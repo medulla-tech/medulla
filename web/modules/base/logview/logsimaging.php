@@ -168,12 +168,10 @@ var filterlogs = <?php echo "'$filterlogs'";?>;
 
 function encodeurl(){
     var critere = filterlogs +
-                    "|" + jQuery('#criterionssearch option:selected').val() +
-                    "|" + jQuery('#criterionssearch1 option:selected').val() +
-                    "|" + jQuery('#criterionssearch2 option:selected').val() +
-                    "|" + jQuery('#criterionssearch3 option:selected').val();
-                    //+
-                    //"|" + jQuery('#criterionssearch4 option:selected').val();
+                    "|" + jQuery('#criteriasearch option:selected').val() +
+                    "|" + jQuery('#criteriasearch1 option:selected').val() +
+                    "|" + jQuery('#criteriasearch2 option:selected').val() +
+                    "|" + jQuery('#criteriasearch3 option:selected').val();
 
     uri = "modules/base/logview/ajax_Data_Logs.php"
     //QuickAction
@@ -212,7 +210,6 @@ function encodeurl(){
     jQuery(function(){
         jQuery("p").click(function(){
             searchlogs( encodeurl());
-        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
         });
     });
 
@@ -308,27 +305,27 @@ $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
 
-$modules = new SelectItemlabeltitle("criterionssearch", "criterions", "critere search");
+$modules = new SelectItemlabeltitle("criteriasearch", "criteria", "search criteria");
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
-$modules1 = new SelectItemlabeltitle("criterionssearch1", "criterions", "critere search");
+$modules1 = new SelectItemlabeltitle("criteriasearch1", "criteria", "search criteria");
 $modules1->setElements($typecritere);
 $modules1->setSelected("None");
 $modules1->setElementsVal($typecritereval);
 
-$modules2 = new SelectItemlabeltitle("criterionssearch2", "criterions", "critere search");
+$modules2 = new SelectItemlabeltitle("criteriasearch2", "criteria", "search criteria");
 $modules2->setElements($typecritere);
 $modules2->setSelected("None");
 $modules2->setElementsVal($typecritereval);
 
-$modules3 = new SelectItemlabeltitle("criterionssearch3", "criterions", "critere search");
+$modules3 = new SelectItemlabeltitle("criteriasearch3", "criteria", "search criteria");
 $modules3->setElements($typecritere);
 $modules3->setSelected("None");
 $modules3->setElementsVal($typecritereval);
 
-// $modules4 = new SelectItemlabeltitle("criterionssearch4", "criterions", "critere search");
+// $modules4 = new SelectItemlabeltitle("criteriasearch4", "criteria", "search criteria");
 // $modules4->setElements($typecritere);
 // $modules4->setSelected("None");
 // $modules4->setElementsVal($typecritereval);
@@ -359,23 +356,10 @@ $modules3->setElementsVal($typecritereval);
 <table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
         <thead>
             <tr>
-                <th style="width: 12%;">date</th>
-                <th style="width: 7%;">user</th>
-                <th style="width: 7%;">who</th>
-         <!--
-                <th style="width: 6%;">type</th>
-                <th style="width: 6%;">action</th>
-                <th style="width: 6%;">module</th>
-
-                <th style="width: 6%;">how</th>
-
-                <th style="width: 6%;">why</th>
-
-                <th style="width: 6%;">priority</th>
-                <th style="width: 6%;">touser</th>
-                <th style="width: 6%;">sessionname</th>
-        -->
-                <th>text</th>
+                <th style="width: 12%;"><?php echo _('date'); ?></th>
+                <th style="width: 7%;"><?php echo _('user'); ?></th>
+                <th style="width: 7%;"><?php echo _('who'); ?></th>
+                <th><?php echo _('text'); ?></th>
             </tr>
         </thead>
 

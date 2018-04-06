@@ -149,7 +149,7 @@ class SelectItemlabeltitle extends SelectItem {
     var filterlogs = <?php echo "'$filterlogs'";?>;
 
     function encodeurl(){
-        var critere = filterlogs + "|" + jQuery('#criterionssearch option:selected').val()+ "|" + jQuery('#criterionsdetail option:selected').val();
+        var critere = filterlogs + "|" + jQuery('#criteriasearch option:selected').val()+ "|" + jQuery('#criteriadetail option:selected').val();
         uri = "modules/base/logview/ajax_Data_Logs.php"
         //QuickAction
         var param = {
@@ -187,7 +187,6 @@ class SelectItemlabeltitle extends SelectItem {
     jQuery(function(){
         jQuery("p").click(function(){
             searchlogs( encodeurl());
-        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
         });
     });
     function searchlogs(url){
@@ -238,7 +237,7 @@ $typecritereval  =        array(
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
-$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'), "critere search");
+$modules = new SelectItemlabeltitle("criteriasearch", _T('criteria','logs'), "search criteria");
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
@@ -273,23 +272,10 @@ $modules->setElementsVal($typecritereval);
 <table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
         <thead>
             <tr>
-                <th style="width: 12%;">date</th>
-                <th style="width: 8%;">user</th>
-                <th style="width: 6%;">who</th>
-         <!--
-                <th style="width: 6%;">type</th>
-                <th style="width: 6%;">action</th>
-                <th style="width: 6%;">module</th>
-
-                <th style="width: 6%;">how</th>
-
-                <th style="width: 6%;">why</th>
-
-                <th style="width: 6%;">priority</th>
-                <th style="width: 6%;">touser</th>
-                <th style="width: 6%;">sessionname</th>
-        -->
-                <th>text</th>
+                <th style="width: 12%;"><?php echo _('date'); ?></th>
+                <th style="width: 8%;"><?php echo _('user'); ?></th>
+                <th style="width: 6%;"><?php echo _('who'); ?></th>
+                <th><?php echo _('text'); ?></th>
             </tr>
         </thead>
 

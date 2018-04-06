@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-06 14:08+0100\n"
+"POT-Creation-Date: 2018-03-08 16:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Japanese (Japan) (https://www.transifex.com/siveo/teams/72118/"
@@ -75,7 +75,6 @@ msgid "%s service restarting..."
 msgstr "%s  サービス再起動中..."
 
 #: license.php:27
-#, fuzzy
 msgid ""
 "<p>\n"
 "The community version of this product is distributed in the hope that it\n"
@@ -90,18 +89,6 @@ msgid ""
 "and without a tested and certified upgrade path from previous versions.\n"
 "</p>"
 msgstr ""
-"<p>⏎\n"
-"本製品のコミュニティバージョンは、有益なものとなることを願って配布されていま"
-"すが、 <strong>いかなる保証もありません </strong>。⏎また特定の目的に対する市"
-"場性適合の暗黙の保証もありません。詳細は、GNU General Public ライセンスを参照"
-"してください。.</p>⏎\n"
-"<p>⏎\n"
-"さらに、本製品はお使いの情報システムの主要かつ重要なコンポーネントです。この"
-"コミュニティバージョンは、いかなる種類のプロフェッショナルサポートもありませ"
-"んし、>⏎以前のバージョンからのアップグレードパスは試験されていませんし認証さ"
-"れていません。\n"
-"⏎\n"
-"</p>"
 
 #: modules/base/includes/publicFunc.php:421
 msgid ""
@@ -156,9 +143,8 @@ msgid "Add organizational unit"
 msgstr "組織ユニットを追加"
 
 #: modules/base/main/favorites.php:149
-#, fuzzy
 msgid "Add this page to your favorites"
-msgstr "このページをお気に入りに追加する"
+msgstr ""
 
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
 msgid "Add user"
@@ -175,6 +161,10 @@ msgstr "エージェントホスト名"
 #: modules/base/infoPackage.inc.php:330
 msgid "Ajax part of computers list"
 msgstr "コンピューターの Ajax 部分一覧"
+
+#: modules/base/logview/index.php:133
+msgid "All Logs"
+msgstr ""
 
 #: modules/base/computers/localSidebar.php:5
 msgid "All computers"
@@ -224,6 +214,14 @@ msgstr "バックグラウンドジョブ"
 msgid "Backup"
 msgstr "バックアップ"
 
+#: modules/base/logview/index.php:259 modules/base/logview/logsimaging.php:250
+msgid "Backup Image creation"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:145
+msgid "Backup Logs"
+msgstr ""
+
 #: modules/base/users/backup.php:38
 msgid "Backup a user's folder"
 msgstr "ユーザーフォルダのバックアップ"
@@ -232,6 +230,10 @@ msgstr "ユーザーフォルダのバックアップ"
 msgid "Backup a user's home directory"
 msgstr "ユーザーホームディレクトリのバックアップ"
 
+#: modules/base/logview/logsbackuppc.php:229 modules/base/logview/index.php:234
+msgid "Backup configuration"
+msgstr ""
+
 #: modules/base/users/backup.php:54
 #, php-format
 msgid "Backup of <b>%s</b> user's folder has been launched in background."
@@ -239,7 +241,7 @@ msgstr ""
 "<b>%s</b> ユーザーのフォルダのバックアップがバックグラウンドで起動されまし"
 "た。"
 
-#: modules/base/includes/computers_list.inc.php:369
+#: modules/base/includes/computers_list.inc.php:373
 msgid "Backup status"
 msgstr "バックアップステータス"
 
@@ -250,6 +252,10 @@ msgstr "ユーザーをバックアップ"
 #: modules/base/infoPackage.inc.php:244
 msgid "Backup user files"
 msgstr "ユーザーファイルのバックアップ "
+
+#: modules/base/logview/logsbackuppc.php:239 modules/base/logview/index.php:244
+msgid "BackupPC"
+msgstr ""
 
 #: modules/base/audit/ajaxLogFilter.php:49
 #: modules/base/includes/AjaxFilterLog.inc.php:325
@@ -339,6 +345,10 @@ msgstr "クライアントホスト名"
 msgid "Clients Update"
 msgstr ""
 
+#: modules/base/logview/index.php:271 modules/base/logview/logsimaging.php:262
+msgid "Clone"
+msgstr ""
+
 #: graph/header.inc.php:251 includes/PageGenerator.php:2256
 #: includes/FormGenerator.php:642
 msgid "Close"
@@ -405,9 +415,13 @@ msgstr "コンピューター"
 msgid "Computers : "
 msgstr "コンピューター : "
 
-#: modules/base/includes/computers_list.inc.php:352
+#: modules/base/includes/computers_list.inc.php:356
 msgid "Computers list"
 msgstr "コンピューター一覧"
+
+#: modules/base/logview/index.php:270 modules/base/logview/logsimaging.php:261
+msgid "Configuration"
+msgstr "設定"
 
 #: modules/base/groups/members.php:188 modules/base/groups/edit.php:117
 #: includes/PageGenerator.php:2634 includes/PageGenerator.php:2703
@@ -431,6 +445,15 @@ msgstr "接続"
 #: modules/base/logview/ajax_showlog.php:69
 msgid "Connection"
 msgstr "接続"
+
+#: modules/base/logview/logsbackuppc.php:208 modules/base/logview/index.php:195
+#: modules/base/logview/logspackaging.php:205
+#: modules/base/logview/logsdeployment.php:201
+#: modules/base/logview/logsquickaction.php:200
+#: modules/base/logview/logsinventory.php:209
+#: modules/base/logview/logsimaging.php:223
+msgid "Copy to clipboard"
+msgstr ""
 
 #: modules/base/groups/edit.php:114
 msgid "Create"
@@ -489,6 +512,9 @@ msgstr "ユーザーを全グループから削除"
 msgid "Del user from group"
 msgstr "ユーザーをグループから削除"
 
+#: modules/base/logview/index.php:276 modules/base/logview/index.php:298
+#: modules/base/logview/logspackaging.php:235
+#: modules/base/logview/logsimaging.php:267
 #: modules/base/groups/ajaxFilter.php:48 modules/base/views/index.tpl.php:92
 #: modules/base/users/ajaxFilter.php:88 modules/ppolicy/default/delete.php:45
 #: includes/FormGenerator.php:1157
@@ -511,7 +537,7 @@ msgstr "ユーザーの削除"
 msgid "Delete all user's files"
 msgstr "すべてのユーザーのファイルの削除"
 
-#: modules/base/includes/computers_list.inc.php:407
+#: modules/base/includes/computers_list.inc.php:411
 msgid "Delete computer"
 msgstr "コンピューターの削除"
 
@@ -535,8 +561,38 @@ msgstr "このコンピューターの削除"
 msgid "Delete user"
 msgstr "ユーザーの削除"
 
+#: modules/base/logview/index.php:248
+#: modules/base/logview/logsdeployment.php:223
+msgid "Deployment Download"
+msgstr ""
+
+#: modules/base/logview/index.php:250
+#: modules/base/logview/logsdeployment.php:225
+msgid "Deployment Error"
+msgstr ""
+
+#: modules/base/logview/index.php:247
+#: modules/base/logview/logsdeployment.php:222
+msgid "Deployment Execution"
+msgstr ""
+
 #: modules/base/logview/logsdeployment.php:136
 msgid "Deployment Logs"
+msgstr ""
+
+#: modules/base/logview/index.php:249
+#: modules/base/logview/logsdeployment.php:224
+msgid "Deployment Notify"
+msgstr ""
+
+#: modules/base/logview/index.php:251
+#: modules/base/logview/logsdeployment.php:226
+msgid "Deployment Terminate"
+msgstr ""
+
+#: modules/base/logview/index.php:246
+#: modules/base/logview/logsdeployment.php:221
+msgid "Deployment Transfert"
 msgstr ""
 
 #: modules/base/groups/edit.php:102 modules/base/computers/edit.php:89
@@ -567,7 +623,7 @@ msgstr "バックアップを実行しますか？"
 msgid "Download ACL string"
 msgstr "ACL 文字列のダウンロード"
 
-#: modules/base/includes/computers_list.inc.php:128
+#: modules/base/includes/computers_list.inc.php:132
 msgid "Download file"
 msgstr "ファイルダウンロード"
 
@@ -575,6 +631,7 @@ msgstr "ファイルダウンロード"
 msgid "Download inventory of one machine"
 msgstr ""
 
+#: modules/base/logview/index.php:274 modules/base/logview/logsimaging.php:265
 #: modules/base/views/index.tpl.php:89 modules/base/users/ajaxFilter.php:83
 msgid "Edit"
 msgstr "編集"
@@ -604,9 +661,10 @@ msgstr "ユーザーの編集"
 msgid "Edit computer"
 msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
 
-#: modules/base/includes/computers_list.inc.php:115
-#: modules/base/includes/computers_list.inc.php:116
-msgid "Edit configs files"
+#: modules/base/includes/computers_list.inc.php:118
+#: modules/base/includes/computers_list.inc.php:120
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:83
+msgid "Edit config files"
 msgstr ""
 
 #: modules/base/groups/edit.php:63 modules/base/groups/ajaxFilter.php:47
@@ -698,6 +756,11 @@ msgstr "FAX 番号"
 msgid "February"
 msgstr "2月"
 
+#: modules/base/logview/index.php:294
+#: modules/base/logview/logspackaging.php:231
+msgid "Files"
+msgstr ""
+
 #: modules/base/includes/publicFunc.php:364
 msgid "First name"
 msgstr "名"
@@ -722,6 +785,10 @@ msgstr "フォームを送信できません。入力エラーは赤でハイラ
 msgid "Friday"
 msgstr "金曜"
 
+#: modules/base/logview/logsbackuppc.php:230 modules/base/logview/index.php:235
+msgid "Full backup requested"
+msgstr ""
+
 #: modules/base/includes/publicFunc.php:531
 msgid "GID"
 msgstr "GID"
@@ -742,6 +809,7 @@ msgstr "グローバル表示"
 msgid "Go to page"
 msgstr "ページに移動"
 
+#: modules/base/logview/index.php:275 modules/base/logview/logsimaging.php:266
 #: modules/base/includes/auditCodes.php:47
 msgid "Group"
 msgstr "グループ"
@@ -838,21 +906,34 @@ msgstr ""
 "削除される場合は、このボックスをチェックしてください。"
 
 #: graph/navbar.inc.php:127
-#, fuzzy
 msgid ""
 "If this phrase does not change, your browser is not supported by the MMC "
 "application"
 msgstr ""
-"このフレーズが変わらない場合は、お使いのブラウザ は、MMC アプリケーションに"
-"よってサポートされていません"
+
+#: modules/base/logview/index.php:278 modules/base/logview/logsimaging.php:269
+msgid "Image"
+msgstr ""
+
+#: modules/base/logview/index.php:262 modules/base/logview/logsimaging.php:253
+msgid "Image Deletion"
+msgstr ""
+
+#: modules/base/logview/index.php:260 modules/base/logview/logsimaging.php:251
+msgid "Image Deployment"
+msgstr ""
 
 #: modules/base/logview/logsimaging.php:158
 msgid "Imaging Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:127
+#: modules/base/includes/computers_list.inc.php:131
 msgid "Imaging management"
 msgstr "イメージング管理"
+
+#: modules/base/logview/logsbackuppc.php:231 modules/base/logview/index.php:236
+msgid "Incremental backup requested"
+msgstr ""
 
 #: modules/base/computers/edit.php:44
 msgid "Invalid computer name."
@@ -870,8 +951,55 @@ msgstr "不正なログイン"
 msgid "Inventory"
 msgstr "在庫"
 
+#: modules/base/logview/index.php:282
+#: modules/base/logview/logsinventory.php:231
+msgid "Inventory Deployment"
+msgstr ""
+
 #: modules/base/logview/logsinventory.php:145
 msgid "Inventory Logs"
+msgstr ""
+
+#: modules/base/logview/index.php:286
+#: modules/base/logview/logsinventory.php:235
+msgid "Inventory Machine"
+msgstr ""
+
+#: modules/base/logview/index.php:287
+#: modules/base/logview/logsinventory.php:236
+msgid "Inventory Master"
+msgstr ""
+
+#: modules/base/logview/index.php:288
+#: modules/base/logview/logsinventory.php:237
+msgid "Inventory New machine"
+msgstr ""
+
+#: modules/base/logview/index.php:283
+#: modules/base/logview/logsinventory.php:232
+msgid "Inventory Planned"
+msgstr ""
+
+#: modules/base/logview/index.php:284
+#: modules/base/logview/logsinventory.php:233
+msgid "Inventory Quick Action"
+msgstr ""
+
+#: modules/base/logview/index.php:285
+#: modules/base/logview/logsinventory.php:234
+msgid "Inventory User"
+msgstr ""
+
+#: modules/base/logview/index.php:280
+#: modules/base/logview/logsquickaction.php:223
+#: modules/base/logview/logsinventory.php:229
+msgid "Inventory reception"
+msgstr ""
+
+#: modules/base/logview/index.php:281
+#: modules/base/logview/logsquickaction.php:222
+#: modules/base/logview/logsinventory.php:230
+msgid "Inventory requested"
 msgstr ""
 
 #: includes/FormGenerator.php:619
@@ -914,6 +1042,8 @@ msgstr "バックアップの起動"
 msgid "License and support information"
 msgstr ""
 
+#: modules/base/logview/index.php:295
+#: modules/base/logview/logspackaging.php:232
 #: modules/base/groups/localSidebar.php:28
 msgid "List"
 msgstr "一覧"
@@ -1002,9 +1132,33 @@ msgstr "メール"
 msgid "Mail address"
 msgstr "メールアドレス"
 
+#: modules/base/logview/logsbackuppc.php:235 modules/base/logview/index.php:240
+#: modules/base/logview/index.php:266 modules/base/logview/index.php:296
+#: modules/base/logview/logspackaging.php:233
+#: modules/base/logview/logsquickaction.php:226
+#: modules/base/logview/logsimaging.php:257
+msgid "Manual"
+msgstr ""
+
 #: includes/FormGenerator.php:619
 msgid "March"
 msgstr "3月"
+
+#: modules/base/logview/index.php:255 modules/base/logview/logsimaging.php:246
+msgid "Master Creation"
+msgstr ""
+
+#: modules/base/logview/index.php:257 modules/base/logview/logsimaging.php:248
+msgid "Master Deletion"
+msgstr ""
+
+#: modules/base/logview/index.php:258 modules/base/logview/logsimaging.php:249
+msgid "Master Deployment Multicast"
+msgstr ""
+
+#: modules/base/logview/index.php:256 modules/base/logview/logsimaging.php:247
+msgid "Master Edition"
+msgstr ""
 
 #: includes/FormGenerator.php:620
 msgid "May"
@@ -1017,6 +1171,14 @@ msgstr "メディアサイズ"
 #: modules/base/status/index.php:116
 msgid "Memory"
 msgstr "メモリ"
+
+#: modules/base/logview/index.php:264 modules/base/logview/logsimaging.php:255
+msgid "Menu"
+msgstr "メニュー"
+
+#: modules/base/logview/index.php:253 modules/base/logview/logsimaging.php:244
+msgid "Menu change"
+msgstr ""
 
 #: includes/FormGenerator.php:490
 msgid "Min.: "
@@ -1050,6 +1212,10 @@ msgstr "月: "
 msgid "Move user home"
 msgstr "ユーザーホームを移動"
 
+#: modules/base/logview/index.php:267 modules/base/logview/logsimaging.php:258
+msgid "Multicast"
+msgstr ""
+
 #: modules/base/views/index.tpl.php:84 modules/base/users/ajaxFilter.php:79
 msgid "Name"
 msgstr "名前"
@@ -1081,6 +1247,11 @@ msgstr "使用できる項目がありません"
 #: includes/bgps_view.php:64
 msgid "No job."
 msgstr "ジョブがありません。"
+
+#: modules/base/logview/index.php:222
+#: modules/base/logview/logsquickaction.php:228
+msgid "None"
+msgstr "なし"
 
 #: includes/FormGenerator.php:621
 msgid "November"
@@ -1114,6 +1285,30 @@ msgstr "オペレーション"
 #: modules/base/includes/auditCodes.php:49
 msgid "Organizational unit"
 msgstr "組織ユニット"
+
+#: modules/base/logview/index.php:293
+#: modules/base/logview/logspackaging.php:230
+msgid "Package"
+msgstr "パッケージ"
+
+#: modules/base/logview/index.php:289
+#: modules/base/logview/logspackaging.php:226
+msgid "Package creation"
+msgstr ""
+
+#: modules/base/logview/index.php:291
+#: modules/base/logview/logspackaging.php:228
+msgid "Package deletion"
+msgstr ""
+
+#: modules/base/logview/index.php:290
+#: modules/base/logview/logspackaging.php:227
+msgid "Package edition"
+msgstr ""
+
+#: modules/base/logview/index.php:221
+msgid "Packaging"
+msgstr ""
 
 #: modules/base/logview/logspackaging.php:141
 msgid "Packaging Logs"
@@ -1167,6 +1362,10 @@ msgstr "電話 :"
 #: modules/base/includes/publicFunc.php:354
 msgid "Photo"
 msgstr "写真"
+
+#: modules/base/logview/logsbackuppc.php:236 modules/base/logview/index.php:241
+msgid "Planned"
+msgstr ""
 
 #: modules/base/includes/errorHandling.php:29
 msgid ""
@@ -1228,6 +1427,14 @@ msgstr ""
 msgid "Plugin"
 msgstr "プラグイン"
 
+#: modules/base/logview/index.php:254 modules/base/logview/logsimaging.php:245
+msgid "Post-imaging Script Creation"
+msgstr ""
+
+#: modules/base/logview/index.php:269 modules/base/logview/logsimaging.php:260
+msgid "Postinstall"
+msgstr ""
+
 #: modules/base/includes/publicFunc.php:412
 msgid "Preferred language"
 msgstr "使用言語"
@@ -1248,6 +1455,15 @@ msgstr "前"
 #: modules/base/includes/publicFunc.php:453
 msgid "Primary group"
 msgstr "プライマリグループ"
+
+#: modules/base/logview/logsbackuppc.php:211 modules/base/logview/index.php:198
+#: modules/base/logview/logspackaging.php:208
+#: modules/base/logview/logsdeployment.php:204
+#: modules/base/logview/logsquickaction.php:203
+#: modules/base/logview/logsinventory.php:212
+#: modules/base/logview/logsimaging.php:226
+msgid "Print logs"
+msgstr ""
 
 #: modules/base/status/support.php:50
 msgid "Product name"
@@ -1273,17 +1489,25 @@ msgstr "プロキシ監査"
 msgid "Pulse Updates"
 msgstr ""
 
+#: modules/base/logview/index.php:279 modules/base/logview/logsimaging.php:270
+msgid "Quick Action"
+msgstr ""
+
 #: modules/base/logview/logsquickaction.php:140
 msgid "Quick Actions Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:133
+#: modules/base/includes/computers_list.inc.php:137
 msgid "Quick action"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:105
 msgid "Read log"
 msgstr "ログの読み込み"
+
+#: modules/base/logview/logsquickaction.php:225
+msgid "Reboot sent"
+msgstr ""
 
 #: modules/base/includes/AjaxFilterLog.inc.php:366
 msgid "Refresh"
@@ -1301,13 +1525,28 @@ msgstr "登録ユーザー"
 msgid "Remote Desktop Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:123
-#: modules/base/includes/computers_list.inc.php:125
-#: modules/base/includes/computers_list.inc.php:136
+#: modules/base/includes/computers_list.inc.php:127
+#: modules/base/includes/computers_list.inc.php:129
+#: modules/base/includes/computers_list.inc.php:140
 msgid "Remote control"
 msgstr "リモートコントロール"
 
-#: modules/base/includes/computers_list.inc.php:410
+#: modules/base/logview/index.php:300
+#: modules/base/logview/logsremotedesktop.php:227
+msgid "Remote desktop control request"
+msgstr ""
+
+#: modules/base/logview/index.php:299
+#: modules/base/logview/logsremotedesktop.php:226
+msgid "Remote desktop service"
+msgstr ""
+
+#: modules/base/logview/index.php:297
+#: modules/base/logview/logspackaging.php:234
+msgid "Remove"
+msgstr "削除"
+
+#: modules/base/includes/computers_list.inc.php:414
 msgid "Remove machine from group"
 msgstr "マシンのグループからの削除"
 
@@ -1330,6 +1569,14 @@ msgstr[0] ""
 "\n"
 "other: サービスを再起動しますか？"
 
+#: modules/base/logview/logsbackuppc.php:237 modules/base/logview/index.php:242
+msgid "Restore"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:234 modules/base/logview/index.php:239
+msgid "Restore requested"
+msgstr ""
+
 #: modules/base/audit/ajaxLogFilter.php:128
 msgid "Result"
 msgstr "結果"
@@ -1337,6 +1584,19 @@ msgstr "結果"
 #: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:59
 msgid "Return"
 msgstr "戻る"
+
+#: modules/base/logview/index.php:301
+#: modules/base/logview/logsremotedesktop.php:228
+msgid "Reverse SSH"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:232 modules/base/logview/index.php:237
+msgid "Reverse SSH start"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:233 modules/base/logview/index.php:238
+msgid "Reverse SSH stop"
+msgstr ""
 
 #: modules/base/main/favorites.php:4
 msgid "Root user cannot have favorites"
@@ -1353,6 +1613,24 @@ msgstr "SAMBA"
 #: includes/FormGenerator.php:632
 msgid "Saturday"
 msgstr "土曜"
+
+#: modules/base/logview/logsbackuppc.php:210 modules/base/logview/index.php:197
+#: modules/base/logview/logspackaging.php:207
+#: modules/base/logview/logsdeployment.php:203
+#: modules/base/logview/logsquickaction.php:202
+#: modules/base/logview/logsinventory.php:211
+#: modules/base/logview/logsimaging.php:225
+msgid "Save to Excel file"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:209 modules/base/logview/index.php:196
+#: modules/base/logview/logspackaging.php:206
+#: modules/base/logview/logsdeployment.php:202
+#: modules/base/logview/logsquickaction.php:201
+#: modules/base/logview/logsinventory.php:210
+#: modules/base/logview/logsimaging.php:224
+msgid "Save to csv file"
+msgstr ""
 
 #: modules/base/audit/list.php:39
 msgid "Search action"
@@ -1379,6 +1657,7 @@ msgstr "エンティティ選択"
 msgid "September"
 msgstr "9月"
 
+#: modules/base/logview/index.php:265 modules/base/logview/logsimaging.php:256
 #: index.php:197
 msgid "Server"
 msgstr "サーバー"
@@ -1386,6 +1665,10 @@ msgstr "サーバー"
 #: modules/base/status/index.php:206
 msgid "Server status"
 msgstr "サーバーステータス"
+
+#: modules/base/logview/index.php:277 modules/base/logview/logsimaging.php:268
+msgid "Service"
+msgstr ""
 
 #: modules/base/includes/errorHandling.php:48
 msgid ""
@@ -1403,7 +1686,7 @@ msgstr "すべてのラジオボタンに値を設定してください:&nbsp;&n
 msgid "Shortcuts"
 msgstr "ショートカット"
 
-#: modules/base/includes/computers_list.inc.php:131
+#: modules/base/includes/computers_list.inc.php:135
 msgid "Show Profile"
 msgstr "プロファイル表示"
 
@@ -1411,13 +1694,16 @@ msgstr "プロファイル表示"
 msgid "Show complete trackback"
 msgstr "完了したトレースバックを表示"
 
+#: modules/base/logview/logsquickaction.php:224
+msgid "Shutdown sent"
+msgstr ""
+
 #: modules/base/includes/computers_list.inc.php:103
 #: modules/base/includes/computers_list.inc.php:106
 msgid "Software deployment"
 msgstr "ソフトウェアデプロイ"
 
 #: includes/commonErrorHandling.php:44
-#, fuzzy
 msgid ""
 "Solve the problem by:\n"
 "                        <ul>\n"
@@ -1426,14 +1712,6 @@ msgid ""
 "                            <li>Verify your LDAP server is up</li>\n"
 "                        </ul>"
 msgstr ""
-"次の手法によって問題を解決してください:\n"
-"⏎\n"
-"                        <ul>⏎\n"
-"                            <li>LDAP サーバーが正しく /etc/mmc/プラグインs/"
-"base/ini に設定されていることを確認する </li>⏎\n"
-"                            <li>LDAP サーバーが起動していることを確認する\n"
-"</li>⏎\n"
-"                        </ul>"
 
 #: includes/commonErrorHandling.php:31
 msgid ""
@@ -1456,6 +1734,10 @@ msgid ""
 msgstr ""
 "このグループがプライマリグループであるため、ユーザーの一部はこのグループから"
 "削除できません。"
+
+#: modules/base/logview/index.php:268 modules/base/logview/logsimaging.php:259
+msgid "Start"
+msgstr "開始"
 
 #: modules/base/infoPackage.inc.php:169
 msgid "Status"
@@ -1737,6 +2019,10 @@ msgstr "アップタイム: "
 msgid "Uptime: "
 msgstr "アップタイム: "
 
+#: modules/base/logview/logsbackuppc.php:238 modules/base/logview/index.php:243
+#: modules/base/logview/index.php:292
+#: modules/base/logview/logspackaging.php:229
+#: modules/base/logview/logsquickaction.php:227
 #: modules/base/audit/indexbase.php:30 modules/base/audit/ajaxLogFilter.php:121
 #: modules/base/audit/indexall.php:30 modules/base/includes/auditCodes.php:45
 msgid "User"
@@ -1908,14 +2194,23 @@ msgstr "警告: 登録コンピューター数がライセンスを超過しま�
 msgid "WARNING: The number of registered users is exceeding your license."
 msgstr "警告: 登録ユーザー数がライセンスを超過しました。"
 
+#: modules/base/logview/index.php:261 modules/base/logview/logsimaging.php:252
+msgid "WOL"
+msgstr ""
+
+#: modules/base/logview/index.php:252
+#: modules/base/logview/logsdeployment.php:227
+#: modules/base/logview/logsquickaction.php:221
+msgid "WOL sent"
+msgstr ""
+
 #: modules/base/includes/publicFunc.php:502
 msgid "Warning: an existing directory may belong to another user !"
 msgstr "警告: 既存のディレクトリは別のユーザーに所属する可能性があります！"
 
 #: modules/base/users/editacl.php:228
-#, fuzzy
 msgid "Warning: no desc found in infoPackage.inc.php :"
-msgstr "警告 infoPackage.inc.php に内容が見つかりませんでした  :"
+msgstr ""
 
 #: modules/base/users/editacl.php:219
 msgid "Web page description"
@@ -1990,6 +2285,10 @@ msgstr "セッションは閉じられます"
 msgid "agent: version"
 msgstr "エージェント: バージョン"
 
+#: modules/base/logview/index.php:219
+msgid "backup"
+msgstr ""
+
 #: modules/base/includes/auditCodes.php:50
 msgid "base"
 msgstr "ベース"
@@ -2002,9 +2301,38 @@ msgstr ""
 msgid "computers"
 msgstr "コンピューター"
 
+#: modules/base/logview/logsbackuppc.php:262
+#: modules/base/logview/logsbackuppc.php:267
+#: modules/base/logview/logsbackuppc.php:272 modules/base/logview/index.php:380
+#: modules/base/logview/index.php:385 modules/base/logview/index.php:390
+#: modules/base/logview/logsdeployment.php:244
+#: modules/base/logview/logsdeployment.php:250
+#: modules/base/logview/logsdeployment.php:257
+#: modules/base/logview/logsremotedesktop.php:240
+#: modules/base/logview/logsinventory.php:257
+#: modules/base/logview/logsinventory.php:262
+#: modules/base/logview/logsinventory.php:267
+msgid "criteria"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:306 modules/base/logview/index.php:424
+#: modules/base/logview/logspackaging.php:303
+#: modules/base/logview/logsdeployment.php:295
+#: modules/base/logview/logsquickaction.php:293
+#: modules/base/logview/logsremotedesktop.php:273
+#: modules/base/logview/logsinventory.php:304
+#: modules/base/logview/logsimaging.php:359
+#, fuzzy
+msgid "date"
+msgstr "終了日"
+
 #: modules/base/status/index.php:104
 msgid "day"
 msgstr "日"
+
+#: modules/base/logview/index.php:216
+msgid "deployment"
+msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:102
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:50
@@ -2017,15 +2345,15 @@ msgstr ""
 msgid "expert mode"
 msgstr "エキスパートモード"
 
-#: modules/base/includes/computers_list.inc.php:129
+#: modules/base/includes/computers_list.inc.php:133
 #: modules/base/users/ajaxFilter.php:85
 msgid "extTicket issue"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:111
 #: modules/base/includes/computers_list.inc.php:112
-#: modules/base/includes/computers_list.inc.php:120
-#: modules/base/includes/computers_list.inc.php:121
+#: modules/base/includes/computers_list.inc.php:124
+#: modules/base/includes/computers_list.inc.php:125
 msgid "files browsing"
 msgstr ""
 
@@ -2041,14 +2369,21 @@ msgstr "非表示"
 msgid "hour"
 msgstr "時間"
 
+#: modules/base/logview/index.php:218
+msgid "imaging"
+msgstr ""
+
+#: modules/base/logview/index.php:220
+msgid "inventory"
+msgstr ""
+
 #: graph/navbar.inc.php:81
 msgid "logout"
 msgstr "ログアウト"
 
 #: modules/base/infoPackage.inc.php:130
-#, fuzzy
 msgid "logs all modules"
-msgstr "すべてのモジュール"
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:80
 msgid "medium"
@@ -2062,6 +2397,16 @@ msgstr "分"
 msgid "no"
 msgstr "いいえ"
 
+#: modules/base/logview/logsbackuppc.php:241 modules/base/logview/index.php:302
+#: modules/base/logview/index.php:303
+#: modules/base/logview/logspackaging.php:236
+#: modules/base/logview/logsdeployment.php:228
+#: modules/base/logview/logsremotedesktop.php:229
+#: modules/base/logview/logsinventory.php:238
+#: modules/base/logview/logsimaging.php:271
+msgid "no criteria selected"
+msgstr ""
+
 #: modules/base/includes/AjaxFilterLog.inc.php:168
 #: modules/base/includes/AjaxFilterLog.inc.php:172
 #: includes/FormGenerator.php:562 includes/FormGenerator.php:568
@@ -2072,6 +2417,10 @@ msgstr "あるいは<a href='#'"
 msgid "page"
 msgstr "ページ"
 
+#: modules/base/logview/index.php:217
+msgid "quickaction"
+msgstr ""
+
 #: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
 msgid "read only"
 msgstr "読み取りのみ"
@@ -2080,6 +2429,21 @@ msgstr "読み取りのみ"
 msgid "read/write"
 msgstr "読み取り/書き込み"
 
+#: modules/base/logview/logsbackuppc.php:262
+#: modules/base/logview/logsbackuppc.php:267
+#: modules/base/logview/logsbackuppc.php:272 modules/base/logview/index.php:380
+#: modules/base/logview/index.php:385 modules/base/logview/index.php:390
+#: modules/base/logview/logsinventory.php:257
+#: modules/base/logview/logsinventory.php:262
+#: modules/base/logview/logsinventory.php:267
+msgid "search criteria"
+msgstr ""
+
+#: modules/base/logview/logsdeployment.php:298
+#, fuzzy
+msgid "sessionname"
+msgstr "ユーザー名"
+
 #: includes/commonErrorHandling.php:77
 msgid "smbpasswd failed to change your password entry"
 msgstr "smbpasswd は、パスワード登録の変更に失敗しました。"
@@ -2087,6 +2451,16 @@ msgstr "smbpasswd は、パスワード登録の変更に失敗しました。"
 #: graph/navbar.inc.php:73
 msgid "standard mode"
 msgstr "スタンダードモード"
+
+#: modules/base/logview/logsbackuppc.php:309 modules/base/logview/index.php:427
+#: modules/base/logview/logspackaging.php:306
+#: modules/base/logview/logsdeployment.php:300
+#: modules/base/logview/logsquickaction.php:296
+#: modules/base/logview/logsremotedesktop.php:276
+#: modules/base/logview/logsinventory.php:307
+#: modules/base/logview/logsimaging.php:362
+msgid "text"
+msgstr ""
 
 #: includes/PageGenerator.php:568 includes/PageGenerator.php:800
 msgid "to"
@@ -2100,6 +2474,17 @@ msgstr "使用不能"
 #: includes/xmlrpc.inc.php:349
 msgid "unknown error"
 msgstr "原因不明のエラー"
+
+#: modules/base/logview/logsbackuppc.php:307 modules/base/logview/index.php:425
+#: modules/base/logview/logspackaging.php:304
+#: modules/base/logview/logsdeployment.php:296
+#: modules/base/logview/logsquickaction.php:294
+#: modules/base/logview/logsremotedesktop.php:274
+#: modules/base/logview/logsinventory.php:305
+#: modules/base/logview/logsimaging.php:360
+#, fuzzy
+msgid "user"
+msgstr "ユーザー"
 
 #: modules/base/includes/users-xmlrpc.inc.php:54
 msgid "users"
@@ -2130,6 +2515,16 @@ msgstr "Web: プラグインがインストールされていません。"
 #: version.php:42
 msgid "web: version"
 msgstr "Web: バージョン"
+
+#: modules/base/logview/logsbackuppc.php:308 modules/base/logview/index.php:426
+#: modules/base/logview/logspackaging.php:305
+#: modules/base/logview/logsdeployment.php:297
+#: modules/base/logview/logsquickaction.php:295
+#: modules/base/logview/logsremotedesktop.php:275
+#: modules/base/logview/logsinventory.php:306
+#: modules/base/logview/logsimaging.php:361
+msgid "who"
+msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:108
 #: modules/base/includes/computers_list.inc.php:109

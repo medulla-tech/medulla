@@ -148,9 +148,9 @@ var filterlogs = <?php echo "'$filterlogs'";?>;
 
 function encodeurl(){
     var critere = filterlogs +
-                    "|" + jQuery('#criterionssearch option:selected').val() +
-                    "|" + jQuery('#criterionssearch1 option:selected').val() +
-                    "|" + jQuery('#criterionssearch2 option:selected').val();
+                    "|" + jQuery('#criteriasearch option:selected').val() +
+                    "|" + jQuery('#criteriasearch1 option:selected').val() +
+                    "|" + jQuery('#criteriasearch2 option:selected').val();
     uri = "modules/base/logview/ajax_Data_Logs.php"
     //QuickAction
     var param = {
@@ -188,7 +188,6 @@ function xwwwfurlenc(srcjson){
     jQuery(function(){
         jQuery("p").click(function(){
             searchlogs( encodeurl());
-        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
         });
     });
 
@@ -211,28 +210,12 @@ function searchlogs(url){
                             .load();
     }
 
-//     setInterval( function () {
-//         searchlogs( encodeurl());
-//     }, 30000 );
-
-
     jQuery(function(){
         searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=&headercolumn=<?php echo $headercolumn; ?>")
     });
     </script>
 
 <?php
-// { extend: 'pdf',
-//             className: 'btn btn-primary',
-//             text: 'Save current page',
-//             exportOptions: {
-//                 modifier: {
-//                     page: 'current'
-//                 }
-//             }
-//         }
-
-
 
 $typecritere  =        array(
                                         _T('Deployment Transfert','logs'),
@@ -258,20 +241,20 @@ $typecritereval  =        array(
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
-$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'), "critere search");
+$modules = new SelectItemlabeltitle("criteriasearch", _T('criteria','logs'), "search criteria");
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
 
-$modules1 = new SelectItemlabeltitle("criterionssearch1", _T('criterions','logs'), "critere search1");
+$modules1 = new SelectItemlabeltitle("criteriasearch1", _T('criteria','logs'), "search criteria1");
 $modules1->setElements($typecritere);
 $modules1->setSelected("None");
 $modules1->setElementsVal($typecritereval);
 
 
 
-$modules2 = new SelectItemlabeltitle("criterionssearch2", _T('criterions','logs'), "critere search2");
+$modules2 = new SelectItemlabeltitle("criteriasearch2", _T('criteria','logs'), "search criteria2");
 $modules2->setElements($typecritere);
 $modules2->setSelected("None");
 $modules2->setElementsVal($typecritereval);
@@ -311,23 +294,12 @@ $modules2->setElementsVal($typecritereval);
 <table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
         <thead>
             <tr>
-                <th style="width: 8%;">date</th>
-                <th style="width: 8%;">user</th>
-                <th style="width: 6%;">who</th>
-         <!--
-                <th style="width: 6%;">type</th>
-                <th style="width: 6%;">action</th>
-                <th style="width: 6%;">module</th>
+                <th style="width: 8%;"><?php echo _('date'); ?></th>
+                <th style="width: 8%;"><?php echo _('user'); ?></th>
+                <th style="width: 6%;"><?php echo _('who'); ?></th>
+                <th style="width: 6%;"><?php echo _('sessionname'); ?></th>
 
-                <th style="width: 6%;">how</th>
-
-                <th style="width: 6%;">why</th>
-
-                <th style="width: 6%;">priority</th>
-                <th style="width: 6%;">touser</th> -->
-                <th style="width: 6%;">sessionname</th>
-
-                <th>text</th>
+                <th><?php echo _('text'); ?></th>
             </tr>
         </thead>
 
