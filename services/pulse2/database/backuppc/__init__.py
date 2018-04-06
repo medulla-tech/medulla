@@ -196,7 +196,7 @@ class BackuppcDatabase(DatabaseHelper):
             return host.backup_profile
 
     @DatabaseHelper._session
-    def get_host_backup_reverce_port(self, session, uuid):
+    def get_host_backup_reverse_port(self, session, uuid):
         host = session.query(Hosts).filter_by(uuid = uuid).one()
         if not host:
             logger.warning("Can't find configured host with uuid = %s" % uuid)
@@ -343,7 +343,7 @@ class BackuppcDatabase(DatabaseHelper):
             host.post_backup_script = script
             session.flush()
         return host != None
-    
+
     @DatabaseHelper._session
     def get_host_pre_restore_script(self, session, uuid):
         return session.query(Hosts).filter_by(uuid=uuid).one().pre_restore_script

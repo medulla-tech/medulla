@@ -104,8 +104,8 @@ function get_host_backup_profile($uuid) {
     return xmlCall("backuppc.get_host_backup_profile", array($uuid));
 }
 
-function get_host_backup_reverce_port($uuid) {
-    return xmlCall("backuppc.get_host_backup_reverce_port", array($uuid));
+function get_host_backup_reverse_port($uuid) {
+    return xmlCall("backuppc.get_host_backup_reverse_port", array($uuid));
 }
 
 function set_host_backup_profile($uuid, $newprofile) {

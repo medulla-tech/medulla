@@ -211,7 +211,7 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
 
 if (isset($_POST['bconfirm'],$_POST['host'])){
 
-    $backup_port_reverse_ssh = get_host_backup_reverce_port($_POST['host']);
+    $backup_port_reverse_ssh = get_host_backup_reverse_port($_POST['host']);
     $rsync_path = get_host_rsync_path($_POST['host']);
 
     // Setting host profiles
