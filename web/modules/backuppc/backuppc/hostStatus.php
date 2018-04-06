@@ -260,15 +260,14 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg['DumpPostUserCmd'] = $cfg['RestorePostUserCmd'] = $backup_manager_cmd1;
     $cfg['ClientNameAlias'] = "localhost";
     $cfg['RsyncClientPath'] = $rsync_path;
+    $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
 
     $rep = getComputersOS($_POST['host']);
     $os = $rep[0]['OSName'];
     if (strtolower($os) == 'macos') {
-        $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost sudo $rsyncPath $argList+';
         $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost sudo $rsyncPath $argList+';
     }
     else {
-        $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
         $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
     }
     $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host';
