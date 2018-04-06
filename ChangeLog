@@ -1,6 +1,10 @@
 mmc-core 4.3
 --------------
 
+ * [FEATURE] Allow edition of clients config files from Pulse
+ * [FEATURE] Filter computers list on presence status
+ * [BUGFIX] Update translations
+
 
 mmc-core 4.2
 --------------
