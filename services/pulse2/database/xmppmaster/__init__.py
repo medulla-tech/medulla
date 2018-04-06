@@ -40,7 +40,7 @@ import logging
 import json
 import time
 #topology
-import os, pwd,
+import os, pwd
 class XmppMasterDatabase(DatabaseHelper):
     """
     Singleton Class to query the xmppmaster database.
