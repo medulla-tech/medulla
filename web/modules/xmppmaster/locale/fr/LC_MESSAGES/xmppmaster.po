@@ -158,7 +158,7 @@ msgid "Edit a Quick Action"
 msgstr "Editer une Action Rapide "
 
 #: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:230
-msgid "Edition File configuration"
+msgid "Edit config file"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:324

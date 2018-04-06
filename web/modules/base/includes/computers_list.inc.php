@@ -112,12 +112,12 @@ function list_computers($names,
         $inventnoxmppbrowsingne = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsingne","folderg","computers","xmppmaster", "xmppmaster");
         
         //version avec un select pour choisir les fichier
-        //$editremoteconfiguration  = new ActionItem(_("Edit configs files"),"remoteeditorconfiguration","folder","computers", "xmppmaster", "xmppmaster");
+        //$editremoteconfiguration  = new ActionItem(_("Edit config files"),"remoteeditorconfiguration","folder","computers", "xmppmaster", "xmppmaster");
         //ou 
         // version avec tableau pour les fichier de conf        
-        $editremoteconfiguration    = new ActionItem(_("Edit configs files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
+        $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
         
-        $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit configs files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
+        $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
 
         
         

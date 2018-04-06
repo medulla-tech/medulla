@@ -80,7 +80,7 @@ a.info:hover span{
 
         $actionEdit = array();
 
-        $removeconf =  new ActionItem(_("Edit configs files"), 
+        $removeconf =  new ActionItem(_("Edit config files"), 
                                         "remoteeditorconfigurationlist",
                                         "edit",
                                         "computers",
@@ -93,7 +93,7 @@ a.info:hover span{
             $params[] = $param;
             $actionEdit[] = $removeconf;
         }
-        $n = new ListInfos($result['result'], _T("Conf File name", "xmppmaster"));
+        $n = new ListInfos($result['result'], _T("Config file", "xmppmaster"));
         $n->first_elt_padding = 1;
         $n->disableFirstColumnActionLink();
         $n->setParamInfo($params);
