@@ -600,7 +600,7 @@ msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
 
 #: modules/base/includes/computers_list.inc.php:115
 #: modules/base/includes/computers_list.inc.php:116
-msgid "Edit config files"
+msgid "Edit configs files"
 msgstr ""
 
 #: modules/base/groups/edit.php:63 modules/base/groups/ajaxFilter.php:47
