@@ -2181,18 +2181,19 @@ class XmppMasterDatabase(DatabaseHelper):
         # creation topology file.
         filename = "topology.json"
         pathfile =  os.path.join(directoryjson, filename)
-        builddatajson = { "name" : "Pulse", "parent": None, "children": []}
+        builddatajson = { "name" : "Pulse", "type" : "AMR", "parent": None, "children": []}
         for i in topology:
             listmachines = topology[i]
 
             ARS = {}
             ARS['name'] = i
+            ARS['type'] = "ARS"
             ARS['parent'] = "Pulse"
             ARS['children'] = []
 
             listmachinesstring = []
             for mach in listmachines:
-                ARS['children'].append({ "name" : mach, "parent": i })
+                ARS['children'].append({ "name" : mach, "type" : "AM", "parent" : i })
             #builddatajson[i] = listmachinesstring
             #ARS['children'] = builddatajson
             #print listmachinesstring
