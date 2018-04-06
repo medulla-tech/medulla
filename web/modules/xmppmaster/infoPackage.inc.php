@@ -60,6 +60,10 @@ $submod->addPage($page);
 $page = new Page("filesmanagers", _T('XMPP files managers', 'xmppmaster'));
 $submod->addPage($page);
 
+#topology
+$page = new Page("topology", _T('XMPP topology Machine', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("ajaxFiltercustom");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxFiltercustom.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
