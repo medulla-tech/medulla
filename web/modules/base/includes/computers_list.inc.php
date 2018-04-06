@@ -115,9 +115,9 @@ function list_computers($names,
         //$editremoteconfiguration  = new ActionItem(_("Edit configs files"),"remoteeditorconfiguration","folder","computers", "xmppmaster", "xmppmaster");
         //ou 
         // version avec tableau pour les fichier de conf        
-        $editremoteconfiguration    = new ActionItem(_("Edit configs files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
+        $editremoteconfiguration    = new ActionItem(_("Edit configs files"),"listfichierconf","folder","computers", "xmppmaster", "xmppmaster");
         
-        $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit configs files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
+        $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit configs files"),"remoteeditorconfiguration","folderg","computers", "xmppmaster", "xmppmaster");
 
         
         
