@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-08 16:26+0100\n"
+"POT-Creation-Date: 2018-03-06 15:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/"
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Audit"
 msgstr "Auditoria"
 
-#: modules/xmppmaster/infoPackage.inc.php:210
+#: modules/xmppmaster/infoPackage.inc.php:199
 msgid "Audit deployment"
 msgstr ""
 
@@ -59,10 +59,6 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/logbygrpmachine.php:45
 msgid "Computer deploy group"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:96
-msgid "Config file"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:154
@@ -103,7 +99,7 @@ msgstr ""
 msgid "Custom command name"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:79
+#: modules/xmppmaster/infoPackage.inc.php:75
 msgid "Delete Custom Quick Action"
 msgstr ""
 
@@ -157,18 +153,11 @@ msgstr ""
 msgid "Edit a Quick Action"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:83
-msgid "Edit config files"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/listfichierconf.php:54
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:230
 #: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:230
-msgid "Edit config file"
+msgid "Edition File configuration"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:324
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:324
 msgid "File :"
 msgstr ""
 
@@ -181,19 +170,19 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:225
+#: modules/xmppmaster/infoPackage.inc.php:214
 msgid "List all groups of computers"
 msgstr "Listar todos os grupos de computadores"
 
-#: modules/xmppmaster/infoPackage.inc.php:245
+#: modules/xmppmaster/infoPackage.inc.php:234
 msgid "List computer deploy"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:235
+#: modules/xmppmaster/infoPackage.inc.php:224
 msgid "List computers deploy"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:240
+#: modules/xmppmaster/infoPackage.inc.php:229
 msgid "List computers deploy by group"
 msgstr ""
 
@@ -203,7 +192,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
 msgid "Machine"
-msgstr "Mquina"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/index.php:38
 msgid "My Tasks ["
@@ -249,8 +238,7 @@ msgstr ""
 msgid "Remote Folder"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:324
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:324
 msgid "Save Configuration"
 msgstr ""
 
@@ -319,7 +307,7 @@ msgstr "Usuário"
 msgid "Wake On Lan"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:113
+#: modules/xmppmaster/infoPackage.inc.php:102
 msgid "Wake on LAN"
 msgstr "Acordar via Rede"
 
@@ -334,8 +322,8 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/localSidebar.php:26
 #: modules/xmppmaster/infoPackage.inc.php:54
 #: modules/xmppmaster/infoPackage.inc.php:57
-#: modules/xmppmaster/infoPackage.inc.php:90
-#: modules/xmppmaster/infoPackage.inc.php:110
+#: modules/xmppmaster/infoPackage.inc.php:86
+#: modules/xmppmaster/infoPackage.inc.php:99
 msgid "XMPP Console"
 msgstr ""
 
@@ -355,8 +343,8 @@ msgstr ""
 msgid "XMPP Wake on LAN"
 msgstr ""
 
+#: modules/xmppmaster/infoPackage.inc.php:89
 #: modules/xmppmaster/infoPackage.inc.php:93
-#: modules/xmppmaster/infoPackage.inc.php:97
 msgid "XMPP browser file"
 msgstr ""
 
@@ -364,33 +352,28 @@ msgstr ""
 msgid "XMPP files managers"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:107
-msgid "XMPP list config files"
-msgstr ""
-
-#: modules/xmppmaster/infoPackage.inc.php:215
-#: modules/xmppmaster/infoPackage.inc.php:220
+#: modules/xmppmaster/infoPackage.inc.php:204
+#: modules/xmppmaster/infoPackage.inc.php:209
 msgid "XMPP log"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:84
+#: modules/xmppmaster/infoPackage.inc.php:80
 msgid "XMPP logs"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:87
+#: modules/xmppmaster/infoPackage.inc.php:83
 msgid "XMPP logs grp"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:100
-#: modules/xmppmaster/infoPackage.inc.php:104
+#: modules/xmppmaster/infoPackage.inc.php:96
 msgid "XMPP remote edit configuration file"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:160
+#: modules/xmppmaster/infoPackage.inc.php:149
 msgid "action deploy quick"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:230
+#: modules/xmppmaster/infoPackage.inc.php:219
 msgid "ajax view grp deploy"
 msgstr ""
 
@@ -404,35 +387,35 @@ msgstr ""
 msgid "detaildeploy"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:197
+#: modules/xmppmaster/infoPackage.inc.php:186
 msgid "quick action Install key"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:176
+#: modules/xmppmaster/infoPackage.inc.php:165
 msgid "quick action Inventory"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:182
+#: modules/xmppmaster/infoPackage.inc.php:171
 msgid "quick action Restart"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:171
+#: modules/xmppmaster/infoPackage.inc.php:160
 msgid "quick action Wol"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:192
+#: modules/xmppmaster/infoPackage.inc.php:181
 msgid "quick action change vnc settings"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:165
+#: modules/xmppmaster/infoPackage.inc.php:154
 msgid "quick action deploy group"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:204
+#: modules/xmppmaster/infoPackage.inc.php:193
 msgid "quick action reversessh for guacamole"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:187
+#: modules/xmppmaster/infoPackage.inc.php:176
 msgid "quick action shutdown"
 msgstr ""
 

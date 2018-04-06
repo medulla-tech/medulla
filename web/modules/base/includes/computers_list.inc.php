@@ -110,17 +110,17 @@ function list_computers($names,
         $actionConsole = array();
         $inventxmppbrowsingne   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
         $inventnoxmppbrowsingne = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsingne","folderg","computers","xmppmaster", "xmppmaster");
-
+        
         //version avec un select pour choisir les fichier
-        //$editremoteconfiguration  = new ActionItem(_("Edit config files"),"remoteeditorconfiguration","folder","computers", "xmppmaster", "xmppmaster");
-        //ou
-        // version avec tableau pour les fichier de conf
-        $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
+        //$editremoteconfiguration  = new ActionItem(_("Edit configs files"),"remoteeditorconfiguration","folder","computers", "xmppmaster", "xmppmaster");
+        //ou 
+        // version avec tableau pour les fichier de conf        
+        $editremoteconfiguration    = new ActionItem(_("Edit configs files"),"listfichierconf","folder","computers", "xmppmaster", "xmppmaster");
+        
+        $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit configs files"),"remoteeditorconfiguration","folderg","computers", "xmppmaster", "xmppmaster");
 
-        $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
-
-
-
+        
+        
         $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
         $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
         //$inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");

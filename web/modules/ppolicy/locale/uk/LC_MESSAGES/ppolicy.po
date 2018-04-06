@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-08 16:26+0100\n"
+"POT-Creation-Date: 2018-02-27 13:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -400,6 +400,7 @@ msgid "Update ppolicy for user"
 msgstr "Оновити ppolicy для користувача"
 
 #: modules/ppolicy/default/warnuser.php:35
+#, fuzzy
 msgid ""
 "Warning: you have been logged using grace login mode. Please change your "
 "password as soon as possible using the password change page, else your "
@@ -410,6 +411,7 @@ msgstr ""
 "паролів, інакше ваш обліковий запис буде заблоковано."
 
 #: modules/ppolicy/default/warnuser.php:40
+#, fuzzy
 msgid ""
 "Warning: your password has been reset by an administrator. Your LDAP account "
 "is restricted. Please change your password as soon as possible using the "

@@ -227,7 +227,7 @@ $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinef
 $ma = xmlrpc_getMachinefromjid($machine);
 
 
-$p = new PageGenerator(_T("Edit config file", 'xmppmaster')." on ". $ma['hostname']." : File [".$name.']' );
+$p = new PageGenerator(_T("Edition File configuration", 'xmppmaster')." on ". $ma['hostname']." : File [".$name.']' );
 $p->setSideMenu($sidemenu);
 $p->display();
 

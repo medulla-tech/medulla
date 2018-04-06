@@ -41,6 +41,4 @@ for module in base ppolicy services dashboard report xmppmaster; do
     done
 done
 
-sh scripts/fix_po_charset.sh
-
 exit 0

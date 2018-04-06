@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-08 16:26+0100\n"
+"POT-Creation-Date: 2018-02-27 13:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/"
@@ -401,18 +401,26 @@ msgid "Update ppolicy for user"
 msgstr "Actualizar la política para el usuario"
 
 #: modules/ppolicy/default/warnuser.php:35
+#, fuzzy
 msgid ""
 "Warning: you have been logged using grace login mode. Please change your "
 "password as soon as possible using the password change page, else your "
 "account will be locked."
 msgstr ""
+"Aviso, se ha autenticado usando el tiempo de gracia en la autenticación. Por "
+"favor cambie su contraseña lo antes posible usando la página de cambio de "
+"contraseña, sino lo hace su cuenta será bloqueada."
 
 #: modules/ppolicy/default/warnuser.php:40
+#, fuzzy
 msgid ""
 "Warning: your password has been reset by an administrator. Your LDAP account "
 "is restricted. Please change your password as soon as possible using the "
 "password change page."
 msgstr ""
+"Aviso, su contraseña ha sido cambiada por un administrador. Su cuenta LDAP "
+"se encuentra restringida. Por favor, cambie su contraseña lo antes posible "
+"usando la página de cambio de contraseñas."
 
 #: modules/ppolicy/default/delete.php:41
 #, php-format

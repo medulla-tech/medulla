@@ -51,7 +51,7 @@ $param = array(
 );
 
     $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxFilterfileconf"),"container", $param);
-    $p = new PageGenerator(_T("Edit config file", 'xmppmaster')." on ". $ma['hostname']);
+    $p = new PageGenerator(_T("Edition File configuration", 'xmppmaster')." on ". $ma['hostname']);
     $p->setSideMenu($sidemenu);
     $p->display();
 
