@@ -52,7 +52,7 @@ Planned
 Machine
 Deployment
 User
-Quick Action 
+Quick Action
 
 
 
@@ -77,7 +77,7 @@ Why: Groupe ou machine
 <?php
     require("graph/navbar.inc.php");
     require("localSidebar.inc.php");
- 
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 if ($maxperpage >= 100){
@@ -157,9 +157,9 @@ class SelectItemlabeltitle extends SelectItem {
 
     function encodeurl(){
         var critere = filterlogs +
-                    "|" + jQuery('#criterionssearch option:selected').val() +
-                    "|" + jQuery('#criterionssearch1 option:selected').val() +
-                    "|" + jQuery('#criterionssearch2 option:selected').val();
+                    "|" + jQuery('#criteriasearch option:selected').val() +
+                    "|" + jQuery('#criteriasearch1 option:selected').val() +
+                    "|" + jQuery('#criteriasearch2 option:selected').val();
         uri = "modules/base/logview/ajax_Data_Logs.php"
         //QuickAction
         var param = {
@@ -197,7 +197,6 @@ class SelectItemlabeltitle extends SelectItem {
     jQuery(function(){
         jQuery("p").click(function(){
             searchlogs( encodeurl());
-        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
         });
     });
     function searchlogs(url){
@@ -207,10 +206,10 @@ class SelectItemlabeltitle extends SelectItem {
         "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
         "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
         buttons: [
-        { extend: 'copy', className: 'btn btn-primary', text: 'Copy to clipboard',},
+        { extend: 'copy', className: 'btn btn-primary', text: 'Copy to clipboard' },
         { extend: 'csv', className: 'btn btn-primary',  text: 'Save to csv file' },
         { extend: 'excel', className: 'btn btn-primary',  text: 'Save to Excel file' },
-        { extend: 'print', className: 'btn btn-primary',  text: 'Print logs'  }
+        { extend: 'print', className: 'btn btn-primary',  text: 'Print logs' }
         ]
     } )
                             .ajax.url(
@@ -255,17 +254,17 @@ $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
 
 
-$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'), _T('critere search','logs'));
+$modules = new SelectItemlabeltitle("criteriasearch", _T('criteria','logs'), _T('search criteria','logs'));
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
-$modules1 = new SelectItemlabeltitle("criterionssearch1", _T('criterions','logs'),  _T('critere search','logs'));
+$modules1 = new SelectItemlabeltitle("criteriasearch1", _T('criteria','logs'),  _T('search criteria','logs'));
 $modules1->setElements($typecritere);
 $modules1->setSelected("None");
 $modules1->setElementsVal($typecritereval);
 
-$modules2 = new SelectItemlabeltitle("criterionssearch2", _T('criterions','logs'),  _T('critere search','logs'));
+$modules2 = new SelectItemlabeltitle("criteriasearch2", _T('criteria','logs'),  _T('search criteria','logs'));
 $modules2->setElements($typecritere);
 $modules2->setSelected("None");
 $modules2->setElementsVal($typecritereval);
@@ -275,8 +274,6 @@ $modules2->setElementsVal($typecritereval);
 <style>
 
 .inline { display : inline; }
-
-}
 
 </style>
 <?php
@@ -304,23 +301,10 @@ $modules2->setElementsVal($typecritereval);
 <table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
         <thead>
             <tr>
-                <th style="width: 12%;">date</th>
-                <th style="width: 8%;">user</th>
-                <th style="width: 6%;">who</th>
-         <!--
-                <th style="width: 6%;">type</th>
-                <th style="width: 6%;">action</th>
-                <th style="width: 6%;">module</th>
-
-                <th style="width: 6%;">how</th>
-
-                <th style="width: 6%;">why</th>
-
-                <th style="width: 6%;">priority</th>
-                <th style="width: 6%;">touser</th>
-                <th style="width: 6%;">sessionname</th>
-        -->
-                <th>text</th>
+                <th style="width: 12%;"><?php echo _('date'); ?></th>
+                <th style="width: 8%;"><?php echo _('user'); ?></th>
+                <th style="width: 6%;"><?php echo _('who'); ?></th>
+                <th><?php echo _('text'); ?></th>
             </tr>
         </thead>
 

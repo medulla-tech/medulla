@@ -2,30 +2,39 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 09:58+0100\n"
+"POT-Creation-Date: 2018-03-08 16:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: modules/services/infoPackage.inc.php:32
-msgid "Services management"
-msgstr "Керування службами"
+#: modules/services/includes/panels/services.inc.php:44
+#, php-format
+msgid "%d inactive service"
+msgid_plural "%d inactive services"
+msgstr[0] "%d неактивна служба"
+msgstr[1] "%d неактивних служби"
+msgstr[2] "%d неактивних служб"
 
-#: modules/services/infoPackage.inc.php:36
-#: modules/services/includes/panels/services.inc.php:30
-msgid "Services"
-msgstr "Служби"
+#: modules/services/control/log.php:36
+#, php-format
+msgid "%s service log"
+msgstr "Журнал служб %s"
+
+#: modules/services/includes/panels/services.inc.php:50
+msgid "All services are up"
+msgstr "Усі служби працюють"
 
 #: modules/services/infoPackage.inc.php:42
 #: modules/services/infoPackage.inc.php:45
@@ -34,40 +43,45 @@ msgstr "Служби"
 msgid "Core services"
 msgstr "Основні служби"
 
-#: modules/services/infoPackage.inc.php:49
-msgid "Others services"
-msgstr "Інші служби"
+#: modules/services/control/ajaxLogFilter.php:53
+msgid "Date"
+msgstr "Дата"
 
-#: modules/services/infoPackage.inc.php:76
-#: modules/services/control/localSidebar.php:31
-#: modules/services/control/log.php:38
-msgid "Services log"
-msgstr "Журнал служб"
+#: modules/services/control/ajaxOthersServicesFilter.php:52
+#: modules/services/control/ajaxServicesFilter.php:79
+msgid "Description"
+msgstr "Опис"
 
-#: modules/services/infoPackage.inc.php:88
-#: modules/services/includes/panels/system.inc.php:48
-msgid "Reboot"
-msgstr "Перезавантажити"
+#: modules/services/control/ajaxLogFilter.php:59
+msgid "GID"
+msgstr "GID"
 
-#: modules/services/infoPackage.inc.php:92
-#: modules/services/includes/panels/system.inc.php:49
-msgid "Poweroff"
-msgstr "Вимкнути"
+#: modules/services/control/ajaxLogFilter.php:61
+msgid "Message"
+msgstr "Повідомлення"
 
 #: modules/services/control/others.php:29
 #: modules/services/control/localSidebar.php:28
 msgid "Other services"
 msgstr "Інші служби"
 
-#: modules/services/control/ajaxOthersServicesFilter.php:28
-#: modules/services/control/ajaxServicesFilter.php:28
-msgid "Start service"
-msgstr "Запустити службу"
+#: modules/services/infoPackage.inc.php:49
+msgid "Others services"
+msgstr "Інші служби"
 
-#: modules/services/control/ajaxOthersServicesFilter.php:29
-#: modules/services/control/ajaxServicesFilter.php:29
-msgid "Stop service"
-msgstr "Зупинити службу"
+#: modules/services/control/ajaxLogFilter.php:60
+msgid "PID"
+msgstr "PID"
+
+#: modules/services/infoPackage.inc.php:92
+#: modules/services/includes/panels/system.inc.php:49
+msgid "Poweroff"
+msgstr "Вимкнути"
+
+#: modules/services/infoPackage.inc.php:88
+#: modules/services/includes/panels/system.inc.php:48
+msgid "Reboot"
+msgstr "Перезавантажити"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:30
 #: modules/services/control/ajaxServicesFilter.php:30
@@ -79,72 +93,59 @@ msgstr "Перезавантажити службу"
 msgid "Restart service"
 msgstr "Перезапустити службу"
 
-#: modules/services/control/ajaxOthersServicesFilter.php:32
-#: modules/services/control/ajaxServicesFilter.php:32
-msgid "View log"
-msgstr "Переглянути журнал"
-
 #: modules/services/control/ajaxOthersServicesFilter.php:49
 #: modules/services/control/ajaxServicesFilter.php:76
 #: modules/services/control/ajaxLogFilter.php:57
 msgid "Service"
 msgstr "Служба"
 
-#: modules/services/control/ajaxOthersServicesFilter.php:52
-#: modules/services/control/ajaxServicesFilter.php:79
-msgid "Description"
-msgstr "Опис"
+#: modules/services/infoPackage.inc.php:36
+#: modules/services/includes/panels/services.inc.php:30
+msgid "Services"
+msgstr "Служби"
+
+#: modules/services/infoPackage.inc.php:76
+#: modules/services/control/localSidebar.php:31
+#: modules/services/control/log.php:38
+msgid "Services log"
+msgstr "Журнал служб"
+
+#: modules/services/infoPackage.inc.php:32
+msgid "Services management"
+msgstr "Керування службами"
+
+#: modules/services/control/ajaxOthersServicesFilter.php:28
+#: modules/services/control/ajaxServicesFilter.php:28
+msgid "Start service"
+msgstr "Запустити службу"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:53
 #: modules/services/control/ajaxServicesFilter.php:80
 msgid "Status"
 msgstr "Стан"
 
-#: modules/services/control/ajaxLogFilter.php:53
-msgid "Date"
-msgstr "Дата"
-
-#: modules/services/control/ajaxLogFilter.php:58
-msgid "UID"
-msgstr "UID"
-
-#: modules/services/control/ajaxLogFilter.php:59
-msgid "GID"
-msgstr "GID"
-
-#: modules/services/control/ajaxLogFilter.php:60
-msgid "PID"
-msgstr "PID"
-
-#: modules/services/control/ajaxLogFilter.php:61
-msgid "Message"
-msgstr "Повідомлення"
-
-#: modules/services/control/log.php:36
-#, php-format
-msgid "%s service log"
-msgstr "Журнал служб %s"
-
-#: modules/services/includes/panels/services.inc.php:44
-#, php-format
-msgid "%d inactive service"
-msgid_plural "%d inactive services"
-msgstr[0] "%d неактивна служба"
-msgstr[1] "%d неактивних служби"
-msgstr[2] "%d неактивних служб"
-
-#: modules/services/includes/panels/services.inc.php:50
-msgid "All services are up"
-msgstr "Усі служби працюють"
+#: modules/services/control/ajaxOthersServicesFilter.php:29
+#: modules/services/control/ajaxServicesFilter.php:29
+msgid "Stop service"
+msgstr "Зупинити службу"
 
 #: modules/services/includes/panels/system.inc.php:29
 msgid "System"
 msgstr "Система"
 
+#: modules/services/includes/panels/system.inc.php:43
+msgid "The server will be poweroff. Are you sure ?"
+msgstr "Сервер буде вимкнено. Ви справді цього хочете?"
+
 #: modules/services/includes/panels/system.inc.php:38
 msgid "The server will reboot. Are you sure ?"
 msgstr "Сервер буде перезавантажено. Ви справді цього хочете?"
 
-#: modules/services/includes/panels/system.inc.php:43
-msgid "The server will be poweroff. Are you sure ?"
-msgstr "Сервер буде вимкнено. Ви справді цього хочете?"
+#: modules/services/control/ajaxLogFilter.php:58
+msgid "UID"
+msgstr "UID"
+
+#: modules/services/control/ajaxOthersServicesFilter.php:32
+#: modules/services/control/ajaxServicesFilter.php:32
+msgid "View log"
+msgstr "Переглянути журнал"

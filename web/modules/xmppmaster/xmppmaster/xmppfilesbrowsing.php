@@ -52,8 +52,8 @@ body{
 }
 
 .download{
-    display : none;
-    background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;
+    /*display : none;*/
+    /*background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;*/
     cursor:pointer;
     border: none;
 }
@@ -296,6 +296,35 @@ echo '</script>';
     </div>
 </div>
 
+
+<div id="dialog-confirm-download-directory" title="Transfer Folder">
+  <div>
+    <span style="float:left; margin:12px 12px 20px 0;">
+        <span id="dialogmsg">
+        </span>
+    </span>
+  </div>
+</div>
+<div id="dialog-confirm-download-file" title="Transfer File">
+  <div>
+    <span style="float:left; margin:12px 12px 20px 0;">
+        <span id="dialogmsg1">
+        </span>
+    </span>
+  </div>
+</div>
+
+<!-- dialog box  Notify file-->
+<div id="dialog-notification-download-file" >
+  <div>
+    <span style="float:left; padding:12px 12px 20px 0; background-color: #d9edf7; width: 95%; height:100%;">
+        <span id="dialogmsg2">
+        </span>
+    </span>
+  </div>
+</div>
+
+
 <script type="text/javascript">
     jQuery( document ).ready(function() {
         fileremote = false;
@@ -307,10 +336,38 @@ echo '</script>';
         user = "<?php echo $_SESSION['login']; ?>";
         jid = "<?php echo $ma['jid']; ?>";
         nameremotepath = "";
-        jQuery("#download").hide(200)
+        init = 1;
         local();
         remote();
     });
+
+    function confirmation_information(data) {
+        setTimeout(function() { affichedata(data); }, 2000); 
+    }
+
+    function affichedata(data){
+                jQuery("#dialogmsg2").html(data);
+                jQuery( function() {
+                    jQuery( "#dialog-notification-download-file" ).dialog({
+                        resizable: false,
+                        height: "auto",
+                        width: 600,
+                        modal: true,
+                        buttons: [
+                            {
+                                id: "my-buttoncancel2",
+                                text: "ok",
+                                'class':'btnPrimary',
+                                style:"color:#FFFFFF;background-color: #000000;",
+                                click:function() {
+                                    jQuery( this ).dialog( "close" );
+                                    window.location.href = "/mmc/main.php?module=base&submod=computers&action=index";
+                                }
+                            }
+                        ]
+                        });
+                } );
+    }
 
     function datetimenow(){
         var newdate = new Date();
@@ -361,12 +418,6 @@ echo '</script>';
                 local(dirsel);
                 jQuery('#dirlocal').text(jQuery(this).text());
             });
-            // on ne peut pas selectionner un fichier juste le repertoire de copie.
-            // le fichier dest aura le meme nom que le fichier scr 
-            // jQuery("ul.leftfile > li").click(function() {
-            // recupere file en local
-            // alert(jQuery(this).text());
-            // });
         });
     }
 
@@ -395,7 +446,7 @@ echo '</script>';
                         },
                         function() {
             // REMOTE
-            jQuery("ul.rightdir > li").click(function() {
+            jQuery("ul.rightdir > li").find(':nth-child(1)').click(function() {
                 fileremote = false;
                 filenameremote = "";
                 var dirsel = jQuery(this).text();
@@ -405,34 +456,132 @@ echo '</script>';
                 remote(dirsel);
                 jQuery('#dirremote').text(jQuery(this).text());
             });
-            jQuery(".download").click(function() {
-                if (fileremote){
-                    // fichier pas repertoire.
-                    // alert(jQuery('input[name=path_abs_current_remote]').val());
-                    var responce_user = confirm("<?php echo _T("Copy Remote File", 'xmppmaster'); ?> : " +
-                                                jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote+
-                                                "\nto\n " + "<?php echo _T("Local File : ", 'xmppmaster'); ?> : "+
-                                                jQuery('input[name=path_abs_current_local]').val()+"/"+timetmp+"/"+filenamelocal);
 
-                    if (responce_user == true) {
-                        jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
-                                dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal,
-                                src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  filenameremote,
-                                directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
-                                "jidmachine" : jid }, function( data ) {
-                                jQuery("#messageaction").text(data);
-                        });
-                    }
+            jQuery("span.but").click(function() {
+                if (jQuery(this).parent("li").find(':nth-child(1)').text() == "."){
+                    var source = jQuery('input[name=path_abs_current_remote]').val();
                 }
+                else{
+                    var source = jQuery('input[name=path_abs_current_remote]').val() + seperator + jQuery(this).parent("li").find(':nth-child(1)').text();
+                }
+                timetmp = user + "-" + datetimenow();
+                msg="<p><b>" +
+                        "<?php echo _T("Copy", 'xmppmaster')."</p></b><p style=' margin-left: 30px;' >"._T("Remote Folder", "xmppmaster"); ?>"+
+                    "</p>"+
+                    "<p style=' margin-left: 60px;' >" + source + "</p>"+
+                    "<p>"+
+                    "<?php echo _T("to local folder", 'xmppmaster'); ?>" +
+                    "</p>"+
+                    "<p style=' margin-left: 60px;'>"+
+                        jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp +"/"+
+                    "</p>"
+                jQuery("#dialogmsg").html(msg);
+
+                jQuery( function() {
+                    jQuery( "#dialog-confirm-download-directory" ).dialog({
+                    resizable: false,
+                    height: "auto",
+                    width: 600,
+                    modal: true,
+                    buttons: [
+                        {
+                            id: "my-button",
+                            text: "Confirm",
+                            'class':'btnPrimary',
+                            style:"color:#FFFFFF;background-color: #000000;",
+                            click:function() {
+                                jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
+                                    dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp+"/",
+                                    src : source,
+                                    directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
+                                    "jidmachine" : jid }, function( data ) {
+                                        jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The folder copy has been requested successfully", "xmppmaster"); ?>');
+                                        confirmation_information(data);
+                                        //jQuery("#messageaction").html(data); //action message afficher en haut de page
+                                });
+                                jQuery( this ).dialog( "close" );
+                            }
+                        },
+                        {
+                            id: "my-buttoncancel",
+                            text: "Cancel",
+                            'class':'btnPrimary',
+                            style:"color:#FFFFFF;background-color: #000000;",
+                            click:function() {
+                                jQuery( this ).dialog( "close" );
+                            }
+                        }
+                    ]
+                    });
+                });
             });
+
+            jQuery(".download").click(function() {
+                msg="<p><b>" +
+                    "<?php echo _T("Copy remote file", 'xmppmaster'); ?>"+
+                        "</p>"+
+                        "<p style=' margin-left: 60px;' >" +
+                            jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote +
+                        "</p>"+
+                        "<p>"+
+                        "<?php echo _T("to local File", 'xmppmaster'); ?>" +
+                        "</p>" +
+                        "<p style=' margin-left: 60px;'>"+
+                            jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal+
+                        "</p>"
+                jQuery("#dialogmsg1").html(msg);
+                jQuery( function() {
+                    jQuery( "#dialog-confirm-download-file" ).dialog({
+                        resizable: false,
+                        height: "auto",
+                        width: 600,
+                        modal: true,
+                        buttons: [
+                            {
+                                id: "my-button1",
+                                text: "Confirm",
+                                'class':'btnPrimary',
+                                style:"color:#FFFFFF;background-color: #000000;",
+                                click:function() {
+                                    jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
+                                            dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal,
+                                            src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  filenameremote,
+                                            directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
+                                            "jidmachine" : jid }, function( data ) {
+                                                jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The file copy has been requested successfully", "xmppmaster"); ?>');
+                                                confirmation_information(data);
+                                                //jQuery("#messageaction").html(data); //action message afficher en haut de page
+                                    });
+                                    jQuery( this ).dialog( "close" );
+                                }
+                            },
+                            {
+                                id: "my-buttoncancel1",
+                                text: "Cancel",
+                                'class':'btnPrimary',
+                                style:"color:#FFFFFF;background-color: #000000;",
+                                click:function() {
+                                    jQuery( this ).dialog( "close" );
+                                }
+                            }
+                        ]
+                        });
+                } );
+            });
+            if (init == 1){
+                jQuery(".rightfile LI").each(function(){ 
+                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
+                    jQuery(this).find(':nth-child(2)').hide();
+                });
+            }
             jQuery("ul.rightfile > li").click(function() {
                 //  recupere file en remote
                 fileremote = true;
                 jQuery(".rightfile LI").each(function(){ 
-                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
+                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : 'white',});
                     jQuery(this).find(':nth-child(2)').hide()
                 });
-                jQuery(this).css({ 'color' : 'blue', 'font-weight' : 'bold'});
+                jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
                 jQuery(this).find(':nth-child(2)').show()
                 filenameremote = jQuery(this).find(':first').text();
                 taillefile = jQuery(this).find(':last').text();

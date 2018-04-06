@@ -31,7 +31,7 @@ require_once("modules/base/includes/users-xmlrpc.inc.php");
  * module declaration
  */
 $mod = new Module("base");
-$mod->setVersion("4.2");
+$mod->setVersion("4.3");
 $mod->setRevision('$Rev$');
 $mod->setAPIVersion("9:0:5");
 $mod->setDescription(_("User, group and computer management"));
@@ -127,7 +127,7 @@ if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     $submod->setDefaultPage("base/logview/index");
     $submod->setPriority(1001);
 
-    $page = new Page("index",_("logs all module"));
+    $page = new Page("index",_("logs all modules"));
     $page->setFile("modules/base/logview/index.php", array("expert" => True));
     $submod->addPage($page);
 

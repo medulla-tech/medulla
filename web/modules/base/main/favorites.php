@@ -146,7 +146,7 @@ if ($local_page->isVisible()) {
 
     ?>
 
-    <p><a href="#" onClick="jQuery('__popup_container').load('<?php echo  urlStr('base/main/favorites',$_GET); ?>'); return false"><?php echo  _("Add this page to your favorite") ?></a></p>
+    <p><a href="#" onClick="jQuery('__popup_container').load('<?php echo  urlStr('base/main/favorites',$_GET); ?>'); return false"><?php echo  _("Add this page to your favorites") ?></a></p>
     <?php
 }
 

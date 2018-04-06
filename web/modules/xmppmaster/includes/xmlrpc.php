@@ -57,6 +57,14 @@ function xmlrpc_remotecommandshell($command, $jidmachine, $timeout){
     return xmlCall("xmppmaster.remotecommandshell", array($command, $jidmachine, $timeout));
 }
 
+function xmlrpc_listremotefileedit($jidmachine){
+    return xmlCall("xmppmaster.listremotefileedit", array($jidmachine));
+}
+
+function xmlrpc_remotefileeditaction($jidmachine, $data=array()){
+    return xmlCall("xmppmaster.remotefileeditaction", array($jidmachine, $data));
+}
+
 function xmlrpc_localfilesystem($currentdir){
     return xmlCall("xmppmaster.localfile", array($currentdir));
 }
@@ -171,7 +179,7 @@ function xmlrpc_loginbycommand($commandid){
 function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE") {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
 }
-//jfk
+
 function xmlrpc_getstatdeployfromcommandidstartdate($command_id, $date) {
     return xmlCall("xmppmaster.getstatdeployfromcommandidstartdate", array($command_id, $date));
 }
@@ -219,7 +227,7 @@ function xmlrpc_getdeploybymachinegrprecent($gid, $state, $duree, $min, $max, $f
 function xmlrpc_delDeploybygroup( $numgrp) {
     return xmlCall("xmppmaster.delDeploybygroup", array($numgrp));
 }
-//ici
+
 function xmlrpc_getdeploybyuserrecent( $login , $state, $duree, $min=null, $max=null, $filt=null) {
     return xmlCall("xmppmaster.getdeploybyuserrecent", array($login , $state, $duree, $min , $max, $filt));
 }

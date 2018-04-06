@@ -27,7 +27,7 @@
 <?php echo  _("<p>
 The community version of this product is distributed in the hope that it
 will be useful, but <strong>without any warranty</strong>; without even the implied
-warranty of merchantability of fitness for a particular purpose. See the
+warranty of merchantability or fitness for a particular purpose. See the
 GNU General Public License for more details.</p>
 <p>
 Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,

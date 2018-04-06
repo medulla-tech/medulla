@@ -65,14 +65,18 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxFiltercustom.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
-$page = new Page("editqa", _T('Edit Custon Quick Action', 'xmppmaster'));
+$page = new Page("editqa", _T('Edit Custom Quick Action', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("", _T('delete Custon Quick Action', 'xmppmaster'));
+$page = new Page("", _T('delete Custom Quick Action', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("ajaxFilterfileconf");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
 
-$page = new Page("deleteqa",_T("Delete Custon Quick Action", 'pkgs'));
+$page = new Page("deleteqa",_T("Delete Custom Quick Action", 'pkgs'));
 $page->setFile("modules/xmppmaster/xmppmaster/removeqa.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
@@ -93,6 +97,16 @@ $submod->addPage($page);
 $page = new Page("xmppfilesbrowsingne", _T('XMPP browser file', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("remoteeditorconfiguration", _T('XMPP remote edit configuration file', 'xmppmaster'));
+$submod->addPage($page);
+
+
+$page = new Page("remoteeditorconfigurationlist", _T('XMPP remote edit configuration file', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("listfichierconf", _T('XMPP list config files', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("ActionQuickconsole", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -101,6 +115,11 @@ $submod->addPage($page);
 // ajax procedure read and send result from log
 $page = new Page("ajaxdeploylog");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxdeploylog.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("remoteaction");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppremoteaction.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
