@@ -2,7 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
- * (c) 2015-2018 Siveo, http://http://www.siveo.net
+ * (c) 2015-2017 Siveo, http://http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -38,9 +38,6 @@ if (isset($_GET["start"])) {
 } else {
     $start = 0;
 }
-if (isset($_GET['computerpresence']) && $_GET['computerpresence'] != "all_computer") {
-   $filter['computerpresence'] = $_GET['computerpresence'];
-}
 if (isset($_GET['location'])) {
     $filter['location'] = $_GET['location'];
     if (!empty($_GET['gid'])) {
@@ -72,7 +69,6 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
         }
     }
 }
-
 $cl = getRestrictedComputersList($start, $start + $maxperpage, $filter, False);
 $cl1 = array();
 foreach ($cl as $k => $v) {
