@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-06 14:26+0100\n"
+"POT-Creation-Date: 2018-03-06 14:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Stephane Pointu <spointu@gmail.com>, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/siveo/teams/72118/"
@@ -18,13 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
-#: modules/backuppc/backuppc/viewFileVersions.php:47
-#: modules/backuppc/backuppc/BrowseBackups.php:56
-#: modules/backuppc/backuppc/hostSummary.php:242
-msgid "%A, %B %e %Y"
-msgstr "%A, %e %B %Y"
 
 #: modules/backuppc/backuppc/hostStatus.php:302
 #, php-format
@@ -495,12 +488,12 @@ msgid "Notify Error : Backup configuration Computer"
 msgstr "Erreur: configuration Sauvegarde sur l'ordinateur"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:135
-msgid "OS X (User files)"
-msgstr "OS X (Fichiers utilisateurs)"
+msgid "macOS (User files)"
+msgstr "macOS (Fichiers utilisateurs)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:136
-msgid "OS X (Whole drive)"
-msgstr "OS X (tout le disque)"
+msgid "macOS (Whole drive)"
+msgstr "macOS (tout le disque)"
 
 #: modules/backuppc/backuppc/advScripts.php:68
 msgid "Post-backup script"
@@ -621,8 +614,8 @@ msgstr "Lancer sauvegarde complète"
 
 #: modules/backuppc/backuppc/hostSummary.php:212
 #, fuzzy
-msgid "Start Incr Backup"
-msgstr "Lancer sauvegarde incrémentale"
+msgid "Start an incremental backup"
+msgstr "Sauvegarde incrémentielle"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:99
 msgid "Start backup"
@@ -852,3 +845,10 @@ msgstr "le"
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
 msgstr "à"
+
+#~ msgid "%A, %B %e %Y"
+#~ msgstr "%A, %e %B %Y"
+
+#, fuzzy
+#~ msgid "Start Incr Backup"
+#~ msgstr "Lancer sauvegarde incrémentale"

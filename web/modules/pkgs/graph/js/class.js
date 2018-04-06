@@ -69,7 +69,7 @@ var actionsList = [
     'actionwaitandgoto', //Wait and go to step
     //'action_no_operation',
     'action_comment', //Add info in deployment log
-
+    'action_set_config_file', //initialise config file
     'action_unzip_file', //Unzip file
     //'actionconfirm',
     //'action_pwd_package', //Go to package folder

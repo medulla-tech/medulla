@@ -67,6 +67,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	imaging/sql/schema-015.sql \
 	imaging/sql/schema-016.sql \
 	imaging/sql/schema-017.sql \
+	imaging/sql/schema-018.sql \
 	imaging/sysprep/sysprep-domain.inf \
 	imaging/sysprep/sysprep-name.inf \
 	imaging/sysprep/sysprep-wg.inf \
@@ -173,6 +174,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	backuppc/sql/schema-004.sql \
 	backuppc/sql/schema-005.sql \
 	backuppc/sql/schema-006.sql \
+	backuppc/sql/schema-007.sql \
 	update/sql/README \
 	update/sql/schema-001.sql \
 	update/sql/schema-002.sql \

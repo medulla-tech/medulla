@@ -209,7 +209,7 @@ $hidden = new HiddenTpl("host");
 $f->add($hidden, array("value" => $uuid, "hide" => True));
 $f->addButton("startFullBackup", _T("Start Full Backup", 'backuppc'));
 if (!isset($nerverbackuped))
-    $f->addButton("startIncrBackup", _T("Start Incr Backup", 'backuppc'));
+    $f->addButton("startIncrBackup", _T("Start an incremental backup", 'backuppc'));
 $f->addButton("stopBackup", _T("Stop Backup", 'backuppc'));
 $f->display();
 
@@ -239,7 +239,7 @@ if ($response['data']) {
         $params[] = array('host' => $uuid, 'backupnum' => $backup_nums[$i], 'cn' => $_GET['cn']);
         preg_match("#.+ (.+)#", $start_dates[$i], $result);
         $time = time() - floatval($ages[$i]) * 24 * 60 * 60;
-        $times[] = strftime(_T("%A, %B %e %Y"), $time) . ' - ' . $result[1];
+        $times[] = strftime("%A, %B %e %Y", $time) . ' - ' . $result[1];
         $durations[$i] = max(1, intval($durations[$i]));
         $total_file_count[$i] .= ' (' . $new_file_count[$i] . ')';
         $total_file_size[$i] = intval($total_file_size[$i]) . ' (' . intval($new_file_size[$i]) . ')';

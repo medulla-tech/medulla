@@ -115,15 +115,25 @@ def callshutdownbymaster(to, time, msg):
 def callvncchangepermsbymaster(to, askpermission):
   return ObjectXmpp().callvncchangepermsbymaster( to, askpermission)
 
+##################### call synchrone iq##########################
 def callremotefile( jidmachine, currentdir=""):
     return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "remotefile", "data": currentdir }, 4)
+
+def calllistremotefileedit(jidmachine):
+    return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "listremotefileedit", "data": "" }, 6)
+
+def callremotefileeditaction(jidmachine, data):
+    return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "remotefileeditaction", "data": data }, 6)
+
+def callremotecommandshell( jidmachine, command="", timeout = 10):
+    return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "remotecommandshell", "data": command, "timeout" : timeout }, timeout)
 
 def calllocalfile(currentdir=""):
     return ObjectXmpp().xmppbrowsingpath.listfileindir(currentdir)
 
 def callInstallKey( jidAM, jidARS):
     return ObjectXmpp().callInstallKey( jidAM, jidARS)
-
+##################################################################
 
 class XmppCommandDiffered:
     """
@@ -829,7 +839,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if 'ippublic' in data:
                 logger.info("ippublic : %s"%data['ippublic'])
             logger.info("------------LOCALISATION-----------")
-            logger.info("localisationifo : %s"%data['localisationifo'])
+            logger.info("localisationinfo : %s"%data['localisationinfo'])
             if data['platform'].lower().startswith("win"):
                 if 'adorgbymachine' in data and data['adorgbymachine']:
                     logger.info("localisation AD par MAchine : %s"%data['adorgbymachine'])
@@ -1118,9 +1128,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 info = json.loads(base64.b64decode(data['completedatamachine']))
                 data['information'] = info
                 if data['ippublic'] is not None and data['ippublic'] != "":
-                    data['localisationifo'] = Localisation().geodataip(data['ippublic'])
+                    data['localisationinfo'] = Localisation().geodataip(data['ippublic'])
                 else:
-                    data['localisationifo'] = {}
+                    data['localisationinfo'] = {}
                 self.displayData(data)
             else:
                 return
@@ -1135,11 +1145,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
         logger.debug("Search Relay server for "\
                      "connection from user %s hostname %s localisation %s"%( data['information']['users'][0],
                                                                              data['information']['info']['hostname'],
-                                                                             data['localisationifo']))
+                                                                             data['localisationinfo']))
         XmppMasterDatabase().log("Search Relay server for "\
                 "connection from user %s hostname %s localisation %s"%( data['information']['users'][0],
                                                                         data['information']['info']['hostname'],
-                                                                        data['localisationifo']))
+                                                                        data['localisationinfo']))
         XmppMasterDatabase().log("Warning user no determinate for machine : %s "%(data['information']['info']['hostname']))
 
         adorgbymachinebool = False
@@ -1182,12 +1192,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 relayserver = -1
                 result=[]
                 try:
-                    if 'localisationifo' in data \
-                        and data['localisationifo'] is not None \
-                        and 'longitude' in data['localisationifo'] \
-                        and 'latitude' in data['localisationifo'] \
-                        and data['localisationifo']['longitude'] != "" \
-                        and data['localisationifo']['latitude'] != "":
+                    if 'localisationinfo' in data \
+                        and data['localisationinfo'] is not None \
+                        and 'longitude' in data['localisationinfo'] \
+                        and 'latitude' in data['localisationinfo'] \
+                        and data['localisationinfo']['longitude'] != "" \
+                        and data['localisationinfo']['latitude'] != "":
                         result1 = XmppMasterDatabase().IdlonglatServerRelay(data['classutil'])
                         a=0
                         for x in result1:
@@ -1454,9 +1464,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.debug("** Traitement and check machine information from agent and enregistrement in base")
                 info = json.loads(base64.b64decode(data['completedatamachine']))
                 if data['ippublic'] is not None and data['ippublic'] != "":
-                    data['localisationifo']= Localisation().geodataip(data['ippublic'])
+                    data['localisationinfo']= Localisation().geodataip(data['ippublic'])
                 else:
-                    data['localisationifo'] = {}
+                    data['localisationinfo'] = {}
                 data['information'] = info
                 ###################################
                 #check is agent machine or agent Relayserver has public key of master
@@ -1488,15 +1498,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 postal_code = ""
                 country_code = ""
                 country_name = ""
-                if data['localisationifo'] is not None and len(data['localisationifo']) > 0:
-                    longitude = str(data['localisationifo']['longitude'])
-                    latitude  = str(data['localisationifo']['latitude'])
-                    region_name = str(data['localisationifo']['region_name'])
-                    time_zone = str(data['localisationifo']['time_zone'])
-                    postal_code = str(data['localisationifo']['postal_code'])
-                    country_code = str(data['localisationifo']['country_code'])
-                    country_name = str(data['localisationifo']['country_name'])
-                    city = str(data['localisationifo']['city'])
+                if data['localisationinfo'] is not None and len(data['localisationinfo']) > 0:
+                    longitude = str(data['localisationinfo']['longitude'])
+                    latitude  = str(data['localisationinfo']['latitude'])
+                    region_name = str(data['localisationinfo']['region_name'])
+                    time_zone = str(data['localisationinfo']['time_zone'])
+                    postal_code = str(data['localisationinfo']['postal_code'])
+                    country_code = str(data['localisationinfo']['country_code'])
+                    country_name = str(data['localisationinfo']['country_name'])
+                    city = str(data['localisationinfo']['city'])
                 try:
                     #assignment of the user system, if user absent.
                     if 'users' in data['information'] and len (data['information']['users']) == 0:
@@ -1816,7 +1826,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     mydata = dataobj['data']
                 if not dataobj.has_key('sessionid'):
                     dataobj['sessionid'] = "absent"
-                try:
+                if not 'ret' in dataobj:
+                    dataobj['ret'] = 0
+                try: 
                     logging.debug("Calling plugin %s from  %s"%( dataobj['action'], msg['from']))
                     msg['body'] = dataobj
                     del dataobj['data']

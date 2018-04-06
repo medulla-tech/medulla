@@ -41,11 +41,11 @@ if (!$response['err']) {
     for ($i=0;$i<count($points);$i++) {
         $param_str = "host=".$_GET['host']."&backupnum=".$points[$i]."&sharename=".urlencode($_GET['sharename']);
         $param_str.= "&dir=".urlencode($_GET['dir']);
-        
+
         preg_match("#.+ (.+)#",$datetimes[$i],$result);
-        $time = time() - floatval($ages[$i])*24*60*60; 
-        $time_str = strftime(_T("%A, %B %e %Y",'backuppc'),$time).' - '.$result[1] ;
-        
+        $time = time() - floatval($ages[$i])*24*60*60;
+        $time_str = strftime("%A, %B %e %Y",$time).' - '.$result[1] ;
+
         print('<a href="#" onclick="RestoreFile(\''.$param_str.'\')">'._T("Restore from ","backuppc").$time_str."</a><br/>");
     }
     die('');

@@ -69,7 +69,7 @@ if ($count = count($download_status)) {
         if ($host != $dstatus['host'])
             continue;
 
-        $times[] = strftime(_T("%A, %B %e %Y", 'backuppc') . ' %H:%M', $dstatus['time']);
+        $times[] = strftime("%A, %B %e %Y %H:%M", $dstatus['time']);
 
         // If it is not a direct restore
         if (strpos($filepath, '>DIRECT:') === FALSE) {

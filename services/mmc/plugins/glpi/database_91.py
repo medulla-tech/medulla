@@ -62,6 +62,10 @@ from mmc.plugins.dyngroup.config import DGConfig
 from distutils.version import LooseVersion, StrictVersion
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
+from pulse2.database.xmppmaster import XmppMasterDatabase
+
+from mmc.agent import PluginManager
+
 class Glpi91(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
@@ -88,7 +92,7 @@ class Glpi91(DyngroupDatabaseHelper):
         except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
         
-        if LooseVersion(self._glpi_version) >=  LooseVersion("9.1") and LooseVersion(self._glpi_version) <=  LooseVersion("9.1.7"):
+        if LooseVersion(self._glpi_version) >=  LooseVersion("9.1") and LooseVersion(self._glpi_version) <=  LooseVersion("9.2.2"):
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
@@ -545,7 +549,13 @@ class Glpi91(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-        query = count and session.query(func.count(Machine.id)) or session.query(Machine)
+        listid = []
+        if filt and "computerpresence" in filt:
+            if PluginManager().isEnabled("xmppmaster"):
+                d = XmppMasterDatabase().getlistPresenceMachineid()
+                listid = [x.replace("UUID", "") for x in d]
+        query = (count and session.query(func.count(Machine.id))) or session.query(Machine)
+
         if filt:
             # filtering on query
             join_query = self.machine
@@ -662,6 +672,12 @@ class Glpi91(DyngroupDatabaseHelper):
             else:
                 query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+            if PluginManager().isEnabled("xmppmaster") and len(listid) != 0:
+                    if filt and "computerpresence" in filt:
+                        if filt['computerpresence'] == "presence":
+                            query = query.filter(Machine.id.in_(listid))
+                        else:
+                            query = query.filter(Machine.id.notin_(listid))
             query = self.__filter_on(query)
             query = self.__filter_on_entity(query, ctx)
 
@@ -799,6 +815,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
         if count: query = query.scalar()
         return query
+
 
     def __getId(self, obj):
         if type(obj) == dict:
@@ -1427,7 +1444,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getAllUserProfiles(self, session):
         """
         @return: Return all GLPI profiles as a dict
@@ -1455,6 +1472,7 @@ class Glpi91(DyngroupDatabaseHelper):
             ret = None
         else:
             ret = qentities.name
+        session.close()
         return ret
 
     def getUserLocations(self, user):
@@ -2722,7 +2740,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getMachineByOsLike(self, session, ctx, osnames, count = 0):
         """
         @return: all machines that have this os using LIKE
@@ -2743,7 +2761,7 @@ class Glpi91(DyngroupDatabaseHelper):
             query = query.filter(
                 or_(
 			and_(
-				not_(OS.name.like('%Windows%')), not_(OS.name.like('%Mageia%')),
+				not_(OS.name.like('%Windows%')), not_(OS.name.like('%Mageia%')), not_(OS.name.like('%macOS%')),
                 ), Machine.operatingsystems_id == 0,
             ))
         elif osnames == ["otherw"]:
@@ -2826,7 +2844,7 @@ class Glpi91(DyngroupDatabaseHelper):
             ret[i] = t
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getAllVersion4Software(self, session, ctx, softname, version = ''):
         """
         @return: all softwares defined in the GLPI database
@@ -2858,7 +2876,7 @@ class Glpi91(DyngroupDatabaseHelper):
         ret = query.all()
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getAllSoftwares(self, session, ctx, softname='', vendor=None, limit=None):
         """
         @return: all softwares defined in the GLPI database
@@ -2898,7 +2916,7 @@ class Glpi91(DyngroupDatabaseHelper):
             ret = query.limit(limit).all()
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getAllSoftwaresByManufacturer(self, session, ctx, vendor):
         """
         Return all softwares of a vendor
@@ -2911,7 +2929,7 @@ class Glpi91(DyngroupDatabaseHelper):
         ret = query.group_by(Software.name).order_by(Software.name).all()
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getMachineBySoftware(self,
                              session,
                              ctx,
@@ -2973,7 +2991,7 @@ class Glpi91(DyngroupDatabaseHelper):
             ret = query.all()
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getAllSoftwaresImproved(self,
                              session,
                              ctx,
@@ -3214,7 +3232,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getAllSoftwareVendors(self, session, ctx, filt='', limit=20):
         """ @return: all software vendors defined in the GPLI database"""
         query = session.query(Manufacturers).select_from(self.manufacturers
@@ -3227,7 +3245,7 @@ class Glpi91(DyngroupDatabaseHelper):
         ret = query.order_by(asc(Manufacturers.name)).limit(limit)
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getAllSoftwareVersions(self, session, ctx, software=None, filt=''):
         """ @return: all software versions defined in the GPLI database"""
         query = session.query(SoftwareVersion)
@@ -3309,7 +3327,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getMachineByType(self, session, ctx, types, count=0):
         """ @return: all machines that have this type """
         if isinstance(types, basestring):
@@ -3505,7 +3523,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getMachineByHostnameAndMacs(self, session, ctx, hostname, macs):
         """
         Get machine who match given hostname and at least one of macs
@@ -3970,7 +3988,7 @@ class Glpi91(DyngroupDatabaseHelper):
         self._killsession(sessionwebservice)
         return False
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def addUser(self, session, username, password, entity_rights=None):
         # Check if the user exits or not
         try:
@@ -3994,7 +4012,7 @@ class Glpi91(DyngroupDatabaseHelper):
             self.setLocationsForUser(username, entity_rights)
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def setUserPassword(self, session, username, password):
         try:
             user = session.query(User).filter_by(name=username).one()
@@ -4009,7 +4027,7 @@ class Glpi91(DyngroupDatabaseHelper):
         # Too complicated, affects many tables
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def addEntity(self, session, entity_name, parent_id, comment):
         entity = Entities()
         entity.id = session.query(func.max(Entities.id)).scalar() + 1
@@ -4026,7 +4044,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.flush()
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def editEntity(self, session, id, entity_name, parent_id, comment):
         entity = session.query(Entities).filter_by(id=id).one()
         entity.entities_id = parent_id #parent
@@ -4038,7 +4056,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.flush()
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def updateEntityCompleteName(self, session, entity):
         # Get parent entity object
         parent_entity = session.query(Entities).filter_by(id=entity.entities_id).one()
@@ -4056,11 +4074,11 @@ class Glpi91(DyngroupDatabaseHelper):
         pass
 
     @DatabaseHelper._listinfo
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getAllEntitiesPowered(self, session, params):
         return session.query(Entities).order_by(Entities.completename)
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def addLocation(self, session, name, parent_id, comment):
         location = Locations()
         location.entities_id = 0 #entity is root
@@ -4082,7 +4100,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.flush()
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def editLocation(self, session, id, name, parent_id, comment):
         location = session.query(Locations).filter_by(id=id).one()
         location.locations_id = parent_id #parent
@@ -4096,7 +4114,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.flush()
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def updateLocationCompleteName(self, session, location):
         # Get parent location object
         parent_location = session.query(Locations).filter_by(id=location.locations_id).one()
@@ -4112,19 +4130,19 @@ class Glpi91(DyngroupDatabaseHelper):
         return location
 
     @DatabaseHelper._listinfo
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getAllLocationsPowered(self, session, params):
         return session.query(Locations).order_by(Locations.completename)
 
     @DatabaseHelper._listinfo
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getAllEntityRules(self, session, params):
         # TODO: Filter this by user context entities
         return session.query(self.rules).filter_by(sub_type='PluginFusioninventoryInventoryRuleEntity')\
                                         .filter(self.rules.c.name != 'Root')\
                                         .order_by(self.rules.c.ranking)
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def addEntityRule(self, session, rule_data):
         rule = Rule()
         # root entity (this means that rule is appliable on root entity and all subentities)
@@ -4165,6 +4183,7 @@ class Glpi91(DyngroupDatabaseHelper):
             cr.pattern = rule_data['patterns'][i]
             session.add(cr)
             session.commit()
+            session.flush()
 
         # Adding rule actions
 
@@ -4187,6 +4206,8 @@ class Glpi91(DyngroupDatabaseHelper):
             session.add(action)
 
         session.commit()
+        session.flush()
+
         return True
 
 
@@ -4210,7 +4231,7 @@ class Glpi91(DyngroupDatabaseHelper):
         #action_type=regex_result,field=_affect_entity_by_tag, value=?
         #action_type=assign, field=locations_id, value=id
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def moveEntityRuleUp(self, session, id):
 
         rule = session.query(Rule).filter_by(id=id).one()
@@ -4226,10 +4247,11 @@ class Glpi91(DyngroupDatabaseHelper):
             session.commit()
             rule.ranking = previous_ranking
             session.commit()
+            session.flush()
 
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def moveEntityRuleDown(self, session, id):
 
         rule = session.query(Rule).filter_by(id=id).one()
@@ -4245,11 +4267,12 @@ class Glpi91(DyngroupDatabaseHelper):
             session.commit()
             rule.ranking = next_ranking
             session.commit()
+            session.flush()
 
         return True
 
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def editEntityRule(self, session, id, rule_data):
 
         rule = session.query(Rule).filter_by(id=id).one()
@@ -4279,6 +4302,7 @@ class Glpi91(DyngroupDatabaseHelper):
             cr.pattern = rule_data['patterns'][i]
             session.add(cr)
             session.commit()
+            session.flush()
 
         # Adding rule actions
 
@@ -4301,9 +4325,10 @@ class Glpi91(DyngroupDatabaseHelper):
             session.add(action)
 
         session.commit()
+        session.flush()
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getEntityRule(self, session, id):
 
 
@@ -4338,7 +4363,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
         return result
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def deleteEntityRule(self, session, id):
 
         # Delete rule
@@ -4353,7 +4378,7 @@ class Glpi91(DyngroupDatabaseHelper):
         #UPDATE `glpi_computers`
         #SET `entities_id` = '5' WHERE `id` ='3'
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getLocationsForUser(self, session, username):
         try:
             user_id = session.query(User).filter_by(name=username).one().id
@@ -4369,7 +4394,7 @@ class Glpi91(DyngroupDatabaseHelper):
                         }]
         return entities
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def setLocationsForUser(self, session, username, profiles):
 
         user_id = session.query(User).filter_by(name=username).one().id
@@ -4389,7 +4414,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.flush()
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getRegistryCollect(self, session, full_key):
         """
         Get the registry id where the collect is the defined key
@@ -4414,7 +4439,7 @@ class Glpi91(DyngroupDatabaseHelper):
         except:
             return False
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def addRegistryCollect(self, session, full_key, key_name):
         """
         Add the registry collect for the defined key
@@ -4451,7 +4476,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.flush()
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def addRegistryCollectContent(self, session, computers_id, registry_id, key, value):
         """
         Add registry collect content
@@ -4478,6 +4503,8 @@ class Glpi91(DyngroupDatabaseHelper):
             if contents_id:
                 # Update database
                 session.query(RegContents).filter_by(id=contents_id).update({'value': str(value)})
+                session.commit()
+                session.flush()
                 return True
         except AttributeError:
             # Insert in database

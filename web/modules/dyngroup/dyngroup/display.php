@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2015-2018 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -19,6 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * file:dyngroup/display.php
  */
 
 require("graph/navbar.inc.php");
@@ -58,6 +61,25 @@ if (!$gid) { // TODO !!
     }
     if ($group->type == 0) {
         __my_header(sprintf(_T("Group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
+        $computerpresence = "all_computer";
+        if (isset($_GET['computerpresence'])){
+            $computerpresence = $_GET['computerpresence'];
+        }
+
+        if (in_array("pulse2", $_SESSION["modulesList"])) {
+            echo '
+                <select name="namepresence" id="idpresence">
+                    <option value="all_computer" ';
+                    if ($computerpresence == "all_computer") echo "selected";
+                    echo '>All computers</option>
+                    <option value="presence" ';
+                    if ($computerpresence == "presence") echo "selected";
+                    echo '>Online computers</option>
+                    <option value="no_presence" ';
+                    if ($computerpresence == "no_presence") echo "selected";
+                    echo '>Offine computers</option>
+                </select>';
+        }
     } else {
         __my_header(sprintf(_T("Imaging group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
     }
@@ -83,7 +105,46 @@ function __my_header($label, $sidemenu, $item, $group) {
 }
 
 ?>
+<script type="text/javascript">
 
+    function getQuerystringDef(key, default_) {
+
+    if (default_==null) default_="";
+    key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
+    var qs = regex.exec(window.location.href);
+
+    if(qs == null)
+        return default_;
+
+    else
+        return qs[1];
+
+    }
+
+    jQuery('#idpresence').on('change', function() {
+
+        var valselect  = this.value;
+        var url = window.location.href;
+
+        if( !getQuerystringDef("computerpresence", false)){
+            var url = window.location.href + "&" + "computerpresence"  + "=" + valselect;
+            window.location = url;
+        }
+        else{
+
+            var array_url = url.split("?");
+            var adress = array_url[0];
+            var parameters = array_url[1];
+            var parameterlist = parameters.split("&");
+            parameterlist.pop();
+            parameterstring = parameterlist.join('&');
+            var url = adress + "?" + parameterstring + "&" + "computerpresence"  + "=" + valselect;
+            window.location = url;
+        };
+
+    })
+</script>
 <style>
 li.remove_machine a {
         padding: 1px 3px 5px 20px;
@@ -96,4 +157,3 @@ li.remove_machine a {
         color: #FFF;
 }
 </style>
-
