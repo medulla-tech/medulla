@@ -632,6 +632,8 @@ def get_host_rsync_path(uuid):
 def set_backup_for_host(uuid):
     rsync_path = get_host_rsync_path(uuid)
     server_url = getBackupServerByUUID(uuid)
+    machine_info = Glpi().getLastMachineInventoryFull(uuid)
+    machine = dict((key, value) for (key, value) in machine_info)
     if not server_url: return
     config = get_host_config('',server_url)['general_config']
     try:
@@ -656,8 +658,12 @@ def set_backup_for_host(uuid):
     config = {}
     port = randint(49152, 65535)
     config['RsyncClientPath'] = "%s"%rsync_path;
-    config['RsyncClientCmd'] =     "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s $rsyncPath $argList+"%port;
-    config['RsyncClientRestoreCmd'] = "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s localhost $rsyncPath $argList+"%port;
+    if machine['os'].lower() == 'macos':
+        config['RsyncClientCmd'] = "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s sudo $rsyncPath $argList+"%port;
+        config['RsyncClientRestoreCmd'] = "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s localhost sudo $rsyncPath $argList+"%port;
+    else:
+        config['RsyncClientCmd'] = "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s $rsyncPath $argList+"%port;
+        config['RsyncClientRestoreCmd'] = "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s localhost $rsyncPath $argList+"%port;
     config['DumpPreUserCmd'] = "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s"%(uuid, port);
     config['DumpPostUserCmd'] = "/usr/sbin/pulse2-disconnect-machine-backuppc -m %s -p %s"%(uuid, port);
     config['RestorePreUserCmd'] = "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s"%(uuid, port);
