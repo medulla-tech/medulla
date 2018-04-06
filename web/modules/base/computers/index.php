@@ -68,42 +68,9 @@ else {
 ?>
 
 <script type="text/javascript">
-
-    function getQuerystringDef(key, default_) {
-
-    if (default_==null) default_="";
-    key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-    var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
-    var qs = regex.exec(window.location.href);
-
-    if(qs == null)
-        return default_;
-
-    else
-        return qs[1];
-
-    }
-
-    jQuery('#idpresence').on('change', function() {
-
-        var valselect  = this.value;
-        var url = window.location.href;
-
-        if( !getQuerystringDef("computerpresence", false)){
-            var url = window.location.href + "&" + "computerpresence"  + "=" + valselect;
-            window.location = url;
-        }
-        else{
-
-            var array_url = url.split("?");
-            var adress = array_url[0];
-            var parameters = array_url[1];
-            var parameterlist = parameters.split("&");
-            parameterlist.pop();
-            parameterstring = parameterlist.join('&');
-            var url = adress + "?" + parameterstring + "&" + "computerpresence"  + "=" + valselect;
-            window.location = url;
-        };
-
-    })
+jQuery('#idpresence').on('change', function() {
+    var url = window.location.href + "&" + "computerpresence"  + "=" + this.value;
+    alert( url);
+    window.location = url;
+})
 </script>
