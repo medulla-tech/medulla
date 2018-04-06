@@ -179,10 +179,6 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
 
-#topology
-def topologypulse():
-    return XmppMasterDatabase().topologypulse()
-
 #jfkjfk
 def getMachinefromjid(jid):
     return XmppMasterDatabase().getMachinefromjid(jid)

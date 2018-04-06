@@ -39,8 +39,7 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
 import logging
 import json
 import time
-#topology
-import os, pwd,
+
 class XmppMasterDatabase(DatabaseHelper):
     """
     Singleton Class to query the xmppmaster database.
@@ -2129,84 +2128,6 @@ class XmppMasterDatabase(DatabaseHelper):
             return False
         return True
 
-    #topology
-    @DatabaseHelper._sessionm
-    def listRS(self,session):
-        """ return les RS pour le deploiement """
-        sql = """SELECT DISTINCT
-                    groupdeploy
-                FROM
-                    xmppmaster.machines;"""
-        result = session.execute(sql)
-        session.commit()
-        session.flush()
-        listrs = [x for x in result]
-        return [ i[0] for i in listrs ]
-
-    #topology
-    @DatabaseHelper._sessionm
-    def topologypulse(self, session):
-        #listrs = self.listRS()
-        ## select liste des RS
-        #list des machines pour un relayserver
-
-        sql = """SELECT groupdeploy,
-                    GROUP_CONCAT(jid)
-                FROM
-                    xmppmaster.machines
-                WHERE
-                    xmppmaster.machines.agenttype = 'machine'
-                GROUP BY 
-                    groupdeploy;"""
-        result = session.execute(sql)
-        session.commit()
-        session.flush()
-        listmachinebyRS = [x for x in result]
-        resulttopologie = {}
-        for i in listmachinebyRS:
-            listmachines = i[1].split(',')
-            resulttopologie[i[0]] = listmachines
-        self.write_topologyfile(resulttopologie)
-        return [ resulttopologie]
-
-    #topology
-    def write_topologyfile(self, topology):
-        directoryjson = os.path.join("/","usr","share","mmc","datatopology")
-        if not os.path.isdir(directoryjson):
-            #creation repertoire de json topology
-            os.makedirs(directoryjson)
-            os.chmod(directoryjson, 0o777) # for example
-            uid, gid =  pwd.getpwnam('root').pw_uid, pwd.getpwnam('root').pw_gid
-            os.chown(directoryjson, uid, gid) # set user:group as root:www-data
-        # creation topology file.
-        filename = "topology.json"
-        pathfile =  os.path.join(directoryjson, filename)
-        builddatajson = { "name" : "Pulse", "parent": None, "children": []}
-        for i in topology:
-            listmachines = topology[i]
-
-            ARS = {}
-            ARS['name'] = i
-            ARS['parent'] = "Pulse"
-            ARS['children'] = []
-
-            listmachinesstring = []
-            for mach in listmachines:
-                ARS['children'].append({ "name" : mach, "parent": i })
-            #builddatajson[i] = listmachinesstring
-            #ARS['children'] = builddatajson
-            #print listmachinesstring
-            builddatajson['children'].append(ARS)
-        #import pprint
-        #pp = pprint.PrettyPrinter(indent=4)
-        #pp.pprint(builddatajson)
-        
-        with open(pathfile, 'w') as outfile:
-            json.dump(builddatajson,  outfile, indent = 4)
-        os.chmod(pathfile, 0o777)
-        uid, gid =  pwd.getpwnam('root').pw_uid, pwd.getpwnam('root').pw_gid
-        os.chown(pathfile, uid, gid)
-        
     @DatabaseHelper._sessionm
     def getstepdeployinsession(self, session, sessiondeploy):
         sql = """
