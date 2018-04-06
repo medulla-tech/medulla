@@ -26,7 +26,10 @@
 //======================================================================
 //require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-
+//topology
+function xmlrpc_topology_pulse() {
+    return xmlCall("xmppmaster.topologypulse", array());
+}
 
 function xmlrpc_getPresenceuuid($uuid) {
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));

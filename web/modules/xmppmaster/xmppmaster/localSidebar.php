@@ -38,4 +38,8 @@ $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("XMPP File Manager","xmppmaster"), "xmppmaster", "xmppmaster", "filesmanagers")
 );
 
+//topology
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("XMPP Topology Machines","xmppmaster"), "xmppmaster", "xmppmaster", "topology")
+);
 ?>
