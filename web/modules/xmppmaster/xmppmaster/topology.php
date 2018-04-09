@@ -215,8 +215,18 @@ function update(source) {
   });
 }
 
-// Toggle children on click.
+
 function click(d) {
+    if (d.type == "AM")
+    {
+        // redirect to xmpp detail
+        document.location.href="main.php?module=xmppmaster&submod=xmppmaster&action=machine_xmpp_detail&machine=" + d.name
+        return
+    }
+    // TODO : 
+    // if type is ARS def promise js. infos ARS in intern page <div id=ARS_info><div> 
+    
+  // Toggle children on click.
   if (d.children) {
 	d._children = d.children;
 	d.children = null;
