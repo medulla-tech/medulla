@@ -51,7 +51,7 @@ $f = new ValidatingForm(array("id" => "profile-form"));
     $f->add(
         //InputTplTitle came from modules/imaging/includes/class_form.php
         new TrFormElement(_T('Profile Name','kiosk').":", new InputTplTitle('name',_T('Profile Name','kiosk'))),
-        array("value" => _T('Name','kiosk'), 'placeholder'=> _T('Name','kiosk'), "required" => True)
+        array("value" => _T('','kiosk'), 'placeholder'=> _T('Name','kiosk'), "required" => True)
     );
 
     // -------

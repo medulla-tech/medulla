@@ -39,7 +39,5 @@ function sendForm(){
     // Send the infos to ajaxAddProfile.php
     jQuery.post(url, datas, function(result){
 
-        // the datas printed in ajaxAddProfile.php are stored in result
-        alert(result);
     });
 }

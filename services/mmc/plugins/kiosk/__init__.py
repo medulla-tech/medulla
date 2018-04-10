@@ -82,34 +82,15 @@ def get_profiles_name_list():
     return KioskDatabase().get_profiles_name_list()
 
 
-def create_profile(name, active):
-    return KioskDatabase().create_profile(name, active)
+def create_profile(name, active, packages):
+    return KioskDatabase().create_profile(name, active, packages)
 
 
-def delete_profile(name):
-    return KioskDatabase().delete_profile(name)
+def delete_profile(id):
+    return KioskDatabase().delete_profile(id)
 
 
-"""
-TODO : this function will be used to interact with xmpp
-def callkioskdetectionad(xmppobject, data):
+def get_profile_by_id(id):
+    KioskDatabase().get_profile_by_id(id)
 
-    Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
-    info = json.loads(base64.b64decode(data['completedatamachine']))
-    
-    datasend = {
-                    'action' : 'kiosk',
-                    'sessionid' : name_random(6, "kiosk_send_lists_package_profil"),
-                    'data' : {  'subaction' : 'send_lists_package_profil',
-                                'subdata' : {
-                                    'bidonlist' : ['titi', 'kkkk', 'neoclust', 'dede', 'kno', 'jfk']
-                                }
-                    },
-                    'ret' : 0,
-                    'base64' : False
-    }
-    xmppobject.send_message( mto=data['from'],
-                             mbody=json.dumps(datasend),
-                             mtype='chat')
-    return
-"""
+

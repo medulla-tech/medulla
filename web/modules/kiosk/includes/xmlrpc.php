@@ -36,14 +36,19 @@ function xmlrpc_get_profiles_name_list(){
 }
 
 
-function xmlrpc_create_profile($name, $active){
+function xmlrpc_create_profile($name, $active, $packages=[]){
     // Insert $name into profile table with the $active status.
     // If success return the id of the new profile.
-    return xmlCall("kiosk.create_profile", [$name, $active]);
+    return xmlCall("kiosk.create_profile", [$name, $active, $packages]);
 }
 
-function xmlrpc_delete_profile($name){
-    // Cascading delete $name form the table of profiles.
-    return xmlCall("kiosk.delete_profile", [$name]);
+function xmlrpc_delete_profile($id){
+    // Delete $id form the table of profiles and the assiociates packages.
+    return xmlCall("kiosk.delete_profile", [$id]);
+}
+
+function xmlrpc_get_profile_by_id($id){
+    // Return the simplified list of the profiles
+    return xmlCall("kiosk.get_profile_by_id", array($id));
 }
 ?>

@@ -214,7 +214,7 @@ class KioskDatabase(DatabaseHelper):
         # TODO
 
     @DatabaseHelper._sessionm
-    def delete_profile(self, session, name):
+    def delete_profile(self, session, id):
         """
         Delete the named profile from the table profiles.
         This method delete the profiles which have the specified name.
@@ -226,15 +226,9 @@ class KioskDatabase(DatabaseHelper):
             Boolean: True if success, else False
         """
         try:
-            result = session.query(Profiles.id).filter(Profiles.name == name)
-            result = result.first()
-            id = 0
-            for row in result:
-                id = str(row)
+            session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
 
-            ret = session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
-
-            ret2 = session.query(Profiles).filter(Profiles.name == name).delete()
+            session.query(Profiles).filter(Profiles.id == id).delete()
             session.commit()
             session.flush()
             return True
@@ -256,3 +250,32 @@ class KioskDatabase(DatabaseHelper):
         for row in ret:
             lines.append(row.toDict())
         return lines
+
+    @DatabaseHelper._sessionm
+    def get_profile_by_id(self, session, id):
+        self.refresh_package_list()
+
+        # get the profile row
+
+        profile = session.query(Profiles).filter(Profiles.id == id).first()
+
+        sql = """select \
+        package.name as package_name,
+        package.package_uuid,
+        package_status
+        from package \
+        left join package_has_profil on package.id = package_has_profil.package_id \
+        left join profiles on profiles.id = package_has_profil.profil_id\
+        WHERE profiles.id = '%s';""" %(id)
+
+        response = session.execute(sql)
+        result = [{'uuid':x.package_uuid, 'name':x.package_name, 'status':x.package_status} for x in response]
+
+        dict = {}
+
+        for column in profile.__table__.columns:
+            dict[column.name] = str(getattr(profile, column.name))
+        dict['packages'] = result
+
+        return dict
+

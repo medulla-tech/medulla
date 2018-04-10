@@ -27,9 +27,9 @@ require("graph/navbar.inc.php");
 require("modules/kiosk/kiosk/localSidebar.php");
 
 
-if(isset($_GET['action'],$_GET['profile']) && $_GET['action'] == "delete")
+if(isset($_GET['action'],$_GET['id']) && $_GET['action'] == "delete")
 {
-    xmlrpc_delete_profile($_GET['profile']);
+    xmlrpc_delete_profile($_GET['id']);
     //TODO : Add notification when the profile is deleted
 }
 
@@ -44,13 +44,13 @@ $profiles_name = [];
 $profiles_date = [];
 $profiles_status = [];
 
-
+$params = [];
 foreach($profiles as $element)
 {
     $profiles_name[] = $element['name'];
     $profiles_status[] = ($element['active'] == 1) ? _T("Active","kiosk") : _T("Inactive","kiosk");
+    $params[] = ['id'=>$element['id'], 'name'=>$element['name']];
 }
-
 $n = new OptimizedListInfos($profiles_name, _T("Profile Name", "kiosk"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($profiles_status, _T("Profile Status", "kiosk"));
@@ -66,10 +66,13 @@ $action_editPackage = new ActionItem(_T("Associate Packages", 'kiosk'),"editPack
 $action_editUsers = new ActionItem(_T("Associate Users", 'kiosk'),"editUsers","users","profile","kiosk", "kiosk");
 $action_editProfiles = new ActionItem(_T("Edit Profil",'kiosk'), "editProfile", "edit", "profile", "kiosk", "kiosk");
 $action_deleteProfil = new ActionItem(_T("Delete Profil",'kiosk'), "delete", "delete", "profile", "kiosk", "kiosk");
-$n->addActionItem($action_editPackage);
-$n->addActionItem($action_editUsers);
-$n->addActionItem($action_editProfiles);
-$n->addActionItem($action_deleteProfil);
+
+
+$n->setParamInfo($params);
+$n->addActionItemArray($action_editPackage);
+$n->addActionItemArray($action_editUsers);
+$n->addActionItemArray($action_editProfiles);
+$n->addActionItemArray($action_deleteProfil);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
 
 $n->display();
