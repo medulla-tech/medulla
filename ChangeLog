@@ -3,8 +3,11 @@ Pulse 2 4.3
 * [FEATURE] Enable browsing and download of files from client machines
 * [FEATURE] Add new logs for dump in support script
 * [FEATURE] Allow registration of UEFI machines via PXE
+* [FEATURE] Show macOS in operating systems distribution on dashboard
 * [BUGFIX] Fix top action menu in action views
 * [BUGFIX] Use system user for new machines where no user has logged in yet
+* [BUGFIX] Fix the problem of editing package when we switch from standard to expert mode
+* [BUGFIX] Fix restoring of files to macOS clients
 
 Pulse 2 4.2
 =============

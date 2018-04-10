@@ -487,11 +487,11 @@ msgid "Notify Error : Backup configuration Computer"
 msgstr ""
 
 #: modules/backuppc/backuppc/ViewProfiles.php:135
-msgid "OS X (User files)"
+msgid "macOS (User files)"
 msgstr ""
 
 #: modules/backuppc/backuppc/ViewProfiles.php:136
-msgid "OS X (Whole drive)"
+msgid "macOS (Whole drive)"
 msgstr ""
 
 #: modules/backuppc/backuppc/advScripts.php:68

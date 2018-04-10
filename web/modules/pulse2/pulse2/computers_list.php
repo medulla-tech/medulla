@@ -28,10 +28,10 @@
 require("modules/pulse2/includes/xmlrpc.inc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
-
-
-
 $param = array();
+if (isset($_GET['computerpresence'])) {
+    $param['computerpresence'] = urlencode($_GET['computerpresence']);
+}
 if (isset($_GET['gid'])) {
     $param['gid'] = urlencode($_GET['gid']);
 }

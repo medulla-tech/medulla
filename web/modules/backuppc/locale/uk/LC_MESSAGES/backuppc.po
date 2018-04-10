@@ -488,12 +488,12 @@ msgid "Notify Error : Backup configuration Computer"
 msgstr "Помилка: комп'ютер налаштувань резервного копіювання"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:135
-msgid "OS X (User files)"
-msgstr "OS X (файли користувачів)"
+msgid "macOS (User files)"
+msgstr "macOS (файли користувачів)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:136
-msgid "OS X (Whole drive)"
-msgstr "OS X (увесь диск)"
+msgid "macOS (Whole drive)"
+msgstr "macOS (увесь диск)"
 
 #: modules/backuppc/backuppc/advScripts.php:68
 msgid "Post-backup script"

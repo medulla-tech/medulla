@@ -71,13 +71,13 @@ if (!$gid) { // TODO !!
                 <select name="namepresence" id="idpresence">
                     <option value="all_computer" ';
                     if ($computerpresence == "all_computer") echo "selected";
-                    echo '>all computers</option>
+                    echo '>All computers</option>
                     <option value="presence" ';
                     if ($computerpresence == "presence") echo "selected";
-                    echo '>computers presents</option>
+                    echo '>Online computers</option>
                     <option value="no_presence" ';
                     if ($computerpresence == "no_presence") echo "selected";
-                    echo '>computer not presents</option>
+                    echo '>Offine computers</option>
                 </select>';
         }
     } else {
@@ -106,10 +106,44 @@ function __my_header($label, $sidemenu, $item, $group) {
 
 ?>
 <script type="text/javascript">
-jQuery('#idpresence').on('change', function() {
-    var url = window.location.href + "&" + "computerpresence"  + "=" + this.value;
-    window.location = url;
-})
+
+    function getQuerystringDef(key, default_) {
+
+    if (default_==null) default_="";
+    key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
+    var qs = regex.exec(window.location.href);
+
+    if(qs == null)
+        return default_;
+
+    else
+        return qs[1];
+
+    }
+
+    jQuery('#idpresence').on('change', function() {
+
+        var valselect  = this.value;
+        var url = window.location.href;
+
+        if( !getQuerystringDef("computerpresence", false)){
+            var url = window.location.href + "&" + "computerpresence"  + "=" + valselect;
+            window.location = url;
+        }
+        else{
+
+            var array_url = url.split("?");
+            var adress = array_url[0];
+            var parameters = array_url[1];
+            var parameterlist = parameters.split("&");
+            parameterlist.pop();
+            parameterstring = parameterlist.join('&');
+            var url = adress + "?" + parameterstring + "&" + "computerpresence"  + "=" + valselect;
+            window.location = url;
+        };
+
+    })
 </script>
 <style>
 li.remove_machine a {
@@ -123,4 +157,3 @@ li.remove_machine a {
         color: #FFF;
 }
 </style>
-
