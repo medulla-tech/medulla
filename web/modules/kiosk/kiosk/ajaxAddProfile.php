@@ -28,23 +28,16 @@ require_once("../../../includes/acl.inc.php");
 
 if(isset($_POST['name'], $_POST['active']))
 {
-    echo rename_profile($_POST['name']);
+    $name = rename_profile($_POST['name']);
     // Add the profile to the database
-    $result = xmlrpc_create_profile($_POST['name'], $_POST['active']);
+
+    if(isset($_POST['packages']))
+        $result = xmlrpc_create_profile($_POST['name'], $_POST['active'], $_POST['packages']);
+    else
+        $result = xmlrpc_create_profile($_POST['name'], $_POST['active']);
+
     // Get it's id
-     echo 'Id = '.$result;
-    // Insert all the package when id_profile = what we got
 }
-else
-    echo "false";
-
-
-/*
- * $_POST is an array which contains :
- * - (str) name : ProfileName
- * -
- */
-//xmlrpc_create_profile($_POST);
 
 
 

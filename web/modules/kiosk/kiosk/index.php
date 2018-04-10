@@ -67,7 +67,6 @@ $action_editUsers = new ActionItem(_T("Associate Users", 'kiosk'),"editUsers","u
 $action_editProfiles = new ActionItem(_T("Edit Profil",'kiosk'), "editProfile", "edit", "profile", "kiosk", "kiosk");
 $action_deleteProfil = new ActionItem(_T("Delete Profil",'kiosk'), "delete", "delete", "profile", "kiosk", "kiosk");
 
-
 $n->setParamInfo($params);
 $n->addActionItemArray($action_editPackage);
 $n->addActionItemArray($action_editUsers);
