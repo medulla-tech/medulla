@@ -252,7 +252,12 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
                 <select name="namefileconf" id="namefileconf">
                     <?php
                         foreach($result['result']  as $dd){
-                            printf ('<option value="%s" >%s</option>', $dd, $dd );
+                            if ($dd == $_GET['name']){
+                                printf ('<option value="%s" selected>%s</option>', $dd, $dd );
+                            }
+                            else{
+                                printf ('<option value="%s" >%s</option>', $dd, $dd );
+                            }
                         }
                     ?>
                 </select>
