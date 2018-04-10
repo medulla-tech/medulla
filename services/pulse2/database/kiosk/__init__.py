@@ -128,12 +128,49 @@ class KioskDatabase(DatabaseHelper):
             lines.append(row[0])
         return lines
 
-
     @DatabaseHelper._sessionm
     def create_profile(self, session, name, active, packages):
+        """
+        Create a new profile for kiosk with the elements send.
+
+        name:
+            String which contains the name of the new profile
+        active:
+            Int indicates if the profile is active (active = 1) or inactive (active = 0)
+        packages:
+            Dict which contains the packages associated with the profile and has the following form.
+            {
+                'allowed': [
+                    {
+                        'uuid': 'the-package-uuid',
+                        'name': 'the-package-name'
+                    },
+                    {
+                        'uuid': 'the-package-uuid',
+                        'name': 'the-package-name'
+                    }
+                ],
+                'restricted': [
+                    {
+                        'uuid': 'the-package-uuid',
+                        'name': 'the-package-name'
+                    },
+                    {
+                        'uuid': 'the-package-uuid',
+                        'name': 'the-package-name'
+                    }
+                ]
+            }
+
+        return:
+            The value returned is the id of the new profile
+        """
+
         # refresh the packages in the database
         self.refresh_package_list()
 
+
+        # Creation of the new profile
         import time
         now = time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -143,13 +180,14 @@ class KioskDatabase(DatabaseHelper):
         session.commit()
         session.flush()
 
-        # Search the id of the profile and save it into the variable id
+        # Search the id of this new profile
         result = session.query(Profiles.id).filter(Profiles.name == name)
         result = result.first()
         id = 0
         for row in result:
             id = str(row)
 
+        # Remove all packages associations concerning this profile
         session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
 
         # The profile is now created, but the packages are not linked to it nor added into database.
@@ -177,8 +215,14 @@ class KioskDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def refresh_package_list(self, session):
+        """
+        Refresh the package table, to be sure to not link the profile with deprecated packages.
+        """
+
+        # Get the real list of packages
         package_list = xmpp_packages_list()
 
+        # For each package in this list, add if not exists or update existing packages rows
         for ref_pkg in package_list:
             result = session.query(Packages.id).filter(Packages.package_uuid == ref_pkg['uuid']).all()
 
@@ -237,22 +281,42 @@ class KioskDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
-    def get_profile(self, session, name):
-        """
-        Return the information of the specified profile. It include also it's packages
-            Params:
-                name = (str) the name of the profile
-            Returns:
-                A list of all the founded entities.
-        """
-        ret = session.query(Profiles).all()
-        lines = []
-        for row in ret:
-            lines.append(row.toDict())
-        return lines
-
-    @DatabaseHelper._sessionm
     def get_profile_by_id(self, session, id):
+        """
+        Return the profile datas and it's associated packages. This function create a view of the profile.
+        id:
+            Int it is the id of the wanted package
+        return:
+             Dict which contains the datas of the profile. The dict has this structure :
+             {
+                'active': '1',
+                'creation_date': '2018-04-10 14:13:19',
+                'id': '16',
+                'packages': [
+                    {
+                        'status': 'restricted',
+                        'uuid': 'df98c684-25ff-11e8-a488-0800271cd5f6',
+                        'name': 'Notepad++'
+                    },
+                    {
+                        'status': 'restricted',
+                        'uuid': 'd2d143fa-3792-11e8-8364-0800278d719b',
+                        'name': 'myPackage'
+                    },
+                    {
+                        'status': 'allowed',
+                        'uuid': '82c5996e-25ff-11e8-a488-0800271cd5f6',
+                        'name': 'vlc'
+                    },
+                    {
+                        'status': 'allowed',
+                        'uuid': 'a6e11f44-25ff-11e8-a488-0800271cd5f6',
+                        'name': 'Firefox'
+                    }
+                ],
+                'name': 'qq'
+             }
+        """
         self.refresh_package_list()
 
         # get the profile row
@@ -278,4 +342,3 @@ class KioskDatabase(DatabaseHelper):
         dict['packages'] = result
 
         return dict
-

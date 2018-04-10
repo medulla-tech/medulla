@@ -91,6 +91,4 @@ def delete_profile(id):
 
 
 def get_profile_by_id(id):
-    KioskDatabase().get_profile_by_id(id)
-
-
+    return KioskDatabase().get_profile_by_id(id)
