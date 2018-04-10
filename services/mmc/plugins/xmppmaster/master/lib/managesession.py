@@ -126,6 +126,9 @@ class session:
             self.sessiondata.append(sessiondatainfo)
             return sessiondatainfo
 
+    def getcountsession(self):
+        return len(self.sessiondata)
+
     def createsessiondatainfo(self, sessionid,  datasession = {},timevalid = 10, eventend = None):
         print "SESSION CREATION UNE SESSION"
         obj = sessiondatainfo(sessionid, datasession, timevalid, eventend ,pathfile=self.dirsavesession)

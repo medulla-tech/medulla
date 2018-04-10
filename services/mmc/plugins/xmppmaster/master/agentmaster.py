@@ -560,7 +560,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 result = XmppMasterDatabase().delPresenceMachine(msg_changed_status['from'])
                 if "type" in result and result['type'] ==  "relayserver":
                     # recover list of cluster ARS
-                    listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(str(data['from']))
+                    listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(str(msg_changed_status['from']))
                     cluster={
                             'action' : "cluster",
                             'sessionid': name_random(5, "cluster"),
