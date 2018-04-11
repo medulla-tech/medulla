@@ -20,6 +20,7 @@
  */
 
 require_once("../includes/xmlrpc.php");
+require_once("../includes/functions.php");
 require_once("../../pkgs/includes/xmlrpc.php");
 require_once("../../../includes/config.inc.php");
 require_once("../../../includes/session.inc.php");
@@ -29,31 +30,16 @@ require_once("../../../includes/acl.inc.php");
 if(isset($_POST['name'], $_POST['active']))
 {
     $name = rename_profile($_POST['name']);
+
     // Add the profile to the database
 
-    if(isset($_POST['packages']))
-        $result = xmlrpc_create_profile($_POST['name'], $_POST['active'], $_POST['packages']);
+    /**/if(isset($_POST['packages']))
+        $result = xmlrpc_create_profile($name, $_POST['active'], $_POST['packages']);
     else
-        $result = xmlrpc_create_profile($_POST['name'], $_POST['active']);
+        $result = xmlrpc_create_profile($name, $_POST['active']);
 
+    echo $name;
     // Get it's id
 }
 
-
-
-function rename_profile($name)
-{
-    // strips some special characters
-    $name = str_replace(['@', '#', '&', '"', "'", '(', '§', '!', ')', '-', '\[', '\]', '\{', '\}', '°', '/', '|', '\\', '<', '>'], '_', $_POST['name']);
-    //turns the name to lowercase
-    $name = strtolower($name);
-
-    while(in_array($name, xmlrpc_get_profiles_name_list()))
-    {
-        // if the profile already exists, then the profile is renamed.
-        $name .= '_';
-    }
-    return $name;
-
-}
 ?>

@@ -19,6 +19,26 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/**
+ * Modify the specified if it is already used.
+ * 
+ * @param $name
+ * @return mixed|string
+ */
+function rename_profile($name)
+{
+    // strips some special characters
+    $name = str_replace(['@', '#', '&', '"', "'", '(', '§', '!', ')', '-', '\[', '\]', '\{', '\}', '°', '/', '|', '\\', '<', '>'], '_', $_POST['name']);
+    //turns the name to lowercase
+    $name = strtolower($name);
 
+    while(in_array($name, xmlrpc_get_profiles_name_list()))
+    {
+        // if the profile already exists, then the profile is renamed.
+        $name .= '_';
+    }
+    return $name;
+
+}
 
 ?>
