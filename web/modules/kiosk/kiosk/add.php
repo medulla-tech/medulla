@@ -42,7 +42,7 @@ $f = new ValidatingForm(array("id" => "profile-form"));
 
     $f->push(new Table());
 
-
+    $f->add(new HiddenTpl("action"), array("value" => $_GET['action'], "hide" => True));
     $f->add(new SpanElement('',"packages"));
 
     // -------
@@ -122,4 +122,4 @@ $f->display(); // display the form
     // Manage drag&drop for the packages boxes
     // Generate a json with the packages
 </script>
-<script src="modules/kiosk/graph/js/add_validate.js"></script>
+<script src="modules/kiosk/graph/js/validate.js"></script>

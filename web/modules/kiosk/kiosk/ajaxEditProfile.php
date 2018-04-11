@@ -1,3 +1,4 @@
+<?php
 /**
  * (c) 2016 Siveo, http://siveo.net
  *
@@ -18,27 +19,21 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require_once("../includes/xmlrpc.php");
+require_once("../includes/functions.php");
+require_once("../../pkgs/includes/xmlrpc.php");
+require_once("../../../includes/config.inc.php");
+require_once("../../../includes/session.inc.php");
+require_once("../../../includes/PageGenerator.php");
+require_once("../../../includes/acl.inc.php");
 
-jQuery("#bvalid").click(function() {
-    if(jQuery("#name").val() == "")
-    {
-        jQuery("#name").focus();
-    }
-    else
-        sendForm();
-});
+if(isset($_POST['id'], $_POST['name'], $_POST['active']))
+{
+    $name = rename_profile($_POST['name']);
+    // Update the profile
 
-function sendForm(){
-    var url = "modules/kiosk/kiosk/ajaxAddProfile.php";
-
-    // Create json which contains all the needed infos
-    var datas = {};
-    datas['name'] = jQuery("#name").val();
-    datas['active'] = jQuery("#status").val();
-    datas['packages'] = generate_json();
-    // Send the infos to ajaxAddProfile.php
-    jQuery.post(url, datas, function(result){
-        alert(result);
-        // the datas printed in ajaxAddProfile.php are stored in result
-    });
+    echo _T('The profile '.$name.' has been updated','kiosk');
 }
+else
+    echo _T('Unable to update the profile '.$name,'kiosk');
+?>

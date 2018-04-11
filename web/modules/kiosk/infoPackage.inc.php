@@ -53,7 +53,12 @@ $page->setFile("modules/imaging/manage/ajaxAddProfile.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("editProfile", _T('Edit Profile', 'kiosk'));
+$page = new Page("ajaxEditProfile");
+$page->setFile("modules/imaging/manage/ajaxEditProfile.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("edit", _T('Edit Profile', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/editProfile.php");//, array("expert" => True)
 $submod->addPage($page);
 

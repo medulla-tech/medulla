@@ -43,7 +43,8 @@ $f = new ValidatingForm(array("id" => "profile-form"));
 
 $f->push(new Table());
 
-
+$f->add(new HiddenTpl("id"), array("value" => $_GET['id'], "hide" => True));
+$f->add(new HiddenTpl("action"), array("value" => $_GET['action'], "hide" => True));
 $f->add(new SpanElement('',"packages"));
 
 // -------
@@ -136,18 +137,18 @@ $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packag
     
         <div style="width:100%">
             <h1>'._T("Restricted packages","kiosk").'</h1>
-            <ol data-draggable="target" id="available-packages">'.$restricted_packages_str.'</ol>
+            <ol data-draggable="target" id="restricted-packages">'.$restricted_packages_str.'</ol>
         </div>
     
         <div style="width:100%">
             <h1>'._T("Allowed packages","kiosk").'</h1>
-            <ol data-draggable="target" id="available-packages">'.$allowed_packages_str.'</ol>
+            <ol data-draggable="target" id="allowed-packages">'.$allowed_packages_str.'</ol>
         </div>
     </div>',"packages"));
 
 $f->add(new HiddenTpl("jsonDatas"), array("value" => "", "hide" => True));
 
-$bo = new ValidateButtonTpl('bvalid', _T("Create",'kiosk'),'btnPrimary',_T("Create the profile", "kiosk"));
+$bo = new ValidateButtonTpl('bvalid', _T("modify",'kiosk'),'btnPrimary',_T("Modify the profile", "kiosk"));
 //$rr = new TrFormElementcollapse($bo);
 $bo->setstyle("text-align: center;");
 $f->add($bo);
@@ -162,4 +163,4 @@ $f->display(); // display the form
     // Manage drag&drop for the packages boxes
     // Generate a json with the packages
 </script>
-<script src="modules/kiosk/graph/js/add_validate.js"></script>
+<script src="modules/kiosk/graph/js/validate.js"></script>

@@ -38,8 +38,11 @@ if(isset($_POST['name'], $_POST['active']))
     else
         $result = xmlrpc_create_profile($name, $_POST['active']);
 
-    echo $name;
+    echo _T('The profile '.$name.' has been created','kiosk');
     // Get it's id
 }
+
+else
+    echo _T('Unable to create the profile '.$name,'kiosk');
 
 ?>
