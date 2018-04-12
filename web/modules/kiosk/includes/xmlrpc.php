@@ -51,4 +51,8 @@ function xmlrpc_get_profile_by_id($id){
     // Return the simplified list of the profiles
     return xmlCall("kiosk.get_profile_by_id", array($id));
 }
+
+function xmlrpc_update_profile($id, $name, $active, $packages=[]){
+    return xmlcall('kiosk.update_profile', [$id, $name, $active, $packages]);
+}
 ?>

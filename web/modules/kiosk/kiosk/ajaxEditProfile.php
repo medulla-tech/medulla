@@ -27,13 +27,18 @@ require_once("../../../includes/session.inc.php");
 require_once("../../../includes/PageGenerator.php");
 require_once("../../../includes/acl.inc.php");
 
+
 if(isset($_POST['id'], $_POST['name'], $_POST['active']))
 {
-    $name = rename_profile($_POST['name']);
     // Update the profile
-
-    echo _T('The profile '.$name.' has been updated','kiosk');
+    if(isset($_POST['packages']))
+    {
+        xmlrpc_update_profile($_POST['id'], $_POST['name'], $_POST['active'], $_POST['packages']);
+    }
+    else
+        xmlrpc_update_profile($_POST['id'], $_POST['name'], $_POST['active']);
+    echo _T('The profile '.$_POST['name'].' has been updated','kiosk');
 }
 else
-    echo _T('Unable to update the profile '.$name,'kiosk');
+    echo _T('Unable to update the profile '.$_POST['name'],'kiosk');
 ?>

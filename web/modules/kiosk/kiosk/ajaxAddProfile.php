@@ -32,8 +32,7 @@ if(isset($_POST['name'], $_POST['active']))
     $name = rename_profile($_POST['name']);
 
     // Add the profile to the database
-
-    /**/if(isset($_POST['packages']))
+    if(isset($_POST['packages']))
         $result = xmlrpc_create_profile($name, $_POST['active'], $_POST['packages']);
     else
         $result = xmlrpc_create_profile($name, $_POST['active']);

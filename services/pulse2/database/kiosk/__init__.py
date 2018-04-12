@@ -342,3 +342,73 @@ class KioskDatabase(DatabaseHelper):
         dict['packages'] = result
 
         return dict
+
+    @DatabaseHelper._sessionm
+    def update_profile(self, session, id, name, active, packages):
+        """
+        Update the specified profile
+        id:
+            Int is the id of the profile which will be updated
+        name:
+            String which contains the name of updated profile
+        active:
+            Int indicates if the profile is active (active = 1) or inactive (active = 0)
+        packages:
+            Dict which contains the packages associated with the profile and has the following form.
+            {
+                'allowed': [
+                    {
+                        'uuid': 'the-package-uuid',
+                        'name': 'the-package-name'
+                    },
+                    {
+                        'uuid': 'the-package-uuid',
+                        'name': 'the-package-name'
+                    }
+                ],
+                'restricted': [
+                    {
+                        'uuid': 'the-package-uuid',
+                        'name': 'the-package-name'
+                    },
+                    {
+                        'uuid': 'the-package-uuid',
+                        'name': 'the-package-name'
+                    }
+                ]
+            }
+        """
+
+        # Update the profile
+        now = time.strftime('%Y-%m-%d %H:%M:%S')
+
+        sql = """UPDATE profiles SET name='%s',active='%s' WHERE id='%s';""" % (name, active, id)
+
+        session.execute(sql)
+        session.commit()
+        session.flush()
+
+        # Remove all packages associations concerning this profile
+        session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
+
+        # The profile is now created, but the packages are not linked to it nor added into database.
+        # If the package list is not empty, then firstly we get the status and the uuid for each packages
+        if len(packages) > 0:
+            for status in packages.keys():
+                for uuid in packages[status]:
+
+                    # get the package id and link it with the profile
+                    result = session.query(Packages.id).filter(Packages.package_uuid == uuid)
+                    result = result.first()
+                    id_package = 0
+                    for row in result:
+                        id_package = str(row)
+
+                    profile = Profile_has_package()
+                    profile.profil_id = id
+                    profile.package_id = id_package
+                    profile.package_status = status
+
+                    session.add(profile)
+                    session.commit()
+                    session.flush()
