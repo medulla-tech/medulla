@@ -151,9 +151,12 @@ li.quickg a {
     $command = isset($_POST['command']) ? $_POST['command'] : "";
     $tab = explode("/",$machine);
     $uiduniq = uniqid ("shellcommande");
-    $p = new PageGenerator(_T("Console", 'xmppmaster')." $tab[1]");
+    $resultcommand = "";
+    $errorcode = "";
+    $p = new PageGenerator(_T("Consoleqqqq", 'xmppmaster')." $tab[1]");
     $p->setSideMenu($sidemenu);
     $p->display();
+    
     echo "Natif os :" . xmlrpc_getMachinefromjid($machine)['platform'];
 
     if (
@@ -168,10 +171,20 @@ li.quickg a {
                                 "machine" => $machine,
                                 "uidunique" => $uiduniq
             );
-            xmlrpc_runXmppCommand("plugin_asynchromeremoteshell", $machine, array($tabdata));
-            $recherche = true;
+            $re =  xmlrpc_remotecommandshell($command,$machine,10);
+            if ($re == ""){
+               $resultcommand = "time out command";
+               $errorcode = -1;
+            }
+            else{
+                $ss = json_decode($re, true);
+                foreach(  $ss['result'] as $line){
+                    $resultcommand = $resultcommand . $line;
+                }
+                $errorcode = $ss['code'];
+                $recherche = true;
+            }
         }
-
 ?>
 
 <form method="post" id="Form">
@@ -183,6 +196,7 @@ li.quickg a {
                 <span id="container_input_command">
                     <input value="<? echo $_POST['command']; ?>" 
                         name="command" 
+                        style = "width : 400px;"
                         id="command" 
                         type="text" 
                         size="23"  
@@ -193,63 +207,46 @@ li.quickg a {
                 </span>
             </td>
         </tr>
-
-        <tr>
-            <td class="label" width="40%" style = "text-align: right;"><br></td>
-            <td><img id="imagewait" src="graph/ajax_loading.gif" alt="" /><span>Command result : </span><span><? echo $_POST['command']; ?></span></td>
-        </tr>
-        <tr>
-            <td class="label" width="40%" style = "text-align: right;">Error Code :</td>
-            <td><span id="codereturn"></span></td>
-        </tr>
+        <?php
+        if($resultcommand != ""){
+            echo '
+            <tr>
+                <td class="label" width="40%" style = "text-align: right;"><br></td>
+                <td>
+                    <span>Command result : </span><span>'.$_POST['command'].'</span>
+                </td>
+            </tr>';
+        } 
+            if ($errorcode != ""){
+                echo'<tr>
+                    <td class="label" width="40%" style = "text-align: right;">Error Code :</td>
+                    <td>
+                        <span id="codereturn">'.$errorcode.'</span>
+                    </td>
+                </tr>';
+            }
+        ?>
     </table>
-    <textarea rows="15"
-              id="resultat" 
-              spellcheck="false" 
-              style = "height : 400px;
-                       background : black;
-                       color : white;
-                       FONT-SIZE : 15px;
-                       font-family : 'Courier New', Courier, monospace;
-                       border:10px solid ;
-                       padding : 15px;
-                       border-width:1px;
-                       border-radius: 25px;
-                       border-color:#FFFF00;
-                       box-shadow: 6px 6px 0px #6E6E6E;"
-    ></textarea>
+    <?php 
+        if ($resultcommand != ""){
+            echo '<textarea rows="15"
+                id="resultat" 
+                spellcheck="false" 
+                style = "height : 400px;
+                        background : black;
+                        color : white;
+                        FONT-SIZE : 15px;
+                        font-family : \'Courier New\', Courier, monospace;
+                        border:10px solid ;
+                        padding : 15px;
+                        border-width:1px;
+                        border-radius: 25px;
+                        border-color:#FFFF00;
+                        box-shadow: 6px 6px 0px #6E6E6E;" >'.
+                        $resultcommand.
+                        '</textarea>';
+        }
+    ?>
     <!-- si on veut un boutton submit-->
     <!--<button class="btn btn-small">submit</button>-->
 </form>
-<script type="text/javascript">
-    jQuery( document ).ready(function() {
-
-    jQuery( "#imagewait" ).hide();
-    calldata = function() {
-        jQuery.get( "modules/xmppmaster/xmppmaster/xmppremotecmdshell.php",{
-                        "command" : jQuery( "#command" ).val(),
-                        "machine" : jQuery( "#machine" ).val(),
-                        "uidunique" : "<? echo $uiduniq; ?>"
-                    },
-                    function( data ) {
-                        if(data['stop'] == true){
-                            jQuery( "#resultat" ).text( data['result'] );
-                            jQuery( "#codereturn" ).text( data['codereturn'] );
-                            jQuery( "#imagewait" ).hide();
-                        }else
-                        {
-                            setTimeout(calldata, 2500)
-                        }
-                    });
-}
-<?php
-    if ($recherche == true){
-        echo "var uniqid = \"".$uiduniq."\";";
-        echo "var recherche = true;";
-        echo "var x = setTimeout(calldata, 2000);";
-        echo 'jQuery( "#imagewait" ).show();';
-    }
-?>
-    });
-</script>
-
