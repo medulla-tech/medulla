@@ -5,6 +5,8 @@ require_once("../../../../includes/xmlrpc.inc.php");
 
 extract($_POST);
 
+    $command = (isset($command)) ? base64_decode($command) : "" ;
+
         $packageList = xmpp_packages_list();
         $options = "";
 
@@ -36,7 +38,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         <tr>
             <th>Command</th>
             <th>
-              <input type="text" name="command" size="80" value="<?php echo (isset($command)) ? $command : "" ;?>"/>
+                <textarea style=" height : '50'" name="command" size="80" ><?php echo $command; ?></textarea>
             </th>
         </tr>
 
