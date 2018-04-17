@@ -38,7 +38,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         <tr>
             <th>Command</th>
             <th>
-                <textarea style=" height : '50'" name="command" size="80" ><?php echo $command; ?></textarea>
+                <textarea class="special_textarea" name="command" ><?php echo $command; ?></textarea>
             </th>
         </tr>
 
