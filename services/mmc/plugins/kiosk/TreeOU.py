@@ -21,7 +21,7 @@
 # MA 02110-1301, USA.
 
 class TreeOU(object):
-    """ TreeOU represente the arborescence of the founded OUs"""
+    """ TreeOU represents the arborescence of the founded OUs"""
     def __init__(self, name=""):
         self.name = name
         self.child = []
@@ -63,7 +63,8 @@ class TreeOU(object):
             string child_name is the name of the child we are looking for.
 
         Returns:
-            TreeOU this is the children found."""
+            TreeOU this is the children found.
+        """
         response = False
         if len(self.child) == 0:
             return False
@@ -124,3 +125,15 @@ class TreeOU(object):
                 new = TreeOU(element)
                 temp.add_child(new)
                 temp = new
+
+    def recursive_json(self):
+        """
+        Generate a dict which starts at the specified object and gives all the childrens.
+        """
+        self.json = {
+            'name':self.name,
+            'child':[]
+        }
+        for element in self.child:
+            self.json['child'].append(element.recursive_json())
+        return self.json
