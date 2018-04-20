@@ -41,6 +41,7 @@ import logging
 import getopt
 import xml.etree.cElementTree as ET
 import traceback
+import magic
 
 conf ={}
 filetraceback = open("/var/log/mmc/pulse2-register-pxe.log", "a")
@@ -463,9 +464,16 @@ class MyEventHandler(pyinotify.ProcessEvent):
         if os.path.isfile(str(name)):
             file_content=""
             logging.getLogger().info("parse inventory %s",name)
+
             try:
-                with open(name, 'r') as content_file:
-                    file_content=content_file.read().replace('\n', '')
+                if ( magic.detect_from_filename(name).mime_type == 'application/gzip' ):
+                    com='zcat %s'%name
+                    file_content1 =  os.popen(com).read()
+                    file_content=parsejsoninventory(str(name),file_content1)
+                else:
+                    with open(name, 'r') as content_file:
+                        file_content=content_file.read().replace('\n', '')
+
                 m = re.search('<REQUEST>.*<\/REQUEST>', file_content)
                 file_content = str(m.group(0))
                 try:
