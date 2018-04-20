@@ -336,6 +336,7 @@ Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
 Requires:   python-pulse2-common-database-inventory = %version-%release
+Requires:   python-magic
 
 Provides:   pulse-python-mmc-computers-inventory-backend = %version-%release
 
