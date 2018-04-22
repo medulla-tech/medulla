@@ -44,7 +44,7 @@ import traceback
 import magic
 
 conf ={}
-filetraceback = open("/var/log/mmc/pulse2-register-pxe.log", "a")
+logoutput = open("/var/log/mmc/pulse2-register-pxe.log", "a")
 
 
 logging.basicConfig(level=logging.DEBUG,
@@ -97,7 +97,7 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("cpu\n%s"%cpu)
         except Exception as e:
             logging.getLogger().error("Error loading json cpu %s"%str(e))
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
     else:
         z1.insert(0, "")
 
@@ -111,7 +111,7 @@ def parsejsoninventory(file, file_content):
             pxe = json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("pxe\n%s"%pxe)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json pxe %s"%str(e))
     else:
         z1.insert(0, "")
@@ -125,7 +125,7 @@ def parsejsoninventory(file, file_content):
             syslinux=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("syslinux\n%s"%syslinux)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json syslinux %s"%str(e))
     else:
         z1.insert(0, "")
@@ -139,7 +139,7 @@ def parsejsoninventory(file, file_content):
             vpd=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("vpd\n%s"%vpd)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json vpd %s"%str(e))
     else:
         z1.insert(0, "")
@@ -171,7 +171,7 @@ def parsejsoninventory(file, file_content):
             disks=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("disks\n%s"%disks)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json disks %s"%str(e))
     else:
         z1 = information
@@ -187,7 +187,7 @@ def parsejsoninventory(file, file_content):
                 disks=json.loads(str(z1[0]), strict=False)
                 logging.getLogger().debug("disks\n%s"%disks)
             except Exception as e:
-                traceback.print_exc(file=filetraceback)
+                traceback.print_exc(file=logoutput)
                 logging.getLogger().error("Error loading json disks %s"%str(e))
         else:
             z1.insert(0, "")
@@ -203,7 +203,7 @@ def parsejsoninventory(file, file_content):
             dmi=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("dmi\n%s"%dmi)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json dmi %s"%str(e))
     else:
         z1.insert(0, "")
@@ -219,7 +219,7 @@ def parsejsoninventory(file, file_content):
             memory=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("memory\n%s"%memory)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json memory %s"%str(e))
     else:
         z1.insert(0, "")
@@ -235,7 +235,7 @@ def parsejsoninventory(file, file_content):
             pci=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("pci\n%s"%pci)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json pci %s"%str(e))
     else:
         z1.insert(0, "")
@@ -252,7 +252,7 @@ def parsejsoninventory(file, file_content):
             acpi=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("acpi\n%s"%acpi)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json acpi %s"%str(e))
     else:
         z1.insert(0, "")
@@ -265,7 +265,7 @@ def parsejsoninventory(file, file_content):
             kernel=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("kernel\n%s"%kernel)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json kernel %s"%str(e))
     else:
         z1.insert(0, "")
@@ -279,7 +279,7 @@ def parsejsoninventory(file, file_content):
             hdt=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("hdt\n%s"%hdt)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json hdt %s"%str(e))
     else:
         z1.insert(0, "")
@@ -293,7 +293,7 @@ def parsejsoninventory(file, file_content):
             hostname=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("hostname\n%s"%hostname)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json hostname %s"%str(e))
     else:
         z1.insert(0, "")
@@ -400,7 +400,7 @@ def parsejsoninventory(file, file_content):
                         TOTAL = ET.SubElement(DRIVES,'TOTAL').text=partition_size
                         TYPE = ET.SubElement(DRIVES,'TYPE').text=disks[diskid][partitionid]['partition->os_type']
                     except Exception as e:
-                        traceback.print_exc(file=filetraceback)
+                        traceback.print_exc(file=logoutput)
                         logging.getLogger().warn("Unrecognized Partition Layout disk %s partition%s %s"%(diskid, partitionid, str(e)))
 
     xmlstring = ET.tostring(REQUEST)
@@ -487,13 +487,13 @@ class MyEventHandler(pyinotify.ProcessEvent):
                         os.remove(name)
                         senddata(xmldata,'127.0.0.1',conf['port'])
                     except Exception as e:
-                        traceback.print_exc(file=filetraceback)
+                        traceback.print_exc(file=logoutput)
                         logging.getLogger().error("UDP error sending to %s:%d [%s]"%('127.0.0.1', conf['port'], str(e)))
                 except Exception as e:
-                    traceback.print_exc(file=filetraceback)
+                    traceback.print_exc(file=logoutput)
                     logging.getLogger().error("MAC address error %s"%str(e))
             except Exception as e:
-                traceback.print_exc(file=filetraceback)
+                traceback.print_exc(file=logoutput)
                 logging.getLogger().error("Error traitement file %s"%str(name))
                 logging.getLogger().error("Error traitement %s"%str(e))
 
