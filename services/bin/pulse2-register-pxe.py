@@ -66,7 +66,7 @@ def subnetForIpMask(ip, netmask):
     except ValueError:
         return False, "O.O.O.O"
 
-def sauvefile(name,string):
+def tmpfile(name,string):
     if(logging.getLogger().getEffectiveLevel()<=logging.DEBUG):
         z=open("/tmp/%s"%name,"w")
         z.write(string)
@@ -75,7 +75,7 @@ def sauvefile(name,string):
 
 
 def parsejsoninventory(file, file_content):
-    sauvefile("content.txt",file_content)
+    tmpfile("content.txt",file_content)
 
     file_content = file_content.decode('ascii', errors='ignore')
 
@@ -85,12 +85,12 @@ def parsejsoninventory(file, file_content):
     file_content= file_content.replace('][', '],[')
     file_content= file_content.replace('}{', '},{')
 
-    sauvefile("content1.txt",file_content)
+    tmpfile("content1.txt",file_content)
     file_content = re.sub('[a-z0-9]*cpu\{',  '', file_content)
     z1 = re.compile("\}[a-z0-9]*pxe\{").split(file_content)
     if len(z1) > 1:
         z1[0] = "{" + z1[0] + "}"
-        sauvefile("cpu.txt",z1[0])
+        tmpfile("cpu.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             cpu=json.loads(str(z1[0]), strict=False)
@@ -105,7 +105,7 @@ def parsejsoninventory(file, file_content):
     z1 = re.compile("\}[a-z0-9]*syslinux\{").split(z1[1])
     if len(z1) > 1:
         z1[0] = "{" + z1[0] + "}"
-        sauvefile("pxe.txt",z1[0])
+        tmpfile("pxe.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             pxe = json.loads(str(z1[0]), strict=False)
@@ -119,7 +119,7 @@ def parsejsoninventory(file, file_content):
     z1 = re.compile("\}[a-z0-9]*vpd\{").split(z1[1])
     if len(z1) > 1:
         z1[0] = "{" + z1[0] + "}"
-        sauvefile("syslinux.txt",z1[0])
+        tmpfile("syslinux.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             syslinux=json.loads(str(z1[0]), strict=False)
@@ -133,7 +133,7 @@ def parsejsoninventory(file, file_content):
     z1 = re.compile("\}[a-z0-9]*vesa\{").split(z1[1])
     if len(z1) > 1:
         z1[0] = "{" + z1[0] + "}"
-        sauvefile("vpd.txt",z1[0])
+        tmpfile("vpd.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             vpd=json.loads(str(z1[0]), strict=False)
@@ -149,7 +149,7 @@ def parsejsoninventory(file, file_content):
         z1[0]=str(z1[0])
         z1[0]= z1[0].replace('}{', '},{')
         z1[0]="[\n{" + str(z1[0]) + "}\n]"
-        sauvefile("vesa.txt",z1[0])
+        tmpfile("vesa.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             vesa=json.loads(str(z1[0]), strict=False)
@@ -165,7 +165,7 @@ def parsejsoninventory(file, file_content):
         z1[0]= z1[0].replace('}[', '},[')
         z1[0]= z1[0].replace('][', '],[')
         z1[0]= "[\n" + z1[0] + "\n]"
-        sauvefile("disks.txt",z1[0])
+        tmpfile("disks.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             disks=json.loads(str(z1[0]), strict=False)
@@ -181,7 +181,7 @@ def parsejsoninventory(file, file_content):
             z1[0]= z1[0].replace('}[', '},[')
             z1[0]= z1[0].replace('][', '],[')
             z1[0]= "[\n" + z1[0] + "\n]"
-            sauvefile("disks.txt",z1[0])
+            tmpfile("disks.txt",z1[0])
             try:
                 logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
                 disks=json.loads(str(z1[0]), strict=False)
@@ -197,7 +197,7 @@ def parsejsoninventory(file, file_content):
         z1[0] = "[\n{" + z1[0] + "}\n]"
         z1[0]= z1[0].replace('}{', '},{')
         z1[0]= z1[0].replace('][', '],[')
-        sauvefile("dmi.txt",z1[0])
+        tmpfile("dmi.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             dmi=json.loads(str(z1[0]), strict=False)
@@ -213,7 +213,7 @@ def parsejsoninventory(file, file_content):
         z1[0] = "[\n{" + z1[0] + "}\n]"
         z1[0]= z1[0].replace('}{', '},{')
         z1[0]= z1[0].replace('][', '],[')
-        sauvefile("memory.txt",z1[0])
+        tmpfile("memory.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             memory=json.loads(str(z1[0]), strict=False)
@@ -229,7 +229,7 @@ def parsejsoninventory(file, file_content):
         z1[0] = "[" + "{" + z1[0] + "}"+ "]"
         z1[0]= z1[0].replace('}{', '},{')
         z1[0]= z1[0].replace('][', '],[')
-        sauvefile("pci.txt",z1[0])
+        tmpfile("pci.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             pci=json.loads(str(z1[0]), strict=False)
@@ -246,7 +246,7 @@ def parsejsoninventory(file, file_content):
         z1[0]= z1[0].replace('}[', '},[')
         z1[0]= z1[0].replace('][', '],[')
         z1[0]= "[\n" + "{" + z1[0]+ "]\n"+ "]"
-        sauvefile("acpi.txt",z1[0])
+        tmpfile("acpi.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             acpi=json.loads(str(z1[0]), strict=False)
@@ -259,7 +259,7 @@ def parsejsoninventory(file, file_content):
 
     z1 = re.compile("\][a-z0-9]*hdt\{").split(z1[1])
     if len(z1) > 1:
-        sauvefile("kernel.txt",z1[0])
+        tmpfile("kernel.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             kernel=json.loads(str(z1[0]), strict=False)
@@ -273,7 +273,7 @@ def parsejsoninventory(file, file_content):
     z1 = re.compile("\}[a-z0-9]*hostname\{").split(z1[1])
     if len(z1) > 1:
         z1[0]= "{" + str(z1[0]) + "}"
-        sauvefile("hdt.txt",z1[0])
+        tmpfile("hdt.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             hdt=json.loads(str(z1[0]), strict=False)
@@ -287,7 +287,7 @@ def parsejsoninventory(file, file_content):
     z1 = re.compile("\}[a-z0-9]*TRAILER!!!").split(z1[1])
     if len(z1) > 1:
         z1[0]= "{" + z1[0]+ "}"
-        sauvefile("hostname.txt",z1[0])
+        tmpfile("hostname.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             hostname=json.loads(str(z1[0]), strict=False)
