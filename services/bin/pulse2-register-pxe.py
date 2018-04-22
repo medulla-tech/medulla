@@ -55,13 +55,13 @@ logging.basicConfig(level=logging.DEBUG,
 
 
 def subnetForIpMask(ip, netmask):
-    resultat=[]
+    result=[]
     try:
         ip = map(lambda x: int(x), ip.split('.'))
         netmask = map(lambda x: int(x), netmask.split('.'))
         for i in range(4):
-            resultat.append( str(ip[i] & netmask[i]))
-        result=".".join(resultat)
+            result.append( str(ip[i] & netmask[i]))
+        result=".".join(result)
         return True, result
     except ValueError:
         return False, "O.O.O.O"
