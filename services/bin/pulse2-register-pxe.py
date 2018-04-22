@@ -36,7 +36,6 @@ from pulse2.package_server.config import P2PServerCP
 from mmc.site import mmcconfdir
 import sys
 import ConfigParser
-#from optparse import OptionParser
 import logging
 import getopt
 import xml.etree.cElementTree as ET
