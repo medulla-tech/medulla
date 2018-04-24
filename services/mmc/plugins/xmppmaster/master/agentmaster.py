@@ -751,7 +751,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                               data,
                                               datasession = None,
                                               encodebase64 = False)
-
         self.xmpplog("Start deploy on machine %s"%jidmachine,
                 type = 'deploy',
                 sessionname = sessionid,
@@ -1234,7 +1233,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     traceback.print_exc(file=sys.stdout)
                     continue
             elif x[0] == 4:
-                continue
                 logger.debug("analysis  rule Select relay server in same subnet")
                 logger.debug("rule subnet : Test if network are identical")
                 subnetexist = False
