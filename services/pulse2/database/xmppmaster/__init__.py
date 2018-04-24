@@ -2492,6 +2492,8 @@ class XmppMasterDatabase(DatabaseHelper):
                       #relayserver.package_server_ip,
                       #relayserver.package_server_port
             #]
+
+            notconfars = { relayserver.jid :[relayserver.ipconnection, relayserver.port, relayserver.jid, relayserver.urlguacamole, 0 ]}
             # search for clusters where ARS is
             clustersid = session.query(Has_cluster_ars).filter(Has_cluster_ars.id_ars == relayserver.id)
             clustersid = clustersid.all()
@@ -2525,7 +2527,15 @@ class XmppMasterDatabase(DatabaseHelper):
                             except KeyError:
                                 pass
                     return result2
+            else:
+                # there are no clusters configured for this ARS.
+                logging.getLogger().warning("Cluster ARS [%s] no configured"%relayserver.jid)
+                return notconfars
+        else:
+            logging.getLogger().warning("Relay server no present")
+            logging.getLogger().warning("ARS not known for machine")
         return {}
+
 
     @DatabaseHelper._sessionm
     def algoloadbalancerforcluster(self, session):
