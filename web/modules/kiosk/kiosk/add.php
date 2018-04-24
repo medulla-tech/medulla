@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2016 Siveo, http://siveo.net
+ * (c) 2018 Siveo, http://siveo.net
  * $Id$
  *
  * This file is part of Management Console (MMC).
@@ -27,14 +27,20 @@ require("modules/kiosk/graph/packages.css");
 //Import the functions and classes needed
 require_once("modules/kiosk/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
+require_once("modules/kiosk/includes/functions.php");
 require_once("modules/kiosk/includes/html.inc.php");
 require_once("modules/imaging/includes/class_form.php");
 
 require("graph/navbar.inc.php");
 require("modules/kiosk/kiosk/localSidebar.php");
 
+?>
 
-$p = new PageGenerator(_T("Add New Profile",'kiosk'));
+<style type="text/css">
+    @import url(modules/kiosk/graph/style.min.css);
+</style>
+
+<?php $p = new PageGenerator(_T("Add New Profile",'kiosk'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -64,13 +70,27 @@ $f = new ValidatingForm(array("id" => "profile-form"));
         new TrFormElement(_T('Profile Status','kiosk').":", $profileStatus),
         array("value" => "1","required" => True)
     );
+
     $f->pop(); // End of the table
+
 
     //SepTpl came from modules/imaging/includes/class_form.php
     $f->add( new SepTpl());
+
+    // -------
+    // Add the OUs tree
+    // -------
+    $result = "";
+    recursiveArrayToList(xmlrpc_get_ou_list(), $result);
+
+    $f->add(new TrFormElement(_T("Select ous",'kiosk'),new SpanElement('<div id="ou-container" style="display:flex; max-height:350px;">
+        <div id="jstree" role="tree" style="overflow:scroll;">'.$result.'</div>
+        <div id="users"></div>
+    </div>',"kiosk")));
+
     // Create a section without table in the form
     $f->add(new TitleElement(_T("Manage packages", "kiosk")));
-
+    
     // Get the list of the packages
     $available_packages = [];
     $available_packages_str = "";
@@ -117,9 +137,11 @@ $f->pop(); // end of form
 $f->display(); // display the form
 ?>
 
-
 <script src="modules/kiosk/graph/js/packages.js">
     // Manage drag&drop for the packages boxes
     // Generate a json with the packages
 </script>
+<script src="modules/kiosk/graph/js/tree.js"></script>
 <script src="modules/kiosk/graph/js/validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>

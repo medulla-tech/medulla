@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2016 Siveo, http://siveo.net
+ * (c) 2018 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -38,7 +38,6 @@ if(isset($_POST['name'], $_POST['active']))
         $result = xmlrpc_create_profile($name, $_POST['active']);
 
     echo _T('The profile '.$name.' has been created','kiosk');
-    // Get it's id
 }
 
 else

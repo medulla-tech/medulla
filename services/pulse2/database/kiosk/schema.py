@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net
+# (c) 2018 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #

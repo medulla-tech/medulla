@@ -1,4 +1,3 @@
-<?
 /**
  * (c) 2018 Siveo, http://siveo.net
  *
@@ -19,9 +18,24 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$sidemenu= new SideMenu();
-$sidemenu->setClass("kiosk");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Profils List", 'kiosk'), "kiosk", "kiosk", "index"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Profil", 'kiosk'), "kiosk", "kiosk", "add"));
+jQuery(function(){
 
-?>
+    jQuery('#jstree').jstree();
+
+    jQuery('#jstree').on("changed.jstree", function (e, data) {
+        var users = [];
+        //data.selected contains the selected elements
+        jQuery.each(data.selected, function(id, element){
+            users.push(jQuery("#"+element).attr('data-root'))
+        })
+            jQuery("#users").load('/mmc/modules/kiosk/kiosk/ajaxGetUsersForOu.php', {'roots':users}, function(result){
+
+            });
+    });
+    // 8 interact with the tree - either way is OK
+    jQuery('button').on('click', function () {
+        jQuery('#jstree').jstree(true).select_node('child_node_1');
+        jQuery('#jstree').jstree('select_node', 'child_node_1');
+        jQuery.jstree.reference('#jstree').select_node('child_node_1');
+    });
+});

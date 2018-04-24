@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * (c) 2018 Siveo, http://siveo.net
  *
@@ -18,10 +18,35 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+ 
+require_once("../includes/xmlrpc.php");
+require_once("../includes/functions.php");
+require_once("../../../includes/config.inc.php");
+require_once("../../../includes/session.inc.php");
+require_once("../../../includes/PageGenerator.php");
+require_once("../../../includes/acl.inc.php");
 
-$sidemenu= new SideMenu();
-$sidemenu->setClass("kiosk");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Profils List", 'kiosk'), "kiosk", "kiosk", "index"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Profil", 'kiosk'), "kiosk", "kiosk", "add"));
+$roots = $_POST['roots'];
+$tmp = [];
+foreach($roots as $root)
+{
+    $tmp = array_merge(xmlrpc_get_users_from_ou($root),$tmp);
+}
+$users = [];
+
+foreach($tmp as $user)
+{
+    if(!in_array($user,$users))
+        $users[] = $user;
+}
+unset($tmp);
+unset($roots);
+
+echo '<ul>';
+foreach($users as $user)
+{
+    echo '<li>'.$user.'</li>';
+}
+echo '</ul>';
 
 ?>

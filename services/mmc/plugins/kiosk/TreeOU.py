@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.7
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net
+# (c) 2018 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -20,12 +20,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from mmc.support.config import PluginConfig, PluginConfigFactory
+from mmc.plugins.base.config import BasePluginConfig
+
 class TreeOU(object):
     """ TreeOU represents the arborescence of the founded OUs"""
     def __init__(self, name=""):
         self.name = name
         self.child = []
         self.parent = None
+        self.level = 0
+        self.path = []
 
     def search(self, string):
         """Search the element specified
@@ -45,7 +50,6 @@ class TreeOU(object):
         for element in string:
             # If the element exists
             if temp.search_direct_child(element):
-                print(element)
                 # The next element is analysed
                 temp = temp.search_direct_child(element)
 
@@ -82,9 +86,9 @@ class TreeOU(object):
         """
         This method add the specified children to the actual object.
 
-        param:
+        Params:
             TreeOU children
-        return:
+        Returns:
             Bool True if success and False if failure
         """
 
@@ -96,7 +100,12 @@ class TreeOU(object):
                 if children.parent is None:
                     # A parent is given to the children
                     children.parent = self
+                    children.level = self.level + 1
                     self.child.append(children)
+
+                    last = self.child[-1]
+                    last.path = last.get_path()
+
                     return True
                 else:
                     return False
@@ -109,7 +118,7 @@ class TreeOU(object):
         """
         Create recursively the TreeOU objects as child from the specified string.
 
-        param:
+        Params:
             string this string contains the OUs name separated by /, like "my_first/my_sub/my_subsub"
         """
         string = string.split('/')
@@ -129,11 +138,68 @@ class TreeOU(object):
     def recursive_json(self):
         """
         Generate a dict which starts at the specified object and gives all the childrens.
+
+        Returns:
+            a dict of the tree structure.
         """
+
+        # This is the initial structure whe want.
         self.json = {
             'name':self.name,
-            'child':[]
+            'child':[],
+            'path':'/'.join(self.path)
         }
+        # Check if the actual node has children
         for element in self.child:
+            # If it's the case each child's dict is append
             self.json['child'].append(element.recursive_json())
         return self.json
+
+    def get_path(self):
+        """
+        get_path generate the "path" between the root tree and the actual node.
+
+        Returns:
+            String of the path from root tree and the pointed node.
+        """
+        canonical = []
+        temp = self
+        while temp.parent is not None:
+            canonical.append(temp.name)
+            temp = temp.parent
+
+        canonical.reverse()
+        return canonical
+
+    def str_to_ou(self, ou_string):
+        """
+        Generate a OU string with the path of the node. For example, for the node /root/first_child/grand_son,
+        it's str_to_ou() is OU=grand_son,OU=first_child,OU=root,DC=myDomain,DC=local.
+        The DC datas are read from the configuration file.
+
+        Params:
+            String ou_string contains the path of the node pointed.
+
+        Returns:
+            String which contains the result (i.e.: OU=grand_son,OU=first_child,OU=root,DC=myDomain,DC=local)
+            or
+            returns False if the string can't be generated
+        """
+        config = PluginConfigFactory.new(BasePluginConfig, "base")
+        if config.has_section('authentication_externalldap'):
+            # Get the parameters from the config file
+            suffix = config.get('authentication_externalldap', 'suffix')
+
+            ou_list = ou_string.split('/')
+            ou_list.reverse()
+
+            ous = []
+            for ou in ou_list:
+                ou = 'OU='+ou
+                ous.append(ou)
+
+            ous.append(suffix)
+            return ','.join(ous)
+
+        else:
+            return False

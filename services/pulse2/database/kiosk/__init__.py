@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net
+# (c) 2018 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -103,8 +103,8 @@ class KioskDatabase(DatabaseHelper):
         Return a list of all the existing profiles.
         The list contains all the elements of the profile.
 
-            Returns:
-                A list of all the founded entities.
+        Returns:
+            A list of all the founded entities.
         """
         ret = session.query(Profiles).all()
         lines = []

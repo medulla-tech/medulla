@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net
+# (c) 2018 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -26,10 +26,18 @@ Plugin to manage the interface with Kiosk
 """
 import logging
 import json
+import uuid
+import os
+import base64
+import re
 
-from mmc.plugins.kiosk.config import KioskConfig
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
+
+from mmc.support.config import PluginConfig, PluginConfigFactory
+from mmc.plugins.kiosk.config import KioskConfig
+from mmc.plugins.kiosk.TreeOU import TreeOU
 from mmc.plugins.base import ComputerI
+from mmc.plugins.base.config import BasePluginConfig
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
 import base64
@@ -74,6 +82,10 @@ def activate():
     return True
 
 
+# #############################################################
+# KIOSK DATABASE FUNCTIONS
+# #############################################################
+
 def get_profiles_list():
     return KioskDatabase().get_profiles_list()
 
@@ -96,3 +108,140 @@ def get_profile_by_id(id):
 
 def update_profile(id, name, active, packages):
     return KioskDatabase().update_profile(id, name, active, packages)
+
+
+# #############################################################
+# KIOSK GENERAL FUNCTIONS
+# #############################################################
+
+def get_ou_list():
+    """This function returns the list of OUs
+
+    Returns:
+        list of strings. The strings are the OUs
+        or
+        returns False for some issues
+    """
+
+    # Check the ldap config
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
+
+    if config.has_section('authentication_externalldap'):
+        id = str(uuid.uuid4())
+        file = '/tmp/ous-'+id
+
+        # Get the parameters from the config file
+        ldapurl = config.get('authentication_externalldap', 'ldapurl')
+        suffix = config.get('authentication_externalldap', 'suffix')
+        bindname = config.get('authentication_externalldap', 'bindname')
+        bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
+
+        # Execute the command which get the OU list and write into the specified file
+        command = """ldapsearch -o ldif-wrap=no -H %s -x -b "%s" -D "%s" -w %s -LLL "(
+        objectClass=organizationalUnit)" dn > %s""" % (ldapurl, suffix, bindname, bindpasswd, file)
+
+        os.system(command)
+
+        ous = []
+        # Parse the file
+        with open(file, 'r') as ou_file:
+            lines = ou_file.read().splitlines()
+            # The lines that don't start by 'dn' are ignored
+            lines = [element for element in lines if element.startswith('dn')]
+
+            # Parse the result for each lines
+            for element in lines:
+                # Lines starts with dn:: are get in base64 format
+                if element.startswith('dn:: '):
+                    tmp = element.split('::')
+                    ou = base64.b64decode(tmp[1])
+
+                else:
+                    tmp = element.split(': ')
+                    ou = tmp[1]
+                # Format the result
+                ou = ou.replace(',OU=', ' < ')
+                ou = ou.replace('OU=', '')
+                ou = re.sub(',DC=(.+)', '', ou)
+
+                ou = ou.split(' < ')
+                ou.reverse()
+                ou = '/'.join(ou)
+                # Save the content into a list
+                ous.append(ou)
+
+        # Delete the file
+        os.remove(file)
+
+        tree = TreeOU()
+        for line in ous:
+            tree.create_recursively(line)
+
+        return tree.recursive_json()
+    else:
+        return False
+
+
+def str_to_ou(string):
+    return TreeOU().str_to_ou(string)
+
+
+def get_users_from_ou(ou):
+    """This function returns the list of user for the specified ou.
+
+    Params:
+        string ou must be formatted like path : /root/son/grand_son. See TreeOU.get_path() method to obtain this
+        kind of string from the initial OU string.
+
+    Returns:
+        list of strings. The strings are the OUs
+        or
+        returns False for some issues
+    """
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
+
+    ou = str_to_ou(ou)
+
+    if config.has_section('authentication_externalldap'):
+        id = str(uuid.uuid4())
+        file = '/tmp/users_ou-'+id
+
+        # Get the parameters from the config file
+        ldapurl = config.get('authentication_externalldap', 'ldapurl')
+        bindname = config.get('authentication_externalldap', 'bindname')
+        bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
+
+        command = """ldapsearch -o ldif-wrap=no -H %s -x -b "%s" -D "%s" -w %s -LLL "(
+        objectClass=user)" dn > %s""" % (ldapurl, ou, bindname, bindpasswd, file)
+
+        os.system(command)
+        users = []
+        # Parse the file
+        with open(file, 'r') as user_file:
+            lines = user_file.read().splitlines()
+
+            # The lines that don't start by 'dn' are ignored
+            lines = [element for element in lines if element.startswith('dn')]
+            for element in lines:
+                # Lines starts with dn:: are get in base64 format
+                if element.startswith('dn:: '):
+                    tmp = element.split('::')
+                    cn = base64.b64decode(tmp[1])
+
+                else:
+                    tmp = element.split(': ')
+                    cn = tmp[1]
+                # Format the result
+                cn = re.sub('CN=','',cn)
+                cn = re.sub(',OU=(.+)', '', cn)
+
+                # Save the content into a list
+                users.append(cn)
+
+        # Delete the file
+        os.remove(file)
+
+        return users
+
+    else:
+        return False

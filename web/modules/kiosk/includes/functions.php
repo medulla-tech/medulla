@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2016 Siveo, http://siveo.net
+ * (c) 2018 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -39,6 +39,43 @@ function rename_profile($name)
     }
     return $name;
 
+}
+
+/**
+ * Generate the formated string for the tree structure and save it in $result
+ *
+ * @param array $array
+ * @param &$result the reference which will contains the result of the function.
+ */
+function recursiveArrayToList(Array $array = array(), &$result)
+{
+    if(isset($array['child']))
+    {
+        $name = $array['name'];
+
+        // The limit set the limit of displayed characters for each rows in the tree
+        $limit = 15;
+        if(isset($array['name']) && $array['name'] != "")
+            if(strlen($name) > $limit)
+                $result.= '<li title="'.$name.'" data-root="'.$array['path'].'">'.substr($name,0,$limit).'...';
+            else
+                $result.= '<li data-root="'.$array['path'].'">'.$name;
+        recursiveArrayToList($array['child'], $result);
+        $result.= '</li>';
+    }
+    else
+    {
+        if(count($array)> 0)
+        {
+            $result.= '<ul>';
+            foreach($array as $element)
+            {
+                recursiveArrayToList($element,$result);
+            }
+            $result.= '</ul>';
+        }
+
+    }
 }
 
 ?>

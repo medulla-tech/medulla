@@ -1,7 +1,7 @@
 <?php
 
 /**
- * (c) 2016 Siveo, http://siveo.net
+ * (c) 2018 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -53,6 +53,17 @@ function xmlrpc_get_profile_by_id($id){
 }
 
 function xmlrpc_update_profile($id, $name, $active, $packages=[]){
+    // Edit the profile identified by the id
     return xmlcall('kiosk.update_profile', [$id, $name, $active, $packages]);
+}
+
+function xmlrpc_get_ou_list(){
+    // Returns the list of all founded OUs
+    return xmlcall('kiosk.get_ou_list', []);
+}
+
+function xmlrpc_get_users_from_ou($ou){
+    // Returns the users of the OU specified in $ou ($ou is formated like this : root/son/grand_son)
+    return xmlcall('kiosk.get_users_from_ou',[$ou]);
 }
 ?>

@@ -49,12 +49,17 @@ $page->setFile("modules/kiosk/kiosk/add.php");//, array("expert" => True)
 $submod->addPage($page);
 
 $page = new Page("ajaxAddProfile");
-$page->setFile("modules/imaging/manage/ajaxAddProfile.php");
+$page->setFile("modules/kiosk/kiosk/ajaxAddProfile.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("ajaxGetUsersForOu");
+$page->setFile("modules/imaging/manage/ajaxGetUsersForOu.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
 $page = new Page("ajaxEditProfile");
-$page->setFile("modules/imaging/manage/ajaxEditProfile.php");
+$page->setFile("modules/kiosk/kiosk/ajaxEditProfile.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
