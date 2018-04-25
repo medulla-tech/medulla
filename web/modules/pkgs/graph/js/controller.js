@@ -21,6 +21,35 @@
  *
  */
 
+function isBase64(str) {
+    try {
+        return btoa(atob(str)) == str;
+    } catch (err) {
+        return false;
+    }
+}
+
+function log(arg) {
+    /**
+    *
+    * DISPLAY LOG
+    *
+    */
+    if(console && console.log) {  
+        console.log(arg);  
+    }
+};
+
+function addslashes(string) {
+    return string.replace(/\\/g, '\\\\').
+        replace(/\u0008/g, '\\b').
+        replace(/\t/g, '\\t').
+        replace(/\n/g, '\\n').
+        replace(/\f/g, '\\f').
+        replace(/\r/g, '\\r').
+        replace(/'/g, '\\\'').
+        replace(/"/g, '\\"');
+}
 
 /**
  *
@@ -69,7 +98,7 @@ jQuery(function(){
     {// If something into #loadJson = edit mode
 
         tmp = JSON.parse(jQuery("#loadJson").val());
-
+        
         //Set transferfile value with the saved value
         if(tmp['info']['transferfile'] == true)
             jQuery('#transferfile option[value=1]').attr("selected",true);
@@ -82,10 +111,18 @@ jQuery(function(){
         //Get the elements of the sequence
         sequence = getSequenceFromJSON(tmp);
 
-
         jQuery.each(sequence, function(id,action){
+            if ('command' in action){
+                if (!isBase64(action['command'])){
+                    action['command'] = btoa(action['command'])
+                }
+            }
+            if ('script' in action){
+                if (!isBase64(action['script'])){
+                    action['script'] = btoa(action['script'])
+                }
+            }
             jQuery("#current-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+action['action']+".php", action));
-
         });
     }
     else
@@ -119,7 +156,6 @@ function moveToRight()
 
 }
 
-
 function positionInList(element)
 {
     var listOfPositions = []
@@ -150,19 +186,19 @@ function moveToUp()
 //Remove selected dependencies from dependencies list of the json
 function moveToDown()
 {
-selectedDependencies = jQuery("#addeddependencies").val();
+    selectedDependencies = jQuery("#addeddependencies").val();
 
-index = positionInList(selectedDependencies);
+    index = positionInList(selectedDependencies);
 
-jQuery.each(index, function(i,index){
-    var data = jQuery("#addeddependencies option")[index];
-    var size = jQuery("#addeddependencies option").length;
+    jQuery.each(index, function(i,index){
+        var data = jQuery("#addeddependencies option")[index];
+        var size = jQuery("#addeddependencies option").length;
 
-    if(index+1 < size)
-        jQuery(data).insertAfter(jQuery(data).parent().find("option").eq(index+1));
-    else
-        jQuery(data).insertAfter(jQuery(data).parent().find("option").eq(size));
-});
+        if(index+1 < size)
+            jQuery(data).insertAfter(jQuery(data).parent().find("option").eq(index+1));
+        else
+            jQuery(data).insertAfter(jQuery(data).parent().find("option").eq(size));
+    });
 }
 
 // Get all the workflow elements and create a sequence
@@ -184,6 +220,9 @@ function createSequence()
         // For each element in form :
             // Add {form.elementName : form.elementValue} to action
         jQuery.each(datas,function(idoption, actionRaw){
+            if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script'){
+               actionRaw['value'] = btoa(actionRaw['value'])
+            }
             if(actionRaw['name'] == 'environ')
             {
                 tmp = {}
@@ -204,14 +243,11 @@ function createSequence()
         });
         // Add {step:increment} to this action
         action['step'] = id;
-
         // Then the sequence is created
         sequence.push(action);
     });
-
     return sequence;
 }
-
 
 // Get info from interface and return it as json
 function createInfo()

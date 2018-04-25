@@ -560,7 +560,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 result = XmppMasterDatabase().delPresenceMachine(msg_changed_status['from'])
                 if "type" in result and result['type'] ==  "relayserver":
                     # recover list of cluster ARS
-                    listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(str(data['from']))
+                    listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(str(msg_changed_status['from']))
                     cluster={
                             'action' : "cluster",
                             'sessionid': name_random(5, "cluster"),
@@ -751,7 +751,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                               data,
                                               datasession = None,
                                               encodebase64 = False)
-
         self.xmpplog("Start deploy on machine %s"%jidmachine,
                 type = 'deploy',
                 sessionname = sessionid,
@@ -1234,7 +1233,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     traceback.print_exc(file=sys.stdout)
                     continue
             elif x[0] == 4:
-                continue
                 logger.debug("analysis  rule Select relay server in same subnet")
                 logger.debug("rule subnet : Test if network are identical")
                 subnetexist = False

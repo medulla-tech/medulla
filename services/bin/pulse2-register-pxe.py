@@ -36,14 +36,14 @@ from pulse2.package_server.config import P2PServerCP
 from mmc.site import mmcconfdir
 import sys
 import ConfigParser
-#from optparse import OptionParser
 import logging
 import getopt
 import xml.etree.cElementTree as ET
 import traceback
+import magic
 
 conf ={}
-filetraceback = open("/var/log/mmc/pulse2-register-pxe.log", "a")
+logoutput = open("/var/log/mmc/pulse2-register-pxe.log", "a")
 
 
 logging.basicConfig(level=logging.DEBUG,
@@ -54,18 +54,18 @@ logging.basicConfig(level=logging.DEBUG,
 
 
 def subnetForIpMask(ip, netmask):
-    resultat=[]
+    result=[]
     try:
         ip = map(lambda x: int(x), ip.split('.'))
         netmask = map(lambda x: int(x), netmask.split('.'))
         for i in range(4):
-            resultat.append( str(ip[i] & netmask[i]))
-        result=".".join(resultat)
+            result.append( str(ip[i] & netmask[i]))
+        result=".".join(result)
         return True, result
     except ValueError:
         return False, "O.O.O.O"
 
-def sauvefile(name,string):
+def tmpfile(name,string):
     if(logging.getLogger().getEffectiveLevel()<=logging.DEBUG):
         z=open("/tmp/%s"%name,"w")
         z.write(string)
@@ -74,7 +74,7 @@ def sauvefile(name,string):
 
 
 def parsejsoninventory(file, file_content):
-    sauvefile("content.txt",file_content)
+    tmpfile("content.txt",file_content)
 
     file_content = file_content.decode('ascii', errors='ignore')
 
@@ -84,19 +84,19 @@ def parsejsoninventory(file, file_content):
     file_content= file_content.replace('][', '],[')
     file_content= file_content.replace('}{', '},{')
 
-    sauvefile("content1.txt",file_content)
+    tmpfile("content1.txt",file_content)
     file_content = re.sub('[a-z0-9]*cpu\{',  '', file_content)
     z1 = re.compile("\}[a-z0-9]*pxe\{").split(file_content)
     if len(z1) > 1:
         z1[0] = "{" + z1[0] + "}"
-        sauvefile("cpu.txt",z1[0])
+        tmpfile("cpu.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             cpu=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("cpu\n%s"%cpu)
         except Exception as e:
             logging.getLogger().error("Error loading json cpu %s"%str(e))
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
     else:
         z1.insert(0, "")
 
@@ -104,13 +104,13 @@ def parsejsoninventory(file, file_content):
     z1 = re.compile("\}[a-z0-9]*syslinux\{").split(z1[1])
     if len(z1) > 1:
         z1[0] = "{" + z1[0] + "}"
-        sauvefile("pxe.txt",z1[0])
+        tmpfile("pxe.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             pxe = json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("pxe\n%s"%pxe)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json pxe %s"%str(e))
     else:
         z1.insert(0, "")
@@ -118,13 +118,13 @@ def parsejsoninventory(file, file_content):
     z1 = re.compile("\}[a-z0-9]*vpd\{").split(z1[1])
     if len(z1) > 1:
         z1[0] = "{" + z1[0] + "}"
-        sauvefile("syslinux.txt",z1[0])
+        tmpfile("syslinux.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             syslinux=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("syslinux\n%s"%syslinux)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json syslinux %s"%str(e))
     else:
         z1.insert(0, "")
@@ -132,13 +132,13 @@ def parsejsoninventory(file, file_content):
     z1 = re.compile("\}[a-z0-9]*vesa\{").split(z1[1])
     if len(z1) > 1:
         z1[0] = "{" + z1[0] + "}"
-        sauvefile("vpd.txt",z1[0])
+        tmpfile("vpd.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             vpd=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("vpd\n%s"%vpd)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json vpd %s"%str(e))
     else:
         z1.insert(0, "")
@@ -148,7 +148,7 @@ def parsejsoninventory(file, file_content):
         z1[0]=str(z1[0])
         z1[0]= z1[0].replace('}{', '},{')
         z1[0]="[\n{" + str(z1[0]) + "}\n]"
-        sauvefile("vesa.txt",z1[0])
+        tmpfile("vesa.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             vesa=json.loads(str(z1[0]), strict=False)
@@ -164,13 +164,13 @@ def parsejsoninventory(file, file_content):
         z1[0]= z1[0].replace('}[', '},[')
         z1[0]= z1[0].replace('][', '],[')
         z1[0]= "[\n" + z1[0] + "\n]"
-        sauvefile("disks.txt",z1[0])
+        tmpfile("disks.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             disks=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("disks\n%s"%disks)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json disks %s"%str(e))
     else:
         z1 = information
@@ -180,13 +180,13 @@ def parsejsoninventory(file, file_content):
             z1[0]= z1[0].replace('}[', '},[')
             z1[0]= z1[0].replace('][', '],[')
             z1[0]= "[\n" + z1[0] + "\n]"
-            sauvefile("disks.txt",z1[0])
+            tmpfile("disks.txt",z1[0])
             try:
                 logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
                 disks=json.loads(str(z1[0]), strict=False)
                 logging.getLogger().debug("disks\n%s"%disks)
             except Exception as e:
-                traceback.print_exc(file=filetraceback)
+                traceback.print_exc(file=logoutput)
                 logging.getLogger().error("Error loading json disks %s"%str(e))
         else:
             z1.insert(0, "")
@@ -196,13 +196,13 @@ def parsejsoninventory(file, file_content):
         z1[0] = "[\n{" + z1[0] + "}\n]"
         z1[0]= z1[0].replace('}{', '},{')
         z1[0]= z1[0].replace('][', '],[')
-        sauvefile("dmi.txt",z1[0])
+        tmpfile("dmi.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             dmi=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("dmi\n%s"%dmi)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json dmi %s"%str(e))
     else:
         z1.insert(0, "")
@@ -212,13 +212,13 @@ def parsejsoninventory(file, file_content):
         z1[0] = "[\n{" + z1[0] + "}\n]"
         z1[0]= z1[0].replace('}{', '},{')
         z1[0]= z1[0].replace('][', '],[')
-        sauvefile("memory.txt",z1[0])
+        tmpfile("memory.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             memory=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("memory\n%s"%memory)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json memory %s"%str(e))
     else:
         z1.insert(0, "")
@@ -228,13 +228,13 @@ def parsejsoninventory(file, file_content):
         z1[0] = "[" + "{" + z1[0] + "}"+ "]"
         z1[0]= z1[0].replace('}{', '},{')
         z1[0]= z1[0].replace('][', '],[')
-        sauvefile("pci.txt",z1[0])
+        tmpfile("pci.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             pci=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("pci\n%s"%pci)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json pci %s"%str(e))
     else:
         z1.insert(0, "")
@@ -245,26 +245,26 @@ def parsejsoninventory(file, file_content):
         z1[0]= z1[0].replace('}[', '},[')
         z1[0]= z1[0].replace('][', '],[')
         z1[0]= "[\n" + "{" + z1[0]+ "]\n"+ "]"
-        sauvefile("acpi.txt",z1[0])
+        tmpfile("acpi.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             acpi=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("acpi\n%s"%acpi)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json acpi %s"%str(e))
     else:
         z1.insert(0, "")
 
     z1 = re.compile("\][a-z0-9]*hdt\{").split(z1[1])
     if len(z1) > 1:
-        sauvefile("kernel.txt",z1[0])
+        tmpfile("kernel.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             kernel=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("kernel\n%s"%kernel)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json kernel %s"%str(e))
     else:
         z1.insert(0, "")
@@ -272,13 +272,13 @@ def parsejsoninventory(file, file_content):
     z1 = re.compile("\}[a-z0-9]*hostname\{").split(z1[1])
     if len(z1) > 1:
         z1[0]= "{" + str(z1[0]) + "}"
-        sauvefile("hdt.txt",z1[0])
+        tmpfile("hdt.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             hdt=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("hdt\n%s"%hdt)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json hdt %s"%str(e))
     else:
         z1.insert(0, "")
@@ -286,13 +286,13 @@ def parsejsoninventory(file, file_content):
     z1 = re.compile("\}[a-z0-9]*TRAILER!!!").split(z1[1])
     if len(z1) > 1:
         z1[0]= "{" + z1[0]+ "}"
-        sauvefile("hostname.txt",z1[0])
+        tmpfile("hostname.txt",z1[0])
         try:
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             hostname=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("hostname\n%s"%hostname)
         except Exception as e:
-            traceback.print_exc(file=filetraceback)
+            traceback.print_exc(file=logoutput)
             logging.getLogger().error("Error loading json hostname %s"%str(e))
     else:
         z1.insert(0, "")
@@ -399,7 +399,7 @@ def parsejsoninventory(file, file_content):
                         TOTAL = ET.SubElement(DRIVES,'TOTAL').text=partition_size
                         TYPE = ET.SubElement(DRIVES,'TYPE').text=disks[diskid][partitionid]['partition->os_type']
                     except Exception as e:
-                        traceback.print_exc(file=filetraceback)
+                        traceback.print_exc(file=logoutput)
                         logging.getLogger().warn("Unrecognized Partition Layout disk %s partition%s %s"%(diskid, partitionid, str(e)))
 
     xmlstring = ET.tostring(REQUEST)
@@ -462,10 +462,18 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
         if os.path.isfile(str(name)):
             file_content=""
+            file_content1=""
             logging.getLogger().info("parse inventory %s",name)
+
             try:
-                with open(name, 'r') as content_file:
-                    file_content=content_file.read().replace('\n', '')
+                if ( magic.detect_from_filename(name).mime_type == 'application/gzip' ):
+                    com='zcat %s'%name
+                    file_content1 =  os.popen(com).read()
+                    file_content=parsejsoninventory(str(name),file_content1)
+                else:
+                    with open(name, 'r') as content_file:
+                        file_content=content_file.read().replace('\n', '')
+
                 m = re.search('<REQUEST>.*<\/REQUEST>', file_content)
                 file_content = str(m.group(0))
                 try:
@@ -478,13 +486,13 @@ class MyEventHandler(pyinotify.ProcessEvent):
                         os.remove(name)
                         senddata(xmldata,'127.0.0.1',conf['port'])
                     except Exception as e:
-                        traceback.print_exc(file=filetraceback)
+                        traceback.print_exc(file=logoutput)
                         logging.getLogger().error("UDP error sending to %s:%d [%s]"%('127.0.0.1', conf['port'], str(e)))
                 except Exception as e:
-                    traceback.print_exc(file=filetraceback)
+                    traceback.print_exc(file=logoutput)
                     logging.getLogger().error("MAC address error %s"%str(e))
             except Exception as e:
-                traceback.print_exc(file=filetraceback)
+                traceback.print_exc(file=logoutput)
                 logging.getLogger().error("Error traitement file %s"%str(name))
                 logging.getLogger().error("Error traitement %s"%str(e))
 

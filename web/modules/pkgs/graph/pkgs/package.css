@@ -64,6 +64,11 @@ textarea {
     height:15em;
 }
 
+.content .special_textarea {
+    width:222px;
+    height:28px;
+}
+
 #upload-result {
     clear:left;
 }
