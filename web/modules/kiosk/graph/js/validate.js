@@ -1,5 +1,5 @@
 /**
- * (c) 2016 Siveo, http://siveo.net
+ * (c) 2018 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -21,6 +21,9 @@
 jQuery("#bvalid").click(function() {
     if(jQuery("#name").val() == "")
         jQuery("#name").focus();
+
+    else if(ous.length == 0)
+        alert("Please select the concerned OUs")
     else
         sendForm();
 });
@@ -41,13 +44,14 @@ function sendForm(){
     datas['name'] = jQuery("#name").val();
     datas['active'] = jQuery("#status").val();
     datas['id'] = jQuery("[name='id']").val();
-
+    datas['ous'] = ous;
     datas['packages'] = generate_json();
 
     console.log(datas);
     // Send the infos to ajaxAddProfile.php
     jQuery.post(url, datas, function(result){
         // the datas printed in ajaxAddProfile.php are stored in result
+        
         alert(result)
     });
 }

@@ -33,9 +33,9 @@ if(isset($_POST['name'], $_POST['active']))
 
     // Add the profile to the database
     if(isset($_POST['packages']))
-        $result = xmlrpc_create_profile($name, $_POST['active'], $_POST['packages']);
+        $result = xmlrpc_create_profile($name, $_POST['ous'], $_POST['active'], $_POST['packages']);
     else
-        $result = xmlrpc_create_profile($name, $_POST['active']);
+        $result = xmlrpc_create_profile($name, $_POST['ous'], $_POST['active']);
 
     echo _T('The profile '.$name.' has been created','kiosk');
 }

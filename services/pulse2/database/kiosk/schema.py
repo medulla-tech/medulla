@@ -68,3 +68,11 @@ class Profile_has_package(Base, KioskDBObj):
     package_id = Column(Integer, nullable=False)
     profil_id = Column(Integer, nullable=False)
     package_status = Column(Enum('allowed','restricted'))
+
+
+class Profile_has_ou(Base, KioskDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'profile_has_ous'
+    # ====== Fields =============================
+    profile_id = Column(Integer, nullable=False)
+    ou = Column(Text)

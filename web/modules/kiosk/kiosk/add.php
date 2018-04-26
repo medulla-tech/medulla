@@ -85,7 +85,7 @@ $f = new ValidatingForm(array("id" => "profile-form"));
 
     $f->add(new TrFormElement(_T("Select ous",'kiosk'),new SpanElement('<div id="ou-container" style="display:flex; max-height:350px;">
         <div id="jstree" role="tree" style="overflow:scroll;">'.$result.'</div>
-        <div id="users"></div>
+        <div id="users" class="user-list" style="display:inline"></div>
     </div>',"kiosk")));
 
     // Create a section without table in the form

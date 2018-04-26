@@ -1,5 +1,5 @@
 --
--- (c) 2016 Siveo, http://www.siveo.net/
+-- (c) 2018 Siveo, http://www.siveo.net/
 --
 -- This file is part of Pulse 2, http://www.siveo.net/
 --

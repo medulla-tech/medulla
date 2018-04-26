@@ -31,7 +31,7 @@ from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list
-from pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package
+from pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package, Profile_has_ou
 # Imported last
 import logging
 import json
@@ -67,7 +67,7 @@ class KioskDatabase(DatabaseHelper):
         self.metadata.create_all()
         self.is_activated = True
         result = self.db.execute("SELECT * FROM kiosk.version limit 1;")
-        re = [x.Number for x in result]
+        re = [element.Number for element in result]
         #logging.getLogger().debug("xmppmaster database connected (version:%s)"%(re[0]))
         return True
 
@@ -129,12 +129,14 @@ class KioskDatabase(DatabaseHelper):
         return lines
 
     @DatabaseHelper._sessionm
-    def create_profile(self, session, name, active, packages):
+    def create_profile(self, session, name, ous, active, packages):
         """
         Create a new profile for kiosk with the elements send.
 
         name:
             String which contains the name of the new profile
+        ous:
+            List of the selected OUs for this profile
         active:
             Int indicates if the profile is active (active = 1) or inactive (active = 0)
         packages:
@@ -168,7 +170,6 @@ class KioskDatabase(DatabaseHelper):
 
         # refresh the packages in the database
         self.refresh_package_list()
-
 
         # Creation of the new profile
         import time
@@ -211,6 +212,15 @@ class KioskDatabase(DatabaseHelper):
                     session.add(profile)
                     session.commit()
                     session.flush()
+            # Finally we associate the OUs with the profile.
+            for ou in ous:
+                profile_ou = Profile_has_ou()
+                profile_ou.profile_id = id
+                profile_ou.ou = ou
+
+                session.add(profile_ou)
+                session.commit()
+                session.flush()
         return id
 
     @DatabaseHelper._sessionm
@@ -264,13 +274,14 @@ class KioskDatabase(DatabaseHelper):
         This method delete the profiles which have the specified name.
 
         Args:
-            name: the name of the profile
+            id: the id of the profile
 
         Returns:
             Boolean: True if success, else False
         """
         try:
             session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
+            session.query(Profile_has_ou).filter(Profile_has_ou.profile_id == id).delete()
 
             session.query(Profiles).filter(Profiles.id == id).delete()
             session.commit()
@@ -292,6 +303,7 @@ class KioskDatabase(DatabaseHelper):
                 'active': '1',
                 'creation_date': '2018-04-10 14:13:19',
                 'id': '16',
+                'ous': ['root/son/grand_son1', 'root/son/grand_son2']
                 'packages': [
                     {
                         'status': 'restricted',
@@ -332,15 +344,19 @@ class KioskDatabase(DatabaseHelper):
         left join profiles on profiles.id = package_has_profil.profil_id\
         WHERE profiles.id = '%s';""" %(id)
 
-        response = session.execute(sql)
-        result = [{'uuid':x.package_uuid, 'name':x.package_name, 'status':x.package_status} for x in response]
+        sql_ou = """SELECT ou FROM profile_has_ous WHERE profile_id = %s"""%(id)
 
+        response = session.execute(sql)
+        result = [{'uuid':element.package_uuid, 'name':element.package_name, 'status':element.package_status} for element in response]
+
+        response_ou = session.execute(sql_ou)
         dict = {}
 
         for column in profile.__table__.columns:
             dict[column.name] = str(getattr(profile, column.name))
         dict['packages'] = result
-
+        # generate a list for the OUs and it's added to the returned result
+        dict['ous'] = [element.ou for element in response_ou]
         return dict
 
     @DatabaseHelper._sessionm

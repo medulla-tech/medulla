@@ -1,8 +1,6 @@
 --
 -- (c) 2018 Siveo, http://www.siveo.net/
 --
--- $Id$
---
 -- This file is part of Pulse 2, http://www.siveo.net/
 --
 -- Pulse 2 is free software; you can redistribute it and/or modify
@@ -24,27 +22,10 @@
 -- Database version
 -- ----------------------------------------------------------------------
 
+create table profile_has_ous(id int not null AUTO_INCREMENT, PRIMARY KEY (id),
+  profile_id int not null,
+  ou text
+)
+ENGINE = InnoDB;
 
---
--- Table structure for table `version`
---
-
-DROP TABLE IF EXISTS `version`;
-CREATE TABLE `version` (
-  `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- 
--- Table structure for profils
--- 
-
-CREATE TABLE IF NOT EXISTS `profiles` (
-	`id` int NOT NULL AUTO_INCREMENT, PRIMARY KEY(`id`),
-	`name` varchar(50) NOT NULL,
-	`active` boolean,
-	`creation_date` datetime
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO `version` VALUES (1);
-
-GRANT ALL PRIVILEGES ON `kiosk`.*  TO 'mmc'@'localhost';
+UPDATE version SET Number = 3;

@@ -36,10 +36,10 @@ function xmlrpc_get_profiles_name_list(){
 }
 
 
-function xmlrpc_create_profile($name, $active, $packages=[]){
+function xmlrpc_create_profile($name, $ou, $active, $packages=[]){
     // Insert $name into profile table with the $active status.
     // If success return the id of the new profile.
-    return xmlCall("kiosk.create_profile", [$name, $active, $packages]);
+    return xmlCall("kiosk.create_profile", [$name, $ou, $active, $packages]);
 }
 
 function xmlrpc_delete_profile($id){

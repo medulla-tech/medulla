@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2016 Siveo, http://siveo.net
+ * (c) 2018 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *

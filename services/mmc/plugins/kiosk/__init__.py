@@ -94,8 +94,8 @@ def get_profiles_name_list():
     return KioskDatabase().get_profiles_name_list()
 
 
-def create_profile(name, active, packages):
-    return KioskDatabase().create_profile(name, active, packages)
+def create_profile(name, ous, active, packages):
+    return KioskDatabase().create_profile(name, ous, active, packages)
 
 
 def delete_profile(id):

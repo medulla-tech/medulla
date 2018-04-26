@@ -17,18 +17,18 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
+var ous = [];
 jQuery(function(){
 
     jQuery('#jstree').jstree();
 
     jQuery('#jstree').on("changed.jstree", function (e, data) {
-        var users = [];
+        ous = [];
         //data.selected contains the selected elements
         jQuery.each(data.selected, function(id, element){
-            users.push(jQuery("#"+element).attr('data-root'))
+            ous.push(jQuery("#"+element).attr('data-root'))
         })
-            jQuery("#users").load('/mmc/modules/kiosk/kiosk/ajaxGetUsersForOu.php', {'roots':users}, function(result){
+            jQuery("#users").load('/mmc/modules/kiosk/kiosk/ajaxGetUsersForOu.php', {'roots':ous}, function(result){
 
             });
     });
