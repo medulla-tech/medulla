@@ -47,8 +47,10 @@ function rename_profile($name)
  * @param array $array
  * @param &$result the reference which will contains the result of the function.
  */
-function recursiveArrayToList(Array $array = array(), &$result)
+
+function recursiveArrayToList(Array $array = array(), &$result, &$count)
 {
+
     if(isset($array['child']))
     {
         $name = $array['name'];
@@ -57,10 +59,16 @@ function recursiveArrayToList(Array $array = array(), &$result)
         $limit = 15;
         if(isset($array['name']) && $array['name'] != "")
             if(strlen($name) > $limit)
-                $result.= '<li title="'.$name.'" data-root="'.$array['path'].'">'.substr($name,0,$limit).'...';
+            {
+                $count +=1;
+                $result.= '<li title="'.$name.'" data-id="j1_'.$count.'" data-root="'.$array['path'].'">'.substr($name,0,$limit).'...';
+            }
             else
-                $result.= '<li data-root="'.$array['path'].'">'.$name;
-        recursiveArrayToList($array['child'], $result);
+            {
+                $count +=1;
+                $result.= '<li data-id="j1_'.$count.'" data-root="'.$array['path'].'">'.$name;
+            }
+        recursiveArrayToList($array['child'], $result, $count);
         $result.= '</li>';
     }
     else
@@ -70,12 +78,13 @@ function recursiveArrayToList(Array $array = array(), &$result)
             $result.= '<ul>';
             foreach($array as $element)
             {
-                recursiveArrayToList($element,$result);
+                recursiveArrayToList($element,$result, $count);
             }
             $result.= '</ul>';
         }
 
     }
+
 }
 
 ?>

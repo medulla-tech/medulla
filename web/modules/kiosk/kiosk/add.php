@@ -81,9 +81,10 @@ $f = new ValidatingForm(array("id" => "profile-form"));
     // Add the OUs tree
     // -------
     $result = "";
-    recursiveArrayToList(xmlrpc_get_ou_list(), $result);
+    $number = 0;
+    recursiveArrayToList(xmlrpc_get_ou_list(), $result, $number);
 
-    $f->add(new TrFormElement(_T("Select ous",'kiosk'),new SpanElement('<div id="ou-container" style="display:flex; max-height:350px;">
+    $f->add(new TrFormElement(_T("Select OUs",'kiosk'),new SpanElement('<div id="ou-container" style="display:flex; max-height:350px;">
         <div id="jstree" role="tree" style="overflow:scroll;">'.$result.'</div>
         <div id="users" class="user-list" style="display:inline"></div>
     </div>',"kiosk")));

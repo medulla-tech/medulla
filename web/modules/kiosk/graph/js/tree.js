@@ -18,10 +18,34 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 var ous = [];
+var selectedId = []
 jQuery(function(){
+    if(typeof(jQuery("input[name='ous']").val()) != 'undefined')
+    {
+        var ousToEdit = jQuery("input[name='ous']").val().split(';');
+        console.log(ousToEdit);
+
+        // From the listed OUs :
+        // So firstly, copy the tree, because after declaring it as tree, it's DOM is modified
+        var tmpTree = jQuery('#jstree');
+
+        // Locate the data-root attribute which contains the selected ou and get data-id attribute.
+        // The data-id attribute is the same as the id attributed to the leafs of the tree.
+        jQuery.each(ousToEdit, function(id, value){
+            selectedId.push(jQuery(tmpTree).find("[data-root='"+value+"']").attr('data-id'));
+        });
+
+        jQuery.each(ousToEdit, function(id,value){
+            console.log(jQuery("[data-root='"+value+"']").html());
+        });
+    }
 
     jQuery('#jstree').jstree();
+        // Finally now the ids of selected ous are stored in selectedId variable. The ous are selected by default in
+        // the tree.
+        jQuery('#jstree').jstree('select_node', selectedId);
 
+    //jQuery.jstree.reference('#jstree').select_node("[data-root='bonsecours']");
     jQuery('#jstree').on("changed.jstree", function (e, data) {
         ous = [];
         //data.selected contains the selected elements
@@ -31,11 +55,5 @@ jQuery(function(){
             jQuery("#users").load('/mmc/modules/kiosk/kiosk/ajaxGetUsersForOu.php', {'roots':ous}, function(result){
 
             });
-    });
-    // 8 interact with the tree - either way is OK
-    jQuery('button').on('click', function () {
-        jQuery('#jstree').jstree(true).select_node('child_node_1');
-        jQuery('#jstree').jstree('select_node', 'child_node_1');
-        jQuery.jstree.reference('#jstree').select_node('child_node_1');
     });
 });
