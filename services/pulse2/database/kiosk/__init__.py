@@ -360,13 +360,15 @@ class KioskDatabase(DatabaseHelper):
         return dict
 
     @DatabaseHelper._sessionm
-    def update_profile(self, session, id, name, active, packages):
+    def update_profile(self, session, id, name, ous, active, packages):
         """
         Update the specified profile
         id:
             Int is the id of the profile which will be updated
         name:
             String which contains the name of updated profile
+        ous:
+            List of the selected ous
         active:
             Int indicates if the profile is active (active = 1) or inactive (active = 0)
         packages:
@@ -406,6 +408,16 @@ class KioskDatabase(DatabaseHelper):
 
         # Remove all packages associations concerning this profile
         session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
+        session.query(Profile_has_ou).filter(Profile_has_ou.profile_id == id).delete()
+
+        for ou in ous:
+            profile_ou = Profile_has_ou()
+            profile_ou.profile_id = id
+            profile_ou.ou = ou
+
+            session.add(profile_ou)
+            session.commit()
+            session.flush()
 
         # The profile is now created, but the packages are not linked to it nor added into database.
         # If the package list is not empty, then firstly we get the status and the uuid for each packages

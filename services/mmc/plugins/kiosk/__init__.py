@@ -106,8 +106,8 @@ def get_profile_by_id(id):
     return KioskDatabase().get_profile_by_id(id)
 
 
-def update_profile(id, name, active, packages):
-    return KioskDatabase().update_profile(id, name, active, packages)
+def update_profile(id, name, ous, active, packages):
+    return KioskDatabase().update_profile(id, name, ous, active, packages)
 
 
 # #############################################################

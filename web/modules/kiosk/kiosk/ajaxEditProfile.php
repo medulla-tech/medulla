@@ -33,10 +33,10 @@ if(isset($_POST['id'], $_POST['name'], $_POST['active']))
     // Update the profile
     if(isset($_POST['packages']))
     {
-        xmlrpc_update_profile($_POST['id'], $_POST['name'], $_POST['active'], $_POST['packages']);
+        xmlrpc_update_profile($_POST['id'], $_POST['name'], $_POST['ous'], $_POST['active'], $_POST['packages']);
     }
     else
-        xmlrpc_update_profile($_POST['id'], $_POST['name'], $_POST['active']);
+        xmlrpc_update_profile($_POST['id'], $_POST['name'], $_POST['ous'], $_POST['active']);
     echo _T('The profile '.$_POST['name'].' has been updated','kiosk');
 }
 else
