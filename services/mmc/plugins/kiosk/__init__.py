@@ -211,8 +211,8 @@ def get_users_from_ou(ou):
         bindname = config.get('authentication_externalldap', 'bindname')
         bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
 
-        command = """ldapsearch -o ldif-wrap=no -H %s -x -b "%s" -D "%s" -w %s -LLL "(
-        objectClass=user)" dn > %s""" % (ldapurl, ou, bindname, bindpasswd, file)
+        command = """ldapsearch -o ldif-wrap=no -H %s -x -b "%s" -D "%s" -w %s -LLL "(&(!(objectclass=computer))
+        (objectclass=person))" dn > %s""" % (ldapurl, ou, bindname, bindpasswd, file)
 
         os.system(command)
         users = []
