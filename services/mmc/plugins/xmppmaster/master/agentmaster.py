@@ -876,14 +876,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 f.close()
                 for ligne in lignes:
                     if 'VERSION' in ligne and 'NAME' in ligne:
-                        l=ligne.split("=")
+                        l = ligne.split("=")
                         plugin = eval(l[1])
-                        plugindataseach[plugin['NAME']]=plugin['VERSION']
+                        plugindataseach[plugin['NAME']] = plugin['VERSION']
                         try:
-                            plugintype[plugin['NAME']]=plugin['TYPE']
+                            plugintype[plugin['NAME']] = plugin['TYPE']
                         except:
-                            plugintype[plugin['NAME']]="machine"
-                        break;
+                            plugintype[plugin['NAME']] = "machine"
+                        break
         self.plugindata = plugindataseach
         self.plugintype = plugintype
 
@@ -901,64 +901,64 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("Account created for %s!" % self.boundjid)
         except IqError as e:
             logger.error("Could not register account: %s" %
-                    e.iq['error']['text'])
+                         e.iq['error']['text'])
         except IqTimeout:
             logger.error("No response from server.")
             self.disconnect()
 
-    def restartAgent(self , to ):
+    def restartAgent(self , to):
         if self.config.showplugins:
             logger.info("Restart agent on %s"%(to))
         self.send_message(mto=to,
-            mbody=json.dumps({'action':'restartbot','data':''}),
-            mtype='chat')
+                          mbody=json.dumps({'action':'restartbot','data':''}),
+                          mtype='chat')
 
     def deployPlugin(self, msg, plugin):
-        data =''
-        fichierdata={}
-        namefile =  os.path.join(self.config.dirplugins,"plugin_%s.py"%plugin)
+        data = ''
+        fichierdata = {}
+        namefile = os.path.join(self.config.dirplugins, "plugin_%s.py"%plugin)
         if os.path.isfile(namefile) :
-            logger.debug("File plugin found %s"%namefile)
+            logger.debug("File plugin found %s" % namefile)
         else:
-            logger.error("File plugin found %s"%namefile)
+            logger.error("File plugin found %s" % namefile)
             return
         try:
             fileplugin = open(namefile, "rb")
-            data=fileplugin.read()
+            data = fileplugin.read()
             fileplugin.close()
         except :
             logger.error("File read error")
             traceback.print_exc(file=sys.stdout)
             return
         fichierdata['action'] = 'installplugin'
-        fichierdata['data'] ={}
+        fichierdata['data'] = {}
         dd = {}
-        dd['datafile']= data
+        dd['datafile'] = data
         dd['pluginname'] = "plugin_%s.py"%plugin
-        fichierdata['data']= base64.b64encode(json.dumps(dd))
+        fichierdata['data'] = base64.b64encode(json.dumps(dd))
         fichierdata['sessionid'] = "sans"
         fichierdata['base64'] = True
         try:
             self.send_message(mto=msg['from'],
-                            mbody=json.dumps(fichierdata),
-                            mtype='chat')
+                              mbody=json.dumps(fichierdata),
+                              mtype='chat')
         except:
             traceback.print_exc(file=sys.stdout)
-    
+
     def deployPluginscheduled(self, msg, plugin):
-        data =''
-        fichierdata={}
-        namefile =  os.path.join(self.config.dirschedulerplugins,"%s.py"%plugin)
+        data = ''
+        fichierdata = {}
+        namefile = os.path.join(self.config.dirschedulerplugins,"%s.py"%plugin)
         if os.path.isfile(namefile) :
-            logger.debug("File plugin scheduled found %s"%namefile)
+            logger.debug("File plugin scheduled found %s" % namefile)
         else:
-            logger.error("File plugin scheduled not found %s"%namefile)
+            logger.error("File plugin scheduled not found %s" % namefile)
             return
         try:
             fileplugin = open(namefile, "rb")
             data=fileplugin.read()
             fileplugin.close()
-        except :
+        except:
             logger.error("File read error")
             traceback.print_exc(file=sys.stdout)
             return
@@ -967,13 +967,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
         dd = {}
         dd['datafile']= data
         dd['pluginname'] = "%s.py"%plugin
-        fichierdata['data']= base64.b64encode(json.dumps(dd))
+        fichierdata['data'] = base64.b64encode(json.dumps(dd))
         fichierdata['sessionid'] = "sans"
         fichierdata['base64'] = True
         try:
             self.send_message(mto=msg['from'],
-                            mbody=json.dumps(fichierdata),
-                            mtype='chat')
+                              mbody=json.dumps(fichierdata),
+                              mtype='chat')
         except:
             traceback.print_exc(file=sys.stdout)
 
@@ -986,11 +986,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
             'ret': 255
             }
         self.send_message(mto=to,
-                        mbody=json.dumps(restartmachine),
-                        mtype='chat')
+                          mbody=json.dumps(restartmachine),
+                          mtype='chat')
         return True
 
-    def callshutdownbymaster(self, to, time = 0, msg = ""):
+    def callshutdownbymaster(self, to, time=0, msg=""):
         shutdownmachine = {
             'action' : "shutdownfrommaster",
             'sessionid' : name_random(5, "shutdown"),
