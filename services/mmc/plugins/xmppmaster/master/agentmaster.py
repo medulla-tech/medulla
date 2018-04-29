@@ -414,7 +414,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     self.machineDeploy[UUID].append(deployobject)
 
         for deploy in wolupdatemachine:
-            # wol
             UUID = str(deploy.Target.target_uuid)
 
             if UUID in self.machineWakeOnLan:
@@ -441,10 +440,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     if macadress != "":
                         logging.debug("wakeonlan machine  [Machine : %s]"%uuidmachine)
                         self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress } )
-                        #self.logtopulse("wake on lan on macadress %s"%macadress,type='Wol',
-                                        #sessionname = self.machineWakeOnLan[uuidmachine]['commanid'],
-                                        #priority = -1 ,
-                                        #who = uuidmachine)
                         
         listobjsupp = []
         for deployuuid in self.machineDeploy:
@@ -474,7 +469,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def start(self, event):
         self.get_roster()
         self.send_presence()
-        #chatroomjoin=[self.config.jidchatroommaster,self.config.jidchatroomlog,self.config.confjidchatroom]
         chatroomjoin=[self.config.confjidchatroom]
         for chatroom in chatroomjoin:
             if chatroom == self.config.confjidchatroom:
@@ -484,11 +478,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
             self.plugin['xep_0045'].joinMUC(chatroom,
                                             self.config.NickName,
-                                            # If a room password is needed, use:
                                             password=passwordchatroom,
                                             wait=True)
         self.logtopulse('Start agent Master', type = "MASTER", who = self.boundjid.bare)
-        # Load all plugins starting with plugin_auto
         listplugins = [re.sub('plugin_','','.'.join(f.split('.')[:-1])) for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")) if f.startswith("plugin_auto") and f.endswith(".py")]
         for plugin in listplugins:
             # Load the plugin and start action
@@ -660,7 +652,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
             jidrelay = objmachine['groupdeploy']
             jidmachine = objmachine['jid']
-            ### print "jidrelay %s\njidmachine %s"%(jidrelay,jidmachine)
             if jidmachine != None and jidmachine != "" and jidrelay != None and jidrelay != "" :
 
                 return self.applicationdeploymentjson(  jidrelay,
@@ -717,7 +708,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # Name the event
         dd = name_random(5, "deploy_")
         path =  managepackage.getpathpackagename(name)
-        #read descriptor name in variable
         descript =  managepackage.loadjsonfile(os.path.join(path, 'xmppdeploy.json'))
         self.parsexmppjsonfile(os.path.join(path, 'xmppdeploy.json'))
         if descript is None:
@@ -764,12 +754,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 fromuser = data['login'],
                 touser = "")
 
-        #self.logtopulse("Start deploy on machine %s"%jidmachine,
-                        #type = 'deploy',
-                        #sessionname = sessionid,
-                        #priority = -1,
-                        #who = "MASTER")
-        #self.eventmanage.show_eventloop()
         XmppMasterDatabase().adddeploy( idcommand,
                                         jidmachine,
                                         jidrelay,
@@ -856,7 +840,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def handlemanagesession(self):
         self.session.decrementesessiondatainfo()
-        ###test
 
     def loadPluginschedulerList(self):
         logger.debug("Verify base plugin scheduler")
