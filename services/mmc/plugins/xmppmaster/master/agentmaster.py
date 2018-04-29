@@ -743,8 +743,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                               datasession=None,
                                               encodebase64=False)
         self.xmpplog("Start deploy on machine %s"%jidmachine,
-                     type = 'deploy',
-                     sessionname = sessionid,
+                     type='deploy',
+                     sessionname=sessionid,
                      priority=-1,
                      action="",
                      who="",
@@ -773,22 +773,23 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                       )
         return sessionid
 
-    def pluginaction(self,rep):
+    def pluginaction(self, rep):
         if 'sessionid' in rep.keys():
             sessiondata = self.session.sessionfromsessiondata(rep['sessionid'])
             if 'shell' in sessiondata.getdatasession().keys() and sessiondata.getdatasession()['shell']:
                 self.send_message(mto=jid.JID("commandrelay@localhost"),
-                                mbody=json.dumps(rep),
-                                mtype='chat')
+                                  mbody=json.dumps(rep),
+                                  mtype='chat')
         logger.info("Log action plugin %s!" % rep)
 
     def displayData(self, data):
         if self.config.showinfomaster:
             logger.info("--------------------------")
-            if 'action' in data and data['action'] == 'connectionconf' :
-                logger.info("** INFORMATION FROM CONFIGURATION AGENT FOR %s"%data['agenttype'].upper())
+            if 'action' in data and data['action'] == 'connectionconf':
+                logger.info("** INFORMATION FROM CONFIGURATION AGENT FOR %s" % data['agenttype'].upper())
             else:
-                logger.info("** INFORMATION FROM AGENT %s %s"%(data['agenttype'].upper(), data['action']))
+                logger.info("** INFORMATION FROM AGENT %s %s"%(data['agenttype'].upper(),
+                                                               data['action']))
             logger.info("__________________________")
             logger.info("MACHINE INFORMATION")
             logger.info("Deployment name : %s"%data['deployment'])
@@ -848,19 +849,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
         plugintype = {}
         for element in os.listdir(self.config.dirschedulerplugins):
             if element.endswith('.py') and element.startswith('scheduling_'):
-                f = open(os.path.join(self.config.dirschedulerplugins,element),'r')
-                lignes  = f.readlines()
+                f = open(os.path.join(self.config.dirschedulerplugins, element), 'r')
+                lignes = f.readlines()
                 f.close()
                 for ligne in lignes:
                     if 'VERSION' in ligne and 'NAME' in ligne:
-                        l=ligne.split("=")
+                        li = ligne.split("=")
                         plugin = eval(l[1])
                         plugindataseach[plugin['NAME']] = plugin['VERSION']
                         try:
-                            plugintype[plugin['NAME']]=plugin['TYPE']
+                            plugintype[plugin['NAME']] = plugin['TYPE']
                         except:
-                            plugintype[plugin['NAME']]="machine"
-                        break;
+                            plugintype[plugin['NAME']] = "machine"
+                        break
         self.plugindatascheduler = plugindataseach
         self.plugintypescheduler = plugintype
 
@@ -870,8 +871,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         plugintype={}
         for element in os.listdir(self.config.dirplugins):
             if element.endswith('.py') and element.startswith('plugin_'):
-                f = open(os.path.join(self.config.dirplugins,element),'r')
-                lignes  = f.readlines()
+                f = open(os.path.join(self.config.dirplugins,element), 'r')
+                lignes = f.readlines()
                 f.close()
                 for ligne in lignes:
                     if 'VERSION' in ligne and 'NAME' in ligne:
