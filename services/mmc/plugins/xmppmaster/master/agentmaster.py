@@ -1200,7 +1200,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         result1 = XmppMasterDatabase().IdlonglatServerRelay(data['classutil'])
                         a=0
                         for x in result1:
-                            a=a+1
+                            a += 1
                             if x[1]!="" and x[2]!="":
                                 distancecalculated = Localisation().determinationbylongitudeandip(float(x[2]),float( x[1]) , data['ippublic'])
                                 #print distancecalculated
