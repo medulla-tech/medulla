@@ -207,7 +207,6 @@ class XmppSimpleCommand:
     def __init__(self, to, data, timeout):
         #Get reference on master agent xmpp
         self.xmpp = ObjectXmpp()
-        #self.xmpp = PluginManager().getEnabledPlugins()['xmppmaster'].xmppMasterthread().xmpp
         self.e =  threading.Event()
         self.result = {}
         self.data = data
@@ -231,7 +230,6 @@ class XmppSimpleCommand:
             if event_is_set:
                 self.result = self.session.datasession
             else:
-                #timeout
                 self.result = {u'action': u'resultshellcommand',
                                u'sessionid': self.sessionid,
                                u'base64': False,
