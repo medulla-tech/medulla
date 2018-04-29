@@ -116,22 +116,26 @@ def callvncchangepermsbymaster(to, askpermission):
 
 ##################### call synchrone iq##########################
 def callremotefile(jidmachine, currentdir=""):
-    return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotefile", "data": currentdir }, 4)
+    return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotefile", "data": currentdir}, 4)
 
 def calllistremotefileedit(jidmachine):
-    return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "listremotefileedit", "data": "" }, 6)
+    return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "listremotefileedit",
+                                                 "data": ""}, 6)
 
 def callremotefileeditaction(jidmachine, data):
-    return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotefileeditaction", "data": data }, 6)
+    return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotefileeditaction",
+                                                 "data": data}, 6)
 
-def callremotecommandshell( jidmachine, command="", timeout = 10):
-    return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotecommandshell", "data": command, "timeout" : timeout }, timeout)
+def callremotecommandshell(jidmachine, command="", timeout=10):
+    return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotecommandshell",
+                                                 "data": command,
+                                                 "timeout" : timeout}, timeout)
 
 def calllocalfile(currentdir=""):
     return ObjectXmpp().xmppbrowsingpath.listfileindir(currentdir)
 
 def callInstallKey(jidAM, jidARS):
-    return ObjectXmpp().callInstallKey( jidAM, jidARS)
+    return ObjectXmpp().callInstallKey(jidAM, jidARS)
 ##################################################################
 
 class XmppCommandDiffered:
@@ -145,14 +149,14 @@ class XmppCommandDiffered:
         self.xmpp = ObjectXmpp()
         if self.xmpp != None:
             self.namethread = name_random(5, "thread")
-            self.e =  threading.Event()
+            self.e = threading.Event()
             self.t = timeout
             self.to = to
             self.action = action
             self.data = data
             self.precommand = precommand
             self.postcommand = postcommand
-            self.t2 = threading.Thread( name = self.namethread, target=self.differed)
+            self.t2 = threading.Thread(name=self.namethread, target=self.differed)
             self.t2.start()
         else:
             logger.debug("XmppCommandDiffered error XMPP not initialized")
@@ -165,21 +169,20 @@ class XmppCommandDiffered:
         # Pre-command
         self.xmpp = ObjectXmpp()
         if self.precommand != None:
-            logger.debug( "exec command %s"%self.precommand)
+            logger.debug("exec command %s"%self.precommand)
             a = simplecommandstr(self.precommand)
-            # Sends a['result'] to log
             if a['code'] != 0:
                 return
-            logger.debug( a['result'])
+            logger.debug(a['result'])
         # Executes XMPP command
         # XMPP command with session creation
-        self.sessionid = self.xmpp.send_session_command( self.to,
-                                                        self.action ,
+        self.sessionid = self.xmpp.send_session_command(self.to,
+                                                        self.action,
                                                         self.data,
-                                                        datasession = None,
-                                                        encodebase64 = False,
-                                                        time = self.t,
-                                                        eventthread = self.e )
+                                                        datasession=None,
+                                                        encodebase64=False,
+                                                        time=self.t,
+                                                        eventthread=self.e)
 
         # Post-command running after XMPP Command
         if self.postcommand != None:
@@ -190,13 +193,13 @@ class XmppCommandDiffered:
                     # After session completes, execute post-command shell
                     b = simplecommandstr(self.postcommand)
                     # Sends b['result'] to log
-                    logger.debug( b['result'])
+                    logger.debug(b['result'])
                 else:
                     # Timeout
                     if not self.xmpp.session.isexist(self.sessionid):
-                        logger.debug( 'Action session %s timed out'%self.action)
-                        logger.debug( "Timeout error")
-                        break;
+                        logger.debug('Action session %s timed out'%self.action)
+                        logger.debug("Timeout error")
+                        break
 
 class XmppSimpleCommand:
     """
@@ -207,7 +210,7 @@ class XmppSimpleCommand:
     def __init__(self, to, data, timeout):
         #Get reference on master agent xmpp
         self.xmpp = ObjectXmpp()
-        self.e =  threading.Event()
+        self.e = threading.Event()
         self.result = {}
         self.data = data
         self.t = timeout
@@ -216,24 +219,24 @@ class XmppSimpleCommand:
                                                                {},
                                                                self.t,
                                                                self.e)
-        self.xmpp.send_message( mto = to,
-                                mbody = json.dumps(data),
-                                mtype = 'chat')
+        self.xmpp.send_message(mto=to,
+                               mbody=json.dumps(data),
+                               mtype='chat')
         self.t2 = threading.Thread(name='command',
-                      target=self.resultsession)
+                                   target=self.resultsession)
         self.t2.start()
 
     def resultsession(self):
         while not self.e.isSet():
             event_is_set = self.e.wait(self.t)
-            logger.debug( 'event est signaler set: %s'% event_is_set)
+            logger.debug('event est signaler set: %s'% event_is_set)
             if event_is_set:
                 self.result = self.session.datasession
             else:
                 self.result = {u'action': u'resultshellcommand',
                                u'sessionid': self.sessionid,
                                u'base64': False,
-                               u'data': {u'msg': "ERROR command\n timeout %s"%self.t },
+                               u'data': {u'msg': "ERROR command\n timeout %s"%self.t},
                                u'ret': 125}
                 break;
         self.xmpp.session.clearnoevent(self.sessionid)
