@@ -238,7 +238,7 @@ class XmppSimpleCommand:
                                u'base64': False,
                                u'data': {u'msg': "ERROR command\n timeout %s"%self.t},
                                u'ret': 125}
-                break;
+                break
         self.xmpp.session.clearnoevent(self.sessionid)
         return self.result
 
@@ -249,7 +249,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.session = session()
         self.domaindefault = "pulse"
         ###clear conf compte.
-        logger.debug( 'clear muc conf compte')
+        logger.debug('clear muc conf compte')
         cmd = "for i in  $(ejabberdctl registered_users pulse | grep '^conf' ); do echo $i; ejabberdctl unregister $i pulse; done"
         try:
             a = simplecommandstr(cmd)
@@ -268,10 +268,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.loadPluginList()
         self.plugindatascheduler = {}
         self.loadPluginschedulerList() ###update variable self.plugindatascheduler
-        sleekxmpp.ClientXMPP.__init__(self,  conf.jidagent, conf.passwordconnection)
+        sleekxmpp.ClientXMPP.__init__(self, conf.jidagent, conf.passwordconnection)
 
-        self.manage_scheduler  = manage_scheduler(self)
-        self.xmppbrowsingpath = xmppbrowsing(defaultdir =  self.config.defaultdir, rootfilesystem = self.config.rootfilesystem)
+        self.manage_scheduler = manage_scheduler(self)
+        self.xmppbrowsingpath = xmppbrowsing(defaultdir=self.config.defaultdir,
+                                             rootfilesystem=self.config.rootfilesystem)
         # dictionary used for deploy
         self.machineWakeOnLan = {}
         self.machineDeploy = {}
@@ -283,19 +284,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.presencedeployment = {}
         self.updateguacamoleconfig = {}
         # Scheduler cycle before wanonlan delivery
-        self.xmpppresence={}
+        self.xmpppresence = {}
 
         self.CYCLESCHEDULER = 4
         self.TIMESCHEDULER = 30
         # schedule deployement
         self.schedule('schedule deploy', self.TIMESCHEDULER , self.scheduledeploy, repeat=True)
-        self.schedule('schedulerfunction', 60 , self.schedulerfunction, repeat=True)
+        self.schedule('schedulerfunction', 60, self.schedulerfunction, repeat=True)
 
         # Decrement session time
-        self.schedule('manage session', 15 , self.handlemanagesession, repeat=True)
+        self.schedule('manage session', 15, self.handlemanagesession, repeat=True)
 
         # Reload plugins list every 15 minutes
-        self.schedule('update plugin', 900 , self.loadPluginList, repeat=True)
+        self.schedule('update plugin', 900, self.loadPluginList, repeat=True)
 
         self.add_event_handler("session_start", self.start)
         """ New presence in Conf chatroom """
@@ -316,7 +317,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.add_event_handler("groupchat_message", self.muc_message)
         self.add_event_handler("pluginaction", self.pluginaction)#, threaded=True
 
-        self.add_event_handler ( 'changed_status', self.changed_status)
+        self.add_event_handler ('changed_status', self.changed_status)
         self.RSA = MsgsignedRSA("master")
 
     def schedulerfunction(self):
@@ -332,7 +333,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 return ""
         elif type(datain) == unicode:
             data = str(datain)
-        else :
+        else:
             data = datain
         try:
             data = data.encode("base64")
@@ -340,7 +341,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logging.error("iqsendpulse : encode base64 : %s"%str(e))
             return ""
         try:
-            iq = self.make_iq_get(queryxmlns='custom_xep',ito=to)
+            iq = self.make_iq_get(queryxmlns='custom_xep', ito=to)
             itemXML = ET.Element('{%s}data' %data )
             for child in iq.xml:
                 if child.tag.endswith('query'):
