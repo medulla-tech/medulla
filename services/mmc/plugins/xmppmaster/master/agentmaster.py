@@ -99,7 +99,6 @@ def callXmppFunction(functionname, *args, **kwargs ):
     return getattr(ObjectXmpp(),functionname)( *args, **kwargs)
 
 def callXmppPlugin(plugin, data ):
-    #logging.getLogger().debug("**call plugin %s %s"%(plugin, data))
     logging.getLogger().debug("**call plugin %s"%(plugin))
     ObjectXmpp().callpluginmasterfrommmc(plugin,  data )
 
