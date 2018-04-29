@@ -289,7 +289,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.CYCLESCHEDULER = 4
         self.TIMESCHEDULER = 30
         # schedule deployement
-        self.schedule('schedule deploy', self.TIMESCHEDULER , self.scheduledeploy, repeat=True)
+        self.schedule('schedule deploy', self.TIMESCHEDULER, self.scheduledeploy, repeat=True)
         self.schedule('schedulerfunction', 60, self.schedulerfunction, repeat=True)
 
         # Decrement session time
@@ -317,7 +317,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.add_event_handler("groupchat_message", self.muc_message)
         self.add_event_handler("pluginaction", self.pluginaction)#, threaded=True
 
-        self.add_event_handler ('changed_status', self.changed_status)
+        self.add_event_handler('changed_status', self.changed_status)
         self.RSA = MsgsignedRSA("master")
 
     def schedulerfunction(self):
@@ -342,7 +342,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return ""
         try:
             iq = self.make_iq_get(queryxmlns='custom_xep', ito=to)
-            itemXML = ET.Element('{%s}data' %data )
+            itemXML = ET.Element('{%s}data' %data)
             for child in iq.xml:
                 if child.tag.endswith('query'):
                     child.append(itemXML)
@@ -380,7 +380,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def scheduledeploy(self):
         listobjsupp = []
-        resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp();
+        resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp()
 
         for uuiddeploy in self.machineWakeOnLan:
             # not SEND WOL on presense machine
@@ -395,7 +395,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             # creation deploiement
             UUID = str(deploy.Target.target_uuid)
             deployobject = {'pakkageid' : str(deploy.Commands.package_id),
-                            'commandid' :  deploy.Commands.id ,
+                            'commandid' :  deploy.Commands.id,
                             'mac' : deploy.Target.target_macaddr,
                             'count' : 0,
                             'cycle' : 0,
@@ -404,7 +404,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             'end_date' : deploy.Commands.end_date,
                             'title' : deploy.Commands.title,
                             'UUID' : deploy.Target.target_uuid,
-                            'GUID' : deploy.Target.id_group }
+                            'GUID' : deploy.Target.id_group}
 
             if XmppMasterDatabase().getPresenceuuid(UUID):
                 #If machine present add deployment in deploy list to manage.
@@ -436,12 +436,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for uuidmachine in self.machineWakeOnLan:
             print self.machineWakeOnLan[uuidmachine]['count']
             if self.machineWakeOnLan[uuidmachine]['count'] < self.CYCLESCHEDULER:
-                listmacadress = self.machineWakeOnLan[uuidmachine]['mac'].split("||");
+                listmacadress = self.machineWakeOnLan[uuidmachine]['mac'].split("||")
                 for macadress in listmacadress:
                     if macadress != "":
                         logging.debug("wakeonlan machine  [Machine : %s]"%uuidmachine)
-                        self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress } )
-                        
+                        self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress})
+
         listobjsupp = []
         for deployuuid in self.machineDeploy:
             try:
@@ -452,12 +452,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     deployobject['commandid'],
                                                                     deployobject['login'],
                                                                     30,
-                                                                    encodebase64 = False,
-                                                                    start_date = deployobject['start_date'],
-                                                                    end_date = deployobject['end_date'],
-                                                                    title = deployobject['title'],
-                                                                    macadress = deployobject['mac'],
-                                                                    GUID = deployobject['GUID'])
+                                                                    encodebase64=False,
+                                                                    start_date=deployobject['start_date'],
+                                                                    end_date=deployobject['end_date'],
+                                                                    title=deployobject['title'],
+                                                                    macadress=deployobject['mac'],
+                                                                    GUID=deployobject['GUID'])
             except Exception:
                 listobjsupp.append(deployuuid)
         for objsupp in listobjsupp:
@@ -470,7 +470,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def start(self, event):
         self.get_roster()
         self.send_presence()
-        chatroomjoin=[self.config.confjidchatroom]
+        chatroomjoin = [self.config.confjidchatroom]
         for chatroom in chatroomjoin:
             if chatroom == self.config.confjidchatroom:
                 passwordchatroom = self.config.confpasswordmuc
@@ -481,12 +481,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             self.config.NickName,
                                             password=passwordchatroom,
                                             wait=True)
-        self.logtopulse('Start agent Master', type = "MASTER", who = self.boundjid.bare)
-        listplugins = [re.sub('plugin_','','.'.join(f.split('.')[:-1])) for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")) if f.startswith("plugin_auto") and f.endswith(".py")]
+        self.logtopulse('Start agent Master', type="MASTER", who=self.boundjid.bare)
+        listplugins = [re.sub('plugin_', '', '.'.join(f.split('.')[:-1]))
+                       for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster"))
+                       if f.startswith("plugin_auto") and f.endswith(".py")]
         for plugin in listplugins:
             # Load the plugin and start action
             try:
-                logging.debug("Calling plugin %s " % plugin )
+                logging.debug("Calling plugin %s " % plugin)
                 call_plugin(plugin, self)
             except TypeError:
                 logging.error("TypeError: executing plugin %s %s" % (plugin, sys.exc_info()[0]))
@@ -497,17 +499,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def xmpplog(self,
                 text,
-                type = 'noset',
-                sessionname = '',
-                priority = 0,
-                action = "",
-                who = "",
-                how = "",
-                why = "",
-                module = "",
-                date = None ,
-                fromuser = "",
-                touser = ""):
+                type='noset',
+                sessionname='',
+                priority=0,
+                action="",
+                who="",
+                how="",
+                why="",
+                module="",
+                date=None,
+                fromuser="",
+                touser=""):
         if who == "":
             who = self.boundjid.bare
         msgbody = {
