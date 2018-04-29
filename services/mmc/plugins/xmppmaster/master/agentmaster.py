@@ -419,7 +419,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
             if UUID in self.machineWakeOnLan:
                 if 'count' in self.machineWakeOnLan[UUID]:
-                    self.machineWakeOnLan[UUID]['count'] = self.machineWakeOnLan[UUID]['count'] + 1
+                    self.machineWakeOnLan[UUID]['count'] += 1
                 else:
                     self.machineWakeOnLan[UUID] = {}
                     self.machineWakeOnLan[UUID]['count'] = 0
