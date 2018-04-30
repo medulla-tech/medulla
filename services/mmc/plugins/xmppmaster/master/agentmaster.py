@@ -1629,7 +1629,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                 '',
                                                                 "Master")
 
-                                XmppMasterDatabase().setlogxmpp("Remote Service <b>%s</b> : for [machine : %s][RS : %s]" % (data['remoteservice'], 
+                                XmppMasterDatabase().setlogxmpp("Remote Service <b>%s</b> : for [machine : %s][RS : %s]" % (data['remoteservice'],
                                                                                                                             data['information']['info']['hostname'],
                                                                                                                             jidrs,),
                                                                 "Master",
