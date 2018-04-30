@@ -1719,7 +1719,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     #deploy on changement de version
                                     print "changement de version"
                                     print "*******************"
-                                    self.deployPluginscheduled(msg,k)
+                                    self.deployPluginscheduled(msg, k)
                                     self.restartAgent(msg['from'])
                                     break
                                 else:
@@ -1801,16 +1801,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
         msg['body'] = json.dumps({'action':plugin,
                                   'ret':0,
                                   'sessionid': name_random(5, plugin),
-                                  'data': data })
+                                  'data': data})
         self.callpluginmaster(msg)
 
     def callpluginmaster(self, msg):
-        try :
+        try:
             dataobj = json.loads(msg['body'])
             if dataobj.has_key('action') and dataobj['action'] != "" and dataobj.has_key('data'):
                 if dataobj.has_key('base64') and \
-                    ((isinstance(dataobj['base64'],bool) and dataobj['base64'] == True) or
-                    (isinstance(dataobj['base64'],str) and dataobj['base64'].lower()=='true')):
+                    ((isinstance(dataobj['base64'], bool) and dataobj['base64'] == True) or
+                     (isinstance(dataobj['base64'], str) and dataobj['base64'].lower()=='true')):
                         mydata = json.loads(base64.b64decode(dataobj['data']))
                 else:
                     mydata = dataobj['data']
@@ -1819,7 +1819,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 if not 'ret' in dataobj:
                     dataobj['ret'] = 0
                 try: 
-                    logging.debug("Calling plugin %s from  %s"%( dataobj['action'], msg['from']))
+                    logging.debug("Calling plugin %s from  %s"%(dataobj['action'], msg['from']))
                     msg['body'] = dataobj
                     del dataobj['data']
                     call_plugin(dataobj['action'],
@@ -1864,25 +1864,25 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def muc_onlineConf(self, presence):
         pass
 
-    def send_session_command(self, jid, action , data = {}, datasession=None, 
+    def send_session_command(self, jid, action , data={}, datasession=None,
                              encodebase64=False, time=20, eventthread=None):
         logging.debug("send command and creation session")
         if datasession == None:
             datasession = {}
-        command={'action' : action,
-                 'base64' : encodebase64,
-                 'sessionid': name_random(5, "command"),
-                 'data' : ''
-                }
+        command = {'action' : action,
+                   'base64' : encodebase64,
+                   'sessionid': name_random(5, "command"),
+                   'data' : ''
+                  }
 
-        if encodebase64 :
+        if encodebase64:
             command['data'] = base64.b64encode(json.dumps(data))
         else:
             command['data'] = data
 
         datasession['data'] = data
         datasession['callbackcommand'] = "commandend"
-        self.session.createsessiondatainfo(command['sessionid'],  datasession=data,
+        self.session.createsessiondatainfo(command['sessionid'], datasession=data,
                                            timevalid=time, eventend=eventthread)
         self.send_message(mto=jid,
                           mbody=json.dumps(command),
