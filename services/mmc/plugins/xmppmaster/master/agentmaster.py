@@ -1501,7 +1501,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     if 'users' in data['information'] and len(data['information']['users']) == 0:
                         data['information']['users'] = "system"
 
-                    if 'users' in data['information'] and len (data['information']['users']) > 0:
+                    if 'users' in data['information'] and len(data['information']['users']) > 0:
                         logger.debug("** addition user %s in base"%data['information']['users'][0])
                         logger.info("add user : %s for machine : %s country_name : %s" % (data['information']['users'][0],
                                                                                           data['information']['info']['hostname'],
@@ -1551,12 +1551,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                        )
                     # recover list of cluster ARS
                     listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(str(data['from']))
-                    cluster={'action' : "cluster",
-                             'sessionid': name_random(5, "cluster"),
-                             'data' : {'subaction' : 'initclusterlist',
-                                       'data' : listrelayserver
-                                      }
-                            }
+                    cluster = {'action' : "cluster",
+                               'sessionid': name_random(5, "cluster"),
+                               'data' : {'subaction' : 'initclusterlist',
+                                         'data' : listrelayserver
+                                        }
+                              }
 
                     # all Relays server in the cluster are notified.
                     for ARScluster in listrelayserver:
@@ -1580,10 +1580,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     data['xmppmacaddress'],
                                                                     data['agenttype'],
                                                                     classutil=data['classutil'],
-                                                                    urlguacamole =data['baseurlguacamole'],
-                                                                    groupdeploy =data['deployment'],
-                                                                    objkeypublic= publickeybase64,
-                                                                    ippublic = ippublic
+                                                                    urlguacamole=data['baseurlguacamole'],
+                                                                    groupdeploy=data['deployment'],
+                                                                    objkeypublic=publickeybase64,
+                                                                    ippublic=ippublic
                                                                    )
                 if idmachine != -1:
                     if useradd != -1:
@@ -1597,8 +1597,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         except:
                             broadcast = ''
                         logger.debug("** inscription interface %s in base for machine %s"%(str(i['macaddress']), msg['from'].bare))
-                        XmppMasterDatabase().addPresenceNetwork( i['macaddress'],i['ipaddress'], broadcast, i['gateway'], i['mask'],i['macnotshortened'], idmachine)
-                        #logging.debug("add Presence Network [Machine : %d]"%idmachine)
+                        XmppMasterDatabase().addPresenceNetwork(i['macaddress'], i['ipaddress'], broadcast, i['gateway'], i['mask'], i['macnotshortened'], idmachine)
                     if data['agenttype'] != "relayserver":
                         # Update uuid machine : for consistency with inventory
                         # call Guacamole config
@@ -1607,14 +1606,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         result = XmppMasterDatabase().listMacAdressforMachine(idmachine)
                         results = result[0].split(",")
 
-                        logging.getLogger().debug("listMacAdressforMachine   %s"%results)
+                        logging.getLogger().debug("listMacAdressforMachine   %s" % results)
                         uuid = ''
                         for t in results:
                             computer = ComputerManager().getComputerByMac(t)
                             if computer != None:
                                 jidrs = str(jid.JID(data['deployment']).user)
                                 jidm = jid.JID(data['from']).domain
-                                jidrs = "%s@%s"%(jidrs,jidm)
+                                jidrs = "%s@%s"%(jidrs, jidm)
                                 uuid = 'UUID' + str(computer.id)
                                 logger.debug("** update uuid %s for machine %s "%(uuid, msg['from'].bare))
                                 XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
@@ -1630,7 +1629,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                 '',
                                                                 "Master")
 
-                                XmppMasterDatabase().setlogxmpp("Remote Service <b>%s</b> : for [machine : %s][RS : %s]"%(data['remoteservice'], data['information']['info']['hostname'],jidrs,),
+                                XmppMasterDatabase().setlogxmpp("Remote Service <b>%s</b> : for [machine : %s][RS : %s]" % (data['remoteservice'], 
+                                                                                                                            data['information']['info']['hostname'],
+                                                                                                                            jidrs,),
                                                                 "Master",
                                                                 "",
                                                                 0,
@@ -1644,7 +1645,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 self.callInstallConfGuacamole(jidrs, {'hostname' : data['information']['info']['hostname'],
                                                                       'machine_ip' : data['xmppip'],
                                                                       'uuid' : str(computer.id),
-                                                                      'remoteservice' : data['remoteservice'] })
+                                                                      'remoteservice' : data['remoteservice']})
                                 break
 
                             else:
@@ -1682,17 +1683,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 restartAgent = False
                 if self.config.showplugins:
                     logger.info("_____________Deploy plugin_________________")
-                for k,v in self.plugindata.iteritems():
+                for k, v in self.plugindata.iteritems():
                     deploy = False
                     try:
                         # Check version
                         if data['plugin'][k] != v:
-                            logger.info("update %s version %s to version %s"%(k,data['plugin'][k],v))
+                            logger.info("update %s version %s to version %s"%(k, 
+                                                                              data['plugin'][k], 
+                                                                              v))
                             deploy = True
                     except:
                         deploy = True
                     if self.plugintype[k] == "relayserver":
-                        self.plugintype[k]="relayserver"
+                        self.plugintype[k] = "relayserver"
                     if data['agenttype'] != "all":
                         if data['agenttype'] == "relayserver" and  self.plugintype[k] == 'machine':
                             deploy = False
@@ -1700,8 +1703,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             deploy = False
                     if deploy:
                         if self.config.showplugins:
-                            logger.info("deploy %s version %s on %s"%(k,v,msg['from']))
-                        self.deployPlugin(msg,k)
+                            logger.info("deploy %s version %s on %s"%(k, v, msg['from']))
+                        self.deployPlugin(msg, k)
                         self.restartAgent(msg['from'])
                         if self.config.showplugins:
                             logger.info("__________________________________________")
@@ -1710,7 +1713,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 if 'pluginscheduled' in data:
                     if self.config.showplugins:
                         logger.info("_____________Deploy plugin scheduled_________________")
-                        for k,v in self.plugindatascheduler.iteritems():
+                        for k, v in self.plugindatascheduler.iteritems():
                             if k in data['pluginscheduled']:
                                 if v != data['pluginscheduled'][k]:
                                     #deploy on changement de version
@@ -1719,21 +1722,21 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     self.deployPluginscheduled(msg,k)
                                     self.restartAgent(msg['from'])
                                     break
-                                else :
+                                else:
                                     print "pas de changement de version"
                             else:
                                 #le plugin k n'est pas dans la liste des plugin sur A
                                 if k in self.plugintypescheduler:
                                     if self.plugintypescheduler[k] == 'all':
-                                        self.deployPluginscheduled(msg,k)
+                                        self.deployPluginscheduled(msg, k)
                                         self.restartAgent(msg['from'])
                                         break
                                     if self.plugintypescheduler[k] == 'relayserver' and data['agenttype'] == "relayserver":
-                                        self.deployPluginscheduled(msg,k)
+                                        self.deployPluginscheduled(msg, k)
                                         self.restartAgent(msg['from'])
                                         break
                                     if self.plugintypescheduler[k] == 'machine' and data['agenttype'] == "machine":
-                                        self.deployPluginscheduled(msg,k)
+                                        self.deployPluginscheduled(msg, k)
                                         self.restartAgent(msg['from'])
                                         break
                 self.showListClient()
@@ -1743,20 +1746,20 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 return True
             return False
         except Exception as e:
-            logging.getLogger().error("machine info %s"%(str(e)))
+            logging.getLogger().error("machine info %s" % (str(e)))
             traceback.print_exc(file=sys.stdout)
         return False
 
     def timeout(self, data):
-        log.warm("%s"%data['timeout'])
+        log.warm("%s" % data['timeout'])
 
     def jidInRoom1(self, room, jid):
         for nick in self.plugin['xep_0045'].rooms[room]:
             entry = self.plugin['xep_0045'].rooms[room][nick]
             if entry is not None and entry['jid'] == jid:
-                logger.debug("%s in room %s"%(jid,room))
+                logger.debug("%s in room %s"%(jid, room))
                 return True
-        logger.debug("%s not in room %s"%(jid,room))
+        logger.debug("%s not in room %s"%(jid, room))
         return False
 
     def message(self, msg):
@@ -1766,14 +1769,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
         if msg['from'].bare == self.config.jidchatroommaster or msg['from'].bare == self.config.confjidchatroom:
             return False
-        if self.jidInRoom1( self.config.confjidchatroom, msg['from']):
-            self.MessagesAgentFromChatroomConfig( msg)
+        if self.jidInRoom1(self.config.confjidchatroom, msg['from']):
+            self.MessagesAgentFromChatroomConfig(msg)
             return
         if  msg['type'] == 'groupchat':
             return
         if self.Showlogmessage(msg):
             return
-        self.signalpresence(msg['from'] )
+        self.signalpresence(msg['from'])
         #if not self.jidInRoom1( self.config.jidchatroommaster, msg['from']):
             #""" message agent belonging to master """
             #return False
@@ -1781,7 +1784,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             # Message from client of mmc command
             return
 
-        if  self.MessagesAgentFromChatroomMaster( msg):
+        if  self.MessagesAgentFromChatroomMaster(msg):
             return
         self.callpluginmaster(msg)
 
@@ -1792,14 +1795,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
         """
         pass
 
-    def callpluginmasterfrommmc(self, plugin, data ):
-        msg={}
+    def callpluginmasterfrommmc(self, plugin, data):
+        msg = {}
         msg['from'] = self.boundjid.bare
-        msg['body'] = json.dumps({
-                        'action':plugin,
-                        'ret':0,
-                        'sessionid': name_random(5, plugin),
-                        'data': data })
+        msg['body'] = json.dumps({'action':plugin,
+                                  'ret':0,
+                                  'sessionid': name_random(5, plugin),
+                                  'data': data })
         self.callpluginmaster(msg)
 
     def callpluginmaster(self, msg):
@@ -1828,7 +1830,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 msg,
                                 dataobj['ret'],
                                 dataobj
-                                )
+                               )
                 except TypeError:
                     logging.error("TypeError: executing plugin %s %s" % (dataobj['action'], sys.exc_info()[0]))
                     traceback.print_exc(file=sys.stdout)
@@ -1838,7 +1840,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     traceback.print_exc(file=sys.stdout)
 
         except Exception as e:
-            logging.error("Message structure %s   %s " %(msg,str(e)))
+            logging.error("Message structure %s   %s " % (msg, str(e)))
             traceback.print_exc(file=sys.stdout)
 
 
@@ -1848,7 +1850,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def muc_presenceMaster(self, presence):
         if presence['muc']['nick'] != self.config.NickName:
             if self.config.showinfomaster:
-                logger.debug("Presence of %s"%presence['muc']['nick'])
+                logger.debug("Presence of %s" % presence['muc']['nick'])
 
     def muc_onlineMaster(self, presence):
         if presence['muc']['nick'] != self.config.NickName:
@@ -1862,16 +1864,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def muc_onlineConf(self, presence):
         pass
 
-    def send_session_command(self, jid, action , data = {}, datasession = None, encodebase64 = False, time = 20, eventthread = None):
+    def send_session_command(self, jid, action , data = {}, datasession=None, 
+                             encodebase64=False, time=20, eventthread=None):
         logging.debug("send command and creation session")
         if datasession == None:
             datasession = {}
-        command={
-            'action' : action,
-            'base64' : encodebase64,
-            'sessionid': name_random(5, "command"),
-            'data' : ''
-            }
+        command={'action' : action,
+                 'base64' : encodebase64,
+                 'sessionid': name_random(5, "command"),
+                 'data' : ''
+                }
 
         if encodebase64 :
             command['data'] = base64.b64encode(json.dumps(data))
@@ -1880,8 +1882,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         datasession['data'] = data
         datasession['callbackcommand'] = "commandend"
-        self.session.createsessiondatainfo(command['sessionid'],  datasession = data, timevalid = time, eventend = eventthread)
-        self.send_message(mto = jid,
-                        mbody = json.dumps(command),
-                        mtype = 'chat')
+        self.session.createsessiondatainfo(command['sessionid'],  datasession=data,
+                                           timevalid=time, eventend=eventthread)
+        self.send_message(mto=jid,
+                          mbody=json.dumps(command),
+                          mtype='chat')
         return command['sessionid']
