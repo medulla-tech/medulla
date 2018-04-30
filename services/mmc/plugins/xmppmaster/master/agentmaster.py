@@ -1810,8 +1810,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if dataobj.has_key('action') and dataobj['action'] != "" and dataobj.has_key('data'):
                 if dataobj.has_key('base64') and \
                     ((isinstance(dataobj['base64'], bool) and dataobj['base64'] == True) or
-                     (isinstance(dataobj['base64'], str) and dataobj['base64'].lower()=='true')):
-                        mydata = json.loads(base64.b64decode(dataobj['data']))
+                     (isinstance(dataobj['base64'], str) and dataobj['base64'].lower() == 'true')):
+                    mydata = json.loads(base64.b64decode(dataobj['data']))
                 else:
                     mydata = dataobj['data']
                 if not dataobj.has_key('sessionid'):
@@ -1864,7 +1864,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def muc_onlineConf(self, presence):
         pass
 
-    def send_session_command(self, jid, action , data={}, datasession=None,
+    def send_session_command(self, jid, action, data={}, datasession=None,
                              encodebase64=False, time=20, eventthread=None):
         logging.debug("send command and creation session")
         if datasession == None:
