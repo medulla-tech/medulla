@@ -25,7 +25,7 @@
 import logging
 import json
 
-plugin = { "VERSION" : "1.0", "NAME" : "kiosk", "TYPE" : "master" }
+plugin = {"VERSION" : "1.0", "NAME" : "kiosk", "TYPE" : "master"}
 
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug("=====================================================")
@@ -38,12 +38,11 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
         elif not('data' in data and 'subaction' in data['data']):
             logging.getLogger().error("The message is not formated correctly")
         else:
-            datasend={
-                'action' : 'kiosk',
-                'sessionid' : data['sessionid'],
-                'data' :    data['data']
-                }
+            datasend={'action' : 'kiosk',
+                      'sessionid' : data['sessionid'],
+                      'data' : data['data']
+                     }
             xmppobject.send_message(mto=data['jid'],
-                                mbody=json.dumps(datasend),
-                                mtype='chat')
+                                    mbody=json.dumps(datasend),
+                                    mtype='chat')
 
