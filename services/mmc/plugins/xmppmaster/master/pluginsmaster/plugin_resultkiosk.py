@@ -22,11 +22,11 @@
 # file pluginsmaster/plugin_resultkiosk.py
 
 
-import logging, json
+import json
 
-plugin = { "VERSION" : "1.0", "NAME" : "resultkiosk", "TYPE" : "master" }
+plugin = {"VERSION" : "1.0", "NAME" : "resultkiosk", "TYPE" : "master"}
 
-def action( xmppobject, action, sessionid, data, message, ret, dataobj):
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     print "#################################################"
     print plugin
     print "#################################################"
