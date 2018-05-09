@@ -51,6 +51,7 @@ from mmc.plugins.base import getModList
 from mmc.plugins.base.computers import ComputerManager
 from lib.manage_scheduler import manage_scheduler
 from pulse2.database.xmppmaster import XmppMasterDatabase
+from mmc.plugins.kiosk import handlerkioskpresence
 import traceback
 import pprint
 import pluginsmaster
@@ -1340,6 +1341,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.debug("** update uuid %s for machine %s "%(uuid, machine['jid']))
                     #update inventory
                     XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
+
+
                     return True
         else:
             return True
@@ -1617,6 +1620,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 uuid = 'UUID' + str(computer.id)
                                 logger.debug("** update uuid %s for machine %s "%(uuid, msg['from'].bare))
                                 XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
+                                if PluginManager().isEnabled("kiosk"):
+                                    #send msg data to kiosk when an inventory registered
+                                    handlerkioskpresence( data['from'],
+                                                          id,
+                                                          data['platform'],
+                                                          data['information']['info']['hostname'],
+                                                          uuid,
+                                                          data['agenttype'],
+                                                          classutil = data['classutil'])
                                 XmppMasterDatabase().setlogxmpp("register inventory in xmpp",
                                                                 "Master",
                                                                 "",

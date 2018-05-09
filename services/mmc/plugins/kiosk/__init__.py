@@ -40,6 +40,7 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.base.config import BasePluginConfig
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
+from mmc.plugins.xmppmaster.master.agentmaster import callXmppPlugin
 import base64
 
 # Database
@@ -253,3 +254,24 @@ def handlerkioskpresence(gid, id, os, hostname, uuid_inventorymachine, agenttype
     TODO: This function will be implemented later
     """
     print("kiosk handled")
+
+
+def send_message_to_machine(datas, jid, sessionid = None):
+    datasend={'subaction':'send_message_to_jid',
+    'jid': jid,
+    'datas': datas}
+
+    if sessionid is not None:
+        datasend['sessionid'] = namerandom(6, sendmsgmachine)
+
+    else:
+        datasend['sessionid'] = sessionid
+    callXmppPlugin("kiosk", datasend)
+
+
+def test_call_xmpp_plugin_master(jid):
+    datas = {
+    'subaction':'test'
+    }
+
+    send_message_to_machine(datas, jid)
