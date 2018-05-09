@@ -245,3 +245,11 @@ def get_users_from_ou(ou):
 
     else:
         return False
+
+
+def handlerkioskpresence(gid, id, os, hostname, uuid_inventorymachine, agenttype, classutil):
+    """
+    This function launch the kiosk actions when a prensence machine is active
+    TODO: This function will be implemented later
+    """
+    print("kiosk handled")
