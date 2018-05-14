@@ -1593,7 +1593,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     urlguacamole=data['baseurlguacamole'],
                                                                     groupdeploy=data['deployment'],
                                                                     objkeypublic=publickeybase64,
-                                                                    ippublic=ippublic
+                                                                    ippublic=ippublic,
+                                                                    ad_ou_user = data['adorgbyuser'],
+                                                                    ad_ou_machine = data['adorgbymachine'],
+                                                                    lastuser = data['lastusersession']
                                                                    )
                 if idmachine != -1:
                     if useradd != -1:
