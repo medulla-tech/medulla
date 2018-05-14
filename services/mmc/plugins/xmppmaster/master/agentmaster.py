@@ -197,7 +197,7 @@ class XmppCommandDiffered:
                     if not self.xmpp.session.isexist(self.sessionid):
                         logger.debug( 'Action session %s timed out'%self.action)
                         logger.debug( "Timeout error")
-                        break;
+                        break
 
 class XmppSimpleCommand:
     """
@@ -238,7 +238,7 @@ class XmppSimpleCommand:
                                u'base64': False,
                                u'data': {u'msg': "ERROR command\n timeout %s"%self.t },
                                u'ret': 125}
-                break;
+                break
         self.xmpp.session.clearnoevent(self.sessionid)
         return self.result
 
@@ -886,7 +886,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             plugintype[plugin['NAME']]=plugin['TYPE']
                         except:
                             plugintype[plugin['NAME']]="machine"
-                        break;
+                        break
         self.plugindatascheduler = plugindataseach
         self.plugintypescheduler = plugintype
 
@@ -908,7 +908,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             plugintype[plugin['NAME']]=plugin['TYPE']
                         except:
                             plugintype[plugin['NAME']]="machine"
-                        break;
+                        break
         self.plugindata = plugindataseach
         self.plugintype = plugintype
 
@@ -1254,7 +1254,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                         logger.debug("subnet rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                         break
-                if subnetexist: break;
+                if subnetexist: break
             elif x[0] == 5:
                 logger.debug("analysis  rule Use default relay server %s"%self.config.defaultrelayserverip)
                 result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)

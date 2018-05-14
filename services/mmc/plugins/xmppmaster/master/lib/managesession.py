@@ -216,7 +216,7 @@ class session:
                 self.sessiondata[i].callend()
                 self.sessiondata[i].removesessionfile()
                 self.sessiondata.remove(self.sessiondata[i])
-                break;
+                break
         if objectxmpp != None:
             objectxmpp.eventmanage.clear(sessionid)
 
@@ -226,7 +226,7 @@ class session:
                 #renovefile
                 self.sessiondata[i].removesessionfile()
                 self.sessiondata.remove(self.sessiondata[i])
-                break;
+                break
 
     def isexist(self, sessionid):
         for i in self.sessiondata:

@@ -1247,7 +1247,7 @@ class Imaging(object):
             result['tranfert'] = False
             for x in s.stdout:
                 result['tranfert'] = True
-                break;
+                break
             s.stdout.close()
             s.wait()
             #if result['tranfert'] == True:
