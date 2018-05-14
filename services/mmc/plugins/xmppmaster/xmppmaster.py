@@ -32,12 +32,12 @@ logger = logging.getLogger()
 
 
 def singleton(class_):
-  instances = {}
-  def getinstance(*args, **kwargs):
-    if class_ not in instances:
-        instances[class_] = class_(*args, **kwargs)
-    return instances[class_]
-  return getinstance
+    instances = {}
+    def getinstance(*args, **kwargs):
+        if class_ not in instances:
+            instances[class_] = class_(*args, **kwargs)
+        return instances[class_]
+    return getinstance
 
 
 
@@ -69,14 +69,17 @@ class xmppMasterthread(threading.Thread):
         elif tg.debugmode == "CRITICAL":
             tg.debugmode = 50
         logging.basicConfig(level=tg.debugmode,
-                format='[%(name)s.%(funcName)s:%(lineno)d] %(message)s')
+                            format='[%(name)s.%(funcName)s:%(lineno)d] %(message)s')
         #logging.log(tg.debugmode,"=======================================test log")
         self.xmpp = MUCBot(tg)
         self.xmpp.register_plugin('xep_0030') # Service Discovery
         self.xmpp.register_plugin('xep_0045') # Multi-User Chat
         self.xmpp.register_plugin('xep_0004') # Data Forms
         self.xmpp.register_plugin('xep_0050') # Adhoc Commands
-        self.xmpp.register_plugin('xep_0199', {'keepalive' : False, 'frequency' : 600, 'interval' : 600, 'timeout' : 500  })
+        self.xmpp.register_plugin('xep_0199', {'keepalive' : False,
+                                               'frequency' : 600,
+                                               'interval' : 600,
+                                               'timeout' : 500})
         self.xmpp.register_plugin('xep_0077') # Registration
         #xmpp.register_plugin('xep_0047') # In-band Registration
         #xmpp.register_plugin('xep_0096') # file transfer
