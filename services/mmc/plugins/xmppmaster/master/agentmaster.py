@@ -864,8 +864,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 f.close()
                 for ligne in lignes:
                     if 'VERSION' in ligne and 'NAME' in ligne:
-                        li = ligne.split("=")
-                        plugin = eval(l[1])
+                        line = ligne.split("=")
+                        plugin = eval(line[1])
                         plugindataseach[plugin['NAME']] = plugin['VERSION']
                         try:
                             plugintype[plugin['NAME']] = plugin['TYPE']
