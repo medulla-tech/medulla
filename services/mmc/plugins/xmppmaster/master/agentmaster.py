@@ -798,12 +798,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("Jid from : %s"%data['from'])
             logger.info("Machine : %s"%data['machine'])
             logger.info("Platform : %s"%data['platform'])
+            if 'win' in data['platform']:
+                logger.info("__________________________")
+                logger.info("ACTIVE DIRECTORY")
+                logger.info("OU Active directory")
+                logger.info("OU by machine : %s"%data['adorgbymachine'])
+                logger.info("OU by user : %s"%data['adorgbyuser'])
+                if 'lastusersession' in data: 
+                    logger.info("last user session: %s"%data['lastusersession'])
             logger.info("--------------------------------")
             logger.info("----MACHINE XMPP INFORMATION----")
             logger.info("portxmpp : %s"%data['portxmpp'])
             logger.info("serverxmpp : %s"%data['serverxmpp'])
             logger.info("xmppip : %s"%data['xmppip'])
             logger.info("agenttype : %s"%data['agenttype'])
+            if 'moderelayserver' in data :
+                logger.info("mode relay server : %s"%data['moderelayserver'])
             logger.info("baseurlguacamole : %s"%data['baseurlguacamole'])
             logger.info("xmppmask : %s"%data['xmppmask'])
             logger.info("subnetxmpp : %s"%data['subnetxmpp'])

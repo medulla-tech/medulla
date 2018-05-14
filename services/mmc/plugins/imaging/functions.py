@@ -2580,7 +2580,7 @@ class ImagingRpcProxy(RpcProxyI):
                     if ligne.startswith("OS"):
                         print ligne
                         osfile.append(ligne)
-                        break;
+                        break
                 else:
                     osfile.append("os missing")
                 fichier.close()
@@ -2591,7 +2591,7 @@ class ImagingRpcProxy(RpcProxyI):
                     if ligne.startswith("Notes:"):
                         print ligne
                         descriptionfile.append(ligne[7:-1])
-                        break;
+                        break
                 else:
                     descriptionfile.append("Missing description")
                 fichier.close()
@@ -2686,18 +2686,18 @@ class ImagingRpcProxy(RpcProxyI):
                     if line.startswith("OS"):
                         line = line.split(" ")
                         os = " ".join(line[1:3])
-                        break;
+                        break
 
             for line in f:
                     if line.startswith("Notes"):
                         line = line.split(" ")
                         description = " ".join(line[1:])
-                        break;
+                        break
 
             for line in f:
                     if line.startswith("list"):
                         parameters = parameters + line[18:-1]
-                        break;
+                        break
 
             parameters = json.loads(parameters)
             parameters["Os"] = os
