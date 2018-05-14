@@ -99,6 +99,10 @@ class Machines(Base, XmppMasterDBObj):
     urlguacamole =Column(String(255))
     groupdeploy = Column(String(80))
     picklekeypublic = Column(String(550))
+    ad_ou_machine = Column(Text)
+    ad_ou_user = Column(Text)
+    lastuser = Column(String(45))
+
 
 class Network(Base, XmppMasterDBObj):
     # ====== Table name =========================
