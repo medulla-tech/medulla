@@ -410,6 +410,9 @@ class KioskDatabase(DatabaseHelper):
         session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
         session.query(Profile_has_ou).filter(Profile_has_ou.profile_id == id).delete()
 
+        session.commit()
+        session.flush()
+
         for ou in ous:
             profile_ou = Profile_has_ou()
             profile_ou.profile_id = id

@@ -30,17 +30,16 @@ require_once("../../../includes/acl.inc.php");
 if(isset($_POST['name'], $_POST['active']))
 {
     $name = rename_profile($_POST['name']);
+    if(is_string($_POST['ous']) && $_POST['ous'] == "none")
+        $ous = null;
+    else
+        $ous = $_POST['ous'];
 
     // Add the profile to the database
     if(isset($_POST['packages']))
-        $result = xmlrpc_create_profile($name, $_POST['ous'], $_POST['active'], $_POST['packages']);
+        $result = xmlrpc_create_profile($name, $ous, $_POST['active'], $_POST['packages']);
     else
-    {
-        if(is_string($_POST['ous']) && $_POST['ous'] == "none")
-            $result = xmlrpc_create_profile($name, null, $_POST['active']);
-        else
-            $result = xmlrpc_create_profile($name, $_POST['ous'], $_POST['active']);
-    }
+        $result = xmlrpc_create_profile($name, $ous, $_POST['active']);
 
     echo _T('The profile '.$name.' has been created','kiosk');
 }
