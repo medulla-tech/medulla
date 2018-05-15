@@ -20,10 +20,40 @@
 var ous = [];
 var selectedId = []
 jQuery(function(){
+    //
+    // Enable - disable the OUs tree
+    //
+    // Behaviour by default : useful for edit mode
+    var old_ous = ous;
+    if(jQuery("#no_ou").is(":checked") == false)
+    {
+        jQuery("#jstree").hide();
+        old_ous = ous;
+        ous = "none";
+    }
+    else
+    {
+        jQuery("#jstree").show();
+        ous = old_ous;
+    }
+
+    jQuery("#no_ou").on("click", function(){
+        if(jQuery("#no_ou").is(":checked") == false)
+        {
+            jQuery("#jstree").hide();
+            old_ous = ous;
+            ous = "none";
+        }
+        else
+        {
+            jQuery("#jstree").show();
+            ous = old_ous;
+        }
+    });
+
     if(typeof(jQuery("input[name='ous']").val()) != 'undefined')
     {
         var ousToEdit = jQuery("input[name='ous']").val().split(';');
-        console.log(ousToEdit);
 
         // From the listed OUs :
         // So firstly, copy the tree, because after declaring it as tree, it's DOM is modified
@@ -41,9 +71,9 @@ jQuery(function(){
     }
 
     jQuery('#jstree').jstree();
-        // Finally now the ids of selected ous are stored in selectedId variable. The ous are selected by default in
-        // the tree.
-        jQuery('#jstree').jstree('select_node', selectedId);
+    // Finally now the ids of selected ous are stored in selectedId variable. The ous are selected by default in
+    // the tree.
+    jQuery('#jstree').jstree('select_node', selectedId);
 
     //jQuery.jstree.reference('#jstree').select_node("[data-root='bonsecours']");
     jQuery('#jstree').on("changed.jstree", function (e, data) {
@@ -52,8 +82,8 @@ jQuery(function(){
         jQuery.each(data.selected, function(id, element){
             ous.push(jQuery("#"+element).attr('data-root'))
         })
-            jQuery("#users").load('/mmc/modules/kiosk/kiosk/ajaxGetUsersForOu.php', {'roots':ous}, function(result){
+        jQuery("#users").load('/mmc/modules/kiosk/kiosk/ajaxGetUsersForOu.php', {'roots':ous}, function(result){
 
-            });
+        });
     });
 });

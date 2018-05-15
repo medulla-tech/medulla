@@ -22,7 +22,7 @@ jQuery("#bvalid").click(function() {
     if(jQuery("#name").val() == "")
         jQuery("#name").focus();
 
-    else if(ous.length == 0)
+    else if(ous.length == 0 && jQuery("#no_ou").is(":checked"))
         alert("Please select the concerned OUs")
     else
         sendForm();
@@ -51,7 +51,6 @@ function sendForm(){
     // Send the infos to ajaxAddProfile.php
     jQuery.post(url, datas, function(result){
         // the datas printed in ajaxAddProfile.php are stored in result
-        
         alert(result)
     });
 }

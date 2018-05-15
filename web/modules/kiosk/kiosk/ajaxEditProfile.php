@@ -36,7 +36,14 @@ if(isset($_POST['id'], $_POST['name'], $_POST['active']))
         xmlrpc_update_profile($_POST['id'], $_POST['name'], $_POST['ous'], $_POST['active'], $_POST['packages']);
     }
     else
-        xmlrpc_update_profile($_POST['id'], $_POST['name'], $_POST['ous'], $_POST['active']);
+    {
+        if(is_string($_POST['ous']) && $_POST['ous'] == "none")
+            xmlrpc_update_profile($_POST['id'], $_POST['name'], [], $_POST['active']);
+
+        else
+            xmlrpc_update_profile($_POST['id'], $_POST['name'], $_POST['ous'], $_POST['active']);
+    }
+
     echo _T('The profile '.$_POST['name'].' has been updated','kiosk');
 }
 else

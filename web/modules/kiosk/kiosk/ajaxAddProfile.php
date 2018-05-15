@@ -35,7 +35,12 @@ if(isset($_POST['name'], $_POST['active']))
     if(isset($_POST['packages']))
         $result = xmlrpc_create_profile($name, $_POST['ous'], $_POST['active'], $_POST['packages']);
     else
-        $result = xmlrpc_create_profile($name, $_POST['ous'], $_POST['active']);
+    {
+        if(is_string($_POST['ous']) && $_POST['ous'] == "none")
+            $result = xmlrpc_create_profile($name, null, $_POST['active']);
+        else
+            $result = xmlrpc_create_profile($name, $_POST['ous'], $_POST['active']);
+    }
 
     echo _T('The profile '.$name.' has been created','kiosk');
 }

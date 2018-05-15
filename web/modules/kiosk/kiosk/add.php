@@ -76,7 +76,9 @@ $f = new ValidatingForm(array("id" => "profile-form"));
 
     //SepTpl came from modules/imaging/includes/class_form.php
     $f->add( new SepTpl());
-
+    $f->add(
+        new TrFormElement(_T('', 'kiosk'), new CheckBoxTpl("no_ou")), array("value" => "checked")
+    );
     // -------
     // Add the OUs tree
     // -------
@@ -91,7 +93,6 @@ $f = new ValidatingForm(array("id" => "profile-form"));
 
     // Create a section without table in the form
     $f->add(new TitleElement(_T("Manage packages", "kiosk")));
-    
     // Get the list of the packages
     $available_packages = [];
     $available_packages_str = "";
@@ -105,7 +106,6 @@ $f = new ValidatingForm(array("id" => "profile-form"));
     foreach($available_packages as $package_name=>$package_uuid){
         $available_packages_str .= '<li data-draggable="item" data-uuid="'.$package_uuid.'">'.$package_name.'</li>';
     }
-
     $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packages">
         <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
         <div style="width:100%">
