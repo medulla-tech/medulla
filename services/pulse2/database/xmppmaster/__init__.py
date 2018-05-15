@@ -2580,4 +2580,4 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [x for x in result]
+        return [element for element in result]
