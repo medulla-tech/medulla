@@ -25,16 +25,20 @@ jQuery(function(){
     //
     // Behaviour by default : useful for edit mode
     var old_ous = ous;
+    var old_users = null;
     if(jQuery("#no_ou").is(":checked") == false)
     {
         jQuery("#jstree").hide();
         old_ous = ous;
+        old_users = jQuery("#users").html();
         ous = "none";
+        jQuery("#users").html("");
     }
     else
     {
         jQuery("#jstree").show();
         ous = old_ous;
+        jQuery("#users").html(old_users);
     }
 
     jQuery("#no_ou").on("click", function(){
@@ -42,12 +46,15 @@ jQuery(function(){
         {
             jQuery("#jstree").hide();
             old_ous = ous;
+            old_users = jQuery("#users").html();
             ous = "none";
+            jQuery("#users").html("");
         }
         else
         {
             jQuery("#jstree").show();
             ous = old_ous;
+            jQuery("#users").html(old_users);
         }
     });
 
