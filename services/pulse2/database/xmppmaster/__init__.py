@@ -484,7 +484,10 @@ class XmppMasterDatabase(DatabaseHelper):
                            urlguacamole ="",
                            groupdeploy ="",
                            objkeypublic = None,
-                           ippublic = None):
+                           ippublic = None,
+                           ad_ou_user = "",
+                           ad_ou_machine = "",
+                           lastuser = ""):
         try:
             new_machine = Machines()
             new_machine.jid = jid
@@ -501,6 +504,9 @@ class XmppMasterDatabase(DatabaseHelper):
             new_machine.urlguacamole = urlguacamole
             new_machine.groupdeploy = groupdeploy
             new_machine.picklekeypublic = objkeypublic
+            new_machine.ad_ou_user = ad_ou_user
+            new_machine.ad_ou_machine = ad_ou_machine
+            new_machine.lastuser = lastuser
             session.add(new_machine)
             session.commit()
             session.flush()

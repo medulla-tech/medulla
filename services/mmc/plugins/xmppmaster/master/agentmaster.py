@@ -865,8 +865,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 f.close()
                 for ligne in lignes:
                     if 'VERSION' in ligne and 'NAME' in ligne:
-                        li = ligne.split("=")
-                        plugin = eval(l[1])
+                        line = ligne.split("=")
+                        plugin = eval(line[1])
                         plugindataseach[plugin['NAME']] = plugin['VERSION']
                         try:
                             plugintype[plugin['NAME']] = plugin['TYPE']
@@ -1596,7 +1596,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     urlguacamole=data['baseurlguacamole'],
                                                                     groupdeploy=data['deployment'],
                                                                     objkeypublic=publickeybase64,
-                                                                    ippublic=ippublic
+                                                                    ippublic=ippublic,
+                                                                    ad_ou_user = data['adorgbyuser'],
+                                                                    ad_ou_machine = data['adorgbymachine'],
+                                                                    lastuser = data['lastusersession']
                                                                    )
                 if idmachine != -1:
                     if useradd != -1:
