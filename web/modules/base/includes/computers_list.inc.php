@@ -151,7 +151,8 @@ function list_computers($names,
     $params = array();
     $cssClasses = array();
     $actioneditremoteconfiguration = array();
-
+    $actionxmppbrowsing = array();
+    $actionxmppbrowsingne = array();
 
     $headers = getComputersListHeaders();
 
