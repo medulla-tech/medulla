@@ -40,7 +40,6 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.base.config import BasePluginConfig
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
-from mmc.plugins.xmppmaster.master.agentmaster import callXmppPlugin
 import base64
 
 # Database
