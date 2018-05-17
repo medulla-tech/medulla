@@ -2561,14 +2561,15 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machine_ad_infos(self, session, uuid_inventory):
-    """
-    Select the founded OUs of the logged machine.
-    Param:
-        uuid_inventory: str. This param is the uuid of the inventory of the machine received by xmpp.
+        """
+        Select the founded OUs of the logged machine.
+        Param:
+            uuid_inventory: str. This param is the uuid of the inventory of the machine received by xmpp.
 
-    Returns:
-        List of tuple. The tuple contains all the ou_machine and ou_user founded.
-    """
+        Returns:
+            List of tuple. The tuple contains all the ou_machine and ou_user founded.
+        """
+
         sql = """
         SELECT
             ad_ou_machine, ad_ou_user
