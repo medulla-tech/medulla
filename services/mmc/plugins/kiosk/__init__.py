@@ -266,9 +266,13 @@ def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype
     OUuser    = [ x.replace("\n",'').replace("\r",'')  for x in base64.b64decode(machine['ad_ou_user']).split("@@") if x !=""]
     OU = list(set(OUmachine + OUuser))
 
-    #recherche des package pour les profils appliques
+    # recherche des packages pour les profils appliques
     list_profile_packages =  KioskDatabase().get_profile_list_for_OUList( OU )
-
+    if list_profile_packages is None:
+        #TODO
+        # linux and mac os does not have an Organization Unit.
+        # For mac os and linux, profile association will be done on the login name.
+        return
     list_software_glpi = []
     softwareonmachine = Glpi().getLastMachineInventoryPart(uuid_inventorymachine, 
                                                            'Softwares', 0, -1, '',
