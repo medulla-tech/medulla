@@ -114,6 +114,52 @@ class KioskDatabase(DatabaseHelper):
         return lines
 
     @DatabaseHelper._sessionm
+    def get_profile_list_for_OUList(self, session, OU):
+        if len(OU) == 0:
+            # return le profils par default
+            return
+        listou =  "('" + "','".join(OU) + "')"
+        sql = """
+            SELECT 
+                distinct 
+                kiosk.package.name as 'name_package',
+                kiosk.profiles.name as 'name_profile',
+                kiosk.package.description,
+                kiosk.package.version_package,
+                kiosk.package.software,
+                kiosk.package.version_software,
+                kiosk.package.package_uuid,
+                kiosk.package.os ,
+                kiosk.package_has_profil.package_status
+            FROM
+                kiosk.package
+                    INNER JOIN
+                kiosk.profiles ON kiosk.profiles.id = kiosk.package.id
+                    INNER JOIN
+                kiosk.package_has_profil ON kiosk.package_has_profil.package_id = kiosk.package.id
+            WHERE
+                kiosk.profiles.id in 
+                        (SELECT DISTINCT
+                                profile_id
+                            FROM
+                                kiosk.profile_has_ous
+                            WHERE
+                                ou IN %s)
+                    AND kiosk.profiles.active = 1;
+                """%listou
+        print sql
+        try:
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            l = [x for x in result]
+            return l
+        except Exception, e:
+            logging.getLogger().error("get_profile_list_for_OUList %s" % jid)
+            logging.getLogger().error(str(e))
+            return ""
+
+    @DatabaseHelper._sessionm
     def get_profiles_name_list(self, session):
         """
         Return a list of all the existing profiles.

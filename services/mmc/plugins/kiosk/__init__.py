@@ -40,11 +40,17 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.base.config import BasePluginConfig
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
-import base64
+
+
 
 # Database
 from pulse2.database.kiosk import KioskDatabase
-
+#use database xmppmaster
+from pulse2.database.xmppmaster import XmppMasterDatabase
+#use database glpi
+from mmc.plugins.glpi.database import Glpi
+#lib coparaison de version
+from distutils.version import LooseVersion, StrictVersion
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
@@ -246,22 +252,89 @@ def get_users_from_ou(ou):
     else:
         return False
 
-
-def handlerkioskpresence(gid, id, os, hostname, uuid_inventorymachine, agenttype, classutil):
+def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil):
     """
     This function launch the kiosk actions when a prensence machine is active
     TODO: This function will be implemented later
     """
-    print("kiosk handled")
+    logger.debug("kiosk handled")
+    #print jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil
+    # récupération des profils dans la table machine.
+    machine = XmppMasterDatabase().getMachinefromjid(jid)
+    print base64.b64decode(machine['ad_ou_machine'])
+    OUmachine = [ x.replace("\n",'').replace("\r",'')  for x in base64.b64decode(machine['ad_ou_machine']).split("@@") if x !=""]
+    OUuser    = [ x.replace("\n",'').replace("\r",'')  for x in base64.b64decode(machine['ad_ou_user']).split("@@") if x !=""]
+    OU = list(set(OUmachine + OUuser))
+
+    #recherche des package pour les profils appliques
+    list_profile_packages =  KioskDatabase().get_profile_list_for_OUList( OU )
+
+    list_software_glpi = []
+    softwareonmachine = Glpi().getLastMachineInventoryPart(uuid_inventorymachine, 
+                                                           'Softwares', 0, -1, '',
+                                                           {'hide_win_updates': True, 'history_delta': ''})
+    for x in softwareonmachine:
+        list_software_glpi.append([x[0][1],x[1][1], x[2][1]])
+    print list_software_glpi # ordre information [["Vendor","Name","Version"],]
+    structuredatakiosk = []
+ 
+    #creation structuredatakiosk pour initialisation
+    for packageprofile in list_profile_packages:
+        structuredatakiosk.append( __search_software_in_glpi(list_software_glpi, packageprofile, structuredatakiosk))
+    logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, hostname))
+
+    datas = {
+    'subaction':'test', 
+    'data' : structuredatakiosk
+    }
+
+    send_message_to_machine(datas, jid, name_random(6, "initialisation_kiosk"))
+
+def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatakiosk):
+    structuredatakioskelement={ 'name': packageprofile[0],
+                                "action" : [],
+                                'uuid':  packageprofile[6],
+                                'description': packageprofile[2],
+                                "version" : packageprofile[3]
+                               }
+    patternname = re.compile("(?i)" + packageprofile[0])
+    for soft_glpi in list_software_glpi:
+        #TODO
+        # prevoir dans les packages pulse une rubrique vendor pour le nom du software
+        # pour le momment  on utilise le nom du package qui doit correspondre au nom glpi.
+        if patternname.match(str(soft_glpi[0])) or patternname.match(str(soft_glpi[1])):
+            # traitement de ce pacquage qui est installe sur la machine
+            # le package peut être supprimer
+            structuredatakioskelement['icon'] =  'icone.png'
+            structuredatakioskelement['action'].append('Delete')
+            structuredatakioskelement['action'].append('Launch')
+            # verification si update
+            # compare version
+            #TODO 
+            # pour le moment on utilise la version du package. mais presvoir version du software dans les package pulse
+            if LooseVersion(soft_glpi[2]) < LooseVersion(packageprofile[3]):
+                structuredatakioskelement['action'].append('Update')
+                logger.debug("the software version is superior "\
+                    "to that installed on the machine %s : %s < %s"%(packageprofile[0],soft_glpi[2],LooseVersion(packageprofile[3])))
+            break 
+    if len(structuredatakioskelement['action']) == 0:
+        # le package definie pour ce profil n'est pas present sur la machine:
+        if packageprofile[8] == "allowed":
+            structuredatakioskelement['action'].append('Install')
+        else:
+            structuredatakioskelement['action'].append('Ask')
+    return structuredatakioskelement
 
 
-def send_message_to_machine(datas, jid, sessionid = None):
-    datasend={'subaction':'send_message_to_jid',
+def send_message_to_machine( datas, jid, sessionid = None, subaction = 'send_message_to_jid'):
+    from mmc.plugins.xmppmaster.master.agentmaster import callXmppPlugin
+    # use plugin master kiosk for send msg
+    datasend={'subaction': subaction,
     'jid': jid,
-    'datas': datas}
+    'data': datas}
 
     if sessionid is not None:
-        datasend['sessionid'] = namerandom(6, sendmsgmachine)
+        datasend['sessionid'] = name_random(6, "sendmsgmachine")
 
     else:
         datasend['sessionid'] = sessionid

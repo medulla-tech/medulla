@@ -1636,7 +1636,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 if PluginManager().isEnabled("kiosk"):
                                     #send msg data to kiosk when an inventory registered
                                     handlerkioskpresence( data['from'],
-                                                          id,
+                                                          idmachine,
                                                           data['platform'],
                                                           data['information']['info']['hostname'],
                                                           uuid,
