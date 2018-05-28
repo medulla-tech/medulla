@@ -2394,6 +2394,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getMachinefromjid(self, session, jid):
+        """ information machine"""
         machine = session.query(Machines).filter(Machines.jid == jid).first()
         session.commit()
         session.flush()
@@ -2413,8 +2414,12 @@ class XmppMasterDatabase(DatabaseHelper):
                         "classutil" : machine.classutil, 
                         "groupdeploy" : machine.groupdeploy, 
                         "urlguacamole" : machine.urlguacamole, 
-                        "picklekeypublic" : machine.picklekeypublic}
+                        "picklekeypublic" : machine.picklekeypublic,
+                        'ad_ou_user': machine.ad_ou_user,
+                        'ad_ou_machine': machine.ad_ou_machine,
+                        'lastuser': machine.lastuser}
         return result
+
 
     @DatabaseHelper._sessionm
     def getRelayServerfromjid(self, session, jid):
