@@ -153,11 +153,11 @@ li.quickg a {
     $uiduniq = uniqid ("shellcommande");
     $resultcommand = "";
     $errorcode = "";
-    $p = new PageGenerator(_T("Consoleqqqq", 'xmppmaster')." $tab[1]");
+    $p = new PageGenerator(_T("Console", 'xmppmaster')." $tab[1]");
     $p->setSideMenu($sidemenu);
     $p->display();
-    
-    echo "Natif os :" . xmlrpc_getMachinefromjid($machine)['platform'];
+
+    echo "OS version :" . xmlrpc_getMachinefromjid($machine)['platform'];
 
     if (
         isset($_POST['command']) &&
@@ -191,7 +191,7 @@ li.quickg a {
     <table cellspacing="0">
     <input  type="hidden" id="machine" value="<? echo $machine; ?>" name="Machine"/>
         <tr>
-            <td class="label" width="40%" style = "text-align: right;">Natif Shell command</td>
+            <td class="label" width="40%" style = "text-align: right;">Shell command</td>
             <td>
                 <span id="container_input_command">
                     <input value="<? echo $_POST['command']; ?>" 

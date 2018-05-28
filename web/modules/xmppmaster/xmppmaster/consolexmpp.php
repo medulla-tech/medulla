@@ -101,7 +101,7 @@ textarea {
         </tr>
 
         <tr>
-            <td class="label" width="40%" style = "text-align: right;">Natif Shell command</td>
+            <td class="label" width="40%" style = "text-align: right;">Shell command</td>
             <td>
                 <span id="container_input_command">
                     <input value="<? echo $_POST['command']; ?>"
