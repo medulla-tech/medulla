@@ -94,7 +94,7 @@ function start_a_command($proxy = array()) {
     }
     // Vars seeding
     $post = $_POST;
-  
+
     $from = $post['from'];
     $path = explode('|', $from);
     $module = $path[0];
@@ -658,26 +658,26 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             );
             if( isset($gid)){
                 $rb = new RadioTpl("choix_methode_exec");
-                $rb->setChoices(array(_T('time', 'msc'), _T('Number of machines', 'msc')));
+                $rb->setChoices(array(_T('Time constraint', 'msc'), _T('Successful transfer rate', 'msc')));
                 $rb->setvalues(array('timeinstall','nbinstall'));
                 $rb->setSelected('continueinstall');
             }
                 else{
                 $rb = new RadioTpl("choix_methode_exec");
-                $rb->setChoices(array(_T('time', 'msc')));
+                $rb->setChoices(array(_T('Time constraint', 'msc')));
                 $rb->setvalues(array('timeinstall'));
                 $rb->setSelected('continueinstall');
             }
             $f->add(
                 new TrFormElement(
-                    _T('Choix install Mode', 'msc'), $rb,array("trid"=>"choixmethod")
+                    _T('Install constraint', 'msc'), $rb,array("trid"=>"choixmethod")
                 )
             );
         }
         if (isExpertMode()){
             $f->add(
                 new TrFormElement(
-                    _T('Startup to run the package in the deployment time range', 'msc'), new DateTimeTpl('exec_date'),array("trid"=>"idexecdate")
+                    _T('Run the deployment at the specific time', 'msc'), new DateTimeTpl('exec_date'),array("trid"=>"idexecdate")
                 ), array(
                     "value" => $exec_date,
                     "ask_for_never" => 0
@@ -687,19 +687,19 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         if (isExpertMode()){
             if( isset($gid)){
                 $nbmachineforexec = array(
+                    new TextTpl("Number of machines having successfully transferred the package"),
                     new InputTpl('instructions_nb_machine_for_exec'),
-                    new TextTpl("Machines"),
-                    new TextTpl(" Percentage"),
-                    new InputTpl('instructions_nb_machine_pourcent'),
-                    new TextTpl("%")
+                    new TextTpl("<br>"),
+                    new TextTpl("Percentage of machines having successfully transferred the package"),
+                    new InputTpl('instructions_nb_machine_pourcent')
                 );
                 $f->add(
-                new TrFormElement(
-                    '', new TextTpl(sprintf('<h2>Group "%s" [Machine in Group : %s]</h2>',$namegroup, getRestrictedComputersListLen( array('gid' => $gid)))),array("trid"=>"idnbmachine1")
-                )
-            );
+                    new TrFormElement(
+                        '', new TextTpl(sprintf('<h2>Group "%s" (%s machines)</h2>',$namegroup, getRestrictedComputersListLen( array('gid' => $gid)))),array("trid"=>"idnbmachine1")
+                    )
+                );
                 $f->add(
-                    new TrFormElement("Nb"
+                    new TrFormElement(""
                         , new multifieldTpl($nbmachineforexec),array("trid"=>"idnbmachine")
                     ), $deployment_values
                 );
@@ -784,7 +784,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         $ajax->display();
         print "<br/>";
         $ajax->displayDivToUpdate();
-    } 
+    }
     else {
         $msc_host = new RenderedMSCGroupDontExists();
         $msc_host->headerDisplay();
