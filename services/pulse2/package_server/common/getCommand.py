@@ -99,7 +99,7 @@ class getCommand(object):
     def getMozillaCommand(self):
         return '"%s" -ms' % basename(self.file)
 
-    def getMSI32Command(self):
+    def getMSICommand(self):
         return """msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
 
 if errorlevel 1 (
@@ -111,29 +111,11 @@ if errorlevel 1 (
   exit 0
 )""" % basename(self.file)
 
-    def getMSI32UpdateCommand(self):
+    def getMSIUpdateCommand(self):
         """
         Command for *.msp files (MSI update packages)
         """
         return 'msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
-
-    def getMSI64Command(self):
-        return """%%windir%%\sysnative\msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
-
-if errorlevel 1 (
-  type install.log
-  echo "MSI INSTALLER FAILED WITH CODE %%errorlevel%%. SEE LOG ABOVE."
-  exit /b %%errorlevel%%
-) else (
-  del /F install.log
-  exit 0
-)""" % basename(self.file)
-
-    def getMSI64UpdateCommand(self):
-        """
-        Command for *.msp files (MSI update packages 64-bits)
-        """
-        return '%%windir%%\sysnative\msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
 
     def getRegCommand(self):
         return 'regedit /s "%s"' % basename(self.file)
@@ -201,24 +183,13 @@ if errorlevel 1 (
             # MSI files are created with Windows Installer, but some apps like Flash Plugin, No
             if "Windows Installer" in file_data['Name of Creating Application'] or "Document Little Endian" in file_data[self.file]:
                 # MSI files
-                if "Template" in file_data:
-                    if re.match('x64;[0-9]+', file_data['Template']):
-                        if self.file.endswith('.msp'):
-                            self.logger.debug("%s is a x64 MSI Update file" % self.file)
-                            return self.getMSI64UpdateCommand()
-                        else:
-                            self.logger.debug("%s is a x64 MSI file" % self.file)
-                            return self.getMSI64Command()
-                    # Some buggy MSI converters don't add Intel in Template key
-                    elif re.match('(Intel)?;[0-9]+', file_data['Template']):
-                        if self.file.endswith('.msp'):
-                            self.logger.debug("%s is a 32-bit MSI Update file" % self.file)
-                            return self.getMSI32UpdateCommand()
-                        else:
-                            self.logger.debug("%s is a 32-bit MSI file" % self.file)
-                            return self.getMSI32Command()
+                if re.match('x64;[0-9]+', file_data['Template']):
+                    if self.file.endswith('.msp'):
+                        self.logger.debug("%s is a MSI Update file" % self.file)
+                        return self.getMSIUpdateCommand()
                     else:
-                        return self.logger.info("I can't get a command for %s" % self.file)
+                        self.logger.debug("%s is a MSI file" % self.file)
+                        return self.getMSICommand()
                 else:
                     return self.logger.info("No Template Key for %s" % self.file)
         elif "Debian binary package" in file_data[self.file]:
