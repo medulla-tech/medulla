@@ -207,6 +207,41 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         return bdl
 
+    def createcommanddirectxmpp( self, 
+                                package_id,
+                                start_file, 
+                                parameters, 
+                                files,
+                                start_script, 
+                                clean_on_success,
+                                start_date, 
+                                end_date, 
+                                connect_as,
+                                creator, 
+                                title,
+                                next_connection_delay,
+                                max_connection_attempt,
+                                maxbw, 
+                                deployment_intervals,
+                                fk_bundle, 
+                                order_in_bundle, 
+                                proxies, 
+                                proxy_mode,
+                                state, 
+                                sum_running, 
+                                cmd_type=0):
+        session = create_session()
+        obj = self.createCommand( session, package_id, start_file, parameters, files,
+            start_script, clean_on_success, start_date, end_date, connect_as,
+            creator, title,
+            next_connection_delay,
+            max_connection_attempt,
+            maxbw, deployment_intervals,
+            fk_bundle, order_in_bundle, proxies, proxy_mode,
+            state, sum_running, cmd_type=0)
+        return obj
+        session.close()
+
     def createCommand(self, session, package_id, start_file, parameters, files,
             start_script, clean_on_success, start_date, end_date, connect_as,
             creator, title,
