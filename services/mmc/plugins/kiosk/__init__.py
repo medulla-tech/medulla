@@ -252,7 +252,7 @@ def get_users_from_ou(ou):
     else:
         return False
 
-def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil):
+def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil, fromplugin = False):
     """
     This function launch the kiosk actions when a prensence machine is active
     TODO: This function will be implemented later
@@ -292,7 +292,9 @@ def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype
     'data' : structuredatakiosk
     }
 
-    send_message_to_machine(datas, jid, name_random(6, "initialisation_kiosk"))
+    if not fromplugin:
+        send_message_to_machine(datas, jid, name_random(6, "initialisation_kiosk"))
+    return datas
 
 def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatakiosk):
     structuredatakioskelement={ 'name': packageprofile[0],
