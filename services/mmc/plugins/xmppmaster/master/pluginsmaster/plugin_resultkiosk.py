@@ -31,29 +31,31 @@ from managepackage import managepackage
 import logging
 from utils import name_random, file_put_contents,file_get_contents
 import re
+from mmc.plugins.kiosk import handlerkioskpresence
 
 plugin = {"VERSION" : "1.0", "NAME" : "resultkiosk", "TYPE" : "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    print "#################################################"
-    print plugin
-    print "#################################################"
-    print json.dumps(data, indent = 4)
-
+    logging.getLogger().debug("#################################################")
+    logging.getLogger().debug(plugin)
+    logging.getLogger().debug(json.dumps(data, indent = 4))
+    logging.getLogger().debug("#################################################")
     if 'subaction' in data :
-        if data['subaction'] == 'launch':
+        if data['subaction'] == 'initialization':
+            initialisekiosk(data, message, xmppobject)
+        elif data['subaction'] == 'launch':
             deploypackage(data,  message, xmppobject)
-        if data['subaction'] == 'delete':
+        elif data['subaction'] == 'delete':
             deploypackage(data,  message, xmppobject)
-        if data['subaction'] == 'install':
+        elif data['subaction'] == 'install':
             deploypackage(data,  message, xmppobject)
-        if data['subaction'] == 'update':
+        elif data['subaction'] == 'update':
             deploypackage(data,  message, xmppobject)
         else:
             print "No subaction found"
     else:
-            pass
+        pass
 
 def parsexmppjsonfile(path):
         datastr = file_get_contents(path)
@@ -62,6 +64,28 @@ def parsexmppjsonfile(path):
         datastr = re.sub(r"(?i) *: *true", " : true", datastr)
 
         file_put_contents(path, datastr)
+
+def initialisekiosk(data, message, xmppobject):
+    machine =  XmppMasterDatabase().getMachinefromjid(message['from'])
+    print json.dumps(machine, indent = 4)
+    initializationdatakiosk = handlerkioskpresence( message['from'],
+                               machine['id'],
+                               machine['platform'],
+                               machine['hostname'],
+                               machine['uuid_inventorymachine'],
+                               machine['agenttype'],
+                               classutil = machine['classutil'], 
+                               fromplugin = True)
+
+    datasend = {
+        "sessionid" : name_random(6, "initialisation_kiosk"),
+        "action" : "kiosk",
+        "data" : initializationdatakiosk
+    }
+    xmppobject.send_message( mto= message['from'],
+                             mbody=json.dumps(datasend),
+                             mtype='chat')
+
 
 def deploypackage(data, message, xmppobject):
     machine =  XmppMasterDatabase().getMachinefromjid( message['from'])
