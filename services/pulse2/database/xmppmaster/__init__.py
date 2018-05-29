@@ -1288,6 +1288,8 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['login'].append(linedeploy.login)
             ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
+            if linedeploy.group_uuid == None:
+                linedeploy.group_uuid = ""
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
             ret['tabdeploy']['endcmd'].append(linedeploy.endcmd)
