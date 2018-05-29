@@ -1149,12 +1149,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         adorgbymachinebool = False
         if 'adorgbymachine' in data and data['adorgbymachine'] != "":
-            # manage_fqdn_window_activedirectory.organizationADmachinetofile(data['adorgbymachine'])
             adorgbymachinebool = True
 
         adorgbyuserbool = False
         if 'adorgbyuser' in data and data['adorgbyuser'] != "":
-            # manage_fqdn_window_activedirectory.organizationADusertofile(data['adorgbyuser'])
             adorgbyuserbool = True
 
         # Defining relay server for connection
