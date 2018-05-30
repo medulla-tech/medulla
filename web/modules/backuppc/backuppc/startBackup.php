@@ -33,8 +33,6 @@ if (isset( $_POST["uuid"])) {
     foreach ($cl as $k => $v) {
         $cn = $v[1]['cn'][0];
     }
-    // xmlrpc_getPresenceuuid
-    // xmlrpc_getjidMachinefromuuid
 }
 
 if (isset($_POST["bfull"], $_POST["uuid"])) {
@@ -52,10 +50,10 @@ if (isset($_POST["bfull"], $_POST["uuid"])) {
                                     'Backup | Full backup Starting | Manual');
 
     start_full_backup($_POST["uuid"]);
-
+    // echo "full";
     return;
 } elseif (isset($_POST["bincr"], $_POST["uuid"])) {
-    // Starting Full backup
+    // Starting increment backup
     xmlrpc_setfromxmppmasterlogxmpp("Starting increment backup on machine $cn",
                                     "BPC",
                                     '',
@@ -69,6 +67,7 @@ if (isset($_POST["bfull"], $_POST["uuid"])) {
                                     'Backup | Incremental backup requested | Manual');
 
     start_incr_backup($_POST["uuid"]);
+    //echo "incremental";
     return;
 } else {
     /* Form displaying */
@@ -89,10 +88,13 @@ if (isset($_POST["bfull"], $_POST["uuid"])) {
             var form = $('form#backupManualAction');
             $.ajax(form.attr('action'), {
                 type: form.attr('method'),
-                data: form.serialize() + '&' + $(this).attr('name') + '=' + $(this).val()
-            }).success(function() {
-                pushSearch();
-                closePopup();
+                data: form.serialize() + '&' + $(this).attr('name') + '=' + $(this).val(),
+                success: function(data){
+                //console.log(data);
+                //console.log("success");
+                    pushSearch();
+                    closePopup();
+                }
             });
             return false;
         });
