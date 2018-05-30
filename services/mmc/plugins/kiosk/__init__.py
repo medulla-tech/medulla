@@ -353,3 +353,63 @@ def test_call_xmpp_plugin_master(jid):
     }
 
     send_message_to_machine(datas, jid)
+
+
+def get_ou_for_user(user):
+    """This function find the ou of the specified user.
+
+    Params:
+        string user name
+
+    Returns:
+        The string of the OU
+        or
+        returns False for some issues
+    """
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
+    if config.has_section('authentication_externalldap'):
+        id = str(uuid.uuid4())
+        file = '/tmp/ou_user-'+id
+
+        # Get the parameters from the config file
+        ldapurl = config.get('authentication_externalldap', 'ldapurl')
+        suffix = config.get('authentication_externalldap', 'suffix')
+        bindname = config.get('authentication_externalldap', 'bindname')
+        bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
+
+        command = """ldapsearch -o ldif-wrap=no -H "%s" -x -b "%s" -D "%s" -w %s -LLL "(&(objectclass=user)
+        (samaccountname=%s))" dn > %s""" % (ldapurl, suffix, bindname, bindpasswd, user, file)
+
+        os.system(command)
+        ous = []
+        with open(file, 'r') as user_file:
+            lines = user_file.read().splitlines()
+
+            # The lines that don't start by 'dn' are ignored
+            lines = [element for element in lines if element.startswith('dn')]
+            for element in lines:
+                # Lines starts with dn:: are get in base64 format
+                if element.startswith('dn:: '):
+                    tmp = element.split('::')
+                    ou = base64.b64decode(tmp[1])
+
+                else:
+                    tmp = element.split(': ')
+                    ou = tmp[1]
+                # Format the result
+                # Format the result
+                ou = re.sub('CN='+user+',','',ou)
+                ou = re.sub(',DC=(.+)', '', ou)
+                ou = ou.replace(',OU=', ' < ')
+                ou = ou.replace('OU=', '')
+
+                ou = ou.split(' < ')
+                ou.reverse()
+                ou = '/'.join(ou)
+                # Save the content into a list
+                ous.append(ou)
+        # Delete the file
+        os.remove(file)
+        return ous
+    else:
+        return False
