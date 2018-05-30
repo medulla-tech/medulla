@@ -72,16 +72,14 @@ class manage_fqdn_window_activedirectory:
         """
             in cas organizationby machine ou is entite for machine
         """
-        list_cn_ou_dc = fqdnsinfomachine.split("@@")
-        return list_cn_ou_dc[1]
+        return fqdnsinfomachine
 
     @staticmethod
     def getOrganizationADuserOU(fqdnsinfouser):
         """
             in cas organization by user ou is entite for user
         """
-        list_cn_ou_dc = fqdnsinfouser.split("@@")
-        return list_cn_ou_dc[1]
+        return fqdnsinfouser
 
     @staticmethod
     def getOrganizationADmachineDC(fqdnsinfomachine):
