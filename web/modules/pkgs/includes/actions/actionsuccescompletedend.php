@@ -63,6 +63,46 @@ $lab = "END_SUCCESS";
         echo '
         <td></td><td></td>
             </tr>
+             <tr class="toggleable">
+             ';
+            if(isset($inventory))
+            {
+                echo '<td width="16%">
+                    <input type="checkbox" checked
+                        onclick="if(jQuery(this).is(\':checked\')){
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
+                                }
+                                else{
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
+                                }" />Inventory
+                </td>
+                <td width="25%">
+                    <select name="inventory">
+                        <option selected value="True">True</option>
+                        <option value="False">False</option>
+                    <select>
+                </td>';
+            }
+            else{
+                echo '<td width="16%">
+                    <input type="checkbox"
+                        onclick="if(jQuery(this).is(\':checked\')){
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
+                                }
+                                else{
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
+                                }" />Inventory
+                    </td>
+                    <td width="25%">
+                         <select name="inventory" disabled>
+                            <option value="True">True</option>
+                            <option selected value="False">False</option>
+                         <select>
+                    </td>';
+            }
+        echo '
+        <td></td><td></td>
+            </tr>
         </table>';
         ?>
     </div>
