@@ -263,7 +263,12 @@ def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype
     machine = XmppMasterDatabase().getMachinefromjid(jid)
     print base64.b64decode(machine['ad_ou_machine'])
     OUmachine = [ x.replace("\n",'').replace("\r",'')  for x in base64.b64decode(machine['ad_ou_machine']).split("@@") if x !=""]
-    OUuser    = [ x.replace("\n",'').replace("\r",'')  for x in base64.b64decode(machine['ad_ou_user']).split("@@") if x !=""]
+    try:
+        OUuser = [x.replace("\n", '').replace("\r", '') for x in base64.b64decode(machine['ad_ou_user']).split("@@") if
+                  x != ""]
+    except TypeError:
+        OUuser = OUuser = [x.replace("\n", '').replace("\r", '') for x in machine['ad_ou_user'].split("@@") if
+                  x != ""]
     OU = list(set(OUmachine + OUuser))
 
     # recherche des packages pour les profils appliques
