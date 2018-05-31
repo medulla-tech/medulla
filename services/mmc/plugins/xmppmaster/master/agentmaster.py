@@ -798,7 +798,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("Jid from : %s"%data['from'])
             logger.info("Machine : %s"%data['machine'])
             logger.info("Platform : %s"%data['platform'])
-            if 'win' in data['platform']:
+            if "win" in data['platform'].lower():
                 logger.info("__________________________")
                 logger.info("ACTIVE DIRECTORY")
                 logger.info("OU Active directory")
@@ -836,7 +836,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.info("ippublic : %s"%data['ippublic'])
             logger.info("------------LOCALISATION-----------")
             logger.info("localisationinfo : %s"%data['localisationinfo'])
-            if data['platform'].lower().startswith("win"):
+            if "win" in data['platform'].lower():
                 if 'adorgbymachine' in data and data['adorgbymachine']:
                     logger.info("localisation AD par MAchine : %s"%data['adorgbymachine'])
                 else:
@@ -1469,6 +1469,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 else:
                     data['localisationinfo'] = {}
                 data['information'] = info
+
+                if data['adorgbymachine'] is not None and data['adorgbymachine'] != "":
+                    data['adorgbymachine'] = base64.b64decode(data['adorgbymachine'])
+                if data['adorgbyuser'] is not None and data['adorgbyuser'] != "":
+                    data['adorgbyuser'] = base64.b64decode(data['adorgbyuser'])
 
                 publickeybase64 = info['publickey']
                 is_masterpublickey = info['is_masterpublickey']
