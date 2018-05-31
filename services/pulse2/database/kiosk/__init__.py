@@ -156,7 +156,7 @@ class KioskDatabase(DatabaseHelper):
             l = [x for x in result]
             return l
         except Exception, e:
-            logging.getLogger().error("get_profile_list_for_OUList %s" % jid)
+            logging.getLogger().error("get_profile_list_for_OUList)
             logging.getLogger().error(str(e))
             return ""
 
