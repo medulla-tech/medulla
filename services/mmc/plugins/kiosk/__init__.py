@@ -262,16 +262,18 @@ def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype
     # récupération des profils dans la table machine.
     machine = XmppMasterDatabase().getMachinefromjid(jid)
     print base64.b64decode(machine['ad_ou_machine'])
-    OUmachine = [ x.replace("\n",'').replace("\r",'')  for x in base64.b64decode(machine['ad_ou_machine']).split("@@") if x !=""]
     try:
-        OUuser = [x.replace("\n", '').replace("\r", '') for x in base64.b64decode(machine['ad_ou_user']).split("@@") if
-                  x != ""]
+        OUmachine = [base64.b64decode(machine['ad_ou_machine']).replace("\n",'').replace("\r",'').replace('@@','/')]
     except TypeError:
-        OUuser = OUuser = [x.replace("\n", '').replace("\r", '') for x in machine['ad_ou_user'].split("@@") if
-                  x != ""]
+        OUmachine = [machine['ad_ou_machine'].replace("\n",'').replace("\r",'').replace('@@','/')]
+
+    try:
+        OUuser = [base64.b64decode(machine['ad_ou_user']).replace("\n", '').replace("\r", '').replace('@@','/')]
+    except TypeError:
+        OUuser = [machine['ad_ou_user'].replace("\n", '').replace("\r", '').replace('@@','/')]
     OU = list(set(OUmachine + OUuser))
 
-    # recherche des packages pour les profils appliques
+    # search packages for the applied profiles
     list_profile_packages =  KioskDatabase().get_profile_list_for_OUList( OU )
     if list_profile_packages is None:
         #TODO
