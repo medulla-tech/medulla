@@ -134,9 +134,10 @@ class KioskDatabase(DatabaseHelper):
             FROM
                 kiosk.package
                     INNER JOIN
-                kiosk.profiles ON kiosk.profiles.id = kiosk.package.id
+                kiosk.profiles ON kiosk.profiles.id = kiosk.package_has_profil.profil_id
                     INNER JOIN
-                kiosk.package_has_profil ON kiosk.package_has_profil.package_id = kiosk.package.id
+                kiosk.package_has_profil ON kiosk.package.id = kiosk.package_has_profil.package_id 
+
             WHERE
                 kiosk.profiles.id in 
                         (SELECT DISTINCT
@@ -146,7 +147,7 @@ class KioskDatabase(DatabaseHelper):
                             WHERE
                                 ou IN %s)
                     AND kiosk.profiles.active = 1;
-                """%listou
+                    """ % listou
         print sql
         try:
             result = session.execute(sql)
