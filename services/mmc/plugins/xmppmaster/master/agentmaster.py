@@ -1474,12 +1474,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     try:
                         data['adorgbymachine'] = base64.b64decode(data['adorgbymachine'])
                     except TypeError:
-                        data['adorgbymachine'] = data['adorgbymachine']
+                        pass
                 if data['adorgbyuser'] is not None and data['adorgbyuser'] != "":
                     try:
                         data['adorgbyuser'] = base64.b64decode(data['adorgbyuser'])
                     except TypeError:
-                        data['adorgbyuser'] = data['adorgbyuser']
+                        pass
 
                 publickeybase64 = info['publickey']
                 is_masterpublickey = info['is_masterpublickey']
