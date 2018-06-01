@@ -129,14 +129,14 @@ class KioskDatabase(DatabaseHelper):
                 kiosk.package.software,
                 kiosk.package.version_software,
                 kiosk.package.package_uuid,
-                kiosk.package.os ,
+                kiosk.package.os,
                 kiosk.package_has_profil.package_status
             FROM
                 kiosk.package
-                    INNER JOIN
-                kiosk.profiles ON kiosk.profiles.id = kiosk.package_has_profil.profil_id
-                    INNER JOIN
-                kiosk.package_has_profil ON kiosk.package.id = kiosk.package_has_profil.package_id 
+                  inner join
+                kiosk.package_has_profil on kiosk.package.id = kiosk.package_has_profil.package_id 
+                  inner join
+                kiosk.profiles on profiles.id = kiosk.package_has_profil.profil_id
 
             WHERE
                 kiosk.profiles.id in 
