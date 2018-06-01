@@ -44,7 +44,11 @@ require("modules/kiosk/kiosk/localSidebar.php");
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$f = new ValidatingForm(array("id" => "profile-form"));
+$ou_list = xmlrpc_get_ou_list();
+
+if(is_array($ou_list))
+{
+    $f = new ValidatingForm(array("id" => "profile-form"));
 
     $f->push(new Table());
 
@@ -55,7 +59,7 @@ $f = new ValidatingForm(array("id" => "profile-form"));
     // Add an input for the profile name
     // -------
     $f->add(
-        //InputTplTitle came from modules/imaging/includes/class_form.php
+    //InputTplTitle came from modules/imaging/includes/class_form.php
         new TrFormElement(_T('Profile Name','kiosk').":", new InputTplTitle('name',_T('Profile Name','kiosk'))),
         array("value" => _T('','kiosk'), 'placeholder'=> _T('Name','kiosk'), "required" => True)
     );
@@ -133,9 +137,14 @@ $f = new ValidatingForm(array("id" => "profile-form"));
     $bo->setstyle("text-align: center;");
     $f->add($bo);
 
-$f->pop(); // end of form
+    $f->pop(); // end of form
 
-$f->display(); // display the form
+    $f->display(); // display the form
+}
+else
+{
+    echo _T("The LDAP is not configured correctly. Please check your configuration.");
+}
 ?>
 
 <script src="modules/kiosk/graph/js/packages.js">
