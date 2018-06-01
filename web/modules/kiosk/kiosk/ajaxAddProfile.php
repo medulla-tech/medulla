@@ -31,7 +31,7 @@ if(isset($_POST['name'], $_POST['active']))
 {
     $name = rename_profile($_POST['name']);
     if(is_string($_POST['ous']) && $_POST['ous'] == "none")
-        $ous = null;
+        $ous = "";
     else
         $ous = $_POST['ous'];
 

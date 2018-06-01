@@ -260,14 +260,25 @@ class KioskDatabase(DatabaseHelper):
                     session.commit()
                     session.flush()
             # Finally we associate the OUs with the profile.
-            for ou in ous:
+            if type(ous) == str and ous == "":
                 profile_ou = Profile_has_ou()
                 profile_ou.profile_id = id
-                profile_ou.ou = ou
+                profile_ou.ou = ous
 
                 session.add(profile_ou)
                 session.commit()
                 session.flush()
+
+            else:
+                for ou in ous:
+                    profile_ou = Profile_has_ou()
+                    profile_ou.profile_id = id
+                    profile_ou.ou = ou
+
+
+                    session.add(profile_ou)
+                    session.commit()
+                    session.flush()
         return id
 
     @DatabaseHelper._sessionm
@@ -460,14 +471,25 @@ class KioskDatabase(DatabaseHelper):
         session.commit()
         session.flush()
 
-        for ou in ous:
+        # Finally we associate the OUs with the profile.
+        if type(ous) == str and ous == "":
             profile_ou = Profile_has_ou()
             profile_ou.profile_id = id
-            profile_ou.ou = ou
+            profile_ou.ou = ous
 
             session.add(profile_ou)
             session.commit()
             session.flush()
+
+        else:
+            for ou in ous:
+                profile_ou = Profile_has_ou()
+                profile_ou.profile_id = id
+                profile_ou.ou = ou
+
+                session.add(profile_ou)
+                session.commit()
+                session.flush()
 
         # The profile is now created, but the packages are not linked to it nor added into database.
         # If the package list is not empty, then firstly we get the status and the uuid for each packages

@@ -261,7 +261,6 @@ def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype
     #print jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil
     # récupération des profils dans la table machine.
     machine = XmppMasterDatabase().getMachinefromjid(jid)
-    print base64.b64decode(machine['ad_ou_machine'])
     OUmachine = [machine['ad_ou_machine'].replace("\n",'').replace("\r",'').replace('@@','/')]
     OUuser = [machine['ad_ou_user'].replace("\n", '').replace("\r", '').replace('@@','/')]
 

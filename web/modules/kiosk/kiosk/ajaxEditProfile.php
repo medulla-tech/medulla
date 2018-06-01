@@ -31,7 +31,7 @@ require_once("../../../includes/acl.inc.php");
 if(isset($_POST['id'], $_POST['name'], $_POST['active']))
 {
     if(is_string($_POST['ous']) && $_POST['ous'] == "none")
-        $ous = null;
+        $ous = "";
     else
         $ous = $_POST['ous'];
     // Update the profile
