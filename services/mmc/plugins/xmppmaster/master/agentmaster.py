@@ -1471,9 +1471,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 data['information'] = info
 
                 if data['adorgbymachine'] is not None and data['adorgbymachine'] != "":
-                    data['adorgbymachine'] = base64.b64decode(data['adorgbymachine'])
+                    try:
+                        data['adorgbymachine'] = base64.b64decode(data['adorgbymachine'])
+                    except TypeError:
+                        data['adorgbymachine'] = data['adorgbymachine']
                 if data['adorgbyuser'] is not None and data['adorgbyuser'] != "":
-                    data['adorgbyuser'] = base64.b64decode(data['adorgbyuser'])
+                    try:
+                        data['adorgbyuser'] = base64.b64decode(data['adorgbyuser'])
+                    except TypeError:
+                        data['adorgbyuser'] = data['adorgbyuser']
 
                 publickeybase64 = info['publickey']
                 is_masterpublickey = info['is_masterpublickey']
