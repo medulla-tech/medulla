@@ -958,6 +958,24 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
+    def updatemachineAD(self, session, idmachine, lastuser, ou_machine, ou_user):
+        """
+            update Machine table in base xmppmaster
+            data AD
+        """
+        try:
+            session.query(Machines).filter( Machines.id ==  idmachine).\
+                    update({ Machines.ad_ou_machine : ou_machine,
+                             Machines.ad_ou_user : ou_user,
+                             Machines.lastuser : lastuser})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
     def updatedeploystate(self, session, sessionid, state):
         try:
             session.query(Deploy).filter(Deploy.sessionid == sessionid).\

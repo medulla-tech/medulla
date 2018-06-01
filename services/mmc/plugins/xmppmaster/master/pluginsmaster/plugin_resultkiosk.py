@@ -67,6 +67,15 @@ def parsexmppjsonfile(path):
 
 def initialisekiosk(data, message, xmppobject):
     machine =  XmppMasterDatabase().getMachinefromjid(message['from'])
+    if "userlist" and  "oumachine" and "ouuser" in data:
+        if len(data['userlist']) == 0:
+            user = ""
+        else:
+            user = data['userlist'][0]
+        print "call updatemachineAD"
+        XmppMasterDatabase().updatemachineAD(machine['id'], user, data['oumachine'], data['ouuser'])
+
+    print json.dumps(machine, indent = 4)
     print json.dumps(machine, indent = 4)
     initializationdatakiosk = handlerkioskpresence( message['from'],
                                machine['id'],
