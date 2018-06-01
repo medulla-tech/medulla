@@ -289,7 +289,7 @@ def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype
     logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, hostname))
 
     datas = {
-    'subaction':'test', 
+    'subaction':'initialisation_kiosk', 
     'data' : structuredatakiosk
     }
 
