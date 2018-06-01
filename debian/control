@@ -1,7 +1,7 @@
 Source: pulse2
 Section: admin
 Priority: extra
-Maintainer: Adam Cécile <acecile@mandriva.com>
+Maintainer: Nicolas Lécureuil <nicolas.lecureuil@siveo.net>
 Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python-all (>= 2.6), gettext, autotools-dev, xsltproc, docbook-xsl, docbook-xml
 Standards-Version: 3.9.3
 Homepage: http://projects.mandriva.org/projects/mmc/
