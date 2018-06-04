@@ -61,7 +61,7 @@ if(is_array($ou_list))
     $f->add(
     //InputTplTitle came from modules/imaging/includes/class_form.php
         new TrFormElement(_T('Profile Name','kiosk').":", new InputTplTitle('name',_T('Profile Name','kiosk'))),
-        array("value" => _T('','kiosk'), 'placeholder'=> _T('Name','kiosk'), "required" => True)
+        array("value" => "", 'placeholder'=> _T('Name','kiosk'), "required" => True)
     );
 
     // -------
@@ -81,7 +81,7 @@ if(is_array($ou_list))
     //SepTpl came from modules/imaging/includes/class_form.php
     $f->add( new SepTpl());
     $f->add(
-        new TrFormElement(_T('', 'kiosk'), new CheckBoxTpl("no_ou")), array("value" => "checked")
+        new TrFormElement("", new CheckBoxTpl("no_ou")), array("value" => "checked")
     );
     // -------
     // Add the OUs tree

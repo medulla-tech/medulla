@@ -82,7 +82,7 @@ $f->pop(); // End of the table
 $f->add( new SepTpl());
 $defaultValue = (count($profile['ous']) > 0 && $profile['ous'][0] !="") ? ["value"=>"checked"] : [];
 $f->add(
-    new TrFormElement(_T('', 'kiosk'), new CheckBoxTpl("no_ou")), $defaultValue
+    new TrFormElement("", new CheckBoxTpl("no_ou")), $defaultValue
 );
 // -------
 // Add the OUs tree
