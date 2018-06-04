@@ -452,7 +452,7 @@ class Pulse2ConfigFile(object):
                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig',
                 'InventoryServerConfig', 'PackageServerConfig', 'SchedulerConfig',
                 'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig',
-                'KioskConfig']
+                'PluginsKioskConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
