@@ -1,0 +1,147 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-04 17:53+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: modules/kiosk/kiosk/add.php:43
+msgid "Add New Profile"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:63 modules/kiosk/kiosk/index.php:54
+#: modules/kiosk/kiosk/editProfile.php:65
+msgid "Profile Name"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:64 modules/kiosk/kiosk/editProfile.php:66
+msgid "Name"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:70 modules/kiosk/kiosk/editProfile.php:72
+msgid "Set the profile to active / inactive state"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:71 modules/kiosk/kiosk/index.php:51
+#: modules/kiosk/kiosk/editProfile.php:73
+msgid "Active"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:71 modules/kiosk/kiosk/index.php:51
+#: modules/kiosk/kiosk/editProfile.php:73
+msgid "Inactive"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:74 modules/kiosk/kiosk/index.php:56
+#: modules/kiosk/kiosk/editProfile.php:76
+msgid "Profile Status"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:93 modules/kiosk/kiosk/editProfile.php:94
+msgid "Select OUs"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:99 modules/kiosk/kiosk/editProfile.php:100
+msgid "Manage packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:116 modules/kiosk/kiosk/editProfile.php:160
+msgid "Available packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:121 modules/kiosk/kiosk/editProfile.php:165
+msgid "Restricted packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:127 modules/kiosk/kiosk/editProfile.php:170
+msgid "Allowed packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:135
+msgid "Create"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:135
+msgid "Create the profile"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:146
+msgid "The LDAP is not configured correctly. Please check your configuration."
+msgstr ""
+
+#: modules/kiosk/kiosk/localSidebar.php:24
+msgid "Profils List"
+msgstr ""
+
+#: modules/kiosk/kiosk/localSidebar.php:25
+msgid "Add Profil"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:37
+msgid "List of profils"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:65
+msgid "Associate Packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:66
+msgid "Edit Profil"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:67
+msgid "Delete Profil"
+msgstr ""
+
+#: modules/kiosk/kiosk/editProfile.php:43 modules/kiosk/infoPackage.inc.php:66
+msgid "Edit Profile"
+msgstr ""
+
+#: modules/kiosk/kiosk/editProfile.php:177
+msgid "modify"
+msgstr ""
+
+#: modules/kiosk/kiosk/editProfile.php:177
+msgid "Modify the profile"
+msgstr ""
+
+#: modules/kiosk/kiosk/ajaxEditProfile.php:43
+#: modules/kiosk/kiosk/ajaxAddProfile.php:44
+msgid "The profile "
+msgstr ""
+
+#: modules/kiosk/kiosk/ajaxEditProfile.php:46
+msgid "Unable to update the profile "
+msgstr ""
+
+#: modules/kiosk/kiosk/ajaxAddProfile.php:48
+msgid "Unable to create the profile "
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
+msgid "kiosk"
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:43
+msgid "Profile List"
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:47
+msgid "Add Profile"
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:70
+msgid "Delete profile"
+msgstr ""
