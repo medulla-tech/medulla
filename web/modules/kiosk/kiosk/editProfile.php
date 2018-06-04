@@ -80,7 +80,7 @@ $f->pop(); // End of the table
 
 //SepTpl came from modules/imaging/includes/class_form.php
 $f->add( new SepTpl());
-$defaultValue = (count($profile['ous']) > 0) ? ["value"=>"checked"] : [];
+$defaultValue = (count($profile['ous']) > 1 && $profile['ous'] !="") ? ["value"=>"checked"] : [];
 $f->add(
     new TrFormElement(_T('', 'kiosk'), new CheckBoxTpl("no_ou")), $defaultValue
 );
