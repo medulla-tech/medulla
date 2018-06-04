@@ -362,6 +362,30 @@ class MscDatabase(DatabaseHelper):
     def get_count(self,q):
         return q.with_entities(func.count()).scalar()
 
+    def xmpp_create_Target(self,
+                           target_uuid,
+                           target_name,
+                           mirrors="file:///var/lib/pulse2/packages",
+                           target_macaddr="",
+                           target_bcast="",
+                           target_ipaddr="",
+                           target_network="",
+                           id_group=""):
+        session = create_session()
+        target = Target()
+        target.target_macaddr = target_macaddr
+        target.id_group = id_group
+        target.target_uuid = target_uuid
+        target.target_bcast = target_bcast
+        target.target_name = target_name
+        target.target_ipaddr = target_ipaddr
+        target.mirrors = mirrors
+        target.target_network = target_network
+        session.add(target)
+        session.flush()
+        session.close()
+        return target
+
     def deployxmppscheduler(self, login, min , max, filt):
         datenow = datetime.datetime.now()
         sqlselect="""

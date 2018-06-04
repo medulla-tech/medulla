@@ -33,7 +33,7 @@ from utils import name_random, file_put_contents,file_get_contents
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
 
-plugin = {"VERSION" : "1.0", "NAME" : "resultkiosk", "TYPE" : "master"}
+plugin = {"VERSION" : "1.1", "NAME" : "resultkiosk", "TYPE" : "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
@@ -75,7 +75,6 @@ def initialisekiosk(data, message, xmppobject):
         print "call updatemachineAD"
         XmppMasterDatabase().updatemachineAD(machine['id'], user, data['oumachine'], data['ouuser'])
 
-    print json.dumps(machine, indent = 4)
     print json.dumps(machine, indent = 4)
     initializationdatakiosk = handlerkioskpresence( message['from'],
                                machine['id'],
@@ -127,6 +126,12 @@ def deploypackage(data, message, xmppobject):
     jidrelay = machine['groupdeploy']
     uuidmachine = machine['uuid_inventorymachine']
     jidmachine =  machine['jid']
+    #try:
+        #target = MscDatabase().xmpp_create_Target(uuidmachine, machine['hostname'])
+
+    #except Exception as e:
+        #print str(e)
+        #traceback.print_exc(file=sys.stdout)
 
     XmppMasterDatabase().addlogincommand(
                         "root", 
@@ -151,9 +156,9 @@ def deploypackage(data, message, xmppobject):
         logger.error("deploy %s on %s  error : xmppdeploy.json missing" %( data['uuid'], machine['hostname']))
         return None
     objdeployadvanced = XmppMasterDatabase().datacmddeploy(commandid)
-    
+
     datasend = {"name" :name,
-            "login" : "root",
+            "login" : "kiosk",
             "idcmd" : commandid,
             "advanced" : objdeployadvanced,
             'methodetransfert' : 'pushrsync',
@@ -174,6 +179,7 @@ def deploypackage(data, message, xmppobject):
             "transfert" : True
             }
     #run deploy
+
     sessionid = xmppobject.send_session_command( jidrelay,
                                                  "applicationdeploymentjson",
                                                  datasend,
@@ -187,11 +193,24 @@ def deploypackage(data, message, xmppobject):
                                     machine['uuid_inventorymachine'], ##inventoryuuid,
                                     data['uuid'], ##uuidpackage,
                                     'DEPLOYMENT START', ##state,
-                                    name_random(6, "deploykiosk"), #machine[''], sessionid",
-                                    'root', ##user="",
-                                    'root', ##login="",
-                                    name, ##title="",
-                                    "", ##group_uuid = None,
-                                    commandstart, ##startcmd = None,
-                                    commandstop, ##endcmd = None,
+                                    sessionid, #id session,
+                                    'kiosk', ##user
+                                    'kiosk', ##login
+                                    name + " " + commandstart.strftime("%Y/%m/%d/ %H:%M:%S"), ##title,
+                                    "", ##group_uuid
+                                    commandstart, ##startcmd
+                                    commandstop, ##endcmd 
                                     machine['macaddress'])
+    xmppobject.xmpplog("Start deploy on machine %s"%jidmachine,
+                     type='deploy',
+                     sessionname=sessionid,
+                     priority=-1,
+                     action="",
+                     who="kiosk",
+                     how="",
+                     why=xmppobject.boundjid.bare,
+                     module="Deployment | Start | Creation",
+                     date=None,
+                     fromuser="kiosk",
+                     touser="")
+
