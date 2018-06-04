@@ -78,8 +78,8 @@ $lab = "END_SUCCESS";
                 </td>
                 <td width="25%">
                     <select name="inventory">
-                        <option selected value="True">True</option>
-                        <option value="False">False</option>
+                        <option selected value="False">False</option>
+                        <option value="True">True</option>
                     <select>
                 </td>';
             }
@@ -95,8 +95,8 @@ $lab = "END_SUCCESS";
                     </td>
                     <td width="25%">
                          <select name="inventory" disabled>
-                            <option value="True">True</option>
-                            <option selected value="False">False</option>
+                            <option value="False">False</option>
+                            <option selected value="True">True</option>
                          <select>
                     </td>';
             }
