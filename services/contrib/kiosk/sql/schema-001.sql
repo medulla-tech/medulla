@@ -34,9 +34,9 @@ CREATE TABLE `version` (
   `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 
+--
 -- Table structure for profils
--- 
+--
 
 CREATE TABLE IF NOT EXISTS `profiles` (
 	`id` int NOT NULL AUTO_INCREMENT, PRIMARY KEY(`id`),
@@ -46,5 +46,3 @@ CREATE TABLE IF NOT EXISTS `profiles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `version` VALUES (1);
-
-GRANT ALL PRIVILEGES ON `kiosk`.*  TO 'mmc'@'localhost';
