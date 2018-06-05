@@ -33,7 +33,7 @@ from utils import name_random, file_put_contents,file_get_contents
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
 
-plugin = {"VERSION" : "1.1", "NAME" : "resultkiosk", "TYPE" : "master"}
+plugin = {"VERSION" : "1.2", "NAME" : "resultkiosk", "TYPE" : "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
@@ -98,6 +98,9 @@ def initialisekiosk(data, message, xmppobject):
 def deploypackage(data, message, xmppobject):
     machine =  XmppMasterDatabase().getMachinefromjid( message['from'])
     print json.dumps(machine, indent = 4 )
+
+    nameuser = "(kiosk):%s/%s"%(machine['lastuser'],machine['hostname'])
+
     command = MscDatabase().createcommanddirectxmpp(data['uuid'], 
                                                     '',
                                                     '',
@@ -106,8 +109,8 @@ def deploypackage(data, message, xmppobject):
                                                     'enable',
                                                     datetime.datetime.now(),
                                                     datetime.datetime.now() + datetime.timedelta(hours=1),
-                                                    'root',
-                                                    'root', 
+                                                    nameuser,
+                                                    nameuser, 
                                                     'titlepackage',
                                                     60,
                                                     4,
@@ -134,7 +137,7 @@ def deploypackage(data, message, xmppobject):
         #traceback.print_exc(file=sys.stdout)
 
     XmppMasterDatabase().addlogincommand(
-                        "root", 
+                        nameuser, 
                         commandid,
                         "",
                         "",
@@ -158,7 +161,7 @@ def deploypackage(data, message, xmppobject):
     objdeployadvanced = XmppMasterDatabase().datacmddeploy(commandid)
 
     datasend = {"name" :name,
-            "login" : "kiosk",
+            "login" : nameuser,
             "idcmd" : commandid,
             "advanced" : objdeployadvanced,
             'methodetransfert' : 'pushrsync',
@@ -194,8 +197,8 @@ def deploypackage(data, message, xmppobject):
                                     data['uuid'], ##uuidpackage,
                                     'DEPLOYMENT START', ##state,
                                     sessionid, #id session,
-                                    'kiosk', ##user
-                                    'kiosk', ##login
+                                    nameuser, ##user
+                                    nameuser, ##login
                                     name + " " + commandstart.strftime("%Y/%m/%d/ %H:%M:%S"), ##title,
                                     "", ##group_uuid
                                     commandstart, ##startcmd
@@ -206,11 +209,11 @@ def deploypackage(data, message, xmppobject):
                      sessionname=sessionid,
                      priority=-1,
                      action="",
-                     who="kiosk",
+                     who=nameuser,
                      how="",
                      why=xmppobject.boundjid.bare,
                      module="Deployment | Start | Creation",
                      date=None,
-                     fromuser="kiosk",
+                     fromuser=nameuser,
                      touser="")
 
