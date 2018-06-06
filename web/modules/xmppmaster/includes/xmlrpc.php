@@ -252,7 +252,7 @@ function xmlrpc_runXmppCommand($command, $machine, $postinfo){
     return xmlCall("xmppmaster.runXmppCommand", array($command, $machine, $postinfo));
 }
 
-function xmlrpc_remotecommandshellpluging($command, $machine, $uiduniq){
+function xmlrpc_remotecommandshellplugin($command, $machine, $uiduniq){
     return xmlCall("xmppmaster.runXmppCommand", array($command, $machine, $postinfo));
 }
 
