@@ -803,7 +803,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.info("OU Active directory")
                 logger.info("OU by machine : %s"%data['adorgbymachine'])
                 logger.info("OU by user : %s"%data['adorgbyuser'])
-                if 'lastusersession' in data: 
+                if 'lastusersession' in data:
                     logger.info("last user session: %s"%data['lastusersession'])
             logger.info("--------------------------------")
             logger.info("----MACHINE XMPP INFORMATION----")
@@ -1711,7 +1711,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.info("__________________________________________")
                     if 'pluginscheduled' in data:
                         logger.info("__________________________________________")
-                        logger.info("LIST SCHEDULED PLUGINGS INSTALLED AGENT")
+                        logger.info("LIST SCHEDULED PLUGINS INSTALLED AGENT")
                         logger.info("%s"% json.dumps(data['pluginscheduled'], indent=4, sort_keys=True))
                         logger.info("__________________________________________")
                 restartAgent = False
@@ -1722,8 +1722,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     try:
                         # Check version
                         if data['plugin'][k] != v:
-                            logger.info("update %s version %s to version %s"%(k, 
-                                                                              data['plugin'][k], 
+                            logger.info("update %s version %s to version %s"%(k,
+                                                                              data['plugin'][k],
                                                                               v))
                             deploy = True
                     except:
@@ -1852,7 +1852,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     dataobj['sessionid'] = "absent"
                 if not 'ret' in dataobj:
                     dataobj['ret'] = 0
-                try: 
+                try:
                     logging.debug("Calling plugin %s from  %s"%(dataobj['action'], msg['from']))
                     msg['body'] = dataobj
                     del dataobj['data']
