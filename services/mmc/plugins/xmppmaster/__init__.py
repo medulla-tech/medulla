@@ -239,8 +239,8 @@ def getListPresenceRelay():
 def deploylog(uuidinventory, nblastline):
     return XmppMasterDatabase().deploylog(uuidinventory, nblastline)
 
-def addlogincommand(login, 
-                    commandid, 
+def addlogincommand(login,
+                    commandid,
                     grpid,
                     nb_machine_in_grp,
                     instructions_nb_machine_for_exec,
@@ -249,7 +249,7 @@ def addlogincommand(login,
                     rebootrequired,
                     shutdownrequired,
                     limit_rate_ko):
-    return XmppMasterDatabase().addlogincommand(login, 
+    return XmppMasterDatabase().addlogincommand(login,
                                                 commandid,
                                                 grpid,
                                                 nb_machine_in_grp,
@@ -453,16 +453,16 @@ def runXmppCommand(cmd, machine, information = ""):
                 "base64" : False
         }
     cmd = cmd.strip()
-    if cmd.startswith("pluging_"):
+    if cmd.startswith("plugin_"):
         # call plugin master
-        lineplugingcalling = [x.strip() for x in cmd.split("@_@")]
-        plugingcalling = lineplugingcalling[0]
-        del lineplugingcalling[0]
-        action =  plugingcalling.strip().split("_")[1]
+        lineplugincalling = [x.strip() for x in cmd.split("@_@")]
+        plugincalling = lineplugincalling[0]
+        del lineplugincalling[0]
+        action =  plugincalling.strip().split("_")[1]
         data ={
                 "action" : action,
                 "sessionid" : name_random(8,"quick_"),
-                "data" : [machine, information, lineplugingcalling] ,
+                "data" : [machine, information, lineplugincalling] ,
                 "base64" : False
         }
         callXmppPlugin( action, data )

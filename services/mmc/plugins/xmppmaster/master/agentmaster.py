@@ -1686,7 +1686,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.info("__________________________________________")
                     if 'pluginscheduled' in data:
                         logger.info("__________________________________________")
-                        logger.info("LIST SCHEDULED PLUGINGS INSTALLED AGENT")
+                        logger.info("LIST SCHEDULED PLUGINS INSTALLED AGENT")
                         logger.info("%s"% json.dumps(data['pluginscheduled'], indent=4, sort_keys=True))
                         logger.info("__________________________________________")
                 restartAgent = False
@@ -1826,8 +1826,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     dataobj['sessionid'] = "absent"
                 if not 'ret' in dataobj:
                     dataobj['ret'] = 0
-                try: 
-                    logging.debug("Calling plugin %s from  %s"%( dataobj['action'], msg['from']))
+                try:
+                    logging.debug("Calling plugin %s from  %s"%(dataobj['action'], msg['from']))
                     msg['body'] = dataobj
                     del dataobj['data']
                     call_plugin(dataobj['action'],
