@@ -31,7 +31,8 @@ import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
-import zlib, base64
+import zlib
+import base64
 from master.lib.utils import name_random, simplecommand, file_get_contents
 from  xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
@@ -41,7 +42,7 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
                                                       callvncchangepermsbymaster, callInstallKey,\
                                                       callremotefile, calllocalfile, callremotecommandshell,\
                                                       calllistremotefileedit, callremotefileeditaction,\
-                                                      callremoteXmppMonotoring
+                                                      callremoteXmppMonitoring
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -450,8 +451,8 @@ def getcontentfile(pathfile, deletefile):
 def remotecommandshell( command , jidmachine, timeout):
     return callremotecommandshell( jidmachine, command, timeout = 10)
 
-def remoteXmppMonotoring( suject, jidmachine, timeout):
-    data = callremoteXmppMonotoring(jidmachine,  suject, timeout = timeout )
+def remoteXmppMonitoring( suject, jidmachine, timeout):
+    data = callremoteXmppMonitoring(jidmachine,  suject, timeout = timeout )
     result = json.loads(data)
     resultdata = zlib.decompress(base64.b64decode(result['result']))
     dataresult = [x for x in resultdata.split('\n') ]
