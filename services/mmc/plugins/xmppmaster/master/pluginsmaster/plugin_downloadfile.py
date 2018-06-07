@@ -38,7 +38,7 @@ import ConfigParser
 from pulse2.database.xmppmaster import XmppMasterDatabase
 #### "CONF" : "/etc/mmc/plugin/masterplugin_teledial.ini"
 ####
-plugin = { "VERSION" : "1.1", "NAME" : "downloadfile", "TYPE" : "master"}
+plugin = { "VERSION" : "1.2", "NAME" : "downloadfile", "TYPE" : "master"}
 
 
 def create_path(type ="windows", host="", ipordomain="", path=""):
@@ -92,20 +92,24 @@ def createnamefile(user, prefixe ="", suffixe=""):
 
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
-    print json.dumps(data[0], indent = 4)
-    transpxmpp = True
-    if 'taillefile' in data[0]:
-        ###determine si fichier est transportable dans un message xmppmaster
-        if "Mo" in data[0]['taillefile']:
-            transpxmpp = False
-            print "Mo"
-        else:
-            if "ko" in data[0]['taillefile']:
-                data[0]['taillefile'] = float(data[0]['taillefile'][:-2]) * 1024
-            else:
-                data[0]['taillefile'] = float(data[0]['taillefile'])
-            if data[0]['taillefile'] > 256000 :
+    try:
+        print json.dumps(data[0], indent = 4)
+        transpxmpp = True
+        if 'taillefile' in data[0]:
+            ###determine si fichier est transportable dans un message xmppmaster
+            if "Mo" in data[0]['taillefile']:
                 transpxmpp = False
+                print "Mo"
+            else:
+                if "ko" in data[0]['taillefile']:
+                    data[0]['taillefile'] = float(data[0]['taillefile'][:-2]) * 1024
+                else:
+                    data[0]['taillefile'] = float(data[0]['taillefile'])
+                if data[0]['taillefile'] > 256000 :
+                    transpxmpp = False
+    except KeyError as e:
+        logging.getLogger().debug("data[0] not found while calling %s. The plugin is probably called from a quick action."%(plugin['NAME']))
+        pass
 
     #if transpxmpp:
         #la taille du fichier permet de faire le transfert dans un message xmpp pas encore implemente
@@ -114,15 +118,16 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
         jidmachine = data['jidmachine']
         dest = data['dest']
         scr = data['src']
-    elif 'dest' in data[0] and 'src' in data[0] and 'jidmachine' in data[0]:
-        jidmachine = data[0]['jidmachine']
-        dest = data[0]['dest']
-        scr = data[0]['src']
     else:
-        params = data['data'][2]
-        dest = params[1]
-        scr  = params[0]
-        jidmachine = data['data'][0]
+        try:
+            jidmachine = data[0]['jidmachine']
+            dest = data[0]['dest']
+            scr = data[0]['src']
+        except KeyError:
+            params = data['data'][2]
+            dest = params[1]
+            scr  = params[0]
+            jidmachine = data['data'][0]
     Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
     relayserver = XmppMasterDatabase().getMachinefromjid(Machineinfo['groupdeploy'])
     relayserinfo = XmppMasterDatabase().getRelayServerfromjid(Machineinfo['groupdeploy'])
