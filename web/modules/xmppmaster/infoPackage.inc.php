@@ -119,7 +119,10 @@ $submod->addPage($page);
 
 $page = new Page("wakeonlan", _T('Wake on LAN', 'xmppmaster'));
 $submod->addPage($page);
-// ajax procedure read and send result from log
+
+$page = new Page("xmppMinotoring", _T('XMPP Quick Minotoring', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("ajaxdeploylog");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxdeploylog.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
