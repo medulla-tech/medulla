@@ -40,7 +40,8 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
                                                       callshutdownbymaster, send_message_json,\
                                                       callvncchangepermsbymaster, callInstallKey,\
                                                       callremotefile, calllocalfile, callremotecommandshell,\
-                                                      calllistremotefileedit, callremotefileeditaction
+                                                      calllistremotefileedit, callremotefileeditaction,\
+                                                      callremoteXmppMonotoring
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -445,6 +446,17 @@ def getcontentfile(pathfile, deletefile):
         return data
     else:
         return False
+
+def remotecommandshell( command , jidmachine, timeout):
+    return callremotecommandshell( jidmachine, command, timeout = 10)
+
+def remoteXmppMonotoring( suject, jidmachine, timeout):
+    data = callremoteXmppMonotoring(jidmachine,  suject, timeout = timeout )
+    result = json.loads(data)
+    resultdata = zlib.decompress(base64.b64decode(result['result']))
+    dataresult = [x for x in resultdata.split('\n') ]
+    result['result'] = dataresult
+    return result
 
 def remotecommandshell( command , jidmachine, timeout):
     return callremotecommandshell( jidmachine, command, timeout = 10)
