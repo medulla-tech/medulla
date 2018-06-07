@@ -31,7 +31,7 @@ import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
-
+import zlib, base64
 from master.lib.utils import name_random, simplecommand, file_get_contents
 from  xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
