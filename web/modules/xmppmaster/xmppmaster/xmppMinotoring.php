@@ -43,21 +43,22 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     $p->setSideMenu($sidemenu);
     $p->display();
 
+    echo "<h2>Machine : ". $_GET['cn']." ( ".$_GET['os']." )"."</h2>";
 
-    echo "<pre>";
-    print_r($_GET);
-    echo "</pre>";
      $jidmachine = xmlrpc_getjidMachinefromuuid( $_GET['UUID'] );
 
      switch($_GET['information']){
         case 'battery':
             $re =  xmlrpc_remoteXmppMonotoring("battery", $jidmachine, 100);
                 if ($re == ""){
-                $re = "time out command";
+                    $re = "time out command";
                 }
-            echo $re;
-        echo "<pre>";
-        print_r($re );
+        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+        echo "BATTERY\n";
+            foreach( $re[result] as $datareseau){
+                echo $datareseau;
+                echo "\n";
+            }
         echo "</pre>";
         break;
 
@@ -66,9 +67,13 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 if ($re == ""){
                 $re = "time out command";
                 }
-            echo $re;
-        echo "<pre>";
-        print_r($re );
+                
+        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+        echo "WIN SERVICES\n";
+            foreach( $re[result] as $datareseau){
+                echo $datareseau;
+                echo "\n";
+            }
         echo "</pre>";
         break;
 
@@ -77,11 +82,12 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 if ($re == ""){
                 $re = "time out command";
                 }
-            echo $re;
-        echo "<pre>";
-        foreach( $re[result] as $datareseau){
-        echo $datareseau;echo "\n";
-        }
+        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+        echo "PROCESSUS LIST\n";
+            foreach( $re[result] as $datareseau){
+                echo $datareseau;
+                echo "\n";
+            }
         echo "</pre>";
         break;
 
@@ -90,9 +96,12 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 if ($re == ""){
                 $re = "time out command";
                 }
-            echo $re;
-        echo "<pre>";
-        print_r($re );
+        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+        echo "DISK USAGE\n";
+            foreach( $re[result] as $datareseau){
+                echo $datareseau;
+                echo "\n";
+            }
         echo "</pre>";
         break;
 
@@ -101,9 +110,12 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 if ($re == ""){
                 $re = "time out command";
                 }
-            echo $re;
-        echo "<pre>";
-        print_r($re );
+        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+         echo "SENSORS FANS\n";
+            foreach( $re[result] as $datareseau){
+                echo $datareseau;
+                echo "\n";
+            }
         echo "</pre>";
         break;
 
@@ -112,9 +124,12 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 if ($re == ""){
                 $re = "time out command";
                 }
-            echo $re;
-        echo "<pre>";
-        print_r($re );
+        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+        echo "MEMORY USAGE\n";
+            foreach( $re[result] as $datareseau){
+                echo $datareseau;
+                echo "\n";
+            }
         echo "</pre>";
         break;
 
@@ -123,9 +138,12 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 if ($re == ""){
                 $re = "time out command";
                 }
-            echo $re;
-        echo "<pre>";
-        print_r($re );
+        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+        echo "NETWORK INTERFACE\n";
+            foreach( $re[result] as $datareseau){
+                echo $datareseau;
+                echo "\n";
+            }
         echo "</pre>";
         break;
 
@@ -134,9 +152,12 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 if ($re == ""){
                 $re = "time out command";
                 }
-            echo $re;
-        echo "<pre>";
-        print_r($re );
+        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+        echo "CPU NUM\n";
+            foreach( $re[result] as $datareseau){
+                echo $datareseau;
+                echo "\n";
+            }
         echo "</pre>";
         break;
 
@@ -145,10 +166,10 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 if ($re == ""){
                 $re = "time out command";
                 }
-            echo "<table>";
+            echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+            echo "NETSTAT\n";
             $entete = array_shift ( $re[result] );
             echo $entete;
-            
             echo "<tr>";
             //Proto Local address@Remote address@Status@PID@Program name
             echo "<th>Proto</th>
