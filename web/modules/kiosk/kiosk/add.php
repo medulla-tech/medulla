@@ -103,7 +103,7 @@ if(is_array($ou_list))
 
     foreach(xmpp_packages_list() as $package)
     {
-        $available_packages[$package['name']] = $package['uuid'];
+        $available_packages[$package['software']] = $package['uuid'];
     }
 
     // Generate the list of packages in the available list. This is the process by default when adding new profile
@@ -116,13 +116,13 @@ if(is_array($ou_list))
             <h1>'._T("Available packages","kiosk").'</h1>
             <ol data-draggable="target" id="available-packages">'.$available_packages_str.'</ol>
         </div>
-    
+
         <div style="width:100%">
             <h1>'._T("Restricted packages","kiosk").'</h1>
             <ol data-draggable="target" id="restricted-packages">
             </ol>
         </div>
-    
+
         <div style="width:100%">
             <h1>'._T("Allowed packages","kiosk").'</h1>
             <ol data-draggable="target" id="allowed-packages">

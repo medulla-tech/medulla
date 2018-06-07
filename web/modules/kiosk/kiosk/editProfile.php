@@ -118,9 +118,7 @@ foreach($profile['packages'] as $tmpPackage)
 // Generate a simplified list of package. This list contains all the packages. If some packages must be ignored it is precised here.
 foreach(xmpp_packages_list() as $package)
 {
-    $available_packages[$package['name']] = $package['uuid'];
-
-
+    $available_packages[$package['software']] = $package['uuid'];
 }
 
 // Create a third list of the remaining packages
@@ -160,12 +158,12 @@ $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packag
             <h1>'._T("Available packages","kiosk").'</h1>
             <ol data-draggable="target" id="available-packages">'.$available_packages_str.'</ol>
         </div>
-    
+
         <div style="width:100%">
             <h1>'._T("Restricted packages","kiosk").'</h1>
             <ol data-draggable="target" id="restricted-packages">'.$restricted_packages_str.'</ol>
         </div>
-    
+
         <div style="width:100%">
             <h1>'._T("Allowed packages","kiosk").'</h1>
             <ol data-draggable="target" id="allowed-packages">'.$allowed_packages_str.'</ol>
