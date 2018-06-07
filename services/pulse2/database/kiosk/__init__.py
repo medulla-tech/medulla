@@ -30,7 +30,7 @@ from sqlalchemy import update
 from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list
+from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists
 from pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package, Profile_has_ou
 # Imported last
 import logging
@@ -120,8 +120,8 @@ class KioskDatabase(DatabaseHelper):
             return
         listou =  "('" + "','".join(OU) + "')"
         sql = """
-            SELECT 
-                distinct 
+            SELECT
+                distinct
                 kiosk.package.name as 'name_package',
                 kiosk.profiles.name as 'name_profile',
                 kiosk.package.description,
@@ -134,12 +134,12 @@ class KioskDatabase(DatabaseHelper):
             FROM
                 kiosk.package
                   inner join
-                kiosk.package_has_profil on kiosk.package.id = kiosk.package_has_profil.package_id 
+                kiosk.package_has_profil on kiosk.package.id = kiosk.package_has_profil.package_id
                   inner join
                 kiosk.profiles on profiles.id = kiosk.package_has_profil.profil_id
 
             WHERE
-                kiosk.profiles.id in 
+                kiosk.profiles.id in
                         (SELECT DISTINCT
                                 profile_id
                             FROM
@@ -300,14 +300,13 @@ class KioskDatabase(DatabaseHelper):
 
             # Prepare a package object for the transaction with the database
             pkg = Packages()
-            pkg.name = ref_pkg['name']
+            pkg.name = ref_pkg['software']
             pkg.version_package = ref_pkg['version']
             pkg.software = ref_pkg['software']
             pkg.description = ref_pkg['description']
             pkg.version_software = 0
             pkg.package_uuid = ref_pkg['uuid']
             pkg.os = os
-
             # If the package is not registered into database, it is added. Else it is updated
             if len(result) == 0:
                 session.add(pkg)
@@ -316,14 +315,26 @@ class KioskDatabase(DatabaseHelper):
             else:
                 sql = """UPDATE `package` set name='%s', version_package='%s', software='%s',\
                 description='%s', package_uuid='%s', os='%s' WHERE package_uuid='%s';""" % (
-                    ref_pkg['name'], ref_pkg['version'], ref_pkg['software'], ref_pkg['description'], ref_pkg['uuid'], os, ref_pkg['uuid'])
+                    ref_pkg['software'], ref_pkg['version'], ref_pkg['software'], ref_pkg['description'], ref_pkg['uuid'], os, ref_pkg['uuid'])
 
                 session.execute(sql)
                 session.commit()
                 session.flush()
 
         # Now we need to verify if all the registered packages are still existing into the server
-        # TODO
+        sql = """SELECT id, package_uuid FROM package;"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        packages_in_db = [element for element in result]
+
+        for package in packages_in_db:
+            if package_exists(package[1]):
+                pass
+            else:
+                session.query(Packages).filter(Packages.id == package[0]).delete()
+                session.commit()
+                session.flush()
 
     @DatabaseHelper._sessionm
     def delete_profile(self, session, id):

@@ -598,15 +598,15 @@ def save_xmpp_json(folder, json_content):
     structpackage = json.loads(json_content)
     keysupp = [ "actionlabel",
                 "p_api",
-                "id", 
-                "random_dir", 
-                "Qversion", 
+                "id",
+                "random_dir",
+                "Qversion",
                 "codereturn",
                 "Qsoftware",
-                "Qvendor", 
-                "files_uploaded", 
+                "Qvendor",
+                "files_uploaded",
                 "step",
-                "command", 
+                "command",
                 "action",
                 "success",
                 "error",
@@ -815,3 +815,17 @@ def get_meta_from_xmpp_package(package_uuid):
     else:
         return False
 
+
+def package_exists(uuid):
+    """Test if the specified package exists
+    Param:
+        uuid str corresponds to the package uuid we are looking for
+    Returns:
+        boolean true if the package exists else false"""
+
+    path = _path_package()
+
+    if os.path.exists(os.path.join(path, uuid)):
+        return True
+    else:
+        return False
