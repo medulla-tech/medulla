@@ -120,7 +120,7 @@ $submod->addPage($page);
 $page = new Page("wakeonlan", _T('Wake on LAN', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("xmppMonitoring", _T('XMPP Quick Minotoring', 'xmppmaster'));
+$page = new Page("xmppMonitoring", _T('XMPP Quick Monitoring', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("ajaxdeploylog");

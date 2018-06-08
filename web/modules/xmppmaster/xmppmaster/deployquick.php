@@ -160,7 +160,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         echo "<form name='formmonitoring' id ='formmonitoring' action='main.php' method='GET' >";
             echo "<input type= 'hidden' name = 'module' value ='xmppmaster'>";
             echo "<input type= 'hidden' name = 'submod' value ='xmppmaster'>";
-            echo "<input type= 'hidden' name = 'action' value ='xmppMinotoring'>";
+            echo "<input type= 'hidden' name = 'action' value ='xmppMonitoring'>";
             echo "<input type= 'hidden' name = 'UUID' value='".$_GET['objectUUID']."'>";
             echo "<input type= 'hidden' name = 'cn' value='".$_GET['cn']."'>";
             echo "<input type= 'hidden' name = 'type' value='".$_GET['type']."'>";
