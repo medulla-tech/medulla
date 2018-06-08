@@ -176,34 +176,37 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             echo "<input id='informationmonitor' type= 'hidden' name = 'information' value=''>";
         echo '</form>';
 
-        if ($_GET['presencemachinexmpp']){
-            echo "<h2>Status Machine :".$_GET['cn']."</h2>";
-            echo "<table>";
-            echo '<tr>';
-                echo '<td id="battery" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                echo '<td id="winservices" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                echo '<td id="disk_usage" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                echo '<td id="mmemory" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                echo '<td id="ifconfig" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                echo '<td id="cpu_num" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                echo '<td id="netstat" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-            echo "</tr>";
-
-            echo '<tr>';
-                echo '<td id="battery0" align="center">battery </td>';
-                echo '<td id="winservices0" align="center">winservices </td>';
-                echo '<td id="clone_ps_aux0" align="center">clone_ps_aux</td>';
-                echo '<td id="disk_usage0" align="center">disk_usage </td>';
-                echo '<td id="sensors_fans0" align="center">sensors_fans</td>';
-                echo '<td id="mmemory0" align="center">mmemory</td>';
-                echo '<td id="ifconfig0" align="center">ifconfig</td>';
-                echo '<td id="cpu_num0" align="center">cpu_num</td>';
-                echo '<td id="netstat0" align="center">netstat</td>';
-            echo "</tr>";
-            echo "</table>";
-        }
+//    TODO :
+//           code code fragment, for future functionality.
+//           monitoring on remote machines.
+//         if ($_GET['presencemachinexmpp']){
+//             echo "<h2>Status Machine :".$_GET['cn']."</h2>";
+//             echo "<table>";
+//             echo '<tr>';
+//                 echo '<td id="battery" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="winservices" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="disk_usage" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="mmemory" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="ifconfig" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="cpu_num" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="netstat" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//             echo "</tr>";
+// 
+//             echo '<tr>';
+//                 echo '<td id="battery0" align="center">battery </td>';
+//                 echo '<td id="winservices0" align="center">winservices </td>';
+//                 echo '<td id="clone_ps_aux0" align="center">clone_ps_aux</td>';
+//                 echo '<td id="disk_usage0" align="center">disk_usage </td>';
+//                 echo '<td id="sensors_fans0" align="center">sensors_fans</td>';
+//                 echo '<td id="mmemory0" align="center">mmemory</td>';
+//                 echo '<td id="ifconfig0" align="center">ifconfig</td>';
+//                 echo '<td id="cpu_num0" align="center">cpu_num</td>';
+//                 echo '<td id="netstat0" align="center">netstat</td>';
+//             echo "</tr>";
+//             echo "</table>";
+//         }
              ?>
     </div>
 <script type="text/javascript">

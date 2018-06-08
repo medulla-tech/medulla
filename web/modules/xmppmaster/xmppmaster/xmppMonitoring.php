@@ -23,7 +23,7 @@
  */
 ?>
 
-style type='text/css'>
+<style type='text/css'>
 textarea {
     width:50% ;
     height:150px;
