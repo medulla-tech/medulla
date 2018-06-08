@@ -3,6 +3,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2018 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -29,6 +30,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/html.inc.php");
 require_once("modules/pkgs/includes/query.php");
+require_once("modules/pkgs/includes/class.php");
 
 if (in_array('dyngroup', $_SESSION['modulesList'])) {
     require_once("modules/dyngroup/includes/dyngroup.php");
@@ -493,7 +495,7 @@ foreach ($cmds as $p) {
             new HiddenTpl($p[0] . 'name'), array("value" => $package[$p[0]]['name'], "hide" => True)
     );
     $f->add(
-            new TrFormElement($p[2], new TextareaTpl($p[0] . 'cmd')), array("value" => htmlspecialchars($package[$p[0]]['command']))
+      new TrFormElement($p[2], new TextareaTplArray(['name'=>$p[0] . 'cmd', "required"=>"required","value" => htmlspecialchars($package[$p[0]]['command'])]))
     );
 }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2016 Siveo, http://www.siveo.net/
+ * (c) 2016-2018 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -505,5 +505,67 @@ function arrayCleaner($parameters)
     $parameters['os'] = $os;
 
     return $parameters;
+}
+
+class TextareaTplArray extends AbstractTpl{
+  /**
+  * The class TextareaTplArray works in the same way as TextareaTpl but the
+  * parameters are given in a array, and not anymore separately.
+  *
+  * All the parameters given are send as html parameters to the textarea tag,
+  * excepted for the value. The value is treated separately
+  *
+  * protected $params : this array contains all the parameters given to the tag
+  * protected $value : string contains the displayed value in the textarea.
+  */
+  protected $params = array();
+  protected $value;
+  public function TextareaTplArray($params = [])
+  {
+    if(is_array($params))
+    {
+      // Some tests to be sure to have a name and / or id option
+      if(array_key_exists("name", $params) && !array_key_exists("id", $params))
+      {
+        $params["id"] = $params["name"];
+      }
+      if(!array_key_exists("name", $params) && array_key_exists("id", $params))
+      {
+        $params["name"] = $params["id"];
+      }
+
+      // Set cols and rows size by default if not precised
+      if(!array_key_exists("rows", $params))
+      {
+        $params["rows"] = 3;
+      }
+      if(!array_key_exists("cols", $params))
+      {
+        $params["cols"] = 21;
+      }
+
+      // The value displayed
+      if(array_key_exists("value", $params))
+      {
+        $this->value = $params['value'];
+        unset($params['value']);
+      }
+      else {
+        $this->value="";
+      }
+      $this->params = $params;
+    }
+  }
+
+  // The function called when the page is displayed
+  public function display() {
+      $stringToDisplay = '<textarea ';
+      foreach($this->params as $opt=>$value)
+      {
+        $stringToDisplay .= $opt.'="'.$value.'" ';
+      }
+      $stringToDisplay .= '>'.$this->value.'</textarea>';
+      echo $stringToDisplay;
+  }
 }
 ?>

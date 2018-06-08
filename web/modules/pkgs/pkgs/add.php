@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2018 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -27,6 +28,7 @@ require("graph/navbar.inc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/query.php");
+require_once("modules/pkgs/includes/class.php");
 
 $p = new PageGenerator(_T("Add package", "pkgs"));
 $p->setSideMenu($sidemenu);
@@ -308,7 +310,7 @@ if (isset($_POST['bconfirm'])) {
                 new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)
         );
         $f->add(
-                new TrFormElement($p[2], new TextareaTpl($p[0] . 'cmd')), array("value" => '')
+                new TrFormElement($p[2], new TextareaTplArray(["name"=>$p[0] . 'cmd',"required"=>"required"])), array("value" => '')
         );
     }
 
