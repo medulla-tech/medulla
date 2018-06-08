@@ -81,20 +81,6 @@ $f->pop(); // End of the table
 //SepTpl came from modules/imaging/includes/class_form.php
 $f->add( new SepTpl());
 $defaultValue = (count($profile['ous']) > 0 && $profile['ous'][0] !="") ? ["value"=>"checked"] : [];
-$f->add(
-    new TrFormElement("", new CheckBoxTpl("no_ou")), $defaultValue
-);
-// -------
-// Add the OUs tree
-// -------
-$result = "";
-$number = 0;
-recursiveArrayToList(xmlrpc_get_ou_list(), $result, $number);
-
-$f->add(new TrFormElement(_T("Select OUs",'kiosk'),new SpanElement('<div id="ou-container" style="max-height:350px;">
-        <div id="jstree" role="tree" style="display:inline-block;overflow:scroll;">'.$result.'</div>
-        <div style="display:inline">Concerned Users<div id="users" class="user-list" style="display:inline"></div></div>
-    </div>',"kiosk")));
 
 // Create a section without table in the form
 $f->add(new TitleElement(_T("Manage packages", "kiosk")));
@@ -171,6 +157,21 @@ $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packag
     </div>',"packages"));
 
 $f->add(new HiddenTpl("jsonDatas"), array("value" => "", "hide" => True));
+
+$f->add(
+    new TrFormElement("", new CheckBoxTpl("no_ou")), $defaultValue
+);
+// -------
+// Add the OUs tree
+// -------
+$result = "";
+$number = 0;
+recursiveArrayToList(xmlrpc_get_ou_list(), $result, $number);
+
+$f->add(new TrFormElement(_T("Select OUs",'kiosk'),new SpanElement('<div id="ou-container" style="max-height:350px;">
+        <div id="jstree" role="tree" style="width:40%;display:inline-block;overflow:scroll;">'.$result.'</div>
+        <div style="display:inline"><div id="users" class="user-list" style="display:inline"></div></div>
+    </div>',"kiosk")));
 
 $bo = new ValidateButtonTpl('bvalid', _T("modify",'kiosk'),'btnPrimary',_T("Modify the profile", "kiosk"));
 //$rr = new TrFormElementcollapse($bo);
