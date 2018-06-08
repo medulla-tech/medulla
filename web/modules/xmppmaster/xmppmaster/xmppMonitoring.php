@@ -49,7 +49,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
      switch($_GET['information']){
         case 'battery':
-            $re =  xmlrpc_remoteXmppMonotoring("battery", $jidmachine, 100);
+            $re =  xmlrpc_remoteXmppMonitoring("battery", $jidmachine, 100);
                 if ($re == ""){
                     $re = "time out command";
                 }
@@ -63,7 +63,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         break;
 
         case 'winservices':
-            $re =  xmlrpc_remoteXmppMonotoring("winservices", $jidmachine, 240);
+            $re =  xmlrpc_remoteXmppMonitoring("winservices", $jidmachine, 240);
                 if ($re == ""){
                 $re = "time out command";
                 }
@@ -78,7 +78,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         break;
 
         case 'clone_ps_aux':
-            $re =  xmlrpc_remoteXmppMonotoring("clone_ps_aux", $jidmachine, 100);
+            $re =  xmlrpc_remoteXmppMonitoring("clone_ps_aux", $jidmachine, 100);
                 if ($re == ""){
                 $re = "time out command";
                 }
@@ -92,7 +92,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         break;
 
         case 'disk_usage':
-            $re =  xmlrpc_remoteXmppMonotoring("disk_usage", $jidmachine, 100);
+            $re =  xmlrpc_remoteXmppMonitoring("disk_usage", $jidmachine, 100);
                 if ($re == ""){
                 $re = "time out command";
                 }
@@ -106,7 +106,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         break;
 
         case 'sensors_fans':
-            $re =  xmlrpc_remoteXmppMonotoring("sensors_fans", $jidmachine, 100);
+            $re =  xmlrpc_remoteXmppMonitoring("sensors_fans", $jidmachine, 100);
                 if ($re == ""){
                 $re = "time out command";
                 }
@@ -120,7 +120,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         break;
 
         case 'mmemory':
-            $re =  xmlrpc_remoteXmppMonotoring("mmemory", $jidmachine, 100);
+            $re =  xmlrpc_remoteXmppMonitoring("mmemory", $jidmachine, 100);
                 if ($re == ""){
                 $re = "time out command";
                 }
@@ -134,7 +134,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         break;
 
         case 'ifconfig':
-            $re =  xmlrpc_remoteXmppMonotoring("ifconfig", $jidmachine, 100);
+            $re =  xmlrpc_remoteXmppMonitoring("ifconfig", $jidmachine, 100);
                 if ($re == ""){
                 $re = "time out command";
                 }
@@ -148,7 +148,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         break;
 
         case 'cpu_num':
-            $re =  xmlrpc_remoteXmppMonotoring("cpu_num", $jidmachine, 100);
+            $re =  xmlrpc_remoteXmppMonitoring("cpu_num", $jidmachine, 100);
                 if ($re == ""){
                 $re = "time out command";
                 }
@@ -162,7 +162,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         break;
 
         case 'netstat':
-            $re =  xmlrpc_remoteXmppMonotoring("netstat", $jidmachine, 50);
+            $re =  xmlrpc_remoteXmppMonitoring("netstat", $jidmachine, 50);
                 if ($re == ""){
                 $re = "time out command";
                 }
