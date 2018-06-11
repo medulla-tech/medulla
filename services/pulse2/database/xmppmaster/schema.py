@@ -247,6 +247,35 @@ class Deploy(Base, XmppMasterDBObj):
     command = Column(Integer)
     macadress=Column(String(255))
 
+
+class Command_qa(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'command_qa'
+    # ====== Fields =============================
+    # Here we define columns for the table Command_qa.
+    # Notice that each column is also a normal Python instance attribute.
+    # id = Column(Integer, primary_key=True)
+    # Warning, if you modify the wrapper, you also have to change it in log.py
+    command_name = Column(String(45), nullable=False, default = "")
+    command_action = Column(String(500), nullable=False)
+    command_login = Column(String(45), nullable=False)
+    command_os = Column(String(45))
+    command_start = Column(DateTime, default=datetime.datetime.utcnow)
+    command_grp = Column(String(11), default=None)
+    command_machine = Column(String(11), default=None)
+
+class Command_action(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'command_action'
+    # ====== Fields =============================
+    # Here we define columns for the table Command_qa.
+    # Notice that each column is also a normal Python instance attribute.
+    # id = Column(Integer, primary_key=True)
+    # Warning, if you modify the wrapper, you also have to change it in log.py
+    command_id = Column(Integer, nullable=False)
+    sessionid = Column(String(45), nullable=False)
+    command_result = Column(Text )
+
 class ParametersDeploy(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'parameters_deploy'
