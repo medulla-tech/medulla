@@ -20,9 +20,13 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
-ALTER TABLE `xmppmaster`.`machines` 
+START TRANSACTION;
+
+ALTER TABLE `xmppmaster`.`machines`
 ADD COLUMN `ad_ou_machine` TEXT NULL DEFAULT '' AFTER `picklekeypublic`,
 ADD COLUMN `ad_ou_user` TEXT NULL DEFAULT '' AFTER `ad_ou_machine`,
 ADD COLUMN `lastuser` VARCHAR(45) NULL AFTER `ad_ou_user`;
 
 UPDATE version SET Number = 13;
+
+COMMIT;

@@ -20,13 +20,13 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+
 --
+
 -- manage custom qa for grp
---
---
---
---
 -- table for command
+
+START TRANSACTION;
 
 CREATE TABLE IF NOT EXISTS `xmppmaster`.`command_qa` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -57,3 +57,7 @@ ADD COLUMN `typemessage` VARCHAR(20) NOT NULL DEFAULT 'log' AFTER `session_id`;
 
 ALTER TABLE IF NOT EXISTS `xmppmaster`.`command_action` 
 ADD COLUMN `target` VARCHAR(45) NOT NULL AFTER `command_result`;
+
+UPDATE version SET Number = 14;
+
+COMMIT;

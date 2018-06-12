@@ -195,7 +195,8 @@ def getMachinefromuuid(uuid):
 def getRelayServerfromjid(jid):
     return XmppMasterDatabase().getRelayServerfromjid(jid)
 
-def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None):
+
+def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None, edit = None):
     if osname == '':
         osname = None
     if min == '':
@@ -204,8 +205,10 @@ def getlistcommandforuserbyos(login, osname = None , min = None, max = None, fil
         max = None
     if filt == '':
         filt = None
+    if edit == '':
+        edit = None
 
-    return XmppMasterDatabase().getlistcommandforuserbyos(login, osname=osname, min = min, max = max, filt = filt)
+    return XmppMasterDatabase().getlistcommandforuserbyos(login, osname=osname, min = min, max = max, filt = filt, edit = edit)
 
 def delQa_custom_command(login, name, osname):
     return XmppMasterDatabase().delQa_custom_command(login, name, osname )

@@ -347,10 +347,10 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def create_Qa_custom_command( self,
                                   session,
-                                  user, 
+                                  user,
                                   osname,
                                   namecmd,
-                                  customcmd, 
+                                  customcmd,
                                   description = ""):
         """
             create Qa_custom_command
@@ -374,7 +374,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updateName_Qa_custom_command( self,
                                      session,
-                                     user, 
+                                     user,
                                      osname,
                                      namecmd,
                                      customcmd,
@@ -399,7 +399,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def delQa_custom_command( self,
                               session,
-                              user, 
+                              user,
                               osname,
                               namecmd):
         """
@@ -418,7 +418,6 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
 
-#jfkjfk
     @DatabaseHelper._sessionm
     def getlistcommandforuserbyos( self,
                                    session,
@@ -426,7 +425,8 @@ class XmppMasterDatabase(DatabaseHelper):
                                    osname  = None,
                                    min = None,
                                    max = None,
-                                   filt = None):
+                                   filt = None,
+                                   edit = None):
         ret={ 'len'     : 0,
               'nb'      : 0,
               'limit'   : 0,
@@ -435,10 +435,15 @@ class XmppMasterDatabase(DatabaseHelper):
               'filt'    : '',
               'command' : []}
         try:
-            if osname is None:
+            if edit is not None:
+                # We are in the edition view
                 result = session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user))
+            elif osname is None:
+                # We are displaying the list of QAs for use where OS is not defined (view list of QAs)
+                result = session.query(Qa_custom_command).filter(or_(Qa_custom_command.user == user, Qa_custom_command.user == 'allusers'))
             else:
-                result = session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user,
+                # We are displaying the list of QAs for use where OS is defined (list QAs for specific machine)
+                result = session.query(Qa_custom_command).filter(and_(or_(Qa_custom_command.user == user, Qa_custom_command.user == 'allusers'),
                                                                       Qa_custom_command.os == osname))
 
             total =  self.get_count(result)
@@ -935,8 +940,8 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self, session, 
-                        login, 
+    def addlogincommand(self, session,
+                        login,
                         commandid,
                         grpid,
                         nb_machine_in_grp,
@@ -1242,7 +1247,7 @@ class XmppMasterDatabase(DatabaseHelper):
         logs = session.query(Logs)
         if headercolumn == "":
             headercolumn = "date@fromuser@who@text"
-            
+
         if start_date != "":
             logs = logs.filter( Logs.date > start_date)
         if end_date != "":
@@ -1298,8 +1303,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 listchamp.append(linelogs.sessionname)
             if headercolumn != "" and "text" in headercolumn:
                 listchamp.append(linelogs.text)
-                
-            
+
+
             ##listchamp.append(linelogs.type)
             ##listchamp.append(linelogs.action)
             ##listchamp.append(linelogs.module)
@@ -2270,7 +2275,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.machines
                 WHERE
                     xmppmaster.machines.agenttype = 'machine'
-                GROUP BY 
+                GROUP BY
                     groupdeploy;"""
         result = session.execute(sql)
         session.commit()
@@ -2315,13 +2320,13 @@ class XmppMasterDatabase(DatabaseHelper):
         #import pprint
         #pp = pprint.PrettyPrinter(indent=4)
         #pp.pprint(builddatajson)
-        
+
         with open(pathfile, 'w') as outfile:
             json.dump(builddatajson,  outfile, indent = 4)
         os.chmod(pathfile, 0o777)
         uid, gid =  pwd.getpwnam('root').pw_uid, pwd.getpwnam('root').pw_gid
         os.chown(pathfile, uid, gid)
-        
+
     @DatabaseHelper._sessionm
     def getstepdeployinsession(self, session, sessiondeploy):
         sql = """
@@ -2511,17 +2516,17 @@ class XmppMasterDatabase(DatabaseHelper):
             result = {  "id" : machine.id,
                         "jid" : machine.jid,
                         "platform" : machine.platform,
-                        "archi" : machine.archi, 
+                        "archi" : machine.archi,
                         "hostname" : machine.hostname,
                         "uuid_inventorymachine" : machine.uuid_inventorymachine,
-                        "ip_xmpp" : machine.ip_xmpp, 
-                        "ippublic" : machine.ippublic, 
-                        "macaddress" : machine.macaddress, 
-                        "subnetxmpp" : machine.subnetxmpp, 
-                        "agenttype" : machine.agenttype, 
-                        "classutil" : machine.classutil, 
-                        "groupdeploy" : machine.groupdeploy, 
-                        "urlguacamole" : machine.urlguacamole, 
+                        "ip_xmpp" : machine.ip_xmpp,
+                        "ippublic" : machine.ippublic,
+                        "macaddress" : machine.macaddress,
+                        "subnetxmpp" : machine.subnetxmpp,
+                        "agenttype" : machine.agenttype,
+                        "classutil" : machine.classutil,
+                        "groupdeploy" : machine.groupdeploy,
+                        "urlguacamole" : machine.urlguacamole,
                         "picklekeypublic" : machine.picklekeypublic,
                         'ad_ou_user': machine.ad_ou_user,
                         'ad_ou_machine': machine.ad_ou_machine,
@@ -2619,7 +2624,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         if relayserver:
-            #object complete 
+            #object complete
             #result = [relayserver.id,
                       #relayserver.urlguacamole,
                       #relayserver.subnet,
@@ -2653,7 +2658,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         join(Cluster_ars, Has_cluster_ars.id_cluster == Cluster_ars.id)
                 if moderelayserver != None:
                     ars = ars.filter(and_(Has_cluster_ars.id_cluster.in_(listcluster_id),
-                                          RelayServer.enabled == 1, 
+                                          RelayServer.enabled == 1,
                                           RelayServer.moderelayserver == moderelayserver ) )
                 else:
                     ars = ars.filter(and_(Has_cluster_ars.id_cluster.in_(listcluster_id),
