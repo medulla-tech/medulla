@@ -272,9 +272,12 @@ class Command_action(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     # id = Column(Integer, primary_key=True)
     # Warning, if you modify the wrapper, you also have to change it in log.py
+    date = Column(DateTime, default=datetime.datetime.utcnow)
     command_id = Column(Integer, nullable=False)
-    sessionid = Column(String(45), nullable=False)
+    session_id = Column(String(45), nullable=False)
+    typemessage = Column(String(20), default = "log")
     command_result = Column(Text )
+    target = Column(String(45), nullable=False)
 
 class ParametersDeploy(Base, XmppMasterDBObj):
     # ====== Table name =========================

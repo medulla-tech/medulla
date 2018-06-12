@@ -138,6 +138,76 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
+    def getCommand_action_time(self, session, during_the_last_seconds):
+        try:
+            commandaction = session.query(Command_action)
+            if during_the_last_seconds:
+                commandaction = commandaction.filter( Command_action.command_start >= (datetime.utcnow() - timedelta(seconds=during_the_last_seconds)))
+            commandaction = commandaction.all()
+            session.commit()
+            session.flush()
+            ## creation des list pour affichage web organiser par colone
+            result_list = []
+            command_id_list = []
+            command_action_list = []
+            command_login_list = []
+            command_os_list = []
+            command_start_list = []
+            command_grp_list = []
+            command_machine_list = []
+            for command in commandaction:
+                command_id_list.append(command.command_id)
+                command_action_list.append(command.command_action)
+                command_login_list.append(command.command_login)
+                command_os_list.append(command.command_os)
+                command_start_list.append(command.command_start)
+                command_grp_list.append(command.command_grp)
+                command_machine_list.append(command.command_machine)
+            result_list.append(command_id_list)
+            result_list.append(command_action_list)
+            result_list.append(command_login_list)
+            result_list.append(command_os_list)
+            result_list.append(command_start_list)
+            result_list.append(command_grp_list)
+            result_list.append(command_machine_list)
+            return result_list
+        except Exception, e:
+            logging.getLogger().debug("getlistcommandforuserbyos error %s->"%str(e))
+            return result_list
+
+    @DatabaseHelper._sessionm
+    def setCommand_qa(self, session, command_name, command_action, command_login, command_grp='', command_machine='', command_os=''):
+        try:
+            new_Command_qa = Command_qa()
+            new_Command_qa.command_name = command_name
+            new_Command_qa.command_action = command_action
+            new_Command_qa.command_login = command_login
+            new_Command_qa.command_grp = command_grp
+            new_Command_qa.command_machine = command_machine
+            new_Command_qa.command_os = command_os
+            session.add(new_Command_qa)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+
+    @DatabaseHelper._sessionm
+    def setCommand_action(self, session, target,command_id, sessionid, command_result="", typemessage="log"):
+        try:
+            new_Command_action = Command_action()
+            new_Command_action.session_id = sessionid
+            new_Command_action.command_id = command_id
+            new_Command_action.typemessage = typemessage
+            new_Command_action.command_result = command_result
+            new_Command_action.target = target
+            session.add(new_Command_action)
+            session.commit()
+            session.flush()
+            return new_Command_action.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+
+    @DatabaseHelper._sessionm
     def logtext(self, session, text, sessionname='' , type = "noset",priority = 0, who = ''):
         try:
             new_log = Logs()
@@ -1573,7 +1643,6 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
         return ret
 
-
     @DatabaseHelper._sessionm
     def showmachinegrouprelayserver(self,session):
         """ return les machines en fonction du RS """
@@ -1586,6 +1655,24 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [x for x in result]
+
+    @DatabaseHelper._sessionm
+    def get_qaction(self, session, namecmd, user ):
+        """ 
+            return quick actions informations 
+        """
+        qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.namecmd==namecmd, Qa_custom_command.user==user))
+        qa_custom_command = qa_custom_command.first()
+        if qa_custom_command:
+            result = {  "user" : qa_custom_command.user,
+                        "os" : qa_custom_command.os,
+                        "namecmd" : qa_custom_command.namecmd,
+                        "customcmd" : qa_custom_command.customcmd,
+                        "description" : qa_custom_command.description
+                        }
+            return result
+        else:
+            result = {}
 
     @DatabaseHelper._sessionm
     def listjidRSdeploy(self,session):
@@ -2441,6 +2528,33 @@ class XmppMasterDatabase(DatabaseHelper):
                         'lastuser': machine.lastuser}
         return result
 
+    @DatabaseHelper._sessionm
+    def getMachinefromuuid(self, session, uuid):
+        """ information machine"""
+        machine = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).first()
+        session.commit()
+        session.flush()
+        result = {}
+        if machine:
+            result = {  "id" : machine.id,
+                        "jid" : machine.jid,
+                        "platform" : machine.platform,
+                        "archi" : machine.archi, 
+                        "hostname" : machine.hostname,
+                        "uuid_inventorymachine" : machine.uuid_inventorymachine,
+                        "ip_xmpp" : machine.ip_xmpp, 
+                        "ippublic" : machine.ippublic, 
+                        "macaddress" : machine.macaddress, 
+                        "subnetxmpp" : machine.subnetxmpp, 
+                        "agenttype" : machine.agenttype, 
+                        "classutil" : machine.classutil, 
+                        "groupdeploy" : machine.groupdeploy, 
+                        "urlguacamole" : machine.urlguacamole, 
+                        "picklekeypublic" : machine.picklekeypublic,
+                        'ad_ou_user': machine.ad_ou_user,
+                        'ad_ou_machine': machine.ad_ou_machine,
+                        'lastuser': machine.lastuser}
+        return result
 
     @DatabaseHelper._sessionm
     def getRelayServerfromjid(self, session, jid):
