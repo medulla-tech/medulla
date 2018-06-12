@@ -31,7 +31,8 @@ import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
-
+import zlib
+import base64
 from master.lib.utils import name_random, simplecommand, file_get_contents
 from  xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
@@ -40,7 +41,8 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
                                                       callshutdownbymaster, send_message_json,\
                                                       callvncchangepermsbymaster, callInstallKey,\
                                                       callremotefile, calllocalfile, callremotecommandshell,\
-                                                      calllistremotefileedit, callremotefileeditaction
+                                                      calllistremotefileedit, callremotefileeditaction,\
+                                                      callremoteXmppMonitoring
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -179,14 +181,20 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
 
-#jfkjfk
+#topology
+def topologypulse():
+    return XmppMasterDatabase().topologypulse()
+
+
 def getMachinefromjid(jid):
     return XmppMasterDatabase().getMachinefromjid(jid)
+
+def getMachinefromuuid(uuid):
+    return XmppMasterDatabase().getMachinefromuuid(uuid)
 
 def getRelayServerfromjid(jid):
     return XmppMasterDatabase().getRelayServerfromjid(jid)
 
-#jfkjfk
 def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None):
     if osname == '':
         osname = None
@@ -352,6 +360,18 @@ def getshowmachinegrouprelayserver():
         array.append(ob)
     return array
 
+def get_qaction(groupname, user):
+    return XmppMasterDatabase().get_qaction(groupname, user)
+
+def setCommand_qa(command_name, command_action, command_login, command_grp="", command_machine='', command_os=""):
+    return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os)
+
+def getCommand_action_time(during_the_last_seconds):
+    return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds)
+
+def setCommand_action(target, command_id, sessionid, command_result, typemessage):
+    return XmppMasterDatabase().setCommand_action(target, command_id, sessionid, command_result, typemessage)
+
 def getXmppConfiguration():
     return getXmppConfiguration()
 
@@ -441,6 +461,17 @@ def getcontentfile(pathfile, deletefile):
         return data
     else:
         return False
+
+def remotecommandshell( command , jidmachine, timeout):
+    return callremotecommandshell( jidmachine, command, timeout = 10)
+
+def remoteXmppMonitoring( suject, jidmachine, timeout):
+    data = callremoteXmppMonitoring(jidmachine,  suject, timeout = timeout )
+    result = json.loads(data)
+    resultdata = zlib.decompress(base64.b64decode(result['result']))
+    dataresult = [x for x in resultdata.split('\n') ]
+    result['result'] = dataresult
+    return result
 
 def remotecommandshell( command , jidmachine, timeout):
     return callremotecommandshell( jidmachine, command, timeout = 10)

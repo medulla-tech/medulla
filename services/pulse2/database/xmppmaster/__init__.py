@@ -40,7 +40,8 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
 import logging
 import json
 import time
-
+#topology
+import os, pwd
 class XmppMasterDatabase(DatabaseHelper):
     """
     Singleton Class to query the xmppmaster database.
@@ -133,6 +134,76 @@ class XmppMasterDatabase(DatabaseHelper):
             session.add(new_log)
             session.commit()
             session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+
+    @DatabaseHelper._sessionm
+    def getCommand_action_time(self, session, during_the_last_seconds):
+        try:
+            commandaction = session.query(Command_action)
+            if during_the_last_seconds:
+                commandaction = commandaction.filter( Command_action.command_start >= (datetime.utcnow() - timedelta(seconds=during_the_last_seconds)))
+            commandaction = commandaction.all()
+            session.commit()
+            session.flush()
+            ## creation des list pour affichage web organiser par colone
+            result_list = []
+            command_id_list = []
+            command_action_list = []
+            command_login_list = []
+            command_os_list = []
+            command_start_list = []
+            command_grp_list = []
+            command_machine_list = []
+            for command in commandaction:
+                command_id_list.append(command.command_id)
+                command_action_list.append(command.command_action)
+                command_login_list.append(command.command_login)
+                command_os_list.append(command.command_os)
+                command_start_list.append(command.command_start)
+                command_grp_list.append(command.command_grp)
+                command_machine_list.append(command.command_machine)
+            result_list.append(command_id_list)
+            result_list.append(command_action_list)
+            result_list.append(command_login_list)
+            result_list.append(command_os_list)
+            result_list.append(command_start_list)
+            result_list.append(command_grp_list)
+            result_list.append(command_machine_list)
+            return result_list
+        except Exception, e:
+            logging.getLogger().debug("getlistcommandforuserbyos error %s->"%str(e))
+            return result_list
+
+    @DatabaseHelper._sessionm
+    def setCommand_qa(self, session, command_name, command_action, command_login, command_grp='', command_machine='', command_os=''):
+        try:
+            new_Command_qa = Command_qa()
+            new_Command_qa.command_name = command_name
+            new_Command_qa.command_action = command_action
+            new_Command_qa.command_login = command_login
+            new_Command_qa.command_grp = command_grp
+            new_Command_qa.command_machine = command_machine
+            new_Command_qa.command_os = command_os
+            session.add(new_Command_qa)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+
+    @DatabaseHelper._sessionm
+    def setCommand_action(self, session, target,command_id, sessionid, command_result="", typemessage="log"):
+        try:
+            new_Command_action = Command_action()
+            new_Command_action.session_id = sessionid
+            new_Command_action.command_id = command_id
+            new_Command_action.typemessage = typemessage
+            new_Command_action.command_result = command_result
+            new_Command_action.target = target
+            session.add(new_Command_action)
+            session.commit()
+            session.flush()
+            return new_Command_action.id
         except Exception, e:
             logging.getLogger().error(str(e))
 
@@ -484,7 +555,10 @@ class XmppMasterDatabase(DatabaseHelper):
                            urlguacamole ="",
                            groupdeploy ="",
                            objkeypublic = None,
-                           ippublic = None):
+                           ippublic = None,
+                           ad_ou_user = "",
+                           ad_ou_machine = "",
+                           lastuser = ""):
         try:
             new_machine = Machines()
             new_machine.jid = jid
@@ -501,6 +575,9 @@ class XmppMasterDatabase(DatabaseHelper):
             new_machine.urlguacamole = urlguacamole
             new_machine.groupdeploy = groupdeploy
             new_machine.picklekeypublic = objkeypublic
+            new_machine.ad_ou_user = ad_ou_user
+            new_machine.ad_ou_machine = ad_ou_machine
+            new_machine.lastuser = lastuser
             session.add(new_machine)
             session.commit()
             session.flush()
@@ -944,6 +1021,24 @@ class XmppMasterDatabase(DatabaseHelper):
                                               Deploy.state != "DEPLOYMENT ERROR")
                                   ).\
                     update({Deploy.state: state})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def updatemachineAD(self, session, idmachine, lastuser, ou_machine, ou_user):
+        """
+            update Machine table in base xmppmaster
+            data AD
+        """
+        try:
+            session.query(Machines).filter( Machines.id ==  idmachine).\
+                    update({ Machines.ad_ou_machine : ou_machine,
+                             Machines.ad_ou_user : ou_user,
+                             Machines.lastuser : lastuser})
             session.commit()
             session.flush()
             return 1
@@ -1548,7 +1643,6 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
         return ret
 
-
     @DatabaseHelper._sessionm
     def showmachinegrouprelayserver(self,session):
         """ return les machines en fonction du RS """
@@ -1561,6 +1655,24 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [x for x in result]
+
+    @DatabaseHelper._sessionm
+    def get_qaction(self, session, namecmd, user ):
+        """ 
+            return quick actions informations 
+        """
+        qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.namecmd==namecmd, Qa_custom_command.user==user))
+        qa_custom_command = qa_custom_command.first()
+        if qa_custom_command:
+            result = {  "user" : qa_custom_command.user,
+                        "os" : qa_custom_command.os,
+                        "namecmd" : qa_custom_command.namecmd,
+                        "customcmd" : qa_custom_command.customcmd,
+                        "description" : qa_custom_command.description
+                        }
+            return result
+        else:
+            result = {}
 
     @DatabaseHelper._sessionm
     def listjidRSdeploy(self,session):
@@ -2131,6 +2243,85 @@ class XmppMasterDatabase(DatabaseHelper):
             return False
         return True
 
+    #topology
+    @DatabaseHelper._sessionm
+    def listRS(self,session):
+        """ return les RS pour le deploiement """
+        sql = """SELECT DISTINCT
+                    groupdeploy
+                FROM
+                    xmppmaster.machines;"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        listrs = [x for x in result]
+        return [ i[0] for i in listrs ]
+
+    #topology
+    @DatabaseHelper._sessionm
+    def topologypulse(self, session):
+        #listrs = self.listRS()
+        ## select liste des RS
+        #list des machines pour un relayserver
+
+        sql = """SELECT groupdeploy,
+                    GROUP_CONCAT(jid)
+                FROM
+                    xmppmaster.machines
+                WHERE
+                    xmppmaster.machines.agenttype = 'machine'
+                GROUP BY 
+                    groupdeploy;"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        listmachinebyRS = [x for x in result]
+        resulttopologie = {}
+        for i in listmachinebyRS:
+            listmachines = i[1].split(',')
+            resulttopologie[i[0]] = listmachines
+        self.write_topologyfile(resulttopologie)
+        return [ resulttopologie]
+
+    #topology
+    def write_topologyfile(self, topology):
+        directoryjson = os.path.join("/","usr","share","mmc","datatopology")
+        if not os.path.isdir(directoryjson):
+            #creation repertoire de json topology
+            os.makedirs(directoryjson)
+            os.chmod(directoryjson, 0o777) # for example
+            uid, gid =  pwd.getpwnam('root').pw_uid, pwd.getpwnam('root').pw_gid
+            os.chown(directoryjson, uid, gid) # set user:group as root:www-data
+        # creation topology file.
+        filename = "topology.json"
+        pathfile =  os.path.join(directoryjson, filename)
+        builddatajson = { "name" : "Pulse", "type" : "AMR", "parent": None, "children": []}
+        for i in topology:
+            listmachines = topology[i]
+
+            ARS = {}
+            ARS['name'] = i
+            ARS['type'] = "ARS"
+            ARS['parent'] = "Pulse"
+            ARS['children'] = []
+
+            listmachinesstring = []
+            for mach in listmachines:
+                ARS['children'].append({ "name" : mach, "type" : "AM", "parent" : i })
+            #builddatajson[i] = listmachinesstring
+            #ARS['children'] = builddatajson
+            #print listmachinesstring
+            builddatajson['children'].append(ARS)
+        #import pprint
+        #pp = pprint.PrettyPrinter(indent=4)
+        #pp.pprint(builddatajson)
+        
+        with open(pathfile, 'w') as outfile:
+            json.dump(builddatajson,  outfile, indent = 4)
+        os.chmod(pathfile, 0o777)
+        uid, gid =  pwd.getpwnam('root').pw_uid, pwd.getpwnam('root').pw_gid
+        os.chown(pathfile, uid, gid)
+        
     @DatabaseHelper._sessionm
     def getstepdeployinsession(self, session, sessiondeploy):
         sql = """
@@ -2194,20 +2385,6 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
         except:
             return -1
-
-    @DatabaseHelper._sessionm
-    def getCountPresenceMachine(self, session):
-        sql = """SELECT
-                    COUNT(*) AS 'nb'
-                 FROM
-                    xmppmaster.machines
-                 WHERE
-                    agenttype='machine';"""
-        nb = session.execute(sql)
-        session.commit()
-        session.flush()
-        result = [x for x in nb][0][0]
-        return result
 
     @DatabaseHelper._sessionm
     def delPresenceMachine(self, session, jid):
@@ -2325,6 +2502,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getMachinefromjid(self, session, jid):
+        """ information machine"""
         machine = session.query(Machines).filter(Machines.jid == jid).first()
         session.commit()
         session.flush()
@@ -2344,7 +2522,38 @@ class XmppMasterDatabase(DatabaseHelper):
                         "classutil" : machine.classutil, 
                         "groupdeploy" : machine.groupdeploy, 
                         "urlguacamole" : machine.urlguacamole, 
-                        "picklekeypublic" : machine.picklekeypublic}
+                        "picklekeypublic" : machine.picklekeypublic,
+                        'ad_ou_user': machine.ad_ou_user,
+                        'ad_ou_machine': machine.ad_ou_machine,
+                        'lastuser': machine.lastuser}
+        return result
+
+    @DatabaseHelper._sessionm
+    def getMachinefromuuid(self, session, uuid):
+        """ information machine"""
+        machine = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).first()
+        session.commit()
+        session.flush()
+        result = {}
+        if machine:
+            result = {  "id" : machine.id,
+                        "jid" : machine.jid,
+                        "platform" : machine.platform,
+                        "archi" : machine.archi, 
+                        "hostname" : machine.hostname,
+                        "uuid_inventorymachine" : machine.uuid_inventorymachine,
+                        "ip_xmpp" : machine.ip_xmpp, 
+                        "ippublic" : machine.ippublic, 
+                        "macaddress" : machine.macaddress, 
+                        "subnetxmpp" : machine.subnetxmpp, 
+                        "agenttype" : machine.agenttype, 
+                        "classutil" : machine.classutil, 
+                        "groupdeploy" : machine.groupdeploy, 
+                        "urlguacamole" : machine.urlguacamole, 
+                        "picklekeypublic" : machine.picklekeypublic,
+                        'ad_ou_user': machine.ad_ou_user,
+                        'ad_ou_machine': machine.ad_ou_machine,
+                        'lastuser': machine.lastuser}
         return result
 
     @DatabaseHelper._sessionm
@@ -2429,6 +2638,8 @@ class XmppMasterDatabase(DatabaseHelper):
                       #relayserver.package_server_ip,
                       #relayserver.package_server_port
             #]
+
+            notconfars = { relayserver.jid :[relayserver.ipconnection, relayserver.port, relayserver.jid, relayserver.urlguacamole, 0 ]}
             # search for clusters where ARS is
             clustersid = session.query(Has_cluster_ars).filter(Has_cluster_ars.id_ars == relayserver.id)
             clustersid = clustersid.all()
@@ -2462,7 +2673,15 @@ class XmppMasterDatabase(DatabaseHelper):
                             except KeyError:
                                 pass
                     return result2
+            else:
+                # there are no clusters configured for this ARS.
+                logging.getLogger().warning("Cluster ARS [%s] no configured"%relayserver.jid)
+                return notconfars
+        else:
+            logging.getLogger().warning("Relay server no present")
+            logging.getLogger().warning("ARS not known for machine")
         return {}
+
 
     @DatabaseHelper._sessionm
     def algoloadbalancerforcluster(self, session):
@@ -2480,3 +2699,26 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x for x in result]
 
+    @DatabaseHelper._sessionm
+    def get_machine_ad_infos(self, session, uuid_inventory):
+        """
+        Select the founded OUs of the logged machine.
+        Param:
+            uuid_inventory: str. This param is the uuid of the inventory of the machine received by xmpp.
+
+        Returns:
+            List of tuple. The tuple contains all the ou_machine and ou_user founded.
+        """
+
+        sql = """
+        SELECT
+            ad_ou_machine, ad_ou_user
+        FROM
+            machines
+        WHERE
+            uuid_inventorymachine = '%s';"""%(uuid_inventory)
+
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [element for element in result]
