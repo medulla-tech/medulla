@@ -67,7 +67,7 @@ a.info:hover span{
         $start = 0;
     }
 
-    $result = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], '', $start, $end, $filter);
+    $result = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], '', $start, $end, $filter, $edit=1);
 
     $params = array();
     $names  = array();

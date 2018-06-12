@@ -80,8 +80,8 @@ function xmlrpc_create_local_dir_transfert($pathroot, $hostname){
     return xmlCall("xmppmaster.create_local_dir_transfert", array($pathroot, $hostname));
 }
 
-function xmlrpc_getlistcommandforuserbyos($login, $os=null, $min = null, $max = null, $filt = null   ) {
-    return xmlCall("xmppmaster.getlistcommandforuserbyos", array($login, $os,  $min, $max, $filt ));
+function xmlrpc_getlistcommandforuserbyos($login, $os=null, $min = null, $max = null, $filt = null, $edit = null ) {
+    return xmlCall("xmppmaster.getlistcommandforuserbyos", array($login, $os,  $min, $max, $filt, $edit ));
 }
 
 function xmlrpc_delQa_custom_command($login, $namecmd, $os ) {
