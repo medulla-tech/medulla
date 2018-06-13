@@ -36,6 +36,10 @@ function xmlrpc_getMachinefromjid($jid) {
     return xmlCall("xmppmaster.getMachinefromjid", array($jid));
 }
 
+function xmlrpc_getMachinefromuuid($uuid) {
+    return xmlCall("xmppmaster.getMachinefromuuid", array($uuid));
+}
+
 function xmlrpc_getRelayServerfromjid($jid) {
     return xmlCall("xmppmaster.getRelayServerfromjid", array($jid));
 }
@@ -246,6 +250,30 @@ function xmlrpc_getdeploybyuser($login, $numrow, $offset) {
 
 function xmlrpc_getshowmachinegrouprelayserver() {
     return xmlCall("xmppmaster.getshowmachinegrouprelayserver", array());
+}
+
+function xmlrpc_get_qaction($groupname, $user){
+    return xmlCall("xmppmaster.get_qaction", array($groupname, $user));
+}
+
+function xmlrpc_setCommand_qa($command_name, $command_action, $command_login, $command_grp="", $command_machine='', $command_os=""){
+    return xmlCall("xmppmaster.setCommand_qa", array($command_name, $command_action, $command_login, $command_grp, $command_machine, $command_os));
+}
+
+function xmlrpc_getCommand_action_time($duration){
+    return xmlCall("xmppmaster.getCommand_action_time", array($during_the_last_seconds));
+}
+
+function xmlrpc_getCommand_qa_by_cmdid($cmdid){
+    return xmlCall("xmppmaster.getCommand_qa_by_cmdid", array($cmdid));
+}
+
+function xmlrpc_setCommand_action($target, $command_id, $sessionid, $command_result ="", $typemessage="log" ){
+    return xmlCall("xmppmaster.setCommand_action", array($target, $command_id, $sessionid, $command_result, $typemessage));
+}
+
+function xmlrpc_getQAforMachine($cmd_id, $uuid){
+    return xmlCall("xmppmaster.getQAforMachine", array($cmd_id, $uuid));
 }
 
 function xmlrpc_runXmppCommand($command, $machine, $postinfo){
