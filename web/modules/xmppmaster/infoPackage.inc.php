@@ -117,6 +117,12 @@ $submod->addPage($page);
 $page = new Page("ActionQuickconsole", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("ActionQuickGroup", _T('XMPP Action Quick Group', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("QAcustommachgrp", _T('XMPP Action Quick Group result', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("wakeonlan", _T('Wake on LAN', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -130,6 +136,11 @@ $submod->addPage($page);
 
 $page = new Page("remoteaction");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppremoteaction.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("actioncustomquickactiongrp", _T("quick action Custom", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 

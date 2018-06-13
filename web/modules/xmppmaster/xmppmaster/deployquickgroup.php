@@ -41,7 +41,6 @@ input[type="text"] {
     if ($_GET['type'] !== 0) $grouptype = "";else $grouptype = "(Imaging)";
      $id  = $_GET['id'];
      $gid = $_GET['gid'];
-     //echo json_encode($_GET);
 ?>
 
 <?
@@ -152,17 +151,71 @@ input[type="text"] {
                 </tr>
             </table>
         </div>
+<?php
 
-        <script type="text/javascript">
-        // todo add graoh pie
-        </script>
+                $qacomand =array();
+                $mm = array();
+                // convention les commande de l'user root sont appliquer a tous
+                $qacomand = xmlrpc_getlistcommandforuserbyos("root" );
+                echo "<table>";
+                    echo '<tr>';
+                    echo'<td>Custom command</td>
+                    <td>
+                        <select id="select">';
+                        foreach($qacomand['command'] as $tabblecommand){
+                            echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].'</option>';
+                                    $mm[] =  '"'.addslashes($tabblecommand['namecmd']).'": {
+                                        "description" : "'.addslashes( $tabblecommand['description'] ).'",
+                                        "customcmd" : "'.addslashes($tabblecommand['customcmd']).'",
+                                        "os" : "'.addslashes($tabblecommand['os']).'",
+                                        "user" : "'.addslashes($tabblecommand['user']).'}';
+                                    };
+                        echo'</select>
+                    </td>
+                    <td><input id="buttoncmd" class="btn btn-primary" type=button value="Send custom command"></td>';
+                    echo '</tr>';
+                echo "</table>";
+                echo "<form name='formcmdcustom' id ='formcmdcustom' action='main.php' method='GET' >";
+                    foreach ($_GET as $key=>$valu){
+                        if ( $key == "mod" || $key == "id" || $key == "type" ) continue;
+                        echo "<input type='hidden' id='".$key."'  name ='".$key."' value ='".$valu."'>";
+                    }
+                    echo "<input type='hidden' id='action'  name ='action' value ='ActionQuickGroup'>";
+                    echo "<input type='hidden' id='namecmd'  name ='namecmd' value =''>";
+                    echo "<input type='hidden' id='user'  name ='user' value ='root'>";
+                    echo "<input type='hidden' id='cmdid'  name ='cmdid' value =''>";
+                echo "</form>";
+?>
+
 <script type="text/javascript">
    var groupinfo = <? echo json_encode($_GET); ?>
 
+        jQuery(function() {
+            var t = jQuery('#select option:selected').text();
+            jQuery('#namecmd').val(t);
+        });
+        jQuery('#select').on('change', function() {
+            var t = jQuery('#select option:selected').text();
+            jQuery('#namecmd').val(t);
+        });
 
-    jQuery('#checkboxshutdown').click(function() {
-        jQuery("#shutdowninfo").toggle();
-    })
+        jQuery( '#buttoncmd' ).click(function() {
+            groupinfo["namecmd"]=jQuery('#namecmd').val()
+            groupinfo["user"]=jQuery('#user').val()
+            groupinfo["actionqa"]=jQuery('#action').val()
+            groupinfo["groupname"] = jQuery('#groupname').val()
+            groupinfo["type"] = jQuery('#type').val()
+            jQuery.get( "modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php", groupinfo)
+                .done(function( data ) {
+                    jQuery('#cmdid').val(data);
+                    jQuery( '#formcmdcustom' ).submit();
+                })
+        });
+
+        jQuery('#checkboxshutdown').click(function() {
+            jQuery("#shutdowninfo").toggle();
+        })
+    //console.log(groupinfo);
 
     function wol(data){
         uuid = data[0];
@@ -273,15 +326,7 @@ input[type="text"] {
         }
     }
 
-    jQuery('#wol').unbind().on('click', function(){
-        groupinfo['wol'] = jQuery('#checkboxwol').is(':checked');
-        jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo )
-            .done(function( data ) {
-               wol(data)
-            })
-    })
-
-    jQuery('#wol0').unbind().on('click', function(){
+    jQuery('#wol,#wol0').unbind().on('click', function(){
         groupinfo['wol'] = jQuery('#checkboxwol').is(':checked'); 
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo )
             .done(function( data ) {
@@ -289,35 +334,20 @@ input[type="text"] {
             })
     })
 
-    jQuery('#inventory').on('click', function(){
+    jQuery('#inventory,#inventory0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actioninventory.php", groupinfo )
             .done(function( data ) {
                 inventory(data)
             })
     })
-
-    jQuery('#inventory0').on('click', function(){
-        jQuery.get( "modules/xmppmaster/xmppmaster/actioninventory.php", groupinfo )
-            .done(function( data ) {
-                inventory(data)
-            })
-    })
-
-    jQuery('#reboot').on('click', function(){
+    jQuery('#reboot,#reboot0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", groupinfo )
             .done(function( data ) {
                 reboot(data)
             })
     })
 
-    jQuery('#reboot0').on('click', function(){
-        jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", groupinfo )
-            .done(function( data ) {
-                reboot(data)
-            })
-    })
-
-    jQuery('#installkey').on('click', function(){
+    jQuery('#installkey,#installkey0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionkeyinstall.php", groupinfo )
             .done(function( data ) {
             //alert(data);
@@ -325,15 +355,7 @@ input[type="text"] {
             })
     })
 
-    jQuery('#installkey0').on('click', function(){
-        jQuery.get( "modules/xmppmaster/xmppmaster/actionkeyinstall.php", groupinfo )
-            .done(function( data ) {
-             //alert(data);
-               installkey(data)
-            })
-    })
-
-    jQuery('#shutdown').on('click', function(){
+    jQuery('#shutdown,#shutdown0').on('click', function(){
         groupinfo['time'] = jQuery('#mytimeshutdown').val()
         groupinfo['msg'] = jQuery('#msgshutdown').val()
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", groupinfo )
@@ -342,29 +364,7 @@ input[type="text"] {
             })
     })
 
-    jQuery('#shutdown0').on('click', function(){
-        groupinfo['time'] = jQuery('#mytimeshutdown').val()
-        groupinfo['msg'] = jQuery('#msgshutdown').val()
-        jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", groupinfo )
-            .done(function( data ) {
-                shutdownfunction(data)
-            })
-    })
-
-    jQuery('#vncchangeperms').on('click', function(){
-        if (jQuery('#checkboxvncchangeperms').val() == "on"){
-          groupinfo['askpermission'] = 1
-        }
-        else {
-          groupinfo['askpermission'] = 0
-        }
-        jQuery.get( "modules/xmppmaster/xmppmaster/actionvncchangeperms.php", groupinfo )
-            .done(function( data ) {
-                shutdownfunction(data)
-            })
-    })
-
-    jQuery('#vncchangeperms0').on('click', function(){
+    jQuery('#vncchangeperms,#vncchangeperms0').on('click', function(){
         if (jQuery('#checkboxvncchangeperms').val() == "on"){
           groupinfo['askpermission'] = 1
         }
