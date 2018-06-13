@@ -163,10 +163,10 @@ class XmppMasterDatabase(DatabaseHelper):
             traceback.print_exc(file=sys.stdout)
             return []
 
-    @DatabaseHelper._sessionm
-    def getCommand_action_time(self, session, during_the_last_seconds):
+   @DatabaseHelper._sessionm
+    def getCommand_action_time(self, session, during_the_last_seconds, start, stop, filter = None):
         try:
-            command_qa = session.query(Command_qa.id.label("id"),
+            command_qa = session.query(distinct(Command_qa.id).label("id"),
                                        Command_qa.command_name.label("command_name"),
                                        Command_qa.command_login.label("command_login"),
                                        Command_qa.command_os.label("command_os"),
@@ -175,8 +175,17 @@ class XmppMasterDatabase(DatabaseHelper):
                                        Command_qa.command_machine.label("command_machine"),
                                        Command_action.target.label("target")).join(Command_action,
                                                                         Command_qa.id == Command_action.command_id)
+            ##si on veut passer par les groupe avant d'aller sur les machine.
+            ## command_qa = command_qa.group_by(Command_qa.id)
+            command_qa = command_qa.order_by(desc(Command_qa.id))
             if during_the_last_seconds:
                 command_qa = command_qa.filter( Command_qa.command_start >= (datetime.utcnow() - timedelta(seconds=during_the_last_seconds)))
+            #nb = self.get_count(deploylog)
+        #lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
+
+            nbtotal = self.get_count(command_qa)
+            if start != "" and stop != "":
+                command_qa = command_qa.offset(int(start)).limit(int(stop)-int(start))
             command_qa = command_qa.all()
             session.commit()
             session.flush()
@@ -207,11 +216,12 @@ class XmppMasterDatabase(DatabaseHelper):
             result_list.append(command_grp_list)
             result_list.append(command_machine_list)
             result_list.append(command_target_list)
-            return result_list
+            return {"nbtotal" :nbtotal ,"result" : result_list}
         except Exception, e:
             logging.getLogger().debug("getCommand_action_time error %s->"%str(e))
             traceback.print_exc(file=sys.stdout)
-            return result_list
+            return {"nbtotal" :0 ,"result" : result_list}
+
 
     @DatabaseHelper._sessionm
     def setCommand_qa(self, session, command_name, command_action, command_login, command_grp='', command_machine='', command_os=''):

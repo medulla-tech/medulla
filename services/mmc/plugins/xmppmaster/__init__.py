@@ -369,14 +369,11 @@ def get_qaction(groupname, user):
 def setCommand_qa(command_name, command_action, command_login, command_grp="", command_machine='', command_os=""):
     return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os)
 
-def getCommand_action_time(during_the_last_seconds):
-    return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds)
+def getCommand_action_time(during_the_last_seconds, start, stop, filter):
+    return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds, start, stop, filter)
 
 def setCommand_action(target, command_id, sessionid, command_result, typemessage):
     return XmppMasterDatabase().setCommand_action(target, command_id, sessionid, command_result, typemessage)
-
-def getCommand_qa_by_cmdid(cmdid):
-    return XmppMasterDatabase().getCommand_qa_by_cmdid(cmdid)
 
 def getCommand_qa_by_cmdid(cmdid):
     return XmppMasterDatabase().getCommand_qa_by_cmdid(cmdid)
