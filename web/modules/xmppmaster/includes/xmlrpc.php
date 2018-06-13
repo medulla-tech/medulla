@@ -267,8 +267,8 @@ function xmlrpc_setCommand_qa($command_name, $command_action, $command_login, $c
     return xmlCall("xmppmaster.setCommand_qa", array($command_name, $command_action, $command_login, $command_grp, $command_machine, $command_os));
 }
 
-function xmlrpc_getCommand_action_time($duration){
-    return xmlCall("xmppmaster.getCommand_action_time", array($during_the_last_seconds));
+function xmlrpc_getCommand_action_time($duration, $start, $stop, $filter){
+    return xmlCall("xmppmaster.getCommand_action_time", array($duration, $start, $stop, $filter));
 }
 
 function xmlrpc_getCommand_qa_by_cmdid($cmdid){
