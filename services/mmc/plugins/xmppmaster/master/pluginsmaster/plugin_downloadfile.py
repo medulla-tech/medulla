@@ -36,9 +36,9 @@ import datetime
 import ConfigParser
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
-#### "CONF" : "/etc/mmc/plugin/masterplugin_teledial.ini"
-####
-plugin = { "VERSION" : "1.2", "NAME" : "downloadfile", "TYPE" : "master"}
+from mmc.plugins.xmppmaster.config import xmppMasterConfig
+
+plugin = { "VERSION" : "1.3", "NAME" : "downloadfile", "TYPE" : "master"}
 
 
 def create_path(type ="windows", host="", ipordomain="", path=""):
@@ -63,7 +63,7 @@ def create_path(type ="windows", host="", ipordomain="", path=""):
         else:
             return "\"%s\""%(path)
 
-def scpfile(scr, dest):
+def scpfile(src, dest):
     cmdpre = "scp -r -o IdentityFile=/root/.ssh/id_rsa "\
                     "-o StrictHostKeyChecking=no "\
                     "-o UserKnownHostsFile=/dev/null "\
@@ -72,7 +72,7 @@ def scpfile(scr, dest):
                     "-o ServerAliveInterval=10 "\
                     "-o CheckHostIP=no "\
                     "-o ConnectTimeout=10 "\
-                    "%s %s"%(scr, dest)
+                    "%s %s"%(src, dest)
     return cmdpre
 
 def isconf():
@@ -116,19 +116,40 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
 
     if 'dest' in data and 'src' in data and 'jidmachine' in data:
         jidmachine = data['jidmachine']
+        Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
         dest = data['dest']
-        scr = data['src']
+        src = data['src']
     else:
         try:
             jidmachine = data[0]['jidmachine']
+            Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
             dest = data[0]['dest']
-            scr = data[0]['src']
+            src = data[0]['src']
         except KeyError:
-            params = data['data'][2]
-            dest = params[1]
-            scr  = params[0]
             jidmachine = data['data'][0]
-    Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
+            Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
+            params = data['data'][2]
+            if len(params) > 1:
+            #if params[1]:
+                dest = params[1]
+            else:
+                machdir = os.path.join(xmppMasterConfig().defaultdir, Machineinfo['hostname'])
+                now = datetime.datetime.now()
+                datedir = "%s-%s"%(data['data'][1][1]['user'], now.strftime("%Y-%m-%d-%H:%M:%S"))
+                destdir = os.path.join(machdir, datedir)
+                if not os.path.exists(machdir):
+                    os.mkdir(machdir)
+                    os.chmod(machdir, 0777)
+                if not os.path.exists(destdir):
+                    logging.getLogger().debug("Creating folder: %s"%destdir)
+                    os.mkdir(destdir)
+                if '\\' in params[0]:
+                    final_folder = os.path.basename(os.path.normpath(params[0].replace('\\','/').replace(':','')))
+                else:
+                    final_folder = os.path.basename(os.path.normpath(params[0]))
+                dest = os.path.join(destdir, final_folder)
+            src  = params[0]
+
     relayserver = XmppMasterDatabase().getMachinefromjid(Machineinfo['groupdeploy'])
     relayserinfo = XmppMasterDatabase().getRelayServerfromjid(Machineinfo['groupdeploy'])
 
@@ -137,7 +158,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
                     'session_id' : sessionid,
                     'action' : "downloadfile",
                     'data' : {  'jidrelayser'       : Machineinfo['groupdeploy'],
-                                'path_src_machine'  : scr,
+                                'path_src_machine'  : src,
                                 'path_dest_master'  : dest,
                                 'jidmachine'        : jidmachine,
                                 'host'              : Machineinfo['uuid_inventorymachine'],# item host is uuid glpi machine
