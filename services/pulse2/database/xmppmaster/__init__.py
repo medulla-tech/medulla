@@ -42,6 +42,9 @@ import json
 import time
 #topology
 import os, pwd
+import traceback
+import sys
+
 class XmppMasterDatabase(DatabaseHelper):
     """
     Singleton Class to query the xmppmaster database.
@@ -138,41 +141,76 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
+    def getQAforMachine(self, session, cmd_id, uuidmachine):
+        try:
+            command_action = session.query(Command_action).filter(and_( Command_action.command_id == cmd_id, Command_action.target == uuidmachine))
+            print command_action
+            print cmd_id
+            print uuidmachine
+            command_action = command_action.all()
+            listcommand = []
+            for command in command_action:
+                action = []
+                action.append( command.command_id )
+                action.append( str(command.date) )
+                action.append( command.session_id )
+                action.append( command.typemessage )
+                action.append( command.command_result )
+                listcommand.append(action)
+            return listcommand
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            traceback.print_exc(file=sys.stdout)
+            return []
+
+    @DatabaseHelper._sessionm
     def getCommand_action_time(self, session, during_the_last_seconds):
         try:
-            commandaction = session.query(Command_action)
+            command_qa = session.query(Command_qa.id.label("id"),
+                                       Command_qa.command_name.label("command_name"),
+                                       Command_qa.command_login.label("command_login"),
+                                       Command_qa.command_os.label("command_os"),
+                                       Command_qa.command_start.label("command_start"),
+                                       Command_qa.command_grp.label("command_grp"),
+                                       Command_qa.command_machine.label("command_machine"),
+                                       Command_action.target.label("target")).join(Command_action,
+                                                                        Command_qa.id == Command_action.command_id)
             if during_the_last_seconds:
-                commandaction = commandaction.filter( Command_action.command_start >= (datetime.utcnow() - timedelta(seconds=during_the_last_seconds)))
-            commandaction = commandaction.all()
+                command_qa = command_qa.filter( Command_qa.command_start >= (datetime.utcnow() - timedelta(seconds=during_the_last_seconds)))
+            command_qa = command_qa.all()
             session.commit()
             session.flush()
             ## creation des list pour affichage web organiser par colone
             result_list = []
             command_id_list = []
-            command_action_list = []
+            command_name_list = []
             command_login_list = []
             command_os_list = []
             command_start_list = []
             command_grp_list = []
             command_machine_list = []
-            for command in commandaction:
-                command_id_list.append(command.command_id)
-                command_action_list.append(command.command_action)
+            command_target_list = []
+            for command in command_qa:
+                command_id_list.append(command.id)
+                command_name_list.append(command.command_name)
                 command_login_list.append(command.command_login)
                 command_os_list.append(command.command_os)
                 command_start_list.append(command.command_start)
                 command_grp_list.append(command.command_grp)
                 command_machine_list.append(command.command_machine)
+                command_target_list.append(command.target)
             result_list.append(command_id_list)
-            result_list.append(command_action_list)
+            result_list.append(command_name_list)
             result_list.append(command_login_list)
             result_list.append(command_os_list)
             result_list.append(command_start_list)
             result_list.append(command_grp_list)
             result_list.append(command_machine_list)
+            result_list.append(command_target_list)
             return result_list
         except Exception, e:
-            logging.getLogger().debug("getlistcommandforuserbyos error %s->"%str(e))
+            logging.getLogger().debug("getCommand_action_time error %s->"%str(e))
+            traceback.print_exc(file=sys.stdout)
             return result_list
 
     @DatabaseHelper._sessionm
@@ -188,11 +226,39 @@ class XmppMasterDatabase(DatabaseHelper):
             session.add(new_Command_qa)
             session.commit()
             session.flush()
+            return new_Command_qa.id
         except Exception, e:
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def setCommand_action(self, session, target,command_id, sessionid, command_result="", typemessage="log"):
+    def getCommand_qa_by_cmdid(self, session, cmdid):
+        try:
+            command_qa = session.query(Command_qa).filter( Command_qa.id == cmdid)
+            command_qa = command_qa.first()
+            session.commit()
+            session.flush()
+            return { "id" :  command_qa.id,
+                    "command_name": command_qa.command_name,
+                    "command_action": command_qa.command_action, 
+                    "command_login": command_qa.command_login,
+                    "command_os": command_qa.command_os,
+                    "command_start": str(command_qa.command_start),
+                    "command_grp" : command_qa.command_grp,
+                    "command_machine" : command_qa.command_machine }
+        except Exception, e:
+            logging.getLogger().error("getCommand_qa_by_cmdid error %s->"%str(e))
+            traceback.print_exc(file=sys.stdout)
+            return { "id" :  "",
+                    "command_name": "",
+                    "command_action": "", 
+                    "command_login": "",
+                    "command_os": "",
+                    "command_start": "",
+                    "command_grp" : "",
+                    "command_machine" : "" }
+
+    @DatabaseHelper._sessionm
+    def setCommand_action(self, session, target, command_id, sessionid, command_result="", typemessage="log"):
         try:
             new_Command_action = Command_action()
             new_Command_action.session_id = sessionid

@@ -375,6 +375,15 @@ def getCommand_action_time(during_the_last_seconds):
 def setCommand_action(target, command_id, sessionid, command_result, typemessage):
     return XmppMasterDatabase().setCommand_action(target, command_id, sessionid, command_result, typemessage)
 
+def getCommand_qa_by_cmdid(cmdid):
+    return XmppMasterDatabase().getCommand_qa_by_cmdid(cmdid)
+
+def getCommand_qa_by_cmdid(cmdid):
+    return XmppMasterDatabase().getCommand_qa_by_cmdid(cmdid)
+
+def getQAforMachine(cmd_id, uuidmachine):
+    return XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
+
 def getXmppConfiguration():
     return getXmppConfiguration()
 
