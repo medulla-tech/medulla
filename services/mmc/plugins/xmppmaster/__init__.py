@@ -185,12 +185,16 @@ def getPresenceuuid(uuid):
 def topologypulse():
     return XmppMasterDatabase().topologypulse()
 
-#jfkjfk
+
 def getMachinefromjid(jid):
     return XmppMasterDatabase().getMachinefromjid(jid)
 
+def getMachinefromuuid(uuid):
+    return XmppMasterDatabase().getMachinefromuuid(uuid)
+
 def getRelayServerfromjid(jid):
     return XmppMasterDatabase().getRelayServerfromjid(jid)
+
 
 def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None, edit = None):
     if osname == '':
@@ -358,6 +362,27 @@ def getshowmachinegrouprelayserver():
         ob = {'jid' : z[0], 'type' : z[1], 'os' : z[2], 'rsdeploy' : z[3],'hostname' : z[4] ,'uuid' : z[5],'ip' : z[6],'subnet' : z[7] }
         array.append(ob)
     return array
+
+def get_qaction(groupname, user):
+    return XmppMasterDatabase().get_qaction(groupname, user)
+
+def setCommand_qa(command_name, command_action, command_login, command_grp="", command_machine='', command_os=""):
+    return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os)
+
+def getCommand_action_time(during_the_last_seconds):
+    return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds)
+
+def setCommand_action(target, command_id, sessionid, command_result, typemessage):
+    return XmppMasterDatabase().setCommand_action(target, command_id, sessionid, command_result, typemessage)
+
+def getCommand_qa_by_cmdid(cmdid):
+    return XmppMasterDatabase().getCommand_qa_by_cmdid(cmdid)
+
+def getCommand_qa_by_cmdid(cmdid):
+    return XmppMasterDatabase().getCommand_qa_by_cmdid(cmdid)
+
+def getQAforMachine(cmd_id, uuidmachine):
+    return XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
 
 def getXmppConfiguration():
     return getXmppConfiguration()
