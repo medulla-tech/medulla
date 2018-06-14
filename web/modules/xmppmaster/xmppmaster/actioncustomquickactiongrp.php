@@ -29,7 +29,6 @@
     require_once('../includes/xmlrpc.php');
     require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
-    $result = array();
     // recuperation des donnees de la custom qa
     $customqa = xmlrpc_get_qaction($_GET['namecmd'], $_GET['user']);
     $customqa['customcmd'] = trim($customqa['customcmd']);
@@ -37,7 +36,7 @@
     $GROUP = $_GET['gid'];
     // creation quick action command
     $COMMANDID = xmlrpc_setCommand_qa($_GET['namecmd'], $customqa['customcmd'], $_GET['user'], $_GET['gid'], $command_machine='', $customqa['os']);
-    $result['cmdid'] =  $COMMANDID;
+    
 
     // recupère toutes les machines du groupe.
     $uuid = array();
@@ -49,17 +48,21 @@
         $uuid[] = $key;
         $cn[$key] = $value[1]['cn'][0];
         // recuperemachine dans xmpp machine.
+        $machinegroup = array();
         $machinegroup = xmlrpc_getMachinefromuuid($key);
         if (count($machinegroup) != 0 ){
                 if ( strpos(strtoupper($machinegroup['platform']), $OS) !== false){
                     // machine presente et os correct pour la QA
+                    $machineinfos = array();
+                    $result = array();
+                    $result['cmdid'] =  $COMMANDID;
                     $machineinfos = array_merge($_GET, $machinegroup,$customqa,$result);
                     unset($machineinfos['picklekeypublic']);
                     unset($machineinfos['urlguacamole']);
                     unset($machineinfos['module']);
                     unset($machineinfos['mod']);
                     unset($machineinfos['actionqa']);
-                $result = xmlrpc_runXmppAsyncCommand( trim($customqa['customcmd']) , $machineinfos );
+                    xmlrpc_runXmppAsyncCommand( trim($customqa['customcmd']) , $machineinfos );
                 }
                 else{
                     xmlrpc_setCommand_action( $key, $COMMANDID, "consoleweb",  _T("Sorry the operating system of the machine is", "xmppmaster")."  [".$machinegroup['platform']."]<br>".  _T("The custom QA is defined for opérating system", "xmppmaster")." [".$OS."]", "warning");

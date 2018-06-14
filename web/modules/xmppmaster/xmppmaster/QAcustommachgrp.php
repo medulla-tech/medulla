@@ -132,3 +132,7 @@ if ($result != ""){
 }
 echo "</div>";
  ?>
+ 
+<form>
+  <input class="btnPrimary"  type="button" value="Retour" onclick="history.go(-1)">
+</form>
