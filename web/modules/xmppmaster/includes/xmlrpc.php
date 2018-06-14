@@ -283,6 +283,10 @@ function xmlrpc_getQAforMachine($cmd_id, $uuid){
     return xmlCall("xmppmaster.getQAforMachine", array($cmd_id, $uuid));
 }
 
+function xmlrpc_runXmppAsyncCommand( $command , $machineinfo ){
+    return xmlCall("xmppmaster.runXmppAsyncCommand", array($command, $machineinfo));
+}
+
 function xmlrpc_runXmppCommand($command, $machine, $postinfo){
     return xmlCall("xmppmaster.runXmppCommand", array($command, $machine, $postinfo));
 }
