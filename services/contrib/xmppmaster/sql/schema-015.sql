@@ -22,27 +22,6 @@
 
 START TRANSACTION;
 
--- Create table auto_inc_1000 and auto_inc_10000 to link 1000 or 10000 value to auto_increment
-CREATE TABLE auto_inc_1000(id INT NOT NULL, PRIMARY KEY(id));
-INSERT INTO auto_inc_1000 VALUE(1000);
-
-
--- Set qa_custom_command.AUTO_INCREMENT to 1000 if calculated auto_increment is under this value.
-delimiter //
-drop trigger if exists qa_custom_command_before_insert;
-CREATE TRIGGER qa_custom_command_before_insert BEFORE INSERT ON qa_custom_command
-FOR EACH ROW
-BEGIN
-declare auto_incr1 BIGINT;
-declare auto_incr2 BIGINT;
-SELECT AUTO_INCREMENT INTO auto_incr1 FROM information_schema.TABLES WHERE table_schema=DATABASE() AND table_name='qa_custom_command';
-SELECT AUTO_INCREMENT INTO auto_incr2 FROM information_schema.TABLES WHERE table_schema=DATABASE() AND table_name='auto_inc_1000';
-IF (auto_incr2 > auto_incr1 and NEW.id<auto_incr2) THEN
-SET NEW.id = auto_incr2;
-END IF;
-END;//
-delimiter ;
-
 ALTER TABLE `xmppmaster`.`machines`
 ADD COLUMN IF NOT EXISTS `kiosk_presence` ENUM('True', 'False') NOT NULL DEFAULT 'False'
 AFTER `ad_ou_user`;
