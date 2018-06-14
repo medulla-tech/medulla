@@ -91,6 +91,8 @@ install: build
 	mkdir -p $(DESTDIR)/etc/apache2/conf-available/
 	cp $(CURDIR)/web/conf/apache/pulse.conf $(DESTDIR)/etc/apache2/conf-available/
 	mkdir -p $(DESTDIR)/var/lib/pulse2/file-transfer
+	#(workaround) Remove schema-018.sql
+	rm -fv $(DESTDIR)/usr/share/doc/pulse2-common/contrib/imaging/sql/schema-018.sql
 
 binary-indep: build install
 binary-arch: build install
