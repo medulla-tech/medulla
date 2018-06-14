@@ -32,6 +32,9 @@ if (isExpertMode()){
     $sidemenu->addSideMenuItem(
         new SideMenuItem(_T("XMPP Custom Quick Action","xmppmaster"), "xmppmaster", "xmppmaster", "customQA")
     );
+    $sidemenu->addSideMenuItem(
+        new SideMenuItem(_T("XMPP Group Custom Quick Action","xmppmaster"), "xmppmaster", "xmppmaster", "ActionQuickGroup")
+    );
 }
 
 $sidemenu->addSideMenuItem(

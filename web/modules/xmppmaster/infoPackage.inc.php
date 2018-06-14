@@ -67,6 +67,11 @@ $submod->addPage($page);
 $page = new Page("machine_xmpp_detail", _T('XMPP Machine details', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("ajaxGroupactionquick");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page("ajaxFiltercustom");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxFiltercustom.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
@@ -86,7 +91,6 @@ $submod->addPage($page);
 $page = new Page("deleteqa",_T("Delete Custom Quick Action", 'pkgs'));
 $page->setFile("modules/xmppmaster/xmppmaster/removeqa.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
-
 
 $page = new Page("logbymachine", _T('XMPP logs', 'xmppmaster'));
 $submod->addPage($page);
