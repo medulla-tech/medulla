@@ -163,7 +163,7 @@ class XmppMasterDatabase(DatabaseHelper):
             traceback.print_exc(file=sys.stdout)
             return []
 
-   @DatabaseHelper._sessionm
+    @DatabaseHelper._sessionm
     def getCommand_action_time(self, session, during_the_last_seconds, start, stop, filter = None):
         try:
             command_qa = session.query(distinct(Command_qa.id).label("id"),
@@ -249,7 +249,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
             return { "id" :  command_qa.id,
                     "command_name": command_qa.command_name,
-                    "command_action": command_qa.command_action, 
+                    "command_action": command_qa.command_action,
                     "command_login": command_qa.command_login,
                     "command_os": command_qa.command_os,
                     "command_start": str(command_qa.command_start),
@@ -260,7 +260,7 @@ class XmppMasterDatabase(DatabaseHelper):
             traceback.print_exc(file=sys.stdout)
             return { "id" :  "",
                     "command_name": "",
-                    "command_action": "", 
+                    "command_action": "",
                     "command_login": "",
                     "command_os": "",
                     "command_start": "",
