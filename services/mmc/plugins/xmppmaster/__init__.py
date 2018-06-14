@@ -474,38 +474,6 @@ def getcontentfile(pathfile, deletefile):
 def remotecommandshell( command , jidmachine, timeout):
     return callremotecommandshell( jidmachine, command, timeout = 10)
 
-def runXmppAsyncCommand(cmd, infomachine):
-    sessionid= name_random(8,"quick_")
-    cmd = cmd.strip()
-    if cmd.startswith("plugin_"):
-        ## call plugin master
-        #lineplugincalling = [x.strip() for x in cmd.split("@_@")]
-        #plugincalling = lineplugincalling[0]
-        #del lineplugincalling[0]
-        #action =  plugincalling.strip().split("_")[1]
-        data ={
-                #"action" : action,
-                #"sessionid" : sessionid,
-                #"data" : [machine, information, lineplugincalling] ,
-                #"base64" : False
-        }
-        #XmppMasterDatabase().setCommand_action( infomachine['uuid_inventorymachine'],
-                                               #infomachine['cmdid'],
-                                               #sessionid,
-                                               #"call plugin %s for Quick Action"%(action),
-                                               #"log")
-        #callXmppPlugin( action, data )
-        print json.dumps(data, indent =4 )
-    else:
-        data = {
-            "action": "asynchroremoteQA",
-            "sessionid":sessionid,
-            "data" : infomachine,
-            "base64" :False
-            }
-        print json.dumps(data, indent =4 )
-        callXmppPlugin( "asynchroremoteQA", data )
-
 def remoteXmppMonitoring( suject, jidmachine, timeout):
     data = callremoteXmppMonitoring(jidmachine,  suject, timeout = timeout )
     result = json.loads(data)
@@ -516,6 +484,33 @@ def remoteXmppMonitoring( suject, jidmachine, timeout):
 
 def remotecommandshell( command , jidmachine, timeout):
     return callremotecommandshell( jidmachine, command, timeout = 10)
+
+def runXmppAsyncCommand(cmd, infomachine):
+    sessionid= name_random(8,"quick_")
+    cmd = cmd.strip()
+    if cmd.startswith("plugin_"):
+        ## call plugin master
+        lineplugincalling = [x.strip() for x in cmd.split("@_@")]
+        plugincalling = lineplugincalling[0]
+        del lineplugincalling[0]
+        action =  plugincalling.strip().split("_")[1]
+        data ={
+                "action" : action,
+                "sessionid" : sessionid,
+                "data" : [infomachine['jid'], infomachine, lineplugincalling]
+        }
+        XmppMasterDatabase().setCommand_action( infomachine['uuid_inventorymachine'],
+                                                infomachine['cmdid'],
+                                               sessionid,
+                                               "call plugin %s for Quick Action"%(action),
+                                               "log")
+        callXmppPlugin( action, data )
+    else:
+        data = {"action": "asynchroremoteQA",
+                "sessionid":sessionid,
+                "data" : infomachine,
+                "base64" :False }
+        callXmppPlugin( "asynchroremoteQA", data )
 
 def runXmppCommand(cmd, machine, information = ""):
     data = {
