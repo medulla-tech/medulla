@@ -68,6 +68,11 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("ajaxGroupactionquick");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page("ajaxFiltercustom");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxFiltercustom.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
