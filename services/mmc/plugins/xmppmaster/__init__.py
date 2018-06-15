@@ -379,7 +379,11 @@ def getCommand_qa_by_cmdid(cmdid):
     return XmppMasterDatabase().getCommand_qa_by_cmdid(cmdid)
 
 def getQAforMachine(cmd_id, uuidmachine):
-    return XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
+    resultdata =  XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
+    if resultdata[0][3] == "result":
+        #encode 64 str? to transfer xmlrpc if string with sequence escape
+        resultdata[0][4] = base64.b64encode(resultdata[0][4])
+    return resultdata
 
 def getXmppConfiguration():
     return getXmppConfiguration()
