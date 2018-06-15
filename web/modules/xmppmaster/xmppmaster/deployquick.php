@@ -48,7 +48,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     echo '<td id="reboot0" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
                     echo '<td id="inventory0" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
                     echo '<td id="vncchangeperms0" align="center"><img src="modules/base/graph/computers/remotedesktop.png" height="70" width="70" ></td>';
-                    //jfk
                     echo '<td id="installkey0" align="center"><img src="modules/base/graph/computers/installkeydesktop.png" height="70" width="70" ></td>';
                 }
                 else{
@@ -59,7 +58,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 <tr>
                 <?
                 if ($_GET['presencemachinexmpp']){
-                    //echo '<td id="shutdown" align="center">Shutdown</td>';
                     echo '<td><span id="shutdown">Shutdown</span>
                                 <form name = "infosshutdown">
                                     <label>
@@ -131,7 +129,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     <td><input id="buttoncmd" class="btn btn-primary" type=button value="Send custom command"></td>';
                     echo '</tr>';
                 echo "</table>";
-                echo "<form name id ='formcmdcustom' ='qcmd' action='main.php' method='GET' >";
+                echo "<form name='formcmdcustom' id ='formcmdcustom' action='main.php' method='GET' >";
                 echo "<input type=hidden name ='module' value ='xmppmaster'>";
                 echo "<input type=hidden name ='submod' value ='xmppmaster'>";
                 foreach ($_GET as $key=>$valu){
@@ -156,6 +154,53 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 echo "<input id='user' type=hidden name ='user' value =''>";
                 echo "</form>";
             }
+        echo "<form name='formmonitoring' id ='formmonitoring' action='main.php' method='GET' >";
+            echo "<input type= 'hidden' name = 'module' value ='xmppmaster'>";
+            echo "<input type= 'hidden' name = 'submod' value ='xmppmaster'>";
+            echo "<input type= 'hidden' name = 'action' value ='xmppMonitoring'>";
+            echo "<input type= 'hidden' name = 'UUID' value='".$_GET['objectUUID']."'>";
+            echo "<input type= 'hidden' name = 'cn' value='".$_GET['cn']."'>";
+            echo "<input type= 'hidden' name = 'type' value='".$_GET['type']."'>";
+            echo "<input type= 'hidden' name = 'owner_realname' value='".$_GET['owner_realname']."'>";
+            echo "<input type= 'hidden' name = 'entity' value='".$_GET['entity']."'>";
+            echo "<input type= 'hidden' name = 'owner' value='".$_GET['owner']."'>";
+            echo "<input type= 'hidden' name = 'user' value='".$_GET['user']."'>";
+            echo "<input type= 'hidden' name = 'owner_firstname' value='".$_GET['owner_firstname']."'>";
+            echo "<input type= 'hidden' name = 'os' value='".$_GET['os']."'>";
+            echo "<input type= 'hidden' name = 'presencemachinexmpp' value='".$_GET['presencemachinexmpp']."'>";
+            echo "<input type= 'hidden' name = 'vnctype' value='".$_GET['vnctype']."'>";
+            echo "<input type= 'hidden' name = 'mod' value='".$_GET['mod']."'>";
+            echo "<input id='informationmonitor' type= 'hidden' name = 'information' value=''>";
+        echo '</form>';
+
+//         if ($_GET['presencemachinexmpp']){
+//             echo "<h2>Status Machine :".$_GET['cn']."</h2>";
+//             echo "<table>";
+//             echo '<tr>';
+//                 echo '<td id="battery" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="winservices" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="disk_usage" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="mmemory" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="ifconfig" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="cpu_num" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="netstat" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//             echo "</tr>";
+// 
+//             echo '<tr>';
+//                 echo '<td id="battery0" align="center">battery </td>';
+//                 echo '<td id="winservices0" align="center">winservices </td>';
+//                 echo '<td id="clone_ps_aux0" align="center">clone_ps_aux</td>';
+//                 echo '<td id="disk_usage0" align="center">disk_usage </td>';
+//                 echo '<td id="sensors_fans0" align="center">sensors_fans</td>';
+//                 echo '<td id="mmemory0" align="center">mmemory</td>';
+//                 echo '<td id="ifconfig0" align="center">ifconfig</td>';
+//                 echo '<td id="cpu_num0" align="center">cpu_num</td>';
+//                 echo '<td id="netstat0" align="center">netstat</td>';
+//             echo "</tr>";
+//             echo "</table>";
+//         }
              ?>
     </div>
 <script type="text/javascript">
@@ -190,12 +235,53 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     }
     ?>
    var uuid = <? echo json_encode($_GET); ?>
-
+   <?php
+        if ($_GET['presencemachinexmpp']){
+            echo"
+                jQuery('#battery, #battery0').click(function() {
+                    jQuery('#informationmonitor').val('battery');
+                    jQuery( '#formmonitoring' ).submit();
+                })
+                jQuery('#winservices, #winservices0').click(function() {
+                    jQuery('#informationmonitor').val('winservices');
+                    jQuery( '#formmonitoring' ).submit();
+                })
+                jQuery('#clone_ps_aux, #clone_ps_aux0').click(function() {
+                    jQuery('#informationmonitor').val('clone_ps_aux');
+                    jQuery( '#formmonitoring' ).submit();
+                })
+                jQuery('#disk_usage, #disk_usage0').click(function() {
+                    jQuery('#informationmonitor').val('disk_usage');
+                    jQuery( '#formmonitoring' ).submit();
+                })
+                jQuery('#sensors_fans, #sensors_fans0').click(function() {
+                    jQuery('#informationmonitor').val('sensors_fans');
+                    jQuery( '#formmonitoring' ).submit();
+                })
+                jQuery('#mmemory, #mmemory0').click(function() {
+                    jQuery('#informationmonitor').val('mmemory');
+                    jQuery( '#formmonitoring' ).submit();
+                })
+                jQuery('#ifconfig, #ifconfig0').click(function() {
+                    jQuery('#informationmonitor').val('ifconfig');
+                    jQuery( '#formmonitoring' ).submit();
+                })
+                jQuery('#cpu_num, #cpu_num0').click(function() {
+                    jQuery('#informationmonitor').val('cpu_num');
+                    jQuery( '#formmonitoring' ).submit();
+                })
+                jQuery('#netstat, #netstat0').click(function() {
+                    jQuery('#informationmonitor').val('netstat');
+                    jQuery( '#formmonitoring' ).submit();
+                })
+                ";
+        };
+    ?>
     jQuery('#checkboxshutdown').click(function() {
-        jQuery("#shutdowninfo").toggle();
+        jQuery('#shutdowninfo').toggle();
     })
 
-    jQuery('#wol').on('click', function(){
+    jQuery('#wol, #wol0').on('click', function(){
         uuid['wol'] = jQuery('#checkboxwol').is(':checked'); 
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
             .done(function( data ) {
@@ -208,23 +294,21 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             })
     })
 
-    jQuery('#inventory').on('click', function(){
+    jQuery('#inventory, #inventory0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actioninventory.php", uuid )
             .done(function( data ) {
-            if (typeof(uuid['entity'] ) != "undefined"){
+                if (typeof(uuid['entity'] ) != "undefined"){
                     alert( "inventory : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" , "" , "alert-info" )
                 }
                 else{
                     alert( "inventory : " + uuid['cn'] , "" , "alert-info" )
                 }
-
             })
     })
 
-    jQuery('#reboot').on('click', function(){
+    jQuery('#reboot, #reboot0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", uuid )
             .done(function( data ) {
-
                 if (typeof(uuid['entity'] ) != "undefined"){
                     alert( "reboot : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" , "" , "alert-info" )
                 }
@@ -234,7 +318,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             })
     })
 
-    jQuery('#shutdown').on('click', function(){
+    jQuery('#shutdown, #shutdown0').on('click', function(){
         uuid['time'] = jQuery('#mytimeshutdown').val()
         uuid['msg']  = jQuery('#msgshutdown').val()
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", uuid )
@@ -248,12 +332,12 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             })
     })
 
-    jQuery('#vncchangeperms').on('click', function(){
+    jQuery('#vncchangeperms, #vncchangeperms0').on('click', function(){
         if (jQuery('#checkboxvncchangeperms').val() == "on"){
-          uuid['askpermission'] = 1
+            uuid['askpermission'] = 1
         }
         else {
-          uuid['askpermission'] = 0
+            uuid['askpermission'] = 0
         }
         jQuery.get( "modules/xmppmaster/xmppmaster/actionvncchangeperms.php", uuid )
             .done(function( data ) {
@@ -266,92 +350,10 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             })
     })
 
-    jQuery('#installkey').on('click', function(){
+    jQuery('#installkey, #installkey0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionkeyinstall.php", uuid )
             .done(function( data ) {
-             var obj = jQuery.parseJSON(data);
-                if (typeof(uuid['entity'] ) != "undefined"){
-                    alert( "Install key Pub ARS [" + obj.groupdeploy + "] on AM [" + obj.hostname +"] " + "in entity [" + uuid['entity'] + "]" , "" , "alert-info" )
-                }
-                else{
-                    alert("Install key Pub ARS [" + obj.groupdeploy + "] on AM [" + obj.hostname +"] " , "" , "alert-info" )
-                }
-            })
-    })
-
-    jQuery('#wol0').on('click', function(){
-        uuid['wol'] = jQuery('#checkboxwol').is(':checked');
-        jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
-            .done(function( data ) {
-                if (typeof(uuid['entity'] ) != "undefined"){
-                    alert( "wakeonlan to machine : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" , "" , "alert-info" )
-                }
-                else{
-                    alert( "wakeonlan to machine : " + uuid['cn'] , "" , "alert-info" )
-                }
-            })
-    })
-
-    jQuery('#inventory0').on('click', function(){
-        jQuery.get( "modules/xmppmaster/xmppmaster/actioninventory.php", uuid )
-            .done(function( data ) {
-                if (typeof(uuid['entity'] ) != "undefined"){
-                    alert( "inventory : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" , "" , "alert-info" )
-                }
-                else{
-                    alert( "inventory : " + uuid['cn'] , "" , "alert-info" )
-                }
-            })
-    })
-
-    jQuery('#reboot0').on('click', function(){
-        jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", uuid )
-            .done(function( data ) {
-                if (typeof(uuid['entity'] ) != "undefined"){
-                    alert( "reboot : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" , "" , "alert-info" )
-                }
-                else{
-                    alert( "reboot : " + uuid['cn'] , "" , "alert-info" )
-                }
-            })
-    })
-
-    jQuery('#shutdown0').on('click', function(){
-        uuid['time'] = jQuery('#mytimeshutdown').val()
-        uuid['msg']  = jQuery('#msgshutdown').val()
-        jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", uuid )
-            .done(function( data ) {
-                if (typeof(uuid['entity'] ) != "undefined"){
-                    alert( "shutdown : to machine" + uuid['cn'] + " in entity [" + uuid['entity'] + "]" , "" , "alert-info" )
-                }
-                else{
-                    alert( "shutdown : to machine" + uuid['cn'] , "" , "alert-info" )
-                }
-            })
-    })
-
-    jQuery('#vncchangeperms0').on('click', function(){
-        if (jQuery('#checkboxvncchangeperms').val() == "on"){
-          uuid['askpermission'] = 1
-        }
-        else {
-          uuid['askpermission'] = 0
-        }
-        jQuery.get( "modules/xmppmaster/xmppmaster/actionvncchangeperms.php", uuid )
-            .done(function( data ) {
-                if (typeof(uuid['entity'] ) != "undefined"){
-                    alert( "VNC settings change : to machine" + uuid['cn'] + " in entity [" + uuid['entity'] + "]" , "" , "alert-info" )
-                }
-                else{
-                    alert( "VNC settings change : to machine" + uuid['cn'] , "" , "alert-info" )
-                }
-            })
-    })
-
-    jQuery('#installkey0').on('click', function(){
-        jQuery.get( "modules/xmppmaster/xmppmaster/actionkeyinstall.php", uuid )
-            .done(function( data ) {
-             var obj = jQuery.parseJSON(data);
+                var obj = jQuery.parseJSON(data);
                 if (typeof(uuid['entity'] ) != "undefined"){
                     alert( "Install key Pub ARS [" + obj.groupdeploy + "] on AM [" + obj.hostname +"] " + "in entity [" + uuid['entity'] + "]" , "" , "alert-info" )
                 }

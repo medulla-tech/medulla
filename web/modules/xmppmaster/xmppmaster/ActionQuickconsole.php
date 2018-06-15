@@ -20,154 +20,76 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<style type='text/css'>
-textarea {
-    width:50% ;
-    height:150px;
-    margin:auto;   /* exemple pour centrer */
-    display:block; /* pour effectivement centrer ! */
-}
-</style>
-
-
-<?
-
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
- if (   isset($_POST['bvalid']) &&
-        isset($_POST['command']) &&
-        isset($_POST['Machine']) &&
-        trim($_POST['Machine'])!= "" &&
-        trim($_POST['command'])!= ""
-        ){
-        $_POST['result']='';
-        $result = xmlrpc_runXmppCommand(trim($_POST['command']),trim($_POST['Machine']),array($_POST, $_GET) );
- }else
- {
-    $result="";
- }
+    $uuid         = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
+    $machine      = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
+    $cmdsend      = isset($_GET['customcmd']) ? $_GET['customcmd'] : $_POST['customcmd'];
+    $namecmd      = isset($_GET['namecmd']) ? $_GET['namecmd'] : $_POST['namecmd'];
+    $os           = isset($_GET['os']) ? $_GET['os'] : $_POST['os'];
+    $user         = isset($_GET['user']) ? $_GET['user'] : $_POST['user'];
+    $description  = isset($_GET['$description']) ? $_GET['$description'] : $_POST['$description'];
+    $COMMANDID = xmlrpc_setCommand_qa($namecmd, $cmdsend, $user, "", $uuid, $os);
+    
+    $customqa = array();
+    $customqa['user'] = $user;
+    $customqa['customcmd'] = $cmdsend;
+    $customqa['os'] = $os;
+    $customqa['description'] = $description;
+    $customqa['namecmd'] = $namecmd;
 
-
-
-$uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-$machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
-$cmdsend  = isset($_GET['customcmd']) ? $_GET['customcmd'] : $_POST['customcmd'];
-$namecmd  = isset($_GET['namecmd']) ? $_GET['namecmd'] : $_POST['namecmd'];
-$os  = isset($_GET['os']) ? $_GET['os'] : $_POST['os'];
-$user  = isset($_GET['user']) ? $_GET['user'] : $_POST['user'];
-$description  = isset($_GET['$description']) ? $_GET['$description'] : $_POST['$description'];
-    $tab = explode("/", $machine);
-
-    $p = new PageGenerator(_T("Send custom command to", 'xmppmaster')." $tab[1]");
-    $p->setSideMenu($sidemenu);
-    $p->display();
-
-    if ($_GET['presencemachinexmpp']){
-
-    }
-    $qacomand =array();
-    $mm = array();
-    $os_up_case = strtoupper ($_GET['os']);
-    if ($_GET['presencemachinexmpp']){
-        if (strpos ($os_up_case, "WINDOW") !== false){
-            $qacomand = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], "windows" );
+    $machinegroup = array();
+    $machinegroup = xmlrpc_getMachinefromuuid($uuid);
+    if (count($machinegroup) != 0 ){
+        echo strtoupper($machinegroup['platform']);echo "<br>";
+        echo $os;
+        if ( strpos(strtoupper($machinegroup['platform']), strtoupper($os)) !== false){
+            // machine presente et os correct pour la QA
+            $machineinfos = array_merge($_GET, $machinegroup,$customqa,$result);
+            unset($machineinfos['picklekeypublic']);
+            unset($machineinfos['urlguacamole']);
+            unset($machineinfos['module']);
+            unset($machineinfos['mod']);
+            unset($machineinfos['actionqa']);$machineinfos = array();
+            $result = array();
+            $result['cmdid'] =  $COMMANDID;
+            $machineinfos = array_merge($_GET, $machinegroup, $customqa, $result);
+            xmlrpc_runXmppAsyncCommand( trim($customqa['customcmd']) , $machineinfos );
+            echo "send";
         }
         else{
-            if (strpos ($os_up_case, "LINUX") !== false){
-                $qacomand = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], "linux" );
-            }
-            else{
-                if (strpos ($os_up_case, "MACOS") !== false){
-                    $qacomand = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], "macos" );
-                }
-            }
+            $msg = sprintf(_T("Sorry the operating system of the machine %s is [%s].<br>The custom QA is defined for operating system [%s]", "xmppmaster"), $machine, $machinegroup['platform'], $os);
+            xmlrpc_setCommand_action( $uuid, $COMMANDID, "consoleweb", '<span style = "color : navy;">'. $msg.'</span>', "warning");
         }
     }
-
-    echo "<div style = 'text-align: center;'>
-    <hr>";
-    echo'<br><br>
-            <select id="select">';
-            foreach($qacomand['command'] as $tabblecommand){
-                if ($namecmd == $tabblecommand['namecmd']){
-                    echo '<option value="'.$cmdsend.'" selected>'.$tabblecommand['namecmd'].'</option>';
-                }
-                else{
-                    echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].'</option>';
-                }
-
-                $mm[] =  "'".$tabblecommand['namecmd']."': {
-                    'description' : '".addslashes( $tabblecommand['description'] )."',
-                    'customcmd' : '".$tabblecommand['customcmd']."',
-                    'os' : '".$tabblecommand['os']."',
-                    'user' : '".$tabblecommand['user']."'}";
-                };
-            echo'</select>
-        ';
-    echo "</div>";
-
-echo'
-<form method="post" id="Form">
-        <input  type="hidden" value="'.$machine.'" name="Machine"/>
-        <input  type="hidden" value="'.$uuid.'" name="objectUUID"/>
-        <input  type="hidden" value="'.$cmdsend.'" name="customcmd"/>
-        <input  type="hidden" value="'.$namecmd.'" name="namecmd"/>
-        <input  type="hidden" value="'.$os.'" name="os"/>
-        <input  type="hidden" value="'.$user.'" name="user"/>
-        <input  type="hidden" value="'.$description.'" name="description"/>
-        <input  id="command1" type="hidden" value="'.$cmdsend.'" name="command"/>
-
-    <div width="70%" style = "text-align: center;">
-        <input type="submit" name="bvalid" value="Confirm" class="btnPrimary"  />
-    </div>
-    <hr>
-    <div width="70%" style = "text-align: center;">
-       <span>Command result :</span><span id="cmdsendshow">'.$cmdsend.'</span>
-    <textarea name="result" id="result" rows="6" cols="190"  />'.$result['data']['result'].'</textarea>
-<br>
-<span>Return code : '.$result['ret'].'</span></div>
-</form>
-';
-
-?>
-<script type="text/javascript">
-    <?
-     if ($_GET['presencemachinexmpp']){
-        echo 'var myObject = {';
-            echo implode(",", $mm);
-            echo '};';
-        echo"
-        jQuery(function() {
-            var t = jQuery('#select option:selected').text();
-            jQuery('#namecmd').val(t);
-            jQuery('#customcmd').val(myObject[t].customcmd);
-            jQuery('#description').val(myObject[t].description);
-            jQuery('#os').val(myObject[t].os);
-            jQuery('#user').val(myObject[t].user);
-            jQuery('#command').text(myObject[t].customcmd);
-            jQuery('#command1').val(myObject[t].customcmd);
-            jQuery('#cmdsendshow').text(myObject[t].customcmd);
-        });
-
-        jQuery( '#buttoncmd' ).click(function() {
-            jQuery( '#formcmdcustom' ).submit();
-        });
-
-        jQuery('#select').on('change', function() {
-            var t = jQuery('#select option:selected').text();
-            jQuery('#namecmd').val(t);
-            jQuery('#customcmd').val(myObject[t].customcmd);
-            jQuery('#description').val(myObject[t].description);
-            jQuery('#os').val(myObject[t].os);
-            jQuery('#user').val(myObject[t].user);
-            jQuery('#command').text(myObject[t].customcmd);
-            jQuery('#command1').val(myObject[t].customcmd);
-            jQuery('#cmdsendshow').text(myObject[t].customcmd);
-        });
-    ";
+    else{
+        // update table command action
+        $msg = sprintf(_T("Sorry the machine '%s' is off", "xmppmaster"), $machine );
+        xmlrpc_setCommand_action( $uuid, $COMMANDID, "consoleweb", '<span style = "color : Orange;">'. $msg.'</span>', "warning");
     }
-    ?>
-</script>
+    // Directement to result a action to $action = QAcustommachgrp
+    // Table Action Quick $action = ActionQuickGroup
+    $action = "ActionQuickGroup";
+    echo "<form name='formcmdcustom' id ='formcmdcustom' action='main.php' method='GET' >";
+    echo "<input type=input name ='module' value ='xmppmaster'>";
+    echo "<input type=input name ='submod' value ='xmppmaster'>";
+    echo "<input type=input name ='action' value ='$action'>";
+    echo "<input type=input name ='cmd_id' value ='$COMMANDID'>"; 
+    echo "<input type=input name ='gid' value =''>"; 
+    echo "<input type=input name ='uuid' value ='$uuid'>";
+    echo "<input type=input name ='date' value =''>"; 
+    echo "<input type=input name ='os' value ='$os'>"; 
+    echo "<input type=input name ='login' value ='$user'>"; 
+    echo "<input type=input name ='machname' value ='$machine'>"; 
+    echo "<input type=input name ='namecmd' value ='$namecmd'>";
+    echo "<input type=submit >";
+    echo "<form>";
+    sleep(1);
+    echo '<script type="text/javascript">';
+        echo 'jQuery( document ).ready(function() {
+            jQuery( \'#formcmdcustom\' ).submit();
+        });';
+
+    echo '</script>';
