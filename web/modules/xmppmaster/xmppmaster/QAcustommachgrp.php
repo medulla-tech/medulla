@@ -44,6 +44,7 @@ if ($_GET['gid'] != ""){
 }
 
 $eez = xmlrpc_getCommand_qa_by_cmdid($_GET['cmd_id']);
+
 $startdate = date('Y-m-d H:i:s', $eez['command_start']->timestamp);
 echo "<h3>". _T("Start Custom Quick Action:", 'xmppmaster')." ". $startdate."</h3>";
 echo "<h3>". _T("User Custom Quick Action:", 'xmppmaster')." ". $eez['command_login']."</h3>";
@@ -52,11 +53,12 @@ echo "<h3>". _T("OS Custom Quick Action:", 'xmppmaster')." ". $eez['command_os']
 
 $result = "";
 $listmessage = array();
+
 $resultAQformachine = xmlrpc_getQAforMachine($_GET['cmd_id'], $_GET['uuid'] );
 if (count($resultAQformachine) != 0){
     foreach($resultAQformachine as $message ){
         if ( $message[3] == "result"){
-            $result = $message[4];
+            $result = base64_decode($message[4]);
         }
         else{
             $listmessage[] = $message;
@@ -64,9 +66,6 @@ if (count($resultAQformachine) != 0){
     }
 }
 
-// echo "<pre>";
-//     print_r( $eez);
-// echo "</pre>";
 if ($result == ""){
 echo "<div style=\"text-align: center;\">";
     echo "<h3>command :</h3>";
