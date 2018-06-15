@@ -718,13 +718,6 @@ class Glpi91(DyngroupDatabaseHelper):
                         clauses.append(self.glpi_computermodels.c.name.like('%'+filt['hostname']+'%'))
                     if 'manufacturer' in self.config.summary:
                         clauses.append(self.manufacturers.c.name.like('%'+filt['hostname']+'%'))
-                    r=re.compile('reg_key_.*')
-                    regs=filter(r.search, self.config.summary)
-                    try:
-                        if regs[0]:
-                            clauses.append(self.regcontents.c.value.like('%'+filt['hostname']+'%'))
-                    except IndexError:
-                        pass
                     # Filtering on computer list page
                     if clauses:
                         query = query.filter(or_(*clauses))
