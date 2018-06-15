@@ -124,7 +124,7 @@ define (DIR_SYS_PREP, "/var/lib/pulse2/imaging/postinst/sysprep");
 	}
 
     $span = new SpanElement(_T("Choose package source", 'imaging')." : ", "pkgs-title");
-    $List=array('Windows 7','Windows 8 / 8.1','Windows 8 / 8.1 uefi', 'Windows 10','Windows 10-uefi');
+    $List=array('Windows 7','Windows 8','Windows 8-uefi', 'Windows 10','Windows 10-uefi');
     $list_val=[ 'modules/imaging/manage/ajaxFormWin7.php',
                 'modules/imaging/manage/ajaxFormWin8.php',
                 'modules/imaging/manage/ajaxFormWin8-uefi.php',
