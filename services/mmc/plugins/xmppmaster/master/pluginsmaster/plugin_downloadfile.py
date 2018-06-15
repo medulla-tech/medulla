@@ -38,7 +38,7 @@ import ConfigParser
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
-plugin = { "VERSION" : "1.3", "NAME" : "downloadfile", "TYPE" : "master"}
+plugin = { "VERSION" : "1.4", "NAME" : "downloadfile", "TYPE" : "master"}
 
 
 def create_path(type ="windows", host="", ipordomain="", path=""):
@@ -126,6 +126,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
             dest = data[0]['dest']
             src = data[0]['src']
         except KeyError:
+            print json.dumps(data, indent = 4)
             jidmachine = data['data'][0]
             Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
             params = data['data'][2]
@@ -135,7 +136,13 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
             else:
                 machdir = os.path.join(xmppMasterConfig().defaultdir, Machineinfo['hostname'])
                 now = datetime.datetime.now()
-                datedir = "%s-%s"%(data['data'][1][1]['user'], now.strftime("%Y-%m-%d-%H:%M:%S"))
+                try:
+                    # Run on a machine
+                    datedir = "%s-%s"%(data['data'][1][1]['user'], now.strftime("%Y-%m-%d-%H:%M:%S"))
+                except KeyError:
+                    # Run on a group
+                    datedir = "%s-%s"%(data['data'][1]['user'], now.strftime("%Y-%m-%d-%H:%M:%S"))
+                    pass
                 destdir = os.path.join(machdir, datedir)
                 if not os.path.exists(machdir):
                     os.mkdir(machdir)
