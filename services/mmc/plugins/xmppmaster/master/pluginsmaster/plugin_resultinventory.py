@@ -9,7 +9,7 @@ import logging
 from mmc.plugins.glpi.database import Glpi
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
-plugin = { "VERSION" : "1.0", "NAME" : "resultinventory", "TYPE" : "master" }
+plugin = { "VERSION" : "1.1", "NAME" : "resultinventory", "TYPE" : "master" }
 
 def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
     HEADER = {"Pragma": "no-cache",
@@ -52,6 +52,20 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                                             '',
                                             "Master")
         time.sleep(5)
+        if not xmppobject.XmppUpdateInventoried(message['from']):
+            XmppMasterDatabase().setlogxmpp( '<font color="deeppink">Error Injection Inventory for Machine %s</font>'%(message['from']),
+                                                                "Inventory Server",
+                                                                "",
+                                                                0,
+                                                                message['from'],
+                                                                'auto',
+                                                                '',
+                                                                'Inventory | Notify | Error',
+                                                                '',
+                                                                '',
+                                                                "InvServer")
+
+
         # save registry inventory
         try:
             reginventory = json.loads(base64.b64decode(data['reginventory']))
@@ -71,7 +85,12 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                                         "Master")
 
         if reginventory:
-            computers_id = XmppMasterDatabase().getUuidFromJid(message['from'])
+            counter = 0
+            while True:
+                computers_id = XmppMasterDatabase().getUuidFromJid(message['from'])
+                time.sleep(counter)
+                if computers_id or counter >= 10:
+                    break
             logging.getLogger().debug("Computers ID: %s" % computers_id)
             nb_iter = int(reginventory['info']['max_key_index']) + 1
             for num in range(1,nb_iter):
@@ -105,19 +124,7 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                     logging.getLogger().debug("Error getting key: %s" % reg_key)
                     pass
         time.sleep(25)
-        if not xmppobject.XmppUpdateInventoried(message['from']):
-            XmppMasterDatabase().setlogxmpp( '<font color="deeppink">Error Injection Inventory for Machine %s</font>'%(message['from']),
-                                                                "Inventory Server",
-                                                                "",
-                                                                0,
-                                                                message['from'],
-                                                                'auto',
-                                                                '',
-                                                                'Inventory | Notify | Error',
-                                                                '',
-                                                                '',
-                                                                "InvServer")
-
+        
         # restart agent
         #xmppobject.restartAgent(message['from'])
     except Exception, e:
