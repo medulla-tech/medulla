@@ -95,7 +95,6 @@ $n->addExtraInfo( $startdate, _T("Start date", "xmppmaster"));
 $n->addExtraInfo( $dd[2], _T("User", "xmppmaster"));
 $n->addExtraInfo( $listnamegroup, _T("Type", "xmppmaster"));
 $n->addExtraInfo( $machinetarget, _T("Computer", "xmppmaster"));
-$n->addExtraInfo( $dd[0], _T("Commandid", "xmppmaster"));
 $n->setTableHeaderPadding(1);
 $n->setItemCount($nbitem);
 $n->setNavBar(new AjaxNavBar($nbitem, $filter));

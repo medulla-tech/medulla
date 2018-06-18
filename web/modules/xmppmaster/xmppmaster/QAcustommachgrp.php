@@ -22,7 +22,7 @@
  *
  * file : xmppmaster/QAcustommachgrp.php
  */
- 
+
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
@@ -33,21 +33,14 @@ $machine = $machinelist[$_GET['uuid']][1];
 $namemachine = $machine['cn'][0];
 $usermachine = $machine['user'][0];
 
-$p = new PageGenerator(_T("Custom Quick Action Machine", 'xmppmaster')." : $namemachine");
+$p = new PageGenerator(_T("Quick action on machine", 'xmppmaster')." : $namemachine");
 $p->setSideMenu($sidemenu);
 $p->display();
-
-if ($_GET['gid'] != ""){
-    echo "<h2>". _T("From Group :", 'xmppmaster')." ". $_GET['groupname']."</h2>";
-}
 
 $custom_command = xmlrpc_getCommand_qa_by_cmdid($_GET['cmd_id']);
 
 $startdate = date('Y-m-d H:i:s', $custom_command['command_start']->timestamp);
-echo "<h3>". _T("Start Custom Quick Action:", 'xmppmaster')." ". $startdate."</h3>";
-echo "<h3>". _T("User Custom Quick Action:", 'xmppmaster')." ". $custom_command['command_login']."</h3>";
-echo "<h3>". _T("Name Custom Quick Action  :", 'xmppmaster')." ". $custom_command['command_name']."</h3>";
-echo "<h3>". _T("OS Custom Quick Action:", 'xmppmaster')." ". $custom_command['command_os']."</h3>";
+echo "<h3>". _T("Name of Quick Action  :", 'xmppmaster')." ". $custom_command['command_name']."</h3>";
 
 $result = "";
 $listmessage = array();
@@ -65,8 +58,8 @@ if (count($resultAQformachine) != 0){
 }
 
 if ($result == ""){
-    echo "<div style=\"text-align: center;\">";
-        echo "<h3>command :</h3>";
+    echo "<div style=\"text-align: left;\">";
+        echo "<h3>Command :</h3>";
         echo "<pre>";
         echo  $custom_command['command_action'];
         echo "</pre>";
@@ -77,13 +70,13 @@ if (count($listmessage)!=0){
     echo "<table>";
         echo "<tr>";
             echo "<th>";
-                echo "date";
+                echo "Date";
             echo "</th>";
             echo "<th>";
-                echo "type";
+                echo "Type";
             echo "</th>";
             echo "<th>";
-                echo "message";
+                echo "Message";
             echo "</th>";
         echo "</tr>";
 
@@ -110,8 +103,8 @@ if ($result != ""){
     echo  $custom_command['command_action'];
     echo "</pre>";
         echo '<textarea rows="25"
-                        id="resultat" 
-                        spellcheck="false" 
+                        id="resultat"
+                        spellcheck="false"
                         style = "height : 500px;
                                 width : 50%;
                                 background : black;
@@ -129,7 +122,7 @@ if ($result != ""){
 }
 echo "</div>";
  ?>
- 
+
 <form>
-  <input class="btnPrimary"  type="button" value="Retour" onclick="history.go(-1)">
+  <input class="btnPrimary"  type="button" value="Back" onclick="history.go(-1)">
 </form>
