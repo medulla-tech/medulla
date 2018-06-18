@@ -86,6 +86,8 @@ class xmppMasterthread(threading.Thread):
         #xmpp.register_plugin('xep_0095') # file transfer
         self.xmpp['xep_0077'].force_registration = False
         self.xmpp.register_plugin('xep_0279')
+        if tg.Server == "" or tg.Port == "":
+            logger.error("Parameters connection server xmpp missing.")
         if self.xmpp.connect(address=(tg.Server, tg.Port)):
             self.xmpp.process(block=True)
             logger.info("done")
