@@ -1,7 +1,7 @@
 Source: pulse2
 Section: admin
 Priority: extra
-Maintainer: Adam Cécile <acecile@mandriva.com>
+Maintainer: Nicolas Lécureuil <nicolas.lecureuil@siveo.net>
 Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python-all (>= 2.6), gettext, autotools-dev, xsltproc, docbook-xsl, docbook-xml
 Standards-Version: 3.9.3
 Homepage: http://projects.mandriva.org/projects/mmc/
@@ -18,6 +18,16 @@ Depends: ${misc:Depends},
          mmc-web-msc, python-mmc-msc,
          mmc-web-pkgs, python-mmc-pkgs,
          mmc-web-pulse2, python-mmc-pulse2,
+         mmc-web-kiosk, python-mmc-kiosk,
+         mmc-web-backuppc, python-mmc-backuppc,
+         mmc-web-dashboard, python-mmc-dashboard,
+         mmc-web-ppolicy, python-mmc-ppolicy,
+         mmc-web-services, python-mmc-services,
+         mmc-web-support, python-mmc-support,
+         mmc-web-xmppmaster, python-mmc-xmppmaster,
+         pulse2-imaging-server, pulse2-uuid-resolver,
+         pulse-xmppmaster-agentplugins, pulse-xmpp-agent,
+         pulseagent-plugins-relay, pulse-agent-installers,
          pulse2-common,
          pulse2-imaging-client | pulse2-davos-client,
          pulse2-inventory-server,
@@ -427,4 +437,22 @@ Description: Pulse 2 MMC agent plugins
  .
  This package will install all the Pulse 2 MMC agent interface plugins.
 
+Package: mmc-web-kiosk
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 GLPI computer group plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Pulse 2 MMC agent interface plugins
+
+Package: python-mmc-kiosk
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1)
+Description: Pulse 2 MMC agent plugins
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Pulse 2 MMC agent interface plugins.
 

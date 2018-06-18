@@ -1,0 +1,24 @@
+<style type="text/css"><!--
+
+li.list a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/kiosk/graph/img/list.png");
+    background-repeat: no-repeat;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+
+}
+
+li.users a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/kiosk/graph/img/users.gif");
+    background-repeat: no-repeat;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+
+}
+--> </style>

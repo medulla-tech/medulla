@@ -19,7 +19,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime,Text, LargeBinary 
+from sqlalchemy import Column, String, Integer, Boolean, \
+    ForeignKey, DateTime,Text, LargeBinary, Enum
 from sqlalchemy.dialects.mysql import  TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
@@ -101,6 +102,7 @@ class Machines(Base, XmppMasterDBObj):
     picklekeypublic = Column(String(550))
     ad_ou_machine = Column(Text)
     ad_ou_user = Column(Text)
+    kiosk_presence = Column(Enum('False', 'True'))
     lastuser = Column(String(45))
 
 
@@ -327,4 +329,3 @@ class Packages_list(Base, XmppMasterDBObj):
     #id = Column(Integer, primary_key=True)
     organization_id= Column(Integer, nullable=False)
     packageuuid = Column(String(45), nullable=False)
-

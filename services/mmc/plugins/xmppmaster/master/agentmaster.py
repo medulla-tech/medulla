@@ -802,13 +802,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("Jid from : %s"%data['from'])
             logger.info("Machine : %s"%data['machine'])
             logger.info("Platform : %s"%data['platform'])
-            if 'win' in data['platform']:
+            if "win" in data['platform'].lower():
                 logger.info("__________________________")
                 logger.info("ACTIVE DIRECTORY")
                 logger.info("OU Active directory")
                 logger.info("OU by machine : %s"%data['adorgbymachine'])
                 logger.info("OU by user : %s"%data['adorgbyuser'])
-                if 'lastusersession' in data: 
+                if 'lastusersession' in data:
                     logger.info("last user session: %s"%data['lastusersession'])
             logger.info("--------------------------------")
             logger.info("----MACHINE XMPP INFORMATION----")
@@ -840,7 +840,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.info("ippublic : %s"%data['ippublic'])
             logger.info("------------LOCALISATION-----------")
             logger.info("localisationinfo : %s"%data['localisationinfo'])
-            if data['platform'].lower().startswith("win"):
+            if "win" in data['platform'].lower():
                 if 'adorgbymachine' in data and data['adorgbymachine']:
                     logger.info("localisation AD par MAchine : %s"%data['adorgbymachine'])
                 else:
@@ -869,8 +869,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 f.close()
                 for ligne in lignes:
                     if 'VERSION' in ligne and 'NAME' in ligne:
-                        li = ligne.split("=")
-                        plugin = eval(l[1])
+                        line = ligne.split("=")
+                        plugin = eval(line[1])
                         plugindataseach[plugin['NAME']] = plugin['VERSION']
                         try:
                             plugintype[plugin['NAME']] = plugin['TYPE']
@@ -1153,12 +1153,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         adorgbymachinebool = False
         if 'adorgbymachine' in data and data['adorgbymachine'] != "":
-            manage_fqdn_window_activedirectory.organizationADmachinetofile(data['adorgbymachine'])
             adorgbymachinebool = True
 
         adorgbyuserbool = False
         if 'adorgbyuser' in data and data['adorgbyuser'] != "":
-            manage_fqdn_window_activedirectory.organizationADusertofile(data['adorgbyuser'])
             adorgbyuserbool = True
 
         # Defining relay server for connection
@@ -1355,6 +1353,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.debug("** update uuid %s for machine %s "%(uuid, machine['jid']))
                     #update inventory
                     XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
+
+
                     return True
         else:
             return True
@@ -1473,6 +1473,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 else:
                     data['localisationinfo'] = {}
                 data['information'] = info
+
+                if data['adorgbymachine'] is not None and data['adorgbymachine'] != "":
+                    try:
+                        data['adorgbymachine'] = base64.b64decode(data['adorgbymachine'])
+                    except TypeError:
+                        pass
+                if data['adorgbyuser'] is not None and data['adorgbyuser'] != "":
+                    try:
+                        data['adorgbyuser'] = base64.b64decode(data['adorgbyuser'])
+                    except TypeError:
+                        pass
 
                 publickeybase64 = info['publickey']
                 is_masterpublickey = info['is_masterpublickey']
@@ -1635,6 +1646,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 uuid = 'UUID' + str(computer.id)
                                 logger.debug("** update uuid %s for machine %s "%(uuid, msg['from'].bare))
                                 XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
+                                if PluginManager().isEnabled("kiosk"):
+                                    from mmc.plugins.kiosk import handlerkioskpresence
+                                    #send msg data to kiosk when an inventory registered
+                                    handlerkioskpresence( data['from'],
+                                                          idmachine,
+                                                          data['platform'],
+                                                          data['information']['info']['hostname'],
+                                                          uuid,
+                                                          data['agenttype'],
+                                                          classutil = data['classutil'])
                                 XmppMasterDatabase().setlogxmpp("register inventory in xmpp",
                                                                 "Master",
                                                                 "",
@@ -1695,7 +1716,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.info("__________________________________________")
                     if 'pluginscheduled' in data:
                         logger.info("__________________________________________")
-                        logger.info("LIST SCHEDULED PLUGINGS INSTALLED AGENT")
+                        logger.info("LIST SCHEDULED PLUGINS INSTALLED AGENT")
                         logger.info("%s"% json.dumps(data['pluginscheduled'], indent=4, sort_keys=True))
                         logger.info("__________________________________________")
                 restartAgent = False
@@ -1706,8 +1727,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     try:
                         # Check version
                         if data['plugin'][k] != v:
-                            logger.info("update %s version %s to version %s"%(k, 
-                                                                              data['plugin'][k], 
+                            logger.info("update %s version %s to version %s"%(k,
+                                                                              data['plugin'][k],
                                                                               v))
                             deploy = True
                     except:
@@ -1836,7 +1857,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     dataobj['sessionid'] = "absent"
                 if not 'ret' in dataobj:
                     dataobj['ret'] = 0
-                try: 
+                try:
                     logging.debug("Calling plugin %s from  %s"%(dataobj['action'], msg['from']))
                     msg['body'] = dataobj
                     del dataobj['data']

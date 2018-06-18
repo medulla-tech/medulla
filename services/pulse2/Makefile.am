@@ -21,7 +21,7 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 pythonmodules = apis apis.clients database database.dyngroup \
-	database.imaging database.inventory database.msc \
+	database.imaging database.inventory database.msc database.kiosk \
 	database.msc.orm database.pulse database.xmppmaster imaging \
 	imaging_server inventoryserver inventoryserver.scheduler \
 	managers package_server package_server.assign_algo \

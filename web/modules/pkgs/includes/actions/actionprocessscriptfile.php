@@ -17,6 +17,7 @@ require_once("../../../../includes/xmlrpc.inc.php");
                 "@resultcommand": ""
 */
 extract($_POST);
+    $script = (isset($script)) ? base64_decode($script) : "" ;
    $packageList = xmpp_packages_list();
         $optionspackage= "";
 
@@ -92,13 +93,10 @@ extract($_POST);
         <tr>
             <th>Script</th>
             <th>
-              <textarea name="script" cols="5" rows="5"><?php echo (isset($script)) ? $script : "" ;?></textarea>
+              <textarea name="script" cols="5" rows="5"><?php echo $script ;?></textarea>
             </th>
         </tr>
 
-        
-           
-        
         <?php
           echo '<tr class="toggleable">'; 
             if(isset($packageuuid))

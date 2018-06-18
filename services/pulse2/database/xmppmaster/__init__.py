@@ -639,6 +639,7 @@ class XmppMasterDatabase(DatabaseHelper):
                            ippublic = None,
                            ad_ou_user = "",
                            ad_ou_machine = "",
+                           kiosk_presence = "True",
                            lastuser = ""):
         try:
             new_machine = Machines()
@@ -658,6 +659,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_machine.picklekeypublic = objkeypublic
             new_machine.ad_ou_user = ad_ou_user
             new_machine.ad_ou_machine = ad_ou_machine
+            new_machine.kiosk_presence = kiosk_presence
             new_machine.lastuser = lastuser
             session.add(new_machine)
             session.commit()
@@ -1739,8 +1741,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_qaction(self, session, namecmd, user ):
-        """ 
-            return quick actions informations 
+        """
+            return quick actions informations
         """
         qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.namecmd==namecmd, Qa_custom_command.user==user))
         qa_custom_command = qa_custom_command.first()
@@ -2468,6 +2470,28 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
+    def getListPresenceMachineWithKiosk(self, session):
+        sql = """SELECT
+                    *
+                 FROM
+                    xmppmaster.machines
+                 WHERE
+                    agenttype='machine' and uuid_inventorymachine IS NOT NULL ;"""
+
+        presencelist = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a=[]
+            for t in presencelist:
+                a.append({'id':t[0],'jid': t[1], 'platform':t[2], \
+                    'hostname': t[4], 'uuid_inventorymachine':t[5], \
+                    'agenttype':t[10], 'classutil': t[11]})
+            return a
+        except:
+            return -1
+
+    @DatabaseHelper._sessionm
     def delPresenceMachine(self, session, jid):
         result = ['-1']
         typemachine = "machine"
@@ -2620,17 +2644,17 @@ class XmppMasterDatabase(DatabaseHelper):
             result = {  "id" : machine.id,
                         "jid" : machine.jid,
                         "platform" : machine.platform,
-                        "archi" : machine.archi, 
+                        "archi" : machine.archi,
                         "hostname" : machine.hostname,
                         "uuid_inventorymachine" : machine.uuid_inventorymachine,
-                        "ip_xmpp" : machine.ip_xmpp, 
-                        "ippublic" : machine.ippublic, 
-                        "macaddress" : machine.macaddress, 
-                        "subnetxmpp" : machine.subnetxmpp, 
-                        "agenttype" : machine.agenttype, 
-                        "classutil" : machine.classutil, 
-                        "groupdeploy" : machine.groupdeploy, 
-                        "urlguacamole" : machine.urlguacamole, 
+                        "ip_xmpp" : machine.ip_xmpp,
+                        "ippublic" : machine.ippublic,
+                        "macaddress" : machine.macaddress,
+                        "subnetxmpp" : machine.subnetxmpp,
+                        "agenttype" : machine.agenttype,
+                        "classutil" : machine.classutil,
+                        "groupdeploy" : machine.groupdeploy,
+                        "urlguacamole" : machine.urlguacamole,
                         "picklekeypublic" : machine.picklekeypublic,
                         'ad_ou_user': machine.ad_ou_user,
                         'ad_ou_machine': machine.ad_ou_machine,

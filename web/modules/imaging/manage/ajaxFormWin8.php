@@ -30,7 +30,7 @@
     #codeToCopy{
         width:400px;
     }
-</style> 
+</style>
 <script type="text/javascript">
 var template = [
 '<? echo $strin; ?>xml version="1.0" encoding="utf-8"<? echo $strou; ?>',

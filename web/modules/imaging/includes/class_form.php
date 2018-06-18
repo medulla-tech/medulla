@@ -325,7 +325,7 @@ class SepTpl extends AbstractTpl{
 
 	function display()
 	{
-		echo '<hr />';
+		echo '<hr style="border-top: 1px solid #CCCCCC;"/>';
 	}
 }
 
