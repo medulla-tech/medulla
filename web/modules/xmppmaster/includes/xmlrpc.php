@@ -26,7 +26,10 @@
 //======================================================================
 //require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-
+//topology
+function xmlrpc_topology_pulse() {
+    return xmlCall("xmppmaster.topologypulse", array());
+}
 
 function xmlrpc_getPresenceuuid($uuid) {
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
@@ -59,6 +62,10 @@ function xmlrpc_remotefilesystem($currentdir, $jidmachine){
 
 function xmlrpc_remotecommandshell($command, $jidmachine, $timeout){
     return xmlCall("xmppmaster.remotecommandshell", array($command, $jidmachine, $timeout));
+}
+
+function xmlrpc_remoteXmppMonitoring($sujectinfo, $jidmachine, $timeout){
+    return xmlCall("xmppmaster.remoteXmppMonitoring", array($sujectinfo, $jidmachine, $timeout));
 }
 
 function xmlrpc_listremotefileedit($jidmachine){

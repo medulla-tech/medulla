@@ -60,12 +60,11 @@ $submod->addPage($page);
 $page = new Page("filesmanagers", _T('XMPP files managers', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("machine_xmpp_detail", _T('XMPP Machine details', 'xmppmaster'));
+#topology
+$page = new Page("topology", _T('XMPP topology Machine', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("ajaxGroupactionquick");
-$page->setFile("modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page = new Page("machine_xmpp_detail", _T('XMPP Machine details', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("ajaxGroupactionquick");
@@ -130,7 +129,10 @@ $submod->addPage($page);
 
 $page = new Page("wakeonlan", _T('Wake on LAN', 'xmppmaster'));
 $submod->addPage($page);
-// ajax procedure read and send result from log
+
+$page = new Page("xmppMonitoring", _T('XMPP Quick Monitoring', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("ajaxdeploylog");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxdeploylog.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));

@@ -435,50 +435,52 @@ if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state']
         echo "</table>";
         echo "</div>";
     }
-    if ( $info['len'] != 0){
-        $res = str_replace ( "{'", "'" ,$otherinfos[$index]->environ);
-        $res = str_replace ( "'}", "'" ,$res);
-        $res = str_replace ( "  ", " " ,$res);
-        $res = str_replace ( "  ", " " ,$res);
-        $res = str_replace ( "  ", " " ,$res);
-        $res = str_replace ( "': '", "' : '" ,$res);
-        $res = str_replace ( "', '", "' , '" ,$res);
-        $res = str_replace ( "\\\\", "\\" ,$res);
-        $res = str_replace ( "C:\\", "C:\\\\" ,$res);
-        $res = explode ( "' , '" , $res);
-        echo "<br>";
-        echo "<h2 class='replytab'>Hide Environment</h2>";
-        echo "<div>";
-        echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
-        echo "<thead>";
-            echo "<tr>";
-                echo '<td  style="width : 120px;">';
-                    echo '<span style=" padding-left: 32px;">key</span>';
-                echo '</td>';
-                echo '<td>';
-                    echo '<span style=" padding-left:0px;">value</span>';
-                echo '</td>';
-            echo "</tr>";
-        echo "</thead>";
-        echo "<tbody>";
-        foreach ($res as $ll){
-                $ff =  explode ( "' : '" , $ll);
-                echo "<tr>";
-                echo "<td>";
-                echo trim($ff[0],"'");
-                echo "</td>";
-                echo "<td>";
-                echo '<span  style="padding-left:10px;">';
-                echo trim($ff[1],"'");
-                echo "</span>";
-                echo "</td>";
-            echo "</tr>";
-            }
-        echo "</tbody>";
-        echo "</table>";
-        echo "</div>";
-    }
 
+    if (count((array)$otherinfos[$index]->environ) == 1){
+        if ( $info['len'] != 0){
+            $res = str_replace ( "{'", "'" ,$otherinfos[$index]->environ);
+            $res = str_replace ( "'}", "'" ,$res);
+            $res = str_replace ( "  ", " " ,$res);
+            $res = str_replace ( "  ", " " ,$res);
+            $res = str_replace ( "  ", " " ,$res);
+            $res = str_replace ( "': '", "' : '" ,$res);
+            $res = str_replace ( "', '", "' , '" ,$res);
+            $res = str_replace ( "\\\\", "\\" ,$res);
+            $res = str_replace ( "C:\\", "C:\\\\" ,$res);
+            $res = explode ( "' , '" , $res);
+            echo "<br>";
+            echo "<h2 class='replytab'>Hide Environment</h2>";
+            echo "<div>";
+            echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
+            echo "<thead>";
+                echo "<tr>";
+                    echo '<td  style="width : 120px;">';
+                        echo '<span style=" padding-left: 32px;">key</span>';
+                    echo '</td>';
+                    echo '<td>';
+                        echo '<span style=" padding-left:0px;">value</span>';
+                    echo '</td>';
+                echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($res as $ll){
+                    $ff =  explode ( "' : '" , $ll);
+                    echo "<tr>";
+                    echo "<td>";
+                    echo trim($ff[0],"'");
+                    echo "</td>";
+                    echo "<td>";
+                    echo '<span  style="padding-left:10px;">';
+                    echo trim($ff[1],"'");
+                    echo "</span>";
+                    echo "</td>";
+                echo "</tr>";
+                }
+            echo "</tbody>";
+            echo "</table>";
+            echo "</div>";
+        }
+    }
     if (isset($descriptorslist)){
         echo "<br>";
         echo "<h2 class='replytab'>Hide Deployment result</h2>

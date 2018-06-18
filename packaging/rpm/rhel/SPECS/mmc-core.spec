@@ -24,7 +24,7 @@
 %define debug_package          %{nil}
 %define use_git                1
 %define git                    SHA
-%define version                4.3.1
+%define version                4.4
 
 Summary:	Management Console
 Name:		mmc-core

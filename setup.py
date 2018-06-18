@@ -33,8 +33,8 @@ setup(
 
     keywords='mmc-core',
     name='mmc-core',
-    version='4.3.1',
-    debian_distro='stretch'
+    version='4.4',
+    debian_distro='stretch',
     description='mmc-core',
     url='https://www.siveo.net/',
     packages=['mmc-core'],
@@ -44,3 +44,4 @@ setup(
     extras_require={},
     install_requires=[],
     )
+
