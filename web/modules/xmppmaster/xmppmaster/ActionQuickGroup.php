@@ -33,7 +33,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
     $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxGroupactionquick"));
 
-    $p = new PageGenerator(_T("Action Quick Group", 'xmppmaster'));
+    $p = new PageGenerator(_T("Quick action results", 'xmppmaster'));
     $p->setSideMenu($sidemenu);
     $p->display();
 
