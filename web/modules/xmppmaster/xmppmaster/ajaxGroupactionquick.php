@@ -37,13 +37,9 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     $dd = array();
     $dd = $machinegroup['result'];
     $nbitem = $machinegroup['nbtotal'];
-$groupormachine = array();
-foreach ($dd[4] as $val ){
-    if ($val != "") $groupormachine[] = "Grp";else $groupormachine[] = "Mach";
-}
 
 $startdate =  array();
-foreach ($dd[5] as $val ){
+foreach ($dd[4] as $val ){
     $startdate[] = date('Y-m-d H:i:s', $val->timestamp);
 }
 $machinetarget =  array();
