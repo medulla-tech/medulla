@@ -2630,6 +2630,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "picklekeypublic" : machine.picklekeypublic,
                         'ad_ou_user': machine.ad_ou_user,
                         'ad_ou_machine': machine.ad_ou_machine,
+                        'kiosk_presence': machine.kiosk_presence,
                         'lastuser': machine.lastuser}
         return result
 
@@ -2658,6 +2659,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "picklekeypublic" : machine.picklekeypublic,
                         'ad_ou_user': machine.ad_ou_user,
                         'ad_ou_machine': machine.ad_ou_machine,
+                        'kiosk_presence': machine.kiosk_presence,
                         'lastuser': machine.lastuser}
         return result
 
