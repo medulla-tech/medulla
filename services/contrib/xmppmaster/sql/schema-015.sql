@@ -23,7 +23,7 @@
 START TRANSACTION;
 
 ALTER TABLE `xmppmaster`.`machines`
-ADD COLUMN IF NOT EXISTS `kiosk_presence` ENUM('True', 'False') NOT NULL DEFAULT 'False'
+ADD COLUMN `kiosk_presence` ENUM('True', 'False') NOT NULL DEFAULT 'False'
 AFTER `ad_ou_user`;
 
 UPDATE version SET Number = 15;
