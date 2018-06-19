@@ -17,7 +17,6 @@ require_once("../../../../includes/xmlrpc.inc.php");
                 "@resultcommand": ""
 */
 extract($_POST);
-    $script = (isset($script)) ? base64_decode($script) : "" ;
    $packageList = xmpp_packages_list();
         $optionspackage= "";
 
@@ -98,11 +97,11 @@ extract($_POST);
         </tr>
 
         <?php
-          echo '<tr class="toggleable">'; 
+          echo '<tr class="toggleable">';
             if(isset($packageuuid))
             {
                 echo '<td width="16%">
-                    <input type="checkbox" checked 
+                    <input type="checkbox" checked
                         onclick="if(jQuery(this).is(\':checked\')){
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
                                 }
@@ -116,7 +115,7 @@ extract($_POST);
             }
             else{
                 echo '<td width="16%">
-                    <input type="checkbox" 
+                    <input type="checkbox"
                         onclick="if(jQuery(this).is(\':checked\')){
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
                                 }
@@ -132,8 +131,8 @@ extract($_POST);
         <td></td><td></td>
             </tr>';
         ?>
-        
-        
+
+
     <tr class="toggleable">
            <?php
             if(isset($suffix))
@@ -178,11 +177,11 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             ?>
         </tr>
 
-            
-     
-        
-        
-        
+
+
+
+
+
       <tr class="toggleable">
            <?php
             if(isset($bang))
@@ -227,10 +226,10 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             ?>
         </tr>
 
-        
-    
-        
-        
+
+
+
+
     <?php
             echo "<tr class='toggleable'>";
 
