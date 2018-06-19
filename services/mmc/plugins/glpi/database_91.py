@@ -652,13 +652,6 @@ class Glpi91(DyngroupDatabaseHelper):
                    'owner_firstname' in self.config.summary or \
                    'owner_realname' in self.config.summary:
                     join_query = join_query.outerjoin(self.user)
-                r=re.compile('reg_key_.*')
-                regs=filter(r.search, self.config.summary)
-                try:
-                    if regs[0]:
-                        join_query = join_query.outerjoin(self.regcontents)
-                except IndexError:
-                    pass
 
 
             if self.fusionagents is not None:
