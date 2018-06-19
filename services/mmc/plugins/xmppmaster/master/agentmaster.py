@@ -1599,6 +1599,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     ippublic = data['ippublic']
                 if ippublic == None:
                     ippublic = data['xmppip']
+                kiosk_presence = ""
+                if 'kiosk_presence' in data and data['kiosk_presence'] != "":
+                    kiosk_presence = data['kiosk_presence']
+                else:
+                    kiosk_presence = "False"
                 idmachine = XmppMasterDatabase().addPresenceMachine(data['from'],
                                                                     data['platform'],
                                                                     data['information']['info']['hostname'],
@@ -1615,6 +1620,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     ippublic=ippublic,
                                                                     ad_ou_user = data['adorgbyuser'],
                                                                     ad_ou_machine = data['adorgbymachine'],
+                                                                    kiosk_presence = kiosk_presence,
                                                                     lastuser = data['lastusersession']
                                                                    )
                 if idmachine != -1:
