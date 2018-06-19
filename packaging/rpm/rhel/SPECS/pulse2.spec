@@ -386,6 +386,20 @@ This package contains the pkgs plugin for the MMC agent.
 
 #--------------------------------------------------------------------
 
+%package -n python-mmc-kiosk
+Summary:    Kiosk plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+
+%description -n python-mmc-kiosk
+This package contains the pkgs plugin for the MMC agent.
+
+%files -n python-mmc-kiosk
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/kiosk.ini
+%python2_sitelib/mmc/plugins/kiosk
+
+#--------------------------------------------------------------------
+
 %package -n python-mmc-xmppmaster
 Summary:    Xmppmaster plugin for the MMC agent
 Group:      System/Servers
@@ -435,6 +449,22 @@ interface.
 
 %files -n mmc-web-pkgs
 %{_datadir}/mmc/modules/pkgs
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-kiosk
+Summary:        Kiosk plugin for the MMC web interface
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       mmc-web-base >= %mmc_version
+
+
+%description -n mmc-web-kiosk
+This package contains the kiosk plugin for the MMC web
+interface.
+
+%files -n mmc-web-kiosk
+%{_datadir}/mmc/modules/kiosk
 
 #--------------------------------------------------------------------
 
