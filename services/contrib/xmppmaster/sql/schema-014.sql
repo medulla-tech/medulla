@@ -50,13 +50,13 @@ CREATE TABLE IF NOT EXISTS `xmppmaster`.`command_action` (
 
 
 ALTER TABLE `xmppmaster`.`command_action` 
-ADD COLUMN IF NOT EXISTS `date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `id`;
+ADD COLUMN `date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `id`;
 
 ALTER TABLE `xmppmaster`.`command_action` 
-ADD COLUMN IF NOT EXISTS `typemessage` VARCHAR(20) NOT NULL DEFAULT 'log' AFTER `session_id`;
+ADD COLUMN `typemessage` VARCHAR(20) NOT NULL DEFAULT 'log' AFTER `session_id`;
 
 ALTER TABLE  `xmppmaster`.`command_action` 
-ADD COLUMN IF NOT EXISTS `target` VARCHAR(45) NOT NULL AFTER `command_result`;
+ADD COLUMN `target` VARCHAR(45) NOT NULL AFTER `command_result`;
 
 UPDATE version SET Number = 14;
 
