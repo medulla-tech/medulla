@@ -1309,17 +1309,6 @@ class Glpi91(DyngroupDatabaseHelper):
                     datas['owner_firstname'] = owner_firstname
                 if 'owner_realname' in self.config.summary:
                     datas['owner_realname'] = owner_realname
-                master_config = xmppMasterConfig()
-                regvalue = []
-                r=re.compile(r'reg_key_.*')
-                regs=filter(r.search, self.config.summary)
-                for regkey in regs:
-                    regkeyconf = getattr( master_config, regkey).split("|")[0].split("\\")[-1]
-                    try:
-                        keyname, keyvalue = self.getMachineRegistryKey(m,regkeyconf)
-                        datas[regkey] = keyvalue
-                    except TypeError:
-                        pass
 
             ret[m.getUUID()] = [None, datas]
 
