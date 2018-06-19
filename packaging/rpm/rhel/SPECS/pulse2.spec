@@ -397,6 +397,7 @@ This package contains the pkgs plugin for the MMC agent.
 %files -n python-mmc-kiosk
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/kiosk.ini
 %python2_sitelib/mmc/plugins/kiosk
+%python2_sitelib/pulse2/database/kiosk
 
 #--------------------------------------------------------------------
 
