@@ -367,18 +367,22 @@ if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state']
         echo "</table>";
         echo "</div>";
         $actionsname = array(
-                              "action_pwd_packagecompleted" =>  "Current directory is package directory",
-                              "action_pwd_package" =>  "Current directory is package directory",
-                              "actionprocessscript" => "Script Running in process",
-                              "action_command_natif_shell" => "Script Running in thread",
-                              "actionerrorcompletedend" => "<span style='color:red;'>Deployment terminated on an error. Clean packages</span>",
-                              "actionsuccescompletedend" =>"Deployment terminated successfully. Clean package",
-                              "actioncleaning"  =>"Clean downloaded package",
-                              "actionrestartbot" => "Restart agent",
-                              "actionrestart" => "Restart Machine",
-                              "action_unzip_file" => "unzip file",
-                              "action_set_environ" => "Initializes environment variables",
-                              "action_no_operation" => "no action",
+                              "action_pwd_packagecompleted" =>  _T("Current directory is package directory",'xmppmaster'),
+                              "action_pwd_package" =>  _T("Current directory is package directory",'xmppmaster'),
+                              "actionprocessscript" => _T("Script Running in process",'xmppmaster'),
+                              "action_command_natif_shell" => _T("Script Running in thread",'xmppmaster'),
+                              "actionerrorcompletedend" => "<span style='color:red;'>"._T("Deployment terminated on an error. Clean packages",'xmppmaster')."</span>",
+                              "actionsuccescompletedend" => _T("Deployment terminated successfully. Clean package",'xmppmaster'),
+                              "actioncleaning"  => _T("Clean downloaded package",'xmppmaster'),
+                              "actionrestartbot" => _T("Restart agent",'xmppmaster'),
+                              "actionrestart" => _T("Restart Machine",'xmppmaster'),
+                              "action_unzip_file" => _T("unzip file",'xmppmaster'),
+                              "action_set_environ" => _T("Initializes environment variables",'xmppmaster'),
+                              "action_no_operation" => _T("no action",'xmppmaster'),
+                              "action_section_install" => _T("Install Section Package",'xmppmaster'),
+                              "action_section_undinstall" => _T("UndInstall Section Package",'xmppmaster'),
+                              "action_section_update" => _T("Update Section Package",'xmppmaster'),
+                              "action_comment" => _T("Display Message in history",'xmppmaster'),
         );
     if ( $info['len'] != 0){
         $jidmachine = $info['objectdeploy'][0]['jidmachine'];
@@ -506,8 +510,8 @@ if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state']
                     echo $step->action;
                 }
                 $color="red";
-                echo "<br>";
                 if (isset($step->completed) && $actions != "ERROR"){
+                    echo "<br>";
                     echo '<h3 style="color:green;">STEP'." <strong>".$step->step. " [". $actions. "]</strong>" ."". "  </h3>";
                     $color="green";
                 }
