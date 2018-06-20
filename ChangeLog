@@ -1,3 +1,21 @@
+Pulse 2 4.4
+===========
+* [FEATURE] Improve registry settings description in config files
+* [FEATURE] Improve execution of commands by using synchronous operations
+* [FEATURE] First version of Pulse Kiosk
+* [FEATURE] Addition of an inventory step after deployment
+* [FEATURE] Ability to run a custom quick action on a group
+* [FEATURE] Creation of sysprep response files for UEFI systems
+* [BUGFIX] Fix detection of MSI command for 64bit Windows
+* [BUGFIX] Fix Ajax call for run backup command
+* [BUGFIX] Fix researching of machine and user OUs
+* [BUGFIX] Review dependencies in Pulse packaging
+* [BUGFIX] Fix calling a plugin from a quick action
+* [BUGFIX] Fix encoding for deployment stuck in START DEPLOY step
+* [BUGFIX] Fix downloadfile plugin for launch as a quickaction on groups
+* [BUGFIX] Fix the saving of registry keys after the inventory
+* [BUGFIX] Fix the display of machines when registry keys inventories are present
+
 Pulse 2 4.3
 =============
 * [FEATURE] Enable browsing and download of files from client machines
