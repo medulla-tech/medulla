@@ -380,7 +380,7 @@ if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state']
                               "action_set_environ" => _T("Initializes environment variables",'xmppmaster'),
                               "action_no_operation" => _T("no action",'xmppmaster'),
                               "action_section_install" => _T("Install Section Package",'xmppmaster'),
-                              "action_section_undinstall" => _T("UndInstall Section Package",'xmppmaster'),
+                              "action_section_uninstall" => _T("UndInstall Section Package",'xmppmaster'),
                               "action_section_update" => _T("Update Section Package",'xmppmaster'),
                               "action_comment" => _T("Display Message in history",'xmppmaster'),
         );
