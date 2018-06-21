@@ -74,6 +74,10 @@ var actionsList = [
     //'actionconfirm',
     //'action_pwd_package', //Go to package folder
     'actioncleaning', //Remove uploaded files
+
+    'action_section_install',    // definie section install
+    'action_section_update',     // definie section update
+    'action_section_uninstall', // definie section uninstall
 ];
 /**
  *
