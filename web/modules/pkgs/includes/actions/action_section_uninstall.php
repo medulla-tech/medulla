@@ -4,7 +4,7 @@ extract($_POST);
     descriptor type
         {
             "step" : 8,
-            "action": "action_section_undinstall"
+            "action": "action_section_uninstall"
         }
 
     echo "<pre>";
@@ -18,9 +18,9 @@ extract($_POST);
 </div>
 <div class="content">
     <div>
-        <input type="hidden" name="action" value="action_section_undinstall" />
+        <input type="hidden" name="action" value="action_section_uninstall" />
         <input type="hidden" name="step" />
-        <input id="laction" type="hidden" name="actionlabel" value="label_section_undinstall"/>
+        <input id="laction" type="hidden" name="actionlabel" value="label_section_uninstall"/>
     </div>
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" /> 
 </div>
