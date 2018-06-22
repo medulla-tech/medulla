@@ -81,7 +81,7 @@ def activate():
     if config.disable:
         logger.warning("Plugin kiosk: disabled by configuration.")
         return False
-    
+
     if not KioskDatabase().activate(config):
         logger.warning("Plugin kiosk: an error occurred during the database initialization")
         return False
@@ -101,8 +101,9 @@ def get_profiles_name_list():
 
 
 def create_profile(name, ous, active, packages):
-    return KioskDatabase().create_profile(name, ous, active, packages)
-
+    result = KioskDatabase().create_profile(name, ous, active, packages)
+    XmppMasterDatabase().get_machines_with_kiosk()
+    return result
 
 def delete_profile(id):
     return KioskDatabase().delete_profile(id)
@@ -274,21 +275,21 @@ def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype
         # For mac os and linux, profile association will be done on the login name.
         return
     list_software_glpi = []
-    softwareonmachine = Glpi().getLastMachineInventoryPart(uuid_inventorymachine, 
+    softwareonmachine = Glpi().getLastMachineInventoryPart(uuid_inventorymachine,
                                                            'Softwares', 0, -1, '',
                                                            {'hide_win_updates': True, 'history_delta': ''})
     for x in softwareonmachine:
         list_software_glpi.append([x[0][1],x[1][1], x[2][1]])
     print list_software_glpi # ordre information [["Vendor","Name","Version"],]
     structuredatakiosk = []
- 
+
     #creation structuredatakiosk pour initialisation
     for packageprofile in list_profile_packages:
         structuredatakiosk.append( __search_software_in_glpi(list_software_glpi, packageprofile, structuredatakiosk))
     logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, hostname))
 
     datas = {
-    'subaction':'initialisation_kiosk', 
+    'subaction':'initialisation_kiosk',
     'data' : structuredatakiosk
     }
 
@@ -316,13 +317,13 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
             structuredatakioskelement['action'].append('Launch')
             # verification si update
             # compare version
-            #TODO 
+            #TODO
             # pour le moment on utilise la version du package. mais presvoir version du software dans les package pulse
             if LooseVersion(soft_glpi[2]) < LooseVersion(packageprofile[3]):
                 structuredatakioskelement['action'].append('Update')
                 logger.debug("the software version is superior "\
                     "to that installed on the machine %s : %s < %s"%(packageprofile[0],soft_glpi[2],LooseVersion(packageprofile[3])))
-            break 
+            break
     if len(structuredatakioskelement['action']) == 0:
         # le package definie pour ce profil n'est pas present sur la machine:
         if packageprofile[8] == "allowed":

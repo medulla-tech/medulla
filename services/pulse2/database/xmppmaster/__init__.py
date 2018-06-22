@@ -2829,3 +2829,24 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [element for element in result]
+
+    @DatabaseHelper._sessionm
+    def get_machines_with_kiosk(self, session):
+        """
+        Select the machines with the kiosk installed.
+        Returns:
+            List of tuple. The tuple contains all the machines founded.
+        """
+
+        sql = """
+        SELECT
+            *
+        FROM
+            machines
+        WHERE
+            kiosk_presence = 'True';"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+
+        return [element for element in result]
