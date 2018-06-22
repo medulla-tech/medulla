@@ -1553,6 +1553,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 # Add relayserver or update status in database
                 logger.debug("** Add relayserver or update status in database %s" % msg['from'].bare)
                 if data['agenttype'] == "relayserver":
+                    data["adorgbyuser"] = ""
+                    data["adorgbymachine"] = ""
+                    data["kiosk_presence"] = ""
+
                     if 'moderelayserver' in data:
                         moderelayserver = data['moderelayserver']
                     else:
