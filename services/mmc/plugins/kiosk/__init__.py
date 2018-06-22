@@ -197,7 +197,7 @@ def get_users_from_ou(ou):
     """This function returns the list of user for the specified ou.
 
     Params:
-        string ou must be formatted like path : /root/son/grand_son. See TreeOU.get_path() method to obtain this
+        string OU must be formatted like path : /root/son/grand_son. See TreeOU.get_path() method to obtain this
         kind of string from the initial OU string.
 
     Returns:
@@ -256,11 +256,10 @@ def get_users_from_ou(ou):
 def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil, fromplugin = False):
     """
     This function launch the kiosk actions when a prensence machine is active
-    TODO: This function will be implemented later
     """
     logger.debug("kiosk handled")
     #print jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil
-    # récupération des profils dans la table machine.
+    # get the profiles from the table machine.
     machine = XmppMasterDatabase().getMachinefromjid(jid)
     OUmachine = [machine['ad_ou_machine'].replace("\n",'').replace("\r",'').replace('@@','/')]
     OUuser = [machine['ad_ou_user'].replace("\n", '').replace("\r", '').replace('@@','/')]
@@ -283,7 +282,7 @@ def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype
     print list_software_glpi # ordre information [["Vendor","Name","Version"],]
     structuredatakiosk = []
 
-    #creation structuredatakiosk pour initialisation
+    #Create structuredatakiosk for initialization
     for packageprofile in list_profile_packages:
         structuredatakiosk.append( __search_software_in_glpi(list_software_glpi, packageprofile, structuredatakiosk))
     logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, hostname))
@@ -307,25 +306,25 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
     patternname = re.compile("(?i)" + packageprofile[0])
     for soft_glpi in list_software_glpi:
         #TODO
-        # prevoir dans les packages pulse une rubrique vendor pour le nom du software
-        # pour le momment  on utilise le nom du package qui doit correspondre au nom glpi.
+        # Into the pulse package provide Vendor information for the software name
+        # For now we use the package name which must match with glpi name
         if patternname.match(str(soft_glpi[0])) or patternname.match(str(soft_glpi[1])):
-            # traitement de ce pacquage qui est installe sur la machine
-            # le package peut être supprimer
+            # Process with this package which is installed on the machine
+            # The package could be deleted
             structuredatakioskelement['icon'] =  'icone.png'
             structuredatakioskelement['action'].append('Delete')
             structuredatakioskelement['action'].append('Launch')
-            # verification si update
-            # compare version
+            # verification if update
+            # compare the version
             #TODO
-            # pour le moment on utilise la version du package. mais presvoir version du software dans les package pulse
+            # For now we use the package version. Later the software version will be needed into the pulse package
             if LooseVersion(soft_glpi[2]) < LooseVersion(packageprofile[3]):
                 structuredatakioskelement['action'].append('Update')
                 logger.debug("the software version is superior "\
                     "to that installed on the machine %s : %s < %s"%(packageprofile[0],soft_glpi[2],LooseVersion(packageprofile[3])))
             break
     if len(structuredatakioskelement['action']) == 0:
-        # le package definie pour ce profil n'est pas present sur la machine:
+        # The package defined for this profile is absent from the machine:
         if packageprofile[8] == "allowed":
             structuredatakioskelement['action'].append('Install')
         else:
