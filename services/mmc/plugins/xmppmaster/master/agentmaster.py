@@ -907,7 +907,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             self.plugintypescheduler[plugin['NAME']] = "machine"
                         break
 
-   def remoteinstallPlugin(self):
+    def remoteinstallPlugin(self):
         """ 
             this function install the plugins to agent M et RS 
         """
