@@ -124,7 +124,6 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                     logging.getLogger().debug("Error getting key: %s" % reg_key)
                     pass
         time.sleep(25)
-        
         # restart agent
         #xmppobject.restartAgent(message['from'])
     except Exception, e:
