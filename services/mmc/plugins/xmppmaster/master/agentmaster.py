@@ -57,7 +57,7 @@ import pluginsmaster
 import cPickle
 import logging
 import threading
-from time import mktime
+from time import mktime, sleep
 from datetime import datetime
 from multiprocessing import Process, Queue, TimeoutError
 from mmc.agent import PluginManager
@@ -313,6 +313,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
         """ Subscribe to Conf chatroom """
         self.add_event_handler("muc::%s::got_online" % conf.confjidchatroom,
                                self.muc_onlineConf)
+        # install plugins list file is not empty.
+        self.schedule('remote update plugin', 60, self.remoteinstallPlugin, repeat=True)
+        # appell function 
+        self.add_event_handler("restartmachineasynchrone", self.restartmachineasynchrone, threaded=True)
         # Called for all messages
         self.add_event_handler('message', self.message, threaded=True)#, threaded=True
         # The groupchat_message event is triggered every time a message
@@ -861,10 +865,35 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def handlemanagesession(self):
         self.session.decrementesessiondatainfo()
 
+    def loadPluginList(self):
+        logger.debug("Load and Verify base plugin")
+        self.plugindata = {}
+        self.plugintype = {}
+        for element in [ x for x in os.listdir(self.config.dirplugins) if x[-3:]== ".py" and x[:7] == "plugin_"]:
+            element_name = os.path.join(self.config.dirplugins, element)
+            # verify syntaxe error for plugin python
+            # we do not deploy a plugin with syntax error.
+            if os.system( "python -m py_compile \"%s\""%element_name) == 0:
+                f = open(element_name, 'r')
+                lignes = f.readlines()
+                f.close()
+                for ligne in lignes:
+                    if 'VERSION' in ligne and 'NAME' in ligne:
+                        l = ligne.split("=")
+                        plugin = eval(l[1])
+                        self.plugindata[plugin['NAME']] = plugin['VERSION']
+                        try:
+                            self.plugintype[plugin['NAME']] = plugin['TYPE']
+                        except:
+                            self.plugintype[plugin['NAME']] = "machine"
+                        break
+            else :
+                logger.error("As long as the ERROR SYNTAX is not fixed, the plugin [%s] is ignored." %os.path.join(self.config.dirplugins, element))
+
     def loadPluginschedulerList(self):
         logger.debug("Verify base plugin scheduler")
-        plugindataseach = {}
-        plugintype = {}
+        self.plugindatascheduler = {}
+        self.plugintypescheduler = {}
         for element in os.listdir(self.config.dirschedulerplugins):
             if element.endswith('.py') and element.startswith('scheduling_'):
                 f = open(os.path.join(self.config.dirschedulerplugins, element), 'r')
@@ -874,36 +903,38 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     if 'VERSION' in ligne and 'NAME' in ligne:
                         line = ligne.split("=")
                         plugin = eval(line[1])
-                        plugindataseach[plugin['NAME']] = plugin['VERSION']
+                        self.plugindatascheduler[plugin['NAME']] = plugin['VERSION']
                         try:
-                            plugintype[plugin['NAME']] = plugin['TYPE']
+                            self.plugintypescheduler[plugin['NAME']] = plugin['TYPE']
                         except:
-                            plugintype[plugin['NAME']] = "machine"
+                            self.plugintypescheduler[plugin['NAME']] = "machine"
                         break
-        self.plugindatascheduler = plugindataseach
-        self.plugintypescheduler = plugintype
 
-    def loadPluginList(self):
-        logger.debug("Verify base plugin")
-        plugindataseach = {}
-        plugintype = {}
-        for element in os.listdir(self.config.dirplugins):
-            if element.endswith('.py') and element.startswith('plugin_'):
-                f = open(os.path.join(self.config.dirplugins, element), 'r')
-                lignes = f.readlines()
-                f.close()
-                for ligne in lignes:
-                    if 'VERSION' in ligne and 'NAME' in ligne:
-                        l = ligne.split("=")
-                        plugin = eval(l[1])
-                        plugindataseach[plugin['NAME']] = plugin['VERSION']
-                        try:
-                            plugintype[plugin['NAME']] = plugin['TYPE']
-                        except:
-                            plugintype[plugin['NAME']] = "machine"
-                        break
-        self.plugindata = plugindataseach
-        self.plugintype = plugintype
+   def remoteinstallPlugin(self):
+        """ 
+            this function install the plugins to agent M et RS 
+        """
+        restart_machine = set()
+        for indexplugin in range(0, len(self.file_deploy_plugin)):
+            if XmppMasterDatabase().getPresencejid(plugmachine['dest']):
+                if plugmachine['type'] == 'deployPlugin':
+                    print "install plugin normal %s to %s"%(plugmachine['plugin'],plugmachine['dest']) 
+                    self.deployPlugin(plugmachine['dest'], plugmachine['plugin'])
+                    restart_machine.add(plugmachine['dest'])
+                elif plugmachine['type'] == 'deploySchedulingPlugin':
+                    # a code mise a jour des plugins scheduling.
+                    pass
+        for jidmachine in restart_machine:# Itération pour chaque élément
+            ## appel d'une function par message pour faire de l'asynchrone. et pouvoir mettre une tempo sur le restart.
+            self.event('restartmachineasynchrone', jidmachine)
+
+    def restartmachineasynchrone(self, jid):
+        waittingrestart =  random.randint(10,20)
+        print "Restart Machine jid %s after %s secondes"%(jid, waittingrestart)
+        sleep(waittingrestart)
+        print "Restart Machine jid %s fait"%jid
+        ##"verifier que restartAgent ne soit pas appeler depuis un plugin ou une lib.
+        self.restartAgent(jid)
 
     def signalpresence(self, jid):
         self.sendPresence(pto=jid, ptype='probe')
@@ -931,7 +962,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                           mbody=json.dumps({'action':'restartbot', 'data':''}),
                           mtype='chat')
 
-    def deployPlugin(self, msg, plugin):
+    def deployPlugin(self, jid, plugin):
         data = ''
         fichierdata = {}
         namefile = os.path.join(self.config.dirplugins, "plugin_%s.py"%plugin)
@@ -957,7 +988,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         fichierdata['sessionid'] = "sans"
         fichierdata['base64'] = True
         try:
-            self.send_message(mto=msg['from'],
+            self.send_message(mto=jid,
                               mbody=json.dumps(fichierdata),
                               mtype='chat')
         except:
@@ -1742,8 +1773,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             deploy = True
                     except:
                         deploy = True
-                    if self.plugintype[k] == "relayserver":
-                        self.plugintype[k] = "relayserver"
                     if data['agenttype'] != "all":
                         if data['agenttype'] == "relayserver" and  self.plugintype[k] == 'machine':
                             deploy = False
@@ -1752,8 +1781,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     if deploy:
                         if self.config.showplugins:
                             logger.info("deploy %s version %s on %s"%(k, v, msg['from']))
-                        self.deployPlugin(msg, k)
-                        self.restartAgent(msg['from'])
                         if self.config.showplugins:
                             logger.info("__________________________________________")
                         return True
