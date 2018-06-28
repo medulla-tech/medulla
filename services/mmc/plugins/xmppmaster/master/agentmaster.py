@@ -1635,6 +1635,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     kiosk_presence = data['kiosk_presence']
                 else:
                     kiosk_presence = "False"
+                if not 'lastusersession' in data:
+                    data['lastusersession'] = ""
                 idmachine = XmppMasterDatabase().addPresenceMachine(data['from'],
                                                                     data['platform'],
                                                                     data['information']['info']['hostname'],
