@@ -111,11 +111,13 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
             logging.getLogger().error('parameter section "defaultconnection" serverip must not be 127.0.0.1')
         self.defaultrelayserverport = self.get('defaultconnection', 'port')
         self.defaultrelayserverbaseurlguacamole=self.get('defaultconnection', 'guacamole_baseurl')
-
-
         self.jidagent = "%s@%s/%s"%("master",self.chatserver,"MASTER")
         self.NickName = "MASTER"
 
+        if self.has_option("global", "diragentbase"):
+            self.diragentbase = self.get('global', 'diragentbase')
+        else:
+            diragentbase = "/var/lib/pulse2/xmpp_baseremoteagent/"
         self.dirplugins = self.get('plugins', 'dirplugins')
         self.dirschedulerplugins = self.get('plugins', 'dirschedulerplugins')
         self.information={}
