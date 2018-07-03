@@ -117,7 +117,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         if self.has_option("global", "diragentbase"):
             self.diragentbase = self.get('global', 'diragentbase')
         else:
-            diragentbase = "/var/lib/pulse2/xmpp_baseremoteagent/"
+            self.diragentbase = "/var/lib/pulse2/xmpp_baseremoteagent/"
         self.dirplugins = self.get('plugins', 'dirplugins')
         self.dirschedulerplugins = self.get('plugins', 'dirschedulerplugins')
         self.information={}
