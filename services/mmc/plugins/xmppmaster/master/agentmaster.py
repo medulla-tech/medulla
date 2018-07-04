@@ -61,7 +61,7 @@ from time import mktime, sleep
 from datetime import datetime
 from multiprocessing import Process, Queue, TimeoutError
 from mmc.agent import PluginManager
-
+from lib.update_remote_agent import Update_Remote_Agent
 
 from sleekxmpp.xmlstream.stanzabase import ElementBase, ET, JID
 from sleekxmpp.stanza.iq import Iq
@@ -253,6 +253,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.config = conf
         self.session = session()
         self.domaindefault = "pulse"
+        self.Update_Remote_Agentlist = Update_Remote_Agent(self.config.diragentbase,self.config.autoupdate )
         ###clear conf compte.
         logger.debug('clear muc conf compte')
         cmd = "for i in  $(ejabberdctl registered_users pulse | grep '^conf' ); do echo $i; ejabberdctl unregister $i pulse; done"
@@ -1751,6 +1752,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 else:
                     logger.error("** enregistration base error")
                     return
+                
+                #manage update remote agent
+                if 'finger_print_remote_agent' in data and \
+                    data['finger_print_remote_agent'].upper() != 'DEV' and \
+                    data['finger_print_remote_agent'].upper() != 'DEBUG' and \
+                    data['finger_print_remote_agent'] != self.Update_Remote_Agentlist.get_fingerprint_agent_base() and \
+                    self.Update_Remote_Agentlist.autoupdate != False:
+                    #send catalog of files.
+                    datasend = {'action' : 'updateagent',
+                                'sessionid': name_random(5, "updateagent"),
+                                'data' : {'descriptor' : self.Update_Remote_Agentlist.md5_descriptor_agent_to_string(),
+                                        'type_descriptor' : 'catalogoffilesagent' }}
+                    self.send_message(mto=msg['from'],
+                                      mbody=json.dumps(datasend),
+                                      mtype='chat')
+
                 # Show plugins information logs
                 if self.config.showplugins:
                     logger.info("__________________________________________")
