@@ -484,6 +484,24 @@ else {
                         unset($networks['domain'][$i]);
                     }
                 }
+                //supprime doublon
+                $tabip = array();
+                $idkey = array();
+                foreach ($networks['ipHostNumber'] as $key=>$val) {
+                    if (!in_array($val, $tabip))
+                    {
+                        $tabip[] =  $val; 
+                    }
+                    else{
+                        $idkey[]=$key;
+                    }
+                }
+                foreach ($idkey as $vv){
+                    unset($networks['ipHostNumber'][$vv]);
+                    unset($networks['macAddress'][$vv]);
+                    unset($networks['networkUuids'][$vv]);
+                    unset($networks['domain'][$vv]);
+                }
                 if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
                     if (count($networks['macAddress']) > 1) {
                         $f->push(new Table());
@@ -623,6 +641,26 @@ else {
                     unset($networks['networkUuids'][$i]);
                     unset($networks['domain'][$i]);
                 }
+            }
+            //supprime doublon
+            $tabip = array();
+            $idkey = array();
+            foreach ($networks['ipHostNumber'] as $key=>$val) {
+                if (!in_array($val, $tabip))
+                {
+                    $tabip[] =  $val; 
+                }
+                else{
+                    $idkey[]=$key;
+                }
+            }
+
+            foreach ($idkey as $vv){
+                unset($networks['ipHostNumber'][$vv]);
+                unset($networks['macAddress'][$vv]);
+                unset($networks['networkUuids'][$vv]);
+                unset($networks['domain'][$vv]);
+                unset($networks['subnetMask'][$vv]);
             }
             if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
                 if (count($networks['macAddress']) > 1) {
