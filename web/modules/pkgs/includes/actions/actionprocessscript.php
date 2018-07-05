@@ -5,7 +5,8 @@ require_once("../../../../includes/xmlrpc.inc.php");
 
 extract($_POST);
 
-    $command = (isset($command)) ? $command : "" ;
+    $command = (isset($command)) ? base64_decode($command) : "" ;
+
         $packageList = xmpp_packages_list();
         $options = "";
 
