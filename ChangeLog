@@ -15,6 +15,8 @@ Pulse 2 4.4
 * [BUGFIX] Fix downloadfile plugin for launch as a quickaction on groups
 * [BUGFIX] Fix the saving of registry keys after the inventory
 * [BUGFIX] Fix the display of machines when registry keys inventories are present
+* [BUGFIX] Fix encoding error in "Execute Script" action when creating package
+* [BUGFIX] Fix inactive Wake On Lan button in quick action
 
 Pulse 2 4.3
 =============
