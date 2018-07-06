@@ -1,3 +1,5 @@
+* [BUGFIX] Fix inactive Wake On Lan button in quick action
+
 mmc-core 4.4
 ============
 * [FEATURE] Ability to use quick actions installed by the sql schemas for all users
