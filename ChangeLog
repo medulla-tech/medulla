@@ -1,3 +1,5 @@
+* [BUGFIX] Fix wake on lan problem
+
 mmc-core 4.4
 ============
 * [FEATURE] Ability to use quick actions installed by the sql schemas for all users
