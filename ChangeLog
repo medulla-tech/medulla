@@ -1,5 +1,6 @@
-
+* [BUGFIX] Fix the display of the command executed
 * [BUGFIX] Remove sql file to handle UEFI ( we need new davos first )
+
 Pulse 2 4.4
 ===========
 * [FEATURE] Improve registry settings description in config files
