@@ -254,6 +254,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.session = session()
         self.domaindefault = "pulse"
         self.Update_Remote_Agentlist = Update_Remote_Agent(self.config.diragentbase,self.config.autoupdate )
+        self.file_deploy_plugin = []
         ###clear conf compte.
         logger.debug('clear muc conf compte')
         cmd = "for i in  $(ejabberdctl registered_users pulse | grep '^conf' ); do echo $i; ejabberdctl unregister $i pulse; done"
@@ -914,9 +915,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
         """
         restart_machine = set()
         for indexplugin in range(0, len(self.file_deploy_plugin)):
+            plugmachine = self.file_deploy_plugin.pop(0)
             if XmppMasterDatabase().getPresencejid(plugmachine['dest']):
                 if plugmachine['type'] == 'deployPlugin':
-                    print "install plugin normal %s to %s"%(plugmachine['plugin'],plugmachine['dest']) 
+                    logger.debug("install plugin normal %s to %s"%(plugmachine['plugin'], plugmachine['dest']))
                     self.deployPlugin(plugmachine['dest'], plugmachine['plugin'])
                     restart_machine.add(plugmachine['dest'])
                 elif plugmachine['type'] == 'deploySchedulingPlugin':
@@ -1801,6 +1803,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     if deploy:
                         if self.config.showplugins:
                             logger.info("deploy %s version %s on %s"%(k, v, msg['from']))
+
+                        self.file_deploy_plugin.append({'dest' : msg['from'], 'plugin' : k , 'type' : 'deployPlugin'})
                         if self.config.showplugins:
                             logger.info("__________________________________________")
                         return True
