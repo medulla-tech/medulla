@@ -1760,7 +1760,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     data['finger_print_remote_agent'].upper() != 'DEV' and \
                     data['finger_print_remote_agent'].upper() != 'DEBUG' and \
                     data['finger_print_remote_agent'] != self.Update_Remote_Agentlist.get_fingerprint_agent_base() and \
-                    self.Update_Remote_Agentlist.autoupdate != False:
+                    self.Update_Remote_Agentlist.autoupdate is not False:
                     #send catalog of files.
                     datasend = {'action' : 'updateagent',
                                 'sessionid': name_random(5, "updateagent"),
