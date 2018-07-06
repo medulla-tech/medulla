@@ -34,14 +34,14 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 </style>
 
     <div style="width : 600px;">
-        <? 
+        <?
         echo "<h1>Quick Actions</h1>";
         echo "<h2>Machine :".$_GET['cn']."</h2>";
         echo "<h2>Os : ".$_GET['os']."</h2>";
         echo "<h2>Entity : ".$_GET['entity']."</h2>";
         ?>
         <table style="width : 500px;">
-            <tr> 
+            <tr>
             <?
                 if ($_GET['presencemachinexmpp']){
                     echo '<td id="shutdown0" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
@@ -133,8 +133,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 echo "<input type=hidden name ='module' value ='xmppmaster'>";
                 echo "<input type=hidden name ='submod' value ='xmppmaster'>";
                 foreach ($_GET as $key=>$valu){
-                    if($key == "displayName" || 
-                        $key == 'owner_realname' || 
+                    if($key == "displayName" ||
+                        $key == 'owner_realname' ||
                         $key == 'owner_firstname'||
                         $key == 'mod'
                     ){
@@ -187,7 +187,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 echo '<td id="cpu_num" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
 //                 echo '<td id="netstat" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
 //             echo "</tr>";
-// 
+//
 //             echo '<tr>';
 //                 echo '<td id="battery0" align="center">battery </td>';
 //                 echo '<td id="winservices0" align="center">winservices </td>';
@@ -234,7 +234,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     ";
     }
     ?>
-   var uuid = <? echo json_encode($_GET); ?>
+   var uuid = <? echo json_encode($_GET); ?>;
    <?php
         if ($_GET['presencemachinexmpp']){
             echo"
@@ -282,7 +282,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     })
 
     jQuery('#wol, #wol0').on('click', function(){
-        uuid['wol'] = jQuery('#checkboxwol').is(':checked'); 
+        uuid['wol'] = jQuery('#checkboxwol').is(':checked');
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
             .done(function( data ) {
                 if (typeof(uuid['entity'] ) != "undefined"){
