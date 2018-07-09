@@ -484,31 +484,6 @@ else {
                         unset($networks['domain'][$i]);
                     }
                 }
-                //supprime doublon
-                $tabip = array();
-                $idkey = array();
-                foreach ($networks['ipHostNumber'] as $key=>$val) {
-                    if (!in_array($val, $tabip))
-                    {
-                        $tabip[] =  $val; 
-                    }
-                    else{
-                        $idkey[]=$key;
-                    }
-                }
-                foreach ($idkey as $vv){
-                    unset($networks['ipHostNumber'][$vv]);
-                    unset($networks['macAddress'][$vv]);
-                    unset($networks['networkUuids'][$vv]);
-                    unset($networks['domain'][$vv]);
-                    unset($networks['subnetMask'][$vv]);
-                }
-                //reinitialise index tableau
-                $networks['ipHostNumber'] = array_values($networks['ipHostNumber']);
-                $networks['macAddress'] = array_values($networks['macAddress']);
-                $networks['networkUuids'] = array_values($networks['networkUuids']);
-                $networks['domain'] = array_values($networks['domain']);
-                $networks['subnetMask'] = array_values($networks['subnetMask']);
                 if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
                     if (count($networks['macAddress']) > 1) {
                         $f->push(new Table());
@@ -649,32 +624,6 @@ else {
                     unset($networks['domain'][$i]);
                 }
             }
-            //supprime doublon
-            $tabip = array();
-            $idkey = array();
-            foreach ($networks['ipHostNumber'] as $key=>$val) {
-                if (!in_array($val, $tabip))
-                {
-                    $tabip[] =  $val; 
-                }
-                else{
-                    $idkey[]=$key;
-                }
-            }
-
-            foreach ($idkey as $vv){
-                unset($networks['ipHostNumber'][$vv]);
-                unset($networks['macAddress'][$vv]);
-                unset($networks['networkUuids'][$vv]);
-                unset($networks['domain'][$vv]);
-                unset($networks['subnetMask'][$vv]);
-            }
-            //reinitialise les index du tableau
-            $networks['ipHostNumber'] = array_values($networks['ipHostNumber']);
-            $networks['macAddress'] = array_values($networks['macAddress']);
-            $networks['networkUuids'] = array_values($networks['networkUuids']);
-            $networks['domain'] = array_values($networks['domain']);
-            $networks['subnetMask'] = array_values($networks['subnetMask']);
             if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
                 if (count($networks['macAddress']) > 1) {
                     $f->push(new Table());
@@ -682,7 +631,7 @@ else {
                     $elements = array();
                     $values = array();
                     foreach (range(0, count($networks['macAddress']) - 1) as $i) {
-                        $elements[] = sprintf("%s [%s]", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
+                        $elements[] = sprintf("%s / %s", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
                         $values[] = $networks['networkUuids'][$i];
                     }
                     $macs_choice->setElements($elements);
@@ -702,6 +651,7 @@ else {
         }
 
         $f->push(new DivExpertMode());
+        
         expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real_target);
 
         $f->pop();

@@ -4058,24 +4058,9 @@ def getComputersNetwork_filtered(ctx, params):
     @return: the computer network information but excludes
     ipv6, empty macs, lo interface and if there is a preferred network
     choose it
+    
     """
     network_data = ComputerManager().getComputersNetwork(ctx, params)
-    for interfacelist in network_data:
-        datalistip =[]
-        indexdel=[]
-        listip = interfacelist[1]['ipHostNumber']
-        for indexlist,ipstring in enumerate(listip):
-            if not ipstring in datalistip:
-                datalistip.append(ipstring)
-            else:
-                indexdel.append(indexlist)
-        indexdel.reverse()
-        for indexlist in indexdel:
-            del interfacelist[1]['ipHostNumber'][indexlist]
-            del interfacelist[1]['networkUuids'][indexlist]
-            del interfacelist[1]['macAddress'][indexlist]
-            del interfacelist[1]['domain'][indexlist]
-            del interfacelist[1]['subnetMask'][indexlist]
     for m in xrange(len(network_data)):
         cpt_data = network_data[m][1]
         ipHostNumber = []
