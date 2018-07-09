@@ -47,6 +47,14 @@ from os import path, makedirs, listdir, remove, rename
 import subprocess
 import json
 import hashlib
+import socket
+
+def is_ipv4_valid(ip_string):
+    try:
+        socket.inet_aton(ip_string)
+    except socket.error as e:
+        return False
+    return True
 
 def fromUUID(uuid):
     return int(uuid.replace('UUID', ''))
@@ -4048,8 +4056,9 @@ def computersUnregister(computers_UUID, backup):
 def getComputersNetwork_filtered(ctx, params):
     """
     @return: the computer network information but excludes
-    empty macs, lo interface and if there is a preferred network
+    ipv6, empty macs, lo interface and if there is a preferred network
     choose it
+    
     """
     network_data = ComputerManager().getComputersNetwork(ctx, params)
     for m in xrange(len(network_data)):
@@ -4058,16 +4067,21 @@ def getComputersNetwork_filtered(ctx, params):
         macAddress = []
         networkUuids = []
         subnetMask = []
+        domainlist = []
         for i in xrange(len(cpt_data['ipHostNumber'])):
             ip = cpt_data['ipHostNumber'][i]
             mac = cpt_data['macAddress'][i]
             uuid = cpt_data['networkUuids'][i]
             netmask = cpt_data['subnetMask'][i]
+            domain = cpt_data['domain'][i]
             # IP filtering
             if not ip or ip == '127.0.0.1':
                 continue
             if not mac:
                 continue
+            if not is_ipv4_valid(ip):
+                continue
+            domainlist.append(domain)
             ipHostNumber.append(ip)
             macAddress.append(mac)
             networkUuids.append(uuid)
@@ -4082,11 +4096,13 @@ def getComputersNetwork_filtered(ctx, params):
                    macAddress = [macAddress[i]]
                    networkUuids = [networkUuids[i]]
                    subnetMask = [subnetMask[i]]
+                   domainlist = [domainlist[i]]
                    break
         network_data[m][1]['ipHostNumber'] = ipHostNumber
         network_data[m][1]['macAddress'] = macAddress
         network_data[m][1]['networkUuids'] = networkUuids
         network_data[m][1]['subnetMask'] = subnetMask
+        network_data[m][1]['domain'] = domainlist
     return network_data
 
 def getMachineMac_filtered(ctx, params):
