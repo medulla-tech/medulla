@@ -121,7 +121,8 @@ class os_repartitionPanel extends Panel {
             var data = $osCount,
                 createGroupText = $createGroupText,
                 legend = $osLabels,
-                colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED"],
+                //Add "#000-color-color" into the colors variable if all the os are not displayed
+                colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED","000-#7e1282-#c98fcb","000-#b36919-#e8c6a2","000-#2eb9f3-#4297-#4297ba","000-#168eff-#28c96c","000-#a9751a-#cdbda1","000-#72ed62-#72ed62"],
                 href = $links,
                 title = 'OS Repartition';
 
