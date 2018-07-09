@@ -484,7 +484,9 @@ else {
                         unset($networks['domain'][$i]);
                     }
                 }
+
                 // Remove dupplicate entries
+
                 $tabip = array();
                 $idkey = array();
                 foreach ($networks['ipHostNumber'] as $key=>$val) {
@@ -509,6 +511,7 @@ else {
                 $networks['networkUuids'] = array_values($networks['networkUuids']);
                 $networks['domain'] = array_values($networks['domain']);
                 $networks['subnetMask'] = array_values($networks['subnetMask']);
+
                 if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
                     if (count($networks['macAddress']) > 1) {
                         $f->push(new Table());
@@ -649,7 +652,9 @@ else {
                     unset($networks['domain'][$i]);
                 }
             }
+
             // Remove dupplicate entries
+
             $tabip = array();
             $idkey = array();
             foreach ($networks['ipHostNumber'] as $key=>$val) {
@@ -669,12 +674,14 @@ else {
                 unset($networks['domain'][$vv]);
                 unset($networks['subnetMask'][$vv]);
             }
+
             // Reinitialize the array's index
             $networks['ipHostNumber'] = array_values($networks['ipHostNumber']);
             $networks['macAddress'] = array_values($networks['macAddress']);
             $networks['networkUuids'] = array_values($networks['networkUuids']);
             $networks['domain'] = array_values($networks['domain']);
             $networks['subnetMask'] = array_values($networks['subnetMask']);
+
             if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
                 if (count($networks['macAddress']) > 1) {
                     $f->push(new Table());

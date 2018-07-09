@@ -1,3 +1,5 @@
+* [BUGFIX] Fix encoding error in "Execute Script" action when creating package
+
 Pulse 2 4.4
 ===========
 * [FEATURE] Improve registry settings description in config files
