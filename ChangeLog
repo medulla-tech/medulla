@@ -1,4 +1,5 @@
 * [BUGFIX] Fix encoding error in "Execute Script" action when creating package
+* [BUGFIX] Improve the creation of the groups for machineOnline widget
 
 Pulse 2 4.4
 ===========
