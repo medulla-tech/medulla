@@ -277,3 +277,6 @@ def moveEntityRuleUp(*args, **kwargs):
 
 def moveEntityRuleDown(*args, **kwargs):
     return xmlrpcCleanup(Glpi().moveEntityRuleDown(*args, **kwargs))
+
+def get_all_uuids_and_hostnames():
+    return Glpi().get_all_uuids_and_hostnames()
