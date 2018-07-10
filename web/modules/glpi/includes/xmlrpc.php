@@ -170,5 +170,9 @@ function xmlrpc_setfromglpilogxmpp(   $text,
                                                     $action,
                                                     $touser,
                                                     $fromuser));
-}                                                    
+}
+
+function xmlrpc_get_all_uuids_and_hostnames(){
+  return xmlCall("glpi.get_all_uuids_and_hostnames", array());
+}
 ?>

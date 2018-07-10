@@ -23,11 +23,12 @@ require_once("modules/dyngroup/includes/dyngroup.php"); // For Group Class
 require_once("modules/glpi/includes/xmlrpc.php"); // For total_machines
 require_once("modules/xmppmaster/includes/xmlrpc.php"); // For machines_online
 require_once("modules/dyngroup/includes/xmlrpc.php");
+require_once("modules/glpi/includes/xmlrpc.php"); // For xmlrpc_getListPresenceMachine
 
 $machines_online = xmlrpc_getListPresenceMachine();
 $uuids_online = [];
-$all_machines = getComputersList();
-$total_machines = count($all_machines);
+$all_machines = xmlrpc_get_all_uuids_and_hostnames();
+
 $machines_offline = [];
 
 $list = [];
@@ -42,7 +43,6 @@ foreach($machines_online as $machine)
     else
         unset($machine);
 }
-
 // Clean the array
 $machines_online = [];
 
@@ -50,25 +50,20 @@ $machines_online = [];
 foreach($all_machines as $machine)
 {
     $tmp = [];
-
     // Create formated machine
-    $tmp[$machine[1]["objectUUID"][0].'##'.$machine[1]["cn"][0]] = ["hostname" => $machine[1]["cn"][0], 'uuid' =>$machine[1]["objectUUID"][0]];
-
-    if(!in_array($machine[1]['objectUUID'][0],$uuids_online))
+    $tmp[$machine["uuid"].'##'.$machine["hostname"]] = ["hostname" => $machine["hostname"], 'uuid' =>$machine["uuid"]];
+    if(!in_array($machine["uuid"],$uuids_online))
         $machines_offline += $tmp;
 
     else
         $machines_online += $tmp;
 }
-
 if($_GET['machines'] == 'online'){
-
     $groupname = sprintf (_T("Machines online at %s", "glpi"), date("Y-m-d H:i:s"));
     $groupmembers = $machines_online;
 }
 
 else {
-
     $groupname = sprintf (_T("Machines offline at %s", "glpi"), date("Y-m-d H:i:s"));
     $groupmembers = $machines_offline;
 }

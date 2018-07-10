@@ -86,12 +86,12 @@ class Glpi91(DyngroupDatabaseHelper):
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.1')
-        
+
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
-        
+
         if LooseVersion(self._glpi_version) >=  LooseVersion("9.1") and LooseVersion(self._glpi_version) <=  LooseVersion("9.2.2"):
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
@@ -127,12 +127,12 @@ class Glpi91(DyngroupDatabaseHelper):
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
             setattr(Glpi91, "decode", decode_latin1)
             setattr(Glpi91, "encode", encode_latin1)
-        
+
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
-        
+
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.logger.info("Glpi is in version %s" % (self.glpi_version))
@@ -1163,6 +1163,20 @@ class Glpi91(DyngroupDatabaseHelper):
                                             empty_macs=empty_macs)
         session.close()
         return ret
+
+    def get_all_uuids_and_hostnames(self):
+        """Get the uuids and hostnames for all the machines
+        Returns:
+            list of the machines. The list is formated as :
+            [
+                {'uuid':'uuid1', 'hostname':'machine1'},
+                {'uuid':'uuid2', 'hostname':'machine2'}
+            ]
+        """
+        session = create_session()
+        query = session.query(Machine.id, Machine.name).all()
+        session.close()
+        return [{"uuid": toUUID(str(machine.id)), "hostname": machine.name} for machine in query]
 
     def getTotalComputerCount(self):
         session = create_session()
@@ -2209,7 +2223,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
                 # Last inventory date
                 date_mod = machine.date_mod
-                
+
                 if self.fusionagents is not None and last_contact is not None:
                     date_mod = last_contact
 
