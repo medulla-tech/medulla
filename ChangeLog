@@ -2,6 +2,8 @@
 * [BUGFIX] Fix the display of the command executed
 * [BUGFIX] Remove sql file to handle UEFI ( we need new davos first )
 * [BUGFIX] Improve the creation of the groups for machineOnline widget
+* [BUGFIX] Allow to modify imaging groups for machines with more than one
+           ethernet card
 
 Pulse 2 4.4
 ===========
