@@ -118,6 +118,7 @@ if (isset($_POST["bdelmachine_x"])) {
         // If Profile, don't add computer to current group if it has more than one ethernet card
         if (in_array($member['uuid'], $hasMoreThanOneEthCard)) {
             $dontAddedToProfile[] = $member;
+            $listN[$member['uuid'].'##'.$member['hostname']] = $member;
         }
         else {
             $listN[$member['uuid'].'##'.$member['hostname']] = $member;
@@ -180,6 +181,14 @@ if (isset($_POST["bdelmachine_x"])) {
                         $msg .= $member['hostname'] . "<br />";
                     }
                     new NotifyWidgetWarning($msg);
+                    $params = array(
+                        'target_uuid' => $group->id,
+                        'type' => 'group',
+                        'target_name' => $name,
+                        'edit' => "1",
+                    );
+                    header("Location: " . urlStrRedirect("imaging/manage/groupregister_target", $params));
+                    exit;
                 }
                 else {
                     new NotifyWidgetSuccess(_T("Imaging group successfully modified", "dyngroup"));
