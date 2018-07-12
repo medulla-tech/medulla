@@ -77,7 +77,7 @@ function getPGobject($id, $load = false) {
 
 
 class ConvergenceGroup extends Group {
-    
+
     function __Construct($id = null, $load = false, $ro = False, $root_context = false) {
         parent::Group($id, $load, $ro, $root_context);
         $this->type = 2;
@@ -126,7 +126,7 @@ class ConvergenceGroup extends Group {
             $parent_group = new Group($parent_gid, True, False, True);
             $this->setParentGroup($parent_group);
         }
-        
+
         $request = array();
 
         /* Create convergence groups subrequest */
@@ -135,32 +135,32 @@ class ConvergenceGroup extends Group {
         if (in_array('inventory', $_SESSION['modulesList'])) {
             $subReqCriterion = 'Software/Company:ProductName:ProductVersion';
         }
-        
+
         // Arrays are for bundles (multiple convergence criterions)
         if (!is_array($this->package->Qvendor)){
             $this->package->Qvendor = array($this->package->Qvendor);
             $this->package->Qsoftware = array($this->package->Qsoftware);
             $this->package->Qversion = array($this->package->Qversion);
         }
-        
+
         $i = 0;
-        
+
         for ($i = 0; $i< count($this->package->Qvendor); $i++){
-            
+
             $Qvendor = ($this->package->Qvendor[$i]) ? str_replace(',', '*', $this->package->Qvendor[$i]) : '*';
             $Qsoftware = ($this->package->Qsoftware[$i]) ? str_replace(',', '*', $this->package->Qsoftware[$i]) : '*';
             $Qversion = ($this->package->Qversion[$i]) ? str_replace(',', '*', $this->package->Qversion[$i]) : '*';
-            
+
             $request[] = sprintf("%d==%s::%s==>%s, %s, %s<", $i+1, $subReqModule, $subReqCriterion, $Qvendor, $Qsoftware, $Qversion);
         }
-        
-        
+
+
         // Adding parent group condition in last
         $request[] = ($i+1) . '==dyngroup::groupname==' . $this->parentGroup->name;
-        
-        
+
+
         $request = implode('||', $request);
-        
+
         parent::setRequest($request, True);
     }
 
@@ -168,7 +168,7 @@ class ConvergenceGroup extends Group {
         // If a bool condition is defined in the package level
         // we use it,
         $criterion_count = count($this->package->Qvendor);
-        
+
         if (trim($this->package->boolcnd)){
             $subgroup_condition = $this->package->boolcnd;
         }
@@ -176,13 +176,13 @@ class ConvergenceGroup extends Group {
             // If the bool condition is not defined, we generate
             // the defaut one
             $subgroup_condition = 'AND(' . implode(',', range(1, $criterion_count)) . ')';
-            
+
         }
-        
+
         // From 1 to $criterion_count => software criteria
         // $criterion_count +1 => parent group criterion
         $pgroup_cnumber = $criterion_count +1;
-        
+
         /* create convergence groups bools */
         if ($this->isDeployGroup) {
             $this->bool = "AND($pgroup_cnumber, NOT($subgroup_condition))";
@@ -351,6 +351,8 @@ class Group {
     function prettyDisplay($canbedeleted = false, $default_params = array()) {
         include("modules/pulse2/pulse2/computers_list.php");
     }
+
+    function getId(){return $this->id;}
 }
 
 function __xmlrpc_countallgroups($params) { return xmlCall("dyngroup.countallgroups", array($params)); }
@@ -542,4 +544,7 @@ function xmlrpc_get_convergence_parent_group_id($gid) {
     return xmlCall("dyngroup.get_convergence_group_parent_id", array($gid));
 }
 
+function xmlrpc_mini_addmembers_to_group($id, $uuids) {
+    return xmlCall("dyngroup.mini_addmembers_to_group", array($id, $uuids));
+}
 ?>
