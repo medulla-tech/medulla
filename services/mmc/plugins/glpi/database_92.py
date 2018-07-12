@@ -22,7 +22,7 @@
 
 """
 This module declare all the necessary stuff to connect to a glpi database in it's
-version 9.1
+version 9.2
 """
 import os
 import logging
@@ -66,7 +66,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 
-class Glpi91(DyngroupDatabaseHelper):
+class Glpi92(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
 
@@ -85,18 +85,18 @@ class Glpi91(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.1')
+        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.2')
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
-        if LooseVersion(self._glpi_version) >=  LooseVersion("9.1") and LooseVersion(self._glpi_version) <=  LooseVersion("9.1.7"):
+        if LooseVersion(self._glpi_version) >=  LooseVersion("9.2") and LooseVersion(self._glpi_version) <=  LooseVersion("9.2.4"):
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
-            logging.getLogger().debug('GLPI higher than version 9.1 was not detected')
+            logging.getLogger().debug('GLPI higher than version 9.2 was not detected')
             return False
 
     @property
@@ -121,12 +121,12 @@ class Glpi91(DyngroupDatabaseHelper):
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
             self.db.execute(u'SELECT "\xe9"')
-            setattr(Glpi91, "decode", decode_utf8)
-            setattr(Glpi91, "encode", encode_utf8)
+            setattr(Glpi92, "decode", decode_utf8)
+            setattr(Glpi92, "encode", encode_utf8)
         except:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
-            setattr(Glpi91, "decode", decode_latin1)
-            setattr(Glpi91, "encode", encode_latin1)
+            setattr(Glpi92, "decode", decode_latin1)
+            setattr(Glpi92, "encode", encode_latin1)
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
@@ -541,17 +541,6 @@ class Glpi91(DyngroupDatabaseHelper):
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
         return self.machine.c.entities_id.in_(ctx.locationsid + other_locids)
-
-    def mini_computers_count(self):
-        """Count all the GLPI machines
-            Returns:
-                int count of machines"""
-
-        sql = """select count(id) as count_machines from glpi_computers;"""
-        res = self.db.execute(sql)
-        for element in res:
-            result = element[0]
-        return result
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
@@ -1115,35 +1104,6 @@ class Glpi91(DyngroupDatabaseHelper):
             return 0
         session.close()
         return ret
-
-    def getMachineforentityList(self, min = 0, max = -1, filt = None):
-        """
-        Get the computer list that match filters entity parameters between min and max
-
-        FIXME: may return a list or a dict according to the parameters
-
-        eg. dict filt param {'fk_entity': 1, 'imaging_server': 'UUID1', 'get': ['cn', 'objectUUID']}
-        """
-        if filt and 'imaging_server' in filt and filt['imaging_server'] != "" and \
-            'get' in filt and len(filt['get']) == 2 and filt['get'][0] == 'cn' and filt['get'][1] == 'objectUUID' and\
-                'fk_entity' in filt and filt['fk_entity'] != -1:
-            #recherche entity parent.
-            entitylist =  self.getEntitiesParentsAsList([filt['fk_entity']])
-            session = create_session()
-            entitylist.append(filt['fk_entity'])
-            q = session.query(Machine.id, Machine.name, Machine.entities_id, Machine.locations_id).\
-                add_column(self.entities.c.name.label('Entity_name')).\
-                    select_from(self.machine.join(self.entities)).\
-                        filter(self.machine.c.entities_id.in_(entitylist)).\
-                            filter(self.machine.c.is_deleted == 0).\
-                                filter(self.machine.c.is_template == 0)
-            ret =  q.all()
-            listentitymachine = {}
-            for line in ret:
-                uuid= "UUID%s"%line.id
-                listentitymachine[uuid] = {"cn" : line.name, "objectUUID" : uuid }
-            session.close()
-            return listentitymachine
 
     def getRestrictedComputersList(self,
                                    ctx,
@@ -4568,7 +4528,7 @@ class Machine(object):
     def toH(self):
         return { 'hostname':self.name, 'uuid':toUUID(self.id) }
     def to_a(self):
-        owner_login, owner_firstname, owner_realname = Glpi91().getMachineOwner(self)
+        owner_login, owner_firstname, owner_realname = Glpi92().getMachineOwner(self)
         return [
             ['name',self.name],
             ['comments',self.comment],
@@ -4592,7 +4552,7 @@ class Machine(object):
             ['model',self.computermodels_id],
             ['type',self.computertypes_id],
             ['entity',self.entities_id],
-            ['uuid',Glpi91().getMachineUUID(self)]
+            ['uuid',Glpi92().getMachineUUID(self)]
         ]
 
 class Entities(object):
