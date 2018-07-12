@@ -22,7 +22,7 @@
 
 """
 This module declare all the necessary stuff to connect to a glpi database in it's
-version 9.1
+version 9.2
 """
 import os
 import logging
@@ -66,7 +66,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 
-class Glpi91(DyngroupDatabaseHelper):
+class Glpi92(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
 
@@ -85,18 +85,18 @@ class Glpi91(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.1')
+        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.2')
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
-        if LooseVersion(self._glpi_version) >=  LooseVersion("9.1") and LooseVersion(self._glpi_version) <=  LooseVersion("9.1.7"):
+        if LooseVersion(self._glpi_version) >=  LooseVersion("9.2") and LooseVersion(self._glpi_version) <=  LooseVersion("9.2.4"):
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
-            logging.getLogger().debug('GLPI higher than version 9.1 was not detected')
+            logging.getLogger().debug('GLPI higher than version 9.2 was not detected')
             return False
 
     @property
@@ -121,12 +121,12 @@ class Glpi91(DyngroupDatabaseHelper):
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
             self.db.execute(u'SELECT "\xe9"')
-            setattr(Glpi91, "decode", decode_utf8)
-            setattr(Glpi91, "encode", encode_utf8)
+            setattr(Glpi92, "decode", decode_utf8)
+            setattr(Glpi92, "encode", encode_utf8)
         except:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
-            setattr(Glpi91, "decode", decode_latin1)
-            setattr(Glpi91, "encode", encode_latin1)
+            setattr(Glpi92, "decode", decode_latin1)
+            setattr(Glpi92, "encode", encode_latin1)
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
@@ -4528,7 +4528,7 @@ class Machine(object):
     def toH(self):
         return { 'hostname':self.name, 'uuid':toUUID(self.id) }
     def to_a(self):
-        owner_login, owner_firstname, owner_realname = Glpi91().getMachineOwner(self)
+        owner_login, owner_firstname, owner_realname = Glpi92().getMachineOwner(self)
         return [
             ['name',self.name],
             ['comments',self.comment],
@@ -4552,7 +4552,7 @@ class Machine(object):
             ['model',self.computermodels_id],
             ['type',self.computertypes_id],
             ['entity',self.entities_id],
-            ['uuid',Glpi91().getMachineUUID(self)]
+            ['uuid',Glpi92().getMachineUUID(self)]
         ]
 
 class Entities(object):
