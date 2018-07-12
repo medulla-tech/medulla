@@ -722,6 +722,19 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         return True
 
+    def _mini_add_members_to_group(self, connection, computers, groupid):
+        """Add the computers into the group.
+        Params:
+            computers: dict of all the computers we want add to the group
+            groupid: int corresponds to the id of the group newly created"""
+        session = create_session()
+
+        # transform to dictionnary on format {"uuid": "hostname",}
+        for computer in computers:
+            id = self.__getOrCreateMachine(computer["uuid"], computer["hostname"], session)
+            self.__createResult(groupid, id)
+
+
     ################################
     ## MEMBERS
 
