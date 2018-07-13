@@ -171,13 +171,21 @@ li.quickg a {
                                 "machine" => $machine,
                                 "uidunique" => $uiduniq
             );
-            $re =  xmlrpc_remotecommandshell($command,$machine,10);
-            if ($re == ""){
-               $resultcommand = "time out command";
-               $errorcode = -1;
+            $re =  xmlrpc_remotecommandshell($command,$machine,15);
+            $ss = json_decode($re, true);
+            if (isset($ss['err'])){
+                if ( $ss['err'] == 'Timeout Error'){
+                    $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
+                }else{
+                    $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
+                }
+                    new NotifyWidgetFailure($msg);
+                #   exit;
+                $resultcommand = $ss['err'];
+                $errorcode = -1;
             }
             else{
-                $ss = json_decode($re, true);
+                //$ss = json_decode($re, true);
                 foreach(  $ss['result'] as $line){
                     $resultcommand = $resultcommand . $line;
                 }
