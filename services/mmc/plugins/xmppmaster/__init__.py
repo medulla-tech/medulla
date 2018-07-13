@@ -463,8 +463,12 @@ def listremotefileedit(jidmachine):
 
 def remotefileeditaction(jidmachine, data):
     resultjsonstr = callremotefileeditaction(jidmachine, data)
+    if not isinstance(resultjsonstr, basestring):
+        return resultjsonstr
     objout = json.loads(resultjsonstr)
-    return objout['data']
+    if 'data' in objout:
+        return objout['data']
+    return objout
 
 def getcontentfile(pathfile, deletefile):
     if os.path.isfile(pathfile):

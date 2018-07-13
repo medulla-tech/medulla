@@ -122,9 +122,9 @@ def calllistremotefileedit(jidmachine):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "listremotefileedit",
                                                  "data": ""}, 6)
 
-def callremotefileeditaction(jidmachine, data):
+def callremotefileeditaction(jidmachine, data,timeout=10):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotefileeditaction",
-                                                 "data": data}, 6)
+                                                 "data": data}, timeout)
 
 def callremotecommandshell(jidmachine, command="", timeout=10):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotecommandshell",
@@ -341,7 +341,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 data = json.dumps(datain)
             except Exception as e:
                 logging.error("iqsendpulse : encode json : %s"%str(e))
-                return ""
+                return '{"err" : "%s"}'%str(e).replace('"',"'")
         elif type(datain) == unicode:
             data = str(datain)
         else:
@@ -350,7 +350,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             data = data.encode("base64")
         except Exception as e:
             logging.error("iqsendpulse : encode base64 : %s"%str(e))
-            return ""
+            return '{"err" : "%s"}'%str(e).replace('"',"'")
         try:
             iq = self.make_iq_get(queryxmlns='custom_xep', ito=to)
             itemXML = ET.Element('{%s}data' %data)
@@ -364,30 +364,33 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         if child.tag.endswith('query'):
                             for z in child:
                                 if z.tag.endswith('data'):
-                                    #decode result
+                                    # decode result
                                     print z.tag[1:-5]
-
+                                    return base64.b64decode(z.tag[1:-5])
                                     try:
                                         data = base64.b64decode(z.tag[1:-5])
+                                        print "RECU data"
+                                        print data
                                         return data
                                     except Exception as e:
-                                        logging.error("iqsendpulse : decode base64 : %s"%str(e))
+                                        logging.error("iqsendpulse : %s"%str(e))
                                         traceback.print_exc(file=sys.stdout)
-                                        return ""
-                                    return ""
+                                        return '{"err" : "%s"}'%str(e).replace('"',"'")
+                                    return "{}"
             except IqError as e:
                 err_resp = e.iq
-                logging.error("iqsendpulse : Iq error %s"%str(err_resp))
+                logging.error("iqsendpulse : Iq error %s"%str(err_resp).replace('"',"'"))
+                traceback.print_exc(file=sys.stdout)
+                return '{"err" : "%s"}'%str(err_resp).replace('"',"'")
 
             except IqTimeout:
                 logging.error("iqsendpulse : Timeout Error")
-                return ""
+                return '{"err" : "Timeout Error"}'
         except Exception as e:
-            logging.error("iqsendpulse : error %s"%str(e))
-            return ""
-        return ""
-
-
+            logging.error("iqsendpulse : error %s"%str(e).replace('"',"'"))
+            traceback.print_exc(file=sys.stdout)
+            return '{"err" : "%s"}'%str(e).replace('"',"'")
+        return "{}"
 
     def scheduledeploy(self):
         listobjsupp = []
