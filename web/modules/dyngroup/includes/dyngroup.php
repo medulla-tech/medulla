@@ -313,10 +313,12 @@ class Group {
     function removeRequest() { return __xmlrpc_setrequest_group($this->id, ''); }
 
     function addMember($uuid) { if ($this->can_modify()) { return $this->addMembers(array($uuid)); } return array(False); }
+    function miniAddMember($uuid){ if($this->can_modify()) {return $this->miniAddMembers(array($uuid)); } return array(False);}
     function delMember($uuid) { if ($this->can_modify()) { return $this->delMembers($uuid); } return False; }
     function importMembers($elt, $values) { if ($this->can_modify()) { return __xmlrpc_importmembers_to_group($this->id, $elt, $values); } return False; }
     #function removeMachine($uuid) { }
     function addMembers($uuids) { if ($this->can_modify()) { return __xmlrpc_addmembers_to_group($this->id, $uuids); } return array(False); }
+    function miniAddMembers($uuids) { if ($this->can_modify()) { return xmlrpc_mini_addmembers_to_group($this->id, $uuids); } return array(False); }
     #function addMachines($a_uuids) { }
     function delMembers($uuids) { if ($this->can_modify()) { return __xmlrpc_delmembers_to_group($this->id, $uuids); } return False; }
 
