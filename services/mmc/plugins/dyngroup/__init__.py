@@ -319,7 +319,7 @@ class RpcProxy(RpcProxyI):
 
     def mini_addmembers_to_group(self, id, uuids):
         ctx = self.currentContext
-        ret = DyngroupDatabase().addmembers_to_group(ctx, id, uuids)
+        ret = DyngroupDatabase()._mini_addmembers_to_group(ctx, id, uuids)
         return [ret]
 
     def delmembers_to_group(self, id, uuids):
