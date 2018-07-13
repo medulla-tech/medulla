@@ -69,7 +69,7 @@ else {
 
 $group = new Group();
 $group->create($groupname, False);
-xmlrpc_mini_addmembers_to_group($group->getId(), $groupmembers);
+$group->miniAddMembers($groupmembers);
 
 $truncate_limit = getMaxElementsForStaticList();
 if ($truncate_limit == count($groupmembers)) new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
