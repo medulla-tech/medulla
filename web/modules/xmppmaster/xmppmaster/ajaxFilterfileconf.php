@@ -62,8 +62,14 @@ a.info:hover span{
         $ma = xmlrpc_getMachinefromjid($machine);
 
         $result = xmlrpc_remotefileeditaction($ma['jid'], array('action' => 'listconfigfile'));
-
-       
+        if (isset($result['err'])){
+            if ( $result['err'] == 'Timeout Error'){
+                $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
+            }else{
+                $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
+            }
+                new NotifyWidgetFailure($msg);
+        }
         $count = count($result['result']);
 
         $param = array(
