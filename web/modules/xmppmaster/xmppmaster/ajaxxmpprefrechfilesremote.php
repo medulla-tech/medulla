@@ -73,8 +73,18 @@ else{
     }
 }
 
-
 $lifdir = json_decode($lifdirstr, true);
+if (isset($lifdir['err'])){
+    if ( $lifdir['err'] == 'Timeout Error'){
+        $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
+    }else{
+        $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
+    }
+        echo '<h2 style="color : red;">';
+        echo "$msg";
+        echo "</h2>";
+        exit;
+}
 $lifdir = $lifdir['data'];
 
 printf ('
