@@ -30,11 +30,6 @@ $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 
 $etat="";
-$LastdeployINsecond = 3600*72;
-//print_r($_GET);
-echo "<h2>deploy log machine";
-$arraydeploy = xmlrpc_getdeploybymachinerecent( $_GET['uuid'] ,"", $LastdeployINsecond, $start, $end, $filter);
-print_r($arraydeploy);
 $arrayname = array();
 $arraytitlename = array();
 $arraystate = array();
