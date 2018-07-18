@@ -181,7 +181,7 @@ class Glpi92(DyngroupDatabaseHelper):
             self.klass[i] = eval(j)
 
             setattr(self, "computers_%s"%i, Table("glpi_items_%s"%i, self.metadata,
-                Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+                Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                 Column('%s_id'%i, Integer, ForeignKey('glpi_%s.id'%i)),
                 autoload = True))
             j = self.getTableName("computers_%s"%i)
@@ -209,7 +209,7 @@ class Glpi92(DyngroupDatabaseHelper):
 
         # logs
         self.logs = Table("glpi_logs", self.metadata,
-            Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             autoload = True)
         mapper(Logs, self.logs)
 
@@ -218,7 +218,7 @@ class Glpi92(DyngroupDatabaseHelper):
         mapper(Processor, self.processor)
 
         self.computerProcessor = Table("glpi_items_deviceprocessors", self.metadata,
-            Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             Column('deviceprocessors_id', Integer, ForeignKey('glpi_deviceprocessors.id')),
             autoload = True)
         mapper(ComputerProcessor, self.computerProcessor)
@@ -233,7 +233,7 @@ class Glpi92(DyngroupDatabaseHelper):
         mapper(MemoryType, self.memoryType)
 
         self.computerMemory = Table("glpi_items_devicememories", self.metadata,
-            Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             Column('devicememories_id', Integer, ForeignKey('glpi_devicememories.id')),
             autoload = True)
         mapper(ComputerMemory, self.computerMemory)
@@ -258,7 +258,7 @@ class Glpi92(DyngroupDatabaseHelper):
         # glpi_infocoms
         self.infocoms = Table('glpi_infocoms', self.metadata,
                               Column('suppliers_id', Integer, ForeignKey('glpi_suppliers.id')),
-                              Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+                              Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                               autoload = True)
         mapper(Infocoms, self.infocoms)
 
@@ -276,7 +276,7 @@ class Glpi92(DyngroupDatabaseHelper):
         try:
             self.logger.debug('Try to load fusion antivirus table...')
             self.fusionantivirus = Table('glpi_computerantiviruses', self.metadata,
-                Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+                Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                 Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
                 autoload = True)
             mapper(FusionAntivirus, self.fusionantivirus)
@@ -294,18 +294,18 @@ class Glpi92(DyngroupDatabaseHelper):
         if self.fusionantivirus is not None: # Fusion is not installed
             self.logger.debug('Load glpi_plugin_fusioninventory_locks')
             self.fusionlocks = Table('glpi_plugin_fusioninventory_locks', self.metadata,
-                Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+                Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                 autoload = True)
             mapper(FusionLocks, self.fusionlocks)
             self.logger.debug('Load glpi_plugin_fusioninventory_agents')
             self.fusionagents = Table('glpi_plugin_fusioninventory_agents', self.metadata,
-                Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+                Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                 autoload = True)
             mapper(FusionAgents, self.fusionagents)
 
         # glpi_computerdisks
         self.disk = Table('glpi_computerdisks', self.metadata,
-                          Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+                          Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                           Column('filesystems_id', Integer, ForeignKey('glpi_filesystems.id')),
                           autoload = True)
         mapper(Disk, self.disk)
@@ -363,7 +363,7 @@ class Glpi92(DyngroupDatabaseHelper):
 
         # machine (we need the foreign key, so we need to declare the table by hand ...
         #          as we don't need all columns, we don't declare them all)
-        self.machine = Table("glpi_computers", self.metadata,
+        self.machine = Table("glpi_computers_pulse", self.metadata,
             Column('id', Integer, primary_key=True),
             Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
             Column('operatingsystems_id', Integer, ForeignKey('glpi_operatingsystems.id')),
@@ -442,8 +442,8 @@ class Glpi92(DyngroupDatabaseHelper):
         mapper(Software, self.software)
 
         # glpi_inst_software
-        self.inst_software = Table("glpi_computers_softwareversions", self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+        self.inst_software = Table("glpi_computers_pulse_softwareversions", self.metadata,
+            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             Column('softwareversions_id', Integer, ForeignKey('glpi_softwareversions.id')),
             autoload = True)
         mapper(InstSoftware, self.inst_software)
@@ -482,7 +482,7 @@ class Glpi92(DyngroupDatabaseHelper):
 
         # registries contents
         self.regcontents = Table("glpi_plugin_fusioninventory_collects_registries_contents", self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             Column('plugin_fusioninventory_collects_registries_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects_registries.id')),
             autoload = True)
         mapper(RegContents, self.regcontents)
@@ -1093,7 +1093,7 @@ class Glpi92(DyngroupDatabaseHelper):
 
         # When search field is used on main computer's list page,
         # Pagination PHP Widget must know total machine result
-        # So, set displayList to True to count on glpi_computers
+        # So, set displayList to True to count on glpi_computers_pulse
         # and all needed joined tables
         if 'hostname' in filt:
             if len(filt['hostname']) > 0:
@@ -1400,7 +1400,7 @@ class Glpi92(DyngroupDatabaseHelper):
         @param machine: computer's instance
         @type machine: Machine
 
-        @return: owner (glpi_computers.user_id -> name)
+        @return: owner (glpi_computers_pulse.user_id -> name)
         @rtype: str
         """
 
@@ -4375,7 +4375,7 @@ class Glpi92(DyngroupDatabaseHelper):
 
     def moveComputerToEntity(self, uuid, entity_id):
         pass
-        #UPDATE `glpi_computers`
+        #UPDATE `glpi_computers_pulse`
         #SET `entities_id` = '5' WHERE `id` ='3'
 
     @DatabaseHelper._sessionm
@@ -4481,7 +4481,7 @@ class Glpi92(DyngroupDatabaseHelper):
         """
         Add registry collect content
 
-        @param computers_id: the computer_id from glpi_computers
+        @param computers_id: the computer_id from glpi_computers_pulse
         @type computers_id: str
 
         @param registry_id: the registry_id from plugin_fusioninventory_collects_registries
@@ -4521,7 +4521,7 @@ class Glpi92(DyngroupDatabaseHelper):
 
 # Class for SQLalchemy mapping
 class Machine(object):
-    __tablename__ = 'glpi_computers'
+    __tablename__ = 'glpi_computers_pulse'
 
     def getUUID(self):
         return toUUID(self.id)
