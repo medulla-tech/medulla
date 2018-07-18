@@ -4,6 +4,7 @@
 * [BUGFIX] Improve the creation of the groups for machineOnline widget
 * [BUGFIX] Allow to modify imaging groups for machines with more than one
            ethernet card
+* [BUGFIX] Fix editing configuration files in client machine
 
 Pulse 2 4.4
 ===========
