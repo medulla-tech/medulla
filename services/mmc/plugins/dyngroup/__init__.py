@@ -471,6 +471,9 @@ class RpcProxy(RpcProxyI):
         dyndatabase.updateNewNames(need_update)
         return len(need_update)
 
+    def getMachineforentityList(self,min,max,filt):
+        return ComputerManager().getMachineforentityList(min,max,filt)
+
     def set_profile_imaging_server(self, gid, imaging_uuid):
         if not self.isprofile(gid):
             return False
