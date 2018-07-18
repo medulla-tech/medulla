@@ -263,7 +263,16 @@ if (isset($_POST["bdelmachine_x"])) {
     if (!$listOfMembers) { $listOfMembers = array(); }
 
     $truncate_limit = getMaxElementsForStaticList();
-    //$listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'imaging_server'=>$imaging_server), False);
+    //search entity for serverimaging
+    $imss = xmlrpc_getAllImagingServersForProfiles(true);
+
+    $entitieval = -1;
+    foreach ($imss as $key => $value){
+        if ($value['imaging_uuid']== $imaging_server){
+            $entitieval = $value['fk_entity'];
+            break;
+        }
+    }
     $listOfMachines = getMachineforentityList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 
                                                     'imaging_server'=>$imaging_server,
                                                     'fk_entity' => $entitieval));
