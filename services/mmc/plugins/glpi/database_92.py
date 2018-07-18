@@ -2239,7 +2239,7 @@ class Glpi92(DyngroupDatabaseHelper):
                     ['OS', os],
                     ['Service Pack', servicepack],
                     ['Architecture', architecture],
-                    ['Windows Key', machine.os_license_number],
+                    ['Windows Key', machine.license_number],
                     ['Model / Type', modelType],
                     ['Manufacturer', manufacturer],
                     ['Serial Number', serialNumber],
