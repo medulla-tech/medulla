@@ -364,6 +364,13 @@ class ComputerManager(Singleton):
         instance = klass()
         return instance.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
 
+    def getMachineforentityList(self,  min = 0, max = -1, filt = None ):
+        min = int(min)
+        max = int(max)
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getMachineforentityList( min, max, filt)
+
     def getComputerByMac(self, mac):
         klass = self.components[self.main]
         instance = klass()
