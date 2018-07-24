@@ -1599,10 +1599,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     ippublic = data['ippublic']
                 if ippublic == None:
                     ippublic = data['xmppip']
-
-                if not 'lastusersession' in data:
-                    data['lastusersession'] = ""
-
                 idmachine = XmppMasterDatabase().addPresenceMachine(data['from'],
                                                                     data['platform'],
                                                                     data['information']['info']['hostname'],
