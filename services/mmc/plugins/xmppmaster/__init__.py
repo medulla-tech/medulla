@@ -501,7 +501,9 @@ def runXmppAsyncCommand(cmd, infomachine):
         lineplugincalling = [x.strip() for x in cmd.split("@_@")]
         plugincalling = lineplugincalling[0]
         del lineplugincalling[0]
-        action =  plugincalling.strip().split("_")[1]
+        action =  plugincalling.strip().split("_")
+        action.pop(0)
+        action = "_".join(action)
         data ={
                 "action" : action,
                 "sessionid" : sessionid,
