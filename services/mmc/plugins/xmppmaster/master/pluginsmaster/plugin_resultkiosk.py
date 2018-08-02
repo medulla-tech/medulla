@@ -33,7 +33,7 @@ from utils import name_random, file_put_contents,file_get_contents
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
 
-plugin = {"VERSION" : "1.2", "NAME" : "resultkiosk", "TYPE" : "master"}
+plugin = {"VERSION" : "1.3", "NAME" : "resultkiosk", "TYPE" : "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
@@ -45,11 +45,11 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
         if data['subaction'] == 'initialization':
             initialisekiosk(data, message, xmppobject)
         elif data['subaction'] == 'launch':
-            deploypackage(data,  message, xmppobject)
+            deploypackage(data,  message, data['subaction'], xmppobject)
         elif data['subaction'] == 'delete':
-            deploypackage(data,  message, xmppobject)
+            deploypackage(data,  message, data['subaction'], xmppobject)
         elif data['subaction'] == 'install':
-            deploypackage(data,  message, xmppobject)
+            deploypackage(data,  message, data['subaction'], xmppobject)
         elif data['subaction'] == 'update':
             deploypackage(data,  message, xmppobject)
         else:
@@ -95,15 +95,22 @@ def initialisekiosk(data, message, xmppobject):
                              mtype='chat')
 
 
-def deploypackage(data, message, xmppobject):
+def deploypackage(data, message, section, xmppobject):
     machine =  XmppMasterDatabase().getMachinefromjid( message['from'])
     print json.dumps(machine, indent = 4 )
-
+    section = ""
     nameuser = "(kiosk):%s/%s"%(machine['lastuser'],machine['hostname'])
-
+    if section == "install":
+        section = '"section":"install"'
+    elif section == "delete":
+        section = '"section":"uninstall"'
+    elif section == "update":
+        section = '"section":"update"'
+    else:
+        pass
     command = MscDatabase().createcommanddirectxmpp(data['uuid'],
                                                     '',
-                                                    '',
+                                                    section,
                                                     'malistetodolistfiles',
                                                     'enable',
                                                     'enable',
@@ -143,7 +150,7 @@ def deploypackage(data, message, xmppobject):
                         "",
                         "",
                         "",
-                        "",
+                        section,
                         0,
                         0,
                         0)
