@@ -317,6 +317,11 @@ class RpcProxy(RpcProxyI):
                 return [ret]
         return xmlrpcCleanup([not are_some_to_remove, didnt_work])
 
+    def mini_addmembers_to_group(self, id, uuids):
+        ctx = self.currentContext
+        ret = DyngroupDatabase()._mini_addmembers_to_group(ctx, id, uuids)
+        return [ret]
+
     def delmembers_to_group(self, id, uuids):
         ctx = self.currentContext
         ret = DyngroupDatabase().delmembers_to_group(ctx, id, uuids)
@@ -466,6 +471,9 @@ class RpcProxy(RpcProxyI):
         dyndatabase.updateNewNames(need_update)
         return len(need_update)
 
+    def getMachineforentityList(self,min,max,filt):
+        return ComputerManager().getMachineforentityList(min,max,filt)
+
     def set_profile_imaging_server(self, gid, imaging_uuid):
         if not self.isprofile(gid):
             return False
@@ -517,7 +525,7 @@ class RpcProxy(RpcProxyI):
     def getConvergenceStatus(self, gid):
         ret = DyngroupDatabase().getConvergenceStatus(gid)
         return xmlrpcCleanup(ret)
-    
+
     def get_active_convergence_for_host(self, host_uuid):
         all_convergences = DyngroupDatabase().get_active_convergences()
         host_convergences = []
@@ -634,4 +642,3 @@ def unescape(search):
     if type(search) == str and search != '':
         return re.sub('&lt;', '<', re.sub('&gt;', '>', search))
     return search
-

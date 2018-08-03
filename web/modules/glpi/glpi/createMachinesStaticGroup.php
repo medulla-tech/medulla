@@ -28,7 +28,6 @@ require_once("modules/glpi/includes/xmlrpc.php"); // For xmlrpc_getListPresenceM
 $machines_online = xmlrpc_getListPresenceMachine();
 $uuids_online = [];
 $all_machines = xmlrpc_get_all_uuids_and_hostnames();
-
 $machines_offline = [];
 
 $list = [];
@@ -43,21 +42,21 @@ foreach($machines_online as $machine)
     else
         unset($machine);
 }
+
 // Clean the array
 $machines_online = [];
 
 // Create the offline an online machines lists
 foreach($all_machines as $machine)
 {
-    $tmp = [];
     // Create formated machine
-    $tmp[$machine["uuid"].'##'.$machine["hostname"]] = ["hostname" => $machine["hostname"], 'uuid' =>$machine["uuid"]];
     if(!in_array($machine["uuid"],$uuids_online))
-        $machines_offline += $tmp;
+        $machines_offline[] = $machine;
 
     else
-        $machines_online += $tmp;
+        $machines_online[] = $machine;
 }
+
 if($_GET['machines'] == 'online'){
     $groupname = sprintf (_T("Machines online at %s", "glpi"), date("Y-m-d H:i:s"));
     $groupmembers = $machines_online;
@@ -70,7 +69,7 @@ else {
 
 $group = new Group();
 $group->create($groupname, False);
-$group->addMembers($groupmembers);
+$group->miniAddMembers($groupmembers);
 
 $truncate_limit = getMaxElementsForStaticList();
 if ($truncate_limit == count($groupmembers)) new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));

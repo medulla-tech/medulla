@@ -648,20 +648,20 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         get all the parts to build a query to get only the group which the user can have access
         """
-        join_tables = [[self.users, False, self.users.c.id==self.groups.c.FK_users], 
+        join_tables = [[self.users, False, self.users.c.id==self.groups.c.FK_users],
                        [self.shareGroup, True, self.groups.c.id==self.shareGroup.c.FK_groups]]
         filters = None
 
         if ctx.userid<>'root':
             # Filter on user groups
             user_id = self.__getOrCreateUser(ctx)
-            filters = [ self.users.c.login==ctx.userid, 
+            filters = [ self.users.c.login==ctx.userid,
                         self.shareGroup.c.FK_users==user_id ]
 
             # get all usergroups ids
             ug_ids = []
             for user in self.__getUsers(getUserGroups(ctx.userid), 1, session):
-                ug_ids.append(user.id)            
+                ug_ids.append(user.id)
             if ug_ids:
                 filters.append(self.shareGroup.c.FK_users.in_(ug_ids))
 
@@ -834,6 +834,25 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         trans.commit()
         return True
 
+    def _mini_addmembers_to_group(self, ctx, id, uuids):
+        """
+        Add member computers specified by a uuids list to a group.
+        Params:
+            id: int corresponds to the newly created group id
+            uuids: dict of all the machines we want to add into the group
+        """
+        session = create_session()
+        session.close()
+        connection = self.getDbConnection()
+        trans = connection.begin()
+
+        if type(uuids) == dict:
+            uuids = uuids.values()
+
+        self._mini_add_members_to_group(connection, uuids, id)
+        trans.commit()
+        return True
+
     def delmembers_to_group(self, ctx, id, uuids):
         """
         Remove from a group member computers, specified by a uuids list.
@@ -964,7 +983,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 'cmd_id': line.commandId
             })
         return ret
-    
+
     @DatabaseHelper._session
     def get_active_convergences(self, session):
         query = session.query(Convergence.deployGroupId, Convergence.papi, Convergence.packageUUID)

@@ -1,7 +1,8 @@
-* [BUGFIX] Fix encoding error in "Execute Script" action when creating package
-* [BUGFIX] Improve the creation of the groups for machineOnline widget
-* [BUGFIX] Allow to modify imaging groups for machines with more than one
-           ethernet card
+* [FEATURE] Add Agent "Auto Update" functionnality
+* [BUGFIX]  Fix encoding error in "Execute Script" action when creating package
+* [BUGFIX]  Improve the creation of the groups for machineOnline widget
+* [BUGFIX]  Allow to modify imaging groups for machines with more than one
+            ethernet card
 
 Pulse 2 4.4
 ===========

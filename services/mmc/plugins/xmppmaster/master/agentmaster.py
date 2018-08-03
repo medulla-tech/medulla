@@ -63,6 +63,7 @@ from multiprocessing import Process, Queue, TimeoutError
 from mmc.agent import PluginManager
 from lib.update_remote_agent import Update_Remote_Agent
 
+from sleekxmpp.exceptions import IqError, IqTimeout
 from sleekxmpp.xmlstream.stanzabase import ElementBase, ET, JID
 from sleekxmpp.stanza.iq import Iq
 
@@ -115,23 +116,23 @@ def callvncchangepermsbymaster(to, askpermission):
     return ObjectXmpp().callvncchangepermsbymaster(to, askpermission)
 
 ##################### call synchrone iq##########################
-def callremotefile(jidmachine, currentdir=""):
-    return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotefile", "data": currentdir}, 4)
+def callremotefile(jidmachine, currentdir="", timeout = 15):
+    return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotefile", "data": currentdir}, timeout)
 
 def calllistremotefileedit(jidmachine):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "listremotefileedit",
-                                                 "data": ""}, 6)
+                                                 "data": ""}, 10)
 
-def callremotefileeditaction(jidmachine, data):
+def callremotefileeditaction(jidmachine, data,timeout=10):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotefileeditaction",
-                                                 "data": data}, 6)
+                                                 "data": data}, timeout)
 
-def callremotecommandshell(jidmachine, command="", timeout=10):
+def callremotecommandshell(jidmachine, command="", timeout=20):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotecommandshell",
                                                  "data": command,
                                                  "timeout" : timeout}, timeout)
 
-def callremoteXmppMonitoring( jidmachine, suject,  timeout=10):
+def callremoteXmppMonitoring( jidmachine, suject,  timeout=15):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action" : "remotexmppmonitoring",
                                                  "data": suject,
                                                  "timeout" : timeout}, timeout)
@@ -253,7 +254,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.config = conf
         self.session = session()
         self.domaindefault = "pulse"
+        #######################Update remote agent#########################
         self.Update_Remote_Agentlist = Update_Remote_Agent(self.config.diragentbase,self.config.autoupdate )
+        #######################Update remote agent#########################
         self.file_deploy_plugin = []
         ###clear conf compte.
         logger.debug('clear muc conf compte')
@@ -341,7 +344,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 data = json.dumps(datain)
             except Exception as e:
                 logging.error("iqsendpulse : encode json : %s"%str(e))
-                return ""
+                return '{"err" : "%s"}'%str(e).replace('"',"'")
         elif type(datain) == unicode:
             data = str(datain)
         else:
@@ -350,7 +353,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             data = data.encode("base64")
         except Exception as e:
             logging.error("iqsendpulse : encode base64 : %s"%str(e))
-            return ""
+            return '{"err" : "%s"}'%str(e).replace('"',"'")
         try:
             iq = self.make_iq_get(queryxmlns='custom_xep', ito=to)
             itemXML = ET.Element('{%s}data' %data)
@@ -364,30 +367,33 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         if child.tag.endswith('query'):
                             for z in child:
                                 if z.tag.endswith('data'):
-                                    #decode result
+                                    # decode result
                                     print z.tag[1:-5]
-
+                                    return base64.b64decode(z.tag[1:-5])
                                     try:
                                         data = base64.b64decode(z.tag[1:-5])
+                                        print "RECU data"
+                                        print data
                                         return data
                                     except Exception as e:
-                                        logging.error("iqsendpulse : decode base64 : %s"%str(e))
+                                        logging.error("iqsendpulse : %s"%str(e))
                                         traceback.print_exc(file=sys.stdout)
-                                        return ""
-                                    return ""
+                                        return '{"err" : "%s"}'%str(e).replace('"',"'")
+                                    return "{}"
             except IqError as e:
                 err_resp = e.iq
-                logging.error("iqsendpulse : Iq error %s"%str(err_resp))
+                logging.error("iqsendpulse : Iq error %s"%str(err_resp).replace('"',"'"))
+                traceback.print_exc(file=sys.stdout)
+                return '{"err" : "%s"}'%str(err_resp).replace('"',"'")
 
             except IqTimeout:
                 logging.error("iqsendpulse : Timeout Error")
-                return ""
+                return '{"err" : "Timeout Error"}'
         except Exception as e:
-            logging.error("iqsendpulse : error %s"%str(e))
-            return ""
-        return ""
-
-
+            logging.error("iqsendpulse : error %s"%str(e).replace('"',"'"))
+            traceback.print_exc(file=sys.stdout)
+            return '{"err" : "%s"}'%str(e).replace('"',"'")
+        return "{}"
 
     def scheduledeploy(self):
         listobjsupp = []
@@ -1412,6 +1418,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.error("** Erreur update inventaire %s"%(jid))
         return False
 
+    def senddescriptormd5(self, to):
+        """
+        send descriptor figerprint agent in base to updating machine
+        Update remote agent
+        """
+        datasend = {"action" : "updateagent",
+                    "data" : { 'subaction' : 'descriptor',
+                               'descriptoragent' : self.Update_Remote_Agentlist.get_md5_descriptor_agent()},
+                    'ret': 0,
+                    'sessionid': name_random(5, "updateagent")}
+        #send catalog of files.
+        logger.debug("send descriptor to agent [%s] for update"%to)
+        self.send_message(to,
+                          mbody=json.dumps(datasend),
+                          mtype='chat')
+
     def MessagesAgentFromChatroomMaster(self, msg):
         ### Message from chatroom master
         ### jabber routes the message.
@@ -1754,21 +1776,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 else:
                     logger.error("** enregistration base error")
                     return
-                
+
+                #######################Update remote agent#########################
                 #manage update remote agent
-                if 'finger_print_remote_agent' in data and \
-                    data['finger_print_remote_agent'].upper() != 'DEV' and \
-                    data['finger_print_remote_agent'].upper() != 'DEBUG' and \
-                    data['finger_print_remote_agent'] != self.Update_Remote_Agentlist.get_fingerprint_agent_base() and \
-                    self.Update_Remote_Agentlist.autoupdate is not False:
-                    #send catalog of files.
-                    datasend = {'action' : 'updateagent',
-                                'sessionid': name_random(5, "updateagent"),
-                                'data' : {'descriptor' : self.Update_Remote_Agentlist.md5_descriptor_agent_to_string(),
-                                        'type_descriptor' : 'catalogoffilesagent' }}
-                    self.send_message(mto=msg['from'],
-                                      mbody=json.dumps(datasend),
-                                      mtype='chat')
+                if self.config.autoupdate and 'md5agent' in data and self.Update_Remote_Agentlist.get_fingerprint_agent_base() != data['md5agent']:
+                    if data['md5agent'].upper() != "DEV" or data['md5agent'].upper() != "DEBUG":
+                    # send descriptor md5 agent for remote update.
+                        self.senddescriptormd5(msg['from'])
 
                 # Show plugins information logs
                 if self.config.showplugins:

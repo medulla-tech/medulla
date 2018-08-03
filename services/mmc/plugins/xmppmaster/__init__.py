@@ -463,8 +463,12 @@ def listremotefileedit(jidmachine):
 
 def remotefileeditaction(jidmachine, data):
     resultjsonstr = callremotefileeditaction(jidmachine, data)
+    if not isinstance(resultjsonstr, basestring):
+        return resultjsonstr
     objout = json.loads(resultjsonstr)
-    return objout['data']
+    if 'data' in objout:
+        return objout['data']
+    return objout
 
 def getcontentfile(pathfile, deletefile):
     if os.path.isfile(pathfile):
@@ -497,7 +501,9 @@ def runXmppAsyncCommand(cmd, infomachine):
         lineplugincalling = [x.strip() for x in cmd.split("@_@")]
         plugincalling = lineplugincalling[0]
         del lineplugincalling[0]
-        action =  plugincalling.strip().split("_")[1]
+        action =  plugincalling.strip().split("_")
+        action.pop(0)
+        action = "_".join(action)
         data ={
                 "action" : action,
                 "sessionid" : sessionid,
