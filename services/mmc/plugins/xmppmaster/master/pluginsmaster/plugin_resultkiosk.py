@@ -22,6 +22,7 @@
 # file pluginsmaster/plugin_resultkiosk.py
 
 import datetime
+import pytz
 import json
 import traceback
 import sys, os
@@ -29,9 +30,10 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.msc import MscDatabase
 from managepackage import managepackage
 import logging
-from utils import name_random, file_put_contents,file_get_contents
+from utils import name_random, file_put_contents,file_get_contents, utc2local
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
+
 
 plugin = {"VERSION" : "1.3", "NAME" : "resultkiosk", "TYPE" : "master"}
 
@@ -45,11 +47,11 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
         if data['subaction'] == 'initialization':
             initialisekiosk(data, message, xmppobject)
         elif data['subaction'] == 'launch':
-            deploypackage(data,  message, data['subaction'], xmppobject)
+            deploypackage(data,  message, xmppobject)
         elif data['subaction'] == 'delete':
-            deploypackage(data,  message, data['subaction'], xmppobject)
+            deploypackage(data,  message, xmppobject)
         elif data['subaction'] == 'install':
-            deploypackage(data,  message, data['subaction'], xmppobject)
+            deploypackage(data,  message, xmppobject)
         elif data['subaction'] == 'update':
             deploypackage(data,  message, xmppobject)
         else:
@@ -95,27 +97,54 @@ def initialisekiosk(data, message, xmppobject):
                              mtype='chat')
 
 
-def deploypackage(data, message, section, xmppobject):
+def deploypackage(data, message, xmppobject):
     machine =  XmppMasterDatabase().getMachinefromjid( message['from'])
     print json.dumps(machine, indent = 4 )
+
+    # Get the actual timestamp in utc format
+    current_date = datetime.datetime.utcnow()
+    current_date = current_date.replace(tzinfo=pytz.UTC)
     section = ""
+
+    # Get the install timestamp sent by the kiosk
+    sent_datetime = datetime.datetime.utcnow()
+    if "utcdatetime" in data:
+        date_str = data["utcdatetime"].replace("(","")
+        date_str = date_str.replace(")","")
+        date_list_tmp = date_str.split(",")
+        date_list = []
+        for element in date_list_tmp:
+            date_list.append(int(element))
+
+        sent_datetime = datetime.datetime(date_list[0],
+            date_list[1],
+            date_list[2],
+            date_list[3],
+            date_list[4],
+            0, 0,
+            pytz.UTC)
+        install_date = utc2local(sent_datetime)
+    else:
+        install_date = current_date
+
     nameuser = "(kiosk):%s/%s"%(machine['lastuser'],machine['hostname'])
-    if section == "install":
+    if data['subaction'] == "install":
         section = '"section":"install"'
-    elif section == "delete":
+    elif data['subaction'] == "delete":
         section = '"section":"uninstall"'
-    elif section == "update":
+    elif data['subaction'] == "update":
         section = '"section":"update"'
     else:
-        pass
+        section = '"section":"install"'
+
     command = MscDatabase().createcommanddirectxmpp(data['uuid'],
                                                     '',
                                                     section,
                                                     'malistetodolistfiles',
                                                     'enable',
                                                     'enable',
-                                                    datetime.datetime.now(),
-                                                    datetime.datetime.now() + datetime.timedelta(hours=1),
+                                                    install_date,
+                                                    install_date + datetime.timedelta(hours=1),
                                                     nameuser,
                                                     nameuser,
                                                     'titlepackage',
@@ -136,12 +165,6 @@ def deploypackage(data, message, section, xmppobject):
     jidrelay = machine['groupdeploy']
     uuidmachine = machine['uuid_inventorymachine']
     jidmachine =  machine['jid']
-    #try:
-        #target = MscDatabase().xmpp_create_Target(uuidmachine, machine['hostname'])
-
-    #except Exception as e:
-        #print str(e)
-        #traceback.print_exc(file=sys.stdout)
 
     XmppMasterDatabase().addlogincommand(
                         nameuser,
