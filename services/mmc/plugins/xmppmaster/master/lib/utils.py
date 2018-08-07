@@ -67,7 +67,7 @@ def file_get_contents(filename, use_include_path = 0, context = None, offset = -
             fp.close( )
 
 def file_put_contents(filename,  data):
-    """ 
+    """
     write content "data" to file "filename"
     """
     f = open(filename, 'w')
@@ -725,4 +725,8 @@ def check_exist_ip_port(name_domaine_or_ip, port):
         return False
     except Exception:
         return False
-    
+
+def utc2local (utc):
+    epoch = time.mktime(utc.timetuple())
+    offset = datetime.fromtimestamp (epoch) - datetime.utcfromtimestamp (epoch)
+    return utc + offset

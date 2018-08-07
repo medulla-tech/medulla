@@ -33,7 +33,6 @@ import logging
 from utils import name_random, file_put_contents,file_get_contents, utc2local
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
-import utc2local
 
 plugin = {"VERSION" : "1.3", "NAME" : "resultkiosk", "TYPE" : "master"}
 
