@@ -36,6 +36,10 @@ from importlib import import_module
 import threading
 import socket
 import urllib
+import time
+from datetime import datetime
+
+
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),"..", "pluginsmaster"))
 
 if sys.platform.startswith('win'):
@@ -726,7 +730,14 @@ def check_exist_ip_port(name_domaine_or_ip, port):
     except Exception:
         return False
 
+
 def utc2local (utc):
+    """Convert utc datetime to local datetime.
+    Param:
+        utc datetime in utc format, not in naive format
+    Returns:
+        local datetime converted into local datetime."""
+
     epoch = time.mktime(utc.timetuple())
     offset = datetime.fromtimestamp (epoch) - datetime.utcfromtimestamp (epoch)
     return utc + offset
