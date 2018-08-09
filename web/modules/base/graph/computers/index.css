@@ -291,7 +291,7 @@ li.delbootmenu a {
 li.config a {
         padding: 0px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/config.png");
+        background-image: url("modules/msc/graph/images/actions/run.png");
         background-repeat: no-repeat;
         background-position: left top;
         line-height: 18px;
@@ -302,7 +302,7 @@ li.config a {
 li.configg a {
         padding: 0px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/config.png");
+        background-image: url("modules/msc/graph/images/actions/run.png");
         background-repeat: no-repeat;
         background-position: left top;
         line-height: 18px;
