@@ -64,8 +64,8 @@ textarea {
 .ui-multiselect-header span.ui-icon { float:left }
 .ui-multiselect-header li.ui-multiselect-close { float:right; text-align:right; padding-right:0 }
 
-.ui-multiselect-menu { 
-    display:none; padding:3px; position:absolute; z-index:10000; text-align: left;background: #fff;border:1px solid rgb(153, 153, 153); opacity:0.8; 
+.ui-multiselect-menu {
+    display:none; padding:3px; position:absolute; z-index:10000; text-align: left;background: #fff;border:1px solid rgb(153, 153, 153); opacity:0.8;
     border-radius: 4px 4px 4px 4px;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
 }
@@ -79,7 +79,7 @@ textarea {
 /* remove label borders in IE6 because IE6 does not support transparency */
 * html .ui-multiselect-checkboxes label { border:none; padding:0 }
 
-/* 
+/*
  * classes for top right shortcut icons
  */
 li.inventory a {
@@ -178,3 +178,13 @@ li.imaging a {
         color: #FFF;
 }
 
+li.config a {
+	padding: 1px 3px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/config.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
