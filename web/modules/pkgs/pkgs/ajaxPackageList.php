@@ -28,6 +28,7 @@
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
 require_once("modules/msc/includes/utilities.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 ?>
 <style>
 a.info{
@@ -97,8 +98,9 @@ $emptyAction = new EmptyActionItem();
 $delActions = array();
 $delAction = new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs");
 
-
-$packages = advGetAllPackages($filter, $start, $start + $maxperpage);
+//jfkjfk
+$packages= xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
+//$packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 
 $count = $packages[0];
 $packages = $packages[1];

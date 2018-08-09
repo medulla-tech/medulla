@@ -35,7 +35,8 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs, ParametersDeploy, \
     Organization, Packages_list, Qa_custom_command,\
     Cluster_ars, Has_cluster_ars,\
-    Command_action, Command_qa
+    Command_action, Command_qa,\
+    Syncthingsync
 # Imported last
 import logging
 import json
@@ -99,6 +100,80 @@ class XmppMasterDatabase(DatabaseHelper):
         if not ret:
             raise "Database connection error"
         return ret
+
+    # =====================================================================
+    # xmppmaster FUNCTIONS synch syncthing
+    # =====================================================================
+    @DatabaseHelper._sessionm
+    def setSyncthingsync( self, session, uuidpackage, relayserver_jid, typesynchro = "create", watching = 'yes'):
+        try:
+            new_Syncthingsync = Syncthingsync()
+            new_Syncthingsync.uuidpackage = uuidpackage
+            new_Syncthingsync.typesynchro =  typesynchro
+            new_Syncthingsync.relayserver_jid = relayserver_jid
+            new_Syncthingsync.watching =  watching
+            session.add(new_Syncthingsync)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+
+    @DatabaseHelper._sessionm
+    def get_List_jid_ServerRelay_enable(self, session, enabled=1):
+        """ return list enable server relay id """
+        sql = """SELECT
+                    jid
+                FROM
+                    xmppmaster.relayserver
+                WHERE
+                        `relayserver`.`enabled` = %d;"""%(enabled)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._sessionm
+    def xmpp_regiter_synchro_package(self, session, uuidpackage, typesynchro ):
+        #list id server relay
+        list_server_relay = self.get_List_jid_ServerRelay_enable(enabled=1)
+        for jid in list_server_relay:
+            #exclude local package server
+            if jid[0] == "rspulse@pulse/pulse01":
+                continue
+            self.setSyncthingsync(uuidpackage, jid[0], typesynchro , watching = 'yes')
+
+    @DatabaseHelper._sessionm
+    def xmpp_unregiter_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
+        session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
+                                                 Syncthingsync.relayserver_jid == jid_relayserver, 
+                                                 Syncthingsync.typesynchro == typesynchro)).delete()
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
+    def xmpp_delete_synchro_package(self, session, uuidpackage):
+        session.query(Syncthingsync).filter(Syncthingsync.uuidpackage == uuidpackage).delete()
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
+    def list_pending_synchro_package(self, session):
+        pendinglist = session.query(distinct(Syncthingsync.uuidpackage).label("uuidpackage")).all()
+        session.commit()
+        session.flush()
+        result_list = []
+        for packageuid in pendinglist:
+            result_list.append(packageuid.uuidpackage)
+        return result_list
+
+    @DatabaseHelper._sessionm
+    def clear_old_pending_synchro_package(self, session, timeseconde=35):
+        sql ="""DELETE FROM `xmppmaster`.`syncthingsync` 
+            WHERE
+                `syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d MINUTE);"""%timeseconde
+        session.execute(sql)
+        session.commit()
+        session.flush()
 
     # =====================================================================
     # xmppmaster FUNCTIONS

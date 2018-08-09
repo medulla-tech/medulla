@@ -29,7 +29,8 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/query.php");
 require_once("modules/pkgs/includes/class.php");
-
+//jfkjfk
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 $p = new PageGenerator(_T("Add package", "pkgs"));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -65,6 +66,7 @@ if (isset($_POST['bconfirm'])) {
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($p_api_id, $package, $need_assign);
+    xmlrpc_xmpp_regiter_synchro_package($ret[1],'create');
     $pid = $ret[3]['id'];
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];

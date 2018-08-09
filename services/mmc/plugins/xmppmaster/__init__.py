@@ -25,7 +25,7 @@ Plugin to manage the interface with xmppmaster
 import logging
 import os,sys
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
-
+from  master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 import json
 # Database
@@ -569,3 +569,17 @@ def runXmppScript(cmd,machine):
 
 def getCountOnlineMachine():
     return XmppMasterDatabase().getCountOnlineMachine()
+
+#jfkjfk
+############### synchro syncthing package #####################
+def xmppGetAllPackages(filter,  start, end):
+    return apimanagepackagemsc.loadpackagelistmsc(filter, start, end)
+
+def xmpp_regiter_synchro_package(uuidpackage, typesynchro):
+    return XmppMasterDatabase().xmpp_regiter_synchro_package(uuidpackage, typesynchro)
+
+def xmpp_delete_synchro_package(uuidpackage):
+    return XmppMasterDatabase().xmpp_delete_synchro_package(uuidpackage)
+
+def xmpp_regiter_synchro_package(uuidpackage, typesynchro):
+    return XmppMasterDatabase().xmpp_regiter_synchro_package(uuidpackage, typesynchro)

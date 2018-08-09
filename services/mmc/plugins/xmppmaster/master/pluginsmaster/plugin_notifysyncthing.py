@@ -28,7 +28,7 @@ import os
 import utils
 import pprint
 import logging
-
+from pulse2.database.xmppmaster import XmppMasterDatabase
 logger = logging.getLogger()
 
 plugin = { "VERSION" : "1.0", "NAME" : "notifysyncthing", "TYPE" : "master" }
@@ -38,3 +38,9 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug(plugin)
     logger.debug("=====================================================")
     print json.dumps(data, indent = 4)
+    if 'suppdir' in data or 'adddir' in data:
+        print "supprime %s %s %s"%( data['packageid'], 'create', str(message['from'])) 
+        XmppMasterDatabase().xmpp_unregiter_synchro_package( data['packageid'], 'create', str(message['from']))
+    elif 'MotifyFile' in data:
+        print "supprime %s %s %s"%( data['packageid'], 'chang', str(message['from'])) 
+        XmppMasterDatabase().xmpp_unregiter_synchro_package( data['packageid'], 'chang', str(message['from']))

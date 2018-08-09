@@ -24,7 +24,7 @@
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
@@ -42,7 +42,9 @@ if (isset($_GET["end"])) $end = $_GET["end"];
 else $end = 9;
 
 
-$packages = advGetAllPackages($filter, $start, $end);
+//jfkjfk
+$packages = xmlrpc_xmppGetAllPackages($filter, $start, $end);
+//$packages = advGetAllPackages($filter, $start, $end);
 $count = $packages[0];
 $packages = $packages[1];
 
@@ -76,7 +78,7 @@ $n->end = $count - 1;
 
 $n->addActionItem($assoc_list);
 $n->addActionItem(new ActionPopupItem(_T("Show mirrors", "pkgs"), "rsync", "info", "pkgs", "pkgs", "pkgs"));
-$n->addActionItem(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
+//$n->addActionItem(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
 
 print "<br/><br/><br/>"; // start display below the location bar, yes it's quiet ugly, so : FIXME !
 $n->display();

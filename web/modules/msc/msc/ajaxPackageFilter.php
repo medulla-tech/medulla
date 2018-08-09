@@ -28,6 +28,7 @@ require_once('modules/msc/includes/machines.inc.php');
 require_once('modules/msc/includes/widgets.inc.php');
 require_once('modules/msc/includes/utilities.php');
 require_once("includes/xmlrpc.inc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $group = null;
 if (!empty($_GET['gid'])) {
@@ -116,8 +117,9 @@ if (!empty($_GET['uuid'])) {
 }
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages
-list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
-
+//list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
+//jfkjfk
+list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
 $err = array();
 foreach ($packages as $c_package) {
     $package = to_package($c_package[0]);

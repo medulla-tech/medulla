@@ -5,8 +5,86 @@ import sys, os
 import os.path
 import json
 import logging
-
+from utils import md5, simplecommand
+from pulse2.database.xmppmaster import XmppMasterDatabase
 logger = logging.getLogger()
+
+class apimanagepackagemsc:
+    @staticmethod
+    def readjsonfile(namefile):
+        with open(namefile) as json_data:
+            data_dict = json.load(json_data)
+        return data_dict
+
+    @staticmethod
+    def packagelistmsc():
+        folderpackages = os.path.join("/", "var" ,"lib","pulse2","packages")
+        return [ os.path.join(folderpackages,x) for x in os.listdir(folderpackages) if os.path.isdir(os.path.join(folderpackages,x)) and str(os.path.join(folderpackages,x))[-9:] != ".stfolder" ]
+
+    @staticmethod
+    def listfilepackage(folderpackages):
+        return [ os.path.join(folderpackages,x) for x in os.listdir(folderpackages) if not os.path.isdir(os.path.join(folderpackages,x)) ]
+
+    @staticmethod
+    def packagelistmscconfjson(pending = False):
+        folderpackages = os.path.join("/", "var" ,"lib","pulse2","packages")
+        listfichierconf =  [ os.path.join(folderpackages,x,"conf.json") for x in os.listdir(folderpackages) if os.path.isdir(os.path.join(folderpackages,x)) and str(os.path.join(folderpackages,x))[-9:] != ".stfolder" ]
+        listpackagependig = XmppMasterDatabase().list_pending_synchro_package()
+        listpendingfichierconf = []
+        listnotpendingfichierconf = []
+        for pathuuidpackage in listfichierconf:
+            nameuuid = os.path.basename(os.path.dirname(pathuuidpackage))
+            if nameuuid in listpackagependig:
+                listpendingfichierconf.append(pathuuidpackage)
+            else:
+                listnotpendingfichierconf.append(pathuuidpackage)
+        if pending:
+            return listpendingfichierconf
+        else:
+            return listnotpendingfichierconf
+
+    @staticmethod
+    def loadpackagelistmsc(filter = None, start = None, end = None):
+        pending = False
+        if "pending" in filter:
+            pending = True
+        tab = ['description','targetos','sub_packages','entity_id','reboot','version','metagenerator','id','name','basepath','size']
+        result = []
+
+        for x in apimanagepackagemsc.packagelistmscconfjson(pending):
+            obj={}
+            aa = apimanagepackagemsc.readjsonfile(x)
+            for key in aa:
+                if key in tab:
+                    obj[str(key)] = str(aa[key])
+                    #obj.append(str(key) : str(aa[key])})
+                elif key == 'commands':
+                    for z in aa['commands']:
+                        obj[str(z)] = str(aa['commands'][z])
+                elif key == 'inventory':
+                    for z in aa['inventory']:
+                        if z == 'queries':
+                            for t in aa['inventory']['queries']:
+                                obj[str(t)] = str(aa['inventory']['queries'][t])
+                        else:
+                            obj[str(z)] = str(aa['inventory'][z])
+            obj['files']=[]
+            obj['basepath'] = os.path.dirname(x)
+            re = simplecommand("du -b %s | awk '{print $1}'"%obj['basepath'])
+            obj['size'] = re['result'][0].replace('\n', '')
+
+            for fich in apimanagepackagemsc.listfilepackage(os.path.dirname(x)):
+                obj['files'].append({"path" :os.path.join("/",os.path.basename(os.path.dirname(fich))), "name" : os.path.basename(fich), 'id' : md5(fich), "size" : os.path.getsize(fich) })
+            if 'name' in obj:
+                obj['label'] = obj['name']
+            obj1 = [obj]
+            result.append(obj1)
+
+        nb = len(result)
+        if start is not None and end is not None:
+            return ((nb, result[start:end] ))
+        else:
+            return ((nb, result))
 
 
 class managepackage:
@@ -117,7 +195,6 @@ class search_list_of_deployment_packages:
         objdescriptor = managepackage.getdescriptorpackageuuid(packageuuid)
         if objdescriptor is not None:
             ll = self.__list_dependence__(objdescriptor)
-            #print ll
             for y in ll:
                 if y not in  self.list_of_deployment_packages:
                     self.__recursif__(y)
