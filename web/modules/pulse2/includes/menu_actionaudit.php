@@ -71,13 +71,14 @@ $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imagin
         $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
         if (isExpertMode()){
             $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
+            $editconfiguration = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
         }else{
             $inventxmppbrowsing   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
         }
     }
 
 
-        $actions = array($inventAction, $backupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing,$inventconsole, $DeployQuickxmpp);
+        $actions = array($inventAction, $backupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing,$inventconsole, $editconfiguration, $DeployQuickxmpp);
 
 
 /*
@@ -97,6 +98,7 @@ function modIsActive($action) {
         "cre" => "extticket",
         "console" => "xmppmaster",
         "xmpp" => "xmppmaster",
+        "list"=> "xmppmaster",
         "quick" => "xmppmaster"
     );
     $modList = $_SESSION['supportModList'];
