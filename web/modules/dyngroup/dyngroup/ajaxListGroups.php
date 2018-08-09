@@ -87,7 +87,7 @@ foreach ($list as $group) {
         $type[]= _T('static group', 'dyngroup');
     }
     $show[]= ($group->canShow() ? _T('Yes', 'dyngroup') : _T('No', 'dyngroup'));
-    if ($group->is_owner == 1) {
+    if ($group->is_owner == 1 || $_SESSION['login'] == "root") {
         $action_delete[]= $delete;
     } else {
         $action_delete[]= $empty;
