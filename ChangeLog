@@ -5,6 +5,7 @@
 * [BUGFIX] Allow to modify imaging groups for machines with more than one
            ethernet card
 * [BUGFIX] Fix editing configuration files in client machine
+* [BUGFIX] Root can delete imaging groups shared with him
 
 Pulse 2 4.4
 ===========
