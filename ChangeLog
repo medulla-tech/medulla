@@ -1,7 +1,9 @@
+mmc-core 4.4.1
+--------------
 * [BUGFIX] Fix wake on lan problem
 
 mmc-core 4.4
-============
+--------------
 * [FEATURE] Ability to use quick actions installed by the sql schemas for all users
 * [FEATURE] Ability to run a custom quick action on a group
 * [BUGFIX] Fix remote console shell for long commands
