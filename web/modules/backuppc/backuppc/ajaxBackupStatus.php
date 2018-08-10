@@ -108,8 +108,9 @@ $presenceHosts = [];
 $cssClasses = [];
 foreach($hosts as $host)
 {
-  if(xmlrpc_getPresenceuuid($host)){
-    $presenceHosts[$host] = xmlrpc_getPresenceuuid($host);
+  $status = xmlrpc_getPresenceuuid($host);
+  if($status){
+    $presenceHosts[$host] = $status;
     $cssClasses[] = "machineNamepresente";
   }
   else {
