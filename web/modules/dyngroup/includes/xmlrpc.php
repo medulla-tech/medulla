@@ -62,10 +62,6 @@ function updateMachineCache() {
     return xmlCall("dyngroup.update_machine_cache", null);
 }
 
-function getMachineforentityList($min,$max,$filt){
-    return xmlCall("dyngroup.getMachineforentityList",array( $min,$max,$filt));
-}
-
 function getMaxElementsForStaticList() {
     if (!isset($_SESSION["maxElementsForStaticList"])) {
         $_SESSION["maxElementsForStaticList"] = xmlCall("dyngroup.getMaxElementsForStaticList", null);

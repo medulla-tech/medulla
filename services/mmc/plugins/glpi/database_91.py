@@ -1105,35 +1105,6 @@ class Glpi91(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineforentityList(self, min = 0, max = -1, filt = None):
-        """
-        Get the computer list that match filters entity parameters between min and max
-
-        FIXME: may return a list or a dict according to the parameters
-
-        eg. dict filt param {'fk_entity': 1, 'imaging_server': 'UUID1', 'get': ['cn', 'objectUUID']}
-        """
-        if filt and 'imaging_server' in filt and filt['imaging_server'] != "" and \
-            'get' in filt and len(filt['get']) == 2 and filt['get'][0] == 'cn' and filt['get'][1] == 'objectUUID' and\
-                'fk_entity' in filt and filt['fk_entity'] != -1:
-            #recherche entity parent.
-            entitylist =  self.getEntitiesParentsAsList([filt['fk_entity']])
-            session = create_session()
-            entitylist.append(filt['fk_entity'])
-            q = session.query(Machine.id, Machine.name, Machine.entities_id, Machine.locations_id).\
-                add_column(self.entities.c.name.label('Entity_name')).\
-                    select_from(self.machine.join(self.entities)).\
-                        filter(self.machine.c.entities_id.in_(entitylist)).\
-                            filter(self.machine.c.is_deleted == 0).\
-                                filter(self.machine.c.is_template == 0)
-            ret =  q.all()
-            listentitymachine = {}
-            for line in ret:
-                uuid= "uuid%s"%line.id
-                listentitymachine[uuid] = {"cn" : line.name, "objectUUID" : uuid }
-            session.close()
-            return listentitymachine
-
     def getRestrictedComputersList(self,
                                    ctx,
                                    min = 0,

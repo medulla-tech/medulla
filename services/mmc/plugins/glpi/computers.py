@@ -166,9 +166,6 @@ class GlpiComputers(ComputerI):
             pass
         return self.glpi.getRestrictedComputersListLen(ctx, filt)
 
-    def getMachineforentityList(self, min = 0, max = -1, filt = None):
-        return self.glpi.getMachineforentityList(min, max, filt)
-
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         if filt == None or filt == '':
             filt = {}

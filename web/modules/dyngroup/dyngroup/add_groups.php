@@ -263,10 +263,7 @@ if (isset($_POST["bdelmachine_x"])) {
     if (!$listOfMembers) { $listOfMembers = array(); }
 
     $truncate_limit = getMaxElementsForStaticList();
-    //$listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'imaging_server'=>$imaging_server), False);
-    $listOfMachines = getMachineforentityList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 
-                                                    'imaging_server'=>$imaging_server,
-                                                    'fk_entity' => $entitieval));
+    $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'imaging_server'=>$imaging_server), False);
     $count = getRestrictedComputersListLen(array('imaging_server'=>$imaging_server));
     if ($truncate_limit < $count) {
         new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
