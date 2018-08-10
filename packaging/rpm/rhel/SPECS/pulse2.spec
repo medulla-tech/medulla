@@ -581,6 +581,7 @@ Summary:        Pulse 2 package server
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       python-pulse2-common = %version-%release
+Requires:       python-mmc-core
 Requires:       genisoimage
 Requires:       pyOpenSSL
 
