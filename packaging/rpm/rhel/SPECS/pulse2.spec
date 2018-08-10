@@ -465,6 +465,7 @@ Summary:        Base plugin for the MMC web interface
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
+Requires:       mmc-web-imaging
 
 %description -n mmc-web-pulse2
 This package contains the base plugin for the MMC web interface.
@@ -550,6 +551,7 @@ Summary:        Pulse 2 package server
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       python-pulse2-common = %version-%release
+Requires:       python-mmc-core
 Requires:       genisoimage
 Requires:       pyOpenSSL
 

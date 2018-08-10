@@ -337,7 +337,7 @@ Description: Pulse 2 package management plugin for MMC web interface
 
 Package: mmc-web-pulse2
 Architecture: all
-Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1), mmc-web-imaging
 Description: Pulse 2 base plugin for MMC web interface
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
