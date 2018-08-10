@@ -12,6 +12,7 @@ Pulse 2 4.4.1
 * [BUGFIX] In backuppc the computer icon is colored when the machine is
            on line
 * [BUGFIX] use one database access instead of two
+* [BUGFIX] Add the config button in the xmpp console page
 
 Pulse 2 4.4
 ===========
