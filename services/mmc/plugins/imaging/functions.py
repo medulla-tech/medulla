@@ -3668,12 +3668,12 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
 
     # initialize stuff
     logger = logging.getLogger()
-    ListImagingServerAssociated=[]
+    #ListImagingServerAssociated=[]
     db = ImagingDatabase()
 
     # store the fact that we are attempting a sync
     db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
-    dfdf = db.getListImagingServerAssociated()
+    #dfdf = db.getListImagingServerAssociated()
     for t in dfdf:
         ListImagingServerAssociated.append(t.url)
     # Load up l_uuids with the required info (computer within profile OR given computers)
@@ -3785,10 +3785,10 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
     if len(defer_list) == 0:
         distinct_locs = distinct_loc
         keyvaleur = distinct_loc.keys()
-        for tt in ListImagingServerAssociated:
-            for z in keyvaleur:
-                distinct_loc[z][0]=tt
-                synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
+        #for tt in ListImagingServerAssociated:
+            #for z in keyvaleur:
+                #distinct_loc[z][0]=tt
+                #synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
         return synchroTargetsSecondPart(ctx, distinct_locs, target_type, pid, macs = macs)
     else:
         def sendResult(results, distinct_loc = distinct_loc, target_type = target_type, pid = pid, db = db):
@@ -3796,10 +3796,10 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
                 db.delProfileMenuTarget(uuids)
             distinct_locs = distinct_loc    
             keyvaleur = distinct_loc.keys()
-            for tt in ListImagingServerAssociated:
-                for z in keyvaleur:
-                    distinct_loc[z][0]=tt
-                    synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
+            #for tt in ListImagingServerAssociated:
+                #for z in keyvaleur:
+                    #distinct_loc[z][0]=tt
+                    #synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
             return synchroTargetsSecondPart(ctx, distinct_locs, target_type, pid, macs = macs)
         defer_list = defer.DeferredList(defer_list)
         defer_list.addCallback(sendResult)
