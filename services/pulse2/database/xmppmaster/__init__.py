@@ -639,7 +639,7 @@ class XmppMasterDatabase(DatabaseHelper):
                            ippublic = None,
                            ad_ou_user = "",
                            ad_ou_machine = "",
-                           kiosk_presence = "True",
+                           kiosk_presence = "False",
                            lastuser = ""):
         try:
             new_machine = Machines()
