@@ -1,6 +1,7 @@
 mmc-core 4.4.1
 --------------
 * [BUGFIX] Fix wake on lan problem
+* [BUGFIX] Modify the configuration icon computers action
 
 mmc-core 4.4
 --------------
