@@ -63,13 +63,6 @@ class manage_scheduler:
         if not os.path.exists(self.directoryschedule):
             logging.getLogger().debug("create directory scheduler %s"%self.directoryschedule)
             os.makedirs(self.directoryschedule, 0700 )
-        #print self.directoryschedule
-        namefile = os.path.join(self.directoryschedule,"__init__.py")
-        #print namefile
-        if not os.path.exists(namefile):
-            fichier = open(namefile, "w")
-            fichier.write("###WARNING : never delete this file")
-            fichier.close()
 
         for x in os.listdir(self.directoryschedule):
             if x.endswith(".pyc") or not x.startswith("scheduling"):
