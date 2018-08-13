@@ -1129,7 +1129,7 @@ class Glpi91(DyngroupDatabaseHelper):
             ret =  q.all()
             listentitymachine = {}
             for line in ret:
-                uuid= "uuid%s"%line.id
+                uuid= "UUID%s"%line.id
                 listentitymachine[uuid] = {"cn" : line.name, "objectUUID" : uuid }
             session.close()
             return listentitymachine
