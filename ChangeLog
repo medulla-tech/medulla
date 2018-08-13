@@ -1,6 +1,6 @@
 Pulse 2 4.4.1
 ===========
-* [BUGFIX]Fix displaying OSes in 'Operating system' dashboard widget
+* [BUGFIX] Fix displaying OSes in 'Operating system' dashboard widget
 * [BUGFIX] Fix the display of the command executed
 * [BUGFIX] Remove sql file to handle UEFI ( we need new davos first )
 * [BUGFIX] Improve the creation of the groups for machineOnline widget
