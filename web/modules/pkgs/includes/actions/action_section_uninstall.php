@@ -14,7 +14,7 @@ extract($_POST);
 
 ?>
 <div class="header">
-    <h1>UndInstall Section</h1>
+    <h1>Uninstall Section</h1>
 </div>
 <div class="content">
     <div>
