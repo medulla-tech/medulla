@@ -23,7 +23,7 @@
  */
 
 require_once("modules/backuppc/includes/xmlrpc.php");
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 if (!isset($_GET['location']))
    return;
@@ -58,9 +58,9 @@ $cnames = array();
 $params = array();
 
 for ($i = 0 ; $i<count($data['hosts']) ; $i++){
-	
+
 	$cn = $data['hosts'][$i];
-    
+
     if (preg_match('@uuid([0-9]+)@i', $cn, $matches) == 1)
     {
     	$cn_ = getComputersName(array('uuid' => $matches[1]));
@@ -74,11 +74,11 @@ for ($i = 0 ; $i<count($data['hosts']) ; $i++){
         $param_ = array('cn' => $data['hosts'][$i]);
 		$cnames_ = $cn;
 	}
-		
-	
+
+
 	if (!empty($_GET['filter']) && stripos($cn, $_GET['filter'])===FALSE)
 		continue;
-	
+
 
 	$cnames[] = $cnames_;
 	$params[] = $param_;
@@ -102,7 +102,22 @@ $n->addActionItem(new ActionPopupItem(_T("View errors"), "viewHostLog", "file", 
 $n->addActionItem(new ActionConfirmItem(_T("Unset backup", 'backuppc'), "index", "delete", "uuid", "backuppc", "backuppc", _T('Are you sure you want to unset backup for this computer?', 'backuppc')));
 $n->setParamInfo($params);
 
-$n->setCssClass("machineName"); // CSS for icons
+// Get the presence for each machine
+$hosts = $data['hosts'];
+$presenceHosts = [];
+$cssClasses = [];
+foreach($hosts as $host)
+{
+  $status = xmlrpc_getPresenceuuid($host);
+  if($status){
+    $presenceHosts[$host] = $status;
+    $cssClasses[] = "machineNamepresente";
+  }
+  else {
+    $cssClasses[] = "machineName";
+  }
+}
+$n->setMainActionClasses($cssClasses);
 $n->setItemCount($count);
 $filter1 = $_GET['location'];
 $n->setNavBar(new AjaxNavBar($count, $filter1));

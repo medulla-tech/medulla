@@ -1,9 +1,11 @@
 * [FEATURE] Add Agent "Auto Update" functionnality
+* [FEATURE] Show the presence status in backup machine list
 * [BUGFIX]  Fix encoding error in "Execute Script" action when creating package
 * [BUGFIX]  Improve the creation of the groups for machineOnline widget
 * [BUGFIX]  Allow to modify imaging groups for machines with more than one
             ethernet card
 * [BUGFIX]  Do not modify py files directly
+* [BUGFIX] The action navbar is uniformized
 
 Pulse 2 4.4
 ===========
