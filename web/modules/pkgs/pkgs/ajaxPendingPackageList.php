@@ -44,6 +44,13 @@ else $end = 9;
 
 //jfkjfk
 $packages = xmlrpc_xmppGetAllPackages($filter, $start, $end);
+$packages[0][1] = 0;
+$packages[0][2] = array();
+$packages[0][2]["mountpoint"] = "/package_api_get1";
+$packages[0][2]["server"] = "localhost";
+$packages[0][2]["protocol"] = "https";
+$packages[0][2]["uuid"] = "UUID/package_api_get1";
+$packages[0][2]["port"] = 9990;
 //$packages = advGetAllPackages($filter, $start, $end);
 $count = $packages[0];
 $packages = $packages[1];

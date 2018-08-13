@@ -100,6 +100,13 @@ $delAction = new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "dele
 
 //jfkjfk
 $packages= xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
+$packages[0][1] = 0;
+$packages[0][2] = array();
+$packages[0][2]["mountpoint"] = "/package_api_get1";
+$packages[0][2]["server"] = "localhost";
+$packages[0][2]["protocol"] = "https";
+$packages[0][2]["uuid"] = "UUID/package_api_get1";
+$packages[0][2]["port"] = 9990;
 //$packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 
 $count = $packages[0];

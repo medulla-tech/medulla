@@ -120,6 +120,13 @@ if (!empty($_GET['uuid'])) {
 //list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
 //jfkjfk
 list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
+$packages[0][1] = 0;
+$packages[0][2] = array();
+$packages[0][2]["mountpoint"] = "/package_api_get1";
+$packages[0][2]["server"] = "localhost";
+$packages[0][2]["protocol"] = "https";
+$packages[0][2]["uuid"] = "UUID/package_api_get1";
+$packages[0][2]["port"] = 9990;
 $err = array();
 foreach ($packages as $c_package) {
     $package = to_package($c_package[0]);
