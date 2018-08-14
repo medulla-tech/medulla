@@ -1,3 +1,5 @@
+* [BUGFIX]  The imaging triggers now really starts to id 1000
+
 Pulse 2 4.4.1
 ===========
 * [BUGFIX]Fix displaying OSes in 'Operating system' dashboard widget
