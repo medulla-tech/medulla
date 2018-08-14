@@ -423,6 +423,12 @@ if(isExpertMode())
     $f->add(
         new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => $setlimit_rate_ko), array('placeholder' => _T('<in ko>', 'pkgs')))
     );
+
+    $launcher = (isset($json["info"]["launcher"]) && $json["info"]["launcher"] != "") ? base64_decode($json["info"]["launcher"]) : "";
+    $f->add(
+            new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")), ["value"=>$launcher,"placeholder"=>"C:\Program Files\my_app\app.exe"]
+    );
+
     // Get the sorted list of dependencies
     if(isset($json['info']['Dependency']))
     {

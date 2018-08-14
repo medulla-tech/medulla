@@ -77,7 +77,7 @@ var actionsList = [
 
     'action_section_install',    // define install section
     'action_section_update',     // define update section
-    'action_section_launch',     // define launch section
+    //'action_section_launch',     // define launch section
     'action_section_uninstall',  // define uninstall section
 ];
 /**

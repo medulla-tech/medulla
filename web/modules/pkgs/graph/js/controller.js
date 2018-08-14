@@ -35,8 +35,8 @@ function log(arg) {
     * DISPLAY LOG
     *
     */
-    if(console && console.log) {  
-        console.log(arg);  
+    if(console && console.log) {
+        console.log(arg);
     }
 };
 
@@ -98,7 +98,7 @@ jQuery(function(){
     {// If something into #loadJson = edit mode
 
         tmp = JSON.parse(jQuery("#loadJson").val());
-        
+
         //Set transferfile value with the saved value
         if(tmp['info']['transferfile'] == true)
             jQuery('#transferfile option[value=1]').attr("selected",true);
@@ -287,6 +287,10 @@ function createInfo()
                     // All the element from the array are not added into the info section.
                     // Dependency is also ignored because it is managed outside this loop
                 }
+
+                // The launcher can contains some special characters
+                else if(param["name"] == "launcher")
+                  info[param["name"]] = btoa(param["value"]);
 
                 else
                     info[param['name']] = param['value'];

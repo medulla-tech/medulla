@@ -263,6 +263,10 @@ if (isset($_POST['bconfirm'])) {
                 new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
         );
 
+        $f->add(
+                new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")), ["value"=>"","placeholder"=>"C:\Program Files\my_app\app.exe"]
+        );
+
         $packagesInOption = '';
         foreach(xmpp_packages_list() as $package)
         {
