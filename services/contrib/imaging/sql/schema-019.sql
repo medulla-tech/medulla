@@ -25,6 +25,8 @@ SET NAMES 'utf8';
 
 use imaging;
 
+START TRANSACTION;
+
 -- Set BootService.AUTO_INCREMENT to 1000 if calculated auto_increment is under this value.
 delimiter //
 drop trigger if exists BootService_before_insert;
@@ -95,3 +97,5 @@ delimiter ;
 
 
 UPDATE version set Number = 19;
+
+COMMIT;
