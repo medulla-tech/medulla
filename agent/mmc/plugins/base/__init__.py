@@ -2611,6 +2611,9 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return ComputerManager().getComputerCount(ctx, filt)
 
+    def simple_computer_count(self):
+        return ComputerManager().simple_computer_count()
+
     def getComputersListHeaders(self):
         ctx = self.currentContext
         return ComputerManager().getComputersListHeaders(ctx)

@@ -34,7 +34,7 @@ class ComputersOnlinePanel extends Panel {
 
     function display_content() {
         $urlRedirect = urlStrRedirect("base/computers/createMachinesStaticGroup");
-        $total_machines = getComputerCount();
+        $total_machines = getSimpleComputerCount();
         $machines_online = xmlrpc_getCountOnlineMachine();
 
         if($total_machines >= $machines_online) {
