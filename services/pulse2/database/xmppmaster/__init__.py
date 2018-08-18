@@ -170,7 +170,7 @@ class XmppMasterDatabase(DatabaseHelper):
     def clear_old_pending_synchro_package(self, session, timeseconde=35):
         sql ="""DELETE FROM `xmppmaster`.`syncthingsync` 
             WHERE
-                `syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d MINUTE);"""%timeseconde
+                `syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d SECOND);"""%timeseconde
         session.execute(sql)
         session.commit()
         session.flush()
