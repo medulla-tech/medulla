@@ -1,3 +1,4 @@
+* [FEATURE] Add glpi 9.2 support
 * [FEATURE] Add Agent "Auto Update" functionnality
 * [FEATURE] Show the presence status in backup machine list
 * [BUGFIX]  Fix encoding error in "Execute Script" action when creating package
