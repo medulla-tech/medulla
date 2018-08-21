@@ -542,6 +542,17 @@ class Glpi92(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         return self.machine.c.entities_id.in_(ctx.locationsid + other_locids)
 
+    def mini_computers_count(self):
+        """Count all the GLPI machines
+            Returns:
+                int count of machines"""
+
+        sql = """select count(id) as count_machines from glpi_computers;"""
+        res = self.db.execute(sql)
+        for element in res:
+            result = element[0]
+        return result
+
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
         Get the sqlalchemy query to get a list of computers with some filters
