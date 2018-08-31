@@ -1,3 +1,4 @@
+* [FEATURE] Add glpi 9.2 support
 * [BUGFIX]  Automatically call inventory was done by pxe
 * [BUGFIX]  The imaging triggers now really starts to id 1000
 

@@ -841,6 +841,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_deploy.login = login
             new_deploy.startcmd =startcmd
             new_deploy.endcmd = endcmd
+            new_deploy.start = datetime.now()
             new_deploy.macadress = macadress
             new_deploy.title = title
             session.add(new_deploy)
@@ -1926,7 +1927,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
-            limit 1;"""%(rule, username, enabled, classutilMachine)
+            limit 1;"""%(rule, userou, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
             from `relayserver`
