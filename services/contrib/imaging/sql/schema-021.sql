@@ -42,6 +42,6 @@ INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc,
 INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (18, "Postinstall",           "SIVEO postinstall script with debug",  1, 01, "MountSystem\n\nCopySysprepInf /opt/sysprep/yoursysprep.xml\n\nmkdir -p /mnt/Windows/Setup/Scripts\nmkdir -p /mnt/Windows/INF/driverpack\n\ncp /opt/sysprep/SetupComplete.cmd /mnt/Windows/Setup/Scripts\ncp /opt/winutils/Pulse-Agent-windows-FULL-latest.exe /mnt/Windows/Setup/Scripts\n\n/opt/sysprep/drivercopy Windows10\n\nmkdir -p /imaging_server/masters/debug_imaging/`hostname`\ncp /var/log/clonezilla.log /imaging_server/masters/debug_imaging/`hostname`/`date '+%Y-%m-%d-%H:%M:%S'`-clonezilla.log\ncp /var/log/partclone.log /imaging_server/masters/debug_imaging/`hostname`/`date '+%Y-%m-%d-%H:%M:%S'`-partclone.log\ncp /mnt/[[:alpha:]]indows/[[:alpha:]]anther/unattend.xml /imaging_server/masters/debug_imaging/`hostname`/`date '+%Y-%m-%d-%H:%M:%S'`-unattend.xml\ncp /mnt/[[:alpha:]]indows/[[:alpha:]]anther/[[:alpha:]]etuperr.log /imaging_server/masters/debug_imaging/`hostname`/`date '+%Y-%m-%d-%H:%M:%S'`-setuperr.log\ncp /mnt/[[:alpha:]]indows/[[:alpha:]]anther/[[:alpha:]]etupact.log /imaging_server/masters/debug_imaging/`hostname`/`date '+%Y-%m-%d-%H:%M:%S'`-setupact.log\n\nls /mnt/Windows/Panther/ > /imaging_server/masters/debug_imaging/`hostname`/`date '+%Y-%m-%d-%H:%M:%S'`-direct-panther\n");
 
 
-UPDATE version set Number = 20;
+UPDATE version set Number = 21;
 
 COMMIT;
