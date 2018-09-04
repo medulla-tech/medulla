@@ -424,7 +424,13 @@ if(isExpertMode())
         new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => $setlimit_rate_ko), array('placeholder' => _T('<in ko>', 'pkgs')))
     );
 
-    $launcher = (isset($json["info"]["launcher"]) && $json["info"]["launcher"] != "") ? base64_decode($json["info"]["launcher"]) : "";
+    if(isset($json["info"]["launcher"]) && $json["info"]["launcher"] != "")
+    {
+        $launcher = (base64_decode($json["info"]["launcher"], true) != false)? $launcher = base64_decode($json["info"]["launcher"]) : $json["info"]["launcher"];
+    }
+  else{
+    $launcher = "";
+  }
     $f->add(
             new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")), ["value"=>$launcher,"placeholder"=>"C:\Program Files\my_app\app.exe"]
     );
