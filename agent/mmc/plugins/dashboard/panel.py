@@ -53,7 +53,7 @@ class GeneralPanel(Panel):
         	uptime = str(datetime.now() - datetime.fromtimestamp(psutil.boot_time()))
         else:
         	uptime = str(datetime.now() - datetime.fromtimestamp(psutil.BOOT_TIME))
-        	        
+
         try:
             dist = platform.linux_distribution()
         except:
@@ -123,29 +123,15 @@ class ProcessPanel(Panel):
             }
 
 
-class PluginsPanel(Panel):
-    def serialize(self):
-        ls = shlaunch("ls /etc/mmc/plugins/*.ini")
-        return {
-            'list':ls,
-        }
-
-
 class ComputersOnlinePanel(Panel):
     """This class is called by the ComputerOnline widget from the dashboard"""
-    def serialize(self):
-        """This method does nothing but needs to be implemented"""
-        pass
-    
+    pass
+
 class UpdatePanel(Panel):
     """This class is called by the Pulse Update widget from the dashboard"""
-    def serialize(self):
-        """This method does nothing but needs to be implemented"""
-        pass
+    pass
 
 
 class BackupPanel(Panel):
     """This class is called by the Backup widget from the dashboard"""
-    def serialize(self):
-        """This method does nothing but needs to be implemented"""
-        pass
+    pass
