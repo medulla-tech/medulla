@@ -663,6 +663,12 @@ def save_xmpp_json(folder, json_content):
                 valerror = _stepforalias(stepseq['error'], vv)
                 if valerror != None:
                     stepseq['error'] = valerror
+
+    # Extract the uuid of the folder
+    folder_list = folder.split("/")
+    uuid = folder_list[-1]
+    structpackage['metaparameter']['uuid'] = uuid
+
     json_content= json.dumps(structpackage)
     _save_xmpp_json(folder, json_content)
 
