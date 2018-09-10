@@ -595,6 +595,7 @@ def _path_package():
     return os.path.join("/", "var", "lib", "pulse2", "packages")
 
 def save_xmpp_json(folder, json_content):
+    logger = logging.getLogger()
     structpackage = json.loads(json_content)
     keysupp = [ "actionlabel",
                 "p_api",
@@ -664,13 +665,15 @@ def save_xmpp_json(folder, json_content):
                 if valerror != None:
                     stepseq['error'] = valerror
 
-    # Extract the uuid of the folder
+    # Extracts the uuid of the folder
     folder_list = folder.split("/")
     uuid = folder_list[-1]
-    structpackage['metaparameter']['uuid'] = uuid
 
+    structpackage['metaparameter']['uuid'] = uuid
     json_content= json.dumps(structpackage)
     _save_xmpp_json(folder, json_content)
+    from mmc.plugins.kiosk import update_launcher
+    update_launcher(uuid, structpackage['info']['launcher'])
 
 def _aliasforstep(step, dictstepseq):
     for t in dictstepseq:

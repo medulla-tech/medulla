@@ -442,3 +442,28 @@ def get_packages_for_machine(machine):
         packageprofile, structuredatakiosk))
     logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, machine['hostname']))
     return structuredatakiosk
+
+
+def update_launcher(uuid, launcher):
+    """ Send the new launcher for the specified package.
+    Params:
+        uuid: str which contains the uuid of the package.
+        launcher: str or base64 str of the launcher
+
+    Emits:
+        "update_launcher" subaction for kiosk_plugin
+    """
+
+    datas = {
+    'subaction':'update_launcher',
+    'data' : {'uuid':uuid,'launcher':launcher}
+    }
+
+    machines_list = XmppMasterDatabase().get_machines_with_kiosk()
+    for machine in machines_list:
+        # Send the launcher to all the machines
+        send_message_to_machine(datas, machine['jid'], name_random(6, "update_launcher"))
+
+        # Update the datas for all the kiosks
+        structuredatakiosk = get_packages_for_machine(machine)
+    notify_kiosks()
