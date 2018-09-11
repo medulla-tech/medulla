@@ -79,6 +79,7 @@ var actionsList = [
     'action_section_update',     // define update section
     //'action_section_launch',     // define launch section
     'action_section_uninstall',  // define uninstall section
+    'action_status', //define a status action which send infos of deployment stat
 ];
 /**
  *

@@ -206,7 +206,7 @@ function createSequence()
 {
     // Create a new sequence
     var sequence = [];
-
+    var actualSection = "Install";
     /**
      * Get all the form element in #current-actions and serialize them
      */
@@ -220,6 +220,15 @@ function createSequence()
         // For each element in form :
             // Add {form.elementName : form.elementValue} to action
         jQuery.each(datas,function(idoption, actionRaw){
+          if(actionRaw['value'] == "action_section_install"){
+            actualSection = "Install";
+          }
+          if(actionRaw['value'] =='action_section_update'){
+            actualSection = "Update";
+          }
+          if(actionRaw['value'] == "action_section_uninstall"){
+            actualSection = "Delete"
+          }
             if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script'){
                actionRaw['value'] = btoa(actionRaw['value'])
             }
@@ -236,6 +245,20 @@ function createSequence()
                 })
 
                 action[actionRaw['name']] = tmp;
+            }
+
+            if(actionRaw['value'] == 'status'){
+              action['status'] = actualSection;
+            }
+
+            if(actionRaw['name'] == 'stat'){
+              var stat = parseInt(actionRaw['value'])
+              if(stat <0)
+                stat = 0;
+              if(stat > 100)
+                stat = 100;
+
+              action['stat'] = stat;
             }
             else
                 action[actionRaw['name']] = actionRaw['value'];
