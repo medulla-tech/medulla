@@ -3464,6 +3464,21 @@ class Glpi91(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getAllRegistryKey(self, ctx, filt = ''):
+        """
+        Returns the registry keys name.
+        @return: list Register key name
+        """
+        ret = None
+        session = create_session()
+        query = session.query(Registries.name)
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.registries.c.name.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
     def getMachineByLocation(self, ctx, filt):
         """ @return: all machines that have this contact number """
         session = create_session()
