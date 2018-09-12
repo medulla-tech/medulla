@@ -901,6 +901,8 @@ class Glpi91(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.softwareversions, self.software, self.manufacturers]
         elif query[2] == 'User location':
             return base + [self.user, self.locations]
+        elif query[2] == 'Register key':
+            return base + [ self.regcontents]#self.collects, self.registries,
         return []
 
     def mapping(self, ctx, query, invert = False):
