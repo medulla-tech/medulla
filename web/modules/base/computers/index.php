@@ -45,13 +45,13 @@ if (in_array("pulse2", $_SESSION["modulesList"])) {
         <select name="namepresence" id="idpresence">
             <option value="all_computer" ';
             if ($computerpresence == "all_computer") echo "selected";
-            echo '>all computers</option>
+            echo '>All machines</option>
             <option value="presence" ';
             if ($computerpresence == "presence") echo "selected";
-            echo '>computers presents</option>
+            echo '>Online machines</option>
             <option value="no_presence" ';
             if ($computerpresence == "no_presence") echo "selected";
-            echo '>computer not presents</option>
+            echo '>Offline machines</option>
         </select>';
         include("modules/pulse2/pulse2/computers_list.php");
     }
