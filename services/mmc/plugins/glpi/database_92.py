@@ -903,6 +903,8 @@ class Glpi92(DyngroupDatabaseHelper):
             return base + [self.user, self.locations]
         elif query[2] == 'Register key':
             return base + [ self.regcontents]#self.collects, self.registries,
+        elif query[2] == 'Register key value':
+            return base + [ self.regcontents, self.registries ]#self.collects, self.registries, 
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -1020,6 +1022,10 @@ class Glpi92(DyngroupDatabaseHelper):
             return [[self.software.c.name, query[3][0]], [self.softwareversions.c.name, query[3][1]]]
         elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
             return [[self.manufacturers.c.name, query[3][0]], [self.software.c.name, query[3][1]], [self.softwareversions.c.name, query[3][2]]]
+        elif query[2] == 'Register key':
+            return [[self.registries.c.name, query[3]]]
+        elif query[2] == 'Register key value':
+            return [[self.registries.c.name, query[3][0]], [self.regcontents.c.value , query[3][1]]]
         return []
 
 
@@ -3477,6 +3483,22 @@ class Glpi92(DyngroupDatabaseHelper):
         query = self.__filter_on_entity(query, ctx)
         if filter != '':
             query = query.filter(self.registries.c.name.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    @DatabaseHelper._sessionm
+    def getAllRegistryKeyValue(self, session, ctx, keyregister, value):
+        """
+        @return: all key value defined in the GLPI database
+        """
+        ret = None
+        #if not hasattr(ctx, 'locationsid'):
+            #complete_ctx(ctx)
+        session = create_session()
+        query = session.query(distinct(RegContents.value))
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.registries.c.key.like('%'+keyregister+'%'))
         ret = query.all()
         session.close()
         return ret

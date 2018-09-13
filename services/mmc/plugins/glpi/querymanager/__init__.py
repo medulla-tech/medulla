@@ -65,7 +65,11 @@ def queryPossibilities():
     ret['Entity'] = ['list', getAllEntities]
     ret['Vendors'] = ['list', getAllSoftwareVendors]
     ret['Software versions'] = ['list', getAllSoftwareVersions]
-    ret['Register key'] =  ['list', getAllRegistryKey]
+    ret['Register key'] = ['list', getAllRegistryKey]
+    ret['Register key value'] = ['double',
+                                getRegisterKeyValue,
+                                3,
+                                2]
     logging.getLogger().info('queryPossibilities %s' %
                              (str(ret)))
     return ret
@@ -203,6 +207,17 @@ def getAllSoftwares(ctx, softname='', vendor=None):
                                              softname=softname,
                                              vendor=vendor,
                                              limit=20)]
+
+def getRegisterKeyValue(ctx, keyregister="", value=None):
+    if value is None:
+        DMSG("parameter : keyregister %s "%(keyregister))
+        return getAllRegistryKey(ctx, keyregister)
+    else:
+        DMSG("parameter : keyregister %s  value %s"%(keyregister, value))
+        return getAllRegistryKeyValue(ctx, keyregister, value)
+
+def getAllRegistryKeyValue(ctx, keyregister, value):
+    return [x[0] for x in Glpi().getAllRegistryKeyValue(ctx, keyregister, value)]
 
 def getAllSoftwaresAndVersions(ctx, softname="", version=None):
     if version is None:
