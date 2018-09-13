@@ -65,7 +65,7 @@ from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
-
+import traceback,sys
 class Glpi91(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
@@ -961,7 +961,31 @@ class Glpi91(DyngroupDatabaseHelper):
                         else:
                             ret.append(partA.like(self.encode(partB)))
                     else:
-                        ret.append(partA.like(self.encode(partB)))
+                        try:
+                            partB = partB.strip()
+                            if partB.startswith(">="):
+                                partB = partB[2:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA >= d))
+                            elif partB.startswith("<="):
+                                partB = partB[2:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA <= d))
+                            elif partB.startswith("<"):
+                                partB = partB[1:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA < d))
+                            elif partB.startswith(">"):
+                                partB = partB[1:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA > d))
+                            else:
+                                ret.append(partA.like(self.encode(partB)))
+                        except Exception as e:
+                            print str(e)
+                            traceback.print_exc(file=sys.stdout)
+                            ret.append(partA.like(self.encode(partB)))
+                                
             if ctx.userid != 'root':
                 ret.append(self.__filter_on_entity_filter(None, ctx))
             return and_(*ret)
