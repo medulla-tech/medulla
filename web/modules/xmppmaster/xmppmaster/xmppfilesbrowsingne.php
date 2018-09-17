@@ -327,9 +327,6 @@ echo '</script>';
          <div id ="directoryremote" class="fileshow"></div>
         <div id ="fileshowremote" class="fileshow"></div>
     </div>
-    <h1>Interaction and events demo</h1>
-	<button id="evts_button">select node with id 1</button> <em>either click the button or a node in the tree</em>
-	<div id="evts" class="demo"></div>
     <div class ="piedbrowser"> 
         <form>
             <div>
