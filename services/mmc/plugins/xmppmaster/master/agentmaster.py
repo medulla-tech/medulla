@@ -1716,6 +1716,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 uuid = 'UUID' + str(computer.id)
                                 logger.debug("** update uuid %s for machine %s "%(uuid, msg['from'].bare))
                                 XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
+                                if 'countstart' in data and data['countstart'] == 1:
+                                    logger.debug("** call inventory on machine Pxe")
+                                    self.callinventory(data['from'])
+                                    return
+                                osmachine = ComputerManager().getComputersOS(str(computer.id))
+                                if "Unknown operating system (PXE" in osmachine[0]['OSName']:
+                                    logger.debug("** call inventory on machine Pxe")
+                                    self.callinventory(data['from'])
+                                    return
                                 if PluginManager().isEnabled("kiosk"):
                                     from mmc.plugins.kiosk import handlerkioskpresence
                                     #send msg data to kiosk when an inventory registered

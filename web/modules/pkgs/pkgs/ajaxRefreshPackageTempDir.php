@@ -71,7 +71,6 @@ if(count($files)) {
                 jQuery('#commandcmd').val(data.commandcmd);
             }
         });
-        
     }
     // fill form when changing temp package
     jQuery('#rdo_files').change(function() {
@@ -79,7 +78,7 @@ if(count($files)) {
         var selectedPapi = jQuery('#p_api').val();
         fillForm(selectedPapi, tempdir);
     });
-    
+
     var jcArray = new Array('label', 'version', 'description', 'commandcmd');
     for (var dummy in jcArray) {
         try {
@@ -121,12 +120,10 @@ else {
 ?>
 <script type="text/javascript">
     var selectedPapi = jQuery('#p_api').val();
-    jQuery('#package-temp-directory').load( '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
     // reset form fields
     jQuery('#version').val('');
     jQuery('#commandcmd').val('');
-    jQuery('input[type="radio"][name="package-method"][value="upload"]:first').attr("checked", "checked");
-    jQuery('#directory-label').html("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
+    jQuery('input[type="radio"][name="package-method"][value="empty"]:first').attr("checked", "checked");
 </script>
 <?php
     }

@@ -916,6 +916,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_deploy.login = login
             new_deploy.startcmd =startcmd
             new_deploy.endcmd = endcmd
+            new_deploy.start = datetime.now()
             new_deploy.macadress = macadress
             new_deploy.title = title
             session.add(new_deploy)

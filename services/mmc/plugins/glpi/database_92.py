@@ -22,7 +22,7 @@
 
 """
 This module declare all the necessary stuff to connect to a glpi database in it's
-version 9.1
+version 9.2
 """
 import os
 import logging
@@ -66,7 +66,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback,sys
-class Glpi91(DyngroupDatabaseHelper):
+class Glpi92(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
 
@@ -85,18 +85,18 @@ class Glpi91(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.1')
+        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.2')
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
-        if LooseVersion(self._glpi_version) >=  LooseVersion("9.1") and LooseVersion(self._glpi_version) <=  LooseVersion("9.1.7"):
+        if LooseVersion(self._glpi_version) >=  LooseVersion("9.2") and LooseVersion(self._glpi_version) <=  LooseVersion("9.2.4"):
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
-            logging.getLogger().debug('GLPI higher than version 9.1 was not detected')
+            logging.getLogger().debug('GLPI higher than version 9.2 was not detected')
             return False
 
     @property
@@ -121,12 +121,12 @@ class Glpi91(DyngroupDatabaseHelper):
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
             self.db.execute(u'SELECT "\xe9"')
-            setattr(Glpi91, "decode", decode_utf8)
-            setattr(Glpi91, "encode", encode_utf8)
+            setattr(Glpi92, "decode", decode_utf8)
+            setattr(Glpi92, "encode", encode_utf8)
         except:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
-            setattr(Glpi91, "decode", decode_latin1)
-            setattr(Glpi91, "encode", encode_latin1)
+            setattr(Glpi92, "decode", decode_latin1)
+            setattr(Glpi92, "encode", encode_latin1)
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
@@ -181,7 +181,7 @@ class Glpi91(DyngroupDatabaseHelper):
             self.klass[i] = eval(j)
 
             setattr(self, "computers_%s"%i, Table("glpi_items_%s"%i, self.metadata,
-                Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+                Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                 Column('%s_id'%i, Integer, ForeignKey('glpi_%s.id'%i)),
                 autoload = True))
             j = self.getTableName("computers_%s"%i)
@@ -209,7 +209,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
         # logs
         self.logs = Table("glpi_logs", self.metadata,
-            Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             autoload = True)
         mapper(Logs, self.logs)
 
@@ -218,7 +218,7 @@ class Glpi91(DyngroupDatabaseHelper):
         mapper(Processor, self.processor)
 
         self.computerProcessor = Table("glpi_items_deviceprocessors", self.metadata,
-            Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             Column('deviceprocessors_id', Integer, ForeignKey('glpi_deviceprocessors.id')),
             autoload = True)
         mapper(ComputerProcessor, self.computerProcessor)
@@ -233,7 +233,7 @@ class Glpi91(DyngroupDatabaseHelper):
         mapper(MemoryType, self.memoryType)
 
         self.computerMemory = Table("glpi_items_devicememories", self.metadata,
-            Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             Column('devicememories_id', Integer, ForeignKey('glpi_devicememories.id')),
             autoload = True)
         mapper(ComputerMemory, self.computerMemory)
@@ -258,7 +258,7 @@ class Glpi91(DyngroupDatabaseHelper):
         # glpi_infocoms
         self.infocoms = Table('glpi_infocoms', self.metadata,
                               Column('suppliers_id', Integer, ForeignKey('glpi_suppliers.id')),
-                              Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+                              Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                               autoload = True)
         mapper(Infocoms, self.infocoms)
 
@@ -276,7 +276,7 @@ class Glpi91(DyngroupDatabaseHelper):
         try:
             self.logger.debug('Try to load fusion antivirus table...')
             self.fusionantivirus = Table('glpi_computerantiviruses', self.metadata,
-                Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+                Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                 Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
                 autoload = True)
             mapper(FusionAntivirus, self.fusionantivirus)
@@ -294,18 +294,18 @@ class Glpi91(DyngroupDatabaseHelper):
         if self.fusionantivirus is not None: # Fusion is not installed
             self.logger.debug('Load glpi_plugin_fusioninventory_locks')
             self.fusionlocks = Table('glpi_plugin_fusioninventory_locks', self.metadata,
-                Column('items_id', Integer, ForeignKey('glpi_computers.id')),
+                Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                 autoload = True)
             mapper(FusionLocks, self.fusionlocks)
             self.logger.debug('Load glpi_plugin_fusioninventory_agents')
             self.fusionagents = Table('glpi_plugin_fusioninventory_agents', self.metadata,
-                Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+                Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                 autoload = True)
             mapper(FusionAgents, self.fusionagents)
 
         # glpi_computerdisks
         self.disk = Table('glpi_computerdisks', self.metadata,
-                          Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+                          Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                           Column('filesystems_id', Integer, ForeignKey('glpi_filesystems.id')),
                           autoload = True)
         mapper(Disk, self.disk)
@@ -363,7 +363,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
         # machine (we need the foreign key, so we need to declare the table by hand ...
         #          as we don't need all columns, we don't declare them all)
-        self.machine = Table("glpi_computers", self.metadata,
+        self.machine = Table("glpi_computers_pulse", self.metadata,
             Column('id', Integer, primary_key=True),
             Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
             Column('operatingsystems_id', Integer, ForeignKey('glpi_operatingsystems.id')),
@@ -380,8 +380,8 @@ class Glpi91(DyngroupDatabaseHelper):
             Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
             Column('name', String(255), nullable=False),
             Column('serial', String(255), nullable=False),
-            Column('os_license_number', String(255), nullable=True),
-            Column('os_licenseid', String(255), nullable=True),
+            Column('license_number', String(255), nullable=True),
+            Column('license_id', String(255), nullable=True),
             Column('is_deleted', Integer, nullable=False),
             Column('is_template', Integer, nullable=False),
             Column('states_id', Integer, ForeignKey('glpi_states.id'), nullable=False),
@@ -443,7 +443,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
         # glpi_inst_software
         self.inst_software = Table("glpi_computers_softwareversions", self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             Column('softwareversions_id', Integer, ForeignKey('glpi_softwareversions.id')),
             autoload = True)
         mapper(InstSoftware, self.inst_software)
@@ -482,7 +482,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
         # registries contents
         self.regcontents = Table("glpi_plugin_fusioninventory_collects_registries_contents", self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             Column('plugin_fusioninventory_collects_registries_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects_registries.id')),
             autoload = True)
         mapper(RegContents, self.regcontents)
@@ -985,7 +985,6 @@ class Glpi91(DyngroupDatabaseHelper):
                             print str(e)
                             traceback.print_exc(file=sys.stdout)
                             ret.append(partA.like(self.encode(partB)))
-                                
             if ctx.userid != 'root':
                 ret.append(self.__filter_on_entity_filter(None, ctx))
             return and_(*ret)
@@ -1136,7 +1135,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
         # When search field is used on main computer's list page,
         # Pagination PHP Widget must know total machine result
-        # So, set displayList to True to count on glpi_computers
+        # So, set displayList to True to count on glpi_computers_pulse
         # and all needed joined tables
         if 'hostname' in filt:
             if len(filt['hostname']) > 0:
@@ -1472,7 +1471,7 @@ class Glpi91(DyngroupDatabaseHelper):
         @param machine: computer's instance
         @type machine: Machine
 
-        @return: owner (glpi_computers.user_id -> name)
+        @return: owner (glpi_computers_pulse.user_id -> name)
         @rtype: str
         """
 
@@ -2311,7 +2310,7 @@ class Glpi91(DyngroupDatabaseHelper):
                     ['OS', os],
                     ['Service Pack', servicepack],
                     ['Architecture', architecture],
-                    ['Windows Key', machine.os_license_number],
+                    ['Windows Key', machine.license_number],
                     ['Model / Type', modelType],
                     ['Manufacturer', manufacturer],
                     ['Serial Number', serialNumber],
@@ -2917,22 +2916,6 @@ class Glpi91(DyngroupDatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def getAllRegistryKeyValue(self, session, ctx, keyregister, value):
-        """
-        @return: all key value defined in the GLPI database
-        """
-        ret = None
-        #if not hasattr(ctx, 'locationsid'):
-            #complete_ctx(ctx)
-        session = create_session()
-        query = session.query(distinct(RegContents.value))
-        query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.registries.c.key.like('%'+keyregister+'%'))
-        ret = query.all()
-        session.close()
-        return ret
-    
-    @DatabaseHelper._sessionm
     def getAllVersion4Software(self, session, ctx, softname, version = ''):
         """
         @return: all softwares defined in the GLPI database
@@ -3523,6 +3506,22 @@ class Glpi91(DyngroupDatabaseHelper):
         query = self.__filter_on_entity(query, ctx)
         if filter != '':
             query = query.filter(self.registries.c.name.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    @DatabaseHelper._sessionm
+    def getAllRegistryKeyValue(self, session, ctx, keyregister, value):
+        """
+        @return: all key value defined in the GLPI database
+        """
+        ret = None
+        #if not hasattr(ctx, 'locationsid'):
+            #complete_ctx(ctx)
+        session = create_session()
+        query = session.query(distinct(RegContents.value))
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.registries.c.key.like('%'+keyregister+'%'))
         ret = query.all()
         session.close()
         return ret
@@ -4478,7 +4477,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
     def moveComputerToEntity(self, uuid, entity_id):
         pass
-        #UPDATE `glpi_computers`
+        #UPDATE `glpi_computers_pulse`
         #SET `entities_id` = '5' WHERE `id` ='3'
 
     @DatabaseHelper._sessionm
@@ -4584,7 +4583,7 @@ class Glpi91(DyngroupDatabaseHelper):
         """
         Add registry collect content
 
-        @param computers_id: the computer_id from glpi_computers
+        @param computers_id: the computer_id from glpi_computers_pulse
         @type computers_id: str
 
         @param registry_id: the registry_id from plugin_fusioninventory_collects_registries
@@ -4624,14 +4623,14 @@ class Glpi91(DyngroupDatabaseHelper):
 
 # Class for SQLalchemy mapping
 class Machine(object):
-    __tablename__ = 'glpi_computers'
+    __tablename__ = 'glpi_computers_pulse'
 
     def getUUID(self):
         return toUUID(self.id)
     def toH(self):
         return { 'hostname':self.name, 'uuid':toUUID(self.id) }
     def to_a(self):
-        owner_login, owner_firstname, owner_realname = Glpi91().getMachineOwner(self)
+        owner_login, owner_firstname, owner_realname = Glpi92().getMachineOwner(self)
         return [
             ['name',self.name],
             ['comments',self.comment],
@@ -4647,15 +4646,15 @@ class Machine(object):
             ['os_version',self.operatingsystemversions_id],
             ['os_sp',self.operatingsystemservicepacks_id],
             ['os_arch',self.operatingsystemarchitectures_id],
-            ['os_license_number',self.os_license_number],
-            ['os_license_id',self.os_licenseid],
+            ['license_number',self.license_number],
+            ['license_id',self.license_id],
             ['location',self.locations_id],
             ['domain',self.domains_id],
             ['network',self.networks_id],
             ['model',self.computermodels_id],
             ['type',self.computertypes_id],
             ['entity',self.entities_id],
-            ['uuid',Glpi91().getMachineUUID(self)]
+            ['uuid',Glpi92().getMachineUUID(self)]
         ]
 
 class Entities(object):

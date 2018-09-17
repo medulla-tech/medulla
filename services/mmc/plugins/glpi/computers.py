@@ -205,6 +205,10 @@ class GlpiComputers(ComputerI):
     def getTotalComputerCount(self):
         return self.glpi.getTotalComputerCount()
 
+    def simple_computer_count(self):
+        result = self.glpi.mini_computers_count()
+        return result
+
     def getComputerCount(self, ctx, filt = None):
         if filt == None or filt == '':
             filt = {}
