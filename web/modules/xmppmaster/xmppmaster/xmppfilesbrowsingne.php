@@ -372,6 +372,11 @@ echo '</script>';
     </span>
   </div>
 </div>
+<script type="text/javascript">
+    // diff between hour server/client
+    var ladate = new Date();
+    diff_hour = <?php echo date("H"); ?> - parseInt(ladate.getHours());
+</script>
 
 <script type="text/javascript">
     jQuery( document ).ready(function() {
@@ -443,7 +448,7 @@ echo '</script>';
         var newdate = new Date();
         var moi      = "0" + (newdate.getMonth() +1 );
         var jour     = "0" + newdate.getDate();
-        var heure    = "0" + newdate.getHours();
+        var heure    = "0" + (newdate.getHours() + diff_hour);
         var minutes  = "0" + newdate.getMinutes();
         var secondes = "0" + newdate.getSeconds();
         var datetime = newdate.getFullYear() + 

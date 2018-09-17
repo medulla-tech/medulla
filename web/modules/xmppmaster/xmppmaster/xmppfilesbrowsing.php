@@ -358,7 +358,11 @@ echo '</script>';
   </div>
 </div>
 
-
+<script type="text/javascript">
+    // diff between hour server/client
+    var ladate = new Date();
+    diff_hour = <?php echo date("H"); ?> - parseInt(ladate.getHours());
+</script>
 <script type="text/javascript">
     jQuery( document ).ready(function() {
         fileremote = false;
@@ -430,19 +434,18 @@ echo '</script>';
         var newdate = new Date();
         var moi      = "0" + (newdate.getMonth() +1 );
         var jour     = "0" + newdate.getDate();
-        var heure    = "0" + newdate.getHours();
+        var heure    = "0" + (newdate.getHours() + diff_hour);
         var minutes  = "0" + newdate.getMinutes();
         var secondes = "0" + newdate.getSeconds();
-        var datetime = newdate.getFullYear() +
+        var datetime = newdate.getFullYear() + 
                                                 "-" + 
-                                                moi.substr(-2)+ 
-                                                "-"+ jour.substr(-2)+ 
-                                                "-"+ heure.substr(-2)+
-                                                ":"+ minutes.substr(-2)+
-                                                ":"+ secondes.substr(-2);
+                                                moi.substr(-2) + 
+                                                "-" + jour.substr(-2) + 
+                                                "-" + heure.substr(-2) + 
+                                                ":" + minutes.substr(-2) + 
+                                                ":" + secondes.substr(-2);
         return datetime;
     }
-
     function local(selectdir){
         if (typeof selectdir == 'undefined'){
             var selectdir = "";
