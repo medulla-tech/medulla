@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import uuid
 import sys, os
 import os.path
 import json
@@ -42,6 +42,13 @@ class apimanagepackagemsc:
             return listpendingfichierconf
         else:
             return listnotpendingfichierconf
+    @staticmethod
+    def sizedirectory(path): 
+        size = 0 
+        for root, dirs, files in os.walk(path): 
+            for fic in files: 
+                size += os.path.getsize(os.path.join(root, fic))
+        return size
 
     @staticmethod
     def loadpackagelistmsc(filter = None, start = None, end = None):
@@ -70,11 +77,15 @@ class apimanagepackagemsc:
                             obj[str(z)] = str(aa['inventory'][z])
             obj['files']=[]
             obj['basepath'] = os.path.dirname(x)
-            re = simplecommand("du -b %s | awk '{print $1}'"%obj['basepath'])
-            obj['size'] = re['result'][0].replace('\n', '')
-
-            for fich in apimanagepackagemsc.listfilepackage(os.path.dirname(x)):
-                obj['files'].append({"path" :os.path.join("/",os.path.basename(os.path.dirname(fich))), "name" : os.path.basename(fich), 'id' : md5(fich), "size" : os.path.getsize(fich) })
+            #re = simplecommand("du -b %s | awk '{print $1}'"%obj['basepath'])
+            #obj['size'] = re['result'][0].replace('\n', '')
+            obj['size'] = apimanagepackagemsc.sizedirectory(obj['basepath'])
+            for fich in apimanagepackagemsc.listfilepackage(obj['basepath'] ):
+                pathfile = os.path.join("/",os.path.basename(os.path.dirname(fich)))
+                obj['files'].append({"path" : pathfile,
+                                     "name" : os.path.basename(fich),
+                                     "id" : str(uuid.uuid4()),
+                                     "size" : os.path.getsize(fich) })
             if 'name' in obj:
                 obj['label'] = obj['name']
             obj1 = [obj]
