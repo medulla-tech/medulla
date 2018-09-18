@@ -65,7 +65,7 @@ from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
-
+import traceback,sys
 class Glpi91(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
@@ -901,6 +901,10 @@ class Glpi91(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.softwareversions, self.software, self.manufacturers]
         elif query[2] == 'User location':
             return base + [self.user, self.locations]
+        elif query[2] == 'Register key':
+            return base + [ self.regcontents]#self.collects, self.registries,
+        elif query[2] == 'Register key value':
+            return base + [ self.regcontents, self.registries ]#self.collects, self.registries, 
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -957,7 +961,31 @@ class Glpi91(DyngroupDatabaseHelper):
                         else:
                             ret.append(partA.like(self.encode(partB)))
                     else:
-                        ret.append(partA.like(self.encode(partB)))
+                        try:
+                            partB = partB.strip()
+                            if partB.startswith(">="):
+                                partB = partB[2:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA >= d))
+                            elif partB.startswith("<="):
+                                partB = partB[2:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA <= d))
+                            elif partB.startswith("<"):
+                                partB = partB[1:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA < d))
+                            elif partB.startswith(">"):
+                                partB = partB[1:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA > d))
+                            else:
+                                ret.append(partA.like(self.encode(partB)))
+                        except Exception as e:
+                            print str(e)
+                            traceback.print_exc(file=sys.stdout)
+                            ret.append(partA.like(self.encode(partB)))
+                                
             if ctx.userid != 'root':
                 ret.append(self.__filter_on_entity_filter(None, ctx))
             return and_(*ret)
@@ -1018,6 +1046,10 @@ class Glpi91(DyngroupDatabaseHelper):
             return [[self.software.c.name, query[3][0]], [self.softwareversions.c.name, query[3][1]]]
         elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
             return [[self.manufacturers.c.name, query[3][0]], [self.software.c.name, query[3][1]], [self.softwareversions.c.name, query[3][2]]]
+        elif query[2] == 'Register key':
+            return [[self.registries.c.name, query[3]]]
+        elif query[2] == 'Register key value':
+            return [[self.registries.c.name, query[3][0]], [self.regcontents.c.value , query[3][1]]]
         return []
 
 
@@ -2885,6 +2917,22 @@ class Glpi91(DyngroupDatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
+    def getAllRegistryKeyValue(self, session, ctx, keyregister, value):
+        """
+        @return: all key value defined in the GLPI database
+        """
+        ret = None
+        #if not hasattr(ctx, 'locationsid'):
+            #complete_ctx(ctx)
+        session = create_session()
+        query = session.query(distinct(RegContents.value))
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.registries.c.key.like('%'+keyregister+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+    
+    @DatabaseHelper._sessionm
     def getAllVersion4Software(self, session, ctx, softname, version = ''):
         """
         @return: all softwares defined in the GLPI database
@@ -3461,6 +3509,21 @@ class Glpi91(DyngroupDatabaseHelper):
             query = query.filter(self.locations.c.completename.like('%'+filt+'%'))
         ret = query.group_by(self.locations.c.completename)
         ret=ret.all()
+        session.close()
+        return ret
+
+    def getAllRegistryKey(self, ctx, filt = ''):
+        """
+        Returns the registry keys name.
+        @return: list Register key name
+        """
+        ret = None
+        session = create_session()
+        query = session.query(Registries.name)
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.registries.c.name.like('%'+filt+'%'))
+        ret = query.all()
         session.close()
         return ret
 

@@ -40,6 +40,7 @@ fi
 lsmod > loaded-modules
 sysctl -a > kernel-parameters
 cp /etc/hosts .
+cp /etc/fstab .
 
 ln -s /etc/mmc conf-mmc
 ln -s /etc/pulse-xmpp-agent conf-relay-agent
