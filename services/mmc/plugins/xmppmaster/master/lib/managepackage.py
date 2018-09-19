@@ -76,8 +76,7 @@ class apimanagepackagemsc:
                    filter['filter'] in data_file_conf_json['version'] or
                    filter['filter'] in data_file_conf_json['targetos']):
                     continue
-            if 'filter1' in filter and \
-                not data_file_conf_json['name'].startswith("Pulse Agent v"):
+            if 'filter1' in filter :
                 if not (filter['filter1'] in data_file_conf_json['targetos']):
                     continue
             for key in data_file_conf_json:
