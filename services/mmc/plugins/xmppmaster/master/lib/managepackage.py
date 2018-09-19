@@ -93,7 +93,7 @@ class apimanagepackagemsc:
 
         nb = len(result)
         if start is not None and end is not None:
-            return ((nb, result[start:end] ))
+            return ((nb, result[int(start):int(end)] ))
         else:
             return ((nb, result))
 
