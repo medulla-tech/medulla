@@ -55,28 +55,41 @@ class apimanagepackagemsc:
         pending = False
         if "pending" in filter:
             pending = True
-        tab = ['description','targetos','sub_packages','entity_id','reboot','version','metagenerator','id','name','basepath','size']
+        tab = ['description',
+               'targetos',
+               'sub_packages',
+               'entity_id',
+               'reboot',
+               'version',
+               'metagenerator',
+               'id',
+               'name',
+               'basepath']
         result = []
 
-        for x in apimanagepackagemsc.packagelistmscconfjson(pending):
+        for packagefiles in apimanagepackagemsc.packagelistmscconfjson(pending):
             obj={}
-            aa = apimanagepackagemsc.readjsonfile(x)
-            for key in aa:
+            data_file_conf_json = apimanagepackagemsc.readjsonfile(packagefiles)
+            if 'filter' in filter:
+                if not (filter['filter'] in data_file_conf_json['name'] or 
+                   filter['filter'] in data_file_conf_json['description'] or 
+                   filter['filter'] in data_file_conf_json['version']):
+                    continue
+            for key in data_file_conf_json:
                 if key in tab:
-                    obj[str(key)] = str(aa[key])
-                    #obj.append(str(key) : str(aa[key])})
+                    obj[str(key)] = str(data_file_conf_json[key])
                 elif key == 'commands':
-                    for z in aa['commands']:
-                        obj[str(z)] = str(aa['commands'][z])
+                    for z in data_file_conf_json['commands']:
+                        obj[str(z)] = str(data_file_conf_json['commands'][z])
                 elif key == 'inventory':
-                    for z in aa['inventory']:
+                    for z in data_file_conf_json['inventory']:
                         if z == 'queries':
-                            for t in aa['inventory']['queries']:
-                                obj[str(t)] = str(aa['inventory']['queries'][t])
+                            for t in data_file_conf_json['inventory']['queries']:
+                                obj[str(t)] = str(data_file_conf_json['inventory']['queries'][t])
                         else:
-                            obj[str(z)] = str(aa['inventory'][z])
+                            obj[str(z)] = str(data_file_conf_json['inventory'][z])
             obj['files']=[]
-            obj['basepath'] = os.path.dirname(x)
+            obj['basepath'] = os.path.dirname(packagefiles)
             #re = simplecommand("du -b %s | awk '{print $1}'"%obj['basepath'])
             #obj['size'] = re['result'][0].replace('\n', '')
             obj['size'] = apimanagepackagemsc.sizedirectory(obj['basepath'])
@@ -93,7 +106,7 @@ class apimanagepackagemsc:
 
         nb = len(result)
         if start is not None and end is not None:
-            return ((nb, result[int(start):int(end)] ))
+            return ((nb, result[int(start):int(end) ]))
         else:
             return ((nb, result))
 
