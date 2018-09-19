@@ -30,6 +30,6 @@ UNLOCK TABLES;
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 17;
+UPDATE version SET Number = 18;
 
 COMMIT;
