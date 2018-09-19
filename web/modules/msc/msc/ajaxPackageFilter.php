@@ -118,7 +118,16 @@ if (!empty($_GET['uuid'])) {
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages
 //list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
-//jfkjfk
+if (isset($_GET['uuid'])){
+    $platform = xmlrpc_getMachinefromuuid($_GET['uuid'])['platform'];
+    if ( stripos($platform, "win") !== false) {
+        $filter['filter1'] = "win";
+    }elseif( stripos($platform, "linux") !== false){
+        $filter['filter1'] = "linux";
+    }elseif( stripos($platform, "darwin") !== false){
+        $filter['filter1'] = "darwin";
+    }
+};
 list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
 $packages[0][1] = 0;
 $packages[0][2] = array();
@@ -139,6 +148,7 @@ foreach ($packages as $c_package) {
         $a_packages[] = $package->label;
         $a_description[] = $package->description;
         $a_pversions[] = $package->version;
+        $a_pos[] = $package->targetos;
         $a_sizes[] = prettyOctetDisplay($package->size);
         if ($group != null) {
             $current_convergence_status = getConvergenceStatus($p_api->mountpoint, $package->id, $group_convergence_status, $package->associateinventory);

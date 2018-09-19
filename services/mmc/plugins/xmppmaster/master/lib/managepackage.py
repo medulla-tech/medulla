@@ -73,7 +73,12 @@ class apimanagepackagemsc:
             if 'filter' in filter:
                 if not (filter['filter'] in data_file_conf_json['name'] or 
                    filter['filter'] in data_file_conf_json['description'] or 
-                   filter['filter'] in data_file_conf_json['version']):
+                   filter['filter'] in data_file_conf_json['version'] or
+                   filter['filter'] in data_file_conf_json['targetos']):
+                    continue
+            if 'filter1' in filter and \
+                not data_file_conf_json['name'].startswith("Pulse Agent v"):
+                if not (filter['filter1'] in data_file_conf_json['targetos']):
                     continue
             for key in data_file_conf_json:
                 if key in tab:
@@ -90,8 +95,6 @@ class apimanagepackagemsc:
                             obj[str(z)] = str(data_file_conf_json['inventory'][z])
             obj['files']=[]
             obj['basepath'] = os.path.dirname(packagefiles)
-            #re = simplecommand("du -b %s | awk '{print $1}'"%obj['basepath'])
-            #obj['size'] = re['result'][0].replace('\n', '')
             obj['size'] = apimanagepackagemsc.sizedirectory(obj['basepath'])
             for fich in apimanagepackagemsc.listfilepackage(obj['basepath'] ):
                 pathfile = os.path.join("/",os.path.basename(os.path.dirname(fich)))
@@ -109,7 +112,6 @@ class apimanagepackagemsc:
             return ((nb, result[int(start):int(end) ]))
         else:
             return ((nb, result))
-
 
 class managepackage:
     @staticmethod

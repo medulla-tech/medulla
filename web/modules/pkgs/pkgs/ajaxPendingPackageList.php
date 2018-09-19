@@ -58,7 +58,7 @@ $packages = $packages[1];
 $empty = new EmptyActionItem();
 $assoc = new ActionItem(_T("Associate package", "pkgs"), "associate_files", "associate_files", "pkgs", "pkgs", "pkgs");
 $assoc_list = array();
-$desc = $params = $names = $versions = array();
+$desc = $params = $names = $versions = $os = array();
 foreach ($packages as $p) {
     $p = $p[0];
     if ($p['why'] || $p['why'] == 'association') {
@@ -69,6 +69,7 @@ foreach ($packages as $p) {
     $names[] = $p['label'];
     $versions[] = $p['version'];
     $desc[] = $p['description'];
+    $os[] = $p['targetos'];
     $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']), 'from'=>'pending', 'plabel'=>base64_encode($p['label']), 'pversion'=>base64_encode($p['version']), 'mode'=>'edit', 'why'=>$p['why']);
 }
 
@@ -77,12 +78,12 @@ $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($desc, _T("Description", "pkgs"));
 $n->addExtraInfo($versions, _T("Version", "pkgs"));
+$n->addExtraInfo($os, _T("Os", "pkgs"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count - 1;
-
 $n->addActionItem($assoc_list);
 $n->addActionItem(new ActionPopupItem(_T("Show mirrors", "pkgs"), "rsync", "info", "pkgs", "pkgs", "pkgs"));
 //$n->addActionItem(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));

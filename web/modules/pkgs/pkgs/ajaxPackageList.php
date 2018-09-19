@@ -90,7 +90,7 @@ $licenses = array();
 $size = array();
 $err = array();
 $desc = array();
-
+$os = array();
 $editActions = array();
 $editAction = new ActionItem(_T("Edit a package", "pkgs"), "edit", "edit", "pkgs", "pkgs", "pkgs");
 $editExpertAction = new EmptyActionItem(_T("Please switch to Expert mode to edit this package", "pkgs"));
@@ -127,6 +127,7 @@ foreach ($packages as $p) {
         $uuid = $p['id'];
         $versions[] = $p['version'];
         $desc[] = $p['description'];
+        $os[] = $p['targetos'];
         // #### begin licenses ####
         $tmp_licenses = '';
         if ($p['associateinventory'] == 1 && isset($p['licenses']) && !empty($p['licenses'])) {
@@ -196,6 +197,7 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo($desc, _T("Description", "pkgs"));
 $n->addExtraInfo($versions, _T("Version", "pkgs"));
 $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
+$n->addExtraInfo($os, _T("Os", "pkgs"));
 $n->addExtraInfo($size, _T("Package size", "pkgs"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
