@@ -1,4 +1,5 @@
 * [BUGFIX] Fix the wrong count of machines in MachineOnline widget
+* [BUGFIX] Remove PluginPanel dashboard plugin
 
 mmc-core 4.4.1
 --------------
