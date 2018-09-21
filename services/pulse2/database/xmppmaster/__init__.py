@@ -45,7 +45,7 @@ import time
 import os, pwd
 import traceback
 import sys
-
+import re
 class XmppMasterDatabase(DatabaseHelper):
     """
     Singleton Class to query the xmppmaster database.
@@ -138,7 +138,7 @@ class XmppMasterDatabase(DatabaseHelper):
         list_server_relay = self.get_List_jid_ServerRelay_enable(enabled=1)
         for jid in list_server_relay:
             #exclude local package server
-            if jid[0] == "rspulse@pulse/pulse01":
+            if jid[0].startswith("rspulse@pulse/"):
                 continue
             self.setSyncthingsync(uuidpackage, jid[0], typesynchro , watching = 'yes')
 

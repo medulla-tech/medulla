@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `xmppmaster`.`syncthingsync` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `uuidpackage` VARCHAR(45) NOT NULL,
     `typesynchro` VARCHAR(45) NOT NULL DEFAULT 'create',
-    `relayserver_jid` INT(11) NOT NULL,
+    `relayserver_jid` VARCHAR(255)  NOT NULL,
     `watching` VARCHAR(3) NULL DEFAULT 'yes',
     PRIMARY KEY (`id`));
 
@@ -42,6 +42,17 @@ ADD COLUMN `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `watching`;
 ALTER TABLE `xmppmaster`.`syncthingsync` 
 CHANGE COLUMN `date` `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `id`;
 
+
+ALTER TABLE `xmppmaster`.`syncthingsync` 
+CHANGE COLUMN `relayserver_jid` `relayserver_jid` VARCHAR(255) NOT NULL ;
+
+
+ALTER TABLE `xmppmaster`.`relayserver` CHANGE COLUMN `jid` `jid` VARCHAR(255) NOT NULL ;
+ALTER TABLE `xmppmaster`.`machines` CHANGE COLUMN `jid` `jid` VARCHAR(255) NOT NULL ;
+-- table Deploy
+ALTER TABLE `xmppmaster`.`deploy` 
+CHANGE COLUMN `jid_relay` `jid_relay` VARCHAR(255) NOT NULL ,
+CHANGE COLUMN `jidmachine` `jidmachine` VARCHAR(255) NOT NULL ;
 
 UPDATE version SET Number = 17;
 

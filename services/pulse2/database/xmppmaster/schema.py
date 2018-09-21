@@ -88,7 +88,7 @@ class Syncthingsync(Base, XmppMasterDBObj):
     #id = Column(Integer, primary_key=True)
     uuidpackage = Column(String(40), nullable=False)
     typesynchro =  Column(String(10), nullable=False, default = "create")
-    relayserver_jid = Column(String(80))
+    relayserver_jid = Column(String(255))
     watching =  Column(String(3), nullable=False, default = "yes")
     date = Column(DateTime, default=datetime.datetime.utcnow)
 
@@ -99,7 +99,7 @@ class Machines(Base, XmppMasterDBObj):
     # Here we define columns for the table machines.
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
-    jid = Column(String(45), nullable=False)
+    jid = Column(String(255), nullable=False)
     platform = Column(String(60))
     hostname = Column(String(45), nullable=False)
     archi= Column(String(45), nullable=False)
@@ -153,7 +153,7 @@ class RelayServer(Base, XmppMasterDBObj):
     ipconnection = Column(String(45))
     portconnection = Column(Integer)
     mask = Column(String(45))
-    jid = Column(String(45))
+    jid = Column(String(255))
     longitude = Column(String(45))
     latitude = Column(String(45))
     enabled=  Column(Boolean, unique=False)
@@ -248,8 +248,8 @@ class Deploy(Base, XmppMasterDBObj):
     inventoryuuid = Column(String(11), nullable=False)
     group_uuid = Column(String(11))
     pathpackage = Column(String(100), nullable=False)
-    jid_relay = Column(String(45), nullable=False)
-    jidmachine = Column(String(45), nullable=False)
+    jid_relay = Column(String(255), nullable=False)
+    jidmachine = Column(String(255), nullable=False)
     state = Column(String(45), nullable=False)
     sessionid = Column(String(45), nullable=False)
     start = Column(DateTime, default=datetime.datetime.now())
