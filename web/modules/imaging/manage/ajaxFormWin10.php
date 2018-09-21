@@ -30,7 +30,7 @@
     #codeToCopy{
         width:400px;
     }
-</style> 
+</style>
 <script type="text/javascript">
 var template = [
 '<? echo $strin; ?>xml version="1.0" encoding="utf-8"<? echo $strou; ?>',
@@ -447,7 +447,7 @@ $f->push(new Table());
         new TrFormElement(_T('Title','imaging'), new InputTplTitle('Location',"name file xml")),
         array("required" => True,'value'=>(isset($parameters)) ? $parameters['Title'] : '')
     );
-    //_____________     
+    //_____________
     $f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? $parameters['Notes'] : 'Enter your comments here...'))));
 
 $f->pop();
@@ -461,7 +461,7 @@ $f->add(new TitleElement(_T("Os Settings", "imaging")));
 $f->add(new TrFormElement("", new Iconereply('General_Settings',$InfoBule_General_Settings)));
 $f->push(new Table());
 
-    //_____________     
+    //_____________
     $key1 = new InputTplTitle('ProductKey1',$InfoBule_ProductKey);
     $key1->setSize(5);
     $key2 = new InputTplTitle('ProductKey2',$InfoBule_ProductKey);
@@ -652,13 +652,13 @@ $f->push(new Table());
         array("value" => (isset($parameters)) ? $parameters['ProtectComputer'] : "1","required" => True)
     );
     //_____________
-    $Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
+    /*$Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
     $Updates->setElements($UpdatesTabElement);
     $Updates->setElementsVal(array('1','2','3','4'));
     $f->add(
         new TrFormElement(_T('System Updates','imaging').":", $Updates),
         array("value" => (isset($parameters)) ? $parameters['Updates'] : "3","required" => True)
-    );
+    );*/
     //_____________
     $NetworkLocation = new SelectItemtitle("NetworkLocation",$InfoBule_NetworkLocation );
     $NetworkLocation->setElements(array('Home','Work','Other'));
