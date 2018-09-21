@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import uuid
+import re
 import sys, os
 import os.path
 import json
@@ -71,13 +72,14 @@ class apimanagepackagemsc:
             obj={}
             data_file_conf_json = apimanagepackagemsc.readjsonfile(packagefiles)
             if 'filter' in filter:
-                if not (filter['filter'] in data_file_conf_json['name'] or 
-                   filter['filter'] in data_file_conf_json['description'] or 
-                   filter['filter'] in data_file_conf_json['version'] or
-                   filter['filter'] in data_file_conf_json['targetos']):
+                if not (re.search(filter['filter'], data_file_conf_json['name'] , re.IGNORECASE) or
+                        re.search(filter['filter'], data_file_conf_json['description'] , re.IGNORECASE) or
+                        re.search(filter['filter'], data_file_conf_json['version'] , re.IGNORECASE) or
+                        re.search(filter['filter'], data_file_conf_json['targetos'] , re.IGNORECASE)):
                     continue
-            if 'filter1' in filter :
-                if not (filter['filter1'] in data_file_conf_json['targetos']):
+            if 'filter1' in filter and \
+                not data_file_conf_json['name'].startswith("Pulse Agent v"):
+                if not (re.search(filter['filter1'], data_file_conf_json['targetos'] , re.IGNORECASE)):
                     continue
             for key in data_file_conf_json:
                 if key in tab:
