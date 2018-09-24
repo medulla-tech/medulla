@@ -274,6 +274,10 @@ echo "<br>";
             ';
 }
 echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";
+
+// group includ computers_list.php
+// les parametres get sont utilisés par computers_list pour l'appel de ajaxComputersList qui compose l'appel a list_computers
+// mmc/modules/base/includes/computers_list.inc.php
 $group->prettyDisplay();
 
 

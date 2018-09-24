@@ -400,11 +400,8 @@ function xmlrpc_getCountOnlineMachine() {
 
 //######################################
 // package et syncthing
-//#####################################
+//######################################
 
-function xmlrpc_xmppGetAllPackages($filter, $start, $end) {
-    return xmlCall("xmppmaster.xmppGetAllPackages", array($filter, $start, $end));
-}
 
 function xmlrpc_xmpp_regiter_synchro_package($packageid, $typesynchro = "create") {
     return xmlCall("xmppmaster.xmpp_regiter_synchro_package", array($packageid, $typesynchro));
@@ -414,5 +411,16 @@ function xmlrpc_xmpp_delete_synchro_package($packageid) {
     return xmlCall("xmppmaster.xmpp_delete_synchro_package", array($packageid));
 }
 
+//######################################
+// package 
+//######################################
+
+function xmlrpc_xmppGetAllPackages($filter, $start, $end) {
+    return xmlCall("xmppmaster.xmppGetAllPackages", array($filter, $start, $end));
+}
+
+function xmpp_getPackageDetail($pid){
+    return xmlCall("xmppmaster.xmpp_getPackageDetail", array($pid));
+}
 
 ?>
