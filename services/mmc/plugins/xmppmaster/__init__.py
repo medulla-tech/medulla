@@ -570,11 +570,15 @@ def runXmppScript(cmd,machine):
 def getCountOnlineMachine():
     return XmppMasterDatabase().getCountOnlineMachine()
 
-#jfkjfk
-############### synchro syncthing package #####################
+
+############### package #####################
 def xmppGetAllPackages(filter,  start, end):
     return apimanagepackagemsc.loadpackagelistmsc(filter, start, end)
 
+def xmpp_getPackageDetail(pid_package):
+    return apimanagepackagemsc.getPackageDetail(pid_package)
+
+############### synchro syncthing package #####################
 def xmpp_regiter_synchro_package(uuidpackage, typesynchro):
     return XmppMasterDatabase().xmpp_regiter_synchro_package(uuidpackage, typesynchro)
 

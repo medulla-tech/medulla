@@ -52,6 +52,43 @@ class apimanagepackagemsc:
         return size
 
     @staticmethod
+    def getPackageDetail(pid):
+        result={}
+        package = os.path.join("/", "var" , "lib", "pulse2", "packages", pid, "conf.json")
+        datapacquage = apimanagepackagemsc.readjsonfile(package)
+        result['postCommandSuccess'] = datapacquage['commands']['postCommandSuccess']
+        result['preCommand'] = datapacquage['commands']['preCommand']
+        result['installInit'] = datapacquage['commands']['installInit']
+        result['postCommandFailure'] = datapacquage['commands']['postCommandFailure']
+        result['command'] = datapacquage['commands']['command']
+
+        result['entity_id'] = datapacquage['entity_id']
+        result['basepath'] = os.path.dirname(package)
+        result['associateinventory'] =datapacquage['inventory']['associateinventory']
+        result['licenses'] =datapacquage['inventory']['licenses']
+        result['id'] = datapacquage['id']
+        result['version'] = datapacquage['version']
+        result['label'] = datapacquage['name']
+        result['metagenerator'] = datapacquage['metagenerator']
+        result['sub_packages'] = datapacquage['sub_packages']
+        result['description'] = datapacquage['description']
+        result['targetos'] =  datapacquage['targetos']
+        result['size'] = apimanagepackagemsc.sizedirectory(result['basepath'])
+        result['Qversion'] = datapacquage['inventory']['queries']['Qversion']
+        result['boolcnd'] = datapacquage['inventory']['queries']['boolcnd']
+        result['Qsoftware'] = datapacquage['inventory']['queries']['Qsoftware']
+        result['Qvendor'] = datapacquage['inventory']['queries']['Qvendor']
+        result['do_reboot'] = 'disable'
+        result['files'] = []
+        for fich in apimanagepackagemsc.listfilepackage(result['basepath'] ):
+            pathfile = os.path.join("/",os.path.basename(os.path.dirname(fich)))
+            result['files'].append({"path" : pathfile,
+                                    "name" : os.path.basename(fich),
+                                    "id" : str(uuid.uuid4()),
+                                    "size" : os.path.getsize(fich) })
+        return ((result))
+
+    @staticmethod
     def loadpackagelistmsc(filter = None, start = None, end = None):
         pending = False
         if "pending" in filter:
