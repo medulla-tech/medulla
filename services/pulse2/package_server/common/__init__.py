@@ -732,7 +732,7 @@ class Common(pulse2.utils.Singleton):
                 filepath = os.path.join(path, _file)
                 os.unlink(filepath)
                 del self.packages[pid].files.internals[internals_files.index(_file)]
-            self._createMD5File(path, force_compute=True)
+            #self._createMD5File(path, force_compute=True)
             # Reloading all packages info
             #desc = self.desc
             #self.init(self.config)
@@ -1048,7 +1048,7 @@ class Common(pulse2.utils.Singleton):
                 else:
                     if not l_package.id in self.need_assign:
                         self.logger.debug("detect a new package %s"%(l_package.id))
-                        self._createMD5File(os.path.dirname(file))
+                        ##self._createMD5File(os.path.dirname(file))
                         pid = self._treatDir(os.path.dirname(file), mp, access, True, l_package)
                         self.associatePackage2mp(pid, mp)
                         self.already_declared[file] = True
@@ -1075,7 +1075,7 @@ class Common(pulse2.utils.Singleton):
                         Common().rsyncPackageOnMirrors(pid)
                 elif isReady == self.SMART_DETECT_CHANGES: # reload the content of the config file
                     self.logger.debug("'%s' has changed"%(str(l_package.id)))
-                    self._createMD5File(os.path.dirname(file))
+                    #self._createMD5File(os.path.dirname(file))
                     pid = self._treatDir(os.path.dirname(file), mp, access, True, l_package, True) # force loading
                     self.associatePackage2mp(pid, mp)
                     self.packageDetectionDate[pid] = self.__getDate(file)
@@ -1107,7 +1107,7 @@ class Common(pulse2.utils.Singleton):
                 return
 
             self.logger.debug("_treatConfFile %s"%(file))
-            self._createMD5File(os.path.dirname(file))
+            #self._createMD5File(os.path.dirname(file))
             pid = self._treatDir(os.path.dirname(file), mp, access)
             self.already_declared[file] = True
             if pid in self.newAssociation:
