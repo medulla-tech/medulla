@@ -292,7 +292,8 @@ if (count($package) == 0) {
     $activeItem = "index";
     # get existing package
     $pid = base64_decode($_GET['pid']);
-    $package = getPackageDetail($p_api_id, $pid);
+    //$package = getPackageDetail($p_api_id, $pid);
+    $package = xmpp_getPackageDetail($pid);
     if ($package['do_reboot']) {
         $package['reboot'] = $package['do_reboot'];
     }
