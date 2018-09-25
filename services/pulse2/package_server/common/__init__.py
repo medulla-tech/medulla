@@ -25,6 +25,7 @@
 """
     Pulse2 PackageServer
 """
+import uuid
 import os.path
 import os
 import stat
@@ -1206,7 +1207,8 @@ class Common(pulse2.utils.Singleton):
         (fsize, fmd5) = [0,0]
         if not f in self.file_properties:
             fsize = os.path.getsize(f)
-            fmd5 = md5file(f)
+            # fmd5 = md5file(f)
+            fmd5  = str(uuid.uuid1())
             self.logger.debug('ish: Creating md5 entry for '+f)
             self.file_properties[f] = [fsize, fmd5]
         else:
