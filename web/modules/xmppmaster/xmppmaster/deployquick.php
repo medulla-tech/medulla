@@ -35,6 +35,15 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
     <div style="width : 600px;">
         <?
+        if(!isset($_GET['os']))
+        {
+          if(isset($_GET["objectUUID"]))
+          {
+            $machine = xmlrpc_getMachinefromuuid($_GET["objectUUID"]);
+            $_GET["os"] = $machine["platform"];
+          }
+        }
+
         echo "<h1>Quick Actions</h1>";
         echo "<h2>Machine :".$_GET['cn']."</h2>";
         echo "<h2>Os : ".$_GET['os']."</h2>";
