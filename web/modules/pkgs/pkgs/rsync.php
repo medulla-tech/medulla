@@ -74,11 +74,6 @@ echo "<table class='listinfos'>";
     echo "<tr>";
     echo '<th headers="resultsync" colspan="1" >'._T("Relay servers already synchronized : ", 'pkgs').$nbs.'/'.$nbt.' ('.$nbsp .'%)</th>';
     echo "</tr>";
-    echo "<tr>";
-            echo "<th>";
-            echo "Name Server";
-            echo "</th>";
-    echo "</tr>";
     echo "</thead>";
 
     echo "<tbody>";
@@ -98,11 +93,6 @@ echo "<table class='listinfos'>";
     echo "<tr>";
     echo '<th headers="resultnosync" colspan="1" >'._T("Relay servers not yet synchronized : ", 'pkgs').$nbns.'/'.$nbt.' ('.$nbnsp .'%)</th>';
     echo "</tr>";
-        echo "<tr>";
-                echo "<th>";
-                echo "Name Server";
-                echo "</th>";
-        echo "</tr>";
     echo "</thead>";
     echo "<tbody>";
 
