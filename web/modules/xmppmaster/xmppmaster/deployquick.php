@@ -342,7 +342,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     })
 
     jQuery('#vncchangeperms, #vncchangeperms0').on('click', function(){
-        if (jQuery('#checkboxvncchangeperms').val() == "on"){
+        if (jQuery('#checkboxvncchangeperms').is(":checked")){
             uuid['askpermission'] = 1
         }
         else {
