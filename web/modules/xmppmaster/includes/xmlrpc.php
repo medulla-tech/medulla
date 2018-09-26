@@ -411,6 +411,11 @@ function xmlrpc_xmpp_delete_synchro_package($packageid) {
     return xmlCall("xmppmaster.xmpp_delete_synchro_package", array($packageid));
 }
 
+//jfkjfk
+function xmlrpc_xmpp_get_info_synchro_packageid($pid_ppackage){
+    return xmlCall("xmppmaster.xmpp_get_info_synchro_packageid", array($pid_ppackage));
+}
+
 //######################################
 // package 
 //######################################
