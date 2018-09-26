@@ -367,7 +367,7 @@ input[type="text"] {
     })
 
     jQuery('#vncchangeperms,#vncchangeperms0').on('click', function(){
-        if (jQuery('#checkboxvncchangeperms').val() == "on"){
+        if (jQuery('#checkboxvncchangeperms').is(":checked")){
           groupinfo['askpermission'] = 1
         }
         else {
