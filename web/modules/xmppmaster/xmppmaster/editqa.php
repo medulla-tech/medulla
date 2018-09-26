@@ -79,7 +79,7 @@ else{
     if ($editcreate == 'createqa'){
         $f->add( new TrFormElement(_T("Command name", "xmpmaster"), new InputTpl('namecmd')), array("value" => $namecmd, "required" => True));
     }
-    $f->add( new TrFormElement(_T("Command", "xmpmaster"), new InputTpl('customcmd')), array("value" => $customcmd, "required" => True));
+    $f->add( new TrFormElement(_T("Command", "xmpmaster"), new TextareaTpl('customcmd')), array("value" => $customcmd, "required" => True));
 
     $f->add( new TrFormElement(_T("Command description", "xmpmaster"), new InputTpl('description')), array("value" => $description,"required" => True));
 
