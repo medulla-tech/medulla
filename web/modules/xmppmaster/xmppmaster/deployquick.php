@@ -126,6 +126,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     <td>
                         <select id="select">';
                         foreach($qacomand['command'] as $tabblecommand){
+                            $tabblecommand['customcmd'] = preg_replace('/\r?\n|\r/',' ', $tabblecommand['customcmd']);
+                            $tabblecommand['customcmd'] = trim ( $tabblecommand['customcmd'] , " \t\n\r");
                             echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].'</option>';
                                     $mm[] =  "'".addslashes($tabblecommand['namecmd'])."': {
                                         'description' : '".addslashes( $tabblecommand['description'] )."',
