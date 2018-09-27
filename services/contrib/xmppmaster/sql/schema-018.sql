@@ -35,6 +35,6 @@ CHANGE COLUMN `jidmachine` `jidmachine` VARCHAR(255) NOT NULL ;
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 17;
+UPDATE version SET Number = 18;
 
 COMMIT;
