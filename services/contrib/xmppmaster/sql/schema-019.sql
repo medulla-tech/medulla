@@ -22,13 +22,15 @@
 
 START TRANSACTION;
 
-LOCK TABLES `rules` WRITE;
-INSERT INTO `rules` VALUES (9,'networkaddress','Associate relay server based on network address',9);
-UNLOCK TABLES;
-
+ALTER TABLE `xmppmaster`.`relayserver` CHANGE COLUMN `jid` `jid` VARCHAR(255) NOT NULL ;
+ALTER TABLE `xmppmaster`.`machines` CHANGE COLUMN `jid` `jid` VARCHAR(255) NOT NULL ;
+-- table Deploy
+ALTER TABLE `xmppmaster`.`deploy` 
+CHANGE COLUMN `jid_relay` `jid_relay` VARCHAR(255) NOT NULL ,
+CHANGE COLUMN `jidmachine` `jidmachine` VARCHAR(255) NOT NULL ;
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 18;
+UPDATE version SET Number = 19;
 
 COMMIT;
