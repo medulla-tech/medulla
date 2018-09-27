@@ -203,6 +203,10 @@ var template = [
 '<Path>net user Administrator /active:yes</Path>',
 '<Order>1</Order>',
 '</RunSynchronousCommand>',
+'<RunSynchronousCommand wcm:action="add">',
+'<Order>2</Order>',
+'<Path>powershell.exe -executionpolicy bypass -File c:\\Windows\\INF\\driverpack\\install-driver-cert.ps1</Path>',
+'</RunSynchronousCommand>',
 '</RunSynchronous>',
 '</component>',
 '</settings>',
@@ -515,13 +519,13 @@ $f->push(new Table());
         array("value" => (isset($parameters)) ? $parameters['ProtectComputer'] : "1","required" => True)
     );
     //_____________
-    $Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
+    /*$Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
     $Updates->setElements($UpdatesTabElement);
     $Updates->setElementsVal(array('1','2','3','4'));
     $f->add(
         new TrFormElement(_T('System Updates','imaging').":", $Updates),
         array("value" => (isset($parameters)) ? $parameters['Updates'] : "3","required" => True)
-    );
+    );*/
     //_____________
     $NetworkLocation = new SelectItemtitle("NetworkLocation",$InfoBule_NetworkLocation );
     $NetworkLocation->setElements(array('Home','Work','Other'));
