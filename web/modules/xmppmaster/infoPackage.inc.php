@@ -57,6 +57,9 @@ $submod->addPage($page);
 $page = new Page("customQA", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("shareqa", _T('Share QA', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("filesmanagers", _T('XMPP files managers', 'xmppmaster'));
 $submod->addPage($page);
 
