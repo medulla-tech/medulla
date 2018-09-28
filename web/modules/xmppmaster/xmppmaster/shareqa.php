@@ -29,7 +29,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/users-xmlrpc.inc.php");
 require("modules/kiosk/graph/packages.css");
 
-
 if (isset($_POST['bcreate'])){
   $json = json_decode($_POST['jsonDatas'], true);
   $json["users"] = json_decode($json['users'], true);
@@ -71,6 +70,11 @@ foreach($users_list[1] as $user)
 {
   if($user['uid'] != $_SESSION['login'])
     $list_str .= '<li data-draggable="item" data-uuid="'.$user['uid'].'">'.$user['uid'].'</li>';
+}
+
+if($_SESSION['login'] != "root")
+{
+  $list_str .= '<li data-draggable="item" data-uuid="root">root</li>';
 }
 
 $f = new ValidatingForm(array("id" => "profile-form", "onchange"=>"generate_json()","onclick"=>"generate_json()"));
