@@ -39,11 +39,13 @@ if (isset($_POST['bcreate'])){
     {
       $response = xmlrpc_create_Qa_custom_command($user, $json['os'], $json['namecmd'], $json['customcmd'], $json['description'] );
       if ($response== -1) {
-        $fail_list[] = $user;
+        $response = xmlrpc_updateName_Qa_custom_command($user, $json['os'], $json['namecmd'], $json['customcmd'], $json['description']);
+        if($response == -1)
+          $fail_list[] = $user;
       }
     }
     if (count($fail_list)){
-      new NotifyWidgetFailure("Error creating custom Quick Action");
+      new NotifyWidgetFailure("Error when sharing custom Quick Action");
     }
     else {
       new NotifyWidgetSuccess(sprintf("Custom Quick Action %s shared successfully",$json['namecmd']));
@@ -55,41 +57,52 @@ if (isset($_POST['bcreate'])){
   //header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/shareqa", array()));
 }
 
-
 $p = new PageGenerator(_T("Share the Quick Action",'xmppmaster').' '.$_GET['namecmd']);
 $p->setSideMenu($sidemenu);
 $p->display();
-
 
 $errors = "";
 $count = get_users_detailed($errors, "", 0, 0)[0];
 $users_list = get_users_detailed($errors, "", 0, $count);
 
+$users_owning_qa = xmlrpc_get_list_of_users_for_shared_qa($_GET["namecmd"]);
+
 $list_str = "";
 foreach($users_list[1] as $user)
 {
-  if($user['uid'] != $_SESSION['login'])
+  if($user['uid'] != $_SESSION['login'] && !in_array($user['uid'], $users_owning_qa))
     $list_str .= '<li data-draggable="item" data-uuid="'.$user['uid'].'">'.$user['uid'].'</li>';
 }
-
-if($_SESSION['login'] != "root")
+if($_SESSION['login'] != "root" && !in_array('root', $users_owning_qa))
 {
   $list_str .= '<li data-draggable="item" data-uuid="root">root</li>';
 }
-
 $f = new ValidatingForm(array("id" => "profile-form", "onchange"=>"generate_json()","onclick"=>"generate_json()"));
 $f->push(new Table());
+
+$f->add(new TitleElement(_T("User Already Owning Quick Action", "xmppmaster")." ".$_GET['namecmd']));
+
+$owner_str = "<ul style='margin-top:0;margin-bottom:0;'>";
+foreach($users_owning_qa as $user)
+{
+  $owner_str.='<li>'.$user.'</li>';
+}
+$owner_str .= "</ul>";
+$f->add(new SpanElement("<div style='max-height=30px;columns: 5;background-color:rgb(221,221,221);border: 2px solid #888;border-radius: 0.2em;'>".$owner_str."</div>","users"));
+
+
 $f->add(new TitleElement(_T("Select Users", "xmppmaster")));
-$f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="users">
+
+$f->add(new SpanElement('<div><input type="button" onclick="selectAllUsers()" value="Select all users"/></div><div style="display:inline-flex; width:100%" id="users">
     <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
     <div style="width:100%">
         <h1>'._T("Available users","xmppmaster").'</h1>
-        <ol data-draggable="target" id="available-users">'.$list_str.'</ol>
+        <ol style="width:95%" data-draggable="target" id="available-users">'.$list_str.'</ol>
     </div>
 
     <div style="width:100%">
         <h1>'._T("Selected users","xmppmaster").'</h1>
-        <ol data-draggable="target" id="selected-users">
+        <ol style="width:95%" data-draggable="target" id="selected-users">
         </ol>
     </div>
 </div>',"users"));
@@ -102,6 +115,14 @@ $f->display(); // display the form
 ?>
 <script src="modules/xmppmaster/graph/js/drag-and-drop.js"></script>
 <script>
+  function selectAllUsers()
+  {
+    jQuery.each(jQuery("#available-users").children("li"), function(id, user){
+      jQuery("#selected-users").append(user);
+    });
+    //generate_json();
+  }
+
   function generate_json()
   {
       //Clean the json and regenere new users list

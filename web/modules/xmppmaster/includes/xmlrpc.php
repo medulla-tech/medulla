@@ -402,4 +402,7 @@ function xmlrpc_getCountOnlineMachine() {
     return xmlCall("xmppmaster.getCountOnlineMachine", array());
 }
 
+function xmlrpc_get_list_of_users_for_shared_qa($namecmd){
+  return xmlCall("xmppmaster.get_list_of_users_for_shared_qa", array($namecmd));
+}
 ?>
