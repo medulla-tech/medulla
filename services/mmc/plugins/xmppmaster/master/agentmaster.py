@@ -57,6 +57,7 @@ import pluginsmaster
 import cPickle
 import logging
 import threading
+import netaddr
 from time import mktime, sleep
 from datetime import datetime
 from multiprocessing import Process, Queue, TimeoutError
@@ -1327,6 +1328,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         break
                     
             
+
+            elif x[0] == 9:
+                #Associate relay server based on network address
+                logger.debug("analyse rule: Associate relay server based on network address")
+                networkaddress = netaddr.IPNetwork(data['xmppip'] + "/" + data['xmppmask']).cidr
+                logger.debug("Network address: %s" % networkaddress)
+                result1 = XmppMasterDatabase().algorulebynetworkaddress(networkaddress,
+                                                                        data['classutil'])
+                if len(result1) > 0:
+                    logger.debug("applied Associate relay server based on network address")
+                    result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
+                    break
 
         try:
             logger.debug(" user %s and hostname %s [connection ip %s port : %s]" % (data['information']['users'][0], data['information']['info']['hostname'], result[0], result[1]))

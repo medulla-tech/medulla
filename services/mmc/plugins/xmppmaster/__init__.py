@@ -592,3 +592,6 @@ def xmpp_get_info_synchro_packageid(uuidpackage):
     list_relayservernosync = XmppMasterDatabase().get_relayservers_no_sync_for_packageuuid(uuidpackage)
     list_relayserver = XmppMasterDatabase().getRelayServer(enable = True )
     return [list_relayservernosync, list_relayserver]
+
+def get_list_of_users_for_shared_qa(namecmd):
+    return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)

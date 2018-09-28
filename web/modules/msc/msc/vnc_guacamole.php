@@ -44,12 +44,23 @@ foreach ($ee as $k){
                 <?
                 foreach ($url as $clef=>$val){
                     if ($clef == "SSH"){
+                      $os_up_case = strtoupper($dd["platform"]);
+                      if (strpos ($os_up_case, "WINDOW") !== false){
+                          $src = 'modules/xmppmaster/graph/img/cmd.png';
+                          $title = "CMD";
+                          $alt = "Remote cmd View";
+                      }
+                      else {
+                        $src = 'modules/xmppmaster/graph/img/SSHguacamole.png';
+                        $title = "SSH";
+                        $alt = "Remote ssh View";
+                      }
                         echo '<td align="center" id="ssh">
-                            <img src="modules/xmppmaster/graph/img/SSHguacamole.png"
-                            alt="remote ssh View"
+                            <img src="'.$src.'"
+                            alt="'.$alt.'"
                             style="width:104px;height:104px;">
                             <br>
-                            <h1>SSH</h1>
+                            <h1>'.$title.'</h1>
                         </td>';
                         }
                     if ($clef == "RDP"){
