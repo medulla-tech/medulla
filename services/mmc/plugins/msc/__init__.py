@@ -421,8 +421,10 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(MscDatabase().getIdCommandOnHost(ctx, id_command))
 
     def get_deployxmppscheduler(self,login,  nin, max, filt):
-        # ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().deployxmppscheduler(login, nin, max, filt))
+
+    def get_deployxmpponmachine(self, command_id):
+        return xmlrpcCleanup(MscDatabase().deployxmpponmachine(command_id))
 
     def expire_all_package_commands(self, pid):
         """
