@@ -495,6 +495,23 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
+    def get_list_of_users_for_shared_qa(self, session, namecmd):
+        """Return the list of users who are owning the specified QA.
+        Param:
+            str: namecmd the name of the quickaction
+        Returns :
+            list of users"""
+
+        query = session.query(Qa_custom_command.user).filter( Qa_custom_command.namecmd == namecmd)
+
+        if query is not None:
+            user_list = [user[0] for user in query]
+            return user_list
+        else:
+            return []
+
+
+    @DatabaseHelper._sessionm
     def getlistcommandforuserbyos( self,
                                    session,
                                    user,
