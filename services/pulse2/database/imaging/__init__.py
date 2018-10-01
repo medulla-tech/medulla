@@ -3086,13 +3086,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                  select_from(self.entity.join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id)).\
                  filter(and_(self.imaging_server.c.packageserver_uuid == imaging_server_uuid, self.imaging_server.c.associated == True)).\
                  first()
-
         if entity == None:
             entity = session.query(Entity).\
                     select_from(self.entity.join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id)).\
-                    filter(and_(self.imaging_server.c.id == uuid2id(imaging_server_uuid), self.imaging_server.c.associated == True)).\
+                    filter(and_(self.entity.c.uuid == imaging_server_uuid, self.imaging_server.c.associated == True)).\
                     first()
-
         session.close()
         return entity
 
@@ -3429,9 +3427,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getCustomMenubylocation(self, location):
         session = create_session()
-        ret = session.query(self.target.c.uuid,self.target.c.name,self.target.c.nic_uuid ).filter(and_(self.target.c.fk_entity == fromUUID(location),
-                                                                                  self.target.c.is_registered_in_package_server == 1,
-                                                                                  self.target.c.type.in_([1])))
+        ret = session.query(self.target.c.uuid,
+                                self.target.c.name,
+                                self.target.c.nic_uuid)\
+                            .select_from(
+                                    self.target.join(self.menu,
+                                                     self.menu.c.id == self.target.c.fk_menu)\
+                                    .join(self.entity, self.target.c.fk_entity == self.entity.c.id))\
+                .filter(and_(Menu.custom_menu == 1,
+                             self.entity.c.uuid == location))
+
         q=ret.distinct().all()
         q1=[]
         for z in q:
