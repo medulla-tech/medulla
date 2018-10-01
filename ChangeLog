@@ -2,6 +2,7 @@
 * [FEATURE] Assign a machine to a relay server based on the machine's network address
 * [BUGFIX]  Automatically call inventory was done by pxe
 * [BUGFIX]  The imaging triggers now really starts to id 1000
+* [BUGFIX]  Fix lenght of the jid from 45 to 255
 
 Pulse 2 4.4.1
 ===========
