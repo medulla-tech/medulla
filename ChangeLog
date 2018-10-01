@@ -1,3 +1,10 @@
+* [FEATURE] Add status action into the packages editor
+* [FEATURE] Send update message to kiosks when a package is edited
+* [FEATURE] Add a launcher info for the kiosk into the packages editor
+* [FEATURE] Add sections into the package editor
+* [FEATURE] By default select "empty package" into the packages editor
+* [FEATURE] Send update message to the detected kiosks when a profile is edited
+* [FEATURE] A kiosk profile can be created without OU selected
 * [FEATURE] Add glpi 9.2 support
 * [FEATURE] Add Agent "Auto Update" functionnality
 * [FEATURE] Show the presence status in backup machine list
