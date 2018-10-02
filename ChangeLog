@@ -1,4 +1,5 @@
 * [FEATURE] Add glpi 9.2 support
+* [FEATURE] Assign a machine to a relay server based on the machine's network address
 * [BUGFIX]  Automatically call inventory was done by pxe
 * [BUGFIX]  The imaging triggers now really starts to id 1000
 

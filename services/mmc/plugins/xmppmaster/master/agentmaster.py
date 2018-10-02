@@ -57,6 +57,7 @@ import pluginsmaster
 import cPickle
 import logging
 import threading
+import netaddr
 from time import mktime, sleep
 from datetime import datetime
 from multiprocessing import Process, Queue, TimeoutError
@@ -1324,6 +1325,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         logger.debug("user rule selects relayserver for machine %s user %s \n %s" % (data['information']['info']['hostname'], data['information']['users'][0], result))
                         break
 
+            elif x[0] == 9:
+                #Associate relay server based on network address
+                logger.debug("analyse rule: Associate relay server based on network address")
+                networkaddress = netaddr.IPNetwork(data['xmppip'] + "/" + data['xmppmask']).cidr
+                logger.debug("Network address: %s" % networkaddress)
+                result1 = XmppMasterDatabase().algorulebynetworkaddress(networkaddress,
+                                                                        data['classutil'])
+                if len(result1) > 0:
+                    logger.debug("applied Associate relay server based on network address")
+                    result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
+                    break
+
         try:
             logger.debug(" user %s and hostname %s [connection ip %s port : %s]" % (data['information']['users'][0], data['information']['info']['hostname'], result[0], result[1]))
             XmppMasterDatabase().log("[user %s hostanme %s] : Relay server for connection ip %s port %s" % (data['information']['users'][0], data['information']['info']['hostname'], result[0], result[1]))
@@ -1710,10 +1723,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 uuid = 'UUID' + str(computer.id)
                                 logger.debug("** update uuid %s for machine %s "%(uuid, msg['from'].bare))
                                 XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
+                                if 'countstart' in data and data['countstart'] == 1:
+                                    logger.debug("** call inventory on machine Pxe")
+                                    self.callinventory(data['from'])
+                                    return
                                 osmachine = ComputerManager().getComputersOS(str(computer.id))
                                 if "Unknown operating system (PXE" in osmachine[0]['OSName']:
                                     logger.debug("** call inventory on machine Pxe")
                                     self.callinventory(data['from'])
+                                    return
                                 if PluginManager().isEnabled("kiosk"):
                                     from mmc.plugins.kiosk import handlerkioskpresence
                                     #send msg data to kiosk when an inventory registered
