@@ -167,7 +167,7 @@ input[type="text"] {
                         foreach($qacomand['command'] as $tabblecommand){
                             $tabblecommand['customcmd'] = preg_replace('/\r?\n|\r/',' ', $tabblecommand['customcmd']);
                             $tabblecommand['customcmd'] = trim ( $tabblecommand['customcmd'] , " \t\n\r");
-                            echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].'</option>';
+                            echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].' ('.$tabblecommand['os'].')</option>';
                                     $mm[] =  '"'.addslashes($tabblecommand['namecmd']).'": {
                                         "description" : "'.addslashes( $tabblecommand['description'] ).'",
                                         "customcmd" : "'.addslashes($tabblecommand['customcmd']).'",
