@@ -179,7 +179,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ## command_qa = command_qa.group_by(Command_qa.id)
             command_qa = command_qa.order_by(desc(Command_qa.id))
             if during_the_last_seconds:
-                command_qa = command_qa.filter( Command_qa.command_start >= (datetime.utcnow() - timedelta(seconds=during_the_last_seconds)))
+                command_qa = command_qa.filter( Command_qa.command_start >= (datetime.now() - timedelta(seconds=during_the_last_seconds)))
             #nb = self.get_count(deploylog)
         #lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
 
@@ -1421,7 +1421,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if group_uuid:
             deploylog = deploylog.filter( Deploy.group_uuid == group_uuid)
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
         if state:
             deploylog = deploylog.filter( Deploy.state == state)
 
@@ -1494,7 +1494,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if uuidinventory:
             deploylog = deploylog.filter( Deploy.inventoryuuid == uuidinventory)
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
         if state:
             deploylog = deploylog.filter( Deploy.state == state)
         #else:
@@ -1582,7 +1582,7 @@ class XmppMasterDatabase(DatabaseHelper):
             deploylog = deploylog.filter( Deploy.state == state)
 
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
 
         if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
@@ -1649,7 +1649,7 @@ class XmppMasterDatabase(DatabaseHelper):
             deploylog = deploylog.filter( Deploy.login == login)
 
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
 
         if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
