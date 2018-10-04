@@ -177,11 +177,6 @@ service pulse2-launchers start >/dev/null 2>&1 || :
 service pulse2-launchers stop >/dev/null 2>&1 || :
 
 %files -n pulse2-launchers
-service asks the launcher to connect to a set of target computers and start
-a deployment. Multiple launchers can be instantiated at the same time for
-scalability.
-
-%files -n pulse2-launchers
 %{_sysconfdir}/mmc/pulse2/launchers/keys
 
 #--------------------------------------------------------------------

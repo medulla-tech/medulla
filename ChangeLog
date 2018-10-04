@@ -1,7 +1,15 @@
 * [FEATURE] Add glpi 9.2 support
 * [FEATURE] Assign a machine to a relay server based on the machine's network address
+* [FEATURE] Add extract driver for Win10
 * [BUGFIX]  Automatically call inventory was done by pxe
 * [BUGFIX]  The imaging triggers now really starts to id 1000
+* [BUGFIX]  Fix lenght of the jid from 45 to 255
+* [BUGFIX]  Fix inventory call for pxe machines
+* [BUGFIX]  Fix count of online machines
+* [BUGFIX]  Switches the ssh icon ( use cmd icon for windows )
+* [BUGFIX]  Correct backslash in sysprep template
+* [BUGFIX]  Fix to know who is the owner of a QA
+* [BUGFIX]  Fix display of imaging custom menus
 
 Pulse 2 4.4.1
 ===========
