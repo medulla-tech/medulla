@@ -179,7 +179,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ## command_qa = command_qa.group_by(Command_qa.id)
             command_qa = command_qa.order_by(desc(Command_qa.id))
             if during_the_last_seconds:
-                command_qa = command_qa.filter( Command_qa.command_start >= (datetime.utcnow() - timedelta(seconds=during_the_last_seconds)))
+                command_qa = command_qa.filter( Command_qa.command_start >= (datetime.now() - timedelta(seconds=during_the_last_seconds)))
             #nb = self.get_count(deploylog)
         #lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
 
@@ -492,6 +492,23 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().debug("delQa_custom_command error %s ->"%str(e))
             return -1
+
+
+    @DatabaseHelper._sessionm
+    def get_list_of_users_for_shared_qa(self, session, namecmd):
+        """Return the list of users who are owning the specified QA.
+        Param:
+            str: namecmd the name of the quickaction
+        Returns :
+            list of users"""
+
+        query = session.query(Qa_custom_command.user).filter( Qa_custom_command.namecmd == namecmd)
+
+        if query is not None:
+            user_list = [user[0] for user in query]
+            return user_list
+        else:
+            return []
 
 
     @DatabaseHelper._sessionm
@@ -1404,7 +1421,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if group_uuid:
             deploylog = deploylog.filter( Deploy.group_uuid == group_uuid)
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
         if state:
             deploylog = deploylog.filter( Deploy.state == state)
 
@@ -1477,7 +1494,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if uuidinventory:
             deploylog = deploylog.filter( Deploy.inventoryuuid == uuidinventory)
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
         if state:
             deploylog = deploylog.filter( Deploy.state == state)
         #else:
@@ -1565,7 +1582,7 @@ class XmppMasterDatabase(DatabaseHelper):
             deploylog = deploylog.filter( Deploy.state == state)
 
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
 
         if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
@@ -1632,7 +1649,7 @@ class XmppMasterDatabase(DatabaseHelper):
             deploylog = deploylog.filter( Deploy.login == login)
 
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
 
         if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
