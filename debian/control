@@ -254,7 +254,7 @@ Description: Pulse 2 support plugin (provide remote access)
 
 Package: pulse2-package-server
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common (= ${binary:Version}), genisoimage, python-mmc-base (>= 3.1.1-1), python-openssl, binutils | binutils-multiarch, pulse-imaging-scripts
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common (= ${binary:Version}), genisoimage, python-mmc-base (>= 3.1.1-1), python-openssl, binutils | binutils-multiarch
 Description: Pulse 2 package server
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
