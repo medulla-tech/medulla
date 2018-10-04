@@ -46,7 +46,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     echo "<h2>Machine : ". $_GET['cn']." ( ".$_GET['os']." )"."</h2>";
 
      $jidmachine = xmlrpc_getjidMachinefromuuid( $_GET['UUID'] );
-
      switch($_GET['information']){
         case 'battery':
             $re =  xmlrpc_remoteXmppMonitoring("battery", $jidmachine, 100);
@@ -67,7 +66,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 if ($re == ""){
                 $re = "time out command";
                 }
-                
+
         echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
         echo "WIN SERVICES\n";
             foreach( $re[result] as $datareseau){
@@ -200,6 +199,49 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 echo "</tr>";
             }
             echo "</table>";
+        break;
+        case 'cputimes':
+        echo "TIMES CPU\n";
+        //todo mise en forme result
+        $suject = array();
+        $suject['subaction'] = 'cputimes';
+        $r = explode(",", $_GET['args']);
+        if (count($r) != 0 and $r[0] != ""){
+            $suject['args'] = $r;
+        }else{
+            $suject['args'] = array();
+        }
+        $suject['kwargs'] =  json_decode($_GET['kwargs'], true);
+        $sujectmonitoring = json_encode ($suject);
+        $re =  xmlrpc_remoteXmppMonitoring($sujectmonitoring, $jidmachine, 100);
+        $tabresult = json_decode($re['result'][0], true);
+        $keystab = array_keys ($tabresult['allcpu']);
+        echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+            echo "<thead><tr>";
+            //Proto Local address@Remote address@Status@PID@Program name
+                echo "<th>CPU num</th>";
+                foreach($keystab as $data){
+                            echo "<th>$data</th>";
+                        }
+                echo "</tr></thead>";
+                for ($i = 0; $i < $tabresult['nbcpu'];$i++){
+                    echo "<tbody><tr>";
+                        echo "<td>".$i."</td>";
+                      //print_r($tabresult['cpu'.$i] );
+                        foreach ($tabresult['cpu'.$i] as $dd => $va){
+                            echo "<td>".$va."</td>";
+                        }
+                  echo "</tr></tbody>";
+                }
+                echo "<tfoot>
+                <tr>";
+                    echo "<td>Total Times</td>";
+                    foreach ($tabresult['allcpu'] as $dd => $va){
+                        echo "<td>".$va."</td>";
+                    }
+                echo "</tr>
+                </tfoot>";
+        echo "</table>";
         break;
     }
 ?>
