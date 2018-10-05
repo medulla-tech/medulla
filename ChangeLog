@@ -1,6 +1,7 @@
 * [FEATURE] Add glpi 9.2 support
 * [FEATURE] Assign a machine to a relay server based on the machine's network address
 * [FEATURE] Add extract driver for Win10
+* [FEATURE] Add Custom postinstall scripts
 * [BUGFIX]  Automatically call inventory was done by pxe
 * [BUGFIX]  The imaging triggers now really starts to id 1000
 * [BUGFIX]  Fix lenght of the jid from 45 to 255
