@@ -418,16 +418,58 @@ def senddata(query,ip ="127.0.0.1", port =1001 ):
     monSocket.sendto("\xBA%s" % query, adresse)
     monSocket.close()
 
-def mac_adressexml(file_content):
+def mac_adressexmlinformationsimple(file_content):
     root = ET.fromstring(file_content)
+    addr=[]
     for child in root:
         if child.tag == "CONTENT":
             for cc in child:
                 if cc.tag == "NETWORKS":
+                    print 
                     for dd in cc:
                         if dd.tag == "MACADDR":
-                            return dd.text
-    return ""
+                            if dd.text !='00:00:00:00:00:00':
+                                addr.append(dd.text)
+    addr=list(set(addr))
+    if len(addr) > 1:
+        logging.getLogger().debug("several mac address found : %s"%addr)
+    if len(addr) == 1:
+        logging.getLogger().debug("<MACADDR> selected : %s"%addr[0])
+        return addr[0]
+    else:
+        return None
+
+def mac_adressexmlpxe(file_content):
+    root = ET.fromstring(file_content)
+    addr=[]
+    for child in root:
+        if child.tag == "CONTENT":
+            for cc in child:
+                if cc.tag == "NETWORKS":
+                    print 
+                    for dd in cc:
+                        if dd.tag == "MACADDRPXE":
+                            if dd.text !='00:00:00:00:00:00':
+                                addr.append(dd.text)
+                            #return dd.text
+    addr=list(set(addr))
+    if len(addr) > 0:
+        logging.getLogger().debug("<MACADDRPXE> selected : %s"%addr[0])
+        return addr[0]
+    else:
+        logging.getLogger().debug("no interface report for PXE")
+        return None
+
+def mac_adressexml(file_content):
+    macadrss = mac_adressexmlpxe(file_content)
+    if macadrss != None:
+        return macadrss
+    else:
+        macadrss = mac_adressexmlinformationsimple(file_content)
+        if macadrss != None:
+            return macadrss
+    logging.getLogger().error("Mac adress Mising return '00:00:00:00:00:00'")
+    return '00:00:00:00:00:00'
 
 class MyEventHandler(pyinotify.ProcessEvent):
     def process_IN_ACCESS(self, event):
