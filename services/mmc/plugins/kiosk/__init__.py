@@ -268,7 +268,10 @@ def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype
     structuredatakiosk = get_packages_for_machine(machine)
     datas = {
     'subaction':'initialisation_kiosk',
-    'data' : structuredatakiosk
+    'data' : {
+        'action': 'packages',
+        'packages_list': structuredatakiosk
+        }
     }
 
     if not fromplugin:
@@ -404,7 +407,10 @@ def notify_kiosks():
         structuredatakiosk = get_packages_for_machine(machine)
         datas = {
         'subaction':'profiles_updated',
-        'data' : structuredatakiosk
+        'data' : {
+            'action':'packages',
+            'packages_list': ructuredatakiosk
+            }
         }
         send_message_to_machine(datas, machine['jid'], name_random(6, "profiles_updated"))
 
@@ -433,7 +439,7 @@ def get_packages_for_machine(machine):
                                                            {'hide_win_updates': True, 'history_delta': ''})
     for x in softwareonmachine:
         list_software_glpi.append([x[0][1],x[1][1], x[2][1]])
-    print list_software_glpi # ordre information [["Vendor","Name","Version"],]
+
     structuredatakiosk = []
 
     #Create structuredatakiosk for initialization
@@ -441,8 +447,8 @@ def get_packages_for_machine(machine):
         structuredatakiosk.append( __search_software_in_glpi(list_software_glpi,
         packageprofile, structuredatakiosk))
     logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, machine['hostname']))
-    return structuredatakiosk
 
+    return structuredatakiosk
 
 def update_launcher(uuid, launcher):
     """ Send the new launcher for the specified package.
