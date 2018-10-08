@@ -409,7 +409,7 @@ def notify_kiosks():
         'subaction':'profiles_updated',
         'data' : {
             'action':'packages',
-            'packages_list': ructuredatakiosk
+            'packages_list': structuredatakiosk
             }
         }
         send_message_to_machine(datas, machine['jid'], name_random(6, "profiles_updated"))
