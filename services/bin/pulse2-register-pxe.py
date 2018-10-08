@@ -570,6 +570,11 @@ if __name__ == '__main__':
         elif option == "-d":
             logging.getLogger().info("logger mode debug")
             daemonize = False
+            ch = logging.StreamHandler(sys.stdout)
+            ch.setLevel(logging.DEBUG)
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            ch.setFormatter(formatter)
+            logging.getLogger().addHandler(ch)
             logging.getLogger().setLevel(logging.DEBUG)
             print "pid file: %d\n"%os.getpid()
             print "kill -9 %s"%os.getpid()
