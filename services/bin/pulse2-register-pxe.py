@@ -401,9 +401,7 @@ def parsejsoninventory(file, file_content):
                     except Exception as e:
                         traceback.print_exc(file=logoutput)
                         logging.getLogger().warn("Unrecognized Partition Layout disk %s partition%s %s"%(diskid, partitionid, str(e)))
-
     xmlstring = ET.tostring(REQUEST)
-    print xmlstring
     return  '<?xml version="1.0" encoding="utf-8"?>' + xmlstring
 
 
@@ -425,7 +423,6 @@ def mac_adressexmlinformationsimple(file_content):
         if child.tag == "CONTENT":
             for cc in child:
                 if cc.tag == "NETWORKS":
-                    print 
                     for dd in cc:
                         if dd.tag == "MACADDR":
                             if dd.text !='00:00:00:00:00:00':
@@ -439,6 +436,26 @@ def mac_adressexmlinformationsimple(file_content):
     else:
         return None
 
+def macadressclear(file_content, interface_mac_clear):
+    root = ET.fromstring(file_content)
+    boolremoveelement = False
+    for child in root:
+        if child.tag == "CONTENT":
+            for network in child.findall('NETWORKS'):
+                for dd in network:
+                    if dd.tag == "MACADDR" and dd.text == interface_mac_clear:
+                        boolremoveelement = True
+                        child.remove(network)
+                        break
+    if boolremoveelement:
+        logging.getLogger().debug("Clear interface with macadress %s "%interface_mac_clear)
+        xml_str =  ET.tostring(root).encode("ASCII", 'ignore')
+        logging.getLogger().debug("New xml netwrok : %s"%xml_str)
+        xml_str = xml_str.replace('\n', '')
+        return xml_str
+        pass
+    return  file_content
+
 def mac_adressexmlpxe(file_content):
     root = ET.fromstring(file_content)
     addr=[]
@@ -446,7 +463,6 @@ def mac_adressexmlpxe(file_content):
         if child.tag == "CONTENT":
             for cc in child:
                 if cc.tag == "NETWORKS":
-                    print 
                     for dd in cc:
                         if dd.tag == "MACADDRPXE":
                             if dd.text !='00:00:00:00:00:00':
@@ -460,7 +476,7 @@ def mac_adressexmlpxe(file_content):
         logging.getLogger().debug("no interface report for PXE")
         return None
 
-def mac_adressexml(file_content):
+def mac_adressexml(file_content):    
     macadrss = mac_adressexmlpxe(file_content)
     if macadrss != None:
         return macadrss
@@ -519,6 +535,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
                 m = re.search('<REQUEST>.*<\/REQUEST>', file_content)
                 file_content = str(m.group(0))
                 try:
+                    file_content = macadressclear(file_content, "00:00:00:00:00:00")
                     mac = mac_adressexml(file_content)
                     try:
                         # add Mc:mac address end of datagram
