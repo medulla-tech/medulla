@@ -53,6 +53,11 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             deploypackage(data,  message, xmppobject)
         elif data['subaction'] == 'update':
             deploypackage(data,  message, xmppobject)
+        elif data['subaction'] == 'presence':
+            machine =  XmppMasterDatabase().getMachinefromjid(message['from'])
+            if "id" in machine:
+                result = XmppMasterDatabase().updatemachine_kiosk_presence(machine['id'], data['value'])
+
         else:
             print "No subaction found"
     else:

@@ -1115,6 +1115,28 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
+    def updatemachine_kiosk_presence(self, session, idmachine, presence):
+        """Modify the kiosk presence for the specified machines
+            Params:
+                session : sql session
+                idmachine : int corresponding to the xmppmaster.machine.id
+                presence : str representing the presence ("True" or "False")
+
+            Returns:
+                int : 1 value if success
+                int : -1 value if failure
+        """
+        try:
+            session.query(Machines).filter( Machines.id ==  idmachine).\
+                    update({ Machines.kiosk_presence : presence})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
     def updatedeploystate1(self, session, sessionid, state):
         try:
             session.query(Deploy).filter(and_(Deploy.sessionid == sessionid,
