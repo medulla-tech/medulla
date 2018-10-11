@@ -50,7 +50,7 @@ class buttonTpl2 extends AbstractTpl {
         $this->cssClass = $class;
     }
 
-    function display($arrParam) {      
+    function display($arrParam = array()) {
         if (isset($this->id,$this->text))
             printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
     }
