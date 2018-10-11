@@ -264,8 +264,8 @@ if (isset($_POST['bconfirm'])) {
         );
         //spooling priority
         $rb = new RadioTpl("spooling");
-        $rb->setChoices(array(_T('hight priority', 'pkgs'), _T('ordinary priority', 'pkgs')));
-        $rb->setvalues(array('hight', 'ordinary'));
+        $rb->setChoices(array(_T('high priority', 'pkgs'), _T('ordinary priority', 'pkgs')));
+        $rb->setvalues(array('high', 'ordinary'));
         $rb->setSelected($_POST['spooling']);
         $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
