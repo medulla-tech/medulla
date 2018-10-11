@@ -76,7 +76,7 @@ class hourInputTpl extends InputTpl{
         $this->fieldType = "text";
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
         $arrParam['disabled']= ' style="width:40px;" ';
         parent::display($arrParam);
     }
@@ -98,7 +98,7 @@ class buttonTpl extends AbstractTpl {
         $this->cssClass = $class;
     }
 
-    function display($arrParam) {      
+    function display($arrParam = array()) {
         if (isset($this->id,$this->text))
             printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
     }

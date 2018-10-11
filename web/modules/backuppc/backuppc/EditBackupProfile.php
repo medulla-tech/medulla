@@ -112,6 +112,7 @@ $list = array(
 
 $sel->setElements(array_values($list));
 $sel->setElementsVal(array_keys($list));
+$profile['encoding'] = isset($profile['encoding'])?$profile['encoding'] : "";
 $sel->setSelected($profile['encoding']);
 
  $f->add(
