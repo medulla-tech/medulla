@@ -71,7 +71,7 @@ class LedElement extends HtmlElement {
         $this->color=$color;
         $this->value='<img style="vertical-align: middle" src="modules/imaging/graph/images/led_circle_'.$this->color.'.png">';
     }
-    function display(){
+    function display($arrParam = array()){
         print $this->value;
     }
     function __toString() {
@@ -205,7 +205,7 @@ function format_health($up, $mem) {
     $m = preg_split("/[ ]+/", $mem[1]);
     $ret .= format_mem_bar("<em>"._("Memory")."</em> : ".humanSize($m[2]*1024)."/".humanSize(($m[5]+$m[6])*1024)."/".humanSize($m[1]*1024), $m[1], $m[2],$m[5]+$m[6]);
     $m = preg_split("/[ ]+/", $mem[3]);
-    if ($m[1] > 0) {
+    if (isset($m[1]) && $m[1] > 0) {
         $ret .= format_mem_bar("<em>"._("Swap")."</em> : ".humanSize($m[2]*1024)."/".humanSize($m[1]*1024), $m[1], $m[2]);
     }
     return $ret;
@@ -275,7 +275,7 @@ class ImageLogs extends HtmlElement {
         $this->logs = $logs;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         $lines = array();
         $errlines = array();
         foreach($this->logs as $line => $msg) {
