@@ -262,6 +262,12 @@ if (isset($_POST['bconfirm'])) {
         $f->add(
                 new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
         );
+        //spooling priority
+        $rb = new RadioTpl("spooling");
+        $rb->setChoices(array(_T('hight priority', 'pkgs'), _T('ordinary priority', 'pkgs')));
+        $rb->setvalues(array('hight', 'ordinary'));
+        $rb->setSelected($_POST['spooling']);
+        $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
         $packagesInOption = '';
         foreach(xmpp_packages_list() as $package)
