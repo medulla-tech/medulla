@@ -1857,13 +1857,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             if k in data['pluginscheduled']:
                                 if v != data['pluginscheduled'][k]:
                                     #deploy on changement de version
-                                    print "changement de version"
-                                    print "*******************"
+                                    logger.info("The version is changing")
+                                    logger.info("*******************")
                                     self.deployPluginscheduled(msg, k)
                                     self.restartAgent(msg['from'])
                                     break
                                 else:
-                                    print "pas de changement de version"
+                                    logger.info("No version change")
                             else:
                                 #le plugin k n'est pas dans la liste des plugin sur A
                                 if k in self.plugintypescheduler:
