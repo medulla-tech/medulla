@@ -11,6 +11,8 @@
 * [BUGFIX]  Correct backslash in sysprep template
 * [BUGFIX]  Fix to know who is the owner of a QA
 * [BUGFIX]  Fix display of imaging custom menus
+* [BUGFIX]  Fix finding MAC Adress while using PXE Inventory
+* [BUGFIX]  Fix Machines mysql database when using several relays
 
 Pulse 2 4.4.1
 ===========

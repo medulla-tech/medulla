@@ -1534,6 +1534,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.debug("Machine %s already exists in base" % msg['from'].bare)
                     return
 
+                if XmppMasterDatabase().getPresencejiduser(msg['from'].user):
+                    logger.debug("Machine idem jid, domain change %s" % msg['from'].bare)
+                    #the registration of the machine database must be deleted, so that it is updated.
+                    XmppMasterDatabase().delPresenceMachinebyjiduser(msg['from'].user)
+
                 """ Check machine information from agent """
                 logger.debug("** Traitement and check machine information from agent and enregistrement in base")
                 info = json.loads(base64.b64decode(data['completedatamachine']))
