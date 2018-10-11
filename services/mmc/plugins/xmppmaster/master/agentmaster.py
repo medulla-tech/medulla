@@ -321,7 +321,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                self.muc_onlineConf)
         # install plugins list file is not empty.
         self.schedule('remote update plugin', 60, self.remoteinstallPlugin, repeat=True)
-        # appell function 
+        # appell function
         self.add_event_handler("restartmachineasynchrone", self.restartmachineasynchrone, threaded=True)
         # Called for all messages
         self.add_event_handler('message', self.message, threaded=True)#, threaded=True
@@ -917,8 +917,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         break
 
     def remoteinstallPlugin(self):
-        """ 
-            this function install the plugins to agent M et RS 
+        """
+            this function install the plugins to agent M et RS
         """
         restart_machine = set()
         for indexplugin in range(0, len(self.file_deploy_plugin)):
