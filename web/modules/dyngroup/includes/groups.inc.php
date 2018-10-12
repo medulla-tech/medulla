@@ -275,7 +275,10 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
 <input type="hidden" name="lsmembers" value="<?php echo base64_encode(serialize($listOfMembers)); ?>" />
 <input type="hidden" name="willBeUnregistered" value="<?php echo base64_encode(serialize($willBeUnregistered)); ?>" />
-<input type="hidden" name="computersgroupedit" value="<?php echo $computersgroupedit; ?>" />
+<?
+$computersgroupedittmp = isset($computersgroupedit) ? $computersgroupedit : "";
+?>
+<input type="hidden" name="computersgroupedit" value="<?php echo $computersgroupedittmp; ?>" />
 <input type="hidden" name="id" value="<?php echo  $gid ?>" />
 <input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" />
 <input type="submit" name="breset" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" />

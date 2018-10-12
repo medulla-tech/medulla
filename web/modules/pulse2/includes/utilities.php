@@ -25,9 +25,9 @@ require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
 
 function quickGet($name, $p_first = false, $urldecode = True) {
     if ($p_first) {
-        if (strlen($_POST[$name])) {
+        if (isset($_POST[$name]) && strlen($_POST[$name])) {
             $res = stripslashes($_POST[$name]);
-        } elseif (strlen($_GET[$name])) {
+        } elseif (isset($_GET[$name]) && strlen($_GET[$name])) {
             $res = $_GET[$name];
         } else {
             $res = null;
