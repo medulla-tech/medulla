@@ -202,7 +202,7 @@ li.quickg a {
             <td class="label" width="40%" style = "text-align: right;">Shell command</td>
             <td>
                 <span id="container_input_command">
-                    <input value="<? echo $_POST['command']; ?>" 
+                    <input value="<? echo $command; ?>" 
                         name="command" 
                         style = "width : 400px;"
                         id="command" 
@@ -221,7 +221,7 @@ li.quickg a {
             <tr>
                 <td class="label" width="40%" style = "text-align: right;"><br></td>
                 <td>
-                    <span>Command result : </span><span>'.$_POST['command'].'</span>
+                    <span>Command result : </span><span>'.$command.'</span>
                 </td>
             </tr>';
         } 
