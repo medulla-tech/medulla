@@ -77,7 +77,7 @@ li.groupshare a {
     } else {
         $start = 0;
     }
-
+    $end = isset($_GET["end"]) ? $_GET["end"] : $maxperpage;
     $result = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], '', $start, $end, $filter, $edit=1);
 
     $params = array();
