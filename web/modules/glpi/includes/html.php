@@ -26,7 +26,7 @@ class AjaxFilterGlpi extends AjaxFilter {
         $this->AjaxFilter($url, $divid, $params, $formid);
     }
 
-    function display() {
+    function display($arrParam = array()) {
         global $conf;
         $root = $conf["global"]["root"];
         $maxperpage = $conf["global"]["maxperpage"];
