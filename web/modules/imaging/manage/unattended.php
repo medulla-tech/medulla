@@ -29,7 +29,7 @@ require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
 }
-define (DIR_SYS_PREP, "/var/lib/pulse2/imaging/postinst/sysprep");
+define ("DIR_SYS_PREP", "/var/lib/pulse2/imaging/postinst/sysprep");
 ?>
 
 <?php
