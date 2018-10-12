@@ -41,7 +41,7 @@ textarea {
     $command = isset($_POST['command']) ? $_POST['command'] : "";
     $tab = explode("/",$machine);
     $uiduniq = uniqid ("shellcommande");
-    recherche = false;
+    $recherche = false;
     
     if ($machine == "") 
         $p = new PageGenerator(_T("Console Agent Relay Server", 'xmppmaster'));
