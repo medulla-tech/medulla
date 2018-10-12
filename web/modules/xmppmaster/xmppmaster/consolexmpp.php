@@ -41,12 +41,12 @@ textarea {
     $command = isset($_POST['command']) ? $_POST['command'] : "";
     $tab = explode("/",$machine);
     $uiduniq = uniqid ("shellcommande");
-    //
+    recherche = false;
+    
     if ($machine == "") 
         $p = new PageGenerator(_T("Console Agent Relay Server", 'xmppmaster'));
     else
         $p = new PageGenerator(_T("Console", 'xmppmaster')." $machine");
-    
     $p->setSideMenu($sidemenu);
     $p->display();
 
@@ -104,7 +104,7 @@ textarea {
             <td class="label" width="40%" style = "text-align: right;">Shell command</td>
             <td>
                 <span id="container_input_command">
-                    <input value="<? echo $_POST['command']; ?>"
+                    <input value="<? echo $command; ?>"
                         title="<? echo _T("return key to start your order", 'xmppmaster'); ?>"
                         name="command" 
                         id="command" 
@@ -119,7 +119,7 @@ textarea {
 
         <tr>
             <td class="label" width="40%" style = "text-align: right;"><br></td>
-            <td><img id="imagewait" src="graph/ajax_loading.gif" alt="" /><span>Command result : </span><span><? echo $_POST['command']; ?></span></td>
+            <td><img id="imagewait" src="graph/ajax_loading.gif" alt="" /><span>Command result : </span><span><? echo $command; ?></span></td>
         </tr>
 
         <tr>
