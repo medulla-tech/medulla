@@ -2,7 +2,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2010 Mandriva, http://www.mandriva.com
-# (c) 2016-2017 siveo, http://www.siveo.net
+# (c) 2016-2018 siveo, http://www.siveo.net
 # $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
@@ -58,6 +58,7 @@ import pwd
 import grp
 import string
 import threading
+import re
 
 logger = logging.getLogger()
 
@@ -66,6 +67,152 @@ sys.path.append("plugins")
 Fault = xmlrpclib.Fault
 ctx = None
 VERSION = "4.5"
+
+
+class IncludeStartsWithFilter(logging.Filter):
+    """This class create a specialized filter for logging.getLogger.
+    This filter include ONLY the logs which starts by the specified criterion"""
+    def __init__(self, criterion=""):
+        """At the creation of the filter, the search criterion is given.
+        Param:
+            criterion: str of the searched criterion"""
+        super(logging.Filter, self).__init__()
+        self.criterion = criterion
+
+    def filter(self, record):
+        """The filter method say "print" or "not print" the recorded message to the logger
+        Param:
+            record: corresponding to the log entry.
+        Returns:
+            True if the criterion is found (= print the record)
+            or
+            False if the criterion is not found (= don't print the record)
+        """
+        return record.getMessage().startswith(self.criterion)
+
+
+# include log containing the criterions
+class IncludeContainsFilter(logging.Filter):
+    """This class create a specialized filter for logging.getLogger.
+    This filter include ONLY the logs which contains the specified criterions"""
+    def __init__(self, criterion=[]):
+        """At the creation of the filter, the search criterion is given.
+        Param:
+            criterion: list of the searched criterions"""
+        super(logging.Filter, self).__init__()
+        self.criterion = criterion
+
+    def filter(self, record):
+        """The filter method say "print" or "not print" the recorded message to the logger
+        Param:
+            record: corresponding to the log entry.
+        Returns:
+            True if the criterion is found (= print the record)
+            or
+            False if the criterion is not found (= don't print the record)
+        """
+        # if criterion == [] the filter let pass all messages
+        flag = False
+        for criterion in self.criterion:
+            if re.search(criterion, record.getMessage(), re.I):
+                flag = True
+        return flag
+
+
+# include log ending by the criterion
+class IncludeEndsWithFilter(logging.Filter):
+    """This class create a specialized filter for logging.getLogger.
+    This filter include ONLY the logs which ends by the specified criterion"""
+    def __init__(self, criterion=""):
+        """At the creation of the filter, the search criterion is given.
+        Param:
+            criterion: str of the searched criterion"""
+        super(logging.Filter, self).__init__()
+        self.criterion = criterion
+
+    def filter(self, record):
+        """The filter method say "print" or "not print" the recorded message to the logger
+        Param:
+            record: corresponding to the log entry.
+        Returns:
+            True if the criterion is found (= print the record)
+            or
+            False if the criterion is not found (= don't print the record)
+        """
+        return record.getMessage().endswith(self.criterion)
+
+
+# exclude all log starting by criterion
+class ExcludeStartsWithFilter(logging.Filter):
+    """This class create a specialized filter for logging.getLogger.
+    This filter excludes ALL the logs which starts by the specified criterion"""
+    def __init__(self, criterion=""):
+        """At the creation of the filter, the search criterion is given.
+        Param:
+            criterion: str of the searched criterion"""
+        super(logging.Filter, self).__init__()
+        self.criterion = criterion
+
+    def filter(self, record):
+        """The filter method say "print" or "not print" the recorded message to the logger
+        Param:
+            record: corresponding to the log entry.
+        Returns:
+            True if the criterion is not found (= print the record)
+            or
+            False if the criterion is found (= don't print the record)
+        """
+        # if criterion == "" the filter exclude all messages
+        return not record.getMessage().startswith(self.criterion)
+
+
+# include log containing the criterion
+class ExcludeContainsFilter(logging.Filter):
+    """This class create a specialized filter for logging.getLogger.
+    This filter excludes ALL the logs which contains the specified criterion"""
+    def __init__(self, criterion=""):
+        """At the creation of the filter, the search criterion is given.
+        Param:
+            criterion: str of the searched criterion"""
+        super(logging.Filter, self).__init__()
+        self.criterion = criterion
+
+    def filter(self, record):
+        """The filter method say "print" or "not print" the recorded message to the logger
+        Param:
+            record: corresponding to the log entry.
+        Returns:
+            True if the criterion is not found (= print the record)
+            or
+            False if the criterion is found (= don't print the record)
+        """
+        if re.search(self.criterion, record.getMessage(), re.I):
+            return False
+        else:
+            return True
+
+
+# include log ending by the criterion
+class ExcludeEndsWithFilter(logging.Filter):
+    """This class create a specialized filter for logging.getLogger.
+    This filter excludes ALL the logs which ends by the specified criterion"""
+    def __init__(self, criterion=""):
+        """At the creation of the filter, the search criterion is given.
+        Param:
+            criterion: str of the searched criterion"""
+        super(logging.Filter, self).__init__()
+        self.criterion = criterion
+
+    def filter(self, record):
+        """The filter method say "print" or "not print" the recorded message to the logger
+        Param:
+            record: corresponding to the log entry.
+        Returns:
+            True if the criterion is not found (= print the record)
+            or
+            False if the criterion is found (= don't print the record)
+        """
+        return not record.getMessage().endswith(self.criterion)
 
 
 class MmcServer(xmlrpc.XMLRPC, object):
@@ -462,6 +609,39 @@ class MMCApp(object):
         self.conffile = options.inifile
         self.daemon = options.daemonize
         self.daemonlog = options.daemonizenolog
+
+        if hasattr(options, "exclude") and options.exclude is not None:
+            self.exclude = options.exclude.split(",")
+
+            for filter in self.exclude:
+                logger.addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.xmlstream.xmlstream").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.clientxmpp").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.plugins.base").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.features.feature_starttls.starttls").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.thirdparty.statemachine").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.features.feature_rosterver.rosterver").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.plugins.xep_0045").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.plugins.xep_0078.legacyauth").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.features.feature_bind.bind").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.features.feature_session.session").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.xmlstream.scheduler").addFilter(ExcludeContainsFilter(filter))
+
+        if hasattr(options, "include") and options.include is not None:
+            self.include = options.include.split(",")
+            logger.addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.xmlstream.xmlstream").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.clientxmpp").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.plugins.base").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.features.feature_starttls.starttls").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.thirdparty.statemachine").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.features.feature_rosterver.rosterver").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.plugins.xep_0045").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.plugins.xep_0078.legacyauth").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.features.feature_bind.bind").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.features.feature_session.session").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.xmlstream.scheduler").addFilter(IncludeContainsFilter(self.include))
+
         if not self.daemonlog:
             self.daemon = False
         # Shared return state, so that father can know if children goes wrong

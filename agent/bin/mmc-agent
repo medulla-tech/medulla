@@ -3,7 +3,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2011 Mandriva, http://www.mandriva.com
-# (c) 2016-2017 Siveo, http://www.siveo.net
+# (c) 2016-2018 Siveo, http://www.siveo.net
 # $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
@@ -52,6 +52,10 @@ if __name__ == "__main__":
                       help="Kill running daemon, if any")
     parser.add_option("-r", "--reload", dest="reload", default=False, action="store_true",
                       help="Reload configuration")
+    parser.add_option("-e", "--exclude", dest="exclude", action="store", type="string",
+                      help="exclude log")
+    parser.add_option("-i", "--include", dest="include", action="store", type="string",
+                      help="exclude log")
 
     # Parse arguments
     (options, args) = parser.parse_args()
@@ -60,7 +64,7 @@ if __name__ == "__main__":
     if not os.path.exists(options.inifile):
         print "File '%s' does not exist." % options.inifile
 	sys.exit(3)
- 
+
     # Load configuration file
     try:
         cp = MMCConfigParser()
@@ -69,7 +73,7 @@ if __name__ == "__main__":
     except Exception, e:
         print str(e)
         sys.exit(3)
-    
+
     # Start the application
     app = mmc.agent.MMCApp(cp, options)
     if options.kill:
