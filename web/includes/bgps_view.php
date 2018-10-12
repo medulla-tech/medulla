@@ -37,20 +37,20 @@ function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
     if ($title != "") {
         echo $title." :";
     }
-    
+
     echo "<div class=\"membarfree\" style=\"width: ".$width."px\">";
-    
+
     if ($cache > 0) {
         printf("<div class=\"membarcache\" style=\"width: %.0fpx\">", $wused);
         $wused = (($used - $cache) / $max) * $width;
     }
-    
+
     printf("<div class=\"membarused\" style=\"width: %.0fpx\"></div>", $wused);
 
     if ($cache > 0) {
         echo "</div>";
     }
-    
+
     echo "</div>\n";
 }
 

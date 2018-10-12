@@ -32,7 +32,7 @@ textarea {
     width:50% ;
     height:150px;
     margin:auto;
-    display:block; 
+    display:block;
 }
 
 body{
@@ -43,7 +43,7 @@ body{
 /*h2{
     text-align: center;
 }*/
-  
+
 #global{
   width:100%;
   height:700px;
@@ -86,7 +86,7 @@ body{
     width:49%;
     height:90%;
 }
- 
+
 #droite {
     width: 49%;
     height:90%;
@@ -322,11 +322,11 @@ echo '</script>';
         <div id ="fileshowremote"  class="fileshow"></div>
     </div>
 
-    <div class ="piedbrowser"> 
+    <div class ="piedbrowser">
         <form>
             <div>
             </div>
-        </form> 
+        </form>
     </div>
 </div>
 
@@ -403,7 +403,7 @@ echo '</script>';
     });
 
     function confirmation_information(data) {
-        setTimeout(function() { affichedata(data); }, 2000); 
+        setTimeout(function() { affichedata(data); }, 2000);
     }
 
     function affichedata(data){
@@ -437,12 +437,12 @@ echo '</script>';
         var heure    = "0" + (newdate.getHours() + diff_hour);
         var minutes  = "0" + newdate.getMinutes();
         var secondes = "0" + newdate.getSeconds();
-        var datetime = newdate.getFullYear() + 
-                                                "-" + 
-                                                moi.substr(-2) + 
-                                                "-" + jour.substr(-2) + 
-                                                "-" + heure.substr(-2) + 
-                                                ":" + minutes.substr(-2) + 
+        var datetime = newdate.getFullYear() +
+                                                "-" +
+                                                moi.substr(-2) +
+                                                "-" + jour.substr(-2) +
+                                                "-" + heure.substr(-2) +
+                                                ":" + minutes.substr(-2) +
                                                 ":" + secondes.substr(-2);
         return datetime;
     }
@@ -458,7 +458,7 @@ echo '</script>';
         if (typeof parentdirlocal == 'undefined'){
             var parentdirlocal = "";
         }
-        jQuery( "#fileshowlocal" ).load( 
+        jQuery( "#fileshowlocal" ).load(
                         "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php",
                         {
                             "parentdirlocal" : parentdirlocal,
@@ -628,7 +628,7 @@ echo '</script>';
                 } );
             });
             if (init == 1){
-                jQuery(".rightfile LI").each(function(){ 
+                jQuery(".rightfile LI").each(function(){
                     jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
                     jQuery(this).find(':nth-child(2)').hide();
                 });
@@ -636,7 +636,7 @@ echo '</script>';
             jQuery("ul.rightfile > li").click(function() {
                 //  recupere file en remote
                 fileremote = true;
-                jQuery(".rightfile LI").each(function(){ 
+                jQuery(".rightfile LI").each(function(){
                     jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : 'white',});
                     jQuery(this).find(':nth-child(2)').hide()
                 });

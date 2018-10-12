@@ -78,7 +78,7 @@ echo'
  if ( $lifdir['path_abs_current'] != $lifdir['rootfilesystem']){
     echo "<li>..</li>";
  }
- 
+
  foreach($lifdir['list_dirs_current'] as $namedir){
             echo "<li>".$namedir."</li>";
         }

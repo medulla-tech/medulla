@@ -14,4 +14,3 @@ cd ${TMPDIR}
 doxygen doxygen-mmc.conf
 
 rm -rf ${TMPDIR}
-

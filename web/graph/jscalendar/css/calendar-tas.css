@@ -38,7 +38,7 @@ progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffffff,
 .calendar thead .headrow { /* Row <TR> containing navigation buttons */
   /*background: #3B86A0;*/
   color: #363636;
-  font-weight: bold; 	
+  font-weight: bold;
 filter:
 progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffffff,EndColorStr=#3b86a0);
 }
@@ -95,7 +95,7 @@ progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#DDDCCC,
 
 .calendar tbody .rowhilite td {
  background: #ddf;
-  
+
 }
 
 .calendar tbody .rowhilite td.wn {
@@ -142,7 +142,7 @@ progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#DDDCCC,
   text-align: center;
   background: #988;
   color: #000;
-  
+
 }
 
 .calendar tfoot .ttip { /* Tooltip (status bar) cell <TD> */

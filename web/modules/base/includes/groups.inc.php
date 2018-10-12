@@ -29,7 +29,7 @@
  * include the correct authentification primitive file
  */
 
-global $conf; //necessaire pour la migration vers la version restructuré
+global $conf; //necessaire pour la migration vers la version restructurï¿½
 
 $be = $conf["global"]["backend"];
 require("groups-$be.inc.php");

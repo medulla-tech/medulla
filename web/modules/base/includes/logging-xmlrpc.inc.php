@@ -26,14 +26,14 @@
 
 function get_last_log_user($user) {
     $param = array(0,1,0,0,"User",0,0,$user,0);
-    
+
     return xmlCall("base.getLog", $param);
 }
 
 function get_log_by_id($id) {
-    
+
     $listlog = xmlCall("base.getLogById", $id);
-        
+
     return $listlog;
 }
 
@@ -45,7 +45,7 @@ function get_log_filter($start,$end,$module,$filter,$filtertype,$startdate,$endd
     if ($module=="all") {
         $module=0;
     }
-    
+
     switch ($filtertype) {
         case "object":
             $object=$filter;
@@ -59,10 +59,10 @@ function get_log_filter($start,$end,$module,$filter,$filtertype,$startdate,$endd
         case "type":
             $type=$filter;
             break;
-    }    
+    }
 
     $param = array((int) $start, (int) $end,$module,$user,$type,$startdate,$enddate,$object,$action);
-        
+
     $listlog = xmlCall("base.getLog", $param);
     return  $listlog;
 }
@@ -71,7 +71,7 @@ function get_log_user_filter($start,$end,$module,$user,$filter,$filtertype,$star
     $action=0;
     $type=0;
     $module=0;
-    
+
     switch ($filtertype) {
     case "object":
         $object=$filter;
@@ -82,16 +82,16 @@ function get_log_user_filter($start,$end,$module,$user,$filter,$filtertype,$star
     case "type":
         $type=$filter;
         break;
-    }    
+    }
 
     $param = array((int) $start, (int) $end,$module,0,$type,$startdate,$enddate,$user,$action);
-    
+
     $listlog = xmlCall("base.getLog", $param);
     return  $listlog;
 }
 
 function get_action_type($action,$type){
-    return xmlCall("base.getActionType",array($action,$type));   
+    return xmlCall("base.getActionType",array($action,$type));
 }
 
 function has_audit_working() {
@@ -100,5 +100,5 @@ function has_audit_working() {
     }
     return $_SESSION["hasAuditManagerWorking"];
 }
-        
+
 ?>

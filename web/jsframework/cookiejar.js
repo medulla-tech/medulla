@@ -1,14 +1,14 @@
 /**
- * Javascript code to store data as JSON strings in cookies. 
+ * Javascript code to store data as JSON strings in cookies.
  * It uses prototype.js 1.5.1 (http://www.prototypejs.org)
- * 
+ *
  * Author : Lalit Patel
  * Website: http://www.lalit.org/lab/jsoncookies
  * License: Apache Software License 2
  *          http://www.apache.org/licenses/LICENSE-2.0
  * Version: 0.5
- * Updated: Jan 26, 2009 
- * 
+ * Updated: Jan 26, 2009
+ *
  * Chnage Log:
  *   v 0.5
  *   -  Changed License from CC to Apache 2
@@ -71,8 +71,8 @@ CookieJar.prototype = {
 		  case 'undefined':
 		  case 'function' :
 		  case 'unknown'  : return false;
-		  case 'boolean'  : 
-		  case 'string'   : 
+		  case 'boolean'  :
+		  case 'string'   :
 		  case 'number'   : value = String(value.toString());
 		}
 		var cookie_str = name + "=" + escape(Object.toJSON(value));

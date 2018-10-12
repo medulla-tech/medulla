@@ -31,11 +31,11 @@ textarea {
 }
 .shadow
 {
-  -moz-box-shadow: 4px 4px 10px #888;  
-  -webkit-box-shadow: 4px 4px 10px #888;  
+  -moz-box-shadow: 4px 4px 10px #888;
+  -webkit-box-shadow: 4px 4px 10px #888;
   box-shadow:4px 4px 6px #888;
 }
- 
+
  li.folder a {
         padding: 0px 0px  5px 22px;
         margin: 0 0px 0 0px;
@@ -202,15 +202,15 @@ li.quickg a {
             <td class="label" width="40%" style = "text-align: right;">Shell command</td>
             <td>
                 <span id="container_input_command">
-                    <input value="<? echo $command; ?>" 
-                        name="command" 
+                    <input value="<? echo $command; ?>"
+                        name="command"
                         style = "width : 400px;"
-                        id="command" 
-                        type="text" 
-                        size="23"  
+                        id="command"
+                        type="text"
+                        size="23"
                         placeholder=""
-                        data-regexp="/.+/" 
-                        autocomplete="off" 
+                        data-regexp="/.+/"
+                        autocomplete="off"
                         title="<? echo _T("return key to start your order", 'xmppmaster');  ?>"/>
                 </span>
             </td>
@@ -224,7 +224,7 @@ li.quickg a {
                     <span>Command result : </span><span>'.$command.'</span>
                 </td>
             </tr>';
-        } 
+        }
             if ($errorcode != ""){
                 echo'<tr>
                     <td class="label" width="40%" style = "text-align: right;">Error Code :</td>
@@ -235,11 +235,11 @@ li.quickg a {
             }
         ?>
     </table>
-    <?php 
+    <?php
         if ($resultcommand != ""){
             echo '<textarea rows="15"
-                id="resultat" 
-                spellcheck="false" 
+                id="resultat"
+                spellcheck="false"
                 style = "height : 400px;
                         background : black;
                         color : white;

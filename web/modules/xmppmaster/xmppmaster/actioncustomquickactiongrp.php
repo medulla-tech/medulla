@@ -36,7 +36,7 @@
     $GROUP = $_GET['gid'];
     // creation quick action command
     $COMMANDID = xmlrpc_setCommand_qa($_GET['namecmd'], $customqa['customcmd'], $_GET['user'], $_GET['gid'], $command_machine='', $customqa['os']);
-    
+
 
     // recupère toutes les machines du groupe.
     $uuid = array();

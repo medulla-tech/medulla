@@ -32,22 +32,22 @@ textarea {
     width:50% ;
     height:150px;
     margin:auto;
-    display:block; 
+    display:block;
 }
 
 body{
     font-family: Georgia;
     font-size: 11pt;
 }
-  
+
 /*h2{
     text-align: center;
 }*/
-  
+
 #global{
   width:100%;
   height:700px;
- 
+
 }
 #droite, #gauche {
     display: inline-block;
@@ -66,7 +66,7 @@ body{
     width:49%;
     height:45%;
 }
- 
+
 #droite {
     width: 90%;
     height:90%;
@@ -241,7 +241,7 @@ li.quickg a {
     require("modules/base/computers/localSidebar.php");
     require("graph/navbar.inc.php");
     require_once("modules/xmppmaster/includes/xmlrpc.php");
-    
+
 /*
 print_r($_GET);
 print_r($_POST);*/
@@ -260,13 +260,13 @@ require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/pulse2/includes/menu_actionaudit.php');
 echo "<br><br><br>";
 // creation repertoire namemachine si non existe.
-// et recuperation pathcurent pour cette machine 
+// et recuperation pathcurent pour cette machine
 // eg /var/lib/pulse2/transfertfiles/machine25pulse
 $filecurentdir = xmlrpc_create_local_dir_transfert(xmlrpc_localfilesystem("")['path_abs_current'], $ma['hostname']);
 
 $curentdir = $filecurentdir['path_abs_current'];
 // echo $curentdir;
-// 
+//
 // echo $filecurentdir['parentdir'];
 echo '<script type="text/javascript">';
 
@@ -311,7 +311,7 @@ echo '</script>';
 </div>
 <br>
 <div id="global">
- 
+
                 <?php
                 printf ('
                 <form>
@@ -327,12 +327,12 @@ echo '</script>';
          <div id ="directoryremote" class="fileshow"></div>
         <div id ="fileshowremote" class="fileshow"></div>
     </div>
-    <div class ="piedbrowser"> 
+    <div class ="piedbrowser">
         <form>
             <div>
                <!-- <input class="btnPrimary" id ="download" type="button" name="Dowload" value="<< Download <<">-->
             </div>
-        </form> 
+        </form>
     </div>
 </div>
 
@@ -414,7 +414,7 @@ echo '</script>';
     });
 
     function confirmation_information(data) {
-        setTimeout(function() { affichedata(data); }, 2000); 
+        setTimeout(function() { affichedata(data); }, 2000);
     }
 
     function affichedata(data){
@@ -448,12 +448,12 @@ echo '</script>';
         var heure    = "0" + (newdate.getHours() + diff_hour);
         var minutes  = "0" + newdate.getMinutes();
         var secondes = "0" + newdate.getSeconds();
-        var datetime = newdate.getFullYear() + 
-                                                "-" + 
-                                                moi.substr(-2) + 
-                                                "-" + jour.substr(-2) + 
-                                                "-" + heure.substr(-2) + 
-                                                ":" + minutes.substr(-2) + 
+        var datetime = newdate.getFullYear() +
+                                                "-" +
+                                                moi.substr(-2) +
+                                                "-" + jour.substr(-2) +
+                                                "-" + heure.substr(-2) +
+                                                ":" + minutes.substr(-2) +
                                                 ":" + secondes.substr(-2);
         return datetime;
     }
@@ -470,8 +470,8 @@ echo '</script>';
         if (typeof parentdirlocal == 'undefined'){
             var parentdirlocal = "";
         }
-        
-        jQuery( "#fileshowlocal" ).load( 
+
+        jQuery( "#fileshowlocal" ).load(
                         "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocalne.php",
                         {
                             "parentdirlocal" : parentdirlocal,
@@ -496,7 +496,7 @@ echo '</script>';
         if (typeof parentdirremote == 'undefined'){
             var parentdirremote = "";
         }
-        
+
         console.log('call remote content :  ' +
                     "\nparentdirremote :" + parentdirremote+
                     "\npath_abs_current_remote : " + path_abs_current_remote+
@@ -638,7 +638,7 @@ echo '</script>';
                 } );
             });
             if (init == 1){
-                jQuery(".rightfile LI").each(function(){ 
+                jQuery(".rightfile LI").each(function(){
                     jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
                     jQuery(this).find(':nth-child(2)').hide();
                 });
@@ -646,7 +646,7 @@ echo '</script>';
             jQuery("ul.rightfile > li").click(function() {
                 //  recupere file en remote
                 fileremote = true;
-                jQuery(".rightfile LI").each(function(){ 
+                jQuery(".rightfile LI").each(function(){
                     jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : 'white',});
                     jQuery(this).find(':nth-child(2)').hide();
                 });

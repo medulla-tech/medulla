@@ -22,7 +22,7 @@ session_start();
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
- 
+
  * file : actionwakeonlan.php
  */
 require_once("../../imaging/includes/xmlrpc.inc.php");
@@ -86,7 +86,7 @@ switch($_GET['action']){
                                         '',
                                         "session user ".$_SESSION["login"],
                                         'QuickAction | WOL sent');
-      
+
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;
@@ -124,6 +124,3 @@ switch($_GET['action']){
     break;
 }
 ?>
-
-
-

@@ -41,4 +41,3 @@ AA = AuditActions
 class AuditTypes(AT):
     PPOLICY = u'PPOLICY'
 AT = AuditTypes
-

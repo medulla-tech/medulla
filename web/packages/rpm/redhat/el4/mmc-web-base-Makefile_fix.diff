@@ -1,9 +1,9 @@
 --- Makefile	2007-06-29 11:17:35.000000000 +0200
 +++ Makefile.oden	2007-06-29 18:18:51.000000000 +0200
 @@ -20,7 +20,7 @@
- 
+
  # General Makefile variables
- DESTDIR = 
+ DESTDIR =
 -PREFIX = /usr/local
 +PREFIX = /usr
  DATADIR = $(PREFIX)/share/mmc

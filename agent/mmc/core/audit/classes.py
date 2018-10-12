@@ -30,17 +30,17 @@ class Event(object):
 class Source(object):
     pass
 
-class Initiator(object):	
+class Initiator(object):
     pass
 
 class Current_Value(object):
 
-    def __init__(self,object_log,value):        
+    def __init__(self,object_log,value):
         self.object_log_id=object_log.id
         self.value=value
 
 class Record(object):
-            
+
     def getId(self):
         return self.id
 
@@ -51,10 +51,10 @@ class Object_Log(object):
     pass
 
 class Object(object):
-    pass	
+    pass
 
 class Parameters(object):
-	
+
     def __init__(self,param_name,value):
         self.param_name=param_name
      	self.param_value=value
@@ -63,8 +63,8 @@ class Module(object):
     pass
 
 class Previous_Value(object):
-    
-    def __init__(self,object_log,value):        
+
+    def __init__(self,object_log,value):
         self.object_log_id=object_log.id
         self.value=value
 

@@ -421,7 +421,7 @@ Allow the use of SQL databases within MMC framework.
 
 cp %{SOURCE1}   agent/mmc/plugins/base
 cp %{SOURCE2}   web/modules/base/computers
-   
+
 %build
 %configure2_5x --disable-python-check --with-systemddir=%{_unitdir} --enable-systemd
 

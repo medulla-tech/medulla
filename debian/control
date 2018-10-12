@@ -49,7 +49,7 @@ Description: Mandriva Management Console systemd services plugin
 Package: python-mmc-database
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-sqlalchemy (>= 0.7), python-mysqldb 
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-sqlalchemy (>= 0.7), python-mysqldb
 Description: Mandriva Management Console database common files
  Allow the use of SQL databases within MMC framework.
 
@@ -100,4 +100,3 @@ Package: mmc-web-xmppmaster
 Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version}), ajax-php-file-manager
 Description: Xmpp mmc module
-

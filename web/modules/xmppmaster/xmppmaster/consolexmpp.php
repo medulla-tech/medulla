@@ -42,8 +42,8 @@ textarea {
     $tab = explode("/",$machine);
     $uiduniq = uniqid ("shellcommande");
     $recherche = false;
-    
-    if ($machine == "") 
+
+    if ($machine == "")
         $p = new PageGenerator(_T("Console Agent Relay Server", 'xmppmaster'));
     else
         $p = new PageGenerator(_T("Console", 'xmppmaster')." $machine");
@@ -106,12 +106,12 @@ textarea {
                 <span id="container_input_command">
                     <input value="<? echo $command; ?>"
                         title="<? echo _T("return key to start your order", 'xmppmaster'); ?>"
-                        name="command" 
-                        id="command" 
-                        type="text" 
-                        size="23"  
-                        placeholder=""  
-                        data-regexp="/.+/" 
+                        name="command"
+                        id="command"
+                        type="text"
+                        size="23"
+                        placeholder=""
+                        data-regexp="/.+/"
                         autocomplete="off" />
                 </span>
             </td>
@@ -126,13 +126,13 @@ textarea {
             <td class="label" width="40%" style = "text-align: right;">Error Code :</td>
             <td><span id="codereturn"></span></td>
         </tr>
-        
-        
-        
+
+
+
     </table>
     <textarea rows="15"
-              id="resultat" 
-              spellcheck="false" 
+              id="resultat"
+              spellcheck="false"
               style = "height : 400px;
                        background : black;
                        color : white;
@@ -145,8 +145,8 @@ textarea {
                        border-color:#FFFF00;
                        box-shadow: 6px 6px 0px #6E6E6E;"
     ></textarea>
-    
-    
+
+
     <!--<button class="btn btn-small">submit</button>-->
 </form>
 
@@ -182,4 +182,3 @@ textarea {
 ?>
     });
 </script>
-

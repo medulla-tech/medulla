@@ -94,7 +94,7 @@ $count = getRestrictedComputersListLen($filter);
  *   - if MSC is configured with file download capability
  *   - if MSC is configured with VNC client capability
  * */
- 
+
 
 $msc_can_download_file = False;
 $msc_vnc_show_icon = False;
@@ -107,13 +107,13 @@ if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SES
 }
 
 if (isset($_GET["id"]) && isset($_GET["cmd_id"])){
-    $result=list_computers( $names, 
-                    $filter, 
-                    $count, 
-                    $canbedeleted, 
-                    $canbedeletedfromgroup, 
-                    $is_group, 
-                    $msc_can_download_file, 
+    $result=list_computers( $names,
+                    $filter,
+                    $count,
+                    $canbedeleted,
+                    $canbedeletedfromgroup,
+                    $is_group,
+                    $msc_can_download_file,
                     $msc_vnc_show_icon,
                     $_GET["cmd_id"],
                     $_GET["login"],

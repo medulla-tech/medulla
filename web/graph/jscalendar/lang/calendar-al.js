@@ -61,7 +61,7 @@ Calendar._TT["ABOUT"] =
 "Zgjedhes i ores/dates ne DHTML \n" +
 "\n\n" +"Zgjedhja e Dates:\n" +
 "- Perdor butonat \xab, \xbb per te zgjedhur vitin\n" +
-"- Perdor  butonat" + String.fromCharCode(0x2039) + ", " + 
+"- Perdor  butonat" + String.fromCharCode(0x2039) + ", " +
 String.fromCharCode(0x203a) +
 " per te  zgjedhur muajin\n" +
 "- Mbani shtypur butonin e mousit per nje zgjedje me te shpejte.";
@@ -89,7 +89,7 @@ Calendar._TT["WEEKEND"] = "0,6";
 
 Calendar._TT["CLOSE"] = "Mbyll";
 Calendar._TT["TODAY"] = "Sot";
-Calendar._TT["TIME_PART"] = "Kliko me (Shift-)ose terhiqe per te ndryshuar 
+Calendar._TT["TIME_PART"] = "Kliko me (Shift-)ose terhiqe per te ndryshuar
 vleren";
 
 // date formats
@@ -98,4 +98,3 @@ Calendar._TT["TT_DATE_FORMAT"] = "%a, %b %e";
 
 Calendar._TT["WK"] = "Java";
 Calendar._TT["TIME"] = "Koha:";
-

@@ -340,7 +340,7 @@ if (hasComputerManagerWorking()) {
         $page = new Page("entityRules", _T('Entity rules', 'inventory'));
         $page->setFile("modules/inventory/inventory/entityRules.php");
         $submod->addPage($page);
-        
+
         $page = new Page("addEntity", _T('Add entity', 'inventory'));
         $page->setFile("modules/inventory/inventory/addEntity.php");
         $submod->addPage($page);
@@ -357,12 +357,12 @@ if (hasComputerManagerWorking()) {
         $page = new Page("EditEntity", _T('Edit Entity', 'inventory'));
         $page->setFile("modules/inventory/inventory/EditEntity.php");
         $submod->addPage($page);
-        
+
         $page = new Page("deleteEntity", _T('Delete Entity', 'inventory'));
         $page->setFile("modules/inventory/inventory/deleteEntity.php");
         $submod->addPage($page);
     }
-    
+
     $page = new Page("get_file", _("Download inventory of one machine"));
     $page->setFile("modules/base/computers/get_file.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));

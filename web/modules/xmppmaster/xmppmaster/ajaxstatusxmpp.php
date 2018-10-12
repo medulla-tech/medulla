@@ -50,8 +50,8 @@ if ($_GET['currenttasks'] == '1'){
   $LastdeployINsecond = 3600*24;
   echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
   $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter) ;
-   
- 
+
+
 }
 else {
   $LastdeployINsecond = 3600*2160;
@@ -89,8 +89,8 @@ for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
 $index = 0;
 foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $error = False;
-    if(($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT START" || 
-        $arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT DIFFERED") && 
+    if(($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT START" ||
+        $arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT DIFFERED") &&
             (get_object_vars($arraydeploy['tabdeploy']['endcmd'][$index])['timestamp']- time()) < 0){
         $error = True;
         $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";

@@ -25,7 +25,7 @@
  // recupere information machine
  //print_r($_GET);
 extract($_GET);
-?> 
+?>
 <?php
 
 //print_r($_GET);

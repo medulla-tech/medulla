@@ -106,7 +106,7 @@ if (!isset($_SESSION['lang'])) {
             $_SESSION['lang'] = 'C';
         }
     } else {
-        $_SESSION['lang'] = $_COOKIE['lang'];        
+        $_SESSION['lang'] = $_COOKIE['lang'];
     }
 }
 
@@ -122,6 +122,6 @@ if(isset($_SESSION["supportModList"]))
         bindtextdomain ($mod, dirname(__FILE__)."/../modules/$mod/locale");
 
 //define default domain for gettext and _() alias
-textdomain ("base"); 
+textdomain ("base");
 
 ?>

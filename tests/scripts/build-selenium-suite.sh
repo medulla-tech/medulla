@@ -55,8 +55,8 @@ done
 
 cat << EOF >> ${FILENAME}
   </table>
-  
-    
+
+
 </body>
 </html>
 
