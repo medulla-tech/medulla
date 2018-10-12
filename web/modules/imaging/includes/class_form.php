@@ -307,7 +307,7 @@ class OptTextareaTpl extends AbstractTpl{
 		$this->options = $array;
 	}
 
-	function display()
+	function display($arrParam = array())
 	{
 	$str ="";
 		foreach($this->options as $attr=>$value)
@@ -323,7 +323,7 @@ class OptTextareaTpl extends AbstractTpl{
 
 class SepTpl extends AbstractTpl{
 
-	function display()
+	function display($arrParam = array())
 	{
 		echo '<hr style="border-top: 1px solid #CCCCCC;"/>';
 	}
@@ -345,7 +345,7 @@ class DivTpl extends AbstractTpl{
 		$this->options = $array;
 	}
 
-	function display()
+	function display($arrParam = array())
 	{
 	$str ="";
 		foreach($this->options as $attr=>$value)
