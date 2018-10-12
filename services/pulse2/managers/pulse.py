@@ -102,4 +102,3 @@ class Pulse2I:
         put the PackageServerEntity object in all the Pulse2Manager
         """
         pass
-

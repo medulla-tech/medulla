@@ -27,10 +27,10 @@ def xml_fix(xml):
   for subelem1 in root:
     if subelem1.tag == 'CONTENT':
       for subelem2 in subelem1:
-          
+
         if subelem2.tag == 'SOFTWARES':
           for subelem3 in subelem2:
-            
+
             if subelem3.tag == 'NAME':
 
               # Adobe vendor name should allways be the same

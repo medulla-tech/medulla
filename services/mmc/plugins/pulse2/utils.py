@@ -28,9 +28,9 @@ from mmc.support.mmctools import Singleton
 from uuid import uuid4
 
 class notificationManager(Singleton):
-    
+
     notifications = []
-    
+
     def add(self, module, title, content, priority=0):
         uuid = str(uuid4())
         self.notifications.append({
@@ -42,14 +42,13 @@ class notificationManager(Singleton):
                 'seen': False
         })
         return uuid
-        
+
     def getModuleNotification(self, module):
         # Sort them by priority
         return [n for n in self.notifications if n['module'] == module]
-    
+
     def setAsSeen(self, notification_uuid):
         for i in xrange(len(self.notifications)):
             if self.notifications[i]['uuid'] == notification_uuid:
                 self.notifications[i]['seen'] = True
                 return self.notifications[i]
-    

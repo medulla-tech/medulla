@@ -88,4 +88,3 @@ def qa_detailled_info(filename):
     qa = Qaction(filename)
     qa = qa.read()
     return [True, qa]
-

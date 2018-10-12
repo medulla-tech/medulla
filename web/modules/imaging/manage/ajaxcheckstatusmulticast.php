@@ -23,7 +23,7 @@ session_start();
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");

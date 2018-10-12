@@ -30,7 +30,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
     try:
         logging.getLogger().debug("plugin resultinstallplugin from %s  ret [%s]"%(message['from'], ret))
-        pass 
+        pass
     except Exception as e:
         logging.getLogger().debug("Error in plugin resultinstallplugin %s"%str(e))
-        pass 
+        pass

@@ -230,4 +230,3 @@ class Query(object):
         except Exception, e:
             self.logger.warn("JSON temp file load failed: %s" % str(e))
             return None
-

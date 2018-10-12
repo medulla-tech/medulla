@@ -32,7 +32,7 @@ $idclass     =  "#".$tableToggle.' tr.'.$toggleable;
         ?>
         <table id="tableToggle">
         <?php
-        
+
         echo '<tr class="toggleable">';
         echo'
                 <th width="16%">Step label : </th>
@@ -42,11 +42,11 @@ $idclass     =  "#".$tableToggle.' tr.'.$toggleable;
                 <th></th>
             </tr>
              ';
-            echo '<tr class="toggleable">'; 
+            echo '<tr class="toggleable">';
             if(isset($packageuuid))
             {
                 echo '<td width="16%">
-                    <input type="checkbox" checked 
+                    <input type="checkbox" checked
                         onclick="if(jQuery(this).is(\':checked\')){
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
                                 }
@@ -60,7 +60,7 @@ $idclass     =  "#".$tableToggle.' tr.'.$toggleable;
             }
             else{
                 echo '<td width="16%">
-                    <input type="checkbox" 
+                    <input type="checkbox"
                         onclick="if(jQuery(this).is(\':checked\')){
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
                                 }

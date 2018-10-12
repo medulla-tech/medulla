@@ -47,7 +47,7 @@ if (isset($edition)) {
     }
 }
 $subedition = false;
-if (isset($_GET['subedition']) && 
+if (isset($_GET['subedition']) &&
         strlen($_GET['subedition']) &&
         $_GET['subedition'] == '1') {
     $subedition = true;

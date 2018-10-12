@@ -580,4 +580,3 @@ def get_history_stdout(coh_id, phase):
 
     session.close()
     return stdout
-

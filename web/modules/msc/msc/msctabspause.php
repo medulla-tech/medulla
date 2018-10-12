@@ -96,7 +96,7 @@ if (isset($_POST["bconfirm"])) {
             $uuid = $_POST["uuid"];
             $coh_id = $_POST["coh_id"];
             pause_command_on_host($coh_id);
-            header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); 
+            header("Location: " . urlStrRedirect("$module/$submod/$page", $url));
             exit;
         }
     }

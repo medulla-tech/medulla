@@ -22,7 +22,7 @@
 
 from pulse2.scheduler.types import Phase
 from pulse2.scheduler.api.imaging import ImagingAPI
-from pulse2.consts import PULSE2_UNKNOWN_ERROR 
+from pulse2.consts import PULSE2_UNKNOWN_ERROR
 
 
 
@@ -48,7 +48,7 @@ class ImagingRpcPhase(Phase):
             self.logger.error("Circuit #%s: imaging phase failed: %s" % (self.coh.id, str(e)))
 
     def parse_imaging_rpc_result(self, result):
-        
+
         if result :
             self.update_history_done()
             if self.phase.switch_to_done():
@@ -65,8 +65,8 @@ class ImagingRpcPhase(Phase):
     def parse_imaging_rpc_error(self, reason):
         self.logger.warn("Circuit #%s: %s phase failed, unattented reason: %s" %
                 (self.name, self.coh.id, reason.getErrorMessage()))
-        self.update_history_failed(PULSE2_UNKNOWN_ERROR, 
-                                   '', 
+        self.update_history_failed(PULSE2_UNKNOWN_ERROR,
+                                   '',
                                    reason.getErrorMessage()
                                   )
         return self.switch_phase_failed()
@@ -78,5 +78,3 @@ class PreImagingMenuPhase(ImagingRpcPhase):
 class PostImagingMenuPhase(ImagingRpcPhase):
     name = "post_menu"
     rpc_method_name = "unsetWOLMenu"
-
-

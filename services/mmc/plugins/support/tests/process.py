@@ -148,6 +148,3 @@ class Test01_PIDControl(TestCase):
 
     def tearDown(self):
         self.daemon.remove_script()
-
-
-

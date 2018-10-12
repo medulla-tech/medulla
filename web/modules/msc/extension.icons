@@ -55,14 +55,14 @@ rar   application/x-rar-compressed
 cab   application/cab
 sit   application/x-stuffit
 
-# TXT 
+# TXT
 txt   text/plain    txt.png
 
 # MIDI
 mid   audio/midi    midi.png
 midi    audio/midi
 
-# CD IMAGE 
+# CD IMAGE
 iso   application/x-iso cdimage.png
 cue   application/x-cue
 
@@ -75,7 +75,7 @@ deb   application/x-deb   deb.png
 # LOG
 log   text/plain    log.png
 
-# SHELL SCRIPT 
+# SHELL SCRIPT
 sh    application/x-sh  shell.png
 
 bat   application/octet-stream  make.png
@@ -83,4 +83,3 @@ exe   application/octet-stream  make.png
 
 # OTHERs
 *   application/octet-stream  unknown.png
-

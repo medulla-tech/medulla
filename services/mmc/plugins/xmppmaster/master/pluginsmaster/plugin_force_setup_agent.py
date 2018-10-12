@@ -49,7 +49,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     #print json.dumps(data, indent = 4)
     print data['data'][0]
     print "_________________________"
-    
+
     command={ 'action' : 'force_setup_agent',
               'base64' : False,
               'sessionid': sessionid,
@@ -57,5 +57,3 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     xmppobject.send_message( mto = data['data'][0],
                                  mbody = json.dumps(command),
                                  mtype = 'chat')
-
-       

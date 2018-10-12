@@ -80,7 +80,7 @@
             }
         }elseif ($attribut != "") {
             $valattribut.=' id="'. $id . '"';
-        } 
+        }
         return $valattribut;
     }
 
@@ -93,7 +93,7 @@
             $valid="";
             if (is_array($id)){
                 $id=implode ( " " , $id );
-            }  
+            }
             $elementhtml.=' id="'. $id . '"';
         }
         if ($attribut != "") {
@@ -109,7 +109,7 @@
             $elementhtml.=">";
         }
         return $elementhtml;
-    }   
+    }
 /**
  * simple input template
  */
@@ -143,10 +143,10 @@ class InputTplTitle extends InputTpl {
             attribut($arrParam["disabled"]),
             attribut("title",$this->title),
             attribut( isset($arrParam["required"]) ? ' rel="required" ' : ''),
-            attribut( isset($arrParam["required"]) ? ' required="required" ' : ''), 
+            attribut( isset($arrParam["required"]) ? ' required="required" ' : ''),
             attribut("data-regexp",$this->regexp),
             attribut("maxlength",$arrParam["maxlength"]),
-            attribut("title",$this->title),           
+            attribut("title",$this->title),
             attribut('autocomplete="off"')
         );
 
@@ -252,7 +252,7 @@ class buttonTpl extends HtmlElement {
         $this->cssClass = $class;
     }
 
-    function display($arrParam = array()) {      
+    function display($arrParam = array()) {
         if (isset($this->id,$this->value))
             printf('<span style="color : red;" id="msg_%s">title missing</span><br><input id="%s" title="%s" type="button" value="%s" class="%s %s" />',
                     $this->id,$this->id,
@@ -331,7 +331,7 @@ class SepTpl extends AbstractTpl{
 
 class DivTpl extends AbstractTpl{
 	var $options = [];
-	
+
 	function __construct($array = [])
 	{
 		if(!isset($array['value']))

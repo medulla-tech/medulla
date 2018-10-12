@@ -428,7 +428,7 @@ class ImagingRpcProxy(RpcProxyI):
         return db.moveItemDownInMenu4Location(loc_id, mi_uuid)
 
     def imagingServermenuMulticast(self, objmenu):
-        try:    
+        try:
             if ImagingRpcProxy.checkThread[objmenu['location']]==False:
                 ImagingRpcProxy.checkThread[objmenu['location']] = True
         except KeyError:
@@ -563,7 +563,7 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             if ImagingRpcProxy.checkThread[process['location']]==True:
                 ImagingRpcProxy.checkThread[process['location']] = False
-        except KeyError:        
+        except KeyError:
             ImagingRpcProxy.checkThread[process['location']] = False
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
@@ -623,7 +623,7 @@ class ImagingRpcProxy(RpcProxyI):
                     if kk[1] == "0%" and len(kk) > 4 :
                         logger.debug("transfer terminer pour %s"%f)
                         data[f]="0 100% 0MB/s xx:xx:xx"
-                    else : 
+                    else :
                         data[f]=' '.join(kk)
                 else:
                     logger.debug("file empty /tmp/%s"%f)
@@ -652,7 +652,7 @@ class ImagingRpcProxy(RpcProxyI):
         return
 
     def checkProcessCloneMasterToLocation(self, name):
-        """ 
+        """
             check script
         """
         returnprocesspid=[]
@@ -726,10 +726,10 @@ class ImagingRpcProxy(RpcProxyI):
 
     def stop_process_multicast(self,process):
         # Multicast stop
-        try:    
+        try:
             if ImagingRpcProxy.checkThread[process['location']]==True:
                 ImagingRpcProxy.checkThread[process['location']] = False
-        except KeyError:        
+        except KeyError:
             ImagingRpcProxy.checkThread[process['location']] = False
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
@@ -2571,7 +2571,7 @@ class ImagingRpcProxy(RpcProxyI):
 
     def Windows_Answer_list_File(self,start=0,end=-1):
         """
-            returns a list of names (with extension, without full path) of all files 
+            returns a list of names (with extension, without full path) of all files
         """
         filexml="/var/lib/pulse2/imaging/postinst/sysprep/"
         if not path.exists(filexml):
@@ -3794,7 +3794,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
         def sendResult(results, distinct_loc = distinct_loc, target_type = target_type, pid = pid, db = db):
             for result, uuids in results:
                 db.delProfileMenuTarget(uuids)
-            distinct_locs = distinct_loc    
+            distinct_locs = distinct_loc
             keyvaleur = distinct_loc.keys()
             for tt in ListImagingServerAssociated:
                 for z in keyvaleur:
@@ -3857,7 +3857,7 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
         for s, uuids in results:
             failures.extend(uuids)
         #if failures == False:
-        if len(failures) == 0:    
+        if len(failures) == 0:
             return [True]
         return [False, failures]
 

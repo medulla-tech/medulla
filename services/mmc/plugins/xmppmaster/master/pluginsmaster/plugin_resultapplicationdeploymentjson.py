@@ -45,4 +45,3 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
             #logging.getLogger().error("%s"%json.dumps(data, indent=4, sort_keys=True))
     except:
         traceback.print_exc(file=sys.stdout)
-

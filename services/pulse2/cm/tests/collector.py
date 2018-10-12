@@ -244,8 +244,3 @@ class Test01_CollectorTestCase(TestCase):
             for i in xrange(10):
                 uid, ip, request = collector.get()
                 self.assertEqual(request, "valid")
-
-
-
-
-

@@ -48,4 +48,3 @@ $lnk = new RenderedLink(urlStr($from, $params), _T('back', 'inventory')); //arra
 $lnk->display();
 
 ?>
-

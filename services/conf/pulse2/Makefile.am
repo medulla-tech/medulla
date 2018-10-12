@@ -48,7 +48,7 @@ nobase_pulseconf_DATA = \
 
 EXTRA_DIST = $(nobase_pulseconf_DATA) \
              scheduler/scheduler.ini.in
-CLEANFILES = scheduler/scheduler.ini 
+CLEANFILES = scheduler/scheduler.ini
 
 scheduler/scheduler.ini: Makefile
 	rm -f $@ $@.tmp

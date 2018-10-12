@@ -70,7 +70,7 @@ if ($type == 0) {
         echo '<style type="text/css">';
         echo '.tabselector { display: none;}';
         echo '</style>';
-        
+
         if (!isset($_GET['tab'])) {
             $params['tab'] = 'tabsta';
             header("Location: " . urlStrRedirect("imaging/manage/computersprofilecreator", $params));

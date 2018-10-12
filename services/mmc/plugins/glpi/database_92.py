@@ -904,7 +904,7 @@ class Glpi92(DyngroupDatabaseHelper):
         elif query[2] == 'Register key':
             return base + [ self.regcontents]#self.collects, self.registries,
         elif query[2] == 'Register key value':
-            return base + [ self.regcontents, self.registries ]#self.collects, self.registries, 
+            return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         return []
 
     def mapping(self, ctx, query, invert = False):

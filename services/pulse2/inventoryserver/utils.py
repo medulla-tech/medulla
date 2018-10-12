@@ -23,7 +23,7 @@
 """ Common inventory utils """
 
 import os
-import logging 
+import logging
 
 from xml.dom.minidom import parseString
 from configobj import ConfigObj
@@ -42,13 +42,13 @@ class ConfigReader :
 
     @classmethod
     def get_config(cls, inifile):
-        """ 
+        """
         Get the configuration from config file
 
         @param inifile: path to config file
         @type inifile: string
 
-        @return: configobj.ConfigObj instance 
+        @return: configobj.ConfigObj instance
         """
         logging.getLogger().debug("Load config file %s" % inifile)
         if not os.path.exists(inifile) :
@@ -62,9 +62,9 @@ class ConfigReader :
 
     @property
     def inv_server_config(self):
-        """ 
+        """
         Get the configuration from inventory-server.ini
-        @return: configobj.ConfigObj instance 
+        @return: configobj.ConfigObj instance
         """
         return self.get_config(self._inv_server_ini)
 
@@ -72,7 +72,7 @@ class ConfigReader :
 # Build XMLRPC connection to MMC-Agent
 class MMCProxy :
     """ Provider to connect at mmc-agent """
-    def __init__(self): 
+    def __init__(self):
 
         config = ConfigReader()
 
@@ -113,14 +113,14 @@ class MMCProxy :
         password = mmc_section["password"]
         port = mmc_section["port"]
 
-        logging.getLogger().debug("Building the connection URL at mmc-agent") 
+        logging.getLogger().debug("Building the connection URL at mmc-agent")
 
         self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
 
     @property
     def failure (self):
-        """ 
-        Failure flag to indicate the incorrect build of proxy 
+        """
+        Failure flag to indicate the incorrect build of proxy
         @returns: bool
         """
         return self._failure
@@ -148,7 +148,7 @@ class InventoryUtils :
 
     @classmethod
     def is_coming_from_pxe(cls, xml_content):
-        """ 
+        """
         Check if the inventory is coming from PXE.
         Return True if OSNAME value = 'Unknown operating system (PXE network boot inventory)'
 

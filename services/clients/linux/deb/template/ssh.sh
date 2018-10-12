@@ -21,6 +21,6 @@ apt-get -y install rsync
 # Copying server key to /root/.ssh
 echo "Setting Server Public Key ..."
 mkdir -p /root/.ssh/
-cat server_key >> /root/.ssh/authorized_keys 
+cat server_key >> /root/.ssh/authorized_keys
 
 exit 0

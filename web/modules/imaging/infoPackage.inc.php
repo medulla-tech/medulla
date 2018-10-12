@@ -446,7 +446,7 @@ if (!empty($submod)) {
     $page->setFile("modules/imaging/imaging/multicast.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
-    
+
     unset($submod);
 }
 ?>

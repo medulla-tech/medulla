@@ -28,17 +28,17 @@ require_once("modules/backuppc/includes/html.inc.php");
 // ===========================================================================
 // Receive form data
 if (isset($_POST['bAdvScripts'])){
-    
+
     $host = $_POST['host'];
-    
+
     // Setting the scripts
     set_host_pre_backup_script($host, $_POST['pre_backup_script']);
     set_host_post_backup_script($host, $_POST['post_backup_script']);
     set_host_pre_restore_script($host, $_POST['pre_restore_script']);
     set_host_post_restore_script($host, $_POST['post_restore_script']);
-    
+
     new NotifyWidgetSuccess(_T('Configuration saved', 'backuppc'));
-    
+
 }
 // ===========================================================================
 

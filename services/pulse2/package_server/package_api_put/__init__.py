@@ -212,4 +212,3 @@ class PackageApiPut(PackageApiGet):
 
     def xmlrpc_addPackageFile(self, pid, file):
         self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
-

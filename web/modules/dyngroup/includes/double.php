@@ -39,32 +39,32 @@ class DoubleAutocomplete {
             $this->b_label = _T("Modify", "dyngroup");
         }
     }
-    
+
     function display() {
     ?>
 
     <td style="text-align:right;"><?php echo  $this->field1; ?> : </td>
     <td>
-        <input type="text" id="autocomplete" name="value" size="23" value="<?php echo $this->val ?>" /> 
+        <input type="text" id="autocomplete" name="value" size="23" value="<?php echo $this->val ?>" />
     </td>
     <td id='secondButton'>
         <input name="next" type="button" class="btnPrimary" value="<?php echo  _T("->", "dyngroup"); ?>" onClick="addSlave('autocomplete'); return false;"/>
     </td>
     </tr>
     </table>
-     
+
     <div id='secondPart' style='visibility:hidden;'>
         <table><tr>
         <td id='secondPart1' style="text-align:right;"><?php echo  $this->field2; ?> : </td>
         <td id='secondPart2'>
-            <input type="text" id="autocomplete2" name="value2" size="23" /> 
+            <input type="text" id="autocomplete2" name="value2" size="23" />
         </td>
         <td id='secondPart3'>
-            <input name="buser" type="submit" class="btnPrimary" value="<?php echo  $this->b_label; ?>" />   
+            <input name="buser" type="submit" class="btnPrimary" value="<?php echo  $this->b_label; ?>" />
         </td>
         </tr></table>
     </div>
-   
+
     <script src="jsframework/lib/jquery.jqEasySuggest.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
@@ -86,22 +86,22 @@ class DoubleAutocomplete {
 		es_opacity		: 0.95,
 		es_max_results		: 10,
 		es_offset_left		: 0,
-		es_offset_top		: 0	
+		es_offset_top		: 0
             });
-            
+
             var secondPart = document.getElementById('secondPart');
 
             var secondButton = document.getElementById('secondButton');
             var secondPart3 = document.getElementById('secondPart3');
             var secondPart2 = document.getElementById('secondPart2');
             var secondPart1 = document.getElementById('secondPart1');
-            
+
             var parent = secondButton.parentNode;
             parent.replaceChild(secondPart3, secondButton);
             parent.insertBefore(secondPart2, secondPart3);
             parent.insertBefore(secondPart1, secondPart2);
         }
-        
+
         //primary
         <?php
             include_once("modules/dyngroup/includes/xmlrpc.php");
@@ -119,7 +119,7 @@ class DoubleAutocomplete {
 		es_opacity		: 0.95,
 		es_max_results		: 10,
 		es_offset_left		: 0,
-		es_offset_top		: 0	
+		es_offset_top		: 0
         });
     -->
     </script>

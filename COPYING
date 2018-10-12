@@ -46,7 +46,7 @@ software.  If the software is modified by someone else and passed on, we
 want its recipients to know that what they have is not the original, so
 that any problems introduced by others will not reflect on the original
 authors' reputations.
-  
+
   Finally, any free program is threatened constantly by software
 patents.  We wish to avoid the danger that redistributors of a free
 program will individually obtain patent licenses, in effect making the
@@ -55,7 +55,7 @@ patent must be licensed for everyone's free use or not licensed at all.
 
   The precise terms and conditions for copying, distribution and
 modification follow.
-            
+
             GNU GENERAL PUBLIC LICENSE
    TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 
@@ -254,7 +254,7 @@ Software Foundation, write to the Free Software Foundation; we sometimes
 make exceptions for this.  Our decision will be guided by the two goals
 of preserving the free status of all derivatives of our free software and
 of promoting the sharing and reuse of software generally.
-                
+
                 NO WARRANTY
 
   11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
@@ -278,4 +278,3 @@ PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGES.
 
              END OF TERMS AND CONDITIONS
-

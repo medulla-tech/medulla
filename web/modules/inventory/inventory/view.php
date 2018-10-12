@@ -116,4 +116,3 @@ if (isset($_POST["inventaire"])) {
     ?>
 
 </table>
-

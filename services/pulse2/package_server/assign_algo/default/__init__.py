@@ -76,4 +76,3 @@ class UPUserAssignAlgo(UPAssignAlgo):
 #                'DEL'=>@mirrors['package_api_put']
 #            }
         return self.assign[user.uuid]
-

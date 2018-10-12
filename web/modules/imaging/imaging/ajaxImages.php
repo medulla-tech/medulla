@@ -56,8 +56,8 @@ $is_in_profile = False;
 
 if ($type == 'group') {
     $all = xmlrpc_getProfileImages($_GET['gid'], $start, $end, $filter);
-    
-    
+
+
 } else {
     $all = xmlrpc_getComputerImages($_GET['uuid'], $start, $end, $filter);
 }
@@ -69,7 +69,7 @@ if ($displayMaster) {
 }
 
 
-    
+
 $params = getParams();
 
 $addActions = array();
@@ -78,7 +78,7 @@ $addActions = array();
 $addAction = new ActionPopupItem(_T("Add image to boot menu", "imaging"), "addimage", "addbootmenu", "image", "base", "computers", null, 300, "add");
 $delAction = new ActionPopupItem(_T("Remove from boot menu", "imaging"), "bootmenu_remove", "delbootmenu", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
 
- 
+
 $emptyAction = new EmptyActionItem();
 $destroyAction = new ActionPopupItem(_T("Delete the image", "imaging"), "images_delete", "delete", "image", "base", "computers", $type."tabimages", 300, "delete");
 
@@ -227,5 +227,3 @@ $l->display();
 
 <!-- inject styles -->
 <link rel="stylesheet" href="modules/imaging/graph/css/imaging.css" type="text/css" media="screen" />
-
-

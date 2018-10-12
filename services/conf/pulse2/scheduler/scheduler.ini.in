@@ -24,9 +24,9 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 
 ## SCHEDULING ##
 # delay between requests during command launching - this lag avoids a huge load
-# on the reqested side, i.e. on a launcher 
+# on the reqested side, i.e. on a launcher
 # emitting_period = .1
-# proxy buffer emitting period 
+# proxy buffer emitting period
 # proxy_buffer_period = .1
 #
 # initial wait time, in seconds, to make stuff stabilize
@@ -54,7 +54,7 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # Example: inventory fail but if other steps are ok, we want a success result for
 # this command.
 # Possible values are (separated by spaces): delete inventory reboot halt
-# non_fatal_steps = 
+# non_fatal_steps =
 
 ## Commands life ##
 # Command max default authorized time (for each stage)
@@ -78,7 +78,7 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 #
 # Preferred network parameter overrides default IP/netmask of server detected when scheduler is started.
 # Setting this parameter favorize the list of introduced networks prior to others networks availables.
-# Format of parameter: ip_address/netmask (e.g. preferred_network = 192.168.1.1/255.255.255.0 10.0.0.0/255.255.0.0) 
+# Format of parameter: ip_address/netmask (e.g. preferred_network = 192.168.1.1/255.255.255.0 10.0.0.0/255.255.0.0)
 # preferred_network =
 # nmblookup command path
 # netbios_path = /usr/bin/nmblookup
@@ -109,7 +109,7 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # All workstations sends the heartbeat packets to Connection Manager
 # and updates last contact timestamp into the table "taget".
 # If enabled, scheduler starts the deployements only for updated machines.
-# requires_agent_update = True 
+# requires_agent_update = True
 
 [database]
 dbdriver = mysql

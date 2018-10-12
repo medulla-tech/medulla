@@ -282,7 +282,7 @@ Description: Pulse 2 Connection Manager
  .
  This package contains the Pulse 2 Connection Manager. This service
  provides incoming connections from pulse2 clients which controls
- initial agent installs and updates the target table by correct IP.  
+ initial agent installs and updates the target table by correct IP.
 
 Package: mmc-web-dyngroup
 Architecture: all
@@ -382,8 +382,8 @@ Description: Pulse 2 support plugin (provide remote access)
  to the Pulse server for support purpose.
 
 Package: pulse2-uuid-resolver
-Architecture: all 
-Depends: ${misc:Depends}, ${python:Depends}, python-twisted-web (>= 2.4.0) 
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-twisted-web (>= 2.4.0)
 Description: Pulse 2 UUID resolver
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -391,7 +391,7 @@ Description: Pulse 2 UUID resolver
  This package contains a helper to resolve Pulse's UUID into IP address.
 
 Package: pulse2-dlp-server
-Architecture: all 
+Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}, python-cherrypy3, python-pulse2-common (= ${binary:Version})
 Description: Pulse 2 Download provider service
  Pulse 2 is Open Source computer system management for medium and large
@@ -455,4 +455,3 @@ Description: Pulse 2 MMC agent plugins
  organizations.
  .
  This package will install all the Pulse 2 MMC agent interface plugins.
-

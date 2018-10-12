@@ -904,7 +904,7 @@ class Glpi91(DyngroupDatabaseHelper):
         elif query[2] == 'Register key':
             return base + [ self.regcontents]#self.collects, self.registries,
         elif query[2] == 'Register key value':
-            return base + [ self.regcontents, self.registries ]#self.collects, self.registries, 
+            return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -985,7 +985,7 @@ class Glpi91(DyngroupDatabaseHelper):
                             print str(e)
                             traceback.print_exc(file=sys.stdout)
                             ret.append(partA.like(self.encode(partB)))
-                                
+
             if ctx.userid != 'root':
                 ret.append(self.__filter_on_entity_filter(None, ctx))
             return and_(*ret)
@@ -2931,7 +2931,7 @@ class Glpi91(DyngroupDatabaseHelper):
         ret = query.all()
         session.close()
         return ret
-    
+
     @DatabaseHelper._sessionm
     def getAllVersion4Software(self, session, ctx, softname, version = ''):
         """

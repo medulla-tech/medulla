@@ -331,7 +331,7 @@ for command in commandData:
             last_entry = None
             last_message = ''
             last_state = ''
-            
+
             prev_error = 0
             prev_entry = None
             prev_message = ''
@@ -527,7 +527,7 @@ def print_human(label, value, total, subtotal):
         print fmt.format(label, value, 100 * value / total, total, 100 * value / subtotal, subtotal)
     else:
         print fmt.format(label, value, 0, total, 0, subtotal)
-    
+
 ids_command = data.keys()
 ids_command.sort()
 for id_command in ids_command:
@@ -689,4 +689,4 @@ for id_command in ids_command:
                     command['Results']['Infra'],
                     command['Fatal']['package_unavailable'],
                     command['Fatal']['conn_issue']
-                )                
+                )

@@ -294,4 +294,3 @@ def onlyAddNew(obj, value, main):
             if value != main:
                 obj.append(value)
     return obj
-

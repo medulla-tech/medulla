@@ -34,14 +34,14 @@ import logging
 plugin = { "VERSION" : "1.0", "NAME" : "updatenbdeploy", "TYPE" : "master" }
 
 #=====================================================
-#DEBUG   {'VERSION': '1.0', 'TYPE': 'master', 'NAME': 'updatenbdeploy'} : 
+#DEBUG   {'VERSION': '1.0', 'TYPE': 'master', 'NAME': 'updatenbdeploy'} :
 #DEBUG   data plugin {
-    #"idcmd": 39, 
-    #"countnb": 0, 
-    #"grp": 14, 
-    #"exec": true, 
-    #"consignnb": "", 
-    #"nbtotal": 1, 
+    #"idcmd": 39,
+    #"countnb": 0,
+    #"grp": 14,
+    #"exec": true,
+    #"consignnb": "",
+    #"nbtotal": 1,
     #"login": "root"
 #}
 #=====================================================

@@ -65,5 +65,3 @@ CREATE TABLE Results (
 
 CREATE TABLE version (Number INT NOT NULL);
 INSERT INTO version values (1);
-
-

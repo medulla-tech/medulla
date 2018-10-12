@@ -42,10 +42,3 @@ class LicensePanel(Panel):
 
     def serialize(self):
         return self.data
-
-
-
-
-
-
-

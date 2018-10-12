@@ -50,6 +50,3 @@ class Shell(Component):
         self.logger.debug("Shell: return code: %s" % repr(returncode))
 
         return returncode
-
-
-

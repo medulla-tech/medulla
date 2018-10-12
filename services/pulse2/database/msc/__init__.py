@@ -207,28 +207,28 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         return bdl
 
-    def createcommanddirectxmpp( self, 
+    def createcommanddirectxmpp( self,
                                 package_id,
-                                start_file, 
-                                parameters, 
+                                start_file,
+                                parameters,
                                 files,
-                                start_script, 
+                                start_script,
                                 clean_on_success,
-                                start_date, 
-                                end_date, 
+                                start_date,
+                                end_date,
                                 connect_as,
-                                creator, 
+                                creator,
                                 title,
                                 next_connection_delay,
                                 max_connection_attempt,
-                                maxbw, 
+                                maxbw,
                                 deployment_intervals,
-                                fk_bundle, 
-                                order_in_bundle, 
-                                proxies, 
+                                fk_bundle,
+                                order_in_bundle,
+                                proxies,
                                 proxy_mode,
-                                state, 
-                                sum_running, 
+                                state,
+                                sum_running,
                                 cmd_type=0):
         session = create_session()
         obj = self.createCommand( session, package_id, start_file, parameters, files,
@@ -485,10 +485,10 @@ class MscDatabase(DatabaseHelper):
 
         if filt:
             sqlfilter = sqlfilter + """
-            AND 
-            (commands.title like %%%s%% 
-            OR 
-            commands.creator like %%%s%% 
+            AND
+            (commands.title like %%%s%%
+            OR
+            commands.creator like %%%s%%
             OR
             commands.start_date like %%%s%%)"""%(filt,filt,filt)
 
@@ -497,7 +497,7 @@ class MscDatabase(DatabaseHelper):
         sqllimit=""
         if min and max:
             sqllimit = """
-                LIMIT %d 
+                LIMIT %d
                 OFFSET %d"""%(int(max)-int(min), int(min))
             reqsql = reqsql + sqllimit
 
@@ -510,13 +510,13 @@ class MscDatabase(DatabaseHelper):
 
         sqlselect="""
             Select COUNT(nb) AS TotalRecords from(
-                SELECT 
+                SELECT
                     COUNT(*) AS nb,
                     CONCAT('',
                             IF(target.id_group != NULL
                                     OR target.id_group = '',
                                 CONCAT('computer', commands.title),
-                                CONCAT('GRP ', commands.title))) AS titledeploy 
+                                CONCAT('GRP ', commands.title))) AS titledeploy
                 FROM
                     commands_on_host
                         INNER JOIN
@@ -530,8 +530,8 @@ class MscDatabase(DatabaseHelper):
             AND
             """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;";
-        result={}       
-        resulta = self.db.execute(reqsql)        
+        result={}
+        resulta = self.db.execute(reqsql)
         resultb = self.db.execute(reqsql1)
         sizereq = [x for x in resultb][0][0]
         result['lentotal'] = sizereq
@@ -584,9 +584,9 @@ class MscDatabase(DatabaseHelper):
         join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
         q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
         q = q.select_from(join)
-        q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute', 
+        q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',
                             self.commands_on_host_phase.c.state == 'ready',
-                            self.target.c.id_group == group 
+                            self.target.c.id_group == group
                             )).all()
         ## return informations for update table deploy xmpp
         result=[]
@@ -623,7 +623,7 @@ class MscDatabase(DatabaseHelper):
         return result
 
     def deployxmpp(self):
-        """ 
+        """
             select deploy machine
         """
         session = create_session()

@@ -805,4 +805,3 @@ mkdir -p %buildroot%_var/lib/pulse2/file-transfer
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
-

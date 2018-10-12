@@ -46,4 +46,3 @@ class InventoryComputers(ComputerI):
 
     def delComputer(self, ctx, uuid, backup):
         return computersUnregister([uuid], backup)
-

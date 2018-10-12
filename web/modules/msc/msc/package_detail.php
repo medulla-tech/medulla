@@ -23,7 +23,7 @@
  */
 
 require('modules/msc/includes/package_api.php');
-    
+
 $from = $_GET['from'];
 $hostname = $_GET["hostname"];
 $uuid = $_GET["uuid"];

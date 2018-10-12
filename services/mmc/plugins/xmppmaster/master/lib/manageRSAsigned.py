@@ -160,7 +160,7 @@ class MsgsignedRSA:
         Function stringbase64 to object keyRSA
         :param strbase64: string encoded in base64
         :type strbase64:  string
-        :return: object 
+        :return: object
         """
         return pickle.loads(base64.b64decode(strbase64))
 

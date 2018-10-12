@@ -171,4 +171,3 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
         if result:
             return final_proxy
         return result
-

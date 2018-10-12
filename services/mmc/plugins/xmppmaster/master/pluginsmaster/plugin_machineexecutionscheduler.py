@@ -42,15 +42,15 @@ plugin = { "VERSION" : "1.0", "NAME" : "machineexecutionscheduler", "TYPE" : "ma
     ...,
     ...,
     #"advanced": {
-        #"idcmd": 1, 
-        #"countnb": 0, 
-        #"grp": 14, 
-        #"exec": false, 
-        #"exectime": "2017-10-18 07:25:11", 
-        #"nbtotal": 1, 
-        #"scheduling": true, 
+        #"idcmd": 1,
+        #"countnb": 0,
+        #"grp": 14,
+        #"exec": false,
+        #"exectime": "2017-10-18 07:25:11",
+        #"nbtotal": 1,
+        #"scheduling": true,
         #"login": "root"
-    #}, 
+    #},
     ...,
     ...
 #}

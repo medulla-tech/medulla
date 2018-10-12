@@ -50,15 +50,15 @@ class Sender(Protocol):
     def dataReceived(self, packet):
         data = PackUtils.unpack(packet)
         self.send_locked = False
-        self.response(data, 
-                      self.request, 
-                      self.func_name, 
+        self.response(data,
+                      self.request,
+                      self.func_name,
                       self.args)
 
 
 class Forwarder:
     """
-    This is the base class for streaming 
+    This is the base class for streaming
     """
     _protocol = None
     _cached_methods = []
@@ -109,7 +109,7 @@ class Forwarder:
             self.logger.warn("UX call pack method failed: %s" % str(e))
 
 
- 
+
         if func_name in self._cached_methods :
             # response always OK, but cached into buffer
             SendingBuffer().add(packet)
@@ -127,14 +127,3 @@ class Forwarder:
                 self.protocol.call_remote(packet)
             except Exception, e:
                 self.logger.warn("UX: immediate call method failed: %s" % str(e))
-
-
-
-
-            
-             
-
-        
-
-
-

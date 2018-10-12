@@ -25,23 +25,23 @@
 
 require_once ("modules/pkgs/includes/autocomplete.php");
 function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $extracriterion = '', $style = '') {
-    
+
     // Sorry for this shit code :(
     if (is_array($pack[$p[0]]))
         $pack[$p[0]] = $pack[$p[0]][0];
-    
+
     $module = (in_array('inventory', $_SESSION['modulesList'])) ? 'inventory' : 'glpi';
     $criterion = clean ( quickGet ( 'add_param' ) );
-    $auto = new Autocomplete($p[0], 'main.php?module=pkgs&submod=pkgs&action=ajaxAutocompleteSearch', 
+    $auto = new Autocomplete($p[0], 'main.php?module=pkgs&submod=pkgs&action=ajaxAutocompleteSearch',
             $module, $field, $value = $pack[$p[0]]/*quickGet ( 'value' )*/, $limit, $extracriterion);
     $tooltip = _T(
             'Please type 3 characters for suggestion.<br>
             Wildcard is \'%\', %text% matches any string containing \'text\'.<br>
-            If unsure, leave Vendor and Version fields blank.', 
+            If unsure, leave Vendor and Version fields blank.',
             pkgs);
     $Form->add(
-            new TrFormElement($p[1], $auto, 
-                    array('class' => 'associateinventory', 'style' => $style, 'tooltip' => $tooltip)), 
+            new TrFormElement($p[1], $auto,
+                    array('class' => 'associateinventory', 'style' => $style, 'tooltip' => $tooltip)),
             array("value" => $pack[$p[0]]));
 }
 
@@ -75,17 +75,17 @@ function addQuerySection($Form, $p) {
     }
 
     $Form->add(
-            new TrFormElement(_T('Associate inventory', 'pkgs'), 
-                    new CheckboxTpl('associateinventory')), 
+            new TrFormElement(_T('Associate inventory', 'pkgs'),
+                    new CheckboxTpl('associateinventory')),
             array("value" => $check)
         );
 
     $Qfields = getQFields();
 
     addQuery($Form, array('Qvendor', _T('Vendor', 'pkgs')), $p, $Qfields['Qvendor'], 3, '', $style);
-    addQuery($Form, array('Qsoftware', _T('Software', 'pkgs')), $p, $Qfields['Qsoftware'], 3, 
+    addQuery($Form, array('Qsoftware', _T('Software', 'pkgs')), $p, $Qfields['Qsoftware'], 3,
             'Qvendor', $style);
-    addQuery($Form, array('Qversion', _T('Version', 'pkgs')), $p, $Qfields['Qversion'], 2, 'Qsoftware', 
+    addQuery($Form, array('Qversion', _T('Version', 'pkgs')), $p, $Qfields['Qversion'], 2, 'Qsoftware',
             $style);
 
     $Bool = new TrFormElement(_T('Bool', 'pkgs'), new InputTpl('boolcnd'));
@@ -94,8 +94,8 @@ function addQuerySection($Form, $p) {
     /* ================= END QUERY ===================== */
     /* =================   BEGIN LICENSE   ===================== */
     $Form->add(
-            new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses'), 
-                    array('class' => 'associateinventory', 'style' => $style)), 
+            new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses'),
+                    array('class' => 'associateinventory', 'style' => $style)),
             array("value" => $p['licenses'])
     );
     /* ==================   END LICENSE   ====================== */
@@ -168,7 +168,7 @@ jQuery("#Qvendor").css("backgroundColor", "#ff123f");
 //                 jQuery("#Qvendor").val('');
 //                 jQuery("#Qsoftware").val('');
 //                 jQuery("#Qversion").val('');
-                
+
                 showconfirm()
                 jQuery('.associateinventory').hide();
             }

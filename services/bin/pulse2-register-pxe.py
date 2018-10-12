@@ -476,7 +476,7 @@ def mac_adressexmlpxe(file_content):
         logging.getLogger().debug("no interface report for PXE")
         return None
 
-def mac_adressexml(file_content):    
+def mac_adressexml(file_content):
     macadrss = mac_adressexmlpxe(file_content)
     if macadrss != None:
         return macadrss

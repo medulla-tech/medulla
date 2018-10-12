@@ -50,8 +50,8 @@ $ make
 $ sudo make install
 
 The `pulse2-setup' tool can then be used to provision databases,
-setup and check configuration files, etc. If you plan to use imaging 
-service, please read the following section, as pulse2-setup does not 
+setup and check configuration files, etc. If you plan to use imaging
+service, please read the following section, as pulse2-setup does not
 handle with its configuration.
 
 Quick imaging client installation
@@ -181,8 +181,8 @@ In tools repository, 'install-pulse-git' allow a quick setup.
 	--glpi-dbname=<database name> \
 	--glpi-dbuser=<database username> \
 	--glpi-dbpasswd=<database user password> \
-	--glpi-dbrootpasswd=<mysql root password> 
+	--glpi-dbrootpasswd=<mysql root password>
 	--branch=<devel branche to use>
 
-   
+
 Repository for devel branch http://git.siveo.net/

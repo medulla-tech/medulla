@@ -45,7 +45,7 @@ sub loadfile {
     local $/;
     my $content = <FILE>;
     close FILE or die "Can't close file $file: $!";
-    
+
     sendContent($content);
 
 }
@@ -95,7 +95,7 @@ sub sendContent {
 
     print STDERR "Invalid content\n"
         if ($debug && !checkContent($content));
- 
+
     my $ua = LWP::UserAgent->new;
     $ua->agent($useragent);
     my $request = HTTP::Request->new( POST => $url );
@@ -112,7 +112,7 @@ sub sendContent {
     print "Response from server:\n$ret_msg" if ($ret_msg && $debug);
 
 	if($res->is_success){
-        print STDERR "Can't remove $file: $!\n" 
+        print STDERR "Can't remove $file: $!\n"
             if ($remove && (!unlink $file));
 	}else{
         print "Upload failed\n";

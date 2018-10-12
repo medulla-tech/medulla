@@ -51,11 +51,11 @@ class ImagingProfile(ComputerProfileI):
         # TODO need to remove the menu and the registering
         if ImagingDatabase().isTargetRegister(profile_UUID, P2IT.PROFILE):
             # put all the computers to their own menu
-            
+
             ret1 = ImagingDatabase().delComputersFromProfile(profile_UUID, computers_UUID)
             ret2 = ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
 
-            return ret1 and ret2 
+            return ret1 and ret2
         return True
 
     def delProfile(self, profile_UUID):
@@ -65,13 +65,13 @@ class ImagingProfile(ComputerProfileI):
             computers = {}
             for uuid in computers_UUID:
                 computers[uuid] = {'uuid':uuid}
- 
+
             ret1 = len(computers) > 0 and ImagingDatabase().delComputersFromProfile(profile_UUID, computers) or True
             ret2 = len(computers) > 0 and ImagingDatabase().changeTargetsSynchroState(computers_UUID, P2IT.COMPUTER, P2ISS.TODO) or True
             # delete the profile itself
             ret3 = ImagingDatabase().delProfile(profile_UUID)
             ret4 = len(computers) > 0 and ImagingDatabase().switchMenusToDefault(computers_UUID) or True
- 
+
             return ret1 and ret2 and ret3 and ret4
         return True
 

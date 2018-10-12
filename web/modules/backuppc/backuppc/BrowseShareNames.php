@@ -51,9 +51,9 @@ $count = count($sharenames);
 $params = array();
 for ($i=0;$i<$count;$i++)
     $params[] = array(
-      'host'=>$_GET['host'], 
+      'host'=>$_GET['host'],
       'cn' => $_GET['cn'],
-      'backupnum'=>$_GET['backupnum'], 
+      'backupnum'=>$_GET['backupnum'],
       'sharename'=>str_replace('&nbsp;','%20',htmlentities($sharenames[$i]))
     );
 
@@ -79,4 +79,3 @@ include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
 <style>
     .noborder { border:0px solid blue; }
 </style>
-

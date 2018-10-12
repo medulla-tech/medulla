@@ -58,5 +58,3 @@ def awakeCheckStatus(interval):
     logging.getLogger().debug('glpi plugin: CHECK: Starting')
     checkStatus()
     scheduleCheckStatus(interval)
-
-

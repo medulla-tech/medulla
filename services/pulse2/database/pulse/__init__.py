@@ -192,7 +192,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         else :
             session.close()
             return False
-            
+
         session.flush()
         session.close()
         return True
@@ -210,4 +210,3 @@ def uuid2id(uuid):
 ##############################################################################################################
 class PackageServerEntity(database_helper.DBObject):
     to_be_exported = ['entity_uuid', 'package_server_uuid']
-

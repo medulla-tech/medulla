@@ -21,7 +21,7 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-# CloseKey OpenKey QueryValueEx SetValue SetValueEx HKEY_LOCAL_MACHINE KEY_SET_VALUE REG_SZ 
+# CloseKey OpenKey QueryValueEx SetValue SetValueEx HKEY_LOCAL_MACHINE KEY_SET_VALUE REG_SZ
 import logging
 import os
 import re
@@ -81,7 +81,7 @@ class MyProxyClientFactory(proxy.ProxyClientFactory):
     def buildProtocol(self, addr):
         # Connection succeeded, we can clean the inventory flag if set
         if HttpInventoryProxySingleton().checked_flag:
-            HttpInventoryProxySingleton().clean_flag()        
+            HttpInventoryProxySingleton().clean_flag()
         return proxy.ProxyClientFactory.buildProtocol(self, addr)
 
     def clientConnectionFailed(self, connector, reason):
@@ -122,14 +122,14 @@ class MyProxyRequest(proxy.ProxyRequest):
             headers['host'] = host
         self.content.seek(0, 0)
         s = self.content.read()
-        
+
         logger = logging.getLogger()
-        
+
         logger.debug("\nOcs Report Received");
-        
+
         # We will unzip the XML File and parsing it only if needed
         if self.config.getocsdebuglog or self.config.improve:
-            # xml file unzip 
+            # xml file unzip
             try:
                 decomp = decompressobj()
                 sUnpack = decomp.decompress(s)
@@ -140,14 +140,14 @@ class MyProxyRequest(proxy.ProxyRequest):
                 logger.error("Failed during decompression.")
                 logger.error(str(e))
                 raise e
-            
+
             # Get the query type
             try:
                 query = re.search(r'<QUERY>([\w-]+)</QUERY>', sUnpack).group(1)
             except AttributeError, e:
                 query = 'FAILS'
-            
-            # process on Inventory OCS XML file, 
+
+            # process on Inventory OCS XML file,
             if query == 'INVENTORY' :
                 try:
                     if sys.platform[0:3] == "win":                          #It's here because I need Pulse2InventoryProxyConfig be initialited before improve packtage be initialat
@@ -163,14 +163,14 @@ class MyProxyRequest(proxy.ProxyRequest):
                         logger.debug("\t\tOcs Debug Log add")
                     if self.config.improve:
                         # improving of xml file
-                        sUnpack = improveXML(sUnpack)    
+                        sUnpack = improveXML(sUnpack)
                         logger.debug("\t\tInformations add")
                 except ImportError:
                     logger.error("OCS improving failed: no improving function found for "+sys.platform+" platform")
-            
+
             logger.debug("\tOcs Report Terminated");
             logger.debug("\t\tuncompressed length: " + str(len(sUnpack)))
-            
+
             # zip of xml file
             try:
                 comp = compressobj()
@@ -180,13 +180,13 @@ class MyProxyRequest(proxy.ProxyRequest):
                 logger.error("Failed during compression.")
                 logger.error(str(e))
                 raise e
-            
+
             # update the new size of xml
             headers['content-length'] = len(s)
-                    
+
         clientFactory = class_(self.method, rest, self.clientproto, headers,
                                s, self)
-        
+
         if self.config.enablessl:
             try:
                 ctx = makeSSLContext(self.config.verifypeer, self.config.cert_file, self.config.key_file)
@@ -235,5 +235,3 @@ class HttpInventoryProxySingleton(Singleton):
             self.logger.debug("Registry key value set")
         except Exception, e:
             self.logger.error("Can't change registry key value: %s", str(e))
-            
-        

@@ -286,9 +286,9 @@ if ($_GET['uuid'] != '') {
          * Use an array to display friendly names
          * instead of Ugly table name
          */
-        
+
 	function __sort($a, $b){
-	 
+
 	 $__order = array('Path','Value','Company','ProductName','ProductVersion');
 	 if (array_search($a, $__order) === FALSE && array_search($b, $__order) === FALSE)
 	   return 0;
@@ -389,7 +389,7 @@ if ($_GET['uuid'] != '') {
                 var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
                 return results[1] || 0;
             }
-            
+
             jQuery(function(){
                 var $=jQuery;
                 // Make field editable only if key is in editable_registry array
@@ -410,9 +410,9 @@ if ($_GET['uuid'] != '') {
                     $('form#registryForm').serialize().split('&').each(function(param){
                         param_string += param + ' ';
                     });
-                    
-                    var uuid = jQuery.urlParam('uuid') || jQuery.urlParam('objectUUID'); 
-                    cmd_params = <?php print $registry_deploy_cfg; ?>; 
+
+                    var uuid = jQuery.urlParam('uuid') || jQuery.urlParam('objectUUID');
+                    cmd_params = <?php print $registry_deploy_cfg; ?>;
                     cmd_params.deploy_params.parameters = param_string;
                     cmd_params.deploy_params.ltitle = 'regchange - ' + (new Date()).toLocaleString();
                     cmd_params.uuids = [ uuid ];

@@ -78,7 +78,7 @@ class EntitiesRules:
                             else:
                                 operand1, operator, operand2 = words[0:3]
                                 operator = operator.lower()
-                                
+
                                 if operator in self.operators:
                                     # TODO: Maybe check operand1 value
                                     if operator == 'match':
@@ -86,7 +86,7 @@ class EntitiesRules:
                                         regexp = re.compile(operand2)
                                         subexprs.append((operand1, operator, regexp))
                                     else:
-                                        subexprs.append((operand1, operator, operand2))    
+                                        subexprs.append((operand1, operator, operand2))
                                 else:
                                     self.logger.error("Operator %s is not supported, skipping" % operator)
                                 words = words[3:]

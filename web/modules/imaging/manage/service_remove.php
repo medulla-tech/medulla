@@ -39,7 +39,7 @@ if (isset($_POST["bconfirm"])) {
 
     $ret = xmlrpc_removeService($item_uuid, $location, $params);
 
-    // goto images list 
+    // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Service <strong>%s</strong> successfully removed", "imaging"), $label);
         xmlrpc_setfromxmppmasterlogxmpp("Error : ".$str,

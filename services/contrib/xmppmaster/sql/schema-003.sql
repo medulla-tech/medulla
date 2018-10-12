@@ -41,7 +41,7 @@ CREATE TABLE `parameters_deploy` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 TRUNCATE `xmppmaster`.`relayserver`;
-ALTER TABLE `xmppmaster`.`relayserver` 
+ALTER TABLE `xmppmaster`.`relayserver`
 ADD COLUMN `package_server_ip` VARCHAR(45) NOT NULL AFTER `groupdeploy`,
 ADD COLUMN `package_server_port` VARCHAR(45) NOT NULL AFTER `package_server_ip`;
 

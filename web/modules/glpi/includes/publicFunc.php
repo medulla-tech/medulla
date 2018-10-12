@@ -31,10 +31,10 @@
  */
 
  //getUserLocations
- 
+
 require_once "modules/glpi/includes/xmlrpc.php";
 require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
- 
+
 class buttonTpl2 extends AbstractTpl {
     var $class = '';
     var $cssClass = 'btn btn-small';
@@ -55,11 +55,11 @@ class buttonTpl2 extends AbstractTpl {
             printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
     }
 }
- 
+
 function _glpi_baseEdit($FH, $mode) {
 
     $username = $FH->getArrayOrPostValue("uid");
-    
+
     // Default profile is SuperAdmin on root entity
     // with recursive rights
     $default_user_locations = array(
@@ -70,7 +70,7 @@ function _glpi_baseEdit($FH, $mode) {
             'profile' => 4
         )
     );
-    
+
     if ($mode == 'edit') {
         $user_locations = getLocationsForUser($username);
         // If not user profile, switching to default
@@ -91,48 +91,48 @@ function _glpi_baseEdit($FH, $mode) {
     // =================================
     // Entity select
     // =================================
-    
+
     $entities_select = new SelectItem("entities[]");
     $entities = getUserLocations();
-    
+
     $entity_list = array();
     foreach ($entities as $entity){
         $id = str_replace('UUID', '', $entity['uuid']);
         $entity_list[$id] = $entity['name'];
     }
-        
+
     $entities_select->setElements(array_values($entity_list));
     $entities_select->setElementsVal(array_keys($entity_list));
-    
+
 
 
     // =================================
     // Profiles select
     // =================================
-    
+
     $profiles_select = new SelectItem("profiles[]");
     $profiles = getAllUserProfiles();
-        
+
     $profiles_select->setElements(array_values($profiles));
     $profiles_select->setElementsVal(array_keys($profiles));
-    
+
     // =================================
     // Recursive select
     // =================================
     $recursive_select = new SelectItem("is_recursive[]");
     $recursive_select->setElements(array('Recursive', 'Not recursive'));
     $recursive_select->setElementsVal(array('1', '0'));
-    
+
     // =================================
     // Recursive select
     // =================================
     $dynamic_select = new SelectItem("is_dynamic[]");
     $dynamic_select->setElements(array('Dynamic', 'Not dynamic'));
     $dynamic_select->setElementsVal(array('1', '0'));
-    
+
     foreach ($user_locations as $attr) {
-        
-            
+
+
         // Fields
         $fields = array(
             $entities_select,
@@ -141,7 +141,7 @@ function _glpi_baseEdit($FH, $mode) {
             $dynamic_select,
             new buttonTpl2('removeLine',_T('Remove', 'glpi'),'removeLine')
         );
-        
+
         $values = array(
             $attr['entity_id'],
             $attr['profile'],
@@ -149,13 +149,13 @@ function _glpi_baseEdit($FH, $mode) {
             $attr['is_dynamic'],
             ''
         );
-        
+
         $f->add(
             new TrFormElement(_T('Entity right','glpi'), new multifieldTpl($fields)),
             array("value" => $values,"required" => True)
         );
     }
-        
+
     // Add line button
     $addEntityRightBtn = new buttonTpl2('addLine',_T('Add entity right','backuppc'));
     $addEntityRightBtn->setClass('btnPrimary');
@@ -163,20 +163,20 @@ function _glpi_baseEdit($FH, $mode) {
         new TrFormElement('', $addEntityRightBtn),
         array()
     );
-    
+
     print <<<EOF
 <script type="text/javascript">
 jQuery(function(){
-    
+
     modelLine = jQuery('.removeLine:first').parents('tr:first').clone();
-        
+
      // Remove line button
      jQuery('.removeLine').click(function(){
          if (jQuery('.removeLine').length > 1)
              jQuery(this).parents('tr:first').remove();
      });
-     
-     
+
+
      // Add line button
      jQuery('#addLine').click(function(){
         var newline = modelLine.clone().insertBefore(jQuery(this).parents('tr:first'));
@@ -188,7 +188,7 @@ jQuery(function(){
                 jQuery(this).parents('tr:first').remove();
         });
      });
-    
+
 });
 window.toto=1;
 </script>
@@ -219,13 +219,13 @@ function _glpi_changeUser($FH, $mode) {
     global $result;
     $username = $FH->getArrayOrPostValue("uid");
     $password = $FH->getPostValue("pass");
-    
+
     // User entity rights
     $entities = $FH->getPostValue('entities');
     $profiles = $FH->getPostValue('profiles');
     $is_recursive = $FH->getPostValue('is_recursive');
     $is_dynamic = $FH->getPostValue('is_dynamic');
-    
+
     // Building attr array
     $attrs = array();
     foreach ($entities as $index => $entity){
@@ -236,7 +236,7 @@ function _glpi_changeUser($FH, $mode) {
             'profile' => $profiles[$index]
         );
     }
-    
+
     if ($password){
         if ($mode == 'edit'){
             // Set only the new password
@@ -248,7 +248,7 @@ function _glpi_changeUser($FH, $mode) {
             return 0;
         }
     }
-       
+
     setLocationsForUser($username, $attrs);
 
     return 0;

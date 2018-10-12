@@ -93,4 +93,3 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
 
 if __name__=='__main__':
     win32serviceutil.HandleCommandLine(Pulse2PackageServer)
-

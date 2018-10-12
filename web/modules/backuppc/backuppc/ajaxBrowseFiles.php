@@ -71,13 +71,13 @@ if (isset($_GET["start"])) {
  *       [module] => backuppc
  *       [submod] => backuppc
  *       [action] => ajaxBrowseFiles
- *       [filter] => 
+ *       [filter] =>
  *       [host] => UUID3
  *       [sharename] => /cygdrive/c/Documents
- *       [Acirc;_and] => 
- *       [Acirc;_Settings/] => 
+ *       [Acirc;_and] =>
+ *       [Acirc;_Settings/] =>
  *       [backupnum] => 0
- *       [location] => 
+ *       [location] =>
  *       [maxperpage] => 20
  *       [folder] => /
  *   )

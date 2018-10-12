@@ -45,4 +45,3 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
             xmppobject.send_message(mto=data['jid'],
                                     mbody=json.dumps(datasend),
                                     mtype='chat')
-

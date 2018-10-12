@@ -87,4 +87,3 @@ TRUNCATE Version;
 INSERT INTO Version VALUES( '9' );
 
 COMMIT;
-

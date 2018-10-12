@@ -349,7 +349,7 @@ if (isset($_POST["bunregister"])) {
     $params['target_uuid'] = $target_uuid;
     $params['target_name'] = $target_name;
     $msg = _T("You are going to unregister this computer from the imaging module, are you sure you want to do that?", "imaging");
-    
+
     $f = new ValidatingForm();
     $f->add(new TitleElement($msg, 3));
     $f->push(new Table());
@@ -389,11 +389,11 @@ else if (isset($_POST["bunregister2"])) {
                                     '',
                                     "session user ".$_SESSION["login"],
                                     'Imaging | Image | Menu | server | Manual');
-        
+
         unset($_SESSION["imaging.isComputerRegistered_".$target_uuid]);
         header("Location: " . urlStrRedirect("base/computers/register_target", $params));
         exit;
-    } 
+    }
     else {
         $str = sprintf(_T("Failed to unregister the computer %s", 'imaging'), $target_name);
         xmlrpc_setfromxmppmasterlogxmpp($str,
@@ -492,7 +492,7 @@ else {
                 foreach ($networks['ipHostNumber'] as $key=>$val) {
                     if (!in_array($val, $tabip))
                     {
-                        $tabip[] =  $val; 
+                        $tabip[] =  $val;
                     }
                     else{
                         $idkey[]=$key;
@@ -544,7 +544,7 @@ else {
             }
 
             $f->push(new DivExpertMode());
-            
+
             expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real_target);
 
             $f->pop();
@@ -660,7 +660,7 @@ else {
             foreach ($networks['ipHostNumber'] as $key=>$val) {
                 if (!in_array($val, $tabip))
                 {
-                    $tabip[] =  $val; 
+                    $tabip[] =  $val;
                 }
                 else{
                     $idkey[]=$key;

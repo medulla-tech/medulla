@@ -90,4 +90,3 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj, objsessi
     except Exception as e:
         xmppobject.session.clear(sessionid)
         xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid,'status': 'error','msgerror' :str(e) , 'to' : message['from'], 'form' : message['to'] ,'file' : objsessiondata.getdatasession()['whowritefile']})
-

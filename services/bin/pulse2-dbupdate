@@ -40,12 +40,12 @@ def db_update (options):
     @type options: optparse.Option
     """
     try :
-        db_control = DBControl(user=options.user, 
-                               passwd=options.password, 
-                               host=options.host, 
-                               port=options.port, 
+        db_control = DBControl(user=options.user,
+                               passwd=options.password,
+                               host=options.host,
+                               port=options.port,
                                module=options.database,
-                               log=log) 
+                               log=log)
         db_control.process()
     except Exception, exc :
         log.warn("An error occured when running dbupdate : %s" % str(exc))
@@ -86,24 +86,24 @@ if __name__ == "__main__" :
 
     parser = OptionParser()
 
-    parser.add_option("--user", 
+    parser.add_option("--user",
                       dest="user",
                       help="MySQL administrator username")
-    parser.add_option("--password", 
+    parser.add_option("--password",
                       dest="password",
                       help="MySQL administrator password")
-    parser.add_option("--host", 
+    parser.add_option("--host",
                       dest="host",
                       help="MySQL server host")
-    parser.add_option("--db", 
+    parser.add_option("--db",
                       dest="database",
                       help="MySQL server database")
-    parser.add_option("--port", 
-                      dest="port", 
-                      default=3306, 
+    parser.add_option("--port",
+                      dest="port",
+                      default=3306,
                       help="MySQL port")
     parser.add_option("-q", "--quiet",
-                      action="store_true", 
+                      action="store_true",
                       dest="verbose",
                       help="Silent output")
 
@@ -120,7 +120,5 @@ if __name__ == "__main__" :
     log.addHandler(handler)
     log.setLevel(level)
 
-    if options_validate(options): 
-        db_update(options) 
-    
- 
+    if options_validate(options):
+        db_update(options)

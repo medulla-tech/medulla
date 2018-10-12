@@ -164,7 +164,7 @@ if __name__ == "__main__":
     days = 0
     uri = ''
     force = False
-    
+
     for o, a in opts:
         if o == '--days':
             days = int(a)
@@ -172,7 +172,7 @@ if __name__ == "__main__":
             uri = a
         if o == '--force':
             STATES_TO_CLEANUP = ['wol_in_progress','wol_done','wol_failed','upload_in_progress','upload_done','upload_failed','execution_in_progress','execution_done','execution_failed','delete_in_progress','delete_done','delete_failed','inventory_in_progress','inventory_done','inventory_failed','reboot_in_progress','reboot_done','reboot_failed','halt_in_progress','halt_done','halt_failed','not_reachable','done','pause','paused','stop','stopped','scheduled','re_scheduled','failed','over_timed']
-            
+
     if days == 0:
         sys.exit(usage(sys.argv))
 
@@ -240,5 +240,3 @@ if __name__ == "__main__":
         optimize_tables()
     else:
         logger.info("No purge to do")
-
-

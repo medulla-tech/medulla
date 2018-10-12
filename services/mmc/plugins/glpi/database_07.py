@@ -781,10 +781,10 @@ class Glpi07(DyngroupDatabaseHelper):
         """
         Get the first computers that match filters parameters
         """
-        ret = self.getRestrictedComputersList(ctx, 
-                                              0, 
-                                              10, 
-                                              filt, 
+        ret = self.getRestrictedComputersList(ctx,
+                                              0,
+                                              10,
+                                              filt,
                                               displayList=False,
                                               empty_macs=empty_macs)
         if len(ret) != 1:
@@ -793,10 +793,10 @@ class Glpi07(DyngroupDatabaseHelper):
                     filt.pop(i)
                 except:
                     pass
-            ret = self.getRestrictedComputersList(ctx, 
-                                                  0, 
-                                                  10, 
-                                                  filt, 
+            ret = self.getRestrictedComputersList(ctx,
+                                                  0,
+                                                  10,
+                                                  filt,
                                                   displayList=False,
                                                   empty_macs=empty_macs)
             if len(ret) > 0:
@@ -860,14 +860,14 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getRestrictedComputersList(self, 
-                                   ctx, 
-                                   min = 0, 
-                                   max = -1, 
-                                   filt = None, 
-                                   advanced = True, 
-                                   justId = False, 
-                                   toH = False, 
+    def getRestrictedComputersList(self,
+                                   ctx,
+                                   min = 0,
+                                   max = -1,
+                                   filt = None,
+                                   advanced = True,
+                                   justId = False,
+                                   toH = False,
                                    displayList = None,
                                    empty_macs=False):
         """
@@ -1050,12 +1050,12 @@ class Glpi07(DyngroupDatabaseHelper):
             nets = self.getMachinesNetwork(uuids)
             for uuid in ret:
                 try:
-                    (ret[uuid][1]['macAddress'], 
-                     ret[uuid][1]['ipHostNumber'], 
-                     ret[uuid][1]['subnetMask'], 
-                     ret[uuid][1]['domain'], 
-                     ret[uuid][1]['networkUuids']) = self.orderIpAdresses(uuid, 
-                                                                          names[uuid], 
+                    (ret[uuid][1]['macAddress'],
+                     ret[uuid][1]['ipHostNumber'],
+                     ret[uuid][1]['subnetMask'],
+                     ret[uuid][1]['domain'],
+                     ret[uuid][1]['networkUuids']) = self.orderIpAdresses(uuid,
+                                                                          names[uuid],
                                                                           nets[uuid],
                                                                           empty_macs)
                     if ret[uuid][1]['domain'] != '' and len(ret[uuid][1]['domain']) > 0 :

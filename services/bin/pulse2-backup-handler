@@ -22,7 +22,7 @@ def main():
 
     # Checking ssh
     o, e, ec = runInShell('/usr/bin/ssh -x -o StrictHostKeyChecking=no -o PasswordAuthentication=no -l root %s echo SSH Ok' % hostIP)
-    
+
     if ec != 0:
         print "SSH Error : " + e
         sys.exit(1)
@@ -43,9 +43,6 @@ def main():
         print o
         print e
         sys.exit(ec)
-    
+
 
 main()
-
-
-

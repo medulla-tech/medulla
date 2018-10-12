@@ -455,4 +455,3 @@ class WUInjectDB :
         else:
             # Set the NEW is_installed field
             self.update_target(update_id, target_uuid, is_installed)
-

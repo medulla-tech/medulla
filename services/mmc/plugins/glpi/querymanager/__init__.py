@@ -102,7 +102,7 @@ def queryGroups():
     #                            ['Contact number',''] \
     #                        ]
     #Zone
-    
+
     ret.append(['Location',
                 [['Location',
                   'Third Floor, Room 401, Headquarters building ... (user defined)'],

@@ -95,6 +95,6 @@ class Glpi(DyngroupDatabaseHelper):
             logging.getLogger().debug('Failed to load glpi panels')
 
         return ret
-    
+
     def __getattr__(self, attr_name):
             return getattr(self.database, attr_name)

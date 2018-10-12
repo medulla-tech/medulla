@@ -61,4 +61,3 @@ class UserPackageApi(MyXmlrpc):
 
     def xmlrpc_getUserPackageApi(self, u):
         return self.assign_algo.getUserPackageApi(u)
-

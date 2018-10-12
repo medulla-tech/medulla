@@ -263,4 +263,3 @@ class ConfigReader(type):
                     # defalt value stays unchanged
                     pass
         setattr(self, section.__name__, section)
-

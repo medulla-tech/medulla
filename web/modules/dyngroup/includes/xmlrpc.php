@@ -95,5 +95,5 @@ function xmlrpc_setfromdyngrouplogxmpp(   $text,
                                                     $action,
                                                     $touser,
                                                     $fromuser));
-}                                                    
+}
 ?>

@@ -174,4 +174,3 @@ class GlpiQueryManagerConfig(PluginConfig):
         PluginConfig.readConf(self)
         if self.has_section('querymanager'):
             self.activate = self.getboolean("querymanager", "activate")
-

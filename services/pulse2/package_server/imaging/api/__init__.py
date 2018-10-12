@@ -128,11 +128,11 @@ class ImagingApi (MyXmlrpc):
         return self.api.start_process_multicast(objprocess)
 
     def xmlrpc_muticast_script_exist(self,objprocess):
-        # controle execution process multicast 
+        # controle execution process multicast
         return self.api.muticast_script_exist(objprocess)
 
     def xmlrpc_clear_script_multicast(self,objprocess):
-        # controle execution process multicast 
+        # controle execution process multicast
         return self.api.clear_script_multicast(objprocess)
 
     def xmlrpc_checkDeploymentUDPSender(self,objprocess):

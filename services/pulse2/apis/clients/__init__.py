@@ -78,4 +78,3 @@ class Pulse2Api(Pulse2XMLRPCProxy):
             ret = ['PULSE2_ERR', PULSE2_ERR_UNKNOWN,
                    self.server_addr, default_return]
         return ret
-

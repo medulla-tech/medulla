@@ -53,7 +53,7 @@ class PackagePutA(Pulse2Api):
         d = self.callRemote("associatePackages", pid, files, level)
         d.addErrback(self.onError, "associatePackages", [pid, files, level])
         return d
-    
+
     def removeFilesFromPackage(self, pid, files):
         if self.initialized_failed:
             return [False, "PackagePutA %s failed to initialize"%self.server_addr]

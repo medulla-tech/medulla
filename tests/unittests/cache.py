@@ -69,7 +69,7 @@ class CacheTest(unittest.TestCase):
         cache = getCache('test')
         cache.set(obj, 'a', timeout=2)
         time.sleep(3)
-        
+
         def f():
             cache.get(obj)
         self.assertRaises(CacheExpired, f)
@@ -79,7 +79,7 @@ class CacheTest(unittest.TestCase):
         cache = getCache('test')
         cache.set(obj, 'a', timeout=2)
         time.sleep(3)
-        
+
         def f():
             cache.get(obj)
         self.assertRaises(CacheExpired, f)

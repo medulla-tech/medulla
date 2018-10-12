@@ -177,4 +177,3 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
                     'name':self.cp.get(section, 'NAME'),
                     'param':params
                 }
-

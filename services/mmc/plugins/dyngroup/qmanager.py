@@ -364,4 +364,3 @@ def getAvailablePlugins(path):
     for item in glob.glob(os.path.join(path, "*", "__init__.py")):
         ret.append(item.split("/")[1])
     return ret
-

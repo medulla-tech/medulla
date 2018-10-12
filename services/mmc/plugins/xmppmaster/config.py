@@ -25,7 +25,7 @@ import platform
 from mmc.plugins.xmppmaster.master.lib import utils
 import logging
 from mmc.plugins.xmppmaster.master.lib.utils import ipfromdns
-import os  
+import os
 import ConfigParser
 
 
@@ -85,7 +85,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
             self.defaultdir = self.get('browserfile', 'defaultdir')
         if self.has_option("bowserfile", "rootfilesystem"):
             self.rootfilesystem = self.get('browserfile', 'rootfilesystem')
-            
+
         ###################Chatroom for dynamic configuration of agents#######################
         # Dynamic configuration information
         self.confjidchatroom = "%s@%s"%(self.get('configuration_server', 'confmuc_chatroom'),self.get('chatroom', 'server'))

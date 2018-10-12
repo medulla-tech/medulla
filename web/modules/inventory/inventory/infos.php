@@ -41,4 +41,3 @@ $date = $date[0] .'-'. $date[1] .'-'. $date[2];
 
 ?>
 <p><?php echo  _T("First apparition", 'inventory') . " : " . $date ?></p>
-

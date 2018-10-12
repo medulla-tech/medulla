@@ -65,4 +65,3 @@ ALTER TABLE commands_on_host \
 
 DELETE FROM version;
 INSERT INTO version VALUES( '4' );
-

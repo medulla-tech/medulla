@@ -253,5 +253,5 @@ function xmlrpc_setfrombackuppclogxmpp(   $text,
                                                     $action,
                                                     $touser,
                                                     $fromuser));
-}                                                    
+}
 ?>

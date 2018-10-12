@@ -1,11 +1,11 @@
 <?php
 
 // {
-//     "action": "actionrestart", 
-//     "step": 0, 
-//     "actionlabel": "bec6f486", 
+//     "action": "actionrestart",
+//     "step": 0,
+//     "actionlabel": "bec6f486",
 //     "targetrestart": "AM"
-// } 
+// }
 extract($_POST);
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 $tableToggle =  "tableToggle".uniqid();
@@ -55,7 +55,7 @@ $options = "";
                 </tr>';
 
             echo '<tr class="toggleable">';
- 
+
                 echo '<td width="16%">Target Restart</td>
                     <td width="25%">
                         <select title="" name="targetrestart">'.$options.'</select>
@@ -65,7 +65,7 @@ $options = "";
             </table>
                 ';
         //-------------------------------------------------------------
-        
+
         ?>
         <!-- All extra options are added here-->
     </div>

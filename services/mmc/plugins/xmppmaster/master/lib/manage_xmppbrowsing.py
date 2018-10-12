@@ -98,5 +98,3 @@ class xmppbrowsing:
 #splitdrive(path): retourne le couple (lecteur, chemin du fichier sans le lecteur) ;
 #splitext(path): retourne le couple (chemin du fichier sans l'extension, extension) ;
 #splitunc(path): retourne le couple (unc, rest) où unc est du type \\h
-
-

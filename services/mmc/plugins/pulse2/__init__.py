@@ -231,7 +231,7 @@ class RpcProxy(RpcProxyI):
         """
         ctx = self.currentContext
         return ComputerImagingManager().getAllImagingServers(ctx.userid, associated)
-    
+
     def runinshell(self, cmd):
         process = subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         out, err = process.communicate()
@@ -319,7 +319,7 @@ def getSSHPublicKey():
     except IOError:
         logging.getLogger().error('Error while reading SSH public key')
         return ''
-    
+
 def updateDebianSourceList():
     try:
         installation_uuid = open('/etc/pulse-licensing/installation_id').read().strip()
@@ -339,7 +339,7 @@ def updateDebianSourceList():
                 break
         else:
             lines.append(repo_line)
-        
+
         # Writing file
         f = open('/etc/apt/sources.list', 'w')
         f.writelines(lines)

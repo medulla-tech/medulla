@@ -82,7 +82,7 @@ def initialisekiosk(data, message, xmppobject):
                                machine['hostname'],
                                machine['uuid_inventorymachine'],
                                machine['agenttype'],
-                               classutil = machine['classutil'], 
+                               classutil = machine['classutil'],
                                fromplugin = True)
 
     datasend = {
@@ -101,27 +101,27 @@ def deploypackage(data, message, xmppobject):
 
     nameuser = "(kiosk):%s/%s"%(machine['lastuser'],machine['hostname'])
 
-    command = MscDatabase().createcommanddirectxmpp(data['uuid'], 
+    command = MscDatabase().createcommanddirectxmpp(data['uuid'],
                                                     '',
                                                     '',
                                                     'malistetodolistfiles',
-                                                    'enable', 
+                                                    'enable',
                                                     'enable',
                                                     datetime.datetime.now(),
                                                     datetime.datetime.now() + datetime.timedelta(hours=1),
                                                     nameuser,
-                                                    nameuser, 
+                                                    nameuser,
                                                     'titlepackage',
                                                     60,
                                                     4,
-                                                    0, 
+                                                    0,
                                                     '',
                                                     None,
-                                                    None, 
+                                                    None,
                                                     None,
                                                     'none',
-                                                    'active', 
-                                                    '1', 
+                                                    'active',
+                                                    '1',
                                                     cmd_type=0)
     commandid    = command.id
     commandstart = command.start_date
@@ -137,7 +137,7 @@ def deploypackage(data, message, xmppobject):
         #traceback.print_exc(file=sys.stdout)
 
     XmppMasterDatabase().addlogincommand(
-                        nameuser, 
+                        nameuser,
                         commandid,
                         "",
                         "",
@@ -150,9 +150,9 @@ def deploypackage(data, message, xmppobject):
 
     sessionid = name_random(5, "deploykiosk_")
     name = managepackage.getnamepackagefromuuidpackage(data['uuid'])
-    
+
     path = managepackage.getpathpackagename(name)
-    
+
     descript = managepackage.loadjsonfile(os.path.join(path, 'xmppdeploy.json'))
     parsexmppjsonfile(os.path.join(path, 'xmppdeploy.json'))
     if descript is None:
@@ -202,7 +202,7 @@ def deploypackage(data, message, xmppobject):
                                     name + " " + commandstart.strftime("%Y/%m/%d/ %H:%M:%S"), ##title,
                                     "", ##group_uuid
                                     commandstart, ##startcmd
-                                    commandstop, ##endcmd 
+                                    commandstop, ##endcmd
                                     machine['macaddress'])
     xmppobject.xmpplog("Start deploy on machine %s"%jidmachine,
                      type='deploy',
@@ -216,4 +216,3 @@ def deploypackage(data, message, xmppobject):
                      date=None,
                      fromuser=nameuser,
                      touser="")
-

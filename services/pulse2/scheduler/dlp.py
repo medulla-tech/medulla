@@ -161,4 +161,3 @@ class DownloadQuery :
         @rtype: bool
         """
         return verify_target(id, hostname, mac)
-

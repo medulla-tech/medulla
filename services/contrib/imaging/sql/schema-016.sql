@@ -24,8 +24,8 @@ SET SESSION character_set_server=UTF8;
 SET NAMES 'utf8';
 
 -- Update menu items for inventory
-UPDATE `imaging`.`BootService` 
-SET 
+UPDATE `imaging`.`BootService`
+SET
     `value` = 'COM32 hdt.c32
         APPEND dump_path=##PULSE2_INVENTORIES_DIR## timereboot=##PULSE2_PXE_TIME_REBOOT## tftp_ip=##PULSE2_PXE_TFTP_IP## hostname nomenu auto=\'dump;reboot\''
 WHERE

@@ -126,7 +126,7 @@ if (isset($_POST["bdelmachine_x"])) {
     $listN = array();
     $listC = array();
     $dontAddedToProfile = array();
-    foreach ($listOfMembers as $member) { 
+    foreach ($listOfMembers as $member) {
         // If Profile, don't add computer to current group if it has more than one ethernet card
         if (in_array($member['uuid'], $hasMoreThanOneEthCard)) {
             $dontAddedToProfile[] = $member;
@@ -136,8 +136,8 @@ if (isset($_POST["bdelmachine_x"])) {
             $listN[$member['uuid'].'##'.$member['hostname']] = $member;
         }
     }
-    foreach ($listOfCurMembers as $member) { 
-        $listC[$member['uuid'].'##'.$member['hostname']] = $member; 
+    foreach ($listOfCurMembers as $member) {
+        $listC[$member['uuid'].'##'.$member['hostname']] = $member;
     }
 
     $newmem = array_diff_assoc($listN, $listC);
@@ -183,7 +183,7 @@ if (isset($_POST["bdelmachine_x"])) {
                         xmlrpc_clear_script_multicast($objprocess);
                     }
                 }
-            
+
                 $ret = xmlrpc_synchroProfile($group->id);
 
                 if (count($dontAddedToProfile) > 0) {
@@ -294,7 +294,7 @@ if (isset($_POST["bdelmachine_x"])) {
         }
     }
 
-    $listOfMachines = getMachineforentityList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 
+    $listOfMachines = getMachineforentityList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'),
                                                     'imaging_server'=>$imaging_server,
                                                     'fk_entity' => $entitieval));
     $count = getRestrictedComputersListLen(array('imaging_server'=>$imaging_server));

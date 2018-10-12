@@ -24,11 +24,11 @@ PREFIX_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 account_name="pulse2connection"
 
 if [ $VPN_OS == "osx" ]; then
-        # need to install tun/tap driver 
+        # need to install tun/tap driver
 	if [ ! -f "$PREFIX_DIR/$VPN_TUNTAP_DRIVER_ARCHIVE" ]; then
 	    echo "Install pack $VPN_TUNTAP_DRIVER_ARCHIVE not exists, try to download it..."
 	    curl -o $PREFIX_DIR/$VPN_TUNTAP_DRIVER_ARCHIVE $VPN_URL_ROOT/$VPN_TUNTAP_DRIVER_ARCHIVE
-	fi 
+	fi
 
 	tar xvzf $PREFIX_DIR/$VPN_TUNTAP_DRIVER_ARCHIVE -C $PREFIX_DIR
         /usr/sbin/installer -pkg $VPN_TUNTAP_DRIVER_NAME -target /
@@ -39,13 +39,13 @@ if [ $VPN_OS == "linux" ]; then
         nic_name="0"
 fi
 
-$VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:NicCreate $nic_name 
-#$VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:AccountCreate $account_name 
+$VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:NicCreate $nic_name
+#$VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:AccountCreate $account_name
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:AccountCreate $account_name 
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:AccountCreate $account_name
     sleep 1
     expect \"Destination VPN Server Host Name and Port Number:\n\"
     send $VPN_SERVER_HOST:$VPN_SERVER_PORT\r
@@ -58,9 +58,9 @@ expect -c "
     expect eof"
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:AccountPasswordSet $account_name 
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:AccountPasswordSet $account_name
     sleep 1
     expect \"Password:\n\"
     send $VPN_SERVER_PASSWORD\r
@@ -80,5 +80,3 @@ fi
 
 $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:AccountConnect $account_name
 $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:AccountStatusGet $account_name
-
- 

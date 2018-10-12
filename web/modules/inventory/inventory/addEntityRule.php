@@ -59,7 +59,7 @@ if (isset($_GET["filter"]) && $_GET["filter"])
 // Receiving form data
 if (isset($_POST['bconfirm'])){
     if (!isset($_GET['numRule'])){
-   
+
         addEntityRule($_POST);
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The entity rule has been added successfully.", "inventory"));
     }
@@ -83,7 +83,7 @@ if (isset($_GET['numRule'])){
     }
 }
 else{
-    // add rule mode    
+    // add rule mode
     $rule[]= array( "operand1"   => "Network/IP",
                     "operand2"   => "/.*/",
                     "entitie"    => $entityroot,
@@ -127,7 +127,7 @@ $f->add(
 // or sans aggregator
 //$f->add(new HiddenTpl("aggregator"), array("value" => "", "hide" => True));
 
-$operator_select = new SelectItemtitle("operators[]", 
+$operator_select = new SelectItemtitle("operators[]",
                                                     _T('Match','inventory').":\n".
                                                     _T(' regular expression','inventory')."\n".
                                                     _T(' special characters must be escaped in regular expressions','inventory')."\n".
@@ -151,7 +151,7 @@ $operators = array( "match"=> _T('matches (regex)', 'inventory'),
                     "starts"=> _T('starts by', 'inventory'),
                     "finishes"=> _T('finishes by', 'inventory')
 );
-$operator_select->setElements(array_values($operators));        
+$operator_select->setElements(array_values($operators));
 $operator_select->setElementsVal(array_keys($operators));
 
 $locations_select = new SelectItemtitle("target_location[]",_T('entities list','inventory'));

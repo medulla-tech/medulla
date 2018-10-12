@@ -35,7 +35,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug("=====================================================")
     try:
         XmppMasterDatabase().setCommand_action(data['data']['data']['uuid_inventorymachine'],
-                                               data['data']['data']['cmdid'], 
+                                               data['data']['data']['cmdid'],
                                                sessionid,
                                                "".join(data['result']['result']),
                                                typemessage="result")

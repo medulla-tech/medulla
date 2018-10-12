@@ -50,4 +50,3 @@ class PackagePutA(pulse2.apis.clients.package_put_api.PackagePutA):
             pulse2.apis.clients.package_put_api.PackagePutA.__init__(self, credentials, self.server_addr, self.config.upaa_verifypeer, self.config.upaa_cacert, self.config.upaa_localcert)
         else:
             pulse2.apis.clients.package_put_api.PackagePutA.__init__(self, credentials, self.server_addr)
-

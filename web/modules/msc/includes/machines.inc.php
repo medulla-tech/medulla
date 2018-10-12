@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301, USA
  */
- 
+
 function machineExists($h_params) { $machine = getMachine($h_params); return ($machine->hostname != ''); }
 function getMachine($h_params, $ping = False) { return new Machine(rpcGetMachine($h_params), $ping); }
 

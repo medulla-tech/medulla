@@ -225,5 +225,3 @@ li.convergence a {
 }
 
 </style>
-
-

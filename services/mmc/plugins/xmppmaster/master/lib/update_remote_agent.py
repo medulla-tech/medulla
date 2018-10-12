@@ -33,7 +33,7 @@ class Update_Remote_Agent:
     """
         this class make finderspring of agent.
         Param : dir_agent_base is location of agent
-        Param : autoupdate is switch for enable or disable remote update. 
+        Param : autoupdate is switch for enable or disable remote update.
     """
     def __init__(self, dir_agent_base, autoupdate = True):
         self.dir_agent_base = dir_agent_base

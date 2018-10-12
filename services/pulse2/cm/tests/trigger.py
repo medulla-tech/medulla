@@ -48,5 +48,3 @@ class Test00_Trigger(TestCase):
         @d.addCallback
         def get_result2(result):
             self.assertFalse(result)
-
-
