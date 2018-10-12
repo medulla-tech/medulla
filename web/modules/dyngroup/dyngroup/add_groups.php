@@ -338,6 +338,7 @@ if (isset($_GET['pieGroupStatus'])) {
 }
 else {
     $_POST['filter']=isset($_POST['filter']) ? $_POST['filter'] : "";
+    $idgrp = isset($group->id) ? $group->id : null;
     drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, htmlspecialchars($name), $_POST['filter'], $type);
 }
 
