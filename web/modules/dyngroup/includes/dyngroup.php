@@ -291,7 +291,8 @@ class Group {
                 return $this->reply($start, $end, $filter);
             }
         } else { # static group with static result
-            return __xmlrpc_result_group($this->id, $start, $end, $filter);
+            $idgrp = isset($this->id ) ? $this->id : NULL;
+            return __xmlrpc_result_group($idgrp, $start, $end, $filter);
         }
     }
 
@@ -305,7 +306,9 @@ class Group {
 
     function isProfile() { return False; }
     function isGroup() { return True; }
-    function isDyn() { return __xmlrpc_isdyn_group($this->id); }
+    function isDyn() { 
+                        $idgrp = isset($this->id) ? $this->id : NULL;
+                        return __xmlrpc_isdyn_group($idgrp); }
     function toDyn() { if ($this->can_modify()) { return __xmlrpc_todyn_group($this->id); } return False; }
     function isRequest() { return __xmlrpc_isrequest_group($this->id); }
     function reload() {  if ($this->can_modify()) { return __xmlrpc_reload_group($this->id); } return False; }
