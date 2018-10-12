@@ -84,8 +84,6 @@ REVISION = scmRevision("$Rev$")
 NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion',
                 'createAuthToken', 'tokenAuthenticate']
 
-# Status methods
-from mmc.plugins.base.status import getLdapRootDN, getDisksInfos, getMemoryInfos, getUptime, listProcess # pyflakes.ignore
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
