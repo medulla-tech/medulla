@@ -346,7 +346,7 @@ Description: Pulse 2 base plugin for MMC web interface
 
 Package: mmc-web-imaging
 Architecture: all
-Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1), php7.0-xml
 Description: Pulse 2 imaging plugin for MMC web interface
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
