@@ -83,9 +83,6 @@ $submod->addPage($page);
 $page = new Page("editqa", _T('Edit Custom Quick Action', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("", _T('delete Custom Quick Action', 'xmppmaster'));
-$submod->addPage($page);
-
 $page = new Page("ajaxFilterfileconf");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
