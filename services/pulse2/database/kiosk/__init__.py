@@ -148,7 +148,6 @@ class KioskDatabase(DatabaseHelper):
                                 ou IN %s)
                     AND kiosk.profiles.active = 1;
                     """ % listou
-        print sql
         try:
             result = session.execute(sql)
             session.commit()
