@@ -480,7 +480,7 @@ def getcontentfile(pathfile, deletefile):
         return False
 
 def remotecommandshell( command , jidmachine, timeout):
-    return callremotecommandshell( jidmachine, command, timeout = 10)
+    return callremotecommandshell( jidmachine, command, timeout = timeout)
 
 def remoteXmppMonitoring( suject, jidmachine, timeout):
     data = callremoteXmppMonitoring(jidmachine,  suject, timeout = timeout )
@@ -489,9 +489,6 @@ def remoteXmppMonitoring( suject, jidmachine, timeout):
     dataresult = [x for x in resultdata.split('\n') ]
     result['result'] = dataresult
     return result
-
-def remotecommandshell( command , jidmachine, timeout):
-    return callremotecommandshell( jidmachine, command, timeout = 10)
 
 def runXmppAsyncCommand(cmd, infomachine):
     sessionid= name_random(8,"quick_")
