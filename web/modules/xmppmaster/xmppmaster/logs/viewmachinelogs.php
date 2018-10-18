@@ -234,7 +234,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
     if ( $info['len'] == 0 || $boolterminate == false){
         echo'
             <script type="text/javascript">
-            setTimeout(refresh, 5000);
+            setTimeout(refresh, 60000);
             function  refresh(){
                 jQuery( "#formpage" ).submit();
             }
