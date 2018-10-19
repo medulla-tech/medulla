@@ -1,5 +1,5 @@
 /**
- * (c) 2016 Siveo, http://www.siveo.net/
+ * (c) 2017-2018 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -79,7 +79,7 @@ var actionsList = [
     'action_section_update',     // define update section
     //'action_section_launch',     // define launch section
     'action_section_uninstall',  // define uninstall section
-    'action_status', //define a status action which send infos of deployment stat
+    'action_notification', //define a notification action which send infos of deployment status
 ];
 /**
  *
