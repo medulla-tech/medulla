@@ -23,7 +23,7 @@
  */
 
 global $conf;
-require("modules/base/includes/users.inc.php");
+require_once("modules/base/includes/users-xmlrpc.inc.php");
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
@@ -32,7 +32,7 @@ class TrAclFormElement extends FormElement{
     var $desc;
     var $cssErrorName;
 
-    function TrAclFormElement($desc,$tpl=NULL,$rownum="",$arrparam = array(),$extraInfo = array()) {
+    function __construct($desc,$tpl=NULL,$rownum="",$arrparam = array(),$extraInfo = array()) {
         $this->desc=$desc;
         $this->template=&$tpl;
         $this->rowNum=$rownum;
@@ -124,6 +124,7 @@ class AclRadioTpl extends RadioTpl {
 }
 
 $aclString = getAcl($_GET["user"]);
+// /!\ This line modify the structure of the given arrays
 list($acl, $acltab, $aclattr) = createAclArray($aclString);
 
 if (isset($_POST["buser"])) {
@@ -143,6 +144,8 @@ if (isset($_POST["buser"])) {
     foreach ($_POST["acltab"] as $key => $value) {
         $acltab[$key] = $value;
     }
+    //Clean the aclattr array
+    $aclattr = [];
     foreach ($_POST["aclattr"] as $key => $value) {
         $aclattr[$key] = $value;
     }
@@ -152,7 +155,8 @@ if (isset($_POST["buser"])) {
         new NotifyWidgetSuccess(_("User ACLs successfully modified."));
     }
     $aclString = getAcl($_GET["user"]);
-    list($acl, $acltab, $aclattr) = createAclArray($aclString);
+    $aclattr2 = $aclattr;
+    list($acl, $acltab, $aclattr2) = createAclArray($aclString);
 } elseif (isset($_POST["bgetacl"])) {
     ob_end_clean();
     header("Pragma: ");
