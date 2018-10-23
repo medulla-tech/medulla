@@ -27,6 +27,7 @@ import os
 import base64
 from utils import file_get_contents
 
+
 class MsgsignedRSA:
     """
         Class use for verify from message xmpp.
@@ -53,8 +54,9 @@ class MsgsignedRSA:
         :return: Function init has no return
         """
         self.type = type
-        self.filekeypublic = os.path.join(self.Setdirectorytempinfo(),"%s-public-RSA.key"%self.type)
-        self.fileallkey    = os.path.join(self.Setdirectorytempinfo(),"%s-all-RSA.key"%self.type)
+        self.filekeypublic = os.path.join(
+            self.Setdirectorytempinfo(), "%s-public-RSA.key" % self.type)
+        self.fileallkey = os.path.join(self.Setdirectorytempinfo(), "%s-all-RSA.key" % self.type)
         self.dirtempinfo = self.Setdirectorytempinfo()
         self.allkey = None
         self.publickey = None
@@ -74,7 +76,7 @@ class MsgsignedRSA:
                 self.publickey = pickle.load(f)
                 f.close()
             else:
-                #recherche keyfile si not exist then generate.
+                # recherche keyfile si not exist then generate.
                 self.generateRSAclefagent()
 
     def loadkeyall(self):
@@ -133,7 +135,7 @@ class MsgsignedRSA:
         """
         return pickle.dumps(self.publickey)
 
-    def strtokeypublic(self,str):
+    def strtokeypublic(self, str):
         """
         Function string public key to obj keyRSA
         """
@@ -143,7 +145,7 @@ class MsgsignedRSA:
         """
         Function string key to obj keyRSA
         """
-        return  pickle.loads(str)
+        return pickle.loads(str)
 
     def Obj_KeyRSA_to_Base64(self, objectkey):
         """
@@ -180,7 +182,7 @@ class MsgsignedRSA:
         """
         create directory
         """
-        dirtempinfo =   os.path.join(os.path.dirname(os.path.realpath(__file__)),"..", "INFOSTMP")
+        dirtempinfo = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "INFOSTMP")
         if not os.path.exists(dirtempinfo):
             os.makedirs(dirtempinfo, mode=0700)
         return dirtempinfo
@@ -189,7 +191,7 @@ class MsgsignedRSA:
         """
         Function signed message with key private.
         """
-        return  self.allkey.sign(msg, None)[0]
+        return self.allkey.sign(msg, None)[0]
 
     def verifymsg(self, keypublic, msg, signed_message):
         """

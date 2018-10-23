@@ -28,8 +28,10 @@ import sys
 import json
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
-plugin = { "VERSION" : "1.0", "NAME" : "resultasynchroremoteQA", "TYPE" : "master" }
-def action( xmppobject, action, sessionid, data, message, ret, dataobj):
+plugin = {"VERSION": "1.0", "NAME": "resultasynchroremoteQA", "TYPE": "master"}
+
+
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug("=====================================================")
     logging.getLogger().debug(plugin)
     logging.getLogger().debug("=====================================================")
@@ -40,7 +42,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
                                                "".join(data['result']['result']),
                                                typemessage="result")
 
-        print json.dumps(data, indent = 4 )
+        print json.dumps(data, indent=4)
     except Exception, e:
         logging.getLogger().error("Error loading plugin: %s" % str(e))
         traceback.print_exc(file=sys.stdout)
