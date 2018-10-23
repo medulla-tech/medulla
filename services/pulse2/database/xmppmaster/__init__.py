@@ -756,6 +756,30 @@ class XmppMasterDatabase(DatabaseHelper):
         return True
 
     @DatabaseHelper._sessionm
+    def getAllOUuser(self, session, ctx, filt = ''):
+        """
+        @return: all ou defined in the xmpp database
+        """
+        query = session.query(Organization_ad)
+        if filter != '':
+            query = query.filter(Organization_ad.ouuser.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    @DatabaseHelper._sessionm
+    def getAllOUmachine(self, session, ctx, filt = ''):
+        """
+        @return: all ou defined in the xmpp database
+        """
+        query = session.query(Organization_ad)
+        if filter != '':
+            query = query.filter(Organization_ad.oumachine.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    @DatabaseHelper._sessionm
     def replace_Organization_ad_id_inventory(self,
                                 session,
                                 old_id_inventory,
@@ -2705,6 +2729,24 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
         except:
             return a
+
+    @DatabaseHelper._sessionm
+    def getxmppmasterfilterforglpi(self, session, listqueryxmppmaster = None):
+        print __file__
+        print listqueryxmppmaster
+        if listqueryxmppmaster:
+            machineid = session.query(Organization_ad.id_inventory)
+            for q in listqueryxmppmaster:
+                fl = q[3].replace('*',"%")
+                if q[2] == "OU user":
+                    machineid = machineid.filter(Organization_ad.ouuser.like(fl))
+                elif q[2] == "OU machine":
+                    machineid = machineid.filter(Organization_ad.oumachine.like(fl))
+            machineid = machineid.all()
+            session.commit()
+            session.flush()
+            ret = [m.id_inventory for m in machineid]
+        return ret
 
     @DatabaseHelper._sessionm
     def getListPresenceMachine(self, session):

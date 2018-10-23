@@ -564,11 +564,14 @@ class RpcProxy(RpcProxyI):
         ret = DyngroupDatabase().get_convergence_group_parent_id(gid)
         return xmlrpcCleanup(ret)
 
-
+#filter module xmpp in module glpi True
 def __onlyIn(query, module):
     for q in query[1]:
         if len(q) == 4:
-            if q[1] != module and q[1] != 'dyngroup':
+            mo = q[1]
+            if mo == "xmppmaster":
+                mo = "glpi"
+            if mo != module and q[1] != 'dyngroup':
                 return False
         else:
             a = __onlyIn(q, module)
