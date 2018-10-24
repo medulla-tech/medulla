@@ -57,10 +57,9 @@ def queryGroups():
     ret = []
     # Identification cat
     ret.append(['ActifDirectory',
-                [['OU user', 'ex OU ..'],
+                [['OU user', 'ex OU User'],
                  ['OU Machine', 'ex OU Machine']
                  ]])
-    
     return ret
 
 

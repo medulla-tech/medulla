@@ -2731,22 +2731,27 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
 
     @DatabaseHelper._sessionm
-    def getxmppmasterfilterforglpi(self, session, listqueryxmppmaster = None):
-        print __file__
-        print listqueryxmppmaster
-        if listqueryxmppmaster:
+    def __getxmppmasterfilterforglpi(self, session, listqueryxmppmaster = None):
+        fl = listqueryxmppmaster[3].replace('*',"%")
+        if listqueryxmppmaster[2] == "OU user":
             machineid = session.query(Organization_ad.id_inventory)
-            for q in listqueryxmppmaster:
-                fl = q[3].replace('*',"%")
-                if q[2] == "OU user":
-                    machineid = machineid.filter(Organization_ad.ouuser.like(fl))
-                elif q[2] == "OU machine":
-                    machineid = machineid.filter(Organization_ad.oumachine.like(fl))
-            machineid = machineid.all()
-            session.commit()
-            session.flush()
-            ret = [m.id_inventory for m in machineid]
+            machineid = machineid.filter(Organization_ad.ouuser.like(fl))
+        elif listqueryxmppmaster[2] == "OU machine":
+            machineid = session.query(Organization_ad.id_inventory)
+            machineid = machineid.filter(Organization_ad.oumachine.like(fl))
+        elif listqueryxmppmaster[2] == "Online computer":
+            print "Online computer"
+            d = XmppMasterDatabase().getlistPresenceMachineid()
+            for x in d:
+                print x
+            listid = [x.replace("UUID", "") for x in d]
+            return listid
+        machineid = machineid.all()
+        session.commit()
+        session.flush()
+        ret = [str(m.id_inventory) for m in machineid]
         return ret
+
 
     @DatabaseHelper._sessionm
     def getListPresenceMachine(self, session):

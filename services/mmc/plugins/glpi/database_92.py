@@ -553,24 +553,18 @@ class Glpi92(DyngroupDatabaseHelper):
             result = element[0]
         return result
 
-    def __xmppmasterfilter(self,filt = None):
-        listid = []
-        if PluginManager().isEnabled("xmppmaster"):
-            if filt:
-                if "computerpresence" in filt:
-                    d = XmppMasterDatabase().getlistPresenceMachineid()
-                    listid = [x.replace("UUID", "") for x in d]
-                    return listid
-                if "query" in filt :
-                    if filt['query'][0] == "AND":
-                        listqueryxmppmaster = []
-                        for q in filt['query'][1]:
-                            if q[1] == "xmppmaster":
-                                listqueryxmppmaster.append(q)
-                        if len(q) != 0:
-                            d = XmppMasterDatabase().getxmppmasterfilterforglpi(listqueryxmppmaster)
-                            listid = [str(x).replace("UUID", "") for x in d]
-            return listid
+    def __xmppmasterfilter(self, filt = None):
+        ret = {}#if filt['computerpresence'] == "presence":
+        if "computerpresence" in filt:
+            d = XmppMasterDatabase().getlistPresenceMachineid()
+            listid = [x.replace("UUID", "") for x in d]
+            ret["computerpresence"] = ["computerpresence","xmppmaster",filt["computerpresence"] , listid]
+        elif "query" in filt and filt['query'][0] == "AND":
+            for q in filt['query'][1]:
+                if q[2] == "Online computer" or q[2] == "OU user" or q[2] == "OU machine":
+                    listid = XmppMasterDatabase().__getxmppmasterfilterforglpi(q)
+                    ret[q[2]] = [q[1], q[2], q[3], listid]
+        return ret
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
@@ -579,9 +573,10 @@ class Glpi92(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-        #search list from xmppmaster
-        listid = self.__xmppmasterfilter(filt)
+        
         query = (count and session.query(func.count(Machine.id))) or session.query(Machine)
+        # manage criterion  for xmppmaster
+        ret = self.__xmppmasterfilter(filt)
 
         if filt:
             # filtering on query
@@ -692,14 +687,22 @@ class Glpi92(DyngroupDatabaseHelper):
             else:
                 query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
-            if PluginManager().isEnabled("xmppmaster") and len(listid) != 0:
-                if filt and "computerpresence" in filt:
-                    if filt['computerpresence'] == "presence":
-                        query = query.filter(Machine.id.in_(listid))
-                    else:
-                        query = query.filter(Machine.id.notin_(listid))
-                else :
-                    query = query.filter(Machine.id.in_(listid))
+            if PluginManager().isEnabled("xmppmaster"):
+                if ret:
+                    if "Online computer" in ret:
+                        if ret["Online computer"][2] == "True":
+                            query = query.filter(Machine.id.in_(ret["Online computer"][3]))
+                        else:
+                            query = query.filter(Machine.id.notin_(ret["Online computer"][3]))
+                    if "OU user" in ret:
+                        query = query.filter(Machine.id.in_(ret["OU user"][3]))
+                    if "OU machine" in ret:
+                        query = query.filter(Machine.id.in_(ret["OU machine"][3]))
+                    if "computerpresence" in ret:
+                        if ret["computerpresence"][2] == "presence":
+                            query = query.filter(Machine.id.in_(ret["computerpresence"][3]))
+                        else:
+                            query = query.filter(Machine.id.notin_(ret["computerpresence"][3]))
             query = self.__filter_on(query)
             query = self.__filter_on_entity(query, ctx)
 

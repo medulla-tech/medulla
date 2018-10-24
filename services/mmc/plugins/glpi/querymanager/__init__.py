@@ -70,6 +70,7 @@ def queryPossibilities():
                                 getRegisterKeyValue,
                                 3,
                                 2]
+    ret['Online computer'] = [ 'bool' ]
     logging.getLogger().info('queryPossibilities %s' %
                              (str(ret)))
     return ret
@@ -122,6 +123,9 @@ def queryGroups():
     ret.append(['Register',
                 [['Register key',
                   'Microsoft Windows keys registers']]])
+    ret.append(['Presence',
+                [['Online computer', 'Presence of the machine Yes/No']
+                 ]])
     return ret
 
 
