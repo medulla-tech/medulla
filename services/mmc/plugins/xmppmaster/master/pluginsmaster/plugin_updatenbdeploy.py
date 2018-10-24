@@ -31,26 +31,27 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 import logging
 
-plugin = { "VERSION" : "1.0", "NAME" : "updatenbdeploy", "TYPE" : "master" }
+plugin = {"VERSION": "1.0", "NAME": "updatenbdeploy", "TYPE": "master"}
 
-#=====================================================
-#DEBUG   {'VERSION': '1.0', 'TYPE': 'master', 'NAME': 'updatenbdeploy'} :
-#DEBUG   data plugin {
-    #"idcmd": 39,
-    #"countnb": 0,
-    #"grp": 14,
-    #"exec": true,
-    #"consignnb": "",
-    #"nbtotal": 1,
-    #"login": "root"
-#}
-#=====================================================
+# =====================================================
+# DEBUG   {'VERSION': '1.0', 'TYPE': 'master', 'NAME': 'updatenbdeploy'} :
+# DEBUG   data plugin {
+# "idcmd": 39,
+# "countnb": 0,
+# "grp": 14,
+# "exec": true,
+# "consignnb": "",
+# "nbtotal": 1,
+# "login": "root"
+# }
+# =====================================================
 
-def action( xmppobject, action, sessionid, data, message, ret, dataobj):
+
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
     try:
-        logging.getLogger().debug("End deploy command : %s"%data['idcmd'])
+        logging.getLogger().debug("End deploy command : %s" % data['idcmd'])
         XmppMasterDatabase().updatedeployinfo(data['idcmd'])
     except Exception as e:
-        logging.getLogger().error("Error in plugin %s"%str(e))
+        logging.getLogger().error("Error in plugin %s" % str(e))
         pass
