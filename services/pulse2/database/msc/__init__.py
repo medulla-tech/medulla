@@ -386,6 +386,41 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return target
 
+    def xmpp_create_CommandsOnHost(self,
+                                    fk_commands,
+                                    fk_target,
+                                    host,
+                                    end_date,
+                                    start_date,
+                                    id_group=None):
+        session = create_session()
+        commandsOnHost = CommandsOnHost()
+        commandsOnHost.fk_commands = fk_commands
+        commandsOnHost.host = host
+        commandsOnHost.start_date = start_date
+        commandsOnHost.end_date = end_date
+        commandsOnHost.id_group = id_group
+        session.add(commandsOnHost)
+        session.flush()
+        session.close()
+        return commandsOnHost
+
+    def xmpp_create_CommandsOnHostPhasedeploykiosk(self,
+                                                   fk_commands):
+        names=['upload', 'execute', 'delete', 'inventory', 'done']
+        order=[0,1,2,3,4]
+        session = create_session()
+        commandsOnHostPhase = CommandsOnHostPhase()
+        commandsOnHostPhase.fk_commands_on_host = fk_commands
+        commandsOnHostPhase.state = "ready"
+        for indexname in range(len(names)):
+            commandsOnHost.phase_order = order[indexname]
+            commandsOnHost.name = names[indexname]
+            session.add(commandsOnHost)
+            session.flush()
+        session.close()
+        return commandsOnHost
+    
     def deployxmpponmachine(self, command_id):
         result = {}
         sqlselect="""
