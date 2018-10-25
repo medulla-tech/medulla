@@ -41,4 +41,6 @@ for module in dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc sup
 #    done
 done
 
+sh scripts/fix_po_charset.sh
+
 exit 0
