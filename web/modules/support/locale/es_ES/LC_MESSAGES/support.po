@@ -2,34 +2,34 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 14:06+0100\n"
+"POT-Creation-Date: 2018-10-25 16:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
-"Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/"
-"es_ES/)\n"
-"Language: es_ES\n"
+"Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/support/includes/panels/license.inc.php:132
-msgid "Activate again / Use another subscription"
+#: modules/support/infoPackage.inc.php:31
+#: modules/support/includes/panels/license.inc.php:54
+msgid "Support"
+msgstr ""
+
+#: modules/support/infoPackage.inc.php:35
+msgid "Remote support"
 msgstr ""
 
 #: modules/support/infoPackage.inc.php:40
 msgid "Collect"
 msgstr ""
-
-#: modules/support/includes/panels/license.inc.php:91
-msgid "Computers"
-msgstr "Computadoras"
 
 #: modules/support/infoPackage.inc.php:42
 msgid "Connect"
@@ -43,51 +43,50 @@ msgstr ""
 msgid "Download an archive including logs and config files"
 msgstr ""
 
-#: modules/support/includes/panels/remotesupport.inc.php:56
-msgid "Download archive"
-msgstr ""
-
-#: modules/support/includes/panels/license.inc.php:61
-msgid "Email"
-msgstr ""
-
-#: modules/support/includes/panels/license.inc.php:106
-msgid "End"
-msgstr ""
-
-#: modules/support/includes/panels/remotesupport.inc.php:59
-msgid "Extract log and config files"
-msgstr ""
-
-#: modules/support/includes/panels/remotesupport.inc.php:30
-msgid "Extract logs"
-msgstr ""
-
-#: modules/support/includes/panels/license.inc.php:65
-msgid "Hours"
-msgstr ""
-
-#: modules/support/includes/panels/license.inc.php:118
-msgid "Links"
+#: modules/support/includes/panels/license.inc.php:30
+msgid "Subscription info"
 msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:57
 msgid "Phone"
 msgstr ""
 
-#: modules/support/infoPackage.inc.php:35
-msgid "Remote support"
+#: modules/support/includes/panels/license.inc.php:61
+msgid "Email"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:30
-msgid "Subscription info"
-msgstr ""
-
-#: modules/support/infoPackage.inc.php:31
-#: modules/support/includes/panels/license.inc.php:54
-msgid "Support"
+#: modules/support/includes/panels/license.inc.php:65
+msgid "Hours"
 msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:75
 msgid "Your subscription"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:91
+msgid "Computers"
+msgstr "Computadoras"
+
+#: modules/support/includes/panels/license.inc.php:106
+msgid "End"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:118
+msgid "Links"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:132
+msgid "Activate again / Use another subscription"
+msgstr ""
+
+#: modules/support/includes/panels/remotesupport.inc.php:30
+msgid "Extract logs"
+msgstr ""
+
+#: modules/support/includes/panels/remotesupport.inc.php:56
+msgid "Download archive"
+msgstr ""
+
+#: modules/support/includes/panels/remotesupport.inc.php:59
+msgid "Extract log and config files"
 msgstr ""
