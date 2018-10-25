@@ -65,7 +65,7 @@
                     xmlrpc_runXmppAsyncCommand( trim($customqa['customcmd']) , $machineinfos );
                 }
                 else{
-                    xmlrpc_setCommand_action( $key, $COMMANDID, "consoleweb",  _T("Sorry the operating system of the machine is", "xmppmaster")."  [".$machinegroup['platform']."]<br>".  _T("The custom QA is defined for opérating system", "xmppmaster")." [".$OS."]", "warning");
+                    xmlrpc_setCommand_action( $key, $COMMANDID, "consoleweb",  _T("Sorry the operating system of the machine is", "xmppmaster")."  [".$machinegroup['platform']."]<br>".  _T("The custom QA is defined for operating system", "xmppmaster")." [".$OS."]", "warning");
                 }
         }
         else{
