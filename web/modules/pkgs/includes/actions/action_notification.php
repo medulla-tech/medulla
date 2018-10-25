@@ -64,9 +64,9 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
               </td>
               <td>
                   <select name="type">
-                    <option value="machine">Machine</option>
-                    <option value="user">User</option>
-                    <option value="kiosk">Kiosk</option>
+                    <option value="machine" <?php echo (isset($type) && $type="machine") ? "selected": ""; ?>>Machine</option>
+                    <option value="user" <?php echo (isset($type) && $type="user") ? "selected": ""; ?>>User</option>
+                    <option value="kiosk" <?php echo (isset($type) && $type="kiosk") ? "selected": ""; ?>>Kiosk</option>
                   </select>
               </td>
               <td>
