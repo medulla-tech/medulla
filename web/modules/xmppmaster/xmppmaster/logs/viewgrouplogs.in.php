@@ -357,7 +357,7 @@ if ($info['len'] != 0){
                 }
                 if ($wol > 0){
                     echo 'datadeploy.push('.$wol.');';
-                    echo 'legend.push("%%.%% - Waiting for machine start (WOL send).");';
+                    echo 'legend.push("%%.%% - Waiting for machine start (WOL sent).");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#DBA901");';
                 }
