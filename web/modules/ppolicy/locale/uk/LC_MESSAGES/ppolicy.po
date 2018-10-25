@@ -2,90 +2,30 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-08 16:26+0100\n"
+"POT-Creation-Date: 2018-10-25 16:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: modules/ppolicy/default/edit.php:62
-msgid "\"Maximum age\" must be greater than \"Minimum age\"."
-msgstr "«Максимальний вік» має перевищувати «Мінімальний вік»."
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Список правил паролів"
 
 #: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
 #: modules/ppolicy/includes/localSidebar.php:28
 msgid "Add a password policy"
 msgstr "Додати правило паролів"
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "Додати ppolicy для користувача"
-
-#: modules/ppolicy/includes/publicFunc.php:223
-msgid "Apply a password policy for all group users"
-msgstr "Застосувати правило паролів до усіх користувачів групи"
-
-#: modules/ppolicy/default/edit.php:95
-msgid "Attributes updated"
-msgstr "Атрибути оновлено"
-
-#: modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr "Скасувати"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:40
-msgid "Change password on first connection"
-msgstr "Змінити пароль при першому з'єднанні"
-
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "Змінити атрибут ppolicy"
-
-#: modules/ppolicy/infoPackage.inc.php:79
-msgid "Default "
-msgstr "Типовий "
-
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
-msgstr "Вилучити"
-
-#: modules/ppolicy/infoPackage.inc.php:63
-msgid "Delete a password policy"
-msgstr "Вилучити правило паролів"
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
-msgid "Delete password policy"
-msgstr "Вилучити правило паролів"
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "Вилучити атрибут ppolicy"
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "Вилучити ppolicy для користувача"
-
-#: modules/ppolicy/default/edit.php:132
-#: modules/ppolicy/includes/ppolicy.inc.php:48
-msgid "Description"
-msgstr "Опис"
-
-#: modules/ppolicy/infoPackage.inc.php:58
-msgid "Edit a password policy"
-msgstr "Змінити правило паролів"
 
 #: modules/ppolicy/default/edit.php:48
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
@@ -93,97 +33,68 @@ msgstr "Змінити правило паролів"
 msgid "Edit password policy"
 msgstr "Змінити правило паролів"
 
-#: modules/ppolicy/includes/publicFunc.php:117
-msgid "Enable a specific password policy for this user"
-msgstr "Увімкнути специфічне правило паролів для цього користувача"
+#: modules/ppolicy/default/edit.php:62
+msgid "\"Maximum age\" must be greater than \"Minimum age\"."
+msgstr "«Максимальний вік» має перевищувати «Мінімальний вік»."
 
-#: modules/ppolicy/infoPackage.inc.php:82
-msgid "Enable user specific password policy"
-msgstr "Увімкнути специфічне для користувача правило паролів"
+#: modules/ppolicy/default/edit.php:95
+msgid "Attributes updated"
+msgstr "Атрибути оновлено"
 
-#: modules/ppolicy/default/edit.php:180
-msgid "Force users to change their passwords on the first connection ?"
-msgstr "Примушувати користувачів до зміни паролів під час першого з'єднання?"
+#: modules/ppolicy/default/edit.php:126
+msgid "Name"
+msgstr "Назва"
 
-#: modules/ppolicy/includes/publicFunc.php:89
-msgid "If checked, permanently lock the user account"
-msgstr "Якщо позначено, остаточно блокувати обліковий запис користувача"
-
-#: modules/ppolicy/includes/publicFunc.php:95
-msgid ""
-"If checked, the user must change her password when she first binds to the "
-"LDAP directory after password is set or reset by a password administrator"
-msgstr ""
-"Якщо позначено, користувач має змінити пароль під час першого прив'язування "
-"до каталогу LDAP після встановлення або скидання пароля адміністратором "
-"паролів"
-
-#: modules/ppolicy/includes/publicFunc.php:118
-#: modules/ppolicy/includes/publicFunc.php:224
-msgid "If not set the default password policy is enforced."
-msgstr "Якщо не встановлено, буде використано типове правило паролів."
-
-#: modules/ppolicy/includes/publicFunc.php:88
-msgid "Lock account"
-msgstr "Заблокувати обліковий запис"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:41
-msgid "Lockout duration"
-msgstr "Тривалість блокування"
-
-#: modules/ppolicy/default/edit.php:222
-msgid "Lockout duration (seconds)"
-msgstr "Тривалість блокування (у секундах)"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:39
-msgid "Maximum age"
-msgstr "Максимальний вік"
-
-#: modules/ppolicy/default/edit.php:159
-msgid "Maximum age (seconds)"
-msgstr "Максимальний вік (у секундах)"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:42
-msgid "Maximum failed"
-msgstr "Максимум помилок"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:38
-msgid "Minimum age"
-msgstr "Мінімальний вік"
-
-#: modules/ppolicy/default/edit.php:152
-msgid "Minimum age (seconds)"
-msgstr "Мінімальний вік (у секундах)"
+#: modules/ppolicy/default/edit.php:132
+#: modules/ppolicy/includes/ppolicy.inc.php:48
+msgid "Description"
+msgstr "Опис"
 
 #: modules/ppolicy/default/edit.php:138
 #: modules/ppolicy/includes/ppolicy.inc.php:37
 msgid "Minimum length"
 msgstr "Мінімальна довжина"
 
-#: modules/ppolicy/default/edit.php:126
-msgid "Name"
-msgstr "Назва"
+#: modules/ppolicy/default/edit.php:145
+msgid "Password quality check"
+msgstr "Перевірка якості пароля"
+
+#: modules/ppolicy/default/edit.php:152
+msgid "Minimum age (seconds)"
+msgstr "Мінімальний вік (у секундах)"
+
+#: modules/ppolicy/default/edit.php:159
+msgid "Maximum age (seconds)"
+msgstr "Максимальний вік (у секундах)"
 
 #: modules/ppolicy/default/edit.php:166
 #: modules/ppolicy/includes/ppolicy.inc.php:45
 msgid "Number of grace authentications"
 msgstr "Гранична кількість спроб розпізнавання"
 
-#: modules/ppolicy/infoPackage.inc.php:36
-msgid "Password Policy"
-msgstr "Правило паролів"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:44
-msgid "Password hash history"
-msgstr "Журнал хешів паролів"
+#: modules/ppolicy/default/edit.php:180
+msgid "Force users to change their passwords on the first connection ?"
+msgstr "Примушувати користувачів до зміни паролів під час першого з'єднання?"
 
 #: modules/ppolicy/default/edit.php:187
 msgid "Password history"
 msgstr "Журнал паролів"
 
+#: modules/ppolicy/default/edit.php:201
+msgid "Preventive user lockout ?"
+msgstr "Превентивне блокування користувача?"
+
 #: modules/ppolicy/default/edit.php:215
 msgid "Password maximum failure"
 msgstr "Максимальна кількість помилок у паролі"
+
+#: modules/ppolicy/default/edit.php:222
+msgid "Lockout duration (seconds)"
+msgstr "Тривалість блокування (у секундах)"
+
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
+msgid "Delete password policy"
+msgstr "Вилучити правило паролів"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
 #: modules/ppolicy/infoPackage.inc.php:46
@@ -191,23 +102,94 @@ msgstr "Максимальна кількість помилок у паролі
 msgid "Password policies"
 msgstr "Правила паролів"
 
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Список правил паролів"
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Увага! Ви увійшли до системи з використанням режиму входу за лояльністю. "
+"Будь ласка, якнайшвидше змініть ваш пароль за допомогою сторінки зміни "
+"паролів, інакше ваш обліковий запис буде заблоковано."
 
-#: modules/ppolicy/includes/publicFunc.php:170
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Увага! Ваш пароль було скинуто адміністратором. Права доступу вашого "
+"облікового запису LDAP обмежено. Будь ласка, якнайшвидше змініть ваш пароль "
+"за допомогою сторінки зміни пароля."
+
+#: modules/ppolicy/default/delete.php:29
+msgid "The password policy has been deleted."
+msgstr "Правило паролів було вилучено."
+
+#: modules/ppolicy/default/delete.php:41
 #, php-format
-msgid "Password policy %s applied."
-msgstr "Застосовано правило паролів %s."
+msgid ""
+"You will delete the password policy <strong>%s</strong>. Default password "
+"policy will be applied to users that use this password policy."
+msgstr ""
+"Ви вилучаєте правило паролів <strong>%s</strong>. До записів користувачів, "
+"де використовувалося цей правило паролів, тепер буде застосовано типове "
+"правило паролів."
 
-#: modules/ppolicy/includes/publicFunc.php:174
-#, php-format
-msgid "Password policy %s removed."
-msgstr "Вилучено правило паролів %s."
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "Вилучити"
 
-#: modules/ppolicy/includes/publicFunc.php:186
-msgid "Password policy attributes updated."
-msgstr "Оновлено атрибути правила паролів."
+#: modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: modules/ppolicy/infoPackage.inc.php:36
+msgid "Password Policy"
+msgstr "Правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:58
+msgid "Edit a password policy"
+msgstr "Змінити правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:63
+msgid "Delete a password policy"
+msgstr "Вилучити правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:79
+msgid "Default "
+msgstr "Типовий "
+
+#: modules/ppolicy/infoPackage.inc.php:82
+msgid "Enable user specific password policy"
+msgstr "Увімкнути специфічне для користувача правило паролів"
+
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "Змінити атрибут ppolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "Вилучити атрибут ppolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "Додати ppolicy для користувача"
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "Оновити ppolicy для користувача"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "Вилучити ppolicy для користувача"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "ppolicy"
 
 #: modules/ppolicy/includes/publicFunc.php:37
 #: modules/ppolicy/includes/publicFunc.php:63
@@ -218,36 +200,9 @@ msgstr "Оновлено атрибути правила паролів."
 msgid "Password policy management"
 msgstr "Керування правилами паролів"
 
-#: modules/ppolicy/includes/ppolicy.inc.php:47
-msgid "Password policy quality check"
-msgstr "Перевірка якості правил паролів"
-
-#: modules/ppolicy/default/edit.php:145
-msgid "Password quality check"
-msgstr "Перевірка якості пароля"
-
-#: modules/ppolicy/includes/publicFunc.php:94
-msgid "Password reset flag"
-msgstr "Прапорець скидання пароля"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:43
-msgid "Preventive lockout user"
-msgstr "Превентивно блокувати користувача"
-
-#: modules/ppolicy/default/edit.php:201
-msgid "Preventive user lockout ?"
-msgstr "Превентивне блокування користувача?"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:46
-msgid "Reset the password"
-msgstr "Скинути пароль"
-
-#: modules/ppolicy/includes/publicFunc.php:84
-msgid ""
-"The password of this account has expired. The user can change his password."
-msgstr ""
-"Строк дії пароля для цього облікового запису вичерпано. Користувач може "
-"змінити свій пароль."
+#: modules/ppolicy/includes/publicFunc.php:64
+msgid "This account is locked by the LDAP directory."
+msgstr "Цей обліковий запис заблоковано каталогом LDAP."
 
 #: modules/ppolicy/includes/publicFunc.php:72
 msgid ""
@@ -266,35 +221,104 @@ msgstr ""
 "Строк дії пароля для цього облікового запису вичерпано. У користувача "
 "лишилося %s можливостей входу до системи для зміни свого пароля."
 
-#: modules/ppolicy/default/delete.php:29
-msgid "The password policy has been deleted."
-msgstr "Правило паролів було вилучено."
-
-#: modules/ppolicy/includes/publicFunc.php:64
-msgid "This account is locked by the LDAP directory."
-msgstr "Цей обліковий запис заблоковано каталогом LDAP."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:62
+#: modules/ppolicy/includes/publicFunc.php:84
 msgid ""
-"This attribute contains the number of times that an expired password may be "
-"used to authenticate a user to the directory. If this attribute is not "
-"present or if its value is zero, users with expired password will not be "
-"allowed to authenticate."
+"The password of this account has expired. The user can change his password."
 msgstr ""
-"Цей атрибут визначає кількість разів використання пароля, строк дії якого "
-"вичерпано, для розпізнавання користувача. Якщо значення для цього атрибута "
-"не вказано або вказано значення 0, користувачам із паролями, строк дії яких "
-"вичерпано, буде заборонено входити до системи."
+"Строк дії пароля для цього облікового запису вичерпано. Користувач може "
+"змінити свій пароль."
 
-#: modules/ppolicy/includes/ppolicy.inc.php:56
+#: modules/ppolicy/includes/publicFunc.php:88
+msgid "Lock account"
+msgstr "Заблокувати обліковий запис"
+
+#: modules/ppolicy/includes/publicFunc.php:89
+msgid "If checked, permanently lock the user account"
+msgstr "Якщо позначено, остаточно блокувати обліковий запис користувача"
+
+#: modules/ppolicy/includes/publicFunc.php:94
+msgid "Password reset flag"
+msgstr "Прапорець скидання пароля"
+
+#: modules/ppolicy/includes/publicFunc.php:95
 msgid ""
-"This attribute holds the number of seconds after which a modified password "
-"will expire. If this attribute is not present, or if the value is 0 the "
-"password does not expire."
+"If checked, the user must change her password when she first binds to the "
+"LDAP directory after password is set or reset by a password administrator"
 msgstr ""
-"У цьому атрибуті зберігаються дані щодо строку дії зміненого пароля у "
-"секундах. Якщо для атрибута не вказано значення або встановлено значення у 0 "
-"секунд, строк дії пароля не обмежується."
+"Якщо позначено, користувач має змінити пароль під час першого прив'язування "
+"до каталогу LDAP після встановлення або скидання пароля адміністратором "
+"паролів"
+
+#: modules/ppolicy/includes/publicFunc.php:117
+msgid "Enable a specific password policy for this user"
+msgstr "Увімкнути специфічне правило паролів для цього користувача"
+
+#: modules/ppolicy/includes/publicFunc.php:118
+#: modules/ppolicy/includes/publicFunc.php:224
+msgid "If not set the default password policy is enforced."
+msgstr "Якщо не встановлено, буде використано типове правило паролів."
+
+#: modules/ppolicy/includes/publicFunc.php:170
+#, php-format
+msgid "Password policy %s applied."
+msgstr "Застосовано правило паролів %s."
+
+#: modules/ppolicy/includes/publicFunc.php:174
+#, php-format
+msgid "Password policy %s removed."
+msgstr "Вилучено правило паролів %s."
+
+#: modules/ppolicy/includes/publicFunc.php:186
+msgid "Password policy attributes updated."
+msgstr "Оновлено атрибути правила паролів."
+
+#: modules/ppolicy/includes/publicFunc.php:223
+msgid "Apply a password policy for all group users"
+msgstr "Застосувати правило паролів до усіх користувачів групи"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:38
+msgid "Minimum age"
+msgstr "Мінімальний вік"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:39
+msgid "Maximum age"
+msgstr "Максимальний вік"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:40
+msgid "Change password on first connection"
+msgstr "Змінити пароль при першому з'єднанні"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:41
+msgid "Lockout duration"
+msgstr "Тривалість блокування"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:42
+msgid "Maximum failed"
+msgstr "Максимум помилок"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:43
+msgid "Preventive lockout user"
+msgstr "Превентивно блокувати користувача"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:44
+msgid "Password hash history"
+msgstr "Журнал хешів паролів"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:46
+msgid "Reset the password"
+msgstr "Скинути пароль"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:47
+msgid "Password policy quality check"
+msgstr "Перевірка якості правил паролів"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:54
+msgid ""
+"this attribute contains the minimum number of characters that will be "
+"accepted in a password"
+msgstr ""
+"цей атрибут містить дані щодо мінімальної прийнятної кількості символів у "
+"паролі"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:55
 msgid ""
@@ -308,37 +332,25 @@ msgstr ""
 "встановлено значення у 0 секунд (тобто пароль можна буде змінювати коли "
 "завгодно і як завгодно часто)."
 
-#: modules/ppolicy/includes/ppolicy.inc.php:61
+#: modules/ppolicy/includes/ppolicy.inc.php:56
 msgid ""
-"This attribute holds the number of seconds that the password cannot be used "
-"to authenticate due to too many failed authentication attempts. If this "
-"attribute is empty, or if the value is 0 the password cannot be used to "
-"authenticate until reset by a password administrator."
+"This attribute holds the number of seconds after which a modified password "
+"will expire. If this attribute is not present, or if the value is 0 the "
+"password does not expire."
 msgstr ""
-"Цей атрибут визначає тривалість періоду (у секундах), протягом якого паролем "
-"не можна буде користуватися через надто велику кількість невдалих спроб "
-"пройти розпізнавання. Якщо значення для цього атрибута не встановлено або "
-"встановлено значення 0, паролем не можна буде скористатися, аж доки його не "
-"буде скинуто адміністратором паролів."
+"У цьому атрибуті зберігаються дані щодо строку дії зміненого пароля у "
+"секундах. Якщо для атрибута не вказано значення або встановлено значення у 0"
+" секунд, строк дії пароля не обмежується."
 
-#: modules/ppolicy/includes/ppolicy.inc.php:64
+#: modules/ppolicy/includes/ppolicy.inc.php:57
 msgid ""
-"This attribute indicates how the password quality will be verified while "
-"being modified or added. If this attribute is not present, or if the value "
-"is '0', quality checking will not be enforced.  A value of '1' indicates "
-"that the server will check the quality, and if the server is unable to check "
-"it (due to a hashed password or other reasons) it will be accepted. A value "
-"of '2' indicates that the server will check the quality, and if the server "
-"is unable to verify it, it will return an error refusing the password."
+"This flag specifies whether users must change their passwords when they "
+"first bind to the directory after a password is set or reset by the "
+"administrator."
 msgstr ""
-"Цей атрибут визначає спосіб перевірки якості пароля під час внесення до "
-"нього змін або додавання. Якщо значення атрибута не вказано або вказано "
-"значення 0, перевірка якості пароля виконуватиметься у примусовому режимі. "
-"Значення 1 означатиме, що перевірку якості виконуватиме сервер, а якщо "
-"сервер не зможе виконати перевірку (через хешування пароля або інші "
-"причини), він вважатиметься прийнятним. Значення 2 означає, що перевірку "
-"якості виконуватиме сервер, а якщо сервер не зможе перевірити пароль, буде "
-"повернуто повідомлення про помилку, а використання пароля буде заборонено."
+"Цей прапорець задає, чи мають користувачі змінювати паролі після першої "
+"прив'язки до каталогу з моменту встановлення або скидання пароля "
+"адміністратором."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:58
 msgid ""
@@ -346,31 +358,10 @@ msgid ""
 "the attribute is not present, or if its value is 0, used passwords will not "
 "be stored and thus any previously-used password may be reused."
 msgstr ""
-"Цей атрибут використовується для задання максимальної кількості використаних "
-"паролів. Якщо значення атрибута не вказано або вказано значення 0, "
+"Цей атрибут використовується для задання максимальної кількості використаних"
+" паролів. Якщо значення атрибута не вказано або вказано значення 0, "
 "використані паролі не зберігатимуться, отже, можна буде повторно "
 "використовувати раніше використані паролі."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:60
-msgid ""
-"This attribute specifies the number of consecutive failed bind attempts "
-"after which the password may not be used to authenticate. If this attribute "
-"is not present, or if the value is 0, this policy is not checked, and the "
-"value of \"Preventive user lockout\" will be ignored."
-msgstr ""
-"Цей атрибут визначає максимальну кількість послідовних невдалих спроб "
-"прив'язки, після досягнення якої пароль вже не можна буде використати для "
-"розпізнавання. Якщо значення для цього атрибута не встановлено або "
-"встановлено значення 0, перевірка цього правила не виконується, а значення "
-"«Превентивне блокування користувача» не використовуватиметься."
-
-#: modules/ppolicy/includes/ppolicy.inc.php:63
-msgid ""
-"This flag allows to mark the password as having being reset by an "
-"administrator."
-msgstr ""
-"Цей прапорець надає змогу позначити пароль як такий, який скидається "
-"адміністратором."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:59
 msgid ""
@@ -385,59 +376,67 @@ msgstr ""
 "можна вказати за допомогою розташованого вище поля «Максимальна кількість "
 "помилок у паролі»."
 
-#: modules/ppolicy/includes/ppolicy.inc.php:57
+#: modules/ppolicy/includes/ppolicy.inc.php:60
 msgid ""
-"This flag specifies whether users must change their passwords when they "
-"first bind to the directory after a password is set or reset by the "
+"This attribute specifies the number of consecutive failed bind attempts "
+"after which the password may not be used to authenticate. If this attribute "
+"is not present, or if the value is 0, this policy is not checked, and the "
+"value of \"Preventive user lockout\" will be ignored."
+msgstr ""
+"Цей атрибут визначає максимальну кількість послідовних невдалих спроб "
+"прив'язки, після досягнення якої пароль вже не можна буде використати для "
+"розпізнавання. Якщо значення для цього атрибута не встановлено або "
+"встановлено значення 0, перевірка цього правила не виконується, а значення "
+"«Превентивне блокування користувача» не використовуватиметься."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:61
+msgid ""
+"This attribute holds the number of seconds that the password cannot be used "
+"to authenticate due to too many failed authentication attempts. If this "
+"attribute is empty, or if the value is 0 the password cannot be used to "
+"authenticate until reset by a password administrator."
+msgstr ""
+"Цей атрибут визначає тривалість періоду (у секундах), протягом якого паролем"
+" не можна буде користуватися через надто велику кількість невдалих спроб "
+"пройти розпізнавання. Якщо значення для цього атрибута не встановлено або "
+"встановлено значення 0, паролем не можна буде скористатися, аж доки його не "
+"буде скинуто адміністратором паролів."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:62
+msgid ""
+"This attribute contains the number of times that an expired password may be "
+"used to authenticate a user to the directory. If this attribute is not "
+"present or if its value is zero, users with expired password will not be "
+"allowed to authenticate."
+msgstr ""
+"Цей атрибут визначає кількість разів використання пароля, строк дії якого "
+"вичерпано, для розпізнавання користувача. Якщо значення для цього атрибута "
+"не вказано або вказано значення 0, користувачам із паролями, строк дії яких "
+"вичерпано, буде заборонено входити до системи."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:63
+msgid ""
+"This flag allows to mark the password as having being reset by an "
 "administrator."
 msgstr ""
-"Цей прапорець задає, чи мають користувачі змінювати паролі після першої "
-"прив'язки до каталогу з моменту встановлення або скидання пароля "
+"Цей прапорець надає змогу позначити пароль як такий, який скидається "
 "адміністратором."
 
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "Оновити ppolicy для користувача"
-
-#: modules/ppolicy/default/warnuser.php:35
+#: modules/ppolicy/includes/ppolicy.inc.php:64
 msgid ""
-"Warning: you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
+"This attribute indicates how the password quality will be verified while "
+"being modified or added. If this attribute is not present, or if the value "
+"is '0', quality checking will not be enforced.  A value of '1' indicates "
+"that the server will check the quality, and if the server is unable to check"
+" it (due to a hashed password or other reasons) it will be accepted. A value"
+" of '2' indicates that the server will check the quality, and if the server "
+"is unable to verify it, it will return an error refusing the password."
 msgstr ""
-"Увага! Ви увійшли до системи з використанням режиму входу за лояльністю. "
-"Будь ласка, якнайшвидше змініть ваш пароль за допомогою сторінки зміни "
-"паролів, інакше ваш обліковий запис буде заблоковано."
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning: your password has been reset by an administrator. Your LDAP account "
-"is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-"Увага! Ваш пароль було скинуто адміністратором. Права доступу вашого "
-"облікового запису LDAP обмежено. Будь ласка, якнайшвидше змініть ваш пароль "
-"за допомогою сторінки зміни пароля."
-
-#: modules/ppolicy/default/delete.php:41
-#, php-format
-msgid ""
-"You will delete the password policy <strong>%s</strong>. Default password "
-"policy will be applied to users that use this password policy."
-msgstr ""
-"Ви вилучаєте правило паролів <strong>%s</strong>. До записів користувачів, "
-"де використовувалося цей правило паролів, тепер буде застосовано типове "
-"правило паролів."
-
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr "ppolicy"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:54
-msgid ""
-"this attribute contains the minimum number of characters that will be "
-"accepted in a password"
-msgstr ""
-"цей атрибут містить дані щодо мінімальної прийнятної кількості символів у "
-"паролі"
+"Цей атрибут визначає спосіб перевірки якості пароля під час внесення до "
+"нього змін або додавання. Якщо значення атрибута не вказано або вказано "
+"значення 0, перевірка якості пароля виконуватиметься у примусовому режимі. "
+"Значення 1 означатиме, що перевірку якості виконуватиме сервер, а якщо "
+"сервер не зможе виконати перевірку (через хешування пароля або інші "
+"причини), він вважатиметься прийнятним. Значення 2 означає, що перевірку "
+"якості виконуватиме сервер, а якщо сервер не зможе перевірити пароль, буде "
+"повернуто повідомлення про помилку, а використання пароля буде заборонено."
