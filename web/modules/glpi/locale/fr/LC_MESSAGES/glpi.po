@@ -601,11 +601,11 @@ msgstr "Nom de machine invalide"
 
 #: modules/glpi/glpi/ajaxEntityList.php:66
 msgid "Entity name"
-msgstr "Nom de l'entit"
+msgstr "Nom de l'entité"
 
 #: modules/glpi/glpi/ajaxEntityList.php:70 modules/glpi/glpi/addEntity.php:52
 msgid "Edit entity"
-msgstr "Editer l'entit"
+msgstr "Editer l'entité"
 
 #: modules/glpi/glpi/addEntity.php:34
 msgid "The entity has been added successfully."
@@ -804,7 +804,7 @@ msgstr "Inactif ou pas  jour: %percent% (%d)"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:43
 msgid "No antivirus found: %percent% (%d)"
-msgstr "Pas d'antivirus détect: %percent% (%d)"
+msgstr "Pas d'antivirus détecté: %percent% (%d)"
 
 #: modules/glpi/includes/panels/inventory.inc.php:30
 msgid "Computers"
