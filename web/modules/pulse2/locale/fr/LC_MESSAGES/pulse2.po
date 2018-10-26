@@ -95,7 +95,7 @@ msgstr "explorateur de fichiers"
 
 #: modules/pulse2/includes/menu_actionaudit.php:75
 msgid "Edit config files"
-msgstr ""
+msgstr "Éditer les fichiers de configuration"
 
 #: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this group"
