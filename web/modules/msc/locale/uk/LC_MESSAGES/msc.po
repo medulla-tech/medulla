@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-25 16:24+0200\n"
+"POT-Creation-Date: 2018-10-26 11:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -1512,19 +1512,19 @@ msgstr "Затримати встановлення"
 
 #: modules/msc/msc/launch.php:661 modules/msc/msc/launch.php:667
 msgid "Time constraint"
-msgstr ""
+msgstr "Обмеження за часом"
 
 #: modules/msc/msc/launch.php:661
 msgid "Successful transfer rate"
-msgstr ""
+msgstr "Швидкість успішного передавання"
 
 #: modules/msc/msc/launch.php:673
 msgid "Install constraint"
-msgstr ""
+msgstr "Встановити обмеження"
 
 #: modules/msc/msc/launch.php:680
 msgid "Run the deployment at the specific time"
-msgstr ""
+msgstr "Виконати розгортання у вказаний момент часу"
 
 #: modules/msc/msc/launch.php:711 modules/msc/includes/bundle_widgets.php:364
 msgid "Max bandwidth (kbits/s)"

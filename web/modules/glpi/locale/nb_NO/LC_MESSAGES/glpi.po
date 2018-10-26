@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-25 16:24+0200\n"
+"POT-Creation-Date: 2018-10-26 11:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -760,6 +760,14 @@ msgstr ""
 
 #: modules/glpi/includes/publicFunc.php:86
 msgid "Entity attributes"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Dynamic"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Static"
 msgstr ""
 
 #: modules/glpi/includes/publicFunc.php:154
