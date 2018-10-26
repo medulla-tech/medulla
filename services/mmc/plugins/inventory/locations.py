@@ -27,9 +27,11 @@ import logging
 from pulse2.managers.location import ComputerLocationI
 from pulse2.database.inventory import Inventory
 
+logger = logging.getLogger("inventory")
+
 class InventoryLocation(ComputerLocationI):
     def init(self, config):
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.config = config
         return Inventory().activate(config)
 

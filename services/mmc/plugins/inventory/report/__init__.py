@@ -28,7 +28,8 @@ import operator
 from mmc.support.mmctools import SecurityContext
 from pulse2.database.inventory import Inventory
 
-logger = logging.getLogger()
+logger = logging.getLogger("inventory")
+
 
 def fromUUID(uuid):
     return int(uuid.replace('UUID', ''))

@@ -34,9 +34,10 @@ from mmc.plugins.imaging.functions import computersUnregister
 import pulse2.utils
 import logging
 
+logger = logging.getLogger("imaging")
 class InventoryComputers(ComputerI):
     def __init__(self, conffile = None):
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def canDelComputer(self):
         return True
