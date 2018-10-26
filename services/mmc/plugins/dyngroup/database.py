@@ -43,7 +43,8 @@ from pulse2.database.dyngroup import Groups, Machines, Results, Users, Convergen
 import re
 import cPickle
 
-logger = logging.getLogger()
+logger = logging.getLogger("dyngroup")
+
 
 class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     """

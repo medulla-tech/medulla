@@ -57,10 +57,12 @@ config = None
 
 NOAUTHNEEDED = ['get_active_convergence_for_host']
 
+logger = logging.getLogger("dyngroup")
+
+
 def getApiVersion(): return APIVERSION
 
 def activate():
-    logger = logging.getLogger()
     global config
     config = DGConfig()
     config.init("dyngroup")
@@ -85,7 +87,6 @@ def activate():
 
 def activate_2():
     if isDynamicEnable():
-        logger = logging.getLogger()
         logger.info("Plugin dyngroup: dynamic groups are enabled")
         global queryManager
         queryManager = QueryManager()
@@ -123,7 +124,7 @@ class RpcProxy(RpcProxyI):
             net = net[1]
             if len(net['macAddress']) > 1:
                 if net['objectUUID'] not in moreThanOneEthCard:
-                    logging.getLogger().debug("Computer %s (%s) has more than one network card, it won't be added to profile" % (net['cn'], net['objectUUID']))
+                    logger.debug("Computer %s (%s) has more than one network card, it won't be added to profile" % (net['cn'], net['objectUUID']))
                     moreThanOneEthCard.append(net['objectUUID'][0])
 
         return moreThanOneEthCard
@@ -303,7 +304,7 @@ class RpcProxy(RpcProxyI):
             didnt_work = ComputerProfileManager().areForbiddebComputers(computers)
 
             if len(didnt_work) > 0:
-                logging.getLogger().debug("Can't add the following computers in that profile %s : %s"%(str(id), str(didnt_work)))
+                logger.debug("Can't add the following computers in that profile %s : %s"%(str(id), str(didnt_work)))
                 for i in didnt_work:
                     if uuid2key[i] in uuids:
                         are_some_to_remove = True
@@ -451,8 +452,8 @@ class RpcProxy(RpcProxyI):
         try:
             b.parse(bool)
         except Exception, e:
-            logging.getLogger().debug('checkBoolean failed : ')
-            logging.getLogger().debug(e)
+            logger.debug('checkBoolean failed : ')
+            logger.debug(e)
             return [False, -1]
         return xmlrpcCleanup([b.isValid(), b.countOps()])
 

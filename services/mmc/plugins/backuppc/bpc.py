@@ -46,7 +46,7 @@ from mmc.plugins.backuppc.config import BackuppcConfig
 # Machine info
 from mmc.plugins.glpi.database import Glpi
 
-logger = logging.getLogger()
+logger = logging.getLogger("backuppc")
 
 # Error consts
 _FORMAT_ERROR = {'err':14,'errtext':'Incorrect format, check if the version of BackupPC is supported'}

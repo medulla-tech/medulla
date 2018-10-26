@@ -35,7 +35,7 @@ import traceback
 import logging
 import time
 
-logger = logging.getLogger()
+logger = logging.getLogger("xmppmaster")
 
 
 class manage_infoconsole:
@@ -46,10 +46,10 @@ class manage_infoconsole:
         self.queueinfoout = queue_out
         self.threadevent = threading.Thread(name=self.namethread, target=self.loopinfoconsol)
         self.threadevent.start()
-        logging.info('manage event start')
+        logger.info('manage event start')
 
     def loopinfoconsol(self):
-        logging.info('loopinfoconsol')
+        logger.info('loopinfoconsol')
         while True:
             try:
                 event = self.queueinfo.get(60)
@@ -57,5 +57,5 @@ class manage_infoconsole:
                     break
                 self.objectxmpp.gestioneventconsole(event, self.queueinfoout)
             except Exception as e:
-                logging.error('error in manage infoconsole %s' % str(e))
-        logging.error('quit infocommand')
+                logger.error('error in manage infoconsole %s' % str(e))
+        logger.error('quit infocommand')

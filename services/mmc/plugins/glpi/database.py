@@ -39,6 +39,9 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 
 import logging
 
+logger = logging.getLogger("glpi")
+
+
 class Glpi(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database.
@@ -50,7 +53,7 @@ class Glpi(DyngroupDatabaseHelper):
         return self.database.db_check()
 
     def activate(self, conffile = None):
-        self.logger = logging.getLogger()
+        self.logger = logger
 
         if self.is_activated:
             self.logger.info("Glpi don't need activation")
@@ -82,7 +85,7 @@ class Glpi(DyngroupDatabaseHelper):
         self.is_activated = self.database.is_activated
         # Register the panel to the DashboardManager
         try:
-            logging.getLogger().debug('Try to load glpi panels')
+            logger.debug('Try to load glpi panels')
             from mmc.plugins.dashboard.manager import DashboardManager
             from mmc.plugins.dashboard.panel import Panel
             DM = DashboardManager()
@@ -92,7 +95,7 @@ class Glpi(DyngroupDatabaseHelper):
             # Registring OS Repartition panel
             DM.register_panel(Panel("os_repartition"))
         except ImportError:
-            logging.getLogger().debug('Failed to load glpi panels')
+            logger.debug('Failed to load glpi panels')
 
         return ret
 

@@ -48,7 +48,7 @@ VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
 
-logger = logging.getLogger()
+logger = logging.getLogger("xmppmaster")
 
 
 # #############################################################
@@ -64,7 +64,7 @@ def activate():
     Read the plugin configuration, initialize it, and run some tests to ensure
     it is ready to operate.
     """
-    logger = logging.getLogger()
+    logger = logging.getLogger("xmppmaster")
     config = xmppMasterConfig("xmppmaster")
     if config.disable:
         logger.warning("Plugin xmppmaster: disabled by configuration.")
@@ -460,7 +460,7 @@ def callInventoryinterface(uuid):
         callInventory(jid)
         return jid
     else:
-        logging.getLogger().error("for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger("xmppmaster").error("for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
 
 
@@ -477,7 +477,7 @@ def callInstallKeyAM(jidAM, jidARS):
         callInstallKey(jidAM, jidARS)
         return jidAM
     else:
-        logging.getLogger().error("for machine %s : install key ARS %s" % (jidAM, jidARS))
+        logging.getLogger("xmppmaster").error("for machine %s : install key ARS %s" % (jidAM, jidARS))
         return "jid (AM or ARS) missing"
 
 
@@ -487,7 +487,7 @@ def callrestart(uuid):
         callrestartbymaster(jid)
         return jid
     else:
-        logging.getLogger().error("callrestartbymaster for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger("xmppmaster").error("callrestartbymaster for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
 
 

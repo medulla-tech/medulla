@@ -28,6 +28,9 @@ from pulse2.managers.location import ComputerLocationManager
 import mmc.plugins.glpi.database
 import logging
 
+logger = logging.getLogger("glpi")
+
+
 def __convert(loc):
     loc.name = mmc.plugins.glpi.database.Glpi().decode(loc.name)
     return loc
@@ -37,7 +40,7 @@ def complete_ctx(ctx):
     Set GLPI user locations and profile in current security context.
     """
     if not hasattr(ctx, "locations") or ctx.locations == None:
-        logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
+        logger.debug("adding locations in context for user %s" % (ctx.userid))
         ctx.locations = map(__convert, mmc.plugins.glpi.database.Glpi().getUserLocations(ctx.userid))
         if type(ctx.locations) == list:
             if hasattr(ctx.locations[0], 'id'): # GLPI 0.8
@@ -45,5 +48,5 @@ def complete_ctx(ctx):
             elif hasattr(ctx.locations[0], 'ID'): # GLPI 0.7x
                 ctx.locationsid = map(lambda e: e.ID, ctx.locations)
     if not hasattr(ctx, "profile"):
-        logging.getLogger().debug("adding profiles in context for user %s" % (ctx.userid))
+        logger.debug("adding profiles in context for user %s" % (ctx.userid))
         ctx.profile = ComputerLocationManager().getUserProfile(ctx.userid)

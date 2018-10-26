@@ -58,6 +58,9 @@ from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
 from distutils.version import LooseVersion, StrictVersion
 
+logger = logging.getLogger("glpi")
+
+
 class Glpi090(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
@@ -77,16 +80,16 @@ class Glpi090(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is higher than 0.90.5')
+        logger.debug('Trying to detect if GLPI version is higher than 0.90.5')
 	try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
 	except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
         if LooseVersion(self._glpi_version) >=  LooseVersion("0.90.0") and LooseVersion(self._glpi_version) <  LooseVersion("0.90.6"):
-            logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
+            logger.debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
-            logging.getLogger().debug('GLPI higher than version 0.90 was not detected')
+            logger.debug('GLPI higher than version 0.90 was not detected')
             return False
 
     @property
@@ -97,7 +100,7 @@ class Glpi090(DyngroupDatabaseHelper):
         return False
 
     def activate(self, config = None):
-        self.logger = logging.getLogger()
+        self.logger = logger
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Glpi don't need activation")
@@ -2415,7 +2418,7 @@ class Glpi090(DyngroupDatabaseHelper):
             return self.searchOptions['en_US'][str(log.id_search_option)]
         except:
             if log.id_search_option != 0:
-                logging.getLogger().warn('I can\'t get a search option for id %s' % log.id_search_option)
+                logger.warn('I can\'t get a search option for id %s' % log.id_search_option)
             return ''
 
     def getLinkedActionValues(self, log):

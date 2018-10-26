@@ -32,6 +32,8 @@ from mmc.plugins.glpi.config import GlpiQueryManagerConfig
 
 from pulse2.utils import unique
 
+logger = logging.getLogger("glpi")
+
 
 def activate():
     conf = GlpiQueryManagerConfig("glpi")
@@ -71,7 +73,7 @@ def queryPossibilities():
                                 3,
                                 2]
     ret['Online computer'] = [ 'bool' ]
-    logging.getLogger().info('queryPossibilities %s' %
+    logger.info('queryPossibilities %s' %
                              (str(ret)))
     return ret
 
@@ -137,9 +139,9 @@ def extendedPossibilities():
 
 
 def query(ctx, criterion, value):
-    logging.getLogger().info(ctx)
-    logging.getLogger().info(criterion)
-    logging.getLogger().info(value)
+    logger.info(ctx)
+    logger.info(criterion)
+    logger.info(value)
     machines = []
     if criterion == 'OS' or criterion == 'Operating system':
         machines = [x.name for x in Glpi().getMachineByOs(ctx, value)]

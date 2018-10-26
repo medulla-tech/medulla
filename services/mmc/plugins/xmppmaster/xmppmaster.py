@@ -27,7 +27,7 @@ from master.agentmaster import MUCBot
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from mmc.agent import PluginManager
 
-logger = logging.getLogger()
+logger = logging.getLogger("xmppmaster")
 
 
 def singleton(class_):

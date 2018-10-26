@@ -59,6 +59,9 @@ import datetime
 import calendar
 from xmlrpclib import ProtocolError
 
+logger = logging.getLogger("glpi")
+
+
 class Glpi07(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version 0.7x.
@@ -85,15 +88,15 @@ class Glpi07(DyngroupDatabaseHelper):
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
-            logging.getLogger().debug('Trying to detect if GLPI version is 7')
+            logger.debug('Trying to detect if GLPI version is 7')
             self.db.execute('SELECT version FROM glpi_config').fetchone().values()[0].replace(' ', '')
         except Exception:
-            logging.getLogger().debug('GLPI version 7 was not detected')
+            logger.debug('GLPI version 7 was not detected')
             return False
         return True
 
     def activate(self, config = None):
-        self.logger = logging.getLogger()
+        self.logger = logger
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Glpi don't need activation")
@@ -2102,7 +2105,7 @@ class Glpi07(DyngroupDatabaseHelper):
             return self.searchOptions['en_US'][str(log.id_search_option)]
         except:
             if log.id_search_option != 0:
-                logging.getLogger().warn('I can\'t get a search option for id %s' % log.id_search_option)
+                logger.warn('I can\'t get a search option for id %s' % log.id_search_option)
             return ''
 
     def getLinkedActionValues(self, log):
