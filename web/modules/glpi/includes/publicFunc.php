@@ -127,7 +127,7 @@ function _glpi_baseEdit($FH, $mode) {
     // Recursive select
     // =================================
     $dynamic_select = new SelectItem("is_dynamic[]");
-    $dynamic_select->setElements(array('Dynamic', 'Not dynamic'));
+    $dynamic_select->setElements(array(_T('Dynamic','glpi'), _T('Static','glpi')));
     $dynamic_select->setElementsVal(array('1', '0'));
 
     foreach ($user_locations as $attr) {
