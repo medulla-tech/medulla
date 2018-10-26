@@ -171,15 +171,15 @@ msgstr "Користувач"
 
 #: modules/base/logview/logsdeployment.php:299
 msgid "Who"
-msgstr ""
+msgstr "Хто"
 
 #: modules/base/logview/logsdeployment.php:300
 msgid "Session name"
-msgstr ""
+msgstr "Назва сеансу"
 
 #: modules/base/logview/logsdeployment.php:302
 msgid "message"
-msgstr ""
+msgstr "повідомлення"
 
 #: modules/base/logview/logsquickaction.php:140
 msgid "Quick Actions Logs"
@@ -663,7 +663,7 @@ msgstr "Журнал"
 
 #: modules/base/infoPackage.inc.php:130
 msgid "logs of all the modules"
-msgstr ""
+msgstr "журнали усіх модулів"
 
 #: modules/base/infoPackage.inc.php:169
 msgid "Status"
