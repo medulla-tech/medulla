@@ -299,7 +299,7 @@ $modules2->setElementsVal($typecritereval);
                 <th style="width: 6%;"><?php echo _('Who'); ?></th>
                 <th style="width: 6%;"><?php echo _('Session name'); ?></th>
 
-                <th><?php echo _('text'); ?></th>
+                <th><?php echo _('message'); ?></th>
             </tr>
         </thead>
 
