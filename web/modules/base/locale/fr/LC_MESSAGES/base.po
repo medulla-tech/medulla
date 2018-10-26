@@ -10,12 +10,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-25 16:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Guillaume <guillaume.lassarre@siveo.net>, 2018\n"
-"Language-Team: French (France) (https://www.transifex.com/siveo/teams/72118/fr_FR/)\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: forgotpassword.php:24
@@ -98,7 +98,7 @@ msgstr ""
 #: modules/base/logview/logsinventory.php:304
 #: modules/base/logview/logsimaging.php:359
 msgid "date"
-msgstr ""
+msgstr "date"
 
 #: modules/base/logview/logsbackuppc.php:307
 #: modules/base/logview/index.php:425
@@ -109,7 +109,7 @@ msgstr ""
 #: modules/base/logview/logsinventory.php:305
 #: modules/base/logview/logsimaging.php:360
 msgid "user"
-msgstr ""
+msgstr "utilisateur"
 
 #: modules/base/logview/logsbackuppc.php:308
 #: modules/base/logview/index.php:426
@@ -188,7 +188,7 @@ msgstr "L'utilisateur root ne peut pas avoir de favoris"
 
 #: modules/base/main/favorites.php:149
 msgid "Add this page to your favorites"
-msgstr ""
+msgstr "Ajouter cette page dans vos favoris"
 
 #: modules/base/groups/localSidebar.php:28
 msgid "List"
@@ -350,7 +350,7 @@ msgstr "Utilisateurs et groupes"
 
 #: modules/base/audit/localSidebar.php:34 modules/base/audit/indexsamba.php:31
 msgid "Samba"
-msgstr "SAMBA"
+msgstr "Samba"
 
 #: modules/base/audit/localSidebar.php:38 modules/base/audit/indexmail.php:31
 #: modules/base/users/ajaxFilter.php:80
@@ -734,7 +734,7 @@ msgstr "Ordinateurs"
 
 #: modules/base/infoPackage.inc.php:321
 msgid "Edit computer"
-msgstr ""
+msgstr "Éditer un ordinateur"
 
 #: modules/base/infoPackage.inc.php:325
 msgid "Delete a computer"

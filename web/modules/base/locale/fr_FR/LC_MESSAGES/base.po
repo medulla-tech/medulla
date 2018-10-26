@@ -30,7 +30,7 @@ msgstr ""
 
 #: forgotpassword.php:74 forgotpassword.php:80
 msgid "Password reset"
-msgstr "Mise à zéro du mot de passe"
+msgstr "Réinitialisation du mot de passe"
 
 #: forgotpassword.php:76
 msgid "Login or mail"
@@ -109,7 +109,7 @@ msgstr ""
 #: modules/base/logview/logsinventory.php:305
 #: modules/base/logview/logsimaging.php:360
 msgid "user"
-msgstr ""
+msgstr "utilisateur"
 
 #: modules/base/logview/logsbackuppc.php:308
 #: modules/base/logview/index.php:426
