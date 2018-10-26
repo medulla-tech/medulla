@@ -1489,11 +1489,11 @@ msgstr "Exemple: pendant le repas et la nuit (12-14,20-8)"
 
 #: modules/msc/msc/launch.php:637
 msgid "bandwidth throttling (ko)"
-msgstr ""
+msgstr "Limitation de la bande passante (ko)"
 
 #: modules/msc/msc/launch.php:637
 msgid "<in ko>"
-msgstr ""
+msgstr "<in ko>"
 
 #: modules/msc/msc/launch.php:641
 msgid "Dynamic parameters Packages"
