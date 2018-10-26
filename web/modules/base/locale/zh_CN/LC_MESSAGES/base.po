@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-25 16:03+0200\n"
+"POT-Creation-Date: 2018-10-26 10:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -89,7 +89,6 @@ msgstr ""
 #: modules/base/logview/logsbackuppc.php:306
 #: modules/base/logview/index.php:424
 #: modules/base/logview/logspackaging.php:303
-#: modules/base/logview/logsdeployment.php:297
 #: modules/base/logview/logsquickaction.php:295
 #: modules/base/logview/logsremotedesktop.php:275
 #: modules/base/logview/logsinventory.php:304
@@ -100,7 +99,6 @@ msgstr ""
 #: modules/base/logview/logsbackuppc.php:307
 #: modules/base/logview/index.php:425
 #: modules/base/logview/logspackaging.php:304
-#: modules/base/logview/logsdeployment.php:298
 #: modules/base/logview/logsquickaction.php:296
 #: modules/base/logview/logsremotedesktop.php:276
 #: modules/base/logview/logsinventory.php:305
@@ -111,7 +109,6 @@ msgstr ""
 #: modules/base/logview/logsbackuppc.php:308
 #: modules/base/logview/index.php:426
 #: modules/base/logview/logspackaging.php:305
-#: modules/base/logview/logsdeployment.php:299
 #: modules/base/logview/logsquickaction.php:297
 #: modules/base/logview/logsremotedesktop.php:277
 #: modules/base/logview/logsinventory.php:306
@@ -122,7 +119,6 @@ msgstr ""
 #: modules/base/logview/logsbackuppc.php:309
 #: modules/base/logview/index.php:427
 #: modules/base/logview/logspackaging.php:306
-#: modules/base/logview/logsdeployment.php:302
 #: modules/base/logview/logsquickaction.php:298
 #: modules/base/logview/logsremotedesktop.php:278
 #: modules/base/logview/logsinventory.php:307
@@ -131,6 +127,7 @@ msgid "text"
 msgstr ""
 
 #: modules/base/logview/ajax_showlog.php:68
+#: modules/base/logview/logsdeployment.php:297
 #: modules/base/audit/ajaxLogFilter.php:114 modules/base/audit/logview.php:58
 msgid "Date"
 msgstr "日期"
@@ -159,8 +156,23 @@ msgstr ""
 msgid "Deployment Logs"
 msgstr ""
 
+#: modules/base/logview/logsdeployment.php:298
+#: modules/base/audit/indexbase.php:30
+#: modules/base/audit/ajaxLogFilter.php:121 modules/base/audit/indexall.php:30
+#: modules/base/includes/auditCodes.php:45
+msgid "User"
+msgstr "使用者"
+
+#: modules/base/logview/logsdeployment.php:299
+msgid "Who"
+msgstr ""
+
 #: modules/base/logview/logsdeployment.php:300
-msgid "sessionname"
+msgid "Session name"
+msgstr ""
+
+#: modules/base/logview/logsdeployment.php:302
+msgid "message"
 msgstr ""
 
 #: modules/base/logview/logsquickaction.php:140
@@ -322,12 +334,6 @@ msgstr "类型"
 #: modules/base/audit/indexbase.php:30 modules/base/audit/indexall.php:30
 msgid "Action"
 msgstr "动作"
-
-#: modules/base/audit/indexbase.php:30
-#: modules/base/audit/ajaxLogFilter.php:121 modules/base/audit/indexall.php:30
-#: modules/base/includes/auditCodes.php:45
-msgid "User"
-msgstr "使用者"
 
 #: modules/base/audit/indexbase.php:32
 msgid "User and group"
@@ -632,8 +638,12 @@ msgstr "MMC 记录档"
 msgid "View details of an action"
 msgstr "检视一个动作的详情"
 
+#: modules/base/infoPackage.inc.php:123
+msgid "History"
+msgstr "历史记录"
+
 #: modules/base/infoPackage.inc.php:130
-msgid "logs all modules"
+msgid "logs of all the modules"
 msgstr ""
 
 #: modules/base/infoPackage.inc.php:169

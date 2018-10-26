@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-25 16:03+0200\n"
+"POT-Creation-Date: 2018-10-26 10:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -32,6 +32,8 @@ msgstr "Консоль"
 #, php-format
 msgid "Sorry, the remote machine [%s] takes too much time to answer."
 msgstr ""
+"Вибачте, віддалений комп'ютер [%s] не надав відповіді протягом відведеного "
+"для цього часу."
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:179
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:298
@@ -41,7 +43,7 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:69
 #, php-format
 msgid "Error : %s"
-msgstr ""
+msgstr "Помилка: %s"
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:220
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:108
@@ -133,16 +135,16 @@ msgstr "Користувач"
 
 #: modules/xmppmaster/xmppmaster/topology.php:59
 msgid "Topology Pulse"
-msgstr ""
+msgstr "Пульс топології"
 
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:54
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:89
 msgid "Os"
-msgstr ""
+msgstr "ОС"
 
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:86
 msgid "Custom Command"
-msgstr ""
+msgstr "Нетипова команда"
 
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:90
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:186
@@ -222,11 +224,11 @@ msgstr "Пробудження мережею XMPP"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:33
 msgid "Custom Quick Actions"
-msgstr ""
+msgstr "Нетипові швидкі дії"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:36
 msgid "Quick Action results"
-msgstr ""
+msgstr "Результати швидких дій"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
 msgid "XMPP File Manager"
@@ -234,7 +236,7 @@ msgstr "Керування файлами XMPP"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:46
 msgid "XMPP Topology Machines"
-msgstr ""
+msgstr "Комп'ютери топології XMPP"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Custom command name"
@@ -250,7 +252,7 @@ msgstr "Змінити швидку дію"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:107
 msgid "Share a Quick Action"
-msgstr ""
+msgstr "Оприлюднити швидку дію"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:108
 msgid "Delete a Quick Action"
@@ -264,7 +266,7 @@ msgstr "Налаштування файла редакцій"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:42
 msgid "Quick monitoring"
-msgstr ""
+msgstr "Швидке спостереження"
 
 #: modules/xmppmaster/xmppmaster/deployxmpp.php:88
 msgid "Select a machine"
@@ -280,15 +282,15 @@ msgstr "Ваші завдання ["
 
 #: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:68
 msgid "Sorry the operating system of the machine is"
-msgstr ""
+msgstr "Вибачте, операційною системою на комп'ютері є"
 
 #: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:68
 msgid "The custom QA is defined for operating system"
-msgstr ""
+msgstr "Нетипову швидку дію визначено для операційної системи"
 
 #: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:73
 msgid "Sorry the machine is off"
-msgstr ""
+msgstr "Вибачте, комп'ютер вимкнено"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:528
 msgid "Copy"
@@ -312,11 +314,13 @@ msgid ""
 "Sorry the operating system of the machine %s is [%s].<br>The custom QA is "
 "defined for operating system [%s]"
 msgstr ""
+"Вибачте, операційною системою на комп'ютері %s є [%s].<br>Нетипову швидку "
+"дію визначено для операційної системи [%s]"
 
 #: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:71
 #, php-format
 msgid "Sorry the machine '%s' is off"
-msgstr ""
+msgstr "Вибачте, комп'ютер «%s» вимкнено"
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
 msgid "Computer deploy"
@@ -357,7 +361,7 @@ msgstr "Стан"
 
 #: modules/xmppmaster/xmppmaster/ActionQuickGroup.php:36
 msgid "Quick action results"
-msgstr ""
+msgstr "Результати швидких дій"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
 msgid "Planned tasks"
@@ -387,31 +391,31 @@ msgstr "Файл:"
 
 #: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:142
 msgid "Quick action on machine"
-msgstr ""
+msgstr "Виконати швидку дію на комп'ютері"
 
 #: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:149
 msgid "Name of Quick Action  :"
-msgstr ""
+msgstr "Назва швидкої дії:"
 
 #: modules/xmppmaster/xmppmaster/shareqa.php:60
 msgid "Share the Quick Action"
-msgstr ""
+msgstr "Оприлюднити швидку дію"
 
 #: modules/xmppmaster/xmppmaster/shareqa.php:83
 msgid "User Already Owning Quick Action"
-msgstr ""
+msgstr "Користувач вже є власником швидкої дії"
 
 #: modules/xmppmaster/xmppmaster/shareqa.php:94
 msgid "Select Users"
-msgstr ""
+msgstr "Виберіть користувачів"
 
 #: modules/xmppmaster/xmppmaster/shareqa.php:99
 msgid "Available users"
-msgstr ""
+msgstr "Доступні користувачі"
 
 #: modules/xmppmaster/xmppmaster/shareqa.php:104
 msgid "Selected users"
-msgstr ""
+msgstr "Вибрані користувачі"
 
 #: modules/xmppmaster/xmppmaster/customQA.php:38
 #, php-format
@@ -464,7 +468,7 @@ msgstr "Ваші минулі завдання XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:60
 msgid "Share QA"
-msgstr ""
+msgstr "Оприлюднити ШД"
 
 #: modules/xmppmaster/infoPackage.inc.php:63
 msgid "XMPP files managers"
@@ -472,11 +476,11 @@ msgstr "Засоби керування файлами XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:67
 msgid "XMPP topology Machine"
-msgstr ""
+msgstr "Комп'ютер топології XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:70
 msgid "XMPP Machine details"
-msgstr ""
+msgstr "Параметри комп'ютера XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:83
 msgid "Edit Custom Quick Action"
@@ -510,11 +514,11 @@ msgstr "Список файлів налаштувань XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:124
 msgid "XMPP Action Quick Group"
-msgstr ""
+msgstr "Швидке групування дій XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:127
 msgid "XMPP Action Quick Group result"
-msgstr ""
+msgstr "Результат дії швидкого групування XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:130
 msgid "Wake on LAN"
@@ -522,11 +526,11 @@ msgstr "Пробудження з LAN"
 
 #: modules/xmppmaster/infoPackage.inc.php:133
 msgid "XMPP Quick Monitoring"
-msgstr ""
+msgstr "Швидке спостереження XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:146
 msgid "quick action Custom"
-msgstr ""
+msgstr "Нетипова швидка дія"
 
 #: modules/xmppmaster/infoPackage.inc.php:185
 msgid "action deploy quick"
