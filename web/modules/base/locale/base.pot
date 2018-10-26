@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 10:41+0200\n"
+"POT-Creation-Date: 2018-10-26 10:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -633,8 +633,12 @@ msgstr ""
 msgid "View details of an action"
 msgstr ""
 
+#: modules/base/infoPackage.inc.php:123
+msgid "History"
+msgstr ""
+
 #: modules/base/infoPackage.inc.php:130
-msgid "logs all modules"
+msgid "logs of all the modules"
 msgstr ""
 
 #: modules/base/infoPackage.inc.php:169
