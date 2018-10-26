@@ -32,18 +32,9 @@ global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = $_GET["filter"];
 
-
-    if (isset($_GET["start"])) {
-        $start = $_GET["start"];
-    } else {
-        $start = 0;
-    }
-
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
-$end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
-
-
+$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
 if ($_GET['currenttasks'] == '1'){
   $status="";
@@ -197,6 +188,7 @@ $n->setParamInfo($params);
 // $n->end = (isset($_GET['end'])?$_GET['end']:$maxperpage);
 $n->start = 0;
 $n->end = $arraydeploy['lentotal'];
+
 $n->display();
 echo "<br>";
 ?>
