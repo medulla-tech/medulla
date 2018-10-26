@@ -32,13 +32,16 @@ import mmc.plugins.msc
 import pulse2.apis.clients.mirror_api
 from mmc.support.mmctools import Singleton
 
+logger = logging.getLogger("msc")
+
+
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
 class MirrorApi(Singleton):
     initialized = False
     def __init__(self):
         if self.initialized: return
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.logger.debug("Going to initialize MirrorApi")
         self.config = mmc.plugins.msc.MscConfig()
         credentials = ''

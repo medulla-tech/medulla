@@ -37,6 +37,8 @@ from pulse2.database.msc.config import MscDatabaseConfig
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 from pulse2.apis import makeURL
 
+logger = logging.getLogger("msc")
+
 
 class MscConfig(MscDatabaseConfig):
     disable = True
@@ -225,11 +227,11 @@ class MscConfig(MscDatabaseConfig):
                 if not is_login_and_pass:
                     if username != '':
                         if username != 'username':
-                            logging.getLogger().warning("your version of twisted is not high enough to use login (%s/username)"%(section))
+                            logger.warning("your version of twisted is not high enough to use login (%s/username)"%(section))
                         username = ''
                     if password != '':
                         if password != 'password':
-                            logging.getLogger().warning("your version of twisted is not high enough to use password (%s/password)"%(section))
+                            logger.warning("your version of twisted is not high enough to use password (%s/password)"%(section))
                         password = ''
 
                 self.schedulers[section] = {
@@ -283,7 +285,7 @@ class MscConfig(MscDatabaseConfig):
             for path in dlpaths.split(","):
                 self.web_dlpath.append(path.strip())
             if not os.path.exists(self.download_directory_path):
-                logging.getLogger().warn("Plugin MSC: directory %s does not exist, please create it" % self.download_directory_path)
+                logger.warn("Plugin MSC: directory %s does not exist, please create it" % self.download_directory_path)
 
         if self.cp.has_option("web", "web_def_dlmaxbw"):
             self.web_def_dlmaxbw = self.cp.getint("web", "web_def_dlmaxbw")
@@ -293,7 +295,7 @@ class MscConfig(MscDatabaseConfig):
                 self.web_def_deployment_intervals = time_intervals
             else:
                 self.web_def_deployment_intervals = ""
-                logging.getLogger().warn("Plugin MSC: Error parsing option web_def_deployment_intervals !")
+                logger.warn("Plugin MSC: Error parsing option web_def_deployment_intervals !")
         if self.cp.has_option("web", "web_allow_local_proxy"):
             self.web_allow_local_proxy = self.cp.get("web", "web_allow_local_proxy")
         if self.cp.has_option("web", "web_def_local_proxy_mode"):
@@ -345,13 +347,13 @@ class MscConfig(MscDatabaseConfig):
             self.ma_mountpoint = self.cp.get("package_api", "mmountpoint")
         if self.cp.has_option("package_api", "username"):
             if not is_login_and_pass:
-                logging.getLogger().warning("your version of twisted is not high enough to use login (package_api/username)")
+                logger.warning("your version of twisted is not high enough to use login (package_api/username)")
                 self.ma_username = ""
             else:
                 self.ma_username = self.cp.get("package_api", "username")
         if self.cp.has_option("package_api", "password"):
             if not is_login_and_pass:
-                logging.getLogger().warning("your version of twisted is not high enough to use password (package_api/password)")
+                logger.warning("your version of twisted is not high enough to use password (package_api/password)")
                 self.ma_password = ""
             else:
                 self.ma_password = self.cp.get("package_api", "password")
@@ -384,13 +386,13 @@ class MscConfig(MscDatabaseConfig):
                 self.sa_mountpoint = self.cp.get("scheduler_api", "mountpoint")
             if self.cp.has_option("scheduler_api", "username"):
                 if not is_login_and_pass:
-                    logging.getLogger().warning("your version of twisted is not high enough to use login (scheduler_api/username)")
+                    logger.warning("your version of twisted is not high enough to use login (scheduler_api/username)")
                     self.sa_username = ""
                 else:
                     self.sa_username = self.cp.get("scheduler_api", "username")
             if self.cp.has_option("scheduler_api", "password"):
                 if not is_login_and_pass:
-                    logging.getLogger().warning("your version of twisted is not high enough to use password (scheduler_api/password)")
+                    logger.warning("your version of twisted is not high enough to use password (scheduler_api/password)")
                     self.sa_password = ""
                 else:
                     self.sa_password = self.cp.get("scheduler_api", "password")

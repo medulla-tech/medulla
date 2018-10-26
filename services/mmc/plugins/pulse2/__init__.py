@@ -60,11 +60,13 @@ NOAUTHNEEDED = [
     'canDoInventory',
 ]
 
+logger = logging.getLogger("pulse2")
+
+
 def getApiVersion(): return APIVERSION
 
 def activate():
     config = Pulse2Config("pulse2")
-    logger = logging.getLogger()
     if config.disable:
         logger.warning("Plugin pulse2: disabled by configuration.")
         return False
@@ -81,7 +83,7 @@ def activate_2():
     try:
         ComputerLocationManager().select(config.location)
     except Exception, e:
-        logging.getLogger().error(e)
+        logger.error(e)
         return False
     return True
 
@@ -107,14 +109,14 @@ def create_method(m):
         except DBAPIError, e:
             reconnect = False
             if e.orig.args[0] == 2013 and not already_in_loop: # Lost connection to MySQL server during query error
-                logging.getLogger().warn("DBAPIError Lost connection")
+                logger.warn("DBAPIError Lost connection")
                 reconnect = True
             elif e.orig.args[0] == 2006 and not already_in_loop: # MySQL server has gone away
-                logging.getLogger().warn("DBAPIError MySQL server has gone away")
+                logger.warn("DBAPIError MySQL server has gone away")
                 reconnect = True
             if reconnect:
                 for i in range(0, NB_DB_CONN_TRY):
-                    logging.getLogger().warn("Trying to recover the connection (try #%d on %d)" % (i + 1, NB_DB_CONN_TRY + 1))
+                    logger.warn("Trying to recover the connection (try #%d on %d)" % (i + 1, NB_DB_CONN_TRY + 1))
                     new_m = getattr(self, m)
                     try:
                         ret = new_m(True)
@@ -317,14 +319,14 @@ def getSSHPublicKey():
     try:
         return open('/root/.ssh/id_rsa.pub').read()
     except IOError:
-        logging.getLogger().error('Error while reading SSH public key')
+        logger.error('Error while reading SSH public key')
         return ''
 
 def updateDebianSourceList():
     try:
         installation_uuid = open('/etc/pulse-licensing/installation_id').read().strip()
     except IOError:
-        logging.getLogger().error('Error while reading installation_id file')
+        logger.error('Error while reading installation_id file')
     try:
         pulse_version = getVersion().split('.')[0]
         # Pulse repository line
@@ -345,9 +347,9 @@ def updateDebianSourceList():
         f.writelines(lines)
         f.close()
     except IOError:
-        logging.getLogger().error('Error while writing source.list file')
+        logger.error('Error while writing source.list file')
     except Exception, e:
-        logging.getLogger().exception(str(e))
+        logger.exception(str(e))
 
 
 def canDoInventory():

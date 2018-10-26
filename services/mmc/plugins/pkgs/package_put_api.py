@@ -28,9 +28,12 @@ import logging
 import mmc.plugins.pkgs.config
 import pulse2.apis.clients.package_put_api
 
+logger = logging.getLogger("pkgs")
+
+
 class PackagePutA(pulse2.apis.clients.package_put_api.PackagePutA):
     def __init__(self, server, port = None, mountpoint = None, proto = 'http', login = ''):
-        self.logger = logging.getLogger()
+        self.logger = logger
         credentials = ''
         if type(server) == dict:
             mountpoint = server['mountpoint']

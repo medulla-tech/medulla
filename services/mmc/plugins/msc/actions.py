@@ -29,6 +29,9 @@ import mmc.plugins.msc.config
 
 from mmc.support.mmctools import shLaunch
 
+logger = logging.getLogger("msc")
+
+
 def msc_exec(command):
     proc = shLaunch(command)
     return_var = proc.exitCode
@@ -41,7 +44,7 @@ def msc_ssh(user, ip_addr, command): # TODO better path for annotate_output
     # -tt forces tty allocation so that signals like SIGINT will be properly sent to the remote host
     opts = "-T -R30080:127.0.0.1:80 -o StrictHostKeyChecking=no -o Batchmode=yes -o PasswordAuthentication=no"
     ssh_command = "%s %s ssh %s %s@%s \"%s\"" % (mmc.plugins.msc.MscConfig("msc").annotatepath, mmc.plugins.msc.config.get_keychain(), opts, user, ip_addr, command)
-    logging.getLogger().debug("executing |%s|" % ssh_command)
+    logger.debug("executing |%s|" % ssh_command)
     proc = shLaunch(ssh_command)
     return_var = proc.exitCode
     stdout = proc.out
@@ -65,7 +68,7 @@ def msc_scp(user, ip_addr, source, destination):
         ip_addr,
         destination
     )
-    logging.getLogger().debug("executing |%s|" % scp_command)
+    logger.debug("executing |%s|" % scp_command)
     proc = shLaunch(scp_command)
     return_var = proc.exitCode
     stdout = proc.out
@@ -81,7 +84,6 @@ def mscCopy(session, path_source, files_source, path_destination):
         "stderr":'',
         "return_var":0
     }
-    logger = logging.getLogger()
 
     if type(files_source) != list:
         files_source = [files_source]
@@ -144,7 +146,6 @@ def mscDelete(session, path_target, files_to_delete):
         "stderr": "",
         "return_var": 0
     }
-    logger = logging.getLogger()
 
     if type(files_to_delete) != list:
         files_to_delete = [files_to_delete]

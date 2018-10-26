@@ -29,11 +29,14 @@ import mmc.plugins.pkgs.config
 from mmc.support.mmctools import Singleton
 import pulse2.apis.clients.user_packageapi_api
 
+logger = logging.getLogger("pkgs")
+
+
 class UserPackageApiApi(Singleton):
     initialized = False
     def __init__(self):
         if self.initialized: return
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.logger.debug("Going to initialize UserPackageApiApi")
         self.config = mmc.plugins.pkgs.PkgsConfig("pkgs")
         credentials = ''
