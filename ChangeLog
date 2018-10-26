@@ -9,6 +9,7 @@
 * [BUGFIX]  Fix quick action for groups
 * [BUGFIX]  Add root to share user list
 * [BUGFIX]  Fix sharing Quick Actions
+* [BUGFIX]  Fix Audit page pagination
 
 mmc-core 4.4.1
 --------------
