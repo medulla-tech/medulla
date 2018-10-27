@@ -24,6 +24,8 @@ import logging
 
 from twisted.internet.defer import succeed, maybeDeferred
 
+logger = logging.getLogger("pulse2")
+
 
 class Trigger(object):
     """
@@ -53,7 +55,7 @@ class Trigger(object):
         @param kwargs: kwargs of method
         @type kwargs: dict
         """
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.method = method
         self.args = args
         self.kwargs = kwargs
@@ -127,6 +129,3 @@ if __name__ == "__main__":
     print "after 2nd"
 
     reactor.run()
-
-
-

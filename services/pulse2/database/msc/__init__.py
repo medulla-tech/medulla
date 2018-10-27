@@ -54,8 +54,9 @@ from pulse2.managers.location import ComputerLocationManager
 import logging
 
 NB_DB_CONN_TRY = 2
-
+logger = logging.getLogger("msc")
 # TODO need to check for useless function (there should be many unused one...)
+
 
 class MscDatabase(DatabaseHelper):
     """
@@ -69,7 +70,7 @@ class MscDatabase(DatabaseHelper):
         return DatabaseHelper.db_check(self)
 
     def activate(self, config):
-        self.logger = logging.getLogger()
+        self.logger = logger
         if self.is_activated:
             return None
 
@@ -420,7 +421,7 @@ class MscDatabase(DatabaseHelper):
             session.flush()
         session.close()
         return commandsOnHost
-    
+
     def deployxmpponmachine(self, command_id):
         result = {}
         sqlselect="""
@@ -982,7 +983,7 @@ class MscDatabase(DatabaseHelper):
                              target_name, cmd_max_connection_attempt,
                              start_date, end_date, scheduler = None,
                              order_in_proxy = None, max_clients_per_proxy = 0):
-        logging.getLogger().debug("Create new command on host '%s'" % target_name)
+        logger.debug("Create new command on host '%s'" % target_name)
         return {
             "host" : target_name,
             "start_date" : start_date,
@@ -2289,7 +2290,7 @@ class MscDatabase(DatabaseHelper):
         """
         reason.trap(TimeoutError)
         if self.db.pool._max_overflow > -1 and self.db.pool._overflow >= self.db.pool._max_overflow :
-            logging.getLogger().error('Timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (self.db.pool._overflow, self.db.pool._max_overflow))
+            logger.error('Timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (self.db.pool._overflow, self.db.pool._max_overflow))
             self.db.pool.dispose()
             self.db.pool = self.db.pool.recreate()
         return reason

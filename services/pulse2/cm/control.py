@@ -32,6 +32,8 @@ from pulse2.cm.endpoints import PackagesEndpoint
 from pulse2.cm.endpoints import InventoryServerEndpoint
 from pulse2.cm.endpoints import VPNInstallEndpoint
 
+logger = logging.getLogger("pulse2")
+
 
 class MethodNotFound(Exception):
     """ Unexisting method in an inherited endpoint """
@@ -109,7 +111,7 @@ class EndpointsRoot(object):
 
     def __init__(self, collector):
         self.collector = collector
-        self.logger = logging.getLogger()
+        self.logger = logger
 
 
 
@@ -182,7 +184,7 @@ class Dispatcher(object):
         @type config: Config
         """
         self.config = config
-        self.logger = logging.getLogger()
+        self.logger = logger
 
         self.server = Server(config.server.port,
                              config.server.ssl_key_file,
@@ -237,7 +239,7 @@ if __name__ == "__main__":
 
     import sys
     from mmc.core.log import ColoredFormatter
-    logger = logging.getLogger()
+
     logger.setLevel(logging.DEBUG)
     hdlr2 = logging.StreamHandler(sys.stdout)
     hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))

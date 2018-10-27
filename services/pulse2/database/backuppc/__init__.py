@@ -38,7 +38,7 @@ from pulse2.database.backuppc.schema import Backup_profiles, Period_profiles, Ba
 # Imported last
 import logging
 
-logger = logging.getLogger()
+logger = logging.getLogger("backuppc")
 
 
 class BackuppcDatabase(DatabaseHelper):
@@ -55,7 +55,6 @@ class BackuppcDatabase(DatabaseHelper):
         return DatabaseHelper.db_check(self)
 
     def activate(self, config):
-        self.logger = logging.getLogger()
         if self.is_activated:
             return None
 

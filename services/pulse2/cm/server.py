@@ -29,6 +29,7 @@ from twisted.internet.ssl import DefaultOpenSSLContextFactory
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet.address import IPv4Address
 
+logger = logging.getLogger("pulse2")
 
 
 class GatheringServer(Protocol):
@@ -79,23 +80,23 @@ class GatheringServer(Protocol):
         d.addErrback(self._response_failed)
 
 
-        logging.getLogger().debug("data received: %s from %s" % (str(data), ip))
+        logger.debug("data received: %s from %s" % (str(data), ip))
         try:
             tr_result = self._trigger.fire()
             @tr_result.addCallback
             def res(result):
                 print "trigger result: %s" % (str(result))
         except Exception, e:
-            logging.getLogger().warn("trigger firing fail: %s" % str(e))
+            logger.warn("trigger firing fail: %s" % str(e))
 
 
 
     def send_response(self, response):
-        logging.getLogger().debug("response to client: %s" % str(response))
+        logger.debug("response to client: %s" % str(response))
         self.transport.write(response)
 
     def _response_failed(self, failure):
-        logging.getLogger().warn("response failed: %s" % str(failure))
+        logger.warn("response failed: %s" % str(failure))
 
 
 class GatheringFactory(Factory):
@@ -154,10 +155,10 @@ class Server(object):
 
         @d.addCallback
         def cb(reason):
-            logging.getLogger().info("endpoint start: %s" % str(reason))
+            logger.info("endpoint start: %s" % str(reason))
         @d.addErrback
         def eb(failure):
-            logging.getLogger().warn("endpoint start failed: %s" % str(failure))
+            logger.warn("endpoint start failed: %s" % str(failure))
 
 
         return d
