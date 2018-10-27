@@ -27,7 +27,9 @@ import logging
 
 plugin = {"VERSION": "1.0", "NAME": "resultenddeploy", "TYPE": "master"}
 
+logger = logging.getLogger("xmppmaster")
+
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug(plugin)
+    logger.debug(plugin)
     pass

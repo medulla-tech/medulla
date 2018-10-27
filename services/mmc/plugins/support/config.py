@@ -25,10 +25,12 @@ from random import randrange
 
 from mmc.support.config import PluginConfig
 
+logger = logging.getLogger("support")
+
 
 class SupportConfig(PluginConfig):
     def __init__(self, name="support", conffile=None):
-        self.logger = logging.getLogger()
+        self.logger = logger
         if not hasattr(self, 'initdone'):
             PluginConfig.__init__(self, name, conffile)
             self.initdone = True
@@ -78,7 +80,7 @@ class SupportConfig(PluginConfig):
                                            self.identify_file)
 
         if not os.path.exists(self.identify_file):
-            logging.getLogger().warn("File %s don't exists!" % self.identify_file)
+            logger.warn("File %s don't exists!" % self.identify_file)
 
         self.url = "%s@%s" % (self.support_user, self.support_url)
 
@@ -90,7 +92,7 @@ class SupportConfig(PluginConfig):
                                                   self.session_timeout))
 
         if not os.path.exists(self.install_id_path):
-            logging.getLogger().warn("File %s don't exists!" % self.install_id_path)
+            logger.warn("File %s don't exists!" % self.install_id_path)
         else:
             with open(self.install_id_path, "r") as f:
                 content = f.readlines()

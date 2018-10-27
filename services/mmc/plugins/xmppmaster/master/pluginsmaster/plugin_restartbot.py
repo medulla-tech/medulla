@@ -29,13 +29,15 @@ import logging
 
 plugin = {"VERSION": "1.0", "NAME": "restartbot", "TYPE": "master"}
 
+logger = logging.getLogger("xmppmaster")
+
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    print "_________________________"
-    logging.getLogger().debug(plugin)
+    logger.debug("_________________________")
+    logger.debug(plugin)
     # print json.dumps(data, indent = 4)
-    print data['data'][0]
-    print "_________________________"
+    logger.debug(data['data'][0])
+    logger.debug("_________________________")
 
     command = {'action': 'restartbot',
                'base64': False,

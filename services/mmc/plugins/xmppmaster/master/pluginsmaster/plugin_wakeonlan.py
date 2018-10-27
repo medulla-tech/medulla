@@ -37,9 +37,11 @@ import logging
 
 plugin = {"VERSION": "1.0", "NAME": "wakeonlan", "TYPE": "master"}
 
+logger = logging.getLogger("xmppmaster")
+
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug(plugin)
+    logger.debug(plugin)
     sessionid = name_random(5, "wakeonlan")
     try:
         listserverrelay = XmppMasterDatabase().listserverrelay()

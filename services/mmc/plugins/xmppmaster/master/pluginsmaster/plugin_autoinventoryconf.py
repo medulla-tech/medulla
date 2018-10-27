@@ -35,13 +35,15 @@ plugin = {"VERSION": "1.1", "NAME": "autoinventoryconf", "TYPE": "master"}
 # Plugin for configuring glpi database for holding the registry keys
 # and for configuring the machine agent for inventory
 
+logger = logging.getLogger("xmppmaster")
+
 
 def action(xmppobject):
-    logging.getLogger().debug(plugin)
+    logger.debug(plugin)
     try:
         # read max_key_index parameter to find out the number of keys
         if hasattr(xmppobject.config, 'max_key_index'):
-            logging.getLogger().debug("Loading %s keys" % xmppobject.config.max_key_index)
+            logger.debug("Loading %s keys" % xmppobject.config.max_key_index)
             nb_iter = int(xmppobject.config.max_key_index) + 1
             for num in range(1, nb_iter):
                 registry_key = getattr(xmppobject.config, 'reg_key_' + str(num)).split('|')[0]
@@ -56,6 +58,6 @@ def action(xmppobject):
                     Glpi().addRegistryCollect(registry_key, registry_key_name)
         pass
     except Exception, e:
-        logging.getLogger().error("Error loading plugin: %s" % str(e))
+        logger.error("Error loading plugin: %s" % str(e))
         traceback.print_exc(file=sys.stdout)
         pass

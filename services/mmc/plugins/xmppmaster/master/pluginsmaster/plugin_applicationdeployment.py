@@ -32,9 +32,11 @@ import logging
 
 plugin = {"VERSION": "1.0", "NAME": "applicationdeployment", "TYPE": "master"}
 
+logger = logging.getLogger("xmppmaster")
+
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug(plugin)
+    logger.debug(plugin)
     try:
         if 'Dtypequery' in data:
             if data['Dtypequery'] == 'TED':
@@ -43,9 +45,9 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 xmppobject.session.clear(sessionid)
 
                 if __debug__:
-                    logging.getLogger().debug("_______________________RESULT DEPLOYMENT________________________")
-                    logging.getLogger().debug(json.dumps(data['descriptor']))
-                    logging.getLogger().debug("________________________________________________________________")
+                    logger.debug("_______________________RESULT DEPLOYMENT________________________")
+                    logger.debug(json.dumps(data['descriptor']))
+                    logger.debug("________________________________________________________________")
             elif data['Dtypequery'] == 'TE':
                 # clear session
                 xmppobject.session.clear(sessionid)
@@ -55,4 +57,4 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 xmppobject.session.sessionsetdata(sessionid, data)
         pass
     except Exception as e:
-        logging.getLogger().error("Error in plugin %s : %s" % (plugin['NAME'], str(e)))
+        logger.error("Error in plugin %s : %s" % (plugin['NAME'], str(e)))

@@ -13,6 +13,8 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 plugin = {"VERSION": "1.1", "NAME": "resultinventory", "TYPE": "master"}
 
+logger = logging.getLogger("xmppmaster")
+
 
 def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
     HEADER = {"Pragma": "no-cache",
@@ -20,9 +22,9 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
               "Content-Type": "application/x-compress",
               }
     try:
-        logging.getLogger().debug("=====================================================")
-        logging.getLogger().debug(plugin)
-        logging.getLogger().debug("=====================================================")
+        logger.debug("=====================================================")
+        logger.debug(plugin)
+        logger.debug("=====================================================")
         try:
             url = xmppobject.config.inventory_url
         except:

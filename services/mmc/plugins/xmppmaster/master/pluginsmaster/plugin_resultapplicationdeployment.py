@@ -26,8 +26,10 @@ import logging
 
 plugin = {"VERSION": "1.0", "NAME": "resultapplicationdeploymentjson", "TYPE": "master"}
 
+logger = logging.getLogger("xmppmaster")
+
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug(plugin)
-    logging.getLogger().debug("%s from %s" % (data['msg'], message['from']))
+    logger.debug(plugin)
+    logger.debug("%s from %s" % (data['msg'], message['from']))
     pass

@@ -33,10 +33,12 @@ import logging
 
 plugin = {"VERSION": "1.0", "NAME": "resulttransfertfile", "TYPE": "master"}
 
+logger = logging.getLogger("xmppmaster")
+
 
 @pluginmastersessionaction("actualise", 20)
 def action(xmppobject, action, sessionid, data, message, ret, dataobj, objsessiondata):
-    logging.getLogger().debug(plugin)
+    logger.debug(plugin)
     try:
         sessiondata = xmppobject.session.sessionfromsessiondata(sessionid)
         namefile = sessiondata.getdatasession()['qui']

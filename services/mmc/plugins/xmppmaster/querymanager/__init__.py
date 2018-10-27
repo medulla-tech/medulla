@@ -37,6 +37,8 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 #from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
+logger = logging.getLogger("xmppmaster")
+
 
 def activate():
     conf = GlpiQueryManagerConfig("glpi")
@@ -47,7 +49,7 @@ def queryPossibilities():
     ret = {}
     ret['OU user'] = ['list', getAllOuuser]
     ret['OU Machine'] = ['list', getAllOumachine]
-    logging.getLogger("xmppmaster").info('queryPossibilities %s' %
+    logger.info('queryPossibilities %s' %
                              (str(ret)))
     return ret
 
@@ -72,9 +74,9 @@ def extendedPossibilities():
 
 
 def query(ctx, criterion, value):
-    logging.getLogger("xmppmaster").info(ctx)
-    logging.getLogger("xmppmaster").info(criterion)
-    logging.getLogger("xmppmaster").info(value)
+    logger.info(ctx)
+    logger.info(criterion)
+    logger.info(value)
     machines = []
 
     if criterion == 'OU user':

@@ -29,18 +29,20 @@ import sys
 
 plugin = {"VERSION": "1.0", "NAME": "resultapplicationdeploymentjson", "TYPE": "master"}
 
+logger = logging.getLogger("xmppmaster")
+
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug(plugin)
+    logger.debug(plugin)
     try:
         if ret == 0:
             ###logging.getLogger().debug("deploiement session %s success"% sessionid)
-            logging.getLogger().debug("Succes deploy on %s Package : %s Session : %s" % (data['jidmachine'],
+            logger.debug("Succes deploy on %s Package : %s Session : %s" % (data['jidmachine'],
                                                                                          data['descriptor']['info']['name'],
                                                                                          sessionid))
             #logging.getLogger().debug("%s"%json.dumps(data, indent=4, sort_keys=True))
         else:
-            logging.getLogger().error("Error deploy on %s Package : %s Session : %s" % (data['jidmachine'],
+            logger.error("Error deploy on %s Package : %s Session : %s" % (data['jidmachine'],
                                                                                         data['descriptor']['info']['name'],
                                                                                         sessionid))
             #logging.getLogger().error("%s"%json.dumps(data, indent=4, sort_keys=True))

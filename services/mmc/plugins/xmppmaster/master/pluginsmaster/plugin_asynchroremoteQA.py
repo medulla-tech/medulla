@@ -29,11 +29,12 @@ import json
 
 plugin = {"VERSION": "1.0", "NAME": "asynchroremoteQA", "TYPE": "master"}
 
+logger = logging.getLogger("xmppmaster")
+
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug("=====================================================")
-    logging.getLogger().debug(plugin)
-    logging.getLogger().debug("=====================================================")
+    logger.debug("=====================================================")
+    logger.debug("=====================================================")
     print json.dumps(data, indent=4)
     datasend = {
         "action": action,
