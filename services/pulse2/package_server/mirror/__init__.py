@@ -29,11 +29,14 @@ import logging
 from pulse2.package_server.common import Common
 from pulse2.package_server.xmlrpc import MyXmlrpc
 
+logger = logging.getLogger('pkgs')
+
+
 class Mirror(MyXmlrpc):
     type = 'Mirror'
     def __init__(self, mp, name = ''):
         MyXmlrpc.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.name = name
         self.mp = mp
         if Common().getPackages(self.mp) == None:

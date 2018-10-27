@@ -33,6 +33,9 @@ from pulse2.utils import reduceMACAddress
 from pulse2.imaging.image import isPulse2Image
 from pulse2.package_server.imaging.cache import UUIDCache
 
+logger = logging.getLogger('imaging')
+
+
 class Archiver:
 
     """
@@ -43,7 +46,7 @@ class Archiver:
     ARCHIVING = '.archiving'
 
     def __init__(self, config, archive, computerUUID, macAddress, imageList):
-        self.logger = logging.getLogger('imaging')
+        self.logger = logger
         self.config = config
         self.archive = archive
         self.computerUUID = computerUUID

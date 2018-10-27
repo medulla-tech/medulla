@@ -39,7 +39,7 @@ class MirrorApi(MyXmlrpc):
         self.mirrors = {}
         self.url2mirrors = {}
         self.assign = {}
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger("pkgs")
         # Mutable dict services used as default argument to a method or function
         try:
             for service in services:
