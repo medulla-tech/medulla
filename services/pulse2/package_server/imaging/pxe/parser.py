@@ -1,4 +1,4 @@
-#!/usr/bin/python 
+#!/usr/bin/python
 # -*- coding: utf-8; -*-
 """
 """
@@ -34,6 +34,8 @@ import logging
 from functools import wraps
 
 from pulse2.utils import isMACAddress
+
+logger = logging.getLogger("imaging")
 
 LOG_ACTION = {0 : ("boot", "booted"),
               1 : ("menu", "choosen menu entry"),
@@ -245,8 +247,8 @@ class ArgumentContainer :
                 idx = self.packet.index(";") + 1
                 return ord(self.packet[idx])
         except Exception, e:
-            logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
-            logging.getLogger().debug("Packet content: %s" % self.packet[1:])
+            logger.warn("An eror occured while parsing pnum argument: %s" % str(e))
+            logger.debug("Packet content: %s" % self.packet[1:])
 
 
     @property
@@ -264,8 +266,8 @@ class ArgumentContainer :
                 except ValueError :
                     return None
         except Exception, e:
-            logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
-            logging.getLogger().debug("Packet content: %s" % self.packet[1:])
+            logger.warn("An eror occured while parsing pnum argument: %s" % str(e))
+            logger.debug("Packet content: %s" % self.packet[1:])
 
     @property
     def to(self):
@@ -283,8 +285,8 @@ class ArgumentContainer :
                 except ValueError :
                     return None
         except Exception, e:
-            logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
-            logging.getLogger().debug("Packet content: %s" % self.packet[1:])
+            logger.warn("An eror occured while parsing pnum argument: %s" % str(e))
+            logger.debug("Packet content: %s" % self.packet[1:])
 
 
 
@@ -356,7 +358,7 @@ class PXEMethodParser :
 
                 args.append(value)
 
-        logging.getLogger().debug("PXE Proxy: executed method: (%s) %s" % (str(hex(marker)), method.__name__ ))
+        logger.debug("PXE Proxy: executed method: (%s) %s" % (str(hex(marker)), method.__name__ ))
         return method, args
 
 

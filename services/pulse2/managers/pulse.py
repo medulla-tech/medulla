@@ -28,13 +28,16 @@ The pulse2 manager, it give access to eveything that is stocked in the pulse2 da
 import logging
 from pulse2.utils import Singleton
 
+logger = logging.getLogger("pulse2")
+
+
 class Pulse2Manager(Singleton):
     components = {}
     main = 'pulse2'
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def select(self, name):
         self.logger.info("Selecting pulse2 manager: %s" % name)

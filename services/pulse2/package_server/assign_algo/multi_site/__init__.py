@@ -32,6 +32,9 @@ from pulse2.package_server.assign_algo import MMAssignAlgo
 from urlparse import urlparse
 from pulse2.package_server.imaging.api.functions import Imaging
 
+logger = logging.getLogger("pkgs")
+
+
 class MMUserAssignAlgo(MMAssignAlgo):
     name = 'multi_site'
     assign = {}
@@ -47,7 +50,7 @@ class MMUserAssignAlgo(MMAssignAlgo):
                 server = m['server']
                 self.assign[machine.uuid]['getMirror']['server'] = server
                 if  'servernane' and 'entity_uuid' and 'uuid' and 'Entity_Name' in m:
-                    logging.getLogger().info("getMachineMirror algo multi_site { machine id [%s] } { pserver ip [%s], name [%s] } { Entity id [%s], entity Name [%s] }"%(m['uuid'],m['server'],m['servernane'],m['entity_uuid'],m['Entity_Name']))
+                    logger.info("getMachineMirror algo multi_site { machine id [%s] } { pserver ip [%s], name [%s] } { Entity id [%s], entity Name [%s] }"%(m['uuid'],m['server'],m['servernane'],m['entity_uuid'],m['Entity_Name']))
         return self.assign[machine.uuid]['getMirror']
 
 
@@ -68,5 +71,5 @@ class MMUserAssignAlgo(MMAssignAlgo):
                 if 'server'  in m and m['server'] != "":
                     self.assign[machine.uuid]['getMachinePackageApi'][api]['server'] = m['server']
             if  'servernane' and 'entity_uuid' and 'uuid' and 'Entity_Name' in m:
-                logging.getLogger().info("getMachinePackageApi algo multi_site { machine id [%s] } { pserver ip [%s], name [%s] } { Entity id [%s], entity Name [%s] }"%(m['uuid'],m['server'],m['servernane'],m['entity_uuid'],m['Entity_Name']))
+                logger.info("getMachinePackageApi algo multi_site { machine id [%s] } { pserver ip [%s], name [%s] } { Entity id [%s], entity Name [%s] }"%(m['uuid'],m['server'],m['servernane'],m['entity_uuid'],m['Entity_Name']))
         return self.assign[machine.uuid]['getMachinePackageApi']

@@ -27,6 +27,8 @@ import logging
 from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.functions import Imaging
 
+logger = logging.getLogger("imaging")
+
 
 class ImagingApi (MyXmlrpc):
 
@@ -42,7 +44,7 @@ class ImagingApi (MyXmlrpc):
         self.api.init1(config)
 
         self.name = name
-        self.logger = logging.getLogger('imaging')
+        self.logger = logger
         self.logger.info("Initializing %s" % self.myType)
 
     def xmlrpc_getActiveConvergenceForHost(self, uuid):

@@ -30,13 +30,16 @@ provide methods to work with profile in the imaging module
 import logging
 from pulse2.utils import Singleton
 
+logger = logging.getLogger("imaging")
+
+
 class ComputerImagingManager(Singleton):
     components = {}
     main = 'imaging'
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def select(self, name):
         self.logger.info("Selecting imaging computer profile manager: %s" % name)

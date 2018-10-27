@@ -29,7 +29,7 @@ from time import sleep
 from pulse2.inventoryserver.utils import InventoryUtils, MMCProxy
 
 
-logger = logging.getLogger()
+logger = logging.getLogger("inventory")
 
 
 class AttemptToScheduler(object):
