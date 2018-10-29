@@ -385,15 +385,33 @@ class MscDatabase(DatabaseHelper):
         session.add(target)
         session.flush()
         session.close()
-        return target
+        result = {  "id" : target.id,
+                    "target_macaddr" : target.target_macaddr,
+                    "id_group" : target.id_group,
+                    "target_uuid" : target.target_uuid,
+                    "target_bcast" : target.target_bcast,
+                    "target_name" : target.target_name,
+                    "target_ipaddr" : target.target_ipaddr,
+                    "mirrors" : target.mirrors,
+                    "target_network" : target.target_network }
+        return result
+
+    def uuidtoid(self, uuid):
+        if isinstance(uuid, basestring):
+            if uuid.strip().lower().startswith("uuid"):
+                return int(uuid[4:])
+            else:
+                return int(uuid)
+        else:
+            return  uuid
 
     def xmpp_create_CommandsOnHost(self,
-                                    fk_commands,
-                                    fk_target,
-                                    host,
-                                    end_date,
-                                    start_date,
-                                    id_group=None):
+                           fk_commands,
+                           fk_target,
+                           host,
+                           end_date,
+                           start_date,
+                           id_group=None):
         session = create_session()
         commandsOnHost = CommandsOnHost()
         commandsOnHost.fk_commands = fk_commands
@@ -401,26 +419,38 @@ class MscDatabase(DatabaseHelper):
         commandsOnHost.start_date = start_date
         commandsOnHost.end_date = end_date
         commandsOnHost.id_group = id_group
+        commandsOnHost.fk_target = self.uuidtoid(fk_target)
         session.add(commandsOnHost)
         session.flush()
         session.close()
         return commandsOnHost
 
-    def xmpp_create_CommandsOnHostPhasedeploykiosk(self,
-                                                   fk_commands):
+    def xmpp_create_CommandsOnHostPhasedeploykiosk(self,fk_commands):
         names=['upload', 'execute', 'delete', 'inventory', 'done']
-        order=[0,1,2,3,4]
+        for indexname in range(len(names)):
+            commandsOnHostPhase = self.xmpp_create_CommandsOnHostPhasedeploy(fk_commands, names[indexname])
+        return commandsOnHostPhase
+
+    def xmpp_create_CommandsOnHostPhasedeploy(self, fk_commands, name, state="ready"):
         session = create_session()
         commandsOnHostPhase = CommandsOnHostPhase()
         commandsOnHostPhase.fk_commands_on_host = fk_commands
-        commandsOnHostPhase.state = "ready"
-        for indexname in range(len(names)):
-            commandsOnHost.phase_order = order[indexname]
-            commandsOnHost.name = names[indexname]
-            session.add(commandsOnHost)
-            session.flush()
+        commandsOnHostPhase.state = state
+        commandsOnHostPhase.name = name
+        if name == "upload":
+            commandsOnHostPhase.phase_order = 0
+        elif name == "execute":
+            commandsOnHostPhase.phase_order = 1
+        elif name == "delete":
+            commandsOnHostPhase.phase_order = 2
+        elif name == "inventory":
+            commandsOnHostPhase.phase_order = 3
+        elif name == "done":
+            commandsOnHostPhase.phase_order = 4
+        session.add(commandsOnHostPhase)
+        session.flush()
         session.close()
-        return commandsOnHost
+        return commandsOnHostPhase
 
     def deployxmpponmachine(self, command_id):
         result = {}
