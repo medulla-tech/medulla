@@ -27,6 +27,9 @@ import logging
 from twisted.internet import utils, reactor
 from pulse2.proxyssl.utilities import Singleton
 
+logger = logging.getLogger("inventory")
+
+
 class RunInventory(Singleton):
 
     """
@@ -35,7 +38,7 @@ class RunInventory(Singleton):
 
     def setup(self, config):
         self.config = config
-        self.logger = logging.getLogger()
+        self.logger = logger
         from pulse2.proxyssl.http_inventory_proxy import HttpInventoryProxySingleton
         self.singleton = HttpInventoryProxySingleton()
 

@@ -28,7 +28,7 @@ from command import CommandFailed
 from launcher import launcher
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("pkgs")
 
 
 class ResultWorker(Thread):

@@ -31,13 +31,15 @@ from pulse2.scheduler.proxy.xmlrpc import ForwardingProxy
 from pulse2.scheduler.proxy.unix import Forwarder
 from pulse2.scheduler.proxy.buffer import SendingBuffer
 
+logger = logging.getLogger("pulse2")
+
 
 class App :
     def __init__(self, config):
         self.config = config
         SendingBuffer().init(config)
         self.socket_file = config.scheduler_proxy_socket_path
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.xmlrpc_proxy = ForwardingProxy(self.config)
         self.setup()
         reactor.addSystemEventTrigger('before', 'shutdown', self.clean_up)

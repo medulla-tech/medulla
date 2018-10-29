@@ -37,8 +37,6 @@ class NotInitializedError(Exception):
         return "Buffer not initialized"
 
 
-
-
 def initialized(method):
     """
     Blocks the decorated method when _initialized attribute is False.
@@ -55,6 +53,7 @@ def initialized(method):
 
     return wrapped
 
+logger = logging.getLogger("pulse2")
 
 
 class SendingBuffer(object):
@@ -73,7 +72,7 @@ class SendingBuffer(object):
     def init(self, config):
         self.config = config
         self._initialized = True
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def register_sender(self, sender):
         self.sender = sender
@@ -93,7 +92,7 @@ class SendingBuffer(object):
         packet = self.packets[0]
         del self.packets[0]
         self.sender.call_remote(packet)
-        logging.getLogger().debug("Remaining requests to send: %d" % (len(self.packets)))
+        logger.debug("Remaining requests to send: %d" % (len(self.packets)))
 
     @initialized
     def backup_buffer(self):

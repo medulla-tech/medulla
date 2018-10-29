@@ -28,7 +28,7 @@ import logging
 from pulse2.scheduler.api.mmc_client import RPCClient
 
 
-log = logging.getLogger()
+log = logging.getLogger("msc")
 
 class MscAPI(RPCClient):
     """ XMLRPC Proxy trough MMC agent to accessing MSC methods. """

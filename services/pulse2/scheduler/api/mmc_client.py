@@ -28,7 +28,7 @@ from mmc.site import mmcconfdir
 from ConfigParser import ConfigParser
 from mmc.client.async import Proxy
 
-log = logging.getLogger()
+log = logging.getLogger("mmc-agent")
 
 class ConfigReader(object):
     """Read and parse config files"""

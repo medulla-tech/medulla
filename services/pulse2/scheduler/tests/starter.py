@@ -23,6 +23,8 @@
 
 import logging
 logging.basicConfig()
+logger = logging.getLogger("tests")
+
 
 from twisted.trial import unittest
 
@@ -48,7 +50,7 @@ class Circuit (object):
 class Test00_LoopingStart(unittest.TestCase):
 
     def setUp(self):
-	self.logger = logging.getLogger()
+	self.logger = logger
         self.dispatcher = type("MscDispatcher",
 			      (object,),
 			      {"_circuits": []}
