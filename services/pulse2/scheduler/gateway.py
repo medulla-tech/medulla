@@ -49,6 +49,9 @@ from pulse2.scheduler.health import getHealth
 from pulse2.scheduler.utils import UnixProtocol
 from pulse2.scheduler.dlp import DownloadQuery, get_dlp_method
 
+logger = logging.getLogger("msc")
+
+
 class SchedulerGateway(UnixProtocol):
     """
     Provides incomming requests from scheduler-proxy trough the unix socket.
@@ -144,7 +147,7 @@ class SchedulerGateway(UnixProtocol):
 
     ### XMLRPC functions used from a launcher ###
     def tell_i_am_alive(self, launcher):
-        logging.getLogger().info("Launcher %s tells us it is alive" % launcher)
+        logger.info("Launcher %s tells us it is alive" % launcher)
         return True
 
 
@@ -226,7 +229,7 @@ class SchedulerGateway(UnixProtocol):
         try:
             method = get_dlp_method(phase)
         except KeyError:
-            logging.getLogger().warn("Method %s not declared" % phase)
+            logger.warn("Method %s not declared" % phase)
             return False
         else :
             return xmlrpcCleanup(MscDispatcher().run_proxymethod("dlp",

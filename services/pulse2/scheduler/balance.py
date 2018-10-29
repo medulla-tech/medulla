@@ -27,6 +27,9 @@ import logging
 import random
 import time
 
+logger = logging.getLogger("pkgs")
+
+
 class ParabolicBalance (object):
     """
     A interpretation of run of the parabolic curve, based
@@ -71,7 +74,7 @@ class ParabolicBalance (object):
         if n in range(self.attempts_total+1)  :
             return self.delta * n
         else :
-            logging.getLogger().debug("ParabolicBalance: Out of area")
+            logger.debug("ParabolicBalance: Out of area")
 
     def fx (self, x):
         """
@@ -137,11 +140,11 @@ def randomListByBalance (balances, limit):
             # draw the treshold
             drw_coh = random.choice(sorted_keys)
 
-            logging.getLogger().debug("Keys to draw: %s " % str(sorted_keys))
+            logger.debug("Keys to draw: %s " % str(sorted_keys))
             treshold_idx = sorted_keys.index(drw_coh)
             # remove all the keys bellow the treshold
             sorted_keys = sorted_keys[-treshold_idx:]
-            logging.getLogger().debug("Reduced interval: %s " % str(sorted_keys))
+            logger.debug("Reduced interval: %s " % str(sorted_keys))
 
             count = 0
             selected = []
@@ -158,7 +161,7 @@ def randomListByBalance (balances, limit):
                 # OK when number of selected is more than 80% of limit
                 return selected
             else :
-                logging.getLogger().debug("List of drawed CoHs too small. Repeat the drawing")
+                logger.debug("List of drawed CoHs too small. Repeat the drawing")
 
 def getBalanceByAttempts (start_date, end_date, attempts_failed) :
     """
