@@ -311,4 +311,3 @@ class Collector(object):
         deferred.callback(result)
 
         return deferred
-

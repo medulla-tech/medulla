@@ -2,7 +2,7 @@
 ; Replaces all ocurrences of a given needle within a haystack with another string
 ; Written by dandaman32
 ; http://nsis.sourceforge.net/StrRep
- 
+
 Var STR_REPLACE_VAR_0
 Var STR_REPLACE_VAR_1
 Var STR_REPLACE_VAR_2
@@ -12,7 +12,7 @@ Var STR_REPLACE_VAR_5
 Var STR_REPLACE_VAR_6
 Var STR_REPLACE_VAR_7
 Var STR_REPLACE_VAR_8
- 
+
 Function StrReplace
   Exch $STR_REPLACE_VAR_2
   Exch 1
@@ -40,7 +40,7 @@ Function StrReplace
   Pop $STR_REPLACE_VAR_1 ; stack as it was before the function was called
   Exch $STR_REPLACE_VAR_0
 FunctionEnd
- 
+
 !macro _strReplaceConstructor OUT NEEDLE NEEDLE2 HAYSTACK
   Push "${HAYSTACK}"
   Push "${NEEDLE}"
@@ -48,5 +48,5 @@ FunctionEnd
   Call StrReplace
   Pop "${OUT}"
 !macroend
- 
+
 !define StrReplace '!insertmacro "_strReplaceConstructor"'

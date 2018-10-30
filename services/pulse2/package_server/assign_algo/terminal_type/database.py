@@ -61,5 +61,3 @@ def toUUID(id): # TODO : change this method to get a value from somewhere in the
 
 def fromUUID(uuid):
     return int(uuid.replace('UUID', ''))
-
-

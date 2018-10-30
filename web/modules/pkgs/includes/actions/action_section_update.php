@@ -21,7 +21,7 @@ extract($_POST);
         <input type="hidden" name="step" />
         <input id="laction" type="hidden" name="actionlabel" value="label_section_update"/>
     </div>
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" /> 
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
 </div>
 
 <script type="text/javascript">

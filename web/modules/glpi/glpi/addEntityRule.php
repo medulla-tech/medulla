@@ -24,7 +24,7 @@
 
 // Receiving form data
 if (isset($_POST['bconfirm'])){
-    
+
     //addEntity($_POST['name'], $_POST['parent'], $_POST['description']);
     if (empty($_GET['id'])){
         addEntityRule($_POST);
@@ -34,7 +34,7 @@ if (isset($_POST['bconfirm'])){
         editEntityRule($_GET['id'], $_POST);
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The entity rule has been edited successfully.", "glpi"));
     }
-    
+
 }
 
 require("modules/base/computers/localSidebar.php");
@@ -92,7 +92,7 @@ $f->add(
 // =================================
 
 $criteria_select = new SelectItem("criteria[]");
-   
+
 $criteria_select->setElementsVal(array('ip', 'name', 'domain', 'serial', 'subnet', 'tag'));
 $criteria_select->setElements(array(
     _T('IP Address', 'glpi'),
@@ -103,7 +103,7 @@ $criteria_select->setElements(array(
     _T('Inventory Tag', 'glpi')
                                        ));
 // Operator select
-                                       
+
 $operator_select = new SelectItem("operators[]");
 
 /*condition': 0=is, 1=is_not, 2=contains, 3=doesnt contain,  4=start with, 5= finishes by
@@ -123,13 +123,13 @@ $operators = array(
     _T('does not exist', 'glpi')
 );
 
-$operator_select->setElements(array_values($operators));        
+$operator_select->setElements(array_values($operators));
 $operator_select->setElementsVal(array_keys($operators));
 
 $pattern_input = new InputTpl('patterns[]');
 
 for ($i = 0 ; $i < count($rule['criteria']); $i++) {
-    
+
     // Fields
     $fields = array(
         $criteria_select,
@@ -137,20 +137,20 @@ for ($i = 0 ; $i < count($rule['criteria']); $i++) {
         $pattern_input,
         new buttonTpl2('removeLine',_T('Remove', 'glpi'),'removeLine')
     );
-    
+
     $values = array(
         $rule['criteria'][$i],
         $rule['operators'][$i],
         $rule['patterns'][$i],
         ''
     );
-    
+
     $f->add(
         new TrFormElement(_T('Criterion','glpi'), new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
     );
 }
-    
+
 // Add line button
 $addEntityRightBtn = new buttonTpl2('addLine',_T('Add criterion','glpi'));
 $addEntityRightBtn->setClass('btnPrimary');
@@ -163,15 +163,15 @@ $f->add(
 
 $entities_select = new SelectItem("target_entity");
 $entities = getUserLocations();
-    
+
 $entity_list = array();
 $entity_list['-1'] = _T('Do not assign', 'glpi');
 foreach ($entities as $entity){
     $id = str_replace('UUID', '', $entity['uuid']);
     $entity_list[$id] = $entity['name'];
 }
-    
-    
+
+
 $entities_select->setElements(array_values($entity_list));
 $entities_select->setElementsVal(array_keys($entity_list));
 
@@ -192,7 +192,7 @@ $location_list['-1'] = _T('Do not assign', 'glpi');
 foreach ($locations['data'] as $location){
     $location_list[$location['id']] = $location['name'];
 }
-    
+
 $locations_select->setElements(array_values($location_list));
 $locations_select->setElementsVal(array_keys($location_list));
 
@@ -209,16 +209,16 @@ $f->display();
 
 <script type="text/javascript">
 jQuery(function(){
-    
+
     modelLine = jQuery('.removeLine:first').parents('tr:first').clone();
-        
+
      // Remove line button
      jQuery('.removeLine').click(function(){
          if (jQuery('.removeLine').length > 1)
              jQuery(this).parents('tr:first').remove();
      });
-     
-     
+
+
      // Add line button
      jQuery('#addLine').click(function(){
         var newline = modelLine.clone().insertBefore(jQuery(this).parents('tr:first'));
@@ -230,7 +230,7 @@ jQuery(function(){
                 jQuery(this).parents('tr:first').remove();
         });
      });
-    
+
 });
 window.toto=1;
 </script>

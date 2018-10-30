@@ -43,11 +43,11 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         </tr>
 
         <?php
-          echo '<tr class="toggleable">'; 
+          echo '<tr class="toggleable">';
             if(isset($packageuuid))
             {
                 echo '<td width="16%">
-                    <input type="checkbox" checked 
+                    <input type="checkbox" checked
                         onclick="if(jQuery(this).is(\':checked\')){
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
                                 }
@@ -61,7 +61,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
             }
             else{
                 echo '<td width="16%">
-                    <input type="checkbox" 
+                    <input type="checkbox"
                         onclick="if(jQuery(this).is(\':checked\')){
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
                                 }
@@ -77,8 +77,8 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         <td></td><td></td>
             </tr>';
         ?>
-        
-        
+
+
         <tr class="toggleable">
             <?php
             if(isset($timeout))

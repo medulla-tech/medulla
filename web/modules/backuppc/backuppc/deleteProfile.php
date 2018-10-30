@@ -29,7 +29,7 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 if (isset($_POST["bconfirm"])) {
     $id = intval($_POST["id"]);
     $type = $_POST["type"];
-    
+
     // If id not set, or default profile exit script
     if (!$id or $id<1000) return;
 
@@ -38,17 +38,17 @@ if (isset($_POST["bconfirm"])) {
         $ret = delete_backup_profile($id);
     else
         $ret = delete_period_profile($id);
-    
-    if (!isXMLRPCError() and $ret != -1) 
+
+    if (!isXMLRPCError() and $ret != -1)
         new NotifyWidgetSuccess(_T("The profile has been deleted successfully.", "backuppc"));
-    
-    if ($ret == -1) 
+
+    if ($ret == -1)
         new NotifyWidgetFailure(_T("Failed to delete the selected profile", "backuppc"));
-    
+
     header("Location: " . urlStrRedirect("backuppc/backuppc/ViewProfiles"));
-    return;    
-} 
-else 
+    return;
+}
+else
 {
     $id = $_GET["id"];
     $type = $_GET["type"];
@@ -56,7 +56,7 @@ else
     // If default profile, we can't delete
     if ($id < 1000)
         print _T('Error : Default profiles cannot be deleted','backuppc');
-    
+
     $f = new PopupForm(_T("Delete this profile"));
     $hidden = new HiddenTpl("id");
     $f->add($hidden, array("value" => $id, "hide" => True));

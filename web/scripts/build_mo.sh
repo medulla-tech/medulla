@@ -25,4 +25,3 @@ for name in `find ${1} -type f -name *.po`
   done
 
 exit 0
-

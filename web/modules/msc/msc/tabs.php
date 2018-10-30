@@ -62,7 +62,7 @@ if ($_GET['uuid']) {
         //show list packages
         $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
         if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
-        // there is not bundle with xmpp 
+        // there is not bundle with xmpp
             $p->addTab("tabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
             $p->addTab("tablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
         }

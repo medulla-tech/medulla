@@ -66,6 +66,10 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback,sys
+
+logger = logging.getLogger("glpi")
+
+
 class Glpi91(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
@@ -85,7 +89,7 @@ class Glpi91(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.1')
+        logger.debug('Trying to detect if GLPI version is higher than 9.1')
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
@@ -93,10 +97,11 @@ class Glpi91(DyngroupDatabaseHelper):
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
         if LooseVersion(self._glpi_version) >=  LooseVersion("9.1") and LooseVersion(self._glpi_version) <=  LooseVersion("9.1.7"):
-            logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
+            logger.debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
-            logging.getLogger().debug('GLPI higher than version 9.1 was not detected')
+
+            logger.debug('GLPI higher than version 9.1 was not detected')
             return False
 
     @property
@@ -107,7 +112,7 @@ class Glpi91(DyngroupDatabaseHelper):
         return False
 
     def activate(self, config = None):
-        self.logger = logging.getLogger()
+        self.logger = logger
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Glpi don't need activation")
@@ -904,7 +909,7 @@ class Glpi91(DyngroupDatabaseHelper):
         elif query[2] == 'Register key':
             return base + [ self.regcontents]#self.collects, self.registries,
         elif query[2] == 'Register key value':
-            return base + [ self.regcontents, self.registries ]#self.collects, self.registries, 
+            return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -985,7 +990,7 @@ class Glpi91(DyngroupDatabaseHelper):
                             print str(e)
                             traceback.print_exc(file=sys.stdout)
                             ret.append(partA.like(self.encode(partB)))
-                                
+
             if ctx.userid != 'root':
                 ret.append(self.__filter_on_entity_filter(None, ctx))
             return and_(*ret)
@@ -2620,7 +2625,7 @@ class Glpi91(DyngroupDatabaseHelper):
             return self.searchOptions['en_US'][str(log.id_search_option)]
         except:
             if log.id_search_option != 0:
-                logging.getLogger().warn('I can\'t get a search option for id %s' % log.id_search_option)
+                logger.warn('I can\'t get a search option for id %s' % log.id_search_option)
             return ''
 
     def getLinkedActionValues(self, log):
@@ -2931,7 +2936,7 @@ class Glpi91(DyngroupDatabaseHelper):
         ret = query.all()
         session.close()
         return ret
-    
+
     @DatabaseHelper._sessionm
     def getAllVersion4Software(self, session, ctx, softname, version = ''):
         """

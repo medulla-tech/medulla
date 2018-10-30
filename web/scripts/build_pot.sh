@@ -34,11 +34,13 @@ for module in dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc sup
     fi
     find $fpath -iname "*.php" -exec xgettext -C -j -o ${POT} --language=PHP --keyword=$keyword {} \;
     # Build only the POT file
-    for name in `find modules/$module/locale -type f -name *.po`; do
-        echo -n "updating ${name}..."
-        msgmerge --update --add-location --sort-output ${name} ${POT}
-        echo "done"
-    done
+#    for name in `find modules/$module/locale -type f -name *.po`; do
+#        echo -n "updating ${name}..."
+#        msgmerge --update --add-location --sort-output ${name} ${POT}
+#        echo "done"
+#    done
 done
+
+sh scripts/fix_po_charset.sh
 
 exit 0

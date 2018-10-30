@@ -42,4 +42,3 @@ $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 ?>
-

@@ -30,7 +30,7 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $id = idGet();
-$group = null; 
+$group = null;
 if ($id) { $group = new Group($id, true); } else { exit(-1); }
 $name = $group->getName();
 $request = $group->getRequest();

@@ -35,6 +35,8 @@ from pulse2.imaging.image import PULSE2_IMAGING_GRUB_FNAME, PULSE2_IMAGING_SIZE_
 PULSE2_IMAGING_ISO_MENUFILE = 'menu.lst'
 PULSE2_IMAGING_ISO_INITRDFILE = 'initrd.gz'
 
+logger = logging.getLogger('imaging')
+
 
 class ISOImage:
 
@@ -51,7 +53,7 @@ class ISOImage:
         @param title: title of the image, in UTF-8
         @type title: str
         """
-        self.logger = logging.getLogger('imaging')
+        self.logger = logger
         self.config = config
         self.source = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder'], imageUUID)
         if not isPulse2Image(self.source):
@@ -138,7 +140,7 @@ class ISOImage:
         Fill the medialist dict with needed value to build the ISO image
         """
 
-        logging.getLogger('imaging').info("Iso image : starting volumes generation, max size is %s" % (self.size))
+        logger.info("Iso image : starting volumes generation, max size is %s" % (self.size))
 
         grubfile = os.path.join(self.config.imaging_api['base_folder'],
                                 self.config.imaging_api['bootloader_folder'],
@@ -167,7 +169,7 @@ class ISOImage:
                 filesize = os.stat(filepath).st_size
                 if medialist[medianumber]['mediasize'] + filesize > self.size:
                     medianumber += 1
-                    logging.getLogger('imaging').info("Iso image : max size of %s reached, stopping at %s and switching to volume %s" % \
+                    logger.info("Iso image : max size of %s reached, stopping at %s and switching to volume %s" % \
                                                       (self.size, medialist[medianumber-1]['mediasize'], medianumber))
                     medialist[medianumber] = {'mediasize': 0, 'files': {}, 'opts': ''}
                 medialist[medianumber]['mediasize'] += filesize

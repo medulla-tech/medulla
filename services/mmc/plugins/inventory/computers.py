@@ -31,9 +31,12 @@ from pulse2.managers.imaging import ComputerImagingManager
 import pulse2.utils
 import logging
 
+logger = logging.getLogger("inventory")
+
+
 class InventoryComputers(ComputerI):
     def __init__(self, conffile = None):
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.config = InventoryConfig()
         self.inventory = Inventory()
 
@@ -161,11 +164,11 @@ class InventoryComputers(ComputerI):
                 if network['macAddress'] and network['ipHostNumber']:
                     uuids.append(network['objectUUID'][0])
                 else:
-                    logging.getLogger().debug("Computer %s cannot be added in an imaging group:" % network['cn'])
+                    logger.debug("Computer %s cannot be added in an imaging group:" % network['cn'])
                     if not network['macAddress']:
-                        logging.getLogger().debug("No MAC found !")
+                        logger.debug("No MAC found !")
                     if not network['ipHostNumber']:
-                        logging.getLogger().debug("No IP address found !")
+                        logger.debug("No IP address found !")
             filt['uuids'] = uuids
 
         if justId:

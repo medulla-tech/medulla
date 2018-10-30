@@ -29,6 +29,9 @@ import logging
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 from mmc.plugins.dyngroup.config import DGConfig
 
+logger = logging.getLogger("dyngroup")
+
+
 def activate():
     conf = DGConfig()
     conf.init("dyngroup")
@@ -51,9 +54,9 @@ def extendedPossibilities():
     return ""
 
 def query(ctx, criterion, value):
-    logging.getLogger().info(ctx)
-    logging.getLogger().info(criterion)
-    logging.getLogger().info(value)
+    logger.info(ctx)
+    logger.info(criterion)
+    logger.info(value)
     machines = []
     if criterion == 'groupname':
         machines = map(lambda x: x.name, DyngroupDatabase().getMachines(ctx, {'gname':value}))

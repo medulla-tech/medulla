@@ -30,7 +30,7 @@ password=$2
 usage(){
     echo "Creates a new user in SoftEther VPN server"
     echo
-    echo "Usage:" 
+    echo "Usage:"
     echo "  $0 username password"
     echo
     exit 0
@@ -46,7 +46,7 @@ fi
 
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /HUB:$VPN_PULSE_HUB /CMD:UserCreate $username
     expect \"Password:\n\"
@@ -61,7 +61,7 @@ expect -c "
 echo "----- user $username successfully created ----- "
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /HUB:$VPN_PULSE_HUB /CMD:UserPasswordSet $username
     expect \"Password:\n\"
@@ -72,5 +72,3 @@ expect -c "
     send $password\r
     expect eof"
 echo "----- password for $username successfully set ----- "
-
-

@@ -246,5 +246,3 @@ class LaunchTimeResolver :
             exec_dates.append(self._get_date(delay))
 
         return exec_dates
-
-

@@ -29,7 +29,7 @@ $options = array(
     "class" => "os_repartitionPanel",
     "id" => "osrepartition",
     "refresh" => 960,
-    "title" => _T("Operating systems", "dashboard"),
+    "title" => _T("Operating systems", "glpi"),
 );
 
 class os_repartitionPanel extends Panel {

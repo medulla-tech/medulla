@@ -1,11 +1,11 @@
 pulse2 (3.9.92-2) unstable; urgency=low
- 
+
  * New snapshot
 
  -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 31 Jul 2017 22:00:11 +0100
 
 pulse2 (3.9.92-1) unstable; urgency=low
-  
+
  * New snapshot
 
  -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 16 Jan 2017 22:00:11 +0100
@@ -463,7 +463,7 @@ pulse2 (3.4-134) unstable; urgency=low
 pulse2 (3.4-133) unstable; urgency=low
 
   *     Revert "Mutable dict or list used as default argument to a method or function"
-    
+
     This reverts commit 1e32829839b290bbb293ca07b7bc4be4041e08c9.
 
 
@@ -633,7 +633,7 @@ pulse2 (3.4-6) unstable; urgency=low
 
 pulse2 (3.4-5) unstable; urgency=low
 
-  * Fix deps to python-pyinotify 
+  * Fix deps to python-pyinotify
 
  -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
 
@@ -646,7 +646,7 @@ pulse2 (3.4-4) unstable; urgency=low
 
 pulse2 (3.4-3) unstable; urgency=low
 
-  * Addition of tools in imaging and reorganising memtest and dban ( 889a2b1697542db81fd43a0d8005d1efc2df8e4f ) 
+  * Addition of tools in imaging and reorganising memtest and dban ( 889a2b1697542db81fd43a0d8005d1efc2df8e4f )
 
  -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
 
@@ -754,7 +754,7 @@ pulse2 (3.0.2-6) unstable; urgency=low
  -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
 
 pulse2 (3.0.2-5) unstable; urgency=low
-  * Fix postinst scripts 
+  * Fix postinst scripts
 
  -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
 

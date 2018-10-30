@@ -57,7 +57,7 @@ def initialize(config):
     @return: return False if initialization failed
     """
     ret = True
-    logger = logging.getLogger()
+    logger = logging.getLogger("pkgs")
 
     port = int(config.port)
 
@@ -127,8 +127,8 @@ def initialize(config):
                 logger.exception("Imaging error: %s" % e)
                 logger.error("PXE imaging service initialization failed, exiting.")
             else :
-                logger.info("Package Server initialized with PXE imaging API") 
-            
+                logger.info("Package Server initialized with PXE imaging API")
+
         except Exception, e:
             logger.exception("Imaging error: %s" % e)
             logger.error("Error while initializing the imaging API")
@@ -161,5 +161,3 @@ def initialize(config):
         ret = False
 
     return ret
-
-

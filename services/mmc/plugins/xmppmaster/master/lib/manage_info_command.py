@@ -21,32 +21,35 @@
 # MA 02110-1301, USA.
 
 
-#nota jfk todo implement class for gestion call from script or console.
-import sys,os,platform
+# nota jfk todo implement class for gestion call from script or console.
+import sys
+import os
+import platform
 import os.path
 import json
 from multiprocessing import Process, Queue, TimeoutError
 import threading
 from utils import getRandomName, call_plugin
-from  sleekxmpp import jid
+from sleekxmpp import jid
 import traceback
 import logging
 import time
 
-logger = logging.getLogger()
+logger = logging.getLogger("xmppmaster")
+
 
 class manage_infoconsole:
     def __init__(self, queue_in, queue_out, objectxmpp):
-        self.namethread =  getRandomName(5, "threadevent")
+        self.namethread = getRandomName(5, "threadevent")
         self.objectxmpp = objectxmpp
         self.queueinfo = queue_in
         self.queueinfoout = queue_out
-        self.threadevent = threading.Thread( name = self.namethread, target = self.loopinfoconsol)
+        self.threadevent = threading.Thread(name=self.namethread, target=self.loopinfoconsol)
         self.threadevent.start()
-        logging.info('manage event start')
+        logger.info('manage event start')
 
     def loopinfoconsol(self):
-        logging.info('loopinfoconsol')
+        logger.info('loopinfoconsol')
         while True:
             try:
                 event = self.queueinfo.get(60)
@@ -54,5 +57,5 @@ class manage_infoconsole:
                     break
                 self.objectxmpp.gestioneventconsole(event, self.queueinfoout)
             except Exception as e:
-                logging.error('error in manage infoconsole %s'%str(e))
-        logging.error('quit infocommand')
+                logger.error('error in manage infoconsole %s' % str(e))
+        logger.error('quit infocommand')

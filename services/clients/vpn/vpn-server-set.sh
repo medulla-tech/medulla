@@ -33,13 +33,13 @@ fi
 
 if [[ -n $( netstat -anp | grep LISTEN | grep ":$VPN_SERVER_PORT" | grep -v $VPN_SERVICE_NAME ) ]]; then
     echo "WARNING: Port ${VPN_SERVER_PORT} already in use."
-    exit 1;    
-fi	
+    exit 1;
+fi
 
 $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:ServerPasswordSet $VPN_ADMIN_PASSWORD
 echo "----- set password ok ----- "
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:HubCreate $VPN_PULSE_HUB
     sleep 1
@@ -53,7 +53,7 @@ expect -c "
 echo "----- create hub ok ----- "
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:BridgeCreate $VPN_PULSE_HUB /DEVICE:$VPN_TAP_IFACE /TAP:yes
     sleep 1
@@ -62,7 +62,7 @@ expect -c "
     expect eof"
 echo "----- create bridge ok ----- "
 
-# Configure DNS & DHCP service 		
+# Configure DNS & DHCP service
 echo "interface=tap_${VPN_TAP_IFACE}" >> /etc/dnsmasq.conf
 echo "dhcp-range=tap_${VPN_TAP_IFACE},${VPN_DHCP_RANGE},${VPN_DHCP_LEASE}h" >> /etc/dnsmasq.conf
 #echo "dhcp-option=tap_${VPN_TAP_IFACE},3,${VPN_TAP_ADDRESS}" >> /etc/dnsmasq.conf
@@ -82,7 +82,7 @@ service dnsmasq restart
 
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /HUB:$VPN_PULSE_HUB /CMD:GroupCreate $VPN_PULSE_GROUP
     sleep 1
@@ -96,7 +96,7 @@ expect -c "
 echo "----- group create ok ----- "
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:IPSecEnable
     sleep 1
@@ -116,7 +116,7 @@ expect -c "
 echo "----- IPSec ok ----- "
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:ServerCertRegenerate $fqdn
     sleep 1
@@ -126,7 +126,7 @@ expect -c "
 echo "----- ServerCertRegenerate for $fqdn ok ----- "
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:ServerCertGet $VPN_CRT_PATH
     sleep 1
@@ -136,7 +136,7 @@ expect -c "
 echo "----- ServerCertGet to $VPN_CRT_PATH ok ----- "
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:SstpEnable yes
     sleep 1
@@ -146,7 +146,7 @@ expect -c "
 echo "----- SstpEnable ok ----- "
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:OpenVpnEnable yes /PORTS:1194
     sleep 1
@@ -156,7 +156,7 @@ expect -c "
 echo "----- OpenVpnEnable ok ----- "
 
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:OpenVpnMakeConfig $VPN_OPENVPN_CONFIG_ARCHIVE
     sleep 1
@@ -164,5 +164,3 @@ expect -c "
     send $VPN_ADMIN_PASSWORD\r
     expect eof"
 echo "----- OpenVpnMakeConfig save ok ----- "
-
-

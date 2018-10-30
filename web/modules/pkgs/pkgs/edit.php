@@ -424,13 +424,27 @@ if(isExpertMode())
         new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => $setlimit_rate_ko), array('placeholder' => _T('<in ko>', 'pkgs')))
     );
 
+    if(isset($json['info']['spooling']))
+    {
+        $spooling = $json['info']['spooling'];
+    }
+    else
+    {
+        $spooling = 'ordinary';
+    }
+    $rb = new RadioTpl("spooling");
+    $rb->setChoices(array(_T('high priority', 'pkgs'), _T('ordinary priority', 'pkgs')));
+    $rb->setvalues(array('high', 'ordinary'));
+    $rb->setSelected($spooling);
+    $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
+
     if(isset($json["info"]["launcher"]) && $json["info"]["launcher"] != "")
     {
         $launcher = (base64_decode($json["info"]["launcher"], true) != false)? $launcher = base64_decode($json["info"]["launcher"]) : $json["info"]["launcher"];
     }
-  else{
+    else{
     $launcher = "";
-  }
+    }
     $f->add(
             new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")), ["value"=>$launcher,"placeholder"=>"C:\Program Files\my_app\app.exe"]
     );

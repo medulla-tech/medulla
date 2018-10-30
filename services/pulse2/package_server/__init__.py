@@ -42,10 +42,13 @@ from twisted.internet import defer
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
+logger = logging.getLogger("pkgs")
+
+
 class ThreadPackageHelper(Thread):
     def __init__(self, config):
         Thread.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.config = config
         self.working = False
 
@@ -60,14 +63,14 @@ class ThreadPackageDetect(ThreadPackageHelper):
                 self.logger.debug("###############= ThreadPackageDetect already running")
                 return
             self.working = True
-            logging.getLogger().debug("\n")
-            logging.getLogger().debug("###############> ThreadPackageDetect is running")
+            logger.debug("\n")
+            logger.debug("###############> ThreadPackageDetect is running")
             if self.config.package_detect_tmp_activate:
                 Common().moveCorrectPackages()
             Common().detectNewPackages()
-            logging.getLogger().debug("###############< ThreadPackageDetect end\n")
+            logger.debug("###############< ThreadPackageDetect end\n")
         except Exception, e:
-            logging.getLogger().error('an Exception happened when trying to detect packages:' + str(e))
+            logger.error('an Exception happened when trying to detect packages:' + str(e))
         self.working = False
 
     def run(self):

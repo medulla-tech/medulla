@@ -27,5 +27,5 @@ echo "Usage: /etc/init.d/vnc4server {start|stop}"
 exit 1
 ;;
 esac
-  
+
 exit 0

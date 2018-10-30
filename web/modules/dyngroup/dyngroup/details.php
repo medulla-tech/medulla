@@ -59,8 +59,3 @@ if ($group->canShow()) {
 ?>
 
 </form>
-
-
-
-
-

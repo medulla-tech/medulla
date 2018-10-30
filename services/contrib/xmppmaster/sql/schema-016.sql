@@ -67,4 +67,3 @@ UNLOCK TABLES;
 UPDATE version SET Number = 16;
 
 COMMIT;
-

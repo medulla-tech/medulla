@@ -51,6 +51,8 @@ from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 
 
 MAX_REQ_NUM = 100
+logger = logging.getLogger("inventory")
+
 
 class UserTable(object):
     pass
@@ -81,7 +83,7 @@ class Inventory(DyngroupDatabaseHelper):
     def activate(self, config):
         # Activating or not SQLAlchemy logging
         #logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-        self.logger = logging.getLogger()
+        self.logger = logger
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Inventory doesn't need activation")
@@ -243,7 +245,7 @@ class Inventory(DyngroupDatabaseHelper):
         Set user locations in current security context.
         """
         if not hasattr(ctx, "locations") or ctx.locations == None:
-            logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
+            logger.debug("adding locations in context for user %s" % (ctx.userid))
             ctx.locations = self.getUserLocations(ctx.userid)
             ctx.locationsid = map(lambda e: e.id, ctx.locations)
 
@@ -527,10 +529,10 @@ class Inventory(DyngroupDatabaseHelper):
                     attributcomputer =  m.toDN(ctx)[1]
                     keycomputer =attributcomputer.keys()
                     for ky in keycomputer:
-                        computers[m.uuid()][1][ky] = attributcomputer[ky]            
-            
-            
-            
+                        computers[m.uuid()][1][ky] = attributcomputer[ky]
+
+
+
             ret = []
             for uuid in uuids:
                 ret.append(computers[uuid])
@@ -845,7 +847,7 @@ class Inventory(DyngroupDatabaseHelper):
         @rtype: tuple
         """
         if "Network" in inventory :
-            logging.getLogger().debug("Try to associate a MAC address to an existing machine")
+            logger.debug("Try to associate a MAC address to an existing machine")
             networks = inventory["Network"]
             for network in networks:
                 # This "network" (read: nic) xml entry contains a mac address
@@ -855,7 +857,7 @@ class Inventory(DyngroupDatabaseHelper):
                     # virtual attribute means it's a virtual network interface (vpn...)
                     # which may contains duplicates addresses
                     if not 'Virtual' in network or network['Virtual'] == '0':
-                        logging.getLogger().info("Trying to associate to an existing machine using MAC %s" % mac)
+                        logger.info("Trying to associate to an existing machine using MAC %s" % mac)
                         machines = self.getMachinesBy(ctx,
                                                       "Network",
                                                       "MACAddress",
@@ -866,14 +868,14 @@ class Inventory(DyngroupDatabaseHelper):
                             uuid = machines[0]["uuid"]
                             name = machines[0]["hostname"]
                             message = "Match found using MAC %s! UUID: %s Hostname: %s" % (mac, uuid, name)
-                            logging.getLogger().info(message)
+                            logger.info(message)
                             return mac, uuid, name
                         elif len(machines) > 1 :
-                            logging.getLogger().warn("Cannot resolve machine name: duplicate MAC address (%s)" % mac)
+                            logger.warn("Cannot resolve machine name: duplicate MAC address (%s)" % mac)
                         else:
-                            logging.getLogger().debug("Cannot find a machine with MAC %s" % mac)
+                            logger.debug("Cannot find a machine with MAC %s" % mac)
                     else:
-                        logging.getLogger().info("Skipping MAC %s, interface is marked as being virtual" % mac)
+                        logger.info("Skipping MAC %s, interface is marked as being virtual" % mac)
 
         return None, None, None
 
@@ -1466,7 +1468,7 @@ class Inventory(DyngroupDatabaseHelper):
         if not (isUUID(location_uuid)):
             # if location is not valid, raise a ValueError
             msg = "inventory.addMachine() : tried to add a computer on an invalid entity (%s), linking it to the root entity" % location_uuid
-            logging.getLogger().warn(msg)
+            logger.warn(msg)
             raise ValueError(msg)
 
         assert(isUUID(location_uuid))
@@ -1823,7 +1825,7 @@ class Inventory(DyngroupDatabaseHelper):
         #clear entitie of deleted user
         if fkuser != -1:
             self.delUserEntitiesbyfkUser(fkuser)
-            
+
     def updateNameWithHardwareHost(self, uuid, name):
         """
         machine name is synchronised with hardware's host
@@ -1835,7 +1837,7 @@ class Inventory(DyngroupDatabaseHelper):
                     .join(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
                     .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
                 )
-        query = query.filter( 
+        query = query.filter(
                 and_(
                     self.machine.c.id == fromUUID(uuid),
                     self.inventory.c.Last == 1,
@@ -1847,9 +1849,9 @@ class Inventory(DyngroupDatabaseHelper):
         query1 = query1.select_from(self.hardware
                     .join(self.table['hasHardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
                     .join(self.machine, self.machine.c.id == self.table['hasHardware'].c.machine)
-                    .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)                 
+                    .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
                 )
-        query1 = query1.filter( 
+        query1 = query1.filter(
                 and_(
                     self.machine.c.id == fromUUID(uuid),
                     self.inventory.c.Last == 1,
@@ -1924,13 +1926,13 @@ class Inventory(DyngroupDatabaseHelper):
         try:
             params['max']
         except KeyError:
-            params['max'] = str(len(tabretour)+1) 
+            params['max'] = str(len(tabretour)+1)
         ref1={}
         ref1['count']=len(tabretour)
         ref1['data']=tabretour[int(params['min']):int(params['max'])]
         return ref1
 
-    def moveEntityRuleUp(self, idrule):        
+    def moveEntityRuleUp(self, idrule):
         idrule1 = int(idrule)
         newNumRule = idrule1 - 1
         if (idrule1 -1) <= 0:
@@ -1968,10 +1970,10 @@ class Inventory(DyngroupDatabaseHelper):
     def confFileRule(self):
         cfgfile = os.path.join(mmcconfdir,"pulse2","inventory-server","inventory-server.ini")
         config = Pulse2OcsserverConfigParser()
-        config.setup(cfgfile) 
+        config.setup(cfgfile)
         if not config.entities_rules_file:
-            logging.getLogger().warn("Error conf file  entities_rules_file in inventory-server.ini missing")
-            raise 
+            logger.warn("Error conf file  entities_rules_file in inventory-server.ini missing")
+            raise
         if not os.path.isfile(config.entities_rules_file):
             fichier = open(config.entities_rules_file, "w")
             fichier.close()
@@ -1987,11 +1989,11 @@ class Inventory(DyngroupDatabaseHelper):
                         actif="#"
                     else:
                         actif=""
-                    fichier.write("#@%d" % (index+1) + "\n")  
+                    fichier.write("#@%d" % (index+1) + "\n")
                     strstring= "%s\"%s\"   %s   %s   %s   %s" % (actif,
                                                      ref['data'][index1]['entitie'],
                                                      ref['data'][index1]['aggregator'],
-                                                     ref['data'][index1]['operand1'],  
+                                                     ref['data'][index1]['operand1'],
                                                      ref['data'][index1]['operator'],
                                                      ref['data'][index1]['operand2'])
                     fichier.write(strstring + "\n")
@@ -2030,7 +2032,7 @@ class Inventory(DyngroupDatabaseHelper):
         rulestab = []
         tabretour=[]
         operatorlist=["match","equal","noequal","contains","nocontains","starts","finishes"]
-        #conffile = mmcconfdir + '/pulse2/inventory-server/entities-rules'        
+        #conffile = mmcconfdir + '/pulse2/inventory-server/entities-rules'
         actif = False
         tab=[]
         ret={}
@@ -2039,8 +2041,8 @@ class Inventory(DyngroupDatabaseHelper):
 
         for line in file(conffile):
             line = line.replace('\t',' ')
-            line = line.strip()          
-            #line empty ignored 
+            line = line.strip()
+            #line empty ignored
             if not line.strip():
                 continue
             #line comment actif
@@ -2053,8 +2055,8 @@ class Inventory(DyngroupDatabaseHelper):
             else:
                 actif = True
 
-            ## line two comments deleted 
-            if line.startswith('#'):        
+            ## line two comments deleted
+            if line.startswith('#'):
                continue
             try:
                 ## The first column may contain the quoted entity list
@@ -2065,15 +2067,15 @@ class Inventory(DyngroupDatabaseHelper):
                     rule = m.group(2)
                 else:
                     entities, rule = line.split(None, 1)
-                ## rule line working on severals entity 
+                ## rule line working on severals entity
                 entitieslist = entities.split(',')
                 entitieslist1 = [x for x in entitieslist if re.match('^[a-zA-Z0-9]{3,64}$', x)]
                 entitieslist = [x for x in entitieslist1 if self.locationExists(x)]
                 entitiesNoExist = list(set(entitieslist1) - set(entitieslist))
                 if len(entitiesNoExist) != 0:
                     self.logger.debug('entities %s not exist ' % (entitiesNoExist))
-                # list empty  
-                if len(entitieslist) <= 0: #not entitieslist:# and 
+                # list empty
+                if len(entitieslist) <= 0: #not entitieslist:# and
                     self.logger.debug('empty list entity')
                     continue
 
@@ -2084,15 +2086,15 @@ class Inventory(DyngroupDatabaseHelper):
                 subexprs = []
                 if not words or ( len(words) < 3) :
                     self.logger.debug('wrong format online')
-                    # line mal former                 
+                    # line mal former
                     continue
-                
+
                 if len(words) == 4 and words[0].lower() in ['and', 'or']:
                     prefix = words[0].lower()
                     words = words[1:]
                 elif len(words) == 3 :
                     prefix = ""
-                else:    
+                else:
                     self.logger.debug('operator error in rule')
                     continue
                 operand1, operator, operand2 = words[0:3]
@@ -2146,7 +2148,7 @@ class Inventory(DyngroupDatabaseHelper):
         ref = self.parse_file_rule()
         nb_regle = int(ref['nb_regle'])
         nb_ligne = int(ref['count'])
-        if int(idrule) > (nb_regle): 
+        if int(idrule) > (nb_regle):
             return False
         for index in range(0, nb_ligne):
             numRule = int(ref['data'][index]['numRule'])
@@ -2182,7 +2184,7 @@ class Inventory(DyngroupDatabaseHelper):
         nb_regle = int(ref['nb_regle'])
         nb_ligne = int(ref['count'])
         numreglemodifier = int(ruleobj['numRuleadd'])
-        #if numreglemodifier < 
+        #if numreglemodifier <
         for index in range(0, nb_ligne):
             numRule = int(ref['data'][index]['numRule'])
             if numRule == int(idrule):
@@ -2914,7 +2916,7 @@ class Inventory(DyngroupDatabaseHelper):
         try:
             from mmc.plugins.inventory.config import InventoryConfig
         except:
-            logging.getLogger().error('Cannot import InventoryConfig, make sure that inventory module is installed')
+            logger.error('Cannot import InventoryConfig, make sure that inventory module is installed')
             return
 
         # Reading red and orange thresholds
@@ -2938,7 +2940,7 @@ class Inventory(DyngroupDatabaseHelper):
         try:
             from mmc.plugins.dyngroup.config import DGConfig
         except:
-            logging.getLogger().error('Cannot import DGConfig module, make sure that dyngroup module is installed')
+            logger.error('Cannot import DGConfig module, make sure that dyngroup module is installed')
             return
 
         (red, orange) = self.getLastInventoryThresholds()
@@ -3052,7 +3054,7 @@ class Inventory(DyngroupDatabaseHelper):
 
         machine_id = fromUUID(machine_uuid)
 
-        logging.getLogger().info("Trying to update the owner (machine UUID%s)" % (machine_id))
+        logger.info("Trying to update the owner (machine UUID%s)" % (machine_id))
 
         query = session.query(Hardware)
         query = query.select_from(self.hardware.join(self.table['hasHardware'],
@@ -3069,7 +3071,7 @@ class Inventory(DyngroupDatabaseHelper):
             hardware.Owner = self.getAvgOwner(machine_uuid)
             session.add(hardware)
             session.flush()
-            logging.getLogger().info("New owner of machine UUID%s is %s" % (machine_id, hardware.Owner))
+            logger.info("New owner of machine UUID%s is %s" % (machine_id, hardware.Owner))
 
         session.close()
 
@@ -3156,11 +3158,11 @@ def orderIpAdresses(netiface):
     ret_ids = []
     idx_good = 0
     for iface in netiface:
-        logging.getLogger().debug("Examined network interface: %s" % str(iface))
+        logger.debug("Examined network interface: %s" % str(iface))
         if 'IP' in iface and iface['IP'] and iface['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
-            logging.getLogger().debug('can work on')
+            logger.debug('can work on')
             if iface['Gateway'] == None or iface['Gateway'] == '':
-                logging.getLogger().debug("no gateway")
+                logger.debug("no gateway")
                 ret_ifmac.append(iface['MACAddress'])
                 ret_ifaddr.append(iface['IP'])
                 ret_netmask.append(iface['SubnetMask'])
@@ -3168,13 +3170,13 @@ def orderIpAdresses(netiface):
             else:
                 if same_network(iface['IP'], iface['Gateway'], iface['SubnetMask']):
                     idx_good += 1
-                    logging.getLogger().debug("same net")
+                    logger.debug("same net")
                     ret_ifmac.insert(0, iface['MACAddress'])
                     ret_ifaddr.insert(0, iface['IP'])
                     ret_netmask.insert(0, iface['SubnetMask'])
                     ret_ids.insert(0, iface['id'])
                 else:
-                    logging.getLogger().debug("not same net")
+                    logger.debug("not same net")
                     ret_ifmac.insert(idx_good, iface['MACAddress'])
                     ret_ifaddr.insert(idx_good, iface['IP'])
                     ret_netmask.insert(idx_good, iface['SubnetMask'])
@@ -3230,9 +3232,9 @@ class InventoryCreator(Inventory):
             k = i+k
         if k == 0:
             return False
-        
-        
-        
+
+
+
         dates = date.split(' ')
         if len(dates) != 2:
             # Fix needed for MAC OS OCS inventory agent, which is using a
@@ -3254,7 +3256,7 @@ class InventoryCreator(Inventory):
                     m = machines[0]
                 else :
                     session.close()
-                    logging.getLogger().error("Computer %s seem to appear more than one time in database" %
+                    logger.error("Computer %s seem to appear more than one time in database" %
                                                hostname)
                     return False
             else :
@@ -3362,14 +3364,14 @@ class InventoryCreator(Inventory):
                                     try:
                                         int(entry[field])
                                     except ValueError:
-                                        logging.getLogger().warning("The field %s of the table %s is going to be set to ZERO, please report to us." % (field, table))
-                                        logging.getLogger().debug("The value |%s| become |0|" % (entry[field]))
+                                        logger.warning("The field %s of the table %s is going to be set to ZERO, please report to us." % (field, table))
+                                        logger.debug("The value |%s| become |0|" % (entry[field]))
                                         trunc_entry[field] = '0'
                                 if hasattr(attr, 'length'):
                                     length = attr.length
                                     if len(entry[field]) >= length:
-                                        logging.getLogger().warning("The field %s of the table %s is going to be truncated at %s chars, please report to us."%(field, table, length))
-                                        logging.getLogger().debug("The value |%s| become |%s|"%(entry[field], entry[field][0:length]))
+                                        logger.warning("The field %s of the table %s is going to be truncated at %s chars, please report to us."%(field, table, length))
+                                        logger.debug("The value |%s| become |%s|"%(entry[field], entry[field][0:length]))
                                         trunc_entry[field] = entry[field][0:length]
 
                         # Look up these columns in the inventory table
@@ -3427,7 +3429,7 @@ class InventoryCreator(Inventory):
                     except UnicodeDecodeError, e: # just for test
                         pass
                     except Exception, e:
-                        logging.getLogger().exception(e)
+                        logger.exception(e)
                         pass
                 # closes for block
             # closes for block on inventory parts
@@ -3436,7 +3438,7 @@ class InventoryCreator(Inventory):
         except Exception, e:
             session.rollback()
             session.close()
-            logging.getLogger().exception(e)
+            logger.exception(e)
             raise e
 
         session.close()
@@ -3478,8 +3480,8 @@ class InventoryNetworkComplete :
                     inventory["Network"][0]["SubnetMask"] = netmask
                     inventory["Network"][0]["Gateway"] = gateway
 
-                    logging.getLogger().debug("Resolved netmask: %s" % netmask)
-                    logging.getLogger().debug("Resolved gateway: %s" % gateway)
+                    logger.debug("Resolved netmask: %s" % netmask)
+                    logger.debug("Resolved gateway: %s" % gateway)
 
                     self._inventory = inventory
 
@@ -3511,8 +3513,8 @@ class InventoryNetworkComplete :
 
         except IOError :
 
-            logging.getLogger().warn("Cannot read file '%s'" % filename)
-            logging.getLogger().warn("Ignore to get the netmask and gateway")
+            logger.warn("Cannot read file '%s'" % filename)
+            logger.warn("Ignore to get the netmask and gateway")
 
             return False, False
 

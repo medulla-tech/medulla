@@ -33,13 +33,15 @@ except ImportError:
 
 from pulse2.utils import xmlrpcCleanup
 
+logger = logging.getLogger("pulse2")
+
 
 class ForwardingProxy(XMLRPC):
     """ XMLRPC Scheduler Proxy """
 
     def __init__(self, config):
         XMLRPC.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.config = config
 
     def register_forwarder(self, forwarder):
@@ -52,7 +54,7 @@ class ForwardingProxy(XMLRPC):
         return xmlrpclib.Fault(self.FAILURE, "Internal Error")
 
     def client_response(self, result, request, func, args):
-        
+
         if request :
             request.setHeader("content-type", "text/xml")
             return self._cbRender(result, request, func, args)
@@ -86,7 +88,7 @@ class ForwardingProxy(XMLRPC):
             args, func_name = xmlrpclib.loads(request.content.read())
         except Exception, e:
             self.logger.error("xmlrpc render failed: %s"% str(e))
- 
+
             return NOT_DONE_YET
 
         if not self._auth_validate(request, func_name, args):
@@ -98,14 +100,14 @@ class ForwardingProxy(XMLRPC):
         return NOT_DONE_YET
 
     def _auth_validate(self, request, func_name, args):
-        cleartext_token = '%s:%s' % (self.config.username, 
+        cleartext_token = '%s:%s' % (self.config.username,
                                      self.config.password)
-        token = '%s:%s' % (request.getUser(), 
+        token = '%s:%s' % (request.getUser(),
                            request.getPassword())
         if token != cleartext_token:
             self.logger.error("Invalid login / password for HTTP basic authentication")
             request.setResponseCode(http.UNAUTHORIZED)
-            self._cbRender(Fault(http.UNAUTHORIZED, 
+            self._cbRender(Fault(http.UNAUTHORIZED,
                                  "Unauthorized: invalid credentials to connect to this Pulse 2 Scheduler Proxy, basic HTTP authentication is required"),
                            request,
                            func_name,
@@ -114,4 +116,3 @@ class ForwardingProxy(XMLRPC):
             return False
         else :
             return True
-

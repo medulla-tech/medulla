@@ -7,24 +7,24 @@ inv_file="${PREFIX}/inventory.url"
 
 if [ -e ${ssh_pub_key} ]; then
     if ! [ -d "/root/.ssh" ]; then
-	echo "Create missing SSH profile ..."   
+	echo "Create missing SSH profile ..."
         mkdir -p /root/.ssh
-    fi 	
-    	
+    fi
+
     tee -a /root/.ssh/authorized_keys < ${ssh_pub_key}
     rm -f ${ssh_pub_key}
-fi	
+fi
 
 
-fusion_cfg="/etc/fusioninventory/agent.cfg" 
+fusion_cfg="/etc/fusioninventory/agent.cfg"
 url=$(sed '1q;d' ${inv_file})
 tag=$(sed '2q;d' ${inv_file})
 if [ -z "$url" ]; then
-    echo "ERROR: Unable to get inventory server URL"	    
+    echo "ERROR: Unable to get inventory server URL"
     exit 1
-else    
+else
     echo "INFO: Detected inventory url - $url"
-fi 
+fi
 
 
 if [ -f ${fusion_cfg} ];then
@@ -34,7 +34,7 @@ if [ -f ${fusion_cfg} ];then
     grep -q "${tag}" ${fusion_cfg} || echo "${tag}" >> ${fusion_cfg}
     rm -f ${inv_file}
 else
-    echo "ERROR: Unable to find fusioninventory config file"	
+    echo "ERROR: Unable to find fusioninventory config file"
     exit 1
 fi
 
@@ -42,15 +42,15 @@ if hash x11vnc 2>/dev/null; then
 
     x11_cfg="x11vnc.desktop"
 
-    echo "[Desktop Entry]" >> $x11_cfg   
-    echo "Type=Application" >> $x11_cfg   
-    echo "Name=x11vnc" >> $x11_cfg   
-    echo "Exec=x11vnc -many -rfbport 5900 -listen localhost" >> $x11_cfg   
+    echo "[Desktop Entry]" >> $x11_cfg
+    echo "Type=Application" >> $x11_cfg
+    echo "Name=x11vnc" >> $x11_cfg
+    echo "Exec=x11vnc -many -rfbport 5900 -listen localhost" >> $x11_cfg
 
     for user in /home/*; do
         mkdir -p $user/.config/autostart/
-        cp $x11_cfg $user/.config/autostart/    
-    done	
+        cp $x11_cfg $user/.config/autostart/
+    done
 fi
 
 if hash linuxvnc 2>/dev/null; then
@@ -60,4 +60,3 @@ fi
 
 echo "INFO: Running initial inventory"
 /usr/bin/fusioninventory-agent
-

@@ -42,7 +42,7 @@ setup(
     ],
 
     keywords='pulse2',
-    name='pulse2', 
+    name='pulse2',
     version='4.5',
     debian_distro='stretch',
     description = 'pulse2',
@@ -54,4 +54,3 @@ setup(
     extras_require={},
     install_requires=[],
     )
-

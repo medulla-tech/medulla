@@ -27,7 +27,7 @@ SET NAMES 'utf8';
 ALTER TABLE  `Menu` ADD  `custom_menu` TINYINT NOT NULL DEFAULT  '0' AFTER  `hidden_menu`;
 
 -- Add pxe_password and pxe_keymap to Entity table
-ALTER TABLE  `Entity` ADD  `pxe_password` VARCHAR( 255 ) NOT NULL DEFAULT  '', 
+ALTER TABLE  `Entity` ADD  `pxe_password` VARCHAR( 255 ) NOT NULL DEFAULT  '',
                       ADD  `pxe_keymap` VARCHAR( 10 ) NOT NULL DEFAULT  'C';
 
 -- Adding keymap field for languages (and setting it for existing records)

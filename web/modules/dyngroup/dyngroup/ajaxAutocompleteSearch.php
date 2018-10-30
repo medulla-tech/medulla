@@ -49,7 +49,7 @@ print json_encode($output);
 return;
 print '<ul>';
 foreach($res as $items) {
-    ?> <li><?php echo  $items ?></li> <?php 
+    ?> <li><?php echo  $items ?></li> <?php
 }
 print '</ul>';
 

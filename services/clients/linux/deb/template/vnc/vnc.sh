@@ -9,4 +9,3 @@ if dpkg -l|grep xinit > /dev/null; then
 else
     ./linuxvnc.sh && exit 0
 fi
-

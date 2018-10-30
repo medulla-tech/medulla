@@ -32,10 +32,10 @@ class StatisticsProcessing :
     """
     Provides the periodical and final updates of global command statistics.
 
-    Statistics are periodically updated to have a global sumarization 
+    Statistics are periodically updated to have a global sumarization
     of states of commands on host.
 
-    Final statistics update is called on the last switching a circuit 
+    Final statistics update is called on the last switching a circuit
     to overtimed state. This update is scheduled with a delay having
     the possibility to cancel if the previous updated circuit wasn't
     the last definitive circuit of updated command.
@@ -47,11 +47,11 @@ class StatisticsProcessing :
 
     # previous commands (missing command == expired)
     previous = []
-    
+
 
     def __init__(self, config):
         self.config = config
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger("pulse2")
 
     def update(self, cmd_id=None):
         """ Updates the global statistics or just for one command """
@@ -61,7 +61,7 @@ class StatisticsProcessing :
             self.stats = self._get_stats()
 
         self.check_and_schedule_for_expired()
-    
+
     def check_and_schedule_for_expired(self):
         """Looks for expired commands and schedules an update"""
         for cmd_id in self.previous :
@@ -70,7 +70,7 @@ class StatisticsProcessing :
                 self.watchdog_schedule(cmd_id)
 
         self.previous = self.stats.keys()
- 
+
 
 
     def _get_stats(self, cmd_id=None):
@@ -107,7 +107,7 @@ class StatisticsProcessing :
         try:
             process_non_valid(self.config.name,
                               self.config.non_fatal_steps)
- 
+
             all_stats = self._get_stats(cmd_id)
             stats = all_stats[cmd_id]
 
@@ -135,5 +135,3 @@ class StatisticsProcessing :
         call_id = reactor.callLater(10, self._update_for, cmd_id)
 
         self.wdogs[cmd_id] = call_id
- 
-

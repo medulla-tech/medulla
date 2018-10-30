@@ -83,7 +83,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
     </table>
         <!-- Option timeout -->
     </div>
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" /> 
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
    <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
 </div>
 

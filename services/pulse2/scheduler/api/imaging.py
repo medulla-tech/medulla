@@ -24,7 +24,7 @@
 import logging
 from pulse2.scheduler.api.mmc_client import RPCClient
 
-log = logging.getLogger()
+log = logging.getLogger("imaging")
 
 class ImagingAPI(RPCClient):
     def synchroComputer(self, uuid, wol = False):

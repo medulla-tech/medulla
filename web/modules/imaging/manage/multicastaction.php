@@ -30,25 +30,25 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
  // fichier /tmp/multicast.sh existe
  // multicast lancer "affichage seulement bouton arrêt" voir aprés pour bar de progression
  // multicast non lancer "affichage seulement bouton stop"
- 
- // cas extreme 
+
+ // cas extreme
  // cas si  fichier /tmp/multicast.sh n'existe plus et /tmp/multicast.sh lancer normalement possible
  // stoper /tmp/multicast.sh
- 
+
  // action bouton arret
  // 1)  stoper /tmp/multicast.sh
  // 2)  supprimer le fichier /tmp/multicast.sh
  // 3) regénéré les menus  unicast
- 
+
  // action bouton marche
  // 1) start /tmp/multicast.sh
 
 extract($_POST);
 
 $objprocess=array();
-if (    isset($multicast) && 
-        isset($location) && 
-        isset($process)&& 
+if (    isset($multicast) &&
+        isset($location) &&
+        isset($process)&&
         isset($path) &&
         $location !="" &&
         $process !=""){
@@ -148,5 +148,5 @@ if (    isset($multicast) &&
             break;
     }
 }
-redirectTo(urlStrRedirect("imaging/manage/index/")); 
+redirectTo(urlStrRedirect("imaging/manage/index/"));
 ?>

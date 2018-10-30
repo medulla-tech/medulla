@@ -37,8 +37,6 @@ class NotInitializedError(Exception):
         return "Buffer not initialized"
 
 
-
-
 def initialized(method):
     """
     Blocks the decorated method when _initialized attribute is False.
@@ -55,13 +53,14 @@ def initialized(method):
 
     return wrapped
 
+logger = logging.getLogger("pulse2")
 
 
 class SendingBuffer(object):
     __metaclass__ = SingletonN
 
     """
-    Provides a LIFO buffer processing the responses from launchers. 
+    Provides a LIFO buffer processing the responses from launchers.
     """
 
     packets = []
@@ -73,8 +72,8 @@ class SendingBuffer(object):
     def init(self, config):
         self.config = config
         self._initialized = True
-        self.logger = logging.getLogger()
- 
+        self.logger = logger
+
     def register_sender(self, sender):
         self.sender = sender
 
@@ -93,7 +92,7 @@ class SendingBuffer(object):
         packet = self.packets[0]
         del self.packets[0]
         self.sender.call_remote(packet)
-        logging.getLogger().debug("Remaining requests to send: %d" % (len(self.packets))) 
+        logger.debug("Remaining requests to send: %d" % (len(self.packets)))
 
     @initialized
     def backup_buffer(self):
@@ -113,14 +112,14 @@ class SendingBuffer(object):
         """
         Restoring the backuped responses from a temp file.
 
-        When the scheduler-proxy service starts, this runtime checks 
+        When the scheduler-proxy service starts, this runtime checks
         the content of temp file for unsent responses.
         This content is moved to internal buffer to resend.
         """
-        try: 
+        try:
             if os.path.exists(self.config.scheduler_proxy_buffer_tmp):
                 self.logger.info("XMLRPC Proxy: Restoring the buffer")
-                
+
                 with open(self.config.scheduler_proxy_buffer_tmp, "rb") as fp :
                     try:
                         content = pickle.load(fp)
@@ -130,10 +129,8 @@ class SendingBuffer(object):
                         self.packets.extend(content)
                     else:
                         self.logger.warn("XMLRPC Proxy: Invalid format of backup of buffer, operation ignored")
- 
+
                     os.unlink(self.config.scheduler_proxy_buffer_tmp)
                     self.logger.info("XMLRPC Proxy: restore buffer with %d responses" % len(SendingBuffer().packets))
         except Exception, exc:
             self.logger.error("XMLRPC Proxy: buffer restore failed: %s"  % str(exc))
-
-

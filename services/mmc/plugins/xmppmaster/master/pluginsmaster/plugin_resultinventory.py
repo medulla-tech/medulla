@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-import zlib, base64
+import zlib
+import base64
 import traceback
-import os,sys
+import os
+import sys
 import urllib2
 import time
 import json
@@ -9,17 +11,20 @@ import logging
 from mmc.plugins.glpi.database import Glpi
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
-plugin = { "VERSION" : "1.1", "NAME" : "resultinventory", "TYPE" : "master" }
+plugin = {"VERSION": "1.1", "NAME": "resultinventory", "TYPE": "master"}
 
-def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
+logger = logging.getLogger("xmppmaster")
+
+
+def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
     HEADER = {"Pragma": "no-cache",
               "User-Agent": "Proxy:FusionInventory/Pulse2/GLPI",
               "Content-Type": "application/x-compress",
-             }
+              }
     try:
-        logging.getLogger().debug("=====================================================")
-        logging.getLogger().debug(plugin)
-        logging.getLogger().debug("=====================================================")
+        logger.debug("=====================================================")
+        logger.debug(plugin)
+        logger.debug("=====================================================")
         try:
             url = xmppobject.config.inventory_url
         except:
@@ -28,7 +33,7 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
         request = urllib2.Request(url, inventory, HEADER)
         response = urllib2.urlopen(request)
         nbsize = len(inventory)
-        XmppMasterDatabase().setlogxmpp( "inject inventory to Glpi",
+        XmppMasterDatabase().setlogxmpp("inject inventory to Glpi",
                                         "Master",
                                         "",
                                         0,
@@ -40,7 +45,7 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                                         '',
                                         "Master")
         if nbsize < 250:
-            XmppMasterDatabase().setlogxmpp( '<font color="Orange">Warning, Inventory XML size %s byte</font>'%nbsize,
+            XmppMasterDatabase().setlogxmpp('<font color="Orange">Warning, Inventory XML size %s byte</font>' % nbsize,
                                             "Master",
                                             "",
                                             0,
@@ -53,26 +58,25 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                                             "Master")
         time.sleep(5)
         if not xmppobject.XmppUpdateInventoried(message['from']):
-            XmppMasterDatabase().setlogxmpp( '<font color="deeppink">Error Injection Inventory for Machine %s</font>'%(message['from']),
-                                                                "Inventory Server",
-                                                                "",
-                                                                0,
-                                                                message['from'],
-                                                                'auto',
-                                                                '',
-                                                                'Inventory | Notify | Error',
-                                                                '',
-                                                                '',
-                                                                "InvServer")
-
+            XmppMasterDatabase().setlogxmpp('<font color="deeppink">Error Injection Inventory for Machine %s</font>' % (message['from']),
+                                            "Inventory Server",
+                                            "",
+                                            0,
+                                            message['from'],
+                                            'auto',
+                                            '',
+                                            'Inventory | Notify | Error',
+                                            '',
+                                            '',
+                                            "InvServer")
 
         # save registry inventory
         try:
             reginventory = json.loads(base64.b64decode(data['reginventory']))
         except:
             reginventory = False
-        #send inventory to inventory server
-        XmppMasterDatabase().setlogxmpp( "inject inventory to Glpi",
+        # send inventory to inventory server
+        XmppMasterDatabase().setlogxmpp("inject inventory to Glpi",
                                         "Master",
                                         "",
                                         0,
@@ -93,7 +97,7 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                     break
             logging.getLogger().debug("Computers ID: %s" % computers_id)
             nb_iter = int(reginventory['info']['max_key_index']) + 1
-            for num in range(1,nb_iter):
+            for num in range(1, nb_iter):
                 reg_key_num = 'reg_key_'+str(num)
                 try:
                     reg_key = reginventory[reg_key_num]['key'].strip('"')
@@ -106,26 +110,27 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                     logging.getLogger().debug("  key_name: %s" % key_name)
                     registry_id = Glpi().getRegistryCollect(reg_key)
                     logging.getLogger().debug("  registry_id: %s" % registry_id)
-                    XmppMasterDatabase().setlogxmpp( "Inventory Registry information: [machine :  %s][reg_key_num : %s]"\
-                                                        "[reg_key: %s][reg_key_value : %s]"\
-                                                            "[key_name : %s]"%(message['from'],reg_key_num,reg_key,reg_key_value,key_name),
-                                                                "Master",
-                                                                "",
-                                                                0,
-                                                                message['from'],
-                                                                'Manuel',
-                                                                '',
-                                                                'QuickAction |Inventory | Inventory requested',
-                                                                '',
-                                                                '',
-                                                                "Master")
+                    XmppMasterDatabase().setlogxmpp("Inventory Registry information: [machine :  %s][reg_key_num : %s]"
+                                                    "[reg_key: %s][reg_key_value : %s]"
+                                                    "[key_name : %s]" % (
+                                                        message['from'], reg_key_num, reg_key, reg_key_value, key_name),
+                                                    "Master",
+                                                    "",
+                                                    0,
+                                                    message['from'],
+                                                    'Manuel',
+                                                    '',
+                                                    'QuickAction |Inventory | Inventory requested',
+                                                    '',
+                                                    '',
+                                                    "Master")
                     Glpi().addRegistryCollectContent(computers_id, registry_id, key_name, reg_key_value)
                 except Exception, e:
                     logging.getLogger().debug("Error getting key: %s" % reg_key)
                     pass
         time.sleep(25)
         # restart agent
-        #xmppobject.restartAgent(message['from'])
+        # xmppobject.restartAgent(message['from'])
     except Exception, e:
         print str(e)
         traceback.print_exc(file=sys.stdout)

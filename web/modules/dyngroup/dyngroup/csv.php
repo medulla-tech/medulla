@@ -61,5 +61,3 @@ foreach ($datum as $machine) {
 exit;
 
 ?>
-
-

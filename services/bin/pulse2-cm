@@ -152,6 +152,3 @@ if __name__ == "__main__":
 
     # Start the daemon main loop
     sys.exit(running(cfgfile, daemonize))
-
-
-

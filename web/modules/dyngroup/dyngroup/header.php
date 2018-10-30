@@ -29,4 +29,3 @@ if (strlen($type) && $type == 1) {
 }
 
 ?>
-

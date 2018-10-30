@@ -25,15 +25,15 @@
 function xmlrpc_imagingClearMenuFromUuidAllLocation($uuid){
     return xmlCall("imaging.imagingClearMenuFromUuidAllLocation", array($uuid));
 }
- 
+
 function xmlrpc_imagingClearMenuFromUuid($uuid){
     return xmlCall("imaging.imagingClearMenuFromUuid", array($uuid));
-} 
+}
  //check process
 function xmlrpc_check_process($process) {
     return xmlCall("imaging.check_process", array($process));
 }
- 
+
 function xmlrpc_imagingServermenuMulticast($obj){
     return xmlCall("imaging.imagingServermenuMulticast", $obj);
 }
@@ -44,7 +44,7 @@ function xmlrpc_check_process_multicast ($objprocess){
 }
 
 function xmlrpc_stop_process_multicast ($objprocess){
-   
+
     return xmlCall("imaging.stop_process_multicast", array($objprocess));
 }
 
@@ -243,7 +243,7 @@ function xmlrpc_getLocationSynchroState($id) {
 function xmlrpc_synchroComputer($id,  $menuimagingbool = false, $macbool = false) {
     $cn_ = getComputersName(array('uuid' => $id));
     $name = "";
-    if(isset($cn_[0])){ 
+    if(isset($cn_[0])){
         $name = $cn_[0];
     }
     $str = sprintf(_T("Boot menu generation For machine %s", "imaging"),$name );

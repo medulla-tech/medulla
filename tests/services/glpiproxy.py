@@ -73,7 +73,7 @@ class class02GlpiProxyTest(unittest.TestCase):
         result = glpi_proxy.result
 
         nbr_errors = len(result)
-         
+
         self.assertNotEqual(nbr_errors, 0)
 
 
@@ -90,7 +90,7 @@ def not_ok_response():
 
 
 
-def xml_inventory() : 
+def xml_inventory() :
     return """<?xml version="1.0" encoding="UTF-8" ?>
 <REQUEST>
   <CONTENT>
@@ -4232,5 +4232,3 @@ def xml_inventory() :
 
 if __name__ == "__main__" :
     unittest.main()
-
-

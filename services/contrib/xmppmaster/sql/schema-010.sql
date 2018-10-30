@@ -23,7 +23,7 @@
 START TRANSACTION;
 
 -- --------------------------------------------------------------
--- add gestion cluster for xmpp ARS 
+-- add gestion cluster for xmpp ARS
 -- --------------------------------------------------------------
 -- -----------------------------------------------------
 -- Table `cluster_ars`
@@ -55,7 +55,7 @@ INSERT INTO `xmppmaster`.`has_cluster_ars` (`id`, `id_ars`, `id_cluster`) VALUES
 -- -----------------------------------------------------
 -- Table `relayserver add infos in relayserver`
 -- -----------------------------------------------------
-ALTER TABLE `xmppmaster`.`relayserver` 
+ALTER TABLE `xmppmaster`.`relayserver`
 ADD COLUMN `moderelayserver` VARCHAR(7) NOT NULL DEFAULT 'static' AFTER `package_server_port`;
 
 

@@ -255,7 +255,7 @@ html {
 /* Control bar */
 #noVNC-control-bar {
   position:fixed;
-  
+
   display:block;
   height:36px;
   left:0;

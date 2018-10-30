@@ -31,7 +31,10 @@ from utils import md5
 import hashlib
 import logging
 
-plugin = { "VERSION" : "1.0", "NAME" : "resultdownloadfile", "TYPE" : "master" }
+plugin = {"VERSION": "1.0", "NAME": "resultdownloadfile", "TYPE": "master"}
+
+logger = logging.getLogger("xmppmaster")
+
 
 def writefileappend(name, data):
     try:
@@ -43,19 +46,22 @@ def writefileappend(name, data):
     except Exception as e:
         print str(e)
 
+
 def delfile(name):
     try:
-        print "renove %s"%name
+        print "renove %s" % name
         os.remove(name)
     except Exception as e:
-        print "renove %s  : %s"%(name, str(e))
+        print "renove %s  : %s" % (name, str(e))
 
-@pluginmastersessionaction("actualise",20)
-def action( xmppobject, action, sessionid, data, message, ret, dataobj, objsessiondata):
-    logging.getLogger().debug(plugin)
+
+@pluginmastersessionaction("actualise", 20)
+def action(xmppobject, action, sessionid, data, message, ret, dataobj, objsessiondata):
+    logger.debug(plugin)
     try:
         if ret != 0:
-            xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid,'status': 'start', 'to' : message['from'], 'form' : message['to'] ,'file' : objsessiondata.getdatasession()['whowritefile']})
+            xmppobject.event("pluginaction", {'action': 'transferfile', 'sessionid': sessionid, 'status': 'start',
+                                              'to': message['from'], 'form': message['to'], 'file': objsessiondata.getdatasession()['whowritefile']})
             return
         if dataobj['end'] == True:
             data1 = ""
@@ -70,24 +76,27 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj, objsessi
 
         sizefile = writefileappend(objsessiondata.getdatasession()['whowritefile'], data1)
         if dataobj['end'] == False:
-            command={
-                'action' : 'downloadfile',
-                'base64' : False,
+            command = {
+                'action': 'downloadfile',
+                'base64': False,
                 'sessionid': sessionid,
-                'data' : ''
+                'data': ''
             }
-            xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid, 'status': 'process','size' : sizefile,'to' : message['from'], 'form' : message['to'] ,'file' : objsessiondata.getdatasession()['whowritefile']})
-            xmppobject.send_message( mto=message['from'],
-                                mbody=json.dumps(command),
-                                mtype='chat')
+            xmppobject.event("pluginaction", {'action': 'transferfile', 'sessionid': sessionid, 'status': 'process', 'size': sizefile,
+                                              'to': message['from'], 'form': message['to'], 'file': objsessiondata.getdatasession()['whowritefile']})
+            xmppobject.send_message(mto=message['from'],
+                                    mbody=json.dumps(command),
+                                    mtype='chat')
         else:
-            md5file =  md5 (objsessiondata.getdatasession()['whowritefile'])
+            md5file = md5(objsessiondata.getdatasession()['whowritefile'])
             if md5file == dataobj['md5']:
-                xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid, 'status': 'finished','success':True,  'to' : message['from'], 'form' : message['to'] ,'file' : objsessiondata.getdatasession()['whowritefile']})
+                xmppobject.event("pluginaction", {'action': 'transferfile', 'sessionid': sessionid, 'status': 'finished', 'success': True,
+                                                  'to': message['from'], 'form': message['to'], 'file': objsessiondata.getdatasession()['whowritefile']})
             else:
-                xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid, 'status': 'finished','success':False,  'to' : message['from'], 'form' : message['to'] ,'file' : objsessiondata.getdatasession()['whowritefile']})
+                xmppobject.event("pluginaction", {'action': 'transferfile', 'sessionid': sessionid, 'status': 'finished', 'success': False,
+                                                  'to': message['from'], 'form': message['to'], 'file': objsessiondata.getdatasession()['whowritefile']})
             xmppobject.session.clear(sessionid)
     except Exception as e:
         xmppobject.session.clear(sessionid)
-        xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid,'status': 'error','msgerror' :str(e) , 'to' : message['from'], 'form' : message['to'] ,'file' : objsessiondata.getdatasession()['whowritefile']})
-
+        xmppobject.event("pluginaction", {'action': 'transferfile', 'sessionid': sessionid, 'status': 'error', 'msgerror': str(
+            e), 'to': message['from'], 'form': message['to'], 'file': objsessiondata.getdatasession()['whowritefile']})

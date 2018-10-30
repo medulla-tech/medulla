@@ -45,8 +45,8 @@ else
     export VPN_INST_DIR="vpnclient"
     # name of daemon
     export VPN_SERVICE_NAME="vpnclient"
-fi    	
-    
+fi
+
 # path of SoftEther VPN CLI
 export VPN_VPNCMD_PATH="/usr/bin/vpncmd"
 # program folder path
@@ -76,30 +76,29 @@ VPN_DHCP_RANGE="10.0.0.2,10.255.255.254"
 VPN_DHCP_LEASE="12"
 
 # OS resolve
-export VPN_ARCH=$( uname -m ) 
+export VPN_ARCH=$( uname -m )
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
         export VPN_OS="linux"
         if [[ $VPN_SERVICE_SIDE == "server" ]]; then
-           export VPN_ARCHIVE_NAME="softether-vpnserver-v4.08-9449-rtm-2014.06.08-linux-x64-64bit.tar.gz"  
+           export VPN_ARCHIVE_NAME="softether-vpnserver-v4.08-9449-rtm-2014.06.08-linux-x64-64bit.tar.gz"
         else
-           if [[ $VPN_ARCH == "x86_64" ]]; then 
-               export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-linux-x64-64bit.tar.gz"  
+           if [[ $VPN_ARCH == "x86_64" ]]; then
+               export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-linux-x64-64bit.tar.gz"
            else
-               export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-linux-x86-32bit.tar.gz" 
-           fi 
+               export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-linux-x86-32bit.tar.gz"
+           fi
         fi
 fi
 if [[ "$OSTYPE" == "darwin"* ]]; then
         export VPN_OS="osx"
-        if [[ $VPN_ARCH == "x86_64" ]]; then 
-            export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-macos-x64-64bit.tar.gz" 
+        if [[ $VPN_ARCH == "x86_64" ]]; then
+            export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-macos-x64-64bit.tar.gz"
         else
-            export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-macos-x86-32bit.tar.gz" 
+            export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-macos-x86-32bit.tar.gz"
         fi
-fi 
+fi
 if [[ "$OSTYPE" == "cygwin" ]]; then
         export VPN_OS="cygwin"
-        export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-windows-x86_x64-intel.exe" 
+        export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-windows-x86_x64-intel.exe"
 fi
-

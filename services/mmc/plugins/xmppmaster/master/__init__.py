@@ -20,5 +20,3 @@
 # MA 02110-1301, USA.
 from lib import utils
 from lib import managesession
-
-

@@ -45,10 +45,12 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 APIVERSION = "0:0:0"
 
+logger = logging.getLogger("inventory")
+
+
 def getApiVersion(): return APIVERSION
 
 def activate():
-    logger = logging.getLogger()
     config = InventoryConfig()
     config.init("inventory")
     logger.debug("Inventory %s"%str(config.disable))

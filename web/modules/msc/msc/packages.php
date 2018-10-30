@@ -21,14 +21,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301, USA
  */
- 
+
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require("modules/msc/includes/package_api.php");
 
 $p = new PageGenerator(_T("Packages", 'msc'));
 $p->setSideMenu($sidemenu);
-$p->display(); 
+$p->display();
 
 $a_packages = array();
 $a_pversions = array();
@@ -60,4 +60,3 @@ li.detail a {
 }
 
 </style>
-

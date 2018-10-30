@@ -22,19 +22,24 @@
 #
 # file pluginsmaster/plugin_resultwakeonlan.py
 
-import base64, json, os
+import base64
+import json
+import os
 
 import logging
 
-#plugin_resultwakeonLan
+# plugin_resultwakeonLan
 
-plugin = { "VERSION" : "1.0", "NAME" : "resultwakeonlan", "TYPE" : "master" }
+plugin = {"VERSION": "1.0", "NAME": "resultwakeonlan", "TYPE": "master"}
 
-def action( xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug(plugin)
+logger = logging.getLogger("xmppmaster")
+
+
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
+    logger.debug(plugin)
     try:
-        logging.getLogger().debug("%s",data)
+        logger.debug("%s", data)
         pass
     except Exception as e:
-        logging.getLogger().error("Error in plugin %s : %s"%(action, str(e)))
+        logger.error("Error in plugin %s : %s" % (action, str(e)))
         pass

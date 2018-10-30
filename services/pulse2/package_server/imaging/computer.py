@@ -28,6 +28,8 @@ Write imaging configuration for computers:
 import logging
 import os.path
 
+logger = logging.getLogger('imaging')
+
 
 class ImagingComputerConfiguration:
 
@@ -45,7 +47,7 @@ class ImagingComputerConfiguration:
         @param hostname: the computer host name
         @param menu: the computer parameters to apply
         """
-        self.logger = logging.getLogger('imaging')
+        self.logger = logger
         self.config = config
         self.computerUUID = computerUUID
         self.menu = menu

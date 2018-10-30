@@ -7,7 +7,7 @@
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
-# Pulse 2 is free software; you can redistribute it and/or modify  
+# Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
@@ -88,17 +88,17 @@ class ConfigReader :
     """Read and parse config files"""
     def __init__(self, filepath):
        self._config = self.get_config(filepath)
-        
+
 
     @classmethod
     def get_config(cls, inifile):
-        """ 
+        """
         Get the configuration from config file
-        
+
         @param inifile: path to config file
         @type inifile: string
-    
-        @return: ConfigParser.ConfigParser instance 
+
+        @return: ConfigParser.ConfigParser instance
         """
         if not os.path.exists(inifile) :
             syslog("Error while reading the config file: Not found.")
@@ -110,22 +110,22 @@ class ConfigReader :
             config.readfp(open(inifile + '.local','r'))
 
         return config
-  
+
     @property
     def config (self):
-        """ 
-        Get the configuration instance 
-             
-        @return: ConfigParser.ConfigParser instance 
+        """
+        Get the configuration instance
+
+        @return: ConfigParser.ConfigParser instance
         """
         return self._config
 
 class MMCProxy :
     """ Provider to connect at mmc-agent """
-    def __init__(self, config): 
+    def __init__(self, config):
 
         self._config = config
-        
+
         self._url = None
         self._proxy = None
 
@@ -134,7 +134,7 @@ class MMCProxy :
 
     def _build_url(self):
         """ URL building for XML-RPC proxy """
-        
+
         if not self._config.has_section("mmc_agent") :
             syslog("Error while reading the config file: Section 'mmc_agent' not exists")
             sys.exit(2)
@@ -143,21 +143,21 @@ class MMCProxy :
         host = self._config.get("mmc_agent", "host")
         password = self._config.get("mmc_agent", "password")
         port = self._config.get("mmc_agent", "port")
-        
+
         syslog("Building the connection URL at mmc-agent")
         self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
-        
+
     def _get_ldap_password(self):
-        """ 
-        Password for LDAP authentification 
-        
+        """
+        Password for LDAP authentification
+
         @return: string
         """
-        
+
         if not self._config.has_section("ldap") :
             syslog("Error while reading the config file: Section 'ldap'")
             sys.exit(2)
-                                
+
         return self._config.get("ldap","password")
 
     def _build_proxy (self):
@@ -174,22 +174,22 @@ class MMCProxy :
     def proxy (self):
         """ Get the XML-RPC proxy to MMC agent. """
         return self._proxy
-        
+
 class CallMethod :
     """ XML-RPC Handler to execute remote functions. """
 
     def __init__(self, config, method, *args, **kwargs) :
-       
+
         self._config = config
 
         mmc_agent = MMCProxy(config)
-      
+
         self.proxy = mmc_agent.proxy
 
         self.method = method
         self.args = args
         self.kwargs = kwargs
-        
+
         d = task.deferLater(reactor, 0, self.auth)
         d.addErrback(self._errorback_proxy)
 
@@ -265,8 +265,8 @@ if __name__ == "__main__" :
 
         config = ConfigReader(cfg_file_path).config
         host = sys.argv[1].strip()
-        CallMethod(config, 
-            "msc.scheduler_choose_client_ip", 
-            "scheduler_01", 
+        CallMethod(config,
+            "msc.scheduler_choose_client_ip",
+            "scheduler_01",
             host.upper())
         reactor.run()

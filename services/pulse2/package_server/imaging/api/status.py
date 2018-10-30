@@ -28,6 +28,9 @@ import os
 
 from twisted.internet.utils import getProcessOutput
 
+logger = logging.getLogger("imaging")
+
+
 class Status:
 
     """
@@ -35,7 +38,7 @@ class Status:
     """
 
     def __init__(self, config):
-        self.logging = logging.getLogger()
+        self.logging = logger
         self.config = config
         self.ret = {}
 

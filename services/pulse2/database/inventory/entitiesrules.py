@@ -27,6 +27,9 @@ import os
 from mmc.site import mmcconfdir
 from pulse2.utils import checkEntityName
 
+logger = logging.getLogger("inventory")
+
+
 class EntitiesRules:
 
     """
@@ -36,7 +39,7 @@ class EntitiesRules:
     """
 
     def __init__(self, conffile = mmcconfdir + '/pulse2/inventory-server/entities-rules'):
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.conf = conffile
         self.rules = []
         self.operators =["match","equal","noequal","contains","nocontains","starts","finishes"]
@@ -78,7 +81,7 @@ class EntitiesRules:
                             else:
                                 operand1, operator, operand2 = words[0:3]
                                 operator = operator.lower()
-                                
+
                                 if operator in self.operators:
                                     # TODO: Maybe check operand1 value
                                     if operator == 'match':
@@ -86,7 +89,7 @@ class EntitiesRules:
                                         regexp = re.compile(operand2)
                                         subexprs.append((operand1, operator, regexp))
                                     else:
-                                        subexprs.append((operand1, operator, operand2))    
+                                        subexprs.append((operand1, operator, operand2))
                                 else:
                                     self.logger.error("Operator %s is not supported, skipping" % operator)
                                 words = words[3:]

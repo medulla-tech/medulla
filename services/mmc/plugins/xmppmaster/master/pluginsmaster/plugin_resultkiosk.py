@@ -26,7 +26,8 @@ import time
 import pytz
 import json
 import traceback
-import sys, os
+import sys
+import os
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.msc import MscDatabase
 from managepackage import managepackage
@@ -95,9 +96,9 @@ def initialisekiosk(data, message, xmppobject):
                                fromplugin = True)
 
     datasend = {
-        "sessionid" : name_random(6, "initialisation_kiosk"),
-        "action" : "kiosk",
-        "data" : initializationdatakiosk
+        "sessionid": name_random(6, "initialisation_kiosk"),
+        "action": "kiosk",
+        "data": initializationdatakiosk
     }
     xmppobject.send_message(mto= message['from'],
                              mbody=json.dumps(datasend),

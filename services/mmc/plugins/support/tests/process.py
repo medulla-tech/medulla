@@ -33,7 +33,7 @@ from mmc.plugins.support.process import PIDControl
 PID_PATH = "/var/run/pulse2_ssh_support_test.pid"
 
 logging.basicConfig()
-
+logger = logging.getLogger("support")
 
 class Daemonize(object):
     """Controls a little shell script executed as daemon."""
@@ -112,7 +112,7 @@ class Test01_PIDControl(TestCase):
         args = ["/bin/sh"] + self.daemon.args[1:]
 
         ret = pid_control.set_daemon_pid(args)
-        logging.getLogger().info("ret: %s" % ret)
+        logger.info("ret: %s" % ret)
         self.assertFalse(ret)
 
 
@@ -125,7 +125,7 @@ class Test01_PIDControl(TestCase):
         args = ["/bin/sh"] + self.daemon.args[1:]
 
         ret = pid_control.set_daemon_pid(args)
-        logging.getLogger().info("ret: %s" % ret)
+        logger.info("ret: %s" % ret)
         self.assertTrue(ret)
 
     def test04_probe(self):
@@ -148,6 +148,3 @@ class Test01_PIDControl(TestCase):
 
     def tearDown(self):
         self.daemon.remove_script()
-
-
-

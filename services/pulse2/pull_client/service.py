@@ -24,6 +24,8 @@ import threading
 from poller import Poller
 from config import PullClientConfig
 
+logger = logging.getLogger("pkgs")
+
 
 class Handler(object):
 

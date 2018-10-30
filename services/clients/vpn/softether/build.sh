@@ -21,9 +21,9 @@ VPN_ARCHIVE="SoftEtherVPNClient.zip"
 VPN_URL="http://pulse2.mandriva.org/pub/pulse2/misc/${VPN_ARCHIVE}"
 
 if [ -e ${VPN_ARCHIVE} ]; then
-    echo "Erasing previous SoftEther Installer archive..."	
+    echo "Erasing previous SoftEther Installer archive..."
     rm -f ${VPN_ARCHIVE}
-fi	
+fi
 if [ ! -e ${VPN_ARCHIVE} ]; then
     echo "Downloading ${VPN_ARCHIVE}..."
     curl --progress-bar -o ${VPN_ARCHIVE} ${VPN_URL}
@@ -32,7 +32,7 @@ if [ ! -e ${VPN_ARCHIVE} ]; then
         echo "${VPN_ARCHIVE} download failed. Please restart."
         echo
         exit 1
-    fi	
+    fi
 fi
 
 7z x -y ${VPN_ARCHIVE}

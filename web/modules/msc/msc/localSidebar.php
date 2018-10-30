@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301, USA
  */
- 
+
 $sidemenu= new SideMenu();
 $sidemenu->setClass("msc");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Repository", 'msc'), "msc", "msc", "repository"));

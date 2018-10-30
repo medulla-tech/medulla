@@ -27,21 +27,22 @@
 import json
 import logging
 
-plugin = { "VERSION" : "1.0", "NAME" : "restartbot", "TYPE" : "master"}
+plugin = {"VERSION": "1.0", "NAME": "restartbot", "TYPE": "master"}
+
+logger = logging.getLogger("xmppmaster")
 
 
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
+    logger.debug("_________________________")
+    logger.debug(plugin)
+    # print json.dumps(data, indent = 4)
+    logger.debug(data['data'][0])
+    logger.debug("_________________________")
 
-def action( xmppobject, action, sessionid, data, message, ret, dataobj):
-    print "_________________________"
-    logging.getLogger().debug(plugin)
-    #print json.dumps(data, indent = 4)
-    print data['data'][0]
-    print "_________________________"
-
-    command={ 'action' : 'restartbot',
-              'base64' : False,
-              'sessionid': sessionid,
-              'data' : ''}
-    xmppobject.send_message( mto = data['data'][0],
-                                 mbody = json.dumps(command),
-                                 mtype = 'chat')
+    command = {'action': 'restartbot',
+               'base64': False,
+               'sessionid': sessionid,
+               'data': ''}
+    xmppobject.send_message(mto=data['data'][0],
+                            mbody=json.dumps(command),
+                            mtype='chat')

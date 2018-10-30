@@ -41,9 +41,12 @@ from mmc.plugins.msc.qaction import qa_list_files
 from pulse2.managers.group import ComputerGroupManager
 import pulse2.apis.clients.package_get_api
 
+logger = logging.getLogger("msc")
+
+
 class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
     def __init__(self, server, port = None, mountpoint = None, proto = 'http', login = ''):
-        self.logger = logging.getLogger()
+        self.logger = logger
         bind = server
         credentials = ''
         if type(server) == dict:
@@ -90,7 +93,7 @@ class SendBundleCommand:
         self.session = None
 
     def onError(self, error):
-        logging.getLogger().error("SendBundleCommand: %s", str(error))
+        logger.error("SendBundleCommand: %s", str(error))
         if self.session:
             # Rollback the transaction
             self.session.rollback()
@@ -196,7 +199,7 @@ class SendBundleCommand:
             command['order_in_bundle'] = order
             command['proxies'] = self.proxies
             command['fk_bundle'] = bundle.id
-            command['do_windows_update'] = "disable" 
+            command['do_windows_update'] = "disable"
             commands.append(command)
         add = MscDatabase().addCommands(self.ctx, self.session, self.targets, commands, self.gid)
         if type(add) != int:
@@ -298,7 +301,7 @@ class SendPackageCommand:
         self.cmd_type = cmd_type
 
     def onError(self, error):
-        logging.getLogger().error("SendPackageCommand: %s", str(error))
+        logger.error("SendPackageCommand: %s", str(error))
         return self.deferred.errback(error)
 
     def sendResult(self, id_command = -1):
@@ -313,7 +316,7 @@ class SendPackageCommand:
             if result and idcmd in qas:
                 self.params['command'] = qas[idcmd]['command']
             else:
-                logging.getLogger().warn("Failed to get the QA %s"%(idcmd))
+                logger.warn("Failed to get the QA %s"%(idcmd))
 
             self.pinfos = {
                     "files":None,
@@ -334,16 +337,16 @@ class SendPackageCommand:
             d.addCallbacks(self.setRoot, self.onError)
 
     def setRoot(self, root):
-        logging.getLogger().debug(root)
+        logger.debug(root)
         if self.pid != None and self.pid != '' and not root:
             return self.onError("Can't get path for package %s" % self.pid)
         self.root = root
-        
+
         # If is an empty Package, avoid file uploading
         if 'size' in self.pinfos:
             if self.pinfos['size'] == 0 :
                 self.pinfos['files'] = None
-        
+
         # Prepare command parameters for database insertion
         cmd = prepareCommand(self.pinfos, self.params)
 
@@ -394,7 +397,7 @@ class SendPackageCommand:
             cmd['state'],
             cmd_type = self.cmd_type
         )
-        
+
         if type(addCmd) != int:
             addCmd.addCallbacks(self.sendResult, self.onError)
         else:
@@ -455,7 +458,7 @@ class GetPackagesFiltered:
         self.deferred.callback(ret)
 
     def onError(self, error):
-        logging.getLogger().error("GetPackagesFiltered: %s", str(error))
+        logger.error("GetPackagesFiltered: %s", str(error))
         self.deferred.callback([])
 
 class GetPackagesUuidFiltered:
@@ -465,7 +468,7 @@ class GetPackagesUuidFiltered:
         self.filt = filt
 
     def onError(self, error):
-        logging.getLogger().error("GetPackagesUuidFiltered: %s", str(error))
+        logger.error("GetPackagesUuidFiltered: %s", str(error))
         return self.deferred.callback([])
 
     def sendResult(self, packages = []):
@@ -520,7 +523,7 @@ class GetPackagesGroupFiltered:
         self.gid = None
 
     def onError(self, error):
-        logging.getLogger().error("GetPackagesGroupFiltered: %s", str(error))
+        logger.error("GetPackagesGroupFiltered: %s", str(error))
         return self.deferred.callback([])
 
     def sendResult(self, packages = []):
@@ -570,7 +573,7 @@ class GetPackagesGroupFiltered:
                 try:
                     map(lambda x: _p_apiuniq(plists[i], x[i]), mergedlist)
                 except IndexError:
-                    logging.getLogger().error("Error with i=%d" %i)
+                    logger.error("Error with i=%d" %i)
             self.plists = plists
             self.index = -1
             self.p_apis = None
@@ -583,7 +586,7 @@ class GetPackagesGroupFiltered:
             if not isinstance(result, failure.Failure):
                 self.tmppackages.append(result)
             else:
-                logging.getLogger().error("%s", str(result))
+                logger.error("%s", str(result))
         if not self.p_apis and self.tmppackages:
             # Merge temporary results
             lp = self.tmppackages[0]

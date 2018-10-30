@@ -36,7 +36,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
             <HTML>
             <head>
                 <title>Siveo Pulse</title>
-                <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />                
+                <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
             </head>
             <BODY style='background-color: #FFFFFF;'>
             <center>
@@ -166,10 +166,10 @@ else {
     if(!isset($_COOKIE['javaenabled']) || $_COOKIE['javaenabled']=="null") {
         $f = new PopupWindowForm("");
         print("<br/><span style='color:red'>" . _T("Java Plugin is not installed on <u>your own computer</u>. Please download it from <a href='http://www.java.com/download/'>http://www.java.com/download/</a>, install it, restart your browser and then, verify your installation on <a target='_blank' href='http://www.java.com/verify/'>http://www.java.com/verify/</a>.", "msc") . "</span>");
-    }    
+    }
     else
     {
-        $f = new PopupWindowForm(_T("Take control of this computer", "msc"));    
+        $f = new PopupWindowForm(_T("Take control of this computer", "msc"));
         $f->target_uri = $_SERVER["REQUEST_URI"] . "&establishproxy=yes";
         $f->addValidateButtonWithFade("bconfirm");
     }

@@ -32,4 +32,3 @@ class ImagingDatabaseConfig(DatabaseConfig):
 #        # read the database configuration
 #        DatabaseConfig.setup(self, config_file)
 #        # add the rest of the config retrieving if needed
-

@@ -32,6 +32,8 @@ re_file_prot = re.compile('^file://')
 re_http_prot = re.compile('^http://')
 re_https_prot = re.compile('^https://')
 
+logger = logging.getLogger("msc")
+
 
 class Target(object):
     """ Mapping between msc.target and SA
@@ -56,7 +58,7 @@ class Target(object):
         try :
             return self.target_name.split(".")[0]
         except :
-            logging.getLogger().warn("Unable to get shortname from '%s'" % self.target_name)
+            logger.warn("Unable to get shortname from '%s'" % self.target_name)
             return self.target_name
 
     def getIps(self):
@@ -80,7 +82,7 @@ class Target(object):
         mac_len = reduce(lambda x,y: x+y, map(lambda x: len(x), self.getMacs()))
         bcast_len = reduce(lambda x,y: x+y, map(lambda x: len(x), self.getBCast()))
         result = (mac_len > 0 ) and (bcast_len > 0)
-        logging.getLogger().debug("hasEnoughInfoToWOL(#%s): %s" % (self.id, result))
+        logger.debug("hasEnoughInfoToWOL(#%s): %s" % (self.id, result))
         return result
 
     def hasEnoughInfoToConnect(self):
@@ -91,7 +93,7 @@ class Target(object):
         ips_len = reduce(lambda x,y: x+y, map(lambda x: len(x), self.getIps()))
         names_len = len(self.getFQDN())
         result = (ips_len > 0 ) or (names_len > 0)
-        logging.getLogger().debug("hasEnoughInfoToConnect(#%s): %s" % (self.id, result))
+        logger.debug("hasEnoughInfoToConnect(#%s): %s" % (self.id, result))
         return result
 
     def hasFileMirror(self):

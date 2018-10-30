@@ -28,7 +28,7 @@ $lab = "END_SUCCESS";
             if(isset($clear))
             {
                 echo '<td width="16%">
-                    <input type="checkbox" checked 
+                    <input type="checkbox" checked
                         onclick="if(jQuery(this).is(\':checked\')){
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
                                 }
@@ -45,7 +45,7 @@ $lab = "END_SUCCESS";
             }
             else{
                 echo '<td width="16%">
-                    <input type="checkbox" 
+                    <input type="checkbox"
                         onclick="if(jQuery(this).is(\':checked\')){
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
                                 }
@@ -113,4 +113,3 @@ $lab = "END_SUCCESS";
         jQuery("#tableToggleSuccess tr.toggleable" ).hide();
     });
 </script>
-

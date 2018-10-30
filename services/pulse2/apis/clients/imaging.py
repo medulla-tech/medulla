@@ -33,6 +33,8 @@ import logging
 # need to get a ImagingApiManager, it will manage a Imaging api for each mirror
 # defined in the conf file.
 
+logger = logging.getLogger("pulse2")
+
 
 class Imaging(Pulse2Api):
 
@@ -41,7 +43,7 @@ class Imaging(Pulse2Api):
         Pulse2Api.__init__(self, *attr)
 
     # Computer registration
-    def computerRegister(self, computerName, MACAddress, 
+    def computerRegister(self, computerName, MACAddress,
                          imagingData, waitToBeInventoried=False):
         """
         Called by pulse2-imaging-server to tell the Package Server to
@@ -58,12 +60,12 @@ class Imaging(Pulse2Api):
             raise TypeError('Bad Computer name: %s' % computerName)
         if not isMACAddress(MACAddress):
             raise TypeError('BAD MAC address: %s' % MACAddress)
-        d = self.callRemote("computerRegister", 
-                            computerName, 
-                            MACAddress, 
-                            imagingData, 
+        d = self.callRemote("computerRegister",
+                            computerName,
+                            MACAddress,
+                            imagingData,
                             waitToBeInventoried)
-        d.addErrback(self.onErrorRaise, 
+        d.addErrback(self.onErrorRaise,
                      "Imaging:computerRegister",
                      [computerName, MACAddress, imagingData, waitToBeInventoried])
         return d
@@ -432,7 +434,7 @@ class ImagingApi(Imaging):
     log_entrance = []
 
     def __init__(self, url=None):
-        self.logger = logging.getLogger()
+        self.logger = logger
         credit = ''
         if type(url) == unicode:
             url = url.encode('utf-8')
@@ -483,4 +485,3 @@ class ImagingApi(Imaging):
                     return true_method(*attr)
 
                 setattr(self, m, temp)
-

@@ -31,4 +31,3 @@ ALTER TABLE `Storage` CHANGE `StandardType` `StandardType` VARCHAR( 255 ) NULL D
 --
 TRUNCATE Version;
 INSERT INTO Version VALUES( '4' );
-

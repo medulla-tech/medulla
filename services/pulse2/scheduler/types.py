@@ -1229,5 +1229,3 @@ class MscContainer (object):
             return True
 
         return False
-
-

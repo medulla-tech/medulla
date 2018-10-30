@@ -29,8 +29,7 @@ from mmc.support.mmctools import SecurityContext
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.database_utils import fromUUID
 
-
-logger = logging.getLogger()
+logger = logging.getLogger("glpi")
 
 
 class exportedReport(object):

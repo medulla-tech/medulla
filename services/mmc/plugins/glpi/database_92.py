@@ -66,6 +66,10 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback,sys
+
+logger = logging.getLogger("glpi")
+
+
 class Glpi92(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
@@ -85,7 +89,7 @@ class Glpi92(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.2')
+        logger.debug('Trying to detect if GLPI version is higher than 9.2')
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
@@ -93,10 +97,10 @@ class Glpi92(DyngroupDatabaseHelper):
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
         if LooseVersion(self._glpi_version) >=  LooseVersion("9.2") and LooseVersion(self._glpi_version) <=  LooseVersion("9.2.4"):
-            logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
+            logger.debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
-            logging.getLogger().debug('GLPI higher than version 9.2 was not detected')
+            logger.debug('GLPI higher than version 9.2 was not detected')
             return False
 
     @property
@@ -107,7 +111,7 @@ class Glpi92(DyngroupDatabaseHelper):
         return False
 
     def activate(self, config = None):
-        self.logger = logging.getLogger()
+        self.logger = logger
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Glpi don't need activation")
@@ -553,6 +557,19 @@ class Glpi92(DyngroupDatabaseHelper):
             result = element[0]
         return result
 
+    def __xmppmasterfilter(self, filt = None):
+        ret = {}#if filt['computerpresence'] == "presence":
+        if "computerpresence" in filt:
+            d = XmppMasterDatabase().getlistPresenceMachineid()
+            listid = [x.replace("UUID", "") for x in d]
+            ret["computerpresence"] = ["computerpresence","xmppmaster",filt["computerpresence"] , listid]
+        elif "query" in filt and filt['query'][0] == "AND":
+            for q in filt['query'][1]:
+                if q[2] == "Online computer" or q[2] == "OU user" or q[2] == "OU machine":
+                    listid = XmppMasterDatabase().__getxmppmasterfilterforglpi(q)
+                    ret[q[2]] = [q[1], q[2], q[3], listid]
+        return ret
+
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
         Get the sqlalchemy query to get a list of computers with some filters
@@ -560,12 +577,10 @@ class Glpi92(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-        listid = []
-        if filt and "computerpresence" in filt:
-            if PluginManager().isEnabled("xmppmaster"):
-                d = XmppMasterDatabase().getlistPresenceMachineid()
-                listid = [x.replace("UUID", "") for x in d]
+
         query = (count and session.query(func.count(Machine.id))) or session.query(Machine)
+        # manage criterion  for xmppmaster
+        ret = self.__xmppmasterfilter(filt)
 
         if filt:
             # filtering on query
@@ -676,12 +691,22 @@ class Glpi92(DyngroupDatabaseHelper):
             else:
                 query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
-            if PluginManager().isEnabled("xmppmaster") and len(listid) != 0:
-                    if filt and "computerpresence" in filt:
-                        if filt['computerpresence'] == "presence":
-                            query = query.filter(Machine.id.in_(listid))
+            if PluginManager().isEnabled("xmppmaster"):
+                if ret:
+                    if "Online computer" in ret:
+                        if ret["Online computer"][2] == "True":
+                            query = query.filter(Machine.id.in_(ret["Online computer"][3]))
                         else:
-                            query = query.filter(Machine.id.notin_(listid))
+                            query = query.filter(Machine.id.notin_(ret["Online computer"][3]))
+                    if "OU user" in ret:
+                        query = query.filter(Machine.id.in_(ret["OU user"][3]))
+                    if "OU machine" in ret:
+                        query = query.filter(Machine.id.in_(ret["OU machine"][3]))
+                    if "computerpresence" in ret:
+                        if ret["computerpresence"][2] == "presence":
+                            query = query.filter(Machine.id.in_(ret["computerpresence"][3]))
+                        else:
+                            query = query.filter(Machine.id.notin_(ret["computerpresence"][3]))
             query = self.__filter_on(query)
             query = self.__filter_on_entity(query, ctx)
 
@@ -904,7 +929,7 @@ class Glpi92(DyngroupDatabaseHelper):
         elif query[2] == 'Register key':
             return base + [ self.regcontents]#self.collects, self.registries,
         elif query[2] == 'Register key value':
-            return base + [ self.regcontents, self.registries ]#self.collects, self.registries, 
+            return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -2619,7 +2644,7 @@ class Glpi92(DyngroupDatabaseHelper):
             return self.searchOptions['en_US'][str(log.id_search_option)]
         except:
             if log.id_search_option != 0:
-                logging.getLogger().warn('I can\'t get a search option for id %s' % log.id_search_option)
+                logger.warn('I can\'t get a search option for id %s' % log.id_search_option)
             return ''
 
     def getLinkedActionValues(self, log):
@@ -3148,8 +3173,7 @@ class Glpi92(DyngroupDatabaseHelper):
         elif int(count) == 2:
             return query.all()
         else:
-            print query
-            ret =query.all()
+            ret = query.all()
             return [{'computer':a[0],'name':a[1],'entityid':a[2]}  for a in ret ]
 
     def getMachineBySoftwareAndVersion(self, ctx, swname, count=0):
@@ -3576,6 +3600,7 @@ class Glpi92(DyngroupDatabaseHelper):
         ret = query.group_by(self.group.c.name).all()
         session.close()
         return ret
+
     def getMachineByGroup(self, ctx, filt):# Entity!
         """ @return: all machines that have this contact number """
         session = create_session()

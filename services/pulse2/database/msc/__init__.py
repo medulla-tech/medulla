@@ -54,8 +54,9 @@ from pulse2.managers.location import ComputerLocationManager
 import logging
 
 NB_DB_CONN_TRY = 2
-
+logger = logging.getLogger("msc")
 # TODO need to check for useless function (there should be many unused one...)
+
 
 class MscDatabase(DatabaseHelper):
     """
@@ -69,7 +70,7 @@ class MscDatabase(DatabaseHelper):
         return DatabaseHelper.db_check(self)
 
     def activate(self, config):
-        self.logger = logging.getLogger()
+        self.logger = logger
         if self.is_activated:
             return None
 
@@ -207,28 +208,28 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         return bdl
 
-    def createcommanddirectxmpp( self, 
+    def createcommanddirectxmpp( self,
                                 package_id,
-                                start_file, 
-                                parameters, 
+                                start_file,
+                                parameters,
                                 files,
-                                start_script, 
+                                start_script,
                                 clean_on_success,
-                                start_date, 
-                                end_date, 
+                                start_date,
+                                end_date,
                                 connect_as,
-                                creator, 
+                                creator,
                                 title,
                                 next_connection_delay,
                                 max_connection_attempt,
-                                maxbw, 
+                                maxbw,
                                 deployment_intervals,
-                                fk_bundle, 
-                                order_in_bundle, 
-                                proxies, 
+                                fk_bundle,
+                                order_in_bundle,
+                                proxies,
                                 proxy_mode,
-                                state, 
-                                sum_running, 
+                                state,
+                                sum_running,
                                 cmd_type=0):
         session = create_session()
         obj = self.createCommand( session, package_id, start_file, parameters, files,
@@ -384,7 +385,72 @@ class MscDatabase(DatabaseHelper):
         session.add(target)
         session.flush()
         session.close()
-        return target
+        result = {  "id" : target.id,
+                    "target_macaddr" : target.target_macaddr,
+                    "id_group" : target.id_group,
+                    "target_uuid" : target.target_uuid,
+                    "target_bcast" : target.target_bcast,
+                    "target_name" : target.target_name,
+                    "target_ipaddr" : target.target_ipaddr,
+                    "mirrors" : target.mirrors,
+                    "target_network" : target.target_network }
+        return result
+
+    def uuidtoid(self, uuid):
+        if isinstance(uuid, basestring):
+            if uuid.strip().lower().startswith("uuid"):
+                return int(uuid[4:])
+            else:
+                return int(uuid)
+        else:
+            return  uuid
+
+    def xmpp_create_CommandsOnHost(self,
+                           fk_commands,
+                           fk_target,
+                           host,
+                           end_date,
+                           start_date,
+                           id_group=None):
+        session = create_session()
+        commandsOnHost = CommandsOnHost()
+        commandsOnHost.fk_commands = fk_commands
+        commandsOnHost.host = host
+        commandsOnHost.start_date = start_date
+        commandsOnHost.end_date = end_date
+        commandsOnHost.id_group = id_group
+        commandsOnHost.fk_target = self.uuidtoid(fk_target)
+        session.add(commandsOnHost)
+        session.flush()
+        session.close()
+        return commandsOnHost
+
+    def xmpp_create_CommandsOnHostPhasedeploykiosk(self,fk_commands):
+        names=['upload', 'execute', 'delete', 'inventory', 'done']
+        for indexname in range(len(names)):
+            commandsOnHostPhase = self.xmpp_create_CommandsOnHostPhasedeploy(fk_commands, names[indexname])
+        return commandsOnHostPhase
+
+    def xmpp_create_CommandsOnHostPhasedeploy(self, fk_commands, name, state="ready"):
+        session = create_session()
+        commandsOnHostPhase = CommandsOnHostPhase()
+        commandsOnHostPhase.fk_commands_on_host = fk_commands
+        commandsOnHostPhase.state = state
+        commandsOnHostPhase.name = name
+        if name == "upload":
+            commandsOnHostPhase.phase_order = 0
+        elif name == "execute":
+            commandsOnHostPhase.phase_order = 1
+        elif name == "delete":
+            commandsOnHostPhase.phase_order = 2
+        elif name == "inventory":
+            commandsOnHostPhase.phase_order = 3
+        elif name == "done":
+            commandsOnHostPhase.phase_order = 4
+        session.add(commandsOnHostPhase)
+        session.flush()
+        session.close()
+        return commandsOnHostPhase
 
     def deployxmpponmachine(self, command_id):
         result = {}
@@ -485,10 +551,10 @@ class MscDatabase(DatabaseHelper):
 
         if filt:
             sqlfilter = sqlfilter + """
-            AND 
-            (commands.title like %%%s%% 
-            OR 
-            commands.creator like %%%s%% 
+            AND
+            (commands.title like %%%s%%
+            OR
+            commands.creator like %%%s%%
             OR
             commands.start_date like %%%s%%)"""%(filt,filt,filt)
 
@@ -497,7 +563,7 @@ class MscDatabase(DatabaseHelper):
         sqllimit=""
         if min and max:
             sqllimit = """
-                LIMIT %d 
+                LIMIT %d
                 OFFSET %d"""%(int(max)-int(min), int(min))
             reqsql = reqsql + sqllimit
 
@@ -510,13 +576,13 @@ class MscDatabase(DatabaseHelper):
 
         sqlselect="""
             Select COUNT(nb) AS TotalRecords from(
-                SELECT 
+                SELECT
                     COUNT(*) AS nb,
                     CONCAT('',
                             IF(target.id_group != NULL
                                     OR target.id_group = '',
                                 CONCAT('computer', commands.title),
-                                CONCAT('GRP ', commands.title))) AS titledeploy 
+                                CONCAT('GRP ', commands.title))) AS titledeploy
                 FROM
                     commands_on_host
                         INNER JOIN
@@ -530,8 +596,8 @@ class MscDatabase(DatabaseHelper):
             AND
             """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;";
-        result={}       
-        resulta = self.db.execute(reqsql)        
+        result={}
+        resulta = self.db.execute(reqsql)
         resultb = self.db.execute(reqsql1)
         sizereq = [x for x in resultb][0][0]
         result['lentotal'] = sizereq
@@ -584,9 +650,9 @@ class MscDatabase(DatabaseHelper):
         join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
         q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
         q = q.select_from(join)
-        q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute', 
+        q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',
                             self.commands_on_host_phase.c.state == 'ready',
-                            self.target.c.id_group == group 
+                            self.target.c.id_group == group
                             )).all()
         ## return informations for update table deploy xmpp
         result=[]
@@ -623,7 +689,7 @@ class MscDatabase(DatabaseHelper):
         return result
 
     def deployxmpp(self):
-        """ 
+        """
             select deploy machine
         """
         session = create_session()
@@ -947,7 +1013,7 @@ class MscDatabase(DatabaseHelper):
                              target_name, cmd_max_connection_attempt,
                              start_date, end_date, scheduler = None,
                              order_in_proxy = None, max_clients_per_proxy = 0):
-        logging.getLogger().debug("Create new command on host '%s'" % target_name)
+        logger.debug("Create new command on host '%s'" % target_name)
         return {
             "host" : target_name,
             "start_date" : start_date,
@@ -2254,7 +2320,7 @@ class MscDatabase(DatabaseHelper):
         """
         reason.trap(TimeoutError)
         if self.db.pool._max_overflow > -1 and self.db.pool._overflow >= self.db.pool._max_overflow :
-            logging.getLogger().error('Timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (self.db.pool._overflow, self.db.pool._max_overflow))
+            logger.error('Timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (self.db.pool._overflow, self.db.pool._max_overflow))
             self.db.pool.dispose()
             self.db.pool = self.db.pool.recreate()
         return reason

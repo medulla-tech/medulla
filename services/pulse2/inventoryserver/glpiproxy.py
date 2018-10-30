@@ -27,6 +27,8 @@ import logging
 from xml.dom.minidom import parseString
 from pulse2.inventoryserver.utils import MMCProxy
 
+logger = logging.getLogger("inventory")
+
 
 class _ErrorHandler:
     """
@@ -125,7 +127,7 @@ class GlpiProxy:
 
     @property
     def result(self):
-        """ 
+        """
         @returns: list of error messages
         @rtype: list
         """
@@ -147,13 +149,13 @@ def resolveGlpiMachineUUIDByMAC (mac):
     mmc = MMCProxy()
     if not mmc.failure :
         proxy = mmc.proxy
-        try:  
+        try:
             uuid = proxy.glpi.getMachineUUIDByMacAddress(mac)
         except Exception, e:
-            logging.getLogger().error("Unable to resolve machine UUID for mac %s using %s, error was: %s" % (str(mac), str(mmc._url), str(e)))
+            logger.error("Unable to resolve machine UUID for mac %s using %s, error was: %s" % (str(mac), str(mmc._url), str(e)))
         return uuid
     return None
- 
+
 def hasKnownOS(uuid):
     """
     Return True if machine has a known Operating System
@@ -175,4 +177,3 @@ def hasKnownOS(uuid):
         proxy = mmc.proxy
         return proxy.glpi.hasKnownOS(uuid)
     return False
-

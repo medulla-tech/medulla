@@ -22,7 +22,7 @@
 
 # file : mmc/plugins/kiosk/config.py
 
-from mmc.support.config import PluginConfig 
+from mmc.support.config import PluginConfig
 from pulse2.database.kiosk.config import KioskDatabaseConfig
 
 
@@ -71,4 +71,3 @@ class KioskConfig(PluginConfig,KioskDatabaseConfig):
         # Get module config from "/etc/mmc/plugins/kiosk.ini"
         KioskConfig("kiosk")
         return True
-

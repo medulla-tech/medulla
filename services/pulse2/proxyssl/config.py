@@ -29,6 +29,8 @@ from pulse2.proxyssl.utilities import Singleton
 import ConfigParser
 import sys
 
+logger = logging.getLogger("mmc-agent")
+
 
 class Pulse2InventoryProxyConfig(Singleton):
     server = ''
@@ -49,12 +51,12 @@ class Pulse2InventoryProxyConfig(Singleton):
     umask = ''
     daemon_group = 'root'
     daemon_user = 'root'
-            
+
     improve = True
     savexmlModified = False
     updatedetection = False
     addicon = False
-    
+
     getOcsDebugLog = False
 
 
@@ -63,7 +65,7 @@ class Pulse2InventoryProxyConfig(Singleton):
         self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
         self.cp.read(config_file + '.local')
-        self.logger = logging.getLogger()
+        self.logger = logger
 
         if self.cp.has_option('main', 'server'):
             self.server = self.cp.get('main', 'server')
@@ -112,7 +114,7 @@ class Pulse2InventoryProxyConfig(Singleton):
             self.updatedetection = self.cp.getboolean('xmlupdate', 'updatedetection')
         if self.cp.has_option('xmlupdate', 'addicon'):
             self.addicon = self.cp.getboolean('xmlupdate', 'addicon')
-             
+
         if self.cp.has_option('ocsdebug', 'enable'):
              self.getocsdebuglog = self.cp.getboolean('ocsdebug', 'enable')
              if self.getocsdebuglog:

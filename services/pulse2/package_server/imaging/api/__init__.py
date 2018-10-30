@@ -27,6 +27,8 @@ import logging
 from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.functions import Imaging
 
+logger = logging.getLogger("imaging")
+
 
 class ImagingApi (MyXmlrpc):
 
@@ -42,7 +44,7 @@ class ImagingApi (MyXmlrpc):
         self.api.init1(config)
 
         self.name = name
-        self.logger = logging.getLogger('imaging')
+        self.logger = logger
         self.logger.info("Initializing %s" % self.myType)
 
     def xmlrpc_getActiveConvergenceForHost(self, uuid):
@@ -128,11 +130,11 @@ class ImagingApi (MyXmlrpc):
         return self.api.start_process_multicast(objprocess)
 
     def xmlrpc_muticast_script_exist(self,objprocess):
-        # controle execution process multicast 
+        # controle execution process multicast
         return self.api.muticast_script_exist(objprocess)
 
     def xmlrpc_clear_script_multicast(self,objprocess):
-        # controle execution process multicast 
+        # controle execution process multicast
         return self.api.clear_script_multicast(objprocess)
 
     def xmlrpc_checkDeploymentUDPSender(self,objprocess):

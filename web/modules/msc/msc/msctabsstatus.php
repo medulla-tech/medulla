@@ -355,7 +355,7 @@ echo <<< MSC
     var pie = r.piechart(x, y, radius, data,
                      {legend: legend,
                       legendpos: "east",
-                      colors: colors, 
+                      colors: colors,
                       href: href});
     pie.hover(function () {
         this.sector.stop();
@@ -446,7 +446,7 @@ echo <<< MSC
     var pie = r.piechart(x, y, radius, data,
                      {legend: legend,
                       legendpos: "east",
-                      colors: colors, 
+                      colors: colors,
                       href: href});
     pie.hover(function () {
         this.sector.stop();

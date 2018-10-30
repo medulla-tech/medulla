@@ -45,4 +45,3 @@ class ImagingPulse2Manager(Pulse2I):
         ims = ImagingDatabase().getImagingServerByPackageServerUUID(ps_uuid)
         entity = ImagingDatabase().getEntityByUUID(e_uuid)
         ImagingDatabase().updateImagingServer(ims[0].getUUID(), {'fk_entity':entity.id})
-

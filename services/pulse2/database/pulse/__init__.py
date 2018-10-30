@@ -39,6 +39,8 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 # Imported last
 import logging
 
+logger = logging.getLogger("pulse2")
+
 
 class Pulse2Database(DyngroupDatabaseHelper):
     """
@@ -53,7 +55,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         return DyngroupDatabaseHelper.db_check(self)
 
     def activate(self, config):
-        self.logger = logging.getLogger()
+        self.logger = logger
         if self.is_activated:
             return None
 
@@ -192,7 +194,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         else :
             session.close()
             return False
-            
+
         session.flush()
         session.close()
         return True
@@ -210,4 +212,3 @@ def uuid2id(uuid):
 ##############################################################################################################
 class PackageServerEntity(database_helper.DBObject):
     to_be_exported = ['entity_uuid', 'package_server_uuid']
-

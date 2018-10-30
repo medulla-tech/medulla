@@ -103,6 +103,3 @@ $ret = xmlrpc_setMyMenuProfile($group->id, $params);
 header("Location: " . urlStrRedirect("imaging/manage/display", array('gid'=>$group->id)));
 exit;
 ?>
-
-
-

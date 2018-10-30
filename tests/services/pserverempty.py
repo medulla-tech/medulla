@@ -60,7 +60,7 @@ class class01testMirror (unittest.TestCase):
     """
     Test's class of Mirror's module
     """
-    
+
     def test101isAvailable (self):
         result = serverM.isAvailable ("test")
         self.assertEqual (result,False)
@@ -175,7 +175,7 @@ class class03testPackages_get (unittest.TestCase):
 #        result = serverP.getPackageSize ("test")
 #        self.assertEqual (result,0)
 
-#     def test316isAvailable (self): #The test 'testisAvailable' return true but the package don't exist 
+#     def test316isAvailable (self): #The test 'testisAvailable' return true but the package don't exist
 #         result = serverP.isAvailable ("test",{'mountpoint': '/mirror1', 'server': ipserver, 'protocol': protocol, 'uuid': 'UUID/package_api_get1', 'port': '9990'})
 #        self.assertEqual (result,False)
 
@@ -240,7 +240,7 @@ if mode=="debug":
         print "One or more test are failed or have an unexpected error"
     else:
         print "All function work"
-    
+
     print "PserverEmpty\'s test has run %s test" %(nb)
 else:
 

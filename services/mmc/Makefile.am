@@ -33,7 +33,7 @@ pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \
 	plugins.support plugins.kiosk \
 	plugins.xmppmaster plugins.xmppmaster.master plugins.xmppmaster.master.lib \
 	plugins.xmppmaster.master.pluginsmaster plugins.xmppmaster.master.script \
-	plugins.xmppmaster.master.script.perl
+	plugins.xmppmaster.master.script.perl plugins.xmppmaster.querymanager
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 modpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))

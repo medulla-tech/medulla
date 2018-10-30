@@ -2,333 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 14:06+0100\n"
+"POT-Creation-Date: 2018-10-26 11:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/"
-"teams/72118/pt_BR/)\n"
-"Language: pt_BR\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#: modules/glpi/glpi/ajaxViewPart.php:83
-msgid " (Not an antivirus)"
-msgstr " (No um vrus)"
-
-#: modules/glpi/glpi/tabs.php:72
-#, php-format
-msgid "%s's inventory %s"
-msgstr "Inventrio %s do %s"
-
-#: modules/glpi/includes/panels/inventory.inc.php:44
-msgid "< %s days: %percent% (%d)"
-msgstr "< %s dias: %percent% (%d)"
-
-#: modules/glpi/includes/panels/inventory.inc.php:45
-msgid "> %s days: %percent% (%d)"
-msgstr "> %s dias: %percent% (%d)"
-
-#: modules/glpi/glpi/ajaxViewPart.php:254
-msgid "Action"
-msgstr "Ao"
-
-#: modules/glpi/glpi/addEntityRule.php:67
-msgid "Active"
-msgstr "Ativo"
-
-#: modules/glpi/glpi/addEntityRule.php:155
-msgid "Add criterion"
-msgstr "Adicionar critrio"
-
-#: modules/glpi/infoPackage.inc.php:94 modules/glpi/infoPackage.inc.php:107
-#: modules/glpi/glpi/addEntity.php:43
-msgid "Add entity"
-msgstr "Adicionar entidade."
-
-#: modules/glpi/includes/publicFunc.php:160
-msgid "Add entity right"
-msgstr "Adicionar permisses a entidade"
-
-#: modules/glpi/infoPackage.inc.php:120 modules/glpi/glpi/addEntityRule.php:59
-msgid "Add entity rule"
-msgstr "Adicionar regra da entidade"
-
-#: modules/glpi/glpi/addLocation.php:43
-msgid "Add location"
-msgstr "Adicionar local"
-
-#: modules/glpi/glpi/tabs.php:83
-msgid "Administrative"
-msgstr "Administrativo"
-
-#: modules/glpi/infoPackage.inc.php:175 modules/glpi/infoPackage.inc.php:208
-msgid "Administrative tab (GLPI)"
-msgstr "Aba Administrativa (GLPI)"
-
-#: modules/glpi/glpi/addEntityRule.php:86
-msgid "Aggregator"
-msgstr "Agregador"
-
-#: modules/glpi/glpi/ajaxViewPart.php:258 modules/glpi/includes/html.php:60
-msgid "All"
-msgstr "Tudo"
-
-#: modules/glpi/glpi/entityList.php:36
-msgid "All entities"
-msgstr "Todas as entidades"
-
-#: modules/glpi/glpi/locationList.php:36
-msgid "All locations"
-msgstr "Todos os locais"
-
-#: modules/glpi/glpi/entityRules.php:36
-msgid "All rules"
-msgstr "Todas as regas"
-
-#: modules/glpi/glpi/tabs.php:85
-#: modules/glpi/includes/panels/antivirus.inc.php:30
-msgid "Antivirus"
-msgstr "Antivrus"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
-#, php-format
-msgid "Antivirus is not running or not up-to-date at %s"
-msgstr "Antivrus no est rodando ou no atualizado em %s"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
-#, php-format
-msgid "Antivirus status is OK at %s"
-msgstr "Antivrus est OK em %s"
-
-#: modules/glpi/infoPackage.inc.php:181 modules/glpi/infoPackage.inc.php:214
-msgid "Antivirus tab (GLPI)"
-msgstr "Aba Antivrus(GLPI)"
-
-#: modules/glpi/glpi/ajaxViewPart.php:260
-msgid "Architecture"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:247
-msgid "Bandwidth"
-msgstr "Largura de Banda"
-
-#: modules/glpi/glpi/ajaxViewPart.php:253
-msgid "Category"
-msgstr "Categoria"
-
-#: modules/glpi/infoPackage.inc.php:134
-msgid "Change entity rule order (down)"
-msgstr "Modificar ordem da regra de entidade (para baixo)"
-
-#: modules/glpi/infoPackage.inc.php:129
-msgid "Change entity rule order (up)"
-msgstr "Modificar ordem da regra de entidade (para cima)"
-
-#: modules/glpi/glpi/ajaxViewPart.php:107
-msgid "Click here to see this computer on manufacturer website"
-msgstr "Clique aqui para ver esse computador no site do fabricante"
-
-#: modules/glpi/glpi/ajaxLocationList.php:68
-#: modules/glpi/glpi/ajaxViewPart.php:250
-#: modules/glpi/glpi/ajaxEntityList.php:68
-msgid "Comment"
-msgstr "Comentario"
-
-#: modules/glpi/glpi/ajaxViewPart.php:231
-msgid "Computer Name"
-msgstr "Nome do Computador"
-
-#: modules/glpi/glpi/ajaxViewPart.php:239
-msgid "Computer Type"
-msgstr "Tipo do computador"
-
-#: modules/glpi/glpi/addEntityRule.php:101
-msgid "Computer serial"
-msgstr "Nmero de srie do computador"
-
-#: modules/glpi/includes/panels/inventory.inc.php:30
-msgid "Computers"
-msgstr "Computadores"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
-#: modules/glpi/glpi/createMachinesStaticGroup.php:81
-#: modules/glpi/glpi/createOSStaticGroup.php:52
-#: modules/glpi/glpi/createStaticGroup.php:43
-#: modules/glpi/glpi/createBackupStaticGroup.php:85
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "A lista de computadores foi truncada em %d computadores"
-
-#: modules/glpi/glpi/ajaxViewPart.php:191
-msgid "Controllers"
-msgstr "Controladores"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:40
-#: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:106
-msgid "Create a group"
-msgstr "Criar um grupo"
-
-#: modules/glpi/infoPackage.inc.php:65
-msgid "Create static group from OS distribution dashboard widget (GLPI)"
-msgstr "Criar um grupo esttico atravs do widget SO no painel (GLPI)"
-
-#: modules/glpi/infoPackage.inc.php:60
-msgid "Create static group from antivirus dashboard widget (GLPI)"
-msgstr "Criar um grupo esttico atravs do widget do antivrus (GLPI)"
-
-#: modules/glpi/infoPackage.inc.php:55
-msgid "Create static group from dashboard widgets (GLPI)"
-msgstr "Criar um grupo esttico atravs dos widgets do painel (GLPI)"
-
-#: modules/glpi/infoPackage.inc.php:80
-msgid "Create static group from machines backup widget (GLPI)"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:70 modules/glpi/infoPackage.inc.php:75
-msgid "Create static group from machines dashboard widget (GLPI)"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:149
-msgid "Criterion"
-msgstr "Critrio"
-
-#: modules/glpi/glpi/ajaxViewPart.php:251
-msgid "Date"
-msgstr "Data"
-
-#: modules/glpi/glpi/ajaxViewPart.php:225
-msgid "Date Of Purchase"
-msgstr "Data da Aquisio"
-
-#: modules/glpi/infoPackage.inc.php:124
-msgid "Delete entity rule"
-msgstr "Remover regra de entidade"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:72
-msgid "Delete rule"
-msgstr "Remover regra"
-
-#: modules/glpi/glpi/deleteEntityRule.php:36
-msgid "Delete this rule?"
-msgstr "Remover esta regra?"
-
-#: modules/glpi/glpi/addEntityRule.php:77
-#: modules/glpi/glpi/ajaxViewPart.php:232 modules/glpi/glpi/addEntity.php:100
-#: modules/glpi/glpi/addLocation.php:101
-msgid "Description"
-msgstr "Descrio"
-
-#: modules/glpi/glpi/ajaxViewPart.php:218
-msgid "Device"
-msgstr "Dispositivo"
-
-#: modules/glpi/infoPackage.inc.php:141
-msgid "Display locations"
-msgstr "Mostrar locais"
-
-#: modules/glpi/glpi/addEntityRule.php:168
-#: modules/glpi/glpi/addEntityRule.php:190
-msgid "Do not assign"
-msgstr "No atribuir"
-
-#: modules/glpi/glpi/addEntityRule.php:100
-#: modules/glpi/glpi/ajaxViewPart.php:262
-msgid "Domain"
-msgstr "Domnio"
-
-#: modules/glpi/glpi/ajaxViewPart.php:193
-msgid "Drives"
-msgstr "Drives"
-
-#: modules/glpi/glpi/ajaxEntityList.php:70 modules/glpi/glpi/addEntity.php:52
-msgid "Edit entity"
-msgstr "Editar entidade"
-
-#: modules/glpi/glpi/ajaxLocationList.php:70
-#: modules/glpi/glpi/addLocation.php:52
-msgid "Edit location"
-msgstr "Editar localizao"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:69
-msgid "Edit rule"
-msgstr "Editar regra"
-
-#: modules/glpi/glpi/ajaxViewPart.php:267
-msgid "Enabled"
-msgstr "Habilitada"
-
-#: modules/glpi/infoPackage.inc.php:85
-msgid "Entities"
-msgstr "Entidades"
-
-#: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:102
-msgid "Entities (ajax)"
-msgstr "Entidades (ajax)"
-
-#: modules/glpi/glpi/ajaxViewPart.php:234
-msgid "Entity"
-msgstr "Entidade"
-
-#: modules/glpi/glpi/ajaxViewPart.php:233
-msgid "Entity (Location)"
-msgstr "Entidade (Localizao)"
-
-#: modules/glpi/includes/publicFunc.php:86
-msgid "Entity attributes"
-msgstr "Atributos da entidade"
-
-#: modules/glpi/glpi/entityList.php:28
-msgid "Entity list"
-msgstr "Lista de entidade"
-
-#: modules/glpi/glpi/ajaxEntityList.php:66
-msgid "Entity name"
-msgstr "Nome da entidade"
-
-#: modules/glpi/includes/publicFunc.php:154
-msgid "Entity right"
-msgstr "Permisses da entidade"
-
-#: modules/glpi/infoPackage.inc.php:111 modules/glpi/glpi/entityRules.php:28
-msgid "Entity rules"
-msgstr "Regras das entidades"
-
-#: modules/glpi/infoPackage.inc.php:115
-msgid "Entity rules (ajax)"
-msgstr "Regras das entidades (ajax)"
-
-#: modules/glpi/glpi/ajaxViewPart.php:220
-msgid "Filesystem"
-msgstr "Sistema de Arquivos"
-
-#: modules/glpi/glpi/ajaxViewPart.php:222
-msgid "Free Size"
-msgstr "Espao Livre"
-
-#: modules/glpi/glpi/ajaxViewPart.php:244
-msgid "Frequency"
-msgstr "Frequencia"
 
 #: modules/glpi/infoPackage.inc.php:32
 msgid "GLPI Inventory"
 msgstr "Inventrio GLPI"
-
-#: modules/glpi/glpi/ajaxViewPart.php:217
-msgid "Gateway"
-msgstr "Gateway"
-
-#: modules/glpi/glpi/tabs.php:100
-msgid "Get XLS Report"
-msgstr "Obter relatrio XLS"
 
 #: modules/glpi/infoPackage.inc.php:38
 msgid "Glpi"
@@ -338,89 +30,687 @@ msgstr "GLPI"
 msgid "Glpi Dashboard"
 msgstr "Painel do GLPI"
 
-#: modules/glpi/glpi/ajaxViewPart.php:194
-msgid "Graphic Cards"
-msgstr "Placa de Video"
+#: modules/glpi/infoPackage.inc.php:55
+msgid "Create static group from dashboard widgets (GLPI)"
+msgstr "Criar um grupo esttico atravs dos widgets do painel (GLPI)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:190
-msgid "Hard Drives"
-msgstr "Discos Rgidos"
+#: modules/glpi/infoPackage.inc.php:60
+msgid "Create static group from antivirus dashboard widget (GLPI)"
+msgstr "Criar um grupo esttico atravs do widget do antivrus (GLPI)"
 
-#: modules/glpi/glpi/tabs.php:79
-msgid "Hardware"
-msgstr "Hardware"
+#: modules/glpi/infoPackage.inc.php:65
+msgid "Create static group from OS distribution dashboard widget (GLPI)"
+msgstr "Criar um grupo esttico atravs do widget SO no painel (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:163 modules/glpi/infoPackage.inc.php:196
-msgid "Hardware tab (GLPI)"
-msgstr "Aba Hardware (GLPI)"
+#: modules/glpi/infoPackage.inc.php:70 modules/glpi/infoPackage.inc.php:75
+msgid "Create static group from machines dashboard widget (GLPI)"
+msgstr ""
 
-#: modules/glpi/includes/html.php:49
-msgid "Hide Windows Updates"
-msgstr "Esconder Updates do Windows"
+#: modules/glpi/infoPackage.inc.php:80
+msgid "Create static group from machines backup widget (GLPI)"
+msgstr ""
 
-#: modules/glpi/glpi/tabs.php:84
-msgid "History"
-msgstr "Historico"
+#: modules/glpi/infoPackage.inc.php:85
+msgid "Entities"
+msgstr "Entidades"
 
-#: modules/glpi/infoPackage.inc.php:178 modules/glpi/infoPackage.inc.php:211
-msgid "History tab (GLPI)"
-msgstr "Aba Histrico (GLPI)"
+#: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:102
+msgid "Entities (ajax)"
+msgstr "Entidades (ajax)"
 
-#: modules/glpi/glpi/addEntityRule.php:99
-msgid "Hostname"
-msgstr "Nome do host"
+#: modules/glpi/infoPackage.inc.php:94 modules/glpi/infoPackage.inc.php:107
+#: modules/glpi/glpi/addEntity.php:43
+msgid "Add entity"
+msgstr "Adicionar entidade."
 
-#: modules/glpi/glpi/ajaxViewPart.php:215
-msgid "IP"
-msgstr "IP"
+#: modules/glpi/infoPackage.inc.php:98
+msgid "Locations"
+msgstr "Localizaes"
 
-#: modules/glpi/glpi/addEntityRule.php:98
-msgid "IP Address"
-msgstr "Endereo IP"
+#: modules/glpi/infoPackage.inc.php:111 modules/glpi/glpi/entityRules.php:28
+msgid "Entity rules"
+msgstr "Regras das entidades"
 
-#: modules/glpi/glpi/ajaxViewPart.php:301
-msgid "Invalid hostname"
-msgstr "Hostname Invlido"
+#: modules/glpi/infoPackage.inc.php:115
+msgid "Entity rules (ajax)"
+msgstr "Regras das entidades (ajax)"
+
+#: modules/glpi/infoPackage.inc.php:120 modules/glpi/glpi/addEntityRule.php:59
+msgid "Add entity rule"
+msgstr "Adicionar regra da entidade"
+
+#: modules/glpi/infoPackage.inc.php:124
+msgid "Delete entity rule"
+msgstr "Remover regra de entidade"
+
+#: modules/glpi/infoPackage.inc.php:129
+msgid "Change entity rule order (up)"
+msgstr "Modificar ordem da regra de entidade (para cima)"
+
+#: modules/glpi/infoPackage.inc.php:134
+msgid "Change entity rule order (down)"
+msgstr "Modificar ordem da regra de entidade (para baixo)"
+
+#: modules/glpi/infoPackage.inc.php:141
+msgid "Display locations"
+msgstr "Mostrar locais"
 
 #: modules/glpi/infoPackage.inc.php:156
 msgid "Inventory (GLPI) on a group of machines"
 msgstr "Inventrio (GLPI) em um grupo de mquinas"
 
+#: modules/glpi/infoPackage.inc.php:160 modules/glpi/infoPackage.inc.php:193
+msgid "Summary tab (GLPI)"
+msgstr "Aba Sumario (GLPI)"
+
+#: modules/glpi/infoPackage.inc.php:163 modules/glpi/infoPackage.inc.php:196
+msgid "Hardware tab (GLPI)"
+msgstr "Aba Hardware (GLPI)"
+
+#: modules/glpi/infoPackage.inc.php:166 modules/glpi/infoPackage.inc.php:199
+msgid "Storage tab (GLPI)"
+msgstr "Aba Armazenamento (GLPI)"
+
+#: modules/glpi/infoPackage.inc.php:169 modules/glpi/infoPackage.inc.php:202
+msgid "Network tab (GLPI)"
+msgstr "Aba Redes (GLPI)"
+
+#: modules/glpi/infoPackage.inc.php:172 modules/glpi/infoPackage.inc.php:205
+msgid "Softwares tab (GLPI)"
+msgstr "Aba Programas (GLPI)"
+
+#: modules/glpi/infoPackage.inc.php:175 modules/glpi/infoPackage.inc.php:208
+msgid "Administrative tab (GLPI)"
+msgstr "Aba Administrativa (GLPI)"
+
+#: modules/glpi/infoPackage.inc.php:178 modules/glpi/infoPackage.inc.php:211
+msgid "History tab (GLPI)"
+msgstr "Aba Histrico (GLPI)"
+
+#: modules/glpi/infoPackage.inc.php:181 modules/glpi/infoPackage.inc.php:214
+msgid "Antivirus tab (GLPI)"
+msgstr "Aba Antivrus(GLPI)"
+
+#: modules/glpi/infoPackage.inc.php:184 modules/glpi/infoPackage.inc.php:217
+msgid "Registry tab (GLPI)"
+msgstr ""
+
 #: modules/glpi/infoPackage.inc.php:189
 msgid "Inventory (GLPI) on machine"
 msgstr "Inventrio (GLPI) na mquina"
 
-#: modules/glpi/glpi/ajaxViewPart.php:265
-msgid "Inventory Number"
-msgstr "Numero de inventario"
+#: modules/glpi/glpi/deleteEntityRule.php:31
+msgid "The entity rule has been deleted successfully."
+msgstr "A entidade da regra foi removida com sucesso."
+
+#: modules/glpi/glpi/deleteEntityRule.php:36
+msgid "Delete this rule?"
+msgstr "Remover esta regra?"
+
+#: modules/glpi/glpi/addEntityRule.php:31
+msgid "The entity rule has been added successfully."
+msgstr "A regra da entidade foi adicionada com sucesso."
+
+#: modules/glpi/glpi/addEntityRule.php:35
+msgid "The entity rule has been edited successfully."
+msgstr "A regra da entidade foi editada com sucesso."
+
+#: modules/glpi/glpi/addEntityRule.php:67
+msgid "Active"
+msgstr "Ativo"
+
+#: modules/glpi/glpi/addEntityRule.php:72
+#: modules/glpi/glpi/ajaxViewPart.php:212
+#: modules/glpi/glpi/ajaxViewPart.php:229 modules/glpi/glpi/addEntity.php:78
+#: modules/glpi/glpi/addLocation.php:77
+msgid "Name"
+msgstr "Nome"
+
+#: modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/ajaxViewPart.php:232 modules/glpi/glpi/addEntity.php:100
+#: modules/glpi/glpi/addLocation.php:101
+msgid "Description"
+msgstr "Descrio"
+
+#: modules/glpi/glpi/addEntityRule.php:86
+msgid "Aggregator"
+msgstr "Agregador"
+
+#: modules/glpi/glpi/addEntityRule.php:98
+msgid "IP Address"
+msgstr "Endereo IP"
+
+#: modules/glpi/glpi/addEntityRule.php:99
+msgid "Hostname"
+msgstr "Nome do host"
+
+#: modules/glpi/glpi/addEntityRule.php:100
+#: modules/glpi/glpi/ajaxViewPart.php:262
+msgid "Domain"
+msgstr "Domnio"
+
+#: modules/glpi/glpi/addEntityRule.php:101
+msgid "Computer serial"
+msgstr "Nmero de srie do computador"
+
+#: modules/glpi/glpi/addEntityRule.php:102
+msgid "Subnet"
+msgstr "Subnet"
 
 #: modules/glpi/glpi/addEntityRule.php:103
 msgid "Inventory Tag"
 msgstr "Tag de inventrio"
 
+#: modules/glpi/glpi/addEntityRule.php:113
+msgid "equal to"
+msgstr "igual a"
+
+#: modules/glpi/glpi/addEntityRule.php:114
+msgid "different from"
+msgstr "diferente de"
+
+#: modules/glpi/glpi/addEntityRule.php:115
+msgid "contains"
+msgstr "contm"
+
+#: modules/glpi/glpi/addEntityRule.php:116
+msgid "does not contain"
+msgstr "no contm"
+
+#: modules/glpi/glpi/addEntityRule.php:117
+msgid "starts with"
+msgstr "inicia com"
+
+#: modules/glpi/glpi/addEntityRule.php:118
+#: modules/glpi/glpi/addEntityRule.php:119
+msgid "finishes by"
+msgstr "finaliza com"
+
+#: modules/glpi/glpi/addEntityRule.php:120
+msgid "matches (regex)"
+msgstr "combina (regex)"
+
+#: modules/glpi/glpi/addEntityRule.php:121
+msgid "does not match (regex)"
+msgstr "no combina (regex)"
+
+#: modules/glpi/glpi/addEntityRule.php:122
+msgid "exists"
+msgstr "existe"
+
+#: modules/glpi/glpi/addEntityRule.php:123
+msgid "does not exist"
+msgstr "no existe"
+
+#: modules/glpi/glpi/addEntityRule.php:138
+#: modules/glpi/includes/publicFunc.php:142
+msgid "Remove"
+msgstr "Remover"
+
+#: modules/glpi/glpi/addEntityRule.php:149
+msgid "Criterion"
+msgstr "Critrio"
+
+#: modules/glpi/glpi/addEntityRule.php:155
+msgid "Add criterion"
+msgstr "Adicionar critrio"
+
+#: modules/glpi/glpi/addEntityRule.php:168
+#: modules/glpi/glpi/addEntityRule.php:190
+msgid "Do not assign"
+msgstr "No atribuir"
+
+#: modules/glpi/glpi/addEntityRule.php:180
+msgid "Target entity"
+msgstr "Entidade de destino"
+
+#: modules/glpi/glpi/addEntityRule.php:200
+msgid "Target location"
+msgstr "Local de destino"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
+#, php-format
+msgid "Antivirus status is OK at %s"
+msgstr "Antivrus est OK em %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
+#, php-format
+msgid "Antivirus is not running or not up-to-date at %s"
+msgstr "Antivrus no est rodando ou no atualizado em %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
+#, php-format
+msgid "No antivirus found at %s"
+msgstr "Nenhum antivrus encontrado em %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#: modules/glpi/glpi/createMachinesStaticGroup.php:75
+#: modules/glpi/glpi/createOSStaticGroup.php:52
+#: modules/glpi/glpi/createStaticGroup.php:43
+#: modules/glpi/glpi/createBackupStaticGroup.php:69
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "A lista de computadores foi truncada em %d computadores"
+
+#: modules/glpi/glpi/ajaxLocationList.php:51
+#: modules/glpi/glpi/ajaxEntityList.php:51
+#: modules/glpi/glpi/ajaxEntityRules.php:51
+msgid "No entry found"
+msgstr "Nenhuma entrada encontrada"
+
+#: modules/glpi/glpi/ajaxLocationList.php:66
+msgid "Location name"
+msgstr "Nome da localizao"
+
+#: modules/glpi/glpi/ajaxLocationList.php:68
+#: modules/glpi/glpi/ajaxViewPart.php:250
+#: modules/glpi/glpi/ajaxEntityList.php:68
+msgid "Comment"
+msgstr "Comentario"
+
+#: modules/glpi/glpi/ajaxLocationList.php:70
+#: modules/glpi/glpi/addLocation.php:52
+msgid "Edit location"
+msgstr "Editar localizao"
+
+#: modules/glpi/glpi/ajaxViewPart.php:83
+msgid " (Not an antivirus)"
+msgstr " (No um vrus)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:107
+msgid "Click here to see this computer on manufacturer website"
+msgstr "Clique aqui para ver esse computador no site do fabricante"
+
+#: modules/glpi/glpi/ajaxViewPart.php:124
+msgid "Properties"
+msgstr "Propriedades"
+
+#: modules/glpi/glpi/ajaxViewPart.php:125
+msgid "Value"
+msgstr "Valor"
+
+#: modules/glpi/glpi/ajaxViewPart.php:143
+msgid "No record found for this period."
+msgstr "Nenhum registro encontrado neste periodo."
+
+#: modules/glpi/glpi/ajaxViewPart.php:146
+msgid "Unable to detect any Antivirus software on this machine."
+msgstr "Incapaz de detectar qualquer software de antivrus nesta maquina."
+
+#: modules/glpi/glpi/ajaxViewPart.php:147
+msgid ""
+"Please ensure you are running GLPI with FusionInventory plugin and "
+"FusionInventory Agent on this client."
+msgstr ""
+"Por favor tenha certeza de que voc est rodando o GLPI com o plugin "
+"FusionInventory e o Agente FusionInventory neste cliente."
+
+#: modules/glpi/glpi/ajaxViewPart.php:150
+msgid "No record found."
+msgstr "Nenhum registro encontrado."
+
+#: modules/glpi/glpi/ajaxViewPart.php:188
+msgid "Processors"
+msgstr "Processadores"
+
+#: modules/glpi/glpi/ajaxViewPart.php:189
+#: modules/glpi/glpi/ajaxViewPart.php:249
+msgid "Memory"
+msgstr "Memoria"
+
+#: modules/glpi/glpi/ajaxViewPart.php:190
+msgid "Hard Drives"
+msgstr "Discos Rgidos"
+
+#: modules/glpi/glpi/ajaxViewPart.php:191
+msgid "Controllers"
+msgstr "Controladores"
+
+#: modules/glpi/glpi/ajaxViewPart.php:192
+msgid "Network Cards"
+msgstr "Placa de Rede"
+
+#: modules/glpi/glpi/ajaxViewPart.php:193
+msgid "Drives"
+msgstr "Drives"
+
+#: modules/glpi/glpi/ajaxViewPart.php:194
+msgid "Graphic Cards"
+msgstr "Placa de Video"
+
+#: modules/glpi/glpi/ajaxViewPart.php:195
+msgid "Sound Cards"
+msgstr "Placa de Som"
+
+#: modules/glpi/glpi/ajaxViewPart.php:196
+msgid "Others"
+msgstr "Outros"
+
+#: modules/glpi/glpi/ajaxViewPart.php:210
+msgid "Yes"
+msgstr "Sim"
+
+#: modules/glpi/glpi/ajaxViewPart.php:211
+msgid "No"
+msgstr "No"
+
+#: modules/glpi/glpi/ajaxViewPart.php:213
+msgid "Network Type"
+msgstr "Tipo de Rede"
+
+#: modules/glpi/glpi/ajaxViewPart.php:214
+msgid "MAC Address"
+msgstr "Endereo MAC"
+
+#: modules/glpi/glpi/ajaxViewPart.php:215
+msgid "IP"
+msgstr "IP"
+
+#: modules/glpi/glpi/ajaxViewPart.php:216
+msgid "Netmask"
+msgstr "Mascara de rede"
+
+#: modules/glpi/glpi/ajaxViewPart.php:217
+msgid "Gateway"
+msgstr "Gateway"
+
+#: modules/glpi/glpi/ajaxViewPart.php:218
+msgid "Device"
+msgstr "Dispositivo"
+
+#: modules/glpi/glpi/ajaxViewPart.php:219
+msgid "Mount Point"
+msgstr "Ponto de montagem"
+
+#: modules/glpi/glpi/ajaxViewPart.php:220
+msgid "Filesystem"
+msgstr "Sistema de Arquivos"
+
+#: modules/glpi/glpi/ajaxViewPart.php:221
+#: modules/glpi/glpi/ajaxViewPart.php:246
+msgid "Size"
+msgstr "Tamanho"
+
+#: modules/glpi/glpi/ajaxViewPart.php:222
+msgid "Free Size"
+msgstr "Espao Livre"
+
+#: modules/glpi/glpi/ajaxViewPart.php:223
+msgid "Supplier"
+msgstr "Fornecedor"
+
 #: modules/glpi/glpi/ajaxViewPart.php:224
 msgid "Invoice Number"
 msgstr "Numero da Fatura"
 
-#: modules/glpi/glpi/ajaxViewPart.php:257 modules/glpi/includes/html.php:59
-msgid "Last 30 days"
-msgstr "Ultimo 30 dias"
+#: modules/glpi/glpi/ajaxViewPart.php:225
+msgid "Date Of Purchase"
+msgstr "Data da Aquisio"
 
-#: modules/glpi/glpi/ajaxViewPart.php:256 modules/glpi/includes/html.php:58
-msgid "Last 7 days"
-msgstr "Ultimo 7 dias"
+#: modules/glpi/glpi/ajaxViewPart.php:226
+msgid "Warranty End Date"
+msgstr "Data fim da Garantia"
 
 #: modules/glpi/glpi/ajaxViewPart.php:227
 msgid "Last Inventory Date"
 msgstr "ltima data de inventrio"
 
+#: modules/glpi/glpi/ajaxViewPart.php:228
+msgid "Vendor"
+msgstr "Vendedor"
+
+#: modules/glpi/glpi/ajaxViewPart.php:230
+msgid "Version"
+msgstr "Verso"
+
+#: modules/glpi/glpi/ajaxViewPart.php:231
+msgid "Computer Name"
+msgstr "Nome do Computador"
+
+#: modules/glpi/glpi/ajaxViewPart.php:233
+msgid "Entity (Location)"
+msgstr "Entidade (Localizao)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:234
+msgid "Entity"
+msgstr "Entidade"
+
+#: modules/glpi/glpi/ajaxViewPart.php:235
+msgid "Location"
+msgstr "Localizao"
+
 #: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Last Logged User"
 msgstr "Ultimo usurio logado"
 
-#: modules/glpi/includes/panels/inventory.inc.php:48
-msgid "Latest Inventory Date"
-msgstr "ltima data do inventrio"
+#: modules/glpi/glpi/ajaxViewPart.php:237
+msgid "OS"
+msgstr "SO"
+
+#: modules/glpi/glpi/ajaxViewPart.php:238
+msgid "Operating System"
+msgstr "Sistema Operacional"
+
+#: modules/glpi/glpi/ajaxViewPart.php:239
+msgid "Computer Type"
+msgstr "Tipo do computador"
+
+#: modules/glpi/glpi/ajaxViewPart.php:240
+msgid "Model / Type"
+msgstr "Modelo / Tipo"
+
+#: modules/glpi/glpi/ajaxViewPart.php:241
+msgid "Model"
+msgstr "Modelo"
+
+#: modules/glpi/glpi/ajaxViewPart.php:242
+msgid "Manufacturer"
+msgstr "Fabricante"
+
+#: modules/glpi/glpi/ajaxViewPart.php:243
+msgid "Serial Number"
+msgstr "Numero Serial"
+
+#: modules/glpi/glpi/ajaxViewPart.php:244
+msgid "Frequency"
+msgstr "Frequencia"
+
+#: modules/glpi/glpi/ajaxViewPart.php:245
+msgid "Type"
+msgstr "Tipo"
+
+#: modules/glpi/glpi/ajaxViewPart.php:247
+msgid "Bandwidth"
+msgstr "Largura de Banda"
+
+#: modules/glpi/glpi/ajaxViewPart.php:248
+msgid "Writer"
+msgstr "Escritor"
+
+#: modules/glpi/glpi/ajaxViewPart.php:251
+msgid "Date"
+msgstr "Data"
+
+#: modules/glpi/glpi/ajaxViewPart.php:252
+msgid "User"
+msgstr "Usuario"
+
+#: modules/glpi/glpi/ajaxViewPart.php:253
+msgid "Category"
+msgstr "Categoria"
+
+#: modules/glpi/glpi/ajaxViewPart.php:254
+msgid "Action"
+msgstr "Ao"
+
+#: modules/glpi/glpi/ajaxViewPart.php:255 modules/glpi/includes/html.php:57
+msgid "Today"
+msgstr "Hoje"
+
+#: modules/glpi/glpi/ajaxViewPart.php:256 modules/glpi/includes/html.php:58
+msgid "Last 7 days"
+msgstr "Ultimo 7 dias"
+
+#: modules/glpi/glpi/ajaxViewPart.php:257 modules/glpi/includes/html.php:59
+msgid "Last 30 days"
+msgstr "Ultimo 30 dias"
+
+#: modules/glpi/glpi/ajaxViewPart.php:258 modules/glpi/includes/html.php:60
+msgid "All"
+msgstr "Tudo"
+
+#: modules/glpi/glpi/ajaxViewPart.php:259
+msgid "Service Pack"
+msgstr "Service Pack"
+
+#: modules/glpi/glpi/ajaxViewPart.php:260
+msgid "Architecture"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxViewPart.php:261
+msgid "Windows Key"
+msgstr "Chave do Windows"
+
+#: modules/glpi/glpi/ajaxViewPart.php:263
+msgid "State"
+msgstr "Estado"
+
+#: modules/glpi/glpi/ajaxViewPart.php:264
+msgid "Unknown"
+msgstr "Desconhecido"
+
+#: modules/glpi/glpi/ajaxViewPart.php:265
+msgid "Inventory Number"
+msgstr "Numero de inventario"
+
+#: modules/glpi/glpi/ajaxViewPart.php:267
+msgid "Enabled"
+msgstr "Habilitada"
+
+#: modules/glpi/glpi/ajaxViewPart.php:268
+msgid "Up-to-date"
+msgstr "Atualizado"
+
+#: modules/glpi/glpi/ajaxViewPart.php:301
+msgid "Invalid hostname"
+msgstr "Hostname Invlido"
+
+#: modules/glpi/glpi/ajaxEntityList.php:66
+msgid "Entity name"
+msgstr "Nome da entidade"
+
+#: modules/glpi/glpi/ajaxEntityList.php:70 modules/glpi/glpi/addEntity.php:52
+msgid "Edit entity"
+msgstr "Editar entidade"
+
+#: modules/glpi/glpi/addEntity.php:34
+msgid "The entity has been added successfully."
+msgstr "A entidade foi adicionada com sucesso."
+
+#: modules/glpi/glpi/addEntity.php:38
+msgid "The entity has been edited successfully."
+msgstr "A entidade foi editada com sucesso."
+
+#: modules/glpi/glpi/addEntity.php:95
+msgid "Parent entity"
+msgstr "Hierarquia da entidade"
+
+#: modules/glpi/glpi/createMachinesStaticGroup.php:61
+#, php-format
+msgid "Machines online at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createMachinesStaticGroup.php:66
+#, php-format
+msgid "Machines offline at %s"
+msgstr ""
+
+#: modules/glpi/glpi/locationList.php:28
+msgid "Location list"
+msgstr "Lista de locais"
+
+#: modules/glpi/glpi/locationList.php:36
+msgid "All locations"
+msgstr "Todos os locais"
+
+#: modules/glpi/glpi/createOSStaticGroup.php:34
+#, php-format
+msgid "Machine with %s installed at %s"
+msgstr "Mquina com %s instalada em %s"
+
+#: modules/glpi/glpi/addLocation.php:34
+msgid "The location has been added successfully."
+msgstr "O local foi adicionado com sucesso"
+
+#: modules/glpi/glpi/addLocation.php:38
+msgid "The location has been edited successfully."
+msgstr "A localizao foi editada com sucesso."
+
+#: modules/glpi/glpi/addLocation.php:43
+msgid "Add location"
+msgstr "Adicionar local"
+
+#: modules/glpi/glpi/addLocation.php:96
+msgid "Parent location"
+msgstr "Hierarquia do local"
+
+#: modules/glpi/glpi/entityRules.php:36
+msgid "All rules"
+msgstr "Todas as regas"
+
+#: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
+msgid "This client has been registered in pull mode"
+msgstr "Esta mquina cliente no foi registrada no modo Pull"
+
+#: modules/glpi/glpi/tabs.php:62
+msgid "Leave pull mode"
+msgstr "Sair do modo Pull"
+
+#: modules/glpi/glpi/tabs.php:72
+#, php-format
+msgid "%s's inventory %s"
+msgstr "Inventrio %s do %s"
+
+#: modules/glpi/glpi/tabs.php:78
+msgid "Summary"
+msgstr "Sumrio"
+
+#: modules/glpi/glpi/tabs.php:79
+msgid "Hardware"
+msgstr "Hardware"
+
+#: modules/glpi/glpi/tabs.php:80
+msgid "Storage"
+msgstr "Armazenamento"
+
+#: modules/glpi/glpi/tabs.php:81
+msgid "Network"
+msgstr "Rede"
+
+#: modules/glpi/glpi/tabs.php:82
+msgid "Software"
+msgstr "Software"
+
+#: modules/glpi/glpi/tabs.php:83
+msgid "Administrative"
+msgstr "Administrativo"
+
+#: modules/glpi/glpi/tabs.php:84
+msgid "History"
+msgstr "Historico"
+
+#: modules/glpi/glpi/tabs.php:85
+#: modules/glpi/includes/panels/antivirus.inc.php:30
+msgid "Antivirus"
+msgstr "Antivrus"
+
+#: modules/glpi/glpi/tabs.php:86
+msgid "Registry"
+msgstr "Registro"
+
+#: modules/glpi/glpi/tabs.php:100
+msgid "Get XLS Report"
+msgstr "Obter relatrio XLS"
 
 #: modules/glpi/glpi/createStaticGroup.php:30
 #, php-format
@@ -432,393 +722,110 @@ msgstr "ltimo inventrio  menos que %s dias a %s"
 msgid "Latest inventory is more than %s days at %s"
 msgstr "ltimo inventrio  mais que %s dias a %s"
 
-#: modules/glpi/glpi/tabs.php:62
-msgid "Leave pull mode"
-msgstr "Sair do modo Pull"
-
-#: modules/glpi/glpi/ajaxViewPart.php:235
-msgid "Location"
-msgstr "Localizao"
-
-#: modules/glpi/glpi/locationList.php:28
-msgid "Location list"
-msgstr "Lista de locais"
-
-#: modules/glpi/glpi/ajaxLocationList.php:66
-msgid "Location name"
-msgstr "Nome da localizao"
-
-#: modules/glpi/infoPackage.inc.php:98
-msgid "Locations"
-msgstr "Localizaes"
-
-#: modules/glpi/glpi/ajaxViewPart.php:214
-msgid "MAC Address"
-msgstr "Endereo MAC"
-
-#: modules/glpi/glpi/createOSStaticGroup.php:34
-#, php-format
-msgid "Machine with %s installed at %s"
-msgstr "Mquina com %s instalada em %s"
-
-#: modules/glpi/glpi/createBackupStaticGroup.php:70
+#: modules/glpi/glpi/createBackupStaticGroup.php:55
 #, php-format
 msgid "Machines backup configured at %s"
 msgstr ""
 
-#: modules/glpi/glpi/createBackupStaticGroup.php:75
+#: modules/glpi/glpi/createBackupStaticGroup.php:60
 #, php-format
 msgid "Machines backup not configured at %s"
 msgstr ""
 
-#: modules/glpi/glpi/createMachinesStaticGroup.php:72
-#, php-format
-msgid "Machines offline at %s"
-msgstr ""
+#: modules/glpi/glpi/entityList.php:28
+msgid "Entity list"
+msgstr "Lista de entidade"
 
-#: modules/glpi/glpi/createMachinesStaticGroup.php:66
-#, php-format
-msgid "Machines online at %s"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:242
-msgid "Manufacturer"
-msgstr "Fabricante"
-
-#: modules/glpi/glpi/ajaxViewPart.php:189
-#: modules/glpi/glpi/ajaxViewPart.php:249
-msgid "Memory"
-msgstr "Memoria"
-
-#: modules/glpi/glpi/ajaxViewPart.php:241
-msgid "Model"
-msgstr "Modelo"
-
-#: modules/glpi/glpi/ajaxViewPart.php:240
-msgid "Model / Type"
-msgstr "Modelo / Tipo"
-
-#: modules/glpi/glpi/ajaxViewPart.php:219
-msgid "Mount Point"
-msgstr "Ponto de montagem"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:71
-msgid "Move rule down"
-msgstr "Mover regra para baixo"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:70
-msgid "Move rule up"
-msgstr "Mover regra para cima"
-
-#: modules/glpi/glpi/addEntityRule.php:72
-#: modules/glpi/glpi/ajaxViewPart.php:212
-#: modules/glpi/glpi/ajaxViewPart.php:229 modules/glpi/glpi/addEntity.php:78
-#: modules/glpi/glpi/addLocation.php:77
-msgid "Name"
-msgstr "Nome"
-
-#: modules/glpi/glpi/ajaxViewPart.php:216
-msgid "Netmask"
-msgstr "Mascara de rede"
-
-#: modules/glpi/glpi/tabs.php:81
-msgid "Network"
-msgstr "Rede"
-
-#: modules/glpi/glpi/ajaxViewPart.php:192
-msgid "Network Cards"
-msgstr "Placa de Rede"
-
-#: modules/glpi/glpi/ajaxViewPart.php:213
-msgid "Network Type"
-msgstr "Tipo de Rede"
-
-#: modules/glpi/infoPackage.inc.php:169 modules/glpi/infoPackage.inc.php:202
-msgid "Network tab (GLPI)"
-msgstr "Aba Redes (GLPI)"
-
-#: modules/glpi/glpi/ajaxViewPart.php:211
-msgid "No"
-msgstr "No"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
-#, php-format
-msgid "No antivirus found at %s"
-msgstr "Nenhum antivrus encontrado em %s"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:43
-msgid "No antivirus found: %percent% (%d)"
-msgstr "Nenhum antivrus encontrado: %percent% (%d)"
-
-#: modules/glpi/glpi/ajaxLocationList.php:51
-#: modules/glpi/glpi/ajaxEntityList.php:51
-#: modules/glpi/glpi/ajaxEntityRules.php:51
-msgid "No entry found"
-msgstr "Nenhuma entrada encontrada"
-
-#: modules/glpi/glpi/ajaxViewPart.php:143
-msgid "No record found for this period."
-msgstr "Nenhum registro encontrado neste periodo."
-
-#: modules/glpi/glpi/ajaxViewPart.php:150
-msgid "No record found."
-msgstr "Nenhum registro encontrado."
-
-#: modules/glpi/includes/panels/antivirus.inc.php:42
-msgid "Not running or not up-to-date: %percent% (%d)"
-msgstr "No est rodando ou no atualizado: %percent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:41
-msgid "OK: %percent% (%d)"
-msgstr "OK: %percent% (%d)"
-
-#: modules/glpi/glpi/ajaxViewPart.php:237
-msgid "OS"
-msgstr "SO"
-
-#: modules/glpi/glpi/ajaxViewPart.php:238
-msgid "Operating System"
-msgstr "Sistema Operacional"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:32
-msgid "Operating systems"
-msgstr "Sistemas operacionais"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:53
-msgid "Other"
-msgstr "Outro"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:61
-msgid "Other Windows"
-msgstr "Outro Windows"
-
-#: modules/glpi/glpi/ajaxViewPart.php:196
-msgid "Others"
-msgstr "Outros"
-
-#: modules/glpi/glpi/addEntity.php:95
-msgid "Parent entity"
-msgstr "Hierarquia da entidade"
-
-#: modules/glpi/glpi/addLocation.php:96
-msgid "Parent location"
-msgstr "Hierarquia do local"
-
-#: modules/glpi/glpi/ajaxViewPart.php:147
-msgid ""
-"Please ensure you are running GLPI with FusionInventory plugin and "
-"FusionInventory Agent on this client."
-msgstr ""
-"Por favor tenha certeza de que voc est rodando o GLPI com o plugin "
-"FusionInventory e o Agente FusionInventory neste cliente."
-
-#: modules/glpi/glpi/ajaxViewPart.php:188
-msgid "Processors"
-msgstr "Processadores"
-
-#: modules/glpi/glpi/ajaxViewPart.php:124
-msgid "Properties"
-msgstr "Propriedades"
-
-#: modules/glpi/glpi/tabs.php:86
-msgid "Registry"
-msgstr "Registro"
-
-#: modules/glpi/infoPackage.inc.php:184 modules/glpi/infoPackage.inc.php:217
-msgid "Registry tab (GLPI)"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:138
-#: modules/glpi/includes/publicFunc.php:142
-msgid "Remove"
-msgstr "Remover"
+#: modules/glpi/glpi/entityList.php:36
+msgid "All entities"
+msgstr "Todas as entidades"
 
 #: modules/glpi/glpi/ajaxEntityRules.php:66
 msgid "Rule name"
 msgstr "Nome da regra"
 
-#: modules/glpi/glpi/ajaxViewPart.php:243
-msgid "Serial Number"
-msgstr "Numero Serial"
+#: modules/glpi/glpi/ajaxEntityRules.php:69
+msgid "Edit rule"
+msgstr "Editar regra"
 
-#: modules/glpi/glpi/ajaxViewPart.php:259
-msgid "Service Pack"
-msgstr "Service Pack"
+#: modules/glpi/glpi/ajaxEntityRules.php:70
+msgid "Move rule up"
+msgstr "Mover regra para cima"
 
-#: modules/glpi/glpi/ajaxViewPart.php:221
-#: modules/glpi/glpi/ajaxViewPart.php:246
-msgid "Size"
-msgstr "Tamanho"
+#: modules/glpi/glpi/ajaxEntityRules.php:71
+msgid "Move rule down"
+msgstr "Mover regra para baixo"
 
-#: modules/glpi/glpi/tabs.php:82
-msgid "Software"
-msgstr "Software"
+#: modules/glpi/glpi/ajaxEntityRules.php:72
+msgid "Delete rule"
+msgstr "Remover regra"
 
-#: modules/glpi/infoPackage.inc.php:172 modules/glpi/infoPackage.inc.php:205
-msgid "Softwares tab (GLPI)"
-msgstr "Aba Programas (GLPI)"
+#: modules/glpi/includes/publicFunc.php:86
+msgid "Entity attributes"
+msgstr "Atributos da entidade"
 
-#: modules/glpi/glpi/ajaxViewPart.php:195
-msgid "Sound Cards"
-msgstr "Placa de Som"
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Dynamic"
+msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:263
-msgid "State"
-msgstr "Estado"
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Static"
+msgstr ""
 
-#: modules/glpi/glpi/tabs.php:80
-msgid "Storage"
-msgstr "Armazenamento"
+#: modules/glpi/includes/publicFunc.php:154
+msgid "Entity right"
+msgstr "Permisses da entidade"
 
-#: modules/glpi/infoPackage.inc.php:166 modules/glpi/infoPackage.inc.php:199
-msgid "Storage tab (GLPI)"
-msgstr "Aba Armazenamento (GLPI)"
+#: modules/glpi/includes/publicFunc.php:160
+msgid "Add entity right"
+msgstr "Adicionar permisses a entidade"
 
-#: modules/glpi/glpi/addEntityRule.php:102
-msgid "Subnet"
-msgstr "Subnet"
+#: modules/glpi/includes/html.php:49
+msgid "Hide Windows Updates"
+msgstr "Esconder Updates do Windows"
 
-#: modules/glpi/glpi/tabs.php:78
-msgid "Summary"
-msgstr "Sumrio"
+#: modules/glpi/includes/panels/antivirus.inc.php:40
+#: modules/glpi/includes/panels/inventory.inc.php:43
+#: modules/glpi/includes/panels/os_repartition.inc.php:109
+msgid "Create a group"
+msgstr "Criar um grupo"
 
-#: modules/glpi/infoPackage.inc.php:160 modules/glpi/infoPackage.inc.php:193
-msgid "Summary tab (GLPI)"
-msgstr "Aba Sumario (GLPI)"
+#: modules/glpi/includes/panels/antivirus.inc.php:41
+msgid "OK: %percent% (%d)"
+msgstr "OK: %percent% (%d)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:223
-msgid "Supplier"
-msgstr "Fornecedor"
+#: modules/glpi/includes/panels/antivirus.inc.php:42
+msgid "Not running or not up-to-date: %percent% (%d)"
+msgstr "No est rodando ou no atualizado: %percent% (%d)"
 
-#: modules/glpi/glpi/addEntityRule.php:180
-msgid "Target entity"
-msgstr "Entidade de destino"
+#: modules/glpi/includes/panels/antivirus.inc.php:43
+msgid "No antivirus found: %percent% (%d)"
+msgstr "Nenhum antivrus encontrado: %percent% (%d)"
 
-#: modules/glpi/glpi/addEntityRule.php:200
-msgid "Target location"
-msgstr "Local de destino"
+#: modules/glpi/includes/panels/inventory.inc.php:30
+msgid "Computers"
+msgstr "Computadores"
 
-#: modules/glpi/glpi/addEntity.php:34
-msgid "The entity has been added successfully."
-msgstr "A entidade foi adicionada com sucesso."
+#: modules/glpi/includes/panels/inventory.inc.php:44
+msgid "< %s days: %percent% (%d)"
+msgstr "< %s dias: %percent% (%d)"
 
-#: modules/glpi/glpi/addEntity.php:38
-msgid "The entity has been edited successfully."
-msgstr "A entidade foi editada com sucesso."
+#: modules/glpi/includes/panels/inventory.inc.php:45
+msgid "> %s days: %percent% (%d)"
+msgstr "> %s dias: %percent% (%d)"
 
-#: modules/glpi/glpi/addEntityRule.php:31
-msgid "The entity rule has been added successfully."
-msgstr "A regra da entidade foi adicionada com sucesso."
+#: modules/glpi/includes/panels/inventory.inc.php:48
+msgid "Latest Inventory Date"
+msgstr "ltima data do inventrio"
 
-#: modules/glpi/glpi/deleteEntityRule.php:31
-msgid "The entity rule has been deleted successfully."
-msgstr "A entidade da regra foi removida com sucesso."
+#: modules/glpi/includes/panels/os_repartition.inc.php:32
+msgid "Operating systems"
+msgstr "Sistemas operacionais"
 
-#: modules/glpi/glpi/addEntityRule.php:35
-msgid "The entity rule has been edited successfully."
-msgstr "A regra da entidade foi editada com sucesso."
+#: modules/glpi/includes/panels/os_repartition.inc.php:54
+msgid "Other"
+msgstr "Outro"
 
-#: modules/glpi/glpi/addLocation.php:34
-msgid "The location has been added successfully."
-msgstr "O local foi adicionado com sucesso"
-
-#: modules/glpi/glpi/addLocation.php:38
-msgid "The location has been edited successfully."
-msgstr "A localizao foi editada com sucesso."
-
-#: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
-msgid "This client has been registered in pull mode"
-msgstr "Esta mquina cliente no foi registrada no modo Pull"
-
-#: modules/glpi/glpi/ajaxViewPart.php:255 modules/glpi/includes/html.php:57
-msgid "Today"
-msgstr "Hoje"
-
-#: modules/glpi/glpi/ajaxViewPart.php:245
-msgid "Type"
-msgstr "Tipo"
-
-#: modules/glpi/glpi/ajaxViewPart.php:146
-msgid "Unable to detect any Antivirus software on this machine."
-msgstr "Incapaz de detectar qualquer software de antivrus nesta maquina."
-
-#: modules/glpi/glpi/ajaxViewPart.php:264
-msgid "Unknown"
-msgstr "Desconhecido"
-
-#: modules/glpi/glpi/ajaxViewPart.php:268
-msgid "Up-to-date"
-msgstr "Atualizado"
-
-#: modules/glpi/glpi/ajaxViewPart.php:252
-msgid "User"
-msgstr "Usuario"
-
-#: modules/glpi/glpi/ajaxViewPart.php:125
-msgid "Value"
-msgstr "Valor"
-
-#: modules/glpi/glpi/ajaxViewPart.php:228
-msgid "Vendor"
-msgstr "Vendedor"
-
-#: modules/glpi/glpi/ajaxViewPart.php:230
-msgid "Version"
-msgstr "Verso"
-
-#: modules/glpi/glpi/ajaxViewPart.php:226
-msgid "Warranty End Date"
-msgstr "Data fim da Garantia"
-
-#: modules/glpi/glpi/ajaxViewPart.php:261
-msgid "Windows Key"
-msgstr "Chave do Windows"
-
-#: modules/glpi/glpi/ajaxViewPart.php:248
-msgid "Writer"
-msgstr "Escritor"
-
-#: modules/glpi/glpi/ajaxViewPart.php:210
-msgid "Yes"
-msgstr "Sim"
-
-#: modules/glpi/glpi/addEntityRule.php:115
-msgid "contains"
-msgstr "contm"
-
-#: modules/glpi/glpi/addEntityRule.php:114
-msgid "different from"
-msgstr "diferente de"
-
-#: modules/glpi/glpi/addEntityRule.php:116
-msgid "does not contain"
-msgstr "no contm"
-
-#: modules/glpi/glpi/addEntityRule.php:123
-msgid "does not exist"
-msgstr "no existe"
-
-#: modules/glpi/glpi/addEntityRule.php:121
-msgid "does not match (regex)"
-msgstr "no combina (regex)"
-
-#: modules/glpi/glpi/addEntityRule.php:113
-msgid "equal to"
-msgstr "igual a"
-
-#: modules/glpi/glpi/addEntityRule.php:122
-msgid "exists"
-msgstr "existe"
-
-#: modules/glpi/glpi/addEntityRule.php:118
-#: modules/glpi/glpi/addEntityRule.php:119
-msgid "finishes by"
-msgstr "finaliza com"
-
-#: modules/glpi/glpi/addEntityRule.php:120
-msgid "matches (regex)"
-msgstr "combina (regex)"
-
-#: modules/glpi/glpi/addEntityRule.php:117
-msgid "starts with"
-msgstr "inicia com"
+#: modules/glpi/includes/panels/os_repartition.inc.php:63
+msgid "Other Windows"
+msgstr "Outro Windows"

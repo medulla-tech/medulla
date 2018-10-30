@@ -109,34 +109,46 @@ if ($dd['agenttype'] == "relayserver")
 var uuid = '<?php echo $_GET['objectUUID']; ?>'
 var cn = '<?php echo $_GET['cn']; ?>'
 
-jQuery('#ssh').on('click', function(){
-    var ssh_url = '<?php echo $url['SSH']; ?>'
-    var ssh_cux = '<?php echo $cux['SSH']; ?>'
-    jQuery.get( "modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: ssh_cux, cux_type: "SSH" } )
+<?
+if (isset($url['SSH'])){
+    echo "jQuery('#ssh').on('click', function(){
+    var ssh_url = '".$url['SSH']."';
+    var ssh_cux = '".$cux['SSH']."';";
+    echo 'jQuery.get( "modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: ssh_cux, cux_type: "SSH" } )
     .done(function( data ) {
       window.open( ssh_url )
       alert( "The SSH control session opens in a new window" )
     })
-})
+})';
+};
 
-jQuery('#rdp').on('click', function(){
-    var rdp_url = '<?php echo $url['RDP']; ?>'
-    var rdp_cux = '<?php echo $cux['RDP']; ?>'
+if (isset($url['RDP'])){
+    echo "jQuery('#rdp').on('click', function(){
+        var rdp_url = '" . $url['RDP'] ."';
+        var rdp_cux = '". $cux['RDP']."';";
+    echo '
     jQuery.get( "modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: rdp_cux, cux_type: "RDP" } )
     .done(function( data ) {
       window.open( rdp_url )
       alert( "The RDP control session opens in a new window" )
     })
-})
+    })';
+};
 
-jQuery('#vnc').on('click', function(){
-    var vnc_url = '<?php echo $url['VNC']; ?>'
-    var vnc_cux = '<?php echo $cux['VNC']; ?>'
+
+if (isset($url['VNC'])){
+    echo "jQuery('#vnc').on('click', function(){
+        var vnc_url = '".$url['VNC']."';
+        var vnc_cux = '".$cux['VNC']."';";
+    echo '
     jQuery.get( "modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: vnc_cux, cux_type: "VNC" } )
     .done(function( data ) {
       window.open( vnc_url )
       alert( "The VNC control session opens in a new window" )
     })
-})
+    })';
+};
+
+?>
 
 </script>

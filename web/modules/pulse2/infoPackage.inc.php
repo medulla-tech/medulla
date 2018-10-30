@@ -35,7 +35,7 @@ $mod->setDescription(_T("Pulse2", "pulse2"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(700);
 
- 
+
 /* Get the base module instance */
 $base = &$MMCApp->getModule('base');
 

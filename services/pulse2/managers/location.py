@@ -30,13 +30,16 @@ provide methods to work with location association with computers
 import logging
 from pulse2.utils import Singleton
 
+logger = logging.getLogger("pulse2")
+
+
 class ComputerLocationManager(Singleton):
     components = {}
     main = None
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def select(self, name = None):
         if not name:
@@ -195,8 +198,7 @@ class ComputerLocationI(Singleton):
     def getLocationParentPath(self, loc_uuid):
         """ return an array containing all the parent uuids of this location """
         pass
-    
+
     def getLocationName(self, loc_uuid):
         """ return a string of the location name """
         pass
-

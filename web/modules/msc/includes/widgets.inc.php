@@ -74,7 +74,7 @@ class RenderedMSCGroupDontExists extends HtmlElement {
         $this->str = sprintf(_T('group "%s" is not defined in the MSC module, or you don\'t have permissions to access it', 'msc'), $this->name);
     }
 
-    function display() {
+    function display($arrParam = array()) {
         $this->headerDisplay();
     }
 
@@ -96,7 +96,7 @@ class RenderedMSCHostDontExists extends HtmlElement {
         $this->str = sprintf(_T('%s host is not defined in the MSC module, or you don\'t have permissions to access it', 'msc'), $this->name);
     }
 
-    function display() {
+    function display($arrParam = array()) {
         $this->headerDisplay();
     }
 
@@ -137,7 +137,7 @@ class RenderedLabel extends HtmlElement {
         $this->text = $text;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         print "<h$this->level>$this->text</h$this->level>";
     }
 
@@ -168,7 +168,7 @@ class RenderedMSCActions extends HtmlElement {
         }
     }
 
-    function display() {
+    function display($arrParam = array()) {
         if (!$this->enabled) {
             $selectDisabled = "DISABLED";
             $onSubmit = "";
@@ -303,7 +303,7 @@ class RenderedMSCAction extends HtmlElement {
         }
     }
 
-    function display() {
+    function display($arrParam = array()) {
         print '<option value="' . $this->filename . '">' . $this->title . '</option>';
     }
 
@@ -316,7 +316,7 @@ class RenderedImgInput extends HtmlElement {
         $this->style = $style;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         print '
              <input
                 id="launchActionImg"
@@ -364,7 +364,7 @@ class AjaxFilterCommands extends AjaxFilter {
         $this->commands->setSelected($elemnt);
     }
 
-    function display() {
+    function display($arrParam = array()) {
         global $conf;
         $root = $conf["global"]["root"];
         ?>
@@ -540,7 +540,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
         $this->states->setSelected($elemnt);
     }
 
-    function display() {
+    function display($arrParam = array()) {
         global $conf;
         $root = $conf["global"]["root"];
         ?>

@@ -22,6 +22,8 @@
 import logging
 from sqlalchemy.orm import create_session
 
+logger = logging.getLogger("msc")
+
 
 class CommandsOnHostPhase(object):
 
@@ -45,7 +47,7 @@ class CommandsOnHostPhase(object):
 
     def is_state(self, state):
         ret = self.state == state
-        logging.getLogger().debug("is_state %s: %s" % (state, ret))
+        logger.debug("is_state %s: %s" % (state, ret))
         return ret
 
     def switch_to_done(self):
@@ -81,11 +83,10 @@ class CommandsOnHostPhase(object):
 
     def set_state(self, state):
         self.state = state
-        logging.getLogger().debug("<%s> phase state: %s" % (self.name, state))
+        logger.debug("<%s> phase state: %s" % (self.name, state))
         self.flush()
 
     def toDict(self, relations = False):
         d = self.__dict__
         if '_sa_instance_state' in d: del d['_sa_instance_state']
         return d
-

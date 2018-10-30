@@ -6,4 +6,3 @@ file_filter = <lang>/LC_MESSAGES/backuppc.po
 source_file = backuppc.pot
 source_lang = en_US
 type = PO
-

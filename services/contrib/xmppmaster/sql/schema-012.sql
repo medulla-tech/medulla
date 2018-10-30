@@ -74,7 +74,7 @@ CREATE EVENT IF NOT EXISTS purgelogs
   (CURRENT_TIMESTAMP + INTERVAL 1 DAY) ON COMPLETION PRESERVE ENABLE
   DO
     DELETE FROM logs WHERE date < DATE_SUB(NOW(), INTERVAL 30 DAY);
-    
+
 -- Delete  one month old record table logs
 -- DELETE FROM logs WHERE date < DATE_SUB(NOW(), INTERVAL 30 DAY);
 CREATE EVENT IF NOT EXISTS purgehistorylogs
@@ -84,10 +84,10 @@ CREATE EVENT IF NOT EXISTS purgehistorylogs
   DO
     DELETE FROM historylogs WHERE date < DATE_SUB(NOW(), INTERVAL 60 DAY);
 
--- creation  bandwidth   
-ALTER TABLE `xmppmaster`.`has_login_command` 
+-- creation  bandwidth
+ALTER TABLE `xmppmaster`.`has_login_command`
 ADD COLUMN `bandwidth` INT(11) NULL DEFAULT '0' AFTER `shutdownrequired`;
-    
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------

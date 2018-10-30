@@ -42,7 +42,7 @@ from pulse2.network import PreferredNetworkParser
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 from pulse2.database.msc.config import MscDatabaseConfig
 
-log = logging.getLogger()
+log = logging.getLogger("msc")
 
 class SchedulerDatabaseConfig(MscDatabaseConfig):
     dbname = "msc"
@@ -379,7 +379,3 @@ class SchedulerConfig(object):
                 else :
                     _networks = pnp.get_default()
                 self.launchers_networks.update({section: _networks})
-
-
-
-

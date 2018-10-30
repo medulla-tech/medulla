@@ -33,4 +33,3 @@ class Bundle(object):
 
     def toH(self):
         return { 'id': self.id, 'title': self.title }
-

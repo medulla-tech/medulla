@@ -40,7 +40,7 @@ $licencemax=$_GET['licencemax'];
 
 $licensescount = getLicensesComputer($vendor,$software,$version);
 
-$locationname =xmlrpc_getLocationName($licensescount[0]['entityid']); 
+$locationname =xmlrpc_getLocationName($licensescount[0]['entityid']);
 
 
 
@@ -80,6 +80,3 @@ $parm['gid']=$group->id;
 header("Location: " . urlStrRedirect("base/computers/display", $parm));
 exit;
 ?>
-
-
-

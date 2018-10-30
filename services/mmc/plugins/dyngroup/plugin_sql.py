@@ -77,7 +77,7 @@ class SqlPlugin:
                 raise Exception("user don't have good rigths")
         else:
             return None
-        
+
     def getValue(self, key, user = None):
         datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
         if datum != None:
@@ -108,4 +108,3 @@ class SqlPlugin:
 class SqlDatumSave(object):
     def toS(self):
         return str(self.id) + ") " + str(self.k) + " = " + str(self.value)
-

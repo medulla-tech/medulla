@@ -31,13 +31,15 @@ from pulse2.scheduler.proxy.xmlrpc import ForwardingProxy
 from pulse2.scheduler.proxy.unix import Forwarder
 from pulse2.scheduler.proxy.buffer import SendingBuffer
 
+logger = logging.getLogger("pulse2")
+
 
 class App :
     def __init__(self, config):
         self.config = config
         SendingBuffer().init(config)
         self.socket_file = config.scheduler_proxy_socket_path
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.xmlrpc_proxy = ForwardingProxy(self.config)
         self.setup()
         reactor.addSystemEventTrigger('before', 'shutdown', self.clean_up)
@@ -45,9 +47,9 @@ class App :
     def setup(self):
         """Setup the forwarding proxy"""
         response_handler = self.xmlrpc_proxy.client_response
-        d = task.deferLater(reactor, 
-                            2, 
-                            Forwarder, 
+        d = task.deferLater(reactor,
+                            2,
+                            Forwarder,
                             response_handler,
                             self.socket_file)
         d.addCallback(self._got_forwarder)
@@ -61,7 +63,7 @@ class App :
         a internal LIFO list, filled by Forwarder.append_cached_method()
         contains all the methods which will be buffered.
 
-        Unlisted methods is forwarded immediatelly. 
+        Unlisted methods is forwarded immediatelly.
 
         @param forwarder: forwarding engine based on unix socket proxy
         @type forwarder: Forwarder
@@ -79,11 +81,11 @@ class App :
 
         self.xmlrpc_proxy.register_forwarder(self.forwarder)
 
-        d = task.deferLater(reactor, 
-                            self.config.proxy_buffer_start_delay, 
+        d = task.deferLater(reactor,
+                            self.config.proxy_buffer_start_delay,
                             self.start_emitting_buffer)
         d.addErrback(self._eb_got_forwarder)
- 
+
     def _eb_got_forwarder(self, failure):
         self.logger.error("forwarder get failed: %s" % failure)
 
@@ -119,8 +121,8 @@ class App :
         self.logger.info('XMLRPC Proxy of scheduler %s: starting' % self.config.name)
         try:
             if self.config.enablessl:
-                OpenSSLContext().setup(self.config.localcert, 
-                                       self.config.cacert, 
+                OpenSSLContext().setup(self.config.localcert,
+                                       self.config.cacert,
                                        self.config.verifypeer)
 
                 reactor.listenSSL(
@@ -137,9 +139,7 @@ class App :
                     interface = self.config.host
                     )
         except Exception, e:
-            self.logger.error('XMLRPC Proxy of scheduler %s: can\'t bind to %s:%d, reason is %s' % 
+            self.logger.error('XMLRPC Proxy of scheduler %s: can\'t bind to %s:%d, reason is %s' %
                     (self.config.name, self.config.host, self.config.port, e))
             return False
         return True
-
-

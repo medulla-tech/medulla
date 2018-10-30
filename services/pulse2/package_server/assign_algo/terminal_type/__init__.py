@@ -54,7 +54,7 @@ class MMUserAssignAlgo(MMAssignAlgo):
         for row in self.database.buildPopulateCacheQuery():
             self.types["UUID" + str(row[2])] = row[0].Value
         self.logger.info("Populate done (%d computers)" % len(self.types))
-    
+
     def __getMachineType(self, m):
         try:
             ret = self.types[m['uuid']]
@@ -63,7 +63,7 @@ class MMUserAssignAlgo(MMAssignAlgo):
             # Put result in memory cache
             self.types[m['uuid']] = ret
         return ret
-    
+
     def getMachineMirror(self, m):
         if not m['uuid'] in self.assign:
             self.assign[m['uuid']] = {}
@@ -74,7 +74,7 @@ class MMUserAssignAlgo(MMAssignAlgo):
                 for u in self.config.type2url[type]['mirror']:
                     self.assign[m['uuid']]['getMirror'].append(self.url2mirrors[u])
         return self.assign[m['uuid']]['getMirror']
-        
+
     def getMachineMirrorFallback(self, m):
         if not m['uuid'] in self.assign:
             self.assign[m['uuid']] = {}

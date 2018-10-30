@@ -72,7 +72,7 @@ class Benchmark:
             for pkg in self.packages:
                 for f in pkg['files']:
                     fid = f['id']
-                    self.inprogress += 1                    
+                    self.inprogress += 1
                     print "Current downloads in progress:", self.inprogress
                     d = self.mirror.callRemote('getFileURI', fid).addCallbacks(self.startDl, self.dlError)
 
@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
     URL = sys.argv[1]
     SLEEP = 0.1
-    
+
     benchmark = Benchmark(URL, SLEEP)
     benchmark.start()
     reactor.run()

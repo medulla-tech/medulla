@@ -37,19 +37,19 @@ def myLogger ():
 log = myLogger()
 
 def get_my_network ():
-    """ 
+    """
     Getting the networking info - directly from test machine
 
-    Another way to get necesary networking infomations to compare getted 
+    Another way to get necesary networking infomations to compare getted
     results of tested methods.
 
     @return: IP address, netmask and default gateway of testmachine
     @rtype: tuple
-    
+
     """
     cmd_ip = "ifconfig $EXT_NIC | grep inet | cut -d : -f 2 | cut -d ' ' -f 1"
     cmd_nm = "ifconfig $EXT_NIC | grep Mask | cut -d : -f 4 | cut -d ' ' -f 1"
-    
+
     ip = exec_cmd(cmd_ip,exclude="127.0.0.1")
     nm = exec_cmd(cmd_nm)
 
@@ -66,10 +66,10 @@ def get_my_gateway():
                 continue
             return socket.inet_ntoa(struct.pack("<L", int(fields[2], 16)))
 
- 
+
 def exec_cmd(cmd, exclude=None):
     """
-    Command execute and output parse 
+    Command execute and output parse
 
     @param cmd: command line expression to execute
     @type cmd: str
@@ -79,7 +79,7 @@ def exec_cmd(cmd, exclude=None):
 
     @return: output from executed expression
     @rtype: str
-    
+
     """
     ps = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     out = ps.communicate()
@@ -92,7 +92,7 @@ def exec_cmd(cmd, exclude=None):
         if exclude :
             if exclude in line :
                 line = line.replace(exclude, "")
-    
+
         ret.append(line)
     return ret[0]
 
@@ -102,9 +102,9 @@ class class01_NetUtils (unittest.TestCase) :
 
     def setUp (self):
         """getting of local network settings"""
-        self.my_ip, self.my_nm = get_my_network()  
+        self.my_ip, self.my_nm = get_my_network()
         self.my_gw = get_my_gateway()
-        
+
 
     def test01_get_netmask(self):
         """ test of getting of netmask """
@@ -129,18 +129,18 @@ class class01_NetUtils (unittest.TestCase) :
 
     def test05_has_enough_info_true(self):
         """ test of info complexity """
-        iface_info = {"ip": "192.168.1.25", 
-                      "mac": "00:55:47:f0:d4", 
-                      "netmask": "255.255.255.0" , 
+        iface_info = {"ip": "192.168.1.25",
+                      "mac": "00:55:47:f0:d4",
+                      "netmask": "255.255.255.0" ,
                       "gateway" : "192.168.1.1"}
         result = NetUtils.has_enough_info(iface_info)
         self.assertEqual(result, True)
 
     def test06_has_enough_info_false(self):
         """ test of info complexity """
-        iface_info = {"ip": "192.168.1.25", 
-                      "mac": None, 
-                      "netmask": "255.255.255.0" , 
+        iface_info = {"ip": "192.168.1.25",
+                      "mac": None,
+                      "netmask": "255.255.255.0" ,
                       "gateway" : "192.168.1.1"}
         result = NetUtils.has_enough_info(iface_info)
         self.assertEqual(result, False)
@@ -177,9 +177,9 @@ class class01_NetUtils (unittest.TestCase) :
 class class02_IPresolve (unittest.TestCase):
 
     def test01_resolve_per_ip(self):
-        """ 
+        """
         IP resolving method.
-        
+
         Selecting of correct interface depends on prefered network of server.
         """
 
@@ -189,19 +189,19 @@ class class02_IPresolve (unittest.TestCase):
 
         estimated_ip = "192.168.1.25"
 
-        iface1 = {"ip": estimated_ip, 
-                  "mac": "00:55:47:f0:d4", 
-                  "netmask": "255.255.255.0" , 
+        iface1 = {"ip": estimated_ip,
+                  "mac": "00:55:47:f0:d4",
+                  "netmask": "255.255.255.0" ,
                   "gateway" : "192.168.1.1"}
 
-        iface2 = {"ip": "127.0.0.1", 
-                  "mac": "00:55:40:00:00", 
-                  "netmask": "255.255.255.0" , 
+        iface2 = {"ip": "127.0.0.1",
+                  "mac": "00:55:40:00:00",
+                  "netmask": "255.255.255.0" ,
                   "gateway" : "192.168.1.1"}
 
-        iface3 = {"ip": "200.41.11.85", 
-                  "mac": "41:45:40:f0:8f", 
-                  "netmask": "255.255.0.0" , 
+        iface3 = {"ip": "200.41.11.85",
+                  "mac": "41:45:40:f0:8f",
+                  "netmask": "255.255.0.0" ,
                   "gateway" : "192.168.1.1"}
 
         ifaces =  [iface1, iface2, iface3]
@@ -214,9 +214,9 @@ class class02_IPresolve (unittest.TestCase):
         self.assertEqual(estimated_ip, getted_ip)
 
     def test02_resolve_per_ip_with_default_detection(self):
-        """ 
+        """
         IP resolving method.
-        
+
         Selecting of correct interface depends on prefered network of server.
         IP address of tested machine exists on local network.
         """
@@ -228,23 +228,23 @@ class class02_IPresolve (unittest.TestCase):
 
         resolve_order = ["ip"]
 
-        # modify the last number of IP address to 111 
+        # modify the last number of IP address to 111
         # e.g. 211.55.21.37 --> 211.55.21.111
         estimated_ip = ".".join(my_ip.split(".")[0:3] + ["111"])
 
-        iface1 = {"ip": estimated_ip, 
-                  "mac": "00:55:47:f0:d4", 
-                  "netmask": "255.255.255.0" , 
+        iface1 = {"ip": estimated_ip,
+                  "mac": "00:55:47:f0:d4",
+                  "netmask": "255.255.255.0" ,
                   "gateway" : "192.168.1.1"}
 
-        iface2 = {"ip": "127.0.0.1", 
-                  "mac": "00:55:40:00:00", 
-                  "netmask": "255.255.255.0" , 
+        iface2 = {"ip": "127.0.0.1",
+                  "mac": "00:55:40:00:00",
+                  "netmask": "255.255.255.0" ,
                   "gateway" : "192.168.1.1"}
 
-        iface3 = {"ip": "200.41.11.85", 
-                  "mac": "41:45:40:f0:8f", 
-                  "netmask": "255.255.0.0" , 
+        iface3 = {"ip": "200.41.11.85",
+                  "mac": "41:45:40:f0:8f",
+                  "netmask": "255.255.0.0" ,
                   "gateway" : "192.168.1.1"}
 
         ifaces =  [iface1, iface2, iface3]
@@ -260,26 +260,26 @@ class class02_IPresolve (unittest.TestCase):
         """
         *Last chance method*
 
-        Returns the first interface having enough networking info. 
+        Returns the first interface having enough networking info.
         """
         my_ip, my_mask = get_my_network()
         my_network = [(my_ip, my_mask)]
 
         resolve_order = ["first"]
 
-        estimated_ip = "192.168.1.15" 
-        iface1 = {"ip": estimated_ip, 
-                  "mac": "00:55:47:f0:d4", 
-                  "netmask": "255.255.255.0" , 
+        estimated_ip = "192.168.1.15"
+        iface1 = {"ip": estimated_ip,
+                  "mac": "00:55:47:f0:d4",
+                  "netmask": "255.255.255.0" ,
                   "gateway" : "192.168.1.1"}
 
-        # omitting some informations 
-        iface2 = {"ip": "127.0.0.1", 
-                  "mac": "00:55:40:00:00", 
-                  "netmask": "255.255.255.0"} 
+        # omitting some informations
+        iface2 = {"ip": "127.0.0.1",
+                  "mac": "00:55:40:00:00",
+                  "netmask": "255.255.255.0"}
 
-        iface3 = {"ip": "200.41.11.85", 
-                  "mac": "41:45:40:f0:8f"} 
+        iface3 = {"ip": "200.41.11.85",
+                  "mac": "41:45:40:f0:8f"}
 
         ifaces =  [iface1, iface2, iface3]
 
@@ -298,7 +298,7 @@ class class03_NetDetect (unittest.TestCase):
         format of 1-of-tuple :
         (ip, netmask, correct_network, correct_broadcast)
         """
-        corrects = [("192.168.21.52", "255.255.255.0", 
+        corrects = [("192.168.21.52", "255.255.255.0",
                      "192.168.21.0" , "192.168.21.255"),
 
                     ("10.10.152.55" , "255.255.0.0",
@@ -315,5 +315,3 @@ class class03_NetDetect (unittest.TestCase):
 
 if __name__ == '__main__' :
     unittest.main()
-
-

@@ -2,34 +2,34 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 14:06+0100\n"
+"POT-Creation-Date: 2018-10-26 11:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: modules/support/includes/panels/license.inc.php:132
-msgid "Activate again / Use another subscription"
-msgstr "Активувати знову/Скористатися іншою передплатою"
+#: modules/support/infoPackage.inc.php:31
+#: modules/support/includes/panels/license.inc.php:54
+msgid "Support"
+msgstr "Підтримка"
+
+#: modules/support/infoPackage.inc.php:35
+msgid "Remote support"
+msgstr "Віддалена підтримка"
 
 #: modules/support/infoPackage.inc.php:40
 msgid "Collect"
 msgstr "Зібрати"
-
-#: modules/support/includes/panels/license.inc.php:91
-msgid "Computers"
-msgstr "Комп'ютери"
 
 #: modules/support/infoPackage.inc.php:42
 msgid "Connect"
@@ -43,51 +43,50 @@ msgstr "Від’єднатися"
 msgid "Download an archive including logs and config files"
 msgstr "Отримати архів разом із журналом і файлами налаштування"
 
-#: modules/support/includes/panels/remotesupport.inc.php:56
-msgid "Download archive"
-msgstr "Отримати архів"
-
-#: modules/support/includes/panels/license.inc.php:61
-msgid "Email"
-msgstr "Ел. пошта"
-
-#: modules/support/includes/panels/license.inc.php:106
-msgid "End"
-msgstr "Кінець"
-
-#: modules/support/includes/panels/remotesupport.inc.php:59
-msgid "Extract log and config files"
-msgstr "Видобути журнал і файли налаштувань"
-
-#: modules/support/includes/panels/remotesupport.inc.php:30
-msgid "Extract logs"
-msgstr "Видобути журнал"
-
-#: modules/support/includes/panels/license.inc.php:65
-msgid "Hours"
-msgstr "Години"
-
-#: modules/support/includes/panels/license.inc.php:118
-msgid "Links"
-msgstr "Посилання"
+#: modules/support/includes/panels/license.inc.php:30
+msgid "Subscription info"
+msgstr "Інформація щодо передплати"
 
 #: modules/support/includes/panels/license.inc.php:57
 msgid "Phone"
 msgstr "Телефон"
 
-#: modules/support/infoPackage.inc.php:35
-msgid "Remote support"
-msgstr "Віддалена підтримка"
+#: modules/support/includes/panels/license.inc.php:61
+msgid "Email"
+msgstr "Ел. пошта"
 
-#: modules/support/includes/panels/license.inc.php:30
-msgid "Subscription info"
-msgstr "Інформація щодо передплати"
-
-#: modules/support/infoPackage.inc.php:31
-#: modules/support/includes/panels/license.inc.php:54
-msgid "Support"
-msgstr "Підтримка"
+#: modules/support/includes/panels/license.inc.php:65
+msgid "Hours"
+msgstr "Години"
 
 #: modules/support/includes/panels/license.inc.php:75
 msgid "Your subscription"
 msgstr "Ваша передплата"
+
+#: modules/support/includes/panels/license.inc.php:91
+msgid "Computers"
+msgstr "Комп'ютери"
+
+#: modules/support/includes/panels/license.inc.php:106
+msgid "End"
+msgstr "Кінець"
+
+#: modules/support/includes/panels/license.inc.php:118
+msgid "Links"
+msgstr "Посилання"
+
+#: modules/support/includes/panels/license.inc.php:132
+msgid "Activate again / Use another subscription"
+msgstr "Активувати знову/Скористатися іншою передплатою"
+
+#: modules/support/includes/panels/remotesupport.inc.php:30
+msgid "Extract logs"
+msgstr "Видобути журнал"
+
+#: modules/support/includes/panels/remotesupport.inc.php:42
+msgid "Download archive"
+msgstr "Отримати архів"
+
+#: modules/support/includes/panels/remotesupport.inc.php:45
+msgid "Extract log and config files"
+msgstr "Видобути журнал і файли налаштувань"

@@ -32,6 +32,8 @@ from OpenSSL import SSL
 from twisted.internet import ssl
 from SocketServer import ThreadingMixIn
 
+logger = logging.getLogger("inventory")
+
 
 def makeSSLContext(verifypeer, cacert, localcert, cb, log = True):
     """
@@ -39,12 +41,11 @@ def makeSSLContext(verifypeer, cacert, localcert, cb, log = True):
 
     @returns: a SSL context
     """
-    logger = logging.getLogger()    
     if verifypeer:
         # I use twisted certificate loading function, else our CA and our
         # private key don't match, I didn't find out why
         fd = open(localcert)
-        localCertificate = ssl.PrivateCertificate.loadPEM(fd.read())        
+        localCertificate = ssl.PrivateCertificate.loadPEM(fd.read())
         fd.close()
         fd = open(cacert)
         caCertificate = ssl.Certificate.loadPEM(fd.read())
@@ -56,7 +57,7 @@ def makeSSLContext(verifypeer, cacert, localcert, cb, log = True):
         ctx.verifyOnce = True
         ctx.enableSingleUseKeys = True
         ctx.enableSessions = True
-        ctx.fixBrokenPeers = False        
+        ctx.fixBrokenPeers = False
         if log:
             logger.debug("CA certificate informations: %s" % cacert)
             logger.debug(caCertificate.inspect())
@@ -82,7 +83,7 @@ class SecureHTTPServer(HTTPServer):
         self.server_activate()
 
     def sslReject(self, conn, x509, errnum, errdepth, retcode):
-        logger = logging.getLogger()
+
         logger.warning("SSL reject !")
         request, client_address = self.get_request()
         self.close_request(request)
@@ -95,5 +96,3 @@ class SecureHTTPRequestHandler(SimpleHTTPRequestHandler):
 
 class SecureThreadedHTTPServer(ThreadingMixIn, SecureHTTPServer):
     """Handle requests in a separate thread."""
-    
-

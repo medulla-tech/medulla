@@ -65,5 +65,3 @@ ALTER TABLE Slot MODIFY PortType VarChar(32) default NULL;
 --
 TRUNCATE Version;
 INSERT INTO Version VALUES( '2' );
-
-
