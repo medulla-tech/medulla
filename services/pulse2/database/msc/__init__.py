@@ -452,6 +452,26 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return commandsOnHostPhase
 
+    def get_counta(self, q):
+        count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+        count = q.session.execute(count_q).scalar()
+        return count
+
+    def get_countb(self, q):
+        return q.with_entities(func.count()).scalar()
+    
+    def get_count_timeout_wol_deploy( self, id_command, start_date):
+        """
+            this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals 
+        """
+        #datenow = datetime.datetime.now()
+        session = create_session()
+        q = session.query(CommandsOnHost).filter(and_(CommandsOnHost.fk_commands == id_command,
+                                                 CommandsOnHost.stage == 'ended',
+                                                 CommandsOnHost.current_state == 'over_timed',
+                                                 CommandsOnHost.start_date == start_date))
+        return self.get_counta(q)
+
     def deployxmpponmachine(self, command_id):
         result = {}
         sqlselect="""
@@ -645,7 +665,6 @@ class MscDatabase(DatabaseHelper):
         return result
 
     def updategroup(self, group):
-        #jfkjfk
         session = create_session()
         join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
         q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
@@ -687,6 +706,22 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         session.close()
         return result
+
+    #jfkjfk
+    def xmppstage_statecurrent_xmpp(self):
+        """
+            this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals 
+        """
+        datenow = datetime.datetime.now()
+        session = create_session()
+        session.query(CommandsOnHost).filter(and_(CommandsOnHost.current_state == 'scheduled',
+                                                 CommandsOnHost.stage == 'pending',
+                                                 CommandsOnHost.end_date < datenow )).\
+                        update({CommandsOnHost.current_state: "over_timed",
+                                CommandsOnHost.stage : "ended"
+                                })
+        session.flush()
+        session.close()
 
     def deployxmpp(self):
         """

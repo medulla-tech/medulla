@@ -423,6 +423,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def scheduledeploy(self):
         listobjsupp = []
+        # schedule update  deploy interval date out.
+        MscDatabase().xmppstage_statecurrent_xmpp()
+        #search deploy to rumming
         resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp()
 
         for uuiddeploy in self.machineWakeOnLan:
