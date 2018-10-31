@@ -999,6 +999,26 @@ class XmppMasterDatabase(DatabaseHelper):
         return "pause"
 
     @DatabaseHelper._sessionm
+    def update_status_deploy_end(self, session):
+        """ this function schedued by xmppmaster """
+        #session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
+                                            #Deploy.state == "DEPLOYMENT START") 
+        #).update({ Deploy.state : "DEPLOYMENT ERROR"})
+        result = session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
+                                            Deploy.state == "DEPLOYMENT START") 
+        ).all()
+        session.flush()
+        session.close()
+        for t in result:
+            try:
+                sql = """UPDATE `xmppmaster`.`deploy` SET `state`='DEPLOYMENT ERROR' WHERE `id`='%s';"""%t.id
+                session.execute(sql)
+                session.commit()
+                session.flush()
+            except Exception, e:
+                logging.getLogger().error(str(e))
+
+    @DatabaseHelper._sessionm
     def sessionidforidcommand(self, session, idcommand):
         result = session.query(Deploy.sessionid).filter(Deploy.command == idcommand).all()
         if result:

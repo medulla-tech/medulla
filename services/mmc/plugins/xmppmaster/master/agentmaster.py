@@ -320,9 +320,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.xmpppresence = {}
 
         self.CYCLESCHEDULER = 4
-        self.TIMESCHEDULER = 30
+        self.TIMESCHEDULERDEPLOY = 30
+        self.TIMESCHEDULERGARBAGE = 300
         # schedule deployement
-        self.schedule('schedule deploy', self.TIMESCHEDULER, self.scheduledeploy, repeat=True)
+        self.schedule('schedule deploy', self.TIMESCHEDULERDEPLOY, self.scheduledeploy, repeat=True)
+        self.schedule('schedule garbage', self.TIMESCHEDULERGARBAGE, self.garbagedeploy, repeat=True)
         self.schedule('schedulerfunction', 60, self.schedulerfunction, repeat=True)
 
         # Decrement session time
@@ -421,10 +423,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return '{"err" : "%s"}' % str(e).replace('"', "'")
         return "{}"
 
+    def garbagedeploy(self):
+        MscDatabase().xmppstage_statecurrent_xmpp()
+        XmppMasterDatabase().update_status_deploy_end()
+
     def scheduledeploy(self):
         listobjsupp = []
-        # schedule update  deploy interval date out.
-        MscDatabase().xmppstage_statecurrent_xmpp()
         #search deploy to rumming
         resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp()
 
