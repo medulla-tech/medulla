@@ -53,6 +53,7 @@ $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getNam
 $p->setSideMenu($sidemenu);
 $p->display();
 
+
 $resultfrommsc = xmlrpc_getstatbycmd($cmd_id);
 $total_machine_from_msc  = $resultfrommsc['nbmachine'];
 $nb_machine_deployer_from_msc     = $resultfrommsc['nbdeploydone'];
@@ -60,6 +61,9 @@ $nb_deployer_machine_yet_from_msc = $total_machine_from_msc - $total_machine_fro
 
 $convergenceonpackage = is_commands_convergence_type($cmd_id);
 $command_detail = command_detail($cmd_id);
+
+
+
 
 $lastcommandid = get_last_commands_on_cmd_id($cmd_id);
 $start_date = mktime(   $lastcommandid['start_date'][3],
@@ -78,12 +82,19 @@ $machine_success_from_deploy   = $resultfromdeploy['machinesuccessdeploy'];
 $machine_process_from_deploy   = $resultfromdeploy['machineprocessdeploy'];
 $machine_abort_from_deploy     = $resultfromdeploy['machineabortdeploy'];
 
-$machine_wol_from_deploy       = $totalmachinedeploy-($machineerrordeploy + $machinesuccessdeploy + $machineprocessdeploy);
+
+
+// from msc  
+$machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy( $cmd_id,
+                                                                date("Y-m-d H:i:s",
+                                                                $start_date));
+
+$machine_wol_from_deploy       = $totalmachinedeploy-($machineerrordeploy + $machinesuccessdeploy + $machineprocessdeploy + $machine_timeout_from_deploy);
 
 $terminate = 0;
 $deployinprogress = 0;
 
-$waiting = $total_machine_from_msc - $total_machine_from_deploy;
+$waiting = $total_machine_from_msc - ($total_machine_from_deploy + $machine_timeout_from_deploy);
 
 // $evolution
 if ($waiting == 0 && $machine_process_from_deploy == 0 ){
@@ -174,26 +185,29 @@ else{
         $f->addButton("bStop", _T("Stop Deployment", 'xmppmaster'));
         $f->display();
     }
-
-    $evolution  = round(($nb_machine_deployer_from_msc / $total_machine_from_msc) * 100,2);
+    echo "<br>";
+    
+    $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $nb_machine_deployer_from_msc;
+    $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $total_machine_from_msc) * 100,2);
     $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
     echo '<div class="bars">';
         echo '<span style="width: 200px;">';
-            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$total_machine_from_msc.'" value="'.$nb_machine_deployer_from_msc.'" form="form-id"></progress>';
+            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$total_machine_from_msc.'" value="'.$nb_machine_deployer_avec_timeout_deploy .'" form="form-id"></progress>';
         echo '</span>';
     echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
 
-    $wol = ($total_machine_from_msc-$total_machine_from_deploy);
+    $wol = ( $total_machine_from_msc - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
     echo "<br><br>Number of machines in the deployment group. : ".$total_machine_from_msc;
     echo "<br>Number of machines in the group : ".$countmachine;
     echo "<br>Number of machines being deployed : ". $deploymachine;
-
+    echo "<br>Number of machines timeout deploy wol: ". $machine_timeout_from_deploy;
     echo "<br>Deployment summary:";
     echo "<table><tr>";
     echo "<td>sucess</td>
         <td>error</td>
         <td>progress</td>
         <td>Waiting</td>
+        <td>abort timeout</td>
         <td>abort</td>";
     echo "</tr>
     <tr>";
@@ -201,6 +215,7 @@ else{
         <td>".$machine_error_from_deploy."</td>
         <td>".$machine_process_from_deploy."</td>
         <td>".$wol."</td>
+        <td>".$machine_timeout_from_deploy."</td>
         <td>".$machine_abort_from_deploy."</td>";
     echo "</tr></table>";
 echo '</div>';
@@ -273,7 +288,7 @@ echo "<br>";
             </script>
             ';
 }
-echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";
+echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";;echo "<br>";
 $group->prettyDisplay();
 
 
@@ -322,7 +337,7 @@ if ($info['len'] != 0){
     $machinesucess    = count ( $uuidsuccess );
     $machineerror     = count ( $uuiderror );
     $machineinprocess = count ( $uuidprocess );
-    $machinewol       = $stat['nbmachine']-$stat['nbdeploydone'];
+    $machinewol       = $state['nbmachine']-$state['nbdeploydone'];
 
 
 
@@ -360,6 +375,12 @@ if ($info['len'] != 0){
                     echo 'legend.push("%%.%% - Waiting for machine start (WOL sent).");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#DBA901");';
+                }
+                if ($machine_timeout_from_deploy > 0){
+                    echo 'datadeploy.push('.$machine_timeout_from_deploy.');';
+                    echo 'legend.push("%%.%% - abort wol timeout deploy.");';
+                    echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
+                    echo 'color.push("#FF4500");';
                 }
                 if ($machine_abort_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_abort_from_deploy.');';

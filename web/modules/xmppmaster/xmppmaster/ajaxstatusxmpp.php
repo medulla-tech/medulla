@@ -97,7 +97,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
             $countmachine = "";
             $namegrp = "";
         }
-        $stat = xmlrpc_getstatbycmd($arraydeploy['tabdeploy']['command'][$index]);
+        //$stat = xmlrpc_getstatbycmd($arraydeploy['tabdeploy']['command'][$index]);
         //recherche information de deployement sur ce groupe.
         $lastcommandid = get_last_commands_on_cmd_id($arraydeploy['tabdeploy']['command'][$index]);
         if ( is_commands_convergence_type($arraydeploy['tabdeploy']['command'][$index]) != 0 ){
