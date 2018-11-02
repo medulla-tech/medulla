@@ -106,7 +106,7 @@ if __name__ == '__main__':
         top = os.path.realpath(sys.argv[1])
         size = int(sys.argv[3])
         dest = sys.argv[2]
-    else: 
+    else:
 	print "usage "+sys.argv[0]+" <dir_to_backup> <dir_to_put_list> <media_size>"
 	sys.exit(0)
 

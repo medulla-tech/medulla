@@ -123,7 +123,7 @@ class FormHandler {
  *               on Calcul du coefficient points/longueur
  *               on Calcul du coefficient de la diversité des types de caractères...
  *               on Multiplication le coefficient de diversité avec la longueur de la chaine
- 
+
  * \param     $mdp  le mot de passe passé en paramètre
  * \return    Un \e Entier :  indice de durete du mot de passe
  */

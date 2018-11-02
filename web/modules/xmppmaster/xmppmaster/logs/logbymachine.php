@@ -46,7 +46,7 @@ $p = new PageGenerator(_T("Computer deploy", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxlogsxmpp"), "container",$params, 'logsxmpp'  );
-$ajax->setRefresh(15000);
+$ajax->setRefresh(30000);
 $ajax->display();
 
 print "<br/><br/><br/>";

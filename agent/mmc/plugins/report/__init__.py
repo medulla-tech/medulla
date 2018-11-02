@@ -43,7 +43,7 @@ from mmc.plugins.report.config import ReportConfig, reportconfdir
 from mmc.plugins.report.database import ReportDatabase
 from mmc.plugins.report.output import XLSGenerator, PDFGenerator, SVGGenerator
 
-VERSION = "4.4.1"
+VERSION = "4.5"
 APIVERSION = "0:1:0"
 REVISION = scmRevision("$Rev$")
 
@@ -196,7 +196,7 @@ class RpcProxy(RpcProxyI):
                 return f(*args, **kwargs)
             return wrapper
         return decorator
-        
+
     @set_report_path()
     def generate_report_from_csv(self, csv_files, delimiter='|', lang='C'):
         if not isinstance(csv_files, list):
@@ -344,7 +344,7 @@ class RpcProxy(RpcProxyI):
             if level1.tag.lower() in ['footer', 'header']:
                 _hf_feeder(level1)
             ## =========< SECTION >===================
-        
+
         for csv_file in csv_files:
             with open(csv_file) as f:
                 headers_fetched = False
@@ -719,7 +719,7 @@ class RpcProxy(RpcProxyI):
         if timestamp is None:
             timestamp = int(time.time())
         ReportDatabase().historize_all(timestamp)
-        
+
     def historize_overwrite_last(self, timestamp=None):
         # If timestamp is not specified, taking actual time
         if not timestamp:

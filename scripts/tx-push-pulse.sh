@@ -20,6 +20,6 @@ modules="base ppolicy services dashboard report xmppmaster"
 for mod in $modules
 do
 	cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
-	tx push -r pulse-1.${mod} -s -t 
+	tx push -r pulse-1.${mod} -s -t
 	#-f --no-interactive
 done

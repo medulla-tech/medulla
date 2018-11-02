@@ -31,7 +31,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     $filter  = isset($_GET['filter'])?$_GET['filter']:"";
     $start = isset($_GET['start'])?$_GET['start']:0;
     $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
-
+    $logs = array();
     $machinegroup = xmlrpc_getCommand_action_time(10000, $start, $end, $filter);
 
     $dd = array();

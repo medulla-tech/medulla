@@ -81,7 +81,7 @@ $n->addExtraInfo($mails,_("Mail"));
 $n->addExtraInfo($phones,_("Telephone"));
 
 $n->addActionItem(new ActionItem(_("Edit"),"edit","edit","user"));
-if (in_array("extticket", $_SESSION["supportModList"])) { 
+if (in_array("extticket", $_SESSION["supportModList"])) {
     $n->addActionItem(new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "user"));
 }
 $n->addActionItem(new ActionItem(_("MMC rights"),"editacl","editacl","user") );

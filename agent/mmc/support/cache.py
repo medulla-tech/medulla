@@ -313,7 +313,7 @@ class CacheableObject(object):
     def _cached(self, method, key=None, *args, **kwargs):
         if key is None:
             raise ValueError("Invalid cache key: None")
-        
+
         if self.cache.has_key(key):
             ret = self.cache.get(key)
             log.debug("%s(%s, %s): key=%s, value=%s" % (method.__name__,

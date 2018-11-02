@@ -66,7 +66,7 @@ p {
 .path {
 	background-color: white;
 	padding: 10px 0 10px 30px;
-	
+
 }
 /*ADD*/
 
@@ -266,7 +266,7 @@ p {
     border-left: 1px solid #21262b;
 }
 
-#navbar ul li a {   
+#navbar ul li a {
 	padding: 40px 0px 15px 0px;
     text-decoration: none;
     display: block;
@@ -316,8 +316,8 @@ p {
     margin: 0px;
     padding: 0px;
     width: 200px;
-    
-    
+
+
 }
 
 #sidebar ul li a {

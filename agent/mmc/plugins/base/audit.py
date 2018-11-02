@@ -21,7 +21,7 @@
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Contains constants for the audit system. 
+Contains constants for the audit system.
 """
 
 class AuditActions:

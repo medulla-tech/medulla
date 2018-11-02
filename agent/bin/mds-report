@@ -36,7 +36,7 @@ def usage():
     print "mds-report <url>"
     print
     print "Example:"
-    print "mds-report https://127.0.0.1:7080/XMLRPC"    
+    print "mds-report https://127.0.0.1:7080/XMLRPC"
 
 try:
     url = sys.argv[1]
@@ -150,7 +150,7 @@ class Report:
             name = item[1]["zoneName"][0]
             dlist.append(self.proxy.callRemote("network.getZoneObjectsCount", name).addCallbacks(self.printDNSHostsCount, self.receiveError))
         dl = defer.DeferredList(dlist)
-        dl.addCallback(self.getDHCPSubnetsCount)        
+        dl.addCallback(self.getDHCPSubnetsCount)
 
     def printDNSHostsCount(self, value):
         print "  RR in zone:", value
@@ -179,9 +179,8 @@ class Report:
     def receiveError(self, error):
         print error
         reactor.stop()
-    
+
 report = Report(url, httpuser, httppass, username, password)
 report.auth()
 
 reactor.run()
-

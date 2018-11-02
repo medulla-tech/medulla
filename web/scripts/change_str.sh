@@ -28,5 +28,5 @@ for file in `find . -type f`
     echo ${file} | egrep -q ".svn" || \
     sed -i "s/${pattern1}/${pattern2}/g" ${file}
   done
-  
+
 exit 0

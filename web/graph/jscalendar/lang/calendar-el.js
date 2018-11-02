@@ -86,4 +86,3 @@ Calendar._TT["DEF_DATE_FORMAT"] = "dd-mm-y";
 Calendar._TT["TT_DATE_FORMAT"] = "D, d M";
 
 Calendar._TT["WK"] = "εβδ";
-

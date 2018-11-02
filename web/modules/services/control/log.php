@@ -25,7 +25,7 @@ require("graph/navbar.inc.php");
 
 $service = isset($_GET['service']) ? $_GET['service'] : "";
 
-$ajax = new AjaxFilter(urlStrRedirect("services/control/ajaxLogFilter"), "logContainer", 
+$ajax = new AjaxFilter(urlStrRedirect("services/control/ajaxLogFilter"), "logContainer",
                        array("service" => $service));
 $ajax->display();
 

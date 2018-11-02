@@ -22,12 +22,17 @@
  *  file xmppfilesbrowsing.php
  */
 ?>
+<?php
+    echo '<link rel="stylesheet" href="jsframework/lib/pluginjqueryjtree/themes/default/style.min.css" />'."\n".
+    '<script src="jsframework/lib/pluginjqueryjtree/jstree.min.js"></script>'."\n";
+?>
+
 <style type='text/css'>
 textarea {
     width:50% ;
     height:150px;
     margin:auto;
-    display:block; 
+    display:block;
 }
 
 body{
@@ -38,7 +43,7 @@ body{
 /*h2{
     text-align: center;
 }*/
-  
+
 #global{
   width:100%;
   height:700px;
@@ -63,11 +68,25 @@ body{
     height:85%;
 }
 
+#fileshowremote {
+    width: 50%;
+    height:100%;
+    overflow:auto;
+}
+
+#directoryremote{
+    width: 50%;
+    height:100%;
+    overflow:auto;
+    padding-botton:15px;
+    float:left;
+}
+
 #gauche {
     width:49%;
     height:90%;
 }
- 
+
 #droite {
     width: 49%;
     height:90%;
@@ -221,9 +240,7 @@ li.quickg a {
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-/*
-print_r($_GET);
-print_r($_POST);*/
+
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
@@ -238,10 +255,9 @@ require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/pulse2/includes/menu_actionaudit.php');
 echo "<br><br><br>";
 
-
-
 // creation repertoire namemachine si non existe.
-// et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles/machine25pulse
+// et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles
+// /machine25pulse
 $filecurentdir = xmlrpc_create_local_dir_transfert(xmlrpc_localfilesystem("")['path_abs_current'], $ma['hostname']);
 $curentdir = $filecurentdir['path_abs_current'];
 
@@ -263,6 +279,25 @@ else{
 }
 echo '</script>';
 ?>
+
+<?php
+    $lifdirstr = xmlrpc_remotefilesystem("", $machine);
+    $lifdir = json_decode($lifdirstr, true);
+
+    if (isset($lifdir['err'])){
+        if ( $lifdir['err'] == 'Timeout Error'){
+            $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
+        }else{
+            $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
+        }
+            echo '<h2 style="color : red;">';
+            echo "$msg";
+            echo "</h2>";
+            exit;
+    }
+    $datatree = $lifdir['data']['strjsonhierarchy'];
+?>
+
 <div id="messageaction">
 
 </div>
@@ -282,17 +317,16 @@ echo '</script>';
        <div class ="piedbrowser"><h2></h2></div>
     </div>
 
-   <div id="droite">
-            <div id ="fileshowremote" class="fileshow">
-            </div>
+    <div id="droite">
+        <div id ="directoryremote" class="fileshow"></div>
+        <div id ="fileshowremote"  class="fileshow"></div>
     </div>
 
-    <div class ="piedbrowser"> 
+    <div class ="piedbrowser">
         <form>
             <div>
-                <!--<input  class="btnPrimary" id ="download" type="button" name="Dowload" value="<< Download <<"> -->
             </div>
-        </form> 
+        </form>
     </div>
 </div>
 
@@ -324,7 +358,11 @@ echo '</script>';
   </div>
 </div>
 
-
+<script type="text/javascript">
+    // diff between hour server/client
+    var ladate = new Date();
+    diff_hour = <?php echo date("H"); ?> - parseInt(ladate.getHours());
+</script>
 <script type="text/javascript">
     jQuery( document ).ready(function() {
         fileremote = false;
@@ -336,13 +374,36 @@ echo '</script>';
         user = "<?php echo $_SESSION['login']; ?>";
         jid = "<?php echo $ma['jid']; ?>";
         nameremotepath = "";
+        absolutepath ="";
         init = 1;
         local();
         remote();
+        jQuery('#directoryremote')
+            .on("changed.jstree", function (e, data) {
+                if(data.selected.length) {
+                    var pathlinux = data.instance.get_path(data.node,'/');
+                    console.log("jjj"+pathlinux)
+                    var absolutepath_array = pathlinux.split("/");
+                    var absolutepath = absolutepath_array.shift();
+                    var pathlinux_array = absolutepath_array;
+                    pathlinux = absolutepath_array.join("/");
+                    var absolutepath = "/" + absolutepath;
+                    console.log('composer: ' + pathlinux + "  "+absolutepath+"   ");
+                        remote(pathlinux);
+                }
+            })
+            .jstree({
+                'core' : {
+                    'multiple' : false,
+                    'data' : [
+                    <?php	echo $datatree; ?>
+                    ]
+                }
+            });
     });
 
     function confirmation_information(data) {
-        setTimeout(function() { affichedata(data); }, 2000); 
+        setTimeout(function() { affichedata(data); }, 2000);
     }
 
     function affichedata(data){
@@ -373,19 +434,18 @@ echo '</script>';
         var newdate = new Date();
         var moi      = "0" + (newdate.getMonth() +1 );
         var jour     = "0" + newdate.getDate();
-        var heure    = "0" + newdate.getHours();
+        var heure    = "0" + (newdate.getHours() + diff_hour);
         var minutes  = "0" + newdate.getMinutes();
         var secondes = "0" + newdate.getSeconds();
         var datetime = newdate.getFullYear() +
-                                                "-" + 
-                                                moi.substr(-2)+ 
-                                                "-"+ jour.substr(-2)+ 
-                                                "-"+ heure.substr(-2)+
-                                                ":"+ minutes.substr(-2)+
-                                                ":"+ secondes.substr(-2);
+                                                "-" +
+                                                moi.substr(-2) +
+                                                "-" + jour.substr(-2) +
+                                                "-" + heure.substr(-2) +
+                                                ":" + minutes.substr(-2) +
+                                                ":" + secondes.substr(-2);
         return datetime;
     }
-
     function local(selectdir){
         if (typeof selectdir == 'undefined'){
             var selectdir = "";
@@ -398,7 +458,7 @@ echo '</script>';
         if (typeof parentdirlocal == 'undefined'){
             var parentdirlocal = "";
         }
-        jQuery( "#fileshowlocal" ).load( 
+        jQuery( "#fileshowlocal" ).load(
                         "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php",
                         {
                             "parentdirlocal" : parentdirlocal,
@@ -434,7 +494,6 @@ echo '</script>';
         if (typeof parentdirremote == 'undefined'){
             var parentdirremote = "";
         }
-
         jQuery( "#fileshowremote" ).load(
                         "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php",
                         {
@@ -569,7 +628,7 @@ echo '</script>';
                 } );
             });
             if (init == 1){
-                jQuery(".rightfile LI").each(function(){ 
+                jQuery(".rightfile LI").each(function(){
                     jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
                     jQuery(this).find(':nth-child(2)').hide();
                 });
@@ -577,7 +636,7 @@ echo '</script>';
             jQuery("ul.rightfile > li").click(function() {
                 //  recupere file en remote
                 fileremote = true;
-                jQuery(".rightfile LI").each(function(){ 
+                jQuery(".rightfile LI").each(function(){
                     jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : 'white',});
                     jQuery(this).find(':nth-child(2)').hide()
                 });

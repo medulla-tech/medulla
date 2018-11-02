@@ -36,7 +36,7 @@
     $GROUP = $_GET['gid'];
     // creation quick action command
     $COMMANDID = xmlrpc_setCommand_qa($_GET['namecmd'], $customqa['customcmd'], $_GET['user'], $_GET['gid'], $command_machine='', $customqa['os']);
-    
+
 
     // recupère toutes les machines du groupe.
     $uuid = array();
@@ -65,7 +65,7 @@
                     xmlrpc_runXmppAsyncCommand( trim($customqa['customcmd']) , $machineinfos );
                 }
                 else{
-                    xmlrpc_setCommand_action( $key, $COMMANDID, "consoleweb",  _T("Sorry the operating system of the machine is", "xmppmaster")."  [".$machinegroup['platform']."]<br>".  _T("The custom QA is defined for opérating system", "xmppmaster")." [".$OS."]", "warning");
+                    xmlrpc_setCommand_action( $key, $COMMANDID, "consoleweb",  _T("Sorry the operating system of the machine is", "xmppmaster")."  [".$machinegroup['platform']."]<br>".  _T("The custom QA is defined for operating system", "xmppmaster")." [".$OS."]", "warning");
                 }
         }
         else{

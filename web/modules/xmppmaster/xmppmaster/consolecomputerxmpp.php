@@ -145,7 +145,7 @@ li.quickg a {
     require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
     require_once("modules/dyngroup/includes/utilities.php");
     include_once('modules/pulse2/includes/menu_actionaudit.php');
-
+    $timeout = isset($_POST['timeout']) ? $_POST['timeout'] : 10 ; 
     $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
     $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
     $command = isset($_POST['command']) ? $_POST['command'] : "";
@@ -158,7 +158,6 @@ li.quickg a {
     $p->display();
 
     echo "OS version :" . xmlrpc_getMachinefromjid($machine)['platform'];
-
     if (
         isset($_POST['command']) &&
         isset($_POST['Machine']) &&
@@ -171,7 +170,7 @@ li.quickg a {
                                 "machine" => $machine,
                                 "uidunique" => $uiduniq
             );
-            $re =  xmlrpc_remotecommandshell($command,$machine,15);
+            $re =  xmlrpc_remotecommandshell($command,$machine, intval($timeout));
             $ss = json_decode($re, true);
             if (isset($ss['err'])){
                 if ( $ss['err'] == 'Timeout Error'){
@@ -194,15 +193,22 @@ li.quickg a {
             }
         }
 ?>
+<form>
+    timeout (between 10s and 60s):
+    <input type="number" id="timeout1" name="timeout1" value="<? echo $timeout; ?>" min="10" max="60">
+</form>
 
 <form method="post" id="Form">
+
     <table cellspacing="0">
     <input  type="hidden" id="machine" value="<? echo $machine; ?>" name="Machine"/>
+    <input  type="hidden" id="timeout" value="<? echo $timeout; ?>" name="timeout"/>
+
         <tr>
             <td class="label" width="40%" style = "text-align: right;">Shell command</td>
             <td>
                 <span id="container_input_command">
-                    <input value="<? echo $_POST['command']; ?>" 
+                    <input value="<? echo $command; ?>" 
                         name="command" 
                         style = "width : 400px;"
                         id="command" 
@@ -221,7 +227,7 @@ li.quickg a {
             <tr>
                 <td class="label" width="40%" style = "text-align: right;"><br></td>
                 <td>
-                    <span>Command result : </span><span>'.$_POST['command'].'</span>
+                    <span>Command result : </span><span>'.$command.'</span>
                 </td>
             </tr>';
         } 
@@ -234,6 +240,7 @@ li.quickg a {
                 </tr>';
             }
         ?>
+        
     </table>
     <?php 
         if ($resultcommand != ""){
@@ -258,3 +265,10 @@ li.quickg a {
     <!-- si on veut un boutton submit-->
     <!--<button class="btn btn-small">submit</button>-->
 </form>
+<script type="text/javascript">
+       jQuery( document ).ready(function() {
+            jQuery( "#timeout1" ).change(function() {
+                jQuery("#timeout").val(jQuery( "#timeout1" ).val())
+            });
+        });
+</script>

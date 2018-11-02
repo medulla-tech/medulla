@@ -67,28 +67,28 @@ class AuditFactory(Singleton):
         Return the object built by the factory to log events
         """
         return self.logaction
-    
+
     def log(self,*args):
         """
         Log Actions
         @param **args : list of log args
         """
         return self.logaction.log(*args)
-  
+
     def getLog(self,*args):
         """
         Get Log Actions return a listEvent
         @param *args : list of log filter args
         """
         return self.logaction.getLog(*args)
-    
+
     def getLogById(self,*args):
         """
         Get Log Actions return an Event
         @param *args : list of log filter args
         """
         return self.logaction.getLogById(*args)
-    
+
     def getActionType(self,*args):
         """
         Get Log Actions return an list of actions or type
@@ -96,16 +96,15 @@ class AuditFactory(Singleton):
         @param type : return type
         """
         return self.logaction.getActionType(*args)
-        
+
     def setup(self,*args):
         """
         Setup database default values and set actions list for the module (MODULE_NAME)
         """
         self.logaction.setup(*args)
-    
+
     def commit(self):
         """
         Set result in log table to True
         """
         self.logaction.commit()
-

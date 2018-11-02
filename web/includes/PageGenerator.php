@@ -351,7 +351,7 @@ class ActionConfirmItem extends ActionItem {
 
 class EmptyActionItem extends ActionItem {
 
-    function EmptyActionItem($desc) {
+    function EmptyActionItem($desc = "") {
         $this->classCss='empty';
         $this->desc=$desc;
     }

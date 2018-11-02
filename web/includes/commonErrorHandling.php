@@ -60,7 +60,7 @@ $errItem->setAdvice(_("Please contact your administrator."));
 $errObj->add($errItem);
 
 
-$errItem = new ErrorHandlingItem('(exceptions.IndexError: list index out of range|ldap.NO_SUCH_OBJECT)'); // FIXME : isn't the regex too wide ? 
+$errItem = new ErrorHandlingItem('(exceptions.IndexError: list index out of range|ldap.NO_SUCH_OBJECT)'); // FIXME : isn't the regex too wide ?
 $errItem->setMsg(_("This item do not seems to be in the index"));
 $errItem->setAdvice(_("This problem can appear if:
                         <ul>

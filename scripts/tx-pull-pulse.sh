@@ -22,5 +22,7 @@ for mod in $modules
 do
 	cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
 	tx pull -a -f -r pulse-1.${mod} ${lang} ${args}
-	cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES
+    cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES
+    sed -i 's/Language: fr\\n/Language: fr_FR\\n/' $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/$mod.po
+
 done
