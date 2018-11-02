@@ -35,8 +35,8 @@ function log(arg) {
     * DISPLAY LOG
     *
     */
-    if(console && console.log) {  
-        console.log(arg);  
+    if(console && console.log) {
+        console.log(arg);
     }
 };
 
@@ -98,7 +98,7 @@ jQuery(function(){
     {// If something into #loadJson = edit mode
 
         tmp = JSON.parse(jQuery("#loadJson").val());
-        
+
         //Set transferfile value with the saved value
         if(tmp['info']['transferfile'] == true)
             jQuery('#transferfile option[value=1]').attr("selected",true);

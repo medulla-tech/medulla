@@ -1,25 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, os
+import sys
+import os
 import os.path
 import json
 import logging
 
-logger = logging.getLogger()
+logger = logging.getLogger("xmppmaster")
+
 
 class manage_fqdn_window_activedirectory:
 
     @staticmethod
     def basedirmachineAD():
-        bd = os.path.join("/", "var" ,"lib","pulse2","organizationADmachines")
+        bd = os.path.join("/", "var", "lib", "pulse2", "organizationADmachines")
         if not os.path.isdir(bd):
             os.makedirs(bd, mode=0700)
         return bd
 
     @staticmethod
     def basediruserAD():
-        bd = os.path.join("/", "var" ,"lib","pulse2","organizationADusers")
+        bd = os.path.join("/", "var", "lib", "pulse2", "organizationADusers")
         if not os.path.isdir(bd):
             os.makedirs(bd, mode=0700)
         return bd
@@ -43,7 +45,7 @@ class manage_fqdn_window_activedirectory:
         bd = manage_fqdn_window_activedirectory.basediruserAD()
         list_cn_ou_dc = fqdnsinfomachine.split("@@")
         contenuefile = list_cn_ou_dc[2]
-        pathfile = os.path.join(bd,list_cn_ou_dc[1])
+        pathfile = os.path.join(bd, list_cn_ou_dc[1])
         if not os.path.isdir(pathfile):
             os.makedirs(pathfile, mode=0700)
         namefile = os.path.join(pathfile, list_cn_ou_dc[0])

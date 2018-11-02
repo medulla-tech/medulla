@@ -36,7 +36,7 @@ $submod = & $base->getSubmod('computers');
 
 /* Set up MSC pages only when the computers module is available */
 if (!empty($submod)) {
-    if (! in_array("xmppmaster", $_SESSION["supportModList"])) 
+    if (! in_array("xmppmaster", $_SESSION["supportModList"]))
     {
         $mod = new Module("msc");
         $mod->setVersion(VERSION);
@@ -91,7 +91,7 @@ if (!empty($submod)) {
     $page->setOptions(array("visible" => False));
     $submod->addPage($page);
 
-    // A customer specific page to handle specific deployement 
+    // A customer specific page to handle specific deployement
     $page = new Page("ajaxDeployPackage", _T('Deploy specific package', 'msc'));
     $page->setFile("modules/msc/msc/ajaxDeployPackage.php");
     $page->setOptions(array("visible" => False, "AJAX" => True));
@@ -200,7 +200,7 @@ if (!empty($submod)) {
     $submod->addPage($page);
 
     /* Launch a command */
-    
+
         $page = new Page("start_command", _T("Launch a command", "msc"));
         $page->setFile("modules/msc/msc/start_command.php");
         $page->setOptions(array("visible" => False, "noHeader" => True));

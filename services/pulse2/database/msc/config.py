@@ -35,4 +35,3 @@ class MscDatabaseConfig(DatabaseConfig):
         DatabaseConfig.setup(self, config_file)
 
         # read the other inventory default parameters
-

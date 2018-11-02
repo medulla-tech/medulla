@@ -49,7 +49,7 @@ if ($_POST) {
         new NotifyWidgetSuccess($str);
         // Synchronize boot menu
         $ret = xmlrpc_synchroLocation($location);
-        
+
         if (isXMLRPCError()) {
 //             xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Error : removed from default boot menu.", 'Imaging').' '."Label : "."( ".$label." )".implode(', ', $ret[1]),
 //                                                 "IMG",

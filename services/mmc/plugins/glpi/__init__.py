@@ -49,6 +49,8 @@ NOAUTHNEEDED = [
     'hasKnownOS',
 ]
 
+logger = logging.getLogger("glpi")
+
 
 def getApiVersion():
     return APIVERSION
@@ -56,7 +58,6 @@ def getApiVersion():
 
 def activate():
     config = GlpiConfig("glpi")
-    logger = logging.getLogger()
     if config.disable:
         logger.warning("Plugin glpi: disabled by configuration.")
         return False

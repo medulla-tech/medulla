@@ -80,4 +80,3 @@ if __name__ == "__main__":
         initdb().remove_backupserver(options.entity.upper())
 
     sys.exit(0)
-

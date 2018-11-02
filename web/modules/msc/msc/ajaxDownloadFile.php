@@ -72,7 +72,7 @@ foreach($files as $file) {
             $states[] = _T('Error', 'msc');
             $flengths[] = '';
             $actionsdl[] = new EmptyActionItem();
-            $actionsrm[] = $actionRemove;            
+            $actionsrm[] = $actionRemove;
         } else {
             $states[] = _T('Ready', 'msc');
             $flengths[] = $file[3];

@@ -56,7 +56,7 @@ VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
 
-logger = logging.getLogger()
+logger = logging.getLogger("kiosk")
 
 
 # #############################################################
@@ -72,7 +72,6 @@ def activate():
     Read the plugin configuration, initialize it, and run some tests to ensure
     it is ready to operate.
     """
-    logger = logging.getLogger()
     config = KioskConfig("kiosk")
 
     # Registering KioskComputers in ComputerManager
@@ -81,7 +80,7 @@ def activate():
     if config.disable:
         logger.warning("Plugin kiosk: disabled by configuration.")
         return False
-    
+
     if not KioskDatabase().activate(config):
         logger.warning("Plugin kiosk: an error occurred during the database initialization")
         return False
@@ -101,11 +100,14 @@ def get_profiles_name_list():
 
 
 def create_profile(name, ous, active, packages):
-    return KioskDatabase().create_profile(name, ous, active, packages)
-
+    result = KioskDatabase().create_profile(name, ous, active, packages)
+    notify_kiosks()
+    return result
 
 def delete_profile(id):
-    return KioskDatabase().delete_profile(id)
+    result = KioskDatabase().delete_profile(id)
+    notify_kiosks()
+    return result
 
 
 def get_profile_by_id(id):
@@ -113,7 +115,9 @@ def get_profile_by_id(id):
 
 
 def update_profile(id, name, ous, active, packages):
-    return KioskDatabase().update_profile(id, name, ous, active, packages)
+    result = KioskDatabase().update_profile(id, name, ous, active, packages)
+    notify_kiosks()
+    return result
 
 
 # #############################################################
@@ -196,7 +200,7 @@ def get_users_from_ou(ou):
     """This function returns the list of user for the specified ou.
 
     Params:
-        string ou must be formatted like path : /root/son/grand_son. See TreeOU.get_path() method to obtain this
+        string OU must be formatted like path : /root/son/grand_son. See TreeOU.get_path() method to obtain this
         kind of string from the initial OU string.
 
     Returns:
@@ -255,40 +259,14 @@ def get_users_from_ou(ou):
 def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil, fromplugin = False):
     """
     This function launch the kiosk actions when a prensence machine is active
-    TODO: This function will be implemented later
     """
     logger.debug("kiosk handled")
     #print jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil
-    # récupération des profils dans la table machine.
+    # get the profiles from the table machine.
     machine = XmppMasterDatabase().getMachinefromjid(jid)
-    OUmachine = [machine['ad_ou_machine'].replace("\n",'').replace("\r",'').replace('@@','/')]
-    OUuser = [machine['ad_ou_user'].replace("\n", '').replace("\r", '').replace('@@','/')]
-
-    OU = list(set(OUmachine + OUuser))
-
-    # search packages for the applied profiles
-    list_profile_packages =  KioskDatabase().get_profile_list_for_OUList( OU )
-    if list_profile_packages is None:
-        #TODO
-        # linux and mac os does not have an Organization Unit.
-        # For mac os and linux, profile association will be done on the login name.
-        return
-    list_software_glpi = []
-    softwareonmachine = Glpi().getLastMachineInventoryPart(uuid_inventorymachine, 
-                                                           'Softwares', 0, -1, '',
-                                                           {'hide_win_updates': True, 'history_delta': ''})
-    for x in softwareonmachine:
-        list_software_glpi.append([x[0][1],x[1][1], x[2][1]])
-    print list_software_glpi # ordre information [["Vendor","Name","Version"],]
-    structuredatakiosk = []
- 
-    #creation structuredatakiosk pour initialisation
-    for packageprofile in list_profile_packages:
-        structuredatakiosk.append( __search_software_in_glpi(list_software_glpi, packageprofile, structuredatakiosk))
-    logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, hostname))
-
+    structuredatakiosk = get_packages_for_machine(machine)
     datas = {
-    'subaction':'initialisation_kiosk', 
+    'subaction':'initialisation_kiosk',
     'data' : structuredatakiosk
     }
 
@@ -306,25 +284,25 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
     patternname = re.compile("(?i)" + packageprofile[0])
     for soft_glpi in list_software_glpi:
         #TODO
-        # prevoir dans les packages pulse une rubrique vendor pour le nom du software
-        # pour le momment  on utilise le nom du package qui doit correspondre au nom glpi.
+        # Into the pulse package provide Vendor information for the software name
+        # For now we use the package name which must match with glpi name
         if patternname.match(str(soft_glpi[0])) or patternname.match(str(soft_glpi[1])):
-            # traitement de ce pacquage qui est installe sur la machine
-            # le package peut être supprimer
-            structuredatakioskelement['icon'] =  'icone.png'
+            # Process with this package which is installed on the machine
+            # The package could be deleted
+            structuredatakioskelement['icon'] =  'kiosk.png'
             structuredatakioskelement['action'].append('Delete')
             structuredatakioskelement['action'].append('Launch')
-            # verification si update
-            # compare version
-            #TODO 
-            # pour le moment on utilise la version du package. mais presvoir version du software dans les package pulse
+            # verification if update
+            # compare the version
+            #TODO
+            # For now we use the package version. Later the software version will be needed into the pulse package
             if LooseVersion(soft_glpi[2]) < LooseVersion(packageprofile[3]):
                 structuredatakioskelement['action'].append('Update')
                 logger.debug("the software version is superior "\
                     "to that installed on the machine %s : %s < %s"%(packageprofile[0],soft_glpi[2],LooseVersion(packageprofile[3])))
-            break 
+            break
     if len(structuredatakioskelement['action']) == 0:
-        # le package definie pour ce profil n'est pas present sur la machine:
+        # The package defined for this profile is absent from the machine:
         if packageprofile[8] == "allowed":
             structuredatakioskelement['action'].append('Install')
         else:
@@ -413,3 +391,53 @@ def get_ou_for_user(user):
         return ous
     else:
         return False
+
+def notify_kiosks():
+    """This function send a notification message for all the machine which have a kiosk on it.
+    """
+
+    machines_list = XmppMasterDatabase().get_machines_with_kiosk()
+
+    for machine in machines_list:
+
+        structuredatakiosk = get_packages_for_machine(machine)
+        datas = {
+        'subaction':'profiles_updated',
+        'data' : structuredatakiosk
+        }
+        send_message_to_machine(datas, machine['jid'], name_random(6, "profiles_updated"))
+
+
+def get_packages_for_machine(machine):
+    """Get a list of the packages for the concerned machine.
+    Param:
+        machine : tuple of the machine datas
+    Returns:
+        list of the packages"""
+    OUmachine = [machine['ad_ou_machine'].replace("\n",'').replace("\r",'').replace('@@','/')]
+    OUuser = [machine['ad_ou_user'].replace("\n", '').replace("\r", '').replace('@@','/')]
+
+    OU = list(set(OUmachine + OUuser))
+
+    # search packages for the applied profiles
+    list_profile_packages =  KioskDatabase().get_profile_list_for_OUList(OU)
+    if list_profile_packages is None:
+        #TODO
+        # linux and mac os does not have an Organization Unit.
+        # For mac os and linux, profile association will be done on the login name.
+        return
+    list_software_glpi = []
+    softwareonmachine = Glpi().getLastMachineInventoryPart(machine['uuid_inventorymachine'],
+                                                           'Softwares', 0, -1, '',
+                                                           {'hide_win_updates': True, 'history_delta': ''})
+    for x in softwareonmachine:
+        list_software_glpi.append([x[0][1],x[1][1], x[2][1]])
+    print list_software_glpi # ordre information [["Vendor","Name","Version"],]
+    structuredatakiosk = []
+
+    #Create structuredatakiosk for initialization
+    for packageprofile in list_profile_packages:
+        structuredatakiosk.append( __search_software_in_glpi(list_software_glpi,
+        packageprofile, structuredatakiosk))
+    logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, machine['hostname']))
+    return structuredatakiosk

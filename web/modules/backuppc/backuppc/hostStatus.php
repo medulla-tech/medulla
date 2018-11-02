@@ -221,33 +221,33 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg = array();
     // 1 - Shares and exclude settings
     $cfg['RsyncShareName'] = $_POST['sharenames'];
-    // Charset 
+    // Charset
     $cfg['ClientCharset'] = $_POST['encoding'];
-    
+
     // Splitting excludes by \n
     foreach ($_POST['excludes'] as $key => $value) {
         $_POST['excludes'][$key] = explode("\n",trim($value));
         for ($j = 0 ; $j< count($_POST['excludes'][$key]); $j++)
             $_POST['excludes'][$key][$j] = trim ($_POST['excludes'][$key][$j]);
     }
-    
+
     $cfg['BackupFilesExclude'] = array_combine($_POST['sharenames'],$_POST['excludes']);
-    
+
     // 2 -Backup Period settings
-    
+
     $cfg['FullPeriod'] = fmtFloat(fmtfloat($_POST['full'])-0.03);
     $cfg['IncrPeriod'] = fmtFloat(fmtfloat($_POST['incr'])-0.03);
-    
+
     // Blackout periods
     $starthours = $_POST['starthour'];
     $endhours = $_POST['endhour'];
-    
+
     $cfg['BlackoutPeriods'] = array();
-    
+
     for ($i = 0 ; $i<count($starthours); $i++) {
         $daystring = implode(', ',$_POST['days'.$i]);
         $cfg['BlackoutPeriods'][] = array(
-            'hourBegin' => hhmm2float($starthours[$i]), 
+            'hourBegin' => hhmm2float($starthours[$i]),
             'hourEnd'   => hhmm2float($endhours[$i]),
             'weekDays'  => $daystring
                 );

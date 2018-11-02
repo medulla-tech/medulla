@@ -34,6 +34,9 @@ from twisted.internet import reactor
 
 from pulse2.package_server.imaging.pxe.api import PXEImagingApi
 
+logger = logging.getLogger("imaging")
+
+
 class ProcessPacket :
     """Common packet processing"""
 
@@ -53,7 +56,7 @@ class ProcessPacket :
         """
         cls.api = api
         cls.config = config
-        logging.getLogger().debug("PXE Proxy: UDP proxy initialized")
+        logger.debug("PXE Proxy: UDP proxy initialized")
 
     def method_exec(self, imaging, method, args):
         """
@@ -118,20 +121,20 @@ class ProcessPacket :
                     self.transport.write(data)         # TCP response
                 if client :
                     ip, port = client
-                    logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s on %s:%d" %
+                    logger.debug("PXE Proxy: method: %s / response sent: %s on %s:%d" %
                             (fnc.__name__, str(data), ip, port))
                 else :
-                    logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s" %
+                    logger.debug("PXE Proxy: method: %s / response sent: %s" %
                             (fnc.__name__, str(data)))
 
             except Exception, e:
-                logging.getLogger().warn("PXE Proxy: send response error: %s" % (str(e)))
+                logger.warn("PXE Proxy: send response error: %s" % (str(e)))
 
         return result
 
 
     def on_exec_error(self, failure):
-        logging.getLogger().warn("PXE Proxy: send response error: %s" % str(failure))
+        logger.warn("PXE Proxy: send response error: %s" % str(failure))
         return failure
 
 class UDPProxy(ProcessPacket, DatagramProtocol):
@@ -140,7 +143,7 @@ class UDPProxy(ProcessPacket, DatagramProtocol):
         # special case for GLPI :
         # add the IP address of client as a next argument
         ip, port = client
-        logging.getLogger().debug("PXE Proxy: packet received from: %s" % ip)
+        logger.debug("PXE Proxy: packet received from: %s" % ip)
         data += "\nIPADDR:%s:0" % ip
         self.process_data(data, client)
 
@@ -169,8 +172,3 @@ class PXEProxy :
         tcp.protocol.set_imaging_args(config, api)
 
         reactor.listenTCP(pxe_port, tcp)
-
-
-
-
-

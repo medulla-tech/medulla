@@ -34,7 +34,7 @@ class PackageApiGet(MyXmlrpc):
     type = 'PackageApiGet'
     def __init__(self, mp, name = ''):
         MyXmlrpc.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger("pkgs")
         self.name = name
         self.mp = mp
         if Common().getPackages(self.mp) == None:
@@ -63,7 +63,7 @@ class PackageApiGet(MyXmlrpc):
 
     def xmlrpc_getPackagesDetail(self, pidlist):
         return map(lambda p: p.toH(), Common().packagelist(pidlist, self.mp))
-    
+
     def xmlrpc_getPackageDetail(self, pid):
         try:
             ret = Common().package(pid, self.mp).toH()
@@ -78,7 +78,7 @@ class PackageApiGet(MyXmlrpc):
 
     def xmlrpc_getLocalPackagesPath(self, pidlist):
         return map(lambda p: os.path.dirname(p.root), Common().packagelist(pidlist))
-        
+
     def xmlrpc_getLocalPackagePath(self, pid):
         try:
             ret = os.path.dirname(Common().package(pid, self.mp).root)
@@ -150,4 +150,3 @@ class PackageApiGet(MyXmlrpc):
 
     def xmlrpc_isAvailable(self, pid, mirror):
         return True
-

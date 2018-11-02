@@ -28,7 +28,7 @@ require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
 
 // Receiving form data
 if (isset($_POST['name'], $_POST['parent'], $_POST['description'])){
-    
+
     if (empty($_GET['id'])){
         addLocation($_POST['name'], $_POST['parent'], $_POST['description']);
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The location has been added successfully.", "glpi"));
@@ -37,7 +37,7 @@ if (isset($_POST['name'], $_POST['parent'], $_POST['description'])){
         editLocation($_GET['id'], $_POST['name'], $_POST['parent'], $_POST['description']);
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The location has been edited successfully.", "glpi"));
     }
-    
+
 }
 
 $page_title = _T("Add location", 'glpi');
@@ -48,9 +48,9 @@ $parent = 1;
 $description = '';
 
 if (isset($_GET['id'])){
-    
+
     $page_title = _T("Edit location", 'glpi');
-    
+
     // Edition mode : init vars
     // Get the corresponding location
     $params = array();
@@ -58,12 +58,12 @@ if (isset($_GET['id'])){
     $result = getAllLocationsPowered($params);
     if ($result['count'] != 1)
         die('Unexpected error');
-    
+
     $location = $result['data'][0];
     $location_name = $location['name'];
     $parent = $location['locations_id'];
     $description = $location['comment'];
-    
+
 }
 
 $p = new PageGenerator($page_title);
@@ -88,7 +88,7 @@ $location_list = array();
 foreach ($locations['data'] as $location){
     $location_list[$location['id']] = $location['completename'];
 }
-    
+
 $locations_select->setElements(array_values($location_list));
 $locations_select->setElementsVal(array_keys($location_list));
 

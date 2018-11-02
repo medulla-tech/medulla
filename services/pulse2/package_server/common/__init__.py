@@ -44,6 +44,9 @@ from pulse2.package_server.utilities import md5file
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
 from twisted.internet import reactor, task
 
+logger = logging.getLogger("pkgs")
+
+
 class Common(pulse2.utils.Singleton):
     """  Base class
     """
@@ -61,7 +64,7 @@ class Common(pulse2.utils.Singleton):
     def init(self, config):
         self.working = True
         self.working_pkgs = {}
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.logger.info("Loading PackageServer > Common")
         self.config = config
 

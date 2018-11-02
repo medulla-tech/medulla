@@ -11,9 +11,8 @@ index 430e3dd59..61cd46856 100644
 @@ -23,7 +23,7 @@
  ACLOCAL_AMFLAGS = -I m4
  DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup --disable-python-check
- 
+
 -SUBDIRS = web services doc
 +SUBDIRS = web services
- 
+
  backupext = .$(shell date +%Y-%m-%d+%H:%M:%S)
- 

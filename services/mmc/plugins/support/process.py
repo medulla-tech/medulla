@@ -33,6 +33,8 @@ from twisted.internet.defer import succeed, inlineCallbacks
 from twisted.internet.task import deferLater
 from twisted.internet.error import ProcessDone
 
+logger = logging.getLogger("support")
+
 
 class ForkingProtocol(ProcessProtocol):
     """ Protocol to fork a process"""
@@ -46,7 +48,7 @@ class ForkingProtocol(ProcessProtocol):
         @type callback: func
         """
         ProcessProtocol()
-        self.logger = logging.getLogger()
+        self.logger = logger
 
         self.name = name
         self.callback = callback
@@ -95,7 +97,7 @@ class PIDControl(object):
         @type pid_path: str
         """
         self.pid_path = pid_path
-        self.logger = logging.getLogger()
+        self.logger = logger
 
         if self.established:
             if self.probe():
@@ -112,8 +114,8 @@ class PIDControl(object):
         @return: True if process found
         @rtype: bool
         """
-        # A little hack - because autossh in ps list has another path 
-        for i, a in enumerate(args): 
+        # A little hack - because autossh in ps list has another path
+        for i, a in enumerate(args):
             if a=="/usr/bin/autossh":
                 args[i] = "/usr/lib/autossh/autossh"
                 break
@@ -234,7 +236,7 @@ class TunnelBuilder(object):
         """
         self.config = config
         self.pid_control = PIDControl(config.pid_path)
-        self.logger = logging.getLogger()
+        self.logger = logger
 
         if self.established:
             pid_date = self.pid_control.get_pid_date()
@@ -258,7 +260,7 @@ class TunnelBuilder(object):
         @return: ssh command
         @rtype: list
         """
-        return ["/usr/bin/autossh", 
+        return ["/usr/bin/autossh",
                 "-i", self.config.identify_file,
                 "-o",
                 "PasswordAuthentication=no",
@@ -391,6 +393,3 @@ class Forker(object):
                              self.args[0],
                              self.args,
                              usePTY=True)
-
-
-

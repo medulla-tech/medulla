@@ -315,7 +315,7 @@ $f->push(new Table());
         array("required" => True,'value'=>(isset($parameters)) ? $parameters['Title'] : '')
     );
     //_____________
-    $f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? $parameters['Notes'] : 'Enter your comments here...'))));
+    $f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? $parameters['Notes'] : _T('Enter your comments here...','imaging')))));
 
 $f->pop();
 $f->add(new SepTpl());

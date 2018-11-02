@@ -58,8 +58,3 @@ printf(_T("You will remove computer <b>%s</b> from group <b>%s</b>.", "dyngroup"
     <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "dyngroup"); ?>" onClick="closePopup();
             return false;"/>
 </form>
-
-
-
-
-

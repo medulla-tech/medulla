@@ -31,7 +31,7 @@ class Autocomplete {
             $this->b_label = _T("Modify", "dyngroup");
         }
     }
-    
+
     function display() {
         if (in_array($_GET['add_param'], array("Entity"))) {
             $frequency = 1.0;
@@ -43,12 +43,12 @@ class Autocomplete {
 
     <td style="text-align:right;"><?php echo  _T("Add a value", "dyngroup"); ?></td><td>
 
-    <input type="text" autocomplete="off" id="autocomplete" name="value" size="23" value="<?php echo $this->val ?>" /> 
-    
-    <input name="buser" type="submit" class="btnPrimary" value="<?php echo  $this->b_label; ?>"/> 
+    <input type="text" autocomplete="off" id="autocomplete" name="value" size="23" value="<?php echo $this->val ?>" />
+
+    <input name="buser" type="submit" class="btnPrimary" value="<?php echo  $this->b_label; ?>"/>
     </td></tr>
     </table>
-    
+
     <script src="jsframework/lib/jquery.jqEasySuggest.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
@@ -69,10 +69,10 @@ class Autocomplete {
 		es_opacity		: 0.95,
 		es_max_results		: 10,
 		es_offset_left		: 0,
-		es_offset_top		: 0	
+		es_offset_top		: 0
             });
        });
-        
+
     </script>
     <style type="text/css">
         .easy_suggest{

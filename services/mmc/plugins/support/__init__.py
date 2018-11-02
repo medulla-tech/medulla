@@ -35,13 +35,16 @@ from mmc.plugins.support.jsonquery import Query
 APIVERSION = "0:1:0"
 NAME = "support"
 
+logger = logging.getLogger("support")
+
+
 def getApiVersion(): return APIVERSION
 
 
 def activate():
     config = SupportConfig(NAME)
     if config.disabled:
-        logging.getLogger().warning("Plugin Support: disabled by configuration.")
+        logger.warning("Plugin Support: disabled by configuration.")
         return False
 
     DM = DashboardManager()
@@ -78,7 +81,7 @@ class LicenseChecker(object):
         @rtype: Deferred
         """
 
-        logging.getLogger().info("Plugin Support: checking the license info on %s/%s/pulse/?country=%s" % (
+        logger.info("Plugin Support: checking the license info on %s/%s/pulse/?country=%s" % (
             config.license_server_url,
             config.install_uuid,
             config.country)
@@ -147,7 +150,7 @@ class LicenseChecker(object):
         #   }
 
         if not isinstance(response, list):
-            logging.getLogger().warning("No license data; widget will not be updated.")
+            logger.warning("No license data; widget will not be updated.")
             return None
 
         data = None
@@ -158,11 +161,11 @@ class LicenseChecker(object):
                     break
 
         if not data:
-            logging.getLogger().warning("No license data for country '%s'; widget will not be updated." % config.country)
+            logger.warning("No license data for country '%s'; widget will not be updated." % config.country)
             return None
 
         if not "data" in data:
-            logging.getLogger().warning("No license data")
+            logger.warning("No license data")
             return None
 
         for key in ["phone", "email", "hours", "raw_content"]:
@@ -208,7 +211,7 @@ class LicenseChecker(object):
 
     def eb_get_info(self, failure):
         """ Common errorback for querying and parsing """
-        logging.getLogger().warning("License check failed: %s" % failure)
+        logger.warning("License check failed: %s" % failure)
         return False
 
 
@@ -276,7 +279,7 @@ def collect_info():
         This callable is passed as callback to forking protocol.
         """
 
-        logging.getLogger().info("Collector: Archive created")
+        logger.info("Collector: Archive created")
         cd.info_collected = True
         cd.in_progress = False
 
@@ -326,4 +329,3 @@ def delete_archive():
     if os.path.exists(config.collector_archive_path):
         os.unlink(config.collector_archive_path)
     cd.info_collected = False
-

@@ -53,6 +53,9 @@ from pulse2.inventoryserver.utils import InventoryUtils, canDoInventory
 from pulse2.inventoryserver.scheduler import AttemptToScheduler
 from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC, hasKnownOS
 
+logger = logging.getLogger("inventory")
+
+
 def decosingleton(cls):
     instances = {}
     def getinstance():
@@ -210,7 +213,7 @@ class InventoryServer:
                             do_forward = True
                 # Machine is not known, forward anyway
                 else:
-                    
+
                     if canDoInventory():
                         if InventoryUtils.is_coming_from_pxe(content):
                             self.logger.info("<GlpiProxy> PXE inventory received from %s for an unknown machine: forwarding" % str(from_ip))
@@ -253,7 +256,7 @@ class InventoryFix :
     def __init__(self, config, inventory):
         self.config = config
         self._inventory = inventory
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.logger.debug("Initialize the inventory fixer")
 
         self.fixers = []
@@ -327,7 +330,7 @@ class InventoryFix :
 
 class HttpInventoryServer(BaseHTTPServer.BaseHTTPRequestHandler, InventoryServer):
     def __init__(self, *args):
-        self.logger = logging.getLogger()
+        self.logger = logger
         cfgfile = os.path.join(mmcconfdir,"pulse2","inventory-server","inventory-server.ini")
         self.config = Pulse2OcsserverConfigParser()
         self.config.setup(cfgfile)
@@ -337,7 +340,7 @@ class HttpInventoryServer(BaseHTTPServer.BaseHTTPRequestHandler, InventoryServer
 
 class HttpsInventoryServer(SecureHTTPRequestHandler, InventoryServer):
     def __init__(self, *args):
-        self.logger = logging.getLogger()
+        self.logger = logger
         cfgfile = os.path.join(mmcconfdir,"pulse2","inventory-server","inventory-server.ini")
         self.config = Pulse2OcsserverConfigParser()
         self.config.setup(cfgfile)
@@ -350,7 +353,7 @@ class TreatInv(Thread):
     def __init__(self, config):
         Thread.__init__(self)
         self.status = -1
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.config = config
 
     def log_message(self, format, *args):
@@ -519,7 +522,7 @@ class TreatInv(Thread):
             self.logger.exception(e)
 
         return True
-    
+
 ##Singleton
 @decosingleton
 class Common():
@@ -556,7 +559,7 @@ class ThreadedHTTPServerThread(ThreadingMixIn, HTTPServer):
 
 class InventoryGetService(Singleton):
     def initialise(self, config):
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.xmlmapping = config.ocsmapping
         self.bind = config.bind
         self.port = int(config.port)
@@ -651,11 +654,10 @@ def my_handle_one_request(self):
         return self.__handle_one_request()
     except Exception, e:
         if e.args[0] == 104 and e.args[1] == 'Connection reset by peer': # most probably is a nmap request
-            logging.getLogger().info("nmap detected")
+            logger.info("nmap detected")
             return
         else:
             raise e
 
 setattr(BaseHTTPRequestHandler, '__handle_one_request', BaseHTTPRequestHandler.handle_one_request)
 setattr(BaseHTTPRequestHandler, 'handle_one_request', my_handle_one_request)
-

@@ -35,6 +35,9 @@ from mmc.plugins.msc.client.scheduler import getProxy
 from twisted.internet.threads import deferToThread
 import twisted.internet.defer
 
+logger = logging.getLogger("msc")
+
+
 class MscDownloadProcess:
 
     """
@@ -55,7 +58,7 @@ class MscDownloadProcess:
         self.mscdlfiles = MscDownloadedFiles(self.userid)
         self.storage = self.mscdlfiles.storage
         self.lockfile = os.path.join(self.storage, self.uuid + '.' + self.mscdlfiles.LOCKEXT)
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def _cbDownloadOk(self, result):
         """
@@ -77,7 +80,7 @@ class MscDownloadProcess:
             self._recordError()
         return result
 
-    def _cbDownloadErr(self, failure):        
+    def _cbDownloadErr(self, failure):
         self.logger.error(failure)
         self._recordError()
         return failure
@@ -111,7 +114,7 @@ class MscDownloadProcess:
 
         # Create the lock file
         f = file(self.lockfile, 'w+')
-        f.close()        
+        f.close()
         # Start download process
         d = getProxy(MscConfig().schedulers[scheduler_name]).callRemote(
             'download_file',
@@ -132,7 +135,7 @@ class MscDownloadProcess:
         Start file download process in a new thread.
 
         @rtype: tuple
-        @returns: tuple with (status, reason)        
+        @returns: tuple with (status, reason)
         """
         def _start():
             # Start download process
@@ -222,7 +225,7 @@ class MscDownloadedFiles:
             for timestamp in timestamps:
                 ret.append(tmp[timestamp])
         return ret
-        
+
     def removeFiles(self, inodes):
         """
         Remove the files with the given inode numbers

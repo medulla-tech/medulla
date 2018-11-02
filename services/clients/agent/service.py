@@ -58,4 +58,3 @@ class Handler(object):
         cx_Logging.Info("Pulse2 Agent stopping...")
         logger.info("Pulse2 Agent stopped.")
         self.stopEvent.Set()
-

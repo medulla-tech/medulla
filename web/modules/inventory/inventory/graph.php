@@ -37,5 +37,5 @@ ob_end_clean();
 renderGraph($machines, $type, $field, $filter);
 
 exit;
-  
+
 ?>

@@ -27,18 +27,17 @@ from master.agentmaster import MUCBot
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from mmc.agent import PluginManager
 
-logger = logging.getLogger()
-
+logger = logging.getLogger("xmppmaster")
 
 
 def singleton(class_):
     instances = {}
+
     def getinstance(*args, **kwargs):
         if class_ not in instances:
             instances[class_] = class_(*args, **kwargs)
         return instances[class_]
     return getinstance
-
 
 
 @singleton
@@ -50,7 +49,6 @@ class xmppMasterthread(threading.Thread):
         self.kwargs = kwargs
         self.disable = xmppMasterConfig().disable
         self.xmpp = None
-
 
     def doTask(self):
         tg = xmppMasterConfig()
@@ -72,18 +70,18 @@ class xmppMasterthread(threading.Thread):
                             format='[%(name)s.%(funcName)s:%(lineno)d] %(message)s')
         #logging.log(tg.debugmode,"=======================================test log")
         self.xmpp = MUCBot(tg)
-        self.xmpp.register_plugin('xep_0030') # Service Discovery
-        self.xmpp.register_plugin('xep_0045') # Multi-User Chat
-        self.xmpp.register_plugin('xep_0004') # Data Forms
-        self.xmpp.register_plugin('xep_0050') # Adhoc Commands
-        self.xmpp.register_plugin('xep_0199', {'keepalive' : False,
-                                               'frequency' : 600,
-                                               'interval' : 600,
-                                               'timeout' : 500})
-        self.xmpp.register_plugin('xep_0077') # Registration
-        #xmpp.register_plugin('xep_0047') # In-band Registration
-        #xmpp.register_plugin('xep_0096') # file transfer
-        #xmpp.register_plugin('xep_0095') # file transfer
+        self.xmpp.register_plugin('xep_0030')  # Service Discovery
+        self.xmpp.register_plugin('xep_0045')  # Multi-User Chat
+        self.xmpp.register_plugin('xep_0004')  # Data Forms
+        self.xmpp.register_plugin('xep_0050')  # Adhoc Commands
+        self.xmpp.register_plugin('xep_0199', {'keepalive': False,
+                                               'frequency': 600,
+                                               'interval': 600,
+                                               'timeout': 500})
+        self.xmpp.register_plugin('xep_0077')  # Registration
+        # xmpp.register_plugin('xep_0047') # In-band Registration
+        # xmpp.register_plugin('xep_0096') # file transfer
+        # xmpp.register_plugin('xep_0095') # file transfer
         self.xmpp['xep_0077'].force_registration = False
         self.xmpp.register_plugin('xep_0279')
         if tg.Server == "" or tg.Port == "":
@@ -94,10 +92,10 @@ class xmppMasterthread(threading.Thread):
         else:
             logger.info("Unable to connect.")
 
-    #todo faire class
+    # todo faire class
     def stopxmpp(self):
         if self.xmpp != None:
-            #_remove_schedules
+            # _remove_schedules
             self.xmpp.scheduler.quit()
             self.xmpp.session.sessionstop()
             time.sleep(2)

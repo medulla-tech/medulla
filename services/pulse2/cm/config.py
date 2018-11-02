@@ -91,4 +91,3 @@ class Config(object):
 
     class formatter_form01(object):
         format = "%(asctime)s %(levelname)s %(message)s"
-

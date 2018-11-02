@@ -37,7 +37,7 @@ class MscQueryManager(MscContainer):
     def _analyze_groups(self, circuits):
         """
         Counts the circuits by network (equivalent to SQL group by clause).
-        
+
         @param circuits: list of Circuit instances
         @type circuits: list
 
@@ -67,7 +67,7 @@ class MscQueryManager(MscContainer):
 
     def get_running_circuits(self):
         """
-        Get the all waitings circuits. 
+        Get the all waitings circuits.
 
         @param ids: list of commands_on_host
         @type ids: list
@@ -76,11 +76,11 @@ class MscQueryManager(MscContainer):
         @rtype: list
         """
         return self.circuits
- 
+
 
     def get_waiting_circuits(self, ids):
         """
-        Get the all waitings circuits. 
+        Get the all waitings circuits.
 
         @param ids: list of commands_on_host
         @type ids: list
@@ -106,8 +106,8 @@ class MscQueryManager(MscContainer):
             return []
         circuits = [c for c in self.circuits if c.initialized and c.is_running]
         if len(circuits) == 0 :
-            return [] 
-        circuits = [c for c in circuits 
+            return []
+        circuits = [c for c in circuits
                        if not (c.qm.coh.isStateStopped() or c.qm.coh.isStatePaused())
                        and c.qm.cmd.in_valid_time()
                    ]
@@ -116,7 +116,7 @@ class MscQueryManager(MscContainer):
             return circuits
         else :
             return []
- 
+
 
     def rn_stats(self): return self._stats(self.circuits, "active")
     def wt_stats(self): return self._stats(self.waiting_circuits, "waiting")
@@ -131,18 +131,18 @@ class MscQueryManager(MscContainer):
         done    = len([c for c in cics if c.qm.phase.is_done()])
 
         non_started = len([c for c in circuits if not c.is_running])
-        self.logger.info("total %s circuits(%d) not started yet(%d)" % (c_name, len(cics), non_started)) 
+        self.logger.info("total %s circuits(%d) not started yet(%d)" % (c_name, len(cics), non_started))
         self.logger.info("- ready=%d running=%d failed=%d done=%d" % (ready, running, failed, done))
 
     def get_unprocessed_circuits(self):
         return [c for c in self.circuits if not c.initialized]
- 
+
     def get_unprocessed_waitings(self):
         return [c for c in self.waiting_circuits if c.initialized and not c.is_running]
- 
+
     def get_valid_waitings(self):
         banned = self.bundles.get_banned_cohs()
- 
+
         now = time.time()
         circuits = [c for c in self.waiting_circuits]
         circuits = [c for c in circuits
@@ -156,7 +156,7 @@ class MscQueryManager(MscContainer):
     def _get_candidats_to_failed(self, circuits):
         circuits = [c for c in circuits if c.initialized and c.is_running]
         return [c for c in circuits if c.qm.coh.is_out_of_attempts()
-                                    and c.qm.phase.is_failed() 
+                                    and c.qm.phase.is_failed()
                ]
 
     def _get_candidats_to_overtimed(self, circuits):
@@ -168,16 +168,16 @@ class MscQueryManager(MscContainer):
         cmd_ids = []
         # get unique command ids
         [cmd_ids.append(c.cmd_id) for c in circuits if c.cmd_id not in cmd_ids]
-        
+
         grouped = dict([(id,[]) for id in cmd_ids])
         for circuit in circuits :
             grouped[circuit.cmd_id].append(circuit)
-            
+
         return grouped
 
     def get_all_running_bundles(self):
         b_ids = []
-        [b_ids.append(c.cohq.cmd.fk_bundle) for c in self.circuits 
+        [b_ids.append(c.cohq.cmd.fk_bundle) for c in self.circuits
                                           if c.cohq.cmd.fk_bundle
                                           and c.cohq.cmd.fk_bundle not in b_ids
                 ]
@@ -235,7 +235,7 @@ class MscQueryManager(MscContainer):
         order_in_bundle = cmd.order_in_bundle
         target_uuid = target.target_uuid
 
-        nbr = len([c for c in self.get_active_circuits([cmd.id]) 
+        nbr = len([c for c in self.get_active_circuits([cmd.id])
                  if fk_bundle == c.qm.cmd.fk_bundle
                  and order_in_bundle == c.qm.cmd.order_in_bundle
                  and target_uuid == c.qm.target.target_uuid
@@ -249,7 +249,7 @@ class MscQueryManager(MscContainer):
             return True
 
     def local_proxy_upload_status(self, cohq):
-        """ 
+        """
         attempt to analyse coh in the same command in order to now how we may advance.
         possible return values:
             - 'waiting': my time is not yet come
@@ -268,9 +268,9 @@ class MscQueryManager(MscContainer):
             self.logger.debug("scheduler %s: command #%s seems to be wrong (bad priorities?)" % (self.config.name, cohq.cmd.id))
             return 'dead'
 
-        
+
     def get_proxy_mode_for_command(self, cmd_id):
-        """ 
+        """
         Preliminar iteration to gather information about this command
         the idea being to obtain some informations about what's going on
         we are looking for the following elements
@@ -341,7 +341,7 @@ class MscQueryManager(MscContainer):
             # are linked to the same command
             # are not our CoH
             # are proxy server
-            circuits = [c for c in self.get_active_circuits([cmd_id]) 
+            circuits = [c for c in self.get_active_circuits([cmd_id])
                                 if c.qm.cmd.id == cohq.cmd.id
                                and c.qm.coh.id != cohq.coh.id
                                and c.qm.coh.order_in_proxy is None]
@@ -408,7 +408,7 @@ class MscQueryManager(MscContainer):
         # are linked to the same command
         # are not our CoH
         cmd_id = cohq.cmd.id
-        circuits = [c for c in self.get_active_circuits([cmd_id]) 
+        circuits = [c for c in self.get_active_circuits([cmd_id])
                             if c.qm.cmd.id==cohq.cmd.id
                            and c.qm.coh.id != cohq.coh.id]
 
@@ -418,7 +418,7 @@ class MscQueryManager(MscContainer):
 
             if c.qm.phase_is_done():          # got a pal which succeeded in doing its upload
                 if not c.qm.coh.order_in_proxy is None :# got a potent proxy server
-                    if smallest_done_upload_order_in_proxy < c.qm.coh.order_in_proxy:  
+                    if smallest_done_upload_order_in_proxy < c.qm.coh.order_in_proxy:
                         # keep its id as it seems to be the best server ever
                         smallest_done_upload_order_in_proxy = c.qm.coh.order_in_proxy
                         best_ready_proxy_server_coh = c.qm.coh.id
@@ -427,7 +427,7 @@ class MscQueryManager(MscContainer):
                 if c.qm.coh.order_in_proxy != None:     # got a potential proxy server
                     if cohq.coh.order_in_proxy is None:    # i may use this server, as I'm not server myself
                         potential_proxy_server_coh = c.qm.coh.id
-                    elif cohq.coh.order_in_proxy > c.qm.coh.order_in_proxy:               
+                    elif cohq.coh.order_in_proxy > c.qm.coh.order_in_proxy:
                         # i may use this server, as it has a lower priority than me
                         potential_proxy_server_coh = c.qm.coh.id
 
@@ -444,37 +444,37 @@ class MscQueryManager(MscContainer):
                             (self.config.name, best_ready_proxy_server_coh, cohq.coh.id))
                     return best_ready_proxy_server_coh
                 else:
-                    self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" % 
+                    self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" %
                             (self.config.name, best_ready_proxy_server_coh, cohq.coh.id, current_client_number))
                     return 'waiting'
             elif potential_proxy_server_coh != None:                        # ... and one may become ready => WAITING
-                self.logger.debug("scheduler %s: coh #%s still waiting for a local proxy to use" % 
+                self.logger.debug("scheduler %s: coh #%s still waiting for a local proxy to use" %
                         (self.config.name, cohq.coh.id))
                 return 'waiting'
             else:                                                           # ... but all seems dead => ERROR
-                self.logger.debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % 
+                self.logger.debug("scheduler %s: coh #%s won't likely be able to use a local proxy" %
                         (self.config.name, cohq.coh.id))
                 return 'dead'
         else:                                                               # I'm a server: I MAY use a proxy ...
             if best_ready_proxy_server_coh != None:                         # ... and a proxy seems ready => PROXY CLIENT MODE
                 (current_client_number, max_client_number) = self.get_client_usage_for_proxy(best_ready_proxy_server_coh)
                 if current_client_number < max_client_number:
-                    self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s" % 
+                    self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s" %
                             (self.config.name, best_ready_proxy_server_coh, cohq.coh.id))
                     return best_ready_proxy_server_coh
                 else:
-                    self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" % 
+                    self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" %
                             (self.config.name, best_ready_proxy_server_coh, cohq.coh.id, current_client_number))
                     return 'waiting'
             elif potential_proxy_server_coh:                                # ... but a better candidate may become ready => WAITING
-                self.logger.debug("scheduler %s: coh #%s still waiting to know if is is local proxy client or server" % 
+                self.logger.debug("scheduler %s: coh #%s still waiting to know if is is local proxy client or server" %
                         (self.config.name, cohq.coh.id))
                 return 'waiting'
             else:                                                           # ... and other best candidates seems dead => PROXY SERVER MODE
-                self.logger.debug("scheduler %s: coh #%s become local proxy server" % 
+                self.logger.debug("scheduler %s: coh #%s become local proxy server" %
                         (self.config.name, cohq.coh.id))
                 return 'server'
- 
+
     def get_client_usage_for_proxy(self, id):
         """
         count the (current number, max number) of clients using this proxy
@@ -484,12 +484,12 @@ class MscQueryManager(MscContainer):
         to save some time, iteration is done as usual (on command from coh)
         """
         commands_ids, max_clients = [(c.qm.cmd.id,
-                                      c.qm.coh.getMaxClientsPerProxy()) 
-                                     for c in self.get_active_circuits() if c.qm.coh.id==id] 
+                                      c.qm.coh.getMaxClientsPerProxy())
+                                     for c in self.get_active_circuits() if c.qm.coh.id==id]
         assert len(commands_ids) == 1
 
         cmd_id = commands_ids[0]
-        circuits = [c for c in self.get_active_circuits([cmd_id]) 
+        circuits = [c for c in self.get_active_circuits([cmd_id])
                             if c.qm.cmd.id==cmd_id
                            and c.qm.coh.fk_use_as_proxy==id
                            and c.qm.phase.is_running()
@@ -514,7 +514,7 @@ class MscQueryManager(MscContainer):
             self.logger.debug("scheduler %s: checking if we may continue coh #%s" % (self.config.name, cohq.coh.id))
             our_client_count = 0
             cmd_id = cohq.cmd.id
-            clients = [c for c in self.get_active_circuits([cmd_id]) 
+            clients = [c for c in self.get_active_circuits([cmd_id])
                                if c.qm.cmd.id==cohq.cmd.id
                               and c.qm.coh.id != cohq.coh.id
                               and not c.qm.phase.is_done()
@@ -523,31 +523,30 @@ class MscQueryManager(MscContainer):
 
             if cohq.cmd.hasToUseQueueProxy():
                 our_client_count = len(clients)
-                self.logger.debug("scheduler %s: found %s coh to be uploaded in command #%s" % 
+                self.logger.debug("scheduler %s: found %s coh to be uploaded in command #%s" %
                         (self.config.name, our_client_count, cohq.cmd.id))
 
             elif cohq.cmd.hasToUseSplitProxy():
- 
+
                 clients = [c for c in clients if c.qm.coh.order_in_proxy is None]
                 our_client_count = len(clients)
 
-            self.logger.debug("scheduler %s: found %s coh to be uploaded in command #%s" % 
+            self.logger.debug("scheduler %s: found %s coh to be uploaded in command #%s" %
                     (self.config.name, our_client_count, cohq.cmd.id))
 
 
             # proxy tracking update
             if our_client_count != 0:
-                LocalProxiesUsageTracking().create_proxy(cohq.target.getUUID(),                        
-                                                         cohq.coh.getMaxClientsPerProxy(), 
+                LocalProxiesUsageTracking().create_proxy(cohq.target.getUUID(),
+                                                         cohq.coh.getMaxClientsPerProxy(),
                                                          cohq.cmd.id)
-                self.logger.debug("scheduler %s: (re-)adding %s (#%s) to proxy pool" % 
+                self.logger.debug("scheduler %s: (re-)adding %s (#%s) to proxy pool" %
                         (self.config.name, cohq.target.getUUID(), cohq.cmd.getId()))
             else:
-                LocalProxiesUsageTracking().delete_proxy(cohq.target.getUUID(), 
+                LocalProxiesUsageTracking().delete_proxy(cohq.target.getUUID(),
                                                          cohq.cmd.getId())
-                self.logger.debug("scheduler %s: (re-)removing %s (#%s) from proxy pool" % 
+                self.logger.debug("scheduler %s: (re-)removing %s (#%s) from proxy pool" %
                         (self.config.name, cohq.target.getUUID(), cohq.cmd.getId()))
             return our_client_count == 0
         else:
             return True
-

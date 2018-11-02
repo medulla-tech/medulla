@@ -32,7 +32,7 @@ require("../includes/ajaxcommon.inc.php");
     $ajax->display();
     echo '<br/><br/><br/>';
     $ajax->displayDivToUpdate();
-    
+
 require("../includes/ajaxcommon_bottom.inc.php");
-    
+
 ?>

@@ -22,11 +22,11 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
+
 /*
  * Script duplication page for post-imaging script
  */
- 
+
 $task = "duplicate";
 include('postinstall_edit.php');
 

@@ -28,7 +28,7 @@ from command import CommandFailed
 from launcher import launcher
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("pkgs")
 
 
 class ResultWorker(Thread):
@@ -179,5 +179,3 @@ class WatchdogWorker(Thread):
         if exitcode == 0:
             logger.info("\033[31mMachine locked\033[0m")
             self.scheduled_to = None
-
-

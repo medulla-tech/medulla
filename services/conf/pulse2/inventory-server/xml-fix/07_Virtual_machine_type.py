@@ -45,7 +45,7 @@ def xml_fix(xml):
             if subelem3.tag == 'SMODEL':
               if subelem3.text == 'Bochs':
                 is_bochs += 1
-  
+
   # Or Vbox
   for subelem1 in root:
     if subelem1.tag == 'CONTENT':

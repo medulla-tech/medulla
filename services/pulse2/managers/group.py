@@ -25,13 +25,16 @@
 import logging
 from pulse2.utils import Singleton
 
+logger = logging.getLogger("dyngroup")
+
+
 class ComputerGroupManager(Singleton):
     components = {}
     main = 'dyngroup'
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def select(self, name):
         self.logger.info("Selecting computer group manager: %s" % name)
@@ -77,7 +80,7 @@ class ComputerGroupManager(Singleton):
         else:
             ret = self.result_group(ctx, gid, min, max, filter, True)
         return ret
-            
+
     def request(self, ctx, query, bool, min, max, filter):
         klass = self.components[self.main]
         return klass().request(ctx, query, bool, min, max, filter)
@@ -122,4 +125,3 @@ class ComputerGroupI:
         Send the group content, given a group name
         """
         pass
-

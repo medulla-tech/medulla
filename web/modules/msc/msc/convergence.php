@@ -53,7 +53,7 @@ if (!empty($_GET['gid'])) {
 } else {
     $gid = null;
 }
-    
+
 $pid = $_GET['pid'];
 $papi =  $_GET["papi"];
 $p_api = new ServerAPI();
@@ -67,9 +67,9 @@ if ($gid) {
 }
 
 $params["papi"] = $papi;
-$params["name"] = $hostname; 
-$params["hostname"] = $hostname; 
-$params["uuid"] = $uuid; 
+$params["name"] = $hostname;
+$params["hostname"] = $hostname;
+$params["uuid"] = $uuid;
 $params["gid"] = $gid;
 $params["from"] = $from;
 $params["pid"] = $pid;
@@ -143,4 +143,3 @@ header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
 exit;
 
 ?>
-

@@ -84,7 +84,7 @@ else
     echo "ERROR: downloaded packet not found"
     echo "Check if agent pack was created"
     exit 1
-fi	
+fi
 
 if [ -d ${fusion_pkg} ]; then
 
@@ -102,7 +102,7 @@ else
     echo "ERROR: downloaded package ${fusion_pkg} not found"
     echo "Check if agent pack was created"
     exit 1
-fi    
+fi
 
 if [ -e ${fusion_pkg} ];then
     rm -rf ${fusion_pkg}

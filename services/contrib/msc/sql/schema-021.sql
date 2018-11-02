@@ -18,18 +18,18 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
--- Tranforming the workflow to dynamic. 
+-- Tranforming the workflow to dynamic.
 -- Each record in commands_on_hosts_phase corrensponds to one phase
 -- in the actual workflow.
 
 CREATE TABLE IF NOT EXISTS phase (
     id INT NOT NULL AUTO_INCREMENT,
     fk_commands_on_host INT NOT NULL,
-    phase_order INT NOT NULL, 
+    phase_order INT NOT NULL,
     name VARCHAR(32) NOT NULL,
-    state ENUM ("ready", 
+    state ENUM ("ready",
 	        "running",
-	        "done", 
+	        "done",
 		"failed") DEFAULT "ready" NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (fk_commands_on_host) REFERENCES commands_on_host(id)
@@ -57,8 +57,8 @@ ALTER TABLE `commands_history` ADD COLUMN `phase` ENUM('wol',
 						       'inventory',
 						       'reboot',
 						       'halt') DEFAULT 'wol' NOT NULL;
-						       
-	
+
+
 ALTER TABLE `commands_history` MODIFY `state` ENUM('done',
                                                    'running',
                                                    'failed') DEFAULT NULL;
@@ -94,5 +94,3 @@ ALTER TABLE `commands_history` MODIFY `state` ENUM('done',
 
 DELETE FROM version;
 INSERT INTO version VALUES( "21" );
-
-

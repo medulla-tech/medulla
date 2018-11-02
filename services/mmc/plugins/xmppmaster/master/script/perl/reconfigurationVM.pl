@@ -14,7 +14,7 @@ $nboptionObligatoire=3;
 	'h' => 1,
 	'd' => 1,
 	'm' => 1
-	
+
 );
 getopts( "h:d:i:m:n:g:", \%opts ) or &gestionErreur();
 
@@ -39,7 +39,7 @@ if ($os ne '1' && $os ne '2' && $os ne '3') {
 $adresseMac=$opts{'m'};
 &gestionErreur("AdessseMac obligatoire") if (!$adresseMac);
 
-# controle des data si pas dhcp ( =0 ) 
+# controle des data si pas dhcp ( =0 )
 if (!$dhcp ) {
 
 	$ip=$opts{'i'};
@@ -50,7 +50,7 @@ if (!$dhcp ) {
 	&gestionErreur("IP non renseignee") if (!$ip);
 	&gestionErreur("Netmask non renseigne") if (!$netmask);
 	&gestionErreur("getway non renseignee") if (!$getway);
-	
+
 }
 
 @cmdSys=&debian($dhcp,$ip,$adresseMac,$netmask,$getway) if ($os eq 1);
@@ -63,7 +63,7 @@ exit 0;
 
 
 # =========================================
-#               Fonctions 
+#               Fonctions
 # =========================================
 
 #-----------------------------------------#
@@ -86,27 +86,27 @@ sub controleParametre($$) {
 	($cle)=@_;
 
 	if (exists($optionObligatoire{$cle})) {
-		
+
 		$nb+=$optionObligatoire{$cle};
 	}
-	
+
 	return $nb;
 }
 #-----------------------------------------#
 sub debian($$$$$) {
 
 	($dhcp,$ip,$adresseMac,$netmask,$getway)=@_;
-	
+
 	$date_save=`date +'%Y%m%d%H%M%S'`;
 	chomp $date_save;
-	
+
 	$fichier_ip_debian='/etc/network/interfaces';
     $fichier_ip_debian_sav=$fichier_ip_debian."_du_$date_save";
     $fichier_ip_debian_new=$fichier_ip_debian.".new";
-   
+
 	# sauvegarde du fichier
 	&sauvegarde_fic("$fichier_ip_debian" , "$fichier_ip_debian_sav");
-	
+
 	# recherche de la carte
 	$cmd="ifconfig |grep -i 'HWaddr $adresseMac'|cut -f1,1 -d' '";
 	$eth=`$cmd`;
@@ -115,52 +115,52 @@ sub debian($$$$$) {
 
 	# si pas dhcp
 	if (!$dhcp) {
-	
+
 		# modification IP
 		$trouve=0;
 		$nbModifAFaire=0;
 	}
-	
+
 	open(IN,"$fichier_ip_debian") or die "$!";
 	open(OUT,">$fichier_ip_debian_new") or die "$!";
-	
+
 	# pas dhcp demande
 	if (!$dhcp) {
-	
-		# recherche si on est en dhcp 
+
+		# recherche si on est en dhcp
 		$rechercheDhcp=`grep dhcp $fichier_ip_debian`;
 		chomp $rechercheDhcp;
 
 		# on est pas en dhcp reseau
 		if (!$rechercheDhcp) {
-		
+
 			while(defined($enreg=<IN>)) {
-					
+
 				chomp $enreg;
 				if ($enreg=~/$eth/) {
-				
+
 					$trouve=1;
 				}
 				else {
-						
+
 					if ($trouve) {
-						
+
 						if (defined($ip) && $enreg=~/address/gi) {
-								
+
 							$enreg="address $ip";
 							$nbModifAFaire++;
 						}
 						elsif (defined($netmask) && $enreg=~/netmask/gi) {
-					
+
 							$enreg="netmask $netmask";
 							$nbModifAFaire++;
 						}
 						elsif ($enreg=~/gateway/gi) {
-					
+
 							$enreg="gateway $getway";
 							$nbModifAFaire++;
 						}
-		
+
 						# reinitialisation du compteur si les modif sont effectuees
 						$trouve=0 if ($nbModifAFaire==3);
 					}
@@ -175,8 +175,8 @@ sub debian($$$$$) {
 			print OUT "address $ip\n";
 #-----------------------------------------------------------
 # il faut verifier si ca fonctionne sans network
-# sinon il faut décommenter le code ci-dessous
-#-----------------------------------------------------------			
+# sinon il faut dï¿½commenter le code ci-dessous
+#-----------------------------------------------------------
 #			# recuperation de IP du reseau
 #			$network=`hostname -I`;
 #			chomp $network;
@@ -191,12 +191,12 @@ sub debian($$$$$) {
 		# dhcp demande
 		print OUT "auto $eth\n";
 		print OUT "iface $eth inet dhcp\n";
-	
+
 	}
-	
+
 	close(IN);
 	rename("$fichier_ip_debian_new","$fichier_ip_debian");
-	
+
 	@cmdSys="/etc/init.d/networking restart";
 
 	return @cmdSys;
@@ -205,62 +205,62 @@ sub debian($$$$$) {
 sub redhat($$$$$) {
 
 	($dhcp,$ip,$adresseMac,$netmask,$getway)=@_;
-	
+
 	($fichier_ip,$fichier_ip_new,$fichier_ip_sav)=&constructionFicIP();
-	
+
 	# modification IP et NETMASK
 	$ipadrTrouve=0;
 	$maskTrouve=0;
 	$getWayTrouve=0;
 	$bootprotoTrouve=0;
-	
+
 	$tmp=`basename $fichier_ip`;
 	chomp $tmp;
 	($a,$eth)=split /-/,$tmp;
-	
+
 
 	open(OUT,">$fichier_ip_new") or die "$!";
 
-  
+
 	# sauvegarde du fichier
 	&sauvegarde_fic("$fichier_ip", "$fichier_ip_sav");
-	
+
 	open(IN,"$fichier_ip") or die "$!";
-	
-	# recherche si on est en dhcp 
+
+	# recherche si on est en dhcp
 	$rechercheDhcp=`grep dhcp $fichier_ip`;
 	chomp $rechercheDhcp;
-    
-	
-	
+
+
+
 	# si dhcp non demande
 	if (!$dhcp) {
-	
+
 		# on est pas en dhcp reseau
 		if (!$rechercheDhcp) {
-		
+
 			while(defined($enreg=<IN>)) {
-				
+
 				chomp $enreg;
 				if (defined($ip) && $enreg=~/IPADDR/i) {
-					
+
 					$enreg="IPADDR=$ip";
 					$ipadrTrouve=1;
 				}
 				if (defined($netmask) && $enreg=~/NETMASK/i) {
-					
+
 					$enreg="NETMASK=$netmask";
 					$maskTrouve=1;
-							
+
 				}
 				if ($enreg=~/GATEWAY=/i ) {
-				
+
 					$enreg="GATEWAY=$getway";
 					$getWayTrouve=1;
 				}
-		
+
 				if ($enreg=~/BOOTPROTO/) {
-		
+
 					$enreg="BOOTPROTO=static";
 					$bootprotoTrouve=1;
 				}
@@ -271,7 +271,7 @@ sub redhat($$$$$) {
 			print OUT "NETMASK=$netmask\n" if ( !$maskTrouve && defined($netmask));
 			print OUT "GATEWAY=$getway\n" if ( !$getWayTrouve );
 			print OUT "BOOTPROTO=static\n" if ( !$bootprotoTrouve );
-			
+
 		}
 		else {
 			# en est en dhcp on bascule en static
@@ -284,8 +284,8 @@ sub redhat($$$$$) {
 			print OUT "USERCTL=no\n";
 			#-----------------------------------------------------------
 			# il faut verifier si ca fonctionne sans network
-			# sinon il faut décommenter le code ci-dessous
-			#-----------------------------------------------------------			
+			# sinon il faut dï¿½commenter le code ci-dessous
+			#-----------------------------------------------------------
 			#			# recuperation de IP du reseau
 			#			$network=`hostname -I`;
 			#			chomp $network;
@@ -299,33 +299,33 @@ sub redhat($$$$$) {
 		print OUT 'ONBOOT=yes',"\n";
 		print OUT 'BOOTPROTO=dhcp',"\n";
 	}
-	
-	# on renome le fichier new  
+
+	# on renome le fichier new
 	rename("$fichier_ip_new","$fichier_ip");
-	
+
 	@cmdSys="/etc/init.d/network restart";
-	
+
 	return @cmdSys;
 }
 #-----------------------------------------#
 sub oraclevm($$$$$) {
 
 	($dhcp,$ip,$adresseMac,$netmask,$getway)=@_;
-	
+
 	($fichier_ip,$fichier_ip_new,$fichier_ip_sav)=&constructionFicIP();
-	
+
 	$tmp=`basename $fichier_ip`;
 	chomp $tmp;
 	($a,$eth)=split /-/,$tmp;
-	
+
 	# sauvegarde du fichier
 	&sauvegarde_fic("$fichier_ip", "$fichier_ip_sav");
-	
+
 	open(OUT,">$fichier_ip_new") or die "$!";
-	
+
 	# si pas dhcp
 	if (!$dhcp) {
-	
+
 		print OUT "PEERDNS=no\n";
 		print OUT "GATEWAY=$getway\n";
 		print OUT "NETMASK=$netmask\n";
@@ -341,11 +341,11 @@ sub oraclevm($$$$$) {
 		print OUT 'ONBOOT="yes"',"\n";
 		print OUT 'BOOTPROTO="dhcp"',"\n";
 	}
-	# on renome le fichier new  
+	# on renome le fichier new
 	rename("$fichier_ip_new","$fichier_ip");
-	
+
 	@cmdSys="/etc/init.d/network restart";
-	
+
 	return @cmdSys;
 }
 #-----------------------------------------#
@@ -353,9 +353,9 @@ sub constructionFicIP() {
 
 	$date_save=`date +'%Y%m%d%H%M%S'`;
 	chomp $date_save;
-	
+
 	$rep='/etc/sysconfig/network-scripts';
-	
+
     # recherche du fichier ifcfg
 	$cmd="ifconfig -a |grep -i  $adresseMac";
 	$fichier_ip_redhat=`$cmd`;
@@ -364,7 +364,7 @@ sub constructionFicIP() {
 	($fichier_ip_redhat)=split(/ /,$fichier_ip_redhat);
     $fichier_ip_redhat=~s/ +//g;
 	$fichier_ip_redhat='ifcfg-'.$fichier_ip_redhat;
-	
+
 	$fichier_ip_redhat=$rep.'/'.$fichier_ip_redhat;
     $fichier_ip_redhat_sav=$fichier_ip_redhat."_du_$date_save";
     $fichier_ip_redhat_new=$fichier_ip_redhat.".new";
@@ -381,7 +381,7 @@ sub sauvegarde_fic() {
 		$fic_backup=`basename $_[1]`;
 		chomp $fic_backup;
 		$fic_backup='backup_'.$fic_backup;
-	
+
 		if (!copy("$_[0]","$fic_backup")) {
 
 			print "sauvegarde du fichier $_[0] vers $fic_backup impossible\n";

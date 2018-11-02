@@ -18,7 +18,7 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
--- Tranforming the workflow to dynamic. 
+-- Tranforming the workflow to dynamic.
 -- Each record in commands_on_hosts_phase corrensponds to one phase
 -- in the actual workflow.
 

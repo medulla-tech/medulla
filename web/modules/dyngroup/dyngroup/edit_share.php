@@ -71,7 +71,7 @@ if (isset($_POST["bdeluser_x"])) {
     $listC = array();
     foreach ($listOfMembers as $login => $member) { $listN[$member['user']['login']] = $member; }
     foreach ($listOfCurMembers as $member) { $listC[$member['user']['login']] = $member; }
-    
+
     $newmem = array_diff_assoc($listN, $listC);
     $delmem = array_diff_assoc($listC, $listN);
 
@@ -98,7 +98,7 @@ if (isset($_POST["bdeluser_x"])) {
         $members[$member['user']['type']."##".$member['user']['login']] = $member['user']['login'];
         $listOfMembers[$member['user']['login']] = $member;
     }
-    
+
     if (!$members) { $members = array(); }
     if (!$listOfMembers) { $listOfMembers = array(); }
 
@@ -128,4 +128,3 @@ natcasesort($diff);
 drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $group->id, htmlspecialchars($name));
 
 ?>
-

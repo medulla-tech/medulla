@@ -52,5 +52,3 @@ UPDATE `commands_on_host` SET `stage` = "ended" where `current_state` = "failed"
 
 DELETE FROM version;
 INSERT INTO version VALUES( "14" );
-
-

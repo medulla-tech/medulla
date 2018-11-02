@@ -36,6 +36,9 @@ from pulse2.apis import makeURL
 from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 
+logger = logging.getLogger('imaging')
+
+
 class RPCStore(Singleton):
 
     """
@@ -49,7 +52,7 @@ class RPCStore(Singleton):
         """
         Initialize object.
         """
-        self.logger = logging.getLogger('imaging')
+        self.logger = logger
         self.logger.debug('Initializing imaging RPC replay file')
         self.filename = PackageServerConfig().imaging_api['rpc_replay_file']
         try:
@@ -198,7 +201,7 @@ class RPCReplay(Singleton):
         """
         Initialize object, and the RPCStore object.
         """
-        self.logger = logging.getLogger('imaging')
+        self.logger = logger
         self.logger.debug('Initializing imaging RPC replay manager')
         self.timer = PackageServerConfig().imaging_api['rpc_loop_timer']
         self.count = PackageServerConfig().imaging_api['rpc_count']

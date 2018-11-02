@@ -158,4 +158,3 @@ INSERT INTO backup_profiles VALUES(null, 'Windows 10 (Whole drive)', '/cygdrive/
 	/Windows/Temp", 'utf8');
 
 UPDATE version SET number=4;
-

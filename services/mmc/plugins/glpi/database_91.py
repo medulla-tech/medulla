@@ -65,6 +65,10 @@ from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
+import traceback,sys
+
+logger = logging.getLogger("glpi")
+
 
 class Glpi91(DyngroupDatabaseHelper):
     """
@@ -85,7 +89,7 @@ class Glpi91(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.1')
+        logger.debug('Trying to detect if GLPI version is higher than 9.1')
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
@@ -93,10 +97,11 @@ class Glpi91(DyngroupDatabaseHelper):
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
         if LooseVersion(self._glpi_version) >=  LooseVersion("9.1") and LooseVersion(self._glpi_version) <=  LooseVersion("9.1.7"):
-            logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
+            logger.debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
-            logging.getLogger().debug('GLPI higher than version 9.1 was not detected')
+
+            logger.debug('GLPI higher than version 9.1 was not detected')
             return False
 
     @property
@@ -107,7 +112,7 @@ class Glpi91(DyngroupDatabaseHelper):
         return False
 
     def activate(self, config = None):
-        self.logger = logging.getLogger()
+        self.logger = logger
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Glpi don't need activation")
@@ -901,6 +906,10 @@ class Glpi91(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.softwareversions, self.software, self.manufacturers]
         elif query[2] == 'User location':
             return base + [self.user, self.locations]
+        elif query[2] == 'Register key':
+            return base + [ self.regcontents]#self.collects, self.registries,
+        elif query[2] == 'Register key value':
+            return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -957,7 +966,31 @@ class Glpi91(DyngroupDatabaseHelper):
                         else:
                             ret.append(partA.like(self.encode(partB)))
                     else:
-                        ret.append(partA.like(self.encode(partB)))
+                        try:
+                            partB = partB.strip()
+                            if partB.startswith(">="):
+                                partB = partB[2:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA >= d))
+                            elif partB.startswith("<="):
+                                partB = partB[2:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA <= d))
+                            elif partB.startswith("<"):
+                                partB = partB[1:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA < d))
+                            elif partB.startswith(">"):
+                                partB = partB[1:].strip()
+                                d=int(partB)
+                                ret.append( and_(partA > d))
+                            else:
+                                ret.append(partA.like(self.encode(partB)))
+                        except Exception as e:
+                            print str(e)
+                            traceback.print_exc(file=sys.stdout)
+                            ret.append(partA.like(self.encode(partB)))
+
             if ctx.userid != 'root':
                 ret.append(self.__filter_on_entity_filter(None, ctx))
             return and_(*ret)
@@ -1018,6 +1051,10 @@ class Glpi91(DyngroupDatabaseHelper):
             return [[self.software.c.name, query[3][0]], [self.softwareversions.c.name, query[3][1]]]
         elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
             return [[self.manufacturers.c.name, query[3][0]], [self.software.c.name, query[3][1]], [self.softwareversions.c.name, query[3][2]]]
+        elif query[2] == 'Register key':
+            return [[self.registries.c.name, query[3]]]
+        elif query[2] == 'Register key value':
+            return [[self.registries.c.name, query[3][0]], [self.regcontents.c.value , query[3][1]]]
         return []
 
 
@@ -2588,7 +2625,7 @@ class Glpi91(DyngroupDatabaseHelper):
             return self.searchOptions['en_US'][str(log.id_search_option)]
         except:
             if log.id_search_option != 0:
-                logging.getLogger().warn('I can\'t get a search option for id %s' % log.id_search_option)
+                logger.warn('I can\'t get a search option for id %s' % log.id_search_option)
             return ''
 
     def getLinkedActionValues(self, log):
@@ -2882,6 +2919,22 @@ class Glpi91(DyngroupDatabaseHelper):
                 t.append(p)
                 p = __getParent(p)
             ret[i] = t
+        return ret
+
+    @DatabaseHelper._sessionm
+    def getAllRegistryKeyValue(self, session, ctx, keyregister, value):
+        """
+        @return: all key value defined in the GLPI database
+        """
+        ret = None
+        #if not hasattr(ctx, 'locationsid'):
+            #complete_ctx(ctx)
+        session = create_session()
+        query = session.query(distinct(RegContents.value))
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.registries.c.key.like('%'+keyregister+'%'))
+        ret = query.all()
+        session.close()
         return ret
 
     @DatabaseHelper._sessionm
@@ -3461,6 +3514,21 @@ class Glpi91(DyngroupDatabaseHelper):
             query = query.filter(self.locations.c.completename.like('%'+filt+'%'))
         ret = query.group_by(self.locations.c.completename)
         ret=ret.all()
+        session.close()
+        return ret
+
+    def getAllRegistryKey(self, ctx, filt = ''):
+        """
+        Returns the registry keys name.
+        @return: list Register key name
+        """
+        ret = None
+        session = create_session()
+        query = session.query(Registries.name)
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.registries.c.name.like('%'+filt+'%'))
+        ret = query.all()
         session.close()
         return ret
 

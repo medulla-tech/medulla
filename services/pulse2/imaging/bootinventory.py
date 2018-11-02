@@ -381,6 +381,9 @@ FAMCPU_H = {
     "1F4": "Video Processor (family)",
 }
 
+logger = logging.getLogger("imaging")
+
+
 class BootInventory:
     """
         Class holding one inventory.
@@ -611,7 +614,7 @@ class BootInventory:
             mo = re.match(NETMASK_RE, line)
             if mo :
                 self.netmask_info = mo.group(1)
-                logging.getLogger().info("netmask_info load self.netmask_info%s"%str(self.netmask_info))
+                logger.info("netmask_info load self.netmask_info%s"%str(self.netmask_info))
                 # Compute network address (subnet) from ip and netmask
                 if self.netmask_info and self.ipaddr_info['ip']:
                     try:
@@ -649,7 +652,7 @@ class BootInventory:
 
 
     def initialise(self, xml, entity=None, hostname=None):
-        logging.getLogger().debug("initialise xml\n%s"%xml)
+        logger.debug("initialise xml\n%s"%xml)
         root = ET.fromstring(xml)
         for child in root:
             if child.tag == "DEVICEID":
@@ -748,7 +751,7 @@ class BootInventory:
         """
         Return an OCS XML string
         """
-        logging.getLogger().debug("dumpOCS hostname %s  entity %s "%(hostname,entity))
+        logger.debug("dumpOCS hostname %s  entity %s "%(hostname,entity))
 	REQUEST = ET.Element('REQUEST')
 
 	DEVICEID = ET.SubElement(REQUEST,'DEVICEID')
@@ -781,7 +784,7 @@ class BootInventory:
 
 	MMANUFACTURER = ET.SubElement(BIOS,'MMANUFACTURER')
 	MMANUFACTURER.text = ''
-	
+
 	MMODEL = ET.SubElement(BIOS,'MMODEL')
 	MMODEL.text = ''
 
@@ -810,7 +813,7 @@ class BootInventory:
 	txtssn = self.sys_info['serial'].strip(' \t\n\r').strip()
 	if txtssn == "":
             txtssn ="0"
-	SSN.text = txtssn 
+	SSN.text = txtssn
 
 	#### HARDWARE SECTION ###############################
 	HARDWARE = ET.SubElement(CONTENT,'HARDWARE')
@@ -819,7 +822,7 @@ class BootInventory:
 	ipval = self.ipaddr_info['ip'].strip(' \t\n\r').strip()
 	ipval=self.ipaddr_info['ip'].split(":")[0]
 	IPADDR.text = ipval
-	
+
 	DEFAULTGATEWAY = ET.SubElement(HARDWARE,'DEFAULTGATEWAY')
 	DEFAULTGATEWAY.text = self.gateway_info.strip(' \t\n\r').strip()
 
@@ -875,13 +878,13 @@ class BootInventory:
 
 	IPMASK = ET.SubElement(NETWORKS,'IPMASK')
 	IPMASK.text = self.netmask_info.strip(' \t\n\r').strip()
-	
+
 	IPGATEWAY = ET.SubElement(NETWORKS,'IPGATEWAY')
 	IPGATEWAY.text = self.gateway_info.strip(' \t\n\r').strip()
-	
+
         IPSUBNET = ET.SubElement(NETWORKS,'IPSUBNET')
 	IPSUBNET.text = self.subnet_info.strip(' \t\n\r').strip()
-	
+
         STATUS = ET.SubElement(NETWORKS,'STATUS')
 	STATUS.text = 'Up'
 
@@ -896,13 +899,13 @@ class BootInventory:
 
 	for k,v in self.disk_info_i.iteritems():
 		STORAGES = ET.SubElement(CONTENT,'STORAGES')
-		
+
 		NAME = ET.SubElement(STORAGES,'NAME')
 		NAME.text = 'hd'+str(k)
 
 		TYPE = ET.SubElement(STORAGES,'TYPE')
 		TYPE.text = 'disk'
-		
+
 		DISKSIZE = ET.SubElement(STORAGES,'DISKSIZE')
 		DISKSIZE.text = str(v['lba_size_mb'])
 #### mandriva-management-console/pulse-imaging-client
@@ -916,10 +919,10 @@ class BootInventory:
 			FILESYSTEM = ET.SubElement(DRIVES,'FILESYSTEM')
 			if partinfo['type_hex'] in FILESYSTEMS_H:
 				FILESYSTEM.text = FILESYSTEMS_H[partinfo['type_hex']]
-			
+
 			TOTAL = ET.SubElement(DRIVES,'TOTAL')
 			TOTAL.text = str(partinfo['length_mb'])
-			
+
 			TYPE = ET.SubElement(DRIVES,'TYPE')
 			TYPE.text = 'hd'+str(diskid)+'p'+str(partid)
 
@@ -957,5 +960,5 @@ class BootInventory:
 				SPEED.text = 'N/A'
 
 	a = '<?xml version="1.0" encoding="utf-8"?>'+ET.tostring(REQUEST)
-	logging.getLogger().debug("create xml :\n%s"%a)
+	logger.debug("create xml :\n%s"%a)
 	return a

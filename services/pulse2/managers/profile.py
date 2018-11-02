@@ -31,13 +31,16 @@ import logging
 from pulse2.utils import Singleton
 from twisted.internet import defer
 
+logger = logging.getLogger("dyngroup")
+
+
 class ComputerProfileManager(Singleton):
     components = {}
     main = 'dyngroup'
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def select(self, name):
         self.logger.info("Selecting computer profile manager: %s" % name)

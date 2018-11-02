@@ -26,10 +26,13 @@ from mmc.site import mmcconfdir
 from mmc.plugins.inventory.provisioning_plugins import PluginEntitiesI
 from pulse2.database.inventory.entitiesrules import EntitiesRules
 
+logger = logging.getLogger("inventory")
+
+
 class PluginEntities(PluginEntitiesI):
 
     def __init__(self):
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def get(self, authtoken):
         nr = NetworkRules(mmcconfdir + '/plugins/provisioning-inventory')

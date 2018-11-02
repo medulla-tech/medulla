@@ -164,7 +164,7 @@ foreach ($actions as $action){
 //         }
 //         else{
 //             $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
-// 
+//
 //         }
         if (modIsActive($action->action)) {
             switch($action->action){

@@ -19,6 +19,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-""" 
+"""
 A proxy providing the communication between scheduler and launcher (or mmc).
 """

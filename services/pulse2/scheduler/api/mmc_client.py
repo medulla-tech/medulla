@@ -28,14 +28,14 @@ from mmc.site import mmcconfdir
 from ConfigParser import ConfigParser
 from mmc.client.async import Proxy
 
-log = logging.getLogger()
+log = logging.getLogger("mmc-agent")
 
 class ConfigReader(object):
     """Read and parse config files"""
     def __init__(self):
-        scheduler_ini = os.path.join(mmcconfdir, 
-                                      "pulse2",  
-                                      "scheduler", 
+        scheduler_ini = os.path.join(mmcconfdir,
+                                      "pulse2",
+                                      "scheduler",
                                       "scheduler.ini")
 
         self._scheduler_config = self.get_config(scheduler_ini)
@@ -49,7 +49,7 @@ class ConfigReader(object):
         @param inifile: path to config file
         @type inifile: string
 
-        @return: ConfigParser.ConfigParser instance 
+        @return: ConfigParser.ConfigParser instance
         """
         log.debug("Load config file %s" % inifile)
         if not os.path.exists(inifile) :
@@ -65,16 +65,16 @@ class ConfigReader(object):
 
     @property
     def scheduler_config(self):
-        """ 
-        Get the configuration of package server 
+        """
+        Get the configuration of package server
 
-        @return: ConfigParser.ConfigParser instance 
+        @return: ConfigParser.ConfigParser instance
         """
         return self._scheduler_config
 
 class MMCProxy(object):
     """ Provider to connect at mmc-agent """
-    def __init__(self): 
+    def __init__(self):
 
         config = ConfigReader()
 
@@ -97,7 +97,7 @@ class MMCProxy(object):
         host = self.scheduler_config.get("mmc_agent", "host")
         port = self.scheduler_config.get("mmc_agent", "port")
 
-        log.debug("Building the connection URL at mmc-agent") 
+        log.debug("Building the connection URL at mmc-agent")
         self._url = 'https://%s:%s/XMLRPC' % (host, port)
 
     def _build_proxy(self):
@@ -121,22 +121,22 @@ class MMCProxy(object):
         return self._build_proxy()
 
 class RPCClient(MMCProxy) :
-    """ 
-    XML-RPC Handler to execute remote functions. 
+    """
+    XML-RPC Handler to execute remote functions.
     """
 
     def rpc_execute(self, fnc, *args, **kwargs):
-        """ 
+        """
         Remote execution handler
 
         @param fnc: RPC function to call
-        @type fnc: function type  
+        @type fnc: function type
 
         @param args: Arguments of called function
-        @type args: *args type (list) 
+        @type args: *args type (list)
 
         @param kwargs: Arguments of called function
-        @type kwargs: **kwargs type (dict) 
+        @type kwargs: **kwargs type (dict)
         """
 
         d = self.proxy()

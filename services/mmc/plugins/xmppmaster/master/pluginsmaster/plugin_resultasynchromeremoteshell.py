@@ -25,23 +25,27 @@
 
 import logging
 import traceback
-import sys, os
+import sys
+import os
 import json
 from utils import file_put_content
 
 
-plugin = { "VERSION" : "1.0", "NAME" : "resultasynchromeremoteshell", "TYPE" : "master" }
+plugin = {"VERSION": "1.0", "NAME": "resultasynchromeremoteshell", "TYPE": "master"}
 
-def action( xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug("=====================================================")
-    logging.getLogger().debug(plugin)
-    logging.getLogger().debug("=====================================================")
+logger = logging.getLogger("xmppmaster")
+
+
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
+    logger.debug("=====================================================")
+    logger.debug(plugin)
+    logger.debug("=====================================================")
     try:
-        pathresult =  os.path.join("/","tmp",sessionid)
+        pathresult = os.path.join("/", "tmp", sessionid)
         print pathresult
-        file_put_content(pathresult,json.dumps(data, indent=4) ,mode="w")
+        file_put_content(pathresult, json.dumps(data, indent=4), mode="w")
         print json.dumps(data, indent=4)
     except Exception, e:
-        logging.getLogger().error("Error loading plugin: %s" % str(e))
+        logger.error("Error loading plugin: %s" % str(e))
         traceback.print_exc(file=sys.stdout)
         pass

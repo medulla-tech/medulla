@@ -45,6 +45,8 @@ from sqlalchemy.exc import InvalidRequestError
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.location import ComputerLocationManager
 
+logger = logging.getLogger("imaging")
+
 
 class ImagingException(Exception):
     pass
@@ -67,7 +69,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return DyngroupDatabaseHelper.db_check(self)
 
     def activate(self, config):
-        self.logger = logging.getLogger()
+        self.logger = logger
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("ImagingDatabase don't need activation")
@@ -3565,7 +3567,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
             return True
         except Exception, e:
-            logging.getLogger().error(str(e))
+            logger.error(str(e))
             session.close()
             return False
 
@@ -3593,7 +3595,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
             return True
         except Exception, e:
-            logging.getLogger().error(str(e))
+            logger.error(str(e))
             session.close()
             return False
 
@@ -3613,7 +3615,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             menu.fk_synchrostate = state
             session.add(menu)
         else :
-            logging.getLogger().warn("Imaging.setLocationSynchroState : failed to set synchro_state")
+            logger.warn("Imaging.setLocationSynchroState : failed to set synchro_state")
 
         session.flush()
         session.close()

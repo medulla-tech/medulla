@@ -29,11 +29,14 @@ from mmc.plugins.msc.config import MscConfig
 from mmc.support.mmctools import Singleton
 import pulse2.apis.clients.scheduler_api
 
+logger = logging.getLogger("msc")
+
+
 class SchedulerApi(Singleton):
     initialized = False
     def __init__(self):
         if self.initialized: return
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.logger.debug("Going to initialize SchedulerApi")
         self.config = MscConfig()
         credentials = ''
@@ -59,10 +62,9 @@ class SchedulerApi(Singleton):
                 self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(MscConfig().default_scheduler, credentials, self.server_addr, self.config.sa_verifypeer, self.config.sa_cacert, self.config.sa_localcert)
             else:
                 self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(MscConfig().default_scheduler, credentials, self.server_addr)
-                
+
         for method in ('getScheduler', 'getSchedulers', 'getDefaultScheduler'):
             setattr(self, method, getattr(self.internal, method))
 
         self.internal.setConfig(self.config)
         self.initialized = True
- 

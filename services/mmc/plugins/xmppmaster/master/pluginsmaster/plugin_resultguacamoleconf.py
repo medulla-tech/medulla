@@ -27,13 +27,16 @@ import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import logging
 
-plugin = { "VERSION" : "1.0", "NAME" : "resultguacamoleconf", "TYPE" : "master" }
+plugin = {"VERSION": "1.0", "NAME": "resultguacamoleconf", "TYPE": "master"}
 
-def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
-    logging.getLogger().debug(plugin)
+logger = logging.getLogger("xmppmaster")
+
+
+def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
+    logger.debug(plugin)
     try:
         XmppMasterDatabase().addlistguacamoleidforiventoryid(data['uuid'], data['connection'])
     except Exception, e:
-        logging.getLogger().error( "Error: %s" % str(e))
+        logger.error("Error: %s" % str(e))
         traceback.print_exc(file=sys.stdout)
         pass

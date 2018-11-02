@@ -1,4 +1,3 @@
- 
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
 #
@@ -25,9 +24,12 @@
 
 import logging
 
-plugin = { "VERSION" : "1.0", "NAME" : "resultforce_setup_agent", "TYPE" : "master" }
+plugin = {"VERSION": "1.0", "NAME": "resultforce_setup_agent", "TYPE": "master"}
 
-def action( xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug("________________________________________________")
-    logging.getLogger().debug(plugin)
-    logging.getLogger().debug("________________________________________________")
+logger = logging.getLogger("xmppmaster")
+
+
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
+    logger.debug("________________________________________________")
+    logger.debug(plugin)
+    logger.debug("________________________________________________")

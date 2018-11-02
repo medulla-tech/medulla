@@ -35,6 +35,8 @@ from xml.dom.expatbuilder import ExpatBuilderNS
 
 from pulse2.utils import Singleton
 
+logger = logging.getLogger("inventory")
+
 
 class EncodingSafeParser(ExpatBuilderNS):
 
@@ -108,7 +110,7 @@ class OcsMapping(Singleton):
         """
         Parse the given XML string which is the content of a OCS inventory.
         """
-        self.logger = logging.getLogger()
+        self.logger = logger
         xml = None
         try:
             xml = parseString(xmltext)

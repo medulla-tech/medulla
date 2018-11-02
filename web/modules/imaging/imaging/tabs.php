@@ -95,12 +95,12 @@ if (isset($_POST['bsync'])) {
         $objprocess['location']=$location;
         $objprocess['process'] = $path.$scriptmulticast;
         //if (xmlrpc_muticast_script_exist($objprocess)){
-        
+
         if (xmlrpc_check_process_multicast($objprocess)){
             $msg = _T("The bootmenus cannot be generated as a multicast deployment is currently running.", "imaging");
             new NotifyWidgetFailure($msg);
             header("Location: " . urlStrRedirect("imaging/manage/index"));
-            exit;  
+            exit;
         }
         else{
             $ret = xmlrpc_synchroProfile($params['gid']);

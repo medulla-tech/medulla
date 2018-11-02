@@ -40,8 +40,8 @@ if(isset($_POST['id'], $_POST['name'], $_POST['active']))
     else
         xmlrpc_update_profile($_POST['id'], $_POST['name'], $ous, $_POST['active']);
 
-    echo _T('The profile '.$_POST['name'].' has been updated','kiosk');
+    new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated','kiosk'),$_POST['name']));
 }
 else
-    echo _T('Unable to update the profile '.$_POST['name'],'kiosk');
+    new NotifyWidgetSuccess(sprintf(_T('Unable to update the profile %s','kiosk'),$_POST['name']));
 ?>

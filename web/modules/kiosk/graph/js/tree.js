@@ -28,6 +28,7 @@ jQuery(function(){
     var old_users = null;
     if(jQuery("#no_ou").is(":checked") == false)
     {
+        jQuery("#treeToggler").hide();
         jQuery("#jstree").hide();
         old_ous = ous;
         old_users = jQuery("#users").html();
@@ -44,6 +45,7 @@ jQuery(function(){
     jQuery("#no_ou").on("click", function(){
         if(jQuery("#no_ou").is(":checked") == false)
         {
+            jQuery("#treeToggler").hide();
             jQuery("#jstree").hide();
             old_ous = ous;
             old_users = jQuery("#users").html();
@@ -53,6 +55,7 @@ jQuery(function(){
         else
         {
             jQuery("#jstree").show();
+            jQuery("#treeToggler").show();
             ous = old_ous;
             jQuery("#users").html(old_users);
         }
@@ -78,6 +81,7 @@ jQuery(function(){
     }
 
     jQuery('#jstree').jstree();
+
     // Finally now the ids of selected ous are stored in selectedId variable. The ous are selected by default in
     // the tree.
     jQuery('#jstree').jstree('select_node', selectedId);
@@ -93,4 +97,18 @@ jQuery(function(){
 
         });
     });
+
+    jQuery("#treeToggler").on("click", function(){
+      if(jQuery("#treeToggler").val() == "+")
+      {
+        jQuery('#jstree').jstree('open_all');
+        jQuery("#treeToggler").val("-")
+      }
+      else
+      {
+        jQuery('#jstree').jstree('close_all');
+        jQuery("#treeToggler").val("+")
+      }
+    });
+
 });

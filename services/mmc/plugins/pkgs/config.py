@@ -28,6 +28,9 @@ import os.path # for SSL cert files checking
 from mmc.support.config import PluginConfig
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 
+logger = logging.getLogger("pkgs")
+
+
 class PkgsConfig(PluginConfig):
 
     # User/package_api API stuff
@@ -41,7 +44,7 @@ class PkgsConfig(PluginConfig):
     upaa_cacert = ''
     upaa_localcert = ''
     tmp_dir = os.path.join('/tmp', 'pkgs_tmp')
-    
+
     # Appstream settings
     appstream_url = ""
 
@@ -61,13 +64,13 @@ class PkgsConfig(PluginConfig):
 
         if self.has_option("user_package_api", "username"):
             if not isTwistedEnoughForLoginPass():
-                logging.getLogger().warning("your version of twisted is not high enough to use login (user_package_api/username)")
+                logger.warning("your version of twisted is not high enough to use login (user_package_api/username)")
                 self.upaa_username = ""
             else:
                 self.upaa_username = self.get("user_package_api", "username")
         if self.has_option("user_package_api", "password"):
             if not isTwistedEnoughForLoginPass():
-                logging.getLogger().warning("your version of twisted is not high enough to use password (user_package_api/password)")
+                logger.warning("your version of twisted is not high enough to use password (user_package_api/password)")
                 self.upaa_password = ""
             else:
                 self.upaa_password = self.get("user_package_api", "password")
@@ -91,7 +94,7 @@ class PkgsConfig(PluginConfig):
                 import twisted.internet.ssl
                 if not hasattr(twisted.internet.ssl, "Certificate"):
                     raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
-        
+
         # Appstream settings
         if self.has_option("appstream", "url"):
             self.appstream_url = self.get("appstream", "url")

@@ -45,4 +45,3 @@ def getInventoryNoms(table = None):
     if table in noms:
         return noms[table]
     return None
-    

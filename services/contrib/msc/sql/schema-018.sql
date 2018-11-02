@@ -18,7 +18,7 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
--- Execution schedule set for command_on_host 
+-- Execution schedule set for command_on_host
 ALTER TABLE commands_on_host ADD COLUMN attempts_failed INT DEFAULT 0 AFTER attempts_left;
 ALTER TABLE commands_on_host ADD COLUMN balance FLOAT NULL AFTER attempts_failed;
 

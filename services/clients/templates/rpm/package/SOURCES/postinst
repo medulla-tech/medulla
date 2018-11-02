@@ -10,43 +10,43 @@ inv_file="${PREFIX}/inventory.url"
 
 
 if ! [ -d "/root/.ssh" ]; then
-    echo "Create missing SSH profile ..."    
+    echo "Create missing SSH profile ..."
     mkdir -p /root/.ssh
-fi 	
-    	
+fi
+
 tee -a /root/.ssh/authorized_keys < ${ssh_pub_key}
 
 
-fusion_dir="/etc/fusioninventory" 
+fusion_dir="/etc/fusioninventory"
 fusion_cfg="$fusion_dir/agent.cfg"
 
-FUSION_PERL_LIB=$(find /usr -name  FusionInventory-Agent)    
+FUSION_PERL_LIB=$(find /usr -name  FusionInventory-Agent)
 
 url=$(sed '1q;d' ${inv_file})
 tag=$(sed '2q;d' ${inv_file})
 
 if [ -z "$url" ]; then
-    echo "ERROR: Unable to get inventory server URL"	    
+    echo "ERROR: Unable to get inventory server URL"
     exit 1
-else    
+else
     echo "INFO: Detected inventory url - $url"
-fi 
+fi
 
 if [ $DISTRO == "OpenMandrivaLinux" ];then
 
     if [ ! -d $fusion_dir ]; then
         mkdir $fusion_dir
-    fi	   
-     
+    fi
+
     if [ ! -f $fusion_cfg ]; then
-	touch $fusion_cfg    
-    fi	
+	touch $fusion_cfg
+    fi
 
     echo '/basevardir/c\basevardir=/var/lib/fusioninventory-agent' >> $fusion_cfg
     echo "/share-dir/c\share-dir=$FUSION_PERL_LIB" >> $fusion_cfg
 
 
-fi	
+fi
 
 if [ -f ${fusion_cfg} ];then
     sed -i '/^server\ =/d' ${fusion_cfg}
@@ -54,7 +54,7 @@ if [ -f ${fusion_cfg} ];then
     grep -q "${url}" ${fusion_cfg} || echo "${url}" >> ${fusion_cfg}
     grep -q "${tag}" ${fusion_cfg} || echo "${tag}" >> ${fusion_cfg}
 else
-    echo "ERROR: Unable to find fusioninventory config file"	
+    echo "ERROR: Unable to find fusioninventory config file"
     exit 1
 fi
 
@@ -69,18 +69,16 @@ if hash vncserver 2>/dev/null; then
     if [ -f ${vnc_cfg} ];then
         echo "${vnc_servers}" >> ${vnc_cfg}
         echo "${vnc_serverargs}" >> ${vnc_cfg}
-        echo "INFO: Configuring VNC..."	
+        echo "INFO: Configuring VNC..."
     else
-        echo "ERROR: Unable to find VNC config file"	
+        echo "ERROR: Unable to find VNC config file"
         exit 1
     fi
 
-    # ----------- VNC start ---------- 
+    # ----------- VNC start ----------
     service vncserver start
     chkconfig --levels 235 vncsever on
-fi    
+fi
 
 echo "INFO: Running initial inventory"
 /usr/bin/fusioninventory-agent
-
-

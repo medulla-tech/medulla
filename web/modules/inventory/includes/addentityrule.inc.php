@@ -29,7 +29,7 @@
         function TrFormElementcollapse( $tpl, $extraInfo = array()){
             parent::TrFormElement($desc, $tpl, $extraInfo);
         }
-        
+
         function display($arrParam = array()) {
             if (empty($arrParam))
                 $arrParam = $this->options;
@@ -48,10 +48,10 @@
             $this->template->display($arrParam);
             print "</td></tr>";
         }
-        
+
     }
-   
-    
+
+
     function attribut($val,$val1=null){
         if(isset($val1)){
             $valeur[0]=$val;
@@ -70,7 +70,7 @@
         }
         return "";
     }
-    
+
     function add_attribut($attribut){
         $valattribut="";
         if (isset($attribut)) {
@@ -86,7 +86,7 @@
             }
         }elseif ($attribut != "") {
             $valattribut.=' id="'. $id . '"';
-        } 
+        }
         return $valattribut;
     }
 
@@ -99,7 +99,7 @@
             $valid="";
             if (is_array($id)){
                 $id=implode ( " " , $id );
-            }  
+            }
             $elementhtml.=' id="'. $id . '"';
         }
         if ($attribut != "") {
@@ -115,7 +115,7 @@
             $elementhtml.=">";
         }
         return $elementhtml;
-    }   
+    }
 /**
  * simple input template
  */
@@ -149,13 +149,13 @@ class InputTplTitle extends InputTpl {
             attribut($arrParam["disabled"]),
             attribut("title",$this->title),
             attribut( isset($arrParam["required"]) ? ' rel="required" ' : ''),
-            attribut( isset($arrParam["required"]) ? ' required="required" ' : ''), 
+            attribut( isset($arrParam["required"]) ? ' required="required" ' : ''),
             attribut("data-regexp",$this->regexp),
             attribut("maxlength",$arrParam["maxlength"]),
-            attribut("title",$this->title),           
+            attribut("title",$this->title),
             attribut('autocomplete="off"')
         );
-      
+
         echo add_element('span',
                 "" ,
                 "container_input_$this->name",
@@ -216,7 +216,7 @@ class buttonTpl2 extends AbstractTpl {
         $this->cssClass = $class;
     }
 
-    function display($arrParam) {      
+    function display($arrParam) {
         if (isset($this->id,$this->text))
             printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
     }

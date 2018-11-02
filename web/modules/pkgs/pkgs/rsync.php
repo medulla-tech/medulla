@@ -32,7 +32,7 @@ if ($p['why'] || $p['why'] == 'association') {
     print sprintf(_T("The package %s (%s) is not associated", "pkgs"), $_GET["plabel"], $_GET['pversion']);
 } else {
     $mirrors_status = getRsyncStatus($p_api, $pid);
-    
+
     print "<table style='width:90%'>";
     foreach ($mirrors_status as $mirror) {
         print "<tr><td>$mirror[0]</td>";

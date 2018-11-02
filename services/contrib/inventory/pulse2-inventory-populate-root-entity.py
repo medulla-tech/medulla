@@ -67,7 +67,7 @@ if __name__ == "__main__":
     hashardware = Table("hasHardware", metadata, autoload = True)
 
     computers = select([inventory.c.id, machine.c.id], and_(machine.c.id == hashardware.c.machine, hashardware.c.inventory == inventory.c.id, inventory.c.Last == 1)).execute().fetchall()
-    
+
     entity_id = 1
     if get_entity:
         ent = []
@@ -84,4 +84,3 @@ if __name__ == "__main__":
     for computer in computers:
         into_hasentity.append({'machine' : computer[1], 'entity' : entity_id, 'inventory': computer[0]})
     connection.execute(hasentity.insert(), into_hasentity)
-    

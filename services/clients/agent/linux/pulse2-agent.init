@@ -24,8 +24,8 @@
 # Should-Stop:       mysql
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start and stop Pulse2 Agent Service 
-# Description:       Start and stop Pulse2 Agent Service providing remote connections 
+# Short-Description: Start and stop Pulse2 Agent Service
+# Description:       Start and stop Pulse2 Agent Service providing remote connections
 ### END INIT INFO
 
 # Redhat based distributions specific
@@ -62,7 +62,7 @@ get_running_pid() {
 	    # PIDFILE content correspond to a pid
 	    pid=`cat ${PIDFILE}`
 	else
-	    # PIDFILE content is errorneous, 
+	    # PIDFILE content is errorneous,
 	    # remove the file
 	    rm -f ${PIDFILE}
 	fi
@@ -75,8 +75,8 @@ get_running_pid() {
 start () {
     echo -n "Starting ${DESC} : "
     pid=$(get_running_pid)
-    if [ $pid -eq 0 ]; then 
-    
+    if [ $pid -eq 0 ]; then
+
 	    # Start manager
 	    ${DAEMON} start >/dev/null 2>&1
 	    RETVAL=$?
@@ -91,7 +91,7 @@ start () {
      else
 	echo "already running."
         RETVAL=0
-     fi	     
+     fi
 }
 
 # Function to stop daemon
@@ -113,7 +113,7 @@ stop () {
     else
         echo "failed."
     fi
-    
+
 }
 
 # Function to restart (run stop, then start)

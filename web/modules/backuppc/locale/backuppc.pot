@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-06 14:51+0100\n"
+"POT-Creation-Date: 2018-10-26 11:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -176,7 +176,7 @@ msgid "Date"
 msgstr ""
 
 #: modules/backuppc/backuppc/fileSearch.php:127
-#: modules/backuppc/backuppc/EditBackupProfile.php:148
+#: modules/backuppc/backuppc/EditBackupProfile.php:149
 #: modules/backuppc/backuppc/BrowseShareNames.php:60
 #: modules/backuppc/backuppc/edit.php:142
 msgid "Folder"
@@ -301,24 +301,24 @@ msgstr ""
 msgid "Windows-1258 - Vietnamese"
 msgstr ""
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:118
+#: modules/backuppc/backuppc/EditBackupProfile.php:119
 #: modules/backuppc/backuppc/edit.php:110
 msgid "Client encoding"
 msgstr ""
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:135
+#: modules/backuppc/backuppc/EditBackupProfile.php:136
 #: modules/backuppc/backuppc/edit.php:129
 msgid "Excluded files"
 msgstr ""
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:137
+#: modules/backuppc/backuppc/EditBackupProfile.php:138
 #: modules/backuppc/backuppc/EditPeriodProfile.php:148
 #: modules/backuppc/backuppc/edit.php:131
 #: modules/backuppc/backuppc/edit.php:215
 msgid "Remove"
 msgstr ""
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:154
+#: modules/backuppc/backuppc/EditBackupProfile.php:155
 #: modules/backuppc/backuppc/edit.php:147
 msgid "Add folder"
 msgstr ""
@@ -532,20 +532,20 @@ msgstr ""
 msgid "Schedule"
 msgstr ""
 
-#: modules/backuppc/backuppc/startBackup.php:75
+#: modules/backuppc/backuppc/startBackup.php:74
 msgid "Choose the backup type."
 msgstr ""
 
-#: modules/backuppc/backuppc/startBackup.php:79
+#: modules/backuppc/backuppc/startBackup.php:78
 msgid "Full backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/startBackup.php:80
+#: modules/backuppc/backuppc/startBackup.php:79
 msgid "Incremental backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:288
+#: modules/backuppc/backuppc/hostStatus.php:296
 msgid "Configuration saved"
 msgstr ""
 
@@ -598,7 +598,7 @@ msgid "Notify Error : Backup configuration Computer"
 msgstr ""
 
 #: modules/backuppc/backuppc/hostStatus.php:162
-#: modules/backuppc/backuppc/hostStatus.php:277
+#: modules/backuppc/backuppc/hostStatus.php:285
 msgid "Notify Computer :"
 msgstr ""
 
@@ -613,29 +613,29 @@ msgid ""
 "configure its filesets and scheduling."
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:277
+#: modules/backuppc/backuppc/hostStatus.php:285
 msgid "Save configure host "
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:302
+#: modules/backuppc/backuppc/hostStatus.php:310
 #, php-format
 msgid "%s's backup status"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:305
+#: modules/backuppc/backuppc/hostStatus.php:313
 msgid "Summary"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:309
+#: modules/backuppc/backuppc/hostStatus.php:317
 msgid "Configuration"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:310
+#: modules/backuppc/backuppc/hostStatus.php:318
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:311
+#: modules/backuppc/backuppc/hostStatus.php:319
 #: modules/backuppc/infoPackage.inc.php:57
 msgid "File search"
 msgstr ""

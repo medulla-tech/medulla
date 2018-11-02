@@ -116,4 +116,3 @@ ALTER TABLE `commands_history` MODIFY `state` ENUM('wol_in_progress',
 -- Bump version
 DELETE FROM version;
 INSERT INTO version VALUES( "20" );
-

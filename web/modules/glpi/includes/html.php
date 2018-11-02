@@ -26,7 +26,7 @@ class AjaxFilterGlpi extends AjaxFilter {
         $this->AjaxFilter($url, $divid, $params, $formid);
     }
 
-    function display() {
+    function display($arrParam = array()) {
         global $conf;
         $root = $conf["global"]["root"];
         $maxperpage = $conf["global"]["maxperpage"];
@@ -41,18 +41,18 @@ class AjaxFilterGlpi extends AjaxFilter {
 
     <?php if($_GET['part'] == 'Softwares') { ?>
     <!-- Hide Windows Updates checkbox -->
-    <input checked style="top: 2px; left: 5px; position: relative; float: left" 
+    <input checked style="top: 2px; left: 5px; position: relative; float: left"
         type="checkbox"
-        class="searchfieldreal" 
-        name="hide_win_updates" 
+        class="searchfieldreal"
+        name="hide_win_updates"
         id="hide_win_updates<?php echo $this->formid ?>" onchange="pushSearch<?php echo $this->formid ?>(); return false;" />
     <span style="padding: 7px 15px; position: relative; float: left"><?php echo _T('Hide Windows Updates', "glpi")?></span>
     <?php } ?>
 
     <?php if($_GET['part'] == 'History') { ?>
-    <select style="position: relative; float: left" 
-        class="searchfieldreal" 
-        name="history_delta" 
+    <select style="position: relative; float: left"
+        class="searchfieldreal"
+        name="history_delta"
         id="history_delta<?php echo $this->formid ?>" onchange="pushSearch<?php echo $this->formid ?>(); return false;" >
         <option value="today"><?php echo _T('Today', 'glpi') ?></option>
         <option selected="selected" value="week"><?php echo _T('Last 7 days', 'glpi') ?></option>

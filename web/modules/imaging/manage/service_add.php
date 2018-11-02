@@ -44,7 +44,7 @@ if (isset($_POST["bconfirm"])) {
 
     $ret = xmlrpc_addServiceToLocation($item_uuid, $location, $params);
 
-    // goto images list 
+    // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Service <strong>%s</strong> added to default boot menu", "imaging"), $label);
         xmlrpc_setfromxmppmasterlogxmpp($str,
@@ -77,7 +77,7 @@ if (isset($_POST["bconfirm"])) {
 
 if(isset($_GET['mod']))
     $mod = $_GET['mod'];
-else 
+else
     $mod = "none";
 
 switch($mod) {
@@ -109,7 +109,7 @@ function service_add($location) {
 
     #    $input = new TrFormElement(_T('Default menu item label', 'imaging'),        new InputTpl("default_mi_label"));
     #$f->add($input,                                         array("value" => ''));
-    
+
 
     $check = new TrFormElement(_T('Selected by default', 'imaging'), new CheckboxTpl("do_default"));
     $f->add($check,                                         array("value" => web_def_service_default() ? "checked" : ""));
@@ -119,11 +119,11 @@ function service_add($location) {
     $f->add($check,                                         array("value" => web_def_service_default_WOL() ? "checked" : ""));
     $check = new TrFormElement(_T('Displayed on WOL', 'imaging'), new CheckboxTpl("do_display_WOL"));
     $f->add($check,                                         array("value" => web_def_service_hidden_WOL() ? "checked" : ""));
-    
+
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
-    
+
 }
 
 ?>

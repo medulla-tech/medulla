@@ -48,7 +48,7 @@ class class01BalanceTest(unittest.TestCase):
     def test01get_list(self):
         b = balance.ParabolicBalance(self.NBR_ATTEMPTS)
         result = sum(b.balances)
-         
+
         self.assertEqual(round(result,2), 1)
 
     def test02is_symetric_curve(self):
@@ -68,7 +68,7 @@ class class01BalanceTest(unittest.TestCase):
         """test of curve run"""
         b = balance.ParabolicBalance(self.NBR_ATTEMPTS)
         nbr_steps = get_nbr_steps(self.NBR_ATTEMPTS)
-        
+
         is_parabolic = True
         previous = 0.0
         for i in range(nbr_steps) :
@@ -83,7 +83,7 @@ class class01BalanceTest(unittest.TestCase):
                     is_parabolic = False
                     break
                 previous = b.balances[i]
- 
+
         self.assertEqual(is_parabolic, True)
 
 
@@ -92,7 +92,7 @@ class class02BalanceTest(unittest.TestCase):
 
     def setUp(self):
         start = datetime.datetime.now()
-        
+
         self.coh_struct_set = []
         self.limit = random.choice(range(1,100))
         for i in range(100) :
@@ -101,7 +101,7 @@ class class02BalanceTest(unittest.TestCase):
             attempts_failed = random.choice(range(100))
             end = start + datetime.timedelta(hours=hours)
 
-            self.coh_struct_set.append((id, start, end, attempts_failed)) 
+            self.coh_struct_set.append((id, start, end, attempts_failed))
 
 
     def test01get_list(self):
@@ -112,7 +112,7 @@ class class02BalanceTest(unittest.TestCase):
             if value > 1 :
                 is_correct = False
                 break
-    
+
         self.assertEqual(is_correct, True)
 
 
@@ -129,7 +129,6 @@ class class02BalanceTest(unittest.TestCase):
 
         self.assertEqual(is_correct, True)
 
- 
+
 if __name__ == "__main__" :
     unittest.main()
-

@@ -93,4 +93,3 @@ class SchedulerApi(Pulse2Api): # Singleton
         if type(machine) != dict:
             machine = {'uuid':machine}
         return machine
-

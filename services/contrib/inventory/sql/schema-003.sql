@@ -47,5 +47,3 @@ CREATE TABLE hasEntity (
 --
 TRUNCATE Version;
 INSERT INTO Version VALUES( '3' );
-
-

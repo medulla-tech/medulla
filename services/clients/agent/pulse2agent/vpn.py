@@ -68,6 +68,3 @@ class VPNLaunchControl(Component):
         return probe(self.config.vpn.host,
                      self.config.vpn.port,
                      )
-
-
-

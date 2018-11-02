@@ -27,6 +27,8 @@ from twisted.internet.protocol import Protocol, ClientCreator
 from pulse2.scheduler.utils import PackUtils
 from pulse2.scheduler.proxy.buffer import SendingBuffer
 
+logger = logging.getLogger("pulse2")
+
 
 class Sender(Protocol):
 
@@ -39,7 +41,7 @@ class Sender(Protocol):
         try :
             self.transport.write(pack)
         except Exception, e:
-            logging.getLogger().error("\033[31mux call failed: %s\033[0m" % str(e))
+            logger.error("\033[31mux call failed: %s\033[0m" % str(e))
 
         self.send_locked = True
 
@@ -50,22 +52,22 @@ class Sender(Protocol):
     def dataReceived(self, packet):
         data = PackUtils.unpack(packet)
         self.send_locked = False
-        self.response(data, 
-                      self.request, 
-                      self.func_name, 
+        self.response(data,
+                      self.request,
+                      self.func_name,
                       self.args)
 
 
 class Forwarder:
     """
-    This is the base class for streaming 
+    This is the base class for streaming
     """
     _protocol = None
     _cached_methods = []
 
     def __init__(self, response_handler, socket_file):
         """Initiate a connect attempt"""
-        self.logger = logging.getLogger()
+        self.logger = logger
 
         Sender.register_response_handler(response_handler)
         client = ClientCreator(reactor, Sender)
@@ -109,7 +111,7 @@ class Forwarder:
             self.logger.warn("UX call pack method failed: %s" % str(e))
 
 
- 
+
         if func_name in self._cached_methods :
             # response always OK, but cached into buffer
             SendingBuffer().add(packet)
@@ -127,14 +129,3 @@ class Forwarder:
                 self.protocol.call_remote(packet)
             except Exception, e:
                 self.logger.warn("UX: immediate call method failed: %s" % str(e))
-
-
-
-
-            
-             
-
-        
-
-
-

@@ -41,10 +41,9 @@ if(isset($_POST['name'], $_POST['active']))
     else
         $result = xmlrpc_create_profile($name, $ous, $_POST['active']);
 
-    echo _T('The profile '.$name.' has been created','kiosk');
+    new NotifyWidgetSuccess(sprintf(_T("Profile %s successfully added", "kiosk"),$name));
 }
 
 else
-    echo _T('Unable to create the profile '.$name,'kiosk');
-
+  new NotifyWidgetWarning(sprintf(_T('Unable to create the profile %s','kiosk'),$name));
 ?>

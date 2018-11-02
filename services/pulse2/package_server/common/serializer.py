@@ -24,9 +24,12 @@ import os
 import logging
 import pulse2.utils
 
+logger = logging.getLogger("pkgs")
+
+
 class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
     def init(self, common):
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.logger.debug("Package synchro state serialization, is initializing")
         self.common = common
         self.config = common.config
@@ -82,5 +85,3 @@ class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
         except Exception, e:
             self.logger.debug("Package synchro state serialization, unserialize failed: %s"%(str(e)))
             return False
-
-

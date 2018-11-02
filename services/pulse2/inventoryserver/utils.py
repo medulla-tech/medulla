@@ -23,13 +23,16 @@
 """ Common inventory utils """
 
 import os
-import logging 
+import logging
 
 from xml.dom.minidom import parseString
 from configobj import ConfigObj
 
 from mmc.client import sync
 from mmc.site import mmcconfdir
+
+logger = logging.getLogger("inventory")
+
 
 # Read inventory-server.ini config file
 class ConfigReader :
@@ -42,19 +45,19 @@ class ConfigReader :
 
     @classmethod
     def get_config(cls, inifile):
-        """ 
+        """
         Get the configuration from config file
 
         @param inifile: path to config file
         @type inifile: string
 
-        @return: configobj.ConfigObj instance 
+        @return: configobj.ConfigObj instance
         """
-        logging.getLogger().debug("Load config file %s" % inifile)
+        logger.debug("Load config file %s" % inifile)
         if not os.path.exists(inifile) :
 
-            logging.getLogger().warn("Error while reading the config file:")
-            logging.getLogger().warn("Not found.")
+            logger.warn("Error while reading the config file:")
+            logger.warn("Not found.")
 
             raise IOError, "Config file '%s' not found" % inifile
 
@@ -62,9 +65,9 @@ class ConfigReader :
 
     @property
     def inv_server_config(self):
-        """ 
+        """
         Get the configuration from inventory-server.ini
-        @return: configobj.ConfigObj instance 
+        @return: configobj.ConfigObj instance
         """
         return self.get_config(self._inv_server_ini)
 
@@ -72,7 +75,7 @@ class ConfigReader :
 # Build XMLRPC connection to MMC-Agent
 class MMCProxy :
     """ Provider to connect at mmc-agent """
-    def __init__(self): 
+    def __init__(self):
 
         config = ConfigReader()
 
@@ -92,8 +95,8 @@ class MMCProxy :
         """ URL building for XML-RPC proxy """
 
         if not "mmc_agent" in self.inv_server_config :
-            logging.getLogger().warn("Error while reading the config file:")
-            logging.getLogger().warn("Section 'mmc_agent' not exists")
+            logger.warn("Error while reading the config file:")
+            logger.warn("Section 'mmc_agent' not exists")
             self._failure = True
             return
 
@@ -102,8 +105,8 @@ class MMCProxy :
         for option in ["username", "password", "host", "port"] :
 
             if option not in mmc_section :
-                logging.getLogger().warn("Error while reading section 'mmc_agent':")
-                logging.getLogger().warn("Option '%s' not exists" % option)
+                logger.warn("Error while reading section 'mmc_agent':")
+                logger.warn("Option '%s' not exists" % option)
 
                 self._failure = True
                 return
@@ -113,14 +116,14 @@ class MMCProxy :
         password = mmc_section["password"]
         port = mmc_section["port"]
 
-        logging.getLogger().debug("Building the connection URL at mmc-agent") 
+        logger.debug("Building the connection URL at mmc-agent")
 
         self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
 
     @property
     def failure (self):
-        """ 
-        Failure flag to indicate the incorrect build of proxy 
+        """
+        Failure flag to indicate the incorrect build of proxy
         @returns: bool
         """
         return self._failure
@@ -131,7 +134,7 @@ class MMCProxy :
             self._proxy = sync.Proxy(self._url)
 
         except Exception, err :
-            logging.getLogger().error("Error while connecting to mmc-agent : %s" % err)
+            logger.error("Error while connecting to mmc-agent : %s" % err)
             self._failure = True
 
     @property
@@ -148,7 +151,7 @@ class InventoryUtils :
 
     @classmethod
     def is_coming_from_pxe(cls, xml_content):
-        """ 
+        """
         Check if the inventory is coming from PXE.
         Return True if OSNAME value = 'Unknown operating system (PXE network boot inventory)'
 

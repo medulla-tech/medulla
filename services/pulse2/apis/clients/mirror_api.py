@@ -26,6 +26,10 @@ from pulse2.database.imaging import ImagingDatabase
 from urlparse import urlparse
 import logging
 from pulse2.managers.location import ComputerLocationManager
+
+logger = logging.getLogger("pulse2")
+
+
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
 class MirrorApi(Pulse2Api):
@@ -58,7 +62,7 @@ class MirrorApi(Pulse2Api):
             machine ['server']= urlparse(url).hostname
             machine ['servernane']=serverinfo.name
         except:
-            logging.getLogger().error("Cannot get Entity for this machine UUID (%s)" % uuid)
+            logger.error("Cannot get Entity for this machine UUID (%s)" % uuid)
         d = self.callRemote("getMirror", machine)
         d.addErrback(self.onError, "MirrorApi:getMirror", machine)
         return d
@@ -104,7 +108,7 @@ class MirrorApi(Pulse2Api):
             entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
             parent_entities = [entity_uuid] + ComputerLocationManager().getLocationParentPath(entity_uuid)
             url = ''
-            entity_uuid = '' 
+            entity_uuid = ''
             db = ImagingDatabase()
             for _uuid in parent_entities:
                 urlsearch = db.getEntityUrl(_uuid)
@@ -119,7 +123,7 @@ class MirrorApi(Pulse2Api):
             machine ['server']= urlparse(url).hostname
             machine ['servernane']=serverinfo.name
         except:
-            logging.getLogger().error("Cannot get Entity for this machine UUID (%s)" % uuid)
+            logger.error("Cannot get Entity for this machine UUID (%s)" % uuid)
 
         d = self.callRemote("getApiPackage", machine)
         d.addErrback(self.onError, "MirrorApi:getApiPackage", machine)
@@ -137,4 +141,3 @@ class MirrorApi(Pulse2Api):
         if type(machine) != dict:
             machine = {'uuid':machine}
         return machine
-

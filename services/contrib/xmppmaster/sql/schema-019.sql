@@ -25,7 +25,7 @@ START TRANSACTION;
 ALTER TABLE `xmppmaster`.`relayserver` CHANGE COLUMN `jid` `jid` VARCHAR(255) NOT NULL ;
 ALTER TABLE `xmppmaster`.`machines` CHANGE COLUMN `jid` `jid` VARCHAR(255) NOT NULL ;
 -- table Deploy
-ALTER TABLE `xmppmaster`.`deploy` 
+ALTER TABLE `xmppmaster`.`deploy`
 CHANGE COLUMN `jid_relay` `jid_relay` VARCHAR(255) NOT NULL ,
 CHANGE COLUMN `jidmachine` `jidmachine` VARCHAR(255) NOT NULL ;
 -- ----------------------------------------------------------------------

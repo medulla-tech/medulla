@@ -20,7 +20,7 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = 
+SUBDIRS =
 if ENABLE_CONF
 SUBDIRS += pulse2 plugins
 endif

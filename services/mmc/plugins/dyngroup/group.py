@@ -67,5 +67,3 @@ class DyngroupGroup(ComputerGroupI):
         Send the group content, given a group name
         """
         return DyngroupDatabase().result_group_by_name(ctx, name, min, max, filter, QueryManager())
-
-

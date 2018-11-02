@@ -192,7 +192,3 @@ class Test00_GatheringServerTestCase(TestCase):
 #            print "\033[32mrelease request: %d \033[0m" % (lag)
 #            prev_stamp = clock.seconds()
 #        print len(collector.queue)
-
-
-
-

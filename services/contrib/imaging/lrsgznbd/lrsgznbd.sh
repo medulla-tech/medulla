@@ -41,4 +41,3 @@ sleep 2
 mount -r -t vfat /dev/nb0 /mnt/tmp
 # autodetect
 mount -r /dev/nb0 /mnt/tmp
-

@@ -2,6 +2,8 @@
 * [FEATURE] Assign a machine to a relay server based on the machine's network address
 * [FEATURE] Add extract driver for Win10
 * [FEATURE] Add Custom postinstall scripts
+* [FEATURE] Add Agent "Auto Update" functionnality
+* [FEATURE] Show the presence status in backup machine list
 * [BUGFIX]  Automatically call inventory was done by pxe
 * [BUGFIX]  The imaging triggers now really starts to id 1000
 * [BUGFIX]  Fix lenght of the jid from 45 to 255
@@ -13,6 +15,12 @@
 * [BUGFIX]  Fix display of imaging custom menus
 * [BUGFIX]  Fix finding MAC Adress while using PXE Inventory
 * [BUGFIX]  Fix Machines mysql database when using several relays
+* [BUGFIX]  Fix encoding error in "Execute Script" action when creating package
+* [BUGFIX]  Improve the creation of the groups for machineOnline widget
+* [BUGFIX]  Allow to modify imaging groups for machines with more than one
+            ethernet card
+* [BUGFIX]  Do not modify py files directly
+* [BUGFIX] The action navbar is uniformized
 
 Pulse 2 4.4.1
 ===========

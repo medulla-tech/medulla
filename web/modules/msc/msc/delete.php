@@ -33,19 +33,19 @@ if (isset($_POST["bconfirm"])) {
     $url = array();
     foreach (array('name', 'from', 'uuid', 'gid', 'bundle_id', 'hostname') as $post) {
         $url[$post] = $_POST[$post];
-    }   
+    }
     if (isset($tab)) {
         $url['tab'] = $tab;
-    }   
+    }
 
-	
-    if (isset($_POST['coh_id']) && $_POST['coh_id'] != ""){	
+
+    if (isset($_POST['coh_id']) && $_POST['coh_id'] != ""){
         delete_command_on_host($_POST['coh_id']);
     }
-    elseif (isset($_POST['cmd_id']) && $_POST['cmd_id'] != ""){	
+    elseif (isset($_POST['cmd_id']) && $_POST['cmd_id'] != ""){
         delete_command($_POST['cmd_id']);
     }
-    elseif (isset($_POST['bundle_id']) && $_POST['bundle_id'] != ""){	
+    elseif (isset($_POST['bundle_id']) && $_POST['bundle_id'] != ""){
         delete_bundle($_POST['bundle_id']);
     }
     header("Location: " . urlStrRedirect("$module/$submod/$page", $url));

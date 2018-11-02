@@ -118,5 +118,3 @@ if (count($tables) == 1) { # FIXME: only one table handled for now for CVS split
 exit;
 
 ?>
-
-

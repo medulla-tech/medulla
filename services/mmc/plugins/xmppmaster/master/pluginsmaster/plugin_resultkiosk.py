@@ -24,24 +24,27 @@
 import datetime
 import json
 import traceback
-import sys, os
+import sys
+import os
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.msc import MscDatabase
 from managepackage import managepackage
 import logging
-from utils import name_random, file_put_contents,file_get_contents
+from utils import name_random, file_put_contents, file_get_contents
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
 
-plugin = {"VERSION" : "1.2", "NAME" : "resultkiosk", "TYPE" : "master"}
+plugin = {"VERSION": "1.2", "NAME": "resultkiosk", "TYPE": "master"}
+
+logger = logging.getLogger("xmppmaster")
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug("#################################################")
-    logging.getLogger().debug(plugin)
-    logging.getLogger().debug(json.dumps(data, indent = 4))
-    logging.getLogger().debug("#################################################")
-    if 'subaction' in data :
+    logger.debug("#################################################")
+    logger.debug(plugin)
+    logger.debug(json.dumps(data, indent=4))
+    logger.debug("#################################################")
+    if 'subaction' in data:
         if data['subaction'] == 'initialization':
             initialisekiosk(data, message, xmppobject)
         elif data['subaction'] == 'launch':
@@ -57,17 +60,19 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     else:
         pass
 
+
 def parsexmppjsonfile(path):
-        datastr = file_get_contents(path)
+    datastr = file_get_contents(path)
 
-        datastr = re.sub(r"(?i) *: *false", " : false", datastr)
-        datastr = re.sub(r"(?i) *: *true", " : true", datastr)
+    datastr = re.sub(r"(?i) *: *false", " : false", datastr)
+    datastr = re.sub(r"(?i) *: *true", " : true", datastr)
 
-        file_put_contents(path, datastr)
+    file_put_contents(path, datastr)
+
 
 def initialisekiosk(data, message, xmppobject):
-    machine =  XmppMasterDatabase().getMachinefromjid(message['from'])
-    if "userlist" and  "oumachine" and "ouuser" in data:
+    machine = XmppMasterDatabase().getMachinefromjid(message['from'])
+    if "userlist" and "oumachine" and "ouuser" in data:
         if len(data['userlist']) == 0:
             user = ""
         else:
@@ -75,145 +80,146 @@ def initialisekiosk(data, message, xmppobject):
         print "call updatemachineAD"
         XmppMasterDatabase().updatemachineAD(machine['id'], user, data['oumachine'], data['ouuser'])
 
-    print json.dumps(machine, indent = 4)
-    initializationdatakiosk = handlerkioskpresence( message['from'],
-                               machine['id'],
-                               machine['platform'],
-                               machine['hostname'],
-                               machine['uuid_inventorymachine'],
-                               machine['agenttype'],
-                               classutil = machine['classutil'], 
-                               fromplugin = True)
+    print json.dumps(machine, indent=4)
+    initializationdatakiosk = handlerkioskpresence(message['from'],
+                                                   machine['id'],
+                                                   machine['platform'],
+                                                   machine['hostname'],
+                                                   machine['uuid_inventorymachine'],
+                                                   machine['agenttype'],
+                                                   classutil=machine['classutil'],
+                                                   fromplugin=True)
 
     datasend = {
-        "sessionid" : name_random(6, "initialisation_kiosk"),
-        "action" : "kiosk",
-        "data" : initializationdatakiosk
+        "sessionid": name_random(6, "initialisation_kiosk"),
+        "action": "kiosk",
+        "data": initializationdatakiosk
     }
-    xmppobject.send_message( mto= message['from'],
-                             mbody=json.dumps(datasend),
-                             mtype='chat')
+    xmppobject.send_message(mto=message['from'],
+                            mbody=json.dumps(datasend),
+                            mtype='chat')
 
 
 def deploypackage(data, message, xmppobject):
-    machine =  XmppMasterDatabase().getMachinefromjid( message['from'])
-    print json.dumps(machine, indent = 4 )
+    machine = XmppMasterDatabase().getMachinefromjid(message['from'])
+    print json.dumps(machine, indent=4)
 
-    nameuser = "(kiosk):%s/%s"%(machine['lastuser'],machine['hostname'])
+    nameuser = "(kiosk):%s/%s" % (machine['lastuser'], machine['hostname'])
 
-    command = MscDatabase().createcommanddirectxmpp(data['uuid'], 
+    command = MscDatabase().createcommanddirectxmpp(data['uuid'],
                                                     '',
                                                     '',
                                                     'malistetodolistfiles',
-                                                    'enable', 
+                                                    'enable',
                                                     'enable',
                                                     datetime.datetime.now(),
                                                     datetime.datetime.now() + datetime.timedelta(hours=1),
                                                     nameuser,
-                                                    nameuser, 
+                                                    nameuser,
                                                     'titlepackage',
                                                     60,
                                                     4,
-                                                    0, 
+                                                    0,
                                                     '',
                                                     None,
-                                                    None, 
+                                                    None,
                                                     None,
                                                     'none',
-                                                    'active', 
-                                                    '1', 
+                                                    'active',
+                                                    '1',
                                                     cmd_type=0)
-    commandid    = command.id
+    commandid = command.id
     commandstart = command.start_date
-    commandstop  = command.end_date
+    commandstop = command.end_date
     jidrelay = machine['groupdeploy']
     uuidmachine = machine['uuid_inventorymachine']
-    jidmachine =  machine['jid']
-    #try:
-        #target = MscDatabase().xmpp_create_Target(uuidmachine, machine['hostname'])
+    jidmachine = machine['jid']
+    # try:
+    #target = MscDatabase().xmpp_create_Target(uuidmachine, machine['hostname'])
 
-    #except Exception as e:
-        #print str(e)
-        #traceback.print_exc(file=sys.stdout)
+    # except Exception as e:
+    # print str(e)
+    # traceback.print_exc(file=sys.stdout)
 
     XmppMasterDatabase().addlogincommand(
-                        nameuser, 
-                        commandid,
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        0,
-                        0,
-                        0)
+        nameuser,
+        commandid,
+        "",
+        "",
+        "",
+        "",
+        "",
+        0,
+        0,
+        0)
 
     sessionid = name_random(5, "deploykiosk_")
     name = managepackage.getnamepackagefromuuidpackage(data['uuid'])
-    
+
     path = managepackage.getpathpackagename(name)
-    
+
     descript = managepackage.loadjsonfile(os.path.join(path, 'xmppdeploy.json'))
     parsexmppjsonfile(os.path.join(path, 'xmppdeploy.json'))
     if descript is None:
-        logger.error("deploy %s on %s  error : xmppdeploy.json missing" %( data['uuid'], machine['hostname']))
+        logger.error("deploy %s on %s  error : xmppdeploy.json missing" %
+                     (data['uuid'], machine['hostname']))
         return None
     objdeployadvanced = XmppMasterDatabase().datacmddeploy(commandid)
 
-    datasend = {"name" :name,
-            "login" : nameuser,
-            "idcmd" : commandid,
-            "advanced" : objdeployadvanced,
-            'methodetransfert' : 'pushrsync',
-            "path" : path,
-            "packagefile": os.listdir(path),
-            "jidrelay" : jidrelay,
-            "jidmachine" : jidmachine,
-            "jidmaster" : xmppobject.boundjid.bare,
-            "iprelay" :  XmppMasterDatabase().ipserverARS(jidrelay)[0],
-            "ippackageserver" :  XmppMasterDatabase().ippackageserver(jidrelay)[0],
-            "portpackageserver" :  XmppMasterDatabase().portpackageserver(jidrelay)[0],
-            "ipmachine" : XmppMasterDatabase().ipfromjid(jidmachine)[0],
-            "ipmaster" : xmppobject.config.Server,
-            "Dtypequery" : "TQ",
-            "Devent" : "DEPLOYMENT START",
-            "uuid" : uuidmachine,
-            "descriptor" : descript,
-            "transfert" : True
-            }
-    #run deploy
+    datasend = {"name": name,
+                "login": nameuser,
+                "idcmd": commandid,
+                "advanced": objdeployadvanced,
+                'methodetransfert': 'pushrsync',
+                "path": path,
+                "packagefile": os.listdir(path),
+                "jidrelay": jidrelay,
+                "jidmachine": jidmachine,
+                "jidmaster": xmppobject.boundjid.bare,
+                "iprelay":  XmppMasterDatabase().ipserverARS(jidrelay)[0],
+                "ippackageserver":  XmppMasterDatabase().ippackageserver(jidrelay)[0],
+                "portpackageserver":  XmppMasterDatabase().portpackageserver(jidrelay)[0],
+                "ipmachine": XmppMasterDatabase().ipfromjid(jidmachine)[0],
+                "ipmaster": xmppobject.config.Server,
+                "Dtypequery": "TQ",
+                "Devent": "DEPLOYMENT START",
+                "uuid": uuidmachine,
+                "descriptor": descript,
+                "transfert": True
+                }
+    # run deploy
 
-    sessionid = xmppobject.send_session_command( jidrelay,
-                                                 "applicationdeploymentjson",
-                                                 datasend,
-                                                 datasession=None,
-                                                 encodebase64=False)
-    #add deploy in table.
-    XmppMasterDatabase().adddeploy( commandid,
-                                    machine['jid'], #jidmachine
-                                    machine['groupdeploy'], ##jidrelay,
-                                    machine['hostname'], ##host,
-                                    machine['uuid_inventorymachine'], ##inventoryuuid,
-                                    data['uuid'], ##uuidpackage,
-                                    'DEPLOYMENT START', ##state,
-                                    sessionid, #id session,
-                                    nameuser, ##user
-                                    nameuser, ##login
-                                    name + " " + commandstart.strftime("%Y/%m/%d/ %H:%M:%S"), ##title,
-                                    "", ##group_uuid
-                                    commandstart, ##startcmd
-                                    commandstop, ##endcmd 
-                                    machine['macaddress'])
-    xmppobject.xmpplog("Start deploy on machine %s"%jidmachine,
-                     type='deploy',
-                     sessionname=sessionid,
-                     priority=-1,
-                     action="",
-                     who=nameuser,
-                     how="",
-                     why=xmppobject.boundjid.bare,
-                     module="Deployment | Start | Creation",
-                     date=None,
-                     fromuser=nameuser,
-                     touser="")
-
+    sessionid = xmppobject.send_session_command(jidrelay,
+                                                "applicationdeploymentjson",
+                                                datasend,
+                                                datasession=None,
+                                                encodebase64=False)
+    # add deploy in table.
+    XmppMasterDatabase().adddeploy(commandid,
+                                   machine['jid'],  # jidmachine
+                                   machine['groupdeploy'],  # jidrelay,
+                                   machine['hostname'],  # host,
+                                   machine['uuid_inventorymachine'],  # inventoryuuid,
+                                   data['uuid'],  # uuidpackage,
+                                   'DEPLOYMENT START',  # state,
+                                   sessionid,  # id session,
+                                   nameuser,  # user
+                                   nameuser,  # login
+                                   name + " " + \
+                                   commandstart.strftime("%Y/%m/%d/ %H:%M:%S"),  # title,
+                                   "",  # group_uuid
+                                   commandstart,  # startcmd
+                                   commandstop,  # endcmd
+                                   machine['macaddress'])
+    xmppobject.xmpplog("Start deploy on machine %s" % jidmachine,
+                       type='deploy',
+                       sessionname=sessionid,
+                       priority=-1,
+                       action="",
+                       who=nameuser,
+                       how="",
+                       why=xmppobject.boundjid.bare,
+                       module="Deployment | Start | Creation",
+                       date=None,
+                       fromuser=nameuser,
+                       touser="")

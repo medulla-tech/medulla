@@ -348,8 +348,3 @@ def get_minimal_inventory():
     else:
         raise OSError
     return inv.get()
-
-
-
-
-

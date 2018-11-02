@@ -18,6 +18,9 @@ RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
 
+logger = logging.getLogger("pkgs")
+
+
 def formatter_message(message, use_color = True):
     if use_color:
         message = message.replace("$RESET", RESET_SEQ).replace("$BOLD", BOLD_SEQ)
@@ -48,7 +51,7 @@ class ColoredFormatter(logging.Formatter):
 class getCommand(object):
     def __init__(self, file, log = False):
         self.file = file
-        self.logger = log and log or logging.getLogger()
+        self.logger = log and log or logger
 
     def getStringsData(self):
         """
@@ -226,7 +229,7 @@ if __name__ == "__main__":
     else:
         dir = '.'
 
-    log = logging.getLogger('getCommand')
+    log = logger
     log.setLevel(level)
     formatter = ColoredFormatter("%(levelname)-18s %(message)s")
     handler_stream = logging.StreamHandler()

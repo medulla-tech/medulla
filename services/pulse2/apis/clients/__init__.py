@@ -30,6 +30,9 @@ from pulse2.apis.consts import PULSE2_ERR_404, PULSE2_ERR_CONN_REF, PULSE2_ERR_U
 from twisted.internet.error import ConnectionRefusedError
 import exceptions
 
+logger = logging.getLogger("pulse2")
+
+
 class Pulse2Api(Pulse2XMLRPCProxy):
 
     name = "pulse2API"
@@ -46,7 +49,7 @@ class Pulse2Api(Pulse2XMLRPCProxy):
                                    cacert=cacert,
                                    localcert=localcert)
         self.SSLClientContext = None
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.logger.debug('%s will connect to %s' % (self.name, url))
         self.server_addr = url
         self.credentials = credentials
@@ -78,4 +81,3 @@ class Pulse2Api(Pulse2XMLRPCProxy):
             ret = ['PULSE2_ERR', PULSE2_ERR_UNKNOWN,
                    self.server_addr, default_return]
         return ret
-

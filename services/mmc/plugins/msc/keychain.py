@@ -40,4 +40,3 @@ def get_keychain():
         return proc.out
 
     return ''
-

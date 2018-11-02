@@ -56,6 +56,8 @@ from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
 
+logger = logging.getLogger("glpi")
+
 
 class Glpi08(DyngroupDatabaseHelper):
     """
@@ -76,16 +78,16 @@ class Glpi08(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is lesser than 0.84')
+        logger.debug('Trying to detect if GLPI version is lesser than 0.84')
 	try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
 	except OperationalError: # Maybe GLPI 0.85...
 	    return False
         if self._glpi_version < '0.84':
-            logging.getLogger().debug('GLPI version lesser than 0.84 found !')
+            logger.debug('GLPI version lesser than 0.84 found !')
             return True
         else:
-            logging.getLogger().debug('GLPI lesser than version 0.84 was not detected')
+            logger.debug('GLPI lesser than version 0.84 was not detected')
             return False
 
     @property
@@ -96,7 +98,7 @@ class Glpi08(DyngroupDatabaseHelper):
         return False
 
     def activate(self, config = None):
-        self.logger = logging.getLogger()
+        self.logger = logger
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Glpi don't need activation")
@@ -2317,7 +2319,7 @@ class Glpi08(DyngroupDatabaseHelper):
             return self.searchOptions['en_US'][str(log.id_search_option)]
         except:
             if log.id_search_option != 0:
-                logging.getLogger().warn('I can\'t get a search option for id %s' % log.id_search_option)
+                logger.warn('I can\'t get a search option for id %s' % log.id_search_option)
             return ''
 
     def getLinkedActionValues(self, log):

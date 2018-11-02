@@ -44,6 +44,9 @@ from pulse2.database.msc.orm.target import Target
 from pulse2.apis import makeURL
 from pulse2.utils import noNoneList
 
+logger = logging.getLogger("msc")
+
+
 def getProxy(schedulerConfig):
     """
     Return a suitable Proxy object to communicate with the scheduler
@@ -79,7 +82,7 @@ def start_these_commands(scheduler, commands):
     for coh in coh_query.all():
         scheduler = coh.scheduler
         if not scheduler in done:
-            logging.getLogger().debug('Starting command on scheduler %s' % scheduler)
+            logger.debug('Starting command on scheduler %s' % scheduler)
             done.append(scheduler)
             getProxy(__select_scheduler(scheduler)).callRemote(
                 'start_these_commands',
@@ -140,12 +143,12 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
         - macAddress[]
     """
     def parseResult(result):
-        logging.getLogger().debug('%s %s: %s' % (function, computer, result))
+        logger.debug('%s %s: %s' % (function, computer, result))
         return result
 
     def parseError(reason):
         if re.compile('Connection was refused by other side: 111').search(str(reason)):
-            logging.getLogger().error("%s %s: %s" %(function, computer, "Connection was refused by other side: 111"))
+            logger.error("%s %s: %s" %(function, computer, "Connection was refused by other side: 111"))
             return 11
         return reason
 
@@ -158,10 +161,10 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
                 scheduler_name = MscConfig().default_scheduler
         else:
             scheduler_name = result
-        logging.getLogger().debug("got %s as scheduler for client %s" % (scheduler_name, computer[1]['objectUUID'][0]))
+        logger.debug("got %s as scheduler for client %s" % (scheduler_name, computer[1]['objectUUID'][0]))
 
         if scheduler_name not in MscConfig().schedulers:
-            logging.getLogger().warn("scheduler %s does not exist" % (scheduler_name))
+            logger.warn("scheduler %s does not exist" % (scheduler_name))
             return twisted.internet.defer.fail(twisted.python.failure.Failure("Invalid scheduler %s (does not seem to exist)" % (scheduler_name)))
 
         mydeffered = getProxy(MscConfig().schedulers[scheduler_name]).callRemote(
@@ -192,7 +195,7 @@ def pauseCommands(scheduler, command_ids):
 
 def stopCommand(scheduler, command_id):
     def parseResult(result):
-        logging.getLogger().debug('Stop command %s: %s' % (command_id, result))
+        logger.debug('Stop command %s: %s' % (command_id, result))
         return result
     def parseError(reason):
         # FIXME: handle error
@@ -208,7 +211,7 @@ def stopCommand(scheduler, command_id):
         mydeffered.addCallback(parseResult).addErrback(parseResult)
         return mydeffered
     else:
-        logging.getLogger().error("stopCommand: no target associated to coh %s" % command_id)
+        logger.error("stopCommand: no target associated to coh %s" % command_id)
 
 def stopCommands(scheduler, command_ids):
     """
@@ -216,7 +219,7 @@ def stopCommands(scheduler, command_ids):
     given their ids.
     """
     def parseResult(result):
-        logging.getLogger().debug('Stopping commands %s on %s' % (command_ids, scheduler))
+        logger.debug('Stopping commands %s on %s' % (command_ids, scheduler))
         return result
     def parseError(reason):
         # FIXME: handle error
@@ -234,11 +237,11 @@ def startCommands(scheduler, command_ids):
     their ids.
     """
     def parseResult(result):
-        logging.getLogger().debug('Starting commands %s on %s' % (command_ids, scheduler))
+        logger.debug('Starting commands %s on %s' % (command_ids, scheduler))
         return result
     def parseError(reason):
         # FIXME: handle error
-        logging.getLogger().debug(reason)
+        logger.debug(reason)
         return False
     mydeffered = getProxy(__select_scheduler(scheduler)).callRemote(
         'start_commands',
@@ -249,7 +252,7 @@ def startCommands(scheduler, command_ids):
 
 def startCommand(scheduler, command_id):
     def parseResult(result):
-        logging.getLogger().debug('Start command %s: %s' % (command_id, result))
+        logger.debug('Start command %s: %s' % (command_id, result))
         return result
     def parseError(reason):
         # FIXME: handle error
@@ -265,16 +268,16 @@ def startCommand(scheduler, command_id):
         mydeffered.addCallback(parseResult).addErrback(parseResult)
         return mydeffered
     else:
-        logging.getLogger().error("startCommand: no target associated to coh %s" % command_id)
+        logger.error("startCommand: no target associated to coh %s" % command_id)
 
 def extend_command(scheduler, command_id, start_date, end_date):
 
     def parseResult(result):
-        logging.getLogger().debug('Extending command %s on %s' % (command_id, scheduler))
+        logger.debug('Extending command %s on %s' % (command_id, scheduler))
         return result
 
     def parseError(reason):
-        logging.getLogger().warn('Extending command %s on %s failed: %s' %
+        logger.warn('Extending command %s on %s failed: %s' %
                 (command_id, scheduler, reason))
         return False
 

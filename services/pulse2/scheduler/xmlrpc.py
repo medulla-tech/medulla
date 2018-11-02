@@ -69,4 +69,3 @@ def getProxy(url):
                              cacert=cacert,
                              localcert=localcert
                              )
-

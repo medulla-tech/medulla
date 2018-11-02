@@ -22,9 +22,9 @@
 
 START TRANSACTION;
 
-ALTER TABLE `xmppmaster`.`machines` 
+ALTER TABLE `xmppmaster`.`machines`
 ADD COLUMN `ippublic` VARCHAR(20) NULL DEFAULT NULL AFTER `picklekeypublic`;
-ALTER TABLE `xmppmaster`.`machines` 
+ALTER TABLE `xmppmaster`.`machines`
 CHANGE COLUMN `ippublic` `ippublic` VARCHAR(20) NULL DEFAULT NULL AFTER `uuid_inventorymachine`;
 
 

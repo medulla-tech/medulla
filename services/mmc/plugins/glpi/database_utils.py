@@ -73,6 +73,5 @@ def setUUID(obj):
     elif hasattr(obj, 'ID'):
         setattr(obj, 'uuid', toUUID(obj.ID))
     else:
-        logging.getLogger().error("Can't get id for %s => no UUID"%(str(obj)))
+        logging.getLogger("glpi").error("Can't get id for %s => no UUID"%(str(obj)))
     return obj
-

@@ -27,20 +27,22 @@ import traceback
 import sys
 import json
 
-plugin = { "VERSION" : "1.0", "NAME" : "asynchroremoteQA", "TYPE" : "master" }
+plugin = {"VERSION": "1.0", "NAME": "asynchroremoteQA", "TYPE": "master"}
 
-def action( xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug("=====================================================")
-    logging.getLogger().debug(plugin)
-    logging.getLogger().debug("=====================================================")
+logger = logging.getLogger("xmppmaster")
+
+
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
+    logger.debug("=====================================================")
+    logger.debug("=====================================================")
     print json.dumps(data, indent=4)
-    datasend={
-        "action" : action,
-        "sessionid" : sessionid,
-        "data" : data,
-        'base64' : False }
+    datasend = {
+        "action": action,
+        "sessionid": sessionid,
+        "data": data,
+        'base64': False}
 
     # call plugin asynchromeremoteshell to machine or relay
-    xmppobject.send_message( mto = data['data']['jid'],
-                             mbody = json.dumps(datasend),
-                             mtype = 'chat')
+    xmppobject.send_message(mto=data['data']['jid'],
+                            mbody=json.dumps(datasend),
+                            mtype='chat')

@@ -25,7 +25,7 @@ import logging
 import unittest
 logging.basicConfig()
 
-#from twisted.trial import unittest        
+#from twisted.trial import unittest
 
 from twisted.internet import reactor
 from twisted.internet.defer import maybeDeferred
@@ -34,9 +34,10 @@ from pulse2.scheduler.types import Phase, Circuit, DIRECTIVE
 from pulse2.scheduler.utils import launcher_proxymethod
 
 
-from pulse2.scheduler.tests.tools import TableFactory 
+from pulse2.scheduler.tests.tools import TableFactory
 
-    
+logger = logging.getLogger("tests")
+
 class CoHQueryFrame(object):
     """
     Simulates a CoHQuery instance.
@@ -93,10 +94,10 @@ class DelPhase(_MyPhase):
 
 class DonePhase(_MyPhase):
     name = "done"
- 
+
 class MyCircuit(Circuit):
     def __init__(self, _id, installed_phases, config):
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.id = _id
         self.config = config
 
@@ -108,7 +109,7 @@ class MyCircuit(Circuit):
 
         self.installed_phases = installed_phases
 
-   
+
 
 class TestPhases(unittest.TestCase):
     def setUp(self):
@@ -128,7 +129,7 @@ class TestPhases(unittest.TestCase):
         self.assertFalse("completed_001" in self.phase1.proxy_methods)
         self.assertTrue("completed_02" in self.phase2.proxy_methods)
         self.assertFalse("completed_0020" in self.phase2.proxy_methods)
-        
+
 
 class TestCircuit(unittest.TestCase):
 
@@ -138,23 +139,23 @@ class TestCircuit(unittest.TestCase):
         config.setup("/etc/mmc/pulse2/scheduler/scheduler.ini")
 
         installed_phases = [ExecPhase, DelPhase, DonePhase]
-        
+
         self.circuit = MyCircuit(1, installed_phases, config)
         self.circuit.cohq.cmd.id = 1
         self.circuit.cohq.coh.id = 1
         self.circuit.cohq.target.target_name = "my_hostname"
         self.circuit.cohq.target.target_ipaddr = "55.12.120.83||127.0.0.1"
         self.circuit.cohq.target.target_macaddr = "00:01:00:52:2d:01||00:01:00:52:2d:01"
- 
+
         self.circuit.cohq.target.target_network = "255.255.0.0||255.0.0.0"
 
-        # some needed objects  
+        # some needed objects
         class Statistics (object):
             stats = []
             def update(cls, id) :pass
 
-        dispatcher = type("MscContainer", 
-                          (object,), 
+        dispatcher = type("MscContainer",
+                          (object,),
                           {"release": lambda x : x,
                            "statistics" : Statistics()
                                                      })
@@ -189,6 +190,5 @@ class TestCircuit(unittest.TestCase):
 
 
 if __name__ == "__main__":
-   
-    unittest.main()
 
+    unittest.main()

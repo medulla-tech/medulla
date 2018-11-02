@@ -97,5 +97,3 @@ function renderGraph($machines, $type, $sort, $filter) {
 
 
 ?>
-
-

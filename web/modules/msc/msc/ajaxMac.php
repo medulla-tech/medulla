@@ -24,7 +24,7 @@
 
 if (!isset($_SESSION[$_GET["uuid"]]['getMachineMac'])) {
     $_SESSION[$_GET["uuid"]]['getMachineMac'] = xmlCall('base.getMachineMac', array(array('uuid'=>$_GET["uuid"])));
-} 
+}
 $adresses = $_SESSION[$_GET["uuid"]]['getMachineMac'];
 
 print join(', ', $adresses); //xmlCall('base.getMachineMac', array(array('uuid'=>$_GET["uuid"]))));

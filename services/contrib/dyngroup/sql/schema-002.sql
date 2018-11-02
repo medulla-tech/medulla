@@ -44,4 +44,3 @@ INSERT INTO UsersType values (0, 'user');
 INSERT INTO UsersType values (1, 'group');
 
 UPDATE version set Number = 2;
-
