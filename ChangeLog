@@ -12,6 +12,7 @@ mmc-core 4.5
 * [BUGFIX]  Add root to share user list
 * [BUGFIX]  Fix sharing Quick Actions
 * [BUGFIX]  Fix Audit page pagination
+* [BUGFIX]  Fix refresh rate in the audit page 
 
 mmc-core 4.4.1
 --------------
