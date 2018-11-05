@@ -143,7 +143,7 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppremoteaction.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("actioncustomquickactiongrp", _T("quick action Custom", "xmppmaster"));
+$page = new Page("actioncustomquickactiongrp", _T("Custom quick action", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
