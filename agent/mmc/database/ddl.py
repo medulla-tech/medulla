@@ -35,13 +35,14 @@ from mmc.site import prefix
 
 SCHEMA_MASK = "schema-xxx.sql"
 
+logger = logging.getLogger("mmc")
 
 # This logger is created only for the case when this module
 # is called as standallone.
 # (usualy is called by pulse2-setup with a passed logger)
 def myLogger():
     """ Default logging instance """
-    log = logging.getLogger("DDL")
+    log = logger
     handler = logging.StreamHandler()
     log.addHandler(handler)
     return log

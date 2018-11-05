@@ -41,7 +41,7 @@ except ImportError:
 from sqlalchemy.orm import scoped_session
 
 Session = sessionmaker()
-logger = logging.getLogger()
+logger = logging.getLogger("mmc")
 NB_DB_CONN_TRY = 2
 
 
@@ -138,13 +138,13 @@ class DatabaseHelper(Singleton):
                 level = self.config.dbdebug
             else:
                 level = logging.INFO
-        logging.getLogger("sqlalchemy.engine").setLevel(level)
+        logger.setLevel(level)
 
     def disableLogging(self):
         """
         Disable log for sqlalchemy.engine module
         """
-        logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
+        logger.setLevel(logging.ERROR)
 
     def getDbConnection(self):
         ret = None
@@ -218,7 +218,7 @@ class DatabaseHelper(Singleton):
 
             # Testing if result is a Query statement
             if not isinstance(query, Query):
-                logging.getLogger().error('@_listinfo methods must return a Query object, got %s', query.__class__.__name__)
+                logger.error('@_listinfo methods must return a Query object, got %s', query.__class__.__name__)
                 return {'count': 0, 'data': [], 'listinfo': 1}
 
             # Applying filters on primary entity
@@ -304,7 +304,7 @@ class DatabaseHelper(Singleton):
                 )
                 statement = query.statement
             else:
-                logging.getLogger().error('@_logquery methods must return a Query object, got %s', query.__class__.__name__)
+                logger.error('@_logquery methods must return a Query object, got %s', query.__class__.__name__)
                 return query
 
             dialect = bind.dialect
@@ -321,8 +321,8 @@ class DatabaseHelper(Singleton):
 
             compiler = LiteralCompiler(dialect, statement)
             query_str = compiler.process(statement)
-            logging.getLogger().debug('Result query for %s:' % func_.__name__)
-            logging.getLogger().debug(query_str)
+            logger.debug('Result query for %s:' % func_.__name__)
+            logger.debug(query_str)
 
             # ===========================================
             # End query logging
@@ -341,7 +341,7 @@ class DBObject(object):
     def getUUID(self):
         if hasattr(self, 'id'):
             return id2uuid(self.id)
-        logging.getLogger().warn("try to get %s uuid!" % type(self))
+        logger.warn("try to get %s uuid!" % type(self))
         return False
 
     def to_h(self):

@@ -44,6 +44,8 @@ import struct
 import socket
 import platform
 
+log = logging.getLogger("support")
+
 # python 2.3 fallback for set() in xmlrpcleanup
 # also try sqlalchemy.util Sets
 try:
@@ -369,7 +371,7 @@ class shDebugProcessProtocol(shProcessProtocol):
 
 
 def launch(cmd, param):
-    logger = logging.getLogger()
+    logger = log
     logger.debug("support.mmctools.launch(\""+str(cmd)+","+str(param)+"\")")
     shProcess = shProcessProtocol(cmd)
     reactor.spawnProcess(shProcess, cmd, param,os.environ)
@@ -429,7 +431,7 @@ def shlaunchBackground(cmd, desc = None, progressFunc = None, endFunc = None):
         @see: progressBackup for an example
     @type progressFunc: function
     """
-    logger = logging.getLogger()
+    logger = log
     logger.info("support.mmctools.shlaunchBackground(\""+str(cmd)+"\")")
     shProcess = shSharedProcessProtocol(cmd)
     if desc == None:

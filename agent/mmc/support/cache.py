@@ -30,7 +30,7 @@ import time
 import threading
 import logging
 
-log = logging.getLogger()
+log = logging.getLogger("support")
 
 # Global in-memory store of cache data. Keyed by name, to provide
 # multiple named local memory caches.
