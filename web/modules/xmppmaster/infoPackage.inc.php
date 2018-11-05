@@ -95,42 +95,42 @@ $submod->addPage($page);
 $page = new Page("logbymachine", _T('XMPP logs', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("logbygrpmachine", _T('XMPP logs grp', 'xmppmaster'));
+$page = new Page("logbygrpmachine", _T('XMPP logs on group', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("consolecomputerxmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("xmppfilesbrowsing", _T('XMPP browser file', 'xmppmaster'));
+$page = new Page("xmppfilesbrowsing", _T('File Browser', 'xmppmaster'));
 $submod->addPage($page);
 
 //ne non expert mode
-$page = new Page("xmppfilesbrowsingne", _T('XMPP browser file', 'xmppmaster'));
+$page = new Page("xmppfilesbrowsingne", _T('File Browser', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("remoteeditorconfiguration", _T('XMPP remote edit configuration file', 'xmppmaster'));
+$page = new Page("remoteeditorconfiguration", _T('Remote edit configuration file', 'xmppmaster'));
 $submod->addPage($page);
 
 
-$page = new Page("remoteeditorconfigurationlist", _T('XMPP remote edit configuration file', 'xmppmaster'));
+$page = new Page("remoteeditorconfigurationlist", _T('Remote edit configuration file', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("listfichierconf", _T('XMPP list config files', 'xmppmaster'));
+$page = new Page("listfichierconf", _T('List config files', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("ActionQuickconsole", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("ActionQuickGroup", _T('XMPP Action Quick Group', 'xmppmaster'));
+$page = new Page("ActionQuickGroup", _T('Quick Action on group', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("QAcustommachgrp", _T('XMPP Action Quick Group result', 'xmppmaster'));
+$page = new Page("QAcustommachgrp", _T('Quick Action on group results', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("wakeonlan", _T('Wake on LAN', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("xmppMonitoring", _T('XMPP Quick Monitoring', 'xmppmaster'));
+$page = new Page("xmppMonitoring", _T('Quick Monitoring', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("ajaxdeploylog");
@@ -143,7 +143,7 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppremoteaction.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("actioncustomquickactiongrp", _T("quick action Custom", "xmppmaster"));
+$page = new Page("actioncustomquickactiongrp", _T("Custom quick action", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);

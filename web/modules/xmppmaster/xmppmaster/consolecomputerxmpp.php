@@ -217,7 +217,7 @@ li.quickg a {
                         placeholder=""
                         data-regexp="/.+/" 
                         autocomplete="off" 
-                        title="<? echo _T("return key to start your order", 'xmppmaster');  ?>"/>
+                        title="<? echo _T("Press return key to start your command", 'xmppmaster');  ?>"/>
                 </span>
             </td>
         </tr>

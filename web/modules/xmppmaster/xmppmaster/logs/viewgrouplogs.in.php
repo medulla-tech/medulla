@@ -84,7 +84,7 @@ $machine_abort_from_deploy     = $resultfromdeploy['machineabortdeploy'];
 
 
 
-// from msc  
+// from msc
 $machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy( $cmd_id,
                                                                 date("Y-m-d H:i:s",
                                                                 $start_date));
@@ -164,18 +164,18 @@ foreach ($info['objectdeploy'] as $val)
 if ( $start_deploy){
     echo "<br>";
     if ($end_deploy || $terminate == 1){
-        echo "<h2>Deployment completed</h2>";
+        echo "<h2>"._T("Deployment completed","xmppmaster")."</h2>";
         $terminate = 1;
         $deployinprogress = 0;
         echo "<br>";
     }else{
-        echo "<h2>Deployment in progress</h2>";
-        echo "Started since <span>".($timestampnow - $start_date)."</span> s";
+        echo "<h2>"._T("Deployment in progress","xmppmaster")."</h2>";
+        echo _T("Started since","xmppmaster")." <span>".($timestampnow - $start_date)."</span> s";
         $deployinprogress = 1;
     }
 }
 else{
-    echo "WAITING FOR START ".date("Y-m-d H:i:s", $start_date);
+    echo _T("WAITING FOR START ","xmppmaster").date("Y-m-d H:i:s", $start_date);
 }
 
     //if ($deployinprogress ){
@@ -186,7 +186,7 @@ else{
         $f->display();
     }
     echo "<br>";
-    
+
     $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $nb_machine_deployer_from_msc;
     $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $total_machine_from_msc) * 100,2);
     $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
@@ -197,17 +197,17 @@ else{
     echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
 
     $wol = ( $total_machine_from_msc - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
-    echo "<br><br>Number of machines in the group : ".$total_machine_from_msc;
-    echo "<br>Number of current deployments : ". $deploymachine;
-    echo "<br>Number of deployments in timeout : ". $machine_timeout_from_deploy;
-    echo "<br><br>Deployment summary:";
+    echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$total_machine_from_msc;
+    echo "<br>"._T("Number of current deployments","xmppmaster")." : ". $deploymachine;
+    echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machine_timeout_from_deploy;
+    echo "<br>"._T("Deployment summary","xmppmaster").":";
     echo "<table><tr>";
-    echo "<td>Sucess</td>
-        <td>Error</td>
-        <td>In progress</td>
-        <td>Waiting</td>
-        <td>Timed out</td>
-        <td>Aborted</td>";
+    echo "<td>"._T("Success","xmppmaster")."</td>
+        <td>"._T("Error","xmppmaster")."</td>
+        <td>"._T("In progress","xmppmaster")."</td>
+        <td>"._T("Waiting","xmppmaster")."</td>
+        <td>"._T("Timed out","xmppmaster")."</td>
+        <td>"._T("Aborted","xmppmaster")."</td>";
     echo "</tr>
     <tr>";
     echo "<td>".$machine_success_from_deploy."</td>

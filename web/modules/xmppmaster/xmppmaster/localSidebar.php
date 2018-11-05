@@ -26,7 +26,7 @@ if (isExpertMode()){
         new SideMenuItem(_T("XMPP Console","xmppmaster"), "xmppmaster", "xmppmaster", "consolexmpp")
     );
     $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("XMPP Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
+        new SideMenuItem(_T("Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
     );
 
     $sidemenu->addSideMenuItem(
@@ -38,11 +38,11 @@ if (isExpertMode()){
 }
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("XMPP File Manager","xmppmaster"), "xmppmaster", "xmppmaster", "filesmanagers")
+    new SideMenuItem(_T("File Manager","xmppmaster"), "xmppmaster", "xmppmaster", "filesmanagers")
 );
 
 //topology
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("XMPP Topology Machines","xmppmaster"), "xmppmaster", "xmppmaster", "topology")
+    new SideMenuItem(_T("Machines Topology","xmppmaster"), "xmppmaster", "xmppmaster", "topology")
 );
 ?>

@@ -44,7 +44,7 @@ class ComputersOnlinePanel extends Panel {
           echo '<span style="color:red">'._T("Machines offline : ","dashboard").$machines_offline.'</span><a href="'.$urlRedirect.'&machines=offline"><img title="'._T("Create a group","dashboard").'" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
         }
         else {
-          echo '<span style="color:red">'._T("A problem occurs when counting machines").'</span>';
+          echo '<span style="color:red">'._T("A problem occurred while counting machines").'</span>';
         }
     }
 }
