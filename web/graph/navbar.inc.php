@@ -127,5 +127,9 @@ if (is_object($action)) {
     <div id="__popup_container"><?php echo  _("If this phrase does not change, your browser is not supported by the MMC application"); ?></div>
 </div>
 
+<script>
+jQuery( "#popup" ).draggable({ containment: "#wrapper", scroll: false })
+</script>
+
 <div id="content">
     <div id="section">
