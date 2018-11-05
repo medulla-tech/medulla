@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:35+0100\n"
+"POT-Creation-Date: 2018-11-05 15:41+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
@@ -579,37 +579,37 @@ msgid "XMPP logs"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:98
-msgid "XMPP logs grp"
+msgid "XMPP logs on group"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:104
 #: modules/xmppmaster/infoPackage.inc.php:108
-msgid "XMPP browser file"
+msgid "File Browser"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:111
 #: modules/xmppmaster/infoPackage.inc.php:115
-msgid "XMPP remote edit configuration file"
+msgid "Remote edit configuration file"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:118
-msgid "XMPP list config files"
+msgid "List config files"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:124
-msgid "XMPP Action Quick Group"
+msgid "Quick Action on group"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:127
-msgid "XMPP Action Quick Group result"
+msgid "Quick Action on group results"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:133
-msgid "XMPP Quick Monitoring"
+msgid "Quick Monitoring"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:146
-msgid "quick action Custom"
+msgid "Custom quick action"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:185

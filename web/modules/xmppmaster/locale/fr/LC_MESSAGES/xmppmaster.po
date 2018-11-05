@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:35+0100\n"
+"POT-Creation-Date: 2018-11-05 15:41+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -235,11 +235,11 @@ msgstr "Résultats d'Actions Rapides"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
 msgid "File Manager"
-msgstr ""
+msgstr "Navigateur de fichiers"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:46
 msgid "Machines Topology"
-msgstr ""
+msgstr "Topologie machines"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Custom command name"
@@ -336,19 +336,19 @@ msgstr "Déploiement [ groupe"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:167
 msgid "Deployment completed"
-msgstr ""
+msgstr "Déploiement terminé"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:172
 msgid "Deployment in progress"
-msgstr ""
+msgstr "Déploiement en cours"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:173
 msgid "Started since"
-msgstr ""
+msgstr "Démarré depuis"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
 msgid "WAITING FOR START "
-msgstr ""
+msgstr "EN ATTENTE DE DEMARRAGE"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:185
 msgid "Abort Deployment"
@@ -356,35 +356,35 @@ msgstr "Arrêter le déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:200
 msgid "Number of machines in the group"
-msgstr ""
+msgstr "Nb de machines dans le groupe"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:201
 msgid "Number of current deployments"
-msgstr ""
+msgstr "Nb de déploiements en cours"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:202
 msgid "Number of deployments in timeout"
-msgstr ""
+msgstr "Nb de déploiements en timeout"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:203
 msgid "Deployment summary"
-msgstr ""
+msgstr "Résumé du déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:205
 msgid "sucess"
-msgstr ""
+msgstr "succès"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:206
 msgid "error"
-msgstr ""
+msgstr "erreur"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:207
 msgid "progress"
-msgstr ""
+msgstr "en cours"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:208
 msgid "Waiting"
-msgstr ""
+msgstr "En attente"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:209
 msgid "abort timeout"
@@ -583,38 +583,38 @@ msgid "XMPP logs"
 msgstr "Journaux XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:98
-msgid "XMPP logs grp"
-msgstr "Groupe Journaux XMPP"
+msgid "XMPP logs on group"
+msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:104
 #: modules/xmppmaster/infoPackage.inc.php:108
-msgid "XMPP browser file"
-msgstr "Explorateur de fichiers XMPP"
+msgid "File Browser"
+msgstr "Navigateur de fichiers"
 
 #: modules/xmppmaster/infoPackage.inc.php:111
 #: modules/xmppmaster/infoPackage.inc.php:115
-msgid "XMPP remote edit configuration file"
-msgstr ""
+msgid "Remote edit configuration file"
+msgstr "Edition de fichier de configuration distant"
 
 #: modules/xmppmaster/infoPackage.inc.php:118
-msgid "XMPP list config files"
-msgstr ""
+msgid "List config files"
+msgstr "Lister les fichiers de configuration"
 
 #: modules/xmppmaster/infoPackage.inc.php:124
-msgid "XMPP Action Quick Group"
-msgstr ""
+msgid "Quick Action on group"
+msgstr "Action Rapide sur groupe"
 
 #: modules/xmppmaster/infoPackage.inc.php:127
-msgid "XMPP Action Quick Group result"
-msgstr ""
+msgid "Quick Action on group results"
+msgstr "Résultats d'actions rapides sur groupes"
 
 #: modules/xmppmaster/infoPackage.inc.php:133
-msgid "XMPP Quick Monitoring"
-msgstr ""
+msgid "Quick Monitoring"
+msgstr "Monitoring rapide"
 
 #: modules/xmppmaster/infoPackage.inc.php:146
-msgid "quick action Custom"
-msgstr ""
+msgid "Custom quick action"
+msgstr "Action rapide personnalisée"
 
 #: modules/xmppmaster/infoPackage.inc.php:185
 msgid "action deploy quick"
