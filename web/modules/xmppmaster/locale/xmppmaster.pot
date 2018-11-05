@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 10:55+0200\n"
+"POT-Creation-Date: 2018-11-05 14:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,14 +91,14 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:74
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:71
 msgid "detaildeploy"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:87
 #: modules/xmppmaster/xmppmaster/deployxmpp.php:39
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:80
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:182
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:216
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:86
 msgid "Deployment"
 msgstr ""
@@ -125,7 +125,7 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:92
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:188
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:230
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
 msgid "User"
 msgstr ""
@@ -144,7 +144,7 @@ msgid "Custom Command"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:90
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:186
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:220
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
 msgid "Start date"
 msgstr ""
@@ -325,8 +325,8 @@ msgstr ""
 msgid "Deployment [ group"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:174
-msgid "Stop Deployment"
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:185
+msgid "Abort Deployment"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
@@ -337,21 +337,49 @@ msgstr ""
 msgid "Computer deploy group"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:51
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:42
 msgid "Current tasks (last 24 hours)"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:58
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:47
 msgid "Past tasks (last 3 months)"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:185
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:219
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
 msgid "Target"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:187
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:221
 msgid "Status"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:222
+msgid "Total Mach"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:223
+msgid "Process"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:224
+msgid "Success"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:225
+msgid "Error"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:226
+msgid "Waitting Wol"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:227
+msgid "timeout"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
+msgid "abort user"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ActionQuickGroup.php:36
