@@ -19,7 +19,12 @@ modules="base ppolicy services dashboard report xmppmaster"
 
 for mod in $modules
 do
-	cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
-	tx push -r pulse-1.${mod} -s -t
-	#-f --no-interactive
+    if [ "$mod" == "dashboard" ]; then
+        cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
+        tx push -r pulse-1.p${mod} -s -t
+    else
+	    cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
+	    tx push -r pulse-1.${mod} -s -t
+	    #-f --no-interactive
+    fi
 done
