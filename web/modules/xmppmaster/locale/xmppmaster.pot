@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:17+0100\n"
+"POT-Creation-Date: 2018-11-05 15:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -216,7 +216,8 @@ msgid "XMPP Console"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:29
-msgid "XMPP Wake on LAN"
+#: modules/xmppmaster/infoPackage.inc.php:130
+msgid "Wake on LAN"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:33
@@ -228,11 +229,11 @@ msgid "Quick Action results"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
-msgid "XMPP File Manager"
+msgid "File Manager"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:46
-msgid "XMPP Topology Machines"
+msgid "Machines Topology"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
@@ -541,10 +542,6 @@ msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:127
 msgid "XMPP Action Quick Group result"
-msgstr ""
-
-#: modules/xmppmaster/infoPackage.inc.php:130
-msgid "Wake on LAN"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:133
