@@ -219,13 +219,13 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $arrayname, _T("Target", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['start'], _T("Start date", "xmppmaster"));
 $n->addExtraInfo( $arraystate, _T("Status", "xmppmaster"));
-$n->addExtraInfo( $tolmach, _T("Total Mach", "xmppmaster"));
-$n->addExtraInfo( $processmachr, _T("Process", "xmppmaster"));
+$n->addExtraInfo( $tolmach, _T("Total Machines", "xmppmaster"));
+$n->addExtraInfo( $processmachr, _T("In progress", "xmppmaster"));
 $n->addExtraInfo( $successmach, _T("Success", "xmppmaster"));
 $n->addExtraInfo( $êrrormach, _T("Error", "xmppmaster"));
-$n->addExtraInfo( $wolmach, _T("Waitting Wol", "xmppmaster"));
-$n->addExtraInfo( $timeoutmach, _T("timeout", "xmppmaster"));
-$n->addExtraInfo( $abortmachuser, _T("abort user", "xmppmaster"));
+$n->addExtraInfo( $wolmach, _T("Waiting Wol", "xmppmaster"));
+$n->addExtraInfo( $timeoutmach, _T("Timed out", "xmppmaster"));
+$n->addExtraInfo( $abortmachuser, _T("Aborted", "xmppmaster"));
 
 $n->addExtraInfo( $arraydeploy['tabdeploy']['login'],_T("User", "xmppmaster"));
 //$n->setTableHeaderPadding(0);

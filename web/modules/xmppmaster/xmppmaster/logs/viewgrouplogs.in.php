@@ -122,7 +122,7 @@ if ($timestampnow > ($end_date)){
 
 
 
-echo "Deployment programming between [".date("Y-m-d H:i:s", $start_date)." and ".date("Y-m-d H:i:s", $end_date)."]";
+echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date);
 if ($convergenceonpackage !=0 ){
     echo "<img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/>";
 }
@@ -164,7 +164,7 @@ foreach ($info['objectdeploy'] as $val)
 if ( $start_deploy){
     echo "<br>";
     if ($end_deploy || $terminate == 1){
-        echo "<h2>Deployment to complete</h2>";
+        echo "<h2>Deployment completed</h2>";
         $terminate = 1;
         $deployinprogress = 0;
         echo "<br>";
@@ -182,7 +182,7 @@ else{
     if($terminate == 0){
         $f = new ValidatingForm();
         $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
-        $f->addButton("bStop", _T("Stop Deployment", 'xmppmaster'));
+        $f->addButton("bStop", _T("Abort Deployment", 'xmppmaster'));
         $f->display();
     }
     echo "<br>";
@@ -197,18 +197,17 @@ else{
     echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
 
     $wol = ( $total_machine_from_msc - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
-    echo "<br><br>Number of machines in the deployment group. : ".$total_machine_from_msc;
-    echo "<br>Number of machines in the group : ".$countmachine;
-    echo "<br>Number of machines being deployed : ". $deploymachine;
-    echo "<br>Number of machines timeout deploy wol: ". $machine_timeout_from_deploy;
-    echo "<br>Deployment summary:";
+    echo "<br><br>Number of machines in the group : ".$total_machine_from_msc;
+    echo "<br>Number of current deployments : ". $deploymachine;
+    echo "<br>Number of deployments in timeout : ". $machine_timeout_from_deploy;
+    echo "<br><br>Deployment summary:";
     echo "<table><tr>";
-    echo "<td>sucess</td>
-        <td>error</td>
-        <td>progress</td>
+    echo "<td>Sucess</td>
+        <td>Error</td>
+        <td>In progress</td>
         <td>Waiting</td>
-        <td>abort timeout</td>
-        <td>abort</td>";
+        <td>Timed out</td>
+        <td>Aborted</td>";
     echo "</tr>
     <tr>";
     echo "<td>".$machine_success_from_deploy."</td>
@@ -354,37 +353,37 @@ if ($info['len'] != 0){
 
                 if ($machine_success_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_success_from_deploy.');';
-                    echo 'legend.push("%%.%% - Machines deploy in sucess");';
+                    echo 'legend.push("%%.%% - Success");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'");';
                     echo 'color.push("#2EFE2E");';
                 }
                 if ($machine_error_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_error_from_deploy.');';
-                    echo 'legend.push("%%.%% - Machines deploy in error");';
+                    echo 'legend.push("%%.%% - Error");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#FE2E64");';
                 }
                 if ($machine_process_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_process_from_deploy.');';
-                    echo 'legend.push("%%.%% - Machines deploy in process");';
+                    echo 'legend.push("%%.%% - In progress");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#2E9AFE");';
                 }
                 if ($wol > 0){
                     echo 'datadeploy.push('.$wol.');';
-                    echo 'legend.push("%%.%% - Waiting for machine start (WOL sent).");';
+                    echo 'legend.push("%%.%% - Waiting (WOL sent)");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#DBA901");';
                 }
                 if ($machine_timeout_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_timeout_from_deploy.');';
-                    echo 'legend.push("%%.%% - abort wol timeout deploy.");';
+                    echo 'legend.push("%%.%% - Timed out");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#FF4500");';
                 }
                 if ($machine_abort_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_abort_from_deploy.');';
-                    echo 'legend.push("%%.%% - Machine deploy in abort.");';
+                    echo 'legend.push("%%.%% - Aborted");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#ff5050");';
                 }
@@ -398,7 +397,7 @@ if ($info['len'] != 0){
                         }
                     );
 
-                r.text(210, 50, "Deploy Machines").attr({ font: "20px sans-serif" });
+                r.text(210, 50, "Deployments").attr({ font: "20px sans-serif" });
 
                 pie.hover(function () {
                     u = this;                 // My Code
