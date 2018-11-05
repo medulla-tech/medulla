@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:32+0100\n"
+"POT-Creation-Date: 2018-11-05 15:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -326,8 +326,64 @@ msgstr ""
 msgid "Deployment [ group"
 msgstr ""
 
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:167
+msgid "Deployment completed"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:172
+msgid "Deployment in progress"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:173
+msgid "Started since"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
+msgid "WAITING FOR START "
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:185
 msgid "Abort Deployment"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:200
+msgid "Number of machines in the group"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:201
+msgid "Number of current deployments"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:202
+msgid "Number of deployments in timeout"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:203
+msgid "Deployment summary"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:205
+msgid "sucess"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:206
+msgid "error"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:207
+msgid "progress"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:208
+msgid "Waiting"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:209
+msgid "abort timeout"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:210
+msgid "abort"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
