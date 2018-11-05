@@ -164,7 +164,7 @@ foreach ($info['objectdeploy'] as $val)
 if ( $start_deploy){
     echo "<br>";
     if ($end_deploy || $terminate == 1){
-        echo "<h2>Deployment to complete</h2>";
+        echo "<h2>Deployment completed</h2>";
         $terminate = 1;
         $deployinprogress = 0;
         echo "<br>";
