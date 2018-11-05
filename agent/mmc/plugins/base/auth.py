@@ -27,6 +27,8 @@ from ConfigParser import ConfigParser, NoSectionError, NoOptionError
 from mmc.support.mmctools import Singleton
 from mmc.support.config import MMCConfigParser
 
+log = logging.getLogger("glpi")
+
 
 class AuthenticationManager(Singleton):
     """
@@ -38,7 +40,7 @@ class AuthenticationManager(Singleton):
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = log
 
     def register(self, name, klass):
         """
@@ -167,7 +169,7 @@ class AuthenticatorI:
         @param conffile: authenticator configuration file
         @param name: the authenticator name
         """
-        self.logger = logging.getLogger()
+        self.logger = log
         self.config = klass(conffile, "authentication_" + name)
 
     def authenticate(self, user, password):
