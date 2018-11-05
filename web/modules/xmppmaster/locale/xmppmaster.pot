@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 14:54+0100\n"
+"POT-Creation-Date: 2018-11-05 15:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:220
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:108
-msgid "return key to start your order"
+msgid "Press return key to start your command"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:35
