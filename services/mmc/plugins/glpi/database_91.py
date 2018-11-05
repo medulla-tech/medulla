@@ -599,13 +599,6 @@ class Glpi91(DyngroupDatabaseHelper):
                     query = query.add_column(self.user.c.realname)
                 if 'owner' in self.config.summary:
                     query = query.add_column(self.user.c.name)
-                r=re.compile('reg_key_.*')
-                regs=filter(r.search, self.config.summary)
-                try:
-                    if regs[0]:
-                        query = query.add_column(self.regcontents.c.value)
-                except IndexError:
-                    pass
 
             query_filter = None
 

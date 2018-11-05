@@ -100,7 +100,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
             else{
                 echo '
                 <td>
-                    <input type="checkbox" onclick="
+                    <input type="checkbox" checked onclick="
                     if(jQuery(this).is(\':checked\')){
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
                     }
@@ -109,7 +109,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }" />Set timeout
                 </td>
                 <td>
-                    <input type="number" min="0" value="10" disabled name="timeout"  />
+                    <input type="number" min="0" value="800"  name="timeout"  />
                 </td>';
             }
             ?>

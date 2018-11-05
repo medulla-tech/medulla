@@ -2754,7 +2754,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
 
     @DatabaseHelper._sessionm
-    def __getxmppmasterfilterforglpi(self, session, listqueryxmppmaster = None):
+    def getxmppmasterfilterforglpi(self, session, listqueryxmppmaster = None):
         fl = listqueryxmppmaster[3].replace('*',"%")
         if listqueryxmppmaster[2] == "OU user":
             machineid = session.query(Organization_ad.id_inventory)
@@ -2763,10 +2763,7 @@ class XmppMasterDatabase(DatabaseHelper):
             machineid = session.query(Organization_ad.id_inventory)
             machineid = machineid.filter(Organization_ad.oumachine.like(fl))
         elif listqueryxmppmaster[2] == "Online computer":
-            print "Online computer"
             d = XmppMasterDatabase().getlistPresenceMachineid()
-            for x in d:
-                print x
             listid = [x.replace("UUID", "") for x in d]
             return listid
         machineid = machineid.all()

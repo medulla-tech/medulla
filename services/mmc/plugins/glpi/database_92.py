@@ -565,7 +565,7 @@ class Glpi92(DyngroupDatabaseHelper):
         elif "query" in filt and filt['query'][0] == "AND":
             for q in filt['query'][1]:
                 if q[2] == "Online computer" or q[2] == "OU user" or q[2] == "OU machine":
-                    listid = XmppMasterDatabase().__getxmppmasterfilterforglpi(q)
+                    listid = XmppMasterDatabase().getxmppmasterfilterforglpi(q)
                     ret[q[2]] = [q[1], q[2], q[3], listid]
         return ret
 
@@ -608,13 +608,6 @@ class Glpi92(DyngroupDatabaseHelper):
                     query = query.add_column(self.user.c.realname)
                 if 'owner' in self.config.summary:
                     query = query.add_column(self.user.c.name)
-                r=re.compile('reg_key_.*')
-                regs=filter(r.search, self.config.summary)
-                try:
-                    if regs[0]:
-                        query = query.add_column(self.regcontents.c.value)
-                except IndexError:
-                    pass
 
             query_filter = None
 
