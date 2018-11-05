@@ -202,12 +202,12 @@ else{
     echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machine_timeout_from_deploy;
     echo "<br>"._T("Deployment summary","xmppmaster").":";
     echo "<table><tr>";
-    echo "<td>"._T("sucess","xmppmaster")."</td>
-        <td>"._T("error","xmppmaster")."</td>
-        <td>"._T("progress","xmppmaster")."</td>
+    echo "<td>"._T("Success","xmppmaster")."</td>
+        <td>"._T("Error","xmppmaster")."</td>
+        <td>"._T("In progress","xmppmaster")."</td>
         <td>"._T("Waiting","xmppmaster")."</td>
-        <td>"._T("abort timeout","xmppmaster")."</td>
-        <td>"._T("abort","xmppmaster")."</td>";
+        <td>"._T("Timed out","xmppmaster")."</td>
+        <td>"._T("Aborted","xmppmaster")."</td>";
     echo "</tr>
     <tr>";
     echo "<td>".$machine_success_from_deploy."</td>
