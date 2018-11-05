@@ -3,14 +3,18 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Yuri Chornoivan <yurchor@ukr.net>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 10:55+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"POT-Creation-Date: 2018-11-05 15:35+0100\n"
+"PO-Revision-Date: 2018-02-13 15:16+0000\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,8 +51,8 @@ msgstr "Помилка: %s"
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:220
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:108
-msgid "return key to start your order"
-msgstr "клавішу Enter, щоб вашу дію було виконано"
+msgid "Press return key to start your command"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:35
 msgid "Wake On Lan"
@@ -94,14 +98,14 @@ msgstr "Запит щодо копіювання файла успішно на�
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:74
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:71
 msgid "detaildeploy"
 msgstr "докладне розгортання"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:87
 #: modules/xmppmaster/xmppmaster/deployxmpp.php:39
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:80
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:182
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:216
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:86
 msgid "Deployment"
 msgstr "Розгортання"
@@ -128,7 +132,7 @@ msgstr "Пакунок"
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:92
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:188
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:230
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
 msgid "User"
 msgstr "Користувач"
@@ -147,7 +151,7 @@ msgid "Custom Command"
 msgstr "Нетипова команда"
 
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:90
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:186
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:220
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
 msgid "Start date"
 msgstr "Дата початку"
@@ -219,8 +223,9 @@ msgid "XMPP Console"
 msgstr "Консоль XMPP"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:29
-msgid "XMPP Wake on LAN"
-msgstr "Пробудження мережею XMPP"
+#: modules/xmppmaster/infoPackage.inc.php:130
+msgid "Wake on LAN"
+msgstr "Пробудження з LAN"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:33
 msgid "Custom Quick Actions"
@@ -231,12 +236,12 @@ msgid "Quick Action results"
 msgstr "Результати швидких дій"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
-msgid "XMPP File Manager"
-msgstr "Керування файлами XMPP"
+msgid "File Manager"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:46
-msgid "XMPP Topology Machines"
-msgstr "Комп'ютери топології XMPP"
+msgid "Machines Topology"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Custom command name"
@@ -330,9 +335,65 @@ msgstr "Розгортання комп'ютера"
 msgid "Deployment [ group"
 msgstr "Розгортання [група"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:174
-msgid "Stop Deployment"
-msgstr "Припинити розгортання"
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:167
+msgid "Deployment completed"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:172
+msgid "Deployment in progress"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:173
+msgid "Started since"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
+msgid "WAITING FOR START "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:185
+msgid "Abort Deployment"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:200
+msgid "Number of machines in the group"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:201
+msgid "Number of current deployments"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:202
+msgid "Number of deployments in timeout"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:203
+msgid "Deployment summary"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:205
+msgid "sucess"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:206
+msgid "error"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:207
+msgid "progress"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:208
+msgid "Waiting"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:209
+msgid "abort timeout"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:210
+msgid "abort"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
 msgid "Deployment [machine "
@@ -342,22 +403,50 @@ msgstr "Розгортання [машина "
 msgid "Computer deploy group"
 msgstr "Група розгортання комп'ютерів"
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:51
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:42
 msgid "Current tasks (last 24 hours)"
 msgstr "Поточні завдання (останні 24 години)"
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:58
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:47
 msgid "Past tasks (last 3 months)"
 msgstr "Минулі завдання (останні 3 місяці)"
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:185
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:219
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
 msgid "Target"
 msgstr "Призначення"
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:187
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:221
 msgid "Status"
 msgstr "Стан"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:222
+msgid "Total Machines"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:223
+msgid "In progress"
+msgstr "Виконується"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:224
+msgid "Success"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:225
+msgid "Error"
+msgstr "Помилка"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:226
+msgid "Waiting Wol"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:227
+msgid "Timed out"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
+msgid "Aborted"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ActionQuickGroup.php:36
 msgid "Quick action results"
@@ -519,10 +608,6 @@ msgstr "Швидке групування дій XMPP"
 #: modules/xmppmaster/infoPackage.inc.php:127
 msgid "XMPP Action Quick Group result"
 msgstr "Результат дії швидкого групування XMPP"
-
-#: modules/xmppmaster/infoPackage.inc.php:130
-msgid "Wake on LAN"
-msgstr "Пробудження з LAN"
 
 #: modules/xmppmaster/infoPackage.inc.php:133
 msgid "XMPP Quick Monitoring"
