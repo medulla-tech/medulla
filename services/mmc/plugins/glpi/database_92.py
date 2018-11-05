@@ -608,6 +608,13 @@ class Glpi92(DyngroupDatabaseHelper):
                     query = query.add_column(self.user.c.realname)
                 if 'owner' in self.config.summary:
                     query = query.add_column(self.user.c.name)
+                r=re.compile('reg_key_.*')
+                regs=filter(r.search, self.config.summary)
+                try:
+                    if regs[0]:
+                        query = query.add_column(self.regcontents.c.value)
+                except IndexError:
+                    pass
 
             query_filter = None
 
@@ -685,6 +692,14 @@ class Glpi92(DyngroupDatabaseHelper):
                 join_query = join_query.outerjoin(self.fusionantivirus)
                 join_query = join_query.outerjoin(self.os)
 
+            r=re.compile('reg_key_.*')
+            regs=filter(r.search, self.config.summary)
+            try:
+                if regs[0]:
+                    join_query = join_query.outerjoin(self.regcontents)
+            except IndexError:
+                pass
+
             if query_filter is None:
                 query = query.select_from(join_query)
             else:
@@ -746,6 +761,13 @@ class Glpi92(DyngroupDatabaseHelper):
                         clauses.append(self.glpi_computermodels.c.name.like('%'+filt['hostname']+'%'))
                     if 'manufacturer' in self.config.summary:
                         clauses.append(self.manufacturers.c.name.like('%'+filt['hostname']+'%'))
+                    r=re.compile('reg_key_.*')
+                    regs=filter(r.search, self.config.summary)
+                    try:
+                        if regs[0]:
+                            clauses.append(self.regcontents.c.value.like('%'+filt['hostname']+'%'))
+                    except IndexError:
+                        pass
                     # Filtering on computer list page
                     if clauses:
                         query = query.filter(or_(*clauses))
