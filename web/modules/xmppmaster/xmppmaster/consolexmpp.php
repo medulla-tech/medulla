@@ -105,7 +105,7 @@ textarea {
             <td>
                 <span id="container_input_command">
                     <input value="<? echo $command; ?>"
-                        title="<? echo _T("return key to start your order", 'xmppmaster'); ?>"
+                        title="<? echo _T("Press return key to start your command", 'xmppmaster'); ?>"
                         name="command"
                         id="command"
                         type="text"
