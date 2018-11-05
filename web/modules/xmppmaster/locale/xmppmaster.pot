@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 14:41+0100\n"
+"POT-Creation-Date: 2018-11-05 14:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -355,11 +355,11 @@ msgid "Status"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:222
-msgid "Total Mach"
+msgid "Total Machines"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:223
-msgid "Process"
+msgid "In progress"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:224
@@ -371,15 +371,15 @@ msgid "Error"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:226
-msgid "Waitting Wol"
+msgid "Waiting Wol"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:227
-msgid "timeout"
+msgid "Timed out"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
-msgid "abort user"
+msgid "Aborted"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ActionQuickGroup.php:36
