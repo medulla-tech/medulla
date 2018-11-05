@@ -34,7 +34,7 @@ list($SYNCHROSTATE_UNKNOWN, $SYNCHROSTATE_TODO, $SYNCHROSTATE_SYNCHRO, $SYNCHROS
 $errors = array(
     1000 => _T("There was an error (this is a default message).", "imaging"), // $ERR_DEFAULT
     1001 => _T("The nomenclature is missing.", "imaging"), // $ERR_MISSING_NOMENCLATURE
-    1003 => _T("This imaging server doesn't exists.", "imaging"), // $ERR_IMAGING_SERVER_DONT_EXISTS
+    1003 => _T("This imaging server doesn't exist.", "imaging"), // $ERR_IMAGING_SERVER_DONT_EXISTS
     1004 => _T("This entity already exists.", "imaging"), // $ERR_ENTITY_ALREADY_EXISTS
     1005 => _T("You asked for an inexistent menu item.", "imaging"), // $ERR_UNEXISTING_MENUITEM
     1006 => _T("This target has no menu.", "imaging"), // $ERR_TARGET_HAS_NO_MENU
