@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *  file ajaxxmpprefrechfilesremote.php
+ *  file xmppfilesbrowsing.php
  */
 ?>
 <?php
@@ -29,6 +29,7 @@ require_once("../../../includes/config.inc.php");
 require_once("../../../includes/i18n.inc.php");
 require_once("../../../includes/acl.inc.php");
 require_once("../../../includes/session.inc.php");
+
 
 extract($_POST);
 
@@ -47,12 +48,31 @@ function sizefile($tailleoctet){
         }
     }
 }
-if (!isset($selectdir) || $selectdir == ""){
+
+if (!isset($path_abs_current_remote) || $path_abs_current_remote == ""){
     $lifdirstr = xmlrpc_remotefilesystem("", $machine);
 }
 else{
-    $lifdirstr = xmlrpc_remotefilesystem($selectdir, $machine);
+    switch($selectdir){
+                case ".":
+                    $lifdirstr = xmlrpc_remotefilesystem($path_abs_current_remote, $machine);
+                break;
+                case "..":
+                    $lifdirstr = xmlrpc_remotefilesystem($parentdirremote, $machine);
+                break;
+                default:
+                    if (stristr($os, "win")) {
+                        $path_abs_current_remote = $path_abs_current_remote . '\\' . $selectdir;
+                        $lifdirstr = xmlrpc_remotefilesystem($path_abs_current_remote, $machine);
+                    }
+                    else {
+                            $path_abs_current_remote = $path_abs_current_remote . '/'.$selectdir;
+                            $lifdirstr = xmlrpc_remotefilesystem($path_abs_current_remote, $machine);
+                    }
+                break;
+    }
 }
+
 $lifdir = json_decode($lifdirstr, true);
 if (isset($lifdir['err'])){
     if ( $lifdir['err'] == 'Timeout Error'){
@@ -75,6 +95,16 @@ printf ('
 echo "<h2> Current Dir : <span  id='remotecurrrent'>".$lifdir['path_abs_current'] ."</span></h2>";
 echo'
     <ul class="rightdir">';
+        echo "<li>
+            <span class='dir'>.</span>
+            <span class='but'><img style='padding-left : 20px; float : right;' src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+        </li>";
+        if ( $lifdir['path_abs_current'] != $lifdir['rootfilesystem']){
+            echo "<li>
+                      <span class='dir'>..</span>
+                      <span class='but'><img style='padding-left : 20px; float : right;'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+                  </li>";
+        }
         foreach($lifdir['list_dirs_current'] as $namedir){
             echo "<li>
                       <span class='dir'>".$namedir."</span>
