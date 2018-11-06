@@ -1004,6 +1004,7 @@ class XmppMasterDatabase(DatabaseHelper):
         #session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
                                             #Deploy.state == "DEPLOYMENT START") 
         #).update({ Deploy.state : "DEPLOYMENT ERROR"})
+        datenow = datetime.now()
         result = session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
                                             Deploy.state == "DEPLOYMENT START") 
         ).all()
