@@ -3,13 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Nicolas Lécureuil <neoclust@mageia.org>, 2017
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 11:30+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2018-11-05 09:37+0100\n"
+"PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -2186,12 +2189,12 @@ msgstr "Trmino da validade"
 msgid "Cancel bundle creation"
 msgstr "Cancelar criao do conjunto"
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:132
+#: modules/msc/includes/commands_xmlrpc.inc.php:138
 #, php-format
 msgid "%s deployment subgroup - %s"
 msgstr "%s subgrupo de implantao - %s"
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:155
+#: modules/msc/includes/commands_xmlrpc.inc.php:161
 #, php-format
 msgid ""
 "Deploy subgroup created successfully. <br/><a href=\"%s\" "
