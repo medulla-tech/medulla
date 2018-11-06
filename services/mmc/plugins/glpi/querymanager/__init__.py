@@ -219,10 +219,8 @@ def getAllSoftwares(ctx, softname='', vendor=None):
 
 def getRegisterKeyValue(ctx, keyregister="", value=None):
     if value is None:
-        DMSG("parameter : keyregister %s "%(keyregister))
         return getAllRegistryKey(ctx, keyregister)
     else:
-        DMSG("parameter : keyregister %s  value %s"%(keyregister, value))
         return getAllRegistryKeyValue(ctx, keyregister, value)
 
 def getAllRegistryKeyValue(ctx, keyregister, value):
