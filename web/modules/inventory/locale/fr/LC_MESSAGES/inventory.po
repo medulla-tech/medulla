@@ -3,13 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Stephane Pointu <spointu@gmail.com>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 11:30+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2018-11-05 09:36+0100\n"
+"PO-Revision-Date: 2017-10-11 08:07+0000\n"
 "Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -410,7 +414,7 @@ msgstr " ne contient ppas /^((?!ma chaine).)*$/"
 
 #: modules/inventory/inventory/addEntityRule.php:138
 msgid " equal to or contains"
-msgstr ""
+msgstr "Est égal ou contient"
 
 #: modules/inventory/inventory/addEntityRule.php:139
 msgid " finishes by  /.*(my string)$/"
