@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:41+0100\n"
+"POT-Creation-Date: 2018-11-05 15:55+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -168,8 +168,8 @@ msgid "Machines offline : "
 msgstr "Неробочі машини:"
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:47
-msgid "A problem occurs when counting machines"
-msgstr ""
+msgid "A problem occurred while counting machines"
+msgstr "Під час обліку комп'ютерів виникла проблема"
 
 #: modules/dashboard/includes/panels/process.inc.php:28
 msgid "Pulse processes"

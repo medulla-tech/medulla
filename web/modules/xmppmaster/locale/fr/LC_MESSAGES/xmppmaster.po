@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:41+0100\n"
+"POT-Creation-Date: 2018-11-05 15:55+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -120,7 +120,7 @@ msgstr "Démarrer"
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:83
 msgid "State"
-msgstr "Etat"
+msgstr "État"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:91
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:84
@@ -371,28 +371,33 @@ msgid "Deployment summary"
 msgstr "Résumé du déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:205
-msgid "sucess"
-msgstr "succès"
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:224
+msgid "Success"
+msgstr "Succès"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:206
-msgid "error"
-msgstr "erreur"
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:225
+msgid "Error"
+msgstr "Erreur de téléchargement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:207
-msgid "progress"
-msgstr "en cours"
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:223
+msgid "In progress"
+msgstr "En cours"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:208
 msgid "Waiting"
 msgstr "En attente"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:209
-msgid "abort timeout"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:227
+msgid "Timed out"
+msgstr "Délai dépassé"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:210
-msgid "abort"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
+msgid "Aborted"
+msgstr "Arrêté"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
 msgid "Deployment [machine "
@@ -423,29 +428,9 @@ msgstr "Etat"
 msgid "Total Machines"
 msgstr "Nb de machines total"
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:223
-msgid "In progress"
-msgstr "En cours"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:224
-msgid "Success"
-msgstr "Succès"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:225
-msgid "Error"
-msgstr "Erreur de téléchargement"
-
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:226
 msgid "Waiting Wol"
 msgstr "En attente de WoL"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:227
-msgid "Timed out"
-msgstr "Délai dépassé"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
-msgid "Aborted"
-msgstr "Arrêté"
 
 #: modules/xmppmaster/xmppmaster/ActionQuickGroup.php:36
 msgid "Quick action results"
@@ -564,11 +549,11 @@ msgstr "Gestionnaire de fichiers XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:67
 msgid "XMPP topology Machine"
-msgstr ""
+msgstr "Topologie machines"
 
 #: modules/xmppmaster/infoPackage.inc.php:70
 msgid "XMPP Machine details"
-msgstr ""
+msgstr "Détails de la machine"
 
 #: modules/xmppmaster/infoPackage.inc.php:83
 msgid "Edit Custom Quick Action"
@@ -584,7 +569,7 @@ msgstr "Journaux XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:98
 msgid "XMPP logs on group"
-msgstr ""
+msgstr "Journaux des groupes"
 
 #: modules/xmppmaster/infoPackage.inc.php:104
 #: modules/xmppmaster/infoPackage.inc.php:108

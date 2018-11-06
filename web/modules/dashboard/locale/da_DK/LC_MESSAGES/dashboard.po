@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:41+0100\n"
+"POT-Creation-Date: 2018-11-05 15:55+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Language-Team: Danish (Denmark) (https://www.transifex.com/siveo/teams/72118/da_DK/)\n"
 "MIME-Version: 1.0\n"
@@ -164,7 +164,7 @@ msgid "Machines offline : "
 msgstr ""
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:47
-msgid "A problem occurs when counting machines"
+msgid "A problem occurred while counting machines"
 msgstr ""
 
 #: modules/dashboard/includes/panels/process.inc.php:28

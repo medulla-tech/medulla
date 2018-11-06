@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:41+0100\n"
+"POT-Creation-Date: 2018-11-05 15:55+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -52,7 +52,7 @@ msgstr "Помилка: %s"
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:220
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:108
 msgid "Press return key to start your command"
-msgstr ""
+msgstr "Натисніть Enter, щоб розпочати вашу команду"
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:35
 msgid "Wake On Lan"
@@ -237,11 +237,11 @@ msgstr "Результати швидких дій"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
 msgid "File Manager"
-msgstr ""
+msgstr "Керування файлами"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:46
 msgid "Machines Topology"
-msgstr ""
+msgstr "Топологія комп'ютерів"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Custom command name"
@@ -337,63 +337,68 @@ msgstr "Розгортання [група"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:167
 msgid "Deployment completed"
-msgstr ""
+msgstr "Розгортання завершено"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:172
 msgid "Deployment in progress"
-msgstr ""
+msgstr "Виконуємо розгортання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:173
 msgid "Started since"
-msgstr ""
+msgstr "Запущено з"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
 msgid "WAITING FOR START "
-msgstr ""
+msgstr "ОЧІКУЄМО НА ЗАПУСК"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:185
 msgid "Abort Deployment"
-msgstr ""
+msgstr "Перервати розгортання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:200
 msgid "Number of machines in the group"
-msgstr ""
+msgstr "Кількість комп'ютерів у групі"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:201
 msgid "Number of current deployments"
-msgstr ""
+msgstr "Кількість поточних розгортань"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:202
 msgid "Number of deployments in timeout"
-msgstr ""
+msgstr "Кількість розгортань із перевищенням часу очікування"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:203
 msgid "Deployment summary"
-msgstr ""
+msgstr "Резюме розгортання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:205
-msgid "sucess"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:224
+msgid "Success"
+msgstr "Успіх"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:206
-msgid "error"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:225
+msgid "Error"
+msgstr "Помилка"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:207
-msgid "progress"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:223
+msgid "In progress"
+msgstr "Виконується"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:208
 msgid "Waiting"
-msgstr ""
+msgstr "Очікування"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:209
-msgid "abort timeout"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:227
+msgid "Timed out"
+msgstr "Перевищено час"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:210
-msgid "abort"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
+msgid "Aborted"
+msgstr "Перервано"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
 msgid "Deployment [machine "
@@ -422,31 +427,11 @@ msgstr "Стан"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:222
 msgid "Total Machines"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:223
-msgid "In progress"
-msgstr "Виконується"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:224
-msgid "Success"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:225
-msgid "Error"
-msgstr "Помилка"
+msgstr "Загалом машин"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:226
 msgid "Waiting Wol"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:227
-msgid "Timed out"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
-msgid "Aborted"
-msgstr ""
+msgstr "Очікування WOL"
 
 #: modules/xmppmaster/xmppmaster/ActionQuickGroup.php:36
 msgid "Quick action results"
@@ -585,37 +570,37 @@ msgstr "Журнал XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:98
 msgid "XMPP logs on group"
-msgstr ""
+msgstr "Журнал XMPP щодо групи"
 
 #: modules/xmppmaster/infoPackage.inc.php:104
 #: modules/xmppmaster/infoPackage.inc.php:108
 msgid "File Browser"
-msgstr ""
+msgstr "Навігатор файлами"
 
 #: modules/xmppmaster/infoPackage.inc.php:111
 #: modules/xmppmaster/infoPackage.inc.php:115
 msgid "Remote edit configuration file"
-msgstr ""
+msgstr "Віддалене редагування файла налаштувань"
 
 #: modules/xmppmaster/infoPackage.inc.php:118
 msgid "List config files"
-msgstr ""
+msgstr "Вивести список файлів налаштувань"
 
 #: modules/xmppmaster/infoPackage.inc.php:124
 msgid "Quick Action on group"
-msgstr ""
+msgstr "Швидка дія над групою"
 
 #: modules/xmppmaster/infoPackage.inc.php:127
 msgid "Quick Action on group results"
-msgstr ""
+msgstr "Швидка дія над результатами групи"
 
 #: modules/xmppmaster/infoPackage.inc.php:133
 msgid "Quick Monitoring"
-msgstr ""
+msgstr "Швидке спостереження"
 
 #: modules/xmppmaster/infoPackage.inc.php:146
 msgid "Custom quick action"
-msgstr ""
+msgstr "Нетипова швидка дія"
 
 #: modules/xmppmaster/infoPackage.inc.php:185
 msgid "action deploy quick"

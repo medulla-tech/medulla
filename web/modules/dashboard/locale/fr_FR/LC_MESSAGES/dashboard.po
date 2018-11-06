@@ -5,15 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Stephane Pointu <spointu@gmail.com>, 2018
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:41+0100\n"
+"POT-Creation-Date: 2018-11-05 15:55+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,8 +169,8 @@ msgid "Machines offline : "
 msgstr "Machines hors ligne :"
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:47
-msgid "A problem occurs when counting machines"
-msgstr ""
+msgid "A problem occurred while counting machines"
+msgstr "Un problème est survenu lors du comptage des machines"
 
 #: modules/dashboard/includes/panels/process.inc.php:28
 msgid "Pulse processes"
