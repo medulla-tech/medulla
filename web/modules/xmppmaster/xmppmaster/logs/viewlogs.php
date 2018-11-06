@@ -31,7 +31,6 @@ function aleatoirechaine($prefixe, $nbcar){
     $chaine=str_split('abcdefghijklmnopqrstuvwxyz0123456789');
     shuffle($chaine);
     $chaine = implode('',$chaine);
-    echo "$chaine";
     $pass = substr($chaine, 0, $nbcar);
     return $prefixe."_".$pass;
     }
@@ -57,8 +56,8 @@ if ( isset ($_POST['bStop'])) {
                                     $data['login'],
                                     $data['title'],
                                     $data['gid'],
-                                    date("Y-m-d H:i:s", get_object_vars($data['start'])['timestamp']),
-                                    date("Y-m-d H:i:s", get_object_vars($data['end'])['timestamp']),
+                                    $data['startd'],
+                                    $data['endd'],
                                     $data['macadress']);
         }
     }
