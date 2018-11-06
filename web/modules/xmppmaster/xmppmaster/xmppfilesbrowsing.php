@@ -22,11 +22,6 @@
  *  file xmppfilesbrowsing.php
  */
 ?>
-<?php
-    echo '<link rel="stylesheet" href="jsframework/lib/pluginjqueryjtree/themes/default/style.min.css" />'."\n".
-    '<script src="jsframework/lib/pluginjqueryjtree/jstree.min.js"></script>'."\n";
-?>
-
 <style type='text/css'>
 textarea {
     width:50% ;
@@ -66,20 +61,6 @@ body{
 .fileshow {
     overflow:auto;
     height:85%;
-}
-
-#fileshowremote {
-    width: 50%;
-    height:100%;
-    overflow:auto;
-}
-
-#directoryremote{
-    width: 50%;
-    height:100%;
-    overflow:auto;
-    padding-botton:15px;
-    float:left;
 }
 
 #gauche {
@@ -240,7 +221,9 @@ li.quickg a {
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
+/*
+print_r($_GET);
+print_r($_POST);*/
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
@@ -255,9 +238,10 @@ require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/pulse2/includes/menu_actionaudit.php');
 echo "<br><br><br>";
 
+
+
 // creation repertoire namemachine si non existe.
-// et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles
-// /machine25pulse
+// et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles/machine25pulse
 $filecurentdir = xmlrpc_create_local_dir_transfert(xmlrpc_localfilesystem("")['path_abs_current'], $ma['hostname']);
 $curentdir = $filecurentdir['path_abs_current'];
 
@@ -279,25 +263,6 @@ else{
 }
 echo '</script>';
 ?>
-
-<?php
-    $lifdirstr = xmlrpc_remotefilesystem("", $machine);
-    $lifdir = json_decode($lifdirstr, true);
-
-    if (isset($lifdir['err'])){
-        if ( $lifdir['err'] == 'Timeout Error'){
-            $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
-        }else{
-            $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
-        }
-            echo '<h2 style="color : red;">';
-            echo "$msg";
-            echo "</h2>";
-            exit;
-    }
-    $datatree = $lifdir['data']['strjsonhierarchy'];
-?>
-
 <div id="messageaction">
 
 </div>
@@ -317,14 +282,15 @@ echo '</script>';
        <div class ="piedbrowser"><h2></h2></div>
     </div>
 
-    <div id="droite">
-        <div id ="directoryremote" class="fileshow"></div>
-        <div id ="fileshowremote"  class="fileshow"></div>
+   <div id="droite">
+            <div id ="fileshowremote" class="fileshow">
+            </div>
     </div>
 
     <div class ="piedbrowser">
         <form>
             <div>
+                <!--<input  class="btnPrimary" id ="download" type="button" name="Dowload" value="<< Download <<"> -->
             </div>
         </form>
     </div>
@@ -374,32 +340,9 @@ echo '</script>';
         user = "<?php echo $_SESSION['login']; ?>";
         jid = "<?php echo $ma['jid']; ?>";
         nameremotepath = "";
-        absolutepath ="";
         init = 1;
         local();
         remote();
-        jQuery('#directoryremote')
-            .on("changed.jstree", function (e, data) {
-                if(data.selected.length) {
-                    var pathlinux = data.instance.get_path(data.node,'/');
-                    console.log("jjj"+pathlinux)
-                    var absolutepath_array = pathlinux.split("/");
-                    var absolutepath = absolutepath_array.shift();
-                    var pathlinux_array = absolutepath_array;
-                    pathlinux = absolutepath_array.join("/");
-                    var absolutepath = "/" + absolutepath;
-                    console.log('composer: ' + pathlinux + "  "+absolutepath+"   ");
-                        remote(pathlinux);
-                }
-            })
-            .jstree({
-                'core' : {
-                    'multiple' : false,
-                    'data' : [
-                    <?php	echo $datatree; ?>
-                    ]
-                }
-            });
     });
 
     function confirmation_information(data) {
@@ -494,6 +437,7 @@ echo '</script>';
         if (typeof parentdirremote == 'undefined'){
             var parentdirremote = "";
         }
+
         jQuery( "#fileshowremote" ).load(
                         "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php",
                         {
