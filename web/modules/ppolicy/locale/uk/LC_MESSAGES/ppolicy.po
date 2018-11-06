@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:41+0100\n"
+"POT-Creation-Date: 2018-11-06 15:22+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -21,178 +21,16 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Список правил паролів"
-
-#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
-#: modules/ppolicy/includes/localSidebar.php:28
-msgid "Add a password policy"
-msgstr "Додати правило паролів"
-
-#: modules/ppolicy/default/edit.php:48
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
-msgid "Edit password policy"
-msgstr "Змінити правило паролів"
-
-#: modules/ppolicy/default/edit.php:62
-msgid "\"Maximum age\" must be greater than \"Minimum age\"."
-msgstr "«Максимальний вік» має перевищувати «Мінімальний вік»."
-
-#: modules/ppolicy/default/edit.php:95
-msgid "Attributes updated"
-msgstr "Атрибути оновлено"
-
-#: modules/ppolicy/default/edit.php:126
-msgid "Name"
-msgstr "Назва"
-
-#: modules/ppolicy/default/edit.php:132
-#: modules/ppolicy/includes/ppolicy.inc.php:48
-msgid "Description"
-msgstr "Опис"
-
-#: modules/ppolicy/default/edit.php:138
-#: modules/ppolicy/includes/ppolicy.inc.php:37
-msgid "Minimum length"
-msgstr "Мінімальна довжина"
-
-#: modules/ppolicy/default/edit.php:145
-msgid "Password quality check"
-msgstr "Перевірка якості пароля"
-
-#: modules/ppolicy/default/edit.php:152
-msgid "Minimum age (seconds)"
-msgstr "Мінімальний вік (у секундах)"
-
-#: modules/ppolicy/default/edit.php:159
-msgid "Maximum age (seconds)"
-msgstr "Максимальний вік (у секундах)"
-
-#: modules/ppolicy/default/edit.php:166
-#: modules/ppolicy/includes/ppolicy.inc.php:45
-msgid "Number of grace authentications"
-msgstr "Гранична кількість спроб розпізнавання"
-
-#: modules/ppolicy/default/edit.php:180
-msgid "Force users to change their passwords on the first connection ?"
-msgstr "Примушувати користувачів до зміни паролів під час першого з'єднання?"
-
-#: modules/ppolicy/default/edit.php:187
-msgid "Password history"
-msgstr "Журнал паролів"
-
-#: modules/ppolicy/default/edit.php:201
-msgid "Preventive user lockout ?"
-msgstr "Превентивне блокування користувача?"
-
-#: modules/ppolicy/default/edit.php:215
-msgid "Password maximum failure"
-msgstr "Максимальна кількість помилок у паролі"
-
-#: modules/ppolicy/default/edit.php:222
-msgid "Lockout duration (seconds)"
-msgstr "Тривалість блокування (у секундах)"
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
-msgid "Delete password policy"
-msgstr "Вилучити правило паролів"
-
+#: modules/ppolicy/includes/localSidebar.php:27
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
 #: modules/ppolicy/infoPackage.inc.php:46
-#: modules/ppolicy/includes/localSidebar.php:27
 msgid "Password policies"
 msgstr "Правила паролів"
 
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning: you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-"Увага! Ви увійшли до системи з використанням режиму входу за лояльністю. "
-"Будь ласка, якнайшвидше змініть ваш пароль за допомогою сторінки зміни "
-"паролів, інакше ваш обліковий запис буде заблоковано."
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning: your password has been reset by an administrator. Your LDAP account"
-" is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-"Увага! Ваш пароль було скинуто адміністратором. Права доступу вашого "
-"облікового запису LDAP обмежено. Будь ласка, якнайшвидше змініть ваш пароль "
-"за допомогою сторінки зміни пароля."
-
-#: modules/ppolicy/default/delete.php:29
-msgid "The password policy has been deleted."
-msgstr "Правило паролів було вилучено."
-
-#: modules/ppolicy/default/delete.php:41
-#, php-format
-msgid ""
-"You will delete the password policy <strong>%s</strong>. Default password "
-"policy will be applied to users that use this password policy."
-msgstr ""
-"Ви вилучаєте правило паролів <strong>%s</strong>. До записів користувачів, "
-"де використовувалося цей правило паролів, тепер буде застосовано типове "
-"правило паролів."
-
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
-msgstr "Вилучити"
-
-#: modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr "Скасувати"
-
-#: modules/ppolicy/infoPackage.inc.php:36
-msgid "Password Policy"
-msgstr "Правило паролів"
-
-#: modules/ppolicy/infoPackage.inc.php:58
-msgid "Edit a password policy"
-msgstr "Змінити правило паролів"
-
-#: modules/ppolicy/infoPackage.inc.php:63
-msgid "Delete a password policy"
-msgstr "Вилучити правило паролів"
-
-#: modules/ppolicy/infoPackage.inc.php:79
-msgid "Default "
-msgstr "Типовий "
-
-#: modules/ppolicy/infoPackage.inc.php:82
-msgid "Enable user specific password policy"
-msgstr "Увімкнути специфічне для користувача правило паролів"
-
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "Змінити атрибут ppolicy"
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "Вилучити атрибут ppolicy"
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "Додати ppolicy для користувача"
-
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "Оновити ppolicy для користувача"
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "Вилучити ppolicy для користувача"
-
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr "ppolicy"
+#: modules/ppolicy/includes/localSidebar.php:28
+#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
+msgid "Add a password policy"
+msgstr "Додати правило паролів"
 
 #: modules/ppolicy/includes/publicFunc.php:37
 #: modules/ppolicy/includes/publicFunc.php:63
@@ -279,6 +117,11 @@ msgstr "Оновлено атрибути правила паролів."
 msgid "Apply a password policy for all group users"
 msgstr "Застосувати правило паролів до усіх користувачів групи"
 
+#: modules/ppolicy/includes/ppolicy.inc.php:37
+#: modules/ppolicy/default/edit.php:138
+msgid "Minimum length"
+msgstr "Мінімальна довжина"
+
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Minimum age"
 msgstr "Мінімальний вік"
@@ -307,6 +150,11 @@ msgstr "Превентивно блокувати користувача"
 msgid "Password hash history"
 msgstr "Журнал хешів паролів"
 
+#: modules/ppolicy/includes/ppolicy.inc.php:45
+#: modules/ppolicy/default/edit.php:166
+msgid "Number of grace authentications"
+msgstr "Гранична кількість спроб розпізнавання"
+
 #: modules/ppolicy/includes/ppolicy.inc.php:46
 msgid "Reset the password"
 msgstr "Скинути пароль"
@@ -314,6 +162,11 @@ msgstr "Скинути пароль"
 #: modules/ppolicy/includes/ppolicy.inc.php:47
 msgid "Password policy quality check"
 msgstr "Перевірка якості правил паролів"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:48
+#: modules/ppolicy/default/edit.php:132
+msgid "Description"
+msgstr "Опис"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:54
 msgid ""
@@ -443,3 +296,150 @@ msgstr ""
 "причини), він вважатиметься прийнятним. Значення 2 означає, що перевірку "
 "якості виконуватиме сервер, а якщо сервер не зможе перевірити пароль, буде "
 "повернуто повідомлення про помилку, а використання пароля буде заборонено."
+
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "Змінити атрибут ppolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "Вилучити атрибут ppolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "Додати ppolicy для користувача"
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "Оновити ppolicy для користувача"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "Вилучити ppolicy для користувача"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "ppolicy"
+
+#: modules/ppolicy/default/edit.php:48
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
+msgid "Edit password policy"
+msgstr "Змінити правило паролів"
+
+#: modules/ppolicy/default/edit.php:62
+msgid "\"Maximum age\" must be greater than \"Minimum age\"."
+msgstr "«Максимальний вік» має перевищувати «Мінімальний вік»."
+
+#: modules/ppolicy/default/edit.php:95
+msgid "Attributes updated"
+msgstr "Атрибути оновлено"
+
+#: modules/ppolicy/default/edit.php:126
+msgid "Name"
+msgstr "Назва"
+
+#: modules/ppolicy/default/edit.php:145
+msgid "Password quality check"
+msgstr "Перевірка якості пароля"
+
+#: modules/ppolicy/default/edit.php:152
+msgid "Minimum age (seconds)"
+msgstr "Мінімальний вік (у секундах)"
+
+#: modules/ppolicy/default/edit.php:159
+msgid "Maximum age (seconds)"
+msgstr "Максимальний вік (у секундах)"
+
+#: modules/ppolicy/default/edit.php:180
+msgid "Force users to change their passwords on the first connection ?"
+msgstr "Примушувати користувачів до зміни паролів під час першого з'єднання?"
+
+#: modules/ppolicy/default/edit.php:187
+msgid "Password history"
+msgstr "Журнал паролів"
+
+#: modules/ppolicy/default/edit.php:201
+msgid "Preventive user lockout ?"
+msgstr "Превентивне блокування користувача?"
+
+#: modules/ppolicy/default/edit.php:215
+msgid "Password maximum failure"
+msgstr "Максимальна кількість помилок у паролі"
+
+#: modules/ppolicy/default/edit.php:222
+msgid "Lockout duration (seconds)"
+msgstr "Тривалість блокування (у секундах)"
+
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Увага! Ви увійшли до системи з використанням режиму входу за лояльністю. "
+"Будь ласка, якнайшвидше змініть ваш пароль за допомогою сторінки зміни "
+"паролів, інакше ваш обліковий запис буде заблоковано."
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Увага! Ваш пароль було скинуто адміністратором. Права доступу вашого "
+"облікового запису LDAP обмежено. Будь ласка, якнайшвидше змініть ваш пароль "
+"за допомогою сторінки зміни пароля."
+
+#: modules/ppolicy/default/delete.php:29
+msgid "The password policy has been deleted."
+msgstr "Правило паролів було вилучено."
+
+#: modules/ppolicy/default/delete.php:41
+#, php-format
+msgid ""
+"You will delete the password policy <strong>%s</strong>. Default password "
+"policy will be applied to users that use this password policy."
+msgstr ""
+"Ви вилучаєте правило паролів <strong>%s</strong>. До записів користувачів, "
+"де використовувалося цей правило паролів, тепер буде застосовано типове "
+"правило паролів."
+
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "Вилучити"
+
+#: modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Список правил паролів"
+
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
+msgid "Delete password policy"
+msgstr "Вилучити правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:36
+msgid "Password Policy"
+msgstr "Правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:58
+msgid "Edit a password policy"
+msgstr "Змінити правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:63
+msgid "Delete a password policy"
+msgstr "Вилучити правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:79
+msgid "Default "
+msgstr "Типовий "
+
+#: modules/ppolicy/infoPackage.inc.php:82
+msgid "Enable user specific password policy"
+msgstr "Увімкнути специфічне для користувача правило паролів"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 15:41+0100\n"
+"POT-Creation-Date: 2018-11-06 15:22+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -21,45 +21,21 @@ msgstr ""
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/services/infoPackage.inc.php:32
-msgid "Services management"
-msgstr ""
-
-#: modules/services/infoPackage.inc.php:36
-#: modules/services/includes/panels/services.inc.php:30
-msgid "Services"
-msgstr ""
-
-#: modules/services/infoPackage.inc.php:42
-#: modules/services/infoPackage.inc.php:45
 #: modules/services/control/localSidebar.php:25
 #: modules/services/control/index.php:26
+#: modules/services/infoPackage.inc.php:42
+#: modules/services/infoPackage.inc.php:45
 msgid "Core services"
 msgstr ""
 
-#: modules/services/infoPackage.inc.php:49
-msgid "Others services"
-msgstr ""
-
-#: modules/services/infoPackage.inc.php:76
-#: modules/services/control/localSidebar.php:31
-#: modules/services/control/log.php:38
-msgid "Services log"
-msgstr ""
-
-#: modules/services/infoPackage.inc.php:88
-#: modules/services/includes/panels/system.inc.php:48
-msgid "Reboot"
-msgstr ""
-
-#: modules/services/infoPackage.inc.php:92
-#: modules/services/includes/panels/system.inc.php:49
-msgid "Poweroff"
-msgstr ""
-
-#: modules/services/control/others.php:29
 #: modules/services/control/localSidebar.php:28
+#: modules/services/control/others.php:29
 msgid "Other services"
+msgstr ""
+
+#: modules/services/control/localSidebar.php:31
+#: modules/services/control/log.php:38 modules/services/infoPackage.inc.php:76
+msgid "Services log"
 msgstr ""
 
 #: modules/services/control/ajaxOthersServicesFilter.php:28
@@ -88,8 +64,8 @@ msgid "View log"
 msgstr ""
 
 #: modules/services/control/ajaxOthersServicesFilter.php:49
-#: modules/services/control/ajaxServicesFilter.php:76
 #: modules/services/control/ajaxLogFilter.php:57
+#: modules/services/control/ajaxServicesFilter.php:76
 msgid "Service"
 msgstr ""
 
@@ -128,6 +104,11 @@ msgstr ""
 msgid "%s service log"
 msgstr ""
 
+#: modules/services/includes/panels/services.inc.php:30
+#: modules/services/infoPackage.inc.php:36
+msgid "Services"
+msgstr ""
+
 #: modules/services/includes/panels/services.inc.php:44
 #, php-format
 msgid "%d inactive service"
@@ -149,4 +130,22 @@ msgstr ""
 
 #: modules/services/includes/panels/system.inc.php:43
 msgid "The server will be poweroff. Are you sure ?"
+msgstr ""
+
+#: modules/services/includes/panels/system.inc.php:48
+#: modules/services/infoPackage.inc.php:88
+msgid "Reboot"
+msgstr ""
+
+#: modules/services/includes/panels/system.inc.php:49
+#: modules/services/infoPackage.inc.php:92
+msgid "Poweroff"
+msgstr ""
+
+#: modules/services/infoPackage.inc.php:32
+msgid "Services management"
+msgstr ""
+
+#: modules/services/infoPackage.inc.php:49
+msgid "Others services"
 msgstr ""
