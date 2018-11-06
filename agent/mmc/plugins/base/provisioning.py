@@ -27,7 +27,7 @@ from ConfigParser import ConfigParser, NoSectionError, NoOptionError
 from twisted.internet import defer
 from mmc.support.mmctools import Singleton
 
-
+logger = logging.getLogger("glpi")
 class ProvisioningManager(Singleton):
     """
     Class that are able to do provisioning must register to this class.
@@ -37,7 +37,7 @@ class ProvisioningManager(Singleton):
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def register(self, name, klass):
         """
@@ -168,7 +168,7 @@ class ProvisionerI:
         @param conffile: provisioner configuration file
         @param name: the provisioner name
         """
-        self.logger = logging.getLogger()
+        self.logger = logger
         self.config = klass(conffile, "provisioning_" + name)
 
     def doProvisioning(self, authtoken):

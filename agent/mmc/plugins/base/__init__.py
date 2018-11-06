@@ -84,6 +84,8 @@ REVISION = scmRevision("$Rev$")
 NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion',
                 'createAuthToken', 'tokenAuthenticate']
 
+log = logging.getLogger("glpi")
+
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -98,7 +100,7 @@ def activate():
      @return: return True if this module can be activate
      @rtype: boolean
     """
-    logger = logging.getLogger()
+    logger = log
     try:
         ldapObj = ldapUserGroupControl()
     except ldap.INVALID_CREDENTIALS:
@@ -644,7 +646,7 @@ class LdapUserGroupControl:
         self.conffile = configFile
         self.config = PluginConfigFactory.new(BasePluginConfig, "base", self.conffile)
 
-        self.logger = logging.getLogger()
+        self.logger = log
 
         self.baseDN = self.config.baseDN
         self.baseGroupsDN = self.config.getdn("ldap", "baseGroupsDN")
@@ -2454,9 +2456,9 @@ class Computers(ldapUserGroupControl, ComputerI):
         dn = "objectUUID=" + uuid + "," + self.baseComputersDN
         if comment:
             data["displayName"] = [comment]
-        logging.getLogger().info("adding a computer")
-        logging.getLogger().info(dn)
-        logging.getLogger().info(data)
+        log.info("adding a computer")
+        log.info(dn)
+        log.info(data)
         self.l.add_s(dn, ldap.modlist.addModlist(data))
         return uuid
 

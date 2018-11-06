@@ -32,7 +32,7 @@ except ImportError:
     pass
 from mmc.plugins.services.config import ServicesConfig
 
-logger = logging.getLogger()
+logger = logging.getLogger("mmc")
 
 VERSION = "4.5"
 APIVERSION = "0:1:0"

@@ -29,6 +29,8 @@ FIXME: deprecated ?
 import logging
 import re
 
+log = logging.getLogger("support")
+
 class errorMessage:
     def __init__(self,funcName, message = ''):
       self.funcName = funcName
@@ -40,7 +42,7 @@ class errorMessage:
       self.message=self.message+str(message)
 
     def errorArray(self):
-      logger = logging.getLogger()
+      logger = log
       if not logger.handlers:
           # No handler defined
           # We create a default handler that writes to stderr

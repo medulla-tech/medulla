@@ -25,6 +25,7 @@ from sqlalchemy.orm import Query
 from sqlalchemy.exc import DBAPIError
 
 import logging
+logger = logging.getLogger("mmc")
 
 def unique(s):
     """Return a list of the elements in s, but without duplicates.
@@ -116,17 +117,17 @@ def create_method(m):
             # see http://dev.mysql.com/doc/refman/5.1/en/error-messages-client.html
             # we try to handle only situation where a reconnection worth a try
             if e.orig.args[0] == 2013: # Lost connection to MySQL server during query error, but we do not raise the exception (will attempt again)
-                logging.getLogger().warn("Lost connection to MySQL server during query")
+                logger.warn("Lost connection to MySQL server during query")
             elif e.orig.args[0] == 2006: # MySQL server has gone away, but we do not raise the exception (will attempt again)
-                logging.getLogger().warn("MySQL server connection has gone away")
+                logger.warn("MySQL server connection has gone away")
             elif e.orig.args[0] == 2002: # Can't contact SQL server, give up
-                logging.getLogger().error("MySQL server is unreachable by socket while doing query")
+                logger.error("MySQL server is unreachable by socket while doing query")
                 raise e
             elif e.orig.args[0] == 2003: # Can't contact SQL server, give up
-                logging.getLogger().error("MySQL server is unreachable by network while doing query")
+                logger.error("MySQL server is unreachable by network while doing query")
                 raise e
             else: # Other SQL error, give-up
-                logging.getLogger().error("Unknown MySQL error while doing query")
+                logger.error("Unknown MySQL error while doing query")
                 raise e
 
             # handle cases where reco can be attempted again

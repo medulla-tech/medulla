@@ -33,7 +33,7 @@ VERSION = "4.5"
 APIVERSION = "0:1:0"
 REVISION = ""
 
-logger = logging.getLogger()
+logger = logging.getLogger("dashboard")
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION

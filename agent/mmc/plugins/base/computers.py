@@ -28,6 +28,7 @@ Computer Manager is used to call methods giving informations on computers whatev
 import logging
 from mmc.support.mmctools import Singleton, SingletonN
 
+logger = logging.getLogger("glpi")
 
 class ComputerI:
     __metaclass__ = SingletonN
@@ -201,7 +202,7 @@ class ComputerManager(Singleton):
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logging.getLogger()
+        self.logger = logger
 
     def select(self, name):
         self.logger.info("Selecting computer manager: %s" % name)
