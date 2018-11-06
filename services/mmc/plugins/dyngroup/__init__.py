@@ -25,7 +25,7 @@ MMC Dyngroup Backend plugin
 It provide an API to work with the informations in the Dyngroup database.
 It also provide access to the QueryManager API
 """
-
+import os
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 

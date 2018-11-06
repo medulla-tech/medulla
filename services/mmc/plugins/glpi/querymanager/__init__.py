@@ -124,7 +124,10 @@ def queryGroups():
     # REGISTER
     ret.append(['Register',
                 [['Register key',
-                  'Microsoft Windows keys registers']]])
+                  'Microsoft Windows keys registers'],
+                ['Register key value',
+                  'Microsoft Windows keys registers value']]])
+    #PRESENCE XMPP
     ret.append(['Presence',
                 [['Online computer', 'Presence of the machine Yes/No']
                  ]])
