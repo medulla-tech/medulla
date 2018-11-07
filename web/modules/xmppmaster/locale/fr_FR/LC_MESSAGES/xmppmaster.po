@@ -128,11 +128,11 @@ msgstr "Utilisateur"
 #: modules/xmppmaster/xmppmaster/editqa.php:63
 #, php-format
 msgid "Edit custom quick action : %s"
-msgstr ""
+msgstr "Editer l'action rapide personnalisée : %s"
 
 #: modules/xmppmaster/xmppmaster/editqa.php:65
 msgid "Create a custom quick action"
-msgstr ""
+msgstr "Créer une action rapide personnalisée"
 
 #: modules/xmppmaster/xmppmaster/editqa.php:78
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99

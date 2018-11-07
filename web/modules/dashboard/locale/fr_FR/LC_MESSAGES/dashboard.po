@@ -88,7 +88,7 @@ msgstr "Afficher les mises à jour"
 #: modules/dashboard/includes/panels/clients_updates.inc.php:50
 #: modules/dashboard/includes/panels/product_updates.inc.php:52
 msgid "No updates available."
-msgstr "Aucune mises à jour disponible"
+msgstr "Aucune mise à jour disponible"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:52
 msgid "updates available."
@@ -100,7 +100,7 @@ msgstr "système à jour"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:65
 msgid "Updates planned"
-msgstr "Mises à jour planifiés"
+msgstr "Mises à jour planifiées"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:66
 msgid "Updates availables"
