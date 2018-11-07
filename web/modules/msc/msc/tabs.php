@@ -61,18 +61,6 @@ if ($_GET['uuid']) {
         $p->addTop(sprintf(_T("%s's computer secure control", 'msc'), $machine->hostname), "modules/msc/msc/header.php");
         //show list packages
         $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
-        if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
-        // there is not bundle with xmpp
-            $p->addTab("tabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
-            $p->addTab("tablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
-        }
-        else{
-            $_GET['start'] = 0;
-            $_GET['end'] = $maxperpage-1;
-            //function addTab($id, $tabtitle, $pagetitle, $file, $params = array()) {
-            $p->addTab("tablogs", _T("Logs", 'msc'), "", "modules/xmppmaster/xmppmaster/logs/logbymachine.php",$_GET); //array('uuid' => $_GET)
-
-        }
         $p->display();
     }
 } elseif ($_GET['gid']) {
@@ -91,13 +79,6 @@ if ($_GET['uuid']) {
                 $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid' => $_GET['gid']));
             }
         }
-        if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
-            $p->addTab("grouptablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid' => $_GET['gid']));
-        }
-        else{
-            $p->addTab("grouptablogs", _T("Logs", 'msc'), "", "modules/xmppmaster/xmppmaster/logs/logbygrpmachine.php", $_GET);
-        }
-
     }
     $p->display();
 } else {
