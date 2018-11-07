@@ -63,7 +63,7 @@ for ($i=0;$i< count( $dd[0] );$i++){
     if($param['gid'] != ""){
         $gr = xmlCall("dyngroup.get_group", array($param['gid'], false, false));
         $listnamegroup[] = _T("Group : ") . $gr['name'];
-        $param['groupname'] = $_GET["groupname"];
+        $param['groupname'] = isset($_GET["groupname"]) ? $_GET["groupname"] : "";
         $param['machname'] =  "";
     }
     else{
@@ -78,7 +78,7 @@ for ($i=0;$i< count( $dd[0] );$i++){
     $param['login']  = $dd[2][$i];
     $param['os']     = $dd[3][$i];
     $param['date']   = $startdate[$i];
-    $param['namecmd'] = $_GET["namecmd"];
+    $param['namecmd'] =  isset($_GET["namecmd"]) ? $_GET["namecmd"] : "";
     $logs[] = $resultmachine;
     $params[] = $param;
 }
