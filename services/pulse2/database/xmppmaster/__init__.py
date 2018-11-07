@@ -1090,6 +1090,22 @@ class XmppMasterDatabase(DatabaseHelper):
                   endcmd = None,
                   macadress = None
                   ):
+        """
+        parameters
+        startcmd and endcmd  int(timestamp) either str(datetime)
+        """
+        createcommand = datetime.now()
+        try:
+            start=int(startcmd)
+            end=int(endcmd)
+            print start
+            print end
+            startcmd = datetime.fromtimestamp(start).strftime("%Y-%m-%d %H:%M:%S")
+            endcmd = datetime.fromtimestamp(end).strftime("%Y-%m-%d %H:%M:%S")
+        except Exception as e:
+            #logger.error(str(e))
+            pass
+
         #recupere login command
         if login == "":
             login = self.loginbycommand(idcommand)[0]
@@ -1108,13 +1124,13 @@ class XmppMasterDatabase(DatabaseHelper):
             new_deploy.login = login
             new_deploy.startcmd =startcmd
             new_deploy.endcmd = endcmd
-            new_deploy.start = datetime.now()
+            new_deploy.start = createcommand
             new_deploy.macadress = macadress
             new_deploy.title = title
             session.add(new_deploy)
             session.commit()
             session.flush()
-        except Exception, e:
+        except Exception as e:
             logger.error(str(e))
         return new_deploy.id
 

@@ -740,6 +740,8 @@ class MscDatabase(DatabaseHelper):
             resultat['title']       = objdeploy.Commands.title
             resultat['macadress']   = objdeploy.Target.target_macaddr
             resultat['login']       = objdeploy.Commands.creator
+            resultat['startd']      = time.mktime(objdeploy.CommandsOnHost.start_date.timetuple())
+            resultat['endd']        = time.mktime(objdeploy.CommandsOnHost.end_date.timetuple())
             result.append(resultat)
         for x in q:
             #print x.CommandsOnHost.id
