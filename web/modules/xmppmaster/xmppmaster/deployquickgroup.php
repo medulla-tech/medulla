@@ -195,11 +195,11 @@ input[type="text"] {
    var groupinfo = <? echo json_encode($_GET); ?>
 
         jQuery(function() {
-            var t = jQuery('#select option:selected').text();
+            var t = jQuery('#select option:selected').val();
             jQuery('#namecmd').val(t);
         });
         jQuery('#select').on('change', function() {
-            var t = jQuery('#select option:selected').text();
+            var t = jQuery('#select option:selected').val();
             jQuery('#namecmd').val(t);
         });
 
