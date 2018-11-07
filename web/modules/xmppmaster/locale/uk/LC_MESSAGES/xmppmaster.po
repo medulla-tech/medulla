@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-06 15:22+0100\n"
+"POT-Creation-Date: 2018-11-07 10:09+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -22,10 +22,198 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: modules/xmppmaster/xmppmaster/auditdeploy.php:34
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:156
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:49
+msgid "Console"
+msgstr "Консоль"
+
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:177
+#: modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremotene.php:80
+#: modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php:79
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:67
+#, php-format
+msgid "Sorry, the remote machine [%s] takes too much time to answer."
+msgstr ""
+"Вибачте, віддалений комп'ютер [%s] не надав відповіді протягом відведеного "
+"для цього часу."
+
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:179
+#: modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremotene.php:82
+#: modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php:81
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:69
+#, php-format
+msgid "Error : %s"
+msgstr "Помилка: %s"
+
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:220
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:108
+msgid "Press return key to start your command"
+msgstr "Натисніть Enter, щоб розпочати вашу команду"
+
+#: modules/xmppmaster/xmppmaster/wakeonlan.php:35
+msgid "Wake On Lan"
+msgstr "Пробудження з LAN"
+
+#: modules/xmppmaster/xmppmaster/wakeonlan.php:41
+msgid "Mac address"
+msgstr "MAC-адреса"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:235
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:232
+msgid "File manager"
+msgstr "Керування файлами"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:470
+msgid "Copy remote folder"
+msgstr "Копіювати віддалену теку"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:474
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:476
+msgid "to local folder"
+msgstr "до локальної теки"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:500
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:501
+msgid "The folder copy has been requested successfully"
+msgstr "Запит щодо копіювання теки успішно надіслано"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:524
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:524
+msgid "Copy remote file"
+msgstr "Копіювати віддалений файл"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:530
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:530
+msgid "to local File"
+msgstr "до локального файла"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:554
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:554
+msgid "The file copy has been requested successfully"
+msgstr "Запит щодо копіювання файла успішно надіслано"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:71
+msgid "detaildeploy"
+msgstr "докладне розгортання"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:87
+#: modules/xmppmaster/xmppmaster/deployxmpp.php:39
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:80
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:216
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:86
+msgid "Deployment"
+msgstr "Розгортання"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:88
+msgid "Name"
+msgstr "Назва"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:89
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:82
+msgid "Start"
+msgstr "Пуск"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:83
+msgid "State"
+msgstr "Стан"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:91
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:84
+msgid "Package"
+msgstr "Пакунок"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:92
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:230
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
+msgid "User"
+msgstr "Користувач"
+
+#: modules/xmppmaster/xmppmaster/topology.php:59
+msgid "Topology Pulse"
+msgstr "Пульс топології"
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:54
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:89
+msgid "Os"
+msgstr "ОС"
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:65
+msgid "Group : "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:75
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:93
+msgid "Computer"
+msgstr "Комп'ютер"
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:86
+msgid "Custom Command"
+msgstr "Нетипова команда"
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:90
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:220
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
+msgid "Start date"
+msgstr "Дата початку"
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:92
+msgid "Type"
+msgstr "Тип"
+
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:27
+msgid "My tasks"
+msgstr "Ваші завдання"
+
 #: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:28
+#: modules/xmppmaster/xmppmaster/auditdeploy.php:34
 msgid "All users tasks"
 msgstr "Усі завдання користувачів"
+
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:29
+#: modules/xmppmaster/xmppmaster/auditmypastdeploys.php:34
+msgid "My past tasks"
+msgstr "Ваші останні завдання"
+
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:30
+#: modules/xmppmaster/xmppmaster/auditpastdeploys.php:34
+msgid "All users past tasks"
+msgstr "Останні завдання усіх користувачів"
+
+#: modules/xmppmaster/xmppmaster/editqa.php:63
+#, php-format
+msgid "Edit custom quick action : %s"
+msgstr "Змінити нетипову швидку дію: %s"
+
+#: modules/xmppmaster/xmppmaster/editqa.php:65
+msgid "Create a custom quick action"
+msgstr "Створити нетипову швидку дію"
+
+#: modules/xmppmaster/xmppmaster/editqa.php:78
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
+msgid "Operating System"
+msgstr "Операційна система"
+
+#: modules/xmppmaster/xmppmaster/editqa.php:80
+msgid "Command name"
+msgstr "Назва команди"
+
+#: modules/xmppmaster/xmppmaster/editqa.php:82
+msgid "Command"
+msgstr "Команда"
+
+#: modules/xmppmaster/xmppmaster/editqa.php:84
+msgid "Command description"
+msgstr "Опис команди"
+
+#: modules/xmppmaster/xmppmaster/removeqa.php:35
+#, php-format
+msgid "Delete this Quick Action :%s"
+msgstr "Вилучити цю швидку дію: %s"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:26
 #: modules/xmppmaster/infoPackage.inc.php:54
@@ -56,250 +244,47 @@ msgstr "Керування файлами"
 msgid "Machines Topology"
 msgstr "Топологія комп'ютерів"
 
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:156
-#: modules/xmppmaster/xmppmaster/consolexmpp.php:49
-msgid "Console"
-msgstr "Консоль"
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
+msgid "Custom command name"
+msgstr "Нетипова назва команди"
 
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:177
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:289
-#: modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremotene.php:60
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:67
-#: modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php:59
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:296
-#, php-format
-msgid "Sorry, the remote machine [%s] takes too much time to answer."
-msgstr ""
-"Вибачте, віддалений комп'ютер [%s] не надав відповіді протягом відведеного "
-"для цього часу."
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
+msgid "Description"
+msgstr "Опис"
 
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:179
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:291
-#: modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremotene.php:62
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:69
-#: modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php:61
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:298
-#, php-format
-msgid "Error : %s"
-msgstr "Помилка: %s"
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:106
+msgid "Edit a Quick Action"
+msgstr "Змінити швидку дію"
 
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:220
-#: modules/xmppmaster/xmppmaster/consolexmpp.php:108
-msgid "Press return key to start your command"
-msgstr "Натисніть Enter, щоб розпочати вашу команду"
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:107
+msgid "Share a Quick Action"
+msgstr "Оприлюднити швидку дію"
 
-#: modules/xmppmaster/xmppmaster/ActionQuickGroup.php:36
-msgid "Quick action results"
-msgstr "Результати швидких дій"
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:108
+msgid "Delete a Quick Action"
+msgstr "Вилучити швидку дію"
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
-msgid "Planned tasks"
-msgstr "Заплановані завдання"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
-msgid "Delete deploy"
-msgstr "Вилучити розгорнуте"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:86
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:216
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:87
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:80
-#: modules/xmppmaster/xmppmaster/deployxmpp.php:39
-msgid "Deployment"
-msgstr "Розгортання"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:219
-msgid "Target"
-msgstr "Призначення"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:220
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:90
-msgid "Start date"
-msgstr "Дата початку"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:230
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:92
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
-msgid "User"
-msgstr "Користувач"
-
-#: modules/xmppmaster/xmppmaster/editqa.php:63
-#, php-format
-msgid "Edit custom quick action : %s"
-msgstr "Змінити нетипову швидку дію: %s"
-
-#: modules/xmppmaster/xmppmaster/editqa.php:65
-msgid "Create a custom quick action"
-msgstr "Створити нетипову швидку дію"
-
-#: modules/xmppmaster/xmppmaster/editqa.php:78
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
-msgid "Operating System"
-msgstr "Операційна система"
-
-#: modules/xmppmaster/xmppmaster/editqa.php:80
-msgid "Command name"
-msgstr "Назва команди"
-
-#: modules/xmppmaster/xmppmaster/editqa.php:82
-msgid "Command"
-msgstr "Команда"
-
-#: modules/xmppmaster/xmppmaster/editqa.php:84
-msgid "Command description"
-msgstr "Опис команди"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:42
-msgid "Current tasks (last 24 hours)"
-msgstr "Поточні завдання (останні 24 години)"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:47
-msgid "Past tasks (last 3 months)"
-msgstr "Минулі завдання (останні 3 місяці)"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:71
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-msgid "detaildeploy"
-msgstr "докладне розгортання"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:221
-msgid "Status"
-msgstr "Стан"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:222
-msgid "Total Machines"
-msgstr "Загалом машин"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:223
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:207
-msgid "In progress"
-msgstr "Виконується"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:224
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:205
-msgid "Success"
-msgstr "Успіх"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:225
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:206
-msgid "Error"
-msgstr "Помилка"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:226
-msgid "Waiting Wol"
-msgstr "Очікування WOL"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:227
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:209
-msgid "Timed out"
-msgstr "Перевищено час"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:210
-msgid "Aborted"
-msgstr "Перервано"
-
-#: modules/xmppmaster/xmppmaster/auditmypastdeploys.php:34
-#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:29
-msgid "My past tasks"
-msgstr "Ваші останні завдання"
-
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:230
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:230
 #: modules/xmppmaster/xmppmaster/listfichierconf.php:158
+#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:230
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:230
 msgid "Edit config file"
 msgstr "Налаштування файла редакцій"
-
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:329
-msgid "Save Configuration"
-msgstr "Зберегти налаштування"
-
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:329
-msgid "File :"
-msgstr "Файл:"
-
-#: modules/xmppmaster/xmppmaster/auditpastdeploys.php:34
-#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:30
-msgid "All users past tasks"
-msgstr "Останні завдання усіх користувачів"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:42
 msgid "Quick monitoring"
 msgstr "Швидке спостереження"
 
-#: modules/xmppmaster/xmppmaster/consolexmpp.php:47
-msgid "Console Agent Relay Server"
-msgstr "Консольний агент резервного сервера"
+#: modules/xmppmaster/xmppmaster/deployxmpp.php:88
+msgid "Select a machine"
+msgstr "Виберіть машину"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:249
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:253
-msgid "File manager"
-msgstr "Керування файлами"
+#: modules/xmppmaster/xmppmaster/deployxmpp.php:96
+msgid "Select a package"
+msgstr "Виберіть пакунок"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:528
-msgid "Copy"
-msgstr "Копіювати"
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:528
-msgid "Remote Folder"
-msgstr "Віддалена тека"
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:532
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:540
-msgid "to local folder"
-msgstr "до локальної теки"
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:557
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:566
-msgid "The folder copy has been requested successfully"
-msgstr "Запит щодо копіювання теки успішно надіслано"
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:580
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:590
-msgid "Copy remote file"
-msgstr "Копіювати віддалений файл"
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:586
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:596
-msgid "to local File"
-msgstr "до локального файла"
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:610
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:620
-msgid "The file copy has been requested successfully"
-msgstr "Запит щодо копіювання файла успішно надіслано"
-
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
-msgid "Edit config files"
-msgstr "Редагувати файли налаштувань"
-
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:102
-msgid "Config file"
-msgstr "Назва файла налаштувань"
-
-#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:27
-msgid "My tasks"
-msgstr "Ваші завдання"
-
-#: modules/xmppmaster/xmppmaster/topology.php:59
-msgid "Topology Pulse"
-msgstr "Пульс топології"
-
-#: modules/xmppmaster/xmppmaster/customQA.php:38
-#, php-format
-msgid "Quick action list for user %s"
-msgstr "Список швидких дій для користувача %s"
-
-#: modules/xmppmaster/xmppmaster/customQA.php:45
-msgid "Create new Quick Action"
-msgstr "Створити швидку дію"
+#: modules/xmppmaster/xmppmaster/index.php:38
+msgid "My Tasks ["
+msgstr "Ваші завдання ["
 
 #: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:68
 msgid "Sorry the operating system of the machine is"
@@ -313,85 +298,35 @@ msgstr "Нетипову швидку дію визначено для опер�
 msgid "Sorry the machine is off"
 msgstr "Вибачте, комп'ютер вимкнено"
 
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:88
-msgid "Name"
-msgstr "Назва"
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:472
+msgid "Copy"
+msgstr "Копіювати"
 
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:89
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:82
-msgid "Start"
-msgstr "Пуск"
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:472
+msgid "Remote Folder"
+msgstr "Віддалена тека"
 
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:83
-msgid "State"
-msgstr "Стан"
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:81
+msgid "Computer Name"
+msgstr "Назва комп'ютера"
 
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:91
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:84
-msgid "Package"
-msgstr "Пакунок"
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:47
+msgid "Console Agent Relay Server"
+msgstr "Консольний агент резервного сервера"
 
-#: modules/xmppmaster/xmppmaster/shareqa.php:60
-msgid "Share the Quick Action"
-msgstr "Оприлюднити швидку дію"
+#: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:65
+#, php-format
+msgid ""
+"Sorry the operating system of the machine %s is [%s].<br>The custom QA is "
+"defined for operating system [%s]"
+msgstr ""
+"Вибачте, операційною системою на комп'ютері %s є [%s].<br>Нетипову швидку "
+"дію визначено для операційної системи [%s]"
 
-#: modules/xmppmaster/xmppmaster/shareqa.php:83
-msgid "User Already Owning Quick Action"
-msgstr "Користувач вже є власником швидкої дії"
-
-#: modules/xmppmaster/xmppmaster/shareqa.php:94
-msgid "Select Users"
-msgstr "Виберіть користувачів"
-
-#: modules/xmppmaster/xmppmaster/shareqa.php:99
-msgid "Available users"
-msgstr "Доступні користувачі"
-
-#: modules/xmppmaster/xmppmaster/shareqa.php:104
-msgid "Selected users"
-msgstr "Вибрані користувачі"
-
-#: modules/xmppmaster/xmppmaster/wakeonlan.php:35
-msgid "Wake On Lan"
-msgstr "Пробудження з LAN"
-
-#: modules/xmppmaster/xmppmaster/wakeonlan.php:41
-msgid "Mac address"
-msgstr "MAC-адреса"
-
-#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:142
-msgid "Quick action on machine"
-msgstr "Виконати швидку дію на комп'ютері"
-
-#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:149
-msgid "Name of Quick Action  :"
-msgstr "Назва швидкої дії:"
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:54
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:89
-msgid "Os"
-msgstr "ОС"
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:86
-msgid "Custom Command"
-msgstr "Нетипова команда"
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:92
-msgid "Type"
-msgstr "Тип"
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:93
-msgid "Computer"
-msgstr "Комп'ютер"
-
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
-msgid "Deployment [machine "
-msgstr "Розгортання [машина "
-
-#: modules/xmppmaster/xmppmaster/logs/logbygrpmachine.php:45
-msgid "Computer deploy group"
-msgstr "Група розгортання комп'ютерів"
+#: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:71
+#, php-format
+msgid "Sorry the machine '%s' is off"
+msgstr "Вибачте, комп'ютер «%s» вимкнено"
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
 msgid "Computer deploy"
@@ -437,60 +372,134 @@ msgstr "Кількість розгортань із перевищенням ч
 msgid "Deployment summary"
 msgstr "Резюме розгортання"
 
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:205
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:224
+msgid "Success"
+msgstr "Успіх"
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:206
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:225
+msgid "Error"
+msgstr "Помилка"
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:207
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:223
+msgid "In progress"
+msgstr "Виконується"
+
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:208
 msgid "Waiting"
 msgstr "Очікування"
 
-#: modules/xmppmaster/xmppmaster/index.php:38
-msgid "My Tasks ["
-msgstr "Ваші завдання ["
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:209
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:227
+msgid "Timed out"
+msgstr "Перевищено час"
 
-#: modules/xmppmaster/xmppmaster/removeqa.php:35
-#, php-format
-msgid "Delete this Quick Action :%s"
-msgstr "Вилучити цю швидку дію: %s"
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:210
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
+msgid "Aborted"
+msgstr "Перервано"
 
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:81
-msgid "Computer Name"
-msgstr "Назва комп'ютера"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
+msgid "Deployment [machine "
+msgstr "Розгортання [машина "
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:536
-msgid "Copy remote folder"
-msgstr "Копіювати віддалену теку"
+#: modules/xmppmaster/xmppmaster/logs/logbygrpmachine.php:45
+msgid "Computer deploy group"
+msgstr "Група розгортання комп'ютерів"
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
-msgid "Custom command name"
-msgstr "Нетипова назва команди"
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:42
+msgid "Current tasks (last 24 hours)"
+msgstr "Поточні завдання (останні 24 години)"
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
-msgid "Description"
-msgstr "Опис"
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:47
+msgid "Past tasks (last 3 months)"
+msgstr "Минулі завдання (останні 3 місяці)"
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:106
-msgid "Edit a Quick Action"
-msgstr "Змінити швидку дію"
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:219
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
+msgid "Target"
+msgstr "Призначення"
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:107
-msgid "Share a Quick Action"
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:221
+msgid "Status"
+msgstr "Стан"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:222
+msgid "Total Machines"
+msgstr "Загалом машин"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:226
+msgid "Waiting Wol"
+msgstr "Очікування WOL"
+
+#: modules/xmppmaster/xmppmaster/ActionQuickGroup.php:36
+msgid "Quick action results"
+msgstr "Результати швидких дій"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
+msgid "Planned tasks"
+msgstr "Заплановані завдання"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
+msgid "Delete deploy"
+msgstr "Вилучити розгорнуте"
+
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
+msgid "Edit config files"
+msgstr "Редагувати файли налаштувань"
+
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:102
+msgid "Config file"
+msgstr "Назва файла налаштувань"
+
+#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:329
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
+msgid "Save Configuration"
+msgstr "Зберегти налаштування"
+
+#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:329
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
+msgid "File :"
+msgstr "Файл:"
+
+#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:142
+msgid "Quick action on machine"
+msgstr "Виконати швидку дію на комп'ютері"
+
+#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:149
+msgid "Name of Quick Action  :"
+msgstr "Назва швидкої дії:"
+
+#: modules/xmppmaster/xmppmaster/shareqa.php:60
+msgid "Share the Quick Action"
 msgstr "Оприлюднити швидку дію"
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:108
-msgid "Delete a Quick Action"
-msgstr "Вилучити швидку дію"
+#: modules/xmppmaster/xmppmaster/shareqa.php:83
+msgid "User Already Owning Quick Action"
+msgstr "Користувач вже є власником швидкої дії"
 
-#: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:65
-#, php-format
-msgid ""
-"Sorry the operating system of the machine %s is [%s].<br>The custom QA is "
-"defined for operating system [%s]"
-msgstr ""
-"Вибачте, операційною системою на комп'ютері %s є [%s].<br>Нетипову швидку "
-"дію визначено для операційної системи [%s]"
+#: modules/xmppmaster/xmppmaster/shareqa.php:94
+msgid "Select Users"
+msgstr "Виберіть користувачів"
 
-#: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:71
+#: modules/xmppmaster/xmppmaster/shareqa.php:99
+msgid "Available users"
+msgstr "Доступні користувачі"
+
+#: modules/xmppmaster/xmppmaster/shareqa.php:104
+msgid "Selected users"
+msgstr "Вибрані користувачі"
+
+#: modules/xmppmaster/xmppmaster/customQA.php:38
 #, php-format
-msgid "Sorry the machine '%s' is off"
-msgstr "Вибачте, комп'ютер «%s» вимкнено"
+msgid "Quick action list for user %s"
+msgstr "Список швидких дій для користувача %s"
+
+#: modules/xmppmaster/xmppmaster/customQA.php:45
+msgid "Create new Quick Action"
+msgstr "Створити швидку дію"
 
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
 msgid "Machine"
@@ -507,14 +516,6 @@ msgstr "З"
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:46
 msgid "To"
 msgstr "До"
-
-#: modules/xmppmaster/xmppmaster/deployxmpp.php:88
-msgid "Select a machine"
-msgstr "Виберіть машину"
-
-#: modules/xmppmaster/xmppmaster/deployxmpp.php:96
-msgid "Select a package"
-msgstr "Виберіть пакунок"
 
 #: modules/xmppmaster/infoPackage.inc.php:32
 msgid "xmppmaster"
