@@ -62,7 +62,7 @@ for ($i=0;$i< count( $dd[0] );$i++){
     $param['uuid']   = $dd[7][$i];
     if($param['gid'] != ""){
         $gr = xmlCall("dyngroup.get_group", array($param['gid'], false, false));
-        $listnamegroup[] = "Grp : ". $gr['name'];
+        $listnamegroup[] = _T("Group : ") . $gr['name'];
         $param['groupname'] = $_GET["groupname"];
         $param['machname'] =  "";
     }
@@ -72,7 +72,7 @@ for ($i=0;$i< count( $dd[0] );$i++){
         $machine = $machinelist[$_GET['uuid']][1];
         $namemachine = $machine['cn'][0];
         $usermachine = $machine['user'][0];
-        $listnamegroup[] = "Mach : ".$namemachine;
+        $listnamegroup[] = _T("Computer") .$namemachine;
         $param['machname'] =  $namemachine;
     }
     $param['login']  = $dd[2][$i];
