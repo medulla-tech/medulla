@@ -82,7 +82,7 @@ function list_computers($names,
 
         foreach ( $names as &$dd){
             foreach($array_id_machine_deploy as $key=>$val){
-                if ($val == $dd[objectUUID]){
+                if (isset($dd['objectUUID']) &&  $val == $dd['objectUUID']){
                     $dd['status'] = $array_state_machine_deploy[$key];
                 }
             }
