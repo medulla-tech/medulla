@@ -36,7 +36,7 @@ $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
-if ($_GET['currenttasks'] == '1'){
+if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1'){
   $status="";
   $LastdeployINsecond = 3600*24;
   echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
