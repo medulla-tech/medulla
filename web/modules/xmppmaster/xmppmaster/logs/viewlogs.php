@@ -37,7 +37,7 @@ function aleatoirechaine($prefixe, $nbcar){
 
 
 extract($_GET);
-
+$login = isset($login) ?  $_GET['login']  : $_SESSION['login'];
 if ( isset ($_POST['bStop'])) {
     $_MYREQUEST = array_merge($_GET, $_POST);
     if ( isset($_MYREQUEST['gid']) && $_MYREQUEST['gid'] != "" ){

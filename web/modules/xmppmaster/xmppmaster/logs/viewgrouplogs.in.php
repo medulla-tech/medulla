@@ -146,6 +146,10 @@ if (isset($_GET['gid'])){
     $_GET['nbgrp']=$countmachine;
 }
 $nbsuccess = 0;
+$_GET['id']=isset($_GET['id']) ? $_GET['id'] : "";
+$_GET['ses']=isset($_GET['ses']) ? $_GET['ses'] : "";
+$_GET['hos']=isset($_GET['hos']) ? $_GET['hos'] : "";
+$_GET['sta']=isset($_GET['sta']) ? $_GET['sta'] : "";
 foreach ($info['objectdeploy'] as $val)
 {
    $_GET['id']  .= $val['inventoryuuid']."@@";
@@ -336,10 +340,7 @@ if ($info['len'] != 0){
     $machinesucess    = count ( $uuidsuccess );
     $machineerror     = count ( $uuiderror );
     $machineinprocess = count ( $uuidprocess );
-    $machinewol       = $state['nbmachine']-$state['nbdeploydone'];
-
-
-
+    //$machinewol       = $state['nbmachine']-$state['nbdeploydone'];
         echo '
         <script>
             var u = "";
