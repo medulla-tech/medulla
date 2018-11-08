@@ -51,6 +51,7 @@ if (isset($_GET['action']))
             $element="novnc";
         }
     }
+$_SESSION['cn'] = isset($_SESSION['cn']) ? $_SESSION['cn'] : null;
 $paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID'],'vnctype' => $element, "presencemachinexmpp" => $presencemachinexmpp);
 
 $inventAction = new ActionItem(_T("Inventory", "pulse2"),"invtabs","inventory","inventory", "base", "computers");
