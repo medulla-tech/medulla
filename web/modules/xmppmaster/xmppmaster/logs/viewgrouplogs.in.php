@@ -154,7 +154,10 @@ foreach ($info['objectdeploy'] as $val)
 {
    $_GET['id']  .= $val['inventoryuuid']."@@";
    $_GET['ses'] .= $val['sessionid']."@@";
-   $_GET['hos'] .= explode("/", $val['host'])[1]."@@";
+   $hostlocal = explode("/", $val['host']);
+
+   $hostlocal1 = isset($hostlocal[1]) ? $hostlocal[1] : "";
+
    $_GET['sta'] .=  $val['state']."@@";
    if ($val['state'] == "DEPLOYMENT SUCCESS"){
         $nbsuccess ++;
