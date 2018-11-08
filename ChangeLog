@@ -1,28 +1,33 @@
 Pulse 2 4.5
 ===========
 * [FEATURE] Add glpi 9.2 support
-* [FEATURE] Assign a machine to a relay server based on the machine's network address
-* [FEATURE] Add extract driver for Win10
-* [FEATURE] Add Custom postinstall scripts
-* [FEATURE] Add Agent "Auto Update" functionnality
+* [FEATURE] Add Agent "Auto Update" feature
 * [FEATURE] Show the presence status in backup machine list
-* [BUGFIX]  Automatically call inventory was done by pxe
-* [BUGFIX]  The imaging triggers now really starts to id 1000
-* [BUGFIX]  Fix lenght of the jid from 45 to 255
-* [BUGFIX]  Fix inventory call for pxe machines
-* [BUGFIX]  Fix count of online machines
-* [BUGFIX]  Switches the ssh icon ( use cmd icon for windows )
-* [BUGFIX]  Correct backslash in sysprep template
-* [BUGFIX]  Fix to know who is the owner of a QA
-* [BUGFIX]  Fix display of imaging custom menus
-* [BUGFIX]  Fix finding MAC Adress while using PXE Inventory
-* [BUGFIX]  Fix Machines mysql database when using several relays
+* [FEATURE] New imaging post-install scripts available
+* [FEATURE] Allow creation of dyngroups from registry keys
+* [FEATURE] Allow import of static groups from csv containing registry keys
+* [FEATURE] New quick action commands available
+* [FEATURE] Assign a machine to a relay based on the machine's network address
+* [FEATURE] New icon for SSH connection on Windows machines
+* [FEATURE] Allow a deployment to be spooled in priority
+* [FEATURE] Allow creation of dyngroups from Active Directory OU
+* [FEATURE] Filter computer list view on registry contents
 * [BUGFIX]  Fix encoding error in "Execute Script" action when creating package
 * [BUGFIX]  Improve the creation of the groups for machineOnline widget
 * [BUGFIX]  Allow to modify imaging groups for machines with more than one
             ethernet card
 * [BUGFIX]  Do not modify py files directly
-* [BUGFIX] The action navbar is uniformized
+* [BUGFIX]  The action navbar is uniformized
+* [BUGFIX]  Set the default package type as empty package
+* [BUGFIX]  Fix date management in audit and history views
+* [BUGFIX]  Improve audit view
+* [BUGFIX]  Allow for jid up to 255 characters
+* [BUGFIX]  Fix detection of MAC address for PXE registration
+* [BUGFIX]  Fix several occurences of the same machine on relayservers in
+            cluster mode
+* [BUGFIX]  Clean deployment caches and used resources after a deployment
+* [BUGFIX]  Logs and bundles no longer available from machine deployment view
+
 
 Pulse 2 4.4.1
 ===========
