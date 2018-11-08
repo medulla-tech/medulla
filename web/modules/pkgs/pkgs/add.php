@@ -266,7 +266,7 @@ if (isset($_POST['bconfirm'])) {
         $rb = new RadioTpl("spooling");
         $rb->setChoices(array(_T('high priority', 'pkgs'), _T('ordinary priority', 'pkgs')));
         $rb->setvalues(array('high', 'ordinary'));
-        $rb->setSelected($_POST['spooling']);
+        $rb->setSelected('ordinary');
         $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
         $packagesInOption = '';
