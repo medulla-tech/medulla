@@ -2024,12 +2024,16 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def get_qaction(self, session, namecmd, user ):
+    def get_qaction(self, session, namecmd, user, grp):
         """
             return quick actions informations
         """
-        qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.namecmd==namecmd, Qa_custom_command.user==user))
-        qa_custom_command = qa_custom_command.first()
+        if grp == 0:
+            qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.namecmd==namecmd, Qa_custom_command.user==user))
+            qa_custom_command = qa_custom_command.first()
+        else:
+            qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.customcmd==namecmd, or_(Qa_custom_command.user==user,Qa_custom_command.user=="allusers")))
+            qa_custom_command = qa_custom_command.first()
         if qa_custom_command:
             result = {  "user" : qa_custom_command.user,
                         "os" : qa_custom_command.os,
