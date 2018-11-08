@@ -1002,11 +1002,11 @@ class XmppMasterDatabase(DatabaseHelper):
     def update_status_deploy_end(self, session):
         """ this function schedued by xmppmaster """
         #session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
-                                            #Deploy.state == "DEPLOYMENT START") 
+                                            #Deploy.state == "DEPLOYMENT START")
         #).update({ Deploy.state : "DEPLOYMENT ERROR"})
         datenow = datetime.now()
         result = session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
-                                            Deploy.state == "DEPLOYMENT START") 
+                                            Deploy.state == "DEPLOYMENT START")
         ).all()
         session.flush()
         session.close()
@@ -1850,13 +1850,40 @@ class XmppMasterDatabase(DatabaseHelper):
         if duree:
             deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
 
+        count = """select count(*) as nb from (
+        select count(id) as nb
+        from deploy
+        where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
+        group by title
+        ) as x;"""
+
         if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
                                                 Deploy.pathpackage.like('%%%s%%'%(filt)),
                                                 Deploy.start.like('%%%s%%'%(filt)),
                                                 Deploy.login.like('%%%s%%'%(filt)),
                                                 Deploy.host.like('%%%s%%'%(filt))))
+            count = """select count(*) as nb from (
+              select count(id) as nb
+              from deploy
+              where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
+              AND (state LIKE "%%%s%%"
+              or pathpackage LIKE "%%%s%%"
+              or start LIKE "%%%s%%"
+              or login LIKE "%%%s%%"
+              or host LIKE "%%%s%%"
+              )
+              group by title
+              ) as x;"""%(filt,filt,filt,filt,filt,)
+
+
         lentaillerequette = self.get_count(deploylog)
+
+        result = session.execute(count)
+        session.commit()
+        session.flush()
+        lenrequest = [x for x in result]
+
         #lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
         deploylog = deploylog.group_by(Deploy.title)
 
@@ -1868,7 +1895,8 @@ class XmppMasterDatabase(DatabaseHelper):
         result = deploylog.all()
         session.commit()
         session.flush()
-        ret ={'lentotal' : 0,
+        ret ={'total_of_rows' : 0,
+              'lentotal' : 0,
               'tabdeploy' : {
                                 'state' : [],
                                 'pathpackage' : [],
@@ -1888,6 +1916,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 'title' : []}}
 
         ret['lentotal'] = lentaillerequette#[0]
+        ret['total_of_rows'] = lenrequest[0][0]
         for linedeploy in result:
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])

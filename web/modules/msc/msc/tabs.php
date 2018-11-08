@@ -36,12 +36,8 @@ if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
 require_once('graph/navbar.inc.php');
 require_once("modules/pulse2/includes/utilities.php");
 
-if (!isset($_GET['hostname'])) {
-    $_GET['hostname'] = $_GET['cn'];
-}
-if (!isset($_GET['uuid'])) {
-    $_GET['uuid'] = $_GET['objectUUID'];
-}
+$_GET['hostname'] = isset($_GET['hostname'] ) ? $_GET['hostname'] : (isset($_GET['cn'])?$_GET['cn'] : "" );
+$_GET['uuid'] = isset($_GET['uuid'] ) ? $_GET['uuid'] : (isset($_GET['objectUUID']) ? $_GET['objectUUID'] : null );
 /*
  * Display right top shortcuts menu
  */
