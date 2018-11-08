@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-06 15:22+0100\n"
+"POT-Creation-Date: 2018-11-07 10:09+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -21,53 +21,14 @@ msgstr ""
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: modules/dashboard/includes/panels/general.inc.php:28
-msgid "General"
+#: modules/dashboard/infoPackage.inc.php:36
+#: modules/dashboard/infoPackage.inc.php:40
+#: modules/dashboard/infoPackage.inc.php:46
+msgid "Dashboard"
 msgstr ""
 
-#: modules/dashboard/includes/panels/general.inc.php:38
-msgid "on"
-msgstr ""
-
-#: modules/dashboard/includes/panels/general.inc.php:39
-msgid "Uptime"
-msgstr ""
-
-#: modules/dashboard/includes/panels/general.inc.php:40
-msgid "Load"
-msgstr ""
-
-#: modules/dashboard/includes/panels/general.inc.php:43
-msgid "RAM"
-msgstr ""
-
-#: modules/dashboard/includes/panels/general.inc.php:74
-#: modules/dashboard/includes/panels/space.inc.php:37
-msgid "free"
-msgstr ""
-
-#: modules/dashboard/includes/panels/computersOnline.inc.php:29
-msgid "Machines Online"
-msgstr ""
-
-#: modules/dashboard/includes/panels/computersOnline.inc.php:43
-msgid "Machines online : "
-msgstr ""
-
-#: modules/dashboard/includes/panels/computersOnline.inc.php:43
-#: modules/dashboard/includes/panels/computersOnline.inc.php:44
-#: modules/dashboard/includes/panels/clients_updates.inc.php:92
-#: modules/dashboard/includes/panels/backup.inc.php:40
-#: modules/dashboard/includes/panels/backup.inc.php:41
-msgid "Create a group"
-msgstr ""
-
-#: modules/dashboard/includes/panels/computersOnline.inc.php:44
-msgid "Machines offline : "
-msgstr ""
-
-#: modules/dashboard/includes/panels/computersOnline.inc.php:47
-msgid "A problem occurred while counting machines"
+#: modules/dashboard/infoPackage.inc.php:51
+msgid "Panels"
 msgstr ""
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:30
@@ -117,20 +78,53 @@ msgstr ""
 msgid "Not Supported"
 msgstr ""
 
-#: modules/dashboard/includes/panels/process.inc.php:28
-msgid "Pulse processes"
+#: modules/dashboard/includes/panels/clients_updates.inc.php:92
+#: modules/dashboard/includes/panels/backup.inc.php:40
+#: modules/dashboard/includes/panels/backup.inc.php:41
+#: modules/dashboard/includes/panels/computersOnline.inc.php:43
+#: modules/dashboard/includes/panels/computersOnline.inc.php:44
+msgid "Create a group"
 msgstr ""
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:30
-msgid "Pulse Updates"
+#: modules/dashboard/includes/panels/shortcuts.inc.php:29
+msgid "Shortcuts"
 msgstr ""
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:48
-msgid "Install updates"
+#: modules/dashboard/includes/panels/general.inc.php:28
+msgid "General"
 msgstr ""
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:56
-msgid "Updates available."
+#: modules/dashboard/includes/panels/general.inc.php:38
+msgid "on"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:39
+msgid "Uptime"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:40
+msgid "Load"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:43
+msgid "RAM"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:74
+#: modules/dashboard/includes/panels/space.inc.php:37
+msgid "free"
+msgstr ""
+
+#: modules/dashboard/includes/panels/plugins.inc.php:28
+msgid "Plugins loaded"
+msgstr ""
+
+#: modules/dashboard/includes/panels/space.inc.php:28
+msgid "Disk usage"
+msgstr ""
+
+#: modules/dashboard/includes/panels/space.inc.php:36
+msgid "used"
 msgstr ""
 
 #: modules/dashboard/includes/panels/backup.inc.php:28
@@ -149,28 +143,34 @@ msgstr ""
 msgid "Backup not configured : "
 msgstr ""
 
-#: modules/dashboard/includes/panels/shortcuts.inc.php:29
-msgid "Shortcuts"
+#: modules/dashboard/includes/panels/product_updates.inc.php:30
+msgid "Pulse Updates"
 msgstr ""
 
-#: modules/dashboard/includes/panels/space.inc.php:28
-msgid "Disk usage"
+#: modules/dashboard/includes/panels/product_updates.inc.php:48
+msgid "Install updates"
 msgstr ""
 
-#: modules/dashboard/includes/panels/space.inc.php:36
-msgid "used"
+#: modules/dashboard/includes/panels/product_updates.inc.php:56
+msgid "Updates available."
 msgstr ""
 
-#: modules/dashboard/includes/panels/plugins.inc.php:28
-msgid "Plugins loaded"
+#: modules/dashboard/includes/panels/computersOnline.inc.php:29
+msgid "Machines Online"
 msgstr ""
 
-#: modules/dashboard/infoPackage.inc.php:36
-#: modules/dashboard/infoPackage.inc.php:40
-#: modules/dashboard/infoPackage.inc.php:46
-msgid "Dashboard"
+#: modules/dashboard/includes/panels/computersOnline.inc.php:43
+msgid "Machines online : "
 msgstr ""
 
-#: modules/dashboard/infoPackage.inc.php:51
-msgid "Panels"
+#: modules/dashboard/includes/panels/computersOnline.inc.php:44
+msgid "Machines offline : "
+msgstr ""
+
+#: modules/dashboard/includes/panels/computersOnline.inc.php:47
+msgid "A problem occurred while counting machines"
+msgstr ""
+
+#: modules/dashboard/includes/panels/process.inc.php:28
+msgid "Pulse processes"
 msgstr ""

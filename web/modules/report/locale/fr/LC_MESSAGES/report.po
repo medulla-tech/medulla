@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-06 15:22+0100\n"
+"POT-Creation-Date: 2018-11-07 10:09+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -20,6 +20,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: modules/report/report/localSidebar.php:27
+#: modules/report/report/index.php:44 modules/report/infoPackage.inc.php:41
+msgid "Report creation"
+msgstr "Création de rapport"
+
+#: modules/report/report/index.php:62
+msgid "Period"
+msgstr "Période"
+
+#: modules/report/report/index.php:63
+msgid "from"
+msgstr "Du"
+
+#: modules/report/report/index.php:63
+msgid "to"
+msgstr "au"
+
+#: modules/report/report/index.php:76
+msgid "Entities"
+msgstr "Entités"
+
+#: modules/report/report/index.php:90
+msgid "Generate Report"
+msgstr "Générer le rapport"
+
+#: modules/report/report/index.php:132
+msgid "Select some data to include in the report."
+msgstr "Choisissez des données à inclure dans le rapport."
+
+#: modules/report/report/index.php:194
+msgid "Download image"
+msgstr "Télécharger l'image"
+
+#: modules/report/report/index.php:234
+msgid "Get XLS Report"
+msgstr "Obtenir le rapport XLS"
+
+#: modules/report/report/index.php:236
+msgid "Get PDF Report"
+msgstr "Obtenir le rapport PDF"
+
+#: modules/report/infoPackage.inc.php:32
+msgid "Reporting"
+msgstr "Rapports"
+
+#: modules/report/infoPackage.inc.php:36
+msgid "Report"
+msgstr "Rapport"
+
+#: modules/report/infoPackage.inc.php:44
+msgid "Download a file from report module (report or PNG)"
+msgstr "Télécharger un fichier du module de rapports (rapport ou PNG)"
 
 #: modules/report/includes/html.inc.php:100
 msgid "January"
@@ -211,57 +264,3 @@ msgstr "Moins de détails"
 #: modules/report/includes/report.inc.php:197
 msgid "More detail"
 msgstr "Plus de détails"
-
-#: modules/report/infoPackage.inc.php:32
-msgid "Reporting"
-msgstr "Rapports"
-
-#: modules/report/infoPackage.inc.php:36
-msgid "Report"
-msgstr "Rapport"
-
-#: modules/report/infoPackage.inc.php:41
-#: modules/report/report/localSidebar.php:27
-#: modules/report/report/index.php:44
-msgid "Report creation"
-msgstr "Création de rapport"
-
-#: modules/report/infoPackage.inc.php:44
-msgid "Download a file from report module (report or PNG)"
-msgstr "Télécharger un fichier du module de rapports (rapport ou PNG)"
-
-#: modules/report/report/index.php:62
-msgid "Period"
-msgstr "Période"
-
-#: modules/report/report/index.php:63
-msgid "from"
-msgstr "Du"
-
-#: modules/report/report/index.php:63
-msgid "to"
-msgstr "au"
-
-#: modules/report/report/index.php:76
-msgid "Entities"
-msgstr "Entités"
-
-#: modules/report/report/index.php:90
-msgid "Generate Report"
-msgstr "Générer le rapport"
-
-#: modules/report/report/index.php:132
-msgid "Select some data to include in the report."
-msgstr "Choisissez des données à inclure dans le rapport."
-
-#: modules/report/report/index.php:194
-msgid "Download image"
-msgstr "Télécharger l'image"
-
-#: modules/report/report/index.php:234
-msgid "Get XLS Report"
-msgstr "Obtenir le rapport XLS"
-
-#: modules/report/report/index.php:236
-msgid "Get PDF Report"
-msgstr "Obtenir le rapport PDF"

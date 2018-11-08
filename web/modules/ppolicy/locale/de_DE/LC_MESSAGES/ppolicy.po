@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-06 15:22+0100\n"
+"POT-Creation-Date: 2018-11-07 10:09+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: German (Germany) (https://www.transifex.com/siveo/teams/72118/de_DE/)\n"
@@ -21,16 +21,172 @@ msgstr ""
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/ppolicy/includes/localSidebar.php:27
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Passwort-Policies Liste"
+
+#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
+#: modules/ppolicy/includes/localSidebar.php:28
+msgid "Add a password policy"
+msgstr "Eine Passwortpolicy hinzufügen"
+
+#: modules/ppolicy/default/edit.php:48
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
+msgid "Edit password policy"
+msgstr "Passwortpolicy ändern"
+
+#: modules/ppolicy/default/edit.php:62
+msgid "\"Maximum age\" must be greater than \"Minimum age\"."
+msgstr "\"Maximales Alter\" muss größer sein als \"Minimales Alter\"."
+
+#: modules/ppolicy/default/edit.php:95
+msgid "Attributes updated"
+msgstr "Attribute aktualisiert"
+
+#: modules/ppolicy/default/edit.php:126
+msgid "Name"
+msgstr "Name"
+
+#: modules/ppolicy/default/edit.php:132
+#: modules/ppolicy/includes/ppolicy.inc.php:48
+msgid "Description"
+msgstr "Beschreibung"
+
+#: modules/ppolicy/default/edit.php:138
+#: modules/ppolicy/includes/ppolicy.inc.php:37
+msgid "Minimum length"
+msgstr "Minimale Länge"
+
+#: modules/ppolicy/default/edit.php:145
+msgid "Password quality check"
+msgstr "Passwort-Policy"
+
+#: modules/ppolicy/default/edit.php:152
+msgid "Minimum age (seconds)"
+msgstr "Minimales Alter (Sekunden)"
+
+#: modules/ppolicy/default/edit.php:159
+msgid "Maximum age (seconds)"
+msgstr "Maximales Alter (Sekunden)"
+
+#: modules/ppolicy/default/edit.php:166
+#: modules/ppolicy/includes/ppolicy.inc.php:45
+msgid "Number of grace authentications"
+msgstr "Anzahl der Gnade Authentifizierungen"
+
+#: modules/ppolicy/default/edit.php:180
+msgid "Force users to change their passwords on the first connection ?"
+msgstr "Benutzer zwingen ihre Passwörter bei der ersten Verbindung zu ändern?"
+
+#: modules/ppolicy/default/edit.php:187
+msgid "Password history"
+msgstr "Passwort Geschichte"
+
+#: modules/ppolicy/default/edit.php:201
+msgid "Preventive user lockout ?"
+msgstr "Präventive Benutzer Lockout?"
+
+#: modules/ppolicy/default/edit.php:215
+msgid "Password maximum failure"
+msgstr "Passwort maximale Fehlversuche"
+
+#: modules/ppolicy/default/edit.php:222
+msgid "Lockout duration (seconds)"
+msgstr "Lockoutdauer (Sekunden)"
+
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
+msgid "Delete password policy"
+msgstr "Passwort-Policy löschen"
+
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
 #: modules/ppolicy/infoPackage.inc.php:46
+#: modules/ppolicy/includes/localSidebar.php:27
 msgid "Password policies"
 msgstr "Passwort Policies"
 
-#: modules/ppolicy/includes/localSidebar.php:28
-#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
-msgid "Add a password policy"
-msgstr "Eine Passwortpolicy hinzufügen"
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+
+#: modules/ppolicy/default/delete.php:29
+msgid "The password policy has been deleted."
+msgstr "Die Passwortpolicy wurde gelöscht."
+
+#: modules/ppolicy/default/delete.php:41
+#, php-format
+msgid ""
+"You will delete the password policy <strong>%s</strong>. Default password "
+"policy will be applied to users that use this password policy."
+msgstr ""
+"Sie werden die <strong>Kennwortrichtlinie %s</strong> löschen. Standard "
+"Passwort-Policy wird für Benutzer, die diese Passwort-Policy nutzen "
+"angewendet werden."
+
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "Löschen"
+
+#: modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: modules/ppolicy/infoPackage.inc.php:36
+msgid "Password Policy"
+msgstr "Password Policy"
+
+#: modules/ppolicy/infoPackage.inc.php:58
+msgid "Edit a password policy"
+msgstr "Eine Passwortpolicy ändern"
+
+#: modules/ppolicy/infoPackage.inc.php:63
+msgid "Delete a password policy"
+msgstr "Eine Passwortpolicy löschen"
+
+#: modules/ppolicy/infoPackage.inc.php:79
+msgid "Default "
+msgstr "Standart"
+
+#: modules/ppolicy/infoPackage.inc.php:82
+msgid "Enable user specific password policy"
+msgstr "Aktiviere Benutzer spezifischen Passwort-Policy"
+
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "ppolicy Attribute ändern"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "ppolicy Attribut löschen"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "ppolicy dem Benutzer hinzufügen"
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "ppolicy für Benutzer aktualisieren"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "ppolicy bei Benutzer löschen"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "PPolicy"
 
 #: modules/ppolicy/includes/publicFunc.php:37
 #: modules/ppolicy/includes/publicFunc.php:63
@@ -117,11 +273,6 @@ msgstr "Passwort-Policy Attribute aktualisiert."
 msgid "Apply a password policy for all group users"
 msgstr "Eine Passwortpolicy für alle Gruppenbenutzer anwenden"
 
-#: modules/ppolicy/includes/ppolicy.inc.php:37
-#: modules/ppolicy/default/edit.php:138
-msgid "Minimum length"
-msgstr "Minimale Länge"
-
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Minimum age"
 msgstr "Minimales Alter"
@@ -150,11 +301,6 @@ msgstr "Präventive Lockout Benutzer"
 msgid "Password hash history"
 msgstr "Passwort-Hash Geschichte"
 
-#: modules/ppolicy/includes/ppolicy.inc.php:45
-#: modules/ppolicy/default/edit.php:166
-msgid "Number of grace authentications"
-msgstr "Anzahl der Gnade Authentifizierungen"
-
 #: modules/ppolicy/includes/ppolicy.inc.php:46
 msgid "Reset the password"
 msgstr "Zurücksetzen des Kennwort"
@@ -162,11 +308,6 @@ msgstr "Zurücksetzen des Kennwort"
 #: modules/ppolicy/includes/ppolicy.inc.php:47
 msgid "Password policy quality check"
 msgstr "Passwort-Policy Qualitäts-Check"
-
-#: modules/ppolicy/includes/ppolicy.inc.php:48
-#: modules/ppolicy/default/edit.php:132
-msgid "Description"
-msgstr "Beschreibung"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:54
 msgid ""
@@ -297,144 +438,3 @@ msgstr ""
 "akzeptiert. Ein Wert von '2 'zeigt an, dass der Server die Qualitätsprüfung "
 "durchführen wird, und wenn der Server nicht in der Lage ist wird das "
 "Passwort abgelehnt."
-
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "ppolicy Attribute ändern"
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "ppolicy Attribut löschen"
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "ppolicy dem Benutzer hinzufügen"
-
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "ppolicy für Benutzer aktualisieren"
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "ppolicy bei Benutzer löschen"
-
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr "PPolicy"
-
-#: modules/ppolicy/default/edit.php:48
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
-msgid "Edit password policy"
-msgstr "Passwortpolicy ändern"
-
-#: modules/ppolicy/default/edit.php:62
-msgid "\"Maximum age\" must be greater than \"Minimum age\"."
-msgstr "\"Maximales Alter\" muss größer sein als \"Minimales Alter\"."
-
-#: modules/ppolicy/default/edit.php:95
-msgid "Attributes updated"
-msgstr "Attribute aktualisiert"
-
-#: modules/ppolicy/default/edit.php:126
-msgid "Name"
-msgstr "Name"
-
-#: modules/ppolicy/default/edit.php:145
-msgid "Password quality check"
-msgstr "Passwort-Policy"
-
-#: modules/ppolicy/default/edit.php:152
-msgid "Minimum age (seconds)"
-msgstr "Minimales Alter (Sekunden)"
-
-#: modules/ppolicy/default/edit.php:159
-msgid "Maximum age (seconds)"
-msgstr "Maximales Alter (Sekunden)"
-
-#: modules/ppolicy/default/edit.php:180
-msgid "Force users to change their passwords on the first connection ?"
-msgstr "Benutzer zwingen ihre Passwörter bei der ersten Verbindung zu ändern?"
-
-#: modules/ppolicy/default/edit.php:187
-msgid "Password history"
-msgstr "Passwort Geschichte"
-
-#: modules/ppolicy/default/edit.php:201
-msgid "Preventive user lockout ?"
-msgstr "Präventive Benutzer Lockout?"
-
-#: modules/ppolicy/default/edit.php:215
-msgid "Password maximum failure"
-msgstr "Passwort maximale Fehlversuche"
-
-#: modules/ppolicy/default/edit.php:222
-msgid "Lockout duration (seconds)"
-msgstr "Lockoutdauer (Sekunden)"
-
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning: you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning: your password has been reset by an administrator. Your LDAP account"
-" is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-
-#: modules/ppolicy/default/delete.php:29
-msgid "The password policy has been deleted."
-msgstr "Die Passwortpolicy wurde gelöscht."
-
-#: modules/ppolicy/default/delete.php:41
-#, php-format
-msgid ""
-"You will delete the password policy <strong>%s</strong>. Default password "
-"policy will be applied to users that use this password policy."
-msgstr ""
-"Sie werden die <strong>Kennwortrichtlinie %s</strong> löschen. Standard "
-"Passwort-Policy wird für Benutzer, die diese Passwort-Policy nutzen "
-"angewendet werden."
-
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
-msgstr "Löschen"
-
-#: modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Passwort-Policies Liste"
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
-msgid "Delete password policy"
-msgstr "Passwort-Policy löschen"
-
-#: modules/ppolicy/infoPackage.inc.php:36
-msgid "Password Policy"
-msgstr "Password Policy"
-
-#: modules/ppolicy/infoPackage.inc.php:58
-msgid "Edit a password policy"
-msgstr "Eine Passwortpolicy ändern"
-
-#: modules/ppolicy/infoPackage.inc.php:63
-msgid "Delete a password policy"
-msgstr "Eine Passwortpolicy löschen"
-
-#: modules/ppolicy/infoPackage.inc.php:79
-msgid "Default "
-msgstr "Standart"
-
-#: modules/ppolicy/infoPackage.inc.php:82
-msgid "Enable user specific password policy"
-msgstr "Aktiviere Benutzer spezifischen Passwort-Policy"
