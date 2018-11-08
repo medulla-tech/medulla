@@ -47,6 +47,11 @@ else {
   echo "<h2>" . _T("Past tasks (last 3 months)") ."</h2>";
   $arraydeploy = xmlrpc_getdeploybyuserpast( $_GET['login'] ,$LastdeployINsecond, $start, $end, $filter) ;
 }
+
+if (isset($arraydeploy['total_of_rows']))
+{
+  $arraydeploy['lentotal'] = $arraydeploy['total_of_rows'];
+}
 $arrayname = array();
 $arraytitlename = array();
 $arraystate = array();
@@ -144,15 +149,15 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         }
         $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $total_machine_from_msc;
         $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $total_machine_from_msc) * 100,2);
-        
-        
+
+
         if( $result['totalmachinedeploy'] == 0){
             $sucess = 0;
         }
         else{
             $sucess = round(($result['machinesuccessdeploy'] / $total_machine_from_msc) * 100, 2);
         }
-        
+
             switch(intval($sucess)){
                 case $sucess <= 10:
                     $color = "#ff0000";
