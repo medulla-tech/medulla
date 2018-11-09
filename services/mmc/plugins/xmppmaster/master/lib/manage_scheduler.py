@@ -65,7 +65,7 @@ class manage_scheduler:
 
         # creation repertoire si non exist
         if not os.path.exists(self.directoryschedule):
-            logger.debug("create directory scheduler %s" % self.directoryschedule)
+            logging.getLogger("xmppmaster").debug("create directory scheduler %s" % self.directoryschedule)
             os.makedirs(self.directoryschedule, 0700)
 
         for x in os.listdir(self.directoryschedule):
@@ -101,7 +101,7 @@ class manage_scheduler:
                 t["count"] = t["count"] + 1
                 if "nbcount" in t and t["nbcount"] != -1 and t["count"] > t["nbcount"]:
                     deleted.append(t)
-                    logger.debug("terminate plugin %s" % t)
+                    logging.getLogger().debug("terminate plugin %s" % t)
                     continue
                 cron = croniter.croniter(t["tabcron"], now)
                 nextd = cron.get_next(datetime)
@@ -112,7 +112,7 @@ class manage_scheduler:
 
     def call_scheduling_main(self, name, *args, **kwargs):
         mod = __import__("scheduling_%s" % name)
-        logger.debug("exec plugin scheduling_%s" % name)
+        logging.getLogger().debug("exec plugin scheduling_%s" % name)
         mod.schedule_main(*args, **kwargs)
 
     def call_scheduling_mainspe(self, name, *args, **kwargs):

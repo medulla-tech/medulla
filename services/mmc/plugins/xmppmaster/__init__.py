@@ -64,7 +64,7 @@ def activate():
     Read the plugin configuration, initialize it, and run some tests to ensure
     it is ready to operate.
     """
-
+    logger = logging.getLogger("xmppmaster")
     config = xmppMasterConfig("xmppmaster")
     if config.disable:
         logger.warning("Plugin xmppmaster: disabled by configuration.")
@@ -459,7 +459,7 @@ def callInventoryinterface(uuid):
         callInventory(jid)
         return jid
     else:
-        logger.error("for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger("xmppmaster").error("for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
 
 
@@ -476,7 +476,7 @@ def callInstallKeyAM(jidAM, jidARS):
         callInstallKey(jidAM, jidARS)
         return jidAM
     else:
-        logger.error("for machine %s : install key ARS %s" % (jidAM, jidARS))
+        logging.getLogger("xmppmaster").error("for machine %s : install key ARS %s" % (jidAM, jidARS))
         return "jid (AM or ARS) missing"
 
 
@@ -486,7 +486,7 @@ def callrestart(uuid):
         callrestartbymaster(jid)
         return jid
     else:
-        logger.error("callrestartbymaster for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger("xmppmaster").error("callrestartbymaster for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
 
 
@@ -496,7 +496,7 @@ def callshutdown(uuid, time, msg):
         callshutdownbymaster(jid, time, msg)
         return jid
     else:
-        logger.error("callshutdownbymaster for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger().error("callshutdownbymaster for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
 
 
@@ -506,7 +506,7 @@ def callvncchangeperms(uuid, askpermission):
         callvncchangepermsbymaster(jid, askpermission)
         return jid
     else:
-        logger.error("callvncchangepermsbymaster for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger().error("callvncchangepermsbymaster for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
 
 

@@ -26,8 +26,6 @@ import logging
 from utils import file_get_contents
 import json
 
-logger = logging.getLogger("xmppmaster")
-
 
 class Update_Remote_Agent:
     """
@@ -52,7 +50,7 @@ class Update_Remote_Agent:
         for path_dir_remoteagent in dir_create:
             if not os.path.exists(path_dir_remoteagent):
                 os.makedirs(path_dir_remoteagent)
-                logger.debug("Creating folder for remote base agent : %s" % dir_agent_base)
+                logging.getLogger().debug("Creating folder for remote base agent : %s" % dir_agent_base)
         if os.path.exists(os.path.join(dir_agent_base, 'agentversion')):
             self.load_list_md5_agentbase()
 

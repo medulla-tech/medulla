@@ -42,12 +42,10 @@ from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 plugin = {"VERSION": "1.4", "NAME": "force_setup_agent", "TYPE": "master"}
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     print "_________________________"
-    logger.debug(plugin)
+    logging.getLogger().debug(plugin)
     # print json.dumps(data, indent = 4)
     print data['data'][0]
     print "_________________________"

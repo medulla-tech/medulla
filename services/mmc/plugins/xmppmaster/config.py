@@ -28,7 +28,6 @@ from mmc.plugins.xmppmaster.master.lib.utils import ipfromdns
 import os
 import ConfigParser
 
-logger = logging.getLogger("xmppmaster")
 
 class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
@@ -108,9 +107,9 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         ### Connection server parameters if no relay server is available ####
         self.defaultrelayserverip = ipfromdns(self.get('defaultconnection', 'serverip'))
         if self.defaultrelayserverip == "localhost":
-            logger.error('parameter section "defaultconnection" serverip must not be localhost')
+            logging.getLogger("xmppmaster").error('parameter section "defaultconnection" serverip must not be localhost')
         if self.defaultrelayserverip == "127.0.0.1":
-            logger.error('parameter section "defaultconnection" serverip must not be 127.0.0.1')
+            logging.getLogger("xmppmaster").error('parameter section "defaultconnection" serverip must not be 127.0.0.1')
         self.defaultrelayserverport = self.get('defaultconnection', 'port')
         self.defaultrelayserverbaseurlguacamole = self.get('defaultconnection', 'guacamole_baseurl')
         self.jidagent = "%s@%s/%s" % ("master", self.chatserver, "MASTER")
@@ -152,13 +151,13 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
             for z in pluginlist:
                 namefile = "%s.ini" % os.path.join("/", "etc", "mmc", "plugins", z)
-                logger.debug('load parameter File plugin %s' % namefile)
+                logging.getLogger("xmppmaster").debug('load parameter File plugin %s' % namefile)
                 if os.path.isfile(namefile):
                     liststuple = self.loadparametersplugins(namefile)
                     for keyparameter, valueparameter in liststuple:
                         setattr(self, keyparameter, valueparameter)
                 else:
-                    logger.error("Parameter File Plugin %s : missing" % namefile)
+                    logging.getLogger("xmppmaster").error("Parameter File Plugin %s : missing" % namefile)
 
     def check(self):
         """

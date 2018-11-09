@@ -32,14 +32,12 @@ import logging
 
 plugin = {"VERSION": "1.0", "NAME": "resultwakeonlan", "TYPE": "master"}
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug(plugin)
+    logging.getLogger().debug(plugin)
     try:
-        logger.debug("%s", data)
+        logging.getLogger().debug("%s", data)
         pass
     except Exception as e:
-        logger.error("Error in plugin %s : %s" % (action, str(e)))
+        logging.getLogger().error("Error in plugin %s : %s" % (action, str(e)))
         pass

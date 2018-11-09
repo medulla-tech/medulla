@@ -41,8 +41,6 @@ from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 plugin = {"VERSION": "1.4", "NAME": "downloadfile", "TYPE": "master"}
 
-logger = logging.getLogger("xmppmaster")
-
 
 def create_path(type="windows", host="", ipordomain="", path=""):
     """
@@ -99,7 +97,7 @@ def createnamefile(user, prefixe="", suffixe=""):
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug(plugin)
+    logging.getLogger().debug(plugin)
     try:
         print json.dumps(data[0], indent=4)
         transpxmpp = True
@@ -116,7 +114,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 if data[0]['taillefile'] > 256000:
                     transpxmpp = False
     except KeyError as e:
-        logger.debug(
+        logging.getLogger().debug(
             "data[0] not found while calling %s. The plugin is probably called from a quick action." % (plugin['NAME']))
         pass
 
@@ -158,7 +156,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                     os.mkdir(machdir)
                     os.chmod(machdir, 0777)
                 if not os.path.exists(destdir):
-                    logger.debug("Creating folder: %s" % destdir)
+                    logging.getLogger().debug("Creating folder: %s" % destdir)
                     os.mkdir(destdir)
                 if '\\' in params[0]:
                     final_folder = os.path.basename(os.path.normpath(
@@ -204,14 +202,14 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             # print z['result']
             # print z['code']
             if z['code'] != 0:
-                logger.warning(z['result'])
+                logging.getLogger().warning(z['result'])
                 pass
             else:
                 dede = file_get_content("/tmp/id_rsa.pub")
                 authorized_key = file_get_content("/root/.ssh/authorized_keys")
                 # verify key exist in authorized_key for ARS.
                 if not dede in authorized_key:
-                    logger.debug("Add key %s" % datasend['data']['jidmachine'])
+                    logging.getLogger().debug("Add key %s" % datasend['data']['jidmachine'])
                     file_put_content("/root/.ssh/authorized_keysold", "\n" + dede, mode="a")
                     print authorized_key
 
@@ -222,5 +220,5 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                 mtype='chat')
 
     except Exception as e:
-        logger.error("Error in plugin %s : %s" % (plugin['NAME'], str(e)))
+        logging.getLogger().error("Error in plugin %s : %s" % (plugin['NAME'], str(e)))
         traceback.print_exc(file=sys.stdout)

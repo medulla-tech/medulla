@@ -30,7 +30,8 @@ import zlib
 from time import sleep
 from utils import name_random, file_put_contents, file_get_contents
 
-logger = logging.getLogger("xmppmaster")
+
+logger = logging.getLogger()
 
 plugin = {"VERSION": "1.0", "NAME": "resultupdateagent", "TYPE": "master"}
 

@@ -27,19 +27,17 @@ import json
 
 plugin = {"VERSION": "1.0", "NAME": "kiosk", "TYPE": "master"}
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug("=====================================================")
-    logger.debug(plugin)
-    logger.debug("=====================================================")
+    logging.getLogger().debug("=====================================================")
+    logging.getLogger().debug(plugin)
+    logging.getLogger().debug("=====================================================")
     print json.dumps(data, indent=4)
     if data['subaction'] == 'send_message_to_jid':
         if not 'jid' in data:
-            logger.error("jid missing in kiosk send_message_to_jid sub action")
+            logging.getLogger().error("jid missing in kiosk send_message_to_jid sub action")
         elif not('data' in data and 'subaction' in data['data']):
-            logger.error("The message is not formated correctly")
+            logging.getLogger().error("The message is not formated correctly")
         else:
             datasend = {'action': 'kiosk',
                         'sessionid': data['sessionid'],

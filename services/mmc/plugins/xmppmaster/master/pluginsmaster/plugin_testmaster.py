@@ -27,11 +27,9 @@ import logging
 
 plugin = {"VERSION": "1.0", "NAME": "testmaster", "TYPE": "master"}
 
-logger = logging.getLogger("xmppmaster")
-
 
 @pluginmastersessionaction("actualise", 20)
 def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
-    logger.debug(plugin)
+    logging.getLogger().debug(plugin)
     xmppobject.session.affiche()
     pass

@@ -58,11 +58,9 @@ plugin = {"VERSION": "1.0", "NAME": "machineexecutionscheduler", "TYPE": "master
 """
 DEBUGPULSEPLUGIN = 25
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug(plugin)
+    logging.getLogger().debug(plugin)
 
     advanced = data['advanced']
     try:
