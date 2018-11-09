@@ -83,7 +83,7 @@ class ImagingDefaultMenuBuilder:
 
         @return the object
         """
-        self.logger = logger
+        self.logger = log
         if not isMenuStructure(menu):
             raise TypeError('Bad menu structure')
         self.menu = menu
