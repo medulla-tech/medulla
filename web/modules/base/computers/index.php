@@ -35,10 +35,15 @@ $p = new PageGenerator(_("Computer list"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$computerpresence = "all_computer";
+if(isset($_SESSION['computerpresence']))
+  $computerpresence = $_SESSION['computerpresence'];
+else
+  $computerpresence = "all_computer";
+
 if (isset($_GET['computerpresence'])){
     $computerpresence = $_GET['computerpresence'];
 }
+$_SESSION['computerpresence'] = $computerpresence;
 
 if (in_array("pulse2", $_SESSION["modulesList"])) {
     echo '
