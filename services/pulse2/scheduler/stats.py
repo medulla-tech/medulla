@@ -51,7 +51,7 @@ class StatisticsProcessing :
 
     def __init__(self, config):
         self.config = config
-        self.logger = logging.getLogger("pulse2")
+        self.logger = logging.getLogger()
 
     def update(self, cmd_id=None):
         """ Updates the global statistics or just for one command """

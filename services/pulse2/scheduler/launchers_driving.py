@@ -33,8 +33,6 @@ from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 from pulse2.scheduler.xmlrpc import getProxy
 
-logger = logging.getLogger("pulse2")
-
 
 class Stats :
     """
@@ -136,9 +134,9 @@ class LauncherCallingProvider(type):
         @rtype: Deferred
         """
         if launcher :
-            logger.debug("Launcher: method %s(%s)" % (method, str(args)))
+            logging.getLogger().debug("Launcher: method %s(%s)" % (method, str(args)))
             uri = self.launchers[launcher]
-            logger.debug("Calling on launcher %s uri [%s]: method %s" % (launcher, uri, method))
+            logging.getLogger().debug("Calling on launcher %s uri [%s]: method %s" % (launcher, uri, method))
             proxy = getProxy(uri)
             d = proxy.callRemote(method, *args)
             d.addErrback(self._call_error, launcher, method)
@@ -161,10 +159,10 @@ class LauncherCallingProvider(type):
         """
         err = failure.trap(TCPTimedOutError)
         if err == TCPTimedOutError :
-            logger.warn("Timeout raised on launcher '%s' when calling method '%s'" % (launcher, method))
-            logger.warn("Call aborted")
+            logging.getLogger().warn("Timeout raised on launcher '%s' when calling method '%s'" % (launcher, method))
+            logging.getLogger().warn("Call aborted")
         else :
-            logger.error("An error occured when calling method %s on launcher %s: %s" %
+            logging.getLogger().error("An error occured when calling method %s on launcher %s: %s" %
                 (method, launcher, failure))
         return failure
 
@@ -215,9 +213,9 @@ class LauncherCallingProvider(type):
         """
         err = failure.trap(TCPTimedOutError)
         if err == TCPTimedOutError :
-            logger.warn("Timeout raised on launcher '%s' when getting the stats" % launcher)
+            logging.getLogger().warn("Timeout raised on launcher '%s' when getting the stats" % launcher)
         else :
-            logger.error("An error occured when extract the stats from launcher %s: %s" %
+            logging.getLogger().error("An error occured when extract the stats from launcher %s: %s" %
                 (launcher, failure))
         return failure
 
@@ -251,9 +249,9 @@ class LauncherCallingProvider(type):
         def _eb(failure):
             err = failure.trap(ConnectError)
             if err == ConnectError:
-                logger.warn("Unable to get the slots from launcher")
+                logging.getLogger().warn("Unable to get the slots from launcher")
             else :
-                logger.error("An error occured when getting the slots from launcher: %s" % failure)
+                logging.getLogger().error("An error occured when getting the slots from launcher: %s" % failure)
         return d
 
 
@@ -289,13 +287,13 @@ class LauncherCallingProvider(type):
                 if hasattr(result, "trap"):
                     err = result.trap(ConnectionRefusedError, ConnectError)
                     if err in (ConnectionRefusedError, ConnectError) :
-                        logger.warn("Cannot contact a launcher from list to detect the slots !")
+                        logging.getLogger().warn("Cannot contact a launcher from list to detect the slots !")
                     else :
-                        logger.warn("Getting the slots number failed: %s" % result)
+                        logging.getLogger().warn("Getting the slots number failed: %s" % result)
                 else :
-                     logger.error("Getting the slots number failed: %s" % result)
+                     logging.getLogger().error("Getting the slots number failed: %s" % result)
 
-                logger.info("Set slots to default value from scheduler's config file")
+                logging.getLogger().info("Set slots to default value from scheduler's config file")
 
 
 
@@ -323,7 +321,7 @@ class LauncherCallingProvider(type):
         if best_score > 0 :
             return final_launcher
         else :
-            logger.warn("No free slots on launchers, operation aborted")
+            logging.getLogger().warn("No free slots on launchers, operation aborted")
             return None
 
     def _eb_select(self, failure):
@@ -335,9 +333,9 @@ class LauncherCallingProvider(type):
         """
         err = failure.trap(TCPTimedOutError)
         if err == TCPTimedOutError :
-            logger.warn("Timeout raised when selecting a launcher")
+            logging.getLogger().warn("Timeout raised when selecting a launcher")
         else :
-            logger.error("An error occured when selecting a launcher: %s" % failure)
+            logging.getLogger().error("An error occured when selecting a launcher: %s" % failure)
         return failure
 
     def _dispatch_launchers(self, method, *args):
@@ -548,7 +546,7 @@ class RemoteCallProxy :
                            })
 
         if not ip or not NetUtils.is_ipv4_format(ip):
-            logger.warn("Ivalid IP address format: '%s'" % str(ip))
+            logging.getLogger().warn("Ivalid IP address format: '%s'" % str(ip))
             return fail(False)
 
         client = {'host': ip,
@@ -581,12 +579,12 @@ class RemoteCallProxy :
                 (launcher, host, port, key) = result
                 if key == '-':
                     # Key not provided => TCP Proxy
-                    logger.info(
+                    logging.getLogger().info(
                         'VNC Proxy: launcher "%s" created new TCP Proxy to "%s:%s"'
                         % (launcher, host, str(port)))
                 else:
                     # Key provided => Websocket Proxy
-                    logger.info(
+                    logging.getLogger().info(
                         'VNC Proxy: launcher "%s" created new WebSocket Proxy to "%s:%s" with key "%s"'
                         % (str(launcher), str(host), str(port), str(key)))
                 if host == '':
@@ -604,7 +602,7 @@ class RemoteCallProxy :
                            })
 
         if not ip or not NetUtils.is_ipv4_format(ip):
-            logger.warn("Ivalid IP address format: '%s'" % str(ip))
+            logging.getLogger().warn("Ivalid IP address format: '%s'" % str(ip))
             return fail(False)
 
         client = {'host': ip,
@@ -623,7 +621,7 @@ class RemoteCallProxy :
         d.addCallback(_finalize)
         @d.addErrback
         def _eb(failure):
-            logger.warn("VNC proxy open failed: %s" % str(failure))
+            logging.getLogger().warn("VNC proxy open failed: %s" % str(failure))
 
 
         return d

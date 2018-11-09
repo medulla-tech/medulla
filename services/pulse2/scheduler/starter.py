@@ -26,8 +26,6 @@ import logging
 from twisted.internet.threads import deferToThread
 from twisted.internet.task import LoopingCall
 
-logger = logging.getLogger("pulse2")
-
 
 class LoopingStarter(object):
     """
@@ -50,7 +48,7 @@ class LoopingStarter(object):
 	"""
 	self.dispatcher = dispatcher
 	self.emitting_period = emitting_period
-	self.logger = logger
+	self.logger = logging.getLogger()
 
 
     def _run_one(self, circuit):

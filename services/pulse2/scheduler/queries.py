@@ -34,7 +34,7 @@ from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.pull_targets import PullTargets
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 
-log = logging.getLogger("pulse2")
+log = logging.getLogger()
 
 class MscQuerySession :
     """
@@ -478,10 +478,10 @@ def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
     session.close()
 
     if len(otd) > 0 :
-        log.info("Switching %d circuits to overtimed" % len(otd))
+        logging.getLogger().info("Switching %d circuits to overtimed" % len(otd))
         CoHManager.setCoHsStateOverTimed(otd)
     if len(fls) > 0 :
-        log.info("Switching %d circuits to failed" % len(fls))
+        logging.getLogger().info("Switching %d circuits to failed" % len(fls))
         CoHManager.setCoHsStateFailed(fls)
 
 
