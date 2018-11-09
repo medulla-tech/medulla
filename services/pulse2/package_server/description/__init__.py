@@ -29,9 +29,6 @@ from twisted.web import resource
 import logging
 import cgi
 
-logger = logging.getLogger("pkgs")
-
-
 class Description(resource.Resource):
     type = 'Description'
     isLeaf = True
@@ -40,7 +37,7 @@ class Description(resource.Resource):
         self.status = status
         self.services = services
         resource.Resource.__init__(self)
-        self.logger = logger
+        self.logger = logging.getLogger()
         self.logger.info("(%s) initialised with : %s"%(self.type, self.services))
 
     def __up(self):

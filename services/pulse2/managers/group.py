@@ -25,16 +25,13 @@
 import logging
 from pulse2.utils import Singleton
 
-logger = logging.getLogger("dyngroup")
-
-
 class ComputerGroupManager(Singleton):
     components = {}
     main = 'dyngroup'
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logger
+        self.logger = logging.getLogger()
 
     def select(self, name):
         self.logger.info("Selecting computer group manager: %s" % name)

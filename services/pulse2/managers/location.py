@@ -30,16 +30,13 @@ provide methods to work with location association with computers
 import logging
 from pulse2.utils import Singleton
 
-logger = logging.getLogger("pulse2")
-
-
 class ComputerLocationManager(Singleton):
     components = {}
     main = None
 
     def __init__(self):
         Singleton.__init__(self)
-        self.logger = logger
+        self.logger = logging.getLogger()
 
     def select(self, name = None):
         if not name:
