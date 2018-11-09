@@ -79,9 +79,6 @@ NOAUTHNEEDED = [
     'start_command_on_host',
 ]
 
-logger = logging.getLogger("msc")
-
-
 def getApiVersion(): return APIVERSION
 
 def activate():
@@ -90,6 +87,7 @@ def activate():
     """
     config = MscConfig()
     config.init("msc")
+    logger = logging.getLogger()
     if config.disable:
         logger.warning("Plugin msc: disabled by configuration.")
         return False
@@ -116,7 +114,7 @@ def activate_2():
     dldir = conf.download_directory_path
     # Clean all lock or error status file in the download directory pool
     if os.path.exists(dldir):
-        logger.info('Cleaning lock file in %s' % dldir)
+        logging.getLogger().info('Cleaning lock file in %s' % dldir)
         for root, dirs, files in os.walk(dldir):
             for name in files:
                 if name.endswith(MscDownloadedFiles.LOCKEXT) or name.endswith(MscDownloadedFiles.ERROREXT):
@@ -443,11 +441,11 @@ class RpcProxy(RpcProxyI):
         cmds = MscDatabase().get_package_cmds(pid)
 
         if cmds:
-            logger.info('%d command will be expired' % len(cmds))
+            logging.getLogger().info('%d command will be expired' % len(cmds))
 
             # for all cmd_ids, get start_date and expire them
             for cmd_id, start_date in cmds.items():
-                logger.info('Expires command %d' % cmd_id)
+                logging.getLogger().info('Expires command %d' % cmd_id)
                 end_date = time.strftime("%Y-%m-%d %H:%M:%S")
                 self.extend_command(cmd_id, start_date, end_date)
             # Delete convergence groups if any
@@ -578,6 +576,7 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         size, ret1 = MscDatabase().getAllCommandsConsult(ctx, min, max, filt, expired)
         ret = []
+        logger = logging.getLogger()
         cache = {}
         for c in ret1:
             if c['gid']:
@@ -715,7 +714,7 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         if not filterType in ['mine', 'all']:
             filterType = 'mine'
-            logger.error('msc.set_commands_filter called without valid parameter')
+            logging.getLogger().error('msc.set_commands_filter called without valid parameter')
         ctx.filterType = filterType
 
     def get_commands_filter(self):
@@ -872,6 +871,7 @@ def action_on_bundle(id, f_name, f_database, f_scheduler):
     getattr(MscDatabase(), f_database)(id)
     # Stop related commands_on_host on related schedulers
     scheds = MscDatabase().getCommandsonhostsAndSchedulersOnBundle(id)
+    logger = logging.getLogger()
     for sched in scheds:
         d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(sched, scheds[sched])
         d.addErrback(lambda err: logger.error("%s: " % (f_name) + str(err)))
@@ -1064,6 +1064,7 @@ def convergence_reschedule(all=False):
     @param all: If True, All convergence commands will be rescheduled
     @type all: Bool
     """
+    logger = logging.getLogger()
     cmd_ids = _get_convergence_soon_ended_commands(all=all)
     if cmd_ids:
         logger.info("Convergence cron: %s convergence commands will be rescheduled: %s" % (len(cmd_ids), cmd_ids))

@@ -35,9 +35,6 @@ from mmc.plugins.msc.client.scheduler import getProxy
 from twisted.internet.threads import deferToThread
 import twisted.internet.defer
 
-logger = logging.getLogger("msc")
-
-
 class MscDownloadProcess:
 
     """
@@ -58,7 +55,7 @@ class MscDownloadProcess:
         self.mscdlfiles = MscDownloadedFiles(self.userid)
         self.storage = self.mscdlfiles.storage
         self.lockfile = os.path.join(self.storage, self.uuid + '.' + self.mscdlfiles.LOCKEXT)
-        self.logger = logger
+        self.logger = logging.getLogger()
 
     def _cbDownloadOk(self, result):
         """
