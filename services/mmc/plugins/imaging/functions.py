@@ -49,9 +49,6 @@ import json
 import hashlib
 import socket
 
-logger = logging.getLogger("imaging")
-
-
 def is_ipv4_valid(ip_string):
     try:
         socket.inet_aton(ip_string)
@@ -77,6 +74,7 @@ class ImagingRpcProxy(RpcProxyI):
     checkThreadData={}
     def getGeneratedMenu(self, mac):
         # uuid
+        logger = logging.getLogger()
         db_computer = ComputerManager().getComputerByMac(mac)
         uuid = 'UUID' + str(db_computer.id)
         menu = generateMenus(logger, ImagingDatabase(), [uuid], unique=True)
@@ -288,15 +286,15 @@ class ImagingRpcProxy(RpcProxyI):
         def _applyLocationDefaultBootMenu(loc_uuid):
             try:
                 # Get all machine that have not a custom_menu
-                logger.info('Applying default location BootMenu [%s]', loc_uuid)
+                logging.getLogger().info('Applying default location BootMenu [%s]', loc_uuid)
                 for uuid in self.getTargetsByCustomMenuInEntity(loc_uuid, 0):
                     try:
                         self.resetComputerBootMenu(uuid)
                     except Exception, e:
-                        logger.error(str(e))
+                        logging.getLogger().error(str(e))
             except Exception, e:
-                logger.error('Unable to apply location default bootmenu')
-                logger.error(e)
+                logging.getLogger().error('Unable to apply location default bootmenu')
+                logging.getLogger().error(e)
 
         if not immediate:
             TaskManager().addTask('imaging.applyLocationDefaultBootMenu', (_applyLocationDefaultBootMenu, [loc_uuid]), delay=30)
@@ -311,7 +309,7 @@ class ImagingRpcProxy(RpcProxyI):
                 self.synchroComputer(computer)
             return True
         except Exception, e:
-            logger.error(str(e))
+            logging.getLogger().error(str(e))
             return False
 
 
@@ -590,6 +588,7 @@ class ImagingRpcProxy(RpcProxyI):
         return deferred
 
     def statusReadFile (self, file):
+        logger = logging.getLogger()
         logger.debug("statusReadFile %s"%file)
         if not path.isfile(file):
             return []
@@ -599,12 +598,14 @@ class ImagingRpcProxy(RpcProxyI):
         return lignes
 
     def ClearFileStatusProcess(self):
+        logger = logging.getLogger()
         logger.debug("ClearFileStatusProcess")
         fichier = open("/tmp/pulse2-synch-masters.out", "w")
         fichier.close()
         return True
 
     def statusProcessBarClone(self, listfilelog):
+        logger = logging.getLogger()
         logger.debug("statusProcessBarClone %s"%listfilelog)
         data={}
         for f in listfilelog:
@@ -635,6 +636,7 @@ class ImagingRpcProxy(RpcProxyI):
         #if test: return
         if len(test) > 0 : return
         self.ClearFileStatusProcess()
+        logger = logging.getLogger()
         logger.debug("startProcessClone %s"%objetclone)
         if not path.isfile("/usr/bin/pulse2-synch-masters"):
             logger.debug("script /usr/bin/pulse2-synch-masters missing")
@@ -671,28 +673,28 @@ class ImagingRpcProxy(RpcProxyI):
         while(ImagingRpcProxy.checkThread[objmenu['location']] == True):
             for i in threading.enumerate():
                 if i.getName() == "MainThread" and not i.isAlive():
-                    logger.debug("[checkThreadData terminate monitorsUDPSender]")
+                    logging.getLogger().debug("[checkThreadData terminate monitorsUDPSender]")
                     ImagingRpcProxy.checkThread[objmenu['location']] = False
                     return
             time.sleep(temp)
-            logger.debug("monitorsUDPSender")
+            logging.getLogger().debug("monitorsUDPSender")
             result=self.checkDeploymentUDPSender(objmenu)
             try:
-                logger.debug("[checkThreadData] %s"%ImagingRpcProxy.checkThreadData)
-                logger.debug("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
+                logging.getLogger().debug("[checkThreadData] %s"%ImagingRpcProxy.checkThreadData)
+                logging.getLogger().debug("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
                 if ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] == True:
-                    logger.debug("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
+                    logging.getLogger().debug("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
                     ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
                     ImagingRpcProxy.checkThread[objmenu['location']] = False
-                    logger.debug("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
+                    logging.getLogger().debug("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
                     self.synchroProfile(objmenu['group'])
                     return
             except KeyError:
-                logger.debug("[initialisation checkThreadData]")
+                logging.getLogger().debug("[initialisation checkThreadData]")
                 ImagingRpcProxy.checkThreadData[objmenu['location']]={}
                 ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
         else:
-            logger.debug("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
+            logging.getLogger().debug("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
             self.synchroProfile(objmenu['group'])
 
     def checkDeploymentUDPSender(self,process):
@@ -700,7 +702,8 @@ class ImagingRpcProxy(RpcProxyI):
         check whether multicast transfer is in progress
         """
         resultat = False
-        logger.debug("checkDeploymentUDPSender %s"%process)
+        logger = logging.getLogger()
+        logging.getLogger().debug("checkDeploymentUDPSender %s"%process)
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
@@ -756,6 +759,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: boolean
         """
         db = ImagingDatabase()
+        logger = logging.getLogger()
         image, imaging_server = db.getImageAndImagingServer(image_uuid)
 
         i = ImagingApi(imaging_server.url.encode('utf8'))
@@ -1144,6 +1148,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
+        logger = logging.getLogger()
         # try:
         if True:
             # check we are going to be able to remove from the menu
@@ -1661,16 +1666,16 @@ class ImagingRpcProxy(RpcProxyI):
             * the error in case of failure
         @rtype: list
         """
-        logger.debug("linkImagingServerToLocation : is_uuid %s loc_id %s loc_name%s" % (is_uuid,loc_id,loc_name))
+        logging.getLogger().debug("linkImagingServerToLocation : is_uuid %s loc_id %s loc_name%s" % (is_uuid,loc_id,loc_name))
         db = ImagingDatabase()
         try:
             ret = db.linkImagingServerToEntity(is_uuid, loc_id, loc_name)
             my_is = db.getImagingServerByUUID(is_uuid)
-            logger.debug("getImagingServerByUUID : is_uuid %s " % (is_uuid))
+            logging.getLogger().debug("getImagingServerByUUID : is_uuid %s " % (is_uuid))
             Pulse2Manager().putPackageServerEntity(my_is.packageserver_uuid, loc_id)
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
         except Exception, e:
-            logger.warn("Imaging.linkImagingServerToEntity : %s" % e)
+            logging.getLogger().warn("Imaging.linkImagingServerToEntity : %s" % e)
             return [False, "Failed to link Imaging Server to Entity : %s" % e]
 
         return [True, ret]
@@ -1690,19 +1695,19 @@ class ImagingRpcProxy(RpcProxyI):
             * the error in case of failure
         @rtype: list
         """
-        logger.debug("unlinkImagingServerToLocation : is_uuid %s loc_id %s " % (is_uuid,loc_id))
+        logging.getLogger().debug("unlinkImagingServerToLocation : is_uuid %s loc_id %s " % (is_uuid,loc_id))
         db = ImagingDatabase()
         success1 = success2 = False
         try:
             success1 = db.unlinkImagingServerToEntity(is_uuid)
             success2 = Pulse2Manager().delPackageServerEntity(loc_id)
         except Exception, e:
-            logger.warn("Imaging.unlinkImagingServerToEntity : %s" % e)
+            logging.getLogger().warn("Imaging.unlinkImagingServerToEntity : %s" % e)
 
         if not success1 :
-            logger.warn("Failed to unassociate the imaging server to entity:")
+            logging.getLogger().warn("Failed to unassociate the imaging server to entity:")
         if not success2 :
-            logger.warn("Failed to unassociate the package server to entity:")
+            logging.getLogger().warn("Failed to unassociate the package server to entity:")
 
         return [success1, success2]
 
@@ -1825,6 +1830,7 @@ class ImagingRpcProxy(RpcProxyI):
         @returns: true if the computer can be registered
         @rtype: boolean
         """
+        logger = logging.getLogger()
         if self.isComputerRegistered(computerUUID):
             logger.debug("canIRegisterThisComputer %s : %s", computerUUID, "isComputerRegistered")
             return [False, False]
@@ -1905,6 +1911,7 @@ class ImagingRpcProxy(RpcProxyI):
         @return: 0 if the profile can be registered into the imaging module
         @rtype: int
         """
+        logger = logging.getLogger()
         ret = 0
         ctx = self.currentContext
         uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(profileUUID)]
@@ -2151,6 +2158,7 @@ class ImagingRpcProxy(RpcProxyI):
         return menu
 
     def __synchroLocation(self, loc_uuid):
+        logger = logging.getLogger()
         db = ImagingDatabase()
         db.setLocationSynchroState(loc_uuid, P2ISS.RUNNING)
 
@@ -2209,7 +2217,7 @@ class ImagingRpcProxy(RpcProxyI):
 
     def synchroComputer(self, uuid, mac = False, wol = False):
         """ see __synchroTargets """
-        logger.debug("I'm going to synchronize computer %s bootmenu, Wake-on-lan is %s" % (uuid, wol and 'on' or 'off'))
+        logging.getLogger().debug("I'm going to synchronize computer %s bootmenu, Wake-on-lan is %s" % (uuid, wol and 'on' or 'off'))
         macs = mac and {uuid: mac} or {}
         if self.isTargetRegister(uuid, P2IT.COMPUTER):
             ret = self.__synchroTargets([uuid], P2IT.COMPUTER, macs = macs, wol = wol)
@@ -2237,6 +2245,7 @@ class ImagingRpcProxy(RpcProxyI):
         @returns: the list of uuids of the target that failed to synchronize
         @rtype: list
         """
+        logger = logging.getLogger()
         db = ImagingDatabase()
         dl = []
         def __getUUID(x):
@@ -2335,7 +2344,7 @@ class ImagingRpcProxy(RpcProxyI):
                     order = ImagingDatabase().getDefaultMenuItemOrder(item_id)[0].order
                     return [True, order]
                 except Exception:
-                    logger.warn("Get default menu item failed for UUID:%s" % uuid)
+                    logging.getLogger.warn("Get default menu item failed for UUID:%s" % uuid)
         return [False, 0]
 
 
@@ -2404,6 +2413,7 @@ class ImagingRpcProxy(RpcProxyI):
 
         if not isRegistered:
             # send the menu to the good imaging server to register the computer
+            logger = logging.getLogger()
             db.changeTargetsSynchroState([uuid], target_type, P2ISS.RUNNING)
 
             if target_type == P2IT.PROFILE:
@@ -2617,7 +2627,7 @@ class ImagingRpcProxy(RpcProxyI):
                 f = open(filetmp+title, 'w')
                 f.write(xmlWAFG)
             except Exception, e:
-                logger.exception(e)
+                logging.getLogger().exception(e)
                 return False
             else:
                 f.close()
@@ -2645,7 +2655,7 @@ class ImagingRpcProxy(RpcProxyI):
                 f = open(filexml, 'w')
                 f.write(xmlWAFG)
             except  Exception, e:
-                logger.exception(e)
+                logging.getLogger().exception(e)
                 return False
             else:
                 f.close()
@@ -2660,7 +2670,7 @@ class ImagingRpcProxy(RpcProxyI):
                 f = open(filexml+title, 'w')
                 f.write(xmlWAFG)
             except Exception, e:
-                logger.exception(e)
+                logging.getLogger().exception(e)
                 return False
             else:
                 f.close()
@@ -2701,7 +2711,7 @@ class ImagingRpcProxy(RpcProxyI):
             parameters["Os"] = os
             parameters['Notes'] = description
         except Exception, e:
-            logger.exception(e)
+            logging.getLogger().exception(e)
             return False
 
         else:
@@ -2742,7 +2752,7 @@ class ImagingRpcProxy(RpcProxyI):
                         content2.append(line)
 
             except Exception, e:
-                logger.exception(e)
+                logging.getLogger().exception(e)
                 return False
             else :
                 f.close()
@@ -3030,6 +3040,7 @@ class ImagingRpcProxy(RpcProxyI):
             * the error in case of failure
         @rtype: list
         """
+        logger = logging.getLogger()
         db = ImagingDatabase()
 
         imaging_server = db.getImagingServerByPackageServerUUID(imaging_server_uuid, True)
@@ -3335,6 +3346,7 @@ class ImagingRpcProxy(RpcProxyI):
             * the error in case of failure
         @rtype: list
         """
+        logger = logging.getLogger()
         log = {
             'level': level,
             'detail': message,
@@ -3399,7 +3411,7 @@ class ImagingRpcProxy(RpcProxyI):
             ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
             ret = [ret, '']
         except Exception, e:
-            logger.exception(e)
+            logging.getLogger().exception(e)
             ret = [False, str(e)]
         return ret
 
@@ -3446,7 +3458,7 @@ class ImagingRpcProxy(RpcProxyI):
             ret = db.editImage(item_uuid, image)
             ret = [ret, '']
         except Exception, e:
-            logger.exception(e)
+            logging.getLogger().exception(e)
             ret = [False, str(e)]
         return ret
 
@@ -3458,7 +3470,7 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             ret = db.injectInventory(imaging_server_uuid, computer_uuid, inventory)
         except Exception, e:
-            logger.exception(e)
+            logging.getLogger().exception(e)
             ret = [False, str(e)]
         return ret
 
@@ -3497,6 +3509,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: dict
         """
         db = ImagingDatabase()
+        logger = logging.getLogger()
         params = {}
         # First find clonezilla parameters for the machine itself
         # TBD
@@ -3529,6 +3542,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: dict
         """
         db = ImagingDatabase()
+        logger = logging.getLogger()
         menu = self.__generateDefaultSuscribeMenu(logger, db, imaging_server_uuid)
         return xmlrpcCleanup(menu)
 
@@ -3565,7 +3579,7 @@ class ImagingRpcProxy(RpcProxyI):
                 self.__synchroTargets([computer_uuid], P2IT.COMPUTER)
 
         except Exception, e:
-            logger.exception(e)
+            logging.getLogger().exception(e)
             return [False, str(e)]
         return [True, True]
 
@@ -3587,7 +3601,7 @@ def chooseMacAddress(ctx, uuid, macs):
             return mac
 
     if len(nic_uuid) != 1:
-        logger.error("couldn't find the registered mac address for computer %s"%uuid)
+        logging.getLogger().error("couldn't find the registered mac address for computer %s"%uuid)
         return None
 
     # If target has more than one macadresses, choose the one registered
@@ -3598,7 +3612,7 @@ def chooseMacAddress(ctx, uuid, macs):
         if nets['networkUuids'][i] == nic_uuid:
             mac = nets['macAddress'][i]
     if mac == None:
-        logger.error("couldn't find the registered mac address for computer %s"%uuid)
+        logging.getLogger().error("couldn't find the registered mac address for computer %s"%uuid)
     return mac
 
 def getJustOneMacPerComputer(ctx, macs):
@@ -3653,6 +3667,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
     """
 
     # initialize stuff
+    logger = logging.getLogger()
     ListImagingServerAssociated=[]
     db = ImagingDatabase()
 
@@ -3791,6 +3806,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
         return defer_list
 
 def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
+    logger = logging.getLogger()
     db = ImagingDatabase()
     def treatFailures(result, location_uuid, url, distinct_loc = distinct_loc, logger = logger, target_type = target_type, pid = pid, db = db):
         failures = []
@@ -3900,6 +3916,7 @@ def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis =
 
 
 def generateMenus(logger, db, uuids, unique=False):
+    logger = logging.getLogger()
     logger.debug("generateMenus for %s"%(str(uuids)))
     # get target location
     distinct_loc = {}
@@ -3982,6 +3999,7 @@ def computersUnregister(computers_UUID, backup):
 
     """
     db = ImagingDatabase()
+    logger = logging.getLogger()
 
     # get the computers
     ret = db.isTargetRegister(computers_UUID, P2IT.ALL_COMPUTERS)

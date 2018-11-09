@@ -29,9 +29,6 @@ import logging
 from mmc.plugins.inventory import getValues, getValuesFuzzy, getValuesWhere, getValueFuzzyWhere, getMachinesBy, getTypeOfAttribute
 from mmc.plugins.inventory.tables_def import PossibleQueries
 
-logger = logging.getLogger("inventory")
-
-
 def activate():
     return True
 
@@ -99,16 +96,16 @@ def funcGet(couple, type = 'list'):
     elif type == 'halfstatic':
         try:
             table, col, val = re.compile('/').split(couple)
-            logger.info('funcGet halfstatic:')
+            logging.getLogger().info('funcGet halfstatic:')
             dummy, f, v = PossibleQueries().possibleQueries('halfstatic')[couple]
-            logger.info("%s - %s" % (f,v))
+            logging.getLogger().info("%s - %s" % (f,v))
             def getListValue(ctx, value = '', table = table, col = col, f = f, v = v): # pyflakes.ignore
                 if value != '':
                     return getValueFuzzyWhere(table, f, v, col, value)
                 return getValuesWhere(table, f, v, col)
             return getListValue
         except ValueError:
-            logger.warning("%s cant be used as a 'halfstatic' value, please check the syntax of the config file."%(couple))
+            logging.getLogger().warning("%s cant be used as a 'halfstatic' value, please check the syntax of the config file."%(couple))
     elif type == 'extended':
         # Get the table and column name from the parameter
         table, col = re.compile('/').split(couple)
