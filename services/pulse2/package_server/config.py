@@ -43,7 +43,6 @@ if sys.platform != "win32":
     import grp
     from pulse2.utils import Pulse2ConfigParser
 
-logger = logging.getLogger("pkgs")
 
 class P2PServerCP(pulse2.utils.Singleton):
     """
@@ -153,7 +152,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             self.cp.read(config_file + '.local')
 
         if self.cp.has_option("main", "bind"):  # TODO remove in a future version
-            logger.warning("'bind' is obsolete, please replace it in your config file by 'host'")
+            logging.getLogger().warning("'bind' is obsolete, please replace it in your config file by 'host'")
             self.bind = self.cp.get("main", 'bind')
         elif self.cp.has_option('main', 'host'):
             self.bind = self.cp.get("main", 'host')
@@ -192,10 +191,10 @@ class P2PServerCP(pulse2.utils.Singleton):
                 self.password = self.cp.get('ssl', 'password')
             if not isTwistedEnoughForLoginPass():
                 if self.username:
-                    logger.warn("your version of twisted is not high enough to use login (ssl/username)")
+                    logging.getLogger().warn("your version of twisted is not high enough to use login (ssl/username)")
                     self.username = ''
                 if self.password != '':
-                    logger.warning("your version of twisted is not high enough to use password (ssl/password)")
+                    logging.getLogger().warning("your version of twisted is not high enough to use password (ssl/password)")
                     self.password = ''
 
         if self.cp.has_option('ssl', 'enablessl'):
@@ -539,7 +538,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                     if 'check_size' in package_detect_smart_method:
                         self.package_detect_smart_method.append(self.SMART_DETECT_SIZE)
                     else:
-                        logger.info("dont know the package_detect_smart_method '%s'")
+                        logging.getLogger().info("dont know the package_detect_smart_method '%s'")
                     if self.cp.has_option("main", "package_detect_smart_time"):
                         self.package_detect_smart_time = self.cp.getint("main", "package_detect_smart_time")
                 else:

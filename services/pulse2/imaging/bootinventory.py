@@ -381,9 +381,6 @@ FAMCPU_H = {
     "1F4": "Video Processor (family)",
 }
 
-logger = logging.getLogger("imaging")
-
-
 class BootInventory:
     """
         Class holding one inventory.
@@ -614,7 +611,7 @@ class BootInventory:
             mo = re.match(NETMASK_RE, line)
             if mo :
                 self.netmask_info = mo.group(1)
-                logger.info("netmask_info load self.netmask_info%s"%str(self.netmask_info))
+                logging.getLogger().info("netmask_info load self.netmask_info%s"%str(self.netmask_info))
                 # Compute network address (subnet) from ip and netmask
                 if self.netmask_info and self.ipaddr_info['ip']:
                     try:
@@ -652,7 +649,7 @@ class BootInventory:
 
 
     def initialise(self, xml, entity=None, hostname=None):
-        logger.debug("initialise xml\n%s"%xml)
+        logging.getLogger().debug("initialise xml\n%s"%xml)
         root = ET.fromstring(xml)
         for child in root:
             if child.tag == "DEVICEID":
@@ -751,7 +748,7 @@ class BootInventory:
         """
         Return an OCS XML string
         """
-        logger.debug("dumpOCS hostname %s  entity %s "%(hostname,entity))
+        logging.getLogger().debug("dumpOCS hostname %s  entity %s "%(hostname,entity))
 	REQUEST = ET.Element('REQUEST')
 
 	DEVICEID = ET.SubElement(REQUEST,'DEVICEID')
@@ -960,5 +957,5 @@ class BootInventory:
 				SPEED.text = 'N/A'
 
 	a = '<?xml version="1.0" encoding="utf-8"?>'+ET.tostring(REQUEST)
-	logger.debug("create xml :\n%s"%a)
+	logging.getLogger().debug("create xml :\n%s"%a)
 	return a

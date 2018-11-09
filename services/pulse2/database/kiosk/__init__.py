@@ -37,8 +37,6 @@ import logging
 import json
 import time
 
-logger = logging.getLogger("kiosk")
-
 
 class KioskDatabase(DatabaseHelper):
     """
@@ -87,9 +85,9 @@ class KioskDatabase(DatabaseHelper):
             try:
                 ret = self.db.connect()
             except DBAPIError, e:
-                logger.error(e)
+                logging.getLogger().error(e)
             except Exception, e:
-                logger.error(e)
+                logging.getLogger().error(e)
             if ret: break
         if not ret:
             raise "Database kiosk connection error"
@@ -158,8 +156,8 @@ class KioskDatabase(DatabaseHelper):
             l = [x for x in result]
             return l
         except Exception, e:
-            logger.error("get_profile_list_for_OUList")
-            logger.error(str(e))
+            logging.getLogger().error("get_profile_list_for_OUList")
+            logging.getLogger().error(str(e))
             return ""
 
     @DatabaseHelper._sessionm

@@ -24,9 +24,6 @@ from mmc.support.config import PluginConfig
 from ConfigParser import NoOptionError
 import logging
 
-logger = logging.getLogger("glpi")
-
-
 class GlpiConfig(PluginConfig):
     dbpoolrecycle = 60
     dbpoolsize = 5
@@ -127,7 +124,7 @@ class GlpiConfig(PluginConfig):
         # for adding its warranty url
         self.manufacturerWarranty = {}
         if 'manufacturers' in self.sections():
-            logger.debug('[GLPI] Get manufacturers and their warranty infos')
+            logging.getLogger().debug('[GLPI] Get manufacturers and their warranty infos')
             for manufacturer_key in self.options('manufacturers'):
                 if self.has_section('manufacturer_' + manufacturer_key) and self.has_option('manufacturer_' + manufacturer_key, 'url'):
                     try:
@@ -142,7 +139,7 @@ class GlpiConfig(PluginConfig):
                                                                    'type': type,
                                                                    'url': self.get('manufacturer_' + manufacturer_key, 'url'),
                                                                    'params': params}
-            logger.debug(self.manufacturerWarranty)
+            logging.getLogger().debug(self.manufacturerWarranty)
 
     def _parse_filter_on(self, value):
         """
@@ -161,11 +158,11 @@ class GlpiConfig(PluginConfig):
             couples = [f.split("=") for f in value.split(" ")]
 
             filters = dict([(key, values.split("|")) for (key, values) in couples])
-            logger.debug("will filter machines on %s" % (str(filters)))
+            logging.getLogger().debug("will filter machines on %s" % (str(filters)))
             return filters
 
         except Exception, e:
-            logger.warn("Parsing on filter_on failed: %s" % str(e))
+            logging.getLogger().warn("Parsing on filter_on failed: %s" % str(e))
             return None
 
 

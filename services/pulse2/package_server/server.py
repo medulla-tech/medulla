@@ -34,9 +34,6 @@ try:
 except ImportError:
     from twisted.protocols import http # pyflakes.ignore
 
-logger = logging.getLogger("pkgs")
-
-
 class P2PHTTPChannel(http.HTTPChannel):
     """
     We inherit from http.HTTPChannel to log incoming connections when the MMC
@@ -44,11 +41,13 @@ class P2PHTTPChannel(http.HTTPChannel):
     """
 
     def connectionMade(self):
+        logger = logging.getLogger()
         logger.debug("Connection from %s" % (self.transport.getPeer().host,))
         http.HTTPChannel.connectionMade(self)
 
     def connectionLost(self, reason):
         if not reason.check(twisted.internet.error.ConnectionDone) and not reason.check(twisted.internet.error.ConnectionLost):
+            logger = logging.getLogger()
             logger.error(reason)
         http.HTTPChannel.connectionLost(self, reason)
 

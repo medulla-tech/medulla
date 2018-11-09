@@ -37,7 +37,7 @@ class SchedulerApi(MyXmlrpc):
         MyXmlrpc.__init__(self)
         self.name = name
         self.config = config
-        self.logger = logging.getLogger("pkgs")
+        self.logger = logging.getLogger()
         self.assign = {}
         if 'schedulers' in self.config:
             self.schedulers = self.config['schedulers'].split(' ')

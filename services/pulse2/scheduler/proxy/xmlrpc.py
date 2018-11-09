@@ -33,15 +33,13 @@ except ImportError:
 
 from pulse2.utils import xmlrpcCleanup
 
-logger = logging.getLogger("pulse2")
-
 
 class ForwardingProxy(XMLRPC):
     """ XMLRPC Scheduler Proxy """
 
     def __init__(self, config):
         XMLRPC.__init__(self)
-        self.logger = logger
+        self.logger = logging.getLogger()
         self.config = config
 
     def register_forwarder(self, forwarder):

@@ -34,7 +34,7 @@ VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
 
-logger = logging.getLogger("guacamole")
+logger = logging.getLogger()
 
 
 # #############################################################
@@ -49,7 +49,7 @@ def activate():
     Read the plugin configuration, initialize it, and run some tests to ensure
     it is ready to operate.
     """
-    logger = logging.getLogger("guacamole")
+    logger = logging.getLogger()
     config = guacamoleConfig("guacamole")
     if config.disable:
         logger.warning("Plugin guacamole: disabled by configuration.")

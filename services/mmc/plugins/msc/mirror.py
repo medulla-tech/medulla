@@ -26,14 +26,11 @@ import logging
 import mmc.plugins.msc
 import pulse2.apis.clients.mirror
 
-logger = logging.getLogger("msc")
-
-
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
 class Mirror(pulse2.apis.clients.mirror_api.Mirror):
     def __init__(self, url = None):
-        self.logger = logger
+        self.logger = logging.getLogger()
         credit = ''
         if url:
             self.server_addr = url

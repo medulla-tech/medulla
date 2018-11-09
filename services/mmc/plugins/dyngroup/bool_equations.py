@@ -31,8 +31,6 @@ from pulse2.utils import unique
 from xml.dom import minidom
 from sets import Set
 
-logger = logging.getLogger("dyngroup")
-
 p1 = re.compile(' ')
 p2 = re.compile(',')
 p3 = re.compile('((?:AND|OR|NOT|ET|OU|NON)\([^\)\(]*\))', re.I)
@@ -59,11 +57,11 @@ class BoolRequest(object):
 
     def parse(self, str):
         self.equ = BoolEquation(self.clean(str))
-        logger.debug(self.equ.toXML())
+        logging.getLogger().debug(self.equ.toXML())
 
     def parseXML(self, str):
         self.equ = BoolEquation(self.clean(str), True)
-        logger.debug(self.equ.toXML())
+        logging.getLogger().debug(self.equ.toXML())
 
     def clean(self, str):
         # remove ' ' for an easier parsing
@@ -81,11 +79,11 @@ class BoolRequest(object):
         return self.equ.check()
 
     def merge(self, lists):
-        logger.debug(lists)
+        logging.getLogger().debug(lists)
         return self.equ.merge(lists)
 
     def getTree(self, lists):
-        logger.debug(lists)
+        logging.getLogger().debug(lists)
         return self.equ.getTree(lists)
 
     def countOps(self):
@@ -264,7 +262,7 @@ class BoolEquation(BoolElement):
         for beid in self.list:
             retour.append(self.list[beid].merge(lists))
         retour = self.op.merge(retour)
-        logger.debug('>>>> new one')
+        logging.getLogger().debug('>>>> new one')
         return retour
 
     def getTree(self, lists):

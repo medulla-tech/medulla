@@ -22,13 +22,10 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 import logging
 
-logger = logging.getLogger("dyngroup")
-
-
 class DyngroupComputers(ComputerI):
     # don't know how to do something else than delComputer.
     def __init__(self, conffile = None):
-        self.logger = logger
+        self.logger = logging.getLogger()
         self.dyngroup = DyngroupDatabase()
 
     def getComputer(self, ctx, filt = None):

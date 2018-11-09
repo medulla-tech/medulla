@@ -38,7 +38,7 @@ from pulse2.database.backuppc.schema import Backup_profiles, Period_profiles, Ba
 # Imported last
 import logging
 
-logger = logging.getLogger("backuppc")
+logger = logging.getLogger()
 
 
 class BackuppcDatabase(DatabaseHelper):
@@ -48,8 +48,6 @@ class BackuppcDatabase(DatabaseHelper):
     """
     is_activated = False
     session = None
-    # Because the class use self.logger
-    logger = logger
 
     def db_check(self):
         self.my_name = "backuppc"
@@ -57,6 +55,7 @@ class BackuppcDatabase(DatabaseHelper):
         return DatabaseHelper.db_check(self)
 
     def activate(self, config):
+        self.logger = logging.getLogger()
         if self.is_activated:
             return None
 

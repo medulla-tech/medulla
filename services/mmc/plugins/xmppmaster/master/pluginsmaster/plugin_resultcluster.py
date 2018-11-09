@@ -26,14 +26,12 @@ import logging
 
 plugin = {"VERSION": "1.0", "NAME": "resultcluster", "TYPE": "master"}
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug(plugin)
+    logging.getLogger().debug(plugin)
     try:
-        logger.debug("resultcluster %s" % message['from'])
+        logging.getLogger().debug("resultcluster %s" % message['from'])
         pass
     except Exception as e:
-        logger.error("Error resultcluster%s" % str(e))
+        logging.getLogger().error("Error resultcluster%s" % str(e))
         pass

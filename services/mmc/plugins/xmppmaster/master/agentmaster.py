@@ -75,7 +75,7 @@ from mmc.plugins.msc.database import MscDatabase
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster"))
 
-logger = logging.getLogger("xmppmaster")
+logger = logging.getLogger()
 xmpp = None
 
 if sys.version_info < (3, 0):
@@ -101,12 +101,12 @@ def send_message_json(to, jsonstring):
 
 
 def callXmppFunction(functionname, *args, **kwargs):
-    logger.debug("**call function %s %s %s" % (functionname, args, kwargs))
+    logging.getLogger().debug("**call function %s %s %s" % (functionname, args, kwargs))
     return getattr(ObjectXmpp(), functionname)(*args, **kwargs)
 
 
 def callXmppPlugin(plugin, data):
-    logger.debug("**call plugin %s" % (plugin))
+    logging.getLogger().debug("**call plugin %s" % (plugin))
     ObjectXmpp().callpluginmasterfrommmc(plugin, data)
 
 
@@ -369,7 +369,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             try:
                 data = json.dumps(datain)
             except Exception as e:
-                logger.error("iqsendpulse : encode json : %s" % str(e))
+                logging.error("iqsendpulse : encode json : %s" % str(e))
                 return '{"err" : "%s"}' % str(e).replace('"', "'")
         elif type(datain) == unicode:
             data = str(datain)
@@ -378,7 +378,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         try:
             data = data.encode("base64")
         except Exception as e:
-            logger.error("iqsendpulse : encode base64 : %s" % str(e))
+            logging.error("iqsendpulse : encode base64 : %s" % str(e))
             return '{"err" : "%s"}' % str(e).replace('"', "'")
         try:
             iq = self.make_iq_get(queryxmlns='custom_xep', ito=to)
@@ -404,21 +404,21 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                         print data
                                         return data
                                     except Exception as e:
-                                        logger.error("iqsendpulse : %s" % str(e))
+                                        logging.error("iqsendpulse : %s" % str(e))
                                         traceback.print_exc(file=sys.stdout)
                                         return '{"err" : "%s"}' % str(e).replace('"', "'")
                                     return "{}"
             except IqError as e:
                 err_resp = e.iq
-                logger.error("iqsendpulse : Iq error %s" % str(err_resp).replace('"', "'"))
+                logging.error("iqsendpulse : Iq error %s" % str(err_resp).replace('"', "'"))
                 traceback.print_exc(file=sys.stdout)
                 return '{"err" : "%s"}' % str(err_resp).replace('"', "'")
 
             except IqTimeout:
-                logger.error("iqsendpulse : Timeout Error")
+                logging.error("iqsendpulse : Timeout Error")
                 return '{"err" : "Timeout Error"}'
         except Exception as e:
-            logger.error("iqsendpulse : error %s" % str(e).replace('"', "'"))
+            logging.error("iqsendpulse : error %s" % str(e).replace('"', "'"))
             traceback.print_exc(file=sys.stdout)
             return '{"err" : "%s"}' % str(e).replace('"', "'")
         return "{}"
@@ -490,14 +490,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 listmacadress = self.machineWakeOnLan[uuidmachine]['mac'].split("||")
                 for macadress in listmacadress:
                     if macadress != "":
-                        logger.debug("wakeonlan machine  [Machine : %s]" % uuidmachine)
+                        logging.debug("wakeonlan machine  [Machine : %s]" % uuidmachine)
                         self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress})
 
         listobjsupp = []
         for deployuuid in self.machineDeploy:
             try:
                 deployobject = self.machineDeploy[deployuuid].pop(0)
-                logger.debug("send deploy on machine %s package %s" %
+                logging.debug("send deploy on machine %s package %s" %
                               (deployuuid, deployobject['pakkageid']))
                 self.applicationdeployjsonUuidMachineAndUuidPackage(deployuuid,
                                                                     deployobject['pakkageid'],
@@ -539,13 +539,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for plugin in listplugins:
             # Load the plugin and start action
             try:
-                logger.debug("Calling plugin %s " % plugin)
+                logging.debug("Calling plugin %s " % plugin)
                 call_plugin(plugin, self)
             except TypeError:
-                logger.error("TypeError: executing plugin %s %s" % (plugin, sys.exc_info()[0]))
+                logging.error("TypeError: executing plugin %s %s" % (plugin, sys.exc_info()[0]))
                 traceback.print_exc(file=sys.stdout)
             except Exception as e:
-                logger.error("Executing plugin %s %s" % (plugin, str(e)))
+                logging.error("Executing plugin %s %s" % (plugin, str(e)))
                 traceback.print_exc(file=sys.stdout)
 
     def xmpplog(self,
@@ -1464,7 +1464,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             # we try to see if we can update uuid_inventaire by querying glpi
             result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
             results = result[0].split(",")
-            logger.debug("listMacAdressforMachine   %s" % results)
+            logging.getLogger().debug("listMacAdressforMachine   %s" % results)
             uuid = ''
             for t in results:
                 computer = ComputerManager().getComputerByMac(t)
@@ -1484,7 +1484,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             machine = XmppMasterDatabase().getMachinefromjid(jid)
             result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
             results = result[0].split(",")
-            logger.debug("listMacAdressforMachine   %s" % results)
+            logging.getLogger().debug("listMacAdressforMachine   %s" % results)
             uuid = ''
             for t in results:
                 computer = ComputerManager().getComputerByMac(t)
@@ -1804,7 +1804,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         result = XmppMasterDatabase().listMacAdressforMachine(idmachine)
                         results = result[0].split(",")
 
-                        logger.debug("List mac adress for machine   %s" % results)
+                        logging.getLogger().debug("List mac adress for machine   %s" % results)
                         uuid = ''
                         for t in results:
                             computer = ComputerManager().getComputerByMac(t)
@@ -1867,7 +1867,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 break
 
                             else:
-                                logger.debug("No computer found")
+                                logging.getLogger().debug("No computer found")
                                 pass
                         else:
                             # Register machine at inventory creation
@@ -1972,7 +1972,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 return True
             return False
         except Exception as e:
-            logger.error("machine info %s" % (str(e)))
+            logging.getLogger().error("machine info %s" % (str(e)))
             traceback.print_exc(file=sys.stdout)
         return False
 
@@ -2045,7 +2045,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 if not 'ret' in dataobj:
                     dataobj['ret'] = 0
                 try:
-                    logger.debug("Calling plugin %s from  %s" % (dataobj['action'], msg['from']))
+                    logging.debug("Calling plugin %s from  %s" % (dataobj['action'], msg['from']))
                     msg['body'] = dataobj
                     del dataobj['data']
                     call_plugin(dataobj['action'],
@@ -2058,16 +2058,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 dataobj
                                 )
                 except TypeError:
-                    logger.error("TypeError: executing plugin %s %s" %
+                    logging.error("TypeError: executing plugin %s %s" %
                                   (dataobj['action'], sys.exc_info()[0]))
                     traceback.print_exc(file=sys.stdout)
 
                 except Exception as e:
-                    logger.error("Executing plugin %s %s" % (dataobj['action'], str(e)))
+                    logging.error("Executing plugin %s %s" % (dataobj['action'], str(e)))
                     traceback.print_exc(file=sys.stdout)
 
         except Exception as e:
-            logger.error("Message structure %s   %s " % (msg, str(e)))
+            logging.error("Message structure %s   %s " % (msg, str(e)))
             traceback.print_exc(file=sys.stdout)
 
     def muc_offlineMaster(self, presence):
@@ -2094,7 +2094,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def send_session_command(self, jid, action, data={}, datasession=None,
                              encodebase64=False, time=20, eventthread=None):
-        logger.debug("Send command and creation session")
+        logging.debug("Send command and creation session")
         if datasession == None:
             datasession = {}
         command = {'action': action,

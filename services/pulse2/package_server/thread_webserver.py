@@ -57,7 +57,7 @@ def initialize(config):
     @return: return False if initialization failed
     """
     ret = True
-    logger = logging.getLogger("pkgs")
+    logger = logging.getLogger()
 
     port = int(config.port)
 

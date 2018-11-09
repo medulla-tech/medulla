@@ -27,37 +27,34 @@ import time
 import twisted.internet.reactor
 from mmc.plugins.glpi.database import Glpi
 
-logger = logging.getLogger("glpi")
-
-
 def checkPool():
     ret = True
     try :
         pool = Glpi().database.db.pool
         if pool._max_overflow > -1 and pool._overflow >= pool._max_overflow :
-            logger.error('glpi plugin: CHECK: NOK: timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (pool._overflow, pool._max_overflow))
+            logging.getLogger().error('glpi plugin: CHECK: NOK: timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (pool._overflow, pool._max_overflow))
             pool.dispose()
             pool = pool.recreate()
             ret = False
     except Exception, e:
-        logger.warn('glpi plugin: CHECK: NOK: got the following error : %s' % (e))
+        logging.getLogger().warn('glpi plugin: CHECK: NOK: got the following error : %s' % (e))
         ret = False
     else:
-        logger.debug('glpi plugin: CHECK: OK, pool is (%d / %d)' % (pool._overflow, pool._max_overflow))
+        logging.getLogger().debug('glpi plugin: CHECK: OK, pool is (%d / %d)' % (pool._overflow, pool._max_overflow))
     return ret
 
 def checkStatus():
     if checkPool():
-        logger.info('glpi plugin: CHECK: OK')
+        logging.getLogger().info('glpi plugin: CHECK: OK')
 
 def scheduleCheckStatus(interval):
     """ periodicaly check our status stats """
-    logger.debug('glpi plugin: CHECK: Sleeping')
+    logging.getLogger().debug('glpi plugin: CHECK: Sleeping')
     delay = interval # next delay in seconds,
     delay -= time.time() % interval # rounded to the lower (second modulo base)
     twisted.internet.reactor.callLater(delay, awakeCheckStatus, interval)
 
 def awakeCheckStatus(interval):
-    logger.debug('glpi plugin: CHECK: Starting')
+    logging.getLogger().debug('glpi plugin: CHECK: Starting')
     checkStatus()
     scheduleCheckStatus(interval)

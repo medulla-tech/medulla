@@ -37,9 +37,6 @@ from pulse2.package_server.common import Common
 from pulse2.package_server.common.getCommand import getCommand
 from pulse2.package_server.config import P2PServerCP
 
-logger = logging.getLogger('pkgs')
-
-
 class PackageApiPut(PackageApiGet):
     type = 'PackageApiPut'
 
@@ -82,9 +79,9 @@ class PackageApiPut(PackageApiGet):
 
     def xmlrpc_pushPackage(self, random_dir, files, local_files):
         if local_files:
-            logger.info("pushing package from a local mmc-agent")
+            logging.getLogger().info("pushing package from a local mmc-agent")
         else:
-            logger.info("pushing package from an external mmc-agent")
+            logging.getLogger().info("pushing package from an external mmc-agent")
 
         if not os.path.exists(self.tmp_input_dir):
             os.makedirs(self.tmp_input_dir)
@@ -93,11 +90,11 @@ class PackageApiPut(PackageApiGet):
             os.mkdir(filepath)
         for file in files:
             if local_files:
-                logger.debug("Move file %s" % file['filename'])
+                logging.getLogger().debug("Move file %s" % file['filename'])
                 move(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
                              os.path.join(filepath, file['filename']))
             else:
-                logger.debug("Decode file %s" % file['filename'])
+                logging.getLogger().debug("Decode file %s" % file['filename'])
                 f = open(os.path.join(filepath, file['filename']), 'w')
                 f.write(b64decode(file['filebinary']))
                 f.close()

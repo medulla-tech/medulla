@@ -33,19 +33,17 @@ from utils import file_put_content
 
 plugin = {"VERSION": "1.0", "NAME": "resultasynchromeremoteshell", "TYPE": "master"}
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug("=====================================================")
-    logger.debug(plugin)
-    logger.debug("=====================================================")
+    logging.getLogger().debug("=====================================================")
+    logging.getLogger().debug(plugin)
+    logging.getLogger().debug("=====================================================")
     try:
         pathresult = os.path.join("/", "tmp", sessionid)
         print pathresult
         file_put_content(pathresult, json.dumps(data, indent=4), mode="w")
         print json.dumps(data, indent=4)
     except Exception, e:
-        logger.error("Error loading plugin: %s" % str(e))
+        logging.getLogger().error("Error loading plugin: %s" % str(e))
         traceback.print_exc(file=sys.stdout)
         pass

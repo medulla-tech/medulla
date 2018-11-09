@@ -31,11 +31,9 @@ import logging
 plugin = {"VERSION": "1.0", "NAME": "plugin_guacamole", "TYPE": "master"}
 # plugin run guacamole
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug(plugin)
+    logging.getLogger().debug(plugin)
     try:
         relayserver = XmppMasterDatabase().getRelayServerForMachineUuid(data['uuid'])
         jidmachine = XmppMasterDatabase().getjidMachinefromuuid(data['uuid'])
@@ -47,6 +45,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                 mtype='chat')
 
     except:
-        logger.error("error plugin plugin_guacamole %s" % data)
+        logging.getLogger().error("error plugin plugin_guacamole %s" % data)
         traceback.print_exc(file=sys.stdout)
         pass

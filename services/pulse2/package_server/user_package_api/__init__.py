@@ -38,7 +38,7 @@ class UserPackageApi(MyXmlrpc):
         # Mutable dict services used as default argument to a method or function
         services = services or {}
         MyXmlrpc.__init__(self)
-        self.logger = logging.getLogger("pkgs")
+        self.logger = logging.getLogger()
         self.name = name
         package_api_put = []
 

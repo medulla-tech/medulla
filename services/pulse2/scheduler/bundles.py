@@ -23,8 +23,6 @@
 
 import logging
 
-logger = logging.getLogger("pkgs")
-
 
 class BundleElement :
     """
@@ -71,7 +69,7 @@ class BundleReferences :
 
     def __init__(self, config):
         self.config = config
-        self.logger = logger
+        self.logger = logging.getLogger()
 
     @property
     def all_ids(self):

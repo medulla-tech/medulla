@@ -46,14 +46,12 @@ plugin = {"VERSION": "1.0", "NAME": "updatenbdeploy", "TYPE": "master"}
 # }
 # =====================================================
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug(plugin)
+    logging.getLogger().debug(plugin)
     try:
-        logger.debug("End deploy command : %s" % data['idcmd'])
+        logging.getLogger().debug("End deploy command : %s" % data['idcmd'])
         XmppMasterDatabase().updatedeployinfo(data['idcmd'])
     except Exception as e:
-        logger.error("Error in plugin %s" % str(e))
+        logging.getLogger().error("Error in plugin %s" % str(e))
         pass

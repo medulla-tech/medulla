@@ -39,10 +39,6 @@ from importlib import import_module
 import threading
 import socket
 import urllib
-
-logger = logging.getLogger("xmppmaster")
-
-
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "pluginsmaster"))
 
 if sys.platform.startswith('win'):

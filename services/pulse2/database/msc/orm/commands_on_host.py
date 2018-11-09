@@ -30,9 +30,6 @@ import time
 import datetime
 import sqlalchemy.orm
 
-logger = logging.getLogger("msc")
-
-
 class CommandsOnHost(object):
     """ Mapping between msc.commands_on_host and SA
     """
@@ -53,14 +50,14 @@ class CommandsOnHost(object):
         self.setCommandStatut('in_progress')
     def isStateRunning(self):
         result = self.getCommandStatut() == 'in_progress'
-        logger.debug("isStateRunning(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateRunning(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateScheduled(self):
         self.setCommandStatut('scheduled')
     def isStateScheduled(self):
         result = (self.getCommandStatut() == 'scheduled' or self.getCommandStatut() == 're_scheduled')
-        logger.debug("isStateScheduled(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateScheduled(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateDone(self):
@@ -68,7 +65,7 @@ class CommandsOnHost(object):
         self.setEndDate() # final state: we may write the date down
     def isStateDone(self):
         result = (self.getCommandStatut() == 'done')
-        logger.debug("isStateDone(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateDone(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateFailed(self):
@@ -76,24 +73,24 @@ class CommandsOnHost(object):
         self.setEndDate() # final state: we may write the date down
     def isStateFailed(self):
         result = (self.getCommandStatut() == 'failed')
-        logger.debug("isStateFailed(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateFailed(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateStopped(self):
         self.setCommandStatut('stopped')
     def isStateStopped(self):
         if self.getCommandStatut() == 'stop': # 'stop' deprecated a while ago, but may still be present, so we take the opportunity to fix it here
-            logger.warn("Detected command #%s in deprecated state 'stop', setting it to 'stopped'")
+            logging.getLogger().warn("Detected command #%s in deprecated state 'stop', setting it to 'stopped'")
             self.setStateStopped()
         result = (self.getCommandStatut() == 'stop' or self.getCommandStatut() == 'stopped')
-        logger.debug("isStateStopped(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateStopped(#%s): %s" % (self.getId(), result))
         return result
 
     def setStatePaused(self):
         self.setCommandStatut('pause')
     def isStatePaused(self):
         result = (self.getCommandStatut() == 'pause' or self.getCommandStatut() == 'paused')
-        logger.debug("isStatePaused(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStatePaused(#%s): %s" % (self.getId(), result))
         return result
     def toggleStatePaused(self):
         if self.isStatePaused():
@@ -105,14 +102,14 @@ class CommandsOnHost(object):
         self.setCommandStatut('over_timed')
     def isStateOverTimed(self):
         result = (self.getCommandStatut() == 'over_timed')
-        logger.debug("isStateOverTimed(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateOverTimed(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateUnreachable(self):
         self.setCommandStatut('not_reachable')
     def isStateUnreachable(self):
         result = (self.getCommandStatut() == 'not_reachable')
-        logger.debug("isStateUnreachable(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isStateUnreachable(#%s): %s" % (self.getId(), result))
         return result
 
     def setCommandStatut(self, current_state):
@@ -142,21 +139,21 @@ class CommandsOnHost(object):
         # fk_use_as_proxy is set (ie I found a proxy server)
         # fk_use_as_proxy is not equal to my id (ie the proxy server is not me)
         result = (self.fk_use_as_proxy != None and self.fk_use_as_proxy != self.id)
-        logger.debug("isProxyClient(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isProxyClient(#%s): %s" % (self.getId(), result))
         return result
     def isProxyServer(self):
         # I'm a server if:
         # order_in_proxy is set (ie I have chance to become a server)
         # fk_use_as_proxy is equal to my id (ie the proxy server is me)
         result = (self.order_in_proxy != None and self.fk_use_as_proxy == self.id)
-        logger.debug("isProxyServer(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isProxyServer(#%s): %s" % (self.getId(), result))
         return result
     def isLocalProxy(self):
         # I'm a server if:
         # order_in_proxy is set (ie I have chance to become a server)
         # fk_use_as_proxy is equal to my id (ie the proxy server is me)
         result = (self.order_in_proxy != None)
-        logger.debug("isLocalProxy(#%s): %s" % (self.getId(), result))
+        logging.getLogger().debug("isLocalProxy(#%s): %s" % (self.getId(), result))
         return result
 
     def setOrderInProxy(self, order_in_proxy):

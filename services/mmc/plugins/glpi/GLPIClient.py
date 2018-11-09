@@ -23,9 +23,6 @@
 import logging
 import xmlrpclib
 
-logger = logging.getLogger("glpi")
-
-
 class XMLRPCClient(object):
     """
     Python XMLRPC client for GLPI webservices plugin
@@ -35,7 +32,7 @@ class XMLRPCClient(object):
         self.serviceurl = self.baseurl + '/plugins/webservices/xmlrpc.php'
         self.session = None
         self.server = xmlrpclib.ServerProxy(self.serviceurl)
-        self.logger = logger
+        self.logger = logging.getLogger()
 
     def connect(self, login_name=None, login_password=None):
         if not None in [login_name, login_password]:

@@ -28,7 +28,7 @@ import json
 import logging
 import bsddb
 
-logger = logging.getLogger("xmppmaster")
+logger = logging.getLogger()
 
 
 class manageschedulerdeploy:

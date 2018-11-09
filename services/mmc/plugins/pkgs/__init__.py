@@ -53,12 +53,10 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 APIVERSION = "0:0:0"
 
-logger = logging.getLogger("pkgs")
-
-
 def getApiVersion(): return APIVERSION
 
 def activate():
+    logger = logging.getLogger()
     logger.debug("Pkgs is activating")
     config = PkgsConfig("pkgs")
     if config.disabled:
@@ -98,9 +96,9 @@ class ConfigReader(object):
         Returns:
         ConfigParser.ConfigParser instance
         """
-        logger.debug("Load config file %s" % inifile)
+        logging.getLogger().debug("Load config file %s" % inifile)
         if not os.path.exists(inifile) :
-            logger.error("Error while reading the config file: Not found.")
+            logging.getLogger().error("Error while reading the config file: Not found.")
             return False
 
         config = ConfigParser()
@@ -147,7 +145,7 @@ class RpcProxy(RpcProxyI):
             def _encodeFiles(random_dir, files):
                 encoded_files = []
                 for file in files:
-                    logger.debug("Encoding file %s" % file['filename'])
+                    logging.getLogger().debug("Encoding file %s" % file['filename'])
                     tmp_dir = file['tmp_dir']
                     f = open(os.path.join(tmp_dir, random_dir, file['filename']), 'r')
                     encoded_files.append({
@@ -163,7 +161,7 @@ class RpcProxy(RpcProxyI):
                     os.makedirs(os.path.join(pkgs_tmp_dir, random_dir))
                 filepath = os.path.join(pkgs_tmp_dir, random_dir)
                 for file in files:
-                    logger.debug("Decoding file %s" % file['filename'])
+                    logging.getLogger().debug("Decoding file %s" % file['filename'])
                     f = open(os.path.join(filepath, file['filename']), 'w')
                     f.write(b64decode(file['filebinary']))
                     f.close()
@@ -175,26 +173,26 @@ class RpcProxy(RpcProxyI):
                 if upa['uuid'] == pp_api_id:
                     local_pserver = self.getPServerIP() in ['localhost', '127.0.0.1'] and True or False
                     if local_mmc:
-                        logger.info("Push package from local mmc-agent...")
+                        logging.getLogger().info("Push package from local mmc-agent...")
                         if local_pserver:
-                            logger.info("... to local package server")
+                            logging.getLogger().info("... to local package server")
                             return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
                         else:
-                            logger.info("... to external package server")
+                            logging.getLogger().info("... to external package server")
                             # Encode files (base64) and send them with XMLRPC
                             encoded_files = _encodeFiles(random_dir, files)
                             return PackagePutA(upa).pushPackage(random_dir, encoded_files, local_pserver)
                     else:
-                        logger.info("Push package from external mmc-agent...")
+                        logging.getLogger().info("Push package from external mmc-agent...")
                         if local_pserver:
-                            logger.info("... to local package server")
+                            logging.getLogger().info("... to local package server")
                             # decode files
                             decoded_files = _decodeFiles(random_dir, files)
                             return PackagePutA(upa).pushPackage(random_dir, decoded_files, local_pserver)
                         else:
-                            logger.info("... to external package server")
+                            logging.getLogger().info("... to external package server")
                             return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
-            logger.warn("Failed to push package on %s"%(pp_api_id))
+            logging.getLogger().warn("Failed to push package on %s"%(pp_api_id))
             return False
         d = self.upaa_getUserPackageApi()
         d.addCallback(_ppa_pushPackage)
@@ -207,19 +205,19 @@ class RpcProxy(RpcProxyI):
         # Get root location for the user
         root_location_id = locations[0]['uuid'].replace('UUID', '')
         package['entity_id'] = root_location_id
-        logger.fatal(locations)
+        logging.getLogger().fatal(locations)
         def _ppa_putPackageDetail(result, pp_api_id = pp_api_id, package = package, need_assign = need_assign):
             for upa in result:
                 if upa['uuid'] == pp_api_id:
                     return PackagePutA(upa).putPackageDetail(package, need_assign)
-            logger.warn("Failed to put package details on %s"%(pp_api_id))
+            logging.getLogger().warn("Failed to put package details on %s"%(pp_api_id))
             return False
         d = self.upaa_getUserPackageApi()
         d.addCallback(_ppa_putPackageDetail)
         return d
 
     def ppa_dropPackage(self, pp_api_id, pid):
-        logger.info('I will drop package %s/%s' % (pp_api_id, pid))
+        logging.getLogger().info('I will drop package %s/%s' % (pp_api_id, pid))
         def _ppa_dropPackage(result, pp_api_id = pp_api_id, pid = pid):
             for upa in result:
                 if upa['uuid'] == pp_api_id:
@@ -365,6 +363,7 @@ class DownloadAppstreamPackageList(object):
         self.update=True
 
         tempfile.tempdir='/var/tmp/'
+        logger = logging.getLogger()
         appstream_url = PkgsConfig("pkgs").appstream_url
 
         #add non downloaded package to download package list
@@ -509,8 +508,8 @@ def setAppstreamJSON(data):
         f.close()
         return True
     except Exception, e:
-        logger.error('Cannot write appstream JSON')
-        logger.error(str(e))
+        logging.getLogger().error('Cannot write appstream JSON')
+        logging.getLogger().error(str(e))
         return False
 
 
@@ -577,6 +576,7 @@ def _cb_updateAppstreamPackages(reason):
     """
     This methode is the callback of updateAppstreamPackages
     """
+    logger = logging.getLogger()
     logger.info("Update of appstream packages finished correctly ")
     return reason
 
@@ -584,6 +584,7 @@ def _eb_updateAppstreamPackages(failure):
     """
     This method is the error Back of updateAppstreamPackages
     """
+    logger = logging.getLogger()
     logger.warning("Update of appstream packages failed : %s " % repr(failure))
 
 def getAppstreamNotifications():

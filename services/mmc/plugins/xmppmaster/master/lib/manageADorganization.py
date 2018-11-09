@@ -7,7 +7,7 @@ import os.path
 import json
 import logging
 
-logger = logging.getLogger("xmppmaster")
+logger = logging.getLogger()
 
 
 class manage_fqdn_window_activedirectory:

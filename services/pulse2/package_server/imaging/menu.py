@@ -34,8 +34,6 @@ import pulse2.utils
 import pulse2.package_server.imaging.api.functions
 from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 
-log = logging.getLogger('imaging')
-
 
 def isMenuStructure(menu):
     """
@@ -43,7 +41,7 @@ def isMenuStructure(menu):
     @rtype: bool
     """
     ret = True
-    logger = log
+    logger = logging.getLogger('imaging')
     if type(menu) == dict:
         for k in ['message',
                   'default_item',
@@ -83,7 +81,7 @@ class ImagingDefaultMenuBuilder:
 
         @return the object
         """
-        self.logger = log
+        self.logger = logging.getLogger('imaging')
         if not isMenuStructure(menu):
             raise TypeError('Bad menu structure')
         self.menu = menu
@@ -193,7 +191,7 @@ class ImagingMenu:
         @param config: a ImagingConfig object
         @param macaddress: the client MAC Address
         """
-        self.logger = log
+        self.logger = logging.getLogger('imaging')
         self.config = config  # the server configuration
         if macaddress:
             assert pulse2.utils.isMACAddress(macaddress)
@@ -414,7 +412,7 @@ class ImagingMenu:
             try:
                 buf = self.buildMenu()
             except Exception, e:
-                self.logger.error(str(e))
+                logging.getLogger().error(str(e))
 
             backupname = "%s.backup" % filename
             if os.path.exists(filename):
@@ -630,7 +628,7 @@ class ImagingItem:
         @param entry: menu item in dict format
         @type entry: dict
         """
-        self.logger = log
+        self.logger = logging.getLogger('imaging')
         self._convertEntry(entry)
         self.label = entry['name']  # the item label
         self.menulabel = entry['desc']  # the item menulabel
@@ -861,8 +859,8 @@ def changeDefaultMenuItem(macaddress, value):
     @return: True if success, else False
     @rtype: bool
     """
-    logger = log
     config = PackageServerConfig()
+    logger = logging.getLogger('imaging')
     filename = os.path.join(config.imaging_api['base_folder'],
                             config.imaging_api['bootmenus_folder'],
                             pulse2.utils.normalizeMACAddressForPXELINUX(macaddress))
@@ -929,7 +927,7 @@ class ImagingMulticastMenuBuilder:
 
         self.pathBootMenu = os.path.join(PackageServerConfig().imaging_api['base_folder'],
                             PackageServerConfig().imaging_api['bootmenus_folder'])
-        self.logger = log
+        self.logger = logging.getLogger('imaging')
         self.logger.debug('creation commande et menu [%s] '%(menu))
         self.menu = menu
         self.public_ip = PackageServerConfig().public_ip

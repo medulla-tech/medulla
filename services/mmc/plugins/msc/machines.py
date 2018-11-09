@@ -26,13 +26,10 @@ from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.base.computers import ComputerManager
 from mmc.support.mmctools import Singleton
 
-logger = logging.getLogger("msc")
-
-
 class Machine:
     def __init__(self, h_params):
         self.config = MscConfig()
-        self.logger = logger
+        self.logger = logging.getLogger()
         self.logger.debug("new machine: |%s|" % h_params)
         self.ip = None
         try:
@@ -69,7 +66,7 @@ class Machine:
 
 class Machines(Singleton):
     def __init__(self):
-        self.logger = logger
+        self.logger = logging.getLogger()
         self.config = MscConfig()
 
     def getAllMachines(self, ctx):

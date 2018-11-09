@@ -37,8 +37,6 @@ from mmc.database.database_helper import DatabaseHelper
 # Imported last
 import logging
 
-logger = logging.getLogger("dyngroup")
-
 
 class DyngroupDatabase(DatabaseHelper):
     """
@@ -53,7 +51,7 @@ class DyngroupDatabase(DatabaseHelper):
         return DatabaseHelper.db_check(self)
 
     def activate(self, config): ## conffile = None):
-        self.logger = logger
+        self.logger = logging.getLogger()
         if not self.is_activated:
             self.logger.info("Dyngroup database is connecting")
             self.config = config
@@ -313,12 +311,12 @@ class DyngroupDatabase(DatabaseHelper):
         and clears all static groups and imaging group linked
         to the machine
         """
-        logger.info('Removing all groups associated to machine %s.' % uuid)
+        logging.getLogger().info('Removing all groups associated to machine %s.' % uuid)
         session = create_session()
         # First get machine id
         mid = session.query(Machines.id).filter_by(uuid = uuid).scalar()
         if not mid:
-            logger.info('Machine not found in dyngroup database, skipping.')
+            logging.getLogger().info('Machine not found in dyngroup database, skipping.')
             return False
 
         # Deleting all entries in Results and ProfileResults
@@ -327,8 +325,8 @@ class DyngroupDatabase(DatabaseHelper):
             session.query(ProfilesResults).filter_by(FK_machines=mid).delete()
             session.query(Machines).filter_by(id = mid).delete()
         except Exception, e:
-            logger.error('Cannot delete machine %s from associated groups.' % uuid)
-            logger.error(str(e))
+            logging.getLogger().error('Cannot delete machine %s from associated groups.' % uuid)
+            logging.getLogger().error(str(e))
             return False
         session.close()
 
@@ -751,7 +749,7 @@ class Groups(object):
     def getUUID(self):
         if hasattr(self, 'id'):
             return self.id
-        logger.warn("try to get %s uuid!"%(type(self)))
+        logging.getLogger().warn("try to get %s uuid!"%(type(self)))
         return False
 
     def toH(self):
