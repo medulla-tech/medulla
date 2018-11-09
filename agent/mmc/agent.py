@@ -60,7 +60,7 @@ import string
 import threading
 import re
 
-logger = logging.getLogger("mmc")
+logger = logging.getLogger()
 
 sys.path.append("plugins")
 
@@ -615,23 +615,6 @@ class MMCApp(object):
 
             for filter in self.exclude:
                 logger.addFilter(ExcludeContainsFilter(filter))
-
-                logging.getLogger("xmppmaster").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("glpi").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("kiosk").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("imaging").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("scheduler").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("pkgs").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("backuppc").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("pulse2").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("inventory").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("msc").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("dyngroup").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("mmc").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("dashboard").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("support").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("guacamole").addFilter(ExcludeContainsFilter(filter))
-
                 logging.getLogger("sleekxmpp.xmlstream.xmlstream").addFilter(ExcludeContainsFilter(filter))
                 logging.getLogger("sleekxmpp.clientxmpp").addFilter(ExcludeContainsFilter(filter))
                 logging.getLogger("sleekxmpp.plugins.base").addFilter(ExcludeContainsFilter(filter))
@@ -647,23 +630,6 @@ class MMCApp(object):
         if hasattr(options, "include") and options.include is not None:
             self.include = options.include.split(",")
             logger.addFilter(IncludeContainsFilter(self.include))
-
-            logging.getLogger("xmppmaster").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("glpi").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("kiosk").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("imaging").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("scheduler").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("pkgs").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("backuppc").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("pulse2").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("inventory").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("msc").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("dyngroup").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("mmc").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("dashboard").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("support").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("guacamole").addFilter(IncludeContainsFilter(self.include))
-
             logging.getLogger("sleekxmpp.xmlstream.xmlstream").addFilter(IncludeContainsFilter(self.include))
             logging.getLogger("sleekxmpp.clientxmpp").addFilter(IncludeContainsFilter(self.include))
             logging.getLogger("sleekxmpp.plugins.base").addFilter(IncludeContainsFilter(self.include))

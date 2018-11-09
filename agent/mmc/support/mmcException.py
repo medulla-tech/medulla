@@ -28,14 +28,11 @@ Class for MMC exceptions
 import logging
 import sys
 
-log = logging.getLogger("support")
-
-
 class mmcException(Exception):
 
     def __init__(self, *kargs):
         Exception.__init__(self, kargs)
-        logger = log
+        logger = logging.getLogger()
         if not logger.handlers:
             # No handler defined
             # We create a default handler that writes to stderr
