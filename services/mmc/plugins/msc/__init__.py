@@ -467,24 +467,6 @@ class RpcProxy(RpcProxyI):
                                 start_date,
                                 end_date)
 
-        @d.addCallback
-        def scheduler_select(result):
-
-            dl = []
-            schedulers = MscDatabase().getCommandsonhostsAndSchedulers(cmd_id)
-
-            method = mmc.plugins.msc.client.scheduler.extend_command
-
-            for scheduler in schedulers.keys():
-                d_scheduler = method(scheduler, cmd_id, start_date, end_date)
-                dl.append(d_scheduler)
-
-            return defer.DeferredList(dl)
-
-        @d.addErrback
-        def scheduler_call(failure):
-            logging.getLogger().warn("Command extend signal sending failed: %s" % str(failure))
-
         return d
 
 
@@ -881,12 +863,6 @@ def stop_command_on_host(coh_id):
 def action_on_command(id, f_name, f_database, f_scheduler):
     # Update command in database
     getattr(MscDatabase(), f_database)(id)
-    # Stop related commands_on_host on related schedulers
-    scheds = MscDatabase().getCommandsonhostsAndSchedulers(id)
-    logger = logging.getLogger()
-    for sched in scheds:
-        d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(sched, scheds[sched])
-        d.addErrback(lambda err: logger.error("%s: " % (f_name) + str(err)))
 
 def action_on_bundle(id, f_name, f_database, f_scheduler):
     # Update command in database
