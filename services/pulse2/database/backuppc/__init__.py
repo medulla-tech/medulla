@@ -48,8 +48,6 @@ class BackuppcDatabase(DatabaseHelper):
     """
     is_activated = False
     session = None
-    # Because the class use self.logger
-    logger = logger
 
     def db_check(self):
         self.my_name = "backuppc"
