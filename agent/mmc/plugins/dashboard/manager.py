@@ -23,7 +23,7 @@ import logging
 from mmc.support.mmctools import SingletonN
 from mmc.plugins.dashboard.config import DashboardConfig
 
-logger = logging.getLogger("dashboard")
+logger = logging.getLogger()
 
 
 class DashboardManager(object):

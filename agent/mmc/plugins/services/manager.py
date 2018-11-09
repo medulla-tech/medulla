@@ -30,7 +30,7 @@ from mmc.agent import PluginManager
 from mmc.support.mmctools import SingletonN, shlaunch
 from mmc.plugins.services.config import ServicesConfig
 
-logger = logging.getLogger("mmc")
+logger = logging.getLogger()
 
 
 class ServiceManager(object):

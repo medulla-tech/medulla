@@ -28,7 +28,7 @@ Subscription configuration reader classes.
 from mmc.support.mmctools import SingletonN
 import logging
 
-logger = logging.getLogger("glpi")
+logger = logging.getLogger()
 
 class SubscriptionConfig:
     """

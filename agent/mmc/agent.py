@@ -60,7 +60,7 @@ import string
 import threading
 import re
 
-logger = logging.getLogger("mmc")
+logger = logging.getLogger()
 
 sys.path.append("plugins")
 
