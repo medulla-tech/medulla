@@ -29,8 +29,6 @@ from pulse2.proxyssl.utilities import Singleton
 import ConfigParser
 import sys
 
-logger = logging.getLogger("mmc-agent")
-
 
 class Pulse2InventoryProxyConfig(Singleton):
     server = ''
@@ -65,7 +63,7 @@ class Pulse2InventoryProxyConfig(Singleton):
         self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
         self.cp.read(config_file + '.local')
-        self.logger = logger
+        self.logger = logging.getLogger()
 
         if self.cp.has_option('main', 'server'):
             self.server = self.cp.get('main', 'server')

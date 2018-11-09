@@ -30,7 +30,7 @@ from launcher import launcher
 from utils import get_packages_dir, get_launcher_env
 
 
-logger = logging.getLogger("pkgs")
+logger = logging.getLogger(__name__)
 
 
 class CommandFailed(Exception):

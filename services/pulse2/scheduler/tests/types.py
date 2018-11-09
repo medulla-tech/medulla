@@ -36,7 +36,6 @@ from pulse2.scheduler.utils import launcher_proxymethod
 
 from pulse2.scheduler.tests.tools import TableFactory
 
-logger = logging.getLogger("tests")
 
 class CoHQueryFrame(object):
     """
@@ -97,7 +96,7 @@ class DonePhase(_MyPhase):
 
 class MyCircuit(Circuit):
     def __init__(self, _id, installed_phases, config):
-        self.logger = logger
+        self.logger = logging.getLogger()
         self.id = _id
         self.config = config
 

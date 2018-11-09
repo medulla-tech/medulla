@@ -28,7 +28,7 @@ import logging
 import contextlib
 
 
-logger = logging.getLogger("pkgs")
+logger = logging.getLogger(__name__)
 
 
 class HTTPErrorHandler(urllib2.HTTPDefaultErrorHandler):
