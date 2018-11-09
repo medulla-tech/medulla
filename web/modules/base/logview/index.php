@@ -191,6 +191,7 @@ jQuery(function(){
                             "iDisplayLength": <?php echo $maxperpage; ?>,
                             "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
                             "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
+                            'order': [[ 0, "desc" ]],
                             buttons: [
                             { extend: 'copy', className: 'btn btn-primary', text: 'Copy to clipboard' },
                             { extend: 'csv', className: 'btn btn-primary',  text: 'Save to csv file' },
