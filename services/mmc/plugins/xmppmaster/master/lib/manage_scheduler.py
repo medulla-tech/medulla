@@ -34,7 +34,7 @@ import croniter
 # print os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(
     os.path.realpath(__file__)), "..", "descriptorscheduler")))
-logger = logging.getLogger("xmppmaster")
+logger = logging.getLogger()
 
 
 class manage_scheduler:
@@ -65,7 +65,7 @@ class manage_scheduler:
 
         # creation repertoire si non exist
         if not os.path.exists(self.directoryschedule):
-            logging.getLogger("xmppmaster").debug("create directory scheduler %s" % self.directoryschedule)
+            logging.getLogger().debug("create directory scheduler %s" % self.directoryschedule)
             os.makedirs(self.directoryschedule, 0700)
 
         for x in os.listdir(self.directoryschedule):

@@ -47,7 +47,7 @@ def queryPossibilities():
     ret = {}
     ret['OU user'] = ['list', getAllOuuser]
     ret['OU Machine'] = ['list', getAllOumachine]
-    logging.getLogger("xmppmaster").info('queryPossibilities %s' %
+    logging.getLogger().info('queryPossibilities %s' %
                              (str(ret)))
     return ret
 
@@ -72,9 +72,9 @@ def extendedPossibilities():
 
 
 def query(ctx, criterion, value):
-    logging.getLogger("xmppmaster").info(ctx)
-    logging.getLogger("xmppmaster").info(criterion)
-    logging.getLogger("xmppmaster").info(value)
+    logging.getLogger().info(ctx)
+    logging.getLogger().info(criterion)
+    logging.getLogger().info(value)
     machines = []
 
     if criterion == 'OU user':

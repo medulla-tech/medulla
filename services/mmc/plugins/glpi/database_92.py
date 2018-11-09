@@ -66,10 +66,6 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback,sys
-
-logger = logging.getLogger("glpi")
-
-
 class Glpi92(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
@@ -89,7 +85,7 @@ class Glpi92(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logger.debug('Trying to detect if GLPI version is higher than 9.2')
+        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.2')
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
@@ -97,10 +93,10 @@ class Glpi92(DyngroupDatabaseHelper):
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
         if LooseVersion(self._glpi_version) >=  LooseVersion("9.2") and LooseVersion(self._glpi_version) <=  LooseVersion("9.2.4"):
-            logger.debug('GLPI version %s found !' % self._glpi_version)
+            logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
-            logger.debug('GLPI higher than version 9.2 was not detected')
+            logging.getLogger().debug('GLPI higher than version 9.2 was not detected')
             return False
 
     @property
@@ -111,7 +107,7 @@ class Glpi92(DyngroupDatabaseHelper):
         return False
 
     def activate(self, config = None):
-        self.logger = logger
+        self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
             self.logger.info("Glpi don't need activation")
@@ -577,7 +573,7 @@ class Glpi92(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-
+        
         query = (count and session.query(func.count(Machine.id))) or session.query(Machine)
         # manage criterion  for xmppmaster
         ret = self.__xmppmasterfilter(filt)
@@ -2659,7 +2655,7 @@ class Glpi92(DyngroupDatabaseHelper):
             return self.searchOptions['en_US'][str(log.id_search_option)]
         except:
             if log.id_search_option != 0:
-                logger.warn('I can\'t get a search option for id %s' % log.id_search_option)
+                logging.getLogger().warn('I can\'t get a search option for id %s' % log.id_search_option)
             return ''
 
     def getLinkedActionValues(self, log):

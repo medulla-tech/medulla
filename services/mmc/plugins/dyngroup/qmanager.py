@@ -37,9 +37,6 @@ from mmc.plugins.base.computers import ComputerManager
 
 from mmc.support.mmctools import Singleton
 
-logger = logging.getLogger("dyngroup")
-
-
 class QueryManager(Singleton):
     """
     MMC Query manager.
@@ -48,7 +45,7 @@ class QueryManager(Singleton):
     """
 
     def activate(self):
-        self.logger = logger
+        self.logger = logging.getLogger()
 
         os.chdir(os.path.dirname(mmc.support.mmctools.__file__) + '/..')
 
