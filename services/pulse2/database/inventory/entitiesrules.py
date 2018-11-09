@@ -27,9 +27,6 @@ import os
 from mmc.site import mmcconfdir
 from pulse2.utils import checkEntityName
 
-logger = logging.getLogger("inventory")
-
-
 class EntitiesRules:
 
     """
@@ -39,7 +36,7 @@ class EntitiesRules:
     """
 
     def __init__(self, conffile = mmcconfdir + '/pulse2/inventory-server/entities-rules'):
-        self.logger = logger
+        self.logger = logging.getLogger()
         self.conf = conffile
         self.rules = []
         self.operators =["match","equal","noequal","contains","nocontains","starts","finishes"]

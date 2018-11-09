@@ -36,7 +36,6 @@ PULSE2_IMAGING_SIZE_FNAME = 'size.txt'
 PULSE2_IMAGING_LOG_FNAME = 'log.txt'
 PULSE2_IMAGING_PROGRESS_FNAME = 'progress.txt'
 
-logger = logging.getLogger("imaging")
 
 class Pulse2Image:
     """
@@ -111,7 +110,7 @@ class Pulse2Image:
         try:
             fd_grub_file = file(os.path.join(self.directory, PULSE2_IMAGING_GRUB_FNAME))
         except Exception, e:
-            logger.error("Pulse2Image : can't read %s : %s" % (fd_grub_file, e))
+            logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_grub_file, e))
             raise e
 
 
@@ -175,7 +174,7 @@ class Pulse2Image:
         try:
             fd_size_file = open(os.path.join(self.directory, PULSE2_IMAGING_SIZE_FNAME))
         except Exception, e:
-            logger.error("Pulse2Image : can't read %s : %s" % (fd_size_file, e))
+            logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_size_file, e))
             raise e
 
         for line_size_file in fd_size_file:

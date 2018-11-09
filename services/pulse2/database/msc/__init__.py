@@ -54,9 +54,8 @@ from pulse2.managers.location import ComputerLocationManager
 import logging
 
 NB_DB_CONN_TRY = 2
-logger = logging.getLogger("msc")
-# TODO need to check for useless function (there should be many unused one...)
 
+# TODO need to check for useless function (there should be many unused one...)
 
 class MscDatabase(DatabaseHelper):
     """
@@ -70,7 +69,7 @@ class MscDatabase(DatabaseHelper):
         return DatabaseHelper.db_check(self)
 
     def activate(self, config):
-        self.logger = logger
+        self.logger = logging.getLogger()
         if self.is_activated:
             return None
 
@@ -459,10 +458,10 @@ class MscDatabase(DatabaseHelper):
 
     def get_countb(self, q):
         return q.with_entities(func.count()).scalar()
-    
+
     def get_count_timeout_wol_deploy( self, id_command, start_date):
         """
-            this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals 
+            this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals
         """
         #datenow = datetime.datetime.now()
         session = create_session()
@@ -712,7 +711,7 @@ class MscDatabase(DatabaseHelper):
     #jfkjfk
     def xmppstage_statecurrent_xmpp(self):
         """
-            this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals 
+            this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals
         """
         datenow = datetime.datetime.now()
         session = create_session()
@@ -1050,7 +1049,7 @@ class MscDatabase(DatabaseHelper):
                              target_name, cmd_max_connection_attempt,
                              start_date, end_date, scheduler = None,
                              order_in_proxy = None, max_clients_per_proxy = 0):
-        logger.debug("Create new command on host '%s'" % target_name)
+        logging.getLogger().debug("Create new command on host '%s'" % target_name)
         return {
             "host" : target_name,
             "start_date" : start_date,
@@ -2357,7 +2356,7 @@ class MscDatabase(DatabaseHelper):
         """
         reason.trap(TimeoutError)
         if self.db.pool._max_overflow > -1 and self.db.pool._overflow >= self.db.pool._max_overflow :
-            logger.error('Timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (self.db.pool._overflow, self.db.pool._max_overflow))
+            logging.getLogger().error('Timeout then overflow (%d vs. %d) detected in SQL pool : check your network connectivity !' % (self.db.pool._overflow, self.db.pool._max_overflow))
             self.db.pool.dispose()
             self.db.pool = self.db.pool.recreate()
         return reason
