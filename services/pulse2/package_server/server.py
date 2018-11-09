@@ -44,6 +44,7 @@ class P2PHTTPChannel(http.HTTPChannel):
     """
 
     def connectionMade(self):
+        logger = logger
         logger.debug("Connection from %s" % (self.transport.getPeer().host,))
         http.HTTPChannel.connectionMade(self)
 
