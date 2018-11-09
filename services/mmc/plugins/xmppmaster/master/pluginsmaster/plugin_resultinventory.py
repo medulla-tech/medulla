@@ -95,7 +95,7 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
                 time.sleep(counter)
                 if computers_id or counter >= 10:
                     break
-            logger.debug("Computers ID: %s" % computers_id)
+            logging.getLogger().debug("Computers ID: %s" % computers_id)
             nb_iter = int(reginventory['info']['max_key_index']) + 1
             for num in range(1, nb_iter):
                 reg_key_num = 'reg_key_'+str(num)
@@ -103,13 +103,13 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
                     reg_key = reginventory[reg_key_num]['key'].strip('"')
                     reg_key_value = reginventory[reg_key_num]['value'].strip('"')
                     key_name = reg_key.split('\\')[-1]
-                    logger.debug("Registry information:")
-                    logger.debug("  reg_key_num: %s" % reg_key_num)
-                    logger.debug("  reg_key: %s" % reg_key)
-                    logger.debug("  reg_key_value: %s" % reg_key_value)
-                    logger.debug("  key_name: %s" % key_name)
+                    logging.getLogger().debug("Registry information:")
+                    logging.getLogger().debug("  reg_key_num: %s" % reg_key_num)
+                    logging.getLogger().debug("  reg_key: %s" % reg_key)
+                    logging.getLogger().debug("  reg_key_value: %s" % reg_key_value)
+                    logging.getLogger().debug("  key_name: %s" % key_name)
                     registry_id = Glpi().getRegistryCollect(reg_key)
-                    logger.debug("  registry_id: %s" % registry_id)
+                    logging.getLogger().debug("  registry_id: %s" % registry_id)
                     XmppMasterDatabase().setlogxmpp("Inventory Registry information: [machine :  %s][reg_key_num : %s]"
                                                     "[reg_key: %s][reg_key_value : %s]"
                                                     "[key_name : %s]" % (
@@ -126,7 +126,7 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
                                                     "Master")
                     Glpi().addRegistryCollectContent(computers_id, registry_id, key_name, reg_key_value)
                 except Exception, e:
-                    logger.debug("Error getting key: %s" % reg_key)
+                    logging.getLogger().debug("Error getting key: %s" % reg_key)
                     pass
         time.sleep(25)
         # restart agent
