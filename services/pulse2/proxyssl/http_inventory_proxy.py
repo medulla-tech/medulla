@@ -40,8 +40,6 @@ from zlib import decompressobj, compressobj
 if os.name == 'nt':
     from _winreg import CloseKey, OpenKey, QueryValueEx, SetValue, SetValueEx, HKEY_LOCAL_MACHINE, KEY_SET_VALUE REG_SZ  # pyflakes.ignore
 
-logger = logging.getLogger("mmc-agent")
-
 
 def makeSSLContext(verifypeer, cacert, localcert, log = False):
     """
@@ -49,6 +47,7 @@ def makeSSLContext(verifypeer, cacert, localcert, log = False):
 
     @returns: a SSL context
     """
+    logger = logging.getLogger()
     if verifypeer:
         fd = open(localcert)
         localCertificate = ssl.PrivateCertificate.loadPEM(fd.read())
@@ -86,7 +85,7 @@ class MyProxyClientFactory(proxy.ProxyClientFactory):
         return proxy.ProxyClientFactory.buildProtocol(self, addr)
 
     def clientConnectionFailed(self, connector, reason):
-        logger.error("Connection failed: " + str(reason))
+        logging.getLogger().error("Connection failed: " + str(reason))
         proxy.ProxyClientFactory.clientConnectionFailed(self, connector, reason)
 
 
@@ -123,6 +122,8 @@ class MyProxyRequest(proxy.ProxyRequest):
             headers['host'] = host
         self.content.seek(0, 0)
         s = self.content.read()
+
+        logger = logging.getLogger()
 
         logger.debug("\nOcs Report Received");
 
@@ -191,7 +192,7 @@ class MyProxyRequest(proxy.ProxyRequest):
                 ctx = makeSSLContext(self.config.verifypeer, self.config.cert_file, self.config.key_file)
                 self.reactor.connectSSL(host, port, clientFactory, ctx)
             except Exception, e:
-                logger.error(str(e))
+                logging.getLogger().error(str(e))
                 raise
         else:
             self.reactor.connectTCP(host, port, clientFactory)
@@ -207,7 +208,7 @@ class HttpInventoryProxySingleton(Singleton):
 
     def initialise(self, config):
         self.config = config
-        self.logger = logger
+        self.logger = logging.getLogger()
 
     def check_flag(self):
         if self.config.flag_type == 'reg':

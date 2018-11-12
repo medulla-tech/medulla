@@ -3,14 +3,19 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Stephane Pointu <spointu@gmail.com>, 2017
+# Guillaume <guillaume.lassarre@siveo.net>, 2018
+# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 11:30+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Guillaume <guillaume.lassarre@siveo.net>, 2018\n"
+"POT-Creation-Date: 2018-11-05 09:37+0100\n"
+"PO-Revision-Date: 2017-09-12 12:18+0000\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -514,7 +519,7 @@ msgid ""
 "this archive (for proper special characters handling)."
 msgstr ""
 "Votre archive ZIP est en cours de préparation.<br/>Merci d'utiliser 7zip "
-"pour l'ouvrir (pour une support optimal des caractères spéciaux)."
+"pour l'ouvrir (pour un support optimal des caractères spéciaux)."
 
 #: modules/backuppc/backuppc/edit.php:43
 msgid "Host backup is not set."
@@ -558,7 +563,7 @@ msgstr "Configuration enregistrée"
 
 #: modules/backuppc/backuppc/advScripts.php:64
 msgid "Pre-backup script"
-msgstr "Script de pre-sauvegarde"
+msgstr "Script de pré-sauvegarde"
 
 #: modules/backuppc/backuppc/advScripts.php:68
 msgid "Post-backup script"
@@ -695,7 +700,7 @@ msgstr "Etat courant: "
 
 #: modules/backuppc/backuppc/hostSummary.php:210
 msgid "Start Full Backup"
-msgstr "Lancer sauvegarde complète"
+msgstr "Lancer une sauvegarde complète"
 
 #: modules/backuppc/backuppc/hostSummary.php:212
 msgid "Start an incremental backup"

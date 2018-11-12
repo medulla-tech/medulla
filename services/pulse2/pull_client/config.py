@@ -24,7 +24,7 @@ from ConfigParser import ConfigParser, NoOptionError, NoSectionError
 from utils import Singleton
 
 
-logger = logging.getLogger("pkgs")
+logger = logging.getLogger(__name__)
 
 
 class ConfigError(Exception):

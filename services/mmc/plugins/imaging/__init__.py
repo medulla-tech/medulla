@@ -63,8 +63,6 @@ NOAUTHNEEDED = ['computerRegister',
                 'getDefaultMenuItem',
                 'getClonezillaParamsForTarget']
 
-logger = logging.getLogger("imaging")
-
 
 def getApiVersion():
     return APIVERSION
@@ -75,6 +73,7 @@ def activate():
     Read the plugin configuration, initialize it, and run some tests to ensure
     it is ready to operate.
     """
+    logger = logging.getLogger()
     config = ImagingConfig("imaging")
 
     if config.disabled:
@@ -108,7 +107,7 @@ def activate_2():
     """
     if not PluginManager().isEnabled('pulse2'):
         ret = False
-        logger.error("Plugin imaging: plugin is disabled because the pulse2 plugin is not available")
+        logging.getLogger().error("Plugin imaging: plugin is disabled because the pulse2 plugin is not available")
     else:
         ret = True
     return ret
@@ -137,8 +136,8 @@ def purge_removed_computers():
 
     # Unregistering orphan targets without backup
     if to_delete:
-        logger.info('Orphan imaging computer(s) found')
-        logger.info('Going to purge %s' % ' '.join(to_delete))
+        logging.getLogger().info('Orphan imaging computer(s) found')
+        logging.getLogger().info('Going to purge %s' % ' '.join(to_delete))
         computersUnregister(to_delete, False)
 
     return True

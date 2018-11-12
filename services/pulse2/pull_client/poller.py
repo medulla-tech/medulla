@@ -30,7 +30,7 @@ from config import PullClientConfig
 from launcher import launcher
 
 
-logger = logging.getLogger("pkgs")
+logger = logging.getLogger(__name__)
 
 
 class QueueFinished(object):

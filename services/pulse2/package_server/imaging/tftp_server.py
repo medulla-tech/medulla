@@ -37,9 +37,6 @@ thread = deferToThread.__get__ #Create an alias for deferred functions
 from ptftplib.tftpserver import TFTPServer, TFTPServerConfigurationError
 from pulse2.package_server.imaging.api.functions import Imaging
 
-logger = logging.getLogger('imaging')
-
-
 class StringFileHandler:
 
     data = ''
@@ -75,7 +72,7 @@ class ImagingTFTPServer(object):
 
     def __init__(self):
         # TODO: read config and set params
-        self.logger = logger
+        self.logger = logging.getLogger()
 
         def file_handler(TFTPServerHandler, path):
             # Function that handles virtual files serving

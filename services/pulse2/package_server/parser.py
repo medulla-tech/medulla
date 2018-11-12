@@ -31,12 +31,10 @@ from xml.dom import minidom
 import json
 from pulse2.package_server.types import Package
 
-logger = logging.getLogger("pkgs")
-
 
 class PackageParser:
     def init(self, config):
-        self.logger = logger
+        self.logger = logging.getLogger()
         if 1:#config.parser == None or config.parser == 'XML':
             self.parser = PackageParserJSON()
         else:
@@ -67,7 +65,7 @@ class PackageParserXML:
                 xml = minidom.parseString(file)
 
             # parsing routines
-            self.logger = logger
+            self.logger = logging.getLogger()
             root = xml.getElementsByTagName('package')
             if len(root) != 1:
                 raise Exception('CANTPARSE')
@@ -158,8 +156,8 @@ class PackageParserXML:
                 associateinventory
             )
         except Exception, e:
-            logger.error("parse_str failed")
-            logger.error(e)
+            logging.getLogger().error("parse_str failed")
+            logging.getLogger().error(e)
             p = None
 
         return p
@@ -329,7 +327,7 @@ class PackageParserJSON:
                 data = json.loads(file)
 
             # parsing routines
-            self.logger = logger
+            self.logger = logging.getLogger()
             try:
                 pid = data['id']
 
@@ -392,8 +390,8 @@ class PackageParserJSON:
                 metagenerator
             )
         except Exception, e:
-            logger.error("parse_str failed")
-            logger.error(e)
+            logging.getLogger().error("parse_str failed")
+            logging.getLogger().error(e)
             p = None
 
         return p

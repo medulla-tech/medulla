@@ -202,16 +202,6 @@ $n->display();
         text-decoration: none;
         color: #FFF;
     }
-    li.advanced a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/run.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-    }
 
 li.convergence a {
         padding: 3px 0px 5px 20px;

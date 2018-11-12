@@ -29,13 +29,11 @@ import json
 
 plugin = {"VERSION": "1.0", "NAME": "asynchromeremoteshell", "TYPE": "master"}
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug("=====================================================")
-    logger.debug(plugin)
-    logger.debug("=====================================================")
+    logging.getLogger().debug("=====================================================")
+    logging.getLogger().debug(plugin)
+    logging.getLogger().debug("=====================================================")
     try:
         print data['data'][1][0]
         print json.dumps(data, indent=4)
@@ -56,6 +54,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                 mtype='chat')
 
     except Exception, e:
-        logger.error("Error loading plugin: %s" % str(e))
+        logging.getLogger().error("Error loading plugin: %s" % str(e))
         traceback.print_exc(file=sys.stdout)
         pass

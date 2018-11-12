@@ -33,7 +33,6 @@ import pulse2.utils
 import pulse2.package_server.config
 
 # FIXME : shouldn't this cache be updated by the object itself ?
-logger = logging.getLogger('imaging')
 
 class UUIDCache(pulse2.utils.Singleton):
     """
@@ -45,7 +44,7 @@ class UUIDCache(pulse2.utils.Singleton):
      - if not, try to find it asking the agent, updating both disk cache and local cache, resetting lifetime
     """
 
-    log = logger
+    log = logging.getLogger('imaging')
     config = ConfigParser.RawConfigParser()
 
     def __init__(self):

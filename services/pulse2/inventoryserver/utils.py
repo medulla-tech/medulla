@@ -31,9 +31,6 @@ from configobj import ConfigObj
 from mmc.client import sync
 from mmc.site import mmcconfdir
 
-logger = logging.getLogger("inventory")
-
-
 # Read inventory-server.ini config file
 class ConfigReader :
     """Read and parse config files."""
@@ -53,11 +50,11 @@ class ConfigReader :
 
         @return: configobj.ConfigObj instance
         """
-        logger.debug("Load config file %s" % inifile)
+        logging.getLogger().debug("Load config file %s" % inifile)
         if not os.path.exists(inifile) :
 
-            logger.warn("Error while reading the config file:")
-            logger.warn("Not found.")
+            logging.getLogger().warn("Error while reading the config file:")
+            logging.getLogger().warn("Not found.")
 
             raise IOError, "Config file '%s' not found" % inifile
 
@@ -95,8 +92,8 @@ class MMCProxy :
         """ URL building for XML-RPC proxy """
 
         if not "mmc_agent" in self.inv_server_config :
-            logger.warn("Error while reading the config file:")
-            logger.warn("Section 'mmc_agent' not exists")
+            logging.getLogger().warn("Error while reading the config file:")
+            logging.getLogger().warn("Section 'mmc_agent' not exists")
             self._failure = True
             return
 
@@ -105,8 +102,8 @@ class MMCProxy :
         for option in ["username", "password", "host", "port"] :
 
             if option not in mmc_section :
-                logger.warn("Error while reading section 'mmc_agent':")
-                logger.warn("Option '%s' not exists" % option)
+                logging.getLogger().warn("Error while reading section 'mmc_agent':")
+                logging.getLogger().warn("Option '%s' not exists" % option)
 
                 self._failure = True
                 return
@@ -116,7 +113,7 @@ class MMCProxy :
         password = mmc_section["password"]
         port = mmc_section["port"]
 
-        logger.debug("Building the connection URL at mmc-agent")
+        logging.getLogger().debug("Building the connection URL at mmc-agent")
 
         self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
 
@@ -134,7 +131,7 @@ class MMCProxy :
             self._proxy = sync.Proxy(self._url)
 
         except Exception, err :
-            logger.error("Error while connecting to mmc-agent : %s" % err)
+            logging.getLogger().error("Error while connecting to mmc-agent : %s" % err)
             self._failure = True
 
     @property

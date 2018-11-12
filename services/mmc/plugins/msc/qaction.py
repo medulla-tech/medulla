@@ -31,7 +31,7 @@ import logging
 import dircache
 from mmc.plugins.msc.config import MscConfig
 
-log = logging.getLogger("msc")
+log = logging.getLogger()
 
 class Qaction:
     keywords = ['command', 'titlefr', 'titleuk']

@@ -33,9 +33,6 @@ import os.path
 from mmc.site import mmcconfdir
 from pulse2.database.inventory.config import InventoryDatabaseConfig
 
-logger = logging.getLogger("inventory")
-
-
 class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     """
     Singleton Class to hold configuration directives
@@ -84,7 +81,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
             self.dbname = 'inventory'
 
         if self.cp.has_option("main", "server"): # TODO remove in a future version
-            logger.warning("'server' is obslete, please replace it in your config file by 'host'")
+            logging.getLogger().warning("'server' is obslete, please replace it in your config file by 'host'")
             self.bind = self.cp.get("main", 'server')
         elif self.cp.has_option('main', 'host'):
             self.bind = self.cp.get("main", 'host')

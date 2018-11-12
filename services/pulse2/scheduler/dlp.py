@@ -27,9 +27,6 @@ from pulse2.scheduler.queries import get_available_commands
 from pulse2.scheduler.queries import pull_target_update
 from pulse2.scheduler.queries import machine_has_commands, verify_target
 
-logger = logging.getLogger("msc")
-
-
 def get_dlp_method(phase):
     methods = {"wol": "pull_completed_wol",
                "upload": "pull_completed_pull",
@@ -46,7 +43,7 @@ class DownloadQuery :
     """ Provides the remote queries from a DLP to the msc database """
 
     def __init__(self):
-        self.logger = logger
+        self.logger = logging.getLogger()
         self.config = SchedulerConfig()
 
     def get_available_commands(self, uuid):

@@ -33,8 +33,6 @@ from twisted.internet.protocol import Protocol
 from twisted.web._newclient import ResponseDone
 from twisted.internet.error import ConnectionRefusedError
 
-logger = logging.getLogger("support")
-
 
 class QueryProtocol(Protocol):
     """Protocol providing returned request """
@@ -46,7 +44,7 @@ class QueryProtocol(Protocol):
         """
         self.finished = finished
         self._data = []
-        self.logger = logger
+        self.logger = logging.getLogger()
 
     def dataReceived(self, data):
         """
@@ -100,7 +98,7 @@ class Query(object):
         self.url = "%s/%s/pulse/?country=%s" % (url, client_uuid, country)
         self.clock = clock
         self.license_tmp_file = license_tmp_file
-        self.logger = logger
+        self.logger = logging.getLogger()
 
 
     def get(self, offline=False):

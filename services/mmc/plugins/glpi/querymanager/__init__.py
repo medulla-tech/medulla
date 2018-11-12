@@ -32,8 +32,6 @@ from mmc.plugins.glpi.config import GlpiQueryManagerConfig
 
 from pulse2.utils import unique
 
-logger = logging.getLogger("glpi")
-
 
 def activate():
     conf = GlpiQueryManagerConfig("glpi")
@@ -73,7 +71,7 @@ def queryPossibilities():
                                 3,
                                 2]
     ret['Online computer'] = [ 'bool' ]
-    logger.info('queryPossibilities %s' %
+    logging.getLogger().info('queryPossibilities %s' %
                              (str(ret)))
     return ret
 
@@ -124,7 +122,10 @@ def queryGroups():
     # REGISTER
     ret.append(['Register',
                 [['Register key',
-                  'Microsoft Windows keys registers']]])
+                  'Microsoft Windows keys registers'],
+                ['Register key value',
+                  'Microsoft Windows keys registers value']]])
+    #PRESENCE XMPP
     ret.append(['Presence',
                 [['Online computer', 'Presence of the machine Yes/No']
                  ]])
@@ -139,9 +140,9 @@ def extendedPossibilities():
 
 
 def query(ctx, criterion, value):
-    logger.info(ctx)
-    logger.info(criterion)
-    logger.info(value)
+    logging.getLogger().info(ctx)
+    logging.getLogger().info(criterion)
+    logging.getLogger().info(value)
     machines = []
     if criterion == 'OS' or criterion == 'Operating system':
         machines = [x.name for x in Glpi().getMachineByOs(ctx, value)]
@@ -216,10 +217,8 @@ def getAllSoftwares(ctx, softname='', vendor=None):
 
 def getRegisterKeyValue(ctx, keyregister="", value=None):
     if value is None:
-        DMSG("parameter : keyregister %s "%(keyregister))
         return getAllRegistryKey(ctx, keyregister)
     else:
-        DMSG("parameter : keyregister %s  value %s"%(keyregister, value))
         return getAllRegistryKeyValue(ctx, keyregister, value)
 
 def getAllRegistryKeyValue(ctx, keyregister, value):

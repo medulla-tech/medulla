@@ -27,10 +27,8 @@ import logging
 
 plugin = {"VERSION": "1.0", "NAME": "resultforce_setup_agent", "TYPE": "master"}
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug("________________________________________________")
-    logger.debug(plugin)
-    logger.debug("________________________________________________")
+    logging.getLogger().debug("________________________________________________")
+    logging.getLogger().debug(plugin)
+    logging.getLogger().debug("________________________________________________")

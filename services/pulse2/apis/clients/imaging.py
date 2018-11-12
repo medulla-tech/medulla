@@ -33,8 +33,6 @@ import logging
 # need to get a ImagingApiManager, it will manage a Imaging api for each mirror
 # defined in the conf file.
 
-logger = logging.getLogger("pulse2")
-
 
 class Imaging(Pulse2Api):
 
@@ -434,7 +432,7 @@ class ImagingApi(Imaging):
     log_entrance = []
 
     def __init__(self, url=None):
-        self.logger = logger
+        self.logger = logging.getLogger()
         credit = ''
         if type(url) == unicode:
             url = url.encode('utf-8')

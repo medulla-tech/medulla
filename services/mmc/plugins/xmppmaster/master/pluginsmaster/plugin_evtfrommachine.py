@@ -29,11 +29,9 @@ plugin = {"VERSION": "1.0", "NAME": "evtfrommachine", "TYPE": "master"}
 # This plugin is calling from an AM (windows), if AM is stopped by a user.
 # Ctrl + c for example.
 
-logger = logging.getLogger("xmppmaster")
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug(plugin)
+    logging.getLogger().debug(plugin)
     if data['event'] == "SHUTDOWN_EVENT":
         msg_changed_status = {
             "from": data['machine'],

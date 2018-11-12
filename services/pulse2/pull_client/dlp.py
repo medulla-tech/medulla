@@ -12,7 +12,7 @@ from utils import get_hostname, get_mac_addresses
 from http import HTTPClient, CookieSessionExpired
 
 
-logger = logging.getLogger("pkgs")
+logger = logging.getLogger(__name__)
 
 
 class DlpClient(HTTPClient):
@@ -173,6 +173,7 @@ class DlpClient(HTTPClient):
 
 
 if __name__ == "__main__":
+    logger = logging.getLogger()
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     h = logging.StreamHandler()
     h.setFormatter(formatter)

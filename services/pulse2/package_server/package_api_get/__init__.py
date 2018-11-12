@@ -34,7 +34,7 @@ class PackageApiGet(MyXmlrpc):
     type = 'PackageApiGet'
     def __init__(self, mp, name = ''):
         MyXmlrpc.__init__(self)
-        self.logger = logging.getLogger("pkgs")
+        self.logger = logging.getLogger()
         self.name = name
         self.mp = mp
         if Common().getPackages(self.mp) == None:

@@ -37,7 +37,6 @@ from pulse2.database.msc.orm.target import Target
 
 # Pulse 2 stuff
 from pulse2.scheduler.timeaxis import LaunchTimeResolver
-logger = logging.getLogger("inventory")
 
 
 class Commands(object):
@@ -57,7 +56,7 @@ class Commands(object):
 
     def isPartOfABundle(self):
         result = self.fk_bundle != None
-        logger.debug("isPartOfABundle(#%s): %s" %
+        logging.getLogger().debug("isPartOfABundle(#%s): %s" %
                                   (self.id, result))
         return result
 
@@ -67,29 +66,29 @@ class Commands(object):
 
     def hasToWOL(self):
         result = self.do_wol == 'enable'
-        logger.debug("hasToWOL(#%s): %s" % (self.id, result))
+        logging.getLogger().debug("hasToWOL(#%s): %s" % (self.id, result))
         return result
 
     def hasToImagingMenu(self):
         result = self.do_imaging_menu == 'enable'
-        logger.debug("hasToImagingMenu(#%s): %s" %
+        logging.getLogger().debug("hasToImagingMenu(#%s): %s" %
                                   (self.id, result))
         return result
 
     def hasToRunInventory(self):
         result = self.do_inventory == 'enable'
-        logger.debug("hasToRunInventory(#%s): %s" %
+        logging.getLogger().debug("hasToRunInventory(#%s): %s" %
                                   (self.id, result))
         return result
 
     def hasToReboot(self):
         result = self.do_reboot == 'enable'
-        logger.debug("hasToReboot(#%s): %s" % (self.id, result))
+        logging.getLogger().debug("hasToReboot(#%s): %s" % (self.id, result))
         return result
 
     def hasToHalt(self):
         result = len(self.do_halt) > 0
-        logger.debug("hasToHalt(#%s): %s" % (self.id, result))
+        logging.getLogger().debug("hasToHalt(#%s): %s" % (self.id, result))
         return result
 
     def hasToHaltIfDone(self):
@@ -97,7 +96,7 @@ class Commands(object):
             result = 'done' in self.do_halt.split(',')
         except AttributeError:  # workaround for buggy v.14 database
             result = 'done' in self.do_halt
-        logger.debug("hasToHaltIfDone(#%s): %s" %
+        logging.getLogger().debug("hasToHaltIfDone(#%s): %s" %
                                   (self.id, result))
         return result
 
@@ -106,7 +105,7 @@ class Commands(object):
             result = 'failed' in self.do_halt.split(',')
         except AttributeError:  # workaround for buggy v.14 database
             result = 'failed' in self.do_halt
-        logger.debug("hasToHaltIfFailed(#%s): %s" %
+        logging.getLogger().debug("hasToHaltIfFailed(#%s): %s" %
                                   (self.id, result))
         return result
 
@@ -115,7 +114,7 @@ class Commands(object):
             result = 'over_time' in self.do_halt.split(',')
         except AttributeError:  # workaround for buggy v.14 database
             result = 'over_time' in self.do_halt
-        logger.debug("hasToHaltIfOverTime(#%s): %s" %
+        logging.getLogger().debug("hasToHaltIfOverTime(#%s): %s" %
                                   (self.id, result))
         return result
 
@@ -124,50 +123,50 @@ class Commands(object):
             result = 'out_of_interval' in self.do_halt.split(',')
         except AttributeError:
             result = 'out_of_interval' in self.do_halt
-        logger.debug("hasToHaltIfOutOfInterval(#%s): %s" %
+        logging.getLogger().debug("hasToHaltIfOutOfInterval(#%s): %s" %
                                   (self.id, result))
         return result
 
     def hasSomethingToUpload(self):
         result = (len(self.files) != 0)
-        logger.debug("hasSomethingToUpload(#%s): %s" %
+        logging.getLogger().debug("hasSomethingToUpload(#%s): %s" %
                                   (self.id, result))
         return result
 
     def hasSomethingToExecute(self):
         result = len(self.start_file) != 0
-        logger.debug("hasSomethingToExecute(#%s): %s" %
+        logging.getLogger().debug("hasSomethingToExecute(#%s): %s" %
                                   (self.getId(), result))
         return result
 
     def hasSomethingToDelete(self):
         result = len(self.files) != 0
-        logger.debug("hasSomethingToDelete(#%s): %s" %
+        logging.getLogger().debug("hasSomethingToDelete(#%s): %s" %
                                   (self.getId(), result))
         return result
 
     def hasToUseProxy(self):
         result = (self.proxy_mode == 'queue' or self.proxy_mode == 'split')
-        logger.debug("hasToUseProxy(#%s): %s" %
+        logging.getLogger().debug("hasToUseProxy(#%s): %s" %
                                   (self.getId(), result))
         return result
 
     def hasToUseQueueProxy(self):
         result = (self.proxy_mode == 'queue')
-        logger.debug("hasToUseQueueProxy(#%s): %s" %
+        logging.getLogger().debug("hasToUseQueueProxy(#%s): %s" %
                                   (self.getId(), result))
         return result
 
     def hasToUseSplitProxy(self):
         result = (self.proxy_mode == 'split')
-        logger.debug("hasToUseSplitProxy(#%s): %s" %
+        logging.getLogger().debug("hasToUseSplitProxy(#%s): %s" %
                                   (self.getId(), result))
         return result
 
     def isQuickAction(self):
         # TODO: a quick action is not only an action with nothing to upload
         result = (len(self.files) == 0)
-        logger.debug("isQuickAction(#%s): %s" % (self.id, result))
+        logging.getLogger().debug("isQuickAction(#%s): %s" % (self.id, result))
         return result
 
     def inDeploymentInterval(self):
@@ -177,7 +176,7 @@ class Commands(object):
         else:
             result = LaunchTimeResolver().in_deployment_interval(self.deployment_intervals, datetime.datetime.today())
         if not result:
-            logger.debug("inDeploymentInterval(#%s): %s" %
+            logging.getLogger().debug("inDeploymentInterval(#%s): %s" %
                                       (self.id, result))
         return result
 

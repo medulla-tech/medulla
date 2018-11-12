@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 11:30+0200\n"
+"POT-Creation-Date: 2018-11-05 09:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2138,12 +2138,12 @@ msgstr ""
 msgid "Cancel bundle creation"
 msgstr ""
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:132
+#: modules/msc/includes/commands_xmlrpc.inc.php:138
 #, php-format
 msgid "%s deployment subgroup - %s"
 msgstr ""
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:155
+#: modules/msc/includes/commands_xmlrpc.inc.php:161
 #, php-format
 msgid ""
 "Deploy subgroup created successfully. <br/><a href=\"%s\" target=\"_blank"

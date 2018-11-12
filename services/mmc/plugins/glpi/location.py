@@ -30,12 +30,9 @@ from pulse2.managers.location import ComputerLocationI
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.utilities import complete_ctx
 
-logger = logging.getLogger("glpi")
-
-
 class GlpiLocation(ComputerLocationI):
     def init(self, config):
-        self.logger = logger
+        self.logger = logging.getLogger()
         self.config = config
         return Glpi().activate()
 

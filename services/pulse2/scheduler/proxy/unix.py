@@ -27,8 +27,6 @@ from twisted.internet.protocol import Protocol, ClientCreator
 from pulse2.scheduler.utils import PackUtils
 from pulse2.scheduler.proxy.buffer import SendingBuffer
 
-logger = logging.getLogger("pulse2")
-
 
 class Sender(Protocol):
 
@@ -41,7 +39,7 @@ class Sender(Protocol):
         try :
             self.transport.write(pack)
         except Exception, e:
-            logger.error("\033[31mux call failed: %s\033[0m" % str(e))
+            logging.getLogger().error("\033[31mux call failed: %s\033[0m" % str(e))
 
         self.send_locked = True
 
@@ -67,7 +65,7 @@ class Forwarder:
 
     def __init__(self, response_handler, socket_file):
         """Initiate a connect attempt"""
-        self.logger = logger
+        self.logger = logging.getLogger()
 
         Sender.register_response_handler(response_handler)
         client = ClientCreator(reactor, Sender)

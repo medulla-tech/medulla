@@ -56,7 +56,7 @@ VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
 
-logger = logging.getLogger("kiosk")
+logger = logging.getLogger()
 
 
 # #############################################################
@@ -72,6 +72,7 @@ def activate():
     Read the plugin configuration, initialize it, and run some tests to ensure
     it is ready to operate.
     """
+    logger = logging.getLogger()
     config = KioskConfig("kiosk")
 
     # Registering KioskComputers in ComputerManager

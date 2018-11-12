@@ -36,15 +36,14 @@ from utils import name_random, file_put_contents,file_get_contents, utc2local
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
 
-logger = logging.getLogger("xmppmaster")
-plugin = {"VERSION" : "1.31", "NAME" : "resultkiosk", "TYPE" : "master"}
+plugin = {"VERSION": "1.2", "NAME": "resultkiosk", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logger.debug("#################################################")
-    logger.debug(plugin)
-    logger.debug(json.dumps(data, indent=4))
-    logger.debug("#################################################")
+    logging.getLogger().debug("#################################################")
+    logging.getLogger().debug(plugin)
+    logging.getLogger().debug(json.dumps(data, indent=4))
+    logging.getLogger().debug("#################################################")
     if 'subaction' in data:
         if data['subaction'] == 'initialization':
             initialisekiosk(data, message, xmppobject)

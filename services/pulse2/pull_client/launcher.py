@@ -10,7 +10,7 @@ import logging
 from utils import get_launcher_env
 
 
-logger = logging.getLogger("pkgs")
+logger = logging.getLogger(__name__)
 
 
 class ReadFlux(Thread):

@@ -38,9 +38,6 @@ from twisted.internet.error import ProcessDone
 from mmc.client.async import Proxy
 from pulse2.network import NetUtils
 
-logger = logging.getLogger("pulse2")
-
-
 class MethodNotFound(Exception):
     def __repr__(self):
         return "Method %s not found" % repr(self.message)
@@ -62,7 +59,7 @@ class Endpoint(object):
 
     def __init__(self, config):
         self.config = config
-        self.logger = logger
+        self.logger = logging.getLogger()
         self._mmc_proxy_init()
 
 
@@ -694,7 +691,7 @@ class ForkingProtocol(ProcessProtocol):
         @type callback: func
         """
         ProcessProtocol()
-        self.logger = logger
+        self.logger = logging.getLogger()
 
         self.name = name
         self.callback = callback

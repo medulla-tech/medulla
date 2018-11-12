@@ -40,7 +40,9 @@ from pulse2.database.backuppc import BackuppcDatabase
 VERSION = "2.0.0"
 APIVERSION = "4:1:3"
 
-logger = logging.getLogger("backuppc")
+
+logger = logging.getLogger()
+
 
 # #############################################################
 # PLUGIN GENERAL FUNCTIONS
@@ -54,6 +56,7 @@ def activate():
     Read the plugin configuration, initialize it, and run some tests to ensure
     it is ready to operate.
     """
+    logger = logging.getLogger()
     config = BackuppcConfig("backuppc")
 
     # Registering BackupComputers in ComputerManager
@@ -260,7 +263,7 @@ def set_host_post_restore_script(uuid, script):
 
 class BackupComputers(ComputerI):
     def __init__(self, conffile=None):
-        self.logger = logging.getLogger("backuppc")
+        self.logger = logging.getLogger()
 
     def canDelComputer(self):
         return True

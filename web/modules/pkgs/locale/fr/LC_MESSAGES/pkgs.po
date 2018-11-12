@@ -3,14 +3,18 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Stephane Pointu <spointu@gmail.com>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 11:30+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"POT-Creation-Date: 2018-11-05 09:37+0100\n"
+"PO-Revision-Date: 2017-10-11 08:13+0000\n"
+"Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +32,7 @@ msgstr "Montrer tous les packages"
 
 #: modules/pkgs/infoPackage.inc.php:47
 msgid "Show all bundles"
-msgstr "Montrer tous les bundle"
+msgstr "Montrer tous les bundles"
 
 #: modules/pkgs/infoPackage.inc.php:50 modules/pkgs/pkgs/localSidebar.php:28
 msgid "Add a package"
@@ -80,7 +84,7 @@ msgstr "Activer ce flux Appstream"
 
 #: modules/pkgs/infoPackage.inc.php:140
 msgid "Appstream Updates list"
-msgstr "Liste des mises  jour Appstream"
+msgstr "Liste des mises à jour Appstream"
 
 #: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
 msgid "Pending packages list"
@@ -89,7 +93,7 @@ msgstr "Liste des packages en attente"
 #: modules/pkgs/pkgs/appstreamSettings.php:39
 #, php-format
 msgid "Please access the %s to manage your Appstream subscriptions."
-msgstr "Veuillez accéder  %s pour gérer vos souscriptions Appstream."
+msgstr "Veuillez accéder à %s pour gérer vos souscriptions Appstream."
 
 #: modules/pkgs/pkgs/appstreamSettings.php:54
 msgid "Invalid My Credentials, please verify your username/password."
@@ -99,7 +103,7 @@ msgstr ""
 
 #: modules/pkgs/pkgs/appstreamSettings.php:70
 msgid "Your My credentials have been set successfully."
-msgstr ""
+msgstr "Vos accès ont été enregistrés avec succès"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:86
 msgid "Cannot set My Credentials."
@@ -254,15 +258,15 @@ msgstr "<in ko>"
 
 #: modules/pkgs/pkgs/add.php:267 modules/pkgs/pkgs/edit.php:436
 msgid "high priority"
-msgstr ""
+msgstr "Haute priorité"
 
 #: modules/pkgs/pkgs/add.php:267 modules/pkgs/pkgs/edit.php:436
 msgid "ordinary priority"
-msgstr ""
+msgstr "Priorité normale"
 
 #: modules/pkgs/pkgs/add.php:270 modules/pkgs/pkgs/edit.php:439
 msgid "Spooling"
-msgstr ""
+msgstr "Mise en file"
 
 #: modules/pkgs/pkgs/add.php:338
 msgid "Add"
@@ -288,7 +292,7 @@ msgstr "Passer en mode expert pour éditer le package"
 #: modules/pkgs/pkgs/ajaxPackageList.php:110 modules/pkgs/pkgs/index.php:45
 #, php-format
 msgid "MMC failed to contact package server %s."
-msgstr "Le MMC a échoué à contacter le package serveur %s."
+msgstr "La MMC n'a pas réussi à contacter le package serveur %s."
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:181 modules/pkgs/pkgs/index.php:53
 msgid "Please contact your administrator."
@@ -323,11 +327,11 @@ msgstr "Supprimer ce package"
 
 #: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
 msgid "Appstream updates"
-msgstr "Mises  jour Appstream"
+msgstr "Mises à jour Appstream"
 
 #: modules/pkgs/pkgs/viewAppstreamUpdates.php:38
 msgid "Appstream update"
-msgstr "Mise  jour Appstream"
+msgstr "Mise à jour Appstream"
 
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 #: modules/pkgs/pkgs/edit.php:578 modules/pkgs/includes/html.inc.php:59
@@ -362,7 +366,7 @@ msgstr "Date d'expiration"
 #: modules/pkgs/pkgs/createGroupLicence.php:64
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr "La liste des ordinateurs a été tronquée  %d ordinateurs"
+msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
 
 #: modules/pkgs/pkgs/edit.php:39
 msgid "Edit package"
@@ -380,7 +384,7 @@ msgstr "Le package a été correctement édité"
 #: modules/pkgs/pkgs/edit.php:144
 #, php-format
 msgid "Files successfully added to the package <b>%s (%s)</b>"
-msgstr "Fichiers ajouts au package <b>%s (%s)</b>"
+msgstr "Fichiers ajoutés au package <b>%s (%s)</b>"
 
 #: modules/pkgs/pkgs/edit.php:212
 msgid "Package failed to save"
@@ -421,7 +425,7 @@ msgstr "Supprimer le fichier"
 
 #: modules/pkgs/pkgs/edit.php:562
 msgid "Are you sure you want to delete this file?"
-msgstr "êtes-vous sur de vouloir supprimer ce fichier ?"
+msgstr "Etes-vous sur de vouloir supprimer ce fichier ?"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
 msgid "Associate package"
@@ -450,7 +454,7 @@ msgstr "Activer ce flux Appstream ?"
 #: modules/pkgs/pkgs/rsync.php:32
 #, php-format
 msgid "The package %s (%s) is not associated"
-msgstr "Le package %s (%s) n'est pas associ"
+msgstr "Le package %s (%s) n'est pas associé"
 
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:101
 msgid "Package API temporary directory is empty"
@@ -458,7 +462,7 @@ msgstr "Le répertoire temporaire de l'API de package est vide"
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:55
 msgid "Validity (months)"
-msgstr "Validit (mois)"
+msgstr "Validité (mois)"
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:62
 msgid "Activate this Appstream stream"
@@ -472,7 +476,7 @@ msgid ""
 msgstr ""
 "Saisissez 3 caractères pour obtenir une suggestion.<br>\n"
 "            Le symbole \"étoile\" est '%', %texte% valide tout chaîne de caractre contenant 'texte'.<br>\n"
-"            Si vous n'êtes pas sur, laissez les champs Marque et Version vides"
+"            Si vous n'êtes pas sur, laissez les champs Editeur et Version vides"
 
 #: modules/pkgs/includes/query.php:67
 msgid "Query"
@@ -484,7 +488,7 @@ msgstr "Associer  l'inventaire"
 
 #: modules/pkgs/includes/query.php:85
 msgid "Vendor"
-msgstr "Marque"
+msgstr "Editeur"
 
 #: modules/pkgs/includes/query.php:86
 msgid "Software"
