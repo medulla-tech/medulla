@@ -77,7 +77,7 @@ class ComputerGroupManager(Singleton):
         else:
             ret = self.result_group(ctx, gid, min, max, filter, True)
         return ret
-            
+
     def request(self, ctx, query, bool, min, max, filter):
         klass = self.components[self.main]
         return klass().request(ctx, query, bool, min, max, filter)
@@ -122,4 +122,3 @@ class ComputerGroupI:
         Send the group content, given a group name
         """
         pass
-

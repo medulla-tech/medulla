@@ -52,7 +52,7 @@ class PullPhase(Phase):
             self.update_history_done(exitcode, stdout, stderr)
             if self.coh.isStateStopped():
                 return DIRECTIVE.KILLED
-     
+
             if self.phase.switch_to_done():
                 return self.next()
             return self.give_up()
@@ -128,6 +128,3 @@ class HaltPhase(PullPhase):
     @launcher_proxymethod("pull_completed_halt")
     def parse_result(self, (exitcode, stdout, stderr)):
         return self.parse_pull_phase_result((exitcode, stdout, stderr))
-
-
-

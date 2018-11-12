@@ -379,7 +379,3 @@ class SchedulerConfig(object):
                 else :
                     _networks = pnp.get_default()
                 self.launchers_networks.update({section: _networks})
-
-
-
-

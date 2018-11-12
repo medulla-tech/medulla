@@ -399,4 +399,3 @@ if __name__ == "__main__":
     logger.info("Optimizing tables")
     optimizeTables()
     logger.info("Done !")
-

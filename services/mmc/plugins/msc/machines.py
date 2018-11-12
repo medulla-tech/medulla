@@ -102,7 +102,7 @@ class Machines(Singleton):
                     return None
         except KeyError:
             pass
-            
+
         ret = ComputerManager().getComputersList(ctx, h_params)
         self.logger.debug("getMachine: wanted |%s|, got |%s|" % (h_params, ret))
         try:

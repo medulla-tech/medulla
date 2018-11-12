@@ -29,21 +29,21 @@ import time
 
 class ParabolicBalance (object):
     """
-    A interpretation of run of the parabolic curve, based 
+    A interpretation of run of the parabolic curve, based
     on quadratic function : y = - ax^2 + bx.
 
-    The balance coeficient is based on matematical integration 
+    The balance coeficient is based on matematical integration
     of area between the parabolic curve and x-axis.
 
-    Output is a list of balance coeficients which total is 1. 
+    Output is a list of balance coeficients which total is 1.
     """
     delta = 1
 
     #    Example for 5 attepts :
     #    -----------------------
-    # 
-    # |          
-    # |          .--^^^--.    -x^2 + kx  
+    #
+    # |
+    # |          .--^^^--.    -x^2 + kx
     # |        :° |     | °:
     # |       °   |     |   °
     # |      /    |     |    \
@@ -69,12 +69,12 @@ class ParabolicBalance (object):
     def get_index (self, n):
         """ """
         if n in range(self.attempts_total+1)  :
-            return self.delta * n  
+            return self.delta * n
         else :
-            logging.getLogger().debug("ParabolicBalance: Out of area") 
- 
+            logging.getLogger().debug("ParabolicBalance: Out of area")
+
     def fx (self, x):
-        """ 
+        """
         Integral of quadratic function.
 
         ITG (-x^2 + kx) dx = - x^3/3 + 2kx/2
@@ -96,7 +96,7 @@ class ParabolicBalance (object):
             s = self.fx_delta(x)
             areas.append(s)
 
-        total_area = sum(areas) 
+        total_area = sum(areas)
         for area in areas :
             balance = 1.0 * area / total_area
             self._balances.append(balance)
@@ -113,7 +113,7 @@ def randomListByBalance (balances, limit):
 
     First step is the choice of treshold into the sorted dict (by balance).
     This treshold is considered as the lower limit of the interval to drawing
-    next ids to select. 
+    next ids to select.
     All the choices are based on random selecting.
 
     @param balances: dictionary of balances having CoH id as key
@@ -121,7 +121,7 @@ def randomListByBalance (balances, limit):
 
     @param limit: maximum of selected commands
     @type limit: int
-   
+
     @return: list of CoH ids to reschedule
     @rtype: list
 
@@ -134,9 +134,9 @@ def randomListByBalance (balances, limit):
 
             # sort by balance
             sorted_keys = sorted(balances, key=balances.get, reverse=True)
-            # draw the treshold  
+            # draw the treshold
             drw_coh = random.choice(sorted_keys)
- 
+
             logging.getLogger().debug("Keys to draw: %s " % str(sorted_keys))
             treshold_idx = sorted_keys.index(drw_coh)
             # remove all the keys bellow the treshold
@@ -156,7 +156,7 @@ def randomListByBalance (balances, limit):
                     count += 1
             if len(selected) / limit > 0.8 :
                 # OK when number of selected is more than 80% of limit
-                return selected 
+                return selected
             else :
                 logging.getLogger().debug("List of drawed CoHs too small. Repeat the drawing")
 
@@ -173,7 +173,7 @@ def getBalanceByAttempts (start_date, end_date, attempts_failed) :
     @return: balance coefficient
     @rtype: float
     """
-    # random values 
+    # random values
     P1 = 1.6
     P2 = 2.0
     now = time.time()
@@ -191,5 +191,3 @@ def getBalanceByAttempts (start_date, end_date, attempts_failed) :
     dd = P1 ** (attempts_failed * 1.0)
 
     return td / dd
-    
-

@@ -21,7 +21,7 @@
 
 /**
  * Modify the specified if it is already used.
- * 
+ *
  * @param $name
  * @return mixed|string
  */

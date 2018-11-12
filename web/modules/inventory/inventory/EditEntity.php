@@ -35,7 +35,7 @@ if (isset($_POST['bconfirm'])){
         'id'  =>  $_POST['id'],
         'comment'  =>  $_POST['comment']
     );
-    if ($ID) {    
+    if ($ID) {
         //Le champ name ne doit pas contenir d'espaces ni de virgules ni de slash (/) 
         updateEntities($cfg['id'],$cfg['name']);
         if (!isXMLRPCError()){

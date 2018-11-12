@@ -55,7 +55,7 @@ class MyXmlrpc(xmlrpc.XMLRPC):
 
         def _cbRender(result, start, request, functionPath = None, args = None):
             _printExecutionTime(start)
-            s = request.getSession() 
+            s = request.getSession()
             if result == None: result = 0
             if isinstance(result, xmlrpc.Handler):
                 result = result.result
@@ -89,7 +89,7 @@ class MyXmlrpc(xmlrpc.XMLRPC):
             uri = request.uri
             args = request.args
 
-            message = "HTTP request from %s%s method: %s with arguments: %s" 
+            message = "HTTP request from %s%s method: %s with arguments: %s"
             message = message % (host, uri, method, str(args))
 
             self.logger.debug(message)
@@ -103,4 +103,3 @@ class MyXmlrpc(xmlrpc.XMLRPC):
             _cbLogger, request
         )
         return server.NOT_DONE_YET
-

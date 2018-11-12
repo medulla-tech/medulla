@@ -77,7 +77,7 @@ class MscDownloadProcess:
             self._recordError()
         return result
 
-    def _cbDownloadErr(self, failure):        
+    def _cbDownloadErr(self, failure):
         self.logger.error(failure)
         self._recordError()
         return failure
@@ -111,7 +111,7 @@ class MscDownloadProcess:
 
         # Create the lock file
         f = file(self.lockfile, 'w+')
-        f.close()        
+        f.close()
         # Start download process
         d = getProxy(MscConfig().schedulers[scheduler_name]).callRemote(
             'download_file',
@@ -132,7 +132,7 @@ class MscDownloadProcess:
         Start file download process in a new thread.
 
         @rtype: tuple
-        @returns: tuple with (status, reason)        
+        @returns: tuple with (status, reason)
         """
         def _start():
             # Start download process
@@ -222,7 +222,7 @@ class MscDownloadedFiles:
             for timestamp in timestamps:
                 ret.append(tmp[timestamp])
         return ret
-        
+
     def removeFiles(self, inodes):
         """
         Remove the files with the given inode numbers

@@ -35,4 +35,3 @@ $ret = updateMachineCache();
 print sprintf(_T("update machine cache : %s machines", "dyngroup"), $ret);
 
 ?>
-

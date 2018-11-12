@@ -127,5 +127,3 @@ class LoopingStarter(object):
     def cancel(self):
         """ Interrupts immediatelly the looping calls """
         self.loop.stop()
-
-

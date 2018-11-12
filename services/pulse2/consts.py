@@ -153,9 +153,9 @@ PULSE2_PSERVER_ISAVAILABLE_MIRROR           = PULSE2_PSERVER_MESSAGES_MIN + 9
 
 # Commands states
 PULSE2_COMMANDS_NONACTIVE_STATES = [
-    "draft", 
-    "archived", 
-    "disabled", 
+    "draft",
+    "archived",
+    "disabled",
     "template",
 ]
 PULSE2_COMMANDS_ACTIVE_STATES = ["active"]
@@ -251,4 +251,3 @@ PULSE2_STAGE_WORK_IN_PROGRESS   = 'WORK_IN_PROGRESS'
 PULSE2_STAGE_DONE               = 'DONE'
 PULSE2_STAGE_IGNORED            = 'IGNORED'
 PULSE2_STAGE_FAILED             = 'FAILED'
-

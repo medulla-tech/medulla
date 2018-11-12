@@ -196,7 +196,7 @@ class SendBundleCommand:
             command['order_in_bundle'] = order
             command['proxies'] = self.proxies
             command['fk_bundle'] = bundle.id
-            command['do_windows_update'] = "disable" 
+            command['do_windows_update'] = "disable"
             commands.append(command)
         add = MscDatabase().addCommands(self.ctx, self.session, self.targets, commands, self.gid)
         if type(add) != int:
@@ -338,12 +338,12 @@ class SendPackageCommand:
         if self.pid != None and self.pid != '' and not root:
             return self.onError("Can't get path for package %s" % self.pid)
         self.root = root
-        
+
         # If is an empty Package, avoid file uploading
         if 'size' in self.pinfos:
             if self.pinfos['size'] == 0 :
                 self.pinfos['files'] = None
-        
+
         # Prepare command parameters for database insertion
         cmd = prepareCommand(self.pinfos, self.params)
 
@@ -394,7 +394,7 @@ class SendPackageCommand:
             cmd['state'],
             cmd_type = self.cmd_type
         )
-        
+
         if type(addCmd) != int:
             addCmd.addCallbacks(self.sendResult, self.onError)
         else:

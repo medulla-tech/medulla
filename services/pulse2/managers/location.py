@@ -195,8 +195,7 @@ class ComputerLocationI(Singleton):
     def getLocationParentPath(self, loc_uuid):
         """ return an array containing all the parent uuids of this location """
         pass
-    
+
     def getLocationName(self, loc_uuid):
         """ return a string of the location name """
         pass
-

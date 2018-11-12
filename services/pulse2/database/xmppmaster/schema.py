@@ -342,3 +342,16 @@ class Packages_list(Base, XmppMasterDBObj):
     #id = Column(Integer, primary_key=True)
     organization_id= Column(Integer, nullable=False)
     packageuuid = Column(String(45), nullable=False)
+
+class Organization_ad(Base):
+    # ====== Table name =========================
+    __tablename__ = 'organization_ad'
+    # ====== Fields =============================
+    # Here we define columns for the table organization_AD.
+    # Notice that each column is also a normal Python instance attribute.
+    id_inventory = Column(Integer, primary_key=True, autoincrement=False)
+    jiduser = Column(String(80), nullable=False)
+    ouuser = Column(String(120), nullable=False)
+    oumachine = Column(String(120), nullable=False)
+    hostname = Column(String(100), nullable=False)
+    username = Column(String(60), nullable=False)

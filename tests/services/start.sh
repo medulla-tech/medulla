@@ -74,56 +74,56 @@ python mmcagent-inventory-empty.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: Clean: mmcagent-inventory-empty.py"
-fi 
+fi
 echo "Dyngroup plugin"
 python mmcagent-dyngroup-empty.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: Clean: mmcagent-dyngroup-empty.py"
-fi 
+fi
 echo "Dyngroup Pkgs"
 python mmcagent-pkgs-empty.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: Clean: mmcagent-pkgs-empty.py"
-fi 
+fi
 
 echo "Testing Package Server with no package (pserverempty.py)"
 python pserverempty.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: Package Server: pserverempty.py"
-fi 
+fi
 echo "Testing Package Server with one package (pserver.py)"
 python pserver.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: Package Server: pserver.py"
-fi 
+fi
 echo "Testing Launcher"
 python launcher.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: Launcher: launcher.py"
-fi 
+fi
 echo "Testing Scheduler"
 python scheduler.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: Scheduler: scheduler.py"
-fi 
+fi
 echo "Testing Package Server imaging API"
 python pserver-imaging.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: Package Server / Imaging: pserver-imaging.py"
-fi 
+fi
 echo "Testing Scheduler Balance module"
 python balance.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: Scheduler Balance Module: balance.py"
-fi 
+fi
 
 echo ""
 echo ""
@@ -134,14 +134,14 @@ python mmcagent-inventory-inject.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: Inventory Injection: mmcagent-inventory-inject.py"
-fi 
+fi
 
 echo "Testing networking utils"
 python network.py
 if [ ! $? -eq 0 ]; then
   ERROR=`expr ${ERROR} + 1`;
   ERRORLOG="${ERRORLOG}\nFAILURE: networking utils: network.py"
-fi 
+fi
 
 echo ""
 echo ""

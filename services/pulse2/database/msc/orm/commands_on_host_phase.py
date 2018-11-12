@@ -88,4 +88,3 @@ class CommandsOnHostPhase(object):
         d = self.__dict__
         if '_sa_instance_state' in d: del d['_sa_instance_state']
         return d
-

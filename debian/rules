@@ -67,7 +67,7 @@ build-indep:
 build: build-stamp
 build-stamp: config.status
 	dh_testdir
-	$(MAKE) 
+	$(MAKE)
 	touch build-stamp
 
 install: build
@@ -101,7 +101,7 @@ binary-arch: build install
 	dh_installdirs
 	# Must be readable by backuppc
 	chmod 0644 $(DESTDIR)/etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini
-	# Must be writable by web-server 
+	# Must be writable by web-server
 	chown www-data:root debian/pulse2-dlp-server/var/lib/pulse2/dlp_packages/ \
 			    debian/pulse2-dlp-server/var/lib/pulse2/dlp_sessions/
 	chmod 750 debian/pulse2-dlp-server/var/lib/pulse2/dlp_packages/ \

@@ -31,6 +31,3 @@ class PullTargets(object):
         session.add(self)
         session.flush()
         session.close()
-
-
-

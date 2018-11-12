@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-04 17:53+0200\n"
+"POT-Creation-Date: 2018-11-05 09:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,35 +49,35 @@ msgstr ""
 msgid "Profile Status"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:93 modules/kiosk/kiosk/editProfile.php:94
-msgid "Select OUs"
-msgstr ""
-
-#: modules/kiosk/kiosk/add.php:99 modules/kiosk/kiosk/editProfile.php:100
+#: modules/kiosk/kiosk/add.php:82 modules/kiosk/kiosk/editProfile.php:86
 msgid "Manage packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:116 modules/kiosk/kiosk/editProfile.php:160
+#: modules/kiosk/kiosk/add.php:99 modules/kiosk/kiosk/editProfile.php:144
 msgid "Available packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:121 modules/kiosk/kiosk/editProfile.php:165
+#: modules/kiosk/kiosk/add.php:104 modules/kiosk/kiosk/editProfile.php:149
 msgid "Restricted packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:127 modules/kiosk/kiosk/editProfile.php:170
+#: modules/kiosk/kiosk/add.php:110 modules/kiosk/kiosk/editProfile.php:154
 msgid "Allowed packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:135
+#: modules/kiosk/kiosk/add.php:128 modules/kiosk/kiosk/editProfile.php:171
+msgid "Select OUs"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:134
 msgid "Create"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:135
+#: modules/kiosk/kiosk/add.php:134
 msgid "Create the profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:146
+#: modules/kiosk/kiosk/add.php:145
 msgid "The LDAP is not configured correctly. Please check your configuration."
 msgstr ""
 
@@ -118,16 +118,23 @@ msgid "Modify the profile"
 msgstr ""
 
 #: modules/kiosk/kiosk/ajaxEditProfile.php:43
-#: modules/kiosk/kiosk/ajaxAddProfile.php:44
-msgid "The profile "
+#, php-format
+msgid "The profile %s has been updated"
 msgstr ""
 
 #: modules/kiosk/kiosk/ajaxEditProfile.php:46
-msgid "Unable to update the profile "
+#, php-format
+msgid "Unable to update the profile %s"
+msgstr ""
+
+#: modules/kiosk/kiosk/ajaxAddProfile.php:44
+#, php-format
+msgid "Profile %s successfully added"
 msgstr ""
 
 #: modules/kiosk/kiosk/ajaxAddProfile.php:48
-msgid "Unable to create the profile "
+#, php-format
+msgid "Unable to create the profile %s"
 msgstr ""
 
 #: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35

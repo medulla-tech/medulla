@@ -142,7 +142,7 @@ foreach ($packages as $c_package) {
     $type = $c_package[1];
     $p_api = new ServerAPI($c_package[2]);
 
-    if ($c_package[0]['ERR'] && $c_package[0]['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
+    if (isset($c_package[0]['ERR']) && $c_package[0]['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
         $err[] = sprintf(_T("MMC failed to contact package server %s.", "msc"), $c_package[0]['mirror']);
     } else {
         $a_packages[] = $package->label;
@@ -221,16 +221,6 @@ $n->display();
         text-decoration: none;
         color: #FFF;
     }
-    li.advanced a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/run.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-    }
 
 li.convergence a {
         padding: 3px 0px 5px 20px;
@@ -244,5 +234,3 @@ li.convergence a {
 }
 
 </style>
-
-

@@ -22,8 +22,8 @@
  */
  ?>
 
- 
- 
+
+
  <?php
 include('modules/imaging/includes/includes.php');
 include('modules/imaging/includes/xmlrpc.inc.php');
@@ -126,7 +126,7 @@ if ($_POST) {
     $objval=array();
     $objval['computer']=array();
     if ( count($list) < intval($numbercomputer)){
-        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),count($list),intval($numbercomputer));   
+        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),count($list),intval($numbercomputer));
         new NotifyWidgetFailure($msg);
         xmlrpc_setfromxmppmasterlogxmpp($msg,
                                     "IMG",
@@ -350,7 +350,7 @@ jQuery('#checkbox1').click(function() {
 <form action="<?php echo urlStr("base/computers/multicast", $params) ?>" method="post">
 
     <table id="tableoptionmulticast">
-        <tr> 
+        <tr>
             <td>
                 <?php echo _T('Number of machines to wait for', 'imaging'); ?>
             </td>
@@ -358,14 +358,14 @@ jQuery('#checkbox1').click(function() {
                 <input style="width:5em;" name="numbercomputer" type="text" value="" />
             </td>
         </tr>
-        
-        <tr> 
+
+        <tr>
            <TD colspan=2>
            <INPUT type="checkbox" id="checkbox1" name="choix1" value="1" checked >time wait option
-           </TD> 
+           </TD>
         </tr>
-        
-        
+
+
         <tr class="timewait">
             <td>
                 <?php echo _T('start anyways when t seconds since first receiver connection have passed', 'imaging'); ?>
@@ -374,9 +374,9 @@ jQuery('#checkbox1').click(function() {
                 <input style="width:5em;" id="maxwaittime" name="maxwaittime" type="text" value="600" />
             </td>
         </tr>
-        
+
      </table>
-   
+
         <input name="gid"  type="hidden" value="<?php echo $gid; ?>" />
         <input name="from"  type="hidden" value="<?php echo $from; ?>" />
         <input name="is_master" type="hidden" value="<?php echo $is_master; ?>" />
@@ -385,7 +385,7 @@ jQuery('#checkbox1').click(function() {
         <input name="itemlabel" type="hidden" value="<?php echo $itemlabel; ?>" />
         <input name="target_uuid" type="hidden" value="<?php echo $target_uuid; ?>" />
         <input name="target_name" type="hidden" value="<?php echo $target_name; ?>" />
-  
+
     <input name="bgo" type="submit" class="btnPrimary" value="<?php echo _T("Start multicast deploy", "imaging"); ?>" />
     <input name="bback" type="submit" class="btnSecondary" value="<?php echo _("Cancel"); ?>" onclick="closePopup();
             return false;" />

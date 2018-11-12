@@ -98,7 +98,7 @@ foreach ($db_logs as $log) {
     $led = new LedElement($logStates[$status][1]);
     $status = $logStates[$status][0];
     //$status = $led->value.'&nbsp;'.$logStates[$status][0];
-
+    $log['imaging_log_level'] = isset($log['imaging_log_level']) ?$log['imaging_log_level'] : "";
     $a_level[] = $log['imaging_log_level'];
     $a_date[] = $date;
     $a_target[] = $log['target']['name'];

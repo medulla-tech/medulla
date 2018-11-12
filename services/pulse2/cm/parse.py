@@ -52,5 +52,3 @@ class Parser(object):
 
     def decode(self, value):
         return self._backend.loads(value)
-
-

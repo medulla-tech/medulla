@@ -271,5 +271,3 @@ class Description(resource.Resource):
         body += "</html>"
 
         return body
-
-

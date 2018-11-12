@@ -179,5 +179,3 @@ class WatchdogWorker(Thread):
         if exitcode == 0:
             logger.info("\033[31mMachine locked\033[0m")
             self.scheduled_to = None
-
-

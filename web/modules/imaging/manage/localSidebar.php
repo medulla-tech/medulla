@@ -43,8 +43,8 @@ $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Imaging Configuration","imaging"), "imaging", "manage", "configuration", "modules/imaging/graph/images/imaging-configuration-active.png", "modules/imaging/graph/images/imaging-configuration-inactive.png")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Windows System Image Manager","imaging"), "imaging", "manage", "systemImageManager", 
- "modules/imaging/graph/images/imaging-configuration-active.png", 
+    new SideMenuItem(_T("Windows System Image Manager","imaging"), "imaging", "manage", "systemImageManager",
+ "modules/imaging/graph/images/imaging-configuration-active.png",
  "modules/imaging/graph/images/imaging-configuration-inactive.png")
 );
 

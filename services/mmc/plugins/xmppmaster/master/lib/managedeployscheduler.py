@@ -21,7 +21,8 @@
 # MA 02110-1301, USA.
 
 
-import sys, os
+import sys
+import os
 import os.path
 import json
 import logging
@@ -32,8 +33,8 @@ logger = logging.getLogger()
 
 class manageschedulerdeploy:
 
-    def __init__(self, namebase = "BDtimedeploy"):
-        name_basecmd     = namebase + 'cmddb'
+    def __init__(self, namebase="BDtimedeploy"):
+        name_basecmd = namebase + 'cmddb'
         name_basesession = namebase + 'sessiondb'
         self.openbool = False
         path_bd = self.bddir()
@@ -44,8 +45,8 @@ class manageschedulerdeploy:
             self.name_basecmd = os.path.join(path_bd, name_basecmd)
 
     def openbase(self):
-        self.dbcmdscheduler     = bsddb.btopen(self.name_basecmd , 'c')
-        self.dbsessionscheduler = bsddb.btopen(self.name_basesession , 'c')
+        self.dbcmdscheduler = bsddb.btopen(self.name_basecmd, 'c')
+        self.dbsessionscheduler = bsddb.btopen(self.name_basesession, 'c')
 
     def closebase(self):
         self.dbcmdscheduler.close()
@@ -53,9 +54,9 @@ class manageschedulerdeploy:
 
     def bddir(self):
         if sys.platform.startswith('linux'):
-            return os.path.join("/", "var" ,"lib","pulse2","BDDeploy")
+            return os.path.join("/", "var", "lib", "pulse2", "BDDeploy")
         elif sys.platform.startswith('win'):
-            return os.path.join(os.environ["ProgramFiles"], "Pulse","var","tmp","BDDeploy")
+            return os.path.join(os.environ["ProgramFiles"], "Pulse", "var", "tmp", "BDDeploy")
         elif sys.platform.startswith('darwin'):
             return os.path.join("/", "Library", "Application Support", "Pulse", "BDDeploy")
         else:
@@ -86,5 +87,5 @@ class manageschedulerdeploy:
         self.closebase()
 
 
-#for k, v in db.iteritems():
-#...     print k, v
+# for k, v in db.iteritems():
+# ...     print k, v

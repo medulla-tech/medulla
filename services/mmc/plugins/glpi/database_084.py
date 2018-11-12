@@ -3487,7 +3487,7 @@ class Glpi084(DyngroupDatabaseHelper):
         Get a machine mac addresses
         """
         return self.getMachinesMac(uuid)[uuid]
-    
+
     def orderIpAdresses(self, uuid, hostname, netiface, empty_macs=False):
         ret_ifmac = []
         ret_ifaddr = []

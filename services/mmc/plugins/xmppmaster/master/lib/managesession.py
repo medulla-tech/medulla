@@ -23,14 +23,18 @@ import os
 import json
 import pprint
 
+
 class Session(Exception):
     pass
+
 
 class SessionAssertion(Session, AssertionError):
     pass
 
+
 class Sessionpathsauvemissing(Session, Exception):
     pass
+
 
 class SessionkeyError(Session, KeyError):
     pass
@@ -38,9 +42,9 @@ class SessionkeyError(Session, KeyError):
 
 class sessiondatainfo:
 
-    def __init__(self, sessionid, datasession = {}, timevalid = 10, eventend = None, handlefunc = None, pathfile = None):
+    def __init__(self, sessionid, datasession={}, timevalid=10, eventend=None, handlefunc=None, pathfile=None):
         self.sessionid = sessionid
-        #timevalid en minute
+        # timevalid en minute
         self.timevalid = timevalid
         self.datasession = datasession
         self.eventend = eventend
@@ -51,17 +55,19 @@ class sessiondatainfo:
         print "SESSION INFO CREATION"
 
     def jsonsession(self):
-        session = { 'sessionid' : self.sessionid,'timevalid':self.timevalid,'datasession':self.datasession}
+        session = {'sessionid': self.sessionid,
+                   'timevalid': self.timevalid, 'datasession': self.datasession}
         return json.dumps(session)
 
     def sauvesession(self):
-        namefilesession = os.path.join( self.pathfile, self.sessionid )
-        session = { 'sessionid' : self.sessionid, 'timevalid' : self.timevalid, 'datasession' : self.datasession }
+        namefilesession = os.path.join(self.pathfile, self.sessionid)
+        session = {'sessionid': self.sessionid,
+                   'timevalid': self.timevalid, 'datasession': self.datasession}
         with open(namefilesession, 'w') as f:
-            json.dump(session, f, indent = 4)
+            json.dump(session, f, indent=4)
 
     def updatesessionfromfile(self):
-        namefilesession = os.path.join( self.pathfile, self.sessionid )
+        namefilesession = os.path.join(self.pathfile, self.sessionid)
         print "SESSION INFO UPDATE SESSION"
         with open(namefilesession, "r") as fichier:
             session = json.load(fichier)
@@ -69,14 +75,14 @@ class sessiondatainfo:
         self.timevalid = session['timevalid']
 
     def removesessionfile(self):
-        namefilesession = os.path.join( self.pathfile, self.sessionid )
+        namefilesession = os.path.join(self.pathfile, self.sessionid)
         os.remove(namefilesession)
 
     def getdatasession(self):
         return self.datasession
 
     def setdatasession(self, data):
-        self.datasession=data
+        self.datasession = data
         self.sauvesession()
 
     def decrementation(self):
@@ -87,7 +93,7 @@ class sessiondatainfo:
         else:
             self.sauvesession()
 
-    def settimeout(self, timeminute = 10):
+    def settimeout(self, timeminute=10):
         self.timevalid = timeminute
 
     def isexiste(self, sessionid):
@@ -101,22 +107,26 @@ class sessiondatainfo:
             self.eventend.set()
 
     def __repr__(self):
-        return "<session %s, validate %s, data %s, eventend %s> "%(self.sessionid, self.timevalid, self.datasession, self.eventend)
+        return "<session %s, validate %s, data %s, eventend %s> " % (self.sessionid, self.timevalid, self.datasession, self.eventend)
+
 
 class session:
-    def __init__(self, typemachine = None):
+    def __init__(self, typemachine=None):
         self.sessiondata = []
 
         if(typemachine == "relayserver"):
-            self.dirsavesession = os.path.join(os.path.dirname(os.path.realpath(__file__)), ".." ,"sessionsrelayserver")
+            self.dirsavesession = os.path.join(os.path.dirname(
+                os.path.realpath(__file__)), "..", "sessionsrelayserver")
         elif typemachine == "machine":
-            self.dirsavesession = os.path.join(os.path.dirname(os.path.realpath(__file__)), ".." ,"sessionsmachine")
-        else :
-            self.dirsavesession = os.path.join(os.path.dirname(os.path.realpath(__file__)), ".." ,"sessions")
+            self.dirsavesession = os.path.join(os.path.dirname(
+                os.path.realpath(__file__)), "..", "sessionsmachine")
+        else:
+            self.dirsavesession = os.path.join(os.path.dirname(
+                os.path.realpath(__file__)), "..", "sessions")
 
         if not os.path.exists(self.dirsavesession):
             os.makedirs(self.dirsavesession, mode=0007)
-        print "SESSION %s "%self.dirsavesession
+        print "SESSION %s " % self.dirsavesession
         self.loadsessions()
 
     def addsessiondatainfo(self, sessiondatainfo):
@@ -129,9 +139,10 @@ class session:
     def getcountsession(self):
         return len(self.sessiondata)
 
-    def createsessiondatainfo(self, sessionid,  datasession = {},timevalid = 10, eventend = None):
+    def createsessiondatainfo(self, sessionid,  datasession={}, timevalid=10, eventend=None):
         print "SESSION CREATION UNE SESSION"
-        obj = sessiondatainfo(sessionid, datasession, timevalid, eventend ,pathfile=self.dirsavesession)
+        obj = sessiondatainfo(sessionid, datasession, timevalid,
+                              eventend, pathfile=self.dirsavesession)
         self.sessiondata.append(obj)
         if len(datasession) != 0:
             obj.sauvesession()
@@ -147,13 +158,15 @@ class session:
             return False
 
     def loadsessions(self):
-        listfilesession = [x  for x in glob.glob(os.path.join(self.dirsavesession, "*" )) if (os.path.isfile(x) and os.path.basename(x).startswith( 'command'))]
+        listfilesession = [x for x in glob.glob(os.path.join(
+            self.dirsavesession, "*")) if (os.path.isfile(x) and os.path.basename(x).startswith('command'))]
         for filesession in listfilesession:
             if self.removefilesessionifnotsignal(filesession):
                 try:
                     # Session id is the name of the file
                     objsession = self.sessionfromsessiondata(os.path.basename(filesession))
-                    if objsession== None: raise SessionkeyError
+                    if objsession == None:
+                        raise SessionkeyError
                     objsession.pathfile = self.dirsavesession
                     objsession.updatesessionfromfile()
                 except SessionkeyError:
@@ -161,20 +174,19 @@ class session:
                     objsession = self.createsessiondatainfo(os.path.basename(filesession))
                     objsession.updatesessionfromfile()
 
-
     def sauvesessions(self):
         for i in self.sessiondata:
             i.sauvesession()
 
-    def sauvesessionid(self,sessionid):
+    def sauvesessionid(self, sessionid):
         for i in self.sessiondata:
             for i in self.sessiondata:
-                if i.sessionid == sessionid :
+                if i.sessionid == sessionid:
                     i.sauvesession()
                     return i
             return None
 
-    def __decr__(self,x):
+    def __decr__(self, x):
         x.decrementation()
 
     def decrementesessiondatainfo(self):
@@ -182,14 +194,15 @@ class session:
         self.__suppsessiondatainfo__()
 
     def __suppsessiondatainfo__(self):
-        datasessioninfo = [x  for x in self.sessiondata if x.timevalid <= 0]
-        self.sessiondata = [x  for x in self.sessiondata if x.timevalid > 0]
+        datasessioninfo = [x for x in self.sessiondata if x.timevalid <= 0]
+        self.sessiondata = [x for x in self.sessiondata if x.timevalid > 0]
         # Delete session persistance file
         for i in datasessioninfo:
             i.removesessionfile()
 
-    def __aff__(self,x):
-        if x != None : print x
+    def __aff__(self, x):
+        if x != None:
+            print x
 
     def len(self):
         return len(self.sessiondata)
@@ -199,19 +212,19 @@ class session:
 
     def sessionfromsessiondata(self, sessionid):
         for i in self.sessiondata:
-            if i.sessionid == sessionid :
+            if i.sessionid == sessionid:
                 return i
         return None
         #raise SessionkeyError
 
-    def reactualisesession(self, sessionid, timeminute = 10):
+    def reactualisesession(self, sessionid, timeminute=10):
         for i in self.sessiondata:
-            if i.sessionid == sessionid :
+            if i.sessionid == sessionid:
                 i.settimeout(timeminute)
                 break
 
-    def clear(self, sessionid, objectxmpp = None):
-        for i in range(0,self.len()):
+    def clear(self, sessionid, objectxmpp=None):
+        for i in range(0, self.len()):
             if sessionid == self.sessiondata[i].sessionid:
                 self.sessiondata[i].callend()
                 self.sessiondata[i].removesessionfile()
@@ -223,7 +236,7 @@ class session:
     def clearnoevent(self, sessionid):
         for i in range(0, self.len()):
             if sessionid == self.sessiondata[i].sessionid:
-                #renovefile
+                # renovefile
                 self.sessiondata[i].removesessionfile()
                 self.sessiondata.remove(self.sessiondata[i])
                 break
@@ -247,11 +260,11 @@ class session:
 
     def sessionsetdata(self, sessionid, data):
         for i in self.sessiondata:
-            if i.sessionid == sessionid :
+            if i.sessionid == sessionid:
                 i.setdatasession(data)
 
     def sessiongetdata(self, sessionid):
         for i in self.sessiondata:
-            if i.sessionid == sessionid :
+            if i.sessionid == sessionid:
                 return i.getdatasession()
         return None

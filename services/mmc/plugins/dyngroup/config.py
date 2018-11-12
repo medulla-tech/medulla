@@ -50,7 +50,7 @@ class DGConfig(DyngroupDatabaseConfig):
             self.profilesEnable = self.cp.getboolean("main", 'profiles_enable')
         if self.cp.has_option('main', 'default_module'):
             self.defaultModule = self.cp.get('main', 'default_module')
-        
+
         if self.cp.has_option("main", "max_elements_for_static_list"):
             self.maxElementsForStaticList = self.cp.get("main", "max_elements_for_static_list")
 
@@ -73,4 +73,3 @@ class DGConfig(DyngroupDatabaseConfig):
         self.dbsslenable = False
         self.dbpoolrecycle = 60
         self.dbpoolsize = 5
-

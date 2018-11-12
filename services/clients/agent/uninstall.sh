@@ -19,4 +19,4 @@
 
 cat files.txt | xargs rm -rf
 
-# TODO - remove daemons, init and config files too 
+# TODO - remove daemons, init and config files too

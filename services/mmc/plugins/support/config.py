@@ -137,4 +137,3 @@ class SupportConfig(PluginConfig):
         self.logger.debug("License info cron updated to %s" % expression)
 
         self.cron_search_for_updates = expression
-

@@ -553,6 +553,19 @@ class Glpi92(DyngroupDatabaseHelper):
             result = element[0]
         return result
 
+    def __xmppmasterfilter(self, filt = None):
+        ret = {}#if filt['computerpresence'] == "presence":
+        if "computerpresence" in filt:
+            d = XmppMasterDatabase().getlistPresenceMachineid()
+            listid = [x.replace("UUID", "") for x in d]
+            ret["computerpresence"] = ["computerpresence","xmppmaster",filt["computerpresence"] , listid]
+        elif "query" in filt and filt['query'][0] == "AND":
+            for q in filt['query'][1]:
+                if q[2] == "Online computer" or q[2] == "OU user" or q[2] == "OU machine":
+                    listid = XmppMasterDatabase().getxmppmasterfilterforglpi(q)
+                    ret[q[2]] = [q[1], q[2], q[3], listid]
+        return ret
+
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
         Get the sqlalchemy query to get a list of computers with some filters
@@ -560,12 +573,10 @@ class Glpi92(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-        listid = []
-        if filt and "computerpresence" in filt:
-            if PluginManager().isEnabled("xmppmaster"):
-                d = XmppMasterDatabase().getlistPresenceMachineid()
-                listid = [x.replace("UUID", "") for x in d]
+        
         query = (count and session.query(func.count(Machine.id))) or session.query(Machine)
+        # manage criterion  for xmppmaster
+        ret = self.__xmppmasterfilter(filt)
 
         if filt:
             # filtering on query
@@ -671,17 +682,35 @@ class Glpi92(DyngroupDatabaseHelper):
                 join_query = join_query.outerjoin(self.fusionantivirus)
                 join_query = join_query.outerjoin(self.os)
 
+            r=re.compile('reg_key_.*')
+            regs=filter(r.search, self.config.summary)
+            try:
+                if regs[0]:
+                    join_query = join_query.outerjoin(self.regcontents)
+            except IndexError:
+                pass
+
             if query_filter is None:
                 query = query.select_from(join_query)
             else:
                 query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
-            if PluginManager().isEnabled("xmppmaster") and len(listid) != 0:
-                    if filt and "computerpresence" in filt:
-                        if filt['computerpresence'] == "presence":
-                            query = query.filter(Machine.id.in_(listid))
+            if PluginManager().isEnabled("xmppmaster"):
+                if ret:
+                    if "Online computer" in ret:
+                        if ret["Online computer"][2] == "True":
+                            query = query.filter(Machine.id.in_(ret["Online computer"][3]))
                         else:
-                            query = query.filter(Machine.id.notin_(listid))
+                            query = query.filter(Machine.id.notin_(ret["Online computer"][3]))
+                    if "OU user" in ret:
+                        query = query.filter(Machine.id.in_(ret["OU user"][3]))
+                    if "OU machine" in ret:
+                        query = query.filter(Machine.id.in_(ret["OU machine"][3]))
+                    if "computerpresence" in ret:
+                        if ret["computerpresence"][2] == "presence":
+                            query = query.filter(Machine.id.in_(ret["computerpresence"][3]))
+                        else:
+                            query = query.filter(Machine.id.notin_(ret["computerpresence"][3]))
             query = self.__filter_on(query)
             query = self.__filter_on_entity(query, ctx)
 
@@ -722,6 +751,13 @@ class Glpi92(DyngroupDatabaseHelper):
                         clauses.append(self.glpi_computermodels.c.name.like('%'+filt['hostname']+'%'))
                     if 'manufacturer' in self.config.summary:
                         clauses.append(self.manufacturers.c.name.like('%'+filt['hostname']+'%'))
+                    r=re.compile('reg_key_.*')
+                    regs=filter(r.search, self.config.summary)
+                    try:
+                        if regs[0]:
+                            clauses.append(self.regcontents.c.value.like('%'+filt['hostname']+'%'))
+                    except IndexError:
+                        pass
                     # Filtering on computer list page
                     if clauses:
                         query = query.filter(or_(*clauses))
@@ -904,7 +940,7 @@ class Glpi92(DyngroupDatabaseHelper):
         elif query[2] == 'Register key':
             return base + [ self.regcontents]#self.collects, self.registries,
         elif query[2] == 'Register key value':
-            return base + [ self.regcontents, self.registries ]#self.collects, self.registries, 
+            return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -3148,8 +3184,7 @@ class Glpi92(DyngroupDatabaseHelper):
         elif int(count) == 2:
             return query.all()
         else:
-            print query
-            ret =query.all()
+            ret = query.all()
             return [{'computer':a[0],'name':a[1],'entityid':a[2]}  for a in ret ]
 
     def getMachineBySoftwareAndVersion(self, ctx, swname, count=0):
@@ -3576,6 +3611,7 @@ class Glpi92(DyngroupDatabaseHelper):
         ret = query.group_by(self.group.c.name).all()
         session.close()
         return ret
+
     def getMachineByGroup(self, ctx, filt):# Entity!
         """ @return: all machines that have this contact number """
         session = create_session()

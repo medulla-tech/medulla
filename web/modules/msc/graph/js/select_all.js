@@ -33,4 +33,3 @@ function select_all_files(v)
 
   return true;
 }
-

@@ -56,7 +56,7 @@ if (in_array("glpi", $_SESSION['supportModList'])) {
                 case "Domain":
                     $entry['Domain']  = $val[1];
                     break;
-                    
+
                 case " Service Pack":
                     $entry['ServicePack']  = $val[1];
                     break;
@@ -90,16 +90,16 @@ z-index:24;
 color:#000;
 text-decoration:none
 }
- 
+
 a.info:hover{
 z-index:25;
 background-color:#FFF
 }
- 
+
 a.info span{
 display: none
 }
- 
+
 a.info:hover span{
 display:block;
 position:absolute;
@@ -145,7 +145,7 @@ padding:5px;
                 <?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?>
                 <?php
                     if (intval($customMenu_count) > 0){
-                        echo "(".$customMenu_count; 
+                        echo "(".$customMenu_count;
                         echo' <a class="info" href="#" id="boutoninformation1" class="lienstylebouton">';
                         echo _T("with custom menu", "imaging");
                         echo '
@@ -175,7 +175,7 @@ padding:5px;
                             echo '
                         </span>
                     </a>';
-                    echo '<a  href="'. $urlRedirect .'">'; 
+                    echo '<a  href="'. $urlRedirect .'">';
                     echo '<img src="img/machines/icn_machinesList.gif" title="create group "/>';
                     echo '</a>';
                     echo '<a href="'. $urlRedirectgroupimaging .'"  class="lienstylebouton boutoncreation">';
@@ -193,7 +193,7 @@ padding:5px;
                                     $param['type']='';
                                     $param['target_uuid']=$entry[0];
                                     $param['target_name']=$entry['realname'];
-                                    
+
                                     $urlRedirect = urlStrRedirect("base/computers/imgtabs",$param);
                                     if ( $entry['newlocation'] == $entry['creationEntity']){
                                         echo '<a href="'.$urlRedirect.'">'.'Boot menu '.$entry['realname'].'</a>';
@@ -226,7 +226,7 @@ padding:5px;
             ?>
             <p class="stat">
                 <img src="img/machines/icn_machinesList.gif" />
-                <strong> 
+                <strong>
                     <?php echo $short_status['rescue']; ?>
                 </strong>/<?php echo $short_status['total']; ?>
                     <?php
@@ -243,7 +243,7 @@ padding:5px;
                                 if ( intval($val[3]) == 0){
                                     echo 'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."<br>";
                                 }
-                            } 
+                            }
                             echo '</span>';
                             echo '</a>';
                         }
@@ -256,7 +256,7 @@ padding:5px;
                 <?php echo _T("masters are available", "imaging").'</a>'; ?>
                 <!--
                     <a id="kkk" href="#" >fffff</a>
-                
+
                 <a href="#" id="boutoninformation" class="lienstylebouton">Information</a>-->
                 <!--
                     <div id="a_masquer" style="display:none">
@@ -266,7 +266,7 @@ padding:5px;
                 <div id="popupinformation" title="client(s) have rescue image(s)">
                 <p>
 
-                <? 
+                <?
                     foreach ( $dede as $val){
                         if ( intval($val[3]) == 0){
                             $parm=array();
@@ -280,14 +280,14 @@ padding:5px;
                             $urlRedirect = urlStrRedirect("base/computers/imgtabs",$parm);
                             echo '<a href="'.$urlRedirect.'">'.'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."</a><br>";
                         }
-                    } 
+                    }
                 ?>
                 </p>
                 </div>
             </p>
         </div>
     </div>
-    
+
     <script type="text/javascript">
 
     jQuery(function () {
@@ -318,7 +318,7 @@ padding:5px;
             // affichage du popup
             jQuery( "#popupinformation" ).dialog( "open" );
         });
-        
+
         jQuery( "#popupinformation1" ).dialog({
             autoOpen: false,
             width: 400,
@@ -341,8 +341,8 @@ padding:5px;
             // affichage du popup
             jQuery( "#popupinformation1" ).dialog( "open" );
         });
-        
-  
+
+
         // définition de la boîte de dialogue
 
         // la méthode jQuery dialog() permet de transformer un div en boîte de dialogue et de définir ses boutons
@@ -372,9 +372,9 @@ padding:5px;
 
             buttons: [
 
-                {  
+                {
 
-                    text: "Create Group",    
+                    text: "Create Group",
 
                     click: function () {
 
@@ -400,14 +400,14 @@ padding:5px;
 
         });
 
- 
+
 
         // affichage du popup
 
         jQuery("#popupconfirmationgroup").dialog("open");
 
     });
- 
+
 
 });
     </script>
@@ -417,20 +417,20 @@ padding:5px;
 
  <!--// regles de gestions affichage.
  // fichier /tmp/multicast.sh n'existe pas "ne pas afficher cadre Multicast Current Location"
- 
+
  // fichier /tmp/multicast.sh existe
  // multicast lancer "affichage seulement bouton arrêt" voir aprés pour bar de progression
  // multicast non lancer "affichage seulement bouton stop"
- 
- // cas extreme 
+
+ // cas extreme
  // cas si  fichier /tmp/multicast.sh n'existe plus et /tmp/multicast.sh lancer normalement possible
  // stoper /tmp/multicast.sh
- 
+
  // action bouton arret
  // 1)  stoper /tmp/multicast.sh
  // 2)  supprimer le fichier /tmp/multicast.sh
  // 3) regénéré les menus  unicast
- 
+
  // action bouton marche
  // 1) start /tmp/multicast.sh
 
@@ -538,7 +538,7 @@ var interval = setInterval(barprogress,6000);
 
         echo'<h3>'._T('Multicast Current Location', 'imaging').'</h3>';
         echo  "Master : ".$nom_master."<br>";
-        echo '<form action="'; 
+        echo '<form action="';
         echo urlStr("imaging/manage/multicastaction/");
         echo '" method="POST">';
         echo '<input name="multicast"  type="hidden" value="stop" />';
@@ -558,7 +558,7 @@ var interval = setInterval(barprogress,6000);
         $nom_master = str_replace($charvaleur, " ", $objprocess['itemlabel']);
         echo "<h3>"._T('Multicast Current Location', 'imaging').'</h3>';
         echo  "Master : ".$nom_master."<br>";
-        echo '<form action="'; 
+        echo '<form action="';
         echo urlStr("imaging/manage/multicastaction/"); echo '" method="POST">';
         echo '<input name="multicast"  type="hidden" value="start" />';
         echo '<input name="location"  type="hidden" value="'.$objprocess['location'].'" />';
@@ -567,10 +567,10 @@ var interval = setInterval(barprogress,6000);
         <input name="bgo" type="submit" class="btnPrimary"
         value="';
         echo _T("Start multicast deploy", "imaging");
-        echo '" />    
+        echo '" />
         </form>';
         echo "<br>";
-        echo '<form action="'; 
+        echo '<form action="';
         echo urlStr("imaging/manage/multicastaction/"); echo '" method="POST">';
         echo '<input name="multicast"  type="hidden" value="clear" />';
         echo '<input name="location"  type="hidden" value="'.$objprocess['location'].'" />';
@@ -579,7 +579,7 @@ var interval = setInterval(barprogress,6000);
         <input name="bgo" type="submit" class="btnPrimary"
         value="';
         echo _T("Clear multicast deploy", "imaging");
-        echo '" />    
+        echo '" />
         </form>';
             }
         $index=0;

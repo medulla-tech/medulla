@@ -43,7 +43,7 @@ if (isset($_POST['bconfirm'])){
     // Formatting Exclude periods
     $starthours = $_POST['starthour'];
     $endhours = $_POST['endhour'];
-    
+
     for ($i = 0 ; $i<count($starthours); $i++) {
         $daystring = implode(',',$_POST['days'.$i]);
         $cfg['exclude_periods'] .= sprintf("%s=>%s:%s\n",
@@ -62,8 +62,8 @@ if (isset($_POST['bconfirm'])){
     }
     else
         $profile = add_period_profile($cfg);
-    
-    
+
+
 }
 else
     if ($ID)
@@ -75,7 +75,7 @@ else
 // Add or Edit
 if ($ID)
     $p = new PageGenerator(_T("Edit schedule", "backuppc"));
-else 
+else
     $p = new PageGenerator(_T("Add schedule", "backuppc"));
 
 $p->setSideMenu($sidemenu);
@@ -87,7 +87,7 @@ if ($ID && $ID < 1000){
     $profile['profilename'] = '';
 }
 
-// display an edit profile form 
+// display an edit profile form
 $f = new ValidatingForm();
 $f->push(new Table());
 
@@ -130,14 +130,14 @@ foreach ($exclude_periods as $period) {
     list($period,$from,$to,$days) = $matches;
 
     $days = explode(',',$days);
-   
+
     // DAYS SELECT
     $sel = new MultipleSelect('days'.$z++);
     $sel->setElements($daynames);
     $sel->setElementsVal(array('1','2','3','4','5','6','7'));
     foreach ($days as $day)
         $sel->setSelected(trim($day));
-    
+
     // Start hour
     $fields = array(
         new hourInputTpl('starthour[]'),
@@ -147,7 +147,7 @@ foreach ($exclude_periods as $period) {
         $sel,
         new buttonTpl('removePeriod',_T('Remove','backuppc'),'removePeriod')
         );
-    
+
     $values = array(
         float2hhmm($from),
         '',
@@ -155,13 +155,13 @@ foreach ($exclude_periods as $period) {
         '',
         ''
     );
-    
+
     $f->add(
         new TrFormElement(_T('Do not backup from','backuppc'), new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
     );
 
-    
+
 }
 
 // Add Period button
@@ -190,9 +190,9 @@ $f->display();
 <script src="modules/backuppc/lib/jquery.multiselect.js"></script>
 <script type="text/javascript">
 jQuery(function(){
-    
+
     periodLine = jQuery('.removePeriod:first').parents('tr:first').clone();
-    
+
     // Multiselect listbox
     jQuery("select").multiselect({
         height: 120,
@@ -201,20 +201,20 @@ jQuery(function(){
         noneSelectedText : '<?php echo _T('Select days','backuppc'); ?>',
         selectedText : '<?php echo _T('Select days','backuppc'); ?>'
      });
-     
+
      // Remove period button
      jQuery('.removePeriod').click(function(){
          if (jQuery('.removePeriod').length > 1)
              jQuery(this).parents('tr:first').remove();
      });
-     
+
      // Hour mask inputs
      jQuery('input[name="starthour[]"]').mask('99:99');
      jQuery('input[name="endhour[]"]').mask('99:99');
-     
+
      // Add period button
      jQuery('#addPeriod').click(function(){
-        var idx = parseInt(jQuery('select:last').attr('name').replace('days','').replace('[]',''))+1;        
+        var idx = parseInt(jQuery('select:last').attr('name').replace('days','').replace('[]',''))+1;
         var newline = periodLine.clone().insertBefore(jQuery(this).parents('tr:first'));
          newline.find('input[type=text]').val('');
          newline.find('select').val([])
@@ -234,7 +234,7 @@ jQuery(function(){
         newline.find('input[name="starthour[]"]').mask('99:99');
         newline.find('input[name="endhour[]"]').mask('99:99');
      });
-    
+
 });
-     
+
 </script>

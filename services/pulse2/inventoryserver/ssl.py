@@ -39,12 +39,12 @@ def makeSSLContext(verifypeer, cacert, localcert, cb, log = True):
 
     @returns: a SSL context
     """
-    logger = logging.getLogger()    
+    logger = logging.getLogger()
     if verifypeer:
         # I use twisted certificate loading function, else our CA and our
         # private key don't match, I didn't find out why
         fd = open(localcert)
-        localCertificate = ssl.PrivateCertificate.loadPEM(fd.read())        
+        localCertificate = ssl.PrivateCertificate.loadPEM(fd.read())
         fd.close()
         fd = open(cacert)
         caCertificate = ssl.Certificate.loadPEM(fd.read())
@@ -56,7 +56,7 @@ def makeSSLContext(verifypeer, cacert, localcert, cb, log = True):
         ctx.verifyOnce = True
         ctx.enableSingleUseKeys = True
         ctx.enableSessions = True
-        ctx.fixBrokenPeers = False        
+        ctx.fixBrokenPeers = False
         if log:
             logger.debug("CA certificate informations: %s" % cacert)
             logger.debug(caCertificate.inspect())
@@ -95,5 +95,3 @@ class SecureHTTPRequestHandler(SimpleHTTPRequestHandler):
 
 class SecureThreadedHTTPServer(ThreadingMixIn, SecureHTTPServer):
     """Handle requests in a separate thread."""
-    
-

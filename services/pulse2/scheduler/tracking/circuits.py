@@ -62,7 +62,7 @@ class _Tracker(object):
         """
         if id in self.ids:
             self._remove(id)
- 
+
 
 class Tracker(_Tracker):
     """ Simple circuits tracking. """
@@ -82,7 +82,7 @@ class Tracker(_Tracker):
         """
         Removes a circuit id.
 
-        @param id: circuit's identifier 
+        @param id: circuit's identifier
         @type id: int
         """
         self.ids.remove(id)
@@ -108,7 +108,7 @@ class TimedTracker(_Tracker):
         """
         Removes a circuit id with a timestamp.
 
-        @param id: circuit's identifier 
+        @param id: circuit's identifier
         @type id: int
         """
 	if id in self.ids:
@@ -116,18 +116,14 @@ class TimedTracker(_Tracker):
 
     def get_expired(self):
 
-        now = time.time() 
-	 
+        now = time.time()
+
 	return [id for (id, tp) in self.ids.items() if tp + self.life_time < now]
 
 class StoppedTracker(Tracker):
     """Controls the stopped circuits """
     pass
- 
+
 class StartedTracker(TimedTracker):
     """Controls the running circuits with an expiration processing """
     pass
- 
-
-
-

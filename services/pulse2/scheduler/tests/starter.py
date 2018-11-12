@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-"""A simple unittest of looping start of circuits.""" 
+"""A simple unittest of looping start of circuits."""
 
 import logging
 logging.basicConfig()
@@ -49,7 +49,7 @@ class Test00_LoopingStart(unittest.TestCase):
 
     def setUp(self):
 	self.logger = logging.getLogger()
-        self.dispatcher = type("MscDispatcher", 
+        self.dispatcher = type("MscDispatcher",
 			      (object,),
 			      {"_circuits": []}
 			       )
@@ -63,7 +63,7 @@ class Test00_LoopingStart(unittest.TestCase):
 
     def test01_start(self):
 	"""Start of looping start """
-            
+
 	return self.starter.run(self.circuits)
 
     def test02_result(self):

@@ -35,7 +35,7 @@ class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
 
     def setup(self, config_file):
         InventoryDatabaseConfigSkel.setup(self, config_file)
-                                
+
         ## Load configuration file
         #if sys.platform != "win32":
         #    self.cp = MMCConfigParser()
@@ -74,4 +74,3 @@ class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
                 for index in keys:
                     sorted.append(self.type2url[type][kind][index])
                 self.type2url[type][kind] = sorted
-

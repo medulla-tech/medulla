@@ -5,4 +5,3 @@ As the PULSE2 evolve, so does the PULSE2 database. This directory contains the
 base schema (schema-001.sql) and subsequents evolutions (schema-xxx.sql).
 
 To obtain a state-of-the-art PULSE2 database, just run the install script.
-

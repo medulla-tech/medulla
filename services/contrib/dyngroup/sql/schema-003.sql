@@ -91,4 +91,3 @@ CREATE INDEX dyngroup_sharegroup_fk_group_idx on ShareGroup (FK_groups);
 CREATE INDEX dyngroup_sharegroup_fk_user_idx on ShareGroup (FK_users);
 
 UPDATE version set Number = 3;
-

@@ -1,4 +1,4 @@
- 
+
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
 #
@@ -26,7 +26,8 @@
 
 import base64
 import json
-import os,sys
+import os
+import sys
 from utils import simplecommand, file_get_content, file_put_content
 import pprint
 import logging
@@ -39,23 +40,20 @@ import ConfigParser
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
-plugin = { "VERSION" : "1.4", "NAME" : "force_setup_agent", "TYPE" : "master"}
+plugin = {"VERSION": "1.4", "NAME": "force_setup_agent", "TYPE": "master"}
 
 
-
-def action( xmppobject, action, sessionid, data, message, ret, dataobj):
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     print "_________________________"
     logging.getLogger().debug(plugin)
-    #print json.dumps(data, indent = 4)
+    # print json.dumps(data, indent = 4)
     print data['data'][0]
     print "_________________________"
-    
-    command={ 'action' : 'force_setup_agent',
-              'base64' : False,
-              'sessionid': sessionid,
-              'data' : ''}
-    xmppobject.send_message( mto = data['data'][0],
-                                 mbody = json.dumps(command),
-                                 mtype = 'chat')
 
-       
+    command = {'action': 'force_setup_agent',
+               'base64': False,
+               'sessionid': sessionid,
+               'data': ''}
+    xmppobject.send_message(mto=data['data'][0],
+                            mbody=json.dumps(command),
+                            mtype='chat')

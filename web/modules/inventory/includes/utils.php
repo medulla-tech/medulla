@@ -31,5 +31,3 @@ function _toDate($a) {
 }
 
 ?>
-
-

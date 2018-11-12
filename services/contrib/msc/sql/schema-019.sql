@@ -26,5 +26,3 @@ ALTER TABLE `commands` \
 
 DELETE FROM version;
 INSERT INTO version VALUES( "19" );
-
-

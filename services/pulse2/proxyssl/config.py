@@ -49,12 +49,12 @@ class Pulse2InventoryProxyConfig(Singleton):
     umask = ''
     daemon_group = 'root'
     daemon_user = 'root'
-            
+
     improve = True
     savexmlModified = False
     updatedetection = False
     addicon = False
-    
+
     getOcsDebugLog = False
 
 
@@ -112,7 +112,7 @@ class Pulse2InventoryProxyConfig(Singleton):
             self.updatedetection = self.cp.getboolean('xmlupdate', 'updatedetection')
         if self.cp.has_option('xmlupdate', 'addicon'):
             self.addicon = self.cp.getboolean('xmlupdate', 'addicon')
-             
+
         if self.cp.has_option('ocsdebug', 'enable'):
              self.getocsdebuglog = self.cp.getboolean('ocsdebug', 'enable')
              if self.getocsdebuglog:

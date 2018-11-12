@@ -95,4 +95,3 @@ class Pulse2ImagingLogLevel:
     LOG_INFO = 6
     LOG_DEBUG = 7
 P2ILL = Pulse2ImagingLogLevel
-

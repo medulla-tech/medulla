@@ -20,7 +20,7 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
--- Not alteration here, just a simple version increment to converge 
+-- Not alteration here, just a simple version increment to converge
 -- to the LRS database model
 
 --
@@ -28,4 +28,3 @@
 --
 TRUNCATE Version;
 INSERT INTO Version VALUES( '5' );
-

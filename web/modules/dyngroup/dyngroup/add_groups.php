@@ -50,9 +50,21 @@ if ($id) {
     }
 }
 
-$members = unserialize(base64_decode($_POST["lmembers"]));
-$machines = unserialize(base64_decode($_POST["lmachines"]));
-$listOfMembers = unserialize(base64_decode($_POST["lsmembers"]));
+if(isset($_POST["lmembers"])){
+ $members = unserialize(base64_decode($_POST["lmembers"]));
+}else{
+$members =false;
+}
+if(isset($_POST["lmachines"])){
+ $machines = unserialize(base64_decode($_POST["lmachines"]));
+}else{
+$machines =false;
+}
+if(isset($_POST["lsmembers"])){
+ $listOfMembers = unserialize(base64_decode($_POST["lsmembers"]));
+}else{
+$listOfMembers =false;
+}
 
 if (isset($_POST["bdelmachine_x"])) {
     if (isset($_POST["members"])) {
@@ -114,7 +126,7 @@ if (isset($_POST["bdelmachine_x"])) {
     $listN = array();
     $listC = array();
     $dontAddedToProfile = array();
-    foreach ($listOfMembers as $member) { 
+    foreach ($listOfMembers as $member) {
         // If Profile, don't add computer to current group if it has more than one ethernet card
         if (in_array($member['uuid'], $hasMoreThanOneEthCard)) {
             $dontAddedToProfile[] = $member;
@@ -124,8 +136,8 @@ if (isset($_POST["bdelmachine_x"])) {
             $listN[$member['uuid'].'##'.$member['hostname']] = $member;
         }
     }
-    foreach ($listOfCurMembers as $member) { 
-        $listC[$member['uuid'].'##'.$member['hostname']] = $member; 
+    foreach ($listOfCurMembers as $member) {
+        $listC[$member['uuid'].'##'.$member['hostname']] = $member;
     }
 
     $newmem = array_diff_assoc($listN, $listC);
@@ -171,7 +183,7 @@ if (isset($_POST["bdelmachine_x"])) {
                         xmlrpc_clear_script_multicast($objprocess);
                     }
                 }
-            
+
                 $ret = xmlrpc_synchroProfile($group->id);
 
                 if (count($dontAddedToProfile) > 0) {
@@ -266,14 +278,23 @@ if (isset($_POST["bdelmachine_x"])) {
     //search entity for serverimaging
     $imss = xmlrpc_getAllImagingServersForProfiles(true);
 
-    $entitieval = -1;
-    foreach ($imss as $key => $value){
-        if ($value['imaging_uuid']== $imaging_server){
+    if (isset($imss) && count($imss) == 1){
+        foreach ($imss as $key => $value){
             $entitieval = $value['fk_entity'];
-            break;
+            $imaging_server = $key;
         }
     }
-    $listOfMachines = getMachineforentityList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 
+    else{
+        $entitieval = -1;
+        foreach ($imss as $key => $value){
+            if ($value['imaging_uuid']== $imaging_server){
+                $entitieval = $value['fk_entity'];
+                break;
+            }
+        }
+    }
+
+    $listOfMachines = getMachineforentityList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'),
                                                     'imaging_server'=>$imaging_server,
                                                     'fk_entity' => $entitieval));
     $count = getRestrictedComputersListLen(array('imaging_server'=>$imaging_server));
@@ -313,10 +334,11 @@ if (isset($_GET['pieGroupStatus'])) {
     }
 
     $diff = array_diff_assoc($machines, $members);
-    
     drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, htmlspecialchars($name), $_POST['filter'], $type);
 }
 else {
+    $_POST['filter']=isset($_POST['filter']) ? $_POST['filter'] : "";
+    $idgrp = isset($group->id) ? $group->id : null;
     drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $group->id, htmlspecialchars($name), $_POST['filter'], $type);
 }
 

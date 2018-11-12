@@ -25,7 +25,7 @@ require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 
-$proxy_headers = explode(',', "HTTP_VIA,HTTP_X_FORWARDED_FOR,HTTP_FORWARDED_FOR,HTTP_X_FORWARDED,HTTP_FORWARDED,HTTP_CLIENT_IP,HTTP_FORWARDED_FOR_IP,HTTP_X_SURFCACHE_FOR,VIA,X_FORWARDED_FOR,FORWARDED_FOR,X_FORWARDED,FORWARDED,CLIENT_IP,FORWARDED_FOR_IP,HTTP_PROXY_CONNECTION");    
+$proxy_headers = explode(',', "HTTP_VIA,HTTP_X_FORWARDED_FOR,HTTP_FORWARDED_FOR,HTTP_X_FORWARDED,HTTP_FORWARDED,HTTP_CLIENT_IP,HTTP_FORWARDED_FOR_IP,HTTP_X_SURFCACHE_FOR,VIA,X_FORWARDED_FOR,FORWARDED_FOR,X_FORWARDED,FORWARDED,CLIENT_IP,FORWARDED_FOR_IP,HTTP_PROXY_CONNECTION");
 
 $proxyActive = False;
 foreach ($proxy_headers as $header)
@@ -48,7 +48,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
             <head>
                 <title>Siveo Pulse</title>
                 <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
-                
+
             </head>
             <BODY style='background-color: #FFFFFF;'>
             <center>
@@ -57,7 +57,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
                         <h2 style='color: red;'>"._T("Connection Failed !", "msc") . "</h2>
                         <br/>
                         "._T("Connection was refused by the other side.", "msc") . "<br/>
-                            
+
                         <br/>
                         <button id='btnPrimary' onclick='window.close();'>Close window</button>
                     </div>
@@ -73,7 +73,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
 	//web_vnc_allow_user_control()
 	//web_vnc_view_only()
 	//web_vnc_network_connectivity() = fiber|lan|cable|dsl[isdn
-        
+
         ?>
 
 	<!DOCTYPE html>
@@ -214,14 +214,14 @@ if ($proxyActive) {
                 sb.setAttribute("class", "noVNC_status_" + level);
                 if (msg.search('1006') != -1) {
                     // 1006 message: unable to connect
-                    
+
                     // Retrying: New connection attempt
                     if (connection_attemps <= MAX_CONNECTION_ATTEMPS) {
                         setTimeout(window.auto_connect, 3000);
                         s.innerHTML = <?php print json_encode(_T('Connecting ...', 'msc')); ?>;
                         return;
                     }
-                    
+
                 }
                 msg = msg.replace('(unencrypted)', <?php print json_encode('('. _T('through SSH tunnel', 'msc') . ')'); ?>);
                 msg = msg.replace('Failed to connect to server', <?php print json_encode(_T('Connection failed', 'msc')); ?>);
@@ -235,7 +235,7 @@ if ($proxyActive) {
                 s.innerHTML = msg;
             }
         }
-        
+
         function windowResize() {
             var contentWidth = $('canvas').width()+10;
             var contentHeight = $('canvas').height()+120;
@@ -245,21 +245,21 @@ if ($proxyActive) {
                 setTimeout(windowResize, 1000);
 
         }
-        
+
         function update_ui(){
-            
+
             $D('sendCtrlAltDelButton').style.display = "inline";
             $D('sendCtrlAltDelButton').onclick = sendCtrlAltDel;
 
 
             WebUtil.init_logging(WebUtil.getQueryVar('logging', 'warn'));
-            
+
 	    // post clipboard button
 	    $('#toClipboard').click(function(){
 		var clipText = prompt('Enter text to send to machine clipboard:', window.clip_content);
-		rfb.clipboardPasteFrom(clipText);	    
+		rfb.clipboardPasteFrom(clipText);
 	    });
-            
+
             $('#toClipboard').show();
 
 	    // On close window, disconnect
@@ -267,18 +267,18 @@ if ($proxyActive) {
             window.onbeforeunload = function() {
             	rfb.disconnect();
 	    };
-            
+
             jQuery('canvas').resize(windowResize);
 
         };
-        
-        
-        
+
+
+
         window.auto_connect = function () {
             var host, port, password, path, token;
 
             connection_attemps++;
-            
+
 	    // By default, use the host and port of server that served this file
 	    // We can use $_SERVER['SERVER_ADDR'] as host if launcher is on the same server
 	    // host = '<?php print $_SERVER['SERVER_ADDR']; ?>';
@@ -328,18 +328,18 @@ if ($proxyActive) {
             rfb.set_onDesktopName(function(rfb, name){
                 document.title = name;
             });
-            
+
             window.rfb = rfb;
 
 
 	    setTimeout(windowResize, 1000);
 
         };
-        
+
         window.onscriptsload = function() {
             auto_connect();
         };
-        
+
         </script>
 
     </body>
@@ -352,7 +352,7 @@ if ($proxyActive) {
 else {
 
     // Show VNC confirmation popup
-    $f = new PopupWindowForm(_T("Take control of this computer", "msc"));    
+    $f = new PopupWindowForm(_T("Take control of this computer", "msc"));
     $f->target_uri = $_SERVER["REQUEST_URI"] . "&establishproxy=yes";
     $f->addValidateButtonWithFade("bconfirm");
     $f->addCancelButton("bback");

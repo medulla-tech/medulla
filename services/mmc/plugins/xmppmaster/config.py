@@ -19,19 +19,19 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from mmc.support.config import PluginConfig #, ConfigException
+from mmc.support.config import PluginConfig  # , ConfigException
 from pulse2.database.xmppmaster.config import XmppMasterDatabaseConfig
 import platform
 from mmc.plugins.xmppmaster.master.lib import utils
 import logging
 from mmc.plugins.xmppmaster.master.lib.utils import ipfromdns
-import os  
+import os
 import ConfigParser
 
 
 class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
-    def __init__(self, name = 'xmppmaster', conffile = None):
+    def __init__(self, name='xmppmaster', conffile=None):
         if not hasattr(self, 'initdone'):
             PluginConfig.__init__(self, name, conffile)
             XmppMasterDatabaseConfig.__init__(self)
@@ -55,7 +55,6 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.debugmode = "NOTSET"
         self.ordreallagent = False
 
-
     def readConf(self):
         """
         Read the configuration file using the ConfigParser API.
@@ -67,38 +66,40 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.get("main", "tempdir")
 
-        self.Port= self.get('connection', 'port')
-        self.Server= ipfromdns(self.get('connection', 'server'))
-        self.passwordconnection=self.get('connection', 'password')
+        self.Port = self.get('connection', 'port')
+        self.Server = ipfromdns(self.get('connection', 'server'))
+        self.passwordconnection = self.get('connection', 'password')
         self.debugmode = self.get('global', 'log_level')
         #########chatroom############
 
-        self.jidchatroommaster="master@%s"%self.get('chatroom', 'server')
-        self.jidchatroomlog="log@%s"%self.get('chatroom', 'server')
-        self.jidchatroomcommand="command@%s"%self.get('chatroom', 'server')
-        self.passwordconnexionmuc=self.get('chatroom', 'password')
+        self.jidchatroommaster = "master@%s" % self.get('chatroom', 'server')
+        self.jidchatroomlog = "log@%s" % self.get('chatroom', 'server')
+        self.jidchatroomcommand = "command@%s" % self.get('chatroom', 'server')
+        self.passwordconnexionmuc = self.get('chatroom', 'password')
 
         #######configuration browserfile#######
-        self.defaultdir     = os.path.join("/","var","lib","pulse2", "file-transfer")
-        self.rootfilesystem = os.path.join("/","var","lib","pulse2","file-transfer")
+        self.defaultdir = os.path.join("/", "var", "lib", "pulse2", "file-transfer")
+        self.rootfilesystem = os.path.join("/", "var", "lib", "pulse2", "file-transfer")
         if self.has_option("browserfile", "defaultdir"):
             self.defaultdir = self.get('browserfile', 'defaultdir')
         if self.has_option("bowserfile", "rootfilesystem"):
             self.rootfilesystem = self.get('browserfile', 'rootfilesystem')
-            
+
         ###################Chatroom for dynamic configuration of agents#######################
         # Dynamic configuration information
-        self.confjidchatroom = "%s@%s"%(self.get('configuration_server', 'confmuc_chatroom'),self.get('chatroom', 'server'))
+        self.confjidchatroom = "%s@%s" % (
+            self.get('configuration_server', 'confmuc_chatroom'), self.get('chatroom', 'server'))
         self.confpasswordmuc = self.get('configuration_server', 'confmuc_password')
         ########chat#############
         # The jidagent must be the smallest value in the list of mac addresses
-        self.chatserver=self.get('chat', 'domain')
+        self.chatserver = self.get('chat', 'domain')
         # plus petite mac adress
-        self.jidagent = "%s@%s/%s"%(utils.name_jid(),self.get('chat', 'domain'),platform.node())
+        self.jidagent = "%s@%s/%s" % (utils.name_jid(), self.get('chat', 'domain'), platform.node())
         try:
-            self.jidagentsiveo = "%s@%s"%(self.get('global', 'allow_order'),self.get('chat', 'domain'))
+            self.jidagentsiveo = "%s@%s" % (
+                self.get('global', 'allow_order'), self.get('chat', 'domain'))
         except:
-            self.jidagentsiveo = "%s@%s"%("agentsiveo",self.get('chat', 'domain'))
+            self.jidagentsiveo = "%s@%s" % ("agentsiveo", self.get('chat', 'domain'))
         self.ordreallagent = self.getboolean('global', 'inter_agent')
         self.showinfomaster = self.getboolean('master', 'showinfo')
         self.showplugins = self.getboolean('master', 'showplugins')
@@ -110,8 +111,8 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         if self.defaultrelayserverip == "127.0.0.1":
             logging.getLogger().error('parameter section "defaultconnection" serverip must not be 127.0.0.1')
         self.defaultrelayserverport = self.get('defaultconnection', 'port')
-        self.defaultrelayserverbaseurlguacamole=self.get('defaultconnection', 'guacamole_baseurl')
-        self.jidagent = "%s@%s/%s"%("master",self.chatserver,"MASTER")
+        self.defaultrelayserverbaseurlguacamole = self.get('defaultconnection', 'guacamole_baseurl')
+        self.jidagent = "%s@%s/%s" % ("master", self.chatserver, "MASTER")
         self.NickName = "MASTER"
 
         if self.has_option("global", "diragentbase"):
@@ -124,41 +125,39 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
             self.autoupdate = True
         self.dirplugins = self.get('plugins', 'dirplugins')
         self.dirschedulerplugins = self.get('plugins', 'dirschedulerplugins')
-        self.information={}
-        self.PlatformSystem=platform.platform()
-        self.information['platform']=self.PlatformSystem
-        self.OperatingSystem=platform.system()
-        self.information['os']=self.OperatingSystem
+        self.information = {}
+        self.PlatformSystem = platform.platform()
+        self.information['platform'] = self.PlatformSystem
+        self.OperatingSystem = platform.system()
+        self.information['os'] = self.OperatingSystem
         self.UnameSystem = platform.uname()
-        self.information['uname']=self.UnameSystem
-        self.HostNameSystem =platform.node()
-        self.information['hostname']=self.HostNameSystem
-        self.OsReleaseNumber=platform.release()
-        self.information['osrelease']=self.OsReleaseNumber
-        self.DetailedVersion=platform.version()
-        self.information['version']=self.DetailedVersion
-        self.HardwareType=platform.machine()
-        self.information['hardtype']=self.HardwareType
-        self.ProcessorIdentifier=platform.processor()
-        self.information['processor']=self.ProcessorIdentifier
-        self.Architecture=platform.architecture()
-        self.information['archi']=self.Architecture
+        self.information['uname'] = self.UnameSystem
+        self.HostNameSystem = platform.node()
+        self.information['hostname'] = self.HostNameSystem
+        self.OsReleaseNumber = platform.release()
+        self.information['osrelease'] = self.OsReleaseNumber
+        self.DetailedVersion = platform.version()
+        self.information['version'] = self.DetailedVersion
+        self.HardwareType = platform.machine()
+        self.information['hardtype'] = self.HardwareType
+        self.ProcessorIdentifier = platform.processor()
+        self.information['processor'] = self.ProcessorIdentifier
+        self.Architecture = platform.architecture()
+        self.information['archi'] = self.Architecture
 
         if self.has_option("plugins", "pluginlist"):
             pluginlist = self.get('plugins', 'pluginlist').split(",")
-            pluginlist = [x.strip() for x in pluginlist ]
+            pluginlist = [x.strip() for x in pluginlist]
 
             for z in pluginlist:
-                namefile = "%s.ini"%os.path.join("/","etc","mmc","plugins",z)
-                logging.getLogger().debug('load parameter File plugin %s'%namefile)
+                namefile = "%s.ini" % os.path.join("/", "etc", "mmc", "plugins", z)
+                logging.getLogger().debug('load parameter File plugin %s' % namefile)
                 if os.path.isfile(namefile):
                     liststuple = self.loadparametersplugins(namefile)
                     for keyparameter, valueparameter in liststuple:
-                        setattr(self, keyparameter,valueparameter)
+                        setattr(self, keyparameter, valueparameter)
                 else:
-                    logging.getLogger().error("Parameter File Plugin %s : missing"%namefile)
-
-
+                    logging.getLogger().error("Parameter File Plugin %s : missing" % namefile)
 
     def check(self):
         """

@@ -25,6 +25,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
 
+<<<<<<< HEAD
 
 $uuidpackage =  base64_decode ( $_GET['pid']);
 //interoge la table syncthingsync

@@ -43,4 +43,3 @@ $p->display();
 require("add_groups.php");
 
 ?>
-

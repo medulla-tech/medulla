@@ -110,4 +110,3 @@ class UPAssignAlgoManager(IntAssignAlgoManager):
     name = 'User/PackagePut'
     def getClassInModule(self, mod):
         return mod.UPUserAssignAlgo()
-

@@ -49,7 +49,7 @@ class LicensePanel extends Panel {
 
     function display_content() {
 
-        if ($this->data['name'] != ''||$this->data['phone'] != ''||$this->data['email'] != ''||$this->data['hours'] != ''){ 
+        if ($this->data['name'] != ''||$this->data['phone'] != ''||$this->data['email'] != ''||$this->data['hours'] != ''){
             echo '<div class="subpanel">';
             echo '<p><b>' . _T('Support', 'support') . '</b></p>';
 

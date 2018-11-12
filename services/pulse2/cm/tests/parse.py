@@ -52,4 +52,3 @@ class Test00_Parser(TestCase):
         parser = Parser("marshal")
         pack = parser.encode("hello")
         self.assertEqual(parser.decode(pack), "hello")
-

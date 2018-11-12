@@ -34,7 +34,7 @@ list($SYNCHROSTATE_UNKNOWN, $SYNCHROSTATE_TODO, $SYNCHROSTATE_SYNCHRO, $SYNCHROS
 $errors = array(
     1000 => _T("There was an error (this is a default message).", "imaging"), // $ERR_DEFAULT
     1001 => _T("The nomenclature is missing.", "imaging"), // $ERR_MISSING_NOMENCLATURE
-    1003 => _T("This imaging server doesn't exists.", "imaging"), // $ERR_IMAGING_SERVER_DONT_EXISTS
+    1003 => _T("This imaging server doesn't exist.", "imaging"), // $ERR_IMAGING_SERVER_DONT_EXISTS
     1004 => _T("This entity already exists.", "imaging"), // $ERR_ENTITY_ALREADY_EXISTS
     1005 => _T("You asked for an inexistent menu item.", "imaging"), // $ERR_UNEXISTING_MENUITEM
     1006 => _T("This target has no menu.", "imaging"), // $ERR_TARGET_HAS_NO_MENU
@@ -71,7 +71,7 @@ class LedElement extends HtmlElement {
         $this->color=$color;
         $this->value='<img style="vertical-align: middle" src="modules/imaging/graph/images/led_circle_'.$this->color.'.png">';
     }
-    function display(){
+    function display($arrParam = array()){
         print $this->value;
     }
     function __toString() {
@@ -205,7 +205,7 @@ function format_health($up, $mem) {
     $m = preg_split("/[ ]+/", $mem[1]);
     $ret .= format_mem_bar("<em>"._("Memory")."</em> : ".humanSize($m[2]*1024)."/".humanSize(($m[5]+$m[6])*1024)."/".humanSize($m[1]*1024), $m[1], $m[2],$m[5]+$m[6]);
     $m = preg_split("/[ ]+/", $mem[3]);
-    if ($m[1] > 0) {
+    if (isset($m[1]) && $m[1] > 0) {
         $ret .= format_mem_bar("<em>"._("Swap")."</em> : ".humanSize($m[2]*1024)."/".humanSize($m[1]*1024), $m[1], $m[2]);
     }
     return $ret;
@@ -275,7 +275,7 @@ class ImageLogs extends HtmlElement {
         $this->logs = $logs;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         $lines = array();
         $errlines = array();
         foreach($this->logs as $line => $msg) {

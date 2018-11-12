@@ -180,7 +180,7 @@ FunctionEnd
 Section "Clean" Clean
   SectionIn RO
   DetailPrint "* 1. Pre-installation step"
-  
+
   Push '${WINSVCNAME}'
   Services::IsServiceInstalled
   Pop $0
@@ -234,12 +234,12 @@ Section "Core" Core
   File bin\win32evtlog.pyd
   File bin\win32pipe.pyd
   File bin\win32ui.pyd
-  
+
 
   ;;;;;;;;;;;;;
   ; Conf file ;
   ;;;;;;;;;;;;;
-  
+
   SetOutPath "$INSTDIR"
   SetOverwrite on
   File bin\pulse2agent.ini
@@ -269,7 +269,7 @@ Please fill the field with the right DNS name or IP address."
     StrCpy $PULSE2_VPN_FQDN $2
 
   ${EndIF}
-  StrCpy $SOFTETHER_FOLDER_NAME "C:\Program Files\SoftEther VPN Client\vpncmd.exe"  
+  StrCpy $SOFTETHER_FOLDER_NAME "C:\Program Files\SoftEther VPN Client\vpncmd.exe"
   ; Fix conf file
   DetailPrint "Using $PULSE2_CM_SERVER:$PULSE2_CM_PORT as Connection Manager."
   !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_SERVER@@" $PULSE2_CM_SERVER

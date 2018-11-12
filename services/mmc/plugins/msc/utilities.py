@@ -35,4 +35,3 @@ def escapeshellarg(str):
 
 def clean_path(str):
     return os.path.realpath(str)
-

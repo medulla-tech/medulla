@@ -33,7 +33,7 @@ function delete_directory($dirname) {
          if (!is_dir($dirname."/".$file))
             unlink($dirname."/".$file);
          else
-            delete_directory($dirname.'/'.$file);    
+            delete_directory($dirname.'/'.$file);
       }
    }
    closedir($dir_handle);
@@ -77,4 +77,3 @@ function clean_json($json)
     return $json;
 }
 ?>
-

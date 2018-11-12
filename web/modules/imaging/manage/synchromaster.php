@@ -69,7 +69,7 @@ for ($i=0;$i<$nbprocess;$i++){
     echo '<p style="color: blue;" id="po'.$process[$i].'">';
     //echo "Not Started";
     echo "</p>";
-    echo'<progress id="pb'.$process[$i].'" 
+    echo'<progress id="pb'.$process[$i].'"
      max="100" value="0" form="form-id">0%</progress>
      <span id="bb'.$process[$i].'"></span>';
     echo '</div>';
@@ -97,7 +97,7 @@ var interval = setInterval(function() {
     });
     request.done(function(msg) {
         var regUrl = new RegExp("[a-zA-Z._-]", "gi");
-        var t = JSON.parse(msg)        
+        var t = JSON.parse(msg)
         var keyvaleur=Object.keys(t)
         var terminer=new Array();
         for(var i= 0; i < keyvaleur.length; i++){

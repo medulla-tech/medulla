@@ -1092,5 +1092,3 @@ class DonePhase(Phase):
        self.coh.setStateDone()
        self.dispatcher.bundles.finish(self.coh.id)
        return self.next()
-
-

@@ -31,7 +31,7 @@ function float2hhmm($x){
 function hhmm2float($x){
     sscanf($x, "%d:%d",$h,$m);
     return str_replace(',','.',sprintf("%.2f",$h+$m/60));
-    
+
 }
 
 function fmtFloat($x){

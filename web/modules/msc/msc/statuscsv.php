@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301, USA
  */
- 
+
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/command_history.php');
 
@@ -32,10 +32,10 @@ if (strlen($_GET['state'])) {
 }
 
 $cmd_id = isset($_GET['cmd_id']) ? $_GET['cmd_id'] : '';
- 
+
 function get_command_by_state($kind, $id, $state, $count) {
     $split = 250; # results will be splitted by 250 to reduce memory usage
-    
+
     if ($count <= $split) {
         $range = array(0);
     } else {
@@ -138,5 +138,3 @@ foreach ($content as $line) {
 exit;
 
 ?>
-
-

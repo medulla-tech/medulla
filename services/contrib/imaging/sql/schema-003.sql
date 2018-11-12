@@ -30,4 +30,3 @@ UPDATE PostInstallScript SET default_name = "Deploy Pulse Agents", default_desc 
 UPDATE Internationalization SET label = "Déployer les agents Pulse (SSH, OCS, VNC)" WHERE id = 20;
 
 UPDATE version set Number = 3;
-

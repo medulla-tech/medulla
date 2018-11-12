@@ -394,5 +394,3 @@ if __name__ == "__main__":
         sys.exit(__start())
     elif args[0] == "status":
         sys.exit(__status())
-
-

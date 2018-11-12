@@ -34,11 +34,11 @@ else
 if ($q == 'GET_STATUS' && isset($_GET['host']))
 {
     $response = get_host_status($_GET['host']);
-    
+
     if (isXMLRPCError() || $response['err']) {
         print '<span style="color:red">'._T("Error while retrieving status.",'backuppc') .'</span>';
     }
-    
+
     $status_strings = array(
         'no ping' => '<span style="color:red">'._T('No ping response','backuppc').'</span>',
         'backup failed' => '<span style="color:red">'._T('Backup failed','backuppc').'</span>',

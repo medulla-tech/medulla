@@ -20,4 +20,3 @@ def=no
 visu=yes
 image=Tool-MemTest
 include=Tool-MemTest/conf.txt
-

@@ -176,5 +176,3 @@ if __name__ == "__main__":
 
     # Start the daemon main loop
     sys.exit(running(inifile, daemonize, debugtoconsole))
-
-

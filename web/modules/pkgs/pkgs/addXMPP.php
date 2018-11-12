@@ -36,7 +36,7 @@ if(isset($_GET["action"]) && $_GET["action"] =="edit")
 
 
 $f->add(new TrFormElement("",new SpanElement('<div style="width:100%; display:flex;">
-    <div style="width:40%;">
+    <div style="width:40%;position:sticky;top:10px;align-self: flex-start;">
         <h1>Available Actions</h1>
         <ul id="available-actions" style="background-color:rgba(158,158,158,0.27);"></ul>
     </div>'.'<div id="workflow" style="width:95%">

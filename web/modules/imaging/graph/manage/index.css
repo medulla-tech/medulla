@@ -32,7 +32,7 @@ div.status {
 
 div.status_block {
     -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;    
+    -webkit-border-radius: 10px;
     background-color:#F0F4F7;
     border:1px solid #CCCCCC;
     color:#666666;
@@ -57,7 +57,7 @@ div.status_block p {
 
 div.status_block p.stat {
     padding-top: 4px;
-    padding-bottom: 4px;    
+    padding-bottom: 4px;
 }
 
 div.status_block p img {

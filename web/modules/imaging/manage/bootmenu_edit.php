@@ -38,7 +38,7 @@ $item = xmlrpc_getMenuItemByUUID($item_uuid);
 $is_image = False;
 if (isset($item['image'])) {
     $is_image = True;
-}   
+}
 
 if(count($_POST) == 0) {
     $is_selected = '';
@@ -64,39 +64,39 @@ if(count($_POST) == 0) {
             $ro = True;
         }
     }
-    
+
     $p = new PageGenerator(sprintf(_T("Edit : %s", "imaging"), $label));
     $sidemenu->forceActiveItem("bootmenu");
     $p->setSideMenu($sidemenu);
     $p->display();
-    
+
     $f = new ValidatingForm();
-    $f->push(new Table());      
+    $f->push(new Table());
     $f->add(new HiddenTpl("location"),                      array("value" => $location,                      "hide" => True));
-    
+
     $input = new TrFormElement(_T('Default menu item label', 'imaging'),        new InputTpl("default_name"));
     $f->add($input,                                         array("value" => $default_name, "disabled" => ($ro?'disabled':'')));
-                    
+
     $f->add(
-        new TrFormElement(_T("Selected by default", "imaging"), 
+        new TrFormElement(_T("Selected by default", "imaging"),
         new CheckboxTpl("default")),
         array("value" => $is_selected)
     );
     $f->add(
-        new TrFormElement(_T("Displayed", "imaging"), 
+        new TrFormElement(_T("Displayed", "imaging"),
         new CheckboxTpl("displayed")),
         array("value" => $is_displayed)
     );
     $f->add(
-        new TrFormElement(_T("Selected by default on WOL", "imaging"), 
+        new TrFormElement(_T("Selected by default on WOL", "imaging"),
         new CheckboxTpl("default_WOL")),
         array("value" => $is_wol_selected)
     );
     $f->add(
-        new TrFormElement(_T("Displayed on WOL", "imaging"), 
+        new TrFormElement(_T("Displayed on WOL", "imaging"),
         new CheckboxTpl("displayed_WOL")),
         array("value" => $is_wol_displayed)
-    );    
+    );
     $f->pop();
     $f->addButton("bvalid", _T("Validate"));
     $f->pop();
@@ -124,7 +124,7 @@ if(count($_POST) == 0) {
 
     header("Location: " . urlStrRedirect("imaging/manage/bootmenu"));
     exit;
-}   
+}
 
 
 ?>

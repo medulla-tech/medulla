@@ -96,6 +96,6 @@ function xmlrpc_setfrommsclogxmpp(   $text,
                                                     $action,
                                                     $touser,
                                                     $fromuser));
-}                                                    
-                                                    
+}
+
 ?>

@@ -59,10 +59,9 @@ class SchedulerApi(Singleton):
                 self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(MscConfig().default_scheduler, credentials, self.server_addr, self.config.sa_verifypeer, self.config.sa_cacert, self.config.sa_localcert)
             else:
                 self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(MscConfig().default_scheduler, credentials, self.server_addr)
-                
+
         for method in ('getScheduler', 'getSchedulers', 'getDefaultScheduler'):
             setattr(self, method, getattr(self.internal, method))
 
         self.internal.setConfig(self.config)
         self.initialized = True
- 

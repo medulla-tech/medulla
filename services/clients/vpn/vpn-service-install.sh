@@ -45,7 +45,7 @@ fi
 if [ ! -f "$PREFIX_DIR/$VPN_ARCHIVE_NAME" ]; then
     echo "Install pack $VPN_ARCHIVE_NAME not exists, try to download it from $VPN_URL"
     curl -o $PREFIX_DIR/$VPN_ARCHIVE_NAME $VPN_URL_ROOT/$VPN_ARCHIVE_NAME
-fi 
+fi
 
 
 if [ -d "$PREFIX_DIR/$VPN_INST_DIR" ]; then
@@ -65,7 +65,7 @@ cd $PREFIX_DIR/$VPN_INST_DIR
 echo "INFO: Preparation of $SERVICE_NAME installer ..."
 # "make" command requests some license confirmations ...
 expect -c "
-    log_user $VPN_LOG_EXPECT 
+    log_user $VPN_LOG_EXPECT
     set timeout 1
     spawn make
     sleep 1
@@ -83,7 +83,7 @@ if [ ${?} -eq 0 ]; then
 else
     echo "WARNING: The preparation of VPN Server installer failed"
     exit 1;
-fi     
+fi
 
 sleep 5
 cd ..
@@ -92,9 +92,9 @@ mv $VPN_INST_DIR $VPN_PROG_DIR
 
 echo "INFO: Set the rights..."
 sleep 3
-chmod 600 $VPN_PROG_DIR/$VPN_INST_DIR/* 
-chmod 700 $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd 
-chmod 700 $VPN_PROG_DIR/$VPN_INST_DIR/$VPN_SERVICE_NAME 
+chmod 600 $VPN_PROG_DIR/$VPN_INST_DIR/*
+chmod 700 $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd
+chmod 700 $VPN_PROG_DIR/$VPN_INST_DIR/$VPN_SERVICE_NAME
 
 if [[ $VPN_OS == "linux" ]]; then
 	echo "INFO: Registering a startup script"
@@ -121,9 +121,9 @@ case "$1" in
     $DAEMON start
     touch $LOCK
     sleep 1' >> $VPN_START_UP
-	if [[ $VPN_SERVICE_SIDE == "server" ]]; then 
+	if [[ $VPN_SERVICE_SIDE == "server" ]]; then
 	    echo "# ifconfig tap_$VPN_TAP_IFACE $VPN_TAP_ADDRESS" >> $VPN_START_UP
-	fi    
+	fi
 	echo '  ;;
   stop)
     $DAEMON stop
@@ -134,10 +134,10 @@ case "$1" in
     sleep 3
     $DAEMON start
     sleep 1' >> $VPN_START_UP
-	if [[ $VPN_SERVICE_SIDE == "server" ]]; then 
+	if [[ $VPN_SERVICE_SIDE == "server" ]]; then
 	    echo "# ifconfig tap_$VPN_TAP_IFACE $VPN_TAP_ADDRESS" >> $VPN_START_UP
-	fi    
-	echo ' 
+	fi
+	echo '
   ;;
   *)
     echo "Usage: $0 {start|stop|restart}"
@@ -148,11 +148,11 @@ exit 0
 
 	chmod 755 $VPN_START_UP
 
-	echo "#!/bin/bash" > $VPN_VPNCMD_PATH 
+	echo "#!/bin/bash" > $VPN_VPNCMD_PATH
 	echo "cd $VPN_PROG_DIR/$VPN_INST_DIR" >> $VPN_VPNCMD_PATH
 	echo "$VPN_PROG_DIR/$VPN_INST_DIR/vpncmd" >> $VPN_VPNCMD_PATH
 
-	chmod 700 $VPN_VPNCMD_PATH 
+	chmod 700 $VPN_VPNCMD_PATH
 
 	#ln -s $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd /usr/bin
 
@@ -162,4 +162,3 @@ exit 0
 	# Start the service
 	service $VPN_SERVICE_NAME start
 fi
-

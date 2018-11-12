@@ -104,7 +104,7 @@ class MirrorApi(Pulse2Api):
             entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
             parent_entities = [entity_uuid] + ComputerLocationManager().getLocationParentPath(entity_uuid)
             url = ''
-            entity_uuid = '' 
+            entity_uuid = ''
             db = ImagingDatabase()
             for _uuid in parent_entities:
                 urlsearch = db.getEntityUrl(_uuid)
@@ -137,4 +137,3 @@ class MirrorApi(Pulse2Api):
         if type(machine) != dict:
             machine = {'uuid':machine}
         return machine
-

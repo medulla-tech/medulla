@@ -102,7 +102,7 @@ foreach ($ret as $r) {
     if ($item == '') {
         $item = _T("the entity itself", "imaging");
     }
-    
+
     if ($r['id'] == $SYNCHROSTATE_RUNNING) {
         array_push($running_on, $item);
     }

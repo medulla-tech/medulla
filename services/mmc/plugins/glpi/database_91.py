@@ -671,6 +671,14 @@ class Glpi91(DyngroupDatabaseHelper):
                 join_query = join_query.outerjoin(self.fusionantivirus)
                 join_query = join_query.outerjoin(self.os)
 
+            r=re.compile('reg_key_.*')
+            regs=filter(r.search, self.config.summary)
+            try:
+                if regs[0]:
+                    join_query = join_query.outerjoin(self.regcontents)
+            except IndexError:
+                pass
+
             if query_filter is None:
                 query = query.select_from(join_query)
             else:
@@ -722,6 +730,13 @@ class Glpi91(DyngroupDatabaseHelper):
                         clauses.append(self.glpi_computermodels.c.name.like('%'+filt['hostname']+'%'))
                     if 'manufacturer' in self.config.summary:
                         clauses.append(self.manufacturers.c.name.like('%'+filt['hostname']+'%'))
+                    r=re.compile('reg_key_.*')
+                    regs=filter(r.search, self.config.summary)
+                    try:
+                        if regs[0]:
+                            clauses.append(self.regcontents.c.value.like('%'+filt['hostname']+'%'))
+                    except IndexError:
+                        pass
                     # Filtering on computer list page
                     if clauses:
                         query = query.filter(or_(*clauses))
@@ -904,7 +919,7 @@ class Glpi91(DyngroupDatabaseHelper):
         elif query[2] == 'Register key':
             return base + [ self.regcontents]#self.collects, self.registries,
         elif query[2] == 'Register key value':
-            return base + [ self.regcontents, self.registries ]#self.collects, self.registries, 
+            return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -985,7 +1000,7 @@ class Glpi91(DyngroupDatabaseHelper):
                             print str(e)
                             traceback.print_exc(file=sys.stdout)
                             ret.append(partA.like(self.encode(partB)))
-                                
+
             if ctx.userid != 'root':
                 ret.append(self.__filter_on_entity_filter(None, ctx))
             return and_(*ret)
@@ -2931,7 +2946,7 @@ class Glpi91(DyngroupDatabaseHelper):
         ret = query.all()
         session.close()
         return ret
-    
+
     @DatabaseHelper._sessionm
     def getAllVersion4Software(self, session, ctx, softname, version = ''):
         """

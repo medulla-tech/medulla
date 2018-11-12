@@ -45,7 +45,7 @@ get_running_pid() {
 	    # PIDFILE content correspond to a pid
 	    pid=`cat ${PIDFILE}`
 	else
-	    # PIDFILE content is errorneous, 
+	    # PIDFILE content is errorneous,
 	    # remove the file
 	    rm -f ${PIDFILE}
 	fi

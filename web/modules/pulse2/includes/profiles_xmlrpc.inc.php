@@ -43,4 +43,3 @@ function xmlrpc_getAllImagingServersForProfiles($is_associated = false) {
 }
 
 ?>
-

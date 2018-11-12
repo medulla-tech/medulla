@@ -171,5 +171,3 @@ class Server(object):
 # openssl req -new -key client.key -out client.csr
 # openssl x509 -req -in server.csr -CA root.pem -CAkey root.key -CAcreateserial -out server.crt -days 1023
 # openssl x509 -req -in client.csr -CA root.pem -CAkey root.key -CAcreateserial -out client.crt -days 1023
-
-

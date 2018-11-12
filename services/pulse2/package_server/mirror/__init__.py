@@ -63,4 +63,3 @@ class Mirror(MyXmlrpc):
             return ''
         else:
             return f
-

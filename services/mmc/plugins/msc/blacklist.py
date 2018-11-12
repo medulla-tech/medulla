@@ -62,7 +62,7 @@ def processIPListFromConfig(iplist):
                     raise ValueError
                 ret.append((begin,end))
             except ValueError:
-                pass            
+                pass
         else:
             try:
                 dottedQuadToNum(ip)
@@ -74,7 +74,7 @@ def processIPListFromConfig(iplist):
 def rfc2780Filter(ips):
     """
     Filter non RFC 2780 IP addresses (not in IPV4 unicast space).
-    
+
     @param ips: a list of IP addresses
     @type ips: list
 
@@ -96,7 +96,7 @@ def rfc2780Filter(ips):
 def rfc1918Filter(ips):
     """
     Filter non RFC 1918 IP addresses (not a valid private address)
-    
+
     @param ips: a list of IP addresses
     @type ips: list
 
@@ -139,11 +139,11 @@ def excludeFilter(ips, exclude):
                 if ipInRange(ip, ex[0], ex[1]):
                     # This IP is filtered
                     filtered = True
-                    break         
+                    break
         if not filtered:
             ret.append(ip)
     return ret
-        
+
 def mergeWithIncludeFilter(ips, filteredips, include):
     """
     @param ips: list of IP addresses
@@ -203,7 +203,7 @@ def isValidHostname(hostname):
 def checkWithRegexps(string, regexps):
     """
     Check if a string is matching a regexp from a list of regexps
-    
+
     @param hostname: string to check
     @type hostname: str
 

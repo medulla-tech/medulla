@@ -164,7 +164,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 <table style="border: none;" cellspacing="0">
 <tr><td><?php echo  $label_name; ?></td><td></td><td><input name="name" value="<?php echo  $name ?>" type="text"/></td></tr>
 <tr><td><?php echo  $label_visible; ?></td><td></td><td>
-    <input name='visible' value='show' <?php if ($visibility == 'show') { echo 'checked'; } ?> type='radio'/><?php echo  _T('Yes', 'dyngroup') ?> 
+    <input name='visible' value='show' <?php if ($visibility == 'show') { echo 'checked'; } ?> type='radio'/><?php echo  _T('Yes', 'dyngroup') ?>
     <input name='visible' value='hide' <?php if ($visibility != 'show') { echo 'checked'; } ?> type='radio'/><?php echo  _T('No', 'dyngroup') ?>
 </td></tr>
 <!-- add all group inupts -->
@@ -275,7 +275,10 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
 <input type="hidden" name="lsmembers" value="<?php echo base64_encode(serialize($listOfMembers)); ?>" />
 <input type="hidden" name="willBeUnregistered" value="<?php echo base64_encode(serialize($willBeUnregistered)); ?>" />
-<input type="hidden" name="computersgroupedit" value="<?php echo $computersgroupedit; ?>" />
+<?
+$computersgroupedittmp = isset($computersgroupedit) ? $computersgroupedit : "";
+?>
+<input type="hidden" name="computersgroupedit" value="<?php echo $computersgroupedittmp; ?>" />
 <input type="hidden" name="id" value="<?php echo  $gid ?>" />
 <input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" />
 <input type="submit" name="breset" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" />
@@ -308,4 +311,3 @@ select.list
 <?php
 }
 ?>
-

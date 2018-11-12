@@ -62,4 +62,3 @@ class SchedulerApi(MyXmlrpc):
                 self.assign[machine.uuid] = self.schedulers[random.randint(0,len(self.schedulers)-1)]
             ret.append(self.assign[machine.uuid])
         return ret
-

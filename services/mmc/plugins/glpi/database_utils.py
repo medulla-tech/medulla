@@ -75,4 +75,3 @@ def setUUID(obj):
     else:
         logging.getLogger().error("Can't get id for %s => no UUID"%(str(obj)))
     return obj
-
