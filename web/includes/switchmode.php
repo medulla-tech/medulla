@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 ?>
-<?php 
+<?php
 
 require("config.inc.php");
 require("../modules/base/includes/edit.inc.php");
@@ -33,7 +33,7 @@ if (isExpertMode()) {
     setExpertMode(0);
 } else {
     setExpertMode(1);
-} 
+}
 
 header("Location: ".$_SERVER["HTTP_REFERER"]);
 exit;

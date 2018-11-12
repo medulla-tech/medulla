@@ -7,14 +7,14 @@
 
 // full day names
 Calendar._DN = new Array
-("星期日",
- "星期一",
- "星期二",
- "星期三",
- "星期四",
- "星期五",
- "星期六",
- "星期日");
+("锟斤拷锟斤拷锟斤拷",
+ "锟斤拷锟斤拷一",
+ "锟斤拷锟节讹拷",
+ "锟斤拷锟斤拷锟斤拷",
+ "锟斤拷锟斤拷锟斤拷",
+ "锟斤拷锟斤拷锟斤拷",
+ "锟斤拷锟斤拷锟斤拷",
+ "锟斤拷锟斤拷锟斤拷");
 
 // Please note that the following array of short day names (and the same goes
 // for short month names, _SMN) isn't absolutely necessary.  We give it here
@@ -30,48 +30,48 @@ Calendar._DN = new Array
 
 // short day names
 Calendar._SDN = new Array
-("日",
+("锟斤拷",
  "一",
- "二",
- "三",
- "四",
- "五",
- "六",
- "日");
+ "锟斤拷",
+ "锟斤拷",
+ "锟斤拷",
+ "锟斤拷",
+ "锟斤拷",
+ "锟斤拷");
 
 // full month names
 Calendar._MN = new Array
-("一月",
- "二月",
- "三月",
- "四月",
- "五月",
- "六月",
- "七月",
- "八月",
- "九月",
- "十月",
- "十一月",
- "十二月");
+("一锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "十锟斤拷",
+ "十一锟斤拷",
+ "十锟斤拷锟斤拷");
 
 // short month names
 Calendar._SMN = new Array
-("一月",
- "二月",
- "三月",
- "四月",
- "五月",
- "六月",
- "七月",
- "八月",
- "九月",
- "十月",
- "十一月",
- "十二月");
+("一锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "锟斤拷锟斤拷",
+ "十锟斤拷",
+ "十一锟斤拷",
+ "十锟斤拷锟斤拷");
 
 // tooltips
 Calendar._TT = {};
-Calendar._TT["INFO"] = "帮助";
+Calendar._TT["INFO"] = "锟斤拷锟斤拷";
 
 Calendar._TT["ABOUT"] =
 "DHTML Date/Time Selector\n" +
@@ -79,41 +79,41 @@ Calendar._TT["ABOUT"] =
 "For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
 "Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details." +
 "\n\n" +
-"选择日期:\n" +
-"- 点击 \xab, \xbb 按钮选择年份\n" +
-"- 点击 " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " 按钮选择月份\n" +
-"- 长按以上按钮可从菜单中快速选择年份或月份";
+"选锟斤拷锟斤拷锟斤拷:\n" +
+"- 锟斤拷锟斤拷 \xab, \xbb 锟斤拷钮选锟斤拷锟斤拷锟斤拷\n" +
+"- 锟斤拷锟斤拷 " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " 锟斤拷钮选锟斤拷锟铰凤拷\n" +
+"- 锟斤拷锟斤拷锟斤拷锟较帮拷钮锟缴从菜碉拷锟叫匡拷锟斤拷选锟斤拷锟斤拷锟捷伙拷锟铰凤拷";
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
-"选择时间:\n" +
-"- 点击小时或分钟可使改数值加一\n" +
-"- 按住Shift键点击小时或分钟可使改数值减一\n" +
-"- 点击拖动鼠标可进行快速选择";
+"选锟斤拷时锟斤拷:\n" +
+"- 锟斤拷锟斤拷小时锟斤拷锟斤拷锟接匡拷使锟斤拷锟斤拷值锟斤拷一\n" +
+"- 锟斤拷住Shift锟斤拷锟斤拷锟斤拷小时锟斤拷锟斤拷锟接匡拷使锟斤拷锟斤拷值锟斤拷一\n" +
+"- 锟斤拷锟斤拷锟较讹拷锟斤拷锟斤拷锟缴斤拷锟叫匡拷锟斤拷选锟斤拷";
 
-Calendar._TT["PREV_YEAR"] = "上一年 (按住出菜单)";
-Calendar._TT["PREV_MONTH"] = "上一月 (按住出菜单)";
-Calendar._TT["GO_TODAY"] = "转到今日";
-Calendar._TT["NEXT_MONTH"] = "下一月 (按住出菜单)";
-Calendar._TT["NEXT_YEAR"] = "下一年 (按住出菜单)";
-Calendar._TT["SEL_DATE"] = "选择日期";
-Calendar._TT["DRAG_TO_MOVE"] = "拖动";
-Calendar._TT["PART_TODAY"] = " (今日)";
+Calendar._TT["PREV_YEAR"] = "锟斤拷一锟斤拷 (锟斤拷住锟斤拷锟剿碉拷)";
+Calendar._TT["PREV_MONTH"] = "锟斤拷一锟斤拷 (锟斤拷住锟斤拷锟剿碉拷)";
+Calendar._TT["GO_TODAY"] = "转锟斤拷锟斤拷锟斤拷";
+Calendar._TT["NEXT_MONTH"] = "锟斤拷一锟斤拷 (锟斤拷住锟斤拷锟剿碉拷)";
+Calendar._TT["NEXT_YEAR"] = "锟斤拷一锟斤拷 (锟斤拷住锟斤拷锟剿碉拷)";
+Calendar._TT["SEL_DATE"] = "选锟斤拷锟斤拷锟斤拷";
+Calendar._TT["DRAG_TO_MOVE"] = "锟较讹拷";
+Calendar._TT["PART_TODAY"] = " (锟斤拷锟斤拷)";
 
 // the following is to inform that "%s" is to be the first day of week
 // %s will be replaced with the day name.
-Calendar._TT["DAY_FIRST"] = "最左边显示%s";
+Calendar._TT["DAY_FIRST"] = "锟斤拷锟斤拷锟斤拷锟斤拷示%s";
 
 // This may be locale-dependent.  It specifies the week-end days, as an array
 // of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
 // means Monday, etc.
 Calendar._TT["WEEKEND"] = "0,6";
 
-Calendar._TT["CLOSE"] = "关闭";
-Calendar._TT["TODAY"] = "今日";
-Calendar._TT["TIME_PART"] = "(Shift-)点击鼠标或拖动改变值";
+Calendar._TT["CLOSE"] = "锟截憋拷";
+Calendar._TT["TODAY"] = "锟斤拷锟斤拷";
+Calendar._TT["TIME_PART"] = "(Shift-)锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟较讹拷锟侥憋拷值";
 
 // date formats
 Calendar._TT["DEF_DATE_FORMAT"] = "%Y-%m-%d";
-Calendar._TT["TT_DATE_FORMAT"] = "%A, %b %e日";
+Calendar._TT["TT_DATE_FORMAT"] = "%A, %b %e锟斤拷";
 
-Calendar._TT["WK"] = "周";
-Calendar._TT["TIME"] = "时间:";
+Calendar._TT["WK"] = "锟斤拷";
+Calendar._TT["TIME"] = "时锟斤拷:";

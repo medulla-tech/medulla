@@ -120,14 +120,14 @@ if (has_audit_working()) {
 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
 //  if (isLogViewEnabled()) {
     $submod = new SubModule("logview");
-    $submod->setDescription(_T("History", "logview"));
+    $submod->setDescription(_("History"));
     //$submod = new ExpertSubModule("logview", _("History"));
     $submod->setVisibility(True);
     $submod->setImg('modules/base/graph/navbar/logview');
     $submod->setDefaultPage("base/logview/index");
     $submod->setPriority(1001);
 
-    $page = new Page("index",_("logs all modules"));
+    $page = new Page("index",_("logs of all the modules"));
     $page->setFile("modules/base/logview/index.php", array("expert" => True));
     $submod->addPage($page);
 
@@ -340,7 +340,7 @@ if (hasComputerManagerWorking()) {
         $page = new Page("entityRules", _T('Entity rules', 'inventory'));
         $page->setFile("modules/inventory/inventory/entityRules.php");
         $submod->addPage($page);
-        
+
         $page = new Page("addEntity", _T('Add entity', 'inventory'));
         $page->setFile("modules/inventory/inventory/addEntity.php");
         $submod->addPage($page);
@@ -357,12 +357,12 @@ if (hasComputerManagerWorking()) {
         $page = new Page("EditEntity", _T('Edit Entity', 'inventory'));
         $page->setFile("modules/inventory/inventory/EditEntity.php");
         $submod->addPage($page);
-        
+
         $page = new Page("deleteEntity", _T('Delete Entity', 'inventory'));
         $page->setFile("modules/inventory/inventory/deleteEntity.php");
         $submod->addPage($page);
     }
-    
+
     $page = new Page("get_file", _("Download inventory of one machine"));
     $page->setFile("modules/base/computers/get_file.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));

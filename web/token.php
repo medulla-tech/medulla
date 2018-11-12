@@ -64,7 +64,7 @@ if (empty($error) && xmlCall("base.tokenAuthenticate", array($login, $token))) {
 } else {
     $_SESSION['lang'] = $lang;
     require("includes/i18n.inc.php");
-    if (!isXMLRPCError() && empty($error)) 
+    if (!isXMLRPCError() && empty($error))
         $error = _("Token not valid");
     else if (isXMLRPCError())
         $error = _("Error while validating your token. Please contact your administrator.");

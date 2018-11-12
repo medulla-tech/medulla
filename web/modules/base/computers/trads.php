@@ -27,4 +27,3 @@ _('Computer Name');
 _('Display Name');
 
 ?>
-

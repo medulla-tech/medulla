@@ -53,6 +53,17 @@ a.info:hover span{
     font-weight:none;
     padding:5px;
 }
+
+li.groupshare a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/dyngroup/img/share.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
 </style>
 
 <?php
@@ -66,7 +77,7 @@ a.info:hover span{
     } else {
         $start = 0;
     }
-
+    $end = isset($_GET["end"]) ? $_GET["end"] : $maxperpage;
     $result = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], '', $start, $end, $filter, $edit=1);
 
     $params = array();
@@ -93,6 +104,7 @@ a.info:hover span{
     $n->end = (isset($_GET['end'])?$_GET['end']:$maxperpage);
 
 $n->addActionItem(new ActionItem(_T("Edit a Quick Action", "xmppmaster"), "editqa", "edit", "xmppmaster", "xmppmaster", "xmppmaster"));
+$n->addActionItem(new ActionItem(_T("Share a Quick Action", "xmppmaster"), "shareqa", "groupshare", "xmppmaster", "xmppmaster", "xmppmaster"));
 $n->addActionItem(new ActionPopupItem(_T("Delete a Quick Action", "xmppmaster"), "deleteqa", "delete", "xmppmaster", "xmppmaster", "xmppmaster"));
 print "<br/><br/>";
 $n->display();

@@ -35,25 +35,46 @@ $p = new PageGenerator(_("Computer list"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$computerpresence = "all_computer";
+if(isset($_SESSION['computerpresence']))
+  $computerpresence = $_SESSION['computerpresence'];
+else
+  $computerpresence = "all_computer";
+
 if (isset($_GET['computerpresence'])){
     $computerpresence = $_GET['computerpresence'];
 }
+$_SESSION['computerpresence'] = $computerpresence;
 
 if (in_array("pulse2", $_SESSION["modulesList"])) {
-    echo '
+    //Selectbox Mode
+    /*echo '
         <select name="namepresence" id="idpresence">
             <option value="all_computer" ';
             if ($computerpresence == "all_computer") echo "selected";
-            echo '>all computers</option>
+            echo '>All machines</option>
             <option value="presence" ';
             if ($computerpresence == "presence") echo "selected";
-            echo '>computers presents</option>
+            echo '>Online machines</option>
             <option value="no_presence" ';
             if ($computerpresence == "no_presence") echo "selected";
-            echo '>computer not presents</option>
-        </select>';
-        include("modules/pulse2/pulse2/computers_list.php");
+            echo '>Offline machines</option>
+        </select>';*/
+
+      //Radiobox Mode
+      echo '<label for="namepresence1" style="display:initial;">'._T('All computers', 'base').'</label>';
+      echo '<input type="radio" ';
+      if ($computerpresence == "all_computer") echo "checked";
+      echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';
+      echo '<label for="namepresence2" style="display:initial;">'._T('Online computers', 'base').'</label>';
+      echo '<input type="radio" ';
+      if ($computerpresence == "presence") echo "checked";
+      echo ' id="namepresence2" name="namepresence" value="presence"/> ';
+      echo '<label for="namepresence3" style="display:initial;">'._T('Offline computers', 'base').'</label>';
+      echo '<input type="radio" ';
+      if ($computerpresence == "no_presence") echo "checked";
+      echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
+
+      include("modules/pulse2/pulse2/computers_list.php");
     }
 else {
     $param = array();
@@ -83,8 +104,11 @@ else {
         return qs[1];
 
     }
+    //Selectbox Mode
+    //jQuery('#idpresence').on('change', function() {
 
-    jQuery('#idpresence').on('change', function() {
+    //Radiobox Mode
+    jQuery('input[type=radio][name=namepresence]').change(function(){
 
         var valselect  = this.value;
         var url = window.location.href;

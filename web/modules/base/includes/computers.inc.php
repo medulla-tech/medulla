@@ -40,6 +40,10 @@ function getComputerCount($filter = null) {
     return xmlCall("base.getComputerCount", array($filter));
 }
 
+function getSimpleComputerCount() {
+    return xmlCall("base.simple_computer_count", array());
+}
+
 function getComputersName($filter = '') {
     return xmlCall("base.getComputersName", array($filter));
 }
@@ -72,7 +76,7 @@ function getComputersListHeaders() {
 }
 
 function canAddComputer() {
-    return xmlCall("base.canAddComputer");    
+    return xmlCall("base.canAddComputer");
 }
 
 function canDelComputer() {

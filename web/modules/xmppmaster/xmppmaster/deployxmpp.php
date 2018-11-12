@@ -67,11 +67,11 @@ $imss = xmlrpc_getshowmachinegrouprelayserver();
             <script type="text/javascript">
                 var session = '<? echo $sessionid; ?>';
                 console.log( session );
-                //setInterval("bip", 2000) 
+                //setInterval("bip", 2000)
                 function affiche_bonjour(){
                 console.log( session );
                     jQuery.post( "modules/xmppmaster/xmppmaster/ajaxdeploylog.php",{ data: session }, function( data ) {
-                        jQuery( "#dede" ).text( data ); 
+                        jQuery( "#dede" ).text( data );
                     });
                 }
                 setInterval(affiche_bonjour, 3000);

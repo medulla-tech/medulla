@@ -32,7 +32,7 @@ if(isset($_GET["user"]))
     $user = $_GET["user"];
 else
     $user = $_GET["nlogin"];
-    
+
 $ajax = new AjaxFilterLog(urlStrRedirect("base/users/ajaxLogFilter",array("user"=>$user)),$types);
 $ajax->setsearchbar(urlStrRedirect("base/audit/searchbar"));
 $ajax->display();

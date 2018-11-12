@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-08 16:26+0100\n"
+"POT-Creation-Date: 2018-11-07 10:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,8 +77,8 @@ msgstr ""
 #: modules/dashboard/includes/panels/clients_updates.inc.php:92
 #: modules/dashboard/includes/panels/backup.inc.php:40
 #: modules/dashboard/includes/panels/backup.inc.php:41
-#: modules/dashboard/includes/panels/computersOnline.inc.php:42
 #: modules/dashboard/includes/panels/computersOnline.inc.php:43
+#: modules/dashboard/includes/panels/computersOnline.inc.php:44
 msgid "Create a group"
 msgstr ""
 
@@ -155,12 +155,16 @@ msgstr ""
 msgid "Machines Online"
 msgstr ""
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:42
+#: modules/dashboard/includes/panels/computersOnline.inc.php:43
 msgid "Machines online : "
 msgstr ""
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:43
+#: modules/dashboard/includes/panels/computersOnline.inc.php:44
 msgid "Machines offline : "
+msgstr ""
+
+#: modules/dashboard/includes/panels/computersOnline.inc.php:47
+msgid "A problem occurred while counting machines"
 msgstr ""
 
 #: modules/dashboard/includes/panels/process.inc.php:28

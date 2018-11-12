@@ -53,6 +53,7 @@ $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getNam
 $p->setSideMenu($sidemenu);
 $p->display();
 
+
 $resultfrommsc = xmlrpc_getstatbycmd($cmd_id);
 $total_machine_from_msc  = $resultfrommsc['nbmachine'];
 $nb_machine_deployer_from_msc     = $resultfrommsc['nbdeploydone'];
@@ -60,6 +61,9 @@ $nb_deployer_machine_yet_from_msc = $total_machine_from_msc - $total_machine_fro
 
 $convergenceonpackage = is_commands_convergence_type($cmd_id);
 $command_detail = command_detail($cmd_id);
+
+
+
 
 $lastcommandid = get_last_commands_on_cmd_id($cmd_id);
 $start_date = mktime(   $lastcommandid['start_date'][3],
@@ -78,12 +82,19 @@ $machine_success_from_deploy   = $resultfromdeploy['machinesuccessdeploy'];
 $machine_process_from_deploy   = $resultfromdeploy['machineprocessdeploy'];
 $machine_abort_from_deploy     = $resultfromdeploy['machineabortdeploy'];
 
-$machine_wol_from_deploy       = $totalmachinedeploy-($machineerrordeploy + $machinesuccessdeploy + $machineprocessdeploy);
+
+
+// from msc
+$machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy( $cmd_id,
+                                                                date("Y-m-d H:i:s",
+                                                                $start_date));
+
+$machine_wol_from_deploy       = $totalmachinedeploy-($machineerrordeploy + $machinesuccessdeploy + $machineprocessdeploy + $machine_timeout_from_deploy);
 
 $terminate = 0;
 $deployinprogress = 0;
 
-$waiting = $total_machine_from_msc - $total_machine_from_deploy;
+$waiting = $total_machine_from_msc - ($total_machine_from_deploy + $machine_timeout_from_deploy);
 
 // $evolution
 if ($waiting == 0 && $machine_process_from_deploy == 0 ){
@@ -111,7 +122,7 @@ if ($timestampnow > ($end_date)){
 
 
 
-echo "Deployment programming between [".date("Y-m-d H:i:s", $start_date)." and ".date("Y-m-d H:i:s", $end_date)."]";
+echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date);
 if ($convergenceonpackage !=0 ){
     echo "<img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/>";
 }
@@ -135,11 +146,18 @@ if (isset($_GET['gid'])){
     $_GET['nbgrp']=$countmachine;
 }
 $nbsuccess = 0;
+$_GET['id']=isset($_GET['id']) ? $_GET['id'] : "";
+$_GET['ses']=isset($_GET['ses']) ? $_GET['ses'] : "";
+$_GET['hos']=isset($_GET['hos']) ? $_GET['hos'] : "";
+$_GET['sta']=isset($_GET['sta']) ? $_GET['sta'] : "";
 foreach ($info['objectdeploy'] as $val)
 {
    $_GET['id']  .= $val['inventoryuuid']."@@";
    $_GET['ses'] .= $val['sessionid']."@@";
-   $_GET['hos'] .= explode("/", $val['host'])[1]."@@";
+   $hostlocal = explode("/", $val['host']);
+
+   $hostlocal1 = isset($hostlocal[1]) ? $hostlocal[1] : "";
+
    $_GET['sta'] .=  $val['state']."@@";
    if ($val['state'] == "DEPLOYMENT SUCCESS"){
         $nbsuccess ++;
@@ -153,54 +171,57 @@ foreach ($info['objectdeploy'] as $val)
 if ( $start_deploy){
     echo "<br>";
     if ($end_deploy || $terminate == 1){
-        echo "<h2>Deployment to complete</h2>";
+        echo "<h2>"._T("Deployment completed","xmppmaster")."</h2>";
         $terminate = 1;
         $deployinprogress = 0;
         echo "<br>";
     }else{
-        echo "<h2>Deployment in progress</h2>";
-        echo "Started since <span>".($timestampnow - $start_date)."</span> s";
+        echo "<h2>"._T("Deployment in progress","xmppmaster")."</h2>";
+        echo _T("Started since","xmppmaster")." <span>".($timestampnow - $start_date)."</span> s";
         $deployinprogress = 1;
     }
 }
 else{
-    echo "WAITING FOR START ".date("Y-m-d H:i:s", $start_date);
+    echo _T("WAITING FOR START ","xmppmaster").date("Y-m-d H:i:s", $start_date);
 }
 
     //if ($deployinprogress ){
     if($terminate == 0){
         $f = new ValidatingForm();
         $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
-        $f->addButton("bStop", _T("Stop Deployment", 'xmppmaster'));
+        $f->addButton("bStop", _T("Abort Deployment", 'xmppmaster'));
         $f->display();
     }
+    echo "<br>";
 
-    $evolution  = round(($nb_machine_deployer_from_msc / $total_machine_from_msc) * 100,2);
+    $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $nb_machine_deployer_from_msc;
+    $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $total_machine_from_msc) * 100,2);
     $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
     echo '<div class="bars">';
         echo '<span style="width: 200px;">';
-            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$total_machine_from_msc.'" value="'.$nb_machine_deployer_from_msc.'" form="form-id"></progress>';
+            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$total_machine_from_msc.'" value="'.$nb_machine_deployer_avec_timeout_deploy .'" form="form-id"></progress>';
         echo '</span>';
     echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
 
-    $wol = ($total_machine_from_msc-$total_machine_from_deploy);
-    echo "<br><br>Number of machines in the deployment group. : ".$total_machine_from_msc;
-    echo "<br>Number of machines in the group : ".$countmachine;
-    echo "<br>Number of machines being deployed : ". $deploymachine;
-
-    echo "<br>Deployment summary:";
+    $wol = ( $total_machine_from_msc - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
+    echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$total_machine_from_msc;
+    echo "<br>"._T("Number of current deployments","xmppmaster")." : ". $deploymachine;
+    echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machine_timeout_from_deploy;
+    echo "<br>"._T("Deployment summary","xmppmaster").":";
     echo "<table><tr>";
-    echo "<td>sucess</td>
-        <td>error</td>
-        <td>progress</td>
-        <td>Waiting</td>
-        <td>abort</td>";
+    echo "<td>"._T("Success","xmppmaster")."</td>
+        <td>"._T("Error","xmppmaster")."</td>
+        <td>"._T("In progress","xmppmaster")."</td>
+        <td>"._T("Waiting","xmppmaster")."</td>
+        <td>"._T("Timed out","xmppmaster")."</td>
+        <td>"._T("Aborted","xmppmaster")."</td>";
     echo "</tr>
     <tr>";
     echo "<td>".$machine_success_from_deploy."</td>
         <td>".$machine_error_from_deploy."</td>
         <td>".$machine_process_from_deploy."</td>
         <td>".$wol."</td>
+        <td>".$machine_timeout_from_deploy."</td>
         <td>".$machine_abort_from_deploy."</td>";
     echo "</tr></table>";
 echo '</div>';
@@ -266,18 +287,19 @@ echo "<br>";
         echo'
             <script type="text/javascript">
             console.log("hello");
-                setTimeout(refresh, 10000);
+                setTimeout(refresh, 60000);
                 function  refresh(){
                         location.reload()
                 }
             </script>
             ';
 }
-echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";
 
 // group includ computers_list.php
 // les parametres get sont utilisés par computers_list pour l'appel de ajaxComputersList qui compose l'appel a list_computers
 // mmc/modules/base/includes/computers_list.inc.php
+
+echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";;echo "<br>";
 $group->prettyDisplay();
 
 
@@ -326,10 +348,7 @@ if ($info['len'] != 0){
     $machinesucess    = count ( $uuidsuccess );
     $machineerror     = count ( $uuiderror );
     $machineinprocess = count ( $uuidprocess );
-    $machinewol       = $stat['nbmachine']-$stat['nbdeploydone'];
-
-
-
+    //$machinewol       = $state['nbmachine']-$state['nbdeploydone'];
         echo '
         <script>
             var u = "";
@@ -343,31 +362,37 @@ if ($info['len'] != 0){
 
                 if ($machine_success_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_success_from_deploy.');';
-                    echo 'legend.push("%%.%% - Machines deploy in sucess");';
+                    echo 'legend.push("%%.%% - Success");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'");';
                     echo 'color.push("#2EFE2E");';
                 }
                 if ($machine_error_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_error_from_deploy.');';
-                    echo 'legend.push("%%.%% - Machines deploy in error");';
+                    echo 'legend.push("%%.%% - Error");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#FE2E64");';
                 }
                 if ($machine_process_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_process_from_deploy.');';
-                    echo 'legend.push("%%.%% - Machines deploy in process");';
+                    echo 'legend.push("%%.%% - In progress");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#2E9AFE");';
                 }
                 if ($wol > 0){
                     echo 'datadeploy.push('.$wol.');';
-                    echo 'legend.push("%%.%% - Waiting for machine start (WOL send).");';
+                    echo 'legend.push("%%.%% - Waiting (WOL sent)");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#DBA901");';
                 }
+                if ($machine_timeout_from_deploy > 0){
+                    echo 'datadeploy.push('.$machine_timeout_from_deploy.');';
+                    echo 'legend.push("%%.%% - Timed out");';
+                    echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
+                    echo 'color.push("#FF4500");';
+                }
                 if ($machine_abort_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_abort_from_deploy.');';
-                    echo 'legend.push("%%.%% - Machine deploy in abort.");';
+                    echo 'legend.push("%%.%% - Aborted");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#ff5050");';
                 }
@@ -381,7 +406,7 @@ if ($info['len'] != 0){
                         }
                     );
 
-                r.text(210, 50, "Deploy Machines").attr({ font: "20px sans-serif" });
+                r.text(210, 50, "Deployments").attr({ font: "20px sans-serif" });
 
                 pie.hover(function () {
                     u = this;                 // My Code

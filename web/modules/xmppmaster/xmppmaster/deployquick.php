@@ -35,6 +35,15 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
     <div style="width : 600px;">
         <?
+        if(!isset($_GET['os']))
+        {
+          if(isset($_GET["objectUUID"]))
+          {
+            $machine = xmlrpc_getMachinefromuuid($_GET["objectUUID"]);
+            $_GET["os"] = $machine["platform"];
+          }
+        }
+
         echo "<h1>Quick Actions</h1>";
         echo "<h2>Machine :".$_GET['cn']."</h2>";
         echo "<h2>Os : ".$_GET['os']."</h2>";
@@ -117,6 +126,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     <td>
                         <select id="select">';
                         foreach($qacomand['command'] as $tabblecommand){
+                            $tabblecommand['customcmd'] = preg_replace('/\r?\n|\r/',' ', $tabblecommand['customcmd']);
+                            $tabblecommand['customcmd'] = trim ( $tabblecommand['customcmd'] , " \t\n\r");
                             echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].'</option>';
                                     $mm[] =  "'".addslashes($tabblecommand['namecmd'])."': {
                                         'description' : '".addslashes( $tabblecommand['description'] )."',
@@ -171,33 +182,42 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             echo "<input type= 'hidden' name = 'vnctype' value='".$_GET['vnctype']."'>";
             echo "<input type= 'hidden' name = 'mod' value='".$_GET['mod']."'>";
             echo "<input id='informationmonitor' type= 'hidden' name = 'information' value=''>";
+            echo "<input id='args' type= 'hidden' name = 'args' value=''>";
+            echo "<input id='kwargs' type= 'hidden' name = 'kwargs' value=''>";
         echo '</form>';
 
 //         if ($_GET['presencemachinexmpp']){
 //             echo "<h2>Status Machine :".$_GET['cn']."</h2>";
 //             echo "<table>";
 //             echo '<tr>';
-//                 echo '<td id="battery" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-//                 echo '<td id="winservices" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-//                 echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-//                 echo '<td id="disk_usage" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-//                 echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-//                 echo '<td id="mmemory" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-//                 echo '<td id="ifconfig" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-//                 echo '<td id="cpu_num" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-//                 echo '<td id="netstat" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+//                 echo '<td id="battery" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+//                 $pos1 = stripos($_GET['os'], "win");
+//                 if ($pos1 !== false) {
+//                     echo '<td id="winservices" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+//                 }
+//                 echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+//                 echo '<td id="disk_usage" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+//                 echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+//                 echo '<td id="mmemory" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+//                 echo '<td id="ifconfig" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+//                 //echo '<td id="cpu_num" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+//                 echo '<td id="netstat" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+//                 echo '<td id="cputimes" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //             echo "</tr>";
-//
 //             echo '<tr>';
 //                 echo '<td id="battery0" align="center">battery </td>';
-//                 echo '<td id="winservices0" align="center">winservices </td>';
-//                 echo '<td id="clone_ps_aux0" align="center">clone_ps_aux</td>';
-//                 echo '<td id="disk_usage0" align="center">disk_usage </td>';
+//                 $pos1 = stripos($_GET['os'], "win");
+//                 if ($pos1 !== false) {
+//                     echo '<td id="winservices0" align="center">win services </td>';
+//                 }
+//                 echo '<td id="clone_ps_aux0" align="center">process</td>';
+//                 echo '<td id="disk_usage0" align="center">disk usage </td>';
 //                 echo '<td id="sensors_fans0" align="center">sensors_fans</td>';
-//                 echo '<td id="mmemory0" align="center">mmemory</td>';
-//                 echo '<td id="ifconfig0" align="center">ifconfig</td>';
-//                 echo '<td id="cpu_num0" align="center">cpu_num</td>';
+//                 echo '<td id="mmemory0" align="center">memory</td>';
+//                 echo '<td id="ifconfig0" align="center">if config</td>';
+//                 //echo '<td id="cpu_num0" align="center">cpu_num</td>';
 //                 echo '<td id="netstat0" align="center">netstat</td>';
+//                 echo '<td id="cputimes0" align="center">cpu times</td>';
 //             echo "</tr>";
 //             echo "</table>";
 //         }
@@ -274,6 +294,12 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     jQuery('#informationmonitor').val('netstat');
                     jQuery( '#formmonitoring' ).submit();
                 })
+                jQuery('#cputimes, #cputimes0').click(function() {
+                    jQuery('#informationmonitor').val('cputimes');
+                    jQuery('#args').val('');
+                    jQuery('#kwargs').val('{\"percpu\" : true}');
+                    jQuery( '#formmonitoring' ).submit();
+                })
                 ";
         };
     ?>
@@ -333,7 +359,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     })
 
     jQuery('#vncchangeperms, #vncchangeperms0').on('click', function(){
-        if (jQuery('#checkboxvncchangeperms').val() == "on"){
+        if (jQuery('#checkboxvncchangeperms').is(":checked")){
             uuid['askpermission'] = 1
         }
         else {

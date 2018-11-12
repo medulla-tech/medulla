@@ -48,7 +48,7 @@ function print_disk_info() {
     unset($df[0]);
 
     echo "<table>";
-    
+
     $incomplete_lines = "";
 
     foreach ($df as $disk) {
@@ -74,7 +74,7 @@ function print_disk_info() {
 
         if ((array_search($disk[0], array("tmpfs", "none", "udev"))!==FALSE) || ($disk[1] == "0"))
             continue;
-      
+
         echo "<tr><td class=\"statusPad\">$disk[5]</td><td class=\"statusPad\">($disk[0])</td><td class=\"statusPad\">[$disk[4]]</td></tr>\n";
         echo "<tr><td colspan=\"3\" class=\"statusPad\" style=\"padding-bottom: 2px;\">";
         print_mem_bar("", $disk[1], $disk[2]);
@@ -218,7 +218,7 @@ $p->displayTitle();
     <h2 class="statusPad"><?php echo  _("Hard drive partitions") ?></h2>
     <?php print_disk_info(); ?>
   </div>
-  
+
   <div class="statusPad">
     <h2 class="statusPad"><?php echo   _("Background jobs") ?></h2>
     <div id="bgps"> </div>

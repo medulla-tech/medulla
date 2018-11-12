@@ -259,8 +259,8 @@ function xmlrpc_getshowmachinegrouprelayserver() {
     return xmlCall("xmppmaster.getshowmachinegrouprelayserver", array());
 }
 
-function xmlrpc_get_qaction($groupname, $user){
-    return xmlCall("xmppmaster.get_qaction", array($groupname, $user));
+function xmlrpc_get_qaction($groupname, $user, $grp = 0){
+    return xmlCall("xmppmaster.get_qaction", array($groupname, $user, $grp));
 }
 
 function xmlrpc_setCommand_qa($command_name, $command_action, $command_login, $command_grp="", $command_machine='', $command_os=""){
@@ -331,6 +331,10 @@ function xmlrpc_callrestart($uuid){
 
 function xmlrpc_callshutdown($uuid, $time = 0, $msg = ""){
     return xmlCall("xmppmaster.callshutdown", array($uuid, $time, $msg));
+}
+
+function xmlrpc_callvncchangeperms($uuid, $askpermission){
+    return xmlCall("xmppmaster.callvncchangeperms", array($uuid, $askpermission));
 }
 
 function xmlrpc_getstepdeployinsession($session){
@@ -426,6 +430,10 @@ function xmlrpc_xmppGetAllPackages($filter, $start, $end) {
 
 function xmpp_getPackageDetail($pid){
     return xmlCall("xmppmaster.xmpp_getPackageDetail", array($pid));
+}
+
+function xmlrpc_get_list_of_users_for_shared_qa($namecmd){
+  return xmlCall("xmppmaster.get_list_of_users_for_shared_qa", array($namecmd));
 }
 
 ?>

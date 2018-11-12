@@ -39,20 +39,20 @@ if (isset($_POST["bcreate"])){
         case 'createqa':
             $response = xmlrpc_create_Qa_custom_command($_SESSION['login'], $os, $namecmd, $customcmd, $description );
             if ($response== -1) {
-                new NotifyWidgetFailure("Error creating custom Quick Action");
+                new NotifyWidgetFailure("Error while creating a custom quick action");
             }
             else{
-                new NotifyWidgetSuccess(sprintf("Custom Quick Action %s created successfully",$namecmd));
+                new NotifyWidgetSuccess(sprintf("Custom quick Action %s created successfully",$namecmd));
             }
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/customQA", array()));
         break;
         case 'editeqa':
             $response = xmlrpc_updateName_Qa_custom_command($user, $os, $namecmd, $customcmd, $description);
             if ($response== -1) {
-                new NotifyWidgetFailure(sprintf("Error updating custom Quick Action %s",$namecmd));
+                new NotifyWidgetFailure(sprintf("Error while updating a custom quick action %s",$namecmd));
             }
             else{
-                new NotifyWidgetSuccess(sprintf("Custom Quick Action %s updated successfully",$namecmd));
+                new NotifyWidgetSuccess(sprintf("The custom quick action %s updated successfully",$namecmd));
             }
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/customQA", array()));
         break;
@@ -60,9 +60,9 @@ if (isset($_POST["bcreate"])){
 }
 else{
     if ($editcreate == 'editeqa'){
-        $p = new PageGenerator(sprintf (_T("Edit Custom Quick action : %s", 'xmppmaster'), $namecmd));
+        $p = new PageGenerator(sprintf (_T("Edit custom quick action : %s", 'xmppmaster'), $namecmd));
     }else{
-        $p = new PageGenerator(sprintf (_T("Create Custom Quick action", 'xmppmaster')));
+        $p = new PageGenerator(sprintf (_T("Create a custom quick action", 'xmppmaster')));
     }
     $p->setSideMenu($sidemenu);
     $p->display();
@@ -79,7 +79,7 @@ else{
     if ($editcreate == 'createqa'){
         $f->add( new TrFormElement(_T("Command name", "xmpmaster"), new InputTpl('namecmd')), array("value" => $namecmd, "required" => True));
     }
-    $f->add( new TrFormElement(_T("Command", "xmpmaster"), new InputTpl('customcmd')), array("value" => $customcmd, "required" => True));
+    $f->add( new TrFormElement(_T("Command", "xmpmaster"), new TextareaTpl('customcmd')), array("value" => $customcmd, "required" => True));
 
     $f->add( new TrFormElement(_T("Command description", "xmpmaster"), new InputTpl('description')), array("value" => $description,"required" => True));
 

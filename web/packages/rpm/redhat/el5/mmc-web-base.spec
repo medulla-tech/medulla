@@ -55,7 +55,7 @@ EOF
 if [ -f /var/lock/subsys/httpd ]; then
     %{_initrddir}/httpd restart >/dev/null || :
 fi
-    
+
 %postun
 if [ "$1" = "0" ]; then
     if [ -f /var/lock/subsys/httpd ]; then

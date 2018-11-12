@@ -21,6 +21,8 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+import imp
 import ldap
 import xmlrpclib
 from ConfigParser import NoOptionError
@@ -210,7 +212,7 @@ class ExternalLdapProvisioner(ProvisionerI):
                 self.logger.info("No profile information for user %s in attribute %s" % (uid, self.config.profileAttr))
                 profile = ""
             profile = profile.strip()
-            
+
             try:
                 entities = self.config.profilesEntity[profile].split()
                 self.logger.info("*******ENTITE '%s' " % (entities))
@@ -260,8 +262,8 @@ class ExternalLdapProvisioner(ProvisionerI):
                 self.logger.info("****Setting user '%s' entities corresponding to user profile '%s': %s" % (uid, profile, str(entities)))
                 from pulse2.database.inventory import Inventory
                 Inventory().setUserEntities(uid, entities)
-            
-            
+
+
             try:
                 acls = self.config.profilesAcl[profile]
             except KeyError:

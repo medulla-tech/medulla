@@ -234,7 +234,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
     if ( $info['len'] == 0 || $boolterminate == false){
         echo'
             <script type="text/javascript">
-            setTimeout(refresh, 5000);
+            setTimeout(refresh, 60000);
             function  refresh(){
                 jQuery( "#formpage" ).submit();
             }
@@ -652,7 +652,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
             echo "</pre>";
             echo"</div>";
     }
-    if (count((array)$otherinfos[0]->environ) == 1){
+    if (isset($otherinfos[0]->environ) && count((array)$otherinfos[0]->environ) == 1){
         if ( $info['len'] != 0){
             $res = str_replace ( "{'", "'" ,$otherinfos[0]->environ);
             $res = str_replace ( "'}", "'" ,$res);

@@ -27,7 +27,7 @@ textarea {
     width:90% ;
     height:150px;
     margin:auto;
-    display:block; 
+    display:block;
 }
 
 body{
@@ -38,7 +38,7 @@ body{
 /*h2{
     text-align: center;
 }*/
-  
+
 #global{
   width:100%;
   height:700px;
@@ -67,7 +67,7 @@ body{
     width:49%;
     height:90%;
 }
- 
+
 #droite {
     width: 49%;
     height:90%;
@@ -265,8 +265,8 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
         </tr>
         </table>
     <textarea rows="15"
-              id="resultat" 
-              spellcheck="false" 
+              id="resultat"
+              spellcheck="false"
               style = "height : 460px;
                        background : black;
                        color : white;

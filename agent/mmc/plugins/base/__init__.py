@@ -84,8 +84,6 @@ REVISION = scmRevision("$Rev$")
 NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion',
                 'createAuthToken', 'tokenAuthenticate']
 
-# Status methods
-from mmc.plugins.base.status import getLdapRootDN, getDisksInfos, getMemoryInfos, getUptime, listProcess # pyflakes.ignore
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
@@ -2610,6 +2608,9 @@ class RpcProxy(RpcProxyI):
         #filt = filt or {}
         ctx = self.currentContext
         return ComputerManager().getComputerCount(ctx, filt)
+
+    def simple_computer_count(self):
+        return ComputerManager().simple_computer_count()
 
     def getComputersListHeaders(self):
         ctx = self.currentContext

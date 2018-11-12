@@ -27,7 +27,7 @@ textarea {
     width:90% ;
     height:150px;
     margin:auto;
-    display:block; 
+    display:block;
 }
 
 body{
@@ -38,7 +38,7 @@ body{
 /*h2{
     text-align: center;
 }*/
-  
+
 #global{
   width:100%;
   height:700px;
@@ -67,7 +67,7 @@ body{
     width:49%;
     height:90%;
 }
- 
+
 #droite {
     width: 49%;
     height:90%;
@@ -261,8 +261,8 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
         </tr>
         </table>
     <textarea rows="15"
-              id="resultat" 
-              spellcheck="false" 
+              id="resultat"
+              spellcheck="false"
               style = "height : 460px;
                        background : black;
                        color : white;
@@ -362,13 +362,13 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
     jQuery( document ).ready(function() {
         var md5 = "";
         var modification = false;
-        
+
         loadconffile("<? echo $name; ?>");
     });
 
 //"result" : "error create file : name file missing", "error" : True , 'numerror' : 129
 </script>
-    
+
 <?php
 // echo "<br><br><br>";
 // echo "<pre>";
@@ -376,14 +376,14 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
 //     echo "list fichier de configuration<br>";
 //     print_r($result);
 // echo "</pre>";
-// 
+//
 // echo "<pre>";
 //     echo "<br>load file configuration $result[0]<br>";
 //     $data = array('action' => 'loadfile', 'file' => $result[0]);
 //     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
 //     print_r($result);
 // echo "</pre>";
-// 
+//
 // #create file configuration
 // echo "<pre>";
 //     echo "creation file de configuration dede.ini<br>";
@@ -391,35 +391,35 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
 //     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
 //     print_r($result);
 // echo "</pre>";
-// 
+//
 // $result = xmlrpc_listremotefileedit($ma['jid']);
 // echo "<pre>";
 //     echo "Nombre de fichiers de configuration trouver maintenant " . count($result)."fichier<br>";
 //     echo "list fichier de configuration<br>";
 //     print_r($result);
 // echo "</pre>";
-// 
+//
 // echo "<pre>";
 //     echo "<br>load file configuration dede.ini<br>";
 //     $data = array('action' => 'loadfile', 'file' => 'dede.ini');
 //     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
 //     print_r($result);
 // echo "</pre>";
-// 
+//
 // echo "<pre>";
 //     echo "<br>save file configuration dede.ini<br>";
 //     $data = array('action' => 'save', 'file' => 'dede.ini', 'content' => "non il pleut");
 //     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
 //     print_r($result);
 // echo "</pre>";
-// 
+//
 // echo "<pre>";
 //     echo "<br>nouveau contenue de dede.ini<br>";
 //     $data = array('action' => 'loadfile', 'file' => 'dede.ini');
 //     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
 //     print_r($result);
 // echo "</pre>";
-// 
+//
 // // echo "<pre>";
 // //     echo "<br>list config file <br>";
 // //     $data = array('action' => 'listconfigfile');

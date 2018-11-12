@@ -5,12 +5,12 @@ index 521a87d..8816e0f 100644
 @@ -285,8 +285,8 @@ def getHomeDir(uid, homeDir):
  def getDefaultShells():
      return ldapUserGroupControl().getDefaultShells()
- 
+
 -def createUser(login, passwd, firstname, surname, homedir, createHomeDir = True, ownHomeDir = False, primaryGroup = None):
 -    return ldapUserGroupControl().addUser(login, passwd, firstname, surname, homedir, createHomeDir, ownHomeDir, primaryGroup)
 +def createUser(login, passwd, firstname, surname, homedir, mail=None, createHomeDir=True, ownHomeDir=False, primaryGroup=None):
 +    return ldapUserGroupControl().addUser(login, passwd, firstname, surname, homedir, mail, createHomeDir, ownHomeDir, primaryGroup)
- 
+
  def addUserToGroup(cngroup,uiduser):
      ldapObj = ldapUserGroupControl()
 @@ -707,18 +707,21 @@ class LdapUserGroupControl:
@@ -49,23 +49,23 @@ index 521a87d..8816e0f 100644
 @@ -826,7 +829,9 @@ class LdapUserGroupControl:
                  if not found: entry[attribute] = value
          return entry
- 
+
 -    def addUser(self, uid, password, firstN, lastN, homeDir = None, createHomeDir = True, ownHomeDir = False, primaryGroup = None):
 +    def addUser(self, uid, password, firstN, lastN,
 +                homeDir = None, mail=None, createHomeDir=True, ownHomeDir=False,
 +                primaryGroup = None):
          """
          Add an user in ldap directory
- 
+
 @@ -921,6 +926,9 @@ class LdapUserGroupControl:
                       'shadowLastChange': '11192',
                       }
- 
+
 +        if mail:
 +            user_info['mail'] = (mail,)
 +
          user_info = self._applyUserDefault(user_info, self.userDefault["base"])
- 
+
          # Search Python unicode string and encode them to UTF-8
 @@ -1335,9 +1343,9 @@ class LdapUserGroupControl:
          """
@@ -73,7 +73,7 @@ index 521a87d..8816e0f 100644
          r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER, [(userdn, AT.USER)])
 -        # Run delUser hook
 -        self.runHook("base.deluser", uid)
- 
+
 +        # Run delUser hook
 +        self.runHook("base.pre_deluser", uid)
          if home and self.userHomeAction:

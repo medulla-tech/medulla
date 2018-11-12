@@ -34,7 +34,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     $user         = isset($_GET['user']) ? $_GET['user'] : $_POST['user'];
     $description  = isset($_GET['$description']) ? $_GET['$description'] : $_POST['$description'];
     $COMMANDID = xmlrpc_setCommand_qa($namecmd, $cmdsend, $user, "", $uuid, $os);
-    
+
     $customqa = array();
     $customqa['user'] = $user;
     $customqa['customcmd'] = $cmdsend;
@@ -78,13 +78,13 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     echo "<input type='hidden' name ='module' value ='xmppmaster'>";
     echo "<input type='hidden' name ='submod' value ='xmppmaster'>";
     echo "<input type='hidden' name ='action' value ='$action'>";
-    echo "<input type='hidden' name ='cmd_id' value ='$COMMANDID'>"; 
-    echo "<input type='hidden' name ='gid' value =''>"; 
+    echo "<input type='hidden' name ='cmd_id' value ='$COMMANDID'>";
+    echo "<input type='hidden' name ='gid' value =''>";
     echo "<input type='hidden' name ='uuid' value ='$uuid'>";
-    echo "<input type='hidden' name ='date' value =''>"; 
-    echo "<input type='hidden' name ='os' value ='$os'>"; 
-    echo "<input type='hidden' name ='login' value ='$user'>"; 
-    echo "<input type='hidden' name ='machname' value ='$machine'>"; 
+    echo "<input type='hidden' name ='date' value =''>";
+    echo "<input type='hidden' name ='os' value ='$os'>";
+    echo "<input type='hidden' name ='login' value ='$user'>";
+    echo "<input type='hidden' name ='machname' value ='$machine'>";
     echo "<input type='hidden' name ='namecmd' value ='$namecmd'>";
     echo "<input type=submit >";
     echo "<form>";
