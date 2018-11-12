@@ -404,8 +404,8 @@ if(isExpertMode())
         $setmethodetransfert = 'pushrsync';
     }
     $methodtransfer = new SelectItem('methodetransfert');
-    $methodtransfer->setElements(['pushrsync', 'pullcurl']);
-    $methodtransfer->setElementsVal(['pushrsync', 'pullcurl']);
+    $methodtransfer->setElements(['pullcurl','pushrsync']);
+    $methodtransfer->setElementsVal(['pullcurl','pushrsync']);
     $methodtransfer->setSelected($setmethodetransfert);
 
     $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer, ['trid'=>'trTransfermethod']),['value'=>'']);
