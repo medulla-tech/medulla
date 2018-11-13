@@ -34,7 +34,7 @@ from utils import name_random, file_put_contents, file_get_contents
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
 
-plugin = {"VERSION": "1.2", "NAME": "resultkiosk", "TYPE": "master"}
+plugin = {"VERSION": "1.3", "NAME": "resultkiosk", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
@@ -149,7 +149,8 @@ def deploypackage(data, message, xmppobject):
         "",
         0,
         0,
-        0)
+        0,
+        {})
 
     sessionid = name_random(5, "deploykiosk_")
     name = managepackage.getnamepackagefromuuidpackage(data['uuid'])
