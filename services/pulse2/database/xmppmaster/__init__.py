@@ -1054,6 +1054,14 @@ class XmppMasterDatabase(DatabaseHelper):
             obj['shutdownrequired'] = result.shutdownrequired
             obj['limit_rate_ko'] = result.bandwidth
             try:
+                params_json = json.loads(result.params_json)
+
+                if 'spooling' in params_json:
+                    obj['spooling'] = params_json['spooling']
+            except Exception, e:
+                logging.getLogger().error(str(e)+" [the avanced parameters from msc ]")
+
+            try:
                 params = str(result.parameters_deploy)
                 if params == '':
                     return obj
