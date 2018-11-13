@@ -2386,6 +2386,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 session.commit()
                 session.flush()
                 return [y for y in result]
+        return ""
 
     @DatabaseHelper._sessionm
     def algoruleloadbalancer(self, session):
