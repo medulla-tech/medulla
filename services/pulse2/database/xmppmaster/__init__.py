@@ -2365,7 +2365,7 @@ class XmppMasterDatabase(DatabaseHelper):
         listrules = [x for x in result]
         for relayserverrule in listrules:
             subject = relayserverrule[1].replace('*','.*')
-            if re.match(subject, hostname, flags=0)
+            if re.match(subject, hostname, flags=0):
                 has_relayserverrules_id = relayserverrule[0]
                 if classutilMachine == "private":
                     sql = """select `relayserver`.`id`
