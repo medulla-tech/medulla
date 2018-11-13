@@ -102,8 +102,30 @@ function start_a_command($proxy = array()) {
     $page = $path[2];
     $params = array();
     //,'parameterspacquage'
-    foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals', 'max_clients_per_proxy', 'launchAction') as $param) {
-        $params[$param] = $post[$param];
+    foreach (array( 'start_script',
+                    'clean_on_success',
+                    'do_reboot',
+                    'do_wol',
+                    'next_connection_delay',
+                    'max_connection_attempt',
+                    'do_inventory',
+                    'ltitle',
+                    'parameters',
+                    'papi',
+                    'maxbw', 
+                    'deployment_intervals',
+                    'max_clients_per_proxy',
+                    'launchAction',
+                    'spooling') as $param) {
+                        if ( $param != "spooling"){ 
+                            $params[$param] = $post[$param];
+                        }
+                        else
+                        {
+                            if ( isset($post['Spoolingselect']) && $post['Spoolingselect'] == "on" ){
+                                $params[$param] = $post[$param];
+                            }
+                        }
     }
     $halt_to = array();
     foreach ($post as $p => $v) {
@@ -152,7 +174,17 @@ function start_a_command($proxy = array()) {
             if ($exec_date != "" && $exec_date == $start_date){
                 $exec_date = '';
             }
-            xmlrpc_addlogincommand($_SESSION['login'], $id, '', '', '', $exec_date, $parameterspacquage, $rebootrequired, $shutdownrequired, $limit_rate_ko);
+            xmlrpc_addlogincommand( $_SESSION['login'],
+                                    $id,
+                                    '', 
+                                    '', 
+                                    '', 
+                                    $exec_date, 
+                                    $parameterspacquage, 
+                                    $rebootrequired, 
+                                    $shutdownrequired, 
+                                    $limit_rate_ko, 
+                                    $params);
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                 'uuid' => $uuid,
@@ -684,6 +716,23 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                 )
             );
         }
+        // parameter avanced spooling priority
+        $f->add(
+                new TrFormElement(
+                    _T('Spooling priority', 'msc'), new CheckboxTpl('Spoolingselect')
+                ), array("value" => quick_get('Spoolingselect', True) == 'on' ? 'checked' : '')
+            );
+
+                $rb = new RadioTpl("spooling");
+                $rb->setChoices(array(_T('high priority', 'msc'), _T('ordinary priority', 'msc')));
+                $rb->setvalues(array('high', 'ordinary'));
+                $rb->setSelected('high');
+            $f->add(
+                new TrFormElement(
+                    _T('Install Spooling', 'msc'), $rb,array("trid"=>"choixspooling")
+                )
+            );
+        }
         if (isExpertMode()){
             if( isset($gid)){
                 $nbmachineforexec = array(
@@ -885,6 +934,12 @@ jQuery('#choixmethod').hide();
 jQuery('#idexecdate').hide();
 jQuery('#idnbmachine').hide();
 jQuery('#idnbmachine1').hide();
+jQuery('#choixspooling').hide();
+
+    jQuery('input[name=Spoolingselect]').change(function () {
+        jQuery('#choixspooling').toggle();
+    });
+
 
 jQuery('input[name=Delay_install]').change(function () {
     //test si checked case acoche

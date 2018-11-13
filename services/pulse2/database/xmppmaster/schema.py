@@ -310,6 +310,7 @@ class Has_login_command(Base, XmppMasterDBObj):
     rebootrequired = Column(Boolean, default=False)
     shutdownrequired = Column(Boolean, default=False)
     bandwidth = Column(Integer, default = 0)
+    params_json = Column(Text, default=None)
 
 class Organization(Base, XmppMasterDBObj):
     # ====== Table name =========================
