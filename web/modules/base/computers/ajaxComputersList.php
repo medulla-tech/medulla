@@ -38,9 +38,9 @@ if (isset($_GET["start"])) {
 } else {
     $start = 0;
 }
-if (isset($_GET['computerpresence']) && $_GET['computerpresence'] != "all_computer") {
-   $filter['computerpresence'] = $_GET['computerpresence'];
-}
+if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "no_presence" )
+    $filter['computerpresence'] = $_SESSION['computerpresence'];
+
 if (isset($_GET['location'])) {
     $filter['location'] = $_GET['location'];
     if (!empty($_GET['gid'])) {

@@ -35,31 +35,12 @@ $p = new PageGenerator(_("Computer list"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-if(isset($_SESSION['computerpresence']))
-  $computerpresence = $_SESSION['computerpresence'];
-else
-  $computerpresence = "all_computer";
+$computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence'] : (isset($_SESSION['computerpresence']) ? $_SESSION['computerpresence'] : "no_presence");
 
-if (isset($_GET['computerpresence'])){
-    $computerpresence = $_GET['computerpresence'];
-}
 $_SESSION['computerpresence'] = $computerpresence;
 
-if (in_array("pulse2", $_SESSION["modulesList"])) {
-    //Selectbox Mode
-    /*echo '
-        <select name="namepresence" id="idpresence">
-            <option value="all_computer" ';
-            if ($computerpresence == "all_computer") echo "selected";
-            echo '>All machines</option>
-            <option value="presence" ';
-            if ($computerpresence == "presence") echo "selected";
-            echo '>Online machines</option>
-            <option value="no_presence" ';
-            if ($computerpresence == "no_presence") echo "selected";
-            echo '>Offline machines</option>
-        </select>';*/
 
+if (in_array("pulse2", $_SESSION["modulesList"])) {
       //Radiobox Mode
       echo '<label for="namepresence1" style="display:initial;">'._T('All computers', 'base').'</label>';
       echo '<input type="radio" ';
