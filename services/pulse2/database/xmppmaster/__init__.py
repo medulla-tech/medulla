@@ -1300,7 +1300,8 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self, session,
+    def addlogincommand(self, 
+                        session,
                         login,
                         commandid,
                         grpid,
@@ -1310,7 +1311,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         parameterspackage,
                         rebootrequired,
                         shutdownrequired,
-                        bandwidth):
+                        bandwidth,
+                        params):
         try:
             new_logincommand = Has_login_command()
             new_logincommand.login = login
@@ -1335,6 +1337,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_logincommand.shutdownrequired = False
             else:
                 new_logincommand.shutdownrequired = True
+            if (type(params) is list or type(params) is dict) and len(params) != 0:
+                new_logincommand.params_json = json.dumps(params)
+
             session.add(new_logincommand)
             session.commit()
             session.flush()
