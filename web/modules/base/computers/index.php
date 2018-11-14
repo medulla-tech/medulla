@@ -35,43 +35,24 @@ $p = new PageGenerator(_("Computer list"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-if(isset($_SESSION['computerpresence']))
-  $computerpresence = $_SESSION['computerpresence'];
-else
-  $computerpresence = "all_computer";
+$computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence'] : (isset($_SESSION['computerpresence']) ? $_SESSION['computerpresence'] : "no_presence");
 
-if (isset($_GET['computerpresence'])){
-    $computerpresence = $_GET['computerpresence'];
-}
 $_SESSION['computerpresence'] = $computerpresence;
 
-if (in_array("pulse2", $_SESSION["modulesList"])) {
-    //Selectbox Mode
-    /*echo '
-        <select name="namepresence" id="idpresence">
-            <option value="all_computer" ';
-            if ($computerpresence == "all_computer") echo "selected";
-            echo '>All machines</option>
-            <option value="presence" ';
-            if ($computerpresence == "presence") echo "selected";
-            echo '>Online machines</option>
-            <option value="no_presence" ';
-            if ($computerpresence == "no_presence") echo "selected";
-            echo '>Offline machines</option>
-        </select>';*/
 
+if (in_array("pulse2", $_SESSION["modulesList"])) {
       //Radiobox Mode
-      echo '<label for="namepresence1" style="display:initial;">'._T('All computers', 'base').'</label>';
       echo '<input type="radio" ';
       if ($computerpresence == "all_computer") echo "checked";
+      echo '<label for="namepresence1" style="display:initial;">'._T('All computers', 'base').'</label>';
       echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';
-      echo '<label for="namepresence2" style="display:initial;">'._T('Online computers', 'base').'</label>';
       echo '<input type="radio" ';
       if ($computerpresence == "presence") echo "checked";
+      echo '<label for="namepresence2" style="display:initial;">'._T('Online computers', 'base').'</label>';
       echo ' id="namepresence2" name="namepresence" value="presence"/> ';
-      echo '<label for="namepresence3" style="display:initial;">'._T('Offline computers', 'base').'</label>';
       echo '<input type="radio" ';
       if ($computerpresence == "no_presence") echo "checked";
+      echo '<label for="namepresence3" style="display:initial;">'._T('Offline computers', 'base').'</label>';
       echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
 
       include("modules/pulse2/pulse2/computers_list.php");
