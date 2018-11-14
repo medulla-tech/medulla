@@ -286,7 +286,7 @@ if (isset($_GET['delete_file'], $_GET['filename'])) {
                                     "session user ".$_SESSION["login"],
                                     'Packaging | Files | Delete | Manual');
     }
-    header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'])));
+    header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'], 'packageUuid' => $_GET['packageUuid'])));
 }
 if (count($package) == 0) {
     $title = _T("Edit a package", "pkgs");
@@ -394,7 +394,6 @@ else {
 if(isExpertMode())
 {
     $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
-
     $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
 
     if(isset($json['info']['methodetransfert']))
@@ -543,6 +542,7 @@ foreach ($package['files'] as $file) {
     $params[] = array(
         'p_api' => $_GET['p_api'],
         'pid' => $_GET['pid'],
+        'packageUuid' => $_GET['packageUuid'],
         'filename' => $file['name'],
         'delete_file' => 1
     );

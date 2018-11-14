@@ -27,6 +27,7 @@ Pulse 2 4.5
             cluster mode
 * [BUGFIX]  Clean deployment caches and used resources after a deployment
 * [BUGFIX]  Logs and bundles no longer available from machine deployment view
+* [BUGFIX]  Removing files from package does not generate an error
 
 
 Pulse 2 4.4
