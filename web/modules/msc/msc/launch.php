@@ -541,7 +541,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         $f->add(new HiddenTpl('maxbw'), array("value" => $max_bw, "hide" => True));
     }
     else {
-    if(! in_array("xmppmaster", $_SESSION["modulesList"])) {
+        if(! in_array("xmppmaster", $_SESSION["modulesList"])) {
             $f->add(
                 new TrFormElement(
                     _T('Command name', 'msc'), new InputTpl('ltitle')
@@ -732,7 +732,6 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                     _T('Install Spooling', 'msc'), $rb,array("trid"=>"choixspooling")
                 )
             );
-        }
         if (isExpertMode()){
             if( isset($gid)){
                 $nbmachineforexec = array(
