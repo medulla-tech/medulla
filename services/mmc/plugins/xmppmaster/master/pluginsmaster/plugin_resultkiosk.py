@@ -26,8 +26,7 @@ import time
 import pytz
 import json
 import traceback
-import sys
-import os
+import sys, os
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.msc import MscDatabase
 from managepackage import managepackage
@@ -36,14 +35,15 @@ from utils import name_random, file_put_contents,file_get_contents, utc2local
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
 
-plugin = {"VERSION": "1.2", "NAME": "resultkiosk", "TYPE": "master"}
+logger = logging.getLogger("xmppmaster")
+plugin = {"VERSION" : "1.32", "NAME" : "resultkiosk", "TYPE" : "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug("#################################################")
-    logging.getLogger().debug(plugin)
-    logging.getLogger().debug(json.dumps(data, indent=4))
-    logging.getLogger().debug("#################################################")
+    logger.debug("#################################################")
+    logger.debug(plugin)
+    logger.debug(json.dumps(data, indent=4))
+    logger.debug("#################################################")
     if 'subaction' in data:
         if data['subaction'] == 'initialization':
             initialisekiosk(data, message, xmppobject)
@@ -95,9 +95,9 @@ def initialisekiosk(data, message, xmppobject):
                                fromplugin = True)
 
     datasend = {
-        "sessionid": name_random(6, "initialisation_kiosk"),
-        "action": "kiosk",
-        "data": initializationdatakiosk
+        "sessionid" : name_random(6, "initialisation_kiosk"),
+        "action" : "kiosk",
+        "data" : initializationdatakiosk
     }
     xmppobject.send_message(mto= message['from'],
                              mbody=json.dumps(datasend),
@@ -197,7 +197,8 @@ def deploypackage(data, message, xmppobject, sessionid):
                         section,
                         0,
                         0,
-                        0)
+                        0,
+                        {})
     MscDatabase().xmpp_create_CommandsOnHostPhasedeploykiosk(commandid)
 
     # Convert install_date to timestamp and send it to logs

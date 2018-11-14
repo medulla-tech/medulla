@@ -658,6 +658,8 @@ class Glpi92(DyngroupDatabaseHelper):
                             return None
 
             if displayList:
+                r=re.compile('reg_key_.*')
+                regs=filter(r.search, self.config.summary)
                 if 'os' in self.config.summary:
                     join_query = join_query.outerjoin(self.os)
                 if 'type' in self.config.summary:
@@ -674,6 +676,12 @@ class Glpi92(DyngroupDatabaseHelper):
                    'owner_firstname' in self.config.summary or \
                    'owner_realname' in self.config.summary:
                     join_query = join_query.outerjoin(self.user)
+                try:
+                    if regs[0]:
+                        join_query = join_query.outerjoin(self.regcontents)
+                except IndexError:
+                    pass
+
 
 
             if self.fusionagents is not None:
@@ -682,13 +690,13 @@ class Glpi92(DyngroupDatabaseHelper):
                 join_query = join_query.outerjoin(self.fusionantivirus)
                 join_query = join_query.outerjoin(self.os)
 
-            r=re.compile('reg_key_.*')
-            regs=filter(r.search, self.config.summary)
-            try:
-                if regs[0]:
-                    join_query = join_query.outerjoin(self.regcontents)
-            except IndexError:
-                pass
+            #r=re.compile('reg_key_.*')
+            #regs=filter(r.search, self.config.summary)
+            #try:
+                #if regs[0]:
+                    #join_query = join_query.outerjoin(self.regcontents)
+            #except IndexError:
+                #pass
 
             if query_filter is None:
                 query = query.select_from(join_query)
