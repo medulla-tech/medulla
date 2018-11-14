@@ -398,7 +398,7 @@ function list_computers($names,
         if (isExpertMode()){
             $n->addActionItemArray($actionConsole);
             $n->addActionItemArray($actionxmppbrowsing);
-            if ($listhostmachinedeploy == ""){
+            if (!(isset($_GET['logview']) &&  $_GET['logview'] == "viewlogs")){
                 $n->addActionItemArray($actioneditremoteconfiguration);
             }
             $n->addActionItemArray($actionxmppquickdeoloy);
