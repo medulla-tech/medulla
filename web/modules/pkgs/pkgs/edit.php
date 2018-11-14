@@ -59,6 +59,8 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion',
             'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
         $package[$post] = $_POST[$post];
+        $package['label'] = preg_replace('/[[:^print:]]/', '_', $package['label']);
+        $package['description'] = preg_replace('/[[:^print:]]/', '_', $package['description']);
     }
 
     foreach (array('reboot', 'associateinventory') as $post) {

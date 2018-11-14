@@ -53,6 +53,8 @@ if (isset($_POST['bconfirm'])) {
     foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware',
             'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
         $package[$post] = $_POST[$post];
+        $package['label'] = preg_replace('/[[:^print:]]/', '_', $package['label']);
+        $package['description'] = preg_replace('/[[:^print:]]/', '_', $package['description']);
     }
     foreach (array('reboot', 'associateinventory') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
