@@ -35,7 +35,7 @@ $p = new PageGenerator(_("Computer list"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence'] : (isset($_SESSION['computerpresence']) ? $_SESSION['computerpresence'] : "no_presence");
+$computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence'] : (isset($_SESSION['computerpresence']) ? $_SESSION['computerpresence'] : "all_computer");
 
 $_SESSION['computerpresence'] = $computerpresence;
 
