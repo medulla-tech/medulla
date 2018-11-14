@@ -1308,7 +1308,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self, 
+    def addlogincommand(self,
                         session,
                         login,
                         commandid,
@@ -2743,8 +2743,16 @@ class XmppMasterDatabase(DatabaseHelper):
         listmachinebyRS = [x for x in result]
         resulttopologie = {}
         for i in listmachinebyRS:
+            logging.getLogger().info(i)
             listmachines = i[1].split(',')
-            resulttopologie[i[0]] = listmachines
+
+            # For each element split it and just save the important part
+            count = 0
+            while count < len(listmachines):
+                listmachines[count] = listmachines[count].split("@")[0]
+                count += 1
+
+            resulttopologie[i[0].split('/')[1]] = listmachines
         self.write_topologyfile(resulttopologie)
         return [ resulttopologie]
 
