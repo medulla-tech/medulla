@@ -42,17 +42,17 @@ $_SESSION['computerpresence'] = $computerpresence;
 
 if (in_array("pulse2", $_SESSION["modulesList"])) {
       //Radiobox Mode
-      echo '<label for="namepresence1" style="display:initial;">'._T('All computers', 'base').'</label>';
       echo '<input type="radio" ';
       if ($computerpresence == "all_computer") echo "checked";
+      echo '<label for="namepresence1" style="display:initial;">'._T('All computers', 'base').'</label>';
       echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';
-      echo '<label for="namepresence2" style="display:initial;">'._T('Online computers', 'base').'</label>';
       echo '<input type="radio" ';
       if ($computerpresence == "presence") echo "checked";
+      echo '<label for="namepresence2" style="display:initial;">'._T('Online computers', 'base').'</label>';
       echo ' id="namepresence2" name="namepresence" value="presence"/> ';
-      echo '<label for="namepresence3" style="display:initial;">'._T('Offline computers', 'base').'</label>';
       echo '<input type="radio" ';
       if ($computerpresence == "no_presence") echo "checked";
+      echo '<label for="namepresence3" style="display:initial;">'._T('Offline computers', 'base').'</label>';
       echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
 
       include("modules/pulse2/pulse2/computers_list.php");
