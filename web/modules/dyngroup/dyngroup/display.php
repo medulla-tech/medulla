@@ -28,7 +28,7 @@ require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
 
-$computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence'] : (isset($_SESSION['computerpresence']) ? $_SESSION['computerpresence'] : "no_presence");
+$computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence'] : (isset($_SESSION['computerpresence']) ? $_SESSION['computerpresence'] : "all_computer");
 $_SESSION['computerpresence'] = $computerpresence;
 
 $gid = quickGet('gid');
@@ -66,18 +66,19 @@ if (!$gid) { // TODO !!
     if ($group->type == 0) {
         __my_header(sprintf(_T("Group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
         if (in_array("pulse2", $_SESSION["modulesList"])) {
-            echo '<label for="namepresence1" style="display:initial;">'._T('All computers', 'base').'</label>';
-            echo '<input type="radio" ';
-            if ($computerpresence == "all_computer") echo "checked";
-            echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';
-            echo '<label for="namepresence2" style="display:initial;">'._T('Online computers', 'base').'</label>';
-            echo '<input type="radio" ';
-            if ($computerpresence == "presence") echo "checked";
-            echo ' id="namepresence2" name="namepresence" value="presence"/> ';
-            echo '<label for="namepresence3" style="display:initial;">'._T('Offline computers', 'base').'</label>';
-            echo '<input type="radio" ';
-            if ($computerpresence == "no_presence") echo "checked";
-            echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
+          //Radiobox Mode
+          echo '<input type="radio" ';
+          if ($computerpresence == "all_computer") echo "checked";
+          echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';
+          echo '<label for="namepresence1" style="display:initial;">'._T('All computers', 'base').'</label>';
+          echo '<input type="radio" ';
+          if ($computerpresence == "presence") echo "checked";
+          echo ' id="namepresence2" name="namepresence" value="presence"/> ';
+          echo '<label for="namepresence2" style="display:initial;">'._T('Online computers', 'base').'</label>';
+          echo '<input type="radio" ';
+          if ($computerpresence == "no_presence") echo "checked";
+          echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
+          echo '<label for="namepresence3" style="display:initial;">'._T('Offline computers', 'base').'</label>';
         }
     } else {
         __my_header(sprintf(_T("Imaging group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
