@@ -562,7 +562,7 @@ class Glpi92(DyngroupDatabaseHelper):
             ret["computerpresence"] = ["computerpresence","xmppmaster",filt["computerpresence"] , listid]
         elif "query" in filt and filt['query'][0] == "AND":
             for q in filt['query'][1]:
-                if q[2] == "Online computer" or q[2] == "OU user" or q[2] == "OU machine":
+                if len(q) >=3 and (q[2] == "Online computer" or q[2] == "OU user" or q[2] == "OU machine"):
                     listid = XmppMasterDatabase().getxmppmasterfilterforglpi(q)
                     ret[q[2]] = [q[1], q[2], q[3], listid]
         return ret
