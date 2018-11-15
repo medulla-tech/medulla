@@ -52,9 +52,7 @@ if (isset($_POST['bconfirm'])) {
 
     foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware',
             'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
-        $package[$post] = $_POST[$post];
-        $package['label'] = preg_replace('/[[:^print:]]/', '_', $package['label']);
-        $package['description'] = preg_replace('/[[:^print:]]/', '_', $package['description']);
+        $package[$post] = iconv("utf-8","ascii//TRANSLIT",$_POST[$post]);
     }
     foreach (array('reboot', 'associateinventory') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
@@ -76,6 +74,8 @@ if (isset($_POST['bconfirm'])) {
     {
         $saveList = $_POST['saveList'];
         $saveList1 = clean_json($saveList);
+        $saveList1 = iconv("utf-8","ascii//TRANSLIT",$saveList1);
+
         $package_uuid = $ret[2];
         $result = save_xmpp_json($package_uuid,$saveList1);
     }

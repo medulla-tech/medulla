@@ -58,15 +58,12 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
     foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion',
             'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
-        $package[$post] = $_POST[$post];
-        $package['label'] = preg_replace('/[[:^print:]]/', '_', $package['label']);
-        $package['description'] = preg_replace('/[[:^print:]]/', '_', $package['description']);
+        $package[$post] = iconv("utf-8","ascii//TRANSLIT",$_POST[$post]);
     }
 
     foreach (array('reboot', 'associateinventory') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
-
 
         // Package command
         $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
@@ -90,6 +87,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     {
         $saveList = $_POST['saveList'];
         $saveList1 = clean_json($saveList);
+        $saveList1 = iconv("utf-8","ascii//TRANSLIT",$saveList1);
         $result = save_xmpp_json($ret[2],$saveList1);
     }
 
