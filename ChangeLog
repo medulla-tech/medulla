@@ -1,6 +1,7 @@
 mmc-core 4.5
 --------------
 * [FEATURE] The Quick Actions can be shared with others users
+* [FEATURE] A "copy to clipboard" button is added to error popups
 * [BUGFIX]  Fix the wrong count of machines in MachineOnline widget
 * [BUGFIX]  Remove PluginPanel dashboard plugin
 * [BUGFIX]  Fix Action list content
