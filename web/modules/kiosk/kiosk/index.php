@@ -62,12 +62,10 @@ $n->addExtraInfo($profiles_status, _T("Profile Status", "kiosk"));
 // - profile get parameter
 // - module
 // - submodule
-$action_editPackage = new ActionItem(_T("Associate Packages", 'kiosk'),"editPackages","list","profile","kiosk", "kiosk");
 $action_editProfiles = new ActionItem(_T("Edit Profil",'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
 $action_deleteProfil = new ActionItem(_T("Delete Profil",'kiosk'), "delete", "delete", "profile", "kiosk", "kiosk");
 
 $n->setParamInfo($params);
-$n->addActionItemArray($action_editPackage);
 $n->addActionItemArray($action_editProfiles);
 $n->addActionItemArray($action_deleteProfil);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
