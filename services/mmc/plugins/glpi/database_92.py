@@ -1252,6 +1252,8 @@ class Glpi92(DyngroupDatabaseHelper):
         if query == None:
             return {}
 
+        query = query.distinct()
+
         if self.config.ordered:
             query = query.order_by(asc(self.machine.c.name))
 
