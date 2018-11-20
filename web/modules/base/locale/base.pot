@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-07 10:09+0100\n"
+"POT-Creation-Date: 2018-11-20 08:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,7 +86,7 @@ msgid ""
 "application"
 msgstr ""
 
-#: modules/base/logview/logsbackuppc.php:306 modules/base/logview/index.php:424
+#: modules/base/logview/logsbackuppc.php:306 modules/base/logview/index.php:425
 #: modules/base/logview/logspackaging.php:303
 #: modules/base/logview/logsquickaction.php:295
 #: modules/base/logview/logsremotedesktop.php:275
@@ -95,7 +95,7 @@ msgstr ""
 msgid "date"
 msgstr ""
 
-#: modules/base/logview/logsbackuppc.php:307 modules/base/logview/index.php:425
+#: modules/base/logview/logsbackuppc.php:307 modules/base/logview/index.php:426
 #: modules/base/logview/logspackaging.php:304
 #: modules/base/logview/logsquickaction.php:296
 #: modules/base/logview/logsremotedesktop.php:276
@@ -104,7 +104,7 @@ msgstr ""
 msgid "user"
 msgstr ""
 
-#: modules/base/logview/logsbackuppc.php:308 modules/base/logview/index.php:426
+#: modules/base/logview/logsbackuppc.php:308 modules/base/logview/index.php:427
 #: modules/base/logview/logspackaging.php:305
 #: modules/base/logview/logsquickaction.php:297
 #: modules/base/logview/logsremotedesktop.php:277
@@ -113,7 +113,7 @@ msgstr ""
 msgid "who"
 msgstr ""
 
-#: modules/base/logview/logsbackuppc.php:309 modules/base/logview/index.php:427
+#: modules/base/logview/logsbackuppc.php:309 modules/base/logview/index.php:428
 #: modules/base/logview/logspackaging.php:306
 #: modules/base/logview/logsquickaction.php:298
 #: modules/base/logview/logsremotedesktop.php:278
@@ -1128,7 +1128,7 @@ msgstr ""
 #: modules/base/includes/computers_list.inc.php:102
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:71
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:76
 msgid "detaildeploy"
 msgstr ""
 
@@ -1976,11 +1976,19 @@ msgid ""
 "                        </ul>"
 msgstr ""
 
-#: includes/ErrorHandling.php:77
+#: includes/ErrorHandling.php:78
+msgid "Copied"
+msgstr ""
+
+#: includes/ErrorHandling.php:87
 msgid "Show complete trackback"
 msgstr ""
 
-#: includes/ErrorHandling.php:78
+#: includes/ErrorHandling.php:88
+msgid "Copy to clipboard"
+msgstr ""
+
+#: includes/ErrorHandling.php:89
 msgid "Complete Traceback"
 msgstr ""
 
