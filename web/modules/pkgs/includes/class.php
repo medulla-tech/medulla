@@ -568,4 +568,19 @@ class TextareaTplArray extends AbstractTpl{
       echo $stringToDisplay;
   }
 }
+
+class AsciiInputTpl extends InputTpl {
+  /**
+  * AsciiInputTpl generates an input text which specifies a regex. The regex excludes non ascii chars.
+  * If the user try to send the form with non ascii chars (I.E. like accents), the focus is set on the
+  * concerned field.
+  *
+  * Param :
+  *   $name : string which corresponding to the name of the input and the GET/POST data of the form
+  */
+
+  function AsciiInputTpl($name) {
+    $this->InputTpl($name, '/^[A-Za-z0-9\.\-\!\?\ \.\#%$&@\*\+_\/]*$/');
+  }
+}
 ?>
