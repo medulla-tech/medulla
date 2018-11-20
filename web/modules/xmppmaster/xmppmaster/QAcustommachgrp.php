@@ -144,8 +144,8 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $custom_command = xmlrpc_getCommand_qa_by_cmdid($_GET['cmd_id']);
+$startdate = timestamp_to_datetime($custom_command['command_start']->timestamp);
 
-$startdate = date('Y-m-d H:i:s', $custom_command['command_start']->timestamp);
 echo "<h3>". _T("Name of Quick Action  :", 'xmppmaster')." ". $custom_command['command_name']."</h3>";
 
 $result = "";

@@ -40,7 +40,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $startdate =  array();
 foreach ($dd[4] as $val ){
-    $startdate[] = date('Y-m-d H:i:s', $val->timestamp);
+    $startdate[] = timestamp_to_datetime($val->timestamp);
 }
 $machinetarget =  array();
 foreach ($dd[7] as $val ){
