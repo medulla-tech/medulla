@@ -157,7 +157,8 @@ function xmlrpc_addlogincommand($login,
                                 $parameterspackage = '',
                                 $rebootrequired = 0,
                                 $shutdownrequired = 0,
-                                $limit_rate_ko = 0
+                                $limit_rate_ko = 0,
+                                $params = array()
                                 ) {
 
     if($rebootrequired != "0"){
@@ -180,7 +181,8 @@ function xmlrpc_addlogincommand($login,
                                                         $parameterspackage,
                                                         $rebootrequired,
                                                         $shutdownrequired,
-                                                        $limit_rate_ko));
+                                                        $limit_rate_ko,
+                                                        $params));
 }
 
 function xmlrpc_loginbycommand($commandid){
