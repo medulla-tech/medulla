@@ -47,6 +47,7 @@ import os, pwd
 import traceback
 import sys
 import re
+
 class XmppMasterDatabase(DatabaseHelper):
     """
     Singleton Class to query the xmppmaster database.
@@ -1186,6 +1187,14 @@ class XmppMasterDatabase(DatabaseHelper):
             obj['shutdownrequired'] = result.shutdownrequired
             obj['limit_rate_ko'] = result.bandwidth
             try:
+                params_json = json.loads(result.params_json)
+
+                if 'spooling' in params_json:
+                    obj['spooling'] = params_json['spooling']
+            except Exception, e:
+                logging.getLogger().error(str(e)+" [the avanced parameters from msc ]")
+
+            try:
                 params = str(result.parameters_deploy)
                 if params == '':
                     return obj
@@ -1432,7 +1441,8 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self, session,
+    def addlogincommand(self,
+                        session,
                         login,
                         commandid,
                         grpid,
@@ -1442,7 +1452,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         parameterspackage,
                         rebootrequired,
                         shutdownrequired,
-                        bandwidth):
+                        bandwidth,
+                        params):
         try:
             new_logincommand = Has_login_command()
             new_logincommand.login = login
@@ -1467,6 +1478,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_logincommand.shutdownrequired = False
             else:
                 new_logincommand.shutdownrequired = True
+            if (type(params) is list or type(params) is dict) and len(params) != 0:
+                new_logincommand.params_json = json.dumps(params)
+
             session.add(new_logincommand)
             session.commit()
             session.flush()
@@ -2353,7 +2367,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
-    def algoruleadorganisedbyusers(self, session, userou, classutilMachine = "private", rule = 8, enabled=1):
+    def algoruleadorganisedbyusers(self, session, userou, classutilMachine = "both", rule = 8, enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 8 by organization users
             Field "subject" is used to define the organisation by user OU eg Computers/HeadQuarter/Locations
@@ -2391,7 +2405,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algoruleadorganisedbymachines(self, session, machineou, classutilMachine = "private", rule = 7, enabled=1):
+    def algoruleadorganisedbymachines(self, session, machineou, classutilMachine = "both", rule = 7, enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 7 by organization machine
             Field "subject" is used to define the organisation by machine OU eg Computers/HeadQuarter/Locations
@@ -2429,7 +2443,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def algoruleuser(self, session, username, classutilMachine = "private", rule = 1, enabled=1):
+    def algoruleuser(self, session, username, classutilMachine = "both", rule = 1, enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 1 for user name
             Field "subject" is used to define the name of the user in this rule
@@ -2466,37 +2480,54 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algorulehostname(self, session, hostname, classutilMachine = "private", rule = 2, enabled=1):
+    def algorulehostname(self, session, hostname, classutilMachine = "both", rule = 2, enabled=1):
         """
-            Search server relay imposes for a hostname
+            Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 2 for hostname
+            Field "subject" is used to define the hostname in this rule
+            Field "relayserver_id" is used to define the Relayserver associated to this hostname
+            enabled = 1 Only on active relayserver.
+            If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
         """
-        if classutilMachine == "private":
-            sql = """select `relayserver`.`id`
-            from `relayserver`
-                inner join
-                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
-            where
-                `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
-                    AND `relayserver`.`enabled` = %d
-                    AND `relayserver`.`moderelayserver` = 'static'
-                    AND `relayserver`.`classutil` = '%s'
-            limit 1;"""%(rule, hostname, enabled, classutilMachine)
-        else:
-            sql = """select `relayserver`.`id`
-            from `relayserver`
-                inner join
-                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
-            where
-                `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
-                    AND `relayserver`.`enabled` = %d
-                    AND `relayserver`.`moderelayserver` = 'static'
-            limit 1;"""%(rule, hostname, enabled)
+        sql = """select `has_relayserverrules`.`id`,`has_relayserverrules`.`subject`
+        from `has_relayserverrules`
+        where `has_relayserverrules`.`rules_id` = %d
+        order by `has_relayserverrules`.`order`;"""%(rule)
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [x for x in result]
+        listrules = [x for x in result]
+        for relayserverrule in listrules:
+            subject = relayserverrule[1].replace('*','.*')
+            if re.match(subject, hostname, flags=0):
+                has_relayserverrules_id = relayserverrule[0]
+                if classutilMachine == "private":
+                    sql = """select `relayserver`.`id`
+                    from `relayserver`
+                        inner join
+                            `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
+                    where
+                        `has_relayserverrules`.`rules_id` = %d
+                            AND `has_relayserverrules`.`id` = %d
+                            AND `relayserver`.`enabled` = %d
+                            AND `relayserver`.`moderelayserver` = 'static'
+                            AND `relayserver`.`classutil` = '%s'
+                    limit 1;"""%(rule, has_relayserverrules_id, enabled, classutilMachine)
+                else:
+                    sql = """select `relayserver`.`id`
+                    from `relayserver`
+                        inner join
+                            `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
+                    where
+                        `has_relayserverrules`.`rules_id` = %d
+                            AND `has_relayserverrules`.`id` = %d
+                            AND `relayserver`.`enabled` = %d
+                            AND `relayserver`.`moderelayserver` = 'static'
+                    limit 1;"""%(rule, has_relayserverrules_id, enabled)
+                result = session.execute(sql)
+                session.commit()
+                session.flush()
+                return [y for y in result]
+        return ""
 
     @DatabaseHelper._sessionm
     def algoruleloadbalancer(self, session):
@@ -2518,7 +2549,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algorulesubnet(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
+    def algorulesubnet(self, session, subnetmachine, classutilMachine = "both",  enabled=1):
         """
             To associate relay server that is on same networks...
         """
@@ -2544,7 +2575,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algorulebynetworkaddress(self, session, subnetmachine, classutilMachine = "private", rule = 9, enabled=1):
+    def algorulebynetworkaddress(self, session, subnetmachine, classutilMachine = "both", rule = 9, enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 9 by network address
             Field "subject" is used to define the subnet for association
@@ -2613,7 +2644,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
-    def IdlonglatServerRelay(self, session, classutilMachine = "private",  enabled=1):
+    def IdlonglatServerRelay(self, session, classutilMachine = "both",  enabled=1):
         """ return long and lat server relay"""
         if classutilMachine == "private":
             sql = """SELECT
@@ -2845,8 +2876,16 @@ class XmppMasterDatabase(DatabaseHelper):
         listmachinebyRS = [x for x in result]
         resulttopologie = {}
         for i in listmachinebyRS:
+            logging.getLogger().info(i)
             listmachines = i[1].split(',')
-            resulttopologie[i[0]] = listmachines
+
+            # For each element split it and just save the important part
+            count = 0
+            while count < len(listmachines):
+                listmachines[count] = listmachines[count].split("@")[0]
+                count += 1
+
+            resulttopologie[i[0].split('/')[1]] = listmachines
         self.write_topologyfile(resulttopologie)
         return [ resulttopologie]
 

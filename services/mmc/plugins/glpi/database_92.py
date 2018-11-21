@@ -561,7 +561,7 @@ class Glpi92(DyngroupDatabaseHelper):
             ret["computerpresence"] = ["computerpresence","xmppmaster",filt["computerpresence"] , listid]
         elif "query" in filt and filt['query'][0] == "AND":
             for q in filt['query'][1]:
-                if q[2] == "Online computer" or q[2] == "OU user" or q[2] == "OU machine":
+                if len(q) >=3 and (q[2] == "Online computer" or q[2] == "OU user" or q[2] == "OU machine"):
                     listid = XmppMasterDatabase().getxmppmasterfilterforglpi(q)
                     ret[q[2]] = [q[1], q[2], q[3], listid]
         return ret
@@ -658,6 +658,8 @@ class Glpi92(DyngroupDatabaseHelper):
                             return None
 
             if displayList:
+                r=re.compile('reg_key_.*')
+                regs=filter(r.search, self.config.summary)
                 if 'os' in self.config.summary:
                     join_query = join_query.outerjoin(self.os)
                 if 'type' in self.config.summary:
@@ -674,6 +676,12 @@ class Glpi92(DyngroupDatabaseHelper):
                    'owner_firstname' in self.config.summary or \
                    'owner_realname' in self.config.summary:
                     join_query = join_query.outerjoin(self.user)
+                try:
+                    if regs[0]:
+                        join_query = join_query.outerjoin(self.regcontents)
+                except IndexError:
+                    pass
+
 
 
             if self.fusionagents is not None:
@@ -682,13 +690,13 @@ class Glpi92(DyngroupDatabaseHelper):
                 join_query = join_query.outerjoin(self.fusionantivirus)
                 join_query = join_query.outerjoin(self.os)
 
-            r=re.compile('reg_key_.*')
-            regs=filter(r.search, self.config.summary)
-            try:
-                if regs[0]:
-                    join_query = join_query.outerjoin(self.regcontents)
-            except IndexError:
-                pass
+            #r=re.compile('reg_key_.*')
+            #regs=filter(r.search, self.config.summary)
+            #try:
+                #if regs[0]:
+                    #join_query = join_query.outerjoin(self.regcontents)
+            #except IndexError:
+                #pass
 
             if query_filter is None:
                 query = query.select_from(join_query)
@@ -1243,6 +1251,8 @@ class Glpi92(DyngroupDatabaseHelper):
         query = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList)
         if query == None:
             return {}
+
+        query = query.distinct()
 
         if self.config.ordered:
             query = query.order_by(asc(self.machine.c.name))

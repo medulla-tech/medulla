@@ -58,13 +58,13 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
     foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion',
             'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
+        //$package[$post] = iconv("utf-8","ascii//TRANSLIT",$_POST[$post]);
         $package[$post] = $_POST[$post];
     }
 
     foreach (array('reboot', 'associateinventory') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
-
 
         // Package command
         $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
@@ -89,6 +89,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     {
         $saveList = $_POST['saveList'];
         $saveList1 = clean_json($saveList);
+        //$saveList1 = iconv("utf-8","ascii//TRANSLIT",$saveList1);
         $result = save_xmpp_json($ret[2],$saveList1);
     }
 
@@ -285,7 +286,7 @@ if (isset($_GET['delete_file'], $_GET['filename'])) {
                                     "session user ".$_SESSION["login"],
                                     'Packaging | Files | Delete | Manual');
     }
-    header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'])));
+    header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'], 'packageUuid' => $_GET['packageUuid'])));
 }
 if (count($package) == 0) {
     $title = _T("Edit a package", "pkgs");
@@ -365,7 +366,7 @@ $os = array(
 
 foreach ($fields as $p) {
     $f->add(
-            new TrFormElement($p[1], new InputTpl($p[0])), array_merge(array("value" => $package[$p[0]]), $p[2])
+            new TrFormElement($p[1], new AsciiInputTpl($p[0])), array_merge(array("value" => $package[$p[0]]), $p[2])
     );
 }
 
@@ -394,7 +395,6 @@ else {
 if(isExpertMode())
 {
     $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
-
     $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
 
     if(isset($json['info']['methodetransfert']))
@@ -543,6 +543,7 @@ foreach ($package['files'] as $file) {
     $params[] = array(
         'p_api' => $_GET['p_api'],
         'pid' => $_GET['pid'],
+        'packageUuid' => $_GET['packageUuid'],
         'filename' => $file['name'],
         'delete_file' => 1
     );

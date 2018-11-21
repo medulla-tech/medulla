@@ -291,7 +291,8 @@ def addlogincommand(login,
                     parameterspackage,
                     rebootrequired,
                     shutdownrequired,
-                    limit_rate_ko):
+                    limit_rate_ko,
+                    params):
     return XmppMasterDatabase().addlogincommand(login,
                                                 commandid,
                                                 grpid,
@@ -301,7 +302,8 @@ def addlogincommand(login,
                                                 parameterspackage,
                                                 rebootrequired,
                                                 shutdownrequired,
-                                                limit_rate_ko)
+                                                limit_rate_ko,
+                                                params)
 
 
 def loginbycommand(commandid):

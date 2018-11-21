@@ -55,7 +55,7 @@ class Logs(Base, XmppMasterDBObj):
     #id = Column(Integer, primary_key=True)
     # Warning, if you modify the wrapper, you also have to change it in log.py
     type = Column(String(6), nullable=False,default = "noset")
-    date = Column(DateTime, default=datetime.datetime.now())
+    date = Column(DateTime, default=datetime.datetime.now)
     text = Column(String(255), nullable=False)
     sessionname = Column(String(20), nullable=False, default = "")
     priority = Column(Integer, default = 0)
@@ -75,7 +75,7 @@ class UserLog(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
     msg = Column(String(255), nullable=False)
-    datelog =  Column(DateTime, default=datetime.datetime.now())
+    datelog =  Column(DateTime, default=datetime.datetime.now)
     type =  Column(String(10), nullable=False,default = "info")
 
 ################################
@@ -252,7 +252,7 @@ class Deploy(Base, XmppMasterDBObj):
     jidmachine = Column(String(255), nullable=False)
     state = Column(String(45), nullable=False)
     sessionid = Column(String(45), nullable=False)
-    start = Column(DateTime, default=datetime.datetime.now())
+    start = Column(DateTime, default=datetime.datetime.now)
     startcmd = Column(DateTime, default=None)
     endcmd = Column(DateTime, default=None)
     result = Column(Text )
@@ -275,7 +275,7 @@ class Command_qa(Base, XmppMasterDBObj):
     command_action = Column(String(500), nullable=False)
     command_login = Column(String(45), nullable=False)
     command_os = Column(String(45))
-    command_start = Column(DateTime, default=datetime.datetime.now())
+    command_start = Column(DateTime, default=datetime.datetime.now)
     command_grp = Column(String(11), default=None)
     command_machine = Column(String(11), default=None)
 
@@ -287,7 +287,7 @@ class Command_action(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     # id = Column(Integer, primary_key=True)
     # Warning, if you modify the wrapper, you also have to change it in log.py
-    date = Column(DateTime, default=datetime.datetime.now())
+    date = Column(DateTime, default=datetime.datetime.now)
     command_id = Column(Integer, nullable=False)
     session_id = Column(String(45), nullable=False)
     typemessage = Column(String(20), default = "log")
@@ -323,6 +323,7 @@ class Has_login_command(Base, XmppMasterDBObj):
     rebootrequired = Column(Boolean, default=False)
     shutdownrequired = Column(Boolean, default=False)
     bandwidth = Column(Integer, default = 0)
+    params_json = Column(Text, default=None)
 
 class Organization(Base, XmppMasterDBObj):
     # ====== Table name =========================
