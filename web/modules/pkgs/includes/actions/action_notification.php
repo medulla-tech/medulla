@@ -96,7 +96,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                             }
                             else{
                                 jQuery(this).closest('td').next().find('input').prop('disabled',true);
-                            }" />Progresion Stat
+                            }" />Progression Stat
               <?php }
               else{?>
                 <input type="checkbox"
@@ -105,16 +105,16 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                             }
                             else{
                                 jQuery(this).closest('td').next().find('input').prop('disabled',true);
-                            }" />Progresion Stat
+                            }" />Progression Stat
               <?php }?>
             </td>
             <td>
               <?php if (isset($stat))
               {
-                echo '<input type="number" min="0" max="100" name="stat" value="'.$_POST['stat'].'"/>';
+                echo '<input type="number" min="1" max="100" name="stat" value="'.$_POST['stat'].'"/>';
               }
               else{
-                echo '<input type="number" disabled min="0" max="100" value="0" name="stat" />';
+                echo '<input type="number" disabled min="1" max="100" value="1" name="stat" />';
               }?>
 
             </td>
