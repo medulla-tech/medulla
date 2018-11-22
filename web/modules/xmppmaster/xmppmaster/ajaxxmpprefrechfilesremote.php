@@ -54,6 +54,7 @@ else{
     $lifdirstr = xmlrpc_remotefilesystem($selectdir, $machine);
 }
 $lifdir = json_decode($lifdirstr, true);
+
 if (isset($lifdir['err'])){
     if ( $lifdir['err'] == 'Timeout Error'){
         $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
@@ -67,12 +68,14 @@ if (isset($lifdir['err'])){
 }
 $lifdir = $lifdir['data'];
 
+
 printf ('
 <form>
     <input id ="path_abs_current_remote" type="hidden" name="path_abs_current_remote" value="%s">
     <input id ="parentdirremote" type="hidden" name="parentdirremote" value="%s">
 </form>' ,$lifdir['path_abs_current'],$lifdir['parentdir']);
-echo "<h2> Current Dir : <span  id='remotecurrrent'>".$lifdir['path_abs_current'] ."</span></h2>";
+echo "<h2>Remove Root file system : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdir['rootfilesystem'] ."</span></h2>";
+echo "<h2>Parent Dir .. : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdir['parentdir'] ."</span></h2>";
 echo'
     <ul class="rightdir">';
         foreach($lifdir['list_dirs_current'] as $namedir){
