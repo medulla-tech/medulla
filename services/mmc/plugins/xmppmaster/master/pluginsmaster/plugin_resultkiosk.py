@@ -143,6 +143,8 @@ def deploypackage(data, message, xmppobject, sessionid):
     else:
         section = '"section":"install"'
 
+    package = json.loads(get_xmpp_package(data['uuid']))
+    _section = section.split(":")[1]
     command = MscDatabase().createcommanddirectxmpp(data['uuid'],
                                                     '',
                                                     section,
@@ -153,7 +155,7 @@ def deploypackage(data, message, xmppobject, sessionid):
                                                     install_date + datetime.timedelta(hours=1),
                                                     nameuser,
                                                     nameuser,
-                                                    'titlepackage',
+                                                    package['info']['name']+' : '+_section,
                                                     60,
                                                     4,
                                                     0,
