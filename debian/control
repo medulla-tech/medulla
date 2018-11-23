@@ -32,7 +32,7 @@ Depends: ${misc:Depends},
          pulse2-imaging-client | pulse2-davos-client,
          pulse2-inventory-server,
          pulse2-launchers,
-         pulse2-package-server,
+         pulse-imaging-scripts,
          pulse2-scheduler,
          pulse2-homepage
 Description: Pulse 2 metapackage
