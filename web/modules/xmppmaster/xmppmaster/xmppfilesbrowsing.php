@@ -699,7 +699,8 @@ echo '</script>';
                 //  recupere file en remote
                 fileremote = true;
                 jQuery(".rightfile LI").each(function(){
-                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : 'white',});
+                    //jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : 'white',});
+                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#C0C0C0',});
                     jQuery(this).find(':nth-child(2)').hide()
                 });
                 jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
