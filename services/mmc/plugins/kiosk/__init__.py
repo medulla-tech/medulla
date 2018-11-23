@@ -192,6 +192,72 @@ def get_ou_list():
     else:
         return False
 
+def get_ou_tree():
+    """This function returns the list of OUs
+
+    Returns:
+        TreeOU object which contains all the OUs.
+        or
+        returns False for some issues
+    """
+
+    # Check the ldap config
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
+
+    if config.has_section('authentication_externalldap'):
+        id = str(uuid.uuid4())
+        file = '/tmp/ous-'+id
+
+        # Get the parameters from the config file
+        ldapurl = config.get('authentication_externalldap', 'ldapurl')
+        suffix = config.get('authentication_externalldap', 'suffix')
+        bindname = config.get('authentication_externalldap', 'bindname')
+        bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
+
+        # Execute the command which get the OU list and write into the specified file
+        command = """ldapsearch -o ldif-wrap=no -H %s -x -b "%s" -D "%s" -w %s -LLL "(
+        objectClass=organizationalUnit)" dn > %s""" % (ldapurl, suffix, bindname, bindpasswd, file)
+
+        os.system(command)
+
+        ous = []
+        # Parse the file
+        with open(file, 'r') as ou_file:
+            lines = ou_file.read().splitlines()
+            # The lines that don't start by 'dn' are ignored
+            lines = [element for element in lines if element.startswith('dn')]
+
+            # Parse the result for each lines
+            for element in lines:
+                # Lines starts with dn:: are get in base64 format
+                if element.startswith('dn:: '):
+                    tmp = element.split('::')
+                    ou = base64.b64decode(tmp[1])
+
+                else:
+                    tmp = element.split(': ')
+                    ou = tmp[1]
+                # Format the result
+                ou = ou.replace(',OU=', ' < ')
+                ou = ou.replace('OU=', '')
+                ou = re.sub(',DC=(.+)', '', ou)
+
+                ou = ou.split(' < ')
+                ou.reverse()
+                ou = '/'.join(ou)
+                # Save the content into a list
+                ous.append(ou)
+
+        # Delete the file
+        os.remove(file)
+
+        tree = TreeOU()
+        for line in ous:
+            tree.create_recursively(line)
+
+        return tree
+    else:
+        return False
 
 def str_to_ou(string):
     return TreeOU().str_to_ou(string)
