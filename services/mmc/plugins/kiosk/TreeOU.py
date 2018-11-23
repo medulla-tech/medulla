@@ -203,3 +203,16 @@ class TreeOU(object):
 
         else:
             return False
+
+    def recursive_paths(self, list):
+        """This method returns the list of the paths for all the childrens.
+        Params:
+            list : reference to the final list.
+        Returns:
+            The list of all the childrens
+        """
+        for children in self.child:
+            if children is not None:
+                list.append("/".join(children.get_path()))
+                children.recursive_paths(list)
+        return list
