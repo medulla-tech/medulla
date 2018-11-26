@@ -160,7 +160,7 @@ class TreeOU(object):
         get_path generate the "path" between the root tree and the actual node.
 
         Returns:
-            String of the path from root tree and the pointed node.
+            list of the path from root tree and the pointed node.
         """
         canonical = []
         temp = self
@@ -215,4 +215,16 @@ class TreeOU(object):
             if children is not None:
                 list.append("/".join(children.get_path()))
                 children.recursive_paths(list)
+        return list
+
+    def recursive_parent(self, list):
+        """This method returns the list of the parents recursively.
+        Params:
+            list: reference to the final list.
+        Returns:
+            The list of all the parents in canonical format (/parent1/parent2).
+        """
+        if self.parent  is not None:
+            list.append("/".join(self.parent.get_path()))
+            self.parent.recursive_parent(list)
         return list

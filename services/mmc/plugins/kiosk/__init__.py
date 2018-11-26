@@ -490,10 +490,17 @@ def get_packages_for_machine(machine):
     OUmachine = [machine['ad_ou_machine'].replace("\n",'').replace("\r",'').replace('@@','/')]
     OUuser = [machine['ad_ou_user'].replace("\n", '').replace("\r", '').replace('@@','/')]
 
+    tree = get_ou_tree()
+
     OU = list(set(OUmachine + OUuser))
 
+    for ou in OU:
+        tmp = [ou]
+        partial = tree.search(ou)
+        partial.recursive_parent(tmp)
+
     # search packages for the applied profiles
-    list_profile_packages =  KioskDatabase().get_profile_list_for_OUList(OU)
+    list_profile_packages =  KioskDatabase().get_profile_list_for_OUList(tmp)
     if list_profile_packages is None:
         #TODO
         # linux and mac os does not have an Organization Unit.
