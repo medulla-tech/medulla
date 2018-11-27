@@ -233,6 +233,13 @@ li.quickg a {
         -moz-filter: grayscale(50%);
         opacity:0.5;
 }
+.ombremultiple {
+    /*width:100%;*/
+    background-color:#C0C0C0;
+    padding:5px;
+    box-shadow:2px 2px 2px gray,
+    -1px -1px 2px white;
+}
 
 </style>
 
@@ -305,6 +312,14 @@ echo '</script>';
 <div id="global">
 
     <div id="gauche">
+    <table style =  " width:100%;
+                    height:100%;
+                    padding:0px;
+                    border-spacing: 5px 5px;
+                    border-collapse :separate;" 
+                    class="ombremultiple">
+        <tr> 
+        <td class="ombremultiple" style="vertical-align: top;">
             <div id="fileshowlocal" class="fileshow">
              <?php
                 printf ('
@@ -314,12 +329,41 @@ echo '</script>';
                 </form>' ,$curentdir, $filecurentdir['parentdir']);
                 ?>
             </div>
+            </td>
+            </tr>
+            </table>
        <div class ="piedbrowser"><h2></h2></div>
     </div>
 
     <div id="droite">
-        <div id ="directoryremote" class="fileshow"></div>
-        <div id ="fileshowremote"  class="fileshow"></div>
+        <!--<div id ="directoryremote" class="fileshow"></div>
+        <div id ="fileshowremote"  class="fileshow"></div>-->
+
+    <table style =  " width:100%;
+                    height:100%;
+                    padding:0px;
+                    border-spacing: 5px 5px;
+                    border-collapse :separate;" class="ombremultiple">
+        <tr>
+            <td class="enplacementcss ombremultiple">
+                    <span  style="Font-Weight : Bold ;font-size : 15px;">Emplacement</span>
+            </td>
+            <td id="cur" class="currentdircss ombremultiple">
+                <span style="Font-Weight : Bold ;font-size : 15px;">
+                        <? echo $lifdir['data']['path_abs_current']; ?>
+                </span>
+            </td>
+        </tr>
+
+        <tr style="height: 100%;">
+            <td style = " width:40%;vertical-align: top;"  class="ombremultiple" >
+                <div id ="directoryremote" style = " width:100%;overflow:auto;" ></div>
+            </td>
+            <td  style = " width:60%; vertical-align: middle;"  class="ombremultiple" >
+                <div id ="fileshowremote" style = "padding-top:10px; width:100%;overflow:auto;"></div>
+            </td>
+        </tr>
+    </table>
     </div>
 
     <div class ="piedbrowser">
@@ -328,6 +372,7 @@ echo '</script>';
             </div>
         </form>
     </div>
+    
 </div>
 
 
@@ -389,6 +434,23 @@ echo '</script>';
                     pathlinux = absolutepath_array.join("/");
                     var absolutepath = "/" + absolutepath;
                     console.log('composer: ' + pathlinux + "  "+absolutepath+"   ");
+
+                    if (seperator == "\\"){
+                        var absolutepathlocal = "c:\\\\"+ absolutepath.substring(1);
+                        var dd = absolutepathlocal + seperator + pathlinux
+                        var res = dd.replace(/\//g, "\\");
+                    }
+                    else{
+                        var absolutepathlocal = absolutepath;
+                        if( pathlinux == ""){
+                            var res = absolutepathlocal;
+                        }
+                        else{
+                            var res = absolutepathlocal + seperator + pathlinux
+                        }
+                    }
+                    //jQuery( document ).find('#cur').text(res)
+                    jQuery( '#cur' ).text(res)
                         remote(pathlinux);
                 }
             })
@@ -637,7 +699,8 @@ echo '</script>';
                 //  recupere file en remote
                 fileremote = true;
                 jQuery(".rightfile LI").each(function(){
-                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : 'white',});
+                    //jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : 'white',});
+                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#C0C0C0',});
                     jQuery(this).find(':nth-child(2)').hide()
                 });
                 jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});

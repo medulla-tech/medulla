@@ -147,6 +147,14 @@ if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     $page->setFile("modules/base/logview/logsquickaction.php");
     $submod->addPage($page);
 
+    $page = new Page("logsdownload",_T("logs download","base"));
+    $page->setFile("modules/base/logview/logsdownload.php");
+    $submod->addPage($page);
+
+    $page = new Page("logskiosk",_T("logs Kiosk","base"));
+    $page->setFile("modules/base/logview/logskiosk.php");
+    $submod->addPage($page);
+
     $page = new Page("logspackaging",_T("logs packaging","base"));
     $page->setFile("modules/base/logview/logspackaging.php");
     $submod->addPage($page);
