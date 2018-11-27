@@ -28,6 +28,8 @@ Pulse 2 4.5
 * [BUGFIX]  Clean deployment caches and used resources after a deployment
 * [BUGFIX]  Logs and bundles no longer available from machine deployment view
 * [BUGFIX]  Removing files from package does not generate an error
+* [BUGFIX]  Fix detection of uploaded file types in package creation
+* [BUGFIX]  Fix abort of deployments in cases where jidmachine and jidrelay are fake
 
 
 Pulse 2 4.4

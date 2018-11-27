@@ -328,8 +328,10 @@ def get_machine_stop_deploy(cmdid, uuid):
         'base64': False
     }
     updatedeploystate(result['sessionid'], 'DEPLOYMENT ABORT')
-    send_message_json(result['jid_relay'], msg_stop_deploy)
-    send_message_json(result['jidmachine'], msg_stop_deploy)
+    if result['jid_relay'] != "fake_jidrelay":
+        send_message_json(result['jid_relay'], msg_stop_deploy)
+    if result['jidmachine'] != "fake_jidmachine":
+        send_message_json(result['jidmachine'], msg_stop_deploy)
     return True
 
 
@@ -344,8 +346,10 @@ def get_group_stop_deploy(grpid):
     for machine in result['objectdeploy']:
         msg_stop_deploy['sessionid'] = machine['sessionid']
         updatedeploystate1(machine['sessionid'], 'DEPLOYMENT ABORT')
-        send_message_json(machine['jid_relay'], msg_stop_deploy)
-        send_message_json(machine['jidmachine'], msg_stop_deploy)
+        if result['jid_relay'] != "fake_jidrelay":
+            send_message_json(machine['jid_relay'], msg_stop_deploy)
+        if result['jidmachine'] != "fake_jidmachine":
+            send_message_json(machine['jidmachine'], msg_stop_deploy)
     return True
 
 

@@ -99,6 +99,9 @@ class getCommand(object):
     def getMozillaCommand(self):
         return '"%s" -ms' % basename(self.file)
 
+    def get7ZipCommand(self):
+        return '"%s" /S' % basename(self.file)
+
     def getMSICommand(self):
         return """msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
 
@@ -134,6 +137,7 @@ if errorlevel 1 (
 
         strings_data = self.getStringsData()
         file_data = self.getFileData()
+        self.logger.debug("File data: %s" % file_data)
 
         if "PE32 executable" in file_data[self.file]:
             # Not an MSI file, maybe InnoSetup or NSIS
@@ -156,6 +160,7 @@ if errorlevel 1 (
                 if identity > 0:
                     if identity[0].hasAttribute('name'):
                         installer = identity[0].getAttribute('name')
+                        self.logger.debug("Installer: %s" % installer)
             elif 'AdobeSelfExtractorApp' in strings_data:
                 self.logger.debug('Adobe application detected')
                 return self.getAdobeCommand()
@@ -176,6 +181,9 @@ if errorlevel 1 (
                     return self.getMozillaCommand()
                 else:
                     return self.logger.info("I can't get a command for %s" % self.file)
+            elif installer == "7-Zip.7-Zip.7zipInstall":
+                self.logger.debug("7-Zip detected")
+                return self.get7ZipCommand()
             else:
                 return self.logger.info("I can't get a command for %s" % self.file)
 
@@ -183,7 +191,7 @@ if errorlevel 1 (
             # MSI files are created with Windows Installer, but some apps like Flash Plugin, No
             if "Windows Installer" in file_data['Name of Creating Application'] or "Document Little Endian" in file_data[self.file]:
                 # MSI files
-                if re.match('x64;[0-9]+', file_data['Template']):
+                if re.match('(x64|Intel);[0-9]+', file_data['Template']):
                     if self.file.endswith('.msp'):
                         self.logger.debug("%s is a MSI Update file" % self.file)
                         return self.getMSIUpdateCommand()
