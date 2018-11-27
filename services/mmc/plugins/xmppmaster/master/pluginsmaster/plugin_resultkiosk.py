@@ -34,9 +34,10 @@ import logging
 from utils import name_random, file_put_contents,file_get_contents, utc2local
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
+from mmc.plugins.pkgs import get_xmpp_package
 
 logger = logging.getLogger("xmppmaster")
-plugin = {"VERSION" : "1.32", "NAME" : "resultkiosk", "TYPE" : "master"}
+plugin = {"VERSION" : "1.33", "NAME" : "resultkiosk", "TYPE" : "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
