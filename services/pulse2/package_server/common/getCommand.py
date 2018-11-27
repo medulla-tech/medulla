@@ -134,6 +134,7 @@ if errorlevel 1 (
 
         strings_data = self.getStringsData()
         file_data = self.getFileData()
+        self.logger.debug("File data: %s" % file_data)
 
         if "PE32 executable" in file_data[self.file]:
             # Not an MSI file, maybe InnoSetup or NSIS
@@ -183,7 +184,7 @@ if errorlevel 1 (
             # MSI files are created with Windows Installer, but some apps like Flash Plugin, No
             if "Windows Installer" in file_data['Name of Creating Application'] or "Document Little Endian" in file_data[self.file]:
                 # MSI files
-                if re.match('x64;[0-9]+', file_data['Template']):
+                if re.match('(x64|Intel);[0-9]+', file_data['Template']):
                     if self.file.endswith('.msp'):
                         self.logger.debug("%s is a MSI Update file" % self.file)
                         return self.getMSIUpdateCommand()
