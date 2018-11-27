@@ -99,6 +99,9 @@ class getCommand(object):
     def getMozillaCommand(self):
         return '"%s" -ms' % basename(self.file)
 
+    def get7ZipCommand(self):
+        return '"%s" /S' % basename(self.file)
+
     def getMSICommand(self):
         return """msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
 
@@ -157,6 +160,7 @@ if errorlevel 1 (
                 if identity > 0:
                     if identity[0].hasAttribute('name'):
                         installer = identity[0].getAttribute('name')
+                        self.logger.debug("Installer: %s" % installer)
             elif 'AdobeSelfExtractorApp' in strings_data:
                 self.logger.debug('Adobe application detected')
                 return self.getAdobeCommand()
@@ -177,6 +181,9 @@ if errorlevel 1 (
                     return self.getMozillaCommand()
                 else:
                     return self.logger.info("I can't get a command for %s" % self.file)
+            elif installer == "7-Zip.7-Zip.7zipInstall":
+                self.logger.debug("7-Zip detected")
+                return self.get7ZipCommand()
             else:
                 return self.logger.info("I can't get a command for %s" % self.file)
 
