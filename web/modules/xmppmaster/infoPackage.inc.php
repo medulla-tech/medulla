@@ -148,6 +148,21 @@ $page->setFile("modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
+$page = new Page("ajax_refrech_files_remote", _T("ajax refrech files remote", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajax_refrech_files_remote.php.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("ajax_refrech_files_local", _T("ajax refrech files local", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajax_refrech_files_local.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("xmppplugindownloadexpert");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
 $page = new Page("xmpprefrechfilesremote");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));

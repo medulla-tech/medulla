@@ -29,105 +29,114 @@
 
 <style type='text/css'>
 textarea {
-    width:50% ;
-    height:150px;
-    margin:auto;
-    display:block;
+        width:50% ;
+        height:150px;
+        margin:auto;
+        display:block;
 }
 
 body{
-    font-family: Georgia;
-    font-size: 11pt;
+        font-family: Georgia;
+        font-size: 11pt;
 }
-
-/*h2{
-    text-align: center;
-}*/
 
 #global{
-  width:100%;
-  height:700px;
-}
-#droite, #gauche {
-    display: inline-block;
-    vertical-align: top;
-    border-width:1px;
-    border-style:dotted;
-    border-color:black;
-}
-
-.download{
-    /*display : none;*/
-    /*background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;*/
-    cursor:pointer;
-    border: none;
-}
-
-.fileshow {
-    overflow:auto;
-    height:85%;
-}
-
-#fileshowremote {
-    width: 50%;
-    height:100%;
-    overflow:auto;
-}
-
-#directoryremote{
-    width: 50%;
-    height:100%;
-    overflow:auto;
-    padding-botton:15px;
-    float:left;
+        width:100%;
+        height:800px;
 }
 
 #gauche {
-    width:49%;
-    height:90%;
+        width:35%;
+        height:90%;
 }
 
 #droite {
-    width: 49%;
-    height:90%;
+        width: 64%;
+        height:90%;
+}
+
+#droite, #gauche {
+        display: inline-block;
+        vertical-align: top;
+        border-width:1px;
+        border-style:dotted;
+        border-color:black;
+}
+
+.download{
+        /*display : none;*/
+        /*background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;*/
+        cursor:pointer;
+        border: none;
+}
+
+.fileshow {
+        overflow:auto;
+        height:85%;
+}
+
+#fileshowremote {
+        width: 50%;
+        height:100%;
+        overflow:auto;
+}
+
+#fileshowlocal {
+        width: 100%;
+        height:100%;
+        overflow:auto;
+}
+
+#directoryremote{
+        width: 50%;
+        height:100%;
+        overflow:auto;
+        padding-botton:15px;
+        float:left;
 }
 
 .titlebrowser{
-    vertical-align:middle;
-    height:5%;
-    text-align: center;
-    padding-top:5px;
+        vertical-align:middle;
+        height:5%;
+        text-align: center;
+        padding-top:5px;
 }
 
 .currentdir{
-    vertical-align:middle;
-    height:5%;
-    text-align: left;
-    padding-top:5px;
-    padding-left:45px;
+        vertical-align:middle;
+        height:5%;
+        text-align: left;
+        padding-top:5px;
+        padding-left:45px;
 }
 
 .piedbrowser{
-    vertical-align:bottom;
-    height:5%;
-    text-align: center;
-    padding-top:5px;
-    color: blue;
+        vertical-align:bottom;
+        height:5%;
+        text-align: center;
+        padding-top:5px;
+        color: blue;
 }
 
 ul.leftdir, ul.rightdir {
-    list-style-image: url('modules/xmppmaster/graph/img/closedir.png');
-    padding-right:25px;
-    cursor: pointer;
+        list-style-image: url('modules/xmppmaster/graph/img/closedir.png');
+        padding-right:25px;
+        cursor: pointer;
 }
 ul.leftfile, ul.rightfile {
-    list-style-image: url('modules/xmppmaster/graph/img/file1.png');
-    padding-right:25px;
-    cursor: pointer;
+        list-style-image: url('modules/xmppmaster/graph/img/file1.png');
+        padding-right:25px;
+        cursor: pointer;
 }
+
+
+ ul.rightfile.li {
+        background-color:#C0C0C0;
+}
+
 .fileselect{
-    margin-left  : 250px;
-    margin-right : 250px;
+        margin-left  : 250px;
+        margin-right : 250px;
 }
 
 .marge {
@@ -233,14 +242,56 @@ li.quickg a {
         -moz-filter: grayscale(50%);
         opacity:0.5;
 }
-.ombremultiple {
-    /*width:100%;*/
-    background-color:#C0C0C0;
-    padding:5px;
-    box-shadow:2px 2px 2px gray,
-    -1px -1px 2px white;
+
+.Localdestination{
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background: url('modules/xmppmaster/graph/img/browserdownload.png');
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        opacity:1;
+        Font-Weight : Bold ;
+        font-size : 15px;
+
 }
 
+.Localdestination:hover {
+        Font-Weight : Bold ;
+        font-size : 20px;
+}
+
+.delete{
+    padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/xmppmaster/graph/img/button_cancel.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        Font-Weight : Bold ;
+        font-size : 15px;
+}
+.delete:hover{
+        Font-Weight : Bold ;
+        font-size : 20px;
+}
+.ombremultiple {
+        /*width:100%;*/
+        background-color:#C0C0C0;
+        padding:5px;
+        box-shadow:2px 2px 2px gray,
+        -1px -1px 2px white;
+}
+.ombretable1 {
+        /*width:100%;*/
+        background-color:#C0C0C0;
+        box-shadow:2px 2px 2px gray,
+        -1px -1px 2px white;
+}
 </style>
 
 <?
@@ -303,67 +354,115 @@ echo '</script>';
             exit;
     }
     $datatree = $lifdir['data']['strjsonhierarchy'];
+
+    // cherche local directory
+    $lifdirlocal = xmlrpc_localfilesystem("");
+
+printf ('
+<form>
+    <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
+    <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
+</form>' ,$lifdirlocal['path_abs_current'],$lifdirlocal['parentdir']);
+
+
+
+$lifdirstr = xmlrpc_remotefilesystem("", $machine);
+$lifdirremote = json_decode($lifdirstr, true);
+
+printf ('
+<form>
+    <input id ="path_abs_current_remote" type="hidden" name="path_abs_current_remote" value="%s">
+    <input id ="parentdirremote" type="hidden" name="parentdirremote" value="%s">
+    <input id ="rootfilesystem" type="hidden" name="rootfilesystem" value="%s">
+</form>' ,$lifdirremote['data']['path_abs_current'], $lifdirremote['data']['parentdir'], $lifdirremote['data']['rootfilesystem']);
+// echo "<h2>Remove Root file system : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdirremote['data']['rootfilesystem'] ."</span></h2>";
+// echo "<h2>Parent Dir .. : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdirremote['data']['parentdir'] ."</span></h2>";
+// 
+
 ?>
 
-<div id="messageaction">
+<div id="messageaction"></span></div>
 
-</div>
-<br>
 <div id="global">
+    <table>
+        <tr>
+            <th style = "text-align:left; width:10%;Font-Weight : Bold ;font-size : 15px;">[select list Files]</th>
+            <th style = "text-align:left; width:110px;">Local destination :</th>
+            <th id="dest_string" style = "text-align:left;">dest :</th>
+            <th style = "text-align:left; width:15px;">
+                <span id="downloadlist" title="Download list selection" class="Localdestination" ></span>
+            </th>
+        </tr>
+        <tr>
+            <td style = "width:10%;">Directory list :</td>
+            <td id="filedirectory" colspan="2"></td>
+            <td   style = "width:10%;">
+                <span id="deletelistdirectory" title="Delete Remote Directory Select" class="delete" ></span>
+            </td>
+        </tr>
+        <tr>
+            <td>Files list :</td>
+            <td id="filelist" colspan="2"></td>
+            <td style = "width:10%;">
+                <span  id="deletelistfile" title="Delete Remote File Select"  class="delete" ></span>
+            </td>
+        </tr>
+    </table>
+    <br>
 
     <div id="gauche">
-    <table style =  " width:100%;
-                    height:100%;
-                    padding:0px;
-                    border-spacing: 5px 5px;
-                    border-collapse :separate;" 
-                    class="ombremultiple">
-        <tr> 
-        <td class="ombremultiple" style="vertical-align: top;">
-            <div id="fileshowlocal" class="fileshow">
-             <?php
-                printf ('
-                <form>
-                    <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
-                    <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
-                </form>' ,$curentdir, $filecurentdir['parentdir']);
-                ?>
-            </div>
-            </td>
+        <table style = "width:100%;
+                        height:100%;
+                        padding:0px;
+                        border-spacing: 5px 5px;
+                        border-collapse :separate;" 
+                        class="ombremultiple">
+            <tr style="height: 100%;">
+                <td class = "ombremultiple" style="vertical-align : top; height:600px;" >
+                    <div id="fileshowlocal" class="fileshow">
+                        <?php  echo "<h2> Current Dir : <span  id='localcurrrent'>".$lifdirlocal['path_abs_current'] ."</span></h2>";
+                        echo '<ul id="leftdirdata" class="leftdir">';
+                        echo '</ul>';
+                        ?>
+                    </div>
+                </td>
             </tr>
+
             </table>
        <div class ="piedbrowser"><h2></h2></div>
     </div>
 
     <div id="droite">
-        <!--<div id ="directoryremote" class="fileshow"></div>
-        <div id ="fileshowremote"  class="fileshow"></div>-->
+        <table style = "width:100%;
+                        height:100%;
+                        padding:0px;
+                        border-spacing: 5px 5px;
+                        border-collapse :separate;"
+                        class="ombremultiple">
+            <tr>
+                <td class="enplacementcss ombremultiple">
+                    <span style="Font-Weight : Bold ;font-size : 15px;">Emplacement</span>
+                </td>
+                <td class="currentdircss ombremultiple">
+                    <span id="cur" style="Font-Weight : Bold ;font-size : 15px;">
+                            <? echo $lifdir['data']['path_abs_current']; ?>
+                    </span>
+                </td>
+            </tr>
 
-    <table style =  " width:100%;
-                    height:100%;
-                    padding:0px;
-                    border-spacing: 5px 5px;
-                    border-collapse :separate;" class="ombremultiple">
-        <tr>
-            <td class="enplacementcss ombremultiple">
-                    <span  style="Font-Weight : Bold ;font-size : 15px;">Emplacement</span>
-            </td>
-            <td id="cur" class="currentdircss ombremultiple">
-                <span style="Font-Weight : Bold ;font-size : 15px;">
-                        <? echo $lifdir['data']['path_abs_current']; ?>
-                </span>
-            </td>
-        </tr>
-
-        <tr style="height: 100%;">
-            <td style = " width:40%;vertical-align: top;"  class="ombremultiple" >
-                <div id ="directoryremote" style = " width:100%;overflow:auto;" ></div>
-            </td>
-            <td  style = " width:60%; vertical-align: middle;"  class="ombremultiple" >
-                <div id ="fileshowremote" style = "padding-top:10px; width:100%;overflow:auto;"></div>
-            </td>
-        </tr>
-    </table>
+            <tr style="height: 100%;">
+                <td style = " width:40%;vertical-align: top;"  class="ombremultiple" >
+                    <div id ="directoryremote" style = " width:100%;overflow:auto;" ></div>
+                </td>
+                <td class="ombremultiple"  style = "height: 600px; width:60%; vertical-align: middle;"  >
+                    <div id ="fileshowremote" 
+                        style = "padding-top:10px; 
+                                width:100%;height: 100%;
+                                overflow:auto;">
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div class ="piedbrowser">
@@ -372,7 +471,6 @@ echo '</script>';
             </div>
         </form>
     </div>
-    
 </div>
 
 
@@ -404,12 +502,15 @@ echo '</script>';
 </div>
 
 <script type="text/javascript">
-    // diff between hour server/client
-    var ladate = new Date();
-    diff_hour = <?php echo date("H"); ?> - parseInt(ladate.getHours());
-</script>
-<script type="text/javascript">
     jQuery( document ).ready(function() {
+
+        // variable list file select
+        listfileusermachinejson = {"files" :[], "directory" : []};
+        namemachine =  "<?php echo $ma['hostname']; ?>";
+        login =  "<?php echo $_SESSION['login']; ?>";
+        userkey =  login + "_" + namemachine;
+        startlocal =  jQuery('input[name=path_abs_current_local]').val()+"/"+ namemachine;
+
         fileremote = false;
         filelocal  = false;
         taillefile = "";
@@ -421,20 +522,18 @@ echo '</script>';
         nameremotepath = "";
         absolutepath ="";
         init = 1;
-        local();
+        local(namemachine);
         remote();
         jQuery('#directoryremote')
             .on("changed.jstree", function (e, data) {
                 if(data.selected.length) {
                     var pathlinux = data.instance.get_path(data.node,'/');
-                    console.log("jjj"+pathlinux)
                     var absolutepath_array = pathlinux.split("/");
                     var absolutepath = absolutepath_array.shift();
                     var pathlinux_array = absolutepath_array;
                     pathlinux = absolutepath_array.join("/");
                     var absolutepath = "/" + absolutepath;
-                    console.log('composer: ' + pathlinux + "  "+absolutepath+"   ");
-
+                    //console.log('composer: ' + pathlinux + "  "+absolutepath+"   ");
                     if (seperator == "\\"){
                         var absolutepathlocal = "c:\\\\"+ absolutepath.substring(1);
                         var dd = absolutepathlocal + seperator + pathlinux
@@ -450,7 +549,7 @@ echo '</script>';
                         }
                     }
                     //jQuery( document ).find('#cur').text(res)
-                    jQuery( '#cur' ).text(res)
+                    //jQuery( '#cur' ).text(res)
                         remote(pathlinux);
                 }
             })
@@ -461,13 +560,20 @@ echo '</script>';
                     <?php	echo $datatree; ?>
                     ]
                 }
+            })
+            ;
+            timetmp = user + "-" + datetimenow();
+            jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" );
+
+            jQuery('#directoryremote').on('ready.jstree', function() {
+                jQuery('#directoryremote').jstree("open_all"); 
             });
+
     });
 
     function confirmation_information(data) {
         setTimeout(function() { affichedata(data); }, 2000);
     }
-
     function affichedata(data){
                 jQuery("#dialogmsg2").html(data);
                 jQuery( function() {
@@ -496,7 +602,7 @@ echo '</script>';
         var newdate = new Date();
         var moi      = "0" + (newdate.getMonth() +1 );
         var jour     = "0" + newdate.getDate();
-        var heure    = "0" + (newdate.getHours() + diff_hour);
+        var heure    = "0" + (newdate.getHours());
         var minutes  = "0" + newdate.getMinutes();
         var secondes = "0" + newdate.getSeconds();
         var datetime = newdate.getFullYear() +
@@ -508,6 +614,7 @@ echo '</script>';
                                                 ":" + secondes.substr(-2);
         return datetime;
     }
+
     function local(selectdir){
         if (typeof selectdir == 'undefined'){
             var selectdir = "";
@@ -520,27 +627,31 @@ echo '</script>';
         if (typeof parentdirlocal == 'undefined'){
             var parentdirlocal = "";
         }
-        jQuery( "#fileshowlocal" ).load(
-                        "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php",
-                        {
-                            "parentdirlocal" : parentdirlocal,
-                            "path_abs_current_local" : path_abs_current_local,
-                            "machine" : <?php echo '"'.$machine.'"'; ?>,
-                            "os" : <?php echo '"'.$ma['platform'].'"'; ?>,
-                            "selectdir" : selectdir
-                        },
-                        function() {
-        // LOCAL
-            jQuery("ul.leftdir > li").click(function() {
-                var dirsel = jQuery(this).text();
-                if (typeof dirsel == 'undefined'){
-                    var dirsel = "";
-                }
-                //  recupere repertoire en local
-                local(dirsel);
-                jQuery('#dirlocal').text(jQuery(this).text());
-            });
-        });
+
+        jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refrech_files_local.php",
+                    {
+                        "parentdirlocal" : parentdirlocal,
+                        "path_abs_current_local" : path_abs_current_local,
+                        "machine" : <?php echo '"'.$machine.'"'; ?>,
+                        "os" : <?php echo '"'.$ma['platform'].'"'; ?>,
+                        "selectdir" : selectdir
+        } )
+            .done(function( data ) {
+                jQuery('input[name=path_abs_current_local]').val(data['path_abs_current']);
+                timetmp = user + "-" + datetimenow();
+                jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" )
+                jQuery('input[name=parentdirlocal]').val(data['parentdir']);
+                jQuery("ul.leftdir").html(data['html']);
+                jQuery('#localcurrrent').text(jQuery('input[name=path_abs_current_local]').val());
+                jQuery("ul.leftdir > li").click(function() {
+                    var dirsel = jQuery(this).text();
+                    if (typeof dirsel == 'undefined'){
+                        var dirsel = "";
+                    }
+                    //  recupere repertoire en local
+                    local(dirsel);
+                });
+            })
     }
 
 
@@ -556,29 +667,40 @@ echo '</script>';
         if (typeof parentdirremote == 'undefined'){
             var parentdirremote = "";
         }
-        jQuery( "#fileshowremote" ).load(
-                        "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php",
-                        {
+            
+       jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refrech_files_remote.php",
+                    {
                             "parentdirremote" : parentdirremote,
                             "path_abs_current_remote" : path_abs_current_remote,
                             "machine" : <?php echo '"'.$machine.'"'; ?>,
                             "os" : <?php echo '"'.$ma['platform'].'"'; ?>,
                             "selectdir" : selectdir
-                        },
-                        function() {
-            // REMOTE
-            jQuery("ul.rightdir > li").find(':nth-child(1)').click(function() {
-                fileremote = false;
-                filenameremote = "";
-                var dirsel = jQuery(this).text();
-                if (typeof dirsel == 'undefined'){
-                    var dirsel = "";
-                }
-                remote(dirsel);
-                jQuery('#dirremote').text(jQuery(this).text());
-            });
-
+                     } ).done(function( data ) {
+            
+            jQuery( '#cur' ).text(data['path_abs_current'])
+   
+    
+    
+    
+            jQuery('#fileshowremote').html(data['html']);
+            
+            
+            jQuery('#path_abs_current_remote').val(data['path_abs_current']);
+            jQuery('#parentdirremote').val(data['parentdir']);
+            jQuery('#rootfilesystem').val(data['rootfilesystem']);
+            //             jQuery("ul.rightdir > li").find(':nth-child(1)').click(function() {
+            //                 fileremote = false;
+            //                 filenameremote = "";
+            //                 var dirsel = jQuery(this).text();
+            //                 if (typeof dirsel == 'undefined'){
+            //                     var dirsel = "";
+            //                 }
+            //                 console.log("iiiiiii");
+            //                 console.log(dirsel);dirsel
+            //                 remote(dirsel);
+            //             });
             jQuery("span.but").click(function() {
+            
                 if (jQuery(this).parent("li").find(':nth-child(1)').text() == "."){
                     var source = jQuery('input[name=path_abs_current_remote]').val();
                 }
@@ -586,107 +708,47 @@ echo '</script>';
                     var source = jQuery('input[name=path_abs_current_remote]').val() + seperator + jQuery(this).parent("li").find(':nth-child(1)').text();
                 }
                 timetmp = user + "-" + datetimenow();
-                msg="<p><b>" +
-                        "<?php echo _T("Copy", 'xmppmaster')."</p></b><p style=' margin-left: 30px;' >"._T("Remote Folder", "xmppmaster"); ?>"+
-                    "</p>"+
-                    "<p style=' margin-left: 60px;' >" + source + "</p>"+
-                    "<p>"+
-                    "<?php echo _T("to local folder", 'xmppmaster'); ?>" +
-                    "</p>"+
-                    "<p style=' margin-left: 60px;'>"+
-                        jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp +"/"+
-                    "</p>"
-                jQuery("#dialogmsg").html(msg);
-
                 jQuery( function() {
-                    jQuery( "#dialog-confirm-download-directory" ).dialog({
-                    resizable: false,
-                    height: "auto",
-                    width: 600,
-                    modal: true,
-                    buttons: [
-                        {
-                            id: "my-button",
-                            text: "Confirm",
-                            'class':'btnPrimary',
-                            style:"color:#FFFFFF;background-color: #000000;",
-                            click:function() {
-                                jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
-                                    dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp+"/",
-                                    src : source,
-                                    directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
-                                    "jidmachine" : jid }, function( data ) {
-                                        jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The folder copy has been requested successfully", "xmppmaster"); ?>');
-                                        confirmation_information(data);
-                                        //jQuery("#messageaction").html(data); //action message afficher en haut de page
-                                });
-                                jQuery( this ).dialog( "close" );
-                            }
-                        },
-                        {
-                            id: "my-buttoncancel",
-                            text: "Cancel",
-                            'class':'btnPrimary',
-                            style:"color:#FFFFFF;background-color: #000000;",
-                            click:function() {
-                                jQuery( this ).dialog( "close" );
-                            }
-                        }
-                    ]
-                    });
+                    /* console.log(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp+"/");console.log(source); */
+                    if(window.localStorage){
+                        //addition objet au local storage
+                        listfileusermachinejson['directory'].push(source)
+                        var uniqueNames = [];
+                        jQuery.each(listfileusermachinejson['directory'], function(i, el){
+                            if(jQuery.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+                        });
+                        listfileusermachinejson['directory'] = uniqueNames;
+                        /* window.localStorage.getItem();*/
+                        window.localStorage.setItem(userkey, JSON.stringify(listfileusermachinejson) );
+                        //jQuery('#filedirectory').text(JSON.stringify(listfileusermachinejson['directory']));
+                        jQuery('#filedirectory').html(listfileusermachinejson['directory'].join(' ; '));
+                       // jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" )
+                    }
+                    else{
+                        alert ("localstorage missing html5");
+                    }
                 });
             });
-
             jQuery(".download").click(function() {
-                msg="<p><b>" +
-                    "<?php echo _T("Copy remote file", 'xmppmaster'); ?>"+
-                        "</p>"+
-                        "<p style=' margin-left: 60px;' >" +
-                            jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote +
-                        "</p>"+
-                        "<p>"+
-                        "<?php echo _T("to local File", 'xmppmaster'); ?>" +
-                        "</p>" +
-                        "<p style=' margin-left: 60px;'>"+
-                            jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal+
-                        "</p>"
-                jQuery("#dialogmsg1").html(msg);
                 jQuery( function() {
-                    jQuery( "#dialog-confirm-download-file" ).dialog({
-                        resizable: false,
-                        height: "auto",
-                        width: 600,
-                        modal: true,
-                        buttons: [
-                            {
-                                id: "my-button1",
-                                text: "Confirm",
-                                'class':'btnPrimary',
-                                style:"color:#FFFFFF;background-color: #000000;",
-                                click:function() {
-                                    jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
-                                            dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal,
-                                            src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  filenameremote,
-                                            directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
-                                            "jidmachine" : jid }, function( data ) {
-                                                jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The file copy has been requested successfully", "xmppmaster"); ?>');
-                                                confirmation_information(data);
-                                                //jQuery("#messageaction").html(data); //action message afficher en haut de page
-                                    });
-                                    jQuery( this ).dialog( "close" );
-                                }
-                            },
-                            {
-                                id: "my-buttoncancel1",
-                                text: "Cancel",
-                                'class':'btnPrimary',
-                                style:"color:#FFFFFF;background-color: #000000;",
-                                click:function() {
-                                    jQuery( this ).dialog( "close" );
-                                }
-                            }
-                        ]
+                    if(window.localStorage){
+                        //addition objet au local storage
+                        console.log(jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote);
+                        console.log(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal);
+                        listfileusermachinejson['files'].push(jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote);
+                        var uniqueNames = [];
+                        jQuery.each(listfileusermachinejson['files'], function(i, el){
+                            if(jQuery.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
                         });
+                        listfileusermachinejson['files'] = uniqueNames;
+                        console.log(listfileusermachinejson['files']);
+                        /* window.localStorage.getItem();*/
+                        window.localStorage.setItem(userkey, JSON.stringify(listfileusermachinejson) );
+                        jQuery('#filelist').html(listfileusermachinejson['files'].join(' ; '));
+                    }
+                    else{
+                        alert ("localstorage missing html5");
+                    }
                 } );
             });
             if (init == 1){
@@ -704,6 +766,7 @@ echo '</script>';
                     jQuery(this).find(':nth-child(2)').hide()
                 });
                 jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
+                //jQuery(this).css({ 'color' : 'blue',  'background-color' : '#C0C0C0', 'font-weight' : 'bold'});
                 jQuery(this).find(':nth-child(2)').show()
                 filenameremote = jQuery(this).find(':first').text();
                 taillefile = jQuery(this).find(':last').text();
@@ -714,4 +777,86 @@ echo '</script>';
             });
         });
     }
-</script>
+
+    jQuery("#downloadlist").click(function() {
+        var dir  = jQuery('#filedirectory').text().split(";")
+        var file = jQuery('#filelist').text().split(";")
+        msg = "<h1>Download from " + namemachine + "</h1>"+
+        "<p>"+
+        "List directory :"+
+        "</p>";
+        for (var i = 0; i < dir.length; i++) {
+            msg = msg + "<p>" + dir[i] + "</p>";
+        }
+        msg = msg + "<br>";
+        msg = msg + "<p>"+
+        "List files :"+
+        "</p>";
+        for (var i = 0; i < file.length; i++) {
+            msg = msg + "<p>" + file[i] + "</p>";
+        }
+         msg = msg + "<br>";
+        msg = msg + "<p>"+
+        "to directory :" +
+        "</p>";
+        msg = msg + "<br>";
+        msg = msg + "<p>"+
+        jQuery('#dest_string').text()+
+        "</p>";
+                jQuery("#dialogmsg").html(msg);
+
+                jQuery( function() {
+                    jQuery( "#dialog-confirm-download-directory" ).dialog({
+                    resizable: false,
+                    height: "auto",
+                    width: 600,
+                    modal: true,
+                    buttons: [
+                        {
+                            id: "my-button",
+                            text: "Confirm",
+                            'class':'btnPrimary',
+                            style : "color:#FFFFFF; background-color: #000000;",
+                            click:function() {
+                            // call plugin de telechargement.
+                            jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php",  {
+                                        "dest"          : jQuery('#dest_string').text(),
+                                        "directory"     : jQuery('#dest_string').text(),
+                                        "listdirectory" : jQuery('#filedirectory').text(),
+                                        "listfile"      : jQuery('#filelist').text(),
+                                        "jidmachine"    : jid 
+                                        },function(data){
+                                            console.log(data );
+                                        });
+//  src : source,
+//  directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
+//  "jidmachine" : jid }, function( data ) {
+//  jQuery('#dialog-notification-download-file').attr('title', 'The folder copy has been requested successfully');
+//  confirmation_information(data);
+//  //jQuery("#messageaction").html(data); //action message afficher en haut de page
+//  });
+                                jQuery( this ).dialog( "close" );
+                            }
+                        },
+                        {
+                            id: "my-buttoncancel",
+                            text: "Cancel",
+                            'class':'btnPrimary',
+                            style:"color:#FFFFFF;background-color: #000000;",
+                            click:function() {
+                                jQuery( this ).dialog( "close" );
+                            }
+                        }
+                    ]
+                    });
+                });
+    });
+
+    jQuery("#deletelistdirectory").click(function() {
+        jQuery('#filedirectory').html("");
+    });
+
+    jQuery("#deletelistfile").click(function() {
+        jQuery("#filelist").html("");
+    });
+    </script>
