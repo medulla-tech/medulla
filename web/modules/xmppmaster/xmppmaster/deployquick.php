@@ -110,7 +110,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                         $qacomand = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], "windows" );
                     }
                     else{
-                        if (strpos ($os_up_case, "LINUX") !== false){
+                        if ((strpos ($os_up_case, "LINUX") | strpos ($os_up_case, "UBUNTU")) !== false){
                             $qacomand = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], "linux" );
                         }
                         else{
