@@ -32,24 +32,22 @@ require_once("../../../includes/session.inc.php");
 
 
 extract($_GET);
-print_r($_GET);
 
 xmlrpc_createdirectoryuser($directory);
 
 
 xmlrpc_CallXmppPluginmmc("downloadfileexpert", Array($_GET));
-// message a ecrire
+// messArray
+
 // dest, src, jidmachine
 
-if (isset ($src)){
     echo    "<p style=' margin-left: 10px;'><b>"._T("Machine", 'xmppmaster')." : ".$jidmachine."</b></p>".
             "<p style=' margin-left: 20px;'>"._T("Download File", 'xmppmaster')." :</p>".
-            "<p style=' margin-left: 30px;'>"._T("From", 'xmppmaster')."</p>".
-            "<p style=' margin-left: 60px;'><b>".$src."</b></p>".
+            "<p style=' margin-left: 30px;'>"._T("list directory", 'xmppmaster')."</p>".
+            "<p style=' margin-left: 60px;'><b>".print_r($listdirectory,true)."</b></p>".
+            "<p style=' margin-left: 30px;'>"._T("list file", 'xmppmaster')."</p>".
+            "<p style=' margin-left: 60px;'><b>".print_r($listfile,true)."</b></p>".
             "<p style=' margin-left: 30px;'>"._T("To", 'xmppmaster') ."</p>".
             "<p style=' margin-left: 60px;'><b>".$dest."</b></p>";
-}
-else{
 
-}
 ?>

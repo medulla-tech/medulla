@@ -95,21 +95,6 @@ body{
         float:left;
 }
 
-.titlebrowser{
-        vertical-align:middle;
-        height:5%;
-        text-align: center;
-        padding-top:5px;
-}
-
-.currentdir{
-        vertical-align:middle;
-        height:5%;
-        text-align: left;
-        padding-top:5px;
-        padding-left:45px;
-}
-
 .piedbrowser{
         vertical-align:bottom;
         height:5%;
@@ -152,97 +137,6 @@ ul.leftfile, ul.rightfile {
         text-decoration: none;
         color: #FFF;
 }
-
-li.folderg a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/folder.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.console a {
-        padding: 3px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/console.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.consoleg a {
-        padding: 3px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/console.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.quick a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/quick.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.guaca a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/guaca.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.guacag a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/guaca.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.quickg a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/quick.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-
 .Localdestination{
         padding: 0px 0px  5px 22px;
         margin: 0 0px 0 0px;
@@ -255,14 +149,11 @@ li.quickg a {
         opacity:1;
         Font-Weight : Bold ;
         font-size : 15px;
-
 }
-
 .Localdestination:hover {
         Font-Weight : Bold ;
         font-size : 20px;
 }
-
 .delete{
     padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
@@ -281,14 +172,14 @@ li.quickg a {
 }
 .ombremultiple {
         /*width:100%;*/
-        background-color:#C0C0C0;
+        background-color:#ECECEC;
         padding:5px;
         box-shadow:2px 2px 2px gray,
         -1px -1px 2px white;
 }
 .ombretable1 {
         /*width:100%;*/
-        background-color:#C0C0C0;
+        background-color:#ECECEC;
         box-shadow:2px 2px 2px gray,
         -1px -1px 2px white;
 }
@@ -375,9 +266,7 @@ printf ('
     <input id ="parentdirremote" type="hidden" name="parentdirremote" value="%s">
     <input id ="rootfilesystem" type="hidden" name="rootfilesystem" value="%s">
 </form>' ,$lifdirremote['data']['path_abs_current'], $lifdirremote['data']['parentdir'], $lifdirremote['data']['rootfilesystem']);
-// echo "<h2>Remove Root file system : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdirremote['data']['rootfilesystem'] ."</span></h2>";
-// echo "<h2>Parent Dir .. : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdirremote['data']['parentdir'] ."</span></h2>";
-// 
+
 
 ?>
 
@@ -387,22 +276,22 @@ printf ('
     <table>
         <tr>
             <th style = "text-align:left; width:10%;Font-Weight : Bold ;font-size : 15px;">[select list Files]</th>
-            <th style = "text-align:left; width:110px;">Local destination :</th>
-            <th id="dest_string" style = "text-align:left;">dest :</th>
+            <th style = "text-align:left; width:120px;">Local destination :</th>
+            <th id="dest_string" style = "text-align:left;font-size : 17px;">dest :</th>
             <th style = "text-align:left; width:15px;">
                 <span id="downloadlist" title="Download list selection" class="Localdestination" ></span>
             </th>
         </tr>
         <tr>
-            <td style = "width:10%;">Directory list :</td>
-            <td id="filedirectory" colspan="2"></td>
+            <td style = "width:10%;font-size : 15px;">Directory list :</td>
+            <td id="filedirectory" colspan="2" style = "font-size : 14px;"></td>
             <td   style = "width:10%;">
                 <span id="deletelistdirectory" title="Delete Remote Directory Select" class="delete" ></span>
             </td>
         </tr>
         <tr>
-            <td>Files list :</td>
-            <td id="filelist" colspan="2"></td>
+            <td style = "width:10%;font-size : 15px;">Files list :</td>
+            <td id="filelist" colspan="2" style = "font-size : 14px;"></td>
             <td style = "width:10%;">
                 <span  id="deletelistfile" title="Delete Remote File Select"  class="delete" ></span>
             </td>
@@ -482,6 +371,7 @@ printf ('
     </span>
   </div>
 </div>
+
 <div id="dialog-confirm-download-file" title="Transfer File">
   <div>
     <span style="float:left; margin:12px 12px 20px 0;">
@@ -510,7 +400,6 @@ printf ('
         login =  "<?php echo $_SESSION['login']; ?>";
         userkey =  login + "_" + namemachine;
         startlocal =  jQuery('input[name=path_abs_current_local]').val()+"/"+ namemachine;
-
         fileremote = false;
         filelocal  = false;
         taillefile = "";
@@ -533,7 +422,6 @@ printf ('
                     var pathlinux_array = absolutepath_array;
                     pathlinux = absolutepath_array.join("/");
                     var absolutepath = "/" + absolutepath;
-                    //console.log('composer: ' + pathlinux + "  "+absolutepath+"   ");
                     if (seperator == "\\"){
                         var absolutepathlocal = "c:\\\\"+ absolutepath.substring(1);
                         var dd = absolutepathlocal + seperator + pathlinux
@@ -548,8 +436,6 @@ printf ('
                             var res = absolutepathlocal + seperator + pathlinux
                         }
                     }
-                    //jQuery( document ).find('#cur').text(res)
-                    //jQuery( '#cur' ).text(res)
                         remote(pathlinux);
                 }
             })
@@ -568,7 +454,6 @@ printf ('
             jQuery('#directoryremote').on('ready.jstree', function() {
                 jQuery('#directoryremote').jstree("open_all"); 
             });
-
     });
 
     function confirmation_information(data) {
@@ -585,12 +470,42 @@ printf ('
                         buttons: [
                             {
                                 id: "my-buttoncancel2",
-                                text: "ok",
+                                text: "Computer view",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
                                     jQuery( this ).dialog( "close" );
                                     window.location.href = "/mmc/main.php?module=base&submod=computers&action=index";
+                                }
+                            },
+                            {
+                                id: "my-buttonrefresh",
+                                text: "Refrech",
+                                'class':'btnPrimary',
+                                style:"color:#FFFFFF;background-color: #000000;",
+                                click:function() {
+                                    jQuery( this ).dialog( "close" );
+                                    window.location.reload();
+                                }
+                            },
+                            {
+                                id: "my-buttonhistory",
+                                text: "History download",
+                                'class':'btnPrimary',
+                                style:"color:#FFFFFF;background-color: #000000;",
+                                click:function() {
+                                    jQuery( this ).dialog( "close" );
+                                    window.location.href = "/mmc/main.php?module=base&submod=logview&action=logsdownload";
+                                }
+                            },
+                            {
+                                id: "my-buttonfilemanager",
+                                text: "File Manager",
+                                'class':'btnPrimary',
+                                style:"color:#FFFFFF;background-color: #000000;",
+                                click:function() {
+                                    jQuery( this ).dialog( "close" );
+                                    window.location.href = "/mmc/main.php?module=xmppmaster&submod=xmppmaster&action=filesmanagers";
                                 }
                             }
                         ]
@@ -654,7 +569,6 @@ printf ('
             })
     }
 
-
     function remote(selectdir){
         if (typeof selectdir == 'undefined'){
             var selectdir = "";
@@ -667,7 +581,6 @@ printf ('
         if (typeof parentdirremote == 'undefined'){
             var parentdirremote = "";
         }
-            
        jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refrech_files_remote.php",
                     {
                             "parentdirremote" : parentdirremote,
@@ -676,31 +589,12 @@ printf ('
                             "os" : <?php echo '"'.$ma['platform'].'"'; ?>,
                             "selectdir" : selectdir
                      } ).done(function( data ) {
-            
-            jQuery( '#cur' ).text(data['path_abs_current'])
-   
-    
-    
-    
+            jQuery( '#cur' ).text(data['path_abs_current']);
             jQuery('#fileshowremote').html(data['html']);
-            
-            
             jQuery('#path_abs_current_remote').val(data['path_abs_current']);
             jQuery('#parentdirremote').val(data['parentdir']);
             jQuery('#rootfilesystem').val(data['rootfilesystem']);
-            //             jQuery("ul.rightdir > li").find(':nth-child(1)').click(function() {
-            //                 fileremote = false;
-            //                 filenameremote = "";
-            //                 var dirsel = jQuery(this).text();
-            //                 if (typeof dirsel == 'undefined'){
-            //                     var dirsel = "";
-            //                 }
-            //                 console.log("iiiiiii");
-            //                 console.log(dirsel);dirsel
-            //                 remote(dirsel);
-            //             });
             jQuery("span.but").click(function() {
-            
                 if (jQuery(this).parent("li").find(':nth-child(1)').text() == "."){
                     var source = jQuery('input[name=path_abs_current_remote]').val();
                 }
@@ -709,8 +603,6 @@ printf ('
                 }
                 timetmp = user + "-" + datetimenow();
                 jQuery( function() {
-                    /* console.log(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp+"/");console.log(source); */
-                    if(window.localStorage){
                         //addition objet au local storage
                         listfileusermachinejson['directory'].push(source)
                         var uniqueNames = [];
@@ -718,37 +610,18 @@ printf ('
                             if(jQuery.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
                         });
                         listfileusermachinejson['directory'] = uniqueNames;
-                        /* window.localStorage.getItem();*/
-                        window.localStorage.setItem(userkey, JSON.stringify(listfileusermachinejson) );
-                        //jQuery('#filedirectory').text(JSON.stringify(listfileusermachinejson['directory']));
                         jQuery('#filedirectory').html(listfileusermachinejson['directory'].join(' ; '));
-                       // jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" )
-                    }
-                    else{
-                        alert ("localstorage missing html5");
-                    }
                 });
             });
             jQuery(".download").click(function() {
                 jQuery( function() {
-                    if(window.localStorage){
-                        //addition objet au local storage
-                        console.log(jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote);
-                        console.log(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal);
                         listfileusermachinejson['files'].push(jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote);
                         var uniqueNames = [];
                         jQuery.each(listfileusermachinejson['files'], function(i, el){
                             if(jQuery.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
                         });
                         listfileusermachinejson['files'] = uniqueNames;
-                        console.log(listfileusermachinejson['files']);
-                        /* window.localStorage.getItem();*/
-                        window.localStorage.setItem(userkey, JSON.stringify(listfileusermachinejson) );
                         jQuery('#filelist').html(listfileusermachinejson['files'].join(' ; '));
-                    }
-                    else{
-                        alert ("localstorage missing html5");
-                    }
                 } );
             });
             if (init == 1){
@@ -761,12 +634,10 @@ printf ('
                 //  recupere file en remote
                 fileremote = true;
                 jQuery(".rightfile LI").each(function(){
-                    //jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : 'white',});
                     jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#C0C0C0',});
                     jQuery(this).find(':nth-child(2)').hide()
                 });
                 jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
-                //jQuery(this).css({ 'color' : 'blue',  'background-color' : '#C0C0C0', 'font-weight' : 'bold'});
                 jQuery(this).find(':nth-child(2)').show()
                 filenameremote = jQuery(this).find(':first').text();
                 taillefile = jQuery(this).find(':last').text();
@@ -826,15 +697,10 @@ printf ('
                                         "listfile"      : jQuery('#filelist').text(),
                                         "jidmachine"    : jid 
                                         },function(data){
-                                            console.log(data );
+                                            console.log(data);
+                                            jQuery('#dialog-notification-download-file').attr('title', 'The list (folder & files) copy has been requested successfully');
+                                            confirmation_information(data);
                                         });
-//  src : source,
-//  directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
-//  "jidmachine" : jid }, function( data ) {
-//  jQuery('#dialog-notification-download-file').attr('title', 'The folder copy has been requested successfully');
-//  confirmation_information(data);
-//  //jQuery("#messageaction").html(data); //action message afficher en haut de page
-//  });
                                 jQuery( this ).dialog( "close" );
                             }
                         },
