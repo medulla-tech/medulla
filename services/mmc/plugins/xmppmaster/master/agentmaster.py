@@ -1863,7 +1863,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 self.callInstallConfGuacamole(jidrs, {'hostname': data['information']['info']['hostname'],
                                                                       'machine_ip': data['xmppip'],
                                                                       'uuid': str(computer.id),
-                                                                      'remoteservice': data['remoteservice']})
+                                                                      'remoteservice': data['remoteservice'],
+                                                                      'platform' : data['platform'],
+                                                                      'os' : data['information']['info']['os']})
                                 break
 
                             else:

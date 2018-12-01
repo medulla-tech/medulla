@@ -20,4 +20,4 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = init.d bin contrib mmc pulse2 conf clients
+SUBDIRS = init.d bin contrib mmc pulse2 conf
