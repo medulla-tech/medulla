@@ -232,7 +232,6 @@ echo '</script>';
 <?php
     $lifdirstr = xmlrpc_remotefilesystem("", $machine);
     $lifdir = json_decode($lifdirstr, true);
-    print_r($lifdir);
     if (isset($lifdir['err'])){
         if ( $lifdir['err'] == 'Timeout Error'){
             $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
