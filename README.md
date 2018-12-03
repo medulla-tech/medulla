@@ -23,4 +23,4 @@ Thanks
 
 # License
 
-MMC CORE is distributed under GPL v2. 
+MMC CORE is distributed under GPL v2.

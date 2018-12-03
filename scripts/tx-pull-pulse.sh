@@ -20,7 +20,16 @@ modules="base ppolicy services dashboard report xmppmaster"
 
 for mod in $modules
 do
-	cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
-	tx pull -a -f -r pulse-1.${mod} ${lang} ${args}
-	cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES
+    if [ "$mod" == "dashboard" ]; then
+        cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
+        tx pull -a -f -r pulse-1.p${mod} ${lang} ${args}
+        cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES
+        sed -i 's/Language: fr\\n/Language: fr_FR\\n/' $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/$mod.po
+    else
+	    cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
+	    tx pull -a -f -r pulse-1.${mod} ${lang} ${args}
+        cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES
+        sed -i 's/Language: fr\\n/Language: fr_FR\\n/' $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/$mod.po
+    fi
 done
+

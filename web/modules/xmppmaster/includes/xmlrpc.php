@@ -157,7 +157,8 @@ function xmlrpc_addlogincommand($login,
                                 $parameterspackage = '',
                                 $rebootrequired = 0,
                                 $shutdownrequired = 0,
-                                $limit_rate_ko = 0
+                                $limit_rate_ko = 0,
+                                $params = array()
                                 ) {
 
     if($rebootrequired != "0"){
@@ -180,7 +181,8 @@ function xmlrpc_addlogincommand($login,
                                                         $parameterspackage,
                                                         $rebootrequired,
                                                         $shutdownrequired,
-                                                        $limit_rate_ko));
+                                                        $limit_rate_ko,
+                                                        $params));
 }
 
 function xmlrpc_loginbycommand($commandid){
@@ -259,8 +261,8 @@ function xmlrpc_getshowmachinegrouprelayserver() {
     return xmlCall("xmppmaster.getshowmachinegrouprelayserver", array());
 }
 
-function xmlrpc_get_qaction($groupname, $user){
-    return xmlCall("xmppmaster.get_qaction", array($groupname, $user));
+function xmlrpc_get_qaction($groupname, $user, $grp = 0){
+    return xmlCall("xmppmaster.get_qaction", array($groupname, $user, $grp));
 }
 
 function xmlrpc_setCommand_qa($command_name, $command_action, $command_login, $command_grp="", $command_machine='', $command_os=""){

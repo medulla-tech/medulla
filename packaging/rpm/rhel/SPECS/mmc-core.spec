@@ -24,7 +24,7 @@
 %define debug_package          %{nil}
 %define use_git                1
 %define git                    SHA
-%define version                4.4.1
+%define version                4.5
 
 Summary:	Management Console
 Name:		mmc-core
@@ -396,7 +396,7 @@ Allow the use of SQL databases within MMC framework.
 
 cp %{SOURCE1}   agent/mmc/plugins/base
 cp %{SOURCE2}   web/modules/base/computers
-   
+
 %build
 %configure2_5x --disable-python-check --with-systemddir=%{_unitdir} --enable-systemd
 

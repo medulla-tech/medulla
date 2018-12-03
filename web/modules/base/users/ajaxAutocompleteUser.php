@@ -43,7 +43,7 @@ $users = get_users(true, $value);
 
 print '<ul>';
 foreach($users as $items) {
-    ?> 
+    ?>
     <li><?php echo  $items['uid'] ?><span class="informal"><br><?php echo  $items['givenName']; ?> <?php echo  $items['sn']; ?></span></li>
     <?php
 }

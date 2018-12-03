@@ -351,7 +351,7 @@ class ActionConfirmItem extends ActionItem {
 
 class EmptyActionItem extends ActionItem {
 
-    function EmptyActionItem($desc) {
+    function EmptyActionItem($desc = "") {
         $this->classCss='empty';
         $this->desc=$desc;
     }
@@ -1388,7 +1388,9 @@ class multifieldTpl extends AbstractTpl {
         for ($i = 0 ; $i < count($this->fields) ; $i++) {
             $params = array();
             foreach($arrParam as $key => $value) {
-                $params[$key] = $value[$i];
+                if(isset($value[$i])) {
+                    $params[$key] = $value[$i];
+                }
             }
             $this->fields[$i]->display($params);
             echo $separator;

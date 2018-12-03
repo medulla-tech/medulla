@@ -45,8 +45,3 @@ class mmcException(Exception):
         for item in kargs:
             nkargs.append(str(item))
         logger.exception(callStr + " " + " ".join(nkargs))
-
-
-
-
-

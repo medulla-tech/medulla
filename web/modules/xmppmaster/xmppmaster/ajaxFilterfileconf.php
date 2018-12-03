@@ -86,7 +86,7 @@ a.info:hover span{
 
         $actionEdit = array();
 
-        $removeconf =  new ActionItem(_("Edit config files"), 
+        $removeconf =  new ActionItem(_("Edit config files"),
                                         "remoteeditorconfigurationlist",
                                         "edit",
                                         "computers",

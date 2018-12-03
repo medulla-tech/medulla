@@ -38,9 +38,9 @@ if (isset($_GET["start"])) {
 } else {
     $start = 0;
 }
-if (isset($_GET['computerpresence']) && $_GET['computerpresence'] != "all_computer") {
-   $filter['computerpresence'] = $_GET['computerpresence'];
-}
+if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
+    $filter['computerpresence'] = $_SESSION['computerpresence'];
+
 if (isset($_GET['location'])) {
     $filter['location'] = $_GET['location'];
     if (!empty($_GET['gid'])) {
@@ -94,7 +94,7 @@ $count = getRestrictedComputersListLen($filter);
  *   - if MSC is configured with file download capability
  *   - if MSC is configured with VNC client capability
  * */
- 
+
 
 $msc_can_download_file = False;
 $msc_vnc_show_icon = False;
@@ -107,13 +107,13 @@ if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SES
 }
 
 if (isset($_GET["id"]) && isset($_GET["cmd_id"])){
-    $result=list_computers( $names, 
-                    $filter, 
-                    $count, 
-                    $canbedeleted, 
-                    $canbedeletedfromgroup, 
-                    $is_group, 
-                    $msc_can_download_file, 
+    $result=list_computers( $names,
+                    $filter,
+                    $count,
+                    $canbedeleted,
+                    $canbedeletedfromgroup,
+                    $is_group,
+                    $msc_can_download_file,
                     $msc_vnc_show_icon,
                     $_GET["cmd_id"],
                     $_GET["login"],
@@ -142,7 +142,7 @@ function join_value($n) {
     }
     return $ret;
 }
-
+$_GET['groupname'] = isset($_GET['groupname'])?$_GET['groupname'] : null;
 if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
     ?><a href='<?php echo urlStr("base/computers/csv", array('gid' => $_GET['gid'], 'location' => $_GET['location'], 'groupname' => $_GET['groupname'])) ?>'><img src='modules/pulse2/graph/csv.png' alt='export csv'/></a><?php
 }

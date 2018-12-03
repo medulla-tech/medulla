@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-08 16:26+0100\n"
+"POT-Creation-Date: 2018-11-20 08:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,8 +46,8 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:251 includes/PageGenerator.php:2256
-#: includes/FormGenerator.php:642
+#: graph/header.inc.php:251 includes/PageGenerator.php:2258
+#: includes/FormGenerator.php:643
 msgid "Close"
 msgstr ""
 
@@ -86,441 +86,44 @@ msgid ""
 "application"
 msgstr ""
 
-#: modules/base/logview/logsbackuppc.php:145
-msgid "Backup Logs"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:208 modules/base/logview/index.php:195
-#: modules/base/logview/logspackaging.php:205
-#: modules/base/logview/logsdeployment.php:201
-#: modules/base/logview/logsquickaction.php:200
-#: modules/base/logview/logsinventory.php:209
-#: modules/base/logview/logsimaging.php:223
-msgid "Copy to clipboard"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:209 modules/base/logview/index.php:196
-#: modules/base/logview/logspackaging.php:206
-#: modules/base/logview/logsdeployment.php:202
-#: modules/base/logview/logsquickaction.php:201
-#: modules/base/logview/logsinventory.php:210
-#: modules/base/logview/logsimaging.php:224
-msgid "Save to csv file"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:210 modules/base/logview/index.php:197
-#: modules/base/logview/logspackaging.php:207
-#: modules/base/logview/logsdeployment.php:203
-#: modules/base/logview/logsquickaction.php:202
-#: modules/base/logview/logsinventory.php:211
-#: modules/base/logview/logsimaging.php:225
-msgid "Save to Excel file"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:211 modules/base/logview/index.php:198
-#: modules/base/logview/logspackaging.php:208
-#: modules/base/logview/logsdeployment.php:204
-#: modules/base/logview/logsquickaction.php:203
-#: modules/base/logview/logsinventory.php:212
-#: modules/base/logview/logsimaging.php:226
-msgid "Print logs"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:229 modules/base/logview/index.php:234
-msgid "Backup configuration"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:230 modules/base/logview/index.php:235
-msgid "Full backup requested"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:231 modules/base/logview/index.php:236
-msgid "Incremental backup requested"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:232 modules/base/logview/index.php:237
-msgid "Reverse SSH start"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:233 modules/base/logview/index.php:238
-msgid "Reverse SSH stop"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:234 modules/base/logview/index.php:239
-msgid "Restore requested"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:235 modules/base/logview/index.php:240
-#: modules/base/logview/index.php:266 modules/base/logview/index.php:296
-#: modules/base/logview/logspackaging.php:233
-#: modules/base/logview/logsquickaction.php:226
-#: modules/base/logview/logsimaging.php:257
-msgid "Manual"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:236 modules/base/logview/index.php:241
-msgid "Planned"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:237 modules/base/logview/index.php:242
-msgid "Restore"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:238 modules/base/logview/index.php:243
-#: modules/base/logview/index.php:292
-#: modules/base/logview/logspackaging.php:229
-#: modules/base/logview/logsquickaction.php:227
-#: modules/base/audit/indexbase.php:30 modules/base/audit/ajaxLogFilter.php:121
-#: modules/base/audit/indexall.php:30 modules/base/includes/auditCodes.php:45
-msgid "User"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:239 modules/base/logview/index.php:244
-msgid "BackupPC"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:241 modules/base/logview/index.php:302
-#: modules/base/logview/index.php:303
-#: modules/base/logview/logspackaging.php:236
-#: modules/base/logview/logsdeployment.php:228
-#: modules/base/logview/logsremotedesktop.php:229
-#: modules/base/logview/logsinventory.php:238
-#: modules/base/logview/logsimaging.php:271
-msgid "no criteria selected"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:262
-#: modules/base/logview/logsbackuppc.php:267
-#: modules/base/logview/logsbackuppc.php:272 modules/base/logview/index.php:380
-#: modules/base/logview/index.php:385 modules/base/logview/index.php:390
-#: modules/base/logview/logsdeployment.php:244
-#: modules/base/logview/logsdeployment.php:250
-#: modules/base/logview/logsdeployment.php:257
-#: modules/base/logview/logsremotedesktop.php:240
-#: modules/base/logview/logsinventory.php:257
-#: modules/base/logview/logsinventory.php:262
-#: modules/base/logview/logsinventory.php:267
-msgid "criteria"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:262
-#: modules/base/logview/logsbackuppc.php:267
-#: modules/base/logview/logsbackuppc.php:272 modules/base/logview/index.php:380
-#: modules/base/logview/index.php:385 modules/base/logview/index.php:390
-#: modules/base/logview/logsinventory.php:257
-#: modules/base/logview/logsinventory.php:262
-#: modules/base/logview/logsinventory.php:267
-msgid "search criteria"
-msgstr ""
-
-#: modules/base/logview/logsbackuppc.php:306 modules/base/logview/index.php:424
+#: modules/base/logview/logsbackuppc.php:306 modules/base/logview/index.php:425
 #: modules/base/logview/logspackaging.php:303
-#: modules/base/logview/logsdeployment.php:295
-#: modules/base/logview/logsquickaction.php:293
-#: modules/base/logview/logsremotedesktop.php:273
+#: modules/base/logview/logsquickaction.php:295
+#: modules/base/logview/logsremotedesktop.php:275
 #: modules/base/logview/logsinventory.php:304
 #: modules/base/logview/logsimaging.php:359
 msgid "date"
 msgstr ""
 
-#: modules/base/logview/logsbackuppc.php:307 modules/base/logview/index.php:425
+#: modules/base/logview/logsbackuppc.php:307 modules/base/logview/index.php:426
 #: modules/base/logview/logspackaging.php:304
-#: modules/base/logview/logsdeployment.php:296
-#: modules/base/logview/logsquickaction.php:294
-#: modules/base/logview/logsremotedesktop.php:274
+#: modules/base/logview/logsquickaction.php:296
+#: modules/base/logview/logsremotedesktop.php:276
 #: modules/base/logview/logsinventory.php:305
 #: modules/base/logview/logsimaging.php:360
 msgid "user"
 msgstr ""
 
-#: modules/base/logview/logsbackuppc.php:308 modules/base/logview/index.php:426
+#: modules/base/logview/logsbackuppc.php:308 modules/base/logview/index.php:427
 #: modules/base/logview/logspackaging.php:305
-#: modules/base/logview/logsdeployment.php:297
-#: modules/base/logview/logsquickaction.php:295
-#: modules/base/logview/logsremotedesktop.php:275
+#: modules/base/logview/logsquickaction.php:297
+#: modules/base/logview/logsremotedesktop.php:277
 #: modules/base/logview/logsinventory.php:306
 #: modules/base/logview/logsimaging.php:361
 msgid "who"
 msgstr ""
 
-#: modules/base/logview/logsbackuppc.php:309 modules/base/logview/index.php:427
+#: modules/base/logview/logsbackuppc.php:309 modules/base/logview/index.php:428
 #: modules/base/logview/logspackaging.php:306
-#: modules/base/logview/logsdeployment.php:300
-#: modules/base/logview/logsquickaction.php:296
-#: modules/base/logview/logsremotedesktop.php:276
+#: modules/base/logview/logsquickaction.php:298
+#: modules/base/logview/logsremotedesktop.php:278
 #: modules/base/logview/logsinventory.php:307
 #: modules/base/logview/logsimaging.php:362
 msgid "text"
 msgstr ""
 
-#: modules/base/logview/index.php:133
-msgid "All Logs"
-msgstr ""
-
-#: modules/base/logview/index.php:216
-msgid "deployment"
-msgstr ""
-
-#: modules/base/logview/index.php:217
-msgid "quickaction"
-msgstr ""
-
-#: modules/base/logview/index.php:218
-msgid "imaging"
-msgstr ""
-
-#: modules/base/logview/index.php:219
-msgid "backup"
-msgstr ""
-
-#: modules/base/logview/index.php:220
-msgid "inventory"
-msgstr ""
-
-#: modules/base/logview/index.php:221
-msgid "Packaging"
-msgstr ""
-
-#: modules/base/logview/index.php:222
-#: modules/base/logview/logsquickaction.php:228
-msgid "None"
-msgstr ""
-
-#: modules/base/logview/index.php:246
-#: modules/base/logview/logsdeployment.php:221
-msgid "Deployment Transfert"
-msgstr ""
-
-#: modules/base/logview/index.php:247
-#: modules/base/logview/logsdeployment.php:222
-msgid "Deployment Execution"
-msgstr ""
-
-#: modules/base/logview/index.php:248
-#: modules/base/logview/logsdeployment.php:223
-msgid "Deployment Download"
-msgstr ""
-
-#: modules/base/logview/index.php:249
-#: modules/base/logview/logsdeployment.php:224
-msgid "Deployment Notify"
-msgstr ""
-
-#: modules/base/logview/index.php:250
-#: modules/base/logview/logsdeployment.php:225
-msgid "Deployment Error"
-msgstr ""
-
-#: modules/base/logview/index.php:251
-#: modules/base/logview/logsdeployment.php:226
-msgid "Deployment Terminate"
-msgstr ""
-
-#: modules/base/logview/index.php:252
-#: modules/base/logview/logsdeployment.php:227
-#: modules/base/logview/logsquickaction.php:221
-msgid "WOL sent"
-msgstr ""
-
-#: modules/base/logview/index.php:253 modules/base/logview/logsimaging.php:244
-msgid "Menu change"
-msgstr ""
-
-#: modules/base/logview/index.php:254 modules/base/logview/logsimaging.php:245
-msgid "Post-imaging Script Creation"
-msgstr ""
-
-#: modules/base/logview/index.php:255 modules/base/logview/logsimaging.php:246
-msgid "Master Creation"
-msgstr ""
-
-#: modules/base/logview/index.php:256 modules/base/logview/logsimaging.php:247
-msgid "Master Edition"
-msgstr ""
-
-#: modules/base/logview/index.php:257 modules/base/logview/logsimaging.php:248
-msgid "Master Deletion"
-msgstr ""
-
-#: modules/base/logview/index.php:258 modules/base/logview/logsimaging.php:249
-msgid "Master Deployment Multicast"
-msgstr ""
-
-#: modules/base/logview/index.php:259 modules/base/logview/logsimaging.php:250
-msgid "Backup Image creation"
-msgstr ""
-
-#: modules/base/logview/index.php:260 modules/base/logview/logsimaging.php:251
-msgid "Image Deployment"
-msgstr ""
-
-#: modules/base/logview/index.php:261 modules/base/logview/logsimaging.php:252
-msgid "WOL"
-msgstr ""
-
-#: modules/base/logview/index.php:262 modules/base/logview/logsimaging.php:253
-msgid "Image Deletion"
-msgstr ""
-
-#: modules/base/logview/index.php:264 modules/base/logview/logsimaging.php:255
-msgid "Menu"
-msgstr ""
-
-#: modules/base/logview/index.php:265 modules/base/logview/logsimaging.php:256
-#: index.php:197
-msgid "Server"
-msgstr ""
-
-#: modules/base/logview/index.php:267 modules/base/logview/logsimaging.php:258
-msgid "Multicast"
-msgstr ""
-
-#: modules/base/logview/index.php:268 modules/base/logview/logsimaging.php:259
-msgid "Start"
-msgstr ""
-
-#: modules/base/logview/index.php:269 modules/base/logview/logsimaging.php:260
-msgid "Postinstall"
-msgstr ""
-
-#: modules/base/logview/index.php:270 modules/base/logview/logsimaging.php:261
-msgid "Configuration"
-msgstr ""
-
-#: modules/base/logview/index.php:271 modules/base/logview/logsimaging.php:262
-msgid "Clone"
-msgstr ""
-
-#: modules/base/logview/index.php:274 modules/base/logview/logsimaging.php:265
-#: modules/base/views/index.tpl.php:89 modules/base/users/ajaxFilter.php:83
-msgid "Edit"
-msgstr ""
-
-#: modules/base/logview/index.php:275 modules/base/logview/logsimaging.php:266
-#: modules/base/includes/auditCodes.php:47
-msgid "Group"
-msgstr ""
-
-#: modules/base/logview/index.php:276 modules/base/logview/index.php:298
-#: modules/base/logview/logspackaging.php:235
-#: modules/base/logview/logsimaging.php:267
-#: modules/base/groups/ajaxFilter.php:48 modules/base/views/index.tpl.php:92
-#: modules/base/users/ajaxFilter.php:88 modules/ppolicy/default/delete.php:45
-#: includes/FormGenerator.php:1157
-msgid "Delete"
-msgstr ""
-
-#: modules/base/logview/index.php:277 modules/base/logview/logsimaging.php:268
-msgid "Service"
-msgstr ""
-
-#: modules/base/logview/index.php:278 modules/base/logview/logsimaging.php:269
-msgid "Image"
-msgstr ""
-
-#: modules/base/logview/index.php:279 modules/base/logview/logsimaging.php:270
-msgid "Quick Action"
-msgstr ""
-
-#: modules/base/logview/index.php:280
-#: modules/base/logview/logsquickaction.php:223
-#: modules/base/logview/logsinventory.php:229
-msgid "Inventory reception"
-msgstr ""
-
-#: modules/base/logview/index.php:281
-#: modules/base/logview/logsquickaction.php:222
-#: modules/base/logview/logsinventory.php:230
-msgid "Inventory requested"
-msgstr ""
-
-#: modules/base/logview/index.php:282
-#: modules/base/logview/logsinventory.php:231
-msgid "Inventory Deployment"
-msgstr ""
-
-#: modules/base/logview/index.php:283
-#: modules/base/logview/logsinventory.php:232
-msgid "Inventory Planned"
-msgstr ""
-
-#: modules/base/logview/index.php:284
-#: modules/base/logview/logsinventory.php:233
-msgid "Inventory Quick Action"
-msgstr ""
-
-#: modules/base/logview/index.php:285
-#: modules/base/logview/logsinventory.php:234
-msgid "Inventory User"
-msgstr ""
-
-#: modules/base/logview/index.php:286
-#: modules/base/logview/logsinventory.php:235
-msgid "Inventory Machine"
-msgstr ""
-
-#: modules/base/logview/index.php:287
-#: modules/base/logview/logsinventory.php:236
-msgid "Inventory Master"
-msgstr ""
-
-#: modules/base/logview/index.php:288
-#: modules/base/logview/logsinventory.php:237
-msgid "Inventory New machine"
-msgstr ""
-
-#: modules/base/logview/index.php:289
-#: modules/base/logview/logspackaging.php:226
-msgid "Package creation"
-msgstr ""
-
-#: modules/base/logview/index.php:290
-#: modules/base/logview/logspackaging.php:227
-msgid "Package edition"
-msgstr ""
-
-#: modules/base/logview/index.php:291
-#: modules/base/logview/logspackaging.php:228
-msgid "Package deletion"
-msgstr ""
-
-#: modules/base/logview/index.php:293
-#: modules/base/logview/logspackaging.php:230
-msgid "Package"
-msgstr ""
-
-#: modules/base/logview/index.php:294
-#: modules/base/logview/logspackaging.php:231
-msgid "Files"
-msgstr ""
-
-#: modules/base/logview/index.php:295
-#: modules/base/logview/logspackaging.php:232
-#: modules/base/groups/localSidebar.php:28
-msgid "List"
-msgstr ""
-
-#: modules/base/logview/index.php:297
-#: modules/base/logview/logspackaging.php:234
-msgid "Remove"
-msgstr ""
-
-#: modules/base/logview/index.php:299
-#: modules/base/logview/logsremotedesktop.php:226
-msgid "Remote desktop service"
-msgstr ""
-
-#: modules/base/logview/index.php:300
-#: modules/base/logview/logsremotedesktop.php:227
-msgid "Remote desktop control request"
-msgstr ""
-
-#: modules/base/logview/index.php:301
-#: modules/base/logview/logsremotedesktop.php:228
-msgid "Reverse SSH"
-msgstr ""
-
 #: modules/base/logview/ajax_showlog.php:68
+#: modules/base/logview/logsdeployment.php:297
 #: modules/base/audit/ajaxLogFilter.php:114 modules/base/audit/logview.php:58
 msgid "Date"
 msgstr ""
@@ -550,19 +153,25 @@ msgid "Deployment Logs"
 msgstr ""
 
 #: modules/base/logview/logsdeployment.php:298
-msgid "sessionname"
+#: modules/base/audit/indexbase.php:30 modules/base/audit/ajaxLogFilter.php:121
+#: modules/base/audit/indexall.php:30 modules/base/includes/auditCodes.php:45
+msgid "User"
+msgstr ""
+
+#: modules/base/logview/logsdeployment.php:299
+msgid "Who"
+msgstr ""
+
+#: modules/base/logview/logsdeployment.php:300
+msgid "Session name"
+msgstr ""
+
+#: modules/base/logview/logsdeployment.php:302
+msgid "message"
 msgstr ""
 
 #: modules/base/logview/logsquickaction.php:140
 msgid "Quick Actions Logs"
-msgstr ""
-
-#: modules/base/logview/logsquickaction.php:224
-msgid "Shutdown sent"
-msgstr ""
-
-#: modules/base/logview/logsquickaction.php:225
-msgid "Reboot sent"
 msgstr ""
 
 #: modules/base/logview/logsremotedesktop.php:140
@@ -585,7 +194,11 @@ msgstr ""
 msgid "Add this page to your favorites"
 msgstr ""
 
-#: modules/base/groups/localSidebar.php:29 includes/FormGenerator.php:717
+#: modules/base/groups/localSidebar.php:28
+msgid "List"
+msgstr ""
+
+#: modules/base/groups/localSidebar.php:29 includes/FormGenerator.php:718
 msgid "Add"
 msgstr ""
 
@@ -617,14 +230,14 @@ msgid "Group members"
 msgstr ""
 
 #: modules/base/groups/members.php:188 modules/base/groups/edit.php:117
-#: includes/PageGenerator.php:2634 includes/PageGenerator.php:2703
-#: includes/PageGenerator.php:2729
+#: includes/PageGenerator.php:2636 includes/PageGenerator.php:2705
+#: includes/PageGenerator.php:2731
 msgid "Confirm"
 msgstr ""
 
 #: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
-#: includes/PageGenerator.php:2638 includes/PageGenerator.php:2707
+#: includes/PageGenerator.php:2640 includes/PageGenerator.php:2709
 msgid "Cancel"
 msgstr ""
 
@@ -686,6 +299,12 @@ msgstr ""
 
 #: modules/base/groups/ajaxFilter.php:46
 msgid "Edit members"
+msgstr ""
+
+#: modules/base/groups/ajaxFilter.php:48 modules/base/views/index.tpl.php:92
+#: modules/base/users/ajaxFilter.php:88 modules/ppolicy/default/delete.php:45
+#: includes/FormGenerator.php:1158
+msgid "Delete"
 msgstr ""
 
 #: modules/base/groups/ajaxFilter.php:49
@@ -930,7 +549,7 @@ msgstr ""
 msgid "Add computer"
 msgstr ""
 
-#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:312
+#: modules/base/computers/index.php:34 modules/base/infoPackage.inc.php:312
 msgid "Computer list"
 msgstr ""
 
@@ -1014,8 +633,12 @@ msgstr ""
 msgid "View details of an action"
 msgstr ""
 
+#: modules/base/infoPackage.inc.php:123
+msgid "History"
+msgstr ""
+
 #: modules/base/infoPackage.inc.php:130
-msgid "logs all modules"
+msgid "logs of all the modules"
 msgstr ""
 
 #: modules/base/infoPackage.inc.php:169
@@ -1271,6 +894,10 @@ msgstr ""
 msgid "System user"
 msgstr ""
 
+#: modules/base/includes/auditCodes.php:47
+msgid "Group"
+msgstr ""
+
 #: modules/base/includes/auditCodes.php:48
 msgid "Attribute"
 msgstr ""
@@ -1499,9 +1126,9 @@ msgid "GLPI Inventory"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:102
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:50
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:74
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:76
 msgid "detaildeploy"
 msgstr ""
 
@@ -1528,7 +1155,7 @@ msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:118
 #: modules/base/includes/computers_list.inc.php:120
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:83
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
 msgid "Edit config files"
 msgstr ""
 
@@ -1559,19 +1186,19 @@ msgstr ""
 msgid "Quick action"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:356
+#: modules/base/includes/computers_list.inc.php:357
 msgid "Computers list"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:373
+#: modules/base/includes/computers_list.inc.php:374
 msgid "Backup status"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:411
+#: modules/base/includes/computers_list.inc.php:414
 msgid "Delete computer"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:414
+#: modules/base/includes/computers_list.inc.php:417
 msgid "Remove machine from group"
 msgstr ""
 
@@ -1745,30 +1372,30 @@ msgstr ""
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100 includes/ajaxTools.php:63
 #: includes/ajaxTools.php:69 includes/PageGenerator.php:881
-#: includes/PageGenerator.php:1128 includes/FormGenerator.php:643
+#: includes/PageGenerator.php:1128 includes/FormGenerator.php:644
 msgid "Previous"
 msgstr ""
 
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111 includes/ajaxTools.php:74
 #: includes/ajaxTools.php:82 includes/PageGenerator.php:895
-#: includes/PageGenerator.php:1138 includes/FormGenerator.php:644
+#: includes/PageGenerator.php:1138 includes/FormGenerator.php:645
 msgid "Next"
 msgstr ""
 
 #: modules/base/includes/AjaxFilterLog.inc.php:168
 #: modules/base/includes/AjaxFilterLog.inc.php:172
-#: includes/FormGenerator.php:562 includes/FormGenerator.php:568
+#: includes/FormGenerator.php:563 includes/FormGenerator.php:569
 msgid "or <a href='#'"
 msgstr ""
 
 #: modules/base/includes/AjaxFilterLog.inc.php:170
-#: includes/FormGenerator.php:564
+#: includes/FormGenerator.php:565
 msgid "value=\"now\";'>now</a>"
 msgstr ""
 
 #: modules/base/includes/AjaxFilterLog.inc.php:174
-#: includes/FormGenerator.php:570
+#: includes/FormGenerator.php:571
 msgid "value=\"never\";'>never</a>"
 msgstr ""
 
@@ -1778,6 +1405,10 @@ msgstr ""
 
 #: modules/base/views/index.tpl.php:84 modules/base/users/ajaxFilter.php:79
 msgid "Name"
+msgstr ""
+
+#: modules/base/views/index.tpl.php:89 modules/base/users/ajaxFilter.php:83
+msgid "Edit"
 msgstr ""
 
 #: modules/base/views/index.tpl.php:91 modules/base/users/ajaxFilter.php:87
@@ -1952,53 +1583,53 @@ msgstr ""
 msgid "Logged Actions"
 msgstr ""
 
-#: modules/base/users/editacl.php:152
+#: modules/base/users/editacl.php:155
 msgid "User ACLs successfully modified."
 msgstr ""
 
-#: modules/base/users/editacl.php:175
+#: modules/base/users/editacl.php:179
 msgid "Set value for all radio buttons:&nbsp;&nbsp;"
 msgstr ""
 
-#: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
+#: modules/base/users/editacl.php:180 modules/base/users/editacl.php:185
 msgid "read only"
 msgstr ""
 
-#: modules/base/users/editacl.php:177 modules/base/users/editacl.php:181
+#: modules/base/users/editacl.php:181 modules/base/users/editacl.php:185
 msgid "read/write"
 msgstr ""
 
-#: modules/base/users/editacl.php:178 modules/base/users/editacl.php:181
+#: modules/base/users/editacl.php:182 modules/base/users/editacl.php:185
 msgid "hide"
 msgstr ""
 
-#: modules/base/users/editacl.php:181
+#: modules/base/users/editacl.php:185
 msgid "Attribute description"
 msgstr ""
 
-#: modules/base/users/editacl.php:209
+#: modules/base/users/editacl.php:213
 #, php-format
 msgid " (%s module)"
 msgstr ""
 
-#: modules/base/users/editacl.php:219
+#: modules/base/users/editacl.php:223
 msgid "Web page description"
 msgstr ""
 
-#: modules/base/users/editacl.php:219
+#: modules/base/users/editacl.php:223
 msgid "Authorization"
 msgstr ""
 
-#: modules/base/users/editacl.php:228
+#: modules/base/users/editacl.php:232
 msgid "Warning: no desc found in infoPackage.inc.php :"
 msgstr ""
 
-#: modules/base/users/editacl.php:251
+#: modules/base/users/editacl.php:255
 #, php-format
 msgid "Edit ACL of user %s"
 msgstr ""
 
-#: modules/base/users/editacl.php:271
+#: modules/base/users/editacl.php:275
 msgid "Download ACL string"
 msgstr ""
 
@@ -2052,6 +1683,10 @@ msgstr ""
 msgid "Forgot password ?"
 msgstr ""
 
+#: index.php:197
+msgid "Server"
+msgstr ""
+
 #: index.php:204
 msgid "Language"
 msgstr ""
@@ -2093,19 +1728,19 @@ msgstr ""
 msgid "Go to page"
 msgstr ""
 
-#: includes/PageGenerator.php:1417
+#: includes/PageGenerator.php:1419
 msgid "No item available"
 msgstr ""
 
-#: includes/PageGenerator.php:1636
+#: includes/PageGenerator.php:1638
 msgid "Select entity"
 msgstr ""
 
-#: includes/PageGenerator.php:2881
+#: includes/PageGenerator.php:2883
 msgid "Select all"
 msgstr ""
 
-#: includes/PageGenerator.php:2881
+#: includes/PageGenerator.php:2883
 msgid "Unselect all"
 msgstr ""
 
@@ -2151,7 +1786,7 @@ msgid "No job."
 msgstr ""
 
 #: includes/FormGenerator.php:72 includes/FormGenerator.php:294
-#: includes/FormGenerator.php:751 includes/FormGenerator.php:881
+#: includes/FormGenerator.php:752 includes/FormGenerator.php:882
 msgid "unavailable"
 msgstr ""
 
@@ -2167,111 +1802,111 @@ msgstr ""
 msgid "no"
 msgstr ""
 
-#: includes/FormGenerator.php:489
+#: includes/FormGenerator.php:490
 msgid "Year: "
 msgstr ""
 
-#: includes/FormGenerator.php:489
+#: includes/FormGenerator.php:490
 msgid "Month: "
 msgstr ""
 
-#: includes/FormGenerator.php:489
+#: includes/FormGenerator.php:490
 msgid "Day: "
 msgstr ""
 
-#: includes/FormGenerator.php:490
+#: includes/FormGenerator.php:491
 msgid "Hour: "
 msgstr ""
 
-#: includes/FormGenerator.php:490
+#: includes/FormGenerator.php:491
 msgid "Min.: "
 msgstr ""
 
-#: includes/FormGenerator.php:490
+#: includes/FormGenerator.php:491
 msgid "Sec.: "
 msgstr ""
 
-#: includes/FormGenerator.php:619
+#: includes/FormGenerator.php:620
 msgid "January"
 msgstr ""
 
-#: includes/FormGenerator.php:619
+#: includes/FormGenerator.php:620
 msgid "February"
 msgstr ""
 
-#: includes/FormGenerator.php:619
+#: includes/FormGenerator.php:620
 msgid "March"
 msgstr ""
 
-#: includes/FormGenerator.php:619
+#: includes/FormGenerator.php:620
 msgid "April"
 msgstr ""
 
-#: includes/FormGenerator.php:620
+#: includes/FormGenerator.php:621
 msgid "May"
 msgstr ""
 
-#: includes/FormGenerator.php:620
+#: includes/FormGenerator.php:621
 msgid "June"
 msgstr ""
 
-#: includes/FormGenerator.php:620
+#: includes/FormGenerator.php:621
 msgid "July"
 msgstr ""
 
-#: includes/FormGenerator.php:620
+#: includes/FormGenerator.php:621
 msgid "August"
 msgstr ""
 
-#: includes/FormGenerator.php:621
+#: includes/FormGenerator.php:622
 msgid "September"
 msgstr ""
 
-#: includes/FormGenerator.php:621
+#: includes/FormGenerator.php:622
 msgid "October"
 msgstr ""
 
-#: includes/FormGenerator.php:621
+#: includes/FormGenerator.php:622
 msgid "November"
 msgstr ""
 
-#: includes/FormGenerator.php:621
+#: includes/FormGenerator.php:622
 msgid "December"
 msgstr ""
 
-#: includes/FormGenerator.php:631
+#: includes/FormGenerator.php:632
 msgid "Sunday"
 msgstr ""
 
-#: includes/FormGenerator.php:631
+#: includes/FormGenerator.php:632
 msgid "Monday"
 msgstr ""
 
-#: includes/FormGenerator.php:631
+#: includes/FormGenerator.php:632
 msgid "Tuesday"
 msgstr ""
 
-#: includes/FormGenerator.php:631
+#: includes/FormGenerator.php:632
 msgid "Wednesday"
 msgstr ""
 
-#: includes/FormGenerator.php:632
+#: includes/FormGenerator.php:633
 msgid "Thursday"
 msgstr ""
 
-#: includes/FormGenerator.php:632
+#: includes/FormGenerator.php:633
 msgid "Friday"
 msgstr ""
 
-#: includes/FormGenerator.php:632
+#: includes/FormGenerator.php:633
 msgid "Saturday"
 msgstr ""
 
-#: includes/FormGenerator.php:645
+#: includes/FormGenerator.php:646
 msgid "Now"
 msgstr ""
 
-#: includes/FormGenerator.php:1018
+#: includes/FormGenerator.php:1019
 msgid "Toggle selection"
 msgstr ""
 
@@ -2341,11 +1976,19 @@ msgid ""
 "                        </ul>"
 msgstr ""
 
-#: includes/ErrorHandling.php:77
+#: includes/ErrorHandling.php:78
+msgid "Copied"
+msgstr ""
+
+#: includes/ErrorHandling.php:87
 msgid "Show complete trackback"
 msgstr ""
 
-#: includes/ErrorHandling.php:78
+#: includes/ErrorHandling.php:88
+msgid "Copy to clipboard"
+msgstr ""
+
+#: includes/ErrorHandling.php:89
 msgid "Complete Traceback"
 msgstr ""
 

@@ -74,7 +74,18 @@ class ErrorHandlingItem {
             $str .= "<p>" . $this->getAdvice() . "</p>";;
 
         if ($this->_showTraceBack) {
-            $str .= '<a class="btn btn-danger" href="#" onclick="jQuery(this).next().toggle();">'._("Show complete trackback").'</a>';
+
+            $copied_message = _("Copied");
+            $selector = "jQuery(this).parent().find('.errorTraceback')";
+            $script .= "var textareaToRemove = jQuery( '<textarea>' );
+            jQuery( 'body' ).append(textareaToRemove);
+            jQuery(textareaToRemove).val(jQuery(this).parent().find('pre').text()).select();
+            document.execCommand( 'copy' );
+            jQuery(textareaToRemove).remove();
+            console.log(jQuery(this).text('$copied_message'));";
+
+            $str .= '<a class="btn btn-danger" href="#" onclick="jQuery(this).parent().find('.$selector.').toggle();">'._("Show complete trackback").'</a>';
+            $str .= '<a class="btn" href="#" onclick="'.$script.'">'._("Copy to clipboard").'</a>';
             $str .= '<div class="errorTraceback" style="display:none;"><h1>'._("Complete Traceback").'</h1><pre>';
             $str .= gmdate("d M Y H:i:s") . "\n\n";
             $str .= "PHP XMLRPC call: " . $xmlResponse["faultString"] . "\n\n";

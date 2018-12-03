@@ -20,7 +20,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
+
 /*require("graph/navbar.inc.php")*/;
 require("graph/navbar.inc.php");
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");

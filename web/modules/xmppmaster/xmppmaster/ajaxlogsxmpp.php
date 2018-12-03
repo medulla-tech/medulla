@@ -71,7 +71,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $group = new Group($groupid, true, true);
         if ($group->exists == False) {
             $arrayname[] ="This group doesn't exist";
-        } 
+        }
         else {
             $arrayname[] = $group->getName();
         }

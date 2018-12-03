@@ -67,7 +67,7 @@ $response = xmlrpc_topology_pulse();
 var margin = {top: 20, right: 120, bottom: 20, left: 120},
 	width = 960 - margin.right - margin.left,
 	height = 800 - margin.top - margin.bottom;
-	
+
 var i = 0,
 	duration = 750,
 	root;
@@ -223,9 +223,9 @@ function click(d) {
         document.location.href="main.php?module=xmppmaster&submod=xmppmaster&action=machine_xmpp_detail&machine=" + d.name
         return
     }
-    // TODO : 
-    // if type is ARS def promise js. infos ARS in intern page <div id=ARS_info><div> 
-    
+    // TODO :
+    // if type is ARS def promise js. infos ARS in intern page <div id=ARS_info><div>
+
   // Toggle children on click.
   if (d.children) {
 	d._children = d.children;
@@ -238,4 +238,3 @@ function click(d) {
 }
 
 </script>
-	

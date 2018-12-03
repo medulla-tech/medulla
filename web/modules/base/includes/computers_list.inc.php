@@ -52,12 +52,12 @@ class EmptyActionItem1 extends ActionItem {
 
 // $name data  tab
 function list_computers($names,
-                        $filter, 
-                        $count = 0, 
-                        $delete_computer = false, 
-                        $remove_from_result = false, 
-                        $is_group = false, 
-                        $msc_can_download_file = false, 
+                        $filter,
+                        $count = 0,
+                        $delete_computer = false,
+                        $remove_from_result = false,
+                        $is_group = false,
+                        $msc_can_download_file = false,
                         $msc_vnc_show_icon = false,
                         $groupinfodeploy = -1,
                         $login = "",
@@ -82,7 +82,7 @@ function list_computers($names,
 
         foreach ( $names as &$dd){
             foreach($array_id_machine_deploy as $key=>$val){
-                if ($val == $dd[objectUUID]){
+                if (isset($dd['objectUUID']) &&  $val == $dd['objectUUID']){
                     $dd['status'] = $array_state_machine_deploy[$key];
                 }
             }
@@ -262,7 +262,7 @@ function list_computers($names,
         if (in_array("imaging", $_SESSION["supportModList"])) {
             $actionImaging[] = $imgAction;
         }
-	
+
         if (in_array("extticket", $_SESSION["supportModList"])) {
             $actionExtTicket[] = $extticketAction;
         }
@@ -274,7 +274,7 @@ function list_computers($names,
             if ($presencemachinexmpp){
                 $actionVncClient[] = $vncClientAction;
             }else
-            {//show icone vnc griser 
+            {//show icone vnc griser
                 $actionVncClient[] = $vncClientActiongriser;
             }
         }else
@@ -321,7 +321,7 @@ function list_computers($names,
     if ($count) {
    // print_r( $headers);
         foreach ($headers as $header) {
-        
+
             if ($n == null) {
                 if (in_array("glpi", $_SESSION["modulesList"])) {
                     $n = new OptimizedListInfos($columns[$header[0]], _T($header[1], 'glpi'));
@@ -344,7 +344,7 @@ function list_computers($names,
         $n->end = $count - 1;
     } else {
         foreach ($headers as $header) {
-        
+
             if ($n == null) {
                 $n = new ListInfos($columns[$header[0]], _($header[1]));
             } else {
@@ -398,7 +398,9 @@ function list_computers($names,
         if (isExpertMode()){
             $n->addActionItemArray($actionConsole);
             $n->addActionItemArray($actionxmppbrowsing);
-            $n->addActionItemArray($actioneditremoteconfiguration);
+            if (!(isset($_GET['logview']) &&  $_GET['logview'] == "viewlogs")){
+                $n->addActionItemArray($actioneditremoteconfiguration);
+            }
             $n->addActionItemArray($actionxmppquickdeoloy);
         }
         else{

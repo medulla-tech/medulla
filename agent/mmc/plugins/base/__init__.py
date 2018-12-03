@@ -76,7 +76,7 @@ INI = mmcconfdir + "/plugins/base.ini"
 
 modList= None
 
-VERSION = "4.4.1"
+VERSION = "4.5"
 APIVERSION = "9:0:5"
 REVISION = scmRevision("$Rev$")
 
@@ -84,8 +84,6 @@ REVISION = scmRevision("$Rev$")
 NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion',
                 'createAuthToken', 'tokenAuthenticate']
 
-# Status methods
-from mmc.plugins.base.status import getLdapRootDN, getDisksInfos, getMemoryInfos, getUptime, listProcess # pyflakes.ignore
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION

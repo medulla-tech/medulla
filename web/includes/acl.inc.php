@@ -57,7 +57,7 @@ function getAclAttr($attr) {
     $ret = "";
     if ($_SESSION["login"]=="root") {
         $ret = "rw";
-    } 
+    }
     else {
         foreach ($_SESSION["aclattr"] as $key=>$val){
             $pos = strpos($key, $attr);

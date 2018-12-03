@@ -71,4 +71,3 @@ function hideAndShowElement(selectorId, classList)
 }
 
 </script>
-

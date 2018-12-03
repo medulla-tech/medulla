@@ -40,7 +40,7 @@
             }
         });
     }
-    
+
     var entitiesSelected = function() {
 		// select all entities
         var select = jQuery("#entities");
@@ -49,7 +49,7 @@
             option.prop('selected', true);
         });
     }
-    
+
     var sectionsSelected = function() {
         // check if something in the section is selected
         jQuery('.report-section').each(function() {

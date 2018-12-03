@@ -51,7 +51,7 @@ input[type="text"] {
     $nbr_presense = 0;
     foreach($list as $key =>$value){
         if( xmlrpc_getPresenceuuid($key) != 0 ){
-            $nbr_presense ++; 
+            $nbr_presense ++;
         }
     }
     $nbr_absent = $count - $nbr_presense;
@@ -59,7 +59,7 @@ input[type="text"] {
 
 
         <div style="width : 600px;">
-        <? 
+        <?
             echo "<h1>Quick Actions group</h1>";
             echo "<h2>groupName ".$grouptype." : ".$_GET['groupname']."</h2>";
             echo "<h3>".$count." machine in group ".$_GET['groupname']."</h3>";
@@ -84,7 +84,7 @@ input[type="text"] {
 //             datasets: [{
 //                 data: [10, 20, 30]
 //             }],
-// 
+//
 //             // These labels appear in the legend and in the tooltips when hovering different arcs
 //             labels: [
 //                 'Red',
@@ -167,7 +167,7 @@ input[type="text"] {
                         foreach($qacomand['command'] as $tabblecommand){
                             $tabblecommand['customcmd'] = preg_replace('/\r?\n|\r/',' ', $tabblecommand['customcmd']);
                             $tabblecommand['customcmd'] = trim ( $tabblecommand['customcmd'] , " \t\n\r");
-                            echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].'</option>';
+                            echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].' ('.$tabblecommand['os'].')</option>';
                                     $mm[] =  '"'.addslashes($tabblecommand['namecmd']).'": {
                                         "description" : "'.addslashes( $tabblecommand['description'] ).'",
                                         "customcmd" : "'.addslashes($tabblecommand['customcmd']).'",
@@ -195,11 +195,11 @@ input[type="text"] {
    var groupinfo = <? echo json_encode($_GET); ?>
 
         jQuery(function() {
-            var t = jQuery('#select option:selected').text();
+            var t = jQuery('#select option:selected').val();
             jQuery('#namecmd').val(t);
         });
         jQuery('#select').on('change', function() {
-            var t = jQuery('#select option:selected').text();
+            var t = jQuery('#select option:selected').val();
             jQuery('#namecmd').val(t);
         });
 
@@ -331,7 +331,7 @@ input[type="text"] {
     }
 
     jQuery('#wol,#wol0').unbind().on('click', function(){
-        groupinfo['wol'] = jQuery('#checkboxwol').is(':checked'); 
+        groupinfo['wol'] = jQuery('#checkboxwol').is(':checked');
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo )
             .done(function( data ) {
                 wol(data)

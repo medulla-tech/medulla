@@ -31,7 +31,7 @@ class LDAPConnectionConfig:
     """
     Define values needed by the LDAPConnection class.
     """
-    
+
     ldapurl = 'ldap://127.0.0.1:389'
     ldapdebuglevel = 0
     start_tls = False
@@ -103,7 +103,7 @@ class LDAPConnection:
     def __init__(self, config):
         """
         Set up LDAP connection according to the given configuration.
-        
+
         @param config: LDAP connection configuration
         @type config: LDAPConnectionConfigI
         """
@@ -130,7 +130,7 @@ class LDAPConnection:
 
         if config.start_tls:
             self.l.start_tls_s()
-        
+
     def _ldapSetOption(self, conn, parameter, value):
         """
         Set LDAP option to a LDAP connection.

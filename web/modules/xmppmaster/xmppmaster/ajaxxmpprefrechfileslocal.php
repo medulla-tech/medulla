@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *  file xmppfilesbrowsing.php
+ *  file ajaxxmpprefrechfileslocal.php
  */
 ?>
 <?php
@@ -78,7 +78,7 @@ echo'
  if ( $lifdir['path_abs_current'] != $lifdir['rootfilesystem']){
     echo "<li>..</li>";
  }
- 
+
  foreach($lifdir['list_dirs_current'] as $namedir){
             echo "<li>".$namedir."</li>";
         }

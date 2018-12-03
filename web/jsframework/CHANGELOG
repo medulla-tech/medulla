@@ -20,7 +20,7 @@
 
 * Make sure InPlaceEditor converts HTML entities to text.  [Sean Kirby]
 
-* Fix that Builder.node did not return extended elements on IE.  Closes #71 and #77. 
+* Fix that Builder.node did not return extended elements on IE.  Closes #71 and #77.
 
 * Fix a bug in Sortable.destroy to make sure it's called on the referenced Sortable only, which allows for the correct intialization of nested Sortables. Closes Trac #8615.  [Leon Chevalier]
 
@@ -102,8 +102,8 @@
 * Add BDD methods to booleans.  Closes #9147.  [steveluscher]
 
 * Add support for full CSS inheritance in Effect.Morph.  Closes #9054.  [Tobie]
-  IMPORTANT: Note that this could potentially change the outcome of classname-based morphs, so be sure to check your morph effects if you use this feature. 
-  For this feature, the new method Element#getStyles is introduced, which returns an objects which properties correspond to the CSS properties found in Element.CSS_PROPERTIES. Note that this method doesn't work seemlessly across browsers for certain non-measurable CSS properties, such as float.  
+  IMPORTANT: Note that this could potentially change the outcome of classname-based morphs, so be sure to check your morph effects if you use this feature.
+  For this feature, the new method Element#getStyles is introduced, which returns an objects which properties correspond to the CSS properties found in Element.CSS_PROPERTIES. Note that this method doesn't work seemlessly across browsers for certain non-measurable CSS properties, such as float.
 
 * Add the externalControlOnly option to the in-place editors to allow for external controls to exclusively trigger the in-place editing.  Closes #9024.  [tdd]
 
@@ -138,7 +138,7 @@
 
 * Make sure the autocompletion happens on the token where the cursor is, not the last token when using tokenized autocompleting text fields.  Closes #8588.  [tdd]
 
-* Fix that non-Mozilla browsers would display messages with the autocompleter back-button fix introduced in 1.7.1 beta 2. Fixes #7752, #8411. [josh, stetz] 
+* Fix that non-Mozilla browsers would display messages with the autocompleter back-button fix introduced in 1.7.1 beta 2. Fixes #7752, #8411. [josh, stetz]
 
 *V1.7.1 beta 3* (May 19, 2007)
 
@@ -167,7 +167,7 @@
   - Fixes an opacity problem with IE
   - Performance optimizations
   - See http://dev.rubyonrails.org/browser/spinoffs/prototype/trunk/CHANGELOG?rev=6381 for more information
-    
+
 * Make builder unit tests work on IE
 
 * Fix id assignment for sounds on Firefox/Windows, fixes #7709 [Robert Wallis]
@@ -176,20 +176,20 @@
 
 * Added Sound.play(url,options) in new sound.js file. scriptaculous.js automatically includes this file.
   Based on code by Jules Gravinese, used with permission.
-  
+
   The sound player uses native sound support on IE, and falls back to using <embed> on other browsers,
   which means it uses QuickTime for most cases. The recommended format to use is MP3.
-  
+
     Examples:
-      Sound.play('blah.mp3');   
+      Sound.play('blah.mp3');
       // --> plays sound immediately in 'global' track
-      Sound.play('blah.mp3',{replace:true});  
+      Sound.play('blah.mp3',{replace:true});
       // --> stop playing all sounds in 'global' track, and play new sound
       Sound.play('blah.mp3',{track:'mytrack'});
       // --> places the sound in the 'mytrack' track
       Sound.play('blah.mp3',{track:'mytrack',replace:true});
       // --> stop playing all sounds in 'mytrack' track, and play new sound
-      
+
   The sound effect used in the functional test is "Sword being drawn" by James Greever, released as freeware.
 
 * Various effects engine optimizations [Tobie Langel, Thomas Fuchs]
@@ -211,7 +211,7 @@
 * Add ability to nest single nodes in Builder.node in addition to arrays of nodes.
     Examples:
       var element = Builder.node('div', Builder.node('span','blah'));
-      
+
       Builder.dump();
       var element = DIV(SPAN('blah'));
 
@@ -252,7 +252,7 @@
       // will be applied AfterFinish
       $(element).morph('font-size: 10px')  // or
       $(element).morph({fontSize: '10px'}) // will morph the font-size to 10px
-      
+
 *V1.7.0 beta 1* (November 21, 2006)
 
 * Add Element.morph() and Element.Methods.morph() as a shortcut to Effect.Morph
@@ -441,7 +441,7 @@
     the element at a certain place according to the overlap
   - modified Sortable.onHover to avoid DOM Exceptions
   - modified Sortable.create to support the creation of Sortable trees
-  - added two convenience functions - Sortable.findElements and 
+  - added two convenience functions - Sortable.findElements and
     Sortable.findTreeElements
   - Added Sortable.tree (and a number of private functions to facilitate it)
     Returns a tree structure:
@@ -509,7 +509,7 @@
 
 * Added workaround for a rendering bug in Safari when using floating elements with Effect.Appear
 
-* Update lib/prototype.js to Prototype 1.5.0_pre0 
+* Update lib/prototype.js to Prototype 1.5.0_pre0
 
 *V1.5.3*
 
@@ -568,11 +568,11 @@
 
 * Added Effect.toggle for slide, blind and appear/fade effects, fixes #2704 [thx Azad]
 
-* Added selective component loading to scriptaculous.js, see test/unit/loading_test.html for usage [thx David Zülke]
+* Added selective component loading to scriptaculous.js, see test/unit/loading_test.html for usage [thx David Zï¿½lke]
 
-* Added local/scoped effect queues [thx David Zülke]
+* Added local/scoped effect queues [thx David Zï¿½lke]
 
-* New core effect Effect.Move that can do absolute/relative movement [thx David Zülke]
+* New core effect Effect.Move that can do absolute/relative movement [thx David Zï¿½lke]
 
 * Make default effects options modifyable globally by setting Effect.DefaultOptions
 
@@ -712,7 +712,7 @@
 
 * Make Effect position available to callbacks
 
-* Droppables.fire: send event to onDrop callback [François Beausoleil], #2389
+* Droppables.fire: send event to onDrop callback [Franï¿½ois Beausoleil], #2389
 
 * InPlaceEditor: Add disabling the field while loadTextURL loads and add a class while loading, plus fix various bugs with Internet Explorer and InPlaceEditor, [Jon Tirsen] #2302, #2303
 
@@ -854,7 +854,7 @@
 
 * Changed implementation of Builder to an innerHTML-based approach to make it work with IE6 (note: removed special "style" handling for now)
 
-* Changed non-sync Effects to use a common setInterval call for better timing and page update speeds. See the new Effect.Queue object. 
+* Changed non-sync Effects to use a common setInterval call for better timing and page update speeds. See the new Effect.Queue object.
 
 * Fixed a problem with setting opacity in Effect.Opacity to very small values
 
@@ -924,7 +924,7 @@
 
 * Added special handling for style attributes to Builder [Michael Schuerig]
 
-* Changed opacity=1.0 check back to be inline with its original (pre 1.5) implementation to prevent flickering in Firefox < 1.1 on opacity-based effects (this also fixes flickering with drag-and-drop, sortable lists and autocompleting text fields). Note that this potentially breaks correct colors in some situations. [thx to David Zülke]
+* Changed opacity=1.0 check back to be inline with its original (pre 1.5) implementation to prevent flickering in Firefox < 1.1 on opacity-based effects (this also fixes flickering with drag-and-drop, sortable lists and autocompleting text fields). Note that this potentially breaks correct colors in some situations. [thx to David Zï¿½lke]
 
 * Automatically deactivate browser built-in autocompletion on autocompleting textfields, fixes part of Rails #1824.
 
@@ -946,8 +946,8 @@
 
   <script src="path/to/prototype.js" type="text/javascript"></script>
   <script src="path/to/scriptaculous.js" type="text/javascript"></script>
-  
-  in the HEAD section of an HTML file is now all that's needed to include all of the script.aculo.us libraries, 
+
+  in the HEAD section of an HTML file is now all that's needed to include all of the script.aculo.us libraries,
   given that they all can be accessed by the same path as scriptaculous.js is.
 
 * Fixed possible problem with greedy Droppables when using the dropOnEmpty option on Sortable.create
@@ -1008,7 +1008,7 @@
 
 * Make unit testing look good [Michael Schuerig]
 
-* Changed default revert duration for Draggables to distance-dependent algorithm [suggested by San] 
+* Changed default revert duration for Draggables to distance-dependent algorithm [suggested by San]
 
 * Fix double unescaping in Autocompleter
 
@@ -1028,7 +1028,7 @@
 
 * Changed Effect.Opacity to better handle 100% opacity
 
-* Various fixes to ghosting, improves compatiblity with Safari and IE. [thanks to David Zülke]
+* Various fixes to ghosting, improves compatiblity with Safari and IE. [thanks to David Zï¿½lke]
 
 * Added experimental ghosting option to Sortables. See sortable_functional_ghosting.html for usage.
 
@@ -1040,7 +1040,7 @@
 
 *1.1beta1*
 
-* Fixed rendering of last frame of animation when from/to is not 0.0/1.0. [thanks to David Zülke]
+* Fixed rendering of last frame of animation when from/to is not 0.0/1.0. [thanks to David Zï¿½lke]
 
 * Updated internal Prototype JavaScript framework to version 1.4.0_pre2 (patched w/ workaround for Ajax.Updater init bug)
 
@@ -1056,7 +1056,7 @@
 
 * Updated controls.js to allow multple matches in local localcompletion [Ivan Krstic]
 
-* Make version of prototype.js in lib have a nicer Event object [David Zülke]
+* Make version of prototype.js in lib have a nicer Event object [David Zï¿½lke]
 
 * Added incremental and local autocompleting and loads of documentation to controls.js [Ivan Krstic]
 
@@ -1064,9 +1064,9 @@
 
 * Fixed a possible memory leak in dragdrop.js
 
-* Make version of prototype.js in lib compatible with some 3rd-party JavaScript libraries (like IE7) by refactoring to use Object.extend() for testing [David Zülke]
+* Make version of prototype.js in lib compatible with some 3rd-party JavaScript libraries (like IE7) by refactoring to use Object.extend() for testing [David Zï¿½lke]
 
-* Make effects.js, dragdrop.js and controls.js compatible with some 3rd-party JavaScript libraries (like IE7) by refactoring to use Object.extend() [David Zülke]
+* Make effects.js, dragdrop.js and controls.js compatible with some 3rd-party JavaScript libraries (like IE7) by refactoring to use Object.extend() [David Zï¿½lke]
 
 * Changed some tests to work better
 
@@ -1188,7 +1188,7 @@
 
 * Added an Object.prototype.inspect() and more verbose messages for js unit testing
 
-* Added test/unittest.js and initial tests in test/html. 
+* Added test/unittest.js and initial tests in test/html.
 
 * Cleaning up of effects2.js (convert tabs to spaces)
 

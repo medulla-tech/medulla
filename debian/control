@@ -19,7 +19,7 @@ Architecture: all
 Section: python
 Pre-depends: python-mmc-core (= ${source:Version})
 Depends: ${misc:Depends}, ${python:Depends}, python-ldap, python-xlwt
-Description: Mandriva Management Console base plugin
+Description: Management Console base plugin
  Contains the base infrastructure for all MMC plugins:
   * support classes
   * base LDAP management classes
@@ -29,28 +29,28 @@ Architecture: all
 Section: python
 Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version})
 Suggests: mmc-check-password
-Description: Mandriva Management Console password policy plugin
+Description: Management Console password policy plugin
  Contains password policy plugin to enforce minimum password security in MMC.
 
 Package: python-mmc-dashboard
 Architecture: all
 Section: python
 Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-psutil (>= 0.6.1)
-Description: Mandriva Management Console dashboard plugin
+Description: Management Console dashboard plugin
  Provides a simple dashboard in MMC.
 
 Package: python-mmc-services
 Architecture: all
 Section: python
 Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-systemd-dbus (>= 0.1), systemd
-Description: Mandriva Management Console systemd services plugin
+Description: Management Console systemd services plugin
  Handles system services through systemd.
 
 Package: python-mmc-database
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-sqlalchemy (>= 0.7), python-mysqldb 
-Description: Mandriva Management Console database common files
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-sqlalchemy (>= 0.7), python-mysqldb
+Description: Management Console database common files
  Allow the use of SQL databases within MMC framework.
 
 Package: python-mmc-report
@@ -63,31 +63,31 @@ Description: Generate reports within MMC framework
 Package: mmc-agent
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-openssl | python-pyopenssl, python (>= 2.6) | python-multiprocessing, ldap-utils, python-gobject (>= 2.21.4)
-Description: Mandriva Management Console Agent
+Description: Management Console Agent
  XMLRPC server of the MMC API.
 
 Package: mmc-web-base
 Architecture: all
 Depends: ${misc:Depends}, libapache2-mod-php7.0, php7.0-xmlrpc, php7.0-gd, apache2 | apache2-mpm-prefork, wwwconfig-common
 Description: MMC web interface to interact with a MMC agent
- Mandriva Management Console web interface designed by Mandriva.
+ Management Console web interface designed by Siveo.
 
 Package: mmc-web-ppolicy
 Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
-Description: Password policy module for Mandriva MMC
+Description: Password policy module for MMC
  Module to enforce minimum password security in MMC.
 
 Package: mmc-web-dashboard
 Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
-Description: Dashboard module for Mandriva MMC
+Description: Dashboard module for MMC
  Dashboard module in MMC.
 
 Package: mmc-web-services
 Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
-Description: Systemd module for Mandriva MMC
+Description: Systemd module for MMC
  Systemd service management module for MMC.
 
 Package: mmc-web-report
@@ -100,4 +100,3 @@ Package: mmc-web-xmppmaster
 Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version}), ajax-php-file-manager
 Description: Xmpp mmc module
-

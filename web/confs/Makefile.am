@@ -47,6 +47,3 @@ mmc.ini apache/mmc.conf: Makefile
 
 mmc.ini: $(srcdir)/mmc.ini.in
 apache/mmc.conf: $(srcdir)/apache/mmc.conf.in
-
-
-
