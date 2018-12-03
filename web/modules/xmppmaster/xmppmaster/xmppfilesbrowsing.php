@@ -230,6 +230,7 @@ echo '</script>';
 ?>
 
 <?php
+    $lifdirlocal = xmlrpc_localfilesystem("");
     $lifdirstr = xmlrpc_remotefilesystem("", $machine);
     $lifdir = json_decode($lifdirstr, true);
     if (isset($lifdir['err'])){
@@ -244,22 +245,16 @@ echo '</script>';
             exit;
     }
     $datatree = $lifdir['data']['strjsonhierarchy'];
-    $rootfilesystem = $lifdir['data']['rootfilesystem'];
     // cherche local directory
-    $lifdirlocal = xmlrpc_localfilesystem("");
 
 printf ('
 <form>
     <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
     <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
 </form>' ,$lifdirlocal['path_abs_current'],$lifdirlocal['parentdir']);
+$rootfilesystem = $lifdir['data']['rootfilesystem'];
 
-
-
-$lifdirstr = xmlrpc_remotefilesystem("", $machine);
-$lifdirremote = json_decode($lifdirstr, true);
-
-$rootfilesystempath = $lifdirremote['data']['rootfilesystem'];
+$rootfilesystempath = $rootfilesystem;
 if ($rootfilesystem[1] == ":"){
     $rootfilesystempath =substr($lifdirremote['data']['rootfilesystem'],2); 
 }
@@ -427,6 +422,9 @@ printf ('
                     var pathlinux = data.instance.get_path(data.node, '/');
 
                     var rs = jQuery('#rootfilesystempath').val();
+                    console.log(pathlinux)
+                    console.log(rs)
+                    console.log(pathlinux.substr(rs.length))
                     remote(pathlinux.substr(rs.length));
                 }
             })
