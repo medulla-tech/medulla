@@ -645,7 +645,7 @@ class ListInfos extends HtmlElement {
                 $width_styl = $this->col_width[count($this->col_width) - 1];
             }
             $width_styl = isset($width_styl) ? sprintf('width: %s;', $width_styl) : '';
-            echo "<td style=\"text-align: right; $width_styl\"><span>Actions</span></td>";
+            echo "<td style=\"text-align: center; $width_styl\"><span>Actions</span></td>";
         }
 
         echo "</tr></thead>";
