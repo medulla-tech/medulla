@@ -232,7 +232,6 @@ echo '</script>';
 <?php
     $lifdirstr = xmlrpc_remotefilesystem("", $machine);
     $lifdir = json_decode($lifdirstr, true);
-
     if (isset($lifdir['err'])){
         if ( $lifdir['err'] == 'Timeout Error'){
             $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
@@ -245,7 +244,7 @@ echo '</script>';
             exit;
     }
     $datatree = $lifdir['data']['strjsonhierarchy'];
-
+    $rootfilesystem = $lifdir['data']['rootfilesystem'];
     // cherche local directory
     $lifdirlocal = xmlrpc_localfilesystem("");
 
@@ -260,14 +259,22 @@ printf ('
 $lifdirstr = xmlrpc_remotefilesystem("", $machine);
 $lifdirremote = json_decode($lifdirstr, true);
 
+$rootfilesystempath = $lifdirremote['data']['rootfilesystem'];
+if ($rootfilesystem[1] == ":"){
+    $rootfilesystempath =substr($lifdirremote['data']['rootfilesystem'],2); 
+}
+
 printf ('
 <form>
     <input id ="path_abs_current_remote" type="hidden" name="path_abs_current_remote" value="%s">
     <input id ="parentdirremote" type="hidden" name="parentdirremote" value="%s">
     <input id ="rootfilesystem" type="hidden" name="rootfilesystem" value="%s">
-</form>' ,$lifdirremote['data']['path_abs_current'], $lifdirremote['data']['parentdir'], $lifdirremote['data']['rootfilesystem']);
-
-
+    <input id ="rootfilesystempath" type="hidden" name="rootfilesystempath" value="%s">
+</form>' ,
+            $lifdirremote['data']['path_abs_current'],
+            $lifdirremote['data']['parentdir'],
+            $lifdirremote['data']['rootfilesystem'],
+            $rootfilesystempath);
 ?>
 
 <div id="messageaction"></span></div>
@@ -330,9 +337,11 @@ printf ('
                         class="ombremultiple">
             <tr>
                 <td class="enplacementcss ombremultiple">
-                    <span style="Font-Weight : Bold ;font-size : 15px;">Emplacement</span>
+                    <span style="Font-Weight : Bold; font-size : 15px;">Emplacement </span><br>
+                    <span style="Font-Weight : Bold; font-size : 15px; text-align: right">[ root : <?php echo $rootfilesystempath; ?> ]</span>
                 </td>
                 <td class="currentdircss ombremultiple">
+                Path current : 
                     <span id="cur" style="Font-Weight : Bold ;font-size : 15px;">
                             <? echo $lifdir['data']['path_abs_current']; ?>
                     </span>
@@ -393,7 +402,6 @@ printf ('
 
 <script type="text/javascript">
     jQuery( document ).ready(function() {
-
         // variable list file select
         listfileusermachinejson = {"files" :[], "directory" : []};
         namemachine =  "<?php echo $ma['hostname']; ?>";
@@ -416,27 +424,10 @@ printf ('
         jQuery('#directoryremote')
             .on("changed.jstree", function (e, data) {
                 if(data.selected.length) {
-                    var pathlinux = data.instance.get_path(data.node,'/');
-                    var absolutepath_array = pathlinux.split("/");
-                    var absolutepath = absolutepath_array.shift();
-                    var pathlinux_array = absolutepath_array;
-                    pathlinux = absolutepath_array.join("/");
-                    var absolutepath = "/" + absolutepath;
-                    if (seperator == "\\"){
-                        var absolutepathlocal = "c:\\\\"+ absolutepath.substring(1);
-                        var dd = absolutepathlocal + seperator + pathlinux
-                        var res = dd.replace(/\//g, "\\");
-                    }
-                    else{
-                        var absolutepathlocal = absolutepath;
-                        if( pathlinux == ""){
-                            var res = absolutepathlocal;
-                        }
-                        else{
-                            var res = absolutepathlocal + seperator + pathlinux
-                        }
-                    }
-                        remote(pathlinux);
+                    var pathlinux = data.instance.get_path(data.node, '/');
+
+                    var rs = jQuery('#rootfilesystempath').val();
+                    remote(pathlinux.substr(rs.length));
                 }
             })
             .jstree({
@@ -581,6 +572,7 @@ printf ('
         if (typeof parentdirremote == 'undefined'){
             var parentdirremote = "";
         }
+
        jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refrech_files_remote.php",
                     {
                             "parentdirremote" : parentdirremote,
@@ -599,6 +591,7 @@ printf ('
                     var source = jQuery('input[name=path_abs_current_remote]').val();
                 }
                 else{
+
                     var source = jQuery('input[name=path_abs_current_remote]').val() + seperator + jQuery(this).parent("li").find(':nth-child(1)').text();
                 }
                 timetmp = user + "-" + datetimenow();
@@ -697,7 +690,6 @@ printf ('
                                         "listfile"      : jQuery('#filelist').text(),
                                         "jidmachine"    : jid 
                                         },function(data){
-                                            console.log(data);
                                             jQuery('#dialog-notification-download-file').attr('title', 'The list (folder & files) copy has been requested successfully');
                                             confirmation_information(data);
                                         });
