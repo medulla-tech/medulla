@@ -35,18 +35,31 @@ if [ "$(ls -A $DIR)" ]; then
 fi
 # several info placed in text files
 [ -x /usr/bin/lsb_release ] && lsb_release -a  > os-info || cat /etc/redhat-release > os-info
-[ -x /usr/bin/dpkg ] && /usr/bin/dpkg -l | egrep '(mmc|pulse2)' > packages || /usr/bin/rpm -qa | egrep '(mmc|pulse2)' > packages
-[ -x /usr/sbin/apache2 ] && ln -s /var/log/apache2 apache2 || ln -s /var/log/httpd httpd
-[ -x /etc/init.d/tomcat8 ] && ln -s /var/log/tomcat8 tomcat8 || ln -s /var/log/tomcat tomcat
+[ -x /usr/bin/dpkg ] && /usr/bin/dpkg -l | egrep '(mmc|pulse2)' > pulse-packages || /usr/bin/rpm -qa | egrep '(mmc|pulse2)' > pulse-packages
+[ -x /usr/bin/dpkg ] && /usr/bin/dpkg -l > all-packages || /usr/bin/rpm -qa > all-packages
+lsmod > loaded-modules
+sysctl -a > kernel-parameters
+cp /etc/hosts .
+cp /etc/fstab .
 
-ln -s /etc/mmc mmc-conf
-ln -s /etc/pulse-xmpp-agent pulse-xmpp-agent
-ln -s /var/lib/pulse2/clients/config config-agent
-ln -s /var/log/ejabberd ejabberd
-ln -s /var/log/mmc mmc-log
-ln -s /var/log/pulse xmpp-agent
+ln -s /etc/mmc conf-mmc
+ln -s /etc/pulse-xmpp-agent conf-relay-agent
+ln -s /etc/ejabberd conf-ejabberd
+ln -s /etc/glpi conf-glpi
+[ -x /sbin/guacd ] && ln -s /etc/guacamole conf-guacamole
+[ -x /usr/sbin/apache2 ] && ln -s /etc/apache2 conf-apache2 || ln -s /etc/httpd conf-httpd
+mkdir conf-php
+[ -x /usr/sbin/apache2 ] && cp -a /etc/php/7.0/apache2/* conf-php/ || cp -a /etc/php.* conf-php/
+[ -x /etc/init.d/tomcat8 ] && ln -s /etc/tomcat8 conf-tomcat8 || ln -s /etc/tomcat conf-tomcat
+ln -s /var/lib/pulse2/clients/config conf-client-agent
+ln -s /var/log/ejabberd logs-ejabberd
+ln -s /var/log/mmc logs-mmc
+ln -s /var/log/pulse logs-pulse-xmpp-agent
+[ -x /usr/sbin/apache2 ] && ln -s /var/log/apache2 logs-apache2 || ln -s /var/log/httpd logs-httpd
+[ -x /etc/init.d/tomcat8 ] && ln -s /var/log/tomcat8 logs-tomcat8 || ln -s /var/log/tomcat logs-tomcat
 
-name="isc-dhcp-server tftpd-hpa guacd"
+
+name="isc-dhcp-server tftpd-hpa guacd ejabberd"
 
 for serv in $name
 do
@@ -61,4 +74,3 @@ done
 rm -rf $PULSE2_COLLECT_INFO_DIR
 
 chmod 644 $ARCHIVE_PATH
-

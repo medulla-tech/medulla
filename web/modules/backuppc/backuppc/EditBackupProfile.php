@@ -55,7 +55,7 @@ if (isset($_POST['bconfirm'])){
     }
     else
         $profile = add_backup_profile($cfg);
-    
+
 }
 else
     if ($ID)
@@ -68,7 +68,7 @@ else
 // Add or Edit
 if ($ID)
     $p = new PageGenerator(_T("Edit fileset", "backuppc"));
-else 
+else
     $p = new PageGenerator(_T("Add fileset", "backuppc"));
 
 if ($ID && $ID < 1000){
@@ -79,7 +79,7 @@ if ($ID && $ID < 1000){
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// display an edit config form 
+// display an edit config form
 $f = new ValidatingForm();
 $f->push(new Table());
 
@@ -112,6 +112,7 @@ $list = array(
 
 $sel->setElements(array_values($list));
 $sel->setElementsVal(array_keys($list));
+$profile['encoding'] = isset($profile['encoding'])?$profile['encoding'] : "";
 $sel->setSelected($profile['encoding']);
 
  $f->add(
@@ -127,8 +128,8 @@ $i = 0;
 $profile['excludes'] = explode('||',$profile['excludes']);
 
 for ($i = 0 ; $i < count($sharenames) ; $i++) {
-    
-    
+
+
     // Fields
     $fields = array(
         new InputTpl('sharenames[]'),
@@ -136,14 +137,14 @@ for ($i = 0 ; $i < count($sharenames) ; $i++) {
         new TextareaTpl('excludes[]'),
         new buttonTpl('removeShare',_T('Remove'),'removeShare')
         );
-    
+
     $values = array(
         $sharenames[$i],
         '',
         $profile['excludes'][$i],
         ''
     );
-    
+
     $f->add(
         new TrFormElement(_T('Folder','backuppc'), new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
@@ -174,16 +175,16 @@ $f->display();
 
 <script type="text/javascript">
 jQuery(function(){
-    
+
     shareLine = jQuery('.removeShare:first').parents('tr:first').clone();
-        
+
      // Remove Share button
      jQuery('.removeShare').click(function(){
          if (jQuery('.removeShare').length > 1)
              jQuery(this).parents('tr:first').remove();
      });
-     
-     
+
+
      // Add Share button
      jQuery('#addShare').click(function(){
         var newline = shareLine.clone().insertBefore(jQuery(this).parents('tr:first'));
@@ -195,8 +196,8 @@ jQuery(function(){
                 jQuery(this).parents('tr:first').remove();
         });
      });
-    
-});   
-   
-    
+
+});
+
+
 </script>

@@ -27,14 +27,15 @@ if deploy is pause, run, abandonned
 """
 import base64
 import json
-import os, sys
+import os
+import sys
 import utils
 import pprint
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
 import logging
 
-plugin = { "VERSION" : "1.0", "NAME" : "machineexecutionscheduler", "TYPE" : "master" }
+plugin = {"VERSION": "1.0", "NAME": "machineexecutionscheduler", "TYPE": "master"}
 
 """
 #eg : data plugin received
@@ -42,48 +43,50 @@ plugin = { "VERSION" : "1.0", "NAME" : "machineexecutionscheduler", "TYPE" : "ma
     ...,
     ...,
     #"advanced": {
-        #"idcmd": 1, 
-        #"countnb": 0, 
-        #"grp": 14, 
-        #"exec": false, 
-        #"exectime": "2017-10-18 07:25:11", 
-        #"nbtotal": 1, 
-        #"scheduling": true, 
+        #"idcmd": 1,
+        #"countnb": 0,
+        #"grp": 14,
+        #"exec": false,
+        #"exectime": "2017-10-18 07:25:11",
+        #"nbtotal": 1,
+        #"scheduling": true,
         #"login": "root"
-    #}, 
+    #},
     ...,
     ...
 #}
 """
 DEBUGPULSEPLUGIN = 25
-def action( xmppobject, action, sessionid, data, message, ret, dataobj):
+
+
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
 
     advanced = data['advanced']
     try:
         result = XmppMasterDatabase().checkstatusdeploy(advanced['idcmd'])
-        advanced['actionscheduler'] = result # abandonmentdeploy, run or pause
+        advanced['actionscheduler'] = result  # abandonmentdeploy, run or pause
         datasend = {
-                        'action': data['fromaction'],
-                        'sessionid': sessionid,
-                        'data' : advanced,
-                        'ret' : 0,
-                        'base64' : False
-                    }
-        xmppobject.send_message( mto=message['from'],
-                                 mbody=json.dumps(datasend),
-                                 mtype='chat')
+            'action': data['fromaction'],
+            'sessionid': sessionid,
+            'data': advanced,
+            'ret': 0,
+            'base64': False
+        }
+        xmppobject.send_message(mto=message['from'],
+                                mbody=json.dumps(datasend),
+                                mtype='chat')
     except Exception as e:
-        print "Error in plugin %s"%str(e)
+        print "Error in plugin %s" % str(e)
         traceback.print_exc(file=sys.stdout)
-        advanced['actionscheduler'] = "error" # abandonmentdeploy, run or pause
+        advanced['actionscheduler'] = "error"  # abandonmentdeploy, run or pause
         datasend = {
-                        'action': data['fromaction'],
-                        'sessionid': sessionid,
-                        'data' : advanced,
-                        'ret' : 0,
-                        'base64' : False
-                    }
-        xmppobject.send_message( mto=message['from'],
-                                 mbody=json.dumps(datasend),
-                                 mtype='chat')
+            'action': data['fromaction'],
+            'sessionid': sessionid,
+            'data': advanced,
+            'ret': 0,
+            'base64': False
+        }
+        xmppobject.send_message(mto=message['from'],
+                                mbody=json.dumps(datasend),
+                                mtype='chat')

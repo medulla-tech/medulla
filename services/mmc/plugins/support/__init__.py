@@ -326,4 +326,3 @@ def delete_archive():
     if os.path.exists(config.collector_archive_path):
         os.unlink(config.collector_archive_path)
     cd.info_collected = False
-

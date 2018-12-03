@@ -19,7 +19,7 @@ function Keyboard(defaults) {
 var that           = {},  // Public API methods
     conf           = {},  // Configuration attributes
 
-    keyDownList    = [];         // List of depressed keys 
+    keyDownList    = [];         // List of depressed keys
                                  // (even if they are happy)
 
 // Configuration attributes
@@ -31,7 +31,7 @@ Util.conf_defaults(conf, that, defaults, [
     ]);
 
 
-// 
+//
 // Private functions
 //
 
@@ -194,7 +194,7 @@ function releaseMouse() {
     }
     mouseCaptured = false;
 }
-// 
+//
 // Private functions
 //
 
@@ -224,7 +224,7 @@ function onMouseButton(e, down) {
             if (doubleClickTimer == null) {
                 lastTouchPos = pos;
             } else {
-                clearTimeout(doubleClickTimer); 
+                clearTimeout(doubleClickTimer);
 
                 // When the distance between the two touches is small enough
                 // force the position of the latter touch to the position of

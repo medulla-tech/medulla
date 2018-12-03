@@ -72,7 +72,7 @@ class CoHTimeExtend(MscAPI):
 
 
     def _delta (self, coh_life_time):
-        """ 
+        """
         Calculate of timedelta between new command start and end.
 
         @param coh_life_time: default life time of command
@@ -82,13 +82,12 @@ class CoHTimeExtend(MscAPI):
         @rtype: tuple
         """
         fmt = "%Y-%m-%d %H:%M:%S"
-        
+
         start_timestamp = time.time()
         start_date = datetime.datetime.fromtimestamp(start_timestamp).strftime(fmt)
-            
+
         delta = int(coh_life_time) * 60 * 60
         end_timestamp = start_timestamp + delta
         end_date = datetime.datetime.fromtimestamp(end_timestamp).strftime(fmt)
-      
-        return start_date, end_date
 
+        return start_date, end_date

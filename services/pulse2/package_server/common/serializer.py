@@ -82,5 +82,3 @@ class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
         except Exception, e:
             self.logger.debug("Package synchro state serialization, unserialize failed: %s"%(str(e)))
             return False
-
-

@@ -62,7 +62,7 @@ class GlpiAuthenticator(AuthenticatorI):
 
     def __init__(self, conffile = None, name = "glpi"):
         if not conffile:
-            conffile = getConfigFile(name)        
+            conffile = getConfigFile(name)
         AuthenticatorI.__init__(self, conffile, name, GlpiAuthenticatorConfig)
 
     def _cbIndexPage(self, value):

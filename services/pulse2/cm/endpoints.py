@@ -719,6 +719,3 @@ class ForkingProtocol(ProcessProtocol):
 
         if self.callback:
             self.callback(reason)
-
-
-

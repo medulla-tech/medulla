@@ -7,7 +7,7 @@
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
-# Pulse 2 is free software; you can redistribute it and/or modify  
+# Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
@@ -24,7 +24,7 @@
 Parsing of packets on custom format, incoming from imaging PXE client.
 
 Each packet starts with 1 byte identifying a method to execute.
-Rest of its content is integrating values of arguments, identified 
+Rest of its content is integrating values of arguments, identified
 by normalized prefixes.
 
 Output of this engine is method to execute with arguments.
@@ -35,7 +35,7 @@ from functools import wraps
 
 from pulse2.utils import isMACAddress
 
-LOG_ACTION = {0 : ("boot", "booted"), 
+LOG_ACTION = {0 : ("boot", "booted"),
               1 : ("menu", "choosen menu entry"),
               2 : ("restoration", "restoration started"),
               3 : ("restoration", "restoration finished"),
@@ -87,7 +87,7 @@ def assign(id):
             if self.register_only :
                 # registering step called when RPC proxy created
                 self.methods[id] = fnc
-            else : 
+            else :
                 # already registered, function returned with normal behavior
                 return fnc(self, *args, **kwargs)
 
@@ -102,8 +102,8 @@ class ArgumentContainer :
     """
     A container with input parser.
 
-    When a packet incoming from PXE is containing related info, 
-    (prefixes, markers, etc) an argument is created and accesible 
+    When a packet incoming from PXE is containing related info,
+    (prefixes, markers, etc) an argument is created and accesible
     as a property.
     If not, related property is None.
     """
@@ -116,7 +116,7 @@ class ArgumentContainer :
 
     # ================== PARSED ARGUMENTS ========================= #
 
-    
+
     # ------- common arguments --------------- #
     MAC_FLAG = "Mc:"
     HOSTNAME_FLAG = "ID"
@@ -135,7 +135,7 @@ class ArgumentContainer :
         return None
 
     # ------- computerRegister args ---------- #
-    @property 
+    @property
     def hostname(self):
         """ Argument for new machine registering (computerRegister)"""
         if self.HOSTNAME_FLAG in self.packet :
@@ -159,13 +159,13 @@ class ArgumentContainer :
 
     @property
     def level(self):
-        """ logAction argument """ 
+        """ logAction argument """
         assert len(self.packet) > 1
         return int(self.packet[1])
 
     @property
     def phase(self):
-        """ logAction argument """ 
+        """ logAction argument """
         assert len(self.packet) > 1
 
         phase, message = LOG_ACTION[self.level]
@@ -174,7 +174,7 @@ class ArgumentContainer :
 
     @property
     def message(self):
-        """ logAction argument """ 
+        """ logAction argument """
         phase, message = LOG_ACTION[self.level]
 
         complement = None
@@ -194,7 +194,7 @@ class ArgumentContainer :
     @property
     def inventory(self):
         """ injectInventory argument """
-         
+
         body = self.packet[1:]
         return body
     # example of PXE inventory :
@@ -212,7 +212,7 @@ class ArgumentContainer :
     # F:2593852
     # Mc:52:54:00:BB:00:95
 
-    
+
     # ------------ imageDone args --------------- #
     @property
     def imageUUID(self):
@@ -226,7 +226,7 @@ class ArgumentContainer :
         """ Client identification controlled by server"""
         if self.MAC_FLAG in self.packet :
             end = self.packet.index(self.MAC_FLAG)
-            return self.packet[2:end].replace("\x00", "") 
+            return self.packet[2:end].replace("\x00", "")
 
     @property
     def num(self):
@@ -247,7 +247,7 @@ class ArgumentContainer :
         except Exception, e:
             logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
-            
+
 
     @property
     def bnum(self):
@@ -266,7 +266,7 @@ class ArgumentContainer :
         except Exception, e:
             logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
- 
+
     @property
     def to(self):
         """imagingServerStatus argument"""
@@ -285,7 +285,7 @@ class ArgumentContainer :
         except Exception, e:
             logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
- 
+
 
 
 
@@ -297,8 +297,8 @@ class PXEMethodParser :
     All methods declared and decorated with @assign decorator
     are registered into methods dictionnary.
     Argument of @assign decorator is identifying a decorated
-    method with a value of first byte of incoming packet 
-    from PXE imaging client. 
+    method with a value of first byte of incoming packet
+    from PXE imaging client.
     When a method is resolved, instance of ArgumentContainer
     extract the arguments and returns all as a method object.
     """
@@ -308,7 +308,7 @@ class PXEMethodParser :
 
     # flag to indicate if decorated function should be registered
     # if True : method is only registered to methods dictionnary
-    # if False : method is executed 
+    # if False : method is executed
     register_only = False
 
     def __init__(self):
@@ -319,7 +319,7 @@ class PXEMethodParser :
         self.register_only = True
         for name in dir(self):
             fnc = getattr(self, name)
-            
+
             if not callable(fnc) : continue
             if not hasattr(fnc, "is_proxy_fnc"): continue
 
@@ -355,12 +355,12 @@ class PXEMethodParser :
                 value = getattr(arg_container, name)
 
                 args.append(value)
-        
+
         logging.getLogger().debug("PXE Proxy: executed method: (%s) %s" % (str(hex(marker)), method.__name__ ))
         return method, args
 
-       
- 
+
+
     def get_args(self, method):
         """
         Extract the names of arguments from method.
@@ -374,6 +374,3 @@ class PXEMethodParser :
         args, vargs, kwds, defaults = inspect.getargspec(method)
 
         return [a for a in args if a != 'self']
-     
-
-

@@ -98,7 +98,7 @@ if (quickGet('valid')) {
             $path="/tmp/";
             $objprocess['location']=$location;
             $objprocess['process'] = $path.$scriptmulticast;
-          
+
             if (xmlrpc_check_process_multicast($objprocess)){
                 $msg = _T("The bootmenus cannot be generated as a multicast deployment is currently running.", "imaging");
                 xmlrpc_setfromxmppmasterlogxmpp($msg,

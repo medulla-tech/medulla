@@ -210,7 +210,7 @@ class InventoryServer:
                             do_forward = True
                 # Machine is not known, forward anyway
                 else:
-                    
+
                     if canDoInventory():
                         if InventoryUtils.is_coming_from_pxe(content):
                             self.logger.info("<GlpiProxy> PXE inventory received from %s for an unknown machine: forwarding" % str(from_ip))
@@ -519,7 +519,7 @@ class TreatInv(Thread):
             self.logger.exception(e)
 
         return True
-    
+
 ##Singleton
 @decosingleton
 class Common():
@@ -658,4 +658,3 @@ def my_handle_one_request(self):
 
 setattr(BaseHTTPRequestHandler, '__handle_one_request', BaseHTTPRequestHandler.handle_one_request)
 setattr(BaseHTTPRequestHandler, 'handle_one_request', my_handle_one_request)
-

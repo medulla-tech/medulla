@@ -419,5 +419,3 @@ class CoHManager :
         @type ids: list
         """
         CoHManager.setCoHsStates(ids, "failed")
-
-

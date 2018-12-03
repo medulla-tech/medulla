@@ -37,7 +37,8 @@ if ($_GET['action'] == 'computersprofilecreator') { $type = 1; } else { $type = 
 if ($type == 0) {
     $p = new TabbedPageGenerator();
     $p->setSideMenu($sidemenu);
-    $p->addTop(sprintf(_T("Group creation", "dyngroup"), $_GET['name']), "modules/dyngroup/dyngroup/header.php");
+    $nameval = isset($_GET['name']) ? $_GET['name'] : "";
+    $p->addTop(sprintf(_T("Group creation", "dyngroup"), $nameval), "modules/dyngroup/dyngroup/header.php");
     $p->addTab("tabdyn", _T("Dynamic group creation", "dyngroup"), "", "modules/dyngroup/dyngroup/creator.php", array('type'=>$type));
     $p->addTab("tabsta", _T("Static group creation", "dyngroup"), "", "modules/dyngroup/dyngroup/add_groups.php", array('type'=>$type));
     $p->addTab("tabfromfile", _T("Static group creation from import", "dyngroup"), "", "modules/dyngroup/dyngroup/import_from_file.php", array('type'=>$type));
@@ -69,7 +70,7 @@ if ($type == 0) {
         echo '<style type="text/css">';
         echo '.tabselector { display: none;}';
         echo '</style>';
-        
+
         if (!isset($_GET['tab'])) {
             $params['tab'] = 'tabsta';
             header("Location: " . urlStrRedirect("imaging/manage/computersprofilecreator", $params));

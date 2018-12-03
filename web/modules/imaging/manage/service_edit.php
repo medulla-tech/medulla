@@ -53,20 +53,20 @@ if(count($_POST) == 0) {
     $f = new ValidatingForm();
     $f->push(new Table());
     $f->add(
-        new TrFormElement(_T("Label", "imaging"), 
+        new TrFormElement(_T("Label", "imaging"),
         new InputTpl("service_label")),
         array("value" => $label)
     );
     $f->add(
-        new TrFormElement(_T("Description", "imaging"), 
+        new TrFormElement(_T("Description", "imaging"),
         new InputTpl("service_desc")),
         array("value" => $desc)
     );
     $f->add(
-        new TrFormElement(_T("In default bootmenu", "imaging"), 
+        new TrFormElement(_T("In default bootmenu", "imaging"),
         new CheckboxTpl("service_bootmenu")),
         array("value" => $in_bootmenu)
-    );    
+    );
     $f->pop();
     $f->addButton("bvalid", _T("Validate"));
     $f->pop();
@@ -75,7 +75,7 @@ if(count($_POST) == 0) {
 else {
     // set new values
 //     foreach($_POST as $key => $value) {
-// 
+//
 //     }
     $label = $_POST['service_label'];
     $str = sprintf(_T("Service <strong>%s</strong> modified with success", "imaging"), $label);
@@ -94,6 +94,6 @@ else {
     // goto menu boot list
     header("Location: " . urlStrRedirect("imaging/manage/service"));
     exit;
-} 
+}
 
 ?>

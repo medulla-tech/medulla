@@ -46,5 +46,3 @@ $ajax = new AjaxFilterInventory(urlStrRedirect("inventory/inventory/ajaxViewPart
 $ajax->display();
 $ajax->displayDivToUpdate();
 ?>
-
-

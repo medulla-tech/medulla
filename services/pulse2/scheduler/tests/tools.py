@@ -28,14 +28,14 @@ from pulse2.database.msc.orm.target import Target
 class TableFactory(type):
     """
     Simulates a CoHQuery structure.
- 
-    Based on lists of all columns of msc tables, ORM-like object 
+
+    Based on lists of all columns of msc tables, ORM-like object
     is mapped on a simple instance containing all needed attributes.
 
     Lists of columns can be generated from this query :
 
-    select COLUMN_NAME from information_schema.columns 
-     where TABLE_SCHEMA = 'msc' 
+    select COLUMN_NAME from information_schema.columns
+     where TABLE_SCHEMA = 'msc'
        and TABLE_NAME = '<table_name>';
 
     Its output is simply pasted into the factory attribute :
@@ -45,7 +45,7 @@ class TableFactory(type):
     <table_name>_class
 
     This factory must be declared as __metaclass__.
-    
+
     """
     coh_class = CommandsOnHost
     coh_cols = """
@@ -147,7 +147,7 @@ class TableFactory(type):
     def __new__(cls, name, bases, attrs):
         # all table names to generate
         tables = [t.replace('_cols','') for t in cls.__dict__.keys() if t.endswith ('_cols')]
-        
+
         for attr_name in tables:
             # gets the ORM class
             klass =  getattr(cls, "%s_class" % attr_name)
@@ -159,7 +159,5 @@ class TableFactory(type):
             table_class = type(attr_name, (klass,), tab_attrs)
             instance = table_class()
             attrs.update({attr_name: instance,})
-       
+
         return type.__new__(cls,name, bases, attrs)
-
-

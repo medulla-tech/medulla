@@ -100,12 +100,12 @@
 	</MappedObject>
 
 	<MappedObject name="PORTS" class="Port">
-	
+
 		<MappedField from="TYPE" to="Type" />
 		<MappedField from="NAME" to="Stamp" />
 		<MappedField from="CAPTION" to="Caption" />
 		<MappedField from="DESCRIPTION" to="Description" />
-		
+
 	</MappedObject>
 
 	<MappedObject name="PRINTERS" class="Printer">

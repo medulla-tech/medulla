@@ -36,7 +36,7 @@ def push_phases():
             DeletePhase,
             InventoryPhase,
             RebootPhase,
-            HaltPhase, 
+            HaltPhase,
             DonePhase,
            ]
 def pull_phases():
@@ -53,15 +53,14 @@ def pull_phases():
             DeletePhase,
             InventoryPhase,
             RebootPhase,
-            HaltPhase, 
+            HaltPhase,
             DonePhase,
            ]
 
 installed_phases = {"push": push_phases(),
                     "pull": pull_phases(),
-                   } 
+                   }
 
 
 
 __all__ = ["installed_phases"]
-

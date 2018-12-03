@@ -527,10 +527,10 @@ class Inventory(DyngroupDatabaseHelper):
                     attributcomputer =  m.toDN(ctx)[1]
                     keycomputer =attributcomputer.keys()
                     for ky in keycomputer:
-                        computers[m.uuid()][1][ky] = attributcomputer[ky]            
-            
-            
-            
+                        computers[m.uuid()][1][ky] = attributcomputer[ky]
+
+
+
             ret = []
             for uuid in uuids:
                 ret.append(computers[uuid])
@@ -1823,7 +1823,7 @@ class Inventory(DyngroupDatabaseHelper):
         #clear entitie of deleted user
         if fkuser != -1:
             self.delUserEntitiesbyfkUser(fkuser)
-            
+
     def updateNameWithHardwareHost(self, uuid, name):
         """
         machine name is synchronised with hardware's host
@@ -1835,7 +1835,7 @@ class Inventory(DyngroupDatabaseHelper):
                     .join(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
                     .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
                 )
-        query = query.filter( 
+        query = query.filter(
                 and_(
                     self.machine.c.id == fromUUID(uuid),
                     self.inventory.c.Last == 1,
@@ -1847,9 +1847,9 @@ class Inventory(DyngroupDatabaseHelper):
         query1 = query1.select_from(self.hardware
                     .join(self.table['hasHardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
                     .join(self.machine, self.machine.c.id == self.table['hasHardware'].c.machine)
-                    .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)                 
+                    .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
                 )
-        query1 = query1.filter( 
+        query1 = query1.filter(
                 and_(
                     self.machine.c.id == fromUUID(uuid),
                     self.inventory.c.Last == 1,
@@ -1924,13 +1924,13 @@ class Inventory(DyngroupDatabaseHelper):
         try:
             params['max']
         except KeyError:
-            params['max'] = str(len(tabretour)+1) 
+            params['max'] = str(len(tabretour)+1)
         ref1={}
         ref1['count']=len(tabretour)
         ref1['data']=tabretour[int(params['min']):int(params['max'])]
         return ref1
 
-    def moveEntityRuleUp(self, idrule):        
+    def moveEntityRuleUp(self, idrule):
         idrule1 = int(idrule)
         newNumRule = idrule1 - 1
         if (idrule1 -1) <= 0:
@@ -1968,10 +1968,10 @@ class Inventory(DyngroupDatabaseHelper):
     def confFileRule(self):
         cfgfile = os.path.join(mmcconfdir,"pulse2","inventory-server","inventory-server.ini")
         config = Pulse2OcsserverConfigParser()
-        config.setup(cfgfile) 
+        config.setup(cfgfile)
         if not config.entities_rules_file:
             logging.getLogger().warn("Error conf file  entities_rules_file in inventory-server.ini missing")
-            raise 
+            raise
         if not os.path.isfile(config.entities_rules_file):
             fichier = open(config.entities_rules_file, "w")
             fichier.close()
@@ -1987,11 +1987,11 @@ class Inventory(DyngroupDatabaseHelper):
                         actif="#"
                     else:
                         actif=""
-                    fichier.write("#@%d" % (index+1) + "\n")  
+                    fichier.write("#@%d" % (index+1) + "\n")
                     strstring= "%s\"%s\"   %s   %s   %s   %s" % (actif,
                                                      ref['data'][index1]['entitie'],
                                                      ref['data'][index1]['aggregator'],
-                                                     ref['data'][index1]['operand1'],  
+                                                     ref['data'][index1]['operand1'],
                                                      ref['data'][index1]['operator'],
                                                      ref['data'][index1]['operand2'])
                     fichier.write(strstring + "\n")
@@ -2030,7 +2030,7 @@ class Inventory(DyngroupDatabaseHelper):
         rulestab = []
         tabretour=[]
         operatorlist=["match","equal","noequal","contains","nocontains","starts","finishes"]
-        #conffile = mmcconfdir + '/pulse2/inventory-server/entities-rules'        
+        #conffile = mmcconfdir + '/pulse2/inventory-server/entities-rules'
         actif = False
         tab=[]
         ret={}
@@ -2039,8 +2039,8 @@ class Inventory(DyngroupDatabaseHelper):
 
         for line in file(conffile):
             line = line.replace('\t',' ')
-            line = line.strip()          
-            #line empty ignored 
+            line = line.strip()
+            #line empty ignored
             if not line.strip():
                 continue
             #line comment actif
@@ -2053,8 +2053,8 @@ class Inventory(DyngroupDatabaseHelper):
             else:
                 actif = True
 
-            ## line two comments deleted 
-            if line.startswith('#'):        
+            ## line two comments deleted
+            if line.startswith('#'):
                continue
             try:
                 ## The first column may contain the quoted entity list
@@ -2065,15 +2065,15 @@ class Inventory(DyngroupDatabaseHelper):
                     rule = m.group(2)
                 else:
                     entities, rule = line.split(None, 1)
-                ## rule line working on severals entity 
+                ## rule line working on severals entity
                 entitieslist = entities.split(',')
                 entitieslist1 = [x for x in entitieslist if re.match('^[a-zA-Z0-9]{3,64}$', x)]
                 entitieslist = [x for x in entitieslist1 if self.locationExists(x)]
                 entitiesNoExist = list(set(entitieslist1) - set(entitieslist))
                 if len(entitiesNoExist) != 0:
                     self.logger.debug('entities %s not exist ' % (entitiesNoExist))
-                # list empty  
-                if len(entitieslist) <= 0: #not entitieslist:# and 
+                # list empty
+                if len(entitieslist) <= 0: #not entitieslist:# and
                     self.logger.debug('empty list entity')
                     continue
 
@@ -2084,15 +2084,15 @@ class Inventory(DyngroupDatabaseHelper):
                 subexprs = []
                 if not words or ( len(words) < 3) :
                     self.logger.debug('wrong format online')
-                    # line mal former                 
+                    # line mal former
                     continue
-                
+
                 if len(words) == 4 and words[0].lower() in ['and', 'or']:
                     prefix = words[0].lower()
                     words = words[1:]
                 elif len(words) == 3 :
                     prefix = ""
-                else:    
+                else:
                     self.logger.debug('operator error in rule')
                     continue
                 operand1, operator, operand2 = words[0:3]
@@ -2146,7 +2146,7 @@ class Inventory(DyngroupDatabaseHelper):
         ref = self.parse_file_rule()
         nb_regle = int(ref['nb_regle'])
         nb_ligne = int(ref['count'])
-        if int(idrule) > (nb_regle): 
+        if int(idrule) > (nb_regle):
             return False
         for index in range(0, nb_ligne):
             numRule = int(ref['data'][index]['numRule'])
@@ -2182,7 +2182,7 @@ class Inventory(DyngroupDatabaseHelper):
         nb_regle = int(ref['nb_regle'])
         nb_ligne = int(ref['count'])
         numreglemodifier = int(ruleobj['numRuleadd'])
-        #if numreglemodifier < 
+        #if numreglemodifier <
         for index in range(0, nb_ligne):
             numRule = int(ref['data'][index]['numRule'])
             if numRule == int(idrule):
@@ -3230,9 +3230,9 @@ class InventoryCreator(Inventory):
             k = i+k
         if k == 0:
             return False
-        
-        
-        
+
+
+
         dates = date.split(' ')
         if len(dates) != 2:
             # Fix needed for MAC OS OCS inventory agent, which is using a

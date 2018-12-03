@@ -421,7 +421,7 @@ class PXEImagingApi (PXEMethodParser):
                 for dd in child:
                     if dd.tag == "HARDWARE":
                         for ee in dd:
-                            if ee.tag == "NAME": 
+                            if ee.tag == "NAME":
                                 ee.text = hostname
         return ET.tostring(root)
 
@@ -437,7 +437,7 @@ class PXEImagingApi (PXEMethodParser):
                 for dd in child:
                     if dd.tag == "ACCESSLOG":
                         for ee in dd:
-                            if ee.tag == "LOGDATE": 
+                            if ee.tag == "LOGDATE":
                                 ee.text = logdate
         return ET.tostring(root)
 

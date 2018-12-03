@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-06 14:51+0100\n"
+"POT-Creation-Date: 2018-11-05 09:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,11 +74,6 @@ msgstr ""
 msgid "Software deployment"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:69
-#: modules/pulse2/includes/menu_action.php:72
-msgid "xmppconsole"
-msgstr ""
-
 #: modules/pulse2/includes/menu_actionaudit.php:70
 #: modules/pulse2/includes/menu_action.php:64
 #: modules/pulse2/includes/menu_action.php:67
@@ -86,10 +81,19 @@ msgid "Remote control"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:73
-#: modules/pulse2/includes/menu_actionaudit.php:75
+#: modules/pulse2/includes/menu_action.php:72
+msgid "xmppconsole"
+msgstr ""
+
+#: modules/pulse2/includes/menu_actionaudit.php:74
+#: modules/pulse2/includes/menu_actionaudit.php:77
 #: modules/pulse2/includes/menu_action.php:86
 #: modules/pulse2/includes/menu_action.php:88
 msgid "files browsing"
+msgstr ""
+
+#: modules/pulse2/includes/menu_actionaudit.php:75
+msgid "Edit config files"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:47

@@ -373,4 +373,3 @@ elif sys.platform == "win32":
           description = NAME,
           options = dict(build_exe = build_options),
           executables = executables)
-

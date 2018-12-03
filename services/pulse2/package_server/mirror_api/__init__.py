@@ -118,4 +118,3 @@ class MirrorApi(MyXmlrpc):
         for m in machines:
             ret.append(self.assign_algo.getMachinePackageApi(m))
         return ret
-

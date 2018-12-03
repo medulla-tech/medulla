@@ -300,6 +300,3 @@ class BoolValue(BoolElement):
         return lists[self.getValue()]
     def getTree(self, lists):
         return lists[self.getValue()]
-
-
-

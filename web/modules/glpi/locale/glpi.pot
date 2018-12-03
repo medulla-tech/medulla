@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-06 14:51+0100\n"
+"POT-Creation-Date: 2018-11-05 09:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -283,10 +283,10 @@ msgid "No antivirus found at %s"
 msgstr ""
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
-#: modules/glpi/glpi/createMachinesStaticGroup.php:81
+#: modules/glpi/glpi/createMachinesStaticGroup.php:75
 #: modules/glpi/glpi/createOSStaticGroup.php:52
 #: modules/glpi/glpi/createStaticGroup.php:43
-#: modules/glpi/glpi/createBackupStaticGroup.php:85
+#: modules/glpi/glpi/createBackupStaticGroup.php:69
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr ""
@@ -612,12 +612,12 @@ msgstr ""
 msgid "Parent entity"
 msgstr ""
 
-#: modules/glpi/glpi/createMachinesStaticGroup.php:66
+#: modules/glpi/glpi/createMachinesStaticGroup.php:61
 #, php-format
 msgid "Machines online at %s"
 msgstr ""
 
-#: modules/glpi/glpi/createMachinesStaticGroup.php:72
+#: modules/glpi/glpi/createMachinesStaticGroup.php:66
 #, php-format
 msgid "Machines offline at %s"
 msgstr ""
@@ -719,12 +719,12 @@ msgstr ""
 msgid "Latest inventory is more than %s days at %s"
 msgstr ""
 
-#: modules/glpi/glpi/createBackupStaticGroup.php:70
+#: modules/glpi/glpi/createBackupStaticGroup.php:55
 #, php-format
 msgid "Machines backup configured at %s"
 msgstr ""
 
-#: modules/glpi/glpi/createBackupStaticGroup.php:75
+#: modules/glpi/glpi/createBackupStaticGroup.php:60
 #, php-format
 msgid "Machines backup not configured at %s"
 msgstr ""
@@ -761,6 +761,14 @@ msgstr ""
 msgid "Entity attributes"
 msgstr ""
 
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Dynamic"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Static"
+msgstr ""
+
 #: modules/glpi/includes/publicFunc.php:154
 msgid "Entity right"
 msgstr ""
@@ -775,7 +783,7 @@ msgstr ""
 
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:106
+#: modules/glpi/includes/panels/os_repartition.inc.php:109
 msgid "Create a group"
 msgstr ""
 
@@ -811,10 +819,10 @@ msgstr ""
 msgid "Operating systems"
 msgstr ""
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:53
+#: modules/glpi/includes/panels/os_repartition.inc.php:54
 msgid "Other"
 msgstr ""
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:61
+#: modules/glpi/includes/panels/os_repartition.inc.php:63
 msgid "Other Windows"
 msgstr ""

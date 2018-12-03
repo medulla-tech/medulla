@@ -41,7 +41,7 @@ class Imaging(Pulse2Api):
         Pulse2Api.__init__(self, *attr)
 
     # Computer registration
-    def computerRegister(self, computerName, MACAddress, 
+    def computerRegister(self, computerName, MACAddress,
                          imagingData, waitToBeInventoried=False):
         """
         Called by pulse2-imaging-server to tell the Package Server to
@@ -58,12 +58,12 @@ class Imaging(Pulse2Api):
             raise TypeError('Bad Computer name: %s' % computerName)
         if not isMACAddress(MACAddress):
             raise TypeError('BAD MAC address: %s' % MACAddress)
-        d = self.callRemote("computerRegister", 
-                            computerName, 
-                            MACAddress, 
-                            imagingData, 
+        d = self.callRemote("computerRegister",
+                            computerName,
+                            MACAddress,
+                            imagingData,
                             waitToBeInventoried)
-        d.addErrback(self.onErrorRaise, 
+        d.addErrback(self.onErrorRaise,
                      "Imaging:computerRegister",
                      [computerName, MACAddress, imagingData, waitToBeInventoried])
         return d
@@ -483,4 +483,3 @@ class ImagingApi(Imaging):
                     return true_method(*attr)
 
                 setattr(self, m, temp)
-

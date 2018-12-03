@@ -37,7 +37,7 @@ TIMEOUT_FOREVER = -1
 class CacheManager(Singleton):
     def __init__(self):
         self._caches = {}
-        
+
     def getCache(self, name, timeout):
         try:
             ret = self._caches[name]
@@ -54,7 +54,7 @@ def getCache(name, timeout=DEFAULT_TIMEOUT):
     return cm.getCache(name, timeout)
 
 class Cache(object):
-    
+
     def __init__(self, manager, name, timeout=DEFAULT_TIMEOUT):
         """ timeout: time after which object expires, by default (seconds)
         """

@@ -58,4 +58,3 @@ class Mirror(pulse2.apis.clients.mirror_api.Mirror):
                 pulse2.apis.clients.mirror_api.Mirror.__init__(self, credit, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
             else:
                 pulse2.apis.clients.mirror_api.Mirror.__init__(self, credit, self.server_addr)
-

@@ -8,8 +8,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           4.4.1
-%define mmc_version            4.4.1
+%define real_version           4.5
+%define mmc_version            4.5
 
 Summary:	Management Console
 Name:		pulse2
@@ -831,4 +831,3 @@ mkdir -p %buildroot%_var/lib/pulse2/file-transfer
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
-

@@ -202,7 +202,3 @@ if __name__ == '__main__':
 
     if TestCase.__module__ != "twisted.trial.unittest" :
         main()
-
-
-
-

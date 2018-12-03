@@ -109,6 +109,12 @@ function timestamp_to_date($timestamp) {
 }
 
 /*
+ *  Convert timestamp to datetime
+ */
+function timestamp_to_datetime($timestamp) {
+        return gmdate('Y-m-d H:i:s', $timestamp);
+}
+/*
  * get UUID list of machines registered as Pull Machines
  */
 

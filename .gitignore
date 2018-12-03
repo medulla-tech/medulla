@@ -3,6 +3,7 @@
 *.mo
 *.o
 *.exe
+.directory
 Makefile.in
 aclocal.m4
 Makefile

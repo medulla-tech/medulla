@@ -426,6 +426,9 @@ class RpcProxy(RpcProxyI):
     def get_deployxmpponmachine(self, command_id):
         return xmlrpcCleanup(MscDatabase().deployxmpponmachine(command_id))
 
+    def get_count_timeout_wol_deploy(self, command_id, date_start):
+        return xmlrpcCleanup(MscDatabase().get_count_timeout_wol_deploy(command_id, date_start))
+
     def expire_all_package_commands(self, pid):
         """
         Expires all commands of a given package
@@ -466,7 +469,6 @@ class RpcProxy(RpcProxyI):
                                 cmd_id,
                                 start_date,
                                 end_date)
-
         return d
 
 
@@ -1080,4 +1082,3 @@ def convergence_reschedule(all=False):
                 logger.warn("Error while fetching deploy_group_id and user for command %s: %s" % (cmd_id, e))
     else:
         logger.info("Convergence cron: no convergence commands will be rescheduled")
-

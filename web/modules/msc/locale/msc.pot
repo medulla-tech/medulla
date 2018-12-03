@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-06 14:51+0100\n"
+"POT-Creation-Date: 2018-11-05 09:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1482,19 +1482,19 @@ msgid "Delay install"
 msgstr ""
 
 #: modules/msc/msc/launch.php:661 modules/msc/msc/launch.php:667
-msgid "time"
+msgid "Time constraint"
 msgstr ""
 
 #: modules/msc/msc/launch.php:661
-msgid "Number of machines"
+msgid "Successful transfer rate"
 msgstr ""
 
 #: modules/msc/msc/launch.php:673
-msgid "Choix install Mode"
+msgid "Install constraint"
 msgstr ""
 
 #: modules/msc/msc/launch.php:680
-msgid "Startup to run the package in the deployment time range"
+msgid "Run the deployment at the specific time"
 msgstr ""
 
 #: modules/msc/msc/launch.php:711 modules/msc/includes/bundle_widgets.php:364
@@ -2138,12 +2138,12 @@ msgstr ""
 msgid "Cancel bundle creation"
 msgstr ""
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:130
+#: modules/msc/includes/commands_xmlrpc.inc.php:138
 #, php-format
 msgid "%s deployment subgroup - %s"
 msgstr ""
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:153
+#: modules/msc/includes/commands_xmlrpc.inc.php:161
 #, php-format
 msgid ""
 "Deploy subgroup created successfully. <br/><a href=\"%s\" target=\"_blank"

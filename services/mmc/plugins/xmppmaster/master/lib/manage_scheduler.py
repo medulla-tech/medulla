@@ -20,7 +20,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import sys,os,platform
+import sys
+import os
+import platform
 import os.path
 
 import traceback
@@ -29,10 +31,10 @@ import time
 from datetime import datetime
 import croniter
 
-#print os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler")))
+# print os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(
+    os.path.realpath(__file__)), "..", "descriptorscheduler")))
 logger = logging.getLogger()
-
 
 
 class manage_scheduler:
@@ -50,38 +52,32 @@ class manage_scheduler:
      SCHEDULE = {"schedule": "* / 1 * * * *", "nb": -1}
      Nb makes it possible to limit the operation a n times.
     """
+
     def __init__(self, objectxmpp):
-        #creation repertoire si non exist.
+        # creation repertoire si non exist.
         self.taches = []
 
         self.now = datetime.now()
 
         self.objectxmpp = objectxmpp
-        self.directoryschedule =  os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"))
+        self.directoryschedule = os.path.abspath(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"))
 
-        #creation repertoire si non exist
+        # creation repertoire si non exist
         if not os.path.exists(self.directoryschedule):
-            logging.getLogger().debug("create directory scheduler %s"%self.directoryschedule)
-            os.makedirs(self.directoryschedule, 0700 )
-        #print self.directoryschedule
-        namefile = os.path.join(self.directoryschedule,"__init__.py")
-        #print namefile
-        if not os.path.exists(namefile):
-            fichier = open(namefile, "w")
-            fichier.write("###WARNING : never delete this file")
-            fichier.close()
+            logging.getLogger().debug("create directory scheduler %s" % self.directoryschedule)
+            os.makedirs(self.directoryschedule, 0700)
 
         for x in os.listdir(self.directoryschedule):
             if x.endswith(".pyc") or not x.startswith("scheduling"):
                 continue
-            #recupere SCHEDULERDATA
+            # recupere SCHEDULERDATA
             name = x[11:-3]
             try:
                 datascheduler = self.litschedule(name)
                 self.add_event(name, datascheduler)
             except Exception:
                 pass
-
 
     def add_event(self, name, datascheduler):
         tabcron = datascheduler['schedule']
@@ -91,20 +87,21 @@ class manage_scheduler:
             nbcount = datascheduler['nb']
         else:
             nbcount = -1
-        obj=  {"name": name, "exectime" : time.mktime(nextd.timetuple()) , "tabcron" : tabcron , "timestart" : str(self.now), "nbcount" : nbcount, "count" : 0 }
+        obj = {"name": name, "exectime": time.mktime(
+            nextd.timetuple()), "tabcron": tabcron, "timestart": str(self.now), "nbcount": nbcount, "count": 0}
         self.taches.append(obj)
 
     def process_on_event(self):
         now = datetime.now()
         secondeunix = time.mktime(now.timetuple())
-        deleted=[]
+        deleted = []
         for t in self.taches:
-            if (secondeunix - t["exectime"])  > 0:
-                #replace exectime
+            if (secondeunix - t["exectime"]) > 0:
+                # replace exectime
                 t["count"] = t["count"] + 1
-                if "nbcount" in t and t["nbcount"] != -1 and  t["count"] > t["nbcount"]:
+                if "nbcount" in t and t["nbcount"] != -1 and t["count"] > t["nbcount"]:
                     deleted.append(t)
-                    logging.getLogger().debug("terminate plugin %s"%t)
+                    logging.getLogger().debug("terminate plugin %s" % t)
                     continue
                 cron = croniter.croniter(t["tabcron"], now)
                 nextd = cron.get_next(datetime)
@@ -114,15 +111,15 @@ class manage_scheduler:
             self.taches.remove(y)
 
     def call_scheduling_main(self, name, *args, **kwargs):
-        mod = __import__("scheduling_%s"%name)
-        logging.getLogger().debug("exec plugin scheduling_%s"%name)
+        mod = __import__("scheduling_%s" % name)
+        logging.getLogger().debug("exec plugin scheduling_%s" % name)
         mod.schedule_main(*args, **kwargs)
 
     def call_scheduling_mainspe(self, name, *args, **kwargs):
-        mod = __import__("scheduling_%s"%name)
+        mod = __import__("scheduling_%s" % name)
 
         return mod.schedule_main
 
     def litschedule(self, name):
-        mod = __import__("scheduling_%s"%name)
+        mod = __import__("scheduling_%s" % name)
         return mod.SCHEDULE

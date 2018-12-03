@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-06 14:51+0100\n"
+"POT-Creation-Date: 2018-11-05 09:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,10 +82,10 @@ msgstr ""
 msgid "Extract logs"
 msgstr ""
 
-#: modules/support/includes/panels/remotesupport.inc.php:56
+#: modules/support/includes/panels/remotesupport.inc.php:42
 msgid "Download archive"
 msgstr ""
 
-#: modules/support/includes/panels/remotesupport.inc.php:59
+#: modules/support/includes/panels/remotesupport.inc.php:45
 msgid "Extract log and config files"
 msgstr ""

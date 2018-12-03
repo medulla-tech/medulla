@@ -49,4 +49,3 @@ class CommandsHistory(object):
         session.add(self)
         session.flush()
         session.close()
-

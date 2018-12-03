@@ -42,7 +42,7 @@ def handler(signum, frame):
         os.unlink(Pulse2InventoryProxyConfig().pidfile)
     except OSError:
         pass
-    
+
     sys.exit(0)
 
 def initialize(config):

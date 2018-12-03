@@ -32,11 +32,11 @@ class GlpiSearchOptions(object):
     def getIdSearchOptionsValues(self, lang = 'en_US'):
         # Get id_search_options values ($tab)
         lang = self.getLangValues(lang)
-        
+
         # Get $LANG['common'] values
         a = os.popen("grep -rn '$tab' %s/inc/computer.class.php | grep \"\$LANG\" | grep -v \<td\>" % self.options.glpi_path).read().split('\n')
         a = [i.split(' ') for i in a]
-        
+
         # put in a list result and remove PHP's ; end line
         b = []
         for i in a:
@@ -46,14 +46,14 @@ class GlpiSearchOptions(object):
                 tmp.pop(0) # remove php class file
                 tmp.pop(1) # remove '='
                 b.append(tmp)
-        
+
         # b is a list of [$tab[x], $LANG[x]]
-        
+
         # Get Special values added by getSearchOptionsToAdd method
         a = os.popen("sed -n '/static function getSearchOptionsToAdd/,/function getSearchOptions/p' %s/inc/* | grep name | grep \$LANG" % self.options.glpi_path).read().split('\n')
-        
+
         a = [i.split(' ') for i in a]
-        
+
         # put in a list result and remove PHP's ; end line
         c = []
         for i in a:
@@ -62,11 +62,11 @@ class GlpiSearchOptions(object):
             if tmp:
                 tmp.pop(1) # remove '='
                 c.append(tmp)
-        
+
         # b is a list of [$tab[x], $LANG[x]]
-        
+
         id_search_option = {}
-        
+
         for i in b + c:
             value = []
             for val in i[1:]:
@@ -91,16 +91,16 @@ class GlpiSearchOptions(object):
                 else:
                     value.append(val)
                 value = ["".join(j) for j in value]
-            
+
             if 'name' in i[0]:
                 key = int(i[0][5:-9]) # extract 'id' from $tab[id]['name']
                 id_search_option[key] = "".join(value)
-        
+
         return id_search_option
 
 if __name__ == '__main__':
     parser = OptionParser()
-    parser.add_option("-p", "--glpi-path", dest="glpi_path", 
+    parser.add_option("-p", "--glpi-path", dest="glpi_path",
                       help="Define Glpi root path")
     # Parse and analyse args
     (options, args) = parser.parse_args()

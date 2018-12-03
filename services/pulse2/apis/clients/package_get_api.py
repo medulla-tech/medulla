@@ -32,7 +32,7 @@ class PackageGetA(Pulse2Api):
     def __init__(self, *attr):
         self.name = "PackageGetApi"
         Pulse2Api.__init__(self, *attr)
-    
+
     def getAllPackages(self, mirror = None):
         try:
             d = self.callRemote("getAllPackages", mirror)
@@ -58,7 +58,7 @@ class PackageGetA(Pulse2Api):
         for pkg in pkgs:
             ret.append(self.__convertDoReboot(pkg))
         return ret
-            
+
     def __convertDoReboot(self, pkg):
         if pkg:
             try:
@@ -85,7 +85,7 @@ class PackageGetA(Pulse2Api):
         d.addCallback(self.__convertDoRebootList)
         d.addErrback(self.onErrorGetPackageDetailCall, pids, False)
         return d
- 
+
     def treatMultipleGetPackageDetailCall(self, results):
         ret = []
         for i in results:
@@ -189,4 +189,3 @@ class PackageGetA(Pulse2Api):
         d = self.callRemote("isAvailable", pid, mirror)
         d.addErrback(self.onError, "getPackageId", (pid, mirror), False)
         return d
-

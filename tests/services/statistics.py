@@ -126,7 +126,7 @@ SupEspLi(list_functions_tested)
 remove_occur(list_functions_tested)
 remove_occur(list_functions_source)
 remove_occur(list_functions_not_tested)
-    
+
 for function_source in list_functions_source:
     if function_source not in (list_functions_tested):
         list_functions.append(function_source)

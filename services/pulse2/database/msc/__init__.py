@@ -207,28 +207,28 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         return bdl
 
-    def createcommanddirectxmpp( self, 
+    def createcommanddirectxmpp( self,
                                 package_id,
-                                start_file, 
-                                parameters, 
+                                start_file,
+                                parameters,
                                 files,
-                                start_script, 
+                                start_script,
                                 clean_on_success,
-                                start_date, 
-                                end_date, 
+                                start_date,
+                                end_date,
                                 connect_as,
-                                creator, 
+                                creator,
                                 title,
                                 next_connection_delay,
                                 max_connection_attempt,
-                                maxbw, 
+                                maxbw,
                                 deployment_intervals,
-                                fk_bundle, 
-                                order_in_bundle, 
-                                proxies, 
+                                fk_bundle,
+                                order_in_bundle,
+                                proxies,
                                 proxy_mode,
-                                state, 
-                                sum_running, 
+                                state,
+                                sum_running,
                                 cmd_type=0):
         session = create_session()
         obj = self.createCommand( session, package_id, start_file, parameters, files,
@@ -384,7 +384,144 @@ class MscDatabase(DatabaseHelper):
         session.add(target)
         session.flush()
         session.close()
-        return target
+        result = {  "id" : target.id,
+                    "target_macaddr" : target.target_macaddr,
+                    "id_group" : target.id_group,
+                    "target_uuid" : target.target_uuid,
+                    "target_bcast" : target.target_bcast,
+                    "target_name" : target.target_name,
+                    "target_ipaddr" : target.target_ipaddr,
+                    "mirrors" : target.mirrors,
+                    "target_network" : target.target_network }
+        return result
+
+    def uuidtoid(self, uuid):
+        if isinstance(uuid, basestring):
+            if uuid.strip().lower().startswith("uuid"):
+                return int(uuid[4:])
+            else:
+                return int(uuid)
+        else:
+            return  uuid
+
+    def xmpp_create_CommandsOnHost(self,
+                           fk_commands,
+                           fk_target,
+                           host,
+                           end_date,
+                           start_date,
+                           id_group=None):
+        session = create_session()
+        commandsOnHost = CommandsOnHost()
+        commandsOnHost.fk_commands = fk_commands
+        commandsOnHost.host = host
+        commandsOnHost.start_date = start_date
+        commandsOnHost.end_date = end_date
+        commandsOnHost.id_group = id_group
+        commandsOnHost.fk_target = self.uuidtoid(fk_target)
+        session.add(commandsOnHost)
+        session.flush()
+        session.close()
+        return commandsOnHost
+
+    def xmpp_create_CommandsOnHostPhasedeploykiosk(self,fk_commands):
+        names=['upload', 'execute', 'delete', 'inventory', 'done']
+        for indexname in range(len(names)):
+            commandsOnHostPhase = self.xmpp_create_CommandsOnHostPhasedeploy(fk_commands, names[indexname])
+        return commandsOnHostPhase
+
+    def xmpp_create_CommandsOnHostPhasedeploy(self, fk_commands, name, state="ready"):
+        session = create_session()
+        commandsOnHostPhase = CommandsOnHostPhase()
+        commandsOnHostPhase.fk_commands_on_host = fk_commands
+        commandsOnHostPhase.state = state
+        commandsOnHostPhase.name = name
+        if name == "upload":
+            commandsOnHostPhase.phase_order = 0
+        elif name == "execute":
+            commandsOnHostPhase.phase_order = 1
+        elif name == "delete":
+            commandsOnHostPhase.phase_order = 2
+        elif name == "inventory":
+            commandsOnHostPhase.phase_order = 3
+        elif name == "done":
+            commandsOnHostPhase.phase_order = 4
+        session.add(commandsOnHostPhase)
+        session.flush()
+        session.close()
+        return commandsOnHostPhase
+
+    def get_counta(self, q):
+        count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+        count = q.session.execute(count_q).scalar()
+        return count
+
+    def get_countb(self, q):
+        return q.with_entities(func.count()).scalar()
+
+    def get_count_timeout_wol_deploy( self, id_command, start_date):
+        """
+            this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals
+        """
+        #datenow = datetime.datetime.now()
+        session = create_session()
+        q = session.query(CommandsOnHost).filter(and_(CommandsOnHost.fk_commands == id_command,
+                                                 CommandsOnHost.stage == 'ended',
+                                                 CommandsOnHost.current_state == 'over_timed',
+                                                 CommandsOnHost.start_date == start_date))
+        return self.get_counta(q)
+
+    def deployxmpponmachine(self, command_id):
+        result = {}
+        sqlselect="""
+            SELECT
+                host,
+                target_name,
+                title,
+                commands.start_date AS startdatec,
+                commands_on_host.start_date AS startdateh,
+                commands.end_date AS enddatec,
+                commands_on_host.end_date AS enddateh,
+                target_ipaddr,
+                target_uuid,
+                target_macaddr,
+                target_bcast,
+                target_network,
+                package_id,
+                creator,
+                connect_as
+            FROM
+                commands_on_host
+                    INNER JOIN
+                commands ON commands.id = commands_on_host.fk_commands
+                    INNER JOIN
+                target ON target.id = commands_on_host.fk_target
+                    INNER JOIN
+                phase ON commands_on_host.id = phase.fk_commands_on_host
+            WHERE
+                commands.id = %s
+                and commands_on_host.id_group IS NULL
+                ORDER BY commands_on_host.id DESC
+                limit 1
+                ;"""%command_id
+        resultsql = self.db.execute(sqlselect)
+        for x in resultsql:
+            result['host'] = x.host
+            result['target_name'] = x.target_name
+            result['title'] = x.title
+            result['startdatec'] = x.startdatec
+            result['startdateh'] = x.startdateh
+            result['enddatec'] = x.enddatec
+            result['enddateh'] = x.enddateh
+            result['target_ipaddr'] = x.target_ipaddr
+            result['target_uuid'] = x.target_uuid
+            result['target_macaddr'] = x.target_macaddr
+            result['target_bcast'] = x.target_bcast
+            result['target_network'] = x.target_network
+            result['package_id'] = x.package_id
+            result['creator'] = x.creator
+            result['connect_as'] = x.connect_as
+        return result
 
     def deployxmpponmachine(self, command_id):
         result = {}
@@ -485,10 +622,10 @@ class MscDatabase(DatabaseHelper):
 
         if filt:
             sqlfilter = sqlfilter + """
-            AND 
-            (commands.title like %%%s%% 
-            OR 
-            commands.creator like %%%s%% 
+            AND
+            (commands.title like %%%s%%
+            OR
+            commands.creator like %%%s%%
             OR
             commands.start_date like %%%s%%)"""%(filt,filt,filt)
 
@@ -497,7 +634,7 @@ class MscDatabase(DatabaseHelper):
         sqllimit=""
         if min and max:
             sqllimit = """
-                LIMIT %d 
+                LIMIT %d
                 OFFSET %d"""%(int(max)-int(min), int(min))
             reqsql = reqsql + sqllimit
 
@@ -510,13 +647,13 @@ class MscDatabase(DatabaseHelper):
 
         sqlselect="""
             Select COUNT(nb) AS TotalRecords from(
-                SELECT 
+                SELECT
                     COUNT(*) AS nb,
                     CONCAT('',
                             IF(target.id_group != NULL
                                     OR target.id_group = '',
                                 CONCAT('computer', commands.title),
-                                CONCAT('GRP ', commands.title))) AS titledeploy 
+                                CONCAT('GRP ', commands.title))) AS titledeploy
                 FROM
                     commands_on_host
                         INNER JOIN
@@ -530,8 +667,8 @@ class MscDatabase(DatabaseHelper):
             AND
             """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;";
-        result={}       
-        resulta = self.db.execute(reqsql)        
+        result={}
+        resulta = self.db.execute(reqsql)
         resultb = self.db.execute(reqsql1)
         sizereq = [x for x in resultb][0][0]
         result['lentotal'] = sizereq
@@ -579,14 +716,13 @@ class MscDatabase(DatabaseHelper):
         return result
 
     def updategroup(self, group):
-        #jfkjfk
         session = create_session()
         join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
         q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
         q = q.select_from(join)
-        q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute', 
+        q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',
                             self.commands_on_host_phase.c.state == 'ready',
-                            self.target.c.id_group == group 
+                            self.target.c.id_group == group
                             )).all()
         ## return informations for update table deploy xmpp
         result=[]
@@ -603,6 +739,8 @@ class MscDatabase(DatabaseHelper):
             resultat['title']       = objdeploy.Commands.title
             resultat['macadress']   = objdeploy.Target.target_macaddr
             resultat['login']       = objdeploy.Commands.creator
+            resultat['startd']      = time.mktime(objdeploy.CommandsOnHost.start_date.timetuple())
+            resultat['endd']        = time.mktime(objdeploy.CommandsOnHost.end_date.timetuple())
             result.append(resultat)
         for x in q:
             #print x.CommandsOnHost.id
@@ -622,8 +760,24 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return result
 
+    #jfkjfk
+    def xmppstage_statecurrent_xmpp(self):
+        """
+            this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals
+        """
+        datenow = datetime.datetime.now()
+        session = create_session()
+        session.query(CommandsOnHost).filter(and_(CommandsOnHost.current_state == 'scheduled',
+                                                 CommandsOnHost.stage == 'pending',
+                                                 CommandsOnHost.end_date < datenow )).\
+                        update({CommandsOnHost.current_state: "over_timed",
+                                CommandsOnHost.stage : "ended"
+                                })
+        session.flush()
+        session.close()
+
     def deployxmpp(self):
-        """ 
+        """
             select deploy machine
         """
         session = create_session()

@@ -89,7 +89,7 @@ if (isset($_POST["bconfirm"])) {
                                     'Imaging | Image | Menu | server | Manual');
                 new NotifyWidgetFailure($msg);
                 header("Location: " . urlStrRedirect("imaging/manage/index"));
-                exit;  
+                exit;
             }
             else{
                 $ret = xmlrpc_synchroProfile($target_uuid);

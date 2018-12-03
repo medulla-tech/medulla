@@ -45,11 +45,11 @@ class InventoryDatabaseConfigSkel(DatabaseConfig):
         """
         @return: Return all available nomenclatures tables
         @rtype: dict
-        """ 
+        """
         noms = {
             'Registry':['Path']
-        }   
-            
+        }
+
         if table == None:
             return noms
         if table in noms:

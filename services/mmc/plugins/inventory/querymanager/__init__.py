@@ -111,4 +111,3 @@ def funcGet(couple, type = 'list'):
         table, col = re.compile('/').split(couple)
         # Return the type of this column
         return getTypeOfAttribute(table, col)
-

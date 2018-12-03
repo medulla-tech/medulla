@@ -25,4 +25,3 @@
 """
     Pulse2 InventoryServer
 """
-

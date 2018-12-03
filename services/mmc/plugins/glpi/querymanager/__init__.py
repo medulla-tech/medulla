@@ -65,7 +65,12 @@ def queryPossibilities():
     ret['Entity'] = ['list', getAllEntities]
     ret['Vendors'] = ['list', getAllSoftwareVendors]
     ret['Software versions'] = ['list', getAllSoftwareVersions]
-
+    ret['Register key'] = ['list', getAllRegistryKey]
+    ret['Register key value'] = ['double',
+                                getRegisterKeyValue,
+                                3,
+                                2]
+    ret['Online computer'] = [ 'bool' ]
     logging.getLogger().info('queryPossibilities %s' %
                              (str(ret)))
     return ret
@@ -98,6 +103,7 @@ def queryGroups():
     #                            ['Contact number',''] \
     #                        ]
     #Zone
+
     ret.append(['Location',
                 [['Location',
                   'Third Floor, Room 401, Headquarters building ... (user defined)'],
@@ -113,7 +119,16 @@ def queryGroups():
                   'Mozilla Firefox, LibreOffice, Microsoft Office 2003 ...'],
                  ['Installed software (specific version)',
                   'Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ...']]])
-    #
+    # REGISTER
+    ret.append(['Register',
+                [['Register key',
+                  'Microsoft Windows keys registers'],
+                ['Register key value',
+                  'Microsoft Windows keys registers value']]])
+    #PRESENCE XMPP
+    ret.append(['Presence',
+                [['Online computer', 'Presence of the machine Yes/No']
+                 ]])
     return ret
 
 
@@ -200,6 +215,15 @@ def getAllSoftwares(ctx, softname='', vendor=None):
                                              vendor=vendor,
                                              limit=20)]
 
+def getRegisterKeyValue(ctx, keyregister="", value=None):
+    if value is None:
+        return getAllRegistryKey(ctx, keyregister)
+    else:
+        return getAllRegistryKeyValue(ctx, keyregister, value)
+
+def getAllRegistryKeyValue(ctx, keyregister, value):
+    return [x[0] for x in Glpi().getAllRegistryKeyValue(ctx, keyregister, value)]
+
 def getAllSoftwaresAndVersions(ctx, softname="", version=None):
     if version is None:
         return [x[0] for x in Glpi().getAllSoftwares(ctx, softname=softname)]
@@ -254,22 +278,22 @@ def getAllLocations1(ctx, value=''):
 def getAllOsSps(ctx, value=''):
     return unique([x.name for x in Glpi().getAllOsSps(ctx, value)])
 
-
 def getAllGroups(ctx, value=''):
     return unique([x.name for x in Glpi().getAllGroups(ctx, value)])
 
-
 def getAllNetworks(ctx, value=''):
     return unique([x.name for x in Glpi().getAllNetworks(ctx, value)])
-
 
 def getAllSoftwareVendors(ctx, value=''):
     res = Glpi().getAllSoftwareVendors(ctx, value)
     return unique([x.name for x in res])
 
-
 def getAllSoftwareVersions(ctx, value='', software=None):
     res = Glpi().getAllSoftwareVersions(ctx, filt=value, software=software)
+    return unique([x.name for x in res])
+
+def getAllRegistryKey(ctx, value=''):
+    res = Glpi().getAllRegistryKey(ctx, value)
     return unique([x.name for x in res])
 
 def getAllOwnerMachine(ctx, value=''):

@@ -69,7 +69,7 @@ Function .onInit
   ${Else} ; "Silent mode" flag set
     SetSilent silent
   ${EndIf}
- 
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ; Handle /VPN_SERVER option ;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -114,16 +114,16 @@ Function .onInit
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ${GetOptions} $R0 /R $0
   ${If} ${Errors} ; not set
-    StrCpy $REBOOT_AFTER_INSTALL false 
+    StrCpy $REBOOT_AFTER_INSTALL false
   ${Else}
-    StrCpy $REBOOT_AFTER_INSTALL true 
+    StrCpy $REBOOT_AFTER_INSTALL true
   ${EndIf}
- 
+
   ${If} ${RunningX64}
     StrCpy $SOFTETHER_VPNCLIENT "vpnclient_x64.exe"
   ${Else}
     StrCpy $SOFTETHER_VPNCLIENT "vpnclient.exe"
-  ${EndIf}       
+  ${EndIf}
 
 FunctionEnd
 

@@ -100,7 +100,7 @@ class ConvergenceGroup extends Group {
         $this->parent_id = $this->parentGroup->id;
     }
 
-    function create() {
+    function create($name = null, $visibility = null) {
         $group_name = ($this->isDeployGroup) ? 'deploy' : 'done';
         parent::create($group_name . '-' . time(), False);
     }
@@ -118,7 +118,7 @@ class ConvergenceGroup extends Group {
         }
     }
 
-    function setRequest() {
+    function setRequest($request = null, $root_context = null) {
         if ($this->parentGroup == Null) {
             $parent_gid = xmlrpc_get_convergence_parent_group_id($this->id);
             /* Get parent group with root context @see #2240
@@ -164,7 +164,7 @@ class ConvergenceGroup extends Group {
         parent::setRequest($request, True);
     }
 
-    function setBool() {
+    function setBool($bool = null) {
         // If a bool condition is defined in the package level
         // we use it,
         $criterion_count = count($this->package->Qvendor);
@@ -201,7 +201,7 @@ class ConvergenceGroup extends Group {
     /*
      * Get deploy sub-group id for given group
      */
-    function getDeployGroupId() {
+    function getDeployGroupId($package = null) {
         return xmlrpc_getDeployGroupId($this->parentGroup->id, $this->package->id);
     }
 }
@@ -291,7 +291,8 @@ class Group {
                 return $this->reply($start, $end, $filter);
             }
         } else { # static group with static result
-            return __xmlrpc_result_group($this->id, $start, $end, $filter);
+            $idgrp = isset($this->id ) ? $this->id : NULL;
+            return __xmlrpc_result_group($idgrp, $start, $end, $filter);
         }
     }
 
@@ -305,7 +306,9 @@ class Group {
 
     function isProfile() { return False; }
     function isGroup() { return True; }
-    function isDyn() { return __xmlrpc_isdyn_group($this->id); }
+    function isDyn() {
+                        $idgrp = isset($this->id) ? $this->id : NULL;
+                        return __xmlrpc_isdyn_group($idgrp); }
     function toDyn() { if ($this->can_modify()) { return __xmlrpc_todyn_group($this->id); } return False; }
     function isRequest() { return __xmlrpc_isrequest_group($this->id); }
     function reload() {  if ($this->can_modify()) { return __xmlrpc_reload_group($this->id); } return False; }

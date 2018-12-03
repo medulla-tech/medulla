@@ -75,7 +75,7 @@ class SchedulerNetUtils :
         resolve_order = SchedulerConfig().resolv_order
         networks = SchedulerConfig().preferred_network
         netbios_path = SchedulerConfig().netbios_path
-        
+
         ip_resolve = IPResolve(resolve_order,
                                networks,
                                netbios_path=netbios_path)
@@ -109,6 +109,5 @@ def chooseClientIP(msc_target):
     target = SchedulerNetUtils.prepare_target(msc_target)
     ip_resolve = SchedulerNetUtils.get_ip_resolve()
     ip = ip_resolve.get_from_target(target)
- 
-    return ip
 
+    return ip

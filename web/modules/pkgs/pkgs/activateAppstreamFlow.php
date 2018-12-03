@@ -31,7 +31,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 
 if (isset($_POST["bconfirm"])) {
     activateAppstreamFlow($_POST['id'], $_POST['package_name'], $_POST['package_label'], $_POST['duration']);
-    
+
     //ICI
     if (!isXMLRPCError() and $ret != -1) {
         $str = _T("The stream has been added successfully. You will receive the latest updates of this stream directly in your package list.", "pkgs");

@@ -242,7 +242,7 @@ if ($areCommands) { // display several commands
 	    $a_delete[] = $actionempty;
 	}
     }
-    
+
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
 
     $n->addExtraInfo($a_date, _T("Start date", "msc"));

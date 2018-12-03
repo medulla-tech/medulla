@@ -168,10 +168,11 @@ $result = "";
 $number = 0;
 recursiveArrayToList(xmlrpc_get_ou_list(), $result, $number);
 
-$f->add(new TrFormElement(_T("Select OUs",'kiosk'),new SpanElement('<div id="ou-container" style="max-height:350px;">
-        <div id="jstree" role="tree" style="width:40%;display:inline-block;overflow:scroll;">'.$result.'</div>
-        <div style="display:inline"><div id="users" class="user-list" style="display:inline"></div></div>
-    </div>',"kiosk")));
+$f->add(new TrFormElement(_T("Select OUs",'kiosk'),new SpanElement('<div id="ou-container" style="display:flex; max-height:350px;">
+<input type="button" id="treeToggler" value="+" />
+<div id="jstree" role="tree" style="width:40%;overflow:scroll;">'.$result.'</div>
+<div id="users" class="user-list" style="display:inline"></div>
+</div>',"kiosk")));
 
 $bo = new ValidateButtonTpl('bvalid', _T("modify",'kiosk'),'btnPrimary',_T("Modify the profile", "kiosk"));
 //$rr = new TrFormElementcollapse($bo);

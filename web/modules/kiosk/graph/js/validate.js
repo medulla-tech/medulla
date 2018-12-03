@@ -38,7 +38,6 @@ function sendForm(){
         var url = "modules/kiosk/kiosk/ajax"+action+"Profile.php";
     }
 
-
     // Create json which contains all the needed infos
     var datas = {};
     datas['name'] = jQuery("#name").val();
@@ -47,10 +46,9 @@ function sendForm(){
     datas['ous'] = ous;
     datas['packages'] = generate_json();
 
-    console.log(datas);
     // Send the infos to ajaxAddProfile.php
     jQuery.post(url, datas, function(result){
-        // the datas printed in ajaxAddProfile.php are stored in result
-        alert(result)
+        // Redirect to the list of profiles
+        window.location.replace("main.php?module=kiosk&submod=kiosk&action=index");
     });
 }

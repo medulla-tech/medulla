@@ -318,7 +318,7 @@ var template = [
 '<cpi:offlineImage cpi:source="catalog:d:/sources/install_windows 7 ultimate.clg" xmlns:cpi="urn:schemas-microsoft-com:cpi" />',
 '</unattend>',
 ].join('\r\n');
-</script> 
+</script>
 
 <?php
 require("../../../includes/config.inc.php");
@@ -355,8 +355,7 @@ $f->push(new Table());
         array("required" => True,'value'=>(isset($parameters)) ? $parameters['Title'] : '')
     );
     //_____________
-    $f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? htmlentities($parameters['Notes']) : 'Enter your comments here...'))));
-
+    $f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? htmlentities($parameters['Notes']) : _T('Enter your comments here...','imaging')))));
 $f->pop();
 $f->add( new SepTpl());
 
@@ -393,7 +392,7 @@ $f->push(new Table());
         (isset($parameters)) ? $parameters['ProductKey4'] : "RPHKF","",
         (isset($parameters)) ? $parameters['ProductKey5'] : "PW487"
     );
-    //_____________    
+    //_____________
     $f->add(
         new TrFormElement(_T('Product Key','imaging').":", new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
@@ -676,7 +675,7 @@ $f->add( new SepTpl());
 $f->add(new TitleElement(_T("Administrator Account", "imaging")));
 $f->push(new Table());
 
-    //_____________   
+    //_____________
     $f->add(
         new TrFormElement(_T('Password','imaging'), new InputTplTitle('PasswordAdmin',$InfoBule_PasswordAdmin)),
         array(  "required" => True,

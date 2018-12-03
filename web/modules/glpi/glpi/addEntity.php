@@ -28,7 +28,7 @@ require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
 
 // Receiving form data
 if (isset($_POST['name'], $_POST['parent'], $_POST['description'])){
-    
+
     if (empty($_GET['id'])){
         addEntity($_POST['name'], $_POST['parent'], $_POST['description']);
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The entity has been added successfully.", "glpi"));
@@ -37,7 +37,7 @@ if (isset($_POST['name'], $_POST['parent'], $_POST['description'])){
         editEntity($_GET['id'], $_POST['name'], $_POST['parent'], $_POST['description']);
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_T("The entity has been edited successfully.", "glpi"));
     }
-    
+
 }
 
 $page_title = _T("Add entity", 'glpi');
@@ -48,9 +48,9 @@ $parent = 1;
 $description = '';
 
 if (isset($_GET['id'])){
-    
+
     $page_title = _T("Edit entity", 'glpi');
-    
+
     // Edition mode : init vars
     // Get the corresponding entity
     $params = array();
@@ -58,12 +58,12 @@ if (isset($_GET['id'])){
     $result = getAllEntitiesPowered($params);
     if ($result['count'] != 1)
         die('Unexpected error');
-    
+
     $entity = $result['data'][0];
     $entity_name = $entity['name'];
     $parent = $entity['entities_id'];
     $description = $entity['comment'];
-    
+
 }
 
 $p = new PageGenerator($page_title);
@@ -81,13 +81,13 @@ $f->add(
 
 $entities_select = new SelectItem("parent");
 $entities = getUserLocations();
-    
+
 $entity_list = array();
 foreach ($entities as $entity){
     $id = str_replace('UUID', '', $entity['uuid']);
     $entity_list[$id] = $entity['completename'];
 }
-    
+
 $entities_select->setElements(array_values($entity_list));
 $entities_select->setElementsVal(array_keys($entity_list));
 

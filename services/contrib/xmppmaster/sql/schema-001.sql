@@ -25,7 +25,7 @@
 -- ----------------------------------------------------------------------
 
 
-  
+
 CREATE DATABASE  IF NOT EXISTS `xmppmaster` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `xmppmaster`;
 

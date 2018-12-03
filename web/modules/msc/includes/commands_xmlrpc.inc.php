@@ -105,6 +105,11 @@ function xmlrpc_get_deployxmppscheduler($login, $min, $max, $flit){
 function xmlrpc_get_deployxmpponmachine($command_id){
     return xmlCall('msc.get_deployxmpponmachine', array($command_id));
 }
+
+function xmlrpc_get_count_timeout_wol_deploy($command_id, $datestart){
+    return xmlCall('msc.get_count_timeout_wol_deploy', array($command_id, $datestart));
+}
+
 function xmlrpc_updategroup($grp_id){
     return xmlCall('msc.updategroup', array($grp_id));
 }

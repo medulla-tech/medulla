@@ -59,10 +59,10 @@ class DyngroupComputers(ComputerI):
 
     def canAssociateComputer2Location(self):
         return False
-        
+
     def addComputer(self, ctx, params):
         return -1
-    
+
     def neededParamsAddComputer(self):
         return []
 
@@ -74,5 +74,3 @@ class DyngroupComputers(ComputerI):
 
     def getComputersListHeaders(self, ctx):
         return []
-
-

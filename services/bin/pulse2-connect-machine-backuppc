@@ -31,7 +31,7 @@ def conffilename( type ):
     else:
         fileconf = conffilenameparamter
 
-    if os.path.isfile(fileconf): 
+    if os.path.isfile(fileconf):
         return fileconf
     else:
         return conffilenameparamter

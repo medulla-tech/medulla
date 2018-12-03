@@ -126,6 +126,7 @@ if(is_array($ou_list))
     recursiveArrayToList(xmlrpc_get_ou_list(), $result, $number);
 
     $f->add(new TrFormElement(_T("Select OUs",'kiosk'),new SpanElement('<div id="ou-container" style="display:flex; max-height:350px;">
+        <input type="button" id="treeToggler" value="+" />
         <div id="jstree" role="tree" style="width:40%;overflow:scroll;">'.$result.'</div>
         <div id="users" class="user-list" style="display:inline"></div>
     </div>',"kiosk")));

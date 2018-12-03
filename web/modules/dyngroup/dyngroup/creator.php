@@ -33,7 +33,7 @@ $groupedit = True;
 if (strpos($_GET['action'], 'profile') !== false) {
     $groupedit = False;
 }
-if ($edition) {
+if (isset($edition)) {
     if ($groupedit) {
         $target = 'computersgroupedit';
     } else {
@@ -47,7 +47,9 @@ if ($edition) {
     }
 }
 $subedition = false;
-if (strlen($_GET['subedition']) && $_GET['subedition'] == '1') {
+if (isset($_GET['subedition']) &&
+        strlen($_GET['subedition']) &&
+        $_GET['subedition'] == '1') {
     $subedition = true;
 }
 
@@ -56,8 +58,10 @@ if (strlen($_GET['subedition']) && $_GET['subedition'] == '1') {
 $id = idGet();
 $imaging_server = quickGet('imaging_server');
 $group = new Group($id, true);
-$request = $_SESSION['request'];
-unset($_SESSION['request']);
+$request = isset($_SESSION['request']) ? $_SESSION['request'] : null;
+if(isset($_SESSION['request'])){
+    unset($_SESSION['request']);
+}
 
 if (strlen($request)) {
     $r = new Request();

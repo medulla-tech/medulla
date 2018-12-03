@@ -349,7 +349,7 @@ if (isset($_POST["bunregister"])) {
     $params['target_uuid'] = $target_uuid;
     $params['target_name'] = $target_name;
     $msg = _T("You are going to unregister this computer from the imaging module, are you sure you want to do that?", "imaging");
-    
+
     $f = new ValidatingForm();
     $f->add(new TitleElement($msg, 3));
     $f->push(new Table());
@@ -389,11 +389,11 @@ else if (isset($_POST["bunregister2"])) {
                                     '',
                                     "session user ".$_SESSION["login"],
                                     'Imaging | Image | Menu | server | Manual');
-        
+
         unset($_SESSION["imaging.isComputerRegistered_".$target_uuid]);
         header("Location: " . urlStrRedirect("base/computers/register_target", $params));
         exit;
-    } 
+    }
     else {
         $str = sprintf(_T("Failed to unregister the computer %s", 'imaging'), $target_name);
         xmlrpc_setfromxmppmasterlogxmpp($str,
@@ -484,13 +484,15 @@ else {
                         unset($networks['domain'][$i]);
                     }
                 }
+
                 // Remove dupplicate entries
+
                 $tabip = array();
                 $idkey = array();
                 foreach ($networks['ipHostNumber'] as $key=>$val) {
                     if (!in_array($val, $tabip))
                     {
-                        $tabip[] =  $val; 
+                        $tabip[] =  $val;
                     }
                     else{
                         $idkey[]=$key;
@@ -509,6 +511,7 @@ else {
                 $networks['networkUuids'] = array_values($networks['networkUuids']);
                 $networks['domain'] = array_values($networks['domain']);
                 $networks['subnetMask'] = array_values($networks['subnetMask']);
+
                 if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
                     if (count($networks['macAddress']) > 1) {
                         $f->push(new Table());
@@ -541,7 +544,7 @@ else {
             }
 
             $f->push(new DivExpertMode());
-            
+
             expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real_target);
 
             $f->pop();
@@ -649,13 +652,15 @@ else {
                     unset($networks['domain'][$i]);
                 }
             }
+
             // Remove dupplicate entries
+
             $tabip = array();
             $idkey = array();
             foreach ($networks['ipHostNumber'] as $key=>$val) {
                 if (!in_array($val, $tabip))
                 {
-                    $tabip[] =  $val; 
+                    $tabip[] =  $val;
                 }
                 else{
                     $idkey[]=$key;
@@ -669,12 +674,14 @@ else {
                 unset($networks['domain'][$vv]);
                 unset($networks['subnetMask'][$vv]);
             }
+
             // Reinitialize the array's index
             $networks['ipHostNumber'] = array_values($networks['ipHostNumber']);
             $networks['macAddress'] = array_values($networks['macAddress']);
             $networks['networkUuids'] = array_values($networks['networkUuids']);
             $networks['domain'] = array_values($networks['domain']);
             $networks['subnetMask'] = array_values($networks['subnetMask']);
+
             if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
                 if (count($networks['macAddress']) > 1) {
                     $f->push(new Table());

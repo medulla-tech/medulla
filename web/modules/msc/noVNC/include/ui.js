@@ -69,10 +69,10 @@ start: function(callback) {
     // set manually
     port = window.location.port;
     if (!port) {
-        if (window.location.protocol.substring(0,5) == 'https') {            
+        if (window.location.protocol.substring(0,5) == 'https') {
             port = 443;
         }
-        else if (window.location.protocol.substring(0,4) == 'http') {            
+        else if (window.location.protocol.substring(0,4) == 'http') {
             port = 80;
         }
     }
@@ -297,7 +297,7 @@ togglePopupStatusPanel: function() {
     } else {
         psp.innerHTML = $D('noVNC_status').innerHTML;
         psp.style.display = "block";
-        psp.style.left = window.innerWidth/2 - 
+        psp.style.left = window.innerWidth/2 -
             parseInt(window.getComputedStyle(psp, false).width)/2 -30 + "px";
         UI.popupStatusOpen = true;
     }
@@ -567,7 +567,7 @@ updateVisualState: function() {
         $D('noVNC_extra_keys').style.display = "none";
         $D('sendCtrlAltDelButton').style.display = "none";
     }
-    
+
     // State change disables viewport dragging.
     // It is enabled (toggled) by direct click on the button
     UI.setViewDrag(false);
@@ -884,7 +884,3 @@ setBarPosition: function() {
 }
 
 };
-
-
-
-

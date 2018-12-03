@@ -465,5 +465,3 @@ MIME_UNKNOWN_ICON = "unknown.png"
 MIME_DIR = "Directory"
 MIME_DIR_ICON = "folder.png"
 DEFAULT_MIME = "application/octet-stream"
-
-

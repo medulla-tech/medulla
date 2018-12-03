@@ -38,7 +38,7 @@ class InventoryHTTPChannel(http.HTTPChannel):
     We inherit from http.HTTPChannel to log incoming connections when the
     launcher is in DEBUG mode, and to log connection errors.
     """
-    
+
     def connectionMade(self):
         logger = logging.getLogger()
         logger.debug("Connection from %s" % (self.transport.getPeer().host,))
@@ -48,8 +48,7 @@ class InventoryHTTPChannel(http.HTTPChannel):
         if not reason.check(twisted.internet.error.ConnectionDone):
             logger = logging.getLogger()
             logger.error(reason)
-        http.HTTPChannel.connectionLost(self, reason)        
+        http.HTTPChannel.connectionLost(self, reason)
 
 class InventorySite(twisted.web.server.Site):
     protocol = InventoryHTTPChannel
-

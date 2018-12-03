@@ -61,7 +61,7 @@ if (isset($_POST["bconfirm"])) {
         new NotifyWidgetSuccess($str);
 
         // Synchronize boot menu
-        
+
         $ret = xmlrpc_synchroLocation($location);
         // goto images list
         if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {

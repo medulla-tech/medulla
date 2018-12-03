@@ -46,7 +46,7 @@ the noVNC core library. Here is a list of those files and the original
 licenses (all MPL 2.0 compatible):
 
     include/base64.js          : MPL 2.0
-   
+
     include/des.js             : Various BSD style licenses
 
     include/jsunzip.js         : zlib/libpng license

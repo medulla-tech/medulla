@@ -52,6 +52,7 @@ if (isset($_POST['bconfirm'])) {
 
     foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware',
             'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
+        //$package[$post] = iconv("utf-8","ascii//TRANSLIT",$_POST[$post]);
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot', 'associateinventory') as $post) {
@@ -74,6 +75,8 @@ if (isset($_POST['bconfirm'])) {
     {
         $saveList = $_POST['saveList'];
         $saveList1 = clean_json($saveList);
+        //$saveList1 = iconv("utf-8","ascii//TRANSLIT",$saveList1);
+
         $package_uuid = $ret[2];
         $result = save_xmpp_json($package_uuid,$saveList1);
     }
@@ -221,7 +224,7 @@ if (isset($_POST['bconfirm'])) {
 
     foreach ($fields as $p) {
         $f->add(
-                new TrFormElement($p[1], new InputTpl($p[0])), array_merge(array("value" => ''), $p[2])
+                new TrFormElement($p[1], new AsciiInputTpl($p[0])), array_merge(array("value" => ''), $p[2])
         );
     }
 
@@ -262,6 +265,12 @@ if (isset($_POST['bconfirm'])) {
         $f->add(
                 new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
         );
+        //spooling priority
+        $rb = new RadioTpl("spooling");
+        $rb->setChoices(array(_T('high priority', 'pkgs'), _T('ordinary priority', 'pkgs')));
+        $rb->setvalues(array('high', 'ordinary'));
+        $rb->setSelected('ordinary');
+        $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
         $packagesInOption = '';
         foreach(xmpp_packages_list() as $package)

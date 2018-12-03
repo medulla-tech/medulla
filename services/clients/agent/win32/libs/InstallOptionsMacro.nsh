@@ -1,10 +1,10 @@
 ; Stolen from http://nsis.sourceforge.net/Useful_InstallOptions_and_MUI_macros
 
 ; Activate a group of controls, depending on the state of one control
-; 
+;
 ; Usage:
-; 
-; eg. !insertmacro GROUPCONTROLS "${DIALOG1}" "${CHK_PROXYSETTINGS}" 
+;
+; eg. !insertmacro GROUPCONTROLS "${DIALOG1}" "${CHK_PROXYSETTINGS}"
 ; "${LBL_IPADDRESS}|${TXT_IPADDRESS}|${LBL_PORT1}|${TXT_PORT1}|${CHK_ENCRYPTION}"
 ; FILE:          INI-file in $pluginsdir
 ; SOURCECONTROL: RadioButton, Checkbox
@@ -21,19 +21,19 @@
   Push $R1 ;counter
   Push $R2 ;state of the control
   Push $R3 ;flags of the control / hwnd of the control
- 
+
   !insertmacro MUI_INSTALLOPTIONS_READ $R2 "${FILE}" "${SOURCECONTROL}" "State"
- 
+
   StrCpy $R1 1
   ${Do}
     ClearErrors
     ${WordFind} "${CONTROLGROUP}" "|" "E+$R1" $R0
- 
+
     ${If} ${Errors}
     ${OrIf} $R0 == ""
       ${ExitDo}
     ${EndIf}
- 
+
     ; Put state change in flags of element as well
     !insertmacro MUI_INSTALLOPTIONS_READ $R3 "${FILE}" "$R0" "Flags"
     ${If} "$R2" == "1"
@@ -43,23 +43,23 @@
     ${Else}
       !insertmacro MUI_INSTALLOPTIONS_WRITE "${FILE}" "$R0" "Flags" "$R3|DISABLED"
     ${EndIf}
- 
+
     !insertmacro MUI_INSTALLOPTIONS_READ $R3 "${FILE}" "$R0" "HWND"
     EnableWindow $R3 $R2
- 
+
     IntOp $R1 $R1 + 1
   ${Loop}
- 
+
   Pop $R3
   Pop $R2
   Pop $R1
   Pop $R0
- 
+
 !macroend
 
 
 ;change text field and put value in ini file
-; 
+;
 ; Usage:
 ;
 ;  !insertmacro CHANGETEXTFIELD "${DIALOG1}" "${DRQ_NSISPATH}" $tmp
@@ -97,41 +97,41 @@
 ; !insertmacro WordFind
 ;
 !macro CHECKBOXCHECKER FILE CONTROLGROUP MIN MAX
- 
+
   Push $R0 ;holds element
   Push $R1 ;counter
   Push $R2 ;count activated elements
   Push $R3 ;state of the control
- 
+
   StrCpy $R1 1
   StrCpy $R2 0
   ${Do}
     ClearErrors
     ${WordFind} "${CONTROLGROUP}" "|" "E+$R1" $R0
- 
+
     ${If} ${Errors}
     ${OrIf} $R0 == ""
       ${ExitDo}
     ${EndIf}
- 
+
     ; Put state change in flags of element as well
     !insertmacro MUI_INSTALLOPTIONS_READ $R3 "${FILE}" "$R0" "State"
     ${If} "$R3" == "1"
       IntOp $R2 $R2 + 1
     ${EndIf}
- 
+
     IntOp $R1 $R1 + 1
   ${Loop}
- 
+
   ${If} $R2 < ${MIN}
   ${OrIf} $R2 > ${MAX}
     MessageBox MB_OK|MB_ICONSTOP "$(TEXT_LIMITATIONSEXCEEDED)"
     Abort
   ${EndIf}
- 
+
   Pop $R3
   Pop $R2
   Pop $R1
   Pop $R0
- 
+
 !macroend

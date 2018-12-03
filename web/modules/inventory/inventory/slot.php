@@ -28,5 +28,3 @@ $label = _T('Slot', 'inventory');
 $filter = $_GET['filter'];
 
 require("body.php");
-
-

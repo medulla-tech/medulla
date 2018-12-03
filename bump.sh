@@ -17,4 +17,3 @@ else
     echo Usage: ./bump.sh version
 
 fi
-

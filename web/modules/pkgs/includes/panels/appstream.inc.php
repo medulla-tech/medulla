@@ -34,14 +34,14 @@ $options = array(
 class AppstreamPanel extends Panel {
 
     function display_content() {
-		
+
         $featured_link_label = json_encode(_T('_X_ AppStream(s) available for subscription', 'pkgs'));
         $no_featured_text = json_encode(_T('No featured appstream found.', 'pkgs'));
         $excluded_packages = array_keys(getActivatedAppstreamPackages());
         $available = getAvailableAppstreamPackages();
         $excluded_packages = array_merge($excluded_packages, array_map(function($item){
             return $item['options']['package_name'];
-        }, $available['product'])); 
+        }, $available['product']));
         $excluded_packages = json_encode(array_unique($excluded_packages));
 
         print '<div id="appstream_panel_content"></div>';
@@ -67,7 +67,7 @@ $(function(){
                     break;
                 }
             }
-            
+
             if (featured){
                 featured_packages.push(item);
             }
@@ -79,17 +79,17 @@ $(function(){
         }
         var featured_link = $('<a>').attr('href', 'http://serviceplace.mandriva.com/services/?p=140');
         featured_link.html($featured_link_label.replace('_X_', featured_packages.length));
-        panel.append($('<center>').append(featured_link)); 
+        panel.append($('<center>').append(featured_link));
         panel.append('<br/>');
         panel.append('<br/>');
 
         for (var i=0; i<featured_packages.length; i++){
             item = featured_packages[i];
-            console.log(item);  
+            console.log(item);
             var appstream_link = $('<a>').attr('href', item.url);
             appstream_link.html(item.name);
             panel.append(appstream_link);
-            
+
         }
     });
 });

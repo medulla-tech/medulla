@@ -41,9 +41,9 @@ if (isset($_POST["bconfirm"])) {
     $loc_id = $_POST['loc_id'];
     $loc_name = $_POST['loc_name'];
     $item_uuid = $_POST['itemid'];
-    
+
     $label = urldecode($_POST['itemlabel']);
-    
+
     //$params = getParams();
     /*$params['default_name'] = $_POST['default_m_label'];
     $params['timeout'] = $_POST['timeout'];
@@ -55,7 +55,7 @@ if (isset($_POST["bconfirm"])) {
 
     $ret = xmlrpc_linkImagingServerToLocation($item_uuid, $loc_id, $loc_name);
 
-    // goto images list 
+    // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Link between package server <strong>%s</strong> and the entity <strong>%s</strong> succeeded.", "imaging"), $label, $loc_id);
         xmlrpc_setfromxmppmasterlogxmpp($str,
@@ -72,7 +72,7 @@ if (isset($_POST["bconfirm"])) {
         new NotifyWidgetSuccess($str);
         // Synchronize boot menu
         $ret = xmlrpc_synchroLocation($location);
-        
+
         if (isXMLRPCError()) {
             $str = sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1]));
             new NotifyWidgetFailure($str);
@@ -118,22 +118,22 @@ $f->add($input,                                         array("value" => ''));
 
 $input = new TrFormElement(_T('timeout', 'imaging'),        new InputTpl("timeout"));
 $f->add($input,                                             array("value" => web_def_menu_timeout()));
-        
+
 $input = new TrFormElement(_T('Background URI', 'imaging'), new InputTpl("background_uri"));
 $f->add($input,                                             array("value" => ''));
-        
+
 $input = new TrFormElement(_T('Message', 'imaging'),        new InputTpl("message"));
 $f->add($input,                                             array("value" => web_def_menu_message()));
-        
+
 $input = new TrFormElement(_T('protocol', 'imaging'),       new InputTpl("protocol"));
 $f->add($input,                                             array("value" => ''));
 # TODO NEED TO GET THE POSSIBLE protocol AND ASK AS A LIST
-        
+
 */
 $f->addValidateButton("bconfirm");
 //$f->addButton("bconfig", _T("Confirm and configure", "imaging"));
 $f->addCancelButton("bback");
 $f->display();
-    
+
 
 ?>

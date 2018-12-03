@@ -169,8 +169,3 @@ class PXEProxy :
         tcp.protocol.set_imaging_args(config, api)
 
         reactor.listenTCP(pxe_port, tcp)
-
-
-
-
-

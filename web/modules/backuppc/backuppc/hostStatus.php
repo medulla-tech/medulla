@@ -221,55 +221,64 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg = array();
     // 1 - Shares and exclude settings
     $cfg['RsyncShareName'] = $_POST['sharenames'];
-    // Charset 
+    // Charset
     $cfg['ClientCharset'] = $_POST['encoding'];
-    
+
     // Splitting excludes by \n
     foreach ($_POST['excludes'] as $key => $value) {
         $_POST['excludes'][$key] = explode("\n",trim($value));
         for ($j = 0 ; $j< count($_POST['excludes'][$key]); $j++)
             $_POST['excludes'][$key][$j] = trim ($_POST['excludes'][$key][$j]);
     }
-    
+
     $cfg['BackupFilesExclude'] = array_combine($_POST['sharenames'],$_POST['excludes']);
-    
+
     // 2 -Backup Period settings
-    
+
     $cfg['FullPeriod'] = fmtFloat(fmtfloat($_POST['full'])-0.03);
     $cfg['IncrPeriod'] = fmtFloat(fmtfloat($_POST['incr'])-0.03);
-    
+
     // Blackout periods
     $starthours = $_POST['starthour'];
     $endhours = $_POST['endhour'];
-    
+
     $cfg['BlackoutPeriods'] = array();
-    
+
     for ($i = 0 ; $i<count($starthours); $i++) {
         $daystring = implode(', ',$_POST['days'.$i]);
         $cfg['BlackoutPeriods'][] = array(
-            'hourBegin' => hhmm2float($starthours[$i]), 
+            'hourBegin' => hhmm2float($starthours[$i]),
             'hourEnd'   => hhmm2float($endhours[$i]),
             'weekDays'  => $daystring
                 );
     }
     // Rsync and NmbLookup command lines
-
+    $rep = getComputersOS($_POST['host']);
+    $os = strtolower($rep[0]['OSName']);
+    
     $backup_manager_cmd  = "/usr/sbin/pulse2-connect-machine-backuppc -m ".$_POST['host']." -p ".$backup_port_reverse_ssh;
     $backup_manager_cmd1 = "/usr/sbin/pulse2-disconnect-machine-backuppc -m ".$_POST['host']." -p ".$backup_port_reverse_ssh;
     $cfg['DumpPreUserCmd']  = $cfg['RestorePreUserCmd']  = $backup_manager_cmd;
     $cfg['DumpPostUserCmd'] = $cfg['RestorePostUserCmd'] = $backup_manager_cmd1;
     $cfg['ClientNameAlias'] = "localhost";
-    $cfg['RsyncClientPath'] = $rsync_path;
-    $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
+    
 
-    $rep = getComputersOS($_POST['host']);
-    $os = $rep[0]['OSName'];
-    if (strtolower($os) == 'macos') {
-        $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost sudo $rsyncPath $argList+';
+    $cfg['RsyncClientPath'] = $rsync_path;
+    if (strpos($os, 'ubuntu') !== false || strpos($os, 'linux') !== false ){
+        $cfg['RsyncClientPath'] = " sudo '".$rsync_path."' ";
     }
-    else {
-        $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
+    $username = "pulse";
+    if (strpos($os, 'ubuntu') !== false || strpos($os, 'linux') !== false ){
+        $username = "pulseuser";
     }
+    $sudo="";
+    if (strtolower($os) == 'macos' || strpos($os, 'ubuntu') || strpos($os, 'linux') ) {
+        $sudo="sudo";
+     }
+
+    $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l '.$username.' -p '.$backup_port_reverse_ssh.' localhost  $rsyncPath $argList+';
+    $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l '.$username.' -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
+    
     $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host';
     $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host';
     $cfg['XferMethod'] = 'rsync';

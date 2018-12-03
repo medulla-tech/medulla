@@ -35,7 +35,8 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs, ParametersDeploy, \
     Organization, Packages_list, Qa_custom_command,\
     Cluster_ars, Has_cluster_ars,\
-    Command_action, Command_qa
+    Command_action, Command_qa,\
+    Organization_ad
 # Imported last
 import logging
 import json
@@ -44,6 +45,7 @@ import time
 import os, pwd
 import traceback
 import sys
+import re
 
 class XmppMasterDatabase(DatabaseHelper):
     """
@@ -179,7 +181,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ## command_qa = command_qa.group_by(Command_qa.id)
             command_qa = command_qa.order_by(desc(Command_qa.id))
             if during_the_last_seconds:
-                command_qa = command_qa.filter( Command_qa.command_start >= (datetime.utcnow() - timedelta(seconds=during_the_last_seconds)))
+                command_qa = command_qa.filter( Command_qa.command_start >= (datetime.now() - timedelta(seconds=during_the_last_seconds)))
             #nb = self.get_count(deploylog)
         #lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
 
@@ -381,6 +383,9 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             logging.getLogger().debug("organization name : %s is not exist"%name_organization)
             return -1
+
+
+
 
 
     @DatabaseHelper._sessionm
@@ -692,6 +697,230 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
         return new_machine.id
 
+
+
+    @DatabaseHelper._sessionm
+    def is_jiduser_organization_ad(self, session, jiduser):
+        """ if user exist return True"""
+        sql = """SELECT COUNT(jiduser) AS nb
+            FROM
+                 xmppmaster.organization_ad
+             WHERE
+              jiduser LIKE ('%s');"""%(jiduser)
+        req = session.execute(sql)
+        session.commit()
+        session.flush()
+        ret=[m[0] for m in req]
+        if ret[0] == 0 :
+            return False
+        return True
+
+    def uuidtoid(self, uuid):
+        if uuid.strip().lower().startswith("uuid"):
+            return uuid[4:]
+        else:
+            return uuid
+
+    @DatabaseHelper._sessionm
+    def is_id_inventory_organization_ad(self, session, id_inventory):
+        """ if id_inventory exist return True"""
+        sql = """SELECT COUNT(id_inventory) AS nb
+            FROM
+                 xmppmaster.organization_ad
+             WHERE
+              jiduser LIKE ('%s');"""%(self.uuidtoid(id_inventory))
+        req = session.execute(sql)
+        session.commit()
+        session.flush()
+        ret=[m[0] for m in req]
+        if ret[0] == 0 :
+            return False
+        return True
+
+    @DatabaseHelper._sessionm
+    def is_id_inventory_jiduser_organization_ad(self, session, id_inventory, jiduser):
+        """ if id_inventory exist return True"""
+        sql = """SELECT COUNT(id_inventory) AS nb
+            FROM
+                 xmppmaster.organization_ad
+             WHERE
+              jiduser LIKE ('%s')
+              and
+              id_inventory LIKE ('%s')
+              ;"""%(jiduser, self.uuidtoid(id_inventory))
+        req = session.execute(sql)
+        session.commit()
+        session.flush()
+        ret=[m[0] for m in req]
+        if ret[0] == 0 :
+            return False
+        return True
+
+    @DatabaseHelper._sessionm
+    def getAllOUuser(self, session, ctx, filt = ''):
+        """
+        @return: all ou defined in the xmpp database
+        """
+        query = session.query(Organization_ad)
+        if filter != '':
+            query = query.filter(Organization_ad.ouuser.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    @DatabaseHelper._sessionm
+    def getAllOUmachine(self, session, ctx, filt = ''):
+        """
+        @return: all ou defined in the xmpp database
+        """
+        query = session.query(Organization_ad)
+        if filter != '':
+            query = query.filter(Organization_ad.oumachine.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    @DatabaseHelper._sessionm
+    def replace_Organization_ad_id_inventory(self,
+                                session,
+                                old_id_inventory,
+                                new_id_inventory):
+        try:
+            session.query(Organization_ad).filter( Organization_ad.id_inventory ==  self.uuidtoid(old_id_inventory)).\
+                    update({ Organization_ad.id_inventory : self.uuidtoid(new_id_inventory) })
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def updateOrganization_ad_id_inventory(self,
+                                session,
+                                id_inventory,
+                                jiduser,
+                                ouuser="",
+                                oumachine="",
+                                hostname="",
+                                username=""):
+        """
+            update Organization_ad table in base xmppmaster
+        """
+        try:
+            session.query(Organization_ad).filter( Organization_ad.id_inventory ==  self.uuidtoid(id_inventory)).\
+                    update({ Organization_ad.jiduser : jiduser,
+                             Organization_ad.id_inventory : self.uuidtoid(id_inventory),
+                             Organization_ad.ouuser : ouuser,
+                             Organization_ad.oumachine : oumachine,
+                             Organization_ad.hostname : hostname,
+                             Organization_ad.username : username})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def updateOrganization_ad_jiduser(self,
+                                session,
+                                id_inventory,
+                                jiduser,
+                                ouuser="",
+                                oumachine="",
+                                hostname="",
+                                username=""):
+        """
+            update Organization_ad table in base xmppmaster
+        """
+        try:
+            session.query(Organization_ad).filter( Organization_ad.jiduser ==  jiduser).\
+                    update({ Organization_ad.jiduser : jiduser,
+                             Organization_ad.id_inventory : self.uuidtoid(id_inventory),
+                             Organization_ad.ouuser : ouuser,
+                             Organization_ad.oumachine : oumachine,
+                             Organization_ad.hostname : hostname,
+                             Organization_ad.username : username})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def addOrganization_ad(self,
+                           session,
+                           id_inventory,
+                           jiduser,
+                           ouuser="",
+                           oumachine="",
+                           hostname="",
+                           username=""):
+
+        id = self.uuidtoid(id_inventory)
+        new_Organization = Organization_ad()
+        new_Organization.id_inventory = id
+        new_Organization.jiduser = jiduser
+        new_Organization.ouuser = ouuser
+        new_Organization.oumachine = oumachine
+        new_Organization.hostname = hostname
+        new_Organization.username = username
+        boolexistuserjid = self.is_jiduser_organization_ad(jiduser)
+        if not boolexistuserjid:
+            # creation de organization for machine jiduser
+            if self.is_id_inventory_organization_ad(id):
+                #delete for uuid
+                self.delOrganization_ad(id_inventory = id)
+            try:
+                session.add(new_Organization)
+                session.commit()
+                session.flush()
+            except Exception, e:
+                logging.getLogger().error("creation Organisation_ad for jid user %s inventory uuid : %s"% (jiduser, id ))
+                logging.getLogger().error("ouuser=%s\noumachine = %s\nhostname=%s\nusername=%s"% (ouuser, oumachine, hostname, username))
+                logging.getLogger().error(str(e))
+                return -1
+            return new_Organization.id_inventory
+        else:
+            #update fiche
+            self.updateOrganization_ad_jiduser(
+                                                id_inventory,
+                                                jiduser,
+                                                ouuser=ouuser,
+                                                oumachine=oumachine,
+                                                hostname=hostname,
+                                                username=username)
+        return new_Organization.id_inventory
+
+    @DatabaseHelper._sessionm
+    def delOrganization_ad( self,
+                            session,
+                            id_inventory = None,
+                            jiduser = None):
+        """
+            supp organization ad
+        """
+        req = session.query(Organization_ad)
+        if id_inventory is not None and jiduser is not None:
+            req=req.filter(and_(Organization_ad.id_inventory == id_inventory,
+                                Organization_ad.jiduser == jiduser))
+        elif id_inventory is not None and iduser is None:
+            req=req.filter(Organization_ad.id_inventory == id_inventory)
+        elif jiduser is not None and id_inventory is None:
+            req=req.filter(Organization_ad.jiduser == jiduser)
+        else:
+            return False
+        try:
+            req.delete()
+            session.commit()
+            session.flush()
+            return True
+        except Exception, e:
+            logging.getLogger().error("delOrganization_ad : %s "%str(e))
+            return False
+
     @DatabaseHelper._sessionm
     def loginbycommand(self, session, idcommand):
         sql = """SELECT
@@ -713,8 +942,6 @@ class XmppMasterDatabase(DatabaseHelper):
             #logging.getLogger().error("addPresenceMachine %s" % jid)
             logging.getLogger().error(str(e))
             return ""
-
-
 
     @DatabaseHelper._sessionm
     def updatedeployinfo(self, session, idcommand):
@@ -770,6 +997,27 @@ class XmppMasterDatabase(DatabaseHelper):
         return "pause"
 
     @DatabaseHelper._sessionm
+    def update_status_deploy_end(self, session):
+        """ this function schedued by xmppmaster """
+        #session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
+                                            #Deploy.state == "DEPLOYMENT START")
+        #).update({ Deploy.state : "DEPLOYMENT ERROR"})
+        datenow = datetime.now()
+        result = session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
+                                            Deploy.state == "DEPLOYMENT START")
+        ).all()
+        session.flush()
+        session.close()
+        for t in result:
+            try:
+                sql = """UPDATE `xmppmaster`.`deploy` SET `state`='DEPLOYMENT ERROR' WHERE `id`='%s';"""%t.id
+                session.execute(sql)
+                session.commit()
+                session.flush()
+            except Exception, e:
+                logging.getLogger().error(str(e))
+
+    @DatabaseHelper._sessionm
     def sessionidforidcommand(self, session, idcommand):
         result = session.query(Deploy.sessionid).filter(Deploy.command == idcommand).all()
         if result:
@@ -806,6 +1054,14 @@ class XmppMasterDatabase(DatabaseHelper):
             obj['shutdownrequired'] = result.shutdownrequired
             obj['limit_rate_ko'] = result.bandwidth
             try:
+                params_json = json.loads(result.params_json)
+
+                if 'spooling' in params_json:
+                    obj['spooling'] = params_json['spooling']
+            except Exception, e:
+                logging.getLogger().error(str(e)+" [the avanced parameters from msc ]")
+
+            try:
                 params = str(result.parameters_deploy)
                 if params == '':
                     return obj
@@ -840,6 +1096,22 @@ class XmppMasterDatabase(DatabaseHelper):
                   endcmd = None,
                   macadress = None
                   ):
+        """
+        parameters
+        startcmd and endcmd  int(timestamp) either str(datetime)
+        """
+        createcommand = datetime.now()
+        try:
+            start=int(startcmd)
+            end=int(endcmd)
+            print start
+            print end
+            startcmd = datetime.fromtimestamp(start).strftime("%Y-%m-%d %H:%M:%S")
+            endcmd = datetime.fromtimestamp(end).strftime("%Y-%m-%d %H:%M:%S")
+        except Exception as e:
+            #logger.error(str(e))
+            pass
+
         #recupere login command
         if login == "":
             login = self.loginbycommand(idcommand)[0]
@@ -858,7 +1130,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_deploy.login = login
             new_deploy.startcmd =startcmd
             new_deploy.endcmd = endcmd
-            new_deploy.start = datetime.now()
+            new_deploy.start = createcommand
             new_deploy.macadress = macadress
             new_deploy.title = title
             session.add(new_deploy)
@@ -1036,7 +1308,8 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self, session,
+    def addlogincommand(self,
+                        session,
                         login,
                         commandid,
                         grpid,
@@ -1046,7 +1319,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         parameterspackage,
                         rebootrequired,
                         shutdownrequired,
-                        bandwidth):
+                        bandwidth,
+                        params):
         try:
             new_logincommand = Has_login_command()
             new_logincommand.login = login
@@ -1071,6 +1345,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_logincommand.shutdownrequired = False
             else:
                 new_logincommand.shutdownrequired = True
+            if (type(params) is list or type(params) is dict) and len(params) != 0:
+                new_logincommand.params_json = json.dumps(params)
+
             session.add(new_logincommand)
             session.commit()
             session.flush()
@@ -1421,7 +1698,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if group_uuid:
             deploylog = deploylog.filter( Deploy.group_uuid == group_uuid)
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
         if state:
             deploylog = deploylog.filter( Deploy.state == state)
 
@@ -1494,7 +1771,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if uuidinventory:
             deploylog = deploylog.filter( Deploy.inventoryuuid == uuidinventory)
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
         if state:
             deploylog = deploylog.filter( Deploy.state == state)
         #else:
@@ -1582,7 +1859,14 @@ class XmppMasterDatabase(DatabaseHelper):
             deploylog = deploylog.filter( Deploy.state == state)
 
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
+
+        count = """select count(*) as nb from (
+        select count(id) as nb
+        from deploy
+        where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
+        group by title
+        ) as x;"""
 
         if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
@@ -1590,7 +1874,27 @@ class XmppMasterDatabase(DatabaseHelper):
                                                 Deploy.start.like('%%%s%%'%(filt)),
                                                 Deploy.login.like('%%%s%%'%(filt)),
                                                 Deploy.host.like('%%%s%%'%(filt))))
+            count = """select count(*) as nb from (
+              select count(id) as nb
+              from deploy
+              where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
+              AND (state LIKE "%%%s%%"
+              or pathpackage LIKE "%%%s%%"
+              or start LIKE "%%%s%%"
+              or login LIKE "%%%s%%"
+              or host LIKE "%%%s%%"
+              )
+              group by title
+              ) as x;"""%(filt,filt,filt,filt,filt,)
+
+
         lentaillerequette = self.get_count(deploylog)
+
+        result = session.execute(count)
+        session.commit()
+        session.flush()
+        lenrequest = [x for x in result]
+
         #lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
         deploylog = deploylog.group_by(Deploy.title)
 
@@ -1602,7 +1906,8 @@ class XmppMasterDatabase(DatabaseHelper):
         result = deploylog.all()
         session.commit()
         session.flush()
-        ret ={'lentotal' : 0,
+        ret ={'total_of_rows' : 0,
+              'lentotal' : 0,
               'tabdeploy' : {
                                 'state' : [],
                                 'pathpackage' : [],
@@ -1622,6 +1927,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 'title' : []}}
 
         ret['lentotal'] = lentaillerequette#[0]
+        ret['total_of_rows'] = lenrequest[0][0]
         for linedeploy in result:
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
@@ -1649,7 +1955,7 @@ class XmppMasterDatabase(DatabaseHelper):
             deploylog = deploylog.filter( Deploy.login == login)
 
         if duree:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=duree)))
 
         if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
@@ -1758,12 +2064,16 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def get_qaction(self, session, namecmd, user ):
+    def get_qaction(self, session, namecmd, user, grp):
         """
             return quick actions informations
         """
-        qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.namecmd==namecmd, Qa_custom_command.user==user))
-        qa_custom_command = qa_custom_command.first()
+        if grp == 0:
+            qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.namecmd==namecmd, Qa_custom_command.user==user))
+            qa_custom_command = qa_custom_command.first()
+        else:
+            qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.customcmd==namecmd, or_(Qa_custom_command.user==user,Qa_custom_command.user=="allusers")))
+            qa_custom_command = qa_custom_command.first()
         if qa_custom_command:
             result = {  "user" : qa_custom_command.user,
                         "os" : qa_custom_command.os,
@@ -1924,7 +2234,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
-    def algoruleadorganisedbyusers(self, session, userou, classutilMachine = "private", rule = 8, enabled=1):
+    def algoruleadorganisedbyusers(self, session, userou, classutilMachine = "both", rule = 8, enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 8 by organization users
             Field "subject" is used to define the organisation by user OU eg Computers/HeadQuarter/Locations
@@ -1962,7 +2272,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algoruleadorganisedbymachines(self, session, machineou, classutilMachine = "private", rule = 7, enabled=1):
+    def algoruleadorganisedbymachines(self, session, machineou, classutilMachine = "both", rule = 7, enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 7 by organization machine
             Field "subject" is used to define the organisation by machine OU eg Computers/HeadQuarter/Locations
@@ -2000,7 +2310,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def algoruleuser(self, session, username, classutilMachine = "private", rule = 1, enabled=1):
+    def algoruleuser(self, session, username, classutilMachine = "both", rule = 1, enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 1 for user name
             Field "subject" is used to define the name of the user in this rule
@@ -2037,37 +2347,54 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algorulehostname(self, session, hostname, classutilMachine = "private", rule = 2, enabled=1):
+    def algorulehostname(self, session, hostname, classutilMachine = "both", rule = 2, enabled=1):
         """
-            Search server relay imposes for a hostname
+            Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 2 for hostname
+            Field "subject" is used to define the hostname in this rule
+            Field "relayserver_id" is used to define the Relayserver associated to this hostname
+            enabled = 1 Only on active relayserver.
+            If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
         """
-        if classutilMachine == "private":
-            sql = """select `relayserver`.`id`
-            from `relayserver`
-                inner join
-                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
-            where
-                `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
-                    AND `relayserver`.`enabled` = %d
-                    AND `relayserver`.`moderelayserver` = 'static'
-                    AND `relayserver`.`classutil` = '%s'
-            limit 1;"""%(rule, hostname, enabled, classutilMachine)
-        else:
-            sql = """select `relayserver`.`id`
-            from `relayserver`
-                inner join
-                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
-            where
-                `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
-                    AND `relayserver`.`enabled` = %d
-                    AND `relayserver`.`moderelayserver` = 'static'
-            limit 1;"""%(rule, hostname, enabled)
+        sql = """select `has_relayserverrules`.`id`,`has_relayserverrules`.`subject`
+        from `has_relayserverrules`
+        where `has_relayserverrules`.`rules_id` = %d
+        order by `has_relayserverrules`.`order`;"""%(rule)
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [x for x in result]
+        listrules = [x for x in result]
+        for relayserverrule in listrules:
+            subject = relayserverrule[1].replace('*','.*')
+            if re.match(subject, hostname, flags=0):
+                has_relayserverrules_id = relayserverrule[0]
+                if classutilMachine == "private":
+                    sql = """select `relayserver`.`id`
+                    from `relayserver`
+                        inner join
+                            `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
+                    where
+                        `has_relayserverrules`.`rules_id` = %d
+                            AND `has_relayserverrules`.`id` = %d
+                            AND `relayserver`.`enabled` = %d
+                            AND `relayserver`.`moderelayserver` = 'static'
+                            AND `relayserver`.`classutil` = '%s'
+                    limit 1;"""%(rule, has_relayserverrules_id, enabled, classutilMachine)
+                else:
+                    sql = """select `relayserver`.`id`
+                    from `relayserver`
+                        inner join
+                            `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
+                    where
+                        `has_relayserverrules`.`rules_id` = %d
+                            AND `has_relayserverrules`.`id` = %d
+                            AND `relayserver`.`enabled` = %d
+                            AND `relayserver`.`moderelayserver` = 'static'
+                    limit 1;"""%(rule, has_relayserverrules_id, enabled)
+                result = session.execute(sql)
+                session.commit()
+                session.flush()
+                return [y for y in result]
+        return ""
 
     @DatabaseHelper._sessionm
     def algoruleloadbalancer(self, session):
@@ -2089,7 +2416,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algorulesubnet(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
+    def algorulesubnet(self, session, subnetmachine, classutilMachine = "both",  enabled=1):
         """
             To associate relay server that is on same networks...
         """
@@ -2115,7 +2442,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algorulebynetworkaddress(self, session, subnetmachine, classutilMachine = "private", rule = 9, enabled=1):
+    def algorulebynetworkaddress(self, session, subnetmachine, classutilMachine = "both", rule = 9, enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 9 by network address
             Field "subject" is used to define the subnet for association
@@ -2184,7 +2511,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
-    def IdlonglatServerRelay(self, session, classutilMachine = "private",  enabled=1):
+    def IdlonglatServerRelay(self, session, classutilMachine = "both",  enabled=1):
         """ return long and lat server relay"""
         if classutilMachine == "private":
             sql = """SELECT
@@ -2416,8 +2743,16 @@ class XmppMasterDatabase(DatabaseHelper):
         listmachinebyRS = [x for x in result]
         resulttopologie = {}
         for i in listmachinebyRS:
+            logging.getLogger().info(i)
             listmachines = i[1].split(',')
-            resulttopologie[i[0]] = listmachines
+
+            # For each element split it and just save the important part
+            count = 0
+            while count < len(listmachines):
+                listmachines[count] = listmachines[count].split("@")[0]
+                count += 1
+
+            resulttopologie[i[0].split('/')[1]] = listmachines
         self.write_topologyfile(resulttopologie)
         return [ resulttopologie]
 
@@ -2505,6 +2840,26 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
 
     @DatabaseHelper._sessionm
+    def getxmppmasterfilterforglpi(self, session, listqueryxmppmaster = None):
+        fl = listqueryxmppmaster[3].replace('*',"%")
+        if listqueryxmppmaster[2] == "OU user":
+            machineid = session.query(Organization_ad.id_inventory)
+            machineid = machineid.filter(Organization_ad.ouuser.like(fl))
+        elif listqueryxmppmaster[2] == "OU machine":
+            machineid = session.query(Organization_ad.id_inventory)
+            machineid = machineid.filter(Organization_ad.oumachine.like(fl))
+        elif listqueryxmppmaster[2] == "Online computer":
+            d = XmppMasterDatabase().getlistPresenceMachineid()
+            listid = [x.replace("UUID", "") for x in d]
+            return listid
+        machineid = machineid.all()
+        session.commit()
+        session.flush()
+        ret = [str(m.id_inventory) for m in machineid]
+        return ret
+
+
+    @DatabaseHelper._sessionm
     def getListPresenceMachine(self, session):
         sql = """SELECT
                     jid, agenttype, hostname, uuid_inventorymachine
@@ -2588,6 +2943,68 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
         except IndexError:
             logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jid)
+            return {}
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return {}
+        resulttypemachine={"type" : typemachine }
+        return resulttypemachine
+
+    @DatabaseHelper._sessionm
+    def getPresencejiduser(self, session, userjid):
+        sql = """SELECT COUNT(jid) AS nb
+            FROM
+                 xmppmaster.machines
+             WHERE
+              jid LIKE ('%s%%');"""%(userjid)
+        presencejid = session.execute(sql)
+        session.commit()
+        session.flush()
+        ret=[m[0] for m in presencejid]
+        if ret[0] == 0 :
+            return False
+        return True
+
+    @DatabaseHelper._sessionm
+    def delPresenceMachinebyjiduser(self, session, jiduser):
+        result = ['-1']
+        typemachine = "machine"
+        try:
+            sql = """SELECT
+                        id, hostname, agenttype
+                    FROM
+                        xmppmaster.machines
+                    WHERE
+                        xmppmaster.machines.jid like('%s@%%');"""%jiduser
+            id = session.execute(sql)
+            session.commit()
+            session.flush()
+            result=[x for x in id][0]
+            sql  = """DELETE FROM `xmppmaster`.`machines`
+                    WHERE
+                        `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
+
+            sql1 = """DELETE FROM `xmppmaster`.`network`
+                    WHERE
+                        `network`.`machines_id` = '%s';"""%result[0]
+            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers`
+                    WHERE
+                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
+            if result[2] == "relayserver":
+                typemachine = "relayserver"
+                sql2 = """UPDATE `xmppmaster`.`relayserver`
+                            SET
+                                `enabled` = '0'
+                            WHERE
+                                `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
+                session.execute(sql2)
+            session.execute(sql)
+            session.execute(sql1)
+            session.execute(sql3)
+            session.commit()
+            session.flush()
+        except IndexError:
+            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jiduser)
             return {}
         except Exception, e:
             logging.getLogger().error(str(e))
@@ -2747,6 +3164,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "picklekeypublic" : machine.picklekeypublic,
                         'ad_ou_user': machine.ad_ou_user,
                         'ad_ou_machine': machine.ad_ou_machine,
+                        'kiosk_presence': machine.kiosk_presence,
                         'lastuser': machine.lastuser}
         return result
 
@@ -2775,6 +3193,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "picklekeypublic" : machine.picklekeypublic,
                         'ad_ou_user': machine.ad_ou_user,
                         'ad_ou_machine': machine.ad_ou_machine,
+                        'kiosk_presence': machine.kiosk_presence,
                         'lastuser': machine.lastuser}
         return result
 
@@ -2943,4 +3362,25 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
+        return [element for element in result]
+
+    @DatabaseHelper._sessionm
+    def get_machines_with_kiosk(self, session):
+        """
+        Select the machines with the kiosk installed.
+        Returns:
+            List of tuple. The tuple contains all the machines founded.
+        """
+
+        sql = """
+        SELECT
+            *
+        FROM
+            machines
+        WHERE
+            kiosk_presence = 'True';"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+
         return [element for element in result]

@@ -24,7 +24,7 @@
 
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
- 
+
 $p = new PageGenerator(_T("Entity rules", 'glpi'));
 $p->setSideMenu($sidemenu);
 $p->display();

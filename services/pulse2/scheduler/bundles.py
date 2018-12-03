@@ -273,5 +273,3 @@ class BundleReferences :
                 cohs = self.get(cmd_id=cmd_id)
                 for coh in cohs :
                     self.content.remove(coh)
-
-

@@ -39,4 +39,3 @@ keytool -genkey -keyalg dsa -keysize 1024 -validity 3650 -dname "$DN" -keystore 
 
 jarsigner -keystore $NAME.keystore -verbose $NAME.jar "Pulse 2 - $NAME"
 jarsigner -verify -verbose -certs $NAME.jar
-

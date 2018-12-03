@@ -29,7 +29,7 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 require_once("modules/backuppc/includes/xmlrpc.php");
-
+$filter1 = empty($_GET["filter"])            ? ''             : $_GET['filter'];
 
 // =========== BACKUP PROFILES =================================
 

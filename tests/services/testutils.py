@@ -38,90 +38,90 @@ def generation_Pserver(directory):
     """
     generate the package 'test' for the Package Server tests
     """
-    
+
     makedirs ("%s/test" %(directory))#create the directory of the test's package
-    
+
     doc=Document()
 
     comment = doc.createComment("DOCTYPE package SYSTEM \"package_v1.dtd\"")
     doc.appendChild(comment)
-    
+
     package = doc.createElement("package")
     package.setAttribute("id","test")
     doc.appendChild(package)
-    
+
     name = doc.createElement("name")
     package.appendChild(name)
-    
+
     natext = doc.createTextNode("TestPackage")
     name.appendChild(natext)
-    
+
     version = doc.createElement("version")
     package.appendChild(version)
-    
+
     numeric = doc.createElement("numeric")
     version.appendChild(numeric)
-    
+
     nutext = doc.createTextNode("")
     numeric.appendChild(nutext)
-    
+
     label = doc.createElement("label")
     version.appendChild(label)
-    
+
     latext = doc.createTextNode("2.0.0.9")
     label.appendChild(latext)
-    
+
     description = doc.createElement("description")
     package.appendChild(description)
-    
+
     dtext = doc.createTextNode("Ceci est le package de test")
     description.appendChild(dtext)
-    
+
     commands = doc.createElement("commands")
     commands.setAttribute("reboot","1")
     package.appendChild(commands)
-    
+
     Precommands = doc.createElement("Precommands")
     commands.appendChild(Precommands)
-    
+
     Ptext = doc.createTextNode("")
     Precommands.appendChild(Ptext)
-    
+
     installInit = doc.createElement("installInit")
     commands.appendChild(installInit)
-    
+
     itext = doc.createTextNode("")
     installInit.appendChild(itext)
-    
-    
+
+
     command = doc.createElement("command")
     command.setAttribute("name","commande")
     commands.appendChild(command)
-    
+
     ctext = doc.createTextNode("./install.bat")
     command.appendChild(ctext)
-    
+
     postCommandSuccess = doc.createElement("postCommandSuccess")
     commands.appendChild(postCommandSuccess)
-    
+
     Stext = doc.createTextNode("")
     postCommandSuccess.appendChild(Stext)
-    
+
     postCommandFailure = doc.createElement("postCommandFailure")
     commands.appendChild(postCommandFailure)
-    
+
     Ftext = doc.createTextNode("")
     postCommandFailure.appendChild(Ftext)
-    
-    
+
+
     fichier=open("%s/test/conf.xml" %(directory),"w")
     doc.writexml(fichier,indent="   ",addindent="    ",newl="\n", encoding="utf-8")
-    
+
     chdir("%s/test" %(directory))
     instalfile=open("install.bat","w")
     instalfile.write("I can\'t be installed")
     instalfile.close()
-    
+
 def ipconfig():
     """
     Returns the current system IP address (from eth0).
@@ -129,12 +129,13 @@ def ipconfig():
     conf=popen("/sbin/ifconfig eth0")
     server=conf.read()
     server=server.split()
+    print  server
     ipserver=server[6][5:]
     if ipserver == "":
         print "The computer doesn't have an IP address on the eth0 interface"
         sys.exit(1)
     return ipserver
-    
+
 def generation_Launcher(directory):
     """
     Generate the temporary files for Launcher's tests.
@@ -185,8 +186,8 @@ def generation_Commands(driver,host,port):
 
     start_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
     end_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(tomorrow))
-    
-    statement = """INSERT INTO `commands` 
+
+    statement = """INSERT INTO `commands`
                              (id,state,creation_date,start_file,parameters,
                               start_script,clean_on_success,files,start_date,
                               end_date,connect_as,creator,dispatched,title,
@@ -200,11 +201,11 @@ def generation_Commands(driver,host,port):
                               'enable','enable','','%s','%s','root','root','YES',
                               'Test Mandriva : Pause 6 minute\n','disable',
                               'disable',360,3,NULL,NULL,NULL,NULL,NULL,NULL,
-                              0,NULL,'disable','',NULL,NULL,NULL,'none') 
+                              0,NULL,'disable','',NULL,NULL,NULL,'none')
                               """ % (start_date, start_date, end_date)
     c.execute(statement)
 
-    statement = """INSERT INTO `commands` 
+    statement = """INSERT INTO `commands`
                              (id,state,creation_date,start_file,parameters,
                               start_script,clean_on_success,files,start_date,
                               end_date,connect_as,creator,dispatched,title,
@@ -218,35 +219,35 @@ def generation_Commands(driver,host,port):
                               'enable','enable','','%s','%s','root','root','YES',
                               'Test Mandriva : Pause 6 minute\n','disable',
                               'disable',360,3,NULL,NULL,NULL,NULL,NULL,NULL,
-                              0,NULL,'disable','',NULL,NULL,NULL,'none') 
+                              0,NULL,'disable','',NULL,NULL,NULL,'none')
                               """ % (start_date, start_date, end_date)
     c.execute(statement)
 
-    statement = """ INSERT INTO `commands_on_host` 
-                              (id, fk_commands, host, start_date, end_date, 
-                               current_state, stage, awoken, uploaded, 
-                               executed, deleted, inventoried, rebooted, 
+    statement = """ INSERT INTO `commands_on_host`
+                              (id, fk_commands, host, start_date, end_date,
+                               current_state, stage, awoken, uploaded,
+                               executed, deleted, inventoried, rebooted,
                                halted, next_launch_date, attempts_left,
-                               attempts_failed, balance, next_attempt_date_time, 
-                               current_launcher, fk_target, scheduler, 
-                               last_wol_attempt,fk_use_as_proxy, 
+                               attempts_failed, balance, next_attempt_date_time,
+                               current_launcher, fk_target, scheduler,
+                               last_wol_attempt,fk_use_as_proxy,
                                order_in_proxy,  max_clients_per_proxy)
                        VALUES (1,1,'localhost','%s','%s',
                                'execution_in_progress','pending','IGNORED','IGNORED',
                                'WORK_IN_PROGRESS','TODO','TODO','TODO','TODO',
                                '2009-10-29 22:53:59',3,0,0,0,'launcher_01',1,
-                               'scheduler_01',NULL,NULL,NULL,0) 
+                               'scheduler_01',NULL,NULL,NULL,0)
                                """ % (start_date, end_date)
     c.execute(statement)
-   
-    statement = """ INSERT INTO `commands_on_host` 
-                              (id, fk_commands, host, start_date, end_date, 
-                               current_state, stage, awoken, uploaded, 
-                               executed, deleted, inventoried, rebooted, 
+
+    statement = """ INSERT INTO `commands_on_host`
+                              (id, fk_commands, host, start_date, end_date,
+                               current_state, stage, awoken, uploaded,
+                               executed, deleted, inventoried, rebooted,
                                halted, next_launch_date, attempts_left,
-                               attempts_failed, balance, next_attempt_date_time, 
-                               current_launcher, fk_target, scheduler, 
-                               last_wol_attempt,fk_use_as_proxy, 
+                               attempts_failed, balance, next_attempt_date_time,
+                               current_launcher, fk_target, scheduler,
+                               last_wol_attempt,fk_use_as_proxy,
                                order_in_proxy,  max_clients_per_proxy)
                        VALUES (2,2,'localhost','%s','%s',
                                'scheduled','pending','IGNORED','IGNORED','TODO',
@@ -254,15 +255,15 @@ def generation_Commands(driver,host,port):
                                3,0,0,0,'launcher_01',1,'scheduler_01',
                                NULL,NULL,NULL,0) """ % (start_date, end_date)
     c.execute(statement)
-  
-    statement = """ INSERT INTO `commands_on_host` 
-                              (id, fk_commands, host, start_date, end_date, 
-                               current_state, stage, awoken, uploaded, 
-                               executed, deleted, inventoried, rebooted, 
+
+    statement = """ INSERT INTO `commands_on_host`
+                              (id, fk_commands, host, start_date, end_date,
+                               current_state, stage, awoken, uploaded,
+                               executed, deleted, inventoried, rebooted,
                                halted, next_launch_date, attempts_left,
-                               attempts_failed, balance, next_attempt_date_time, 
-                               current_launcher, fk_target, scheduler, 
-                               last_wol_attempt,fk_use_as_proxy, 
+                               attempts_failed, balance, next_attempt_date_time,
+                               current_launcher, fk_target, scheduler,
+                               last_wol_attempt,fk_use_as_proxy,
                                order_in_proxy,  max_clients_per_proxy)
                        VALUES (3,1,'localhost','%s','%s',
                                'scheduled','pending','IGNORED','IGNORED','TODO',
@@ -271,7 +272,7 @@ def generation_Commands(driver,host,port):
                                NULL,NULL,NULL,0) """ % (start_date, end_date)
     c.execute(statement)
 
- 
+
     c.execute(""" INSERT INTO `target` VALUES (1,'localhost','file://0','','UUID1','','','','') """)
 
     c.close()
