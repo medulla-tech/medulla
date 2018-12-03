@@ -11,7 +11,7 @@ import logging
 from mmc.plugins.glpi.database import Glpi
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
-plugin = {"VERSION": "1.1", "NAME": "resultinventory", "TYPE": "master"}
+plugin = {"VERSION": "1.11", "NAME": "resultinventory", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
@@ -126,7 +126,10 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
                 except Exception, e:
                     logging.getLogger().debug("Error getting key: %s" % reg_key)
                     pass
+        machine = XmppMasterDatabase().getMachinefromjid(message['from'])
         time.sleep(25)
+        if machine['kiosk_presence'] == 'True':
+            notify_kiosk(machine)
         # restart agent
         # xmppobject.restartAgent(message['from'])
     except Exception, e:
