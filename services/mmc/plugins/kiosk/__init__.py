@@ -480,6 +480,21 @@ def notify_kiosks():
         }
         send_message_to_machine(datas, machine['jid'], name_random(6, "profiles_updated"))
 
+def notify_kiosk(machine):
+    """This function send a notification message for the specified machine.
+    Param:
+        machine : XmppMasterDatabase.Machine object
+    """
+
+    structuredatakiosk = get_packages_for_machine(machine)
+    datas = {
+    'subaction':'profiles_updated',
+    'data' : {
+        'action':'packages',
+        'packages_list': structuredatakiosk
+        }
+    }
+    send_message_to_machine(datas, machine['jid'], name_random(6, "profiles_updated"))
 
 def get_packages_for_machine(machine):
     """Get a list of the packages for the concerned machine.
