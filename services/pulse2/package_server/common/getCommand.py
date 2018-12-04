@@ -136,7 +136,7 @@ fi
 
 case "$ID" in
   mageia)
-    rpm -i "%s"
+    urpmi --auto "%s"
     ;;
   redhat|fedora)
     dnf -y install "%s"
