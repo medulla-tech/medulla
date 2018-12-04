@@ -525,12 +525,10 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-debug
 %{_sbindir}/pulse2-collect-info
 %{_sbindir}/restart-pulse-services
-%{_var}/lib/pulse2/clients
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %_sysconfdir/httpd/conf.d/pulse.conf
 %_var/lib/pulse2/file-transfer
-%exclude %{_var}/lib/pulse2/clients/win32/generate-agent-pack.sh.in
 #FIXME: Move on the correct package later
 # Does not belong to here, lefover file.
 %exclude %_sysconfdir/mmc/pulse2/atftpd/pcre.conf
