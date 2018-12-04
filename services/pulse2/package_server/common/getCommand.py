@@ -131,12 +131,12 @@ if errorlevel 1 (
   echo "We are not able to find your linux distibution"
   exit 1
 else
-  DISTRO=`cat /etc/os-release | grep ^ID= | cut -f2 -d'='`
+  . /etc/os-release
 fi
 
-case "$DISTRO" in
+case "$ID" in
   mageia)
-    urpmi --auto "%s"
+    rpm -i "%s"
     ;;
   redhat|fedora)
     dnf -y install "%s"
