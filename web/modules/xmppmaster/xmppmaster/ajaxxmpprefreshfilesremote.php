@@ -14,23 +14,23 @@
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU General Public License for more details.<?php
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *  file ajax_refrech_files_remote.php
+ *  file ajaxxmpprefreshfilesremote.php
  */
 ?>
-
 <?php
+
 require_once("../includes/xmlrpc.php");
 require_once("../../../includes/config.inc.php");
 require_once("../../../includes/i18n.inc.php");
 require_once("../../../includes/acl.inc.php");
 require_once("../../../includes/session.inc.php");
-header('Content-type: application/json');
-extract($_GET);
+
+extract($_POST);
 
 function sizefile($tailleoctet){
     $tailleko = $tailleoctet/1024;
@@ -47,63 +47,56 @@ function sizefile($tailleoctet){
         }
     }
 }
-
-$strlistdir  = "";
 if (!isset($selectdir) || $selectdir == ""){
     $lifdirstr = xmlrpc_remotefilesystem("", $machine);
 }
 else{
     $lifdirstr = xmlrpc_remotefilesystem($selectdir, $machine);
 }
-
 $lifdir = json_decode($lifdirstr, true);
-$lifdir = $lifdir['data'];
-$lifdir['html'] = "";
 
 if (isset($lifdir['err'])){
     if ( $lifdir['err'] == 'Timeout Error'){
         $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
-    }
-    else{
+    }else{
         $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
     }
-    $strlistdir.= '<h2 style="color : red;">';
-    $strlistdir.= $msg;
-    $strlistdir.= "</h2>";
-    $lifdir['html'] = $strlistdir;
-    echo json_encode($lifdir);
-    exit;
+        echo '<h2 style="color : red;">';
+        echo "$msg";
+        echo "</h2>";
+        exit;
 }
-$strlistdir  .= '<ul class="rightdir">';
-// $strlistdir  .= "<li>.</li>";
-// if ( $lifdir['path_abs_current'] != $lifdir['rootfilesystem']){
-//     $strlistdir  .= "<li>..</li>";
-// }
-$strlistdir  .=  '</ul>';
+$lifdir = $lifdir['data'];
 
-$strlistdir .= '<ul class="rightdir">';
+
+printf ('
+<form>
+    <input id ="path_abs_current_remote" type="hidden" name="path_abs_current_remote" value="%s">
+    <input id ="parentdirremote" type="hidden" name="parentdirremote" value="%s">
+</form>' ,$lifdir['path_abs_current'],$lifdir['parentdir']);
+echo "<h2>Remove Root file system : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdir['rootfilesystem'] ."</span></h2>";
+echo "<h2>Parent Dir .. : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdir['parentdir'] ."</span></h2>";
+echo'
+    <ul class="rightdir">';
         foreach($lifdir['list_dirs_current'] as $namedir){
-            $strlistdir.= "<li>
+            echo "<li>
                       <span class='dir'>".$namedir."</span>
                       <span class='but'><img style='padding-left : 20px; float : right;'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
-                 </li>
-                 ";
+                 </li>";
         }
-    $strlistdir .= '</ul>';
-$strlistdir .= '
-<ul class="rightfile">';
+        echo'
+    </ul>
+    ';
+    echo '
+    <ul class="rightfile">';
         foreach($lifdir['list_files_current'] as $namefile){
-            $strlistdir .=  "<li>
+            echo "<li>
                     <span style='position : relative; top : -4px;'>".$namefile[0]."</span>
                     <span style='position : relative; top : -4px;'>[ ".sizefile($namefile[1])."] </span>
-                    <span><img  class='download' style='padding-left : 20px;
-                                                        float : right;'
-                                                        src='modules/xmppmaster/graph/img/browserdownload.png'>
-                    </span>
-                </li>
-                ";
+                    <span><img  class='download' style='padding-left : 20px;float : right;' src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+                </li>";
         }
-    $strlistdir .= '</ul>';
-    $lifdir['html'] = $strlistdir;
-    echo json_encode($lifdir);
+      echo '
+    </ul>
+            ';
 ?>

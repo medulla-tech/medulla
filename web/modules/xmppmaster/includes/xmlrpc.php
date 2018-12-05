@@ -35,6 +35,10 @@ function xmlrpc_getPresenceuuid($uuid) {
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
 }
 
+function xmlrpc_getPresenceuuids($uuids) {
+    return xmlCall("xmppmaster.getPresenceuuids", array($uuids));
+}
+
 function xmlrpc_getMachinefromjid($jid) {
     return xmlCall("xmppmaster.getMachinefromjid", array($jid));
 }
