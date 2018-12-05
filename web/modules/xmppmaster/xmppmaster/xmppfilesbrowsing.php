@@ -155,7 +155,7 @@ ul.leftfile, ul.rightfile {
         font-size : 20px;
 }
 .delete{
-    padding: 3px 0px 5px 20px;
+        padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
         background-image: url("modules/xmppmaster/graph/img/button_cancel.png");
         background-repeat: no-repeat;
@@ -272,38 +272,43 @@ printf ('
             $rootfilesystempath);
 ?>
 
-<div id="messageaction"></span></div>
+<div id="messageaction">
+    <span></span>
+</div>
 
 <div id="global">
-    <h2>Downloads basket</h2>
     <table>
+        <caption style = " caption-side : top; 
+                           text-align : left; 
+                           Font-Weight : Bold ; 
+                           font-size : 17px;" ><?php echo sprintf(_T('Downloads basket', 'xmppmaster')); ?>
+        </caption>
+
         <tr>
-            <td style = "width:10%;font-size : 15px;">Folders:</td>
-            <td id="filedirectory" style = "font-size : 14px;"></td>
-            <td   style = "width:10%;">
-                <span id="deletelistdirectory" title="Delete folders selection" class="delete" ></span>
-            </td>
-        </tr>
-        <tr>
-            <td style = "width:10%;font-size : 15px;">Files:</td>
-            <td id="filelist" style = "font-size : 14px;"></td>
+            <td style = "width:10%; font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Folders', 'xmppmaster')); ?>:</td>
+            <td id="filedirectory" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
             <td style = "width:10%;">
-                <span  id="deletelistfile" title="Delete files selection"  class="delete" ></span>
+                <span id="deletelistdirectory" title="<?php echo sprintf(_T('Delete Remote File Select', 'xmppmaster')); ?>" class="delete" ></span>
+            </td>
+        </tr>
+
+        <tr>
+            <td style = "width:10%;font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Files', 'xmppmaster')); ?>:</td>
+            <td id="filelist" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
+            <td style = "width:10%;">
+                <span  id="deletelistfile" title="<?php echo sprintf(_T('Delete Remote File Select', 'xmppmaster')); ?>"  class="delete" ></span>
+            </td>
+        </tr>
+
+        <tr>
+            <td style = "text-align:left; width:10%;Font-Weight : Bold ;font-size : 15px;"><?php echo sprintf(_T('Downloads basket to', 'xmppmaster')); ?></td>
+            <td id="dest_string" colspan="2" style = "text-align:left;font-size : 17px;Font-Weight : Bold ; ">dest :</td>
+            <td style = "text-align:left; width:15px;">
+                <span id="downloadlist" title="<?php echo sprintf(_T('Download list selection', 'xmppmaster')); ?>" class="Localdestination" ></span>
             </td>
         </tr>
     </table>
-    <table>
-        <tr>
-            <th style = "text-align:left; font-size : 15px; width:120px;">Download basket to </th>
-            <th id="dest_string" style = "text-align:left;font-size : 15px;">dest :</th>
-            <th style = "text-align:left; width:15px;">
-                <span id="downloadlist" title="Download list selection" class="Localdestination" ></span>
-            </th>
-        </tr>
-    </table>
-
     <br>
-
     <div id="gauche">
         <table style = "width:100%;
                         height:100%;
@@ -312,10 +317,15 @@ printf ('
                         border-collapse :separate;"
                         class="ombremultiple">
             <tr style="height: 100%;">
-                <td class = "ombremultiple" style="vertical-align : top; height:600px;" >
-                    <div id="fileshowlocal" class="fileshow">
-                        <span style="Font-Weight : Bold; font-size : 15px;">Local folder :</span>
-                        <?php  echo "<span id='localcurrrent' style='Font-Weight : Bold ;font-size : 15px;'>".$lifdirlocal['path_abs_current'] ."</span>";
+                <td class = "ombremultiple" style="vertical-align : top; height:600px; Font-Weight : Bold;font-size : 15px;" >
+                    <div id="fileshowlocal" class="fileshow" >
+                        <?php  echo '<div style=" Font-Weight : Bold; 
+                                                  font-size : 15px;">'.
+                                                  sprintf(_T('Local folder', 'xmppmaster')).'
+                                                  : <span  style=" Font-Weight : Bold;
+                                                                               Font-size : 15px;" 
+                        id=\'localcurrrent\'>'.$lifdirlocal['path_abs_current'] ."</span></div>";
+
                         echo '<ul id="leftdirdata" class="leftdir">';
                         echo '</ul>';
                         ?>
@@ -336,11 +346,13 @@ printf ('
                         class="ombremultiple">
             <tr>
                 <td class="enplacementcss ombremultiple">
-                    <span style="Font-Weight : Bold; font-size : 15px;">Remote tree view</span><br>
-                    <span style="Font-Weight : Bold; font-size : 15px; text-align: right">root : <?php echo $rootfilesystempath; ?></span>
+                    <span style="Font-Weight : Bold; font-size : 15px;"><?php echo sprintf(_T('Remote tree view', 'xmppmaster')); ?>: </span><br>
+                    <span style="Font-Weight : Bold; 
+                    font-size : 15px; 
+                    text-align: right"><?php echo _T('root:', 'xmppmaster')." ".$rootfilesystempath; ?></span>
                 </td>
-                <td class="currentdircss ombremultiple">
-                    <span style="Font-Weight : Bold; font-size : 15px;">Current path :</span>
+                <td class="currentdircss ombremultiple" style="Font-Weight : Bold; font-size : 15px;">
+                <?php echo sprintf(_T('Current path: ', 'xmppmaster')); ?>
                     <span id="cur" style="Font-Weight : Bold ;font-size : 15px;">
                             <? echo $lifdir['data']['path_abs_current']; ?>
                     </span>
@@ -463,7 +475,7 @@ printf ('
                         buttons: [
                             {
                                 id: "my-buttoncancel2",
-                                text: "Computer view",
+                                text: "<?php echo sprintf(_T('Computer view', 'xmppmaster')); ?>",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
@@ -473,7 +485,7 @@ printf ('
                             },
                             {
                                 id: "my-buttonrefresh",
-                                text: "Refresh",
+                                text: "<?php echo sprintf(_T('Refresh', 'xmppmaster')); ?>",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
@@ -483,7 +495,7 @@ printf ('
                             },
                             {
                                 id: "my-buttonhistory",
-                                text: "History download",
+                                text: "<?php echo sprintf(_T('History download', 'xmppmaster')); ?>",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
@@ -493,7 +505,7 @@ printf ('
                             },
                             {
                                 id: "my-buttonfilemanager",
-                                text: "File Manager",
+                                text: "<?php echo sprintf(_T('File Manager', 'xmppmaster')); ?>",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
@@ -536,7 +548,7 @@ printf ('
             var parentdirlocal = "";
         }
 
-        jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refresh_files_local.php",
+        jQuery.get("modules/xmppmaster/xmppmaster/ajax_refresh_files_local.php",
                     {
                         "parentdirlocal" : parentdirlocal,
                         "path_abs_current_local" : path_abs_current_local,
@@ -647,23 +659,23 @@ printf ('
     jQuery("#downloadlist").click(function() {
         var dir  = jQuery('#filedirectory').text().split(";")
         var file = jQuery('#filelist').text().split(";")
-        msg = "<h1>Download from " + namemachine + "</h1>"+
+        msg = "<h1><?php echo sprintf(_T('Download from', 'xmppmaster')); ?>" + " " + namemachine + "</h1>"+
         "<p>"+
-        "Folders list:"+
+        "<?php echo sprintf(_T('Folders list', 'xmppmaster')); ?>" + " : " +
         "</p>";
         for (var i = 0; i < dir.length; i++) {
             msg = msg + "<p>" + dir[i] + "</p>";
         }
         msg = msg + "<br>";
         msg = msg + "<p>"+
-        "Files list:"+
+        "<?php echo sprintf(_T('Files list', 'xmppmaster')); ?>" + " : " +
         "</p>";
         for (var i = 0; i < file.length; i++) {
             msg = msg + "<p>" + file[i] + "</p>";
         }
          msg = msg + "<br>";
         msg = msg + "<p>"+
-        "To local folder :" +
+        "<?php echo sprintf(_T('To local folder', 'xmppmaster')); ?>" + " : "+
         "</p>";
         msg = msg + "<br>";
         msg = msg + "<p>"+
@@ -680,7 +692,7 @@ printf ('
                     buttons: [
                         {
                             id: "my-button",
-                            text: "Confirm",
+                            text: "<?php echo sprintf(_T('Confirm', 'xmppmaster')); ?>",
                             'class':'btnPrimary',
                             style : "color:#FFFFFF; background-color: #000000;",
                             click:function() {
@@ -692,7 +704,7 @@ printf ('
                                         "listfile"      : jQuery('#filelist').text(),
                                         "jidmachine"    : jid
                                         },function(data){
-                                            jQuery('#dialog-notification-download-file').attr('title', 'The list (folder & files) copy has been requested successfully');
+                                            jQuery('#dialog-notification-download-file').attr('title', '<?php echo sprintf(_T('The list (folder & files) copy has been requested successfully', 'xmppmaster')); ?>');
                                             confirmation_information(data);
                                         });
                                 jQuery( this ).dialog( "close" );
