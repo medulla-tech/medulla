@@ -223,7 +223,8 @@ echo "<br><br><br>";
 // creation repertoire namemachine si non existe.
 // et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles
 // /machine25pulse
-$filecurentdir = xmlrpc_create_local_dir_transfert(xmlrpc_localfilesystem("")['path_abs_current'], $ma['hostname']);
+$lifdirlocal = xmlrpc_localfilesystem("");
+$filecurentdir = xmlrpc_create_local_dir_transfert($lifdirlocal['path_abs_current'], $ma['hostname']);
 $curentdir = $filecurentdir['path_abs_current'];
 
 echo '<script type="text/javascript">';
@@ -246,8 +247,7 @@ echo '</script>';
 ?>
 
 <?php
-    $lifdirlocal = xmlrpc_localfilesystem("");
-    $lifdirstr = xmlrpc_remotefilesystem("", $machine);
+    $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
     $lifdir = json_decode($lifdirstr, true);
     if (isset($lifdir['err'])){
         if ( $lifdir['err'] == 'Timeout Error'){
@@ -449,7 +449,7 @@ printf ('
         absolutepath ="";
         init = 1;
         local(namemachine);
-        remote();
+        remote("@");
         jQuery('#directoryremote')
             .on("changed.jstree", function (e, data) {
                 if(data.selected.length) {

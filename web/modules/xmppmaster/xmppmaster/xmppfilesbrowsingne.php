@@ -288,7 +288,7 @@ echo '</script>';
 ?>
 
   <?php
-    $lifdirstr = xmlrpc_remotefilesystem("", $machine);
+    $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
     $lifdir = json_decode($lifdirstr, true);
 
     if (isset($lifdir['err'])){
@@ -315,9 +315,7 @@ echo '</script>';
                 <?php
                 printf ('
                 <form>
-                path abs current local
                     <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
-                    parent dirlocal
                     <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
                 </form>' ,$curentdir, $filecurentdir['parentdir']);
                 ?>
@@ -389,7 +387,7 @@ echo '</script>';
         absolutepath ="";
         init = 1;
         local();
-        remote();
+        remote("@");
 	jQuery('#directoryremote')
 		.on("changed.jstree", function (e, data) {
 			if(data.selected.length) {
