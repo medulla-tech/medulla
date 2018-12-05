@@ -2693,20 +2693,26 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getPresenceuuid(self, session, uuid):
-        sql = """SELECT
-                    COUNT(*) AS 'nb'
-                FROM
-                    `xmppmaster`.`machines`
-                WHERE
-                    `xmppmaster`.`machines`.`uuid_inventorymachine` = '%s';"""%(uuid)
-        #logging.getLogger().debug("sql :%s"%(sql))
-        presence = session.execute(sql)
+        machinespresente = session.query(Machines.uuid_inventorymachine).filter( Machines.uuid_inventorymachine == uuid ).first()
         session.commit()
         session.flush()
-        ret=[m[0] for m in presence]
-        if ret[0] == 0 :
-            return False
-        return True
+        if machinespresente :
+            return True
+        return False
+
+    @DatabaseHelper._sessionm
+    def getPresenceuuids(self, session, uuids):
+        if isinstance(uuids, basestring):
+            uuids=[uuids]
+        result = { }
+        for uuidmachine in uuids:
+            result[uuidmachine] = False
+        machinespresente = session.query(Machines.uuid_inventorymachine).filter(Machines.uuid_inventorymachine.in_(uuids)).all()
+        session.commit()
+        session.flush()
+        for linemachine in machinespresente:
+            result[linemachine.uuid_inventorymachine] = True
+        return result
 
     #topology
     @DatabaseHelper._sessionm
