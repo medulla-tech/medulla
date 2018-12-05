@@ -573,7 +573,7 @@ class Glpi92(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-        
+
         query = (count and session.query(func.count(Machine.id))) or session.query(Machine)
         # manage criterion  for xmppmaster
         ret = self.__xmppmasterfilter(filt)
@@ -4666,6 +4666,92 @@ class Glpi92(DyngroupDatabaseHelper):
             session.flush()
             return True
 
+    @DatabaseHelper._sessionm
+    def get_os_for_dashboard(self, session):
+        """This function returns a list of OS and its version for dashboard
+        Returns:
+            dict of all the founded elements
+
+        Dict structure:
+            [
+                {
+                    'count': 1,
+                    'version': '1807',
+                    'os': 'Windows 10'
+                },
+                {
+                    'count': 3,
+                    'version': '16.04',
+                    'os': 'Ubuntu'
+                },
+            ]
+        """
+
+        sql="""SELECT
+COUNT(*) AS grouped_count,
+
+  glpi_operatingsystems.name as os,
+  glpi_operatingsystemversions.name as version_name
+FROM
+  glpi_computers_pulse
+INNER JOIN
+  glpi_operatingsystems
+ON
+  operatingsystems_id = glpi_operatingsystems.id
+
+left JOIN
+  glpi_operatingsystemversions
+ON
+  operatingsystemversions_id = glpi_operatingsystemversions.id
+GROUP BY
+  glpi_operatingsystems.name
+  -- glpi_operatingsystemversions.name
+  ;"""
+        res = self.db.execute(sql)
+        result = [{'count': count, 'os': os, 'version': version} for count, os, version in res]
+
+        def _add_element(element, list):
+            """Private function which merge the element to the specified list.
+            Params:
+                element: dict of the os we need to merge into the list
+                list : list of all the merged elements.
+            Returns:
+                list
+            """
+            # If an item is found, they are merged
+            for machine in list:
+                if element['os'] == machine['os'] and element['version'] == machine['version']:
+                    machine['count'] = int(machine['count']) + int(element['count'])
+                    return list
+
+            # If no machine is matching with the element, the element is added
+            list.append(element)
+            return list
+
+        final_list = []
+        for machine in result:
+            if machine['os'].startswith('Android'):
+                pass
+            elif machine['os'].startswith('Debian'):
+                machine['os'] = 'Debian'
+                machine['version'] = machine['version'].split(" ")
+                machine['version'] = machine['version'][0]
+            elif machine['os'].startswith('Microsoft'):
+                machine['os'] = machine['os'].split(' ')[1:3]
+                machine['os'] = ' '.join(machine['os'])
+            elif machine['os'].startswith('Ubuntu'):
+                machine['os'] = 'Ubuntu'
+                # We want just the XX.yy version number
+                machine['version'] = machine['version'].split(" ")[0]
+                machine['version'] = machine['version'].split(".")
+                if len(machine['version']) >= 2:
+                    machine['version'] = machine['version'][0:2]
+                machine['version'] = '.'.join(machine['version'])
+            else:
+                machine['os'] = 'Other'
+
+            final_list = _add_element(machine, final_list)
+        return final_list
 
 # Class for SQLalchemy mapping
 class Machine(object):

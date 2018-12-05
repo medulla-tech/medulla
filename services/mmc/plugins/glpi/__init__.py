@@ -280,3 +280,6 @@ def moveEntityRuleDown(*args, **kwargs):
 
 def get_all_uuids_and_hostnames():
     return Glpi().get_all_uuids_and_hostnames()
+
+def get_os_for_dashboard():
+    return xmlrpcCleanup(Glpi().get_os_for_dashboard())
