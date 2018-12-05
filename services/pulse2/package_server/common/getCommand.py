@@ -124,7 +124,9 @@ if errorlevel 1 (
         return 'regedit /s "%s"' % basename(self.file)
 
     def getDpkgCommand(self):
-        return 'DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes dpkg -i --force-confdef --force-confold "%s"' % basename(self.file)
+        return """export DEBIAN_FRONTEND=noninteractive
+export UCF_FORCE_CONFFOLD=yes
+dpkg -i --force-confdef --force-confold "%s" """ % basename(self.file)
 
     def getRpmCommand(self):
         return """if [ ! -e /etc/os-release ]; then
