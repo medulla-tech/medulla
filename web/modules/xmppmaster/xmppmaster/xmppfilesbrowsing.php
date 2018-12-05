@@ -235,7 +235,7 @@ echo '</script>';
     $lifdir = json_decode($lifdirstr, true);
     if (isset($lifdir['err'])){
         if ( $lifdir['err'] == 'Timeout Error'){
-            $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
+            $msg = sprintf(_T("Sorry, the remote machine [%s] takes too long to answer.", "xmppmaster"), $machine);
         }else{
             $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
         }
@@ -252,15 +252,11 @@ printf ('
     <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
     <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
 </form>' ,$lifdirlocal['path_abs_current'],$lifdirlocal['parentdir']);
-/*
- $lifdirstr = xmlrpc_remotefilesystem("", $machine);
- $lifdirremote = json_decode($lifdirstr, true);
-*/
 $rootfilesystem = $lifdir['data']['rootfilesystem'];
 
 $rootfilesystempath = $rootfilesystem;
 if ($rootfilesystem[1] == ":"){
-    $rootfilesystempath =substr($lifdirremote['data']['rootfilesystem'],2); 
+    $rootfilesystempath =substr($lifdirremote['data']['rootfilesystem'],2);
 }
 
 printf ('
@@ -292,7 +288,7 @@ printf ('
             <td style = "width:10%; font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Folders', 'xmppmaster')); ?>:</td>
             <td id="filedirectory" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
             <td style = "width:10%;">
-                <span id="deletelistdirectory" title="<?php echo sprintf(_T('Delete Remote Directory Select', 'xmppmaster')); ?>" class="delete" ></span>
+                <span id="deletelistdirectory" title="<?php echo sprintf(_T('Delete Remote File Select', 'xmppmaster')); ?>" class="delete" ></span>
             </td>
         </tr>
 
@@ -318,7 +314,7 @@ printf ('
                         height:100%;
                         padding:0px;
                         border-spacing: 5px 5px;
-                        border-collapse :separate;" 
+                        border-collapse :separate;"
                         class="ombremultiple">
             <tr style="height: 100%;">
                 <td class = "ombremultiple" style="vertical-align : top; height:600px; Font-Weight : Bold;font-size : 15px;" >
@@ -368,8 +364,8 @@ printf ('
                     <div id ="directoryremote" style = " width:100%;overflow:auto;" ></div>
                 </td>
                 <td class="ombremultiple"  style = "height: 600px; width:60%; vertical-align: middle;"  >
-                    <div id ="fileshowremote" 
-                        style = "padding-top:10px; 
+                    <div id ="fileshowremote"
+                        style = "padding-top:10px;
                                 width:100%;height: 100%;
                                 overflow:auto;">
                     </div>
@@ -461,7 +457,7 @@ printf ('
             jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" );
 
             jQuery('#directoryremote').on('ready.jstree', function() {
-                jQuery('#directoryremote').jstree("open_all"); 
+                jQuery('#directoryremote').jstree("open_all");
             });
     });
 
@@ -489,7 +485,7 @@ printf ('
                             },
                             {
                                 id: "my-buttonrefresh",
-                                text: "<?php echo sprintf(_T('Refrech', 'xmppmaster')); ?>",
+                                text: "<?php echo sprintf(_T('Refresh', 'xmppmaster')); ?>",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
@@ -552,7 +548,7 @@ printf ('
             var parentdirlocal = "";
         }
 
-        jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refrech_files_local.php",
+        jQuery.get("modules/xmppmaster/xmppmaster/ajax_refresh_files_local.php",
                     {
                         "parentdirlocal" : parentdirlocal,
                         "path_abs_current_local" : path_abs_current_local,
@@ -591,7 +587,7 @@ printf ('
             var parentdirremote = "";
         }
 
-       jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refrech_files_remote.php",
+       jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php",
                     {
                             "parentdirremote" : parentdirremote,
                             "path_abs_current_remote" : path_abs_current_remote,
@@ -665,21 +661,21 @@ printf ('
         var file = jQuery('#filelist').text().split(";")
         msg = "<h1><?php echo sprintf(_T('Download from', 'xmppmaster')); ?>" + " " + namemachine + "</h1>"+
         "<p>"+
-        "<?php echo sprintf(_T('List directory', 'xmppmaster')); ?>" + " : " +
+        "<?php echo sprintf(_T('Folders list', 'xmppmaster')); ?>" + " : " +
         "</p>";
         for (var i = 0; i < dir.length; i++) {
             msg = msg + "<p>" + dir[i] + "</p>";
         }
         msg = msg + "<br>";
         msg = msg + "<p>"+
-        "<?php echo sprintf(_T('List files', 'xmppmaster')); ?>" + " : " +
+        "<?php echo sprintf(_T('Files list', 'xmppmaster')); ?>" + " : " +
         "</p>";
         for (var i = 0; i < file.length; i++) {
             msg = msg + "<p>" + file[i] + "</p>";
         }
          msg = msg + "<br>";
         msg = msg + "<p>"+
-        "<?php echo sprintf(_T('to directory', 'xmppmaster')); ?>" + " : "+
+        "<?php echo sprintf(_T('To local folder', 'xmppmaster')); ?>" + " : "+
         "</p>";
         msg = msg + "<br>";
         msg = msg + "<p>"+
@@ -706,7 +702,7 @@ printf ('
                                         "directory"     : jQuery('#dest_string').text(),
                                         "listdirectory" : jQuery('#filedirectory').text(),
                                         "listfile"      : jQuery('#filelist').text(),
-                                        "jidmachine"    : jid 
+                                        "jidmachine"    : jid
                                         },function(data){
                                             jQuery('#dialog-notification-download-file').attr('title', '<?php echo sprintf(_T('The list (folder & files) copy has been requested successfully', 'xmppmaster')); ?>');
                                             confirmation_information(data);
