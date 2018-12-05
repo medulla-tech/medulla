@@ -170,6 +170,22 @@ ul.leftfile, ul.rightfile {
         Font-Weight : Bold ;
         font-size : 20px;
 }
+.pop{
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/xmppmaster/graph/img/rewind.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        Font-Weight : Bold ;
+        font-size : 15px;
+}
+.pop:hover{
+        Font-Weight : Bold ;
+        font-size : 20px;
+}
 .ombremultiple {
         /*width:100%;*/
         background-color:#ECECEC;
@@ -288,6 +304,7 @@ printf ('
             <td style = "width:10%; font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Folders', 'xmppmaster')); ?>:</td>
             <td id="filedirectory" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
             <td style = "width:10%;">
+            <span id="poplistdirectory" title="<?php echo sprintf(_T('pop Remote File Select', 'xmppmaster')); ?>" class="pop" ></span>
                 <span id="deletelistdirectory" title="<?php echo sprintf(_T('Delete Remote File Select', 'xmppmaster')); ?>" class="delete" ></span>
             </td>
         </tr>
@@ -296,6 +313,7 @@ printf ('
             <td style = "width:10%;font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Files', 'xmppmaster')); ?>:</td>
             <td id="filelist" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
             <td style = "width:10%;">
+            <span  id="poplistfile" title="<?php echo sprintf(_T('pop Remote File Select', 'xmppmaster')); ?>"  class="pop" ></span>
                 <span  id="deletelistfile" title="<?php echo sprintf(_T('Delete Remote File Select', 'xmppmaster')); ?>"  class="delete" ></span>
             </td>
         </tr>
@@ -438,9 +456,6 @@ printf ('
                     var pathlinux = data.instance.get_path(data.node, '/');
 
                     var rs = jQuery('#rootfilesystempath').val();
-                    console.log(pathlinux)
-                    console.log(rs)
-                    console.log(pathlinux.substr(rs.length))
                     remote(pathlinux.substr(rs.length));
                 }
             })
@@ -461,9 +476,20 @@ printf ('
             });
     });
 
+    function del_list(type){
+        // type "files" ou "directory"
+        listfileusermachinejson[type].splice(0,listfileusermachinejson[type].length)
+    }
+
+    function pop_list(type){
+        // type "files" ou "directory"
+        listfileusermachinejson[type].pop()
+    }
+
     function confirmation_information(data) {
         setTimeout(function() { affichedata(data); }, 2000);
     }
+
     function affichedata(data){
                 jQuery("#dialogmsg2").html(data);
                 jQuery( function() {
@@ -726,9 +752,21 @@ printf ('
 
     jQuery("#deletelistdirectory").click(function() {
         jQuery('#filedirectory').html("");
+        del_list("directory");
     });
 
     jQuery("#deletelistfile").click(function() {
         jQuery("#filelist").html("");
+        del_list("files");
+    });
+
+    jQuery("#poplistdirectory").click(function() {
+         pop_list("directory");
+         jQuery('#filedirectory').html(listfileusermachinejson['directory'].join(' ; '));
+    });
+
+    jQuery("#poplistfile").click(function() {
+        pop_list("files");
+        jQuery('#filelist').html(listfileusermachinejson['files'].join(' ; '));
     });
     </script>
