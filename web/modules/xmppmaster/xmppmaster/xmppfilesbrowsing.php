@@ -235,7 +235,7 @@ echo '</script>';
     $lifdir = json_decode($lifdirstr, true);
     if (isset($lifdir['err'])){
         if ( $lifdir['err'] == 'Timeout Error'){
-            $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
+            $msg = sprintf(_T("Sorry, the remote machine [%s] takes too long to answer.", "xmppmaster"), $machine);
         }else{
             $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
         }
@@ -256,7 +256,7 @@ $rootfilesystem = $lifdir['data']['rootfilesystem'];
 
 $rootfilesystempath = $rootfilesystem;
 if ($rootfilesystem[1] == ":"){
-    $rootfilesystempath =substr($lifdirremote['data']['rootfilesystem'],2); 
+    $rootfilesystempath =substr($lifdirremote['data']['rootfilesystem'],2);
 }
 
 printf ('
@@ -275,30 +275,33 @@ printf ('
 <div id="messageaction"></span></div>
 
 <div id="global">
+    <h2>Downloads basket</h2>
     <table>
         <tr>
-            <th style = "text-align:left; width:10%;Font-Weight : Bold ;font-size : 15px;">[select list Files]</th>
-            <th style = "text-align:left; width:120px;">Local destination :</th>
-            <th id="dest_string" style = "text-align:left;font-size : 17px;">dest :</th>
+            <td style = "width:10%;font-size : 15px;">Folders:</td>
+            <td id="filedirectory" style = "font-size : 14px;"></td>
+            <td   style = "width:10%;">
+                <span id="deletelistdirectory" title="Delete folders selection" class="delete" ></span>
+            </td>
+        </tr>
+        <tr>
+            <td style = "width:10%;font-size : 15px;">Files:</td>
+            <td id="filelist" style = "font-size : 14px;"></td>
+            <td style = "width:10%;">
+                <span  id="deletelistfile" title="Delete files selection"  class="delete" ></span>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th style = "text-align:left; font-size : 15px; width:120px;">Download basket to </th>
+            <th id="dest_string" style = "text-align:left;font-size : 15px;">dest :</th>
             <th style = "text-align:left; width:15px;">
                 <span id="downloadlist" title="Download list selection" class="Localdestination" ></span>
             </th>
         </tr>
-        <tr>
-            <td style = "width:10%;font-size : 15px;">Directory list :</td>
-            <td id="filedirectory" colspan="2" style = "font-size : 14px;"></td>
-            <td   style = "width:10%;">
-                <span id="deletelistdirectory" title="Delete Remote Directory Select" class="delete" ></span>
-            </td>
-        </tr>
-        <tr>
-            <td style = "width:10%;font-size : 15px;">Files list :</td>
-            <td id="filelist" colspan="2" style = "font-size : 14px;"></td>
-            <td style = "width:10%;">
-                <span  id="deletelistfile" title="Delete Remote File Select"  class="delete" ></span>
-            </td>
-        </tr>
     </table>
+
     <br>
 
     <div id="gauche">
@@ -306,12 +309,13 @@ printf ('
                         height:100%;
                         padding:0px;
                         border-spacing: 5px 5px;
-                        border-collapse :separate;" 
+                        border-collapse :separate;"
                         class="ombremultiple">
             <tr style="height: 100%;">
                 <td class = "ombremultiple" style="vertical-align : top; height:600px;" >
                     <div id="fileshowlocal" class="fileshow">
-                        <?php  echo "<h2> Current Dir : <span  id='localcurrrent'>".$lifdirlocal['path_abs_current'] ."</span></h2>";
+                        <span style="Font-Weight : Bold; font-size : 15px;">Local folder :</span>
+                        <?php  echo "<span id='localcurrrent' style='Font-Weight : Bold ;font-size : 15px;'>".$lifdirlocal['path_abs_current'] ."</span>";
                         echo '<ul id="leftdirdata" class="leftdir">';
                         echo '</ul>';
                         ?>
@@ -332,11 +336,11 @@ printf ('
                         class="ombremultiple">
             <tr>
                 <td class="enplacementcss ombremultiple">
-                    <span style="Font-Weight : Bold; font-size : 15px;">Emplacement </span><br>
-                    <span style="Font-Weight : Bold; font-size : 15px; text-align: right">[ root : <?php echo $rootfilesystempath; ?> ]</span>
+                    <span style="Font-Weight : Bold; font-size : 15px;">Remote tree view</span><br>
+                    <span style="Font-Weight : Bold; font-size : 15px; text-align: right">root : <?php echo $rootfilesystempath; ?></span>
                 </td>
                 <td class="currentdircss ombremultiple">
-                Path current : 
+                    <span style="Font-Weight : Bold; font-size : 15px;">Current path :</span>
                     <span id="cur" style="Font-Weight : Bold ;font-size : 15px;">
                             <? echo $lifdir['data']['path_abs_current']; ?>
                     </span>
@@ -348,8 +352,8 @@ printf ('
                     <div id ="directoryremote" style = " width:100%;overflow:auto;" ></div>
                 </td>
                 <td class="ombremultiple"  style = "height: 600px; width:60%; vertical-align: middle;"  >
-                    <div id ="fileshowremote" 
-                        style = "padding-top:10px; 
+                    <div id ="fileshowremote"
+                        style = "padding-top:10px;
                                 width:100%;height: 100%;
                                 overflow:auto;">
                     </div>
@@ -441,7 +445,7 @@ printf ('
             jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" );
 
             jQuery('#directoryremote').on('ready.jstree', function() {
-                jQuery('#directoryremote').jstree("open_all"); 
+                jQuery('#directoryremote').jstree("open_all");
             });
     });
 
@@ -469,7 +473,7 @@ printf ('
                             },
                             {
                                 id: "my-buttonrefresh",
-                                text: "Refrech",
+                                text: "Refresh",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
@@ -532,7 +536,7 @@ printf ('
             var parentdirlocal = "";
         }
 
-        jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refrech_files_local.php",
+        jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refresh_files_local.php",
                     {
                         "parentdirlocal" : parentdirlocal,
                         "path_abs_current_local" : path_abs_current_local,
@@ -571,7 +575,7 @@ printf ('
             var parentdirremote = "";
         }
 
-       jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refrech_files_remote.php",
+       jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php",
                     {
                             "parentdirremote" : parentdirremote,
                             "path_abs_current_remote" : path_abs_current_remote,
@@ -645,21 +649,21 @@ printf ('
         var file = jQuery('#filelist').text().split(";")
         msg = "<h1>Download from " + namemachine + "</h1>"+
         "<p>"+
-        "List directory :"+
+        "Folders list:"+
         "</p>";
         for (var i = 0; i < dir.length; i++) {
             msg = msg + "<p>" + dir[i] + "</p>";
         }
         msg = msg + "<br>";
         msg = msg + "<p>"+
-        "List files :"+
+        "Files list:"+
         "</p>";
         for (var i = 0; i < file.length; i++) {
             msg = msg + "<p>" + file[i] + "</p>";
         }
          msg = msg + "<br>";
         msg = msg + "<p>"+
-        "to directory :" +
+        "To local folder :" +
         "</p>";
         msg = msg + "<br>";
         msg = msg + "<p>"+
@@ -686,7 +690,7 @@ printf ('
                                         "directory"     : jQuery('#dest_string').text(),
                                         "listdirectory" : jQuery('#filedirectory').text(),
                                         "listfile"      : jQuery('#filelist').text(),
-                                        "jidmachine"    : jid 
+                                        "jidmachine"    : jid
                                         },function(data){
                                             jQuery('#dialog-notification-download-file').attr('title', 'The list (folder & files) copy has been requested successfully');
                                             confirmation_information(data);

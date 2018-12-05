@@ -472,7 +472,7 @@ echo '</script>';
         }
 
         jQuery( "#fileshowlocal" ).load(
-                        "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocalne.php",
+                        "modules/xmppmaster/xmppmaster/ajaxxmpprefreshfileslocalne.php",
                         {
                             "parentdirlocal" : parentdirlocal,
                             "path_abs_current_local" : path_abs_current_local,
@@ -502,7 +502,7 @@ echo '</script>';
                     "\npath_abs_current_remote : " + path_abs_current_remote+
                     "\nselectdir :" + selectdir);
         jQuery( "#fileshowremote" ).load(
-                        "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremotene.php",
+                        "modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php",
                         {
                             "parentdirremote" : parentdirremote,
                             "path_abs_current_remote" : path_abs_current_remote,
