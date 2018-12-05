@@ -304,8 +304,8 @@ printf ('
             <td style = "width:10%; font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Folders', 'xmppmaster')); ?>:</td>
             <td id="filedirectory" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
             <td style = "width:10%;">
-            <span id="poplistdirectory" title="<?php echo sprintf(_T('Delete last folder added', 'xmppmaster')); ?>" class="pop" ></span>
-                <span id="deletelistdirectory" title="<?php echo sprintf(_T('Delete Remote File Select', 'xmppmaster')); ?>" class="delete" ></span>
+            <span id="poplistdirectory" title="<?php echo sprintf(_T('Remove last folder', 'xmppmaster')); ?>" class="pop" ></span>
+                <span id="deletelistdirectory" title="<?php echo sprintf(_T('Remove all folders', 'xmppmaster')); ?>" class="delete" ></span>
             </td>
         </tr>
 
@@ -313,8 +313,8 @@ printf ('
             <td style = "width:10%;font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Files', 'xmppmaster')); ?>:</td>
             <td id="filelist" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
             <td style = "width:10%;">
-            <span  id="poplistfile" title="<?php echo sprintf(_T('Delete last file added', 'xmppmaster')); ?>"  class="pop" ></span>
-                <span  id="deletelistfile" title="<?php echo sprintf(_T('Delete Remote File Select', 'xmppmaster')); ?>"  class="delete" ></span>
+            <span  id="poplistfile" title="<?php echo sprintf(_T('Remove last file', 'xmppmaster')); ?>"  class="pop" ></span>
+                <span  id="deletelistfile" title="<?php echo sprintf(_T('Remove all files', 'xmppmaster')); ?>"  class="delete" ></span>
             </td>
         </tr>
 
