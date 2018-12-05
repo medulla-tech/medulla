@@ -1,0 +1,3464 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# # Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Pulse 2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-27 14:06+0100\n"
+"PO-Revision-Date: 2016-06-01 17:32+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.10\n"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1536
+msgid "   - Hide the Microsoft Software License Terms page in Windows Welcome"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1540
+msgid "   - Skip Welcome Center, also known as Per User OOBE"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1538
+msgid "   - Skip Windows Welcome, also known as Machine OOBE"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1544
+msgid "   - The network type"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1546
+msgid "   - What type of computer protection is in place"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:39
+#, php-format
+msgid "%s menu parameters"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:142 modules/imaging/imaging/tabs.php:173
+#: modules/imaging/imaging/tabs.php:193 modules/imaging/imaging/tabs.php:213
+#, php-format
+msgid "%s's computer imaging"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:209
+#, php-format
+msgid "%s's computer imaging (in group)"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:288
+#, php-format
+msgid "%s's imaging group"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:259
+#, php-format
+msgid "%s's profile imaging"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_redirect_to_boot_service.php:38
+#, php-format
+msgid "<b>%s</b> was already added to Boot Services"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:232
+msgid "<i>undefined</i>"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_edit.php:91
+#, php-format
+msgid "<strong>%s</strong> script %s"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:45
+#, php-format
+msgid "<strong>%s</strong> script deleted"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_edit.php:122
+#, php-format
+msgid "<strong>%s</strong> script wasn't %s"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:74
+#, php-format
+msgid "<strong>%s</strong> script wasn't deleted"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:411
+#: modules/imaging/manage/ajaxFormWin8.php:486
+#: modules/imaging/manage/ajaxFormWin10.php:504
+#: modules/imaging/manage/ajaxFormWin81.php:585
+msgid "Accept EULA"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1366
+msgid "Account Operators"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:77
+#, php-format
+msgid "Add <b>%s</b> to available Boot Services ?"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:429
+msgid "Add a image to a target"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:416
+msgid "Add a service to a target"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:78
+msgid "Add image to boot menu"
+msgstr ""
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:52
+msgid "Add image to default boot menu"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:118
+msgid "Add master"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:133
+msgid "Add service"
+msgstr ""
+
+#: modules/imaging/imaging/services.php:61
+#, php-format
+msgid "Add service %s"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxServices.php:51
+msgid "Add service to boot menu"
+msgstr ""
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:49
+msgid "Add service to default boot menu"
+msgstr ""
+
+#: modules/imaging/imaging/addservice.php:51
+#: modules/imaging/imaging/addservice.php:146
+#, php-format
+msgid "Add the boot service <b>%s</b> to <b>%s</b>"
+msgstr ""
+
+#: modules/imaging/manage/service_add.php:100
+#, php-format
+msgid "Add the boot service <b>%s</b> to the default boot menu"
+msgstr ""
+
+#: modules/imaging/imaging/addimage.php:49
+#: modules/imaging/imaging/addimage.php:165
+#: modules/imaging/manage/master_add.php:133
+#, php-format
+msgid "Add the image <b>%s</b> to <b>%s</b>"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:676
+#: modules/imaging/manage/ajaxFormWin8.php:751
+#: modules/imaging/manage/ajaxFormWin10.php:756
+#: modules/imaging/manage/ajaxFormWin81.php:927
+msgid "Administrator Account"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1367
+msgid "Administrators"
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:78
+msgid "All Windows Answer Files"
+msgstr ""
+
+#: modules/imaging/manage/service_remove.php:79
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> Boot Service ?"
+msgstr ""
+
+#: modules/imaging/imaging/images_delete.php:70
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> image ?"
+msgstr ""
+
+#: modules/imaging/manage/master_delete.php:78
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> master ?"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:99
+#, php-format
+msgid "Are you sure you want to delete the <b>%s</b> script ?"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu_remove.php:159
+#, php-format
+msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
+msgstr ""
+
+#: modules/imaging/manage/master_remove.php:91
+#, php-format
+msgid "Are you sure you want to remove <b>%s</b> master ?"
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:92
+msgid "Are you sure you want to unset this sysrep answer file?"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:224
+#: modules/imaging/includes/includes.php:230
+msgid "As soon as possible"
+msgstr ""
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:70
+msgid "Associate an entity to an imaging server"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:736
+msgid "Auto Logon"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:179
+msgid "Available Imaging Server"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:221 modules/imaging/imaging/tabs.php:291
+msgid "Available boot menu services"
+msgstr ""
+
+#: modules/imaging/imaging/images.php:68
+msgid "Available images"
+msgstr ""
+
+#: modules/imaging/includes/ajaxcommon_bottom.inc.php:24
+#, php-format
+msgid "Available imaging servers for entity %s"
+msgstr ""
+
+#: modules/imaging/imaging/images.php:70
+#: modules/imaging/manage/ajaxMaster.php:27
+msgid "Available masters"
+msgstr ""
+
+#: modules/imaging/manage/ajaxPostInstall.php:27
+msgid "Available post-imaging scripts"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:55
+#: modules/imaging/includes/logs.inc.php:27
+msgid "Backup"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:74
+msgid "Backup Finished"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1368
+msgid "Backup Operators"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:73
+msgid "Backup Started"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:65
+#: modules/imaging/includes/logs.inc.php:39
+msgid "Backup done"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:66
+#: modules/imaging/includes/logs.inc.php:40
+msgid "Backup failed"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:64
+#: modules/imaging/includes/logs.inc.php:38
+msgid "Backup in progress"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:301
+msgid "Backup log messages"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:52
+#: modules/imaging/includes/logs.inc.php:28
+msgid "Boot"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:121
+#, php-format
+msgid "Boot Menu Generation failed for : %s"
+msgstr ""
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:54
+msgid "Boot Service already created"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:217 modules/imaging/imaging/tabs.php:289
+#: modules/imaging/infoPackage.inc.php:274
+#: modules/imaging/infoPackage.inc.php:353
+msgid "Boot menu"
+msgstr ""
+
+#: modules/imaging/includes/xmlrpc.inc.php:272
+#, php-format
+msgid "Boot menu generation For Imaging Group %s"
+msgstr ""
+
+#: modules/imaging/includes/xmlrpc.inc.php:249
+#, php-format
+msgid "Boot menu generation For machine %s"
+msgstr ""
+
+#: modules/imaging/includes/xmlrpc.inc.php:293
+#, php-format
+msgid "Boot menu generation Success for Package Server on location %s"
+msgstr ""
+
+#: modules/imaging/manage/master_add.php:68
+#, php-format
+msgid ""
+"Boot menu generation Success for package server: %s<br /><br />Check /var/"
+"log/mmc/pulse2-package-server.log"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:78
+#: modules/imaging/imaging/addimage.php:106
+#: modules/imaging/imaging/addservice.php:103
+#: modules/imaging/imaging/bootmenu_remove.php:127
+#: modules/imaging/manage/service_show_used.php:85
+#, php-format
+msgid "Boot menu generation failed for computer: %s"
+msgstr ""
+
+#: modules/imaging/includes/xmlrpc.inc.php:306
+#: modules/imaging/includes/xmlrpc.inc.php:320
+#, php-format
+msgid "Boot menu generation failed for package server on location %s [%s]"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:90
+#: modules/imaging/manage/master_remove.php:65
+#: modules/imaging/manage/imaging_server_link.php:77
+#: modules/imaging/manage/service_remove.php:62
+#: modules/imaging/manage/service_del.php:61
+#: modules/imaging/manage/service_add.php:64
+#: modules/imaging/manage/service_add.php:66
+#, php-format
+msgid "Boot menu generation failed for package server: %s"
+msgstr ""
+
+#: modules/imaging/manage/master_add.php:71
+#: modules/imaging/manage/master_add.php:75
+#: modules/imaging/manage/location.php:62
+#: modules/imaging/manage/location.php:66
+#: modules/imaging/manage/save_configuration.php:83
+#: modules/imaging/manage/service_show_used.php:128
+#: modules/imaging/manage/service_show_used.php:132
+#, php-format
+msgid ""
+"Boot menu generation failed for package server: %s<br /><br />Check /var/log/"
+"mmc/pulse2-package-server.log"
+msgstr ""
+
+#: modules/imaging/includes/ajaxcommon.inc.php:120
+#, php-format
+msgid ""
+"Boot menu generation is still in progress for the following items : %s. "
+"Please wait or reload the page %shere%s."
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:277
+#, php-format
+msgid "Boot menu is created for <strong>%s</strong>."
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:279
+#, php-format
+msgid "Boot menu modified for <strong>%s</strong>."
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:45
+msgid "Boot menu shown"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:62
+#: modules/imaging/manage/ajaxConfiguration.php:109
+msgid "Boot options"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:38
+msgid "Boot service successfully created"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:221 modules/imaging/imaging/tabs.php:291
+#: modules/imaging/infoPackage.inc.php:278
+#: modules/imaging/infoPackage.inc.php:357
+msgid "Boot services"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:69
+msgid "Booted"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1433
+msgid ""
+"CEIPEnabled indicates whether the Windows Customer Experience Improvement "
+"Program (CEIP) is enabled"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:626
+msgid "Can't connect to the imaging server linked to the selected entity."
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:93
+msgid "Can't delete this post-imaging script, it's a global script."
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:112
+#: modules/imaging/imaging/showtarget.php:131
+#: modules/imaging/imaging/images_delete.php:73
+#: modules/imaging/imaging/configure.php:365
+#: modules/imaging/imaging/multicast.php:390
+#: modules/imaging/imaging/bootmenu_remove.php:161
+#: modules/imaging/manage/master_remove.php:94
+#: modules/imaging/manage/master_iso.php:109
+#: modules/imaging/manage/postinstall_delete.php:102
+#: modules/imaging/manage/service_show_used.php:200
+#: modules/imaging/manage/master_delete.php:81
+msgid "Cancel"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:619
+#: modules/imaging/manage/ajaxFormWin8.php:694
+#: modules/imaging/manage/ajaxFormWin10.php:704
+#: modules/imaging/manage/ajaxFormWin81.php:907
+msgid "Category View"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1740
+msgid ""
+"Changes the default user profile with customizations made . You must set "
+"this value to true only if you have made customizations to the logged-on "
+"user profile that you need to apply to all new users"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1401
+msgid "Check for updates but choose to download and install"
+msgstr ""
+
+#: modules/imaging/manage/unattended.php:126
+msgid "Choose package source"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:500
+#: modules/imaging/imaging/configure.php:639
+msgid "Choose the MAC address you want to use"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:70
+msgid "Chosen Menu Entry"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:619
+#: modules/imaging/manage/ajaxFormWin8.php:694
+#: modules/imaging/manage/ajaxFormWin10.php:704
+#: modules/imaging/manage/ajaxFormWin81.php:907
+msgid "Classic View"
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:135
+msgid "Clear Multicast of ( Master :"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:581
+msgid "Clear multicast deploy"
+msgstr ""
+
+#: modules/imaging/imaging/header.php:43
+#: modules/imaging/includes/ajaxcommon.inc.php:146
+msgid ""
+"Click on \"Force Generation\" if you want to force the update of the boot "
+"menu"
+msgstr ""
+
+#: modules/imaging/manage/master_clone.php:93
+msgid "Clone master : "
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:82
+msgid "Clonezilla parameters for restoring images"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:79
+msgid "Clonezilla parameters for saving images"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1529
+msgid "CommandLine reg"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1639
+msgid "CommandLine reg ControlPanel AllItemsIconView"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1636
+msgid "CommandLine reg Set the Control Panel View to Small Icons"
+msgstr ""
+
+#: modules/imaging/manage/synchromaster.php:119
+msgid "Complete"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:157
+#: modules/imaging/imaging/configure.php:39
+#: modules/imaging/manage/service_show_used.php:179
+msgid "Computer"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:441
+#: modules/imaging/manage/ajaxFormWin8.php:516
+#: modules/imaging/manage/ajaxFormWin10.php:534
+#: modules/imaging/manage/ajaxFormWin81.php:617
+msgid "Computer Name"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:84
+msgid "Computer UUID Request"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:86
+msgid "Computer UUID Sent"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:499
+msgid "Computer:"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:297
+msgid "Computers Group Editor"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:190
+#: modules/imaging/infoPackage.inc.php:250
+msgid "Computers Profile Creator"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:217
+msgid "Computers Profile Creator Sub Request Delete"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:203
+msgid "Computers Profile Creator Sub Request Editor"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:231
+#: modules/imaging/infoPackage.inc.php:254
+msgid "Computers Profile Editor"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:241
+msgid "Computers Profile Sub Request Delete"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:236
+msgid "Computers Profile Sub Request Editor"
+msgstr ""
+
+#: modules/imaging/imaging/creategroupcustonmenu.php:70
+#: modules/imaging/imaging/creategroupcustonmenuimaging.php:77
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1683
+msgid "Configure Administrators Account"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1460
+msgid "Configure General Settings"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:796
+msgid "Configure International Settings in Windows"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1520
+msgid "Configure Partition Settings"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:762
+msgid "Configure Specialize Settings"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1526
+msgid "Configure User Account"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:630
+#: modules/imaging/manage/ajaxFormWin8.php:705
+#: modules/imaging/manage/ajaxFormWin10.php:715
+#: modules/imaging/manage/ajaxFormWin81.php:918
+msgid "Control Panel Icon Size"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:622
+#: modules/imaging/manage/ajaxFormWin8.php:697
+#: modules/imaging/manage/ajaxFormWin10.php:707
+#: modules/imaging/manage/ajaxFormWin81.php:910
+msgid "Control Panel View"
+msgstr ""
+
+#: modules/imaging/imaging/images.php:129
+msgid "Convert to master"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:710
+#: modules/imaging/manage/ajaxFormWin10.php:790
+#: modules/imaging/manage/ajaxFormWin81.php:778
+msgid "Copy Profile"
+msgstr ""
+
+#: modules/imaging/manage/synchromaster.php:66
+msgid "Copy of master"
+msgstr ""
+
+#: modules/imaging/manage/synchromaster.php:139
+msgid "Copy of master In progress"
+msgstr ""
+
+#: modules/imaging/manage/synchromaster.php:60
+msgid "Copy of master Not Started"
+msgstr ""
+
+#: modules/imaging/manage/synchromaster.php:135
+msgid "Copy of master complete"
+msgstr ""
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:51
+msgid "Create Boot Service"
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:54
+msgid "Create ISO image from master"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:737
+#: modules/imaging/manage/ajaxFormWin8.php:826
+#: modules/imaging/manage/ajaxFormWin10.php:825
+#: modules/imaging/manage/ajaxFormWin81.php:938
+msgid "Create Xml Windows Answer File Generator"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:345
+msgid "Create a static group containing computers with custom imaging menu"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:163
+msgid "Create boot service from postinstall script"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:181
+#: modules/imaging/manage/ajaxMasterLevel2.php:103
+msgid "Create bootable iso"
+msgstr ""
+
+#: modules/imaging/manage/master_iso.php:88
+#, php-format
+msgid "Create iso for <strong>%s</strong>"
+msgstr ""
+
+#: modules/imaging/manage/master_iso.php:44
+#: modules/imaging/infoPackage.inc.php:121
+msgid "Create iso from master"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:441
+msgid "Create iso image"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:86
+#: modules/imaging/infoPackage.inc.php:91
+msgid "Create static group from menu set"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:172
+#: modules/imaging/manage/ajaxMasterLevel2.php:98
+msgid "Created"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:77
+msgid "Critical error"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1369
+msgid "Crypto Operators"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:465
+#: modules/imaging/manage/ajaxFormWin8.php:540
+#: modules/imaging/manage/ajaxFormWin10.php:550
+#: modules/imaging/manage/ajaxFormWin81.php:812
+msgid "Currency and Date format"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:217 modules/imaging/imaging/tabs.php:289
+msgid "Current boot menu"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:702
+#: modules/imaging/manage/ajaxFormWin8.php:777
+#: modules/imaging/manage/ajaxFormWin10.php:782
+#: modules/imaging/manage/ajaxFormWin81.php:690
+msgid "Customer Experience Improvement Program (CEIP)"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1732
+msgid "Customize the desired user profile settings"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1370
+msgid "DCOM Users"
+msgstr ""
+
+#: modules/imaging/manage/ajaxBootmenu.php:100
+msgid "Default"
+msgstr ""
+
+#: modules/imaging/manage/localSidebar.php:37
+#: modules/imaging/infoPackage.inc.php:143
+msgid "Default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/ajaxBootmenu.php:94
+msgid "Default boot menu configuration"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:61
+msgid "Default menu has been successfully restored."
+msgstr ""
+
+#: modules/imaging/manage/bootmenu_edit.php:77
+msgid "Default menu item label"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:43
+#: modules/imaging/manage/ajaxConfiguration.php:94
+msgid "Default menu label"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:90
+msgid "Default menu parameters"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:97
+msgid "Default menu timeout"
+msgstr ""
+
+#: modules/imaging/manage/ajaxBootmenu.php:102
+msgid "Default on WOL"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:367
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
+#: modules/imaging/manage/ajaxMasterLevel2.php:63
+#: modules/imaging/manage/postinstall_delete.php:101
+#: modules/imaging/manage/ajaxLogs.php:58
+#: modules/imaging/includes/logs.inc.php:34
+msgid "Delete"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:293
+msgid "Delete a group of computers"
+msgstr ""
+
+#: modules/imaging/imaging/images_delete.php:68
+#: modules/imaging/infoPackage.inc.php:437
+msgid "Delete image"
+msgstr ""
+
+#: modules/imaging/manage/master_delete.php:76
+#: modules/imaging/infoPackage.inc.php:104
+msgid "Delete master"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:97
+#: modules/imaging/infoPackage.inc.php:169
+msgid "Delete post-imaging script"
+msgstr ""
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:51
+msgid "Delete service"
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:92
+msgid "Delete sysprep file"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:83
+msgid "Delete the image"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:459
+#: modules/imaging/imaging/images.php:109
+#: modules/imaging/imaging/ajaxImages.php:171
+#: modules/imaging/imaging/ajaxServices.php:99
+#: modules/imaging/manage/ajaxBootmenu.php:99
+#: modules/imaging/manage/sysprepList.php:87
+#: modules/imaging/manage/ajaxFormWin7.php:728
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
+#: modules/imaging/manage/ajaxFormWin8.php:809
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
+#: modules/imaging/manage/ajaxMasterLevel2.php:97
+#: modules/imaging/manage/ajaxFormWin10.php:808
+#: modules/imaging/manage/master_edit.php:59
+#: modules/imaging/manage/service_edit.php:61
+#: modules/imaging/manage/ajaxServiceLevel2.php:93
+#: modules/imaging/manage/ajaxFormWin81.php:724
+#: modules/imaging/includes/post_install_script.php:65
+msgid "Description"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:606
+#: modules/imaging/manage/ajaxFormWin8.php:681
+#: modules/imaging/manage/ajaxFormWin10.php:691
+#: modules/imaging/manage/ajaxFormWin81.php:878
+msgid "Disable auto daylight timeset"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1429
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1443
+msgid "Disabled"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1724
+msgid "Disables Windows Firewall for Windows PE"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1659
+msgid "Disk_ID is an integer"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:159
+msgid "Diskless Linux command line access"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:289
+msgid "Display computers group content"
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:90
+msgid "Display sysprep file"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:245
+#: modules/imaging/imaging/bootmenu.php:462
+#: modules/imaging/imaging/addimage.php:179
+#: modules/imaging/imaging/addservice.php:160
+#: modules/imaging/manage/ajaxBootmenu.php:101
+#: modules/imaging/manage/master_add.php:149
+#: modules/imaging/manage/bootmenu_edit.php:86
+#: modules/imaging/manage/service_add.php:116
+msgid "Displayed"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:255
+#: modules/imaging/imaging/bootmenu.php:465
+#: modules/imaging/imaging/addimage.php:183
+#: modules/imaging/imaging/addservice.php:164
+#: modules/imaging/manage/ajaxBootmenu.php:103
+#: modules/imaging/manage/master_add.php:153
+#: modules/imaging/manage/bootmenu_edit.php:96
+#: modules/imaging/manage/service_add.php:120
+msgid "Displayed on WOL"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:157
+msgid "Do not check hard disk size"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1408
+msgid "Do not install selective updates"
+msgstr ""
+
+#: modules/imaging/manage/imaging_server_link.php:106
+#, php-format
+msgid ""
+"Do you really want to link the Imaging Server '<b>%s</b>' to the entity '<b>"
+"%s</b>'"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:357
+msgid "Do you want a backup to be done ?"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1744
+msgid "Does not change the default user profile"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1607
+msgid "Does not hide the Join Wireless Network screen during Windows Welcome"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:645
+#: modules/imaging/manage/ajaxFormWin8.php:720
+#: modules/imaging/manage/ajaxFormWin10.php:729
+msgid "Domain"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:655
+#: modules/imaging/manage/ajaxFormWin8.php:730
+#: modules/imaging/manage/ajaxFormWin10.php:737
+msgid "Domain Password"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:641
+#: modules/imaging/manage/ajaxFormWin8.php:716
+#: modules/imaging/manage/ajaxFormWin10.php:725
+msgid "Domain Settings"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:650
+#: modules/imaging/manage/ajaxFormWin8.php:725
+#: modules/imaging/manage/ajaxFormWin10.php:733
+msgid "Domain User"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1771
+msgid ""
+"Domain specifies the name of the domain used for an account authentication. "
+"Domain is used to authenticate an account before the computer can be joined "
+"to a domain during Windows Setup."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1777
+msgid "Domain to join"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:148
+#: modules/imaging/infoPackage.inc.php:151
+msgid "Down service"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1402
+msgid "Download updates but choose when to install"
+msgstr ""
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:95
+msgid "Duplicate"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:366
+#: modules/imaging/manage/ajaxBootmenu.php:106
+msgid "Edit"
+msgstr ""
+
+#: modules/imaging/manage/bootmenu_edit.php:68
+#, php-format
+msgid "Edit : %s"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:89
+#: modules/imaging/imaging/ajaxImages.php:207
+#: modules/imaging/manage/ajaxMasterLevel2.php:107
+msgid "Edit image"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:291
+#: modules/imaging/imaging/bootmenu.php:305
+#, php-format
+msgid "Edit item <strong>%s</strong> in the boot Menu [ %s ]"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:107
+msgid "Edit master"
+msgstr ""
+
+#: modules/imaging/manage/master_edit.php:45
+msgid "Edit master : "
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:433
+msgid "Edit parameters of a image on a target"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:420
+msgid "Edit parameters of a service on a target"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:157
+#: modules/imaging/infoPackage.inc.php:160
+msgid "Edit post-imaging script"
+msgstr ""
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:52
+msgid "Edit script"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:127
+msgid "Edit service"
+msgstr ""
+
+#: modules/imaging/manage/service_edit.php:48
+msgid "Edit service : "
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:91
+msgid "Edit sysprep file"
+msgstr ""
+
+#: modules/imaging/imaging/images.php:94
+msgid "Edition of image"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:215
+msgid "Edition of item"
+msgstr ""
+
+#: modules/imaging/imaging/images.php:96
+msgid "Edition of master"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1428
+msgid "Enable"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:598
+#: modules/imaging/manage/ajaxFormWin8.php:673
+#: modules/imaging/manage/ajaxFormWin10.php:683
+#: modules/imaging/manage/ajaxFormWin81.php:752
+msgid "Enable Firewall"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1720
+msgid "Enables Windows Firewall for Windows PE"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:62
+msgid "End of Backup Failure"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:61
+msgid "End of Backup Request"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:63
+msgid "End of Backup Success"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1467
+msgid ""
+"Entering an invalid product key in the answer file will cause Windows Setup "
+"to fail"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:139
+msgid "Entity"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:57
+#: modules/imaging/includes/logs.inc.php:31
+msgid "Error"
+msgstr ""
+
+#: modules/imaging/manage/bootmenu_down.php:49
+#, php-format
+msgid ""
+"Error : Failed to move down <strong>%s</strong> in the default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/master_delete.php:57
+#, php-format
+msgid "Error : Image %s deleted from the imaging server."
+msgstr ""
+
+#: modules/imaging/manage/master_add.php:81
+#, php-format
+msgid "Error : Image <strong>%s</strong> added to default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:55
+msgid "Error while creating Boot Service"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:525
+#: modules/imaging/manage/ajaxFormWin8.php:600
+#: modules/imaging/manage/ajaxFormWin10.php:610
+#: modules/imaging/manage/ajaxFormWin81.php:770
+msgid "Extend OS Partition"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1668
+msgid "FAT32"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:322
+#, php-format
+msgid "Failed to generate the boot menu those computers : %s"
+msgstr ""
+
+#: modules/imaging/manage/bootmenu_up.php:50
+#, php-format
+msgid "Failed to move <strong>%s</strong> in the default boot menu"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:101
+#: modules/imaging/imaging/bootmenu.php:180
+#, php-format
+msgid "Failed to move item <strong>%s</strong> in the boot menu"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:85
+msgid "Failed to obtain a Computer UUID"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:80
+msgid "Failed to obtain a Hostname"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:254
+msgid "Failed to reset synchronise state."
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:87
+msgid "Failed to send a Computer UUID"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:82
+msgid "Failed to send a Hostname"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:59
+msgid "Failed to send an Image UUID"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:57
+msgid "Failed to summon an Image UUID"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:398
+#, php-format
+msgid "Failed to unregister the computer %s"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:49
+msgid "File"
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:83
+msgid "File name"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin8.php:792
+msgid "For Windows 8"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin8.php:793
+msgid "For Windows 8.1"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1483
+msgid ""
+"For automatic activation to complete, a valid Windows product key is required"
+msgstr ""
+
+#: modules/imaging/imaging/header.php:46
+#: modules/imaging/includes/ajaxcommon.inc.php:152
+msgid "Force Generation"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:136
+msgid "Force raw backup mode"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1670
+msgid "Formats the partition for the File Allocation Table (FAT) file system"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1666
+msgid "Formats the partition for the NTFS file system"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:176
+#: modules/imaging/imaging/ajaxServices.php:102
+msgid "From profile"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:65
+#: modules/imaging/manage/ajaxConfiguration.php:112
+msgid "Full path to the XPM displayed at boot"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:156
+msgid "GRUB command line access"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:541
+msgid "General Settings"
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:90
+#, php-format
+msgid "Generate ISO for <strong>%s</strong>"
+msgstr ""
+
+#: modules/imaging/imaging/header.php:38
+#: modules/imaging/includes/ajaxcommon.inc.php:141
+msgid "Generate Menu"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:179 modules/imaging/imaging/tabs.php:265
+#, php-format
+msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:723
+#: modules/imaging/manage/ajaxFormWin8.php:804
+#: modules/imaging/manage/ajaxFormWin10.php:803
+#: modules/imaging/manage/ajaxFormWin81.php:719
+msgid "Group"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1371
+msgid "Guests"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:568
+#, php-format
+msgid "Hard disk number: %d"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:563
+msgid "Hard disks and partitions selection to backup"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:48
+msgid "Hardware Inventory not stored"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:49
+msgid "Hardware Inventory not updated"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:47
+msgid "Hardware Inventory received"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:50
+msgid "Hardware Inventory updated"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:590
+#: modules/imaging/manage/ajaxFormWin8.php:665
+#: modules/imaging/manage/ajaxFormWin10.php:675
+#: modules/imaging/manage/ajaxFormWin81.php:870
+msgid "Hide EULA page"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:105
+msgid "Hide menu"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:155
+msgid "Hide menu (shortcut to show it : Shift - Alt - Shift)"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:614
+#: modules/imaging/manage/ajaxFormWin8.php:689
+#: modules/imaging/manage/ajaxFormWin10.php:699
+#: modules/imaging/manage/ajaxFormWin81.php:886
+msgid "Hide wireless setup in OOBE"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1603
+msgid "Hides the Join Wireless Network screen during Windows Welcome"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
+msgid "Home"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:79
+msgid "Hostname Request"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:81
+msgid "Hostname sent"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1465
+msgid "IMPORTANT"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1372
+msgid "IUsers"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:54
+msgid "Identification Failure"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:52
+msgid "Identification Request"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:53
+msgid "Identification Success"
+msgstr ""
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:77
+msgid "Identifier"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1435
+msgid ""
+"If the Microsoft-Windows-SQMAPI component is enabled, it collects and sends "
+"data to Microsoft about Windows usage"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1749
+msgid ""
+"If the Windows Live shortcut has been removed from the Start menu, this "
+"setting cannot be used to put it back on the Start menu"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:453
+#: modules/imaging/imaging/bootmenu.php:455
+msgid ""
+"If the default entry is an image creation or restore, the following network "
+"boots will fall back to the first menu entry."
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:182 modules/imaging/imaging/tabs.php:268
+msgid ""
+"If the processing exceeds 5 minutes, please reset the synchro state of this "
+"computer."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1657
+msgid ""
+"If you are installing to a computer with a single disk, you must specify 0"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1622
+msgid ""
+"If you enable SkipMachineOOBE, any settings specified for ProtectYourPC and "
+"NetworkLocation in your answer file are ignored"
+msgstr ""
+
+#: modules/imaging/manage/service_show_used.php:194
+msgid ""
+"If you want to remove this boot service from one or more targets, check "
+"these targets and click on the remove button"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:125
+msgid ""
+"If you want to remove this master from one or more targets, check these "
+"targets and click on the remove button"
+msgstr ""
+
+#: modules/imaging/manage/master_add.php:49
+#, php-format
+msgid "Image <strong>%s</strong> added to default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/master_delete.php:38
+#, php-format
+msgid "Image <strong>%s</strong> deleted from the imaging server."
+msgstr ""
+
+#: modules/imaging/manage/master_remove.php:37
+#, php-format
+msgid "Image <strong>%s</strong> removed from default boot menu."
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:56
+msgid "Image UUID Request"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:58
+msgid "Image UUID sent"
+msgstr ""
+
+#: modules/imaging/imaging/images.php:193
+msgid "Image backup logs"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:131
+msgid "Image parameters"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:220 modules/imaging/infoPackage.inc.php:276
+#: modules/imaging/infoPackage.inc.php:355
+msgid "Images and Masters"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:38
+msgid "Imaging"
+msgstr ""
+
+#: modules/imaging/manage/localSidebar.php:43
+msgid "Imaging Configuration"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:280
+#: modules/imaging/infoPackage.inc.php:359
+msgid "Imaging Log"
+msgstr ""
+
+#: modules/imaging/manage/master_clone.php:116
+msgid "Imaging Server"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:48
+msgid "Imaging Unattended"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:432
+#, php-format
+msgid "Imaging activation for group '%s'"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:173
+msgid "Imaging configuration"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:157
+#: modules/imaging/manage/service_show_used.php:179
+msgid "Imaging group"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:222 modules/imaging/imaging/tabs.php:292
+msgid "Imaging log"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:350
+msgid "Imaging on computer"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:271
+msgid "Imaging on group"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:149
+#: modules/imaging/manage/service_show_used.php:171
+msgid "Imaging server"
+msgstr ""
+
+#: modules/imaging/manage/save_configuration.php:67
+#, php-format
+msgid "Imaging server <strong>%s</strong> configuration saved."
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:28
+msgid "Imaging server configuration"
+msgstr ""
+
+#: modules/imaging/includes/ajaxcommon.inc.php:84
+#, php-format
+msgid "Imaging server of entity %s"
+msgstr ""
+
+#: modules/imaging/manage/localSidebar.php:28
+msgid "Imaging server status"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:33
+msgid "Imaging service"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:56
+msgid "Imaging sysprepView"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1763
+msgid ""
+"In Windows 8, SystemDefaultBackgroundColor must be a value from 0 to 24, as "
+"shown in the following image, which represents the index of the color scheme "
+"as viewed in the SystemSettings"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1766
+msgid ""
+"In Windows 8.1, SystemDefaultBackgroundColor must be a value from 0 to 24 "
+"which represents the index of the color scheme as viewed in the out-of-box "
+"experience (OOBE) phase. The colors are indexed in the same manner as "
+"Windows 8 colors, from left to right. Samples of the color choices are shown "
+"in the following image"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:174
+#: modules/imaging/manage/ajaxServiceLevel2.php:94
+msgid "In boot menu"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxServices.php:100
+msgid "In bootmenu"
+msgstr ""
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:100
+msgid "In default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/service_edit.php:66
+msgid "In default bootmenu"
+msgstr ""
+
+#: modules/imaging/manage/synchromaster.php:122
+msgid "In progress"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1407
+msgid "Install selective updates"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:509
+#: modules/imaging/manage/ajaxFormWin8.php:584
+#: modules/imaging/manage/ajaxFormWin10.php:594
+#: modules/imaging/manage/ajaxFormWin81.php:643
+msgid "Install to disk"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1403
+msgid "Install updates automatically"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:348
+#: modules/imaging/manage/ajaxFormWin8.php:423
+#: modules/imaging/manage/ajaxFormWin10.php:441
+#: modules/imaging/manage/ajaxFormWin81.php:524
+msgid "Installation Notes"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:59
+#: modules/imaging/includes/logs.inc.php:26
+msgid "Inventory"
+msgstr ""
+
+#: modules/imaging/manage/master_iso.php:46
+#, php-format
+msgid "Iso of master <strong>%s</strong> has been launched in background."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1542
+msgid "It also specifies the following"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:63
+#, php-format
+msgid "Item Menu %s for group up %s"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:144
+#, php-format
+msgid "Item Menu %s for machine down %s"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:77
+#, php-format
+msgid "Item Menu %s for machine up %s"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:130
+#, php-format
+msgid "Item Menu %s%s"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:660
+#: modules/imaging/manage/ajaxFormWin8.php:735
+#: modules/imaging/manage/ajaxFormWin10.php:741
+msgid "Join Domain"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:127
+msgid "Kernel parameters"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:457
+#: modules/imaging/manage/ajaxFormWin8.php:532
+#: modules/imaging/manage/ajaxFormWin10.php:542
+#: modules/imaging/manage/ajaxFormWin81.php:804
+msgid "Keyboard or input method"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:457
+#: modules/imaging/imaging/images.php:105
+#: modules/imaging/imaging/ajaxImages.php:169
+#: modules/imaging/imaging/ajaxServices.php:98
+#: modules/imaging/manage/ajaxBootmenu.php:97
+#: modules/imaging/manage/ajaxMasterLevel2.php:95
+#: modules/imaging/manage/master_edit.php:55
+#: modules/imaging/manage/service_edit.php:56
+#: modules/imaging/manage/ajaxServiceLevel2.php:91
+msgid "Label"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:627
+#: modules/imaging/manage/ajaxFormWin8.php:702
+#: modules/imaging/manage/ajaxFormWin10.php:712
+#: modules/imaging/manage/ajaxFormWin81.php:915
+msgid "Large"
+msgstr ""
+
+#: modules/imaging/manage/master_iso.php:108
+msgid "Launch backup"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:63
+msgid "Leave this field empty to unset PXE Password"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:182
+msgid "Link an Imaging Server"
+msgstr ""
+
+#: modules/imaging/manage/imaging_server_link.php:60
+#, php-format
+msgid ""
+"Link between package server <strong>%s</strong> and the entity <strong>%s</"
+"strong> succeeded."
+msgstr ""
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:47
+#, php-format
+msgid "Link this Imaging Server to the '%s' entity."
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:246
+#: modules/imaging/infoPackage.inc.php:259
+msgid "List all profiles of computers"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:122
+msgid "Load on server"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1730
+msgid ""
+"Log on as a user whose profile you can customize (for example, the built-in-"
+"administrator account)"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:314
+msgid "MSC bundle tab for a group"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:320
+msgid "MSC history tab for a group"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:311
+msgid "MSC launch tab for a group"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:317
+msgid "MSC logs tab for a group"
+msgstr ""
+
+#: modules/imaging/imaging/creategroupcustonmenu.php:49
+#: modules/imaging/imaging/creategroupcustonmenuimaging.php:59
+#, php-format
+msgid "Machine with custom menu on entity [%s] at %s"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:665
+#: modules/imaging/manage/ajaxFormWin8.php:740
+#: modules/imaging/manage/ajaxFormWin10.php:745
+msgid "MachineObjectOU"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1779
+msgid ""
+"MachineObjectOU is an optional setting. It specifies the Lightweight "
+"Directory Access Protocol (LDAP) X 500-distinguished name of the "
+"organizational unit (OU) in which the computer account is created. This "
+"account is in Active Directory on a domain controller in the domain to which "
+"the computer is being joined."
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:533
+#: modules/imaging/manage/ajaxFormWin8.php:608
+#: modules/imaging/manage/ajaxFormWin10.php:618
+#: modules/imaging/manage/ajaxFormWin81.php:659
+msgid "Main Partition Format"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1523
+msgid "Main Partition Label"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:546
+#: modules/imaging/manage/ajaxFormWin8.php:621
+#: modules/imaging/manage/ajaxFormWin10.php:631
+#: modules/imaging/manage/ajaxFormWin81.php:672
+msgid "Main Partition Letter"
+msgstr ""
+
+#: modules/imaging/manage/localSidebar.php:34
+#: modules/imaging/infoPackage.inc.php:125
+msgid "Manage boot services"
+msgstr ""
+
+#: modules/imaging/manage/localSidebar.php:31
+#: modules/imaging/infoPackage.inc.php:99
+msgid "Manage masters"
+msgstr ""
+
+#: modules/imaging/manage/ajaxService.php:27
+msgid "Manage services"
+msgstr ""
+
+#: modules/imaging/manage/master_clone.php:106
+msgid "Master"
+msgstr ""
+
+#: modules/imaging/manage/master_edit.php:116
+#, php-format
+msgid "Master %s modified with error"
+msgstr ""
+
+#: modules/imaging/manage/master_edit.php:96
+#, php-format
+msgid "Master <strong>%s</strong> modified with success"
+msgstr ""
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:119
+msgid "Master Clone"
+msgstr ""
+
+#: modules/imaging/manage/synchromaster.php:47
+#, php-format
+msgid "Master copy: %s ( %s )"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:290
+msgid "Masters"
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:98
+#: modules/imaging/manage/master_iso.php:95
+msgid "Media size"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:206
+msgid "Memory"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:53
+#: modules/imaging/includes/logs.inc.php:25
+msgid "Menu"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:223 modules/imaging/imaging/tabs.php:293
+#: modules/imaging/infoPackage.inc.php:282
+#: modules/imaging/infoPackage.inc.php:361
+msgid "Menu configuration"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:59
+msgid "Menu language"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:47
+msgid "Menu timeout"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxLogs.php:95
+#: modules/imaging/manage/ajaxLogs.php:112
+msgid "Message"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:69
+#: modules/imaging/manage/ajaxConfiguration.php:115
+msgid "Message displayed during backup/restoration"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1457
+msgid "Meta Information xml"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:364
+#: modules/imaging/manage/ajaxBootmenu.php:30
+msgid "Move Up"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:365
+#: modules/imaging/manage/ajaxBootmenu.php:31
+msgid "Move down"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:539
+#: modules/imaging/manage/ajaxStatus.php:559
+msgid "Multicast Current Location"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:200
+msgid "Multicast init"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:293
+msgid "Multicast menu has been successfully created."
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:228
+msgid "Multicast menu has not been created : --max-time-to-wait < 60"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:210
+msgid "Multicast menu has not been created : --max-time-to-wait missing"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:311
+msgid ""
+"Multicast menu has not been created : check that the imaging server is "
+"running"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:66
+#: modules/imaging/imaging/multicast.php:87
+msgid "Multicast menu has not been created : number of computers missing"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:104
+#: modules/imaging/imaging/multicast.php:121
+#: modules/imaging/imaging/multicast.php:129
+#, php-format
+msgid ""
+"Multicast menu has not been created : the imaging group contains %d "
+"computers and you have entered %d"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:254
+msgid ""
+"Multicast menu has not been created : the selected master is missing on disk"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:48
+#: modules/imaging/imaging/multicast.php:237
+msgid ""
+"Multicast menu has not been created : there are no computers in the group"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1664
+msgid "NTFS"
+msgstr ""
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:89
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:74
+#: modules/imaging/includes/post_install_script.php:63
+msgid "Name"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1373
+msgid "Network Configuration Operators"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:582
+#: modules/imaging/manage/ajaxFormWin8.php:657
+#: modules/imaging/manage/ajaxFormWin10.php:667
+#: modules/imaging/manage/ajaxFormWin81.php:846
+msgid "Network Location"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1563
+msgid "Network discovery is disabled by default on this network type"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:221
+msgid "Never"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1400
+msgid "Never check for updates"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1413
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1476
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1500
+msgid "No"
+msgstr ""
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:40
+msgid "No imaging server available for association."
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:45
+msgid "No log available."
+msgstr ""
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:44
+msgid "No master available."
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:301
+msgid "Not enough information"
+msgstr ""
+
+#: modules/imaging/includes/post_install_script.php:28
+msgid "Not selected"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_edit.php:108
+#: modules/imaging/manage/postinstall_edit.php:123
+msgid "Notify Error : "
+msgstr ""
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:56
+msgid "Notify Error : Error while creating Boot Service"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:61
+msgid "Notify Error : script deleted"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_edit.php:92
+msgid "Notify Success : "
+msgstr ""
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:39
+msgid "Notify Success : Boot service successfully created"
+msgstr ""
+
+#: modules/imaging/manage/master_remove.php:38
+msgid "Notify Success : removed from default boot menu."
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:46
+msgid "Notify Success : script deleted"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:75
+msgid "Notify Warning : script wasn't deleted"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:355
+msgid "Number of machines to wait for"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1532
+msgid "OOBE specifies the out-of-box experience for the end user"
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:86
+msgid "OS"
+msgstr ""
+
+#: modules/imaging/includes/post_install_script.php:66
+msgid "Order"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:403
+#: modules/imaging/manage/ajaxFormWin8.php:478
+#: modules/imaging/manage/ajaxFormWin10.php:496
+#: modules/imaging/manage/ajaxFormWin81.php:577
+msgid "Organization Name"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:130
+msgid "Organization Name missing"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:367
+#: modules/imaging/manage/ajaxFormWin8.php:442
+#: modules/imaging/manage/ajaxFormWin10.php:460
+msgid "Os Settings"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1559
+msgid "Other"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:837
+msgid "Out Of Box Experience"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:62
+msgid "PXE Password"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1437
+msgid ""
+"Participation in this program is voluntary, and the results are recorded to "
+"implement improvements for future releases"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:517
+#: modules/imaging/manage/ajaxFormWin8.php:592
+#: modules/imaging/manage/ajaxFormWin10.php:602
+#: modules/imaging/manage/ajaxFormWin81.php:651
+msgid "Partition Order"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:492
+#: modules/imaging/manage/ajaxFormWin8.php:567
+#: modules/imaging/manage/ajaxFormWin10.php:577
+#: modules/imaging/manage/ajaxFormWin81.php:626
+msgid "Partition Settings"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:592
+#, php-format
+msgid "Partition number: %d"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:681
+#: modules/imaging/manage/ajaxFormWin8.php:756
+#: modules/imaging/manage/ajaxFormWin10.php:761
+#: modules/imaging/manage/ajaxFormWin81.php:933
+msgid "Password"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1773
+msgid ""
+"Password specifies the password of the user account used for authentication "
+"of an account to the domain before the computer can be joined to a domain "
+"during Windows Setup."
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:733
+#: modules/imaging/manage/ajaxFormWin8.php:814
+#: modules/imaging/manage/ajaxFormWin10.php:813
+#: modules/imaging/manage/ajaxFormWin81.php:729
+msgid "Password: (Optional)"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1374
+msgid "Perf Logging Users"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1375
+msgid "Perf Monitoring Users"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:156
+#, php-format
+msgid "Please declare the imaging group first %shere%s."
+msgstr ""
+
+#: modules/imaging/manage/master_iso.php:50
+msgid "Please go to the status page to check the iso creation status."
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:95
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:45
+msgid "Please specify a title for the ISO image file."
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:513
+#: modules/imaging/imaging/configure.php:648
+msgid "Please switch to expert mode now if you want to change more parameters."
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:56
+#: modules/imaging/includes/logs.inc.php:30
+msgid "Post-imaging"
+msgstr ""
+
+#: modules/imaging/manage/localSidebar.php:40
+#: modules/imaging/infoPackage.inc.php:155
+msgid "Post-imaging scripts"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:76
+msgid "Postinstall Finished"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:75
+msgid "Postinstall Started"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1376
+msgid "Power Users"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:67
+msgid "Preselected Menu Entry Change Failure"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:65
+msgid "Preselected Menu Entry Change Request"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:66
+msgid "Preselected Menu Entry Change Success"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:460
+msgid "Preselected choice"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:463
+msgid "Preselected choice on WOL"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1377
+msgid "Print Operators"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:398
+#: modules/imaging/manage/ajaxFormWin8.php:473
+#: modules/imaging/manage/ajaxFormWin10.php:491
+#: modules/imaging/manage/ajaxFormWin81.php:572
+msgid "Product Key"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:39
+msgid "Profile"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:193
+#: modules/imaging/infoPackage.inc.php:207
+#: modules/imaging/infoPackage.inc.php:221
+msgid "Profile creation's tab from dynamic request"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:199
+#: modules/imaging/infoPackage.inc.php:213
+#: modules/imaging/infoPackage.inc.php:227
+msgid "Profile creation's tab from file import"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:196
+#: modules/imaging/infoPackage.inc.php:210
+#: modules/imaging/infoPackage.inc.php:224
+msgid "Profile creation's tab from machine list"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1478
+msgid ""
+"Prompts the user to accept the license terms before proceeding with Windows "
+"Setup"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:566
+#: modules/imaging/manage/ajaxFormWin8.php:641
+#: modules/imaging/manage/ajaxFormWin10.php:651
+#: modules/imaging/manage/ajaxFormWin81.php:854
+msgid "Protect Your Computer"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:617
+msgid "Recent activity"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1406
+msgid "Recommended settings"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:166
+msgid "Redirect to Boot Services page"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:795
+msgid "Regional Settings"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:340
+msgid "Register a computer in the imaging module"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:265
+msgid "Register a profile in the imaging module"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:428
+#, php-format
+msgid "Register computer '%s'"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1378
+msgid "Remote Desktop Users"
+msgstr ""
+
+#: modules/imaging/manage/service_show_used.php:67
+#: modules/imaging/manage/service_show_used.php:108
+msgid "Removal of boot service failed"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:72
+#: modules/imaging/imaging/showtarget.php:84
+msgid "Removal of master failed"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:130
+#: modules/imaging/imaging/images_delete.php:72
+#: modules/imaging/imaging/bootmenu_remove.php:160
+#: modules/imaging/manage/master_remove.php:93
+#: modules/imaging/manage/service_show_used.php:199
+#: modules/imaging/manage/master_delete.php:80
+msgid "Remove"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu_remove.php:74
+#, php-format
+msgid "Remove Image %s"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu_remove.php:61
+#, php-format
+msgid "Remove Service %s"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:424
+msgid "Remove a service from a target"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:79
+#: modules/imaging/imaging/bootmenu_remove.php:156
+#: modules/imaging/manage/ajaxMasterLevel2.php:53
+#: modules/imaging/infoPackage.inc.php:285
+#: modules/imaging/infoPackage.inc.php:366
+msgid "Remove from boot menu"
+msgstr ""
+
+#: modules/imaging/manage/master_remove.php:89
+#: modules/imaging/infoPackage.inc.php:101
+msgid "Remove master"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:130
+#: modules/imaging/infoPackage.inc.php:136
+msgid "Remove service"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxServices.php:52
+msgid "Remove service from boot menu"
+msgstr ""
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:50
+msgid "Remove service from default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/service_del.php:78
+#, php-format
+msgid "Remove the boot service <b>%s</b> from the default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/service_show_used.php:170
+#, php-format
+msgid "Remove this boot service from imaging server %s"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:156
+#: modules/imaging/manage/service_show_used.php:178
+#, php-format
+msgid "Remove this master from computer %s"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:148
+#, php-format
+msgid "Remove this master from imaging server %s"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1379
+msgid "Replicator"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:190 modules/imaging/imaging/tabs.php:276
+msgid "Reset Synchro state"
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:164 modules/imaging/imaging/tabs.php:250
+#, php-format
+msgid "Reset synchronisation state for %s (%s) succeed"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:54
+#: modules/imaging/includes/logs.inc.php:29
+msgid "Restoration"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:72
+msgid "Restoration Finished"
+msgstr ""
+
+#: modules/imaging/includes/logs.inc.php:71
+msgid "Restoration Started"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:62
+#: modules/imaging/includes/logs.inc.php:36
+msgid "Restore done"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:63
+#: modules/imaging/includes/logs.inc.php:37
+msgid "Restore failed"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:61
+#: modules/imaging/includes/logs.inc.php:35
+msgid "Restore in progress"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1736
+msgid ""
+"Run sysprep /generalize /unattend:unattend.xml to copy the customized user "
+"profile settings over the default user profile"
+msgstr ""
+
+#: modules/imaging/imaging/images.php:125
+#: modules/imaging/imaging/images.php:152
+msgid "Save"
+msgstr ""
+
+#: modules/imaging/imaging/images.php:127
+msgid "Save (converting to image)"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:175
+msgid "Save an Imaging Server configuration"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_edit.php:158
+msgid "Script value"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:307
+msgid "Secure control on a group of computers"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:557
+#: modules/imaging/manage/ajaxFormWin8.php:632
+#: modules/imaging/manage/ajaxFormWin10.php:642
+msgid "Security Settings"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:127
+#: modules/imaging/manage/service_show_used.php:196
+msgid "Select all"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:579
+msgid "Select this hard disk"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:240
+#: modules/imaging/imaging/addimage.php:177
+#: modules/imaging/imaging/addservice.php:158
+#: modules/imaging/manage/master_add.php:147
+#: modules/imaging/manage/bootmenu_edit.php:81
+#: modules/imaging/manage/service_add.php:114
+msgid "Selected by default"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:250
+#: modules/imaging/imaging/addimage.php:181
+#: modules/imaging/imaging/addservice.php:162
+#: modules/imaging/manage/master_add.php:151
+#: modules/imaging/manage/bootmenu_edit.php:91
+#: modules/imaging/manage/service_add.php:118
+msgid "Selected by default on WOL"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:96
+msgid "Server status"
+msgstr ""
+
+#: modules/imaging/manage/service_add.php:49
+#, php-format
+msgid "Service <strong>%s</strong> added to default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/service_edit.php:81
+#, php-format
+msgid "Service <strong>%s</strong> modified with success"
+msgstr ""
+
+#: modules/imaging/manage/service_del.php:44
+#: modules/imaging/manage/service_show_used.php:93
+#, php-format
+msgid "Service <strong>%s</strong> removed from default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/service_remove.php:44
+#, php-format
+msgid "Service <strong>%s</strong> successfully removed"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1734
+msgid ""
+"Set CopyProfile to true in the Unattend.xml file that you will use with "
+"Sysprep in the next step"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:436
+#: modules/imaging/manage/ajaxFormWin8.php:511
+#: modules/imaging/manage/ajaxFormWin10.php:529
+#: modules/imaging/manage/ajaxFormWin81.php:612
+msgid "Setup Language"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1505
+msgid ""
+"SetupUILanguage defines the language to use in Windows Setup and Windows "
+"Deployment Services"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:301
+msgid "Share a group of computers"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:449
+#: modules/imaging/manage/ajaxFormWin8.php:524
+#: modules/imaging/manage/ajaxFormWin81.php:786
+msgid "Show Windows Live"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:123
+#: modules/imaging/manage/service_show_used.php:163
+msgid "Show all targets that use that image in their boot menu"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1769
+msgid "Show file XML AWFG"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:374
+msgid "Show sync status"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:370
+msgid "Show target that use that image"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:86
+#: modules/imaging/manage/ajaxMasterLevel2.php:64
+msgid "Show target using that image"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:139
+msgid "Show used services"
+msgstr ""
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:52
+msgid "Show where service is used"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1747
+msgid ""
+"ShowWindowsLive specifies whether to display a link to Windows Live on the "
+"Start menu"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:173
+#: modules/imaging/manage/ajaxMasterLevel2.php:99
+msgid "Size (compressed)"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:427
+#: modules/imaging/manage/ajaxFormWin8.php:502
+#: modules/imaging/manage/ajaxFormWin10.php:520
+#: modules/imaging/manage/ajaxFormWin81.php:601
+msgid "Skip License Rearm"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:419
+#: modules/imaging/manage/ajaxFormWin8.php:494
+#: modules/imaging/manage/ajaxFormWin10.php:512
+#: modules/imaging/manage/ajaxFormWin81.php:593
+msgid "Skip automatic activation"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:894
+msgid "Skip machine OOBE"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:902
+msgid "Skip user OOBE"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:627
+#: modules/imaging/manage/ajaxFormWin8.php:702
+#: modules/imaging/manage/ajaxFormWin10.php:712
+#: modules/imaging/manage/ajaxFormWin81.php:915
+msgid "Small"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:118
+msgid "Space available on server"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:761
+msgid "Specialize Settings"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1692
+msgid "Specifies a LocalAccount"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
+msgid "Specifies a private home network"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1557
+msgid "Specifies a private office network"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1561
+msgid "Specifies neither a home or work network"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1633
+msgid "Specifies that Welcome Center is shown"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1629
+msgid "Specifies that Welcome Center is skipped"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1445
+msgid "Specifies that Windows CEIP is enabled"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1441
+msgid "Specifies that Windows CEIP is not enabled"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1618
+msgid "Specifies that Windows Welcome is shown"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1614
+msgid "Specifies that Windows Welcome is skipped"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1491
+msgid "Specifies that Windows attempts to automatically activate"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1487
+msgid "Specifies that Windows does not attempt to automatically activate"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1753
+msgid "Specifies that a link to Windows Live is displayed on the Start menu"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1757
+msgid ""
+"Specifies that a link to Windows Live is not displayed on the Start menu"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1574
+msgid "Specifies that automatic protection is disabled"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1572
+msgid "Specifies that only updates are installed"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1585
+msgid ""
+"Specifies that the Microsoft Software License Terms page of Windows Welcome "
+"is displayed"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1581
+msgid ""
+"Specifies that the Microsoft Software License Terms page of Windows Welcome "
+"is not displayed"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1498
+msgid ""
+"Specifies that the computer is not rearmed and the computer will not be "
+"restored to its original, out-of-box state. All activation-related licensing "
+"and registry data will remain and will not be reset. Similarly, any grace "
+"period timers is not reset."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1502
+msgid ""
+"Specifies that the computer is rearmed, restoring the computer to the "
+"original, out-of-box state. All activation-related licensing and registry "
+"data is removed or reset, and any grace period timers are also reset."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1646
+msgid "Specifies that the disk is erased"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1650
+msgid "Specifies that the disk is not erased"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1474
+msgid ""
+"Specifies that the license terms are automatically accepted without being "
+"displayed to the end user"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1592
+msgid ""
+"Specifies that the time on the computer is not reset to daylight saving time"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1596
+msgid ""
+"Specifies that the time on the computer is reset to daylight saving time"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1686
+msgid ""
+"Specifies the administrator password of the computer and whether it is "
+"hidden in the unattended installation answer file"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1508
+msgid ""
+"Specifies the computer name used to access the computer from the network"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1451
+msgid ""
+"Specifies the default system language to display user interface (UI) items "
+"(such as menus, dialog boxes, and help files)"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1653
+msgid "Specifies the disk ID of the disk to which the image is to be installed"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1673
+msgid ""
+"Specifies the drive letter to apply to a partition. Drive_letter is an "
+"uppercase letter, C through Z"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1517
+msgid ""
+"Specifies the input language and keyboard layout for a Windows installation"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1463
+msgid "Specifies the key used to activate Windows"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1549
+msgid ""
+"Specifies the location of the network if the computer is connected to a "
+"network when a user first logs on"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1689
+msgid ""
+"Specifies the name of an existing local security group to which a new "
+"LocalAccount will be added during installation"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1698
+msgid ""
+"Specifies the name of the end user. User_name is a string with a maximum "
+"length of 63 characters"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1511
+msgid "Specifies the name of the organization that owns the computer"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1676
+msgid ""
+"Specifies the order in which the ModifyPartition command is to be run at "
+"first logon"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1695
+msgid ""
+"Specifies the password for a LocalAccount and whether the password is hidden "
+"in the unattended installation answer file"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1514
+msgid ""
+"Specifies the per-user settings used for formatting dates, times, currency, "
+"and numbers in a Windows installation"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1570
+msgid "Specifies the recommended level of protection for your computer"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1454
+msgid ""
+"Specifies the time zone of the computer. The time zones that are specified "
+"in Windows System Image Manager are not localized"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1701
+msgid ""
+"Specifies whether Windows User Account Controls (UAC) notifies the user when "
+"programs try to make changes to the computer. UAC was formerly known as "
+"Limited User Account (LUA)"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1481
+msgid "Specifies whether Windows attempts to automatically activate"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1588
+msgid ""
+"Specifies whether the time on the computer is set to daylight saving time"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1470
+msgid ""
+"Specifies whether to automatically accept the Microsoft Software License "
+"Terms"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1566
+msgid ""
+"Specifies whether to display the Help protect your computer automatically "
+"page of Windows Welcome to the user"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1642
+msgid ""
+"Specifies whether to erase all partitions on the hard disk before adding "
+"additional configurations to the disk"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1662
+msgid ""
+"Specifies whether to erase the partition, and which file system to apply to "
+"the partition"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1760
+msgid "Specifies whether to extend the partition to fill the entire hard disk"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1599
+msgid ""
+"Specifies whether to hide the Join Wireless Network screen that appears "
+"during Windows Welcome"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1577
+msgid ""
+"Specifies whether to hide the Microsoft Software License Terms page of "
+"Windows Welcome"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1494
+msgid "Specifies whether to run the Windows Software Licensing Rearm program"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1625
+msgid ""
+"Specifies whether to skip Welcome Center. This can be used only for testing "
+"prior to shipment"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1610
+msgid "Specifies whether to skip Windows Welcome"
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:111
+msgid "Start ISO generation"
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:68
+msgid "Start Multicast of ( Master :"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:389
+#: modules/imaging/manage/ajaxStatus.php:569
+msgid "Start multicast deploy"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxLogs.php:96
+msgid "State"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:139
+msgid "Stats"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:33
+msgid "Status"
+msgstr ""
+
+#: modules/imaging/manage/ajaxLogs.php:51
+#: modules/imaging/manage/ajaxLogs.php:67
+#: modules/imaging/includes/logs.inc.php:33
+msgid "Status unknown"
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:88
+msgid "Stop Multicast of ( Master :"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:552
+msgid "Stop multicast deploy"
+msgstr ""
+
+#: modules/imaging/manage/bootmenu_down.php:36
+#, php-format
+msgid "Success : to move down <strong>%s</strong> in the default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/bootmenu_up.php:37
+#, php-format
+msgid "Success to move <strong>%s</strong> in the default boot menu"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:158
+#, php-format
+msgid "Success to move item <strong>%s</strong> in the boot menu [ %s ]"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:209
+msgid "Swap"
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:102
+#: modules/imaging/manage/multicastaction.php:121
+msgid "Synchro Profile Menu group : "
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:129
+msgid "Synchronization state"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1680
+msgid ""
+"Synchronous commands are always run before asynchronous commands in the same "
+"configuration pass"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1678
+msgid ""
+"Synchronous commands start in the order specified in the unattended "
+"installation answer file, and each command must finish before the next "
+"command starts"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:51
+msgid "Sysprep List"
+msgstr ""
+
+#: modules/imaging/manage/systemImageManager.php:38
+msgid "Sysprep generator"
+msgstr ""
+
+#: modules/imaging/manage/systemImageManager.php:39
+msgid "Sysprep list"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin8.php:785
+#: modules/imaging/manage/ajaxFormWin81.php:698
+msgid "System Background Colour"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:43
+msgid "System Image Manager"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1380
+msgid "System Operators"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:574
+#: modules/imaging/manage/ajaxFormWin8.php:649
+#: modules/imaging/manage/ajaxFormWin10.php:659
+#: modules/imaging/manage/ajaxFormWin81.php:862
+msgid "System Updates"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1448
+msgid ""
+"SystemDefaultBackgroundColor specifies the system default Windows background "
+"color scheme appearing on first boot, and on LogonUI if no user is selected"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxLogs.php:94
+#: modules/imaging/manage/ajaxLogs.php:111
+msgid "Target"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:98
+msgid "Target options"
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:58
+msgid ""
+"The ISO image file will be stored into the imaging server at the end of the "
+"backup."
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:56
+#, php-format
+msgid ""
+"The ISO image generation of master <strong>%s</strong> has been launched in "
+"background."
+msgstr ""
+
+#: modules/imaging/imaging/addimage.php:81 modules/imaging/imaging/tabs.php:100
+#: modules/imaging/imaging/addservice.php:78
+#: modules/imaging/imaging/bootmenu_remove.php:103
+msgid ""
+"The bootmenus cannot be generated as a multicast deployment is currently "
+"running."
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:379
+#, php-format
+msgid "The computer %s has correctly been unregistered from imaging"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:461
+msgid ""
+"The computer either doesn't have a MAC address, either has more than one MAC "
+"address or the only NIC doesn't have any network mask. It can't be "
+"registered into the imaging module."
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:549
+#, php-format
+msgid "The default values displayed here come from this %s's profile menu."
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:537
+msgid ""
+"The default values for the imaging parameters will be inherited from the "
+"imaging server that manages the entities of the computers that belongs to "
+"this profile."
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:534
+msgid ""
+"The default values for the imaging parameters will be inherited from the "
+"imaging server that manages the entity that owns this computer."
+msgstr ""
+
+#: modules/imaging/manage/master_iso.php:48
+#, php-format
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the "
+"backup."
+msgstr ""
+
+#: modules/imaging/includes/includes.php:36
+msgid "The nomenclature is missing."
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:466
+msgid "The profile can't be registered into the imaging module."
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:197
+#: modules/imaging/includes/ajaxcommon.inc.php:126
+msgid "The registering in the imaging server has failed."
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:38
+#, php-format
+msgid "The sysprep answer file %s has been removed from the imaging system."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1568
+msgid ""
+"There is no default value. If a value is not set, the page opens during "
+"Windows Welcome"
+msgstr ""
+
+#: modules/imaging/manage/master_clone.php:75
+msgid "There is no imaging server available to clone the master"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:35
+msgid "There was an error (this is a default message)."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1534
+msgid "These settings specify whether to do the following"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:43
+msgid "This computer already exists."
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:148
+msgid ""
+"This computer can't be declared in the imaging module: it's already part of "
+"a broken imaging group."
+msgstr ""
+
+#: modules/imaging/imaging/header.php:60
+#, php-format
+msgid ""
+"This computer has a <u>custom boot menu</u>. <a href=\"%s\">Click here</a> "
+"to get back the default one."
+msgstr ""
+
+#: modules/imaging/imaging/header.php:75
+#, php-format
+msgid ""
+"This computer is currently member of \"%s\". <a href=\"%s\">Click here</a> "
+"to leave the group and customize the boot menu."
+msgstr ""
+
+#: modules/imaging/imaging/tabs.php:117
+#, php-format
+msgid "This computer is no longer registered : %s"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:38
+msgid "This entity already exists."
+msgstr ""
+
+#: modules/imaging/includes/includes.php:41
+msgid "This entity has no default menu, you first need to set one."
+msgstr ""
+
+#: modules/imaging/includes/includes.php:42
+msgid "This image already exists."
+msgstr ""
+
+#: modules/imaging/includes/includes.php:37
+msgid "This imaging server doesn't exists."
+msgstr ""
+
+#: modules/imaging/manage/master_iso.php:52
+msgid "This operation will last according to the amount of data of the master."
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:65
+msgid "This operation will last according to the master size."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1655
+msgid "This sequence starts with 0"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:40
+msgid "This target has no menu."
+msgstr ""
+
+#: modules/imaging/imaging/header.php:51
+msgid "This target's boot menu is up-to-date."
+msgstr ""
+
+#: modules/imaging/includes/post_install_script.php:88
+msgid "This value is already used."
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:473
+#: modules/imaging/manage/ajaxFormWin8.php:548
+#: modules/imaging/manage/ajaxFormWin10.php:558
+#: modules/imaging/manage/ajaxFormWin81.php:820
+msgid "Time Zone"
+msgstr ""
+
+#: modules/imaging/imaging/ajaxLogs.php:90
+#: modules/imaging/manage/ajaxLogs.php:109
+msgid "Timestamp"
+msgstr ""
+
+#: modules/imaging/imaging/images_iso.php:93
+#: modules/imaging/manage/ajaxFormWin7.php:354
+#: modules/imaging/manage/ajaxFormWin8.php:429
+#: modules/imaging/manage/master_iso.php:90
+#: modules/imaging/manage/ajaxFormWin10.php:447
+#: modules/imaging/manage/ajaxFormWin81.php:530
+msgid "Title"
+msgstr ""
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:46
+msgid ""
+"To define a master, browse to the computers module click on the imaging icon "
+"for the computer you wish to make a master from, then choose &quot;Images "
+"and Masters&quot;, followed by clicking the edit button on a backup image to "
+"convert it to a master."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1711
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1716
+msgid ""
+"To provide better protection for computers connected to any kind of network "
+"(such as the Internet, a home network, or an organization network), the "
+"Windows operating system enables Windows Firewall on all network connections "
+"by default"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:456
+msgid ""
+"To register, you must first set a default menu to the imaging server that "
+"manages the entities of the computers that belongs to this profile."
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:454
+msgid ""
+"To register, you must first set a default menu to the imaging server that "
+"manages the entity of this computer."
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin8.php:821
+#: modules/imaging/manage/ajaxFormWin10.php:820
+#: modules/imaging/manage/ajaxFormWin81.php:744
+msgid "UAC"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:481
+#: modules/imaging/manage/ajaxFormWin8.php:556
+#: modules/imaging/manage/ajaxFormWin10.php:566
+#: modules/imaging/manage/ajaxFormWin81.php:828
+msgid "UI Language"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:364
+#: modules/imaging/imaging/configure.php:661
+msgid "Unregister this computer"
+msgstr ""
+
+#: modules/imaging/imaging/showtarget.php:129
+#: modules/imaging/manage/service_show_used.php:198
+msgid "Unselect all"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:145
+msgid "Up service"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:133
+msgid "Up-to-date"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:158
+msgid "Update the NT boot loader if the hard disk has changed"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:195
+msgid "Uptime: "
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:450
+msgid ""
+"Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
+"default boot entry."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1727
+msgid ""
+"Use the following steps to use CopyProfile to set customized user profiles"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:693
+#: modules/imaging/manage/ajaxFormWin8.php:768
+#: modules/imaging/manage/ajaxFormWin10.php:773
+#: modules/imaging/manage/ajaxFormWin81.php:681
+msgid "User Account"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:715
+#: modules/imaging/manage/ajaxFormWin8.php:796
+#: modules/imaging/manage/ajaxFormWin10.php:795
+#: modules/imaging/manage/ajaxFormWin81.php:711
+msgid "User Name"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1775
+msgid ""
+"Username specifies the name of the user account with permission to add the "
+"computer to a domain during Windows Setup."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1381
+msgid "Users"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:260
+#: modules/imaging/manage/postinstall_edit.php:162
+#: modules/imaging/manage/ajaxFormWin7.php:737
+#: modules/imaging/manage/ajaxFormWin8.php:826
+#: modules/imaging/manage/ajaxConfiguration.php:123
+#: modules/imaging/manage/bootmenu_edit.php:101
+#: modules/imaging/manage/ajaxFormWin10.php:825
+#: modules/imaging/manage/master_edit.php:72
+#: modules/imaging/manage/service_edit.php:71
+#: modules/imaging/manage/master_clone.php:121
+#: modules/imaging/manage/ajaxFormWin81.php:938
+msgid "Validate"
+msgstr ""
+
+#: modules/imaging/manage/sysprepView.php:33
+msgid "View "
+msgstr ""
+
+#: modules/imaging/imaging/ajaxImages.php:91
+msgid "View image log"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:455
+msgid ""
+"When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry, "
+"this value will be set on all the computers in this group."
+msgstr ""
+
+#: modules/imaging/manage/unattended.php:89
+msgid "Windows Answer File Generator"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1714
+msgid ""
+"Windows Firewall is a stateful host firewall that discards unsolicited "
+"incoming traffic, providing a level of protection for computers against "
+"malicious users or programs"
+msgstr ""
+
+#: modules/imaging/manage/localSidebar.php:46
+msgid "Windows System Image Manager"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1709
+msgid ""
+"Windows does not notify the user when programs try to install software or "
+"make changes to the computer"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1705
+msgid ""
+"Windows notifies the user when programs try to make changes to the computer"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:501
+#: modules/imaging/manage/ajaxFormWin8.php:576
+#: modules/imaging/manage/ajaxFormWin10.php:586
+#: modules/imaging/manage/ajaxFormWin81.php:635
+msgid "Wipe Disk"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1555
+msgid "Work"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin7.php:745
+#: modules/imaging/manage/ajaxFormWin8.php:834
+#: modules/imaging/manage/ajaxFormWin10.php:833
+#: modules/imaging/manage/ajaxFormWin81.php:946
+msgid "Xml Windows Answer File Generator"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1412
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1472
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1496
+msgid "Yes"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:351
+msgid ""
+"You are going to unregister this computer from the imaging module, are you "
+"sure you want to do that?"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:39
+msgid "You asked for an inexistent menu item."
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:515
+#: modules/imaging/imaging/configure.php:650
+msgid "You can switch to standard mode now if you want less parameters."
+msgstr ""
+
+#: modules/imaging/includes/ajaxcommon.inc.php:135
+#, php-format
+msgid ""
+"You have modified the boot menu for the following items : %s. If you are "
+"done please click on \"Generate Menu\" to update the computer boot menu."
+msgstr ""
+
+#: modules/imaging/imaging/header.php:34
+msgid ""
+"You have modified this target's boot menu, if you are done please click on "
+"\"Generate Menu\" to update the computer boot menu."
+msgstr ""
+
+#: modules/imaging/includes/includes.php:44
+msgid ""
+"You need to register this computer's imaging server to be able to use "
+"imaging."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:50
+msgid "available"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:410
+msgid "boot service"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:408
+msgid "boot service from profile"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:174
+#, php-format
+msgid "choose network profile for group %s"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:200
+#, php-format
+msgid "choose network profile for machine %s"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:234
+msgid "client have rescue image"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:238
+msgid "client(s) have rescue image(s)"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:145
+msgid "client(s) registered"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:187
+msgid "computers have a [IPV6] interfaces address exclusively in the group"
+msgstr ""
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:113
+msgid "copy master In progress"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:197
+msgid "day"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:348
+#, php-format
+msgid ""
+"deploy the master <strong>%s</strong> to this group <strong>%s</strong> in "
+"multicast"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1439
+msgid "enabled "
+msgstr ""
+
+#: modules/imaging/manage/unattended.php:104
+msgid "error create file"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1489
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1583
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1594
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1605
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1616
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1631
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1648
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1707
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1722
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1742
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1755
+msgid "false"
+msgstr ""
+
+#: modules/imaging/manage/unattended.php:76
+msgid "form not found"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:200
+msgid "hour"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:445
+msgid "init multicast"
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:121
+msgid "location : "
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:401
+msgid "master"
+msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:111
+#: modules/imaging/infoPackage.inc.php:114
+msgid "master clone"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:399
+msgid "master from the profile"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:256
+msgid "masters are available"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:202
+msgid "minute"
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:69
+#: modules/imaging/manage/multicastaction.php:89
+#: modules/imaging/manage/multicastaction.php:136
+msgid "on (group :"
+msgstr ""
+
+#: modules/imaging/imaging/addimage.php:72 modules/imaging/imaging/tabs.php:89
+#: modules/imaging/imaging/ajaxImages.php:189
+#: modules/imaging/imaging/addservice.php:69
+#: modules/imaging/imaging/bootmenu_remove.php:93
+#: modules/imaging/includes/ajaxcommon.inc.php:37
+#: modules/imaging/includes/ajaxcommon.inc.php:57
+msgid "root"
+msgstr ""
+
+#: modules/imaging/imaging/multicast.php:371
+msgid ""
+"start anyways when t seconds since first receiver connection have passed"
+msgstr ""
+
+#: modules/imaging/includes/ajaxcommon.inc.php:103
+msgid "the entity itself"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:134
+msgid "title missing ex : sysprep.xml"
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:70
+#: modules/imaging/manage/multicastaction.php:90
+#: modules/imaging/manage/multicastaction.php:137
+msgid "to (location : "
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1485
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1579
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1590
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1601
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1612
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1627
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1644
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1703
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1718
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1738
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1751
+msgid "true"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1620
+msgid "warning"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:150
+msgid "with custom menu"
+msgstr ""
