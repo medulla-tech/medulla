@@ -148,13 +148,13 @@ $page->setFile("modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("ajax_refrech_files_remote", _T("ajax refrech files remote", "xmppmaster"));
-$page->setFile("modules/xmppmaster/xmppmaster/ajax_refrech_files_remote.php.php");
+$page = new Page("ajax_refresh_files_remote", _T("ajax refresh files remote", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("ajax_refrech_files_local", _T("ajax refrech files local", "xmppmaster"));
-$page->setFile("modules/xmppmaster/xmppmaster/ajax_refrech_files_local.php");
+$page = new Page("ajax_refresh_files_local", _T("ajax refresh files local", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajax_refresh_files_local.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
@@ -163,13 +163,13 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php")
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("xmpprefrechfilesremote");
-$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php");
+$page = new Page("xmpprefreshfilesremote");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("xmpprefrechfilesremotene");
-$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremotene.php");
+$page = new Page("xmpprefreshfilesremotene");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
@@ -178,13 +178,13 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("xmpprefrechfileslocal");
-$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php");
+$page = new Page("xmpprefreshfileslocal");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefreshfileslocal.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("xmpprefrechfileslocalne");
-$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocalne.php");
+$page = new Page("xmpprefreshfileslocalne");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefreshfileslocalne.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
