@@ -68,12 +68,23 @@ if (isset($lifdir['err'])){
 }
 $lifdir = $lifdir['data'];
 
+$rootfilesystem = $lifdir['rootfilesystem'];
 
+$rootfilesystempath = $rootfilesystem;
+if ($rootfilesystem[1] == ":"){
+    $rootfilesystempath =substr($lifdirremote['data']['rootfilesystem'],2);
+}
 printf ('
 <form>
-    <input id ="path_abs_current_remote" type="hidden" name="path_abs_current_remote" value="%s">
-    <input id ="parentdirremote" type="hidden" name="parentdirremote" value="%s">
-</form>' ,$lifdir['path_abs_current'],$lifdir['parentdir']);
+    <input id ="path_abs_current_remote" type="text" name="path_abs_current_remote" value="%s">
+    <input id ="parentdirremote" type="text" name="parentdirremote" value="%s">
+    <input id ="rootfilesystem" type="text" name="rootfilesystem" value="%s">
+    <input id ="rootfilesystempath" type="text" name="rootfilesystempath" value="%s">
+</form>' ,$lifdir['path_abs_current'],$lifdir['parentdir'],$lifdir['rootfilesystem'],$lifdir['parentdir'],$rootfilesystempath);
+
+
+
+
 echo "<h2>Remove Root file system : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdir['rootfilesystem'] ."</span></h2>";
 echo "<h2>Parent Dir .. : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdir['parentdir'] ."</span></h2>";
 echo'
