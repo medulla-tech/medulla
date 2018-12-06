@@ -248,9 +248,9 @@ echo '</script>';
 
 <?php
     $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
-    $lifdir = json_decode($lifdirstr, true);
-    if (isset($lifdir['err'])){
-        if ( $lifdir['err'] == 'Timeout Error'){
+    $lifdirremote = json_decode($lifdirstr, true);
+    if (isset($lifdirremote['err'])){
+        if ( $lifdirremote['err'] == 'Timeout Error'){
             $msg = sprintf(_T("Sorry, the remote machine [%s] takes too long to answer.", "xmppmaster"), $machine);
         }else{
             $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
@@ -260,7 +260,7 @@ echo '</script>';
             echo "</h2>";
             exit;
     }
-    $datatree = $lifdir['data']['strjsonhierarchy'];
+    $datatree = $lifdirremote['data']['strjsonhierarchy'];
     // cherche local directory
 
 printf ('
@@ -268,7 +268,7 @@ printf ('
     <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
     <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
 </form>' ,$lifdirlocal['path_abs_current'],$lifdirlocal['parentdir']);
-$rootfilesystem = $lifdir['data']['rootfilesystem'];
+$rootfilesystem = $lifdirremote['data']['rootfilesystem'];
 
 $rootfilesystempath = $rootfilesystem;
 if ($rootfilesystem[1] == ":"){

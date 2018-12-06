@@ -242,9 +242,6 @@ li.quickg a {
     require("graph/navbar.inc.php");
     require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-/*
-print_r($_GET);
-print_r($_POST);*/
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
@@ -265,9 +262,6 @@ echo "<br><br><br>";
 $filecurentdir = xmlrpc_create_local_dir_transfert(xmlrpc_localfilesystem("")['path_abs_current'], $ma['hostname']);
 
 $curentdir = $filecurentdir['path_abs_current'];
-// echo $curentdir;
-//
-// echo $filecurentdir['parentdir'];
 echo '<script type="text/javascript">';
 
 if (stristr($ma['platform'], "win")) {
@@ -291,6 +285,14 @@ echo '</script>';
     $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
     $lifdir = json_decode($lifdirstr, true);
 
+
+    $rootfilesystem = $lifdir['data']['rootfilesystem'];
+
+    $rootfilesystempath = $rootfilesystem;
+
+    if ($rootfilesystem[1] == ":"){
+        $rootfilesystempath =substr($lifdir['data']['rootfilesystem'],2);
+    }
     if (isset($lifdir['err'])){
         if ( $lifdir['err'] == 'Timeout Error'){
             $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
@@ -303,7 +305,6 @@ echo '</script>';
             exit;
     }
     $datatree = $lifdir['data']['strjsonhierarchy'];
-
 ?>
 
 <div id="messageaction">
@@ -312,13 +313,13 @@ echo '</script>';
 <br>
 <div id="global">
 
-                <?php
-                printf ('
-                <form>
-                    <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
-                    <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
-                </form>' ,$curentdir, $filecurentdir['parentdir']);
-                ?>
+    <?php
+    printf ('
+    <form>
+        <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
+        <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
+    </form>' ,$curentdir, $filecurentdir['parentdir']);
+    ?>
        <div class ="piedbrowser"><h2></h2></div>
 
     <div id="droite">
@@ -334,7 +335,6 @@ echo '</script>';
     </div>
 </div>
 
-
 <div id="dialog-confirm-download-directory" title="Transfer Folder">
 
 <!-- dialog box Transfert directory -->
@@ -345,11 +345,8 @@ echo '</script>';
     </span>
   </div>
 </div>
-<div id="dialog-confirm-download-file" title="Transfer File">
 
-
-<!-- dialog box Transfert File -->
-
+<div id="dialog-confirm-download-file" title="Transfer File"><!-- dialog box Transfert File -->
   <div>
     <span style="float:left; margin:12px 12px 20px 0;">
         <span id="dialogmsg1">
@@ -367,6 +364,7 @@ echo '</script>';
     </span>
   </div>
 </div>
+
 <script type="text/javascript">
     // diff between hour server/client
     var ladate = new Date();
@@ -381,6 +379,8 @@ echo '</script>';
         filenamelocal = "";
         timetmp = "";
         taillefile ="";
+        rootfilesystem     = "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystem); ?>";
+        rootfilesystempath = "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystempath); ?>";
         jid = "<?php echo $ma['jid']; ?>";
         user = "<?php echo $_SESSION['login']; ?>";
         nameremotepath = "";
@@ -392,13 +392,7 @@ echo '</script>';
 		.on("changed.jstree", function (e, data) {
 			if(data.selected.length) {
                 var pathlinux = data.instance.get_path(data.node,'/');
-                console.log("jjj"+pathlinux)
-                var absolutepath_array = pathlinux.split("/");
-                var absolutepath = absolutepath_array.shift();
-                var pathlinux_array = absolutepath_array;
-                pathlinux = absolutepath_array.join("/");
-                var absolutepath = "/" + absolutepath;
-                remote(pathlinux);
+                remote(pathlinux.substr(rootfilesystempath.length));
 			}
 		})
 		.jstree({
@@ -409,6 +403,9 @@ echo '</script>';
 				]
 			}
 		});
+	jQuery('#directoryremote').on('ready.jstree', function() {
+                jQuery('#directoryremote').jstree("open_all");
+        });
     });
 
     function confirmation_information(data) {
