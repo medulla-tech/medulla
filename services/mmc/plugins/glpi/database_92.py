@@ -4688,8 +4688,6 @@ class Glpi92(DyngroupDatabaseHelper):
         """
 
         sql="""SELECT
-COUNT(*) AS grouped_count,
-
   glpi_operatingsystems.name as os,
   glpi_operatingsystemversions.name as version_name
 FROM
@@ -4702,13 +4700,9 @@ ON
 left JOIN
   glpi_operatingsystemversions
 ON
-  operatingsystemversions_id = glpi_operatingsystemversions.id
-GROUP BY
-  glpi_operatingsystems.name
-  -- glpi_operatingsystemversions.name
-  ;"""
+  operatingsystemversions_id = glpi_operatingsystemversions.id;"""
         res = self.db.execute(sql)
-        result = [{'count': count, 'os': os, 'version': version} for count, os, version in res]
+        result = [{'os': os, 'version': version} for os, version in res]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
@@ -4730,6 +4724,7 @@ GROUP BY
 
         final_list = []
         for machine in result:
+            machine['count'] = 1
             if machine['os'].startswith('Android'):
                 pass
             elif machine['os'].startswith('Debian'):
