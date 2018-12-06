@@ -26,88 +26,131 @@ require_once("modules/base/includes/computers.inc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 
 $options = array(
-    "class" => "os_repartitionPanel",
-    "id" => "osrepartition",
-    "refresh" => 960,
-    "title" => _T("Operating systems", "glpi"),
+  "class" => "os_repartitionPanel",
+  "id" => "osrepartition",
+  "refresh" => 960,
+  "title" => _T("Operating systems", "glpi"),
 );
 
 class os_repartitionPanel extends Panel {
+  function display_content() {
+    if(!isExpertMode())
+    {
+      // Declare OS classes
+      $osClasses = array(
+        'other',
+        'macOS',
+        'Mageia 5',
+        'Mageia 6',
+        // Ubuntu section
+        'Ubuntu 18',
+        'Ubuntu 17',
+        'Ubuntu 16',
+        // Debian section
+        'stretch',
+        'Windows 10',
+        'Windows 8',
+        'Windows 7',
+        'Windows Vista',
+        'Windows XP',
+        'otherw'
+      );
 
-    function display_content() {
+      $osLabels = array(
+        _T('Other', 'glpi'),
+        'macOS',
+        'Mageia 5',
+        'Mageia 6',
+        // Ubuntu section
+        'Ubuntu 18',
+        'Ubuntu 17',
+        'Ubuntu 16',
+        // Debian section
+        'Debian Stretch',
+        'Windows 10',
+        'Windows 8',
+        'Windows 7',
+        'Windows Vista',
+        'Windows XP',
+        _T('Other Windows', 'glpi')
+      );
 
-        // Declare OS classes
-        $osClasses = array(
-	    'other',
-            'macOS',
-	    'Mageia 5',
-	    'Mageia 6',
-            'Windows 10',
-            'Windows 8',
-	    'Windows 7',
-	    'Windows Vista',
-            'Windows XP',
-            'otherw'
-        );
+      $osCount = array();
 
-        $osLabels = array(
-	    _T('Other', 'glpi'),
-            'macOS',
-	    'Mageia 5',
-	    'Mageia 6',
-            'Windows 10',
-            'Windows 8',
-	    'Windows 7',
-	    'Windows Vista',
-            'Windows XP',
-            _T('Other Windows', 'glpi')
-        );
-
-        $osCount = array();
-
-        $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
+      $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
 
 
-        $links = array(
-	    "$urlRedirect&os=other", // Static group links
-	    "$urlRedirect&os=macOS",
-	    "$urlRedirect&os=Mageia 5",
-	    "$urlRedirect&os=Mageia 6",
-            "$urlRedirect&os=Windows 10",
-            "$urlRedirect&os=Windows 8",
-	    "$urlRedirect&os=Windows 7",
-	    "$urlRedirect&os=Windows Vista",
-            "$urlRedirect&os=Windows XP",
-            "$urlRedirect&os=otherw"
-        );
+      $links = array(
+        "$urlRedirect&os=other", // Static group links
+        "$urlRedirect&os=macOS",
+        "$urlRedirect&os=Mageia 5",
+        "$urlRedirect&os=Mageia 6",
+        "$urlRedirect&os=Ubuntu 18",
+        "$urlRedirect&os=Ubuntu 17",
+        "$urlRedirect&os=Ubuntu 16",
+        "$urlRedirect&os=stretch",
+        "$urlRedirect&os=Windows 10",
+        "$urlRedirect&os=Windows 8",
+        "$urlRedirect&os=Windows 7",
+        "$urlRedirect&os=Windows Vista",
+        "$urlRedirect&os=Windows XP",
+        "$urlRedirect&os=otherw"
+      );
 
         /* $links = json_encode(array("#",
           "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
           "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
           "#"));  DYNGROUP LINKS */
 
-        for ($i = 0; $i < count($osClasses); $i++) {
-            $osCount[] = getMachineByOsLike($osClasses[$i], 1);
-            $osLabels[$i] .= ' (' . $osCount[$i] . ')';
+      for ($i = 0; $i < count($osClasses); $i++) {
+        $osCount[] = getMachineByOsLike($osClasses[$i], 1);
+        $osLabels[$i] .= ' (' . $osCount[$i] . ')';
+      }
+      $n = count($osCount);
+      // Treating osCount for adapting to raphaeljs
+      for ($i = 0; $i < $n; $i++) {
+          if ($osCount[$i] == 0) {
+              unset($osCount[$i]);
+              unset($osLabels[$i]);
+              unset($links[$i]);
+          } elseif ($osCount[$i] / array_sum($osCount) < 0.015)
+              $osCount[$i] = 0.015 / (1 - 0.015) * (array_sum($osCount) - $osCount[$i]);
+      }
+    }
+    else
+    {
+      $pcs = xmlrpc_get_os_for_dashboard();
+
+      $osLabels = [];
+      $osCount = [];
+      $links = [];
+      $cumul = 0;
+      $n = count($pcs);
+      for($i =0; $i < $n; $i++)
+      {
+        $cumul += (int)$pcs[$i]['count'];
+      }
+      $n = $cumul;
+      foreach ($pcs as $os){
+        //$cumul = $cumul + (int)$os['count'];
+        if((int)$os['count'] == 0)
+        {
+          unset($os);
         }
+        $osLabels[] = $os['os'].' '.$os['version'].' ('.$os['count'].')';
+        $osCount[] = (int)$os['count'];
 
-        $n = count($osCount);
+        //$version = ($os['version'] == "") ? "false" : $os['version'];
+        $links[] = $urlRedirect.'&os='.$os['os'].'&version='.$os['version'];
+      }
 
-        // Treating osCount for adapting to raphaeljs
-        for ($i = 0; $i < $n; $i++) {
-            if ($osCount[$i] == 0) {
-                unset($osCount[$i]);
-                unset($osLabels[$i]);
-                unset($links[$i]);
-            } elseif ($osCount[$i] / array_sum($osCount) < 0.015)
-                $osCount[$i] = 0.015 / (1 - 0.015) * (array_sum($osCount) - $osCount[$i]);
-        }
-        $osLabels = json_encode(array_values($osLabels));
-        $osCount = json_encode(array_values($osCount));
-        $links = json_encode(array_values($links));
+      echo 'total : '.$n.'<br />';
+    }
+    $osLabels = json_encode(array_values($osLabels));
+    $osCount = json_encode(array_values($osCount));
+    $links = json_encode(array_values($links));
 
-        $createGroupText = json_encode(_T("Create a group", "glpi"));
-
+    $createGroupText = json_encode(_T("Create a group", "glpi"));
 
         echo <<< SPACE
         <div id="os-graphs"></div>
@@ -122,7 +165,7 @@ class os_repartitionPanel extends Panel {
                 createGroupText = $createGroupText,
                 legend = $osLabels,
                 //Add "#000-color-color" into the colors variable if all the os are not displayed
-                colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED","000-#7e1282-#c98fcb","000-#b36919-#e8c6a2","000-#2eb9f3-#4297-#4297ba","000-#168eff-#28c96c","000-#a9751a-#cdbda1","000-#72ed62-#72ed62"],
+                colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED","000-#7e1282-#c98fcb","000-#b36919-#e8c6a2","000-#2eb9f3-#4297ba","000-#168eff-#28c96c","000-#a9751a-#cdbda1","000-#72ed62-#72ed62","000-#000000-#666665","000-#000000-#666665","000-#000000-#666665"],
                 href = $links,
                 title = 'OS Repartition';
 

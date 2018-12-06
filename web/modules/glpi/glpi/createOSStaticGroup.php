@@ -30,18 +30,38 @@ require_once("modules/base/includes/computers.inc.php");
 
 $requestedOS = $_GET['os'];
 
-// Group name
-$groupname = sprintf (_T("Machine with %s installed at %s", "glpi"), $requestedOS, date("Y-m-d H:i:s"));;
-
 // Get user locations
 $groupmembers = array();
+if(!isExpertMode())
+{
+  // Group name
+  $groupname = sprintf (_T("Machine with %s installed at %s", "glpi"), $requestedOS, date("Y-m-d H:i:s"));
+  $result = getMachineByOsLike($requestedOS,0);
 
-$result = getMachineByOsLike($requestedOS,0);
+}
 
-foreach ($result as $entry){
+else {
+  if($requestedOS == "Other")
+    $requestedOS = "no operating";
+
+  $requestedVersion = $_GET['version'];
+  $groupname = sprintf (_T("Machine with %s %s installed at %s", "glpi"), $requestedOS, $requestedVersion, date("Y-m-d H:i:s"));;
+  $result = xmlrpc_get_machines_with_os_and_version($requestedOS, $requestedVersion);
+
+}
+
+foreach($result as $entry){
+  if(!isExpertMode())
+  {
     $uuid = 'UUID'.$entry[0];
     $cn = $entry[1];
-    $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
+  }
+  else
+  {
+    $uuid = 'UUID'.$entry['id'];
+    $cn = $entry['hostname'];
+  }
+  $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
 }
 
 $group = new Group();

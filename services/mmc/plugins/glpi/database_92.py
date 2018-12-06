@@ -4748,6 +4748,46 @@ ON
             final_list = _add_element(machine, final_list)
         return final_list
 
+    @DatabaseHelper._sessionm
+    def get_machines_with_os_and_version(self, session, os, version = ''):
+        """This function returns a list of id of selected OS for dashboard
+        Params:
+            os: string which contains the searched OS
+            version: string which contains the searched version
+        Returns:
+            list of all the machines with specified OS and specified version
+        """
+
+        criterion = ''
+
+        if version == "":
+            criterion = 'glpi.glpi_operatingsystemversions.name IS NULL'
+        else:
+            criterion = 'glpi.glpi_operatingsystemversions.name like "%%%s%%"' % version
+
+        sql="""SELECT
+    glpi.glpi_computers_pulse.id,
+    glpi.glpi_computers_pulse.name
+FROM
+    glpi.glpi_computers_pulse
+INNER JOIN
+    glpi.glpi_operatingsystems
+ON
+    operatingsystems_id = glpi.glpi_operatingsystems.id
+left JOIN
+    glpi.glpi_operatingsystemversions
+ON
+    operatingsystemversions_id = glpi.glpi_operatingsystemversions.id
+WHERE
+  glpi.glpi_operatingsystems.name LIKE "%%%s%%"
+AND
+  %s
+;""" % (os, criterion)
+
+        res = session.execute(sql)
+        result = [{'id':a, 'hostname':b} for a,b in res]
+        return result
+
 # Class for SQLalchemy mapping
 class Machine(object):
     __tablename__ = 'glpi_computers_pulse'
