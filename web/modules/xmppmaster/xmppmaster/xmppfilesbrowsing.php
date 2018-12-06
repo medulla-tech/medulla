@@ -378,13 +378,14 @@ printf ('
             </tr>
 
             <tr style="height: 100%;">
-                <td style = " width:40%;vertical-align: top;"  class="ombremultiple" >
-                    <div id ="directoryremote" style = " width:100%;overflow:auto;" ></div>
+                <td style = " width:40%;vertical-align: top; height: 100%;"  class="ombremultiple" >
+                    <div id ="directoryremote" style = " width:100%; height: 650px; overflow : auto;" ></div>
                 </td>
-                <td class="ombremultiple"  style = "height: 600px; width:60%; vertical-align: middle;"  >
+                <td class="ombremultiple"  style = " width:60%; vertical-align: middle;"  >
                     <div id ="fileshowremote"
                         style = "padding-top:10px;
-                                width:100%;height: 100%;
+                                width:100%;
+                                height: 600px;
                                 overflow:auto;">
                     </div>
                 </td>
