@@ -34,6 +34,7 @@ $options = array(
 
 class os_repartitionPanel extends Panel {
   function display_content() {
+    $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
     if(!isExpertMode())
     {
       // Declare OS classes
@@ -76,9 +77,6 @@ class os_repartitionPanel extends Panel {
       );
 
       $osCount = array();
-
-      $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
-
 
       $links = array(
         "$urlRedirect&os=other", // Static group links
