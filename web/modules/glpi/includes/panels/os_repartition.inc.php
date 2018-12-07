@@ -2,6 +2,7 @@
 
 /**
  * (c) 2012 Mandriva, http://www.mandriva.com
+ * (c) 2018 Siveo, http://www.siveo.net
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -35,115 +36,30 @@ $options = array(
 class os_repartitionPanel extends Panel {
   function display_content() {
     $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
-    if(!isExpertMode())
+    $pcs = xmlrpc_get_os_for_dashboard();
+
+    $osLabels = [];
+    $osCount = [];
+    $links = [];
+    $cumul = 0;
+    $n = count($pcs);
+    for($i =0; $i < $n; $i++)
     {
-      // Declare OS classes
-      $osClasses = array(
-        'other',
-        'macOS',
-        'Mageia 5',
-        'Mageia 6',
-        // Ubuntu section
-        'Ubuntu 18',
-        'Ubuntu 17',
-        'Ubuntu 16',
-        // Debian section
-        'stretch',
-        'Windows 10',
-        'Windows 8',
-        'Windows 7',
-        'Windows Vista',
-        'Windows XP',
-        'otherw'
-      );
-
-      $osLabels = array(
-        _T('Other', 'glpi'),
-        'macOS',
-        'Mageia 5',
-        'Mageia 6',
-        // Ubuntu section
-        'Ubuntu 18',
-        'Ubuntu 17',
-        'Ubuntu 16',
-        // Debian section
-        'Debian Stretch',
-        'Windows 10',
-        'Windows 8',
-        'Windows 7',
-        'Windows Vista',
-        'Windows XP',
-        _T('Other Windows', 'glpi')
-      );
-
-      $osCount = array();
-
-      $links = array(
-        "$urlRedirect&os=other", // Static group links
-        "$urlRedirect&os=macOS",
-        "$urlRedirect&os=Mageia 5",
-        "$urlRedirect&os=Mageia 6",
-        "$urlRedirect&os=Ubuntu 18",
-        "$urlRedirect&os=Ubuntu 17",
-        "$urlRedirect&os=Ubuntu 16",
-        "$urlRedirect&os=stretch",
-        "$urlRedirect&os=Windows 10",
-        "$urlRedirect&os=Windows 8",
-        "$urlRedirect&os=Windows 7",
-        "$urlRedirect&os=Windows Vista",
-        "$urlRedirect&os=Windows XP",
-        "$urlRedirect&os=otherw"
-      );
-
-        /* $links = json_encode(array("#",
-          "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
-          "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
-          "#"));  DYNGROUP LINKS */
-
-      for ($i = 0; $i < count($osClasses); $i++) {
-        $osCount[] = getMachineByOsLike($osClasses[$i], 1);
-        $osLabels[$i] .= ' (' . $osCount[$i] . ')';
-      }
-      $n = count($osCount);
-      // Treating osCount for adapting to raphaeljs
-      for ($i = 0; $i < $n; $i++) {
-          if ($osCount[$i] == 0) {
-              unset($osCount[$i]);
-              unset($osLabels[$i]);
-              unset($links[$i]);
-          } elseif ($osCount[$i] / array_sum($osCount) < 0.015)
-              $osCount[$i] = 0.015 / (1 - 0.015) * (array_sum($osCount) - $osCount[$i]);
-      }
+      $cumul += (int)$pcs[$i]['count'];
     }
-    else
-    {
-      $pcs = xmlrpc_get_os_for_dashboard();
-
-      $osLabels = [];
-      $osCount = [];
-      $links = [];
-      $cumul = 0;
-      $n = count($pcs);
-      for($i =0; $i < $n; $i++)
+    foreach ($pcs as $os){
+      //$cumul = $cumul + (int)$os['count'];
+      if((int)$os['count'] == 0)
       {
-        $cumul += (int)$pcs[$i]['count'];
+        unset($os);
       }
-      $n = $cumul;
-      foreach ($pcs as $os){
-        //$cumul = $cumul + (int)$os['count'];
-        if((int)$os['count'] == 0)
-        {
-          unset($os);
-        }
-        $osLabels[] = $os['os'].' '.$os['version'].' ('.$os['count'].')';
-        $osCount[] = (int)$os['count'];
+      $osLabels[] = $os['os'].' '.$os['version'].' ('.$os['count'].')';
+      $osCount[] = (int)$os['count'];
 
-        //$version = ($os['version'] == "") ? "false" : $os['version'];
-        $links[] = $urlRedirect.'&os='.$os['os'].'&version='.$os['version'];
-      }
-
-      echo 'total : '.$n.'<br />';
+      $links[] = $urlRedirect.'&os='.$os['os'].'&version='.$os['version'];
     }
+
+    echo 'total : '.$cumul.'<br />';
     $osLabels = json_encode(array_values($osLabels));
     $osCount = json_encode(array_values($osCount));
     $links = json_encode(array_values($links));

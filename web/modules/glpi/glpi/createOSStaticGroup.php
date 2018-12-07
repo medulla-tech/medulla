@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2018 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -32,35 +33,16 @@ $requestedOS = $_GET['os'];
 
 // Get user locations
 $groupmembers = array();
-if(!isExpertMode())
-{
-  // Group name
-  $groupname = sprintf (_T("Machine with %s installed at %s", "glpi"), $requestedOS, date("Y-m-d H:i:s"));
-  $result = getMachineByOsLike($requestedOS,0);
+if($requestedOS == "Other")
+  $requestedOS = "no operating";
 
-}
-
-else {
-  if($requestedOS == "Other")
-    $requestedOS = "no operating";
-
-  $requestedVersion = $_GET['version'];
-  $groupname = sprintf (_T("Machine with %s %s installed at %s", "glpi"), $requestedOS, $requestedVersion, date("Y-m-d H:i:s"));;
-  $result = xmlrpc_get_machines_with_os_and_version($requestedOS, $requestedVersion);
-
-}
+$requestedVersion = $_GET['version'];
+$groupname = sprintf (_T("Machine with %s %s installed at %s", "glpi"), $requestedOS, $requestedVersion, date("Y-m-d H:i:s"));;
+$result = xmlrpc_get_machines_with_os_and_version($requestedOS, $requestedVersion);
 
 foreach($result as $entry){
-  if(!isExpertMode())
-  {
-    $uuid = 'UUID'.$entry[0];
-    $cn = $entry[1];
-  }
-  else
-  {
-    $uuid = 'UUID'.$entry['id'];
-    $cn = $entry['hostname'];
-  }
+  $uuid = 'UUID'.$entry['id'];
+  $cn = $entry['hostname'];
   $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
 }
 
