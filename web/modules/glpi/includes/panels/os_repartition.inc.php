@@ -64,14 +64,14 @@ class os_repartitionPanel extends Panel {
     $osCount = json_encode(array_values($osCount));
     $links = json_encode(array_values($links));
 
-    $createGroupText = json_encode(_T("Create a group", "glpi"));
 
+    $createGroupText = json_encode(_T("Create a group", "glpi"));
         echo <<< SPACE
         <div id="os-graphs"></div>
         <script type="text/javascript">
             var r = Raphael("os-graphs"),
                 radius = 70,
-                margin = 40,
+                margin = 100,
                 x = 100,
                 y = 75;
 
@@ -79,7 +79,7 @@ class os_repartitionPanel extends Panel {
                 createGroupText = $createGroupText,
                 legend = $osLabels,
                 //Add "#000-color-color" into the colors variable if all the os are not displayed
-                colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED","000-#7e1282-#c98fcb","000-#b36919-#e8c6a2","000-#2eb9f3-#4297ba","000-#168eff-#28c96c","000-#a9751a-#cdbda1","000-#72ed62-#72ed62","000-#000000-#666665","000-#000000-#666665","000-#000000-#666665"],
+                //colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED","000-#7e1282-#c98fcb","000-#b36919-#e8c6a2","000-#2eb9f3-#4297ba","000-#168eff-#28c96c","000-#a9751a-#cdbda1","000-#72ed62-#72ed62","000-#000000-#666665","000-#000000-#666665","000-#000000-#666665"],
                 href = $links,
                 title = 'OS Repartition';
 
@@ -87,8 +87,12 @@ class os_repartitionPanel extends Panel {
              .attr({ font: "12px sans-serif" })
              .attr({ "text-anchor": "start" });*/
             data = getPercentageData(data);
+
             pie = r.piechart(x, y + 5, radius, data,
-                       {colors: colors})
+                       {//colors: colors,
+                       legend:$osLabels,
+                       href:$links,
+                       legendpos: "south"})
              .hover(function () {
                 this.sector.stop();
                 this.sector.animate({ transform: 's1.1 1.1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
@@ -110,16 +114,18 @@ class os_repartitionPanel extends Panel {
 
             y += (radius * 2) + margin + 5;
 
-            r.setSize(200, (radius * 1 + margin) + 50);
+            r.setSize(200, (radius * 1 + margin) + legend.size()*20);
             // Legend
-            jQuery('#os-graphs').append('<ul></ul>');
+            /*jQuery('#os-graphs').append('<ul></ul>');
+
             for (var i = 0; i < legend.length; i++) {
                 jQuery('#os-graphs ul').append(
                     '<li style="color: ' + colors[i].split('-')[1]  + ';"><span style="color: #000">' + legend[i]
+                    '<li><span>' + legend[i]
                     + '<a href="' + href[i] + '"><img title="' + createGroupText +
                     '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
                 );
-            }
+            }*/
         </script>
         <style type="text/css">
             #os-graphs ul {
