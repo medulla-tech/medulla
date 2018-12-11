@@ -64,7 +64,6 @@ class os_repartitionPanel extends Panel {
     $osCount = json_encode(array_values($osCount));
     $links = json_encode(array_values($links));
 
-
     $createGroupText = json_encode(_T("Create a group", "glpi"));
         echo <<< SPACE
         <div id="os-graphs"></div>
@@ -72,7 +71,7 @@ class os_repartitionPanel extends Panel {
             var r = Raphael("os-graphs"),
                 radius = 70,
                 margin = 100,
-                x = 100,
+                x = 75,
                 y = 75;
 
             var data = $osCount,
@@ -112,37 +111,30 @@ class os_repartitionPanel extends Panel {
                 }
              });
 
+            var selectors = jQuery("#os-graphs svg text tspan");
+            var links = $links;
+            jQuery.each(selectors, function(i, element){
+              var old = jQuery(element).text();
+
+              var icon = r.image("img/machines/icn_machinesList.gif", 175, margin+1.3*50+17*i, 18,10);
+              jQuery(icon[0]).attr("class","pointer")
+
+              jQuery(icon[0]).on("click", function(){
+                window.location.href = links[i];
+              });
+              var new_legend = "<a href='"+links[i]+"'>"+old+"</a>";
+
+              jQuery(element).html(new_legend);
+            });
+
             y += (radius * 2) + margin + 5;
 
-            r.setSize(200, (radius * 1 + margin) + legend.size()*20);
-            // Legend
-            /*jQuery('#os-graphs').append('<ul></ul>');
-
-            for (var i = 0; i < legend.length; i++) {
-                jQuery('#os-graphs ul').append(
-                    '<li style="color: ' + colors[i].split('-')[1]  + ';"><span style="color: #000">' + legend[i]
-                    '<li><span>' + legend[i]
-                    + '<a href="' + href[i] + '"><img title="' + createGroupText +
-                    '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
-                );
-            }*/
+            r.setSize(210, (radius * 1 + margin) + legend.size()*20);
         </script>
-        <style type="text/css">
-            #os-graphs ul {
-                margin: 0px;
-                padding-left: 28px;
-            }
-            #os-graphs li {
-                list-style: none;
-                font-size: 13px;
-            }
-            #os-graphs li:before {
-                content: "•";
-                font-size: 20px;
-                vertical-align: bottom;
-                line-height: 16px;
-                margin-right: 3px;
-            }
+        <style>
+          .pointer{
+            cursor:pointer;
+          }
         </style>
 SPACE;
     }
