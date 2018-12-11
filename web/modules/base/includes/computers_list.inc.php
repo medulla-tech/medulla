@@ -177,25 +177,13 @@ function list_computers($names,
     function getUUID($machine) { return $machine['objectUUID']; }
 
     $uuids = array_map("getUUID", $names);
-
-    $countmachine=0;
-    $presencemachinexmpp = False;
-
-
+    $presencemachinexmpplist = xmlrpc_getPresenceuuids( $uuids);
+    $countmachine = 0;
     foreach($names as $value) {
-        $presencemachinexmpp = True;
-        if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-            // determine presence machine xmpp
-            if(isset($uuids[$countmachine])){
-                $presencemachinexmpp = xmlrpc_getPresenceuuid( $uuids[$countmachine]);
-                $countmachine++;
-            }
-        }
-
+        $presencemachinexmpp = $presencemachinexmpplist[$uuids[$countmachine]];
+        $countmachine++;
         $presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
-
         $value['presencemachinexmpp'] = $presencemachinexmpp;
-        //$cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
         if ($value['presencemachinexmpp'] == "1"){
             $cssClasses[] = 'machineNamepresente';
         }else{

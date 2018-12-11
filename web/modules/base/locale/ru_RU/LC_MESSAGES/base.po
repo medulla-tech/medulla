@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-07 10:09+0100\n"
+"POT-Creation-Date: 2018-12-05 18:35+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -89,42 +89,55 @@ msgid ""
 "application"
 msgstr ""
 
+#: modules/base/logview/logskiosk.php:136
+#: modules/base/logview/logsquickaction.php:140
+msgid "Quick Actions Logs"
+msgstr ""
+
+#: modules/base/logview/logskiosk.php:283
 #: modules/base/logview/logsbackuppc.php:306
-#: modules/base/logview/index.php:424
+#: modules/base/logview/index.php:425
 #: modules/base/logview/logspackaging.php:303
 #: modules/base/logview/logsquickaction.php:295
 #: modules/base/logview/logsremotedesktop.php:275
 #: modules/base/logview/logsinventory.php:304
+#: modules/base/logview/logsdownload.php:280
 #: modules/base/logview/logsimaging.php:359
 msgid "date"
 msgstr ""
 
+#: modules/base/logview/logskiosk.php:284
 #: modules/base/logview/logsbackuppc.php:307
-#: modules/base/logview/index.php:425
+#: modules/base/logview/index.php:426
 #: modules/base/logview/logspackaging.php:304
 #: modules/base/logview/logsquickaction.php:296
 #: modules/base/logview/logsremotedesktop.php:276
 #: modules/base/logview/logsinventory.php:305
+#: modules/base/logview/logsdownload.php:281
 #: modules/base/logview/logsimaging.php:360
 msgid "user"
 msgstr ""
 
+#: modules/base/logview/logskiosk.php:285
 #: modules/base/logview/logsbackuppc.php:308
-#: modules/base/logview/index.php:426
+#: modules/base/logview/index.php:427
 #: modules/base/logview/logspackaging.php:305
 #: modules/base/logview/logsquickaction.php:297
 #: modules/base/logview/logsremotedesktop.php:277
 #: modules/base/logview/logsinventory.php:306
+#: modules/base/logview/logsdownload.php:282
 #: modules/base/logview/logsimaging.php:361
 msgid "who"
 msgstr ""
 
+#: modules/base/logview/logskiosk.php:286
 #: modules/base/logview/logsbackuppc.php:309
-#: modules/base/logview/index.php:427
+#: modules/base/logview/index.php:428
 #: modules/base/logview/logspackaging.php:306
 #: modules/base/logview/logsquickaction.php:298
 #: modules/base/logview/logsremotedesktop.php:278
 #: modules/base/logview/logsinventory.php:307
+#: modules/base/logview/logsdownload.php:283
 #: modules/base/logview/logsimaging.php:362
 msgid "text"
 msgstr ""
@@ -178,16 +191,16 @@ msgstr ""
 msgid "message"
 msgstr ""
 
-#: modules/base/logview/logsquickaction.php:140
-msgid "Quick Actions Logs"
-msgstr ""
-
 #: modules/base/logview/logsremotedesktop.php:140
 msgid "Remote Desktop Logs"
 msgstr ""
 
 #: modules/base/logview/logsinventory.php:145
 msgid "Inventory Logs"
+msgstr ""
+
+#: modules/base/logview/logsdownload.php:133
+msgid "Transfert File Logs"
 msgstr ""
 
 #: modules/base/logview/logsimaging.php:158
@@ -210,7 +223,7 @@ msgstr "Список"
 msgid "Add"
 msgstr "Добавить"
 
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:278
+#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:286
 msgid "Group list"
 msgstr "Список групп"
 
@@ -235,7 +248,7 @@ msgstr "Члены группы %s"
 msgid "All users"
 msgstr "Все пользователи"
 
-#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:294
+#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:302
 msgid "Group members"
 msgstr "Члены группы"
 
@@ -300,7 +313,7 @@ msgstr "Вы удалите группу"
 msgid "This group will be deleted even though it is not empty"
 msgstr "Эта группа будет удалена, при том что она не пуста"
 
-#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:273
+#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:281
 msgid "Groups"
 msgstr "Группы"
 
@@ -562,11 +575,11 @@ msgid "All computers"
 msgstr "Все компьютеры"
 
 #: modules/base/computers/localSidebar.php:8
-#: modules/base/infoPackage.inc.php:315
+#: modules/base/infoPackage.inc.php:323
 msgid "Add computer"
 msgstr "Добавить компьютер "
 
-#: modules/base/computers/index.php:34 modules/base/infoPackage.inc.php:312
+#: modules/base/computers/index.php:34 modules/base/infoPackage.inc.php:320
 msgid "Computer list"
 msgstr "Список компьютеров"
 
@@ -658,185 +671,185 @@ msgstr "История"
 msgid "logs of all the modules"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:169
+#: modules/base/infoPackage.inc.php:177
 msgid "Status"
 msgstr "Состояние"
 
-#: modules/base/infoPackage.inc.php:175
+#: modules/base/infoPackage.inc.php:183
 msgid "Default status page"
 msgstr "Общая страница состояния"
 
-#: modules/base/infoPackage.inc.php:180
+#: modules/base/infoPackage.inc.php:188
 msgid "Support page"
 msgstr "Страница поддержки"
 
-#: modules/base/infoPackage.inc.php:191 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:199 modules/base/views/index.tpl.php:95
 #: modules/base/users/ajaxFilter.php:93
 msgid "Users"
 msgstr "Пользователи"
 
-#: modules/base/infoPackage.inc.php:196 modules/base/views/index.tpl.php:43
+#: modules/base/infoPackage.inc.php:204 modules/base/views/index.tpl.php:43
 #: modules/base/users/index.php:31
 msgid "User list"
 msgstr "Список пользователей"
 
-#: modules/base/infoPackage.inc.php:211
+#: modules/base/infoPackage.inc.php:219
 msgid "Add a user"
 msgstr "Добавить пользователя"
 
-#: modules/base/infoPackage.inc.php:216
+#: modules/base/infoPackage.inc.php:224
 msgid "Edit a user"
 msgstr "Изменить пользователя"
 
-#: modules/base/infoPackage.inc.php:220
+#: modules/base/infoPackage.inc.php:228
 msgid "Edit ACL permissions on a user"
 msgstr "Изменить ACL-разрешения для пользователя"
 
-#: modules/base/infoPackage.inc.php:224
+#: modules/base/infoPackage.inc.php:232
 msgid "Logged user actions"
 msgstr "Записанные действия пользователя"
 
-#: modules/base/infoPackage.inc.php:229
+#: modules/base/infoPackage.inc.php:237
 msgid "Action details"
 msgstr "Детали действия"
 
-#: modules/base/infoPackage.inc.php:239
+#: modules/base/infoPackage.inc.php:247
 msgid "Delete a user"
 msgstr "Удалить пользователя"
 
-#: modules/base/infoPackage.inc.php:244
+#: modules/base/infoPackage.inc.php:252
 msgid "Backup user files"
 msgstr "Резервирование файлов пользователя"
 
-#: modules/base/infoPackage.inc.php:249
+#: modules/base/infoPackage.inc.php:257
 msgid "Reset user password"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:256
+#: modules/base/infoPackage.inc.php:264
 msgid "Change password"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:263
+#: modules/base/infoPackage.inc.php:271
 msgid "Get user photo"
 msgstr "Получить фотографию пользователя"
 
-#: modules/base/infoPackage.inc.php:281
+#: modules/base/infoPackage.inc.php:289
 msgid "Add a group"
 msgstr "Добавить группу"
 
-#: modules/base/infoPackage.inc.php:284
+#: modules/base/infoPackage.inc.php:292
 msgid "Delete a group"
 msgstr "Удалить группу"
 
-#: modules/base/infoPackage.inc.php:298
+#: modules/base/infoPackage.inc.php:306
 msgid "Edit a group"
 msgstr "Изменить группу"
 
-#: modules/base/infoPackage.inc.php:307
+#: modules/base/infoPackage.inc.php:315
 msgid "Computers"
 msgstr "Компьютеры"
 
-#: modules/base/infoPackage.inc.php:321
+#: modules/base/infoPackage.inc.php:329
 msgid "Edit computer"
 msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
 
-#: modules/base/infoPackage.inc.php:325
+#: modules/base/infoPackage.inc.php:333
 msgid "Delete a computer"
 msgstr "Удалить компьютер"
 
-#: modules/base/infoPackage.inc.php:330
+#: modules/base/infoPackage.inc.php:338
 msgid "Ajax part of computers list"
 msgstr "Ajax-часть списка компьютеров"
 
-#: modules/base/infoPackage.inc.php:366
+#: modules/base/infoPackage.inc.php:374
 msgid "Download inventory of one machine"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:379
+#: modules/base/infoPackage.inc.php:387
 msgid "User photo"
 msgstr "Фотография пользователя"
 
-#: modules/base/infoPackage.inc.php:380
+#: modules/base/infoPackage.inc.php:388
 msgid "User login"
 msgstr "Имя регистрации"
 
-#: modules/base/infoPackage.inc.php:381
+#: modules/base/infoPackage.inc.php:389
 msgid "User name"
 msgstr "Имя пользователя"
 
-#: modules/base/infoPackage.inc.php:382
+#: modules/base/infoPackage.inc.php:390
 msgid "User firstname"
 msgstr "Имя пользователя"
 
-#: modules/base/infoPackage.inc.php:383
+#: modules/base/infoPackage.inc.php:391
 msgid "User home directory"
 msgstr "Домашний каталог пользователя"
 
-#: modules/base/infoPackage.inc.php:384
+#: modules/base/infoPackage.inc.php:392
 #: modules/base/includes/publicFunc.php:508
 msgid "Login shell"
 msgstr "Оболочка входа в систему"
 
-#: modules/base/infoPackage.inc.php:385
+#: modules/base/infoPackage.inc.php:393
 msgid "User title"
 msgstr "Обращение к пользователю"
 
-#: modules/base/infoPackage.inc.php:386
+#: modules/base/infoPackage.inc.php:394
 msgid "Mail address"
 msgstr "Почтовый адрес"
 
-#: modules/base/infoPackage.inc.php:387
+#: modules/base/infoPackage.inc.php:395
 #: modules/base/includes/publicFunc.php:382
 #: modules/base/includes/publicFunc.php:385
 msgid "Telephone number"
 msgstr "Телефон"
 
-#: modules/base/infoPackage.inc.php:388
+#: modules/base/infoPackage.inc.php:396
 msgid "Mobile phone number"
 msgstr "Мобильный"
 
-#: modules/base/infoPackage.inc.php:389
+#: modules/base/infoPackage.inc.php:397
 #: modules/base/includes/publicFunc.php:397
 msgid "Fax number"
 msgstr "Факс"
 
-#: modules/base/infoPackage.inc.php:390
+#: modules/base/infoPackage.inc.php:398
 #: modules/base/includes/publicFunc.php:402
 msgid "Home phone number"
 msgstr "номер домашнего телефона"
 
-#: modules/base/infoPackage.inc.php:391
+#: modules/base/infoPackage.inc.php:399
 #: modules/base/includes/publicFunc.php:453
 msgid "Primary group"
 msgstr "Основная группа"
 
-#: modules/base/infoPackage.inc.php:392
+#: modules/base/infoPackage.inc.php:400
 #: modules/base/includes/publicFunc.php:482
 msgid "Secondary groups"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:393
+#: modules/base/infoPackage.inc.php:401
 #: modules/base/includes/publicFunc.php:513
 msgid "Common name"
 msgstr "Общее имя"
 
-#: modules/base/infoPackage.inc.php:394
+#: modules/base/infoPackage.inc.php:402
 #: modules/base/includes/publicFunc.php:519
 msgid "Preferred name to be used"
 msgstr "Будет использовано предпочтительное имя"
 
-#: modules/base/infoPackage.inc.php:395
+#: modules/base/infoPackage.inc.php:403
 #: modules/base/includes/publicFunc.php:85
 #: modules/base/includes/publicFunc.php:345 index.php:216
 msgid "Password"
 msgstr "Пароль"
 
-#: modules/base/infoPackage.inc.php:396 modules/base/users/passwd.php:68
+#: modules/base/infoPackage.inc.php:404 modules/base/users/passwd.php:68
 #: modules/base/users/resetpasswd.php:53
 msgid "Confirm your password"
 msgstr "Подтвердите пароль"
 
-#: modules/base/infoPackage.inc.php:397
+#: modules/base/infoPackage.inc.php:405
 msgid "Enable/Disable user account"
 msgstr "Включить/Отключить аккаунт пользователя"
 
@@ -1154,7 +1167,7 @@ msgstr "GLPI Инвентарь"
 #: modules/base/includes/computers_list.inc.php:102
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:71
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:76
 msgid "detaildeploy"
 msgstr ""
 
@@ -1212,19 +1225,19 @@ msgstr "Показать профиль"
 msgid "Quick action"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:357
+#: modules/base/includes/computers_list.inc.php:345
 msgid "Computers list"
 msgstr "Список компьютеров"
 
-#: modules/base/includes/computers_list.inc.php:374
+#: modules/base/includes/computers_list.inc.php:362
 msgid "Backup status"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:414
+#: modules/base/includes/computers_list.inc.php:402
 msgid "Delete computer"
 msgstr "Удалить компьютер"
 
-#: modules/base/includes/computers_list.inc.php:417
+#: modules/base/includes/computers_list.inc.php:405
 msgid "Remove machine from group"
 msgstr "Удалить компьютер из группы"
 
@@ -2035,11 +2048,19 @@ msgstr ""
 "                            <li> Ваш Samba-сервер не правильно настроен</li>\n"
 "                        </ul>"
 
-#: includes/ErrorHandling.php:77
+#: includes/ErrorHandling.php:78
+msgid "Copied"
+msgstr ""
+
+#: includes/ErrorHandling.php:87
 msgid "Show complete trackback"
 msgstr "Показать полную трассировку"
 
-#: includes/ErrorHandling.php:78
+#: includes/ErrorHandling.php:88
+msgid "Copy to clipboard"
+msgstr ""
+
+#: includes/ErrorHandling.php:89
 msgid "Complete Traceback"
 msgstr "Полная трассировка"
 

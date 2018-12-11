@@ -28,14 +28,14 @@ if (isExpertMode()){
     $sidemenu->addSideMenuItem(
         new SideMenuItem(_T("Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
     );
-
-    $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("Custom Quick Actions","xmppmaster"), "xmppmaster", "xmppmaster", "customQA")
-    );
-    $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("Quick Action results","xmppmaster"), "xmppmaster", "xmppmaster", "ActionQuickGroup")
-    );
 }
+
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Custom Quick Actions","xmppmaster"), "xmppmaster", "xmppmaster", "customQA")
+);
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Quick Action results","xmppmaster"), "xmppmaster", "xmppmaster", "ActionQuickGroup")
+);
 
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("File Manager","xmppmaster"), "xmppmaster", "xmppmaster", "filesmanagers")

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *  file xmppmaster/ajaxxmpprefrechfilesremotene.php
+ *  file xmppmaster/ajaxxmpprefreshfilesremotene.php
  */
 ?>
 <?php
@@ -67,13 +67,26 @@ if (isset($lifdir['err'])){
         exit;
 }
 $lifdir = $lifdir['data'];
+$rootfilesystem = $lifdir['rootfilesystem'];
+
+$rootfilesystempath = $rootfilesystem;
+if ($rootfilesystem[1] == ":"){
+    $rootfilesystempath =substr($lifdir['rootfilesystem'],2);
+}
+
+
 
 printf ('
 <form>
     <input id ="path_abs_current_remote" type="hidden" name="path_abs_current_remote" value="%s">
     <input id ="parentdirremote" type="hidden" name="parentdirremote" value="%s">
-</form>' ,$lifdir['path_abs_current'],$lifdir['parentdir']);
-echo "<h2> Current Dir : <span  id='remotecurrrent'>".$lifdir['path_abs_current'] ."</span></h2>";
+    <input id ="rootfilesystem" type="hidden" name="rootfilesystem" value="%s">
+    <input id ="rootfilesystempath" type="hidden" name="rootfilesystempath" value="%s">
+</form>' ,  $lifdir['path_abs_current'],
+            $lifdir['parentdir'],
+            $lifdir['rootfilesystem'],
+            $rootfilesystempath);
+echo "<h2>Current path : <span  id='remotecurrrent'>".$lifdir['path_abs_current'] ."</span></h2>";
 echo'
     <ul class="rightdir">';
         foreach($lifdir['list_dirs_current'] as $namedir){
