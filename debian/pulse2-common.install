@@ -7,16 +7,6 @@ usr/sbin/pulse2-create-group
 usr/sbin/pulse2-load-defaults
 usr/sbin/pulse2-create-group
 usr/sbin/restart-pulse-services
-var/lib/pulse2/clients/win32
-var/lib/pulse2/clients/templates/
-var/lib/pulse2/clients/create-repos.sh
-var/lib/pulse2/clients/generate-agents
-var/lib/pulse2/clients/installer.sh.in
-var/lib/pulse2/clients/agents.conf
-var/lib/pulse2/clients/vpn
-var/lib/pulse2/clients/agent
-var/lib/pulse2/clients/style.css
-var/lib/pulse2/clients/HEADER.html
 usr/sbin/pulse2-debug
 usr/sbin/pulse2-dbupdate
 usr/sbin/pulse2-collect-info

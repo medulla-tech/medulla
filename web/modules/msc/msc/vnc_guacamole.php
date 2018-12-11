@@ -119,7 +119,7 @@ if (isset($url['SSH'])){
       window.open( ssh_url )
       alert( "The SSH control session opens in a new window" )
     })
-})';
+});';
 };
 
 if (isset($url['RDP'])){
@@ -132,7 +132,7 @@ if (isset($url['RDP'])){
       window.open( rdp_url )
       alert( "The RDP control session opens in a new window" )
     })
-    })';
+  });';
 };
 
 
@@ -146,7 +146,7 @@ if (isset($url['VNC'])){
       window.open( vnc_url )
       alert( "The VNC control session opens in a new window" )
     })
-    })';
+  });';
 };
 
 ?>

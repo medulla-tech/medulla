@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2017
+# Nicolas Lécureuil <neoclust@mageia.org>, 2018
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 09:36+0100\n"
+"POT-Creation-Date: 2018-12-05 18:44+0100\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,10 +42,22 @@ msgstr "隱藏"
 msgid "Show"
 msgstr "顯示"
 
-#: modules/dyngroup/dyngroup/display.php:63
+#: modules/dyngroup/dyngroup/display.php:67
 #, php-format
 msgid "Group '%s' content"
 msgstr " '%s' "
+
+#: modules/dyngroup/dyngroup/display.php:73
+msgid "All computers"
+msgstr "所有電腦"
+
+#: modules/dyngroup/dyngroup/display.php:77
+msgid "Online computers"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/display.php:81
+msgid "Offline computers"
+msgstr ""
 
 #: modules/dyngroup/dyngroup/display.php:84
 #, php-format

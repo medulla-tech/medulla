@@ -1441,7 +1441,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self,
+    def addlogincommand(self, 
                         session,
                         login,
                         commandid,
@@ -2826,20 +2826,26 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getPresenceuuid(self, session, uuid):
-        sql = """SELECT
-                    COUNT(*) AS 'nb'
-                FROM
-                    `xmppmaster`.`machines`
-                WHERE
-                    `xmppmaster`.`machines`.`uuid_inventorymachine` = '%s';"""%(uuid)
-        #logging.getLogger().debug("sql :%s"%(sql))
-        presence = session.execute(sql)
+        machinespresente = session.query(Machines.uuid_inventorymachine).filter( Machines.uuid_inventorymachine == uuid ).first()
         session.commit()
         session.flush()
-        ret=[m[0] for m in presence]
-        if ret[0] == 0 :
-            return False
-        return True
+        if machinespresente :
+            return True
+        return False
+
+    @DatabaseHelper._sessionm
+    def getPresenceuuids(self, session, uuids):
+        if isinstance(uuids, basestring):
+            uuids=[uuids]
+        result = { }
+        for uuidmachine in uuids:
+            result[uuidmachine] = False
+        machinespresente = session.query(Machines.uuid_inventorymachine).filter(Machines.uuid_inventorymachine.in_(uuids)).all()
+        session.commit()
+        session.flush()
+        for linemachine in machinespresente:
+            result[linemachine.uuid_inventorymachine] = True
+        return result
 
     #topology
     @DatabaseHelper._sessionm
@@ -2876,16 +2882,8 @@ class XmppMasterDatabase(DatabaseHelper):
         listmachinebyRS = [x for x in result]
         resulttopologie = {}
         for i in listmachinebyRS:
-            logging.getLogger().info(i)
             listmachines = i[1].split(',')
-
-            # For each element split it and just save the important part
-            count = 0
-            while count < len(listmachines):
-                listmachines[count] = listmachines[count].split("@")[0]
-                count += 1
-
-            resulttopologie[i[0].split('/')[1]] = listmachines
+            resulttopologie[i[0]] = listmachines
         self.write_topologyfile(resulttopologie)
         return [ resulttopologie]
 
@@ -2907,13 +2905,16 @@ class XmppMasterDatabase(DatabaseHelper):
 
             ARS = {}
             ARS['name'] = i
+            ARS['display_name'] = i.split("/")[1]
             ARS['type'] = "ARS"
             ARS['parent'] = "Pulse"
             ARS['children'] = []
 
             listmachinesstring = []
             for mach in listmachines:
-                ARS['children'].append({ "name" : mach, "type" : "AM", "parent" : i })
+                ARS['children'].append({ "name" : mach,
+                'display_name': mach.split("/")[1],
+                "type" : "AM", "parent" : i })
             #builddatajson[i] = listmachinesstring
             #ARS['children'] = builddatajson
             #print listmachinesstring

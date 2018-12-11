@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 09:37+0100\n"
+"POT-Creation-Date: 2018-12-05 18:44+0100\n"
 "PO-Revision-Date: 2017-09-12 12:18+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -554,7 +554,7 @@ msgid "Incremental backup"
 msgstr "Backup incremental"
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:296
+#: modules/backuppc/backuppc/hostStatus.php:305
 msgid "Configuration saved"
 msgstr "Configurao salva"
 
@@ -607,7 +607,7 @@ msgid "Notify Error : Backup configuration Computer"
 msgstr ""
 
 #: modules/backuppc/backuppc/hostStatus.php:162
-#: modules/backuppc/backuppc/hostStatus.php:285
+#: modules/backuppc/backuppc/hostStatus.php:294
 msgid "Notify Computer :"
 msgstr ""
 
@@ -624,29 +624,29 @@ msgstr ""
 "O computador %s foi adicionado no sistema de backups com sucesso. <br />Voc "
 "pode configurar agora seus arquivos de configurao e agendamentos."
 
-#: modules/backuppc/backuppc/hostStatus.php:285
+#: modules/backuppc/backuppc/hostStatus.php:294
 msgid "Save configure host "
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:310
+#: modules/backuppc/backuppc/hostStatus.php:319
 #, php-format
 msgid "%s's backup status"
 msgstr "%s backup concludo"
 
-#: modules/backuppc/backuppc/hostStatus.php:313
+#: modules/backuppc/backuppc/hostStatus.php:322
 msgid "Summary"
 msgstr "Resumo"
 
-#: modules/backuppc/backuppc/hostStatus.php:317
+#: modules/backuppc/backuppc/hostStatus.php:326
 msgid "Configuration"
 msgstr "Configurao"
 
-#: modules/backuppc/backuppc/hostStatus.php:318
+#: modules/backuppc/backuppc/hostStatus.php:327
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
 msgstr "Scripts avanados"
 
-#: modules/backuppc/backuppc/hostStatus.php:319
+#: modules/backuppc/backuppc/hostStatus.php:328
 #: modules/backuppc/infoPackage.inc.php:57
 msgid "File search"
 msgstr "Busca de arquivos"

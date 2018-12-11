@@ -124,7 +124,33 @@ if errorlevel 1 (
         return 'regedit /s "%s"' % basename(self.file)
 
     def getDpkgCommand(self):
-        return 'DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes dpkg -i --force-confdef --force-confold "%s"' % basename(self.file)
+        return """export DEBIAN_FRONTEND=noninteractive
+export UCF_FORCE_CONFFOLD=yes
+dpkg -i --force-confdef --force-confold "%s" """ % basename(self.file)
+
+    def getRpmCommand(self):
+        return """if [ ! -e /etc/os-release ]; then
+  echo "We are not able to find your linux distibution"
+  exit 1
+else
+  . /etc/os-release
+fi
+
+case "$ID" in
+  mageia)
+    urpmi --auto "%s"
+    ;;
+  redhat|fedora)
+    dnf -y install "%s"
+    ;;
+  *)
+    echo "Your distribution is not supported yet or is not rpm based"
+    exit 1
+    ;;
+esac""" %(basename(self.file), basename(self.file))
+
+    def getAptCommand(self):
+        return 'apt -q -y install "%s" --reinstall' % basename(self.file)
 
     def getBatCommand(self):
         return 'cmd.exe /c "%s"' % basename(self.file)
@@ -212,6 +238,9 @@ if errorlevel 1 (
         elif self.file.endswith(".sh"):
             self.logger.debug("sh file detected")
             return self.getShCommand()
+        elif self.file.endswith(".rpm"):
+            self.logger.debug("rpm file detected")
+            return self.getRpmCommand()
         else:
             return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))
 
