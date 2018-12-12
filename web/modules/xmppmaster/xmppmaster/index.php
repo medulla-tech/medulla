@@ -40,13 +40,13 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1'), 'formRunning'  );
-$ajax->setRefresh(15000);
+$ajax->setRefresh(120000);
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 $ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => $_SESSION['login']), 'formRunning1' );
-$ajax1->setRefresh(20000);
+$ajax1->setRefresh(120000);
 $ajax1->display();
 print "<br/><br/><br/>";
 $ajax1->displayDivToUpdate();
