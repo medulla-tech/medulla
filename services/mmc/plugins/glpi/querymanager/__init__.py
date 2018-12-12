@@ -71,6 +71,7 @@ def queryPossibilities():
                                 3,
                                 2]
     ret['Online computer'] = [ 'bool' ]
+    ret['OS Version'] = ['list', getAllOsVersions]
     logging.getLogger().info('queryPossibilities %s' %
                              (str(ret)))
     return ret
@@ -118,7 +119,9 @@ def queryGroups():
                  ['Installed software',
                   'Mozilla Firefox, LibreOffice, Microsoft Office 2003 ...'],
                  ['Installed software (specific version)',
-                  'Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ...']]])
+                  'Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ...'],
+                 ['OS Version',
+                  '(Windows 10 1803, Debian stretch (9), ...)']]])
     # REGISTER
     ret.append(['Register',
                 [['Register key',
@@ -181,6 +184,8 @@ def query(ctx, criterion, value):
         machines = [x.name for x in Glpi().getMachineByGroup(ctx, value)]
     elif criterion == 'Network':
         machines = [x.name for x in Glpi().getMachineByNetwork(ctx, value)]
+    elif criterion == "OS Version":
+        machines = [x.name for x in Glpi().getMachinesByOsVersion(ctx, value)]
     #elif criterion == '':
     #    machines = map(lambda x: x.name, Glpi().getMachineBy(ctx, value))
     return [machines, True]
@@ -302,3 +307,6 @@ def getAllOwnerMachine(ctx, value=''):
 
 def getAllLoggedUser(ctx, value=''):
     return unique([x.contact for x in Glpi().getAllContacts(ctx, value)])
+
+def getAllOsVersions(ctx, value=""):
+    return unique([element.name for element in Glpi().getAllOsVersions(ctx, filt=value)])
