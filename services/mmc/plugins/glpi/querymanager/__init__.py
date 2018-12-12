@@ -72,6 +72,8 @@ def queryPossibilities():
                                 2]
     ret['Online computer'] = [ 'bool' ]
     ret['OS Version'] = ['list', getAllOsVersions]
+    ret['Architecture'] = ['list', getAllArchitectures]
+
     logging.getLogger().info('queryPossibilities %s' %
                              (str(ret)))
     return ret
@@ -121,7 +123,10 @@ def queryGroups():
                  ['Installed software (specific version)',
                   'Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ...'],
                  ['OS Version',
-                  '(Windows 10 1803, Debian stretch (9), ...)']]])
+                  '(Windows 10 1803, Debian stretch (9), ...)'],
+                 ['Architecture',
+                  '(32-bit, 64-bit)']
+                 ]])
     # REGISTER
     ret.append(['Register',
                 [['Register key',
@@ -185,7 +190,9 @@ def query(ctx, criterion, value):
     elif criterion == 'Network':
         machines = [x.name for x in Glpi().getMachineByNetwork(ctx, value)]
     elif criterion == "OS Version":
-        machines = [x.name for x in Glpi().getMachinesByOsVersion(ctx, value)]
+        machines = [x.name for x in Glpi().getMachineByOsVersion(ctx, value)]
+    elif criterion == "Architecture":
+        machines = [x.name for x in Glpi().getMachineByArchitecure(ctx, value)]
     #elif criterion == '':
     #    machines = map(lambda x: x.name, Glpi().getMachineBy(ctx, value))
     return [machines, True]
@@ -310,3 +317,6 @@ def getAllLoggedUser(ctx, value=''):
 
 def getAllOsVersions(ctx, value=""):
     return unique([element.name for element in Glpi().getAllOsVersions(ctx, filt=value)])
+
+def getAllArchitectures(ctx, value=""):
+    return unique([element.name for element in Glpi().getAllArchitectures(ctx, filt=value)])

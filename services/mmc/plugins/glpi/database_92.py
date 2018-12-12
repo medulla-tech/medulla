@@ -955,6 +955,8 @@ class Glpi92(DyngroupDatabaseHelper):
             return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         elif query[2] == 'OS Version':
             return base + [ self.os_version ]
+        elif query[2] == 'Architecture':
+            return base + [ self.os_arch ]
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -1101,6 +1103,8 @@ class Glpi92(DyngroupDatabaseHelper):
             return [[self.registries.c.name, query[3][0]], [self.regcontents.c.value , query[3][1]]]
         elif query[2] == 'OS Version':
             return [[self.os_version.c.name, query[3]]]
+        elif query[2] == 'Architecture':
+            return [[self.os_arch.c.name, query[3]]]
         return []
 
 
@@ -3722,6 +3726,17 @@ class Glpi92(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getMachineByArchitecure(self, ctx, filt):
+        """ @return: all machines that have this architecture """
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.os_arch))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.os_arch.c.name == filt)
+        ret = query.all()
+        session.close()
+
     def getComputersOS(self, uuids):
         if isinstance(uuids, str):
             uuids = [uuids]
@@ -4650,6 +4665,16 @@ class Glpi92(DyngroupDatabaseHelper):
         query = session.query(OsVersion)
         if filter != '':
             query = query.filter(OsVersion.name.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllArchitectures(self, ctx, filt = ''):
+        """ @return: all hostnames defined in the GLPI database """
+        session = create_session()
+        query = session.query(OsArch)
+        if filter != '':
+            query = query.filter(OsArch.name.like('%'+filt+'%'))
         ret = query.all()
         session.close()
         return ret
