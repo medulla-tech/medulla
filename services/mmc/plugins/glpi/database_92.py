@@ -5001,3 +5001,6 @@ class RuleCriterion(DbTOA):
 
 class RuleAction(DbTOA):
     pass
+
+class OsVersion(DbTOA):
+    pass
