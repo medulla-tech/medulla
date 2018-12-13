@@ -1053,28 +1053,29 @@ class XmppMasterDatabase(DatabaseHelper):
             obj['rebootrequired'] = result.rebootrequired
             obj['shutdownrequired'] = result.shutdownrequired
             obj['limit_rate_ko'] = result.bandwidth
-            try:
-                params_json = json.loads(result.params_json)
+            if result.params_json is not None:
+                try:
+                    params_json = json.loads(result.params_json)
+                    if 'spooling' in params_json:
+                        obj['spooling'] = params_json['spooling']
+                except Exception, e:
+                    logging.getLogger().error("[the avanced parameters from msc] : "+str(e))
 
-                if 'spooling' in params_json:
-                    obj['spooling'] = params_json['spooling']
-            except Exception, e:
-                logging.getLogger().error(str(e)+" [the avanced parameters from msc ]")
-
-            try:
-                params = str(result.parameters_deploy)
-                if params == '':
-                    return obj
-                if not params.startswith('{'):
-                    params = '{' + params
-                if not params.endswith('}'):
-                    params = params + '}'
-                obj['paramdeploy'] = json.loads(params)
-            except Exception, e:
-                logging.getLogger().error(str(e)+" [the parameters must be declared in a json dictionary]")
+            if result.parameters_deploy is not None:
+                try:
+                    params = str(result.parameters_deploy)
+                    if params == '':
+                        return obj
+                    if not params.startswith('{'):
+                        params = '{' + params
+                    if not params.endswith('}'):
+                        params = params + '}'
+                    obj['paramdeploy'] = json.loads(params)
+                except Exception, e:
+                    logging.getLogger().error("[the avanced parameters must be declared in a json dictionary] : "+ str(e))
             return obj
         except Exception, e:
-            logging.getLogger().error(str(e) + " [ obj commandid missing]")
+            logging.getLogger().error("[ obj commandid missing] : " + str(e))
             return {}
 
     @DatabaseHelper._sessionm

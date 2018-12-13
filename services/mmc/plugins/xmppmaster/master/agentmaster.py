@@ -729,11 +729,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
 
     def parsexmppjsonfile(self, path):
+        ### puts the words False in lowercase.
         datastr = file_get_contents(path)
-
         datastr = re.sub(r"(?i) *: *false", " : false", datastr)
         datastr = re.sub(r"(?i) *: *true", " : true", datastr)
-
         file_put_contents(path, datastr)
 
     def applicationdeploymentjson(self,
@@ -755,17 +754,23 @@ class MUCBot(sleekxmpp.ClientXMPP):
         The package is already on the machine and also in relay server.
         """
 
-        if not managepackage.getversionpackagename(name):
-            logger.error("deploy %s error package name" % (name))
+        if managepackage.getversionpackagename(name) is None:
+            logger.error("deploy %s error package name version missing" % (name))
             return False
         # Name the event
         dd = name_random(5, "deploy_")
         path = managepackage.getpathpackagename(name)
+        if path is None:
+            logger.error("package Name missing (%s)" % (name))
+            return False
         descript = managepackage.loadjsonfile(os.path.join(path, 'xmppdeploy.json'))
+        
+        
+        
         self.parsexmppjsonfile(os.path.join(path, 'xmppdeploy.json'))
         if descript is None:
             logger.error("deploy %s on %s  error : xmppdeploy.json missing" % (name, uuidmachine))
-            return None
+            return False
         objdeployadvanced = XmppMasterDatabase().datacmddeploy(idcommand)
         data = {"name": name,
                 "login": login,
