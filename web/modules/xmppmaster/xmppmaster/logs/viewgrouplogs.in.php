@@ -287,7 +287,7 @@ echo "<br>";
         echo'
             <script type="text/javascript">
             console.log("hello");
-                setTimeout(refresh, 60000);
+                setTimeout(refresh, 120000);
                 function  refresh(){
                         location.reload()
                 }
