@@ -4797,8 +4797,10 @@ ON
                 if len(machine['version']) >= 2:
                     machine['version'] = machine['version'][0:2]
                 machine['version'] = '.'.join(machine['version'])
+            elif machine['os'].startswith('Mageia'):
+                machine['os'] = machine['os'].split(" ")[0]
             else:
-                machine['os'] = 'Other'
+                pass
 
             final_list = _add_element(machine, final_list)
         return final_list
