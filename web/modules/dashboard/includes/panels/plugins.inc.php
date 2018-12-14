@@ -25,6 +25,7 @@ include_once("modules/dashboard/includes/panel.class.php");
 $options = array(
     "class" => "PluginsPanel",
     "id" => "plugins",
+    "refresh" => 3600,
     "title" => _T("Plugins loaded", "dashboard"),
     "enable" => false,
 );
