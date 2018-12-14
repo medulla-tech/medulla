@@ -2,6 +2,7 @@
 
 /**
  * (c) 2012 Mandriva, http://www.mandriva.com
+ * (c) 2018 Siveo, http://www.siveo.net
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -26,103 +27,58 @@ require_once("modules/base/includes/computers.inc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 
 $options = array(
-    "class" => "os_repartitionPanel",
-    "id" => "osrepartition",
-    "refresh" => 960,
-    "title" => _T("Operating systems", "glpi"),
+  "class" => "os_repartitionPanel",
+  "id" => "osrepartition",
+  "refresh" => 960,
+  "title" => _T("Operating systems", "glpi"),
 );
 
 class os_repartitionPanel extends Panel {
+  function display_content() {
+    $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
+    $pcs = xmlrpc_get_os_for_dashboard();
 
-    function display_content() {
+    $osLabels = [];
+    $osCount = [];
+    $links = [];
+    $cumul = 0;
+    $n = count($pcs);
+    for($i =0; $i < $n; $i++)
+    {
+      $cumul += (int)$pcs[$i]['count'];
+    }
+    foreach ($pcs as $os){
+      //$cumul = $cumul + (int)$os['count'];
+      if((int)$os['count'] == 0)
+      {
+        unset($os);
+      }
+      $osLabels[] = $os['os'].' '.$os['version'].' ('.$os['count'].')';
+      $osCount[] = (int)$os['count'];
 
-        // Declare OS classes
-        $osClasses = array(
-	    'other',
-            'macOS',
-	    'Mageia 5',
-	    'Mageia 6',
-            'Windows 10',
-            'Windows 8',
-	    'Windows 7',
-	    'Windows Vista',
-            'Windows XP',
-            'otherw'
-        );
+      $links[] = $urlRedirect.'&os='.$os['os'].'&version='.$os['version'];
+    }
 
-        $osLabels = array(
-	    _T('Other', 'glpi'),
-            'macOS',
-	    'Mageia 5',
-	    'Mageia 6',
-            'Windows 10',
-            'Windows 8',
-	    'Windows 7',
-	    'Windows Vista',
-            'Windows XP',
-            _T('Other Windows', 'glpi')
-        );
+    echo 'total : '.$cumul.'<br />';
+    $osLabels = json_encode(array_values($osLabels));
+    $osCount = json_encode(array_values($osCount));
+    $links = json_encode(array_values($links));
 
-        $osCount = array();
-
-        $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
-
-
-        $links = array(
-	    "$urlRedirect&os=other", // Static group links
-	    "$urlRedirect&os=macOS",
-	    "$urlRedirect&os=Mageia 5",
-	    "$urlRedirect&os=Mageia 6",
-            "$urlRedirect&os=Windows 10",
-            "$urlRedirect&os=Windows 8",
-	    "$urlRedirect&os=Windows 7",
-	    "$urlRedirect&os=Windows Vista",
-            "$urlRedirect&os=Windows XP",
-            "$urlRedirect&os=otherw"
-        );
-
-        /* $links = json_encode(array("#",
-          "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows 7 *",
-          "main.php?module=base&submod=computers&action=computersgroupcreator&req=glpi&add_param=OS&request=stored_in_session&id=&value=Microsoft Windows XP *",
-          "#"));  DYNGROUP LINKS */
-
-        for ($i = 0; $i < count($osClasses); $i++) {
-            $osCount[] = getMachineByOsLike($osClasses[$i], 1);
-            $osLabels[$i] .= ' (' . $osCount[$i] . ')';
-        }
-
-        $n = count($osCount);
-
-        // Treating osCount for adapting to raphaeljs
-        for ($i = 0; $i < $n; $i++) {
-            if ($osCount[$i] == 0) {
-                unset($osCount[$i]);
-                unset($osLabels[$i]);
-                unset($links[$i]);
-            } elseif ($osCount[$i] / array_sum($osCount) < 0.015)
-                $osCount[$i] = 0.015 / (1 - 0.015) * (array_sum($osCount) - $osCount[$i]);
-        }
-        $osLabels = json_encode(array_values($osLabels));
-        $osCount = json_encode(array_values($osCount));
-        $links = json_encode(array_values($links));
-
-        $createGroupText = json_encode(_T("Create a group", "glpi"));
-
-
+    $createGroupText = json_encode(_T("Create a group", "glpi"));
         echo <<< SPACE
         <div id="os-graphs"></div>
         <script type="text/javascript">
             var r = Raphael("os-graphs"),
                 radius = 70,
-                margin = 40,
-                x = 100,
+                margin = 100,
+                x = 75,
                 y = 75;
 
             var data = $osCount,
                 createGroupText = $createGroupText,
                 legend = $osLabels,
                 //Add "#000-color-color" into the colors variable if all the os are not displayed
-                colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED","000-#7e1282-#c98fcb","000-#b36919-#e8c6a2","000-#2eb9f3-#4297-#4297ba","000-#168eff-#28c96c","000-#a9751a-#cdbda1","000-#72ed62-#72ed62"],
+                //colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED","000-#7e1282-#c98fcb","000-#b36919-#e8c6a2","000-#2eb9f3-#4297ba","000-#168eff-#28c96c","000-#a9751a-#cdbda1","000-#72ed62-#72ed62","000-#000000-#666665","000-#000000-#666665","000-#000000-#666665"],
                 href = $links,
                 title = 'OS Repartition';
 
@@ -130,8 +86,12 @@ class os_repartitionPanel extends Panel {
              .attr({ font: "12px sans-serif" })
              .attr({ "text-anchor": "start" });*/
             data = getPercentageData(data);
+
             pie = r.piechart(x, y + 5, radius, data,
-                       {colors: colors})
+                       {//colors: colors,
+                       legend:$osLabels,
+                       href:$links,
+                       legendpos: "south"})
              .hover(function () {
                 this.sector.stop();
                 this.sector.animate({ transform: 's1.1 1.1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
@@ -151,35 +111,30 @@ class os_repartitionPanel extends Panel {
                 }
              });
 
+            var selectors = jQuery("#os-graphs svg text tspan");
+            var links = $links;
+            jQuery.each(selectors, function(i, element){
+              var old = jQuery(element).text();
+
+              var icon = r.image("img/machines/icn_machinesList.gif", 175, margin+1.3*50+17*i, 18,10);
+              jQuery(icon[0]).attr("class","pointer")
+
+              jQuery(icon[0]).on("click", function(){
+                window.location.href = links[i];
+              });
+              var new_legend = "<a href='"+links[i]+"'>"+old+"</a>";
+
+              jQuery(element).html(new_legend);
+            });
+
             y += (radius * 2) + margin + 5;
 
-            r.setSize(200, (radius * 1 + margin) + 50);
-            // Legend
-            jQuery('#os-graphs').append('<ul></ul>');
-            for (var i = 0; i < legend.length; i++) {
-                jQuery('#os-graphs ul').append(
-                    '<li style="color: ' + colors[i].split('-')[1]  + ';"><span style="color: #000">' + legend[i]
-                    + '<a href="' + href[i] + '"><img title="' + createGroupText +
-                    '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
-                );
-            }
+            r.setSize(210, (radius * 1 + margin) + legend.size()*20);
         </script>
-        <style type="text/css">
-            #os-graphs ul {
-                margin: 0px;
-                padding-left: 28px;
-            }
-            #os-graphs li {
-                list-style: none;
-                font-size: 13px;
-            }
-            #os-graphs li:before {
-                content: "•";
-                font-size: 20px;
-                vertical-align: bottom;
-                line-height: 16px;
-                margin-right: 3px;
-            }
+        <style>
+          .pointer{
+            cursor:pointer;
+          }
         </style>
 SPACE;
     }

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 09:37+0100\n"
+"POT-Creation-Date: 2018-12-05 18:44+0100\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -305,7 +305,7 @@ msgid "End date"
 msgstr "data final"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:226
-#: modules/msc/msc/launch.php:630 modules/msc/includes/command_history.php:38
+#: modules/msc/msc/launch.php:662 modules/msc/includes/command_history.php:38
 #: modules/msc/includes/bundle_widgets.php:363
 msgid "Deployment interval"
 msgstr "Intervalo de instalao"
@@ -1036,30 +1036,25 @@ msgstr "Lanamento Avanado"
 msgid "Direct launch"
 msgstr "Lanamento Direto"
 
-#: modules/msc/msc/tabs.php:52 modules/msc/msc/tabs.php:61
+#: modules/msc/msc/tabs.php:48 modules/msc/msc/tabs.php:57
 #, php-format
 msgid "%s's computer secure control"
 msgstr "Controle de segurana do computador %s"
 
-#: modules/msc/msc/tabs.php:63 modules/msc/msc/tabs.php:89
+#: modules/msc/msc/tabs.php:59 modules/msc/msc/tabs.php:73
 msgid "Launch Actions"
 msgstr "Lanar Aes"
 
-#: modules/msc/msc/tabs.php:66 modules/msc/msc/tabs.php:91
-msgid "Launch Bundle"
-msgstr "Lanar conjunto"
-
-#: modules/msc/msc/tabs.php:67 modules/msc/msc/tabs.php:73
-#: modules/msc/msc/tabs.php:95 modules/msc/msc/tabs.php:98
-msgid "Logs"
-msgstr "Logs"
-
-#: modules/msc/msc/tabs.php:87
+#: modules/msc/msc/tabs.php:71
 #, php-format
 msgid "%s's group secure control"
 msgstr "Controle de segurana do grupo %s"
 
-#: modules/msc/msc/tabs.php:107
+#: modules/msc/msc/tabs.php:75
+msgid "Launch Bundle"
+msgstr "Lanar conjunto"
+
+#: modules/msc/msc/tabs.php:84
 msgid "Not enough information"
 msgstr "Informaes insuficientes"
 
@@ -1412,140 +1407,156 @@ msgstr "Seleo de proxies locais"
 msgid "Your start and end dates are not coherent, please check them.<br/>"
 msgstr "Suas datas iniciais e finais no esto coerentes, verifique-as.<br/>"
 
-#: modules/msc/msc/launch.php:122 modules/msc/msc/launch.php:319
+#: modules/msc/msc/launch.php:144 modules/msc/msc/launch.php:351
 msgid "now"
 msgstr "agora"
 
-#: modules/msc/msc/launch.php:124 modules/msc/msc/launch.php:322
+#: modules/msc/msc/launch.php:146 modules/msc/msc/launch.php:354
 msgid "never"
 msgstr "nunca"
 
-#: modules/msc/msc/launch.php:435
+#: modules/msc/msc/launch.php:467
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "nico com lanamento avanado: ao \"%s\" em \"%s\""
 
-#: modules/msc/msc/launch.php:446
+#: modules/msc/msc/launch.php:478
 #, php-format
 msgid "Software Convergence: action \"%s\" on \"%s\""
 msgstr "Convergncia de Software: ao \"%s\" em \"%s\""
 
-#: modules/msc/msc/launch.php:449
+#: modules/msc/msc/launch.php:481
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "Lanador d eGrupo Avanado: ao  \"%s\" em \"%s\""
 
-#: modules/msc/msc/launch.php:483 modules/msc/msc/launch.php:597
+#: modules/msc/msc/launch.php:515 modules/msc/msc/launch.php:629
 msgid "The command must start after"
 msgstr "O comando precisa iniciar aps"
 
-#: modules/msc/msc/launch.php:495 modules/msc/msc/launch.php:606
+#: modules/msc/msc/launch.php:527 modules/msc/msc/launch.php:638
 msgid "The command must stop before"
 msgstr "O comando deve parar antes de"
 
-#: modules/msc/msc/launch.php:515 modules/msc/msc/launch.php:564
+#: modules/msc/msc/launch.php:547 modules/msc/msc/launch.php:596
 #: modules/msc/includes/command_history.php:34
 #: modules/msc/includes/command_history.php:180
 msgid "Command name"
 msgstr "Nome do comando"
 
-#: modules/msc/msc/launch.php:521
+#: modules/msc/msc/launch.php:553
 msgid "Script parameters"
 msgstr "Parmetros do Script"
 
-#: modules/msc/msc/launch.php:527 modules/msc/includes/command_history.php:189
+#: modules/msc/msc/launch.php:559 modules/msc/includes/command_history.php:189
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Iniciar requisio \"Wake On Lan\" se a conexo falhar"
 
-#: modules/msc/msc/launch.php:533
+#: modules/msc/msc/launch.php:565
 msgid "Start script"
 msgstr "Iniciar script"
 
-#: modules/msc/msc/launch.php:539 modules/msc/includes/bundle_widgets.php:352
+#: modules/msc/msc/launch.php:571 modules/msc/includes/bundle_widgets.php:352
 msgid "Delete files after a successful execution"
 msgstr "Apagar arquivos aps execuo bem sucedida"
 
-#: modules/msc/msc/launch.php:545
+#: modules/msc/msc/launch.php:577
 msgid "Do an inventory after a successful execution"
 msgstr "Inventariar aps uma execuo sucedida"
 
-#: modules/msc/msc/launch.php:551
+#: modules/msc/msc/launch.php:583
 msgid "Reboot client"
 msgstr "Reiniciar cliente"
 
-#: modules/msc/msc/launch.php:557
+#: modules/msc/msc/launch.php:589
 msgid "Halt client"
 msgstr "Parar cliente"
 
-#: modules/msc/msc/launch.php:583
+#: modules/msc/msc/launch.php:615
 msgid "Convergence is active"
 msgstr "Convergncia est ativada"
 
-#: modules/msc/msc/launch.php:620
+#: modules/msc/msc/launch.php:652
 msgid "Example for lunch and night (24h format): 12-14,20-8"
 msgstr "Exemplo para almoo e noite (formato 24h): 12-14,20-8"
 
-#: modules/msc/msc/launch.php:637
+#: modules/msc/msc/launch.php:669
 msgid "bandwidth throttling (ko)"
 msgstr ""
 
-#: modules/msc/msc/launch.php:637
+#: modules/msc/msc/launch.php:669
 msgid "<in ko>"
 msgstr ""
 
-#: modules/msc/msc/launch.php:641
+#: modules/msc/msc/launch.php:673
 msgid "Dynamic parameters Packages"
 msgstr ""
 
-#: modules/msc/msc/launch.php:646
+#: modules/msc/msc/launch.php:678
 msgid "Reboot required"
 msgstr ""
 
-#: modules/msc/msc/launch.php:651
+#: modules/msc/msc/launch.php:683
 msgid "Shutdown required"
 msgstr ""
 
-#: modules/msc/msc/launch.php:656
+#: modules/msc/msc/launch.php:688
 msgid "Delay install"
 msgstr ""
 
-#: modules/msc/msc/launch.php:661 modules/msc/msc/launch.php:667
+#: modules/msc/msc/launch.php:693 modules/msc/msc/launch.php:699
 msgid "Time constraint"
 msgstr ""
 
-#: modules/msc/msc/launch.php:661
+#: modules/msc/msc/launch.php:693
 msgid "Successful transfer rate"
 msgstr ""
 
-#: modules/msc/msc/launch.php:673
+#: modules/msc/msc/launch.php:705
 msgid "Install constraint"
 msgstr ""
 
-#: modules/msc/msc/launch.php:680
+#: modules/msc/msc/launch.php:712
 msgid "Run the deployment at the specific time"
 msgstr ""
 
-#: modules/msc/msc/launch.php:711 modules/msc/includes/bundle_widgets.php:364
+#: modules/msc/msc/launch.php:722
+msgid "Spooling priority"
+msgstr ""
+
+#: modules/msc/msc/launch.php:727
+msgid "high priority"
+msgstr ""
+
+#: modules/msc/msc/launch.php:727
+msgid "ordinary priority"
+msgstr ""
+
+#: modules/msc/msc/launch.php:732
+msgid "Install Spooling"
+msgstr ""
+
+#: modules/msc/msc/launch.php:759 modules/msc/includes/bundle_widgets.php:364
 msgid "Max bandwidth (kbits/s)"
 msgstr "Max Banda (kbits/s)"
 
-#: modules/msc/msc/launch.php:723 modules/msc/includes/bundle_widgets.php:370
+#: modules/msc/msc/launch.php:771 modules/msc/includes/bundle_widgets.php:370
 msgid "push"
 msgstr "Empurrar"
 
-#: modules/msc/msc/launch.php:723 modules/msc/includes/bundle_widgets.php:370
+#: modules/msc/msc/launch.php:771 modules/msc/includes/bundle_widgets.php:370
 msgid "push / pull"
 msgstr "Empurrar / Puxar"
 
-#: modules/msc/msc/launch.php:726 modules/msc/includes/bundle_widgets.php:373
+#: modules/msc/msc/launch.php:774 modules/msc/includes/bundle_widgets.php:373
 msgid "Copy Mode"
 msgstr "Modo de Transferncia"
 
-#: modules/msc/msc/launch.php:730 modules/msc/includes/bundle_widgets.php:378
+#: modules/msc/msc/launch.php:778 modules/msc/includes/bundle_widgets.php:378
 msgid "Deploy using a local proxy"
 msgstr "Implantao utilizando um proxy local"
 
-#: modules/msc/msc/launch.php:754
+#: modules/msc/msc/launch.php:802
 msgid "Probe status"
 msgstr "Status de Deteco"
 

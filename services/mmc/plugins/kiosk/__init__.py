@@ -433,12 +433,13 @@ def get_packages_for_machine(machine):
                                                            {'hide_win_updates': True, 'history_delta': ''})
     for x in softwareonmachine:
         list_software_glpi.append([x[0][1],x[1][1], x[2][1]])
-    print list_software_glpi # ordre information [["Vendor","Name","Version"],]
+    #print list_software_glpi # ordre information [["Vendor","Name","Version"],]
     structuredatakiosk = []
 
     #Create structuredatakiosk for initialization
     for packageprofile in list_profile_packages:
         structuredatakiosk.append( __search_software_in_glpi(list_software_glpi,
         packageprofile, structuredatakiosk))
-    logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, machine['hostname']))
+    #logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, machine['hostname']))
+    logger.debug("* initialisation kiosk on machine %s"%(machine['hostname']))
     return structuredatakiosk

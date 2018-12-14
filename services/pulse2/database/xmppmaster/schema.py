@@ -20,7 +20,7 @@
 # MA 02110-1301, USA.
 
 from sqlalchemy import Column, String, Integer, Boolean, \
-    ForeignKey, DateTime,Text, LargeBinary, Enum
+    ForeignKey, DateTime, Text, LargeBinary, Enum
 from sqlalchemy.dialects.mysql import  TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
@@ -56,7 +56,7 @@ class Logs(Base, XmppMasterDBObj):
     # Warning, if you modify the wrapper, you also have to change it in log.py
     type = Column(String(6), nullable=False,default = "noset")
     date = Column(DateTime, default=datetime.datetime.now)
-    text = Column(String(255), nullable=False)
+    text = Column(Text, nullable=False)
     sessionname = Column(String(20), nullable=False, default = "")
     priority = Column(Integer, default = 0)
     who = Column(String(45), nullable=False, default = "")
