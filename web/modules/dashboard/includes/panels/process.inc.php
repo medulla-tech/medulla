@@ -24,7 +24,7 @@ include_once("modules/dashboard/includes/panel.class.php");
 $options = array(
     "class" => "ProcessPanel",
     "id" => "process",
-    "refresh" => 30,
+    "refresh" => 3600,
     "title" => _T("Pulse processes", "dashboard"),
     "enable" => false,
 );

@@ -26,6 +26,7 @@ require_once("modules/base/includes/computers.inc.php");
 $options = array(
     "class" => "ComputersOnlinePanel",
     "id" => "computersOnline",
+    "refresh" => 300,
     "title" => _T("Machines Online", "dashboard"),
     "enable" => true,
 );
