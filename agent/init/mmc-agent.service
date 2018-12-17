@@ -1,6 +1,6 @@
 [Unit]
 Description=Machines Management Console
-After=samba.service slapd.service
+After=smbd.service slapd.service
 ConditionPathExists=/etc/mmc/plugins/base.ini.local
 
 [Service]
