@@ -307,8 +307,8 @@ class Glpi93(DyngroupDatabaseHelper):
                 autoload = True)
             mapper(FusionAgents, self.fusionagents)
 
-        # glpi_computerdisks
-        self.disk = Table('glpi_computerdisks', self.metadata,
+        # glpi_items_disks
+        self.disk = Table('glpi_items_disks', self.metadata,
                           Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                           Column('filesystems_id', Integer, ForeignKey('glpi_filesystems.id')),
                           autoload = True)
