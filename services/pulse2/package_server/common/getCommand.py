@@ -226,7 +226,7 @@ esac""" %(basename(self.file), basename(self.file))
                         return self.getMSICommand()
                 else:
                     return self.logger.info("No Template Key for %s" % self.file)
-        elif "Debian binary package" in file_data[self.file]:
+        elif "Debian binary package" in file_data[self.file] or self.file.endswith(".deb"):
             self.logger.debug("Debian package detected")
             return self.getDpkgCommand()
         elif self.file.endswith(".reg"):
