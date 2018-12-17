@@ -309,7 +309,7 @@ class Glpi93(DyngroupDatabaseHelper):
 
         # glpi_items_disks
         self.disk = Table('glpi_items_disks', self.metadata,
-                          Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                          Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                           Column('filesystems_id', Integer, ForeignKey('glpi_filesystems.id')),
                           autoload = True)
         mapper(Disk, self.disk)
