@@ -2284,6 +2284,7 @@ class Glpi92(DyngroupDatabaseHelper):
             .add_column(self.glpi_computertypes.c.name) \
             .add_column(self.glpi_computermodels.c.name) \
             .add_column(self.glpi_operatingsystemservicepacks.c.name) \
+            .add_column(self.glpi_operatingsystemversions.c.name) \
             .add_column(self.glpi_operatingsystemarchitectures.c.name) \
             .add_column(self.glpi_domains.c.name) \
             .add_column(self.state.c.name) \
@@ -2307,7 +2308,7 @@ class Glpi92(DyngroupDatabaseHelper):
             ret = query.count()
         else:
             ret = []
-            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, architecture, domain, state, last_contact in query:
+            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, version, architecture, domain, state, last_contact in query:
                 endDate = ''
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -2368,6 +2369,7 @@ class Glpi92(DyngroupDatabaseHelper):
                     ['Owner Realname', owner_realname],
                     ['OS', os],
                     ['Service Pack', servicepack],
+                    ['Version', version],
                     ['Architecture', architecture],
                     ['Windows Key', machine.license_number],
                     ['Model / Type', modelType],
