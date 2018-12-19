@@ -84,20 +84,20 @@ class Package:
                 with open(os.path.join(self.path, file), "r") as filestream:
                     content = filestream.read()
                     filestream.close()
-            try:
+                    try:
 
-                json_content = json.loads(content)
-                if file == "xmppdeploy.json":
-                    self.info = json_content['info']
-                    self.metaparameter = json_content['metaparameter']
+                        json_content = json.loads(content)
+                        if file == "xmppdeploy.json":
+                            self.info = json_content['info']
+                            self.metaparameter = json_content['metaparameter']
 
-                    # self.sequence = json_content[self.metaparameter['os'][0]]
+                            # self.sequence = json_content[self.metaparameter['os'][0]]
 
-            except ValueError:
-                self.to_summary("error", "The json file {0} contains an invalid json"
-                                .format(file))
-                self.logger.error("The json file % contains an invalid json", file)
-                return False
+                    except ValueError:
+                        self.to_summary("error", "The json file {0} contains an invalid json"
+                                        .format(file))
+                        self.logger.error("The json file % contains an invalid json", file)
+                        return False
         return True
 
     def to_summary(self, message_type, message):
