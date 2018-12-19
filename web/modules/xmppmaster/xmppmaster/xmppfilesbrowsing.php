@@ -199,6 +199,39 @@ ul.leftfile, ul.rightfile {
         box-shadow:2px 2px 2px gray,
         -1px -1px 2px white;
 }
+
+.guaca a {
+    padding: 0px 0px 5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/guaca.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+.quick a {
+    padding: 0px 0px 5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/quick.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+.console a {
+    padding: 3px 0px 5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/console.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
 </style>
 
 <?
@@ -294,9 +327,9 @@ printf ('
 
 <div id="global">
     <table>
-        <caption style = " caption-side : top; 
-                           text-align : left; 
-                           Font-Weight : Bold ; 
+        <caption style = " caption-side : top;
+                           text-align : left;
+                           Font-Weight : Bold ;
                            font-size : 17px;" ><?php echo sprintf(_T('Downloads basket', 'xmppmaster')); ?>
         </caption>
 
@@ -337,11 +370,11 @@ printf ('
             <tr style="height: 100%;">
                 <td class = "ombremultiple" style="vertical-align : top; height:600px; Font-Weight : Bold;font-size : 15px;" >
                     <div id="fileshowlocal" class="fileshow" >
-                        <?php  echo '<div style=" Font-Weight : Bold; 
+                        <?php  echo '<div style=" Font-Weight : Bold;
                                                   font-size : 15px;">'.
                                                   sprintf(_T('Local folder', 'xmppmaster')).'
                                                   : <span  style=" Font-Weight : Bold;
-                                                                               Font-size : 15px;" 
+                                                                               Font-size : 15px;"
                         id=\'localcurrrent\'>'.$lifdirlocal['path_abs_current'] ."</span></div>";
 
                         echo '<ul id="leftdirdata" class="leftdir">';
@@ -365,8 +398,8 @@ printf ('
             <tr>
                 <td class="enplacementcss ombremultiple">
                     <span style="Font-Weight : Bold; font-size : 15px;"><?php echo sprintf(_T('Remote tree view', 'xmppmaster')); ?>: </span><br>
-                    <span style="Font-Weight : Bold; 
-                    font-size : 15px; 
+                    <span style="Font-Weight : Bold;
+                    font-size : 15px;
                     text-align: right"><?php echo _T('root:', 'xmppmaster')." ".$rootfilesystempath; ?></span>
                 </td>
                 <td class="currentdircss ombremultiple" style="Font-Weight : Bold; font-size : 15px;">
