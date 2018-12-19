@@ -41,7 +41,7 @@ $login = isset($login) ?  $_GET['login']  : $_SESSION['login'];
 if ( isset ($_POST['bStop'])) {
     $_MYREQUEST = array_merge($_GET, $_POST);
     if ( isset($_MYREQUEST['gid']) && $_MYREQUEST['gid'] != "" ){
-        $info = xmlrpc_get_group_stop_deploy($_MYREQUEST['gid']);
+        $info = xmlrpc_get_group_stop_deploy($_MYREQUEST['gid'], $_MYREQUEST['cmd_id']);
         $result = xmlrpc_updategroup($_MYREQUEST['gid']);
         foreach($result as $data){
             xmlrpc_adddeployabort(  $data['command'],
