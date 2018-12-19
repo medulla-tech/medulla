@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 09:37+0100\n"
+"POT-Creation-Date: 2018-12-05 18:44+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -38,7 +38,7 @@ msgid "Add a package"
 msgstr "Добавить пакет"
 
 #: modules/pkgs/infoPackage.inc.php:53
-#: modules/pkgs/pkgs/ajaxPackageList.php:94 modules/pkgs/pkgs/edit.php:290
+#: modules/pkgs/pkgs/ajaxPackageList.php:94 modules/pkgs/pkgs/edit.php:291
 msgid "Edit a package"
 msgstr "Редактировать пакет"
 
@@ -130,79 +130,79 @@ msgstr "Пароль"
 msgid "Add package"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:103 modules/pkgs/pkgs/associate_files.php:65
+#: modules/pkgs/pkgs/add.php:106 modules/pkgs/pkgs/associate_files.php:65
 #, php-format
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "      <b>%s (%s)</b>%s"
 
-#: modules/pkgs/pkgs/add.php:123 modules/pkgs/pkgs/associate_files.php:85
-#: modules/pkgs/pkgs/edit.php:166
+#: modules/pkgs/pkgs/add.php:126 modules/pkgs/pkgs/associate_files.php:85
+#: modules/pkgs/pkgs/edit.php:167
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "    %s"
 
-#: modules/pkgs/pkgs/add.php:140 modules/pkgs/pkgs/associate_files.php:88
-#: modules/pkgs/pkgs/edit.php:181
+#: modules/pkgs/pkgs/add.php:143 modules/pkgs/pkgs/associate_files.php:88
+#: modules/pkgs/pkgs/edit.php:182
 msgid "Failed to associate files"
 msgstr "Не удалось объединить файлы"
 
-#: modules/pkgs/pkgs/add.php:160
+#: modules/pkgs/pkgs/add.php:163
 msgid "Choose package source"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:175
+#: modules/pkgs/pkgs/add.php:178
 msgid "Already uploaded on the server"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:175
+#: modules/pkgs/pkgs/add.php:178
 msgid "Upload from this web page"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:175
+#: modules/pkgs/pkgs/add.php:178
 msgid "Make an empty package"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:181 modules/pkgs/pkgs/edit.php:321
+#: modules/pkgs/pkgs/add.php:184 modules/pkgs/pkgs/edit.php:322
 msgid "Package API"
 msgstr "API "
 
-#: modules/pkgs/pkgs/add.php:184
+#: modules/pkgs/pkgs/add.php:187
 msgid "Package source"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:185 modules/pkgs/pkgs/add.php:431
+#: modules/pkgs/pkgs/add.php:188 modules/pkgs/pkgs/add.php:434
 msgid "Files directory"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:188
+#: modules/pkgs/pkgs/add.php:191
 msgid "Package Creation"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:194
+#: modules/pkgs/pkgs/add.php:197
 msgid "Name"
 msgstr "Имя"
 
-#: modules/pkgs/pkgs/add.php:194
+#: modules/pkgs/pkgs/add.php:197
 msgid "<fill_package_name>"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:195 modules/pkgs/pkgs/ajaxPackageList.php:188
+#: modules/pkgs/pkgs/add.php:198 modules/pkgs/pkgs/ajaxPackageList.php:188
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 #: modules/pkgs/includes/query.php:88
 msgid "Version"
 msgstr "Версия"
 
-#: modules/pkgs/pkgs/add.php:196 modules/pkgs/pkgs/ajaxPackageList.php:187
-#: modules/pkgs/pkgs/edit.php:341
+#: modules/pkgs/pkgs/add.php:199 modules/pkgs/pkgs/ajaxPackageList.php:187
+#: modules/pkgs/pkgs/edit.php:342
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
 msgid "Description"
 msgstr "Описание"
 
-#: modules/pkgs/pkgs/add.php:202
+#: modules/pkgs/pkgs/add.php:205
 msgid "Command:"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:203
+#: modules/pkgs/pkgs/add.php:206
 msgid ""
 "Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
 "        If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
@@ -211,64 +211,64 @@ msgid ""
 "        <a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:210 modules/pkgs/pkgs/edit.php:347
+#: modules/pkgs/pkgs/add.php:213 modules/pkgs/pkgs/edit.php:348
 msgid "Command's name : "
 msgstr " : "
 
-#: modules/pkgs/pkgs/add.php:214 modules/pkgs/pkgs/edit.php:355
+#: modules/pkgs/pkgs/add.php:217 modules/pkgs/pkgs/edit.php:356
 msgid "Need a reboot ?"
 msgstr " ?"
 
-#: modules/pkgs/pkgs/add.php:219 modules/pkgs/pkgs/edit.php:361
+#: modules/pkgs/pkgs/add.php:222 modules/pkgs/pkgs/edit.php:362
 msgid "Windows"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:219 modules/pkgs/pkgs/edit.php:361
+#: modules/pkgs/pkgs/add.php:222 modules/pkgs/pkgs/edit.php:362
 msgid "Linux"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:219 modules/pkgs/pkgs/edit.php:361
+#: modules/pkgs/pkgs/add.php:222 modules/pkgs/pkgs/edit.php:362
 msgid "Mac OS"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:238 modules/pkgs/pkgs/edit.php:381
+#: modules/pkgs/pkgs/add.php:241 modules/pkgs/pkgs/edit.php:382
 msgid "Operating System"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:257 modules/pkgs/pkgs/edit.php:411
+#: modules/pkgs/pkgs/add.php:260 modules/pkgs/pkgs/edit.php:411
 msgid "Transfer method"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:263 modules/pkgs/pkgs/edit.php:424
+#: modules/pkgs/pkgs/add.php:266 modules/pkgs/pkgs/edit.php:424
 msgid "bandwidth throttling (ko)"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:263 modules/pkgs/pkgs/edit.php:424
+#: modules/pkgs/pkgs/add.php:266 modules/pkgs/pkgs/edit.php:424
 msgid "<in ko>"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:267 modules/pkgs/pkgs/edit.php:436
+#: modules/pkgs/pkgs/add.php:270 modules/pkgs/pkgs/edit.php:436
 msgid "high priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:267 modules/pkgs/pkgs/edit.php:436
+#: modules/pkgs/pkgs/add.php:270 modules/pkgs/pkgs/edit.php:436
 msgid "ordinary priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:270 modules/pkgs/pkgs/edit.php:439
+#: modules/pkgs/pkgs/add.php:273 modules/pkgs/pkgs/edit.php:439
 msgid "Spooling"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:338
+#: modules/pkgs/pkgs/add.php:341
 msgid "Add"
 msgstr "Добавить"
 
-#: modules/pkgs/pkgs/add.php:453
+#: modules/pkgs/pkgs/add.php:456
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:453
+#: modules/pkgs/pkgs/add.php:456
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -323,12 +323,12 @@ msgid "Appstream update"
 msgstr ""
 
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
-#: modules/pkgs/pkgs/edit.php:578 modules/pkgs/includes/html.inc.php:59
+#: modules/pkgs/pkgs/edit.php:579 modules/pkgs/includes/html.inc.php:59
 msgid "Click here to select files"
 msgstr ""
 
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
-#: modules/pkgs/pkgs/edit.php:579 modules/pkgs/includes/html.inc.php:42
+#: modules/pkgs/pkgs/edit.php:580 modules/pkgs/includes/html.inc.php:42
 msgid "Upload Queued Files"
 msgstr ""
 
@@ -361,58 +361,58 @@ msgstr "     %d  "
 msgid "Edit package"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:97
+#: modules/pkgs/pkgs/edit.php:98
 #, php-format
 msgid "Package successfully added in %s"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:115
+#: modules/pkgs/pkgs/edit.php:116
 msgid "Package successfully edited"
 msgstr "Пакет успешно отредактирован"
 
-#: modules/pkgs/pkgs/edit.php:144
+#: modules/pkgs/pkgs/edit.php:145
 #, php-format
 msgid "Files successfully added to the package <b>%s (%s)</b>"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:212
+#: modules/pkgs/pkgs/edit.php:213
 msgid "Package failed to save"
 msgstr "Не удалось сохранить пакет"
 
-#: modules/pkgs/pkgs/edit.php:240
+#: modules/pkgs/pkgs/edit.php:241
 msgid "File successfully deleted."
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:258
+#: modules/pkgs/pkgs/edit.php:259
 #, php-format
 msgid "Failed to delete files%s"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:273
+#: modules/pkgs/pkgs/edit.php:274
 msgid "Failed to delete files"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:339
+#: modules/pkgs/pkgs/edit.php:340
 msgid "Package label"
 msgstr "Ярлык пакета"
 
-#: modules/pkgs/pkgs/edit.php:340
+#: modules/pkgs/pkgs/edit.php:341
 msgid "Package version"
 msgstr "Версия пакета"
 
-#: modules/pkgs/pkgs/edit.php:347
+#: modules/pkgs/pkgs/edit.php:348
 msgid "Command : "
 msgstr ": "
 
-#: modules/pkgs/pkgs/edit.php:553
+#: modules/pkgs/pkgs/edit.php:554
 msgid "File"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:562
+#: modules/pkgs/pkgs/edit.php:563
 msgid "Delete file"
 msgstr "Удалить файл"
 
-#: modules/pkgs/pkgs/edit.php:562
+#: modules/pkgs/pkgs/edit.php:563
 msgid "Are you sure you want to delete this file?"
 msgstr ""
 
@@ -487,15 +487,15 @@ msgid "Number of licenses"
 msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:60
-#: modules/pkgs/includes/html.inc.php:147
+#: modules/pkgs/includes/html.inc.php:151
 msgid "Cancel"
 msgstr "Отмена"
 
-#: modules/pkgs/includes/html.inc.php:146
+#: modules/pkgs/includes/html.inc.php:150
 msgid "Add files"
 msgstr ""
 
-#: modules/pkgs/includes/html.inc.php:184
+#: modules/pkgs/includes/html.inc.php:188
 msgid "Upload selected files"
 msgstr ""
 

@@ -81,7 +81,7 @@ class MultiFileTpl extends AbstractTpl {
                             else{
                               jQuery("#current-actions").prepend(jQuery(document.createElement("li")).prop("id","autocmd").load("/mmc/modules/pkgs/includes/actions/actionprocessscriptfile.php",{"script":data.commandcmd,"typescript":"Batch"}));
                             }
-                            if(data.commandcmd.search(".deb") != -1 || data.commandcmd.search(".rpm"))
+                            if(data.commandcmd.search(".deb") != -1 || data.commandcmd.search(".rpm") != -1)
                             {
                               jQuery("#targetos").val("linux");
                             }

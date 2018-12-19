@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 09:36+0100\n"
+"POT-Creation-Date: 2018-12-05 18:44+0100\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
@@ -42,9 +42,21 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/display.php:63
+#: modules/dyngroup/dyngroup/display.php:67
 #, php-format
 msgid "Group '%s' content"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/display.php:73
+msgid "All computers"
+msgstr "Wszystkie komputery"
+
+#: modules/dyngroup/dyngroup/display.php:77
+msgid "Online computers"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/display.php:81
+msgid "Offline computers"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/display.php:84

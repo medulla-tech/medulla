@@ -20,7 +20,7 @@
 #
 dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging \
 	pulse2-inventory-server pulse2-scheduler pulse2-scheduler-manager \
-	pulse2-setup pulse2-load-defaults \
+	pulse2-packageparser.py pulse2-setup pulse2-load-defaults \
 	pulse2-scheduler-proxy pulse2-extract-glpi-search-options \
 	pulse2-backup-servers pulse2-debug pulse2-dbupdate \
 	pulse2-msc-clean-database pulse2-inventory-clean-database \

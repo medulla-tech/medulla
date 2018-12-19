@@ -175,4 +175,12 @@ function xmlrpc_setfromglpilogxmpp(   $text,
 function xmlrpc_get_all_uuids_and_hostnames(){
   return xmlCall("glpi.get_all_uuids_and_hostnames", array());
 }
+
+function xmlrpc_get_os_for_dashboard(){
+  return xmlCall("glpi.get_os_for_dashboard", []);
+}
+
+function xmlrpc_get_machines_with_os_and_version($os, $version){
+  return xmlCall("glpi.get_machines_with_os_and_version", [$os, $version]);
+}
 ?>

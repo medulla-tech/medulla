@@ -395,13 +395,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 if z.tag.endswith('data'):
                                     # decode result
                                     # TODO : Replace print by log
-                                    print z.tag[1:-5]
+                                    #print z.tag[1:-5]
                                     return base64.b64decode(z.tag[1:-5])
                                     try:
                                         data = base64.b64decode(z.tag[1:-5])
                                         # TODO : Replace print by log
-                                        print "RECEIVED data"
-                                        print data
+                                        #print "RECEIVED data"
+                                        #print data
                                         return data
                                     except Exception as e:
                                         logging.error("iqsendpulse : %s" % str(e))
@@ -482,10 +482,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 self.machineWakeOnLan[UUID]['count'] = 0
                 self.machineWakeOnLan[UUID]['commanid'] = deploy.Commands.id
                 self.machineWakeOnLan[UUID]['mac'] = deploy.Target.target_macaddr
-
+        
         for uuidmachine in self.machineWakeOnLan:
             # TODO : Replace print by log
-            print self.machineWakeOnLan[uuidmachine]['count']
+            #print self.machineWakeOnLan[uuidmachine]['count']
             if self.machineWakeOnLan[uuidmachine]['count'] < self.CYCLESCHEDULER:
                 listmacadress = self.machineWakeOnLan[uuidmachine]['mac'].split("||")
                 for macadress in listmacadress:
@@ -729,11 +729,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
 
     def parsexmppjsonfile(self, path):
+        ### puts the words False in lowercase.
         datastr = file_get_contents(path)
-
         datastr = re.sub(r"(?i) *: *false", " : false", datastr)
         datastr = re.sub(r"(?i) *: *true", " : true", datastr)
-
         file_put_contents(path, datastr)
 
     def applicationdeploymentjson(self,
@@ -755,17 +754,23 @@ class MUCBot(sleekxmpp.ClientXMPP):
         The package is already on the machine and also in relay server.
         """
 
-        if not managepackage.getversionpackagename(name):
-            logger.error("deploy %s error package name" % (name))
+        if managepackage.getversionpackagename(name) is None:
+            logger.error("deploy %s error package name version missing" % (name))
             return False
         # Name the event
         dd = name_random(5, "deploy_")
         path = managepackage.getpathpackagename(name)
+        if path is None:
+            logger.error("package Name missing (%s)" % (name))
+            return False
         descript = managepackage.loadjsonfile(os.path.join(path, 'xmppdeploy.json'))
+        
+        
+        
         self.parsexmppjsonfile(os.path.join(path, 'xmppdeploy.json'))
         if descript is None:
             logger.error("deploy %s on %s  error : xmppdeploy.json missing" % (name, uuidmachine))
-            return None
+            return False
         objdeployadvanced = XmppMasterDatabase().datacmddeploy(idcommand)
         data = {"name": name,
                 "login": login,
@@ -974,10 +979,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def restartmachineasynchrone(self, jid):
         waittingrestart = random.randint(10, 20)
         # TODO : Replace print by log
-        print "Restart Machine jid %s after %s secondes" % (jid, waittingrestart)
+        # print "Restart Machine jid %s after %s secondes" % (jid, waittingrestart)
         sleep(waittingrestart)
         # TODO : Replace print by log
-        print "Restart Machine jid %s fait" % jid
+        # print "Restart Machine jid %s fait" % jid
         # Check if restartAgent is not called from a plugin or a lib.
 
         self.restartAgent(jid)
@@ -1533,7 +1538,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if 'action' in data and data['action'] == 'askinfo':
                 # Returns machine information
                 # TODO : replace print by logs
-                print json.dumps(data, indent=4)
+                #print json.dumps(data, indent=4)
                 if not "data" in data:
                     return
                 if "fromplugin" in data['data']:
@@ -1584,7 +1589,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             self.send_message(mto=jidmachine,
                                               mbody=json.dumps(data),
                                               mtype='chat')
-                            print "send %s" % json.dumps(data)
+                            #print "send %s" % json.dumps(data)
                     if not "sendemettor" in data['data']:
                         data['data']['sendemettor'] = True
                     if data['data']['sendemettor'] == True:
