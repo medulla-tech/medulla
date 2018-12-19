@@ -1526,7 +1526,7 @@ msgstr "Виконати розгортання у вказаний момент
 
 #: modules/msc/msc/launch.php:722
 msgid "Spooling priority"
-msgstr ""
+msgstr "Пріоритетність буферизації"
 
 #: modules/msc/msc/launch.php:727
 msgid "high priority"
@@ -1538,7 +1538,7 @@ msgstr "звичайна пріоритетність"
 
 #: modules/msc/msc/launch.php:732
 msgid "Install Spooling"
-msgstr ""
+msgstr "Буферизація встановлення"
 
 #: modules/msc/msc/launch.php:759 modules/msc/includes/bundle_widgets.php:364
 msgid "Max bandwidth (kbits/s)"

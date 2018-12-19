@@ -53,11 +53,11 @@ msgstr "Усі комп'ютери"
 
 #: modules/dyngroup/dyngroup/display.php:77
 msgid "Online computers"
-msgstr ""
+msgstr "Комп'ютери у мережі"
 
 #: modules/dyngroup/dyngroup/display.php:81
 msgid "Offline computers"
-msgstr ""
+msgstr "Комп'ютери поза мережею"
 
 #: modules/dyngroup/dyngroup/display.php:84
 #, php-format

@@ -53,25 +53,26 @@ class Package:
                 True if the package is not empty and the main files are present
                 else returns False
         """
+        self.logger.info("Test if the package %s contains the main files", self.uuid)
+        flag = True
         if not self.files:
             self.logger.error("The package %s is empty", self.uuid)
             self.to_summary("error", "The package is empty")
             return False
         # Check if the main files of the package are here
-        elif "conf.json" not in self.files:
+        if "conf.json" not in self.files:
             self.logger.error("The file conf.json is missing")
             self.to_summary("error", "The file conf.json is missing")
-            return False
-        elif "MD5SUMS" not in self.files:
+            flag = False
+        if "MD5SUMS" not in self.files:
             self.logger.error("The file MD5SUMS is missing")
             self.to_summary("error", "The file MD5SUMS is missing")
-            return False
-        elif "xmppdeploy.json" not in self.files:
+            flag = False
+        if "xmppdeploy.json" not in self.files:
             self.logger.error("The file xmppdeploy.json is missing")
             self.to_summary("error", "The file xmppdeploy.json is missing")
-            return False
-        else:
-            return True
+            flag = False
+        return flag
 
     def test_json_files(self):
         """Launch the tests for a uniq package.
