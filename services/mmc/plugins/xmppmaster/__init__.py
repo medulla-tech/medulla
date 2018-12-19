@@ -337,8 +337,8 @@ def get_machine_stop_deploy(cmdid, uuid):
     return True
 
 
-def get_group_stop_deploy(grpid):
-    result = XmppMasterDatabase().get_group_stop_deploy(grpid)
+def get_group_stop_deploy(grpid, cmdid):
+    result = XmppMasterDatabase().get_group_stop_deploy(grpid, cmdid)
     msg_stop_deploy = {
         "action": "enddeploy",
         "sessionid": "",
