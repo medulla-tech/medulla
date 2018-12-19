@@ -152,10 +152,10 @@ ul.leftfile, ul.rightfile {
 }
 .Localdestination:hover {
         Font-Weight : Bold ;
-        font-size : 20px;
+        font-size : 15px;
 }
 .delete{
-    padding: 3px 0px 5px 20px;
+        padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
         background-image: url("modules/xmppmaster/graph/img/button_cancel.png");
         background-repeat: no-repeat;
@@ -168,7 +168,23 @@ ul.leftfile, ul.rightfile {
 }
 .delete:hover{
         Font-Weight : Bold ;
-        font-size : 20px;
+        font-size : 15px;
+}
+.pop{
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/xmppmaster/graph/img/rewind.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        Font-Weight : Bold ;
+        font-size : 15px;
+}
+.pop:hover{
+        Font-Weight : Bold ;
+        font-size : 15px;
 }
 .ombremultiple {
         /*width:100%;*/
@@ -182,6 +198,39 @@ ul.leftfile, ul.rightfile {
         background-color:#ECECEC;
         box-shadow:2px 2px 2px gray,
         -1px -1px 2px white;
+}
+
+.guaca a {
+    padding: 0px 0px 5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/guaca.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+.quick a {
+    padding: 0px 0px 5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/quick.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+.console a {
+    padding: 3px 0px 5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/console.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 </style>
 
@@ -207,7 +256,8 @@ echo "<br><br><br>";
 // creation repertoire namemachine si non existe.
 // et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles
 // /machine25pulse
-$filecurentdir = xmlrpc_create_local_dir_transfert(xmlrpc_localfilesystem("")['path_abs_current'], $ma['hostname']);
+$lifdirlocal = xmlrpc_localfilesystem("");
+$filecurentdir = xmlrpc_create_local_dir_transfert($lifdirlocal['path_abs_current'], $ma['hostname']);
 $curentdir = $filecurentdir['path_abs_current'];
 
 echo '<script type="text/javascript">';
@@ -230,11 +280,10 @@ echo '</script>';
 ?>
 
 <?php
-    $lifdirlocal = xmlrpc_localfilesystem("");
-    $lifdirstr = xmlrpc_remotefilesystem("", $machine);
-    $lifdir = json_decode($lifdirstr, true);
-    if (isset($lifdir['err'])){
-        if ( $lifdir['err'] == 'Timeout Error'){
+    $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
+    $lifdirremote = json_decode($lifdirstr, true);
+    if (isset($lifdirremote['err'])){
+        if ( $lifdirremote['err'] == 'Timeout Error'){
             $msg = sprintf(_T("Sorry, the remote machine [%s] takes too long to answer.", "xmppmaster"), $machine);
         }else{
             $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
@@ -244,7 +293,7 @@ echo '</script>';
             echo "</h2>";
             exit;
     }
-    $datatree = $lifdir['data']['strjsonhierarchy'];
+    $datatree = $lifdirremote['data']['strjsonhierarchy'];
     // cherche local directory
 
 printf ('
@@ -252,7 +301,7 @@ printf ('
     <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
     <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
 </form>' ,$lifdirlocal['path_abs_current'],$lifdirlocal['parentdir']);
-$rootfilesystem = $lifdir['data']['rootfilesystem'];
+$rootfilesystem = $lifdirremote['data']['rootfilesystem'];
 
 $rootfilesystempath = $rootfilesystem;
 if ($rootfilesystem[1] == ":"){
@@ -272,38 +321,45 @@ printf ('
             $rootfilesystempath);
 ?>
 
-<div id="messageaction"></span></div>
+<div id="messageaction">
+    <span></span>
+</div>
 
 <div id="global">
-    <h2>Downloads basket</h2>
     <table>
+        <caption style = " caption-side : top;
+                           text-align : left;
+                           Font-Weight : Bold ;
+                           font-size : 17px;" ><?php echo sprintf(_T('Downloads basket', 'xmppmaster')); ?>
+        </caption>
+
         <tr>
-            <td style = "width:10%;font-size : 15px;">Folders:</td>
-            <td id="filedirectory" style = "font-size : 14px;"></td>
-            <td   style = "width:10%;">
-                <span id="deletelistdirectory" title="Delete folders selection" class="delete" ></span>
-            </td>
-        </tr>
-        <tr>
-            <td style = "width:10%;font-size : 15px;">Files:</td>
-            <td id="filelist" style = "font-size : 14px;"></td>
+            <td style = "width:10%; font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Folders', 'xmppmaster')); ?>:</td>
+            <td id="filedirectory" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
             <td style = "width:10%;">
-                <span  id="deletelistfile" title="Delete files selection"  class="delete" ></span>
+            <span id="poplistdirectory" title="<?php echo sprintf(_T('Remove last folder', 'xmppmaster')); ?>" class="pop" ></span>
+                <span id="deletelistdirectory" title="<?php echo sprintf(_T('Remove all folders', 'xmppmaster')); ?>" class="delete" ></span>
+            </td>
+        </tr>
+
+        <tr>
+            <td style = "width:10%;font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Files', 'xmppmaster')); ?>:</td>
+            <td id="filelist" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
+            <td style = "width:10%;">
+            <span  id="poplistfile" title="<?php echo sprintf(_T('Remove last file', 'xmppmaster')); ?>"  class="pop" ></span>
+                <span  id="deletelistfile" title="<?php echo sprintf(_T('Remove all files', 'xmppmaster')); ?>"  class="delete" ></span>
+            </td>
+        </tr>
+
+        <tr>
+            <td style = "text-align:left; width:10%;Font-Weight : Bold ;font-size : 15px;"><?php echo sprintf(_T('Downloads basket to', 'xmppmaster')); ?></td>
+            <td id="dest_string" colspan="2" style = "text-align:left;font-size : 17px;Font-Weight : Bold ; ">dest :</td>
+            <td style = "text-align:left; width:15px;">
+                <span id="downloadlist" title="<?php echo sprintf(_T('Download list selection', 'xmppmaster')); ?>" class="Localdestination" ></span>
             </td>
         </tr>
     </table>
-    <table>
-        <tr>
-            <th style = "text-align:left; font-size : 15px; width:120px;">Download basket to </th>
-            <th id="dest_string" style = "text-align:left;font-size : 15px;">dest :</th>
-            <th style = "text-align:left; width:15px;">
-                <span id="downloadlist" title="Download list selection" class="Localdestination" ></span>
-            </th>
-        </tr>
-    </table>
-
     <br>
-
     <div id="gauche">
         <table style = "width:100%;
                         height:100%;
@@ -312,10 +368,15 @@ printf ('
                         border-collapse :separate;"
                         class="ombremultiple">
             <tr style="height: 100%;">
-                <td class = "ombremultiple" style="vertical-align : top; height:600px;" >
-                    <div id="fileshowlocal" class="fileshow">
-                        <span style="Font-Weight : Bold; font-size : 15px;">Local folder :</span>
-                        <?php  echo "<span id='localcurrrent' style='Font-Weight : Bold ;font-size : 15px;'>".$lifdirlocal['path_abs_current'] ."</span>";
+                <td class = "ombremultiple" style="vertical-align : top; height:600px; Font-Weight : Bold;font-size : 15px;" >
+                    <div id="fileshowlocal" class="fileshow" >
+                        <?php  echo '<div style=" Font-Weight : Bold;
+                                                  font-size : 15px;">'.
+                                                  sprintf(_T('Local folder', 'xmppmaster')).'
+                                                  : <span  style=" Font-Weight : Bold;
+                                                                               Font-size : 15px;"
+                        id=\'localcurrrent\'>'.$lifdirlocal['path_abs_current'] ."</span></div>";
+
                         echo '<ul id="leftdirdata" class="leftdir">';
                         echo '</ul>';
                         ?>
@@ -336,11 +397,13 @@ printf ('
                         class="ombremultiple">
             <tr>
                 <td class="enplacementcss ombremultiple">
-                    <span style="Font-Weight : Bold; font-size : 15px;">Remote tree view</span><br>
-                    <span style="Font-Weight : Bold; font-size : 15px; text-align: right">root : <?php echo $rootfilesystempath; ?></span>
+                    <span style="Font-Weight : Bold; font-size : 15px;"><?php echo sprintf(_T('Remote tree view', 'xmppmaster')); ?>: </span><br>
+                    <span style="Font-Weight : Bold;
+                    font-size : 15px;
+                    text-align: right"><?php echo _T('root:', 'xmppmaster')." ".$rootfilesystempath; ?></span>
                 </td>
-                <td class="currentdircss ombremultiple">
-                    <span style="Font-Weight : Bold; font-size : 15px;">Current path :</span>
+                <td class="currentdircss ombremultiple" style="Font-Weight : Bold; font-size : 15px;">
+                <?php echo sprintf(_T('Current path: ', 'xmppmaster')); ?>
                     <span id="cur" style="Font-Weight : Bold ;font-size : 15px;">
                             <? echo $lifdir['data']['path_abs_current']; ?>
                     </span>
@@ -348,13 +411,14 @@ printf ('
             </tr>
 
             <tr style="height: 100%;">
-                <td style = " width:40%;vertical-align: top;"  class="ombremultiple" >
-                    <div id ="directoryremote" style = " width:100%;overflow:auto;" ></div>
+                <td style = " width:40%;vertical-align: top; height: 100%;"  class="ombremultiple" >
+                    <div id ="directoryremote" style = " width:100%; height: 650px; overflow : auto;" ></div>
                 </td>
-                <td class="ombremultiple"  style = "height: 600px; width:60%; vertical-align: middle;"  >
+                <td class="ombremultiple"  style = " width:60%; vertical-align: middle;"  >
                     <div id ="fileshowremote"
                         style = "padding-top:10px;
-                                width:100%;height: 100%;
+                                width:100%;
+                                height: 600px;
                                 overflow:auto;">
                     </div>
                 </td>
@@ -419,16 +483,13 @@ printf ('
         absolutepath ="";
         init = 1;
         local(namemachine);
-        remote();
+        remote("@");
         jQuery('#directoryremote')
             .on("changed.jstree", function (e, data) {
                 if(data.selected.length) {
                     var pathlinux = data.instance.get_path(data.node, '/');
 
                     var rs = jQuery('#rootfilesystempath').val();
-                    console.log(pathlinux)
-                    console.log(rs)
-                    console.log(pathlinux.substr(rs.length))
                     remote(pathlinux.substr(rs.length));
                 }
             })
@@ -449,9 +510,20 @@ printf ('
             });
     });
 
+    function del_list(type){
+        // type "files" ou "directory"
+        listfileusermachinejson[type].splice(0,listfileusermachinejson[type].length)
+    }
+
+    function pop_list(type){
+        // type "files" ou "directory"
+        listfileusermachinejson[type].pop()
+    }
+
     function confirmation_information(data) {
         setTimeout(function() { affichedata(data); }, 2000);
     }
+
     function affichedata(data){
                 jQuery("#dialogmsg2").html(data);
                 jQuery( function() {
@@ -463,7 +535,7 @@ printf ('
                         buttons: [
                             {
                                 id: "my-buttoncancel2",
-                                text: "Computer view",
+                                text: "<?php echo sprintf(_T('Computer view', 'xmppmaster')); ?>",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
@@ -473,7 +545,7 @@ printf ('
                             },
                             {
                                 id: "my-buttonrefresh",
-                                text: "Refresh",
+                                text: "<?php echo sprintf(_T('Refresh', 'xmppmaster')); ?>",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
@@ -483,7 +555,7 @@ printf ('
                             },
                             {
                                 id: "my-buttonhistory",
-                                text: "History download",
+                                text: "<?php echo sprintf(_T('History download', 'xmppmaster')); ?>",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
@@ -493,7 +565,7 @@ printf ('
                             },
                             {
                                 id: "my-buttonfilemanager",
-                                text: "File Manager",
+                                text: "<?php echo sprintf(_T('File Manager', 'xmppmaster')); ?>",
                                 'class':'btnPrimary',
                                 style:"color:#FFFFFF;background-color: #000000;",
                                 click:function() {
@@ -536,7 +608,7 @@ printf ('
             var parentdirlocal = "";
         }
 
-        jQuery.get( "modules/xmppmaster/xmppmaster/ajax_refresh_files_local.php",
+        jQuery.get("modules/xmppmaster/xmppmaster/ajax_refresh_files_local.php",
                     {
                         "parentdirlocal" : parentdirlocal,
                         "path_abs_current_local" : path_abs_current_local,
@@ -647,23 +719,23 @@ printf ('
     jQuery("#downloadlist").click(function() {
         var dir  = jQuery('#filedirectory').text().split(";")
         var file = jQuery('#filelist').text().split(";")
-        msg = "<h1>Download from " + namemachine + "</h1>"+
+        msg = "<h1><?php echo sprintf(_T('Download from', 'xmppmaster')); ?>" + " " + namemachine + "</h1>"+
         "<p>"+
-        "Folders list:"+
+        "<?php echo sprintf(_T('Folders list', 'xmppmaster')); ?>" + " : " +
         "</p>";
         for (var i = 0; i < dir.length; i++) {
             msg = msg + "<p>" + dir[i] + "</p>";
         }
         msg = msg + "<br>";
         msg = msg + "<p>"+
-        "Files list:"+
+        "<?php echo sprintf(_T('Files list', 'xmppmaster')); ?>" + " : " +
         "</p>";
         for (var i = 0; i < file.length; i++) {
             msg = msg + "<p>" + file[i] + "</p>";
         }
          msg = msg + "<br>";
         msg = msg + "<p>"+
-        "To local folder :" +
+        "<?php echo sprintf(_T('To local folder', 'xmppmaster')); ?>" + " : "+
         "</p>";
         msg = msg + "<br>";
         msg = msg + "<p>"+
@@ -680,7 +752,7 @@ printf ('
                     buttons: [
                         {
                             id: "my-button",
-                            text: "Confirm",
+                            text: "<?php echo sprintf(_T('Confirm', 'xmppmaster')); ?>",
                             'class':'btnPrimary',
                             style : "color:#FFFFFF; background-color: #000000;",
                             click:function() {
@@ -692,7 +764,7 @@ printf ('
                                         "listfile"      : jQuery('#filelist').text(),
                                         "jidmachine"    : jid
                                         },function(data){
-                                            jQuery('#dialog-notification-download-file').attr('title', 'The list (folder & files) copy has been requested successfully');
+                                            jQuery('#dialog-notification-download-file').attr('title', '<?php echo sprintf(_T('The list (folder & files) copy has been requested successfully', 'xmppmaster')); ?>');
                                             confirmation_information(data);
                                         });
                                 jQuery( this ).dialog( "close" );
@@ -714,9 +786,21 @@ printf ('
 
     jQuery("#deletelistdirectory").click(function() {
         jQuery('#filedirectory').html("");
+        del_list("directory");
     });
 
     jQuery("#deletelistfile").click(function() {
         jQuery("#filelist").html("");
+        del_list("files");
+    });
+
+    jQuery("#poplistdirectory").click(function() {
+         pop_list("directory");
+         jQuery('#filedirectory').html(listfileusermachinejson['directory'].join(' ; '));
+    });
+
+    jQuery("#poplistfile").click(function() {
+        pop_list("files");
+        jQuery('#filelist').html(listfileusermachinejson['files'].join(' ; '));
     });
     </script>

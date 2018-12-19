@@ -25,6 +25,7 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 $options = array(
     "class" => "BackupPanel",
     "id" => "backup",
+    "refresh" => 3600,
     "title" => _T("Machines backup", "dashboard"),
     "enable" => true,
 );

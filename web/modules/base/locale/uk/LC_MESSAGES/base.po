@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-07 10:09+0100\n"
+"POT-Creation-Date: 2018-12-05 18:35+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -96,42 +96,55 @@ msgstr ""
 "Якщо ця фраза не змінилася, у програмі MMC не передбачено підтримки вашої "
 "програми для перегляду інтернету"
 
+#: modules/base/logview/logskiosk.php:136
+#: modules/base/logview/logsquickaction.php:140
+msgid "Quick Actions Logs"
+msgstr "Журнал швидких дій"
+
+#: modules/base/logview/logskiosk.php:283
 #: modules/base/logview/logsbackuppc.php:306
-#: modules/base/logview/index.php:424
+#: modules/base/logview/index.php:425
 #: modules/base/logview/logspackaging.php:303
 #: modules/base/logview/logsquickaction.php:295
 #: modules/base/logview/logsremotedesktop.php:275
 #: modules/base/logview/logsinventory.php:304
+#: modules/base/logview/logsdownload.php:280
 #: modules/base/logview/logsimaging.php:359
 msgid "date"
 msgstr "дата"
 
+#: modules/base/logview/logskiosk.php:284
 #: modules/base/logview/logsbackuppc.php:307
-#: modules/base/logview/index.php:425
+#: modules/base/logview/index.php:426
 #: modules/base/logview/logspackaging.php:304
 #: modules/base/logview/logsquickaction.php:296
 #: modules/base/logview/logsremotedesktop.php:276
 #: modules/base/logview/logsinventory.php:305
+#: modules/base/logview/logsdownload.php:281
 #: modules/base/logview/logsimaging.php:360
 msgid "user"
 msgstr "користувач"
 
+#: modules/base/logview/logskiosk.php:285
 #: modules/base/logview/logsbackuppc.php:308
-#: modules/base/logview/index.php:426
+#: modules/base/logview/index.php:427
 #: modules/base/logview/logspackaging.php:305
 #: modules/base/logview/logsquickaction.php:297
 #: modules/base/logview/logsremotedesktop.php:277
 #: modules/base/logview/logsinventory.php:306
+#: modules/base/logview/logsdownload.php:282
 #: modules/base/logview/logsimaging.php:361
 msgid "who"
 msgstr "хто"
 
+#: modules/base/logview/logskiosk.php:286
 #: modules/base/logview/logsbackuppc.php:309
-#: modules/base/logview/index.php:427
+#: modules/base/logview/index.php:428
 #: modules/base/logview/logspackaging.php:306
 #: modules/base/logview/logsquickaction.php:298
 #: modules/base/logview/logsremotedesktop.php:278
 #: modules/base/logview/logsinventory.php:307
+#: modules/base/logview/logsdownload.php:283
 #: modules/base/logview/logsimaging.php:362
 msgid "text"
 msgstr "текст"
@@ -185,10 +198,6 @@ msgstr "Назва сеансу"
 msgid "message"
 msgstr "повідомлення"
 
-#: modules/base/logview/logsquickaction.php:140
-msgid "Quick Actions Logs"
-msgstr "Журнал швидких дій"
-
 #: modules/base/logview/logsremotedesktop.php:140
 msgid "Remote Desktop Logs"
 msgstr "Журнал віддаленої стільниці"
@@ -196,6 +205,10 @@ msgstr "Журнал віддаленої стільниці"
 #: modules/base/logview/logsinventory.php:145
 msgid "Inventory Logs"
 msgstr "Журнал обліку"
+
+#: modules/base/logview/logsdownload.php:133
+msgid "Transfert File Logs"
+msgstr "Журнали передавання файлів"
 
 #: modules/base/logview/logsimaging.php:158
 msgid "Imaging Logs"
@@ -217,7 +230,7 @@ msgstr "Список"
 msgid "Add"
 msgstr "Додати"
 
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:278
+#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:286
 msgid "Group list"
 msgstr "Список груп"
 
@@ -242,7 +255,7 @@ msgstr "Учасники групи %s"
 msgid "All users"
 msgstr "Всі користувачі"
 
-#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:294
+#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:302
 msgid "Group members"
 msgstr "Члени групи"
 
@@ -307,7 +320,7 @@ msgstr "Ви вилучите групу"
 msgid "This group will be deleted even though it is not empty"
 msgstr "Цю групу буде вилучено, незважаючи на те, що вона не є порожньою"
 
-#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:273
+#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:281
 msgid "Groups"
 msgstr "Групи"
 
@@ -568,11 +581,11 @@ msgid "All computers"
 msgstr "Усі комп'ютери"
 
 #: modules/base/computers/localSidebar.php:8
-#: modules/base/infoPackage.inc.php:315
+#: modules/base/infoPackage.inc.php:323
 msgid "Add computer"
 msgstr "Додати комп'ютер"
 
-#: modules/base/computers/index.php:34 modules/base/infoPackage.inc.php:312
+#: modules/base/computers/index.php:34 modules/base/infoPackage.inc.php:320
 msgid "Computer list"
 msgstr "Список комп'ютерів"
 
@@ -669,185 +682,185 @@ msgstr "Журнал"
 msgid "logs of all the modules"
 msgstr "журнали усіх модулів"
 
-#: modules/base/infoPackage.inc.php:169
+#: modules/base/infoPackage.inc.php:177
 msgid "Status"
 msgstr "Стан"
 
-#: modules/base/infoPackage.inc.php:175
+#: modules/base/infoPackage.inc.php:183
 msgid "Default status page"
 msgstr "Типова сторінка стану"
 
-#: modules/base/infoPackage.inc.php:180
+#: modules/base/infoPackage.inc.php:188
 msgid "Support page"
 msgstr "Сторінка підтримки"
 
-#: modules/base/infoPackage.inc.php:191 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:199 modules/base/views/index.tpl.php:95
 #: modules/base/users/ajaxFilter.php:93
 msgid "Users"
 msgstr "Користувачі"
 
-#: modules/base/infoPackage.inc.php:196 modules/base/views/index.tpl.php:43
+#: modules/base/infoPackage.inc.php:204 modules/base/views/index.tpl.php:43
 #: modules/base/users/index.php:31
 msgid "User list"
 msgstr "Список користувачів"
 
-#: modules/base/infoPackage.inc.php:211
+#: modules/base/infoPackage.inc.php:219
 msgid "Add a user"
 msgstr "Додати користувача"
 
-#: modules/base/infoPackage.inc.php:216
+#: modules/base/infoPackage.inc.php:224
 msgid "Edit a user"
 msgstr "Змінити користувача"
 
-#: modules/base/infoPackage.inc.php:220
+#: modules/base/infoPackage.inc.php:228
 msgid "Edit ACL permissions on a user"
 msgstr "Змінити права доступу ACL для користувача"
 
-#: modules/base/infoPackage.inc.php:224
+#: modules/base/infoPackage.inc.php:232
 msgid "Logged user actions"
 msgstr "Записані до журналу дії користувача"
 
-#: modules/base/infoPackage.inc.php:229
+#: modules/base/infoPackage.inc.php:237
 msgid "Action details"
 msgstr "Параметри дії"
 
-#: modules/base/infoPackage.inc.php:239
+#: modules/base/infoPackage.inc.php:247
 msgid "Delete a user"
 msgstr "Вилучити користувача"
 
-#: modules/base/infoPackage.inc.php:244
+#: modules/base/infoPackage.inc.php:252
 msgid "Backup user files"
 msgstr "Резервне копіювання файлів користувача"
 
-#: modules/base/infoPackage.inc.php:249
+#: modules/base/infoPackage.inc.php:257
 msgid "Reset user password"
 msgstr "Скинути пароль користувача"
 
-#: modules/base/infoPackage.inc.php:256
+#: modules/base/infoPackage.inc.php:264
 msgid "Change password"
 msgstr "Змінити пароль"
 
-#: modules/base/infoPackage.inc.php:263
+#: modules/base/infoPackage.inc.php:271
 msgid "Get user photo"
 msgstr "Отримати фото користувача"
 
-#: modules/base/infoPackage.inc.php:281
+#: modules/base/infoPackage.inc.php:289
 msgid "Add a group"
 msgstr "Додати групу"
 
-#: modules/base/infoPackage.inc.php:284
+#: modules/base/infoPackage.inc.php:292
 msgid "Delete a group"
 msgstr "Вилучити групу"
 
-#: modules/base/infoPackage.inc.php:298
+#: modules/base/infoPackage.inc.php:306
 msgid "Edit a group"
 msgstr "Змінити групу"
 
-#: modules/base/infoPackage.inc.php:307
+#: modules/base/infoPackage.inc.php:315
 msgid "Computers"
 msgstr "Комп'ютери"
 
-#: modules/base/infoPackage.inc.php:321
+#: modules/base/infoPackage.inc.php:329
 msgid "Edit computer"
 msgstr "Змінити комп'ютер"
 
-#: modules/base/infoPackage.inc.php:325
+#: modules/base/infoPackage.inc.php:333
 msgid "Delete a computer"
 msgstr "Вилучити комп'ютер"
 
-#: modules/base/infoPackage.inc.php:330
+#: modules/base/infoPackage.inc.php:338
 msgid "Ajax part of computers list"
 msgstr "Частина Ajax списку комп'ютерів"
 
-#: modules/base/infoPackage.inc.php:366
+#: modules/base/infoPackage.inc.php:374
 msgid "Download inventory of one machine"
 msgstr "Отримати огляд однієї машини"
 
-#: modules/base/infoPackage.inc.php:379
+#: modules/base/infoPackage.inc.php:387
 msgid "User photo"
 msgstr "Фото користувача"
 
-#: modules/base/infoPackage.inc.php:380
+#: modules/base/infoPackage.inc.php:388
 msgid "User login"
 msgstr "Реєстраційне ім'я користувача"
 
-#: modules/base/infoPackage.inc.php:381
+#: modules/base/infoPackage.inc.php:389
 msgid "User name"
 msgstr "Ім'я користувача"
 
-#: modules/base/infoPackage.inc.php:382
+#: modules/base/infoPackage.inc.php:390
 msgid "User firstname"
 msgstr "Ім'я користувача"
 
-#: modules/base/infoPackage.inc.php:383
+#: modules/base/infoPackage.inc.php:391
 msgid "User home directory"
 msgstr "Домашній каталог користувача"
 
-#: modules/base/infoPackage.inc.php:384
+#: modules/base/infoPackage.inc.php:392
 #: modules/base/includes/publicFunc.php:508
 msgid "Login shell"
 msgstr "Оболонка входу"
 
-#: modules/base/infoPackage.inc.php:385
+#: modules/base/infoPackage.inc.php:393
 msgid "User title"
 msgstr "Звертання до користувача"
 
-#: modules/base/infoPackage.inc.php:386
+#: modules/base/infoPackage.inc.php:394
 msgid "Mail address"
 msgstr "Поштова адреса"
 
-#: modules/base/infoPackage.inc.php:387
+#: modules/base/infoPackage.inc.php:395
 #: modules/base/includes/publicFunc.php:382
 #: modules/base/includes/publicFunc.php:385
 msgid "Telephone number"
 msgstr "Номер телефону"
 
-#: modules/base/infoPackage.inc.php:388
+#: modules/base/infoPackage.inc.php:396
 msgid "Mobile phone number"
 msgstr "Номер мобільного телефону"
 
-#: modules/base/infoPackage.inc.php:389
+#: modules/base/infoPackage.inc.php:397
 #: modules/base/includes/publicFunc.php:397
 msgid "Fax number"
 msgstr "Номер факсу"
 
-#: modules/base/infoPackage.inc.php:390
+#: modules/base/infoPackage.inc.php:398
 #: modules/base/includes/publicFunc.php:402
 msgid "Home phone number"
 msgstr "Номер домашнього телефону"
 
-#: modules/base/infoPackage.inc.php:391
+#: modules/base/infoPackage.inc.php:399
 #: modules/base/includes/publicFunc.php:453
 msgid "Primary group"
 msgstr "Основна група"
 
-#: modules/base/infoPackage.inc.php:392
+#: modules/base/infoPackage.inc.php:400
 #: modules/base/includes/publicFunc.php:482
 msgid "Secondary groups"
 msgstr "Вторинні групи"
 
-#: modules/base/infoPackage.inc.php:393
+#: modules/base/infoPackage.inc.php:401
 #: modules/base/includes/publicFunc.php:513
 msgid "Common name"
 msgstr "Звичайне ім'я"
 
-#: modules/base/infoPackage.inc.php:394
+#: modules/base/infoPackage.inc.php:402
 #: modules/base/includes/publicFunc.php:519
 msgid "Preferred name to be used"
 msgstr "Бажане ім'я"
 
-#: modules/base/infoPackage.inc.php:395
+#: modules/base/infoPackage.inc.php:403
 #: modules/base/includes/publicFunc.php:85
 #: modules/base/includes/publicFunc.php:345 index.php:216
 msgid "Password"
 msgstr "Пароль"
 
-#: modules/base/infoPackage.inc.php:396 modules/base/users/passwd.php:68
+#: modules/base/infoPackage.inc.php:404 modules/base/users/passwd.php:68
 #: modules/base/users/resetpasswd.php:53
 msgid "Confirm your password"
 msgstr "Підтвердьте ваш пароль"
 
-#: modules/base/infoPackage.inc.php:397
+#: modules/base/infoPackage.inc.php:405
 msgid "Enable/Disable user account"
 msgstr "Увімкнути або вимкнути обліковий запис користувача"
 
@@ -1167,7 +1180,7 @@ msgstr "Облік GLPI"
 #: modules/base/includes/computers_list.inc.php:102
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:71
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:76
 msgid "detaildeploy"
 msgstr "докладне розгортання"
 
@@ -1225,19 +1238,19 @@ msgstr "Показувати профіль"
 msgid "Quick action"
 msgstr "Швидка дія"
 
-#: modules/base/includes/computers_list.inc.php:357
+#: modules/base/includes/computers_list.inc.php:345
 msgid "Computers list"
 msgstr "Список комп'ютерів"
 
-#: modules/base/includes/computers_list.inc.php:374
+#: modules/base/includes/computers_list.inc.php:362
 msgid "Backup status"
 msgstr "Стан резервного копіювання"
 
-#: modules/base/includes/computers_list.inc.php:414
+#: modules/base/includes/computers_list.inc.php:402
 msgid "Delete computer"
 msgstr "Вилучити комп'ютер"
 
-#: modules/base/includes/computers_list.inc.php:417
+#: modules/base/includes/computers_list.inc.php:405
 msgid "Remove machine from group"
 msgstr "Вилучити машину з групи"
 
@@ -2069,11 +2082,19 @@ msgstr ""
 "                            <li>ваш сервер Samba може бути некоректно налаштовано</li>\n"
 "                        </ul>"
 
-#: includes/ErrorHandling.php:77
+#: includes/ErrorHandling.php:78
+msgid "Copied"
+msgstr "Скопійовано"
+
+#: includes/ErrorHandling.php:87
 msgid "Show complete trackback"
 msgstr "Показати зворотне трасування повністю"
 
-#: includes/ErrorHandling.php:78
+#: includes/ErrorHandling.php:88
+msgid "Copy to clipboard"
+msgstr "Скопіювати до буфера"
+
+#: includes/ErrorHandling.php:89
 msgid "Complete Traceback"
 msgstr "Повне зворотне трасування"
 

@@ -24,7 +24,7 @@ include_once("modules/dashboard/includes/panel.class.php");
 $options = array(
     "class" => "SpacePanel",
     "id" => "space",
-    "refresh" => 960,
+    "refresh" => 3600,
     "title" => _T("Disk usage", "dashboard"),
 );
 
