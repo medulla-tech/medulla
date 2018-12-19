@@ -1194,7 +1194,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_group_stop_deploy(self, session, grpid, cmdid):
         """
-            this function return the machines list for 1 group id
+            this function return the machines list for 1 group id and 1 command id
         """
         relayserver = session.query(Deploy).filter(and_( Deploy.group_uuid == grpid, Deploy.command == cmdid))
         relayserver = relayserver.all()
