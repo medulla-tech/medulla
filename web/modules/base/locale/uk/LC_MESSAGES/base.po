@@ -208,7 +208,7 @@ msgstr "Журнал обліку"
 
 #: modules/base/logview/logsdownload.php:133
 msgid "Transfert File Logs"
-msgstr ""
+msgstr "Журнали передавання файлів"
 
 #: modules/base/logview/logsimaging.php:158
 msgid "Imaging Logs"
@@ -2084,7 +2084,7 @@ msgstr ""
 
 #: includes/ErrorHandling.php:78
 msgid "Copied"
-msgstr ""
+msgstr "Скопійовано"
 
 #: includes/ErrorHandling.php:87
 msgid "Show complete trackback"
