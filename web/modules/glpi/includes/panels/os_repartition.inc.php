@@ -116,12 +116,12 @@ class os_repartitionPanel extends Panel {
             jQuery.each(selectors, function(i, element){
               var old = jQuery(element).text();
 
-              var icon = r.image("img/machines/icn_machinesList.gif", 175, margin+1.3*50+17*i, 18,10);
+              /*var icon = r.image("img/machines/icn_machinesList.gif", 175, margin+1.3*50+17*i, 18,10);
               jQuery(icon[0]).attr("class","pointer")
 
               jQuery(icon[0]).on("click", function(){
                 window.location.href = links[i];
-              });
+              });*/
               var new_legend = "<a href='"+links[i]+"'>"+old+"</a>";
 
               jQuery(element).html(new_legend);
