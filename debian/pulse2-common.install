@@ -10,4 +10,5 @@ usr/sbin/restart-pulse-services
 usr/sbin/pulse2-debug
 usr/sbin/pulse2-dbupdate
 usr/sbin/pulse2-collect-info
+usr/sbin/pulse-packageparser.py
 var/lib/pulse2/file-transfer

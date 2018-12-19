@@ -163,6 +163,8 @@ class PackageParser:
         else:
             for dependency in dependencies_list:
                 if not dependency in uuids_list:
+                    self.logger.error("The dependency %s for the package %s is not existing",
+                                      dependency, package.uuid)
                     package.to_summary("error", "The dependency {0} is not existing"
                                        .format(dependency))
                     flag = False
@@ -203,7 +205,9 @@ class PackageParser:
             # At this point of the program the packages list is generated
             for package in self.packages_list:
                 if package.test_files_list():
+                    self.logger.info("The main files of the package %s are present", package.uuid)
                     if package.test_json_files():
+                        self.logger.info("The files of the package %s seems to be ok", package.uuid)
                         self.test_dependencies(package)
 
 if __name__ == "__main__":
@@ -211,4 +215,4 @@ if __name__ == "__main__":
     checker.run()
     # To use the package report into script.
     # All the information are sent to /var/log/mmc/package/packageparser.log
-    print(checker.to_summary())
+    print("A report is generated into the /var/log/mmc/packageparser.log file.")
