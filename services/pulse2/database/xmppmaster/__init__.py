@@ -1053,28 +1053,29 @@ class XmppMasterDatabase(DatabaseHelper):
             obj['rebootrequired'] = result.rebootrequired
             obj['shutdownrequired'] = result.shutdownrequired
             obj['limit_rate_ko'] = result.bandwidth
-            try:
-                params_json = json.loads(result.params_json)
+            if result.params_json is not None:
+                try:
+                    params_json = json.loads(result.params_json)
+                    if 'spooling' in params_json:
+                        obj['spooling'] = params_json['spooling']
+                except Exception, e:
+                    logging.getLogger().error("[the avanced parameters from msc] : "+str(e))
 
-                if 'spooling' in params_json:
-                    obj['spooling'] = params_json['spooling']
-            except Exception, e:
-                logging.getLogger().error(str(e)+" [the avanced parameters from msc ]")
-
-            try:
-                params = str(result.parameters_deploy)
-                if params == '':
-                    return obj
-                if not params.startswith('{'):
-                    params = '{' + params
-                if not params.endswith('}'):
-                    params = params + '}'
-                obj['paramdeploy'] = json.loads(params)
-            except Exception, e:
-                logging.getLogger().error(str(e)+" [the parameters must be declared in a json dictionary]")
+            if result.parameters_deploy is not None:
+                try:
+                    params = str(result.parameters_deploy)
+                    if params == '':
+                        return obj
+                    if not params.startswith('{'):
+                        params = '{' + params
+                    if not params.endswith('}'):
+                        params = params + '}'
+                    obj['paramdeploy'] = json.loads(params)
+                except Exception, e:
+                    logging.getLogger().error("[the avanced parameters must be declared in a json dictionary] : "+ str(e))
             return obj
         except Exception, e:
-            logging.getLogger().error(str(e) + " [ obj commandid missing]")
+            logging.getLogger().error("[ obj commandid missing] : " + str(e))
             return {}
 
     @DatabaseHelper._sessionm
@@ -1191,11 +1192,11 @@ class XmppMasterDatabase(DatabaseHelper):
         return obj
 
     @DatabaseHelper._sessionm
-    def get_group_stop_deploy(self, session, grpid):
+    def get_group_stop_deploy(self, session, grpid, cmdid):
         """
-            this function return the machines list for 1 group id
+            this function return the machines list for 1 group id and 1 command id
         """
-        relayserver = session.query(Deploy).filter(Deploy.group_uuid == grpid)
+        relayserver = session.query(Deploy).filter(and_( Deploy.group_uuid == grpid, Deploy.command == cmdid))
         relayserver = relayserver.all()
         session.commit()
         session.flush()
@@ -1308,7 +1309,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self,
+    def addlogincommand(self, 
                         session,
                         login,
                         commandid,
@@ -2715,20 +2716,26 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getPresenceuuid(self, session, uuid):
-        sql = """SELECT
-                    COUNT(*) AS 'nb'
-                FROM
-                    `xmppmaster`.`machines`
-                WHERE
-                    `xmppmaster`.`machines`.`uuid_inventorymachine` = '%s';"""%(uuid)
-        #logging.getLogger().debug("sql :%s"%(sql))
-        presence = session.execute(sql)
+        machinespresente = session.query(Machines.uuid_inventorymachine).filter( Machines.uuid_inventorymachine == uuid ).first()
         session.commit()
         session.flush()
-        ret=[m[0] for m in presence]
-        if ret[0] == 0 :
-            return False
-        return True
+        if machinespresente :
+            return True
+        return False
+
+    @DatabaseHelper._sessionm
+    def getPresenceuuids(self, session, uuids):
+        if isinstance(uuids, basestring):
+            uuids=[uuids]
+        result = { }
+        for uuidmachine in uuids:
+            result[uuidmachine] = False
+        machinespresente = session.query(Machines.uuid_inventorymachine).filter(Machines.uuid_inventorymachine.in_(uuids)).all()
+        session.commit()
+        session.flush()
+        for linemachine in machinespresente:
+            result[linemachine.uuid_inventorymachine] = True
+        return result
 
     #topology
     @DatabaseHelper._sessionm
@@ -2765,16 +2772,8 @@ class XmppMasterDatabase(DatabaseHelper):
         listmachinebyRS = [x for x in result]
         resulttopologie = {}
         for i in listmachinebyRS:
-            logging.getLogger().info(i)
             listmachines = i[1].split(',')
-
-            # For each element split it and just save the important part
-            count = 0
-            while count < len(listmachines):
-                listmachines[count] = listmachines[count].split("@")[0]
-                count += 1
-
-            resulttopologie[i[0].split('/')[1]] = listmachines
+            resulttopologie[i[0]] = listmachines
         self.write_topologyfile(resulttopologie)
         return [ resulttopologie]
 

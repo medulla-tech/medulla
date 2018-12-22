@@ -334,7 +334,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                     }" />On error go to step
                 </td>
                 <td>
-                    <input type="text" value="END_ERROR" disabled name="error"  />
+                    <input type="text" value="END_ERROR" enabled name="error"  />
                 </td></td><td></td><td></td>';
             }
             ?>

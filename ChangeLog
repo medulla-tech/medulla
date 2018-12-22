@@ -1,3 +1,19 @@
+Pulse 2 4.5.1
+=============
+* [FEATURE] Expert file download allows download of several files and folders
+* [FEATURE] File download shows a tree view of the remote filesystem
+* [FEATURE] Update the OS widget for the dashboard
+* [FEATURE] Architecture and OS version can be used for creating dynamic groups
+* [BUGFIX]  Make the remote control icons clickable when there is more than one access method
+* [BUGFIX]  Fix user used for guacamole ssh connections
+* [BUGFIX]  Fix user used for backup commands
+* [BUGFIX]  Improve the function that detects the presence of clients
+* [BUGFIX]  In expert mode the default action if a package step returns an error is to go to END_ERROR
+* [BUGFIX]  Check package format before doing a deployment
+* [BUGFIX]  Do not log machines info and plugins by default
+* [BUGFIX]  Fix abort of deployments on groups in cases where the machines are offline
+
+
 Pulse 2 4.5
 ===========
 * [FEATURE] Add glpi 9.2 support

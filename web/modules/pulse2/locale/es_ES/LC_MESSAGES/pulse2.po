@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 09:37+0100\n"
+"POT-Creation-Date: 2018-12-05 18:44+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/es_ES/)\n"
@@ -50,49 +50,49 @@ msgid "Product Updates installation (ajax)"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:59
-#: modules/pulse2/includes/menu_action.php:56
+#: modules/pulse2/includes/menu_action.php:57
 msgid "Inventory"
 msgstr "Inventario"
 
 #: modules/pulse2/includes/menu_actionaudit.php:61
-#: modules/pulse2/includes/menu_action.php:58
+#: modules/pulse2/includes/menu_action.php:59
 msgid "Backup status"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:62
 #: modules/pulse2/includes/menu_group_action.php:78
-#: modules/pulse2/includes/menu_action.php:60
+#: modules/pulse2/includes/menu_action.php:61
 msgid "Imaging management"
 msgstr "Gestión de imagenes"
 
 #: modules/pulse2/includes/menu_actionaudit.php:63
-#: modules/pulse2/includes/menu_action.php:73
+#: modules/pulse2/includes/menu_action.php:74
 msgid "Quick action"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:66
 #: modules/pulse2/includes/menu_actionaudit.php:71
-#: modules/pulse2/includes/menu_action.php:80
-#: modules/pulse2/includes/menu_action.php:84
-#: modules/pulse2/includes/menu_action.php:94
+#: modules/pulse2/includes/menu_action.php:81
+#: modules/pulse2/includes/menu_action.php:85
+#: modules/pulse2/includes/menu_action.php:95
 msgid "Software deployment"
 msgstr "Despliegue de software"
 
 #: modules/pulse2/includes/menu_actionaudit.php:70
-#: modules/pulse2/includes/menu_action.php:64
-#: modules/pulse2/includes/menu_action.php:67
+#: modules/pulse2/includes/menu_action.php:65
+#: modules/pulse2/includes/menu_action.php:68
 msgid "Remote control"
 msgstr "Control remoto"
 
 #: modules/pulse2/includes/menu_actionaudit.php:73
-#: modules/pulse2/includes/menu_action.php:72
+#: modules/pulse2/includes/menu_action.php:73
 msgid "xmppconsole"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:74
 #: modules/pulse2/includes/menu_actionaudit.php:77
-#: modules/pulse2/includes/menu_action.php:86
-#: modules/pulse2/includes/menu_action.php:88
+#: modules/pulse2/includes/menu_action.php:87
+#: modules/pulse2/includes/menu_action.php:89
 msgid "files browsing"
 msgstr ""
 
@@ -122,9 +122,9 @@ msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:56
 #: modules/pulse2/includes/menu_group_action.php:73
-#: modules/pulse2/includes/menu_action.php:79
-#: modules/pulse2/includes/menu_action.php:83
-#: modules/pulse2/includes/menu_action.php:93
+#: modules/pulse2/includes/menu_action.php:80
+#: modules/pulse2/includes/menu_action.php:84
+#: modules/pulse2/includes/menu_action.php:94
 msgid "Read log"
 msgstr "Leer bitácora"
 
@@ -172,7 +172,7 @@ msgstr ""
 msgid "All my entities"
 msgstr ""
 
-#: modules/pulse2/includes/menu_action.php:57
+#: modules/pulse2/includes/menu_action.php:58
 msgid "extTicket issue"
 msgstr ""
 
