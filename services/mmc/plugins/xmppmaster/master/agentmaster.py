@@ -128,7 +128,7 @@ def callvncchangepermsbymaster(to, askpermission):
 # #################### call synchronous iq##########################
 
 
-def callremotefile(jidmachine, currentdir="", timeout=60):
+def callremotefile(jidmachine, currentdir="", timeout=30):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotefile", "data": currentdir}, timeout)
 
 
