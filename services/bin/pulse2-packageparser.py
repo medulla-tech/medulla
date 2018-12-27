@@ -46,6 +46,7 @@ class Package:
         self.info = {}
         self.metaparameter = {}
         self.sequence = {}
+        self.name = ""
 
     def test_files_list(self):
         """The files list of each package is tested by this method.
@@ -91,6 +92,7 @@ class Package:
                         if file == "xmppdeploy.json":
                             self.info = json_content['info']
                             self.metaparameter = json_content['metaparameter']
+                            self.name = self.info['name']
 
                             # self.sequence = json_content[self.metaparameter['os'][0]]
 
@@ -164,8 +166,8 @@ class PackageParser:
         else:
             for dependency in dependencies_list:
                 if not dependency in uuids_list:
-                    self.logger.error("The dependency %s for the package %s is not existing",
-                                      dependency, package.uuid)
+                    self.logger.error("The dependency %s for the package %s (%s) is not existing",
+                                      dependency, package.uuid, package.name)
                     package.to_summary("error", "The dependency {0} is not existing"
                                        .format(dependency))
                     flag = False
@@ -208,7 +210,7 @@ class PackageParser:
                 if package.test_files_list():
                     self.logger.info("The main files of the package %s are present", package.uuid)
                     if package.test_json_files():
-                        self.logger.info("The files of the package %s seems to be ok", package.uuid)
+                        self.logger.info("The files of the package %s (%s) seems to be ok", package.uuid, package.name)
                         self.test_dependencies(package)
 
 if __name__ == "__main__":
