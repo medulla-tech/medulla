@@ -99,7 +99,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             separator = "\\"
         listdirstr=[ ]
         for t in listdirectory:
-            if t.lower() != "c:\\\\":
+            if t.lower() != "c:\\\\" and t.lower() != "d:\\\\":
                 listdirstr.append ("%s%s"%(t, separator))
             else:
                 listdirstr.append (t)
