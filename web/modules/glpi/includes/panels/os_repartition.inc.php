@@ -27,6 +27,7 @@ require_once("modules/base/includes/computers.inc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 ?>
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3pie@0.2.1/d3pie/d3pie.min.js"></script>
 
@@ -104,7 +105,7 @@ jQuery(function(){
   		"pieDistance": 10
 		},
     "inner": {
-	    "format": "none",
+     "format": "none",
 		},
   },
   "tooltips": {
@@ -112,24 +113,53 @@ jQuery(function(){
 		"type": "placeholder",
 		"string": "{label}: {value}, {percentage}%"
 	},
+  "effects": {
+		"load": {
+			"effect": "none"
+		},
+		"pullOutSegmentOnClick": {
+			"effect": "none",
+			"speed": 400,
+			"size": 8
+		}
+	},
+  misc: {
+    canvasPadding: {
+			top: 0,
+			right: 0,
+			bottom: 0,
+			left: -5
+		},
+    pieCenterOffset: {
+			x: 0,
+			y: 0
+		},
+  },
 	callbacks: {
 		onClickSegment: function(a) {
 			window.location.href =a.data.href;
-		}
+		},
+    onMouseoverSegment: function(a) {
+      jQuery("."+a.segment.id).css("font-size", "2em");
+    },
+    onMouseoutSegment: function(a){
+      jQuery("."+a.segment.id).css("font-size", "1em");
+    },
+    onload: function(a){
+
+      sections = d3.select("#pieChart").select("svg").select("g").selectAll("g")._groups[0];
+
+      sections.forEach(function(element){
+        var section = element.children[0];
+        jQuery("#os-list").append("<li class="+section.attributes['id'].nodeValue+" data-index="+section.attributes[3].nodeValue+" style='color:"+section.attributes.fill.nodeValue+";'><span style='color:black'><a href='"+section.__data__.href+"'>"+section.__data__.label +" ("+section.__data__.value+")"+"</a></span></li>");
+      })
+    }
 	}
 });
-
-for(var i =0; i< labels.size(); i++)
-{
-  jQuery("#os-list").append("<li>"+labels[i]+" <a href='"+links[i]+"'> <img title='Créer un groupe' style='height: 10px; padding-left: 3px;' src='img/machines/icn_machinesList.gif'></a></li>")
-}
-
-
-        })
+})
         </script>
 SPACE;
     }
-
 }
 
 ?>
