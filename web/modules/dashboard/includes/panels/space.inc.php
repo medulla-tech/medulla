@@ -72,12 +72,12 @@ jQuery(function(){
   		"sortOrder": "label-desc",
   		"content": [
   			{
-  				"label": "Used",
+  				"label": "$used",
   				"value": parseFloat(datas.usage.used.split('GB')[0]),
   				"color": "#c55252"
   			},
   			{
-  				"label": "Free",
+  				"label": "$free",
   				"value":  parseFloat(datas.usage.free.split('GB')[0]),
   				"color": "#509a4e"
   			}
