@@ -2,6 +2,7 @@
 
 /*
  * (c) 2012 Mandriva, http://www.mandriva.com
+ * (c) 2018 Siveo, http://www.siveo.net
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -20,8 +21,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 include_once("modules/dashboard/includes/panel.class.php");
+?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3pie@0.2.1/d3pie/d3pie.min.js"></script>
 
-$options = array(
+<?php $options = array(
     "class" => "SpacePanel",
     "id" => "space",
     "refresh" => 3600,
@@ -37,66 +41,147 @@ class SpacePanel extends Panel {
         $free = _T("free");
 
         echo <<< SPACE
-        <div id="space-graphs"></div>
-        <script type="text/javascript">
-        var partitions = $json,
-            r = Raphael("space-graphs"),
-            radius = 40,
-            margin = 30,
-            x = 50,
-            y = 60;
-        for (var i=0; i < partitions.length; i++) {
-            var partition = partitions[i],
-                data = [],
-                legend = [],
-                colors = [],
-                title = partition.mountpoint;
-            if (partition.usage.percent < 1)
-                partition.usage.percent = 1;
-            var free = 100 - Math.round(partition.usage.percent),
-                used = Math.round(partition.usage.percent);
-            data.push(used);
-            legend.push(partition.usage.used + " $used");
-            colors.push("000-#ef2929-#A31A1A");
-            if (free > 0) {
-                data.push(free);
-                legend.push(partition.usage.free + " $free");
-                colors.push("000-#73d216-#42780D");
-            }
-            if (partition.device.length < 30)
-                title += " (" + partition.device + ") ";
-            r.text(5, y - radius - 10, title)
-             .attr({ font: "12px sans-serif" })
-             .attr({ "text-anchor": "start" });
-            data = getPercentageData(data);
-            r.piechart(x, y + 5, radius, data,
-                       {legend: legend,
-                        legendpos: "east",
-                        colors: colors})
-             .hover(function () {
-                this.sector.stop();
-                this.sector.animate({ transform: 's1.1 1.1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
+        <div id="spaceChart"></div>
+        <script>
+jQuery(function(){
 
-                if (this.label) {
-                    this.label[0].stop();
-                    this.label[0].attr({ r: 7.5 });
-                    this.label[1].attr({ "font-weight": 800 });
-                }
-             }, function () {
-                this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
+  function donut(datas, index){
+    var pie = new d3pie("spaceChart"+index, {
+  	"header": {
+  		"title": {
+  			"text": datas.mountpoint,
+  			"fontSize": 11,
+  			"font": "Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif"
+  		},
+  		"subtitle": {
+  			"text": datas.usage.total,
+  			"color": "#999999",
+  			"fontSize": 11,
+  			"font": "Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif"
+  		},
+  		"location": "pie-center",
+  		"titleSubtitlePadding": 1
+  	},
+  	"size": {
+  		"canvasHeight": 200,
+  		"canvasWidth": 200,
+  		"pieInnerRadius": "65%",
+  		"pieOuterRadius": "60%"
+  	},
+  	"data": {
+  		"sortOrder": "label-desc",
+  		"content": [
+  			{
+  				"label": "Used",
+  				"value": parseFloat(datas.usage.used.split('GB')[0]),
+  				"color": "#c55252"
+  			},
+  			{
+  				"label": "Free",
+  				"value":  parseFloat(datas.usage.free.split('GB')[0]),
+  				"color": "#509a4e"
+  			}
+  		]
+  	},
+  	"labels": {
+  		"outer": {
+  			"pieDistance": 5
+  		},
+  		"inner": {
+  			"format": "value"
+  		},
+  		"mainLabel": {
+  			"fontSize": 11,
+        "font": "Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif"
+  		},
+  		"percentage": {
+  			"color": "#999999",
+  			"fontSize": 11,
+        "font": "Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif",
+  			"decimalPlaces": 1
+  		},
+  		"value": {
+  			"color": "#000000",
+  			"fontSize": 11,
+        "font":"Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif"
+  		},
+  		"lines": {
+  			"enabled": true,
+  			"style": "straight",
+  			"color": "#777777"
+  		},
+  		"truncation": {
+  			"enabled": true
+  		}
+  	},
+  	"tooltips": {
+  		"enabled": true,
+  		"type": "placeholder",
+  		"string": "{label}: {value} Gb, {percentage}%",
+  		"styles": {
+  			"fadeInSpeed": 255,
+  			"borderRadius": 9,
+  			"padding": 8,
+        "font": "Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif",
+        "fontSize": 11
+  		}
+  	},
+  	"effects": {
+  		"pullOutSegmentOnClick": {
+  			"effect": "linear",
+  			"speed": 400,
+  			"size": 8
+  		}
+  	},
+  	"misc": {
+  		"colors": {
+  			"segmentStroke": "#ffffff"
+  		},
+  		"canvasPadding": {
+  			"top": 0,
+  			"right": 0,
+  			"bottom": 0,
+  			"left": 0
+  		},
+      "pieCenterOffset": {
+			"y": -25
+		}
+  	}
+  });
 
-                if (this.label) {
-                    this.label[0].animate({ r: 5 }, 500, "bounce");
-                    this.label[1].attr({ "font-weight": 400 });
-                }
-             });
-            y += (radius * 2) + margin + 5;
-        }
-        r.setSize(200, partitions.length * (radius * 2 + margin) + 10);
-        </script>
+    return pie;
+  }
+
+  var dataset = $json;
+
+  d3.select("#spaceChart")
+    .selectAll("div")
+    .data(dataset)
+    .enter()
+    .append("div")
+    .attr('id', function(d, i){
+      return "spaceChart"+i;
+    })
+    .attr('html',function(d, i){
+      var tmp = donut(d,i);
+      return jQuery(tmp.element).html();
+    });
+
+})
+
+</script>
 SPACE;
     }
 
 }
 
 ?>
+
+<style>
+  #spaceChart svg{
+    /*The width of the piechart is ajusted after its generation because the toolstips are truncated*/
+    width:350px;
+    height:150px;
+    padding-top:-50px;
+  }
+</style>
