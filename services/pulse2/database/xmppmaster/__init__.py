@@ -1309,7 +1309,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self, 
+    def addlogincommand(self,
                         session,
                         login,
                         commandid,
