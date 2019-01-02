@@ -1309,7 +1309,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self, 
+    def addlogincommand(self,
                         session,
                         login,
                         commandid,
@@ -2255,7 +2255,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
-            limit 1;"""%(rule, username, enabled, classutilMachine)
+            limit 1;"""%(rule, userou, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
             from `relayserver`
