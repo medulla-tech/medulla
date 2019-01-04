@@ -679,7 +679,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 if 'owner' in self.config.summary or \
                    'owner_firstname' in self.config.summary or \
                    'owner_realname' in self.config.summary:
-                    join_query = join_query.outerjoin(self.user)
+                    join_query = join_query.outerjoin(self.user, self.machine.c.users_id == self.user.c.id)
                 try:
                     if regs[0]:
                         join_query = join_query.outerjoin(self.regcontents)
