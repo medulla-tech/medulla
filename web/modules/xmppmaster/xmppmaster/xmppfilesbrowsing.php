@@ -488,9 +488,7 @@ printf ('
             .on("changed.jstree", function (e, data) {
                 if(data.selected.length) {
                     var pathlinux = data.instance.get_path(data.node, '/');
-
-                    var rs = jQuery('#rootfilesystempath').val();
-                    remote(pathlinux.substr(rs.length));
+                    remote(pathlinux);
                 }
             })
             .jstree({
@@ -504,7 +502,6 @@ printf ('
             ;
             timetmp = user + "-" + datetimenow();
             jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" );
-
             jQuery('#directoryremote').on('ready.jstree', function() {
                 jQuery('#directoryremote').jstree("open_all");
             });
