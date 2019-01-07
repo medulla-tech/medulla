@@ -28,8 +28,7 @@ require_once("modules/glpi/includes/xmlrpc.php");
 ?>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3pie@0.2.1/d3pie/d3pie.min.js"></script>
+<script src="jsframework/d3-shape/dist/d3-shape.min.js"></script>
 
 <?php
 $options = array(
