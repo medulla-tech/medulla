@@ -502,7 +502,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-packageparser.py
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
-%_sysconfdir/httpd/conf.d/pulse.conf
+config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
 %_var/lib/pulse2/file-transfer
 #FIXME: Move on the correct package later
 # Does not belong to here, lefover file.
