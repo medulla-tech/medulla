@@ -430,8 +430,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def scheduledeploy(self):
         listobjsupp = []
         #search deploy to rumming
-        resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp()
-
+        resultdeploymachine, wolupdatemachine = MscDatabase().deployxmpp(800)
         for uuiddeploy in self.machineWakeOnLan:
             # not SEND WOL on presense machine
             if XmppMasterDatabase().getPresenceuuid(uuiddeploy):
@@ -441,31 +440,21 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 del self.machineWakeOnLan[uuiddeploy]
             except Exception:
                 pass
-        for deploy in resultdeploymachine:
+        for deployobject in resultdeploymachine:
             # creation deployment
-            UUID = str(deploy.Target.target_uuid)
-            deployobject = {'pakkageid': str(deploy.Commands.package_id),
-                            'commandid':  deploy.Commands.id,
-                            'mac': deploy.Target.target_macaddr,
-                            'count': 0,
-                            'cycle': 0,
-                            'login': deploy.Commands.creator,
-                            'start_date': deploy.Commands.start_date,
-                            'end_date': deploy.Commands.end_date,
-                            'title': deploy.Commands.title,
-                            'UUID': deploy.Target.target_uuid,
-                            'GUID': deploy.Target.id_group}
-
+            UUID = deployobject['UUID']
             if XmppMasterDatabase().getPresenceuuid(UUID):
                 # If a machine is present, add deployment in deploy list to manage.
                 try:
                     self.machineDeploy[UUID].append(deployobject)
                 except:
+                    #creation list deployement
                     self.machineDeploy[UUID] = []
                     self.machineDeploy[UUID].append(deployobject)
 
         for deploy in wolupdatemachine:
-            UUID = str(deploy.Target.target_uuid)
+            UUID = deploy['UUID']
+            #UUID = str(deploy.Target.target_uuid)
 
             if UUID in self.machineWakeOnLan:
                 if 'count' in self.machineWakeOnLan[UUID]:
@@ -482,7 +471,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 self.machineWakeOnLan[UUID]['count'] = 0
                 self.machineWakeOnLan[UUID]['commanid'] = deploy.Commands.id
                 self.machineWakeOnLan[UUID]['mac'] = deploy.Target.target_macaddr
-        
+
         for uuidmachine in self.machineWakeOnLan:
             # TODO : Replace print by log
             #print self.machineWakeOnLan[uuidmachine]['count']
