@@ -332,6 +332,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.schedule('schedule garbage', self.TIMESCHEDULERGARBAGE, self.garbagedeploy, repeat=True)
         self.schedule('schedulerfunction', 60, self.schedulerfunction, repeat=True)
 
+        ## function scheduler use to chase memory leaks
+        #self.timecheck = 15
+        ## function self.leakmemory in function class
+        #self.schedule('event leakmemory',self.timecheck, self.__leakmemory, repeat=True)
+
+
         # Decrement session time
         self.schedule('manage session', 15, self.handlemanagesession, repeat=True)
 
@@ -431,6 +437,46 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def garbagedeploy(self):
         MscDatabase().xmppstage_statecurrent_xmpp()
         XmppMasterDatabase().update_status_deploy_end()
+
+    #def __leakmemory(self):
+        #"""
+            #function scheduler use to chase memory leaks
+        #"""
+        #from time import strftime
+        #import gc
+        ##install  module memory_profiler
+        #from memory_profiler import *
+        ## schedule deployement
+        #if not hasattr(self, 'countseconde'):
+            #self.mesuref = 0.0
+            #self.countseconde = 0
+            #self.mesure = ""
+            #self.mesuref = 0.0
+            #self.name_file_log_leak_memory = "/tmp/data.txt"
+        
+        #self.countseconde += self.timecheck
+        #mem_usage = memory_usage(-1, interval=1, timeout=1)
+        #mesure = str(mem_usage[0]).replace(".",",")
+        #if mesure != self.mesure:
+            #print "__________leak memory_________"
+            #taillepris = (mem_usage[0] - self.mesuref)
+            #self.mesuref = mem_usage[0]
+            #fichier = open(self.name_file_log_leak_memory, "a")
+            #datetimewrite = strftime("%H:%M:%S")
+            #stem = "\n%s count %s\ntime %ss MT %.2f MiB delta [ %s Mo | %s Ko | %s Oc | %s Oc/s]\n"%( datetimewrite,
+                                                                                                    #gc.get_count(),
+                                                                                                    #self.countseconde,
+                                                                                                    #mem_usage[0],
+                                                                                                    #round(taillepris,2),
+                                                                                                    #round(taillepris *1024,2),
+                                                                                                    #round(taillepris *1024 * 1024,2),
+                                                                                                    #round((taillepris *1024 * 1024)/self.countseconde,2))
+            #fichier.write(stem)
+            #self.countseconde = 0
+            #print stem
+            #fichier.close()
+            #self.mesure = mesure
+            #print "______________________________"
 
     def scheduledeploy(self):
         listobjsupp = []
