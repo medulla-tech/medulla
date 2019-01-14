@@ -19,7 +19,19 @@
  */
 
 function donut(selector, datas, title, subtitle){
-
+  /*
+  * the donut function creates a donut with the datas provided and print it inside the specified selector
+  * @param: selector string of the id name. For example "myDiv" will select #myDiv
+  * @param: datas dict of the datas we want print.
+  * datas structure :
+  * [
+  *   {"label":"myLabel", "value":5, href:"http://mywebsite.com"},
+  *   {"label":"myLabel-2", "value":15, href:"http://siveo.net"},
+  *]
+  *
+  * @param: title string of the title which is printed inside the donut
+  * @param: subtitle string of the subtitle which is printed below the title
+  */
   var total = 0;
   for(i = 0; i < datas.length; i++)
   {
@@ -112,7 +124,6 @@ function donut(selector, datas, title, subtitle){
         var offset = ((width-tooltiptextwidth)/2 >0) ? (width-tooltiptextwidth)/2 : 5;
       canvas.select("."+selector+"tooltip")
         .select("text")
-        //.attr("x", d3.mouse(this)[0]+1*outerRadius)
         .attr("x", offset);
 
       d3.select(this).attr("cursor","pointer")
@@ -159,6 +170,18 @@ function donut(selector, datas, title, subtitle){
         return d.data.label+" "+ d.data.value
       else
         return ""
+    })
+    .attr("text-anchor",function(data,i){
+      var length = this.getComputedTextLength();
+      var translate = d3.select(this).attr("transform");
+      var translate = translate.substring(10, translate.length-1).split(",")[0];
+      translate = parseFloat(translate);
+
+      //Positionning the text to limit the overflow
+      if(translate < 0)
+        return "start";
+      else
+        return (width/2 + 5 >translate+length > width/2) ? "end" : "middle";
     })
     .on("mouseover",function(d){
       d3.select("#"+selector).select("svg").attr("width",width+100)
