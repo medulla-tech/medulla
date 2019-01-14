@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2016 siveo, http://www.siveo.net/
+ * (c) 2016-2019 siveo, http://www.siveo.net/
  *
  * This file is part of Management Console (MMC).
  *
@@ -20,9 +20,10 @@
  */
 
 include_once("modules/dashboard/includes/panel.class.php");
-require_once("modules/backuppc/includes/xmlrpc.php");
+require_once("modules/backuppc/includes/xmlrpc.php");?>
 
-$options = array(
+<script src="modules/dashboard/graph/js/donut.js"></script>
+<?php $options = array(
     "class" => "BackupPanel",
     "id" => "backup",
     "refresh" => 3600,
@@ -37,9 +38,20 @@ class BackupPanel extends Panel {
         $total_machines = getComputerCount();
         $machines_backup = get_count_of_backuped_hosts();
         $machines_not_backup = $total_machines - $machines_backup;
-        echo _T("Total machines : ") .$total_machines.'<br/>';
-        echo '<span style="color:green">' . _T("Backup configured : ", "dashboard") . $machines_backup.'</span><a href="'.$urlRedirect.'&backup=yes"><img title="'._T("Create a group","dashboard").'" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
-        echo '<span style="color:red">' . _T("Backup not configured : ", "dashboard") .$machines_not_backup.'</span><a href="'.$urlRedirect.'&backup=no"><img title="'._T("Create a group","dashboard").'" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
-    }
+        $configured_text = _T("Backup configured : ", "dashboard");
+        $not_configured_text = _T("Backup not configured : ", "dashboard");
+        $total_machines_text =  _T("Total machines : ");
+
+        echo <<< BACKUP
+          <script>
+            var backupDatas = [
+              {"label": "$configured_text", "value":$machines_backup, "href":"$urlRedirect&backup=yes"},
+              {'label': '$not_configured_text', 'value': $machines_not_backup, "href": "$urlRedirect&backup=yes"}
+            ];
+
+            donut("backup",backupDatas, "Total", $total_machines);
+          </script>
+BACKUP;
+      }
 }
 ?>
