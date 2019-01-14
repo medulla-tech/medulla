@@ -31,6 +31,7 @@ require("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 <script type="text/javascript" src="jsframework/lib/raphael/g.bar-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/utilities.js"></script>
 <script type="text/javascript" src="jsframework/portlet.js"></script>
+<script src="jsframework/d3-shape/dist/d3-shape.min.js"></script>
 <?php
 
 $d = new Div(array("id" => "dashboard"));
