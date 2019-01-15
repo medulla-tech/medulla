@@ -71,6 +71,20 @@ from twisted.internet import defer
 import hashlib
 _digest = hashlib.sha1
 
+
+from twisted.internet import reactor
+from mmc.core.tasks import TaskManager
+from time import strftime
+import gc
+import datetime
+from memory_profiler import *
+mesuref = 0.0
+countseconde = 0
+mesure = ""
+name_file_log_leak_memory = "/tmp/leakmemory.data"
+timecheck = 3600
+
+
 # global definition for ldapUserGroupControl
 INI = mmcconfdir + "/plugins/base.ini"
 
@@ -99,6 +113,8 @@ def activate():
      @rtype: boolean
     """
     logger = logging.getLogger()
+    global name_file_log_leak_memory
+    global timecheck
     try:
         ldapObj = ldapUserGroupControl()
     except ldap.INVALID_CREDENTIALS:
@@ -163,6 +179,15 @@ def activate():
     # Register computer list manager
     #ComputerManager().register("baseldap", Computers)
 
+    #if  logging.getLevelName(logging.DEBUG) == "DEBUG":
+    if not config.leak_memory_disable:
+        TaskManager().addTask("leakmemory", (leakmemory,), interval = config.leak_memorytime).addErrback(err)
+        fichier = open(config.fileoutresult, "a")
+        date = datetime.datetime.now()
+        fichier.write("\nSTART MMC [%s]\n"%date)
+        fichier.close()
+        timecheck = config.leak_memorytime
+        name_file_log_leak_memory=config.fileoutresult
     return True
 
 def activate_2():
@@ -183,6 +208,46 @@ def activate_2():
         if not ret:
             break
     return ret
+
+def err(failure):
+    logging.debug("error leakmemory")
+    failure.raiseException()
+
+def leakmemory():
+    """
+        function scheduler use to chase memory leaks
+    """
+    # schedule deployement
+    global countseconde
+    global timecheck
+    global mesure
+    global mesuref
+    global name_file_log_leak_memory
+
+    countseconde += timecheck
+    mem_usage = memory_usage(-1, interval=1, timeout=1)
+    mesurel = str(mem_usage[0]).replace(".",",")
+    if mesurel != mesure:
+        logging.debug( "__________leak memory_________")
+        logging.debug("evaluate the memory RSS")
+        taillepris = (mem_usage[0] - mesuref)
+        mesuref = mem_usage[0]
+        fichier = open(name_file_log_leak_memory, "a")
+        datetimewrite = strftime("%H:%M:%S")
+        stem = "\n%s count %s\ntime %ss MT %.2f MiB delta [ %s Mo | %s Ko | %s o | %s o/s]\n"%( datetimewrite,
+                                                                                                gc.get_count(),
+                                                                                                countseconde,
+                                                                                                mem_usage[0],
+                                                                                                round(taillepris,2),
+                                                                                                int(taillepris *1024),
+                                                                                                int(taillepris *1024 * 1024),
+                                                                                                int((taillepris *1024 * 1024)/countseconde))
+        fichier.write(stem)
+        countseconde = 0
+        logging.debug("%s" % stem)
+        fichier.close()
+        mesure = mesurel
+        logging.debug("______________________________")
 
 def getModList():
     """
