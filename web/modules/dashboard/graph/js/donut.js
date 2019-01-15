@@ -25,9 +25,11 @@ function donut(selector, datas, title, subtitle){
   * @param: datas dict of the datas we want print.
   * datas structure :
   * [
-  *   {"label":"myLabel", "value":5, href:"http://mywebsite.com"},
+  *   {"label":"myLabel", "value":5, href:"http://mywebsite.com", "unit":"GB"},
   *   {"label":"myLabel-2", "value":15, href:"http://siveo.net"},
   *]
+  * Here the "unit" key is optional and is set to "" if it doesn't exist.
+  * The "href" key is also optional. If no href is specified, no location is executed on section click
   *
   * @param: title string of the title which is printed inside the donut
   * @param: subtitle string of the subtitle which is printed below the title
@@ -35,20 +37,24 @@ function donut(selector, datas, title, subtitle){
   var total = 0;
   for(i = 0; i < datas.length; i++)
   {
+    if(typeof(datas[i].unit) == "undefined" )
+      datas[i].unit = "";
     total += datas[i].value;
   }
 
-  var height = 200, width = 200;
+  var height = 180, width = 200;
   var outerRadius = 60;
   var innerRadius = 40;
+  var widgetWidth = d3.select("#backup").node().getBoundingClientRect().width;
 
   //var colors = d3.scaleOrdinal(d3.schemeCategory10);
   var colors = d3.scaleOrdinal()
     .range(["#509a4e","#c55252"]);
 
   var canvas = d3.select("#"+selector).append("svg")
-    .attr("width", height)
-    .attr("height", width);
+    .attr("width", width)
+    .attr("height", height)
+    .attr("transform","translate("+(widgetWidth-width)/2+", 0)");
 
   var group = canvas.append("g")
     .attr("transform", "translate("+width/2+","+ height/2+")");
@@ -79,7 +85,7 @@ function donut(selector, datas, title, subtitle){
     .value(function(d){ return d.value; })(datas);
 
   var segments = d3.arc()
-    .innerRadius(40)
+    .innerRadius(innerRadius)
     .outerRadius(outerRadius)
     .padAngle(.20)
     .padRadius(5);
@@ -103,7 +109,7 @@ function donut(selector, datas, title, subtitle){
         //.attr("x", d3.mouse(this)[0]+1*outerRadius)
         .attr("y", d3.mouse(this)[1]+2*innerRadius)
         .attr("text-anchor", "start")
-        .text(d.data.label+" "+ d.data.value+" ("+((d.data.value/total)*100).toFixed(0)+"%)")
+        .text(d.data.label+" "+ d.data.value+d.data.unit+" ("+((d.data.value/total)*100).toFixed(0)+"%)")
         .attr("fill","white");
 
       var tooltiptextwidth = jQuery("#"+selector+" svg ."+selector+"tooltip text")[0].getComputedTextLength();
@@ -121,7 +127,7 @@ function donut(selector, datas, title, subtitle){
         .attr("x", offset)
         .attr("y", d3.mouse(this)[1]+2*innerRadius-15).lower();
 
-        var offset = ((width-tooltiptextwidth)/2 >0) ? (width-tooltiptextwidth)/2 : 5;
+      var offset = ((width-tooltiptextwidth)/2 >0) ? (width-tooltiptextwidth)/2 : 5;
       canvas.select("."+selector+"tooltip")
         .select("text")
         .attr("x", offset);
@@ -154,7 +160,8 @@ function donut(selector, datas, title, subtitle){
       return segments(d);
     })
     .on("click", function(d){
-      window.location.replace(d.data.href)
+      if(typeof(d.data.href) != "")
+        window.location.replace(d.data.href)
     });
 
   //Add label text
@@ -167,7 +174,7 @@ function donut(selector, datas, title, subtitle){
       return "translate(" + [segments.centroid(d)[0]*1.2, 1.2*segments.centroid(d)[1]] + ")";})
     .text(function(d){
       if(d.data.value > 0)
-        return d.data.label+" "+ d.data.value
+        return d.data.label+" "+ d.data.value+d.data.unit
       else
         return ""
     })
