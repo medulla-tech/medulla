@@ -49,12 +49,12 @@ function donut(selector, datas, title, subtitle){
 
   //var colors = d3.scaleOrdinal(d3.schemeCategory10);
   var colors = d3.scaleOrdinal()
-    .range(["#509a4e","#c55252"]);
+    .range(["#509a4e","#c55252", "#dd794b"]);
 
   var canvas = d3.select("#"+selector).append("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("transform","translate("+(widgetWidth-width)/2+", 0)");
+    //.attr("transform","translate("+(widgetWidth-width)/2+", 0)");
 
   var group = canvas.append("g")
     .attr("transform", "translate("+width/2+","+ height/2+")");
