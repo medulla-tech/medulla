@@ -160,7 +160,7 @@ function donut(selector, datas, title, subtitle){
       return segments(d);
     })
     .on("click", function(d){
-      if(typeof(d.data.href) != "")
+      if(typeof(d.data.href) != "undefined" || d.data.href != "")
         window.location.replace(d.data.href)
     });
 

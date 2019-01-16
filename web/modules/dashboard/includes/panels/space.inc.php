@@ -43,130 +43,15 @@ class SpacePanel extends Panel {
         echo <<< SPACE
         <div id="spaceChart"></div>
         <script>
-jQuery(function(){
 
-  function donut(datas, index){
-    var pie = new d3pie("spaceChart"+index, {
-  	"header": {
-  		"title": {
-  			"text": datas.mountpoint,
-  			"fontSize": 11,
-  			"font": "Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif"
-  		},
-  		"subtitle": {
-  			"text": datas.usage.total,
-  			"color": "#999999",
-  			"fontSize": 11,
-  			"font": "Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif"
-  		},
-  		"location": "pie-center",
-  		"titleSubtitlePadding": 1
-  	},
-  	"size": {
-  		"canvasHeight": 200,
-  		"canvasWidth": 200,
-  		"pieInnerRadius": "65%",
-  		"pieOuterRadius": "60%"
-  	},
-  	"data": {
-  		"sortOrder": "label-desc",
-  		"content": [
-  			{
-  				"label": "$used",
-  				"value": parseFloat(datas.usage.used.split('GB')[0]),
-  				"color": "#c55252"
-  			},
-  			{
-  				"label": "$free",
-  				"value":  parseFloat(datas.usage.free.split('GB')[0]),
-  				"color": "#509a4e"
-  			}
-  		]
-  	},
-  	"labels": {
-  		"outer": {
-  			"pieDistance": 5
-  		},
-  		"inner": {
-  			"format": "value"
-  		},
-  		"mainLabel": {
-  			"fontSize": 11,
-        "font": "Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif"
-  		},
-  		"percentage": {
-  			"color": "#999999",
-  			"fontSize": 11,
-        "font": "Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif",
-  			"decimalPlaces": 1
-  		},
-  		"value": {
-  			"color": "#000000",
-  			"fontSize": 11,
-        "font":"Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif"
-  		},
-  		"lines": {
-  			"enabled": true,
-  			"style": "straight",
-  			"color": "#777777"
-  		},
-  		"truncation": {
-  			"enabled": true
-  		}
-  	},
-  	"tooltips": {
-  		"enabled": true,
-  		"type": "placeholder",
-  		"string": "{label}: {value} Gb, {percentage}%",
-  		"styles": {
-  			"fadeInSpeed": 255,
-  			"borderRadius": 9,
-  			"padding": 8,
-        "font": "Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif",
-        "fontSize": 11
-  		}
-  	},
-  	"effects": {
-  		"pullOutSegmentOnClick": {
-  			"effect": "linear",
-  			"speed": 400,
-  			"size": 8
-  		}
-  	},
-  	"misc": {
-  		"colors": {
-  			"segmentStroke": "#ffffff"
-  		},
-  		"canvasPadding": {
-  			"top": 0,
-  			"right": 0,
-  			"bottom": 0,
-  			"left": 0
-  		},
-      "pieCenterOffset": {
-			"y": -25
-		}
-  	}
-  });
-
-    return pie;
-  }
-
-  var dataset = $json;
-
-  d3.select("#spaceChart")
-    .selectAll("div")
-    .data(dataset)
-    .enter()
-    .append("div")
-    .attr('id', function(d, i){
-      return "spaceChart"+i;
-    })
-    .attr('html',function(d, i){
-      var tmp = donut(d,i);
-      return jQuery(tmp.element).html();
-    });
-
+var dataset = $json;
+dataset.forEach(function(d,i){
+  var tmp = [
+    {"label":"$free","value":parseFloat(dataset[i].usage.free.split("GB")[0]),"unit":"GB"},
+    {"label":"$used","value":parseFloat(dataset[i].usage.used.split("GB")[0]),"unit":"GB"},
+  ];
+  jQuery("#spaceChart").append("<div id='spaceChart"+i+"'></div>");
+  donut("spaceChart"+i, tmp, dataset[i].mountpoint, dataset[i].usage.total);
 })
 
 </script>
@@ -179,9 +64,6 @@ SPACE;
 
 <style>
   #spaceChart svg{
-    /*The width of the piechart is ajusted after its generation because the toolstips are truncated*/
-    width:350px;
-    height:150px;
-    padding-top:-50px;
+    margin-left:-11px;
   }
 </style>
