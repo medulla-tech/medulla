@@ -54,7 +54,6 @@ function donut(selector, datas, title, subtitle){
   var canvas = d3.select("#"+selector).append("svg")
     .attr("width", width)
     .attr("height", height)
-    //.attr("transform","translate("+(widgetWidth-width)/2+", 0)");
 
   var group = canvas.append("g")
     .attr("transform", "translate("+width/2+","+ height/2+")");
@@ -98,9 +97,13 @@ function donut(selector, datas, title, subtitle){
     .attr("fill", function(d){return colors(d.data.value)})
 
     // Actions executed when the mouse is over the section
-    .on("mouseover", function(d){
+    .on("mouseover", function(d,i){
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
+      .style("font-size", "1.1em");
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i).select("a")
+      .style("font-size", "1.1em")
+      .style("font-weight","bold");
       // Add the tooltip text
-      canvas.attr("width", 350);
       canvas.append("g")
         .attr("class", selector+"tooltip");
 
@@ -146,8 +149,14 @@ function donut(selector, datas, title, subtitle){
     })
 
     // Action executed when the mouse is over the section
-    .on("mouseout", function(d){
+    .on("mouseout", function(d,i){
       canvas.attr("width", width);
+
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
+      .style("font-size", "1em");
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i).select("a")
+      .style("font-size", "1em")
+      .style("font-weight", "normal");
       // Define the div for the tooltip
       canvas.select("."+selector+"tooltip").remove();
 
@@ -160,7 +169,7 @@ function donut(selector, datas, title, subtitle){
       return segments(d);
     })
     .on("click", function(d){
-      if(typeof(d.data.href) != "undefined" || d.data.href != "")
+      if(typeof(d.data.href) != "undefined")
         window.location.replace(d.data.href)
     });
 
@@ -196,4 +205,20 @@ function donut(selector, datas, title, subtitle){
     .on("mouseout",function(d){
       d3.select("#"+selector).select("svg").attr("width",width)
     });
+    d3.select("#"+selector).append("ul")
+    .selectAll("li")
+    .data(dataset)
+    .enter()
+    .append("li")
+    .attr("class",function(d,i){return selector+'Label'+i})
+    .style("color",function(d){
+      var tmp = segments(d);
+      return colors(d.data.value);
+    })
+    .append("span")
+    .append('a')
+    .style("color","black")
+    .attr("href", function(d){return d.data.href})
+    .text(function(d,i){return d.data.label+" "+d.data.value+d.data.unit});
+
 }
