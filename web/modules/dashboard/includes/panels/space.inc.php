@@ -2,7 +2,6 @@
 
 /*
  * (c) 2012 Mandriva, http://www.mandriva.com
- * (c) 2018 Siveo, http://www.siveo.net
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -21,11 +20,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 include_once("modules/dashboard/includes/panel.class.php");
-?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3pie@0.2.1/d3pie/d3pie.min.js"></script>
 
-<?php $options = array(
+$options = array(
     "class" => "SpacePanel",
     "id" => "space",
     "refresh" => 3600,

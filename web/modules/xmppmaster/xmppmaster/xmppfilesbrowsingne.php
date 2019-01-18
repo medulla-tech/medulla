@@ -392,7 +392,7 @@ echo '</script>';
 		.on("changed.jstree", function (e, data) {
 			if(data.selected.length) {
                 var pathlinux = data.instance.get_path(data.node,'/');
-                remote(pathlinux.substr(rootfilesystempath.length));
+                remote(pathlinux);
 			}
 		})
 		.jstree({

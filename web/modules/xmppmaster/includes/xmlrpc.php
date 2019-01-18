@@ -59,7 +59,6 @@ function xmlrpc_createdirectoryuser($directory){
     return xmlCall("xmppmaster.createdirectoryuser", array($directory));
 }
 
-
 function xmlrpc_remotefilesystem($currentdir, $jidmachine){
     return xmlCall("xmppmaster.remotefile", array($currentdir, $jidmachine));
 }
