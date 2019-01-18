@@ -28,7 +28,7 @@ import re
 
 import ConfigParser
 import operator
-
+import zlib
 import sleekxmpp
 from sleekxmpp import jid
 
@@ -127,10 +127,15 @@ def callvncchangepermsbymaster(to, askpermission):
 
 # #################### call synchronous iq##########################
 
-
-def callremotefile(jidmachine, currentdir="", timeout=15):
-    return ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotefile", "data": currentdir}, timeout)
-
+def callremotefile(jidmachine, currentdir="", timeout=40):
+    strctfilestrcompress = ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotefile", "data": currentdir}, timeout)
+    try :
+        strctfilestr=zlib.decompress(base64.b64decode(strctfilestrcompress))
+        return strctfilestr
+    except Exception as e:
+        print str(e)
+        traceback.print_exc(file=sys.stdout)
+    return strctfilestrcompress
 
 def calllistremotefileedit(jidmachine):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action": "listremotefileedit",
@@ -327,6 +332,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.schedule('schedule garbage', self.TIMESCHEDULERGARBAGE, self.garbagedeploy, repeat=True)
         self.schedule('schedulerfunction', 60, self.schedulerfunction, repeat=True)
 
+        ## function scheduler use to chase memory leaks
+        #self.timecheck = 15
+        ## function self.leakmemory in function class
+        #self.schedule('event leakmemory',self.timecheck, self.__leakmemory, repeat=True)
+
+
         # Decrement session time
         self.schedule('manage session', 15, self.handlemanagesession, repeat=True)
 
@@ -427,11 +438,50 @@ class MUCBot(sleekxmpp.ClientXMPP):
         MscDatabase().xmppstage_statecurrent_xmpp()
         XmppMasterDatabase().update_status_deploy_end()
 
+    #def __leakmemory(self):
+        #"""
+            #function scheduler use to chase memory leaks
+        #"""
+        #from time import strftime
+        #import gc
+        ##install  module memory_profiler
+        #from memory_profiler import *
+        ## schedule deployement
+        #if not hasattr(self, 'countseconde'):
+            #self.mesuref = 0.0
+            #self.countseconde = 0
+            #self.mesure = ""
+            #self.mesuref = 0.0
+            #self.name_file_log_leak_memory = "/tmp/data.txt"
+        
+        #self.countseconde += self.timecheck
+        #mem_usage = memory_usage(-1, interval=1, timeout=1)
+        #mesure = str(mem_usage[0]).replace(".",",")
+        #if mesure != self.mesure:
+            #print "__________leak memory_________"
+            #taillepris = (mem_usage[0] - self.mesuref)
+            #self.mesuref = mem_usage[0]
+            #fichier = open(self.name_file_log_leak_memory, "a")
+            #datetimewrite = strftime("%H:%M:%S")
+            #stem = "\n%s count %s\ntime %ss MT %.2f MiB delta [ %s Mo | %s Ko | %s Oc | %s Oc/s]\n"%( datetimewrite,
+                                                                                                    #gc.get_count(),
+                                                                                                    #self.countseconde,
+                                                                                                    #mem_usage[0],
+                                                                                                    #round(taillepris,2),
+                                                                                                    #round(taillepris *1024,2),
+                                                                                                    #round(taillepris *1024 * 1024,2),
+                                                                                                    #round((taillepris *1024 * 1024)/self.countseconde,2))
+            #fichier.write(stem)
+            #self.countseconde = 0
+            #print stem
+            #fichier.close()
+            #self.mesure = mesure
+            #print "______________________________"
+
     def scheduledeploy(self):
         listobjsupp = []
         #search deploy to rumming
-        resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp()
-
+        resultdeploymachine, wolupdatemachine = MscDatabase().deployxmpp(800)
         for uuiddeploy in self.machineWakeOnLan:
             # not SEND WOL on presense machine
             if XmppMasterDatabase().getPresenceuuid(uuiddeploy):
@@ -441,31 +491,21 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 del self.machineWakeOnLan[uuiddeploy]
             except Exception:
                 pass
-        for deploy in resultdeploymachine:
+        for deployobject in resultdeploymachine:
             # creation deployment
-            UUID = str(deploy.Target.target_uuid)
-            deployobject = {'pakkageid': str(deploy.Commands.package_id),
-                            'commandid':  deploy.Commands.id,
-                            'mac': deploy.Target.target_macaddr,
-                            'count': 0,
-                            'cycle': 0,
-                            'login': deploy.Commands.creator,
-                            'start_date': deploy.Commands.start_date,
-                            'end_date': deploy.Commands.end_date,
-                            'title': deploy.Commands.title,
-                            'UUID': deploy.Target.target_uuid,
-                            'GUID': deploy.Target.id_group}
-
+            UUID = deployobject['UUID']
             if XmppMasterDatabase().getPresenceuuid(UUID):
                 # If a machine is present, add deployment in deploy list to manage.
                 try:
                     self.machineDeploy[UUID].append(deployobject)
                 except:
+                    #creation list deployement
                     self.machineDeploy[UUID] = []
                     self.machineDeploy[UUID].append(deployobject)
 
         for deploy in wolupdatemachine:
-            UUID = str(deploy.Target.target_uuid)
+            UUID = deploy['UUID']
+            #UUID = str(deploy.Target.target_uuid)
 
             if UUID in self.machineWakeOnLan:
                 if 'count' in self.machineWakeOnLan[UUID]:
@@ -482,7 +522,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 self.machineWakeOnLan[UUID]['count'] = 0
                 self.machineWakeOnLan[UUID]['commanid'] = deploy.Commands.id
                 self.machineWakeOnLan[UUID]['mac'] = deploy.Target.target_macaddr
-        
+
         for uuidmachine in self.machineWakeOnLan:
             # TODO : Replace print by log
             #print self.machineWakeOnLan[uuidmachine]['count']
