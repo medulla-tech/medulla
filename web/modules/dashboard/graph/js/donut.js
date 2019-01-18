@@ -181,10 +181,7 @@ function donut(selector, datas, title, subtitle){
     d3.select("#"+selector).append("ul")
     .selectAll("li")
     .data(dataset)
-    .enter().filter(function(d, i){
-      if(d.data.value > 0)
-        return d;
-    })
+    .enter()
     .append("li")
     .style("font-size", "2em")
     .style("line-height","0.5em")
@@ -193,7 +190,12 @@ function donut(selector, datas, title, subtitle){
       var tmp = segments(d);
       return colors(d.data.value);
     })
-
+    .style("display", function(d,i){
+      if(d.data.value == 0)
+        return "none";
+      else
+        return "reset";
+    })
     .append("span")
     .append('a')
     .style("color","black")
