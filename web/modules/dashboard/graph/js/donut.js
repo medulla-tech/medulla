@@ -49,7 +49,7 @@ function donut(selector, datas, title, subtitle){
 
   //var colors = d3.scaleOrdinal(d3.schemeCategory10);
   var colors = d3.scaleOrdinal()
-    .range(["#509a4e","#c55252", "#dd794b"]);
+    .range(["#52b749","#e03c3c", "#f48f42"]);
 
   var canvas = d3.select("#"+selector).append("svg")
     .attr("width", width)
@@ -200,4 +200,8 @@ function donut(selector, datas, title, subtitle){
     .attr("href", function(d){return d.data.href})
     .text(function(d,i){return d.data.label+" ("+d.data.value+d.data.unit+")"});
 
+    if(dataset.length == 3)
+    {
+      d3.select("#"+selector).select("."+selector+'Label1').raise();
+    }
 }
