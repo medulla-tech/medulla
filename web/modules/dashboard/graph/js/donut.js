@@ -208,17 +208,21 @@ function donut(selector, datas, title, subtitle){
     d3.select("#"+selector).append("ul")
     .selectAll("li")
     .data(dataset)
-    .enter()
+    .enter().filter(function(d, i){
+      if(d.data.value > 0)
+        return d;
+    })
     .append("li")
     .attr("class",function(d,i){return selector+'Label'+i})
     .style("color",function(d){
       var tmp = segments(d);
       return colors(d.data.value);
     })
+
     .append("span")
     .append('a')
     .style("color","black")
     .attr("href", function(d){return d.data.href})
-    .text(function(d,i){return d.data.label+" "+d.data.value+d.data.unit});
+    .text(function(d,i){return d.data.label+" ("+d.data.value+d.data.unit+")"});
 
 }
