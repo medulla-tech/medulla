@@ -27,7 +27,7 @@ $options = array(
     "class" => "GlpiPanel",
     "id" => "inventory",
     "refresh" => 3600,
-    "title" => _T("Computers", "glpi"),
+    "title" => _T("Inventories", "glpi"),
 );
 
 class GlpiPanel extends Panel {
