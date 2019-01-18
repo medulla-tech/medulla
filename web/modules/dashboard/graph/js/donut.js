@@ -42,7 +42,7 @@ function donut(selector, datas, title, subtitle){
     total += datas[i].value;
   }
 
-  var height = 180, width = 200;
+  var height = 175, width = 200;
   var outerRadius = 60;
   var innerRadius = 40;
   var widgetWidth = d3.select("#backup").node().getBoundingClientRect().width;
@@ -99,7 +99,9 @@ function donut(selector, datas, title, subtitle){
     // Actions executed when the mouse is over the section
     .on("mouseover", function(d,i){
       d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
-      .style("font-size", "1.1em");
+        .style("font-size", "2.3em")
+        .style("line-height","0.5em");
+
       d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i).select("a")
       .style("font-size", "1.1em")
       .style("font-weight","bold");
@@ -153,9 +155,11 @@ function donut(selector, datas, title, subtitle){
       canvas.attr("width", width);
 
       d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
-      .style("font-size", "1em");
+      .style("font-size", "2em")
+      .style("line-height","0.5em");
       d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i).select("a")
       .style("font-size", "1em")
+      .style("line-height","0.5em")
       .style("font-weight", "normal");
       // Define the div for the tooltip
       canvas.select("."+selector+"tooltip").remove();
@@ -174,37 +178,6 @@ function donut(selector, datas, title, subtitle){
     });
 
   //Add label text
-  canvas.select("g")
-    .append("g").selectAll("text")
-    .data(dataset)
-    .enter()
-    .append("text")
-    .attr("transform",function(d){
-      return "translate(" + [segments.centroid(d)[0]*1.2, 1.2*segments.centroid(d)[1]] + ")";})
-    .text(function(d){
-      if(d.data.value > 0)
-        return d.data.label+" "+ d.data.value+d.data.unit
-      else
-        return ""
-    })
-    .attr("text-anchor",function(data,i){
-      var length = this.getComputedTextLength();
-      var translate = d3.select(this).attr("transform");
-      var translate = translate.substring(10, translate.length-1).split(",")[0];
-      translate = parseFloat(translate);
-
-      //Positionning the text to limit the overflow
-      if(translate < 0)
-        return "start";
-      else
-        return (width/2 + 5 >translate+length > width/2) ? "end" : "middle";
-    })
-    .on("mouseover",function(d){
-      d3.select("#"+selector).select("svg").attr("width",width+100)
-    })
-    .on("mouseout",function(d){
-      d3.select("#"+selector).select("svg").attr("width",width)
-    });
     d3.select("#"+selector).append("ul")
     .selectAll("li")
     .data(dataset)
@@ -213,6 +186,8 @@ function donut(selector, datas, title, subtitle){
         return d;
     })
     .append("li")
+    .style("font-size", "2em")
+    .style("line-height","0.5em")
     .attr("class",function(d,i){return selector+'Label'+i})
     .style("color",function(d){
       var tmp = segments(d);
