@@ -18,67 +18,48 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function donut(selector, datas, title, subtitle){
+function customPie(selector, datas){
   /*
-  * the donut function creates a donut with the datas provided and print it inside the specified selector
+  * the customPie function creates a pie with the datas provided and print it inside the specified selector
   * @param: selector string of the id name. For example "myDiv" will select #myDiv
   * @param: datas dict of the datas we want print.
   * datas structure :
   * [
-  *   {"label":"myLabel", "value":5, href:"http://mywebsite.com", "unit":"GB"},
+  *   {"label":"myLabel", "value":5, href:"http://mywebsite.com"},
   *   {"label":"myLabel-2", "value":15, href:"http://siveo.net"},
   *]
-  * Here the "unit" key is optional and is set to "" if it doesn't exist.
   * The "href" key is also optional. If no href is specified, no location is executed on section click
   *
-  * @param: title string of the title which is printed inside the donut
-  * @param: subtitle string of the subtitle which is printed below the title
   */
   var total = 0;
   for(i = 0; i < datas.length; i++)
   {
-    if(typeof(datas[i].unit) == "undefined" )
-      datas[i].unit = "";
+    if(datas[i].version == false)
+      datas[i].version = "";
     total += datas[i].value;
   }
 
-  var height = 175, width = 200;
-  var outerRadius = 60;
-  var innerRadius = 40;
+  var height = 200, width = 200;
+  var outerRadius = 70;
+  var innerRadius = 2;
   var widgetWidth = d3.select("#backup").node().getBoundingClientRect().width;
 
-  //var colors = d3.scaleOrdinal(d3.schemeCategory10);
   var colors = d3.scaleOrdinal()
-    .range(["#52b749","#e03c3c", "#f48f42"]);
+    .range([
+        "#2484c1", "#65a620", "#7b6888", "#a05d56", "#961a1a", "#e98125", "#d8d23a", "#d0743c", "#635222", "#6ada6a",
+				"#0c6197", "#7d9058", "#207f33", "#44b9b0", "#bca44a", "#e4a14b", "#a3acb2", "#8cc3e9", "#69a6f9", "#5b388f",
+				"#546e91", "#8bde95", "#d2ab58", "#273c71", "#98bf6e", "#4daa4b", "#98abc5", "#cc1010", "#31383b", "#006391",
+				"#c2643f", "#b0a474", "#a5a39c", "#a9c2bc", "#22af8c", "#7fcecf", "#987ac6", "#3d3b87", "#b77b1c", "#c9c2b6",
+				"#807ece", "#8db27c", "#be66a2", "#9ed3c6", "#00644b", "#005064", "#77979f", "#77e079", "#9c73ab", "#1f79a7",
+        "#1b81c1", "#4ea61f", "#886883", "#a06e56", "#963a1a", "#f98125", "#d8d2da", "#00743c", "#635242", "#dada3a",
+      ]);
 
   var canvas = d3.select("#"+selector).append("svg")
     .attr("width", width)
-    .attr("height", height)
+    .attr("height", height);
 
   var group = canvas.append("g")
-    .attr("transform", "translate("+width/2+","+ height/2+")");
-
-  // Create a group for the text in the center of the donut chart
-  canvas.append("g")
-    .attr("class", "center")
-    .attr("transform","translate("+width/2+","+ height/2+")");
-
-  canvas.select(".center")
-    .append("text")
-    .attr("font-size",11)
-    .append("tspan")
-    .attr("text-anchor", "middle")
-    .attr("x", 0)
-    .attr("dy", 0)
-    .text(title);
-
-  canvas.select(".center").select("text")
-    .append("tspan")
-    .attr("x", 0)
-    .attr("dy", 11)
-    .attr("text-anchor", "middle")
-    .attr("font-size",11)
-    .text(subtitle);
+    .attr("transform", "translate("+(width)/2+","+ height/2+")");
 
   var dataset = d3.pie()
     .value(function(d){ return d.value; })(datas);
@@ -94,11 +75,11 @@ function donut(selector, datas, title, subtitle){
     .enter()
     .append("path")
     .attr("d", segments)
-    .attr("fill", function(d){return colors(d.data.value)})
+    .attr("fill", function(d,i){return colors(i)})
 
     // Actions executed when the mouse is over the section
     .on("mouseover", function(d,i){
-      canvas.attr("width", 300);
+      canvas.attr("width", 2*width);
       d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
         .style("font-size", "2.3em")
         .style("line-height","0.5em");
@@ -112,10 +93,14 @@ function donut(selector, datas, title, subtitle){
 
       canvas.select("."+selector+"tooltip")
         .append("text")
-        //.attr("x", d3.mouse(this)[0]+1*outerRadius)
-        .attr("y", d3.mouse(this)[1]+2*innerRadius)
+        .attr("y", d3.mouse(this)[1]+80)
         .attr("text-anchor", "start")
-        .text(d.data.label+" "+ d.data.value+d.data.unit+" ("+((d.data.value/total)*100).toFixed(0)+"%)")
+        .text(function(data,id){
+          if(d.data.version != "")
+            return d.data.label + " v." + d.data.version + " : " + d.data.value + " (" + ((d.data.value/total)*100).toFixed(0) + "%)";
+          else
+            return d.data.label + " : " + d.data.value + " (" + ((d.data.value/total)*100).toFixed(0) + "%)";
+          })
         .attr("fill","white");
 
       var tooltiptextwidth = jQuery("#"+selector+" svg ."+selector+"tooltip text")[0].getComputedTextLength();
@@ -131,7 +116,7 @@ function donut(selector, datas, title, subtitle){
         .attr("opacity", 0.6)
         .attr("fill", "black")
         .attr("x", offset)
-        .attr("y", d3.mouse(this)[1]+2*innerRadius-15).lower();
+        .attr("y", d3.mouse(this)[1]+80-15).lower();
 
       var offset = ((width-tooltiptextwidth)/2 >0) ? (width-tooltiptextwidth)/2 : 5;
       canvas.select("."+selector+"tooltip")
@@ -178,18 +163,21 @@ function donut(selector, datas, title, subtitle){
         window.location.replace(d.data.href)
     });
 
+
   //Add label text
     d3.select("#"+selector).append("ul")
     .selectAll("li")
-    .data(dataset)
+    .data(dataset, function(d,i){return d;})
     .enter()
     .append("li")
     .style("font-size", "2em")
     .style("line-height","0.5em")
-    .attr("class",function(d,i){return selector+'Label'+i})
-    .style("color",function(d){
+    .attr("class",function(d,i){
+
+      return selector+'Label'+i})
+    .style("color",function(d,i){
       var tmp = segments(d);
-      return colors(d.data.value);
+      return colors(i);
     })
     .style("display", function(d,i){
       if(d.data.value == 0)
@@ -201,10 +189,10 @@ function donut(selector, datas, title, subtitle){
     .append('a')
     .style("color","black")
     .attr("href", function(d){return d.data.href})
-    .text(function(d,i){return d.data.label+" ("+d.data.value+d.data.unit+")"});
-
-    if(dataset.length == 3)
-    {
-      d3.select("#"+selector).select("."+selector+'Label1').raise();
-    }
+    .text(function(d,i){
+      if(d.data.version != "")
+        return d.data.label+" v."+ d.data.version+" : "+d.data.value
+      else
+        return d.data.label+ d.data.version+" : "+d.data.value
+      });
 }
