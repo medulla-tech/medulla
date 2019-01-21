@@ -304,7 +304,11 @@ echo '</script>';
             echo "</h2>";
             exit;
     }
-    $datatree = $lifdir['data']['strjsonhierarchy'];
+    $searchchar = array(':', '/', );
+    $replacechar   = array( '", "children" : [', '{"text" : "');
+    $datatree = str_replace ( $searchchar, $replacechar, $lifdir['data']['strjsonhierarchy'] );
+    unset ($lifdir['data']['strjsonhierarchy']);
+    //$datatree = $lifdir['data']['strjsonhierarchy'];
 ?>
 
 <div id="messageaction">

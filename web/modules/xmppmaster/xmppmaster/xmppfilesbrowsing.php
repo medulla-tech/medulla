@@ -293,7 +293,10 @@ echo '</script>';
             echo "</h2>";
             exit;
     }
-    $datatree = $lifdirremote['data']['strjsonhierarchy'];
+    $searchchar = array(':', '/', );// repect order
+    $replacechar   = array( '", "children" : [', '{"text" : "');// repect order
+    $datatree = str_replace ( $searchchar, $replacechar, $lifdirremote['data']['strjsonhierarchy'] );
+    unset ($lifdirremote['data']['strjsonhierarchy']);
     // cherche local directory
 
 printf ('
