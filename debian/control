@@ -9,7 +9,7 @@ Homepage: http://www.siveo.net/
 Package: python-mmc-core
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, python-twisted-web
+Depends: ${misc:Depends}, ${python:Depends}, python-twisted-web, python-memory-profiler
 Suggests: python-sqlalchemy (>= 0.5), python-mysqldb (>= 1.2.2-7)
 Description: Core shared dependency for MMC API
  Contains base functions used by MMC.

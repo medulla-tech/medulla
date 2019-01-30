@@ -3,7 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
- *
+ * (c) 2019 Siveo, http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -51,10 +51,10 @@ function readfile_chunked($filename, $retbytes = true) {
     return $status;
 }
 
-if (isset($_GET['path']) && startswith($_GET['path'], '/var/tmp/report-')) {
+if (isset($_GET['path'], $_SESSION) && preg_match("#^(\/var\/tmp\/report\-)(UUID)([0-9]+)(.xls)$#", $_GET['path'])) {
     // Prevent download to stop after PHP timeout
     set_time_limit(0);
-
+    $file= str_replace('../', '', $_GET['path']);
     $filepath = $_GET['path'];
     $file_name = basename($filepath);
 
@@ -74,5 +74,9 @@ if (isset($_GET['path']) && startswith($_GET['path'], '/var/tmp/report-')) {
     // Sending binary data
     readfile_chunked($filepath);
     die('');    // Stopping flow
+}
+else{
+  $protocol = 'http://';
+  header("location: ".$protocol.$_SERVER['HTTP_HOST']);
 }
 ?>
