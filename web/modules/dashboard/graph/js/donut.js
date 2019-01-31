@@ -45,7 +45,7 @@ function donut(selector, datas, title, subtitle){
   var height = 175, width = 200;
   var outerRadius = 60;
   var innerRadius = 40;
-  var widgetWidth = d3.select("#backup").node().getBoundingClientRect().width;
+  var widgetWidth = d3.select("#"+selector).node().getBoundingClientRect().width;
 
   //var colors = d3.scaleOrdinal(d3.schemeCategory10);
   var colors = d3.scaleOrdinal()

@@ -31,7 +31,20 @@ require("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 <script type="text/javascript" src="jsframework/lib/raphael/g.bar-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/utilities.js"></script>
 <script type="text/javascript" src="jsframework/portlet.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="https://d3js.org/d3-selection.v1.min.js"></script>
+<script src="https://d3js.org/d3-array.v1.min.js"></script>
+<script src="https://d3js.org/d3-collection.v1.min.js"></script>
+<script src="https://d3js.org/d3-format.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+<script src="https://d3js.org/d3-path.v1.min.js"></script>
+<script src="https://d3js.org/d3-scale.v2.min.js"></script>
+<script src="https://d3js.org/d3-axis.v1.min.js"></script>
 <script src="jsframework/d3-shape/dist/d3-shape.min.js"></script>
+<script src="modules/dashboard/graph/js/donut.js"></script>
+<script src="modules/dashboard/graph/js/line.js"></script>
+<script src="modules/dashboard/graph/js/pie.js"></script>
+
 <?php
 
 $d = new Div(array("id" => "dashboard"));
