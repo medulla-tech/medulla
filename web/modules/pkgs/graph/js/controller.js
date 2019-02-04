@@ -122,6 +122,12 @@ jQuery(function(){
                     action['script'] = btoa(action['script'])
                 }
             }
+            if ('set' in action){
+                if (isBase64(action['set'])){
+                    action['set'] = atob(action['set'])
+                }
+            }
+
             jQuery("#current-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+action['action']+".php", action));
         });
     }
@@ -220,7 +226,8 @@ function createSequence()
         // For each element in form :
             // Add {form.elementName : form.elementValue} to action
         jQuery.each(datas,function(idoption, actionRaw){
-            if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script'){
+            if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script' || actionRaw['name'] == "set"){
+
                actionRaw['value'] = btoa(actionRaw['value'])
             }
             if(actionRaw['name'] == 'environ')
@@ -282,7 +289,7 @@ function createInfo()
                 else if(jQuery.inArray(param['name'],['Dependency',"members[]",'environ','action','actionlabel','boolcnd','script','comment',
                     'codereturn','command','filename','goto','old_Qsoftware','old_Qvendor','old_Qversion','old_associateinventory',
                     'old_boolcnd','old_label', 'old_description','old_licenses','old_methodetransfert','old_p_api','old_package-method',
-                    'old_pkgs','old_pkgs-title','old_targetos','old_version','p_api','random_dir','step','mode','waiting']) >= 0)
+                    'old_pkgs','old_pkgs-title','old_targetos','old_version','p_api','random_dir','step','mode','waiting', 'set']) >= 0)
                 {
                     // All the element from the array are not added into the info section.
                     // Dependency is also ignored because it is managed outside this loop

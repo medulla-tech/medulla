@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2012-2019 siveo, http://www.siveo.net/
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -53,82 +54,25 @@ class AntivirusPanel extends Panel {
         createGroupText = $createGroupText,
         urlRedirect = $urlRedirect;
 
-    var data = [];
-    var legend = [];
-    var colors = [];
-    var href = [];
-
-    if (machineCount.green) {
-        var legendText = greenMessage.replace('%d', machineCount.green)
-        data.push(machineCount.green);
-        legend.push(legendText);
-        colors.push("000-#6AB520-#73d216");
-        href.push(urlRedirect + "&group=green");
-    }
-
-    if (machineCount.orange) {
-        var legendText = orangeMessage.replace('%d', machineCount.orange)
-        data.push(machineCount.orange);
-        legend.push(legendText);
-        colors.push("#ff9c00");
-        href.push(urlRedirect + "&group=orange");
-    }
-
-    if (machineCount.red) {
-        var legendText = redMessage.replace('%d', machineCount.red)
-        data.push(machineCount.red);
-        legend.push(legendText);
-        colors.push("000-#CD1515-#ef2929");
-        href.push(urlRedirect + "&group=red");
-    }
-
-    // get data percentage values for bar chart generation
-    data = getPercentageData(data, 'bar');
-
-    // put percentage values in legend
-    for (var i = 0; i < data.length; i++) {
-        legend[i] = legend[i].replace('%percent', data[i]);
-    }
-
-    var r = Raphael("antivirus-graphs", 200, 20);
-        fin = function () {
-        },
-        fout = function () {
-        },
-        txtattr = { font: "12px sans-serif" };
-
-    r.hbarchart(0, 0, 200, 20, data, {
-        type: 'round',
-        stacked: true,
-        colors: colors
-    }).hover(fin, fout);
-    jQuery('#antivirus-graphs').append('<ul></ul>');
-    for (var i = 0; i < legend.length; i++) {
-        jQuery('#antivirus-graphs ul').append(
-            '<li style="color: ' + colors[i].split('-')[2]  + '"><span style="color: #000">' + legend[i]
-            + '<a href="' + href[i] + '"><img title="' + createGroupText +
-            '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
-        );
-    }
+        var datas = [
+          {
+            'label': greenMessage.split(" %percent% ")[0],
+            'value':("green" in machineCount)?machineCount["green"]:0,
+            'href':urlRedirect+"&group=green",
+          },
+          {
+            'label': redMessage.split(" %percent% ")[0],
+            'value':("red" in machineCount)?machineCount["red"]:0,
+            'href':urlRedirect+"&group=red",
+          },
+          {
+            'label': orangeMessage.split(" %percent% ")[0],
+            'value':("orange" in machineCount)?machineCount["orange"]:0,
+            'href':urlRedirect+"&group=orange",
+          },
+        ];
+      donut("antivirus-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"]);
     </script>
-    <style type="text/css">
-        #antivirus-graphs ul {
-            padding-left: 0px;
-            margin: 0px;
-            margin-top: 3px;
-        }
-        #antivirus-graphs li {
-            list-style: none;
-            font-size: 13px;
-        }
-        #antivirus-graphs li:before {
-            content: "•";
-            font-size: 20px;
-            vertical-align: bottom;
-            line-height: 16px;
-            margin-right: 3px;
-        }
-    </style>
 ANTIVIRUS;
     }
 }

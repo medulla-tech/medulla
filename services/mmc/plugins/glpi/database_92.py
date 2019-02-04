@@ -680,7 +680,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 if 'owner' in self.config.summary or \
                    'owner_firstname' in self.config.summary or \
                    'owner_realname' in self.config.summary:
-                    join_query = join_query.outerjoin(self.user)
+                    join_query = join_query.outerjoin(self.user, self.machine.c.users_id == self.user.c.id)
                 try:
                     if regs[0]:
                         join_query = join_query.outerjoin(self.regcontents)
@@ -2298,6 +2298,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_computertypes) \
                 .outerjoin(self.glpi_computermodels) \
                 .outerjoin(self.glpi_operatingsystemservicepacks) \
+                .outerjoin(self.glpi_operatingsystemversions) \
                 .outerjoin(self.glpi_operatingsystemarchitectures) \
                 .outerjoin(self.state) \
                 .outerjoin(self.fusionagents) \
@@ -4758,9 +4759,11 @@ ON
 left JOIN
   glpi_operatingsystemversions
 ON
-  operatingsystemversions_id = glpi_operatingsystemversions.id;"""
+  operatingsystemversions_id = glpi_operatingsystemversions.id
+ORDER BY
+ glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
         res = self.db.execute(sql)
-        result = [{'os': os, 'version': version} for os, version in res]
+        result = [{'os': os, 'version': version, 'count':1} for os, version in res]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
@@ -4782,26 +4785,33 @@ ON
 
         final_list = []
         for machine in result:
-            machine['count'] = 1
-            if machine['os'].startswith('Android'):
-                pass
-            elif machine['os'].startswith('Debian'):
+            if machine['os'].startswith('Debian'):
                 machine['os'] = 'Debian'
-                machine['version'] = machine['version'].split(" ")
-                machine['version'] = machine['version'][0]
+                machine['version'] = machine['version'].split(" ")[0]
             elif machine['os'].startswith('Microsoft'):
                 machine['os'] = machine['os'].split(' ')[1:3]
                 machine['os'] = ' '.join(machine['os'])
             elif machine['os'].startswith('Ubuntu'):
                 machine['os'] = 'Ubuntu'
                 # We want just the XX.yy version number
-                machine['version'] = machine['version'].split(" ")[0]
-                machine['version'] = machine['version'].split(".")
+                machine['version'] = machine['version'].split(" ")[0].split(".")
                 if len(machine['version']) >= 2:
                     machine['version'] = machine['version'][0:2]
                 machine['version'] = '.'.join(machine['version'])
             elif machine['os'].startswith('Mageia'):
                 machine['os'] = machine['os'].split(" ")[0]
+            elif machine['os'].startswith('Unknown'):
+                machine['os'] = machine['os'].split("(")[0]
+                machine['version'] = ""
+            elif machine['os'].startswith("CentOS"):
+                machine['os'] = machine['os'].split(" ")[0]
+                machine['version'] = machine['version'].split("(")[0].split(".")[0:2]
+                machine['version'] = ".".join(machine['version'])
+
+            elif machine['os'].startswith("macOS") or machine['os'].startswith("OS X"):
+                machine['version'] = machine['version'].split(" (")[0].split(".")[0:2]
+                machine['version'] = ".".join(machine['version'])
+
             else:
                 pass
 

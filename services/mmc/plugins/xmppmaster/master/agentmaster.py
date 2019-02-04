@@ -28,7 +28,7 @@ import re
 
 import ConfigParser
 import operator
-
+import zlib
 import sleekxmpp
 from sleekxmpp import jid
 
@@ -125,12 +125,17 @@ def callshutdownbymaster(to, time, msg):
 def callvncchangepermsbymaster(to, askpermission):
     return ObjectXmpp().callvncchangepermsbymaster(to, askpermission)
 
-# #################### call synchronous iq##########################
+##################### call synchronous iq##########################
 
-
-def callremotefile(jidmachine, currentdir="", timeout=60):
-    return ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotefile", "data": currentdir}, timeout)
-
+def callremotefile(jidmachine, currentdir="", timeout=40):
+    strctfilestrcompress = ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotefile", "data": currentdir}, timeout)
+    try :
+        strctfilestr=zlib.decompress(base64.b64decode(strctfilestrcompress))
+        return strctfilestr
+    except Exception as e:
+        print str(e)
+        traceback.print_exc(file=sys.stdout)
+    return strctfilestrcompress
 
 def calllistremotefileedit(jidmachine):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action": "listremotefileedit",
