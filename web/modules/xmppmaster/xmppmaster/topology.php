@@ -31,8 +31,6 @@ $response = xmlrpc_topology_pulse();
 ?>
 
 <script src="https://d3js.org/d3.v3.js"></script>
-<script src="https://d3js.org/d3.js"></script>
-<script type="text/javascript" src="d3/d3.layout.js"></script>
 <style>
 	.node {
 		cursor: pointer;
