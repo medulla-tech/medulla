@@ -299,6 +299,12 @@ Requires:   	mmc-web-dashboard >= %{version}
 %description -n mmc-web-base
 Console web interface designed by Linbox.
 
+%post -n mmc-web-base
+if [ ! -d "/usr/share/mmc/jsframework/d3" ];
+then
+    ln -s /usr/lib/node_modules/d3 /usr/share/mmc/jsframework/d3
+fi
+
 %files -n mmc-web-base
 %defattr(-,root,root,0755)
 %attr(0755,root,root) %dir %{_sysconfdir}/mmc/apache
