@@ -34,6 +34,11 @@ case "$1" in
         chown www-data:root /etc/mmc/mmc.ini
         chmod 660 /etc/mmc/mmc.ini
 
+        # We create the d3 folder for the dashboard
+        if [ ! -d "/usr/share/mmc/jsframework/d3" ]; then
+            ln -s ln -s /usr/lib/nodejs/d3/ /usr/share/mmc/jsframework/
+        fi
+
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
