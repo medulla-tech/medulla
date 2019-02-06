@@ -51,6 +51,8 @@ from pulse2.managers.location import ComputerLocationManager
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
+from pulse2.database.pkgs import PkgsDatabase
+
 APIVERSION = "0:0:0"
 
 def getApiVersion(): return APIVERSION
@@ -68,6 +70,9 @@ def activate():
     #TaskManager().addTask("pkgs.updateAppstreamPackages",
     #                    (updateAppstreamPackages,),
     #                    cron_expression='23 10 * * *')
+    if not PkgsDatabase().activate(config):
+        logger.warning("Plugin Pkgs: an error occurred during the database initialization")
+        return False
     return True
 
 class ContextMaker(ContextMakerI):

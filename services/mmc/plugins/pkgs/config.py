@@ -50,6 +50,34 @@ class PkgsConfig(PluginConfig):
         Read the module configuration
         """
         PluginConfig.readConf(self)
+        self.dbdriver = self.get("main", "dbdriver")
+        self.dbhost = self.get("main", "dbhost")
+        self.dbname = self.get("main", "dbname")
+        self.dbuser = self.get("main", "dbuser")
+        if self.has_option("main", "dbport"):
+            self.dbport = self.getint("main", "dbport")
+        else:
+            self.dbport = 3306
+        if self.has_option("main", "dbsslenable"):
+            self.dbsslenable = self.getboolean("main", "dbsslenable")
+        else:
+            self.dbsslenable = False
+
+        if self.has_option("main",  "dbpooltimeout"):
+            self.dbpooltimeout = self.getint("main", "dbpooltimeout")
+        else:
+            self.dbpooltimeout = 30
+
+        if self.has_option("main", "dbpoolrecycle"):
+            self.dbpoolrecycle = self.get("main", "dbpoolrecycle")
+        else:
+            self.dbpoolrecycle = 60
+        if self.has_option("main", "dbpoolsize"):
+            self.dbpoolsize = self.get("main", "dbpoolsize")
+        else:
+            self.dbpoolsize = 5
+        self.dbpasswd = self.getpassword("main", "dbpasswd")
+
 
         # API Package
         if self.has_option("user_package_api", "server"):
