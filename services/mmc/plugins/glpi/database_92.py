@@ -1408,7 +1408,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 if 'type' in self.config.summary:
                     type = l.pop()
                 if 'os' in self.config.summary:
-                    os = l.pop()
+                    oslocal = l.pop()
 
                 m = l.pop()
             owner_login, owner_firstname, owner_realname = self.getMachineOwner(m)
@@ -1438,7 +1438,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 if 'type' in self.config.summary:
                     datas['type'] = type
                 if 'os' in self.config.summary:
-                    datas['os'] = os
+                    datas['os'] = oslocal
                 if 'owner' in self.config.summary:
                     datas['owner'] = owner_login
                 if 'owner_firstname' in self.config.summary:
@@ -2308,7 +2308,7 @@ class Glpi92(DyngroupDatabaseHelper):
             ret = query.count()
         else:
             ret = []
-            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, version, architecture, domain, state, last_contact in query:
+            for machine, infocoms, entity, location, oslocal, manufacturer, type, model, servicepack, version, architecture, domain, state, last_contact in query:
                 endDate = ''
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -2367,7 +2367,7 @@ class Glpi92(DyngroupDatabaseHelper):
                     ['Owner', owner_login],
                     ['Owner Firstname', owner_firstname],
                     ['Owner Realname', owner_realname],
-                    ['OS', os],
+                    ['OS', oslocal],
                     ['Service Pack', servicepack],
                     ['Version', version],
                     ['Architecture', architecture],
@@ -4818,7 +4818,7 @@ ORDER BY
         return final_list
 
     @DatabaseHelper._sessionm
-    def get_machines_with_os_and_version(self, session, os, version = ''):
+    def get_machines_with_os_and_version(self, session, oslocal, version = ''):
         """This function returns a list of id of selected OS for dashboard
         Params:
             os: string which contains the searched OS
@@ -4851,7 +4851,7 @@ WHERE
   glpi.glpi_operatingsystems.name LIKE "%%%s%%"
 AND
   %s
-;""" % (os, criterion)
+;""" % (oslocal, criterion)
 
         res = session.execute(sql)
         result = [{'id':a, 'hostname':b} for a,b in res]

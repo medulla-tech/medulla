@@ -906,7 +906,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if id_inventory is not None and jiduser is not None:
             req=req.filter(and_(Organization_ad.id_inventory == id_inventory,
                                 Organization_ad.jiduser == jiduser))
-        elif id_inventory is not None and iduser is None:
+        elif id_inventory is not None and jiduser is None:
             req=req.filter(Organization_ad.id_inventory == id_inventory)
         elif jiduser is not None and id_inventory is None:
             req=req.filter(Organization_ad.jiduser == jiduser)
