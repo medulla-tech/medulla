@@ -30,7 +30,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 $response = xmlrpc_topology_pulse();
 ?>
 
-<script src="https://d3js.org/d3.v3.js"></script>
+<script src="jsframework/d3/d3.js"></script>
 <style>
 	.node {
 		cursor: pointer;
