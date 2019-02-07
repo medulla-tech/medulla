@@ -50,6 +50,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	imaging/skel/header.lst \
 	imaging/skel/symlinks \
 	imaging/sql/README \
+	imaging/sql/synch-localglpi-to-imaging.sql \
+	imaging/sql/synch-remoteglpi-to-imaging.sql.in \
 	imaging/sql/schema-001.sql \
 	imaging/sql/schema-002.sql \
 	imaging/sql/schema-003.sql \

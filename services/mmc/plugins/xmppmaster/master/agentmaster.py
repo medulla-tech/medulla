@@ -28,7 +28,7 @@ import re
 
 import ConfigParser
 import operator
-
+import zlib
 import sleekxmpp
 from sleekxmpp import jid
 
@@ -125,12 +125,17 @@ def callshutdownbymaster(to, time, msg):
 def callvncchangepermsbymaster(to, askpermission):
     return ObjectXmpp().callvncchangepermsbymaster(to, askpermission)
 
-# #################### call synchronous iq##########################
+##################### call synchronous iq##########################
 
-
-def callremotefile(jidmachine, currentdir="", timeout=15):
-    return ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotefile", "data": currentdir}, timeout)
-
+def callremotefile(jidmachine, currentdir="", timeout=40):
+    strctfilestrcompress = ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotefile", "data": currentdir}, timeout)
+    try :
+        strctfilestr=zlib.decompress(base64.b64decode(strctfilestrcompress))
+        return strctfilestr
+    except Exception as e:
+        print str(e)
+        traceback.print_exc(file=sys.stdout)
+    return strctfilestrcompress
 
 def calllistremotefileedit(jidmachine):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action": "listremotefileedit",
@@ -328,6 +333,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.schedule('schedule garbage', self.TIMESCHEDULERGARBAGE, self.garbagedeploy, repeat=True)
         self.schedule('schedulerfunction', 60, self.schedulerfunction, repeat=True)
 
+        ## function scheduler use to chase memory leaks
+        #self.timecheck = 15
+        ## function self.leakmemory in function class
+        #self.schedule('event leakmemory',self.timecheck, self.__leakmemory, repeat=True)
+
+
         # Decrement session time
         self.schedule('manage session', 15, self.handlemanagesession, repeat=True)
 
@@ -396,13 +407,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 if z.tag.endswith('data'):
                                     # decode result
                                     # TODO : Replace print by log
-                                    print z.tag[1:-5]
+                                    #print z.tag[1:-5]
                                     return base64.b64decode(z.tag[1:-5])
                                     try:
                                         data = base64.b64decode(z.tag[1:-5])
                                         # TODO : Replace print by log
-                                        print "RECEIVED data"
-                                        print data
+                                        #print "RECEIVED data"
+                                        #print data
                                         return data
                                     except Exception as e:
                                         logging.error("iqsendpulse : %s" % str(e))
@@ -428,11 +439,50 @@ class MUCBot(sleekxmpp.ClientXMPP):
         MscDatabase().xmppstage_statecurrent_xmpp()
         XmppMasterDatabase().update_status_deploy_end()
 
+    #def __leakmemory(self):
+        #"""
+            #function scheduler use to chase memory leaks
+        #"""
+        #from time import strftime
+        #import gc
+        ##install  module memory_profiler
+        #from memory_profiler import *
+        ## schedule deployement
+        #if not hasattr(self, 'countseconde'):
+            #self.mesuref = 0.0
+            #self.countseconde = 0
+            #self.mesure = ""
+            #self.mesuref = 0.0
+            #self.name_file_log_leak_memory = "/tmp/data.txt"
+        
+        #self.countseconde += self.timecheck
+        #mem_usage = memory_usage(-1, interval=1, timeout=1)
+        #mesure = str(mem_usage[0]).replace(".",",")
+        #if mesure != self.mesure:
+            #print "__________leak memory_________"
+            #taillepris = (mem_usage[0] - self.mesuref)
+            #self.mesuref = mem_usage[0]
+            #fichier = open(self.name_file_log_leak_memory, "a")
+            #datetimewrite = strftime("%H:%M:%S")
+            #stem = "\n%s count %s\ntime %ss MT %.2f MiB delta [ %s Mo | %s Ko | %s Oc | %s Oc/s]\n"%( datetimewrite,
+                                                                                                    #gc.get_count(),
+                                                                                                    #self.countseconde,
+                                                                                                    #mem_usage[0],
+                                                                                                    #round(taillepris,2),
+                                                                                                    #round(taillepris *1024,2),
+                                                                                                    #round(taillepris *1024 * 1024,2),
+                                                                                                    #round((taillepris *1024 * 1024)/self.countseconde,2))
+            #fichier.write(stem)
+            #self.countseconde = 0
+            #print stem
+            #fichier.close()
+            #self.mesure = mesure
+            #print "______________________________"
+
     def scheduledeploy(self):
         listobjsupp = []
         #search deploy to rumming
-        resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp()
-
+        resultdeploymachine, wolupdatemachine = MscDatabase().deployxmpp(800)
         for uuiddeploy in self.machineWakeOnLan:
             # not SEND WOL on presense machine
             if XmppMasterDatabase().getPresenceuuid(uuiddeploy):
@@ -442,31 +492,21 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 del self.machineWakeOnLan[uuiddeploy]
             except Exception:
                 pass
-        for deploy in resultdeploymachine:
+        for deployobject in resultdeploymachine:
             # creation deployment
-            UUID = str(deploy.Target.target_uuid)
-            deployobject = {'pakkageid': str(deploy.Commands.package_id),
-                            'commandid':  deploy.Commands.id,
-                            'mac': deploy.Target.target_macaddr,
-                            'count': 0,
-                            'cycle': 0,
-                            'login': deploy.Commands.creator,
-                            'start_date': deploy.Commands.start_date,
-                            'end_date': deploy.Commands.end_date,
-                            'title': deploy.Commands.title,
-                            'UUID': deploy.Target.target_uuid,
-                            'GUID': deploy.Target.id_group}
-
+            UUID = deployobject['UUID']
             if XmppMasterDatabase().getPresenceuuid(UUID):
                 # If a machine is present, add deployment in deploy list to manage.
                 try:
                     self.machineDeploy[UUID].append(deployobject)
                 except:
+                    #creation list deployement
                     self.machineDeploy[UUID] = []
                     self.machineDeploy[UUID].append(deployobject)
 
         for deploy in wolupdatemachine:
-            UUID = str(deploy.Target.target_uuid)
+            UUID = deploy['UUID']
+            #UUID = str(deploy.Target.target_uuid)
 
             if UUID in self.machineWakeOnLan:
                 if 'count' in self.machineWakeOnLan[UUID]:
@@ -486,7 +526,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         for uuidmachine in self.machineWakeOnLan:
             # TODO : Replace print by log
-            print self.machineWakeOnLan[uuidmachine]['count']
+            #print self.machineWakeOnLan[uuidmachine]['count']
             if self.machineWakeOnLan[uuidmachine]['count'] < self.CYCLESCHEDULER:
                 listmacadress = self.machineWakeOnLan[uuidmachine]['mac'].split("||")
                 for macadress in listmacadress:
@@ -730,11 +770,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
 
     def parsexmppjsonfile(self, path):
+        ### puts the words False in lowercase.
         datastr = file_get_contents(path)
-
         datastr = re.sub(r"(?i) *: *false", " : false", datastr)
         datastr = re.sub(r"(?i) *: *true", " : true", datastr)
-
         file_put_contents(path, datastr)
 
     def applicationdeploymentjson(self,
@@ -756,17 +795,23 @@ class MUCBot(sleekxmpp.ClientXMPP):
         The package is already on the machine and also in relay server.
         """
 
-        if not managepackage.getversionpackagename(name):
-            logger.error("deploy %s error package name" % (name))
+        if managepackage.getversionpackagename(name) is None:
+            logger.error("deploy %s error package name version missing" % (name))
             return False
         # Name the event
         dd = name_random(5, "deploy_")
         path = managepackage.getpathpackagename(name)
+        if path is None:
+            logger.error("package Name missing (%s)" % (name))
+            return False
         descript = managepackage.loadjsonfile(os.path.join(path, 'xmppdeploy.json'))
+        
+        
+        
         self.parsexmppjsonfile(os.path.join(path, 'xmppdeploy.json'))
         if descript is None:
             logger.error("deploy %s on %s  error : xmppdeploy.json missing" % (name, uuidmachine))
-            return None
+            return False
         objdeployadvanced = XmppMasterDatabase().datacmddeploy(idcommand)
         data = {"name": name,
                 "login": login,
@@ -976,10 +1021,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def restartmachineasynchrone(self, jid):
         waittingrestart = random.randint(10, 20)
         # TODO : Replace print by log
-        print "Restart Machine jid %s after %s secondes" % (jid, waittingrestart)
+        # print "Restart Machine jid %s after %s secondes" % (jid, waittingrestart)
         sleep(waittingrestart)
         # TODO : Replace print by log
-        print "Restart Machine jid %s fait" % jid
+        # print "Restart Machine jid %s fait" % jid
         # Check if restartAgent is not called from a plugin or a lib.
 
         self.restartAgent(jid)
@@ -1537,7 +1582,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if 'action' in data and data['action'] == 'askinfo':
                 # Returns machine information
                 # TODO : replace print by logs
-                print json.dumps(data, indent=4)
+                #print json.dumps(data, indent=4)
                 if not "data" in data:
                     return
                 if "fromplugin" in data['data']:
@@ -1588,7 +1633,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             self.send_message(mto=jidmachine,
                                               mbody=json.dumps(data),
                                               mtype='chat')
-                            print "send %s" % json.dumps(data)
+                            #print "send %s" % json.dumps(data)
                     if not "sendemettor" in data['data']:
                         data['data']['sendemettor'] = True
                     if data['data']['sendemettor'] == True:

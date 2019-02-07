@@ -724,25 +724,57 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         session.close()
 
-    def deployxmpp(self):
+
+    def deployxmpp(self, intervalsearch=800):
         """
             select deploy machine
         """
-        session = create_session()
-        try:
-            join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
-            q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
-            q = q.select_from(join)
-            q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',self.commands_on_host_phase.c.state == 'ready',
-                              self.commands.c.start_date < datetime.datetime.now(),
-                              self.commands.c.end_date  > (datetime.datetime.now() - datetime.timedelta(seconds=800))))
-            q = q.all()
-            session.flush()
-        except Exception, exc:
-            self.logger.error(str(exc))
-            session.close()
-            return ""
+        q = self.__search_command_deploy(intervalsearch)
+        return self.__dispach_deploy(q)
 
+    @DatabaseHelper._sessionm
+    def __search_command_deploy(self, session, intervalsearch):
+        """
+            select deploy machine
+        """
+        datenow = datetime.datetime.now()
+        sqlselect="""
+        SELECT 
+                `commands`.`id` AS commands_id,
+                `commands`.`title` AS commands_title,
+                `commands`.`creator` AS commands_creator,
+                `commands`.`package_id` AS commands_package_id,
+                `commands`.`start_date` AS commands_start_date,
+                `commands`.`end_date` AS commands_end_date,
+                `commands_on_host`.`id` AS commands_on_host_id,
+                `target`.`target_name` AS target_target_name,
+                `target`.`target_uuid` AS target_target_uuid,
+                `target`.`id_group` AS target_id_group,
+                `target`.`target_macaddr` AS target_target_macaddr
+            FROM
+                commands_on_host
+                    INNER JOIN
+                commands ON commands.id = commands_on_host.fk_commands
+                    INNER JOIN
+                target ON target.id = commands_on_host.fk_target
+                    INNER JOIN
+                `phase` ON `phase`.fk_commands_on_host = `commands_on_host`.`id`
+            WHERE
+                `phase`.`name` = 'execute'
+                    AND 
+                `phase`.`state` = 'ready'
+                    AND 
+                commands.start_date <= '%s'
+                    AND 
+                commands.end_date > DATE_SUB("%s",
+                                             INTERVAL %s SECOND);"""%(datenow,
+                                                                      datenow, 
+                                                                      intervalsearch)
+        resultsql = self.db.execute(sqlselect)
+        return resultsql
+
+    @DatabaseHelper._sessionm
+    def __dispach_deploy(self, session, q):
         tabmachine = []
         updatemachine = []
         listemachine = []
@@ -750,37 +782,56 @@ class MscDatabase(DatabaseHelper):
         wolupdatemachine = []
         self.logger.debug("select deploy machine")
         for x in q:
-            presence = XmppMasterDatabase().getPresenceuuid(x.Target.target_uuid)
+            presence = XmppMasterDatabase().getPresenceuuid(x.target_target_uuid)
             if presence:
-                self.logger.debug("machine %s presente for deploy %s"%(x.Target.target_uuid, x.Commands.package_id))
+                self.logger.debug("machine %s [%s] presente for deploy package %s"%(x.target_target_name,
+                                                                                    x.target_target_uuid, 
+                                                                                    x.commands_package_id))
             else:
-                self.logger.debug("machine %s missing for deploy %s"%(x.Target.target_uuid, x.Commands.package_id))
+                self.logger.debug("machine %s [%s] missing for deploy package %s"%(x.target_target_name,
+                                                                                    x.target_target_uuid, 
+                                                                                    x.commands_package_id))
 
             if presence:
-                if not x.Target.target_uuid in tabmachine:
-                    tabmachine.append(x.Target.target_uuid)
+                deployobject = {'pakkageid': str(x.commands_package_id),
+                                'commandid':  x.commands_id,
+                                'mac': str(x.target_target_macaddr),
+                                'count': 0,
+                                'cycle': 0,
+                                'login': str(x.commands_creator),
+                                'start_date': x.commands_start_date,
+                                'end_date': x.commands_end_date,
+                                'title': str(x.commands_title),
+                                'UUID': str(x.target_target_uuid),
+                                'GUID': x.target_id_group}
+                if not x.target_target_uuid in tabmachine:
+                    tabmachine.append(x.target_target_uuid)
                     #recherche machine existe pour xmpp
-                    self.logger.info("deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id))
-                    machine_do_deploy[x.Target.target_uuid] = x.Commands.package_id
-                    updatemachine.append(x)
+                    self.logger.info("deploy on machine %s [%s] -> %s"%(x.target_target_name,
+                                                                        x.target_target_uuid,
+                                                                        x.commands_package_id))
+                    machine_do_deploy[x.target_target_uuid] = x.commands_package_id
+                    updatemachine.append(deployobject)
 
-                    session.query(CommandsOnHost).filter(CommandsOnHost.id == x.CommandsOnHost.id ).\
+                    session.query(CommandsOnHost).filter(CommandsOnHost.id == x.commands_on_host_id ).\
                         update({CommandsOnHost.current_state: "done",
                                 CommandsOnHost.stage : "ended"
                                 })
                     session.flush()
-                    session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.CommandsOnHost.id ).\
+                    session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.commands_on_host_id).\
                         update({ CommandsOnHostPhase.state : "done" })
                     session.flush()
 
                 else:
-                    self.logger.warn("Cancel deploy in process\n Deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id))
-                    listemachine.append(x)
+                    self.logger.warn("Cancel deploy in process\n"\
+                        "Deploy on machine %s [%s] -> %s"%(x.target_target_name,
+                                                           x.target_target_uuid,
+                                                           x.commands_package_id))
+                    listemachine.append(deployobject)
             else:
-                wolupdatemachine.append(x)
-
-        session.close()
-        return updatemachine, machine_do_deploy, wolupdatemachine
+                wolupdatemachine.append(deployobject)
+        # return updatemachine, machine_do_deploy, wolupdatemachine, listemachine #complete infos
+        return updatemachine, wolupdatemachine
 
 
     def deleteCommand(self, cmd_id):

@@ -79,7 +79,7 @@ if (isset($_POST["bdelmachine_x"])) {
     $listOfMachines = getRestrictedComputersList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'), 'filter'=>$_POST['filter'], 'imaging_server'=>$imaging_server), False);
     $count = getRestrictedComputersListLen(array('filter'=>$_POST['filter'], 'imaging_server'=>$imaging_server));
     if ($truncate_limit < $count) {
-        new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
+        new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers. Use the filter to find specific machines.", "dyngroup"), $truncate_limit));
     }
     $machines = array();
     foreach ($listOfMachines as $machine) {
@@ -299,7 +299,7 @@ if (isset($_POST["bdelmachine_x"])) {
                                                     'fk_entity' => $entitieval));
     $count = getRestrictedComputersListLen(array('imaging_server'=>$imaging_server));
     if ($truncate_limit < $count) {
-        new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
+        new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers. Use the filter to find specific machines.", "dyngroup"), $truncate_limit));
     }
     $machines = array();
     foreach ($listOfMachines as $machine) {

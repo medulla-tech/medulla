@@ -270,6 +270,10 @@ class Glpi92(DyngroupDatabaseHelper):
         self.diskfs = Table('glpi_filesystems', self.metadata, autoload = True)
         mapper(DiskFs, self.diskfs)
 
+        # glpi_operatingsystemversions
+        self.os_version = Table('glpi_operatingsystemversions', self.metadata, autoload = True)
+        mapper(OsVersion, self.os_version)
+
         ## Fusion Inventory tables
 
         self.fusionantivirus = None
@@ -675,7 +679,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 if 'owner' in self.config.summary or \
                    'owner_firstname' in self.config.summary or \
                    'owner_realname' in self.config.summary:
-                    join_query = join_query.outerjoin(self.user)
+                    join_query = join_query.outerjoin(self.user, self.machine.c.users_id == self.user.c.id)
                 try:
                     if regs[0]:
                         join_query = join_query.outerjoin(self.regcontents)
@@ -949,6 +953,10 @@ class Glpi92(DyngroupDatabaseHelper):
             return base + [ self.regcontents]#self.collects, self.registries,
         elif query[2] == 'Register key value':
             return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
+        elif query[2] == 'OS Version':
+            return base + [ self.os_version ]
+        elif query[2] == 'Architecture':
+            return base + [ self.os_arch ]
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -1093,6 +1101,10 @@ class Glpi92(DyngroupDatabaseHelper):
             return [[self.registries.c.name, query[3]]]
         elif query[2] == 'Register key value':
             return [[self.registries.c.name, query[3][0]], [self.regcontents.c.value , query[3][1]]]
+        elif query[2] == 'OS Version':
+            return [[self.os_version.c.name, query[3]]]
+        elif query[2] == 'Architecture':
+            return [[self.os_arch.c.name, query[3]]]
         return []
 
 
@@ -1396,7 +1408,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 if 'type' in self.config.summary:
                     type = l.pop()
                 if 'os' in self.config.summary:
-                    os = l.pop()
+                    oslocal = l.pop()
 
                 m = l.pop()
             owner_login, owner_firstname, owner_realname = self.getMachineOwner(m)
@@ -1426,7 +1438,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 if 'type' in self.config.summary:
                     datas['type'] = type
                 if 'os' in self.config.summary:
-                    datas['os'] = os
+                    datas['os'] = oslocal
                 if 'owner' in self.config.summary:
                     datas['owner'] = owner_login
                 if 'owner_firstname' in self.config.summary:
@@ -2271,6 +2283,7 @@ class Glpi92(DyngroupDatabaseHelper):
             .add_column(self.glpi_computertypes.c.name) \
             .add_column(self.glpi_computermodels.c.name) \
             .add_column(self.glpi_operatingsystemservicepacks.c.name) \
+            .add_column(self.glpi_operatingsystemversions.c.name) \
             .add_column(self.glpi_operatingsystemarchitectures.c.name) \
             .add_column(self.glpi_domains.c.name) \
             .add_column(self.state.c.name) \
@@ -2284,6 +2297,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_computertypes) \
                 .outerjoin(self.glpi_computermodels) \
                 .outerjoin(self.glpi_operatingsystemservicepacks) \
+                .outerjoin(self.glpi_operatingsystemversions) \
                 .outerjoin(self.glpi_operatingsystemarchitectures) \
                 .outerjoin(self.state) \
                 .outerjoin(self.fusionagents) \
@@ -2294,7 +2308,7 @@ class Glpi92(DyngroupDatabaseHelper):
             ret = query.count()
         else:
             ret = []
-            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, architecture, domain, state, last_contact in query:
+            for machine, infocoms, entity, location, oslocal, manufacturer, type, model, servicepack, version, architecture, domain, state, last_contact in query:
                 endDate = ''
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -2353,8 +2367,9 @@ class Glpi92(DyngroupDatabaseHelper):
                     ['Owner', owner_login],
                     ['Owner Firstname', owner_firstname],
                     ['Owner Realname', owner_realname],
-                    ['OS', os],
+                    ['OS', oslocal],
                     ['Service Pack', servicepack],
+                    ['Version', version],
                     ['Architecture', architecture],
                     ['Windows Key', machine.license_number],
                     ['Model / Type', modelType],
@@ -3702,6 +3717,29 @@ class Glpi92(DyngroupDatabaseHelper):
             return None
         return toUUID(ret.id)
 
+    def getMachineByOsVersion(self, ctx, filt):
+        """ @return: all machines that have this os version """
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.os_version))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.os_version.c.name == filt)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getMachineByArchitecure(self, ctx, filt):
+        """ @return: all machines that have this architecture """
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.os_arch))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.os_arch.c.name == filt)
+        ret = query.all()
+        session.close()
+
     def getComputersOS(self, uuids):
         if isinstance(uuids, str):
             uuids = [uuids]
@@ -4624,6 +4662,26 @@ class Glpi92(DyngroupDatabaseHelper):
         session.flush()
         return True
 
+    def getAllOsVersions(self, ctx, filt = ''):
+        """ @return: all os versions defined in the GLPI database """
+        session = create_session()
+        query = session.query(OsVersion)
+        if filter != '':
+            query = query.filter(OsVersion.name.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllArchitectures(self, ctx, filt = ''):
+        """ @return: all hostnames defined in the GLPI database """
+        session = create_session()
+        query = session.query(OsArch)
+        if filter != '':
+            query = query.filter(OsArch.name.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
     @DatabaseHelper._sessionm
     def addRegistryCollectContent(self, session, computers_id, registry_id, key, value):
         """
@@ -4700,9 +4758,11 @@ ON
 left JOIN
   glpi_operatingsystemversions
 ON
-  operatingsystemversions_id = glpi_operatingsystemversions.id;"""
+  operatingsystemversions_id = glpi_operatingsystemversions.id
+ORDER BY
+ glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
         res = self.db.execute(sql)
-        result = [{'os': os, 'version': version} for os, version in res]
+        result = [{'os': os, 'version': version, 'count':1} for os, version in res]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
@@ -4724,32 +4784,41 @@ ON
 
         final_list = []
         for machine in result:
-            machine['count'] = 1
-            if machine['os'].startswith('Android'):
-                pass
-            elif machine['os'].startswith('Debian'):
+            if machine['os'].startswith('Debian'):
                 machine['os'] = 'Debian'
-                machine['version'] = machine['version'].split(" ")
-                machine['version'] = machine['version'][0]
+                machine['version'] = machine['version'].split(" ")[0]
             elif machine['os'].startswith('Microsoft'):
                 machine['os'] = machine['os'].split(' ')[1:3]
                 machine['os'] = ' '.join(machine['os'])
             elif machine['os'].startswith('Ubuntu'):
                 machine['os'] = 'Ubuntu'
                 # We want just the XX.yy version number
-                machine['version'] = machine['version'].split(" ")[0]
-                machine['version'] = machine['version'].split(".")
+                machine['version'] = machine['version'].split(" ")[0].split(".")
                 if len(machine['version']) >= 2:
                     machine['version'] = machine['version'][0:2]
                 machine['version'] = '.'.join(machine['version'])
+            elif machine['os'].startswith('Mageia'):
+                machine['os'] = machine['os'].split(" ")[0]
+            elif machine['os'].startswith('Unknown'):
+                machine['os'] = machine['os'].split("(")[0]
+                machine['version'] = ""
+            elif machine['os'].startswith("CentOS"):
+                machine['os'] = machine['os'].split(" ")[0]
+                machine['version'] = machine['version'].split("(")[0].split(".")[0:2]
+                machine['version'] = ".".join(machine['version'])
+
+            elif machine['os'].startswith("macOS") or machine['os'].startswith("OS X"):
+                machine['version'] = machine['version'].split(" (")[0].split(".")[0:2]
+                machine['version'] = ".".join(machine['version'])
+
             else:
-                machine['os'] = 'Other'
+                pass
 
             final_list = _add_element(machine, final_list)
         return final_list
 
     @DatabaseHelper._sessionm
-    def get_machines_with_os_and_version(self, session, os, version = ''):
+    def get_machines_with_os_and_version(self, session, oslocal, version = ''):
         """This function returns a list of id of selected OS for dashboard
         Params:
             os: string which contains the searched OS
@@ -4782,7 +4851,7 @@ WHERE
   glpi.glpi_operatingsystems.name LIKE "%%%s%%"
 AND
   %s
-;""" % (os, criterion)
+;""" % (oslocal, criterion)
 
         res = session.execute(sql)
         result = [{'id':a, 'hostname':b} for a,b in res]
@@ -4970,4 +5039,7 @@ class RuleCriterion(DbTOA):
     pass
 
 class RuleAction(DbTOA):
+    pass
+
+class OsVersion(DbTOA):
     pass

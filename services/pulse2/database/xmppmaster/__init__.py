@@ -1039,7 +1039,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if id_inventory is not None and jiduser is not None:
             req=req.filter(and_(Organization_ad.id_inventory == id_inventory,
                                 Organization_ad.jiduser == jiduser))
-        elif id_inventory is not None and iduser is None:
+        elif id_inventory is not None and jiduser is None:
             req=req.filter(Organization_ad.id_inventory == id_inventory)
         elif jiduser is not None and id_inventory is None:
             req=req.filter(Organization_ad.jiduser == jiduser)
@@ -1186,28 +1186,29 @@ class XmppMasterDatabase(DatabaseHelper):
             obj['rebootrequired'] = result.rebootrequired
             obj['shutdownrequired'] = result.shutdownrequired
             obj['limit_rate_ko'] = result.bandwidth
-            try:
-                params_json = json.loads(result.params_json)
+            if result.params_json is not None:
+                try:
+                    params_json = json.loads(result.params_json)
+                    if 'spooling' in params_json:
+                        obj['spooling'] = params_json['spooling']
+                except Exception, e:
+                    logging.getLogger().error("[the avanced parameters from msc] : "+str(e))
 
-                if 'spooling' in params_json:
-                    obj['spooling'] = params_json['spooling']
-            except Exception, e:
-                logging.getLogger().error(str(e)+" [the avanced parameters from msc ]")
-
-            try:
-                params = str(result.parameters_deploy)
-                if params == '':
-                    return obj
-                if not params.startswith('{'):
-                    params = '{' + params
-                if not params.endswith('}'):
-                    params = params + '}'
-                obj['paramdeploy'] = json.loads(params)
-            except Exception, e:
-                logging.getLogger().error(str(e)+" [the parameters must be declared in a json dictionary]")
+            if result.parameters_deploy is not None:
+                try:
+                    params = str(result.parameters_deploy)
+                    if params == '':
+                        return obj
+                    if not params.startswith('{'):
+                        params = '{' + params
+                    if not params.endswith('}'):
+                        params = params + '}'
+                    obj['paramdeploy'] = json.loads(params)
+                except Exception, e:
+                    logging.getLogger().error("[the avanced parameters must be declared in a json dictionary] : "+ str(e))
             return obj
         except Exception, e:
-            logging.getLogger().error(str(e) + " [ obj commandid missing]")
+            logging.getLogger().error("[ obj commandid missing] : " + str(e))
             return {}
 
     @DatabaseHelper._sessionm
@@ -1324,11 +1325,11 @@ class XmppMasterDatabase(DatabaseHelper):
         return obj
 
     @DatabaseHelper._sessionm
-    def get_group_stop_deploy(self, session, grpid):
+    def get_group_stop_deploy(self, session, grpid, cmdid):
         """
-            this function return the machines list for 1 group id
+            this function return the machines list for 1 group id and 1 command id
         """
-        relayserver = session.query(Deploy).filter(Deploy.group_uuid == grpid)
+        relayserver = session.query(Deploy).filter(and_( Deploy.group_uuid == grpid, Deploy.command == cmdid))
         relayserver = relayserver.all()
         session.commit()
         session.flush()
@@ -1441,7 +1442,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self, 
+    def addlogincommand(self,
                         session,
                         login,
                         commandid,
@@ -2387,7 +2388,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
-            limit 1;"""%(rule, username, enabled, classutilMachine)
+            limit 1;"""%(rule, userou, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
             from `relayserver`
