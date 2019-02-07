@@ -2,6 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2019 Siveo, http://www.siveo.net
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -21,10 +22,25 @@
  */
 
 include_once("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
-include_once(urldecode($_GET['file']));
+$protocol = 'http://';
+if(isset($_GET['file'], $_SESSION))
+{
+  // Remove all the ../
+  $file= str_replace('../', '', urldecode($_GET['file']));
+  if(preg_match("#(.inc.php)$#", $file))
+  {
+      include_once($file);
 
-$class = $options['class'];
-$panel = new $class($options['id'], $options['title']);
-$panel->display();
+      $class = $options['class'];
+      $panel = new $class($options['id'], $options['title']);
+      $panel->display();
+  }
+  else {
+    header("location: ".$protocol.$_SERVER['HTTP_HOST']);
+  }
+}
 
+else{
+  header("location: ".$protocol.$_SERVER['HTTP_HOST']);
+}
 ?>

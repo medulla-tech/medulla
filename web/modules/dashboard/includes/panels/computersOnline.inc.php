@@ -26,6 +26,7 @@ require_once("modules/base/includes/computers.inc.php");
 $options = array(
     "class" => "ComputersOnlinePanel",
     "id" => "computersOnline",
+    "refresh" => 300,
     "title" => _T("Machines Online", "dashboard"),
     "enable" => true,
 );
@@ -39,9 +40,19 @@ class ComputersOnlinePanel extends Panel {
 
         if($total_machines >= $machines_online) {
           $machines_offline = $total_machines - $machines_online;
-          echo 'Total machines : '.$total_machines.'<br/>';
-          echo '<span style="color:green">'._T("Machines online : ","dashboard").$machines_online.'</span><a href="'.$urlRedirect.'&machines=online"><img title="'._T("Create a group","dashboard").'" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
-          echo '<span style="color:red">'._T("Machines offline : ","dashboard").$machines_offline.'</span><a href="'.$urlRedirect.'&machines=offline"><img title="'._T("Create a group","dashboard").'" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
+          $online_text = _T("Machines online : ","dashboard");
+          $offline_text = _T("Machines offline : ","dashboard");
+
+          echo <<< ONLINE
+          <script>
+            var onlineDatas = [
+              {"label": "$online_text", "value":$machines_online, "href":"$urlRedirect&machines=online"},
+              {'label': '$offline_text', 'value': $machines_offline, "href": "$urlRedirect&machines=offline"}
+            ];
+
+            donut("computersOnline",onlineDatas, "Total", $total_machines);
+          </script>
+ONLINE;
         }
         else {
           echo '<span style="color:red">'._T("A problem occurred while counting machines").'</span>';

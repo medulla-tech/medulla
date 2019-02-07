@@ -8,7 +8,7 @@ require("includes/PageGenerator.php");
 global $conf;
 $root = $conf["global"]["root"];
 $server = $_GET["server"];
-$lang = $_GET["lang"];
+$lang = htmlentities($_GET["lang"]);
 
 $_SESSION["XMLRPC_agent"] = parse_url($conf[$server]["url"]);
 $_SESSION["agent"] = $server;

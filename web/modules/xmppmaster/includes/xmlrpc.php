@@ -59,7 +59,6 @@ function xmlrpc_createdirectoryuser($directory){
     return xmlCall("xmppmaster.createdirectoryuser", array($directory));
 }
 
-
 function xmlrpc_remotefilesystem($currentdir, $jidmachine){
     return xmlCall("xmppmaster.remotefile", array($currentdir, $jidmachine));
 }
@@ -217,8 +216,8 @@ function xmlrpc_get_machine_stop_deploy($cmdid, $uuid) {
     return xmlCall("xmppmaster.get_machine_stop_deploy", array($cmdid, $uuid));
 }
 
-function xmlrpc_get_group_stop_deploy($grpid) {
-    return xmlCall("xmppmaster.get_group_stop_deploy", array($grpid));
+function xmlrpc_get_group_stop_deploy($grpid, $cmdid) {
+    return xmlCall("xmppmaster.get_group_stop_deploy", array($grpid, $cmdid));
 }
 
 function xmlrpc_getlinelogswolcmd($command_id, $uuid) {

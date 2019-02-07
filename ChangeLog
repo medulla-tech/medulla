@@ -1,3 +1,17 @@
+
+
+mmc-core 4.5.1
+==============
+* [FEATURE] New history page for file transfers
+* [FEATURE] Expert file download allows download of several files and folders
+* [FEATURE] File download shows a tree view of the remote filesystem
+* [FEATURE] Enable changing of audit refresh time
+* [BUGFIX]  Improve quick actions for Linux clients
+* [BUGFIX]  Improve the detection of the presence of clients in groups
+* [BUGFIX]  Quick actions moved to standard mode
+* [BUGFIX]  Improve refresh of the dashboard and audit view
+* [BUGFIX]  Fix abort of deployments on groups
+
 mmc-core 4.5
 ============
 * [FEATURE] The Quick Actions can be shared with others users

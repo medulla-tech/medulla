@@ -152,7 +152,7 @@ ul.leftfile, ul.rightfile {
 }
 .Localdestination:hover {
         Font-Weight : Bold ;
-        font-size : 20px;
+        font-size : 15px;
 }
 .delete{
         padding: 3px 0px 5px 20px;
@@ -168,7 +168,7 @@ ul.leftfile, ul.rightfile {
 }
 .delete:hover{
         Font-Weight : Bold ;
-        font-size : 20px;
+        font-size : 15px;
 }
 .pop{
         padding: 3px 0px 5px 20px;
@@ -184,7 +184,7 @@ ul.leftfile, ul.rightfile {
 }
 .pop:hover{
         Font-Weight : Bold ;
-        font-size : 20px;
+        font-size : 15px;
 }
 .ombremultiple {
         /*width:100%;*/
@@ -198,6 +198,39 @@ ul.leftfile, ul.rightfile {
         background-color:#ECECEC;
         box-shadow:2px 2px 2px gray,
         -1px -1px 2px white;
+}
+
+.guaca a {
+    padding: 0px 0px 5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/guaca.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+.quick a {
+    padding: 0px 0px 5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/quick.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+.console a {
+    padding: 3px 0px 5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/console.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 </style>
 
@@ -260,7 +293,10 @@ echo '</script>';
             echo "</h2>";
             exit;
     }
-    $datatree = $lifdirremote['data']['strjsonhierarchy'];
+    $searchchar = array(':', '/', );// repect order
+    $replacechar   = array( '", "children" : [', '{"text" : "');// repect order
+    $datatree = str_replace ( $searchchar, $replacechar, $lifdirremote['data']['strjsonhierarchy'] );
+    unset ($lifdirremote['data']['strjsonhierarchy']);
     // cherche local directory
 
 printf ('
@@ -294,9 +330,9 @@ printf ('
 
 <div id="global">
     <table>
-        <caption style = " caption-side : top; 
-                           text-align : left; 
-                           Font-Weight : Bold ; 
+        <caption style = " caption-side : top;
+                           text-align : left;
+                           Font-Weight : Bold ;
                            font-size : 17px;" ><?php echo sprintf(_T('Downloads basket', 'xmppmaster')); ?>
         </caption>
 
@@ -337,11 +373,11 @@ printf ('
             <tr style="height: 100%;">
                 <td class = "ombremultiple" style="vertical-align : top; height:600px; Font-Weight : Bold;font-size : 15px;" >
                     <div id="fileshowlocal" class="fileshow" >
-                        <?php  echo '<div style=" Font-Weight : Bold; 
+                        <?php  echo '<div style=" Font-Weight : Bold;
                                                   font-size : 15px;">'.
                                                   sprintf(_T('Local folder', 'xmppmaster')).'
                                                   : <span  style=" Font-Weight : Bold;
-                                                                               Font-size : 15px;" 
+                                                                               Font-size : 15px;"
                         id=\'localcurrrent\'>'.$lifdirlocal['path_abs_current'] ."</span></div>";
 
                         echo '<ul id="leftdirdata" class="leftdir">';
@@ -365,8 +401,8 @@ printf ('
             <tr>
                 <td class="enplacementcss ombremultiple">
                     <span style="Font-Weight : Bold; font-size : 15px;"><?php echo sprintf(_T('Remote tree view', 'xmppmaster')); ?>: </span><br>
-                    <span style="Font-Weight : Bold; 
-                    font-size : 15px; 
+                    <span style="Font-Weight : Bold;
+                    font-size : 15px;
                     text-align: right"><?php echo _T('root:', 'xmppmaster')." ".$rootfilesystempath; ?></span>
                 </td>
                 <td class="currentdircss ombremultiple" style="Font-Weight : Bold; font-size : 15px;">
@@ -455,9 +491,7 @@ printf ('
             .on("changed.jstree", function (e, data) {
                 if(data.selected.length) {
                     var pathlinux = data.instance.get_path(data.node, '/');
-
-                    var rs = jQuery('#rootfilesystempath').val();
-                    remote(pathlinux.substr(rs.length));
+                    remote(pathlinux);
                 }
             })
             .jstree({
@@ -471,7 +505,6 @@ printf ('
             ;
             timetmp = user + "-" + datetimenow();
             jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" );
-
             jQuery('#directoryremote').on('ready.jstree', function() {
                 jQuery('#directoryremote').jstree("open_all");
             });

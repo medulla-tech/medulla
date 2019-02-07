@@ -192,3 +192,8 @@ destpath = /home/archives
 # support_mail =
 # support_phone =
 # support_comment =
+
+[memoryinfo]
+time = 15
+outfile = /tmp/leakmemory.data
+leak_memory_disable = True
