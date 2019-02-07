@@ -21,7 +21,8 @@
 
 SERVICES='mmc-agent pulse2-inventory-server pulse2-package-server \
           pulse-xmpp-agent-relay pulse-xmpp-agent-log \
-          pulse2-register-pxe isc-dhcp-server tftpd-hpa'
+          pulse2-register-pxe isc-dhcp-server tftpd-hpa \
+          pulse-package-watching'
 
 for service in ${SERVICES}; do
   if systemctl is-enabled ${service} &>/dev/null ; then

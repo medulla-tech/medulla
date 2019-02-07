@@ -93,6 +93,7 @@ class PackageApiPut(PackageApiGet):
                 logging.getLogger().debug("Move file %s" % file['filename'])
                 move(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
                              os.path.join(filepath, file['filename']))
+                os.chmod(os.path.join(filepath, file['filename']), 0660)
             else:
                 logging.getLogger().debug("Decode file %s" % file['filename'])
                 f = open(os.path.join(filepath, file['filename']), 'w')

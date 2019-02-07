@@ -26,8 +26,9 @@ import logging
 import os
 import sys
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
+from  master.lib.managepackage import apimanagepackagemsc
+from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -647,6 +648,25 @@ def runXmppScript(cmd, machine):
 def getCountOnlineMachine():
     return XmppMasterDatabase().getCountOnlineMachine()
 
+
+############### package #####################
+def xmppGetAllPackages(filter,  start, end):
+    return apimanagepackagemsc.loadpackagelistmsc(filter, start, end)
+
+def xmpp_getPackageDetail(pid_package):
+    return apimanagepackagemsc.getPackageDetail(pid_package)
+
+############### synchro syncthing package #####################
+def xmpp_regiter_synchro_package(uuidpackage, typesynchro):
+    return XmppMasterDatabase().xmpp_regiter_synchro_package(uuidpackage, typesynchro)
+
+def xmpp_delete_synchro_package(uuidpackage):
+    return XmppMasterDatabase().xmpp_delete_synchro_package(uuidpackage)
+
+def xmpp_get_info_synchro_packageid(uuidpackage):
+    list_relayservernosync = XmppMasterDatabase().get_relayservers_no_sync_for_packageuuid(uuidpackage)
+    list_relayserver = XmppMasterDatabase().getRelayServer(enable = True )
+    return [list_relayservernosync, list_relayserver]
 
 def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)

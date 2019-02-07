@@ -317,7 +317,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         # Clear machine table
         XmppMasterDatabase().clearMachine()
-
+        # clears synchros
+        XmppMasterDatabase().clear_old_pending_synchro_package(timeseconde=900)
         self.idm = ""
         self.presencedeployment = {}
         self.updateguacamoleconfig = {}
@@ -951,6 +952,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.session.decrementesessiondatainfo()
 
     def loadPluginList(self):
+        XmppMasterDatabase().clear_old_pending_synchro_package(timeseconde=3600)
         logger.debug("Load and Verify base plugin")
         self.plugindata = {}
         self.plugintype = {}
@@ -1434,6 +1436,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         logger.debug("AD organized by User rule selects relay server for machine %s user %s \n %s" % (
                             data['information']['info']['hostname'], data['information']['users'][0], result))
                         break
+                    
+            
 
             # Network Rule : 9
             elif x[0] == 9:

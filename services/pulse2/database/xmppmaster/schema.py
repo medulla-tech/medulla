@@ -79,6 +79,19 @@ class UserLog(Base, XmppMasterDBObj):
     type =  Column(String(10), nullable=False,default = "info")
 
 ################################
+class Syncthingsync(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'syncthingsync'
+    # ====== Fields =============================
+    # Here we define columns for the table Syncthingsync.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    uuidpackage = Column(String(40), nullable=False)
+    typesynchro =  Column(String(10), nullable=False, default = "create")
+    relayserver_jid = Column(String(255))
+    watching =  Column(String(3), nullable=False, default = "yes")
+    date = Column(DateTime, default=datetime.datetime.utcnow)
+
 class Machines(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'machines'

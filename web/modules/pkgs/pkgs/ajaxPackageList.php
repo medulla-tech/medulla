@@ -28,6 +28,7 @@
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
 require_once("modules/msc/includes/utilities.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 ?>
 <style>
 a.info{
@@ -89,7 +90,7 @@ $licenses = array();
 $size = array();
 $err = array();
 $desc = array();
-
+$os = array();
 $editActions = array();
 $editAction = new ActionItem(_T("Edit a package", "pkgs"), "edit", "edit", "pkgs", "pkgs", "pkgs");
 $editExpertAction = new EmptyActionItem(_T("Please switch to Expert mode to edit this package", "pkgs"));
@@ -97,8 +98,16 @@ $emptyAction = new EmptyActionItem();
 $delActions = array();
 $delAction = new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs");
 
-
-$packages = advGetAllPackages($filter, $start, $start + $maxperpage);
+//jfkjfk
+$packages= xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
+$packages[0][1] = 0;
+$packages[0][2] = array();
+$packages[0][2]["mountpoint"] = "/package_api_get1";
+$packages[0][2]["server"] = "localhost";
+$packages[0][2]["protocol"] = "https";
+$packages[0][2]["uuid"] = "UUID/package_api_get1";
+$packages[0][2]["port"] = 9990;
+// $packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 
 $count = $packages[0];
 $packages = $packages[1];
@@ -118,6 +127,7 @@ foreach ($packages as $p) {
         $uuid = $p['id'];
         $versions[] = $p['version'];
         $desc[] = $p['description'];
+        $os[] = $p['targetos'];
         // #### begin licenses ####
         $tmp_licenses = '';
         if ($p['associateinventory'] == 1 && isset($p['licenses']) && !empty($p['licenses'])) {
@@ -187,6 +197,7 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo($desc, _T("Description", "pkgs"));
 $n->addExtraInfo($versions, _T("Version", "pkgs"));
 $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
+$n->addExtraInfo($os, _T("Os", "pkgs"));
 $n->addExtraInfo($size, _T("Package size", "pkgs"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter1));

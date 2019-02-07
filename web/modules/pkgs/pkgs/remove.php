@@ -31,15 +31,13 @@ if (isset($_POST["bconfirm"])) {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];
     $from = $_GET["from"];
-    if(isExpertMode()) {
-        $uuid = $_GET["packageUuid"];
-        $return = remove_xmpp_package($uuid);
-    }
-    $ret = dropPackage(base64_decode($p_api), base64_decode($pid));
-    $expire_result = expire_all_package_commands($ret);
-
-    // ICI
-    if (!isXMLRPCError() and $ret != -1) {
+    //jfkjfk
+    $uuid =  isset($_GET["packageUuid"]) ? $_GET["packageUuid"] : base64_decode($pid);
+    $ret = remove_xmpp_package($uuid);
+    xmlrpc_xmpp_delete_synchro_package($uuid);
+    // $ret = dropPackage(base64_decode($p_api),base64_decode($pid) );
+    $expire_result = expire_all_package_commands($uuid);
+    if ($ret == "1") {
         $str = _T("The package has been deleted.", "pkgs");
         new NotifyWidgetSuccess($str);
         xmlrpc_setfrompkgslogxmpp( $str,
@@ -53,20 +51,23 @@ if (isset($_POST["bconfirm"])) {
                                     '',
                                     "session user ".$_SESSION["login"],
                                     'Packaging | Remove | Package | Manual');
+    }else{
+        new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
     }
-    if ($ret == -1) new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
-    $to = "index";
-    if ($from) {
-        $to = $from;
-    }
-    header("Location: " . urlStrRedirect("pkgs/pkgs/$to", array('p_api' => $p_api)));
+        $to = "index";
+        if ($from) {
+            $to = $from;
+        }
+        header("Location: " . urlStrRedirect("pkgs/pkgs/$to", array('p_api' => $p_api)));
     exit;
-
 } else {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];
     $from = $_GET["from"];
+    $uuid =  isset($_GET["packageUuid"]) ? $_GET["packageUuid"] : base64_decode($pid);
     $f = new PopupForm(_T("Delete this package"));
+    $hidden = new HiddenTpl("packageUuid");
+    $f->add($hidden, array("value" =>$uuid, "hide" => True));
     $hidden = new HiddenTpl("p_api");
     $f->add($hidden, array("value" => $p_api, "hide" => True));
     $hidden = new HiddenTpl("pid");

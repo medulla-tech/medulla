@@ -34,11 +34,15 @@ class Pulse2Api(Pulse2XMLRPCProxy):
 
     name = "pulse2API"
 
-    def __init__(self, credentials, url, verifypeer = False, cacert = None, localcert = None):
+    def __init__(self, credentials, url = 'https://localhost:9990/package_api_get1', verifypeer = False, cacert = None, localcert = None):
         """
         @param credentials: XML-RPC HTTP BASIC credentials = login:password
         @type credentials: str
         """
+        if len(str(url)) < 10:
+            url = 'https://localhost:9990/package_api_get1'
+        else:
+            url = str(url)
         url = str(url)
         Pulse2XMLRPCProxy.__init__(self,
                                    url,

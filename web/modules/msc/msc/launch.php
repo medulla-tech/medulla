@@ -264,8 +264,8 @@ function start_a_command($proxy = array()) {
                 /* Create convergence */
                 // create sub-groups
                 $group = new Group($gid, True);
-                $package = to_package(getPackageDetails($p_api, $pid));
-
+                //$package = to_package(getPackageDetails($p_api, $pid));
+                $package = to_package(xmpp_getPackageDetail($pid));
                 $convergence_groups = $group->createConvergenceGroups($package);
 
                 $deploy_group_id = $convergence_groups['deploy_group_id'];
