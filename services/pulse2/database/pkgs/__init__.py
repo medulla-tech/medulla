@@ -38,8 +38,8 @@ from sqlalchemy.orm.exc import NoResultFound
 ##from sqlalchemy.orm import sessionmaker
 import datetime
 # ORM mappings
-from pulse2.database.Pkgs.orm.version import Version
-from pulse2.database.Pkgs.orm.pakages import Packages
+from pulse2.database.pkgs.orm.version import Version
+from pulse2.database.pkgs.orm.pakages import Packages
 from mmc.database.database_helper import DatabaseHelper
 #from pulse2.database.xmppmaster import XmppMasterDatabase
 # Pulse 2 stuff
