@@ -791,19 +791,18 @@ class MscDatabase(DatabaseHelper):
                 self.logger.debug("machine %s [%s] missing for deploy package %s"%(x.target_target_name,
                                                                                     x.target_target_uuid, 
                                                                                     x.commands_package_id))
-
+            deployobject = {'pakkageid': str(x.commands_package_id),
+                            'commandid':  x.commands_id,
+                            'mac': str(x.target_target_macaddr),
+                            'count': 0,
+                            'cycle': 0,
+                            'login': str(x.commands_creator),
+                            'start_date': x.commands_start_date,
+                            'end_date': x.commands_end_date,
+                            'title': str(x.commands_title),
+                            'UUID': str(x.target_target_uuid),
+                            'GUID': x.target_id_group}
             if presence:
-                deployobject = {'pakkageid': str(x.commands_package_id),
-                                'commandid':  x.commands_id,
-                                'mac': str(x.target_target_macaddr),
-                                'count': 0,
-                                'cycle': 0,
-                                'login': str(x.commands_creator),
-                                'start_date': x.commands_start_date,
-                                'end_date': x.commands_end_date,
-                                'title': str(x.commands_title),
-                                'UUID': str(x.target_target_uuid),
-                                'GUID': x.target_id_group}
                 if not x.target_target_uuid in tabmachine:
                     tabmachine.append(x.target_target_uuid)
                     #recherche machine existe pour xmpp
