@@ -93,13 +93,6 @@ class PkgsDatabase(DatabaseHelper):
         Initialize all SQLalchemy tables
         """
         try:
-            # version
-            self.version = Table(
-                "version",
-                self.metadata,
-                autoload = True
-            )
-
             # packages
             self.package = Table(
                 "packages",
@@ -116,7 +109,6 @@ class PkgsDatabase(DatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the Pkgs database
         """
-        mapper(Version, self.version)
         mapper(Packages, self.package)
         # FIXME: Version is missing
 
