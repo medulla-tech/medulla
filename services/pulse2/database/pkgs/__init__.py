@@ -102,7 +102,7 @@ class PkgsDatabase(DatabaseHelper):
 
             # packages
             self.package = Table(
-                "package",
+                "packages",
                 self.metadata,
                 autoload = True
             )
@@ -116,7 +116,7 @@ class PkgsDatabase(DatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the Pkgs database
         """
-        mapper(Varsion, self.version)
+        mapper(Version, self.version)
         mapper(Packages, self.package)
         # FIXME: Version is missing
 
