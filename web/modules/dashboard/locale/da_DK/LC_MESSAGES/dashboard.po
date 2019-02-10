@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 18:35+0100\n"
+"POT-Creation-Date: 2018-12-19 14:32+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Language-Team: Danish (Denmark) (https://www.transifex.com/siveo/teams/72118/da_DK/)\n"
 "MIME-Version: 1.0\n"
@@ -75,10 +75,10 @@ msgid "Not Supported"
 msgstr ""
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:92
-#: modules/dashboard/includes/panels/backup.inc.php:40
 #: modules/dashboard/includes/panels/backup.inc.php:41
-#: modules/dashboard/includes/panels/computersOnline.inc.php:43
+#: modules/dashboard/includes/panels/backup.inc.php:42
 #: modules/dashboard/includes/panels/computersOnline.inc.php:44
+#: modules/dashboard/includes/panels/computersOnline.inc.php:45
 msgid "Create a group"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgstr ""
 msgid "free"
 msgstr ""
 
-#: modules/dashboard/includes/panels/plugins.inc.php:28
+#: modules/dashboard/includes/panels/plugins.inc.php:29
 msgid "Plugins loaded"
 msgstr ""
 
@@ -123,19 +123,19 @@ msgstr ""
 msgid "used"
 msgstr ""
 
-#: modules/dashboard/includes/panels/backup.inc.php:28
+#: modules/dashboard/includes/panels/backup.inc.php:29
 msgid "Machines backup"
 msgstr ""
 
-#: modules/dashboard/includes/panels/backup.inc.php:39
+#: modules/dashboard/includes/panels/backup.inc.php:40
 msgid "Total machines : "
 msgstr ""
 
-#: modules/dashboard/includes/panels/backup.inc.php:40
+#: modules/dashboard/includes/panels/backup.inc.php:41
 msgid "Backup configured : "
 msgstr ""
 
-#: modules/dashboard/includes/panels/backup.inc.php:41
+#: modules/dashboard/includes/panels/backup.inc.php:42
 msgid "Backup not configured : "
 msgstr ""
 
@@ -151,19 +151,19 @@ msgstr ""
 msgid "Updates available."
 msgstr ""
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:29
+#: modules/dashboard/includes/panels/computersOnline.inc.php:30
 msgid "Machines Online"
 msgstr ""
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:43
+#: modules/dashboard/includes/panels/computersOnline.inc.php:44
 msgid "Machines online : "
 msgstr ""
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:44
+#: modules/dashboard/includes/panels/computersOnline.inc.php:45
 msgid "Machines offline : "
 msgstr ""
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:47
+#: modules/dashboard/includes/panels/computersOnline.inc.php:48
 msgid "A problem occurred while counting machines"
 msgstr ""
 

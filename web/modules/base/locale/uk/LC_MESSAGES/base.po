@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 18:35+0100\n"
+"POT-Creation-Date: 2018-12-19 14:32+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -208,7 +208,7 @@ msgstr "Журнал обліку"
 
 #: modules/base/logview/logsdownload.php:133
 msgid "Transfert File Logs"
-msgstr ""
+msgstr "Журнали передавання файлів"
 
 #: modules/base/logview/logsimaging.php:158
 msgid "Imaging Logs"
@@ -2084,7 +2084,7 @@ msgstr ""
 
 #: includes/ErrorHandling.php:78
 msgid "Copied"
-msgstr ""
+msgstr "Скопійовано"
 
 #: includes/ErrorHandling.php:87
 msgid "Show complete trackback"
