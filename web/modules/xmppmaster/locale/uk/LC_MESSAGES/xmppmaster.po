@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 18:35+0100\n"
+"POT-Creation-Date: 2018-12-19 14:32+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -28,7 +28,7 @@ msgid "Console"
 msgstr "Консоль"
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:177
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:296
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:298
 #: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:65
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:60
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:60
@@ -40,9 +40,9 @@ msgstr ""
 "для цього часу."
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:179
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:298
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:300
 #: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:68
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:256
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:289
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:62
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:62
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:69
@@ -63,32 +63,32 @@ msgstr "Пробудження з LAN"
 msgid "Mac address"
 msgstr "MAC-адреса"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:253
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:214
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:250
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:247
 msgid "File manager"
 msgstr "Керування файлами"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:536
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:531
 msgid "Copy remote folder"
 msgstr "Копіювати віддалену теку"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:540
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:535
 msgid "to local folder"
 msgstr "до локальної теки"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:566
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:561
 msgid "The folder copy has been requested successfully"
 msgstr "Запит щодо копіювання теки успішно надіслано"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:590
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:585
 msgid "Copy remote file"
 msgstr "Копіювати віддалений файл"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:596
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:591
 msgid "to local File"
 msgstr "до локального файла"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:620
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:615
 msgid "The file copy has been requested successfully"
 msgstr "Запит щодо копіювання файла успішно надіслано"
 
@@ -237,7 +237,7 @@ msgid "Quick Action results"
 msgstr "Результати швидких дій"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:534
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:568
 msgid "File Manager"
 msgstr "Керування файлами"
 
@@ -283,7 +283,7 @@ msgstr "Виберіть машину"
 msgid "Select a package"
 msgstr "Виберіть пакунок"
 
-#: modules/xmppmaster/xmppmaster/index.php:38
+#: modules/xmppmaster/xmppmaster/index.php:41
 msgid "My Tasks ["
 msgstr "Ваші завдання ["
 
@@ -313,95 +313,98 @@ msgstr "Отримання файлів і тек"
 msgid "To"
 msgstr "До"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:254
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:287
 #, php-format
 msgid "Sorry, the remote machine [%s] takes too long to answer."
 msgstr ""
 "Вибачте, віддалений комп'ютер [%s] не надав відповіді протягом відведеного "
 "для цього часу."
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:300
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:333
 msgid "Downloads basket"
 msgstr "Кошик отримання даних"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:304
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:337
 msgid "Folders"
 msgstr "Теки"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:307
-msgid "Delete last folder added"
-msgstr "Вилучити останню додану теку"
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:340
+msgid "Remove last folder"
+msgstr "Вилучити останню теку"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:308
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:317
-msgid "Delete Remote File Select"
-msgstr "Вибір вилучення віддаленого файла"
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:341
+msgid "Remove all folders"
+msgstr "Вилучити усі теки"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:313
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:346
 msgid "Files"
 msgstr "Файли"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:316
-msgid "Delete last file added"
-msgstr "Вилучити останній доданий файл"
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:349
+msgid "Remove last file"
+msgstr "Вилучити останній файл"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:322
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:350
+msgid "Remove all files"
+msgstr "Вилучити усі файли"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:355
 msgid "Downloads basket to"
 msgstr "Отримувати дані до"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:325
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:358
 msgid "Download list selection"
 msgstr "Вибір списку отримання даних"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:342
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:375
 msgid "Local folder"
 msgstr "Локальна тека"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:367
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:400
 msgid "Remote tree view"
 msgstr "Перегляд ієрархії віддаленої теки"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:370
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:403
 msgid "root:"
 msgstr "корінь:"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:373
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:406
 msgid "Current path: "
 msgstr "Поточний шлях:"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:504
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:538
 msgid "Computer view"
 msgstr "Перегляд комп'ютерів"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:514
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:548
 msgid "Refresh"
 msgstr "Оновити"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:524
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:558
 msgid "History download"
 msgstr "Журнал отримання"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:688
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:722
 msgid "Download from"
 msgstr "Отримання з"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:690
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:724
 msgid "Folders list"
 msgstr "Список тек"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:697
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:731
 msgid "Files list"
 msgstr "Список файлів"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:704
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:738
 msgid "To local folder"
 msgstr "До локальної теки"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:721
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:755
 msgid "Confirm"
 msgstr "Підтвердити"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:733
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:767
 msgid "The list (folder & files) copy has been requested successfully"
 msgstr "Запит щодо списку копіювання (теки і файлів) було успішно надіслано"
 
@@ -695,12 +698,12 @@ msgid "Custom quick action"
 msgstr "Нетипова швидка дія"
 
 #: modules/xmppmaster/infoPackage.inc.php:151
-msgid "ajax refrech files remote"
-msgstr "Повторне отримання віддалених файлів ajax"
+msgid "ajax refresh files remote"
+msgstr "Віддалене оновлення файлів ajax"
 
 #: modules/xmppmaster/infoPackage.inc.php:156
-msgid "ajax refrech files local"
-msgstr "Повторне отримання локальних файлів ajax"
+msgid "ajax refresh files local"
+msgstr "Локальне оновлення файлів ajax"
 
 #: modules/xmppmaster/infoPackage.inc.php:200
 msgid "action deploy quick"

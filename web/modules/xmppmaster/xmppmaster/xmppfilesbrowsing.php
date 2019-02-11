@@ -280,7 +280,7 @@ echo '</script>';
 ?>
 
 <?php
-    $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
+    $lifdirstr = xmlrpc_remotefilesystem("@0@", $machine);
     $lifdirremote = json_decode($lifdirstr, true);
     if (isset($lifdirremote['err'])){
         if ( $lifdirremote['err'] == 'Timeout Error'){
@@ -486,7 +486,7 @@ printf ('
         absolutepath ="";
         init = 1;
         local(namemachine);
-        remote("@");
+        remote("@1@");
         jQuery('#directoryremote')
             .on("changed.jstree", function (e, data) {
                 if(data.selected.length) {
