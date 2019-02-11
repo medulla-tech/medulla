@@ -282,7 +282,7 @@ echo '</script>';
 ?>
 
   <?php
-    $lifdirstr = xmlrpc_remotefilesystem("@0@", $machine);
+    $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
     $lifdir = json_decode($lifdirstr, true);
 
 
@@ -383,15 +383,15 @@ echo '</script>';
         filenamelocal = "";
         timetmp = "";
         taillefile ="";
-        rootfilesystem     = ""; // "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystem); ?>";
-        rootfilesystempath = ""; // "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystempath); ?>";
+        rootfilesystem     = "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystem); ?>";
+        rootfilesystempath = "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystempath); ?>";
         jid = "<?php echo $ma['jid']; ?>";
         user = "<?php echo $_SESSION['login']; ?>";
         nameremotepath = "";
         absolutepath ="";
         init = 1;
         local();
-        remote("@1@");
+        remote("@");
 	jQuery('#directoryremote')
 		.on("changed.jstree", function (e, data) {
 			if(data.selected.length) {
