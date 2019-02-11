@@ -57,6 +57,7 @@ APIVERSION = "0:0:0"
 
 def getApiVersion(): return APIVERSION
 
+
 def singleton(class_):
     instances = {}
 
@@ -73,6 +74,14 @@ class pkgmanage():
     def __init__(self, args=(), kwargs=None):
         self.args = args
         self.kwargs = kwargs
+
+    def list_all(param):
+        return PkgsDatabase().list_all()
+
+
+def list_all():
+    return pkgmanage().list_all()
+
 
 def activate():
     logger = logging.getLogger()

@@ -30,7 +30,7 @@ SET SESSION character_set_server=UTF8;
 SET NAMES 'utf8';
 
 
-START TRANSACTION; 
+START TRANSACTION;
 
 CREATE TABLE version (
   Number tinyint(4) unsigned NOT NULL default '0'
@@ -40,7 +40,7 @@ INSERT INTO version VALUES( '1' );
 
 CREATE TABLE `pkgs`.`packages` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `Label` VARCHAR(45) NULL,
+  `label` VARCHAR(45) NULL,
   `descriptif` VARCHAR(80) NULL,
   `uuid` VARCHAR(36) NULL,
   PRIMARY KEY (`id`),

@@ -29,11 +29,24 @@ class Packages(object):
         return self.id
 
     def getLabel(self):
-        return self.label
+        return self.Label
 
-    def getLabel(self):
+    def getDescriptif(self):
         return self.descriptif
 
     def getUuid(self):
         return self.uuid
 
+    def to_array(self):
+        """
+        This function serialize the object to dict.
+
+        Returns:
+            Dict of elements contained into the object.
+        """
+        return {
+            'id': self.getId(),
+            'label': self.getLabel(),
+            'descriptif' : self.getDescriptif(),
+            'uuid': self.getUuid()
+            }

@@ -126,3 +126,18 @@ class PkgsDatabase(DatabaseHelper):
         session.add(bdl)
         session.flush()
         return bdl
+
+    @DatabaseHelper._sessionm
+    def list_all(self, session):
+        """
+        Get the list of all the packages stored in database.
+
+        Returns:
+            list of packages serialized as dict
+        """
+
+        ret = session.query(Packages).all()
+        packages = []
+        for package in ret:
+            packages.append(package.to_array())
+        return packages
