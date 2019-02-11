@@ -703,7 +703,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update', 'kiosk']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update', 'kiosk', 'pkgs']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -1083,6 +1083,11 @@ class SetupApp(object):
         self.confs['plugins/kiosk.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/kiosk.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
+        # pkgs db
+        self.confs['plugins/pkgs.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/pkgs.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/pkgs.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
     def init_glpi(self):
         """GLPI coupling"""
 
@@ -1163,6 +1168,9 @@ class SetupApp(object):
 
         #Enable Kiosk module
         self.confs['plugins/kiosk.ini'].set('main', 'disable', 0)
+
+        #Enable pkgs module
+        self.confs['plugins/pkgs.ini'].set('main', 'disable', 0)
 
         # Ensure various dirs are created
         for path in [self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
