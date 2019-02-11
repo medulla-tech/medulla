@@ -29,7 +29,7 @@ class Packages(object):
         return self.id
 
     def getLabel(self):
-        return self.Label
+        return self.label
 
     def getDescriptif(self):
         return self.descriptif
