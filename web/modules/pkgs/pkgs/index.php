@@ -30,54 +30,10 @@ $p = new PageGenerator(_T("Packages list", 'pkgs'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-
 require_once("modules/pkgs/includes/xmlrpc.php");
-
-$res = getUserPackageApi();
-$list = array();
-$list_val = array();
-if (!isset($_SESSION['PACKAGEAPI'])) {
-    $_SESSION['PACKAGEAPI'] = array();
-}
-$err = array();
-foreach ($res as $mirror) {
-    if (isset($mirror['ERR']) && $mirror['ERR'] == 'PULSE2ERROR_GETUSERPACKAGEAPI') {
-        $err[] = sprintf(_T("MMC failed to contact package server %s.", "pkgs"), $mirror['mirror']);
-    } else {
-        $list_val[$mirror['uuid']] = base64_encode($mirror['uuid']);
-        $list[$mirror['uuid']] = $mirror['mountpoint'];
-        $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
-    }
-}
-if ($err) {
-    $str = implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "pkgs"))));
-    new NotifyWidgetFailure($str);
-    xmlrpc_setfrompkgslogxmpp( $str,
-                                "PKG",
-                                '',
-                                0,
-                                "",
-                                'Manuel',
-                                '',
-                                '',
-                                '',
-                                "session user ".$_SESSION["login"],
-                                'Packaging | Bundle | Manual');
-}
-
-$ajax = new AjaxFilterLocation(urlStrRedirect("pkgs/pkgs/ajaxPackageList"));
-if (isset($_GET['location'])) {
-    $ajax->setSelected($list_val[base64_decode($_GET['location'])]);
-}
-elseif (isset($_SESSION['pkgs_selected'])) {
-    $ajax->setSelected($list_val[$_SESSION['pkgs_selected']]);
-}
-$ajax->setElements($list);
-$ajax->setElementsVal($list_val);
+$ajax = new AjaxFilter(urlStrRedirect("pkgs/pkgs/ajaxPackageList"));
 $ajax->display();
-
 $ajax->displayDivToUpdate();
-
 ?>
 
 <style>
