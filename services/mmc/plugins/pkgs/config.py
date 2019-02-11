@@ -50,33 +50,37 @@ class PkgsConfig(PluginConfig):
         Read the module configuration
         """
         PluginConfig.readConf(self)
-        self.dbdriver = self.get("main", "dbdriver")
-        self.dbhost = self.get("main", "dbhost")
-        self.dbname = self.get("main", "dbname")
-        self.dbuser = self.get("main", "dbuser")
-        if self.has_option("main", "dbport"):
-            self.dbport = self.getint("main", "dbport")
+        self.dbdriver = self.get("database", "dbdriver")
+        self.dbhost = self.get("database", "dbhost")
+        self.dbname = self.get("database", "dbname")
+        self.dbuser = self.get("database", "dbuser")
+        if self.has_option("database", "dbport"):
+            self.dbport = self.getint("database", "dbport")
         else:
             self.dbport = 3306
-        if self.has_option("main", "dbsslenable"):
-            self.dbsslenable = self.getboolean("main", "dbsslenable")
-        else:
-            self.dbsslenable = False
 
-        if self.has_option("main",  "dbpooltimeout"):
-            self.dbpooltimeout = self.getint("main", "dbpooltimeout")
+        self.dbsslenable = False
+        if self.has_option("database", "dbsslenable"):
+            self.dbsslenable = self.getboolean("database", "dbsslenable")
+            if self.dbsslenable:
+                self.dbsslca = self.get("database", "dbsslca")
+                self.dbsslcert = self.get("database", "dbsslcert")
+                self.dbsslkey = self.get("database", "dbsslkey")
+
+        if self.has_option("database",  "dbpooltimeout"):
+            self.dbpooltimeout = self.getint("database", "dbpooltimeout")
         else:
             self.dbpooltimeout = 30
 
-        if self.has_option("main", "dbpoolrecycle"):
-            self.dbpoolrecycle = self.get("main", "dbpoolrecycle")
+        if self.has_option("database", "dbpoolrecycle"):
+            self.dbpoolrecycle = self.get("database", "dbpoolrecycle")
         else:
             self.dbpoolrecycle = 60
-        if self.has_option("main", "dbpoolsize"):
-            self.dbpoolsize = self.get("main", "dbpoolsize")
+        if self.has_option("database", "dbpoolsize"):
+            self.dbpoolsize = self.get("database", "dbpoolsize")
         else:
             self.dbpoolsize = 5
-        self.dbpasswd = self.getpassword("main", "dbpasswd")
+        self.dbpasswd = self.getpassword("database", "dbpasswd")
 
 
         # API Package
