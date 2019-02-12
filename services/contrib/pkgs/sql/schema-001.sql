@@ -32,18 +32,40 @@ SET NAMES 'utf8';
 
 START TRANSACTION;
 
-CREATE TABLE version (
+CREATE TABLE IF NOT EXISTS version (
   Number tinyint(4) unsigned NOT NULL default '0'
 );
 
 INSERT INTO version VALUES( '1' );
 
-CREATE TABLE `pkgs`.`packages` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `label` VARCHAR(45) NULL,
-  `descriptif` VARCHAR(80) NULL,
-  `uuid` VARCHAR(36) NULL,
-  PRIMARY KEY (`id`),
+CREATE TABLE IF NOT EXISTS `pkgs`.`packages`
+(
+  id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  label varchar(45)  null,
+  description varchar(255) null,
+  uuid varchar(36)  null,
+  version varchar(50)  null,
+  os varchar(20)  null,
+  metagenerator varchar(10)  null,
+  entity_id int          null,
+  sub_packages varchar(255) null,
+  reboot int(1)       null,
+  inventory_associateinventory varchar(10)  null,
+  inventory_licenses varchar(20)  null,
+  Qversion varchar(50)  null,
+  Qvendor varchar(50)  null,
+  Qsoftware varchar(50)  null,
+  boolcnd varchar(50)  null,
+  postCommandSuccess_command varchar(50)  null,
+  postCommandSuccess_name varchar(50)  null,
+  installInit_command varchar(50)  null,
+  installInit_name varchar(50)  null,
+  postCommandFailure_command varchar(50)  null,
+  postCommandFailure_name varchar(50)  null,
+  command_command varchar(50)  null,
+  command_name varchar(50)  null,
+  preCommand_command varchar(50)  null,
+  preCommand_name varchar(50)  null,
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC));
 
 COMMIT;
