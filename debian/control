@@ -18,7 +18,7 @@ Package: python-mmc-base
 Architecture: all
 Section: python
 Pre-depends: python-mmc-core (= ${source:Version})
-Depends: ${misc:Depends}, ${python:Depends}, python-ldap, python-xlwt
+Depends: ${misc:Depends}, ${python:Depends}, python-ldap, python-xlwt, python-memory-profiler
 Description: Management Console base plugin
  Contains the base infrastructure for all MMC plugins:
   * support classes
