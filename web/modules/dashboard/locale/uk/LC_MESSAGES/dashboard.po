@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 18:35+0100\n"
+"POT-Creation-Date: 2018-12-19 14:32+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -79,10 +79,10 @@ msgid "Not Supported"
 msgstr "Не підтримується"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:92
-#: modules/dashboard/includes/panels/backup.inc.php:40
 #: modules/dashboard/includes/panels/backup.inc.php:41
-#: modules/dashboard/includes/panels/computersOnline.inc.php:43
+#: modules/dashboard/includes/panels/backup.inc.php:42
 #: modules/dashboard/includes/panels/computersOnline.inc.php:44
+#: modules/dashboard/includes/panels/computersOnline.inc.php:45
 msgid "Create a group"
 msgstr "Створити групу"
 
@@ -115,7 +115,7 @@ msgstr "Пам’ять"
 msgid "free"
 msgstr "вільно"
 
-#: modules/dashboard/includes/panels/plugins.inc.php:28
+#: modules/dashboard/includes/panels/plugins.inc.php:29
 msgid "Plugins loaded"
 msgstr "Завантажені додатки"
 
@@ -127,19 +127,19 @@ msgstr "Використання диска"
 msgid "used"
 msgstr "використано"
 
-#: modules/dashboard/includes/panels/backup.inc.php:28
+#: modules/dashboard/includes/panels/backup.inc.php:29
 msgid "Machines backup"
 msgstr "Резервне копіювання машин"
 
-#: modules/dashboard/includes/panels/backup.inc.php:39
+#: modules/dashboard/includes/panels/backup.inc.php:40
 msgid "Total machines : "
 msgstr "Загалом машин:"
 
-#: modules/dashboard/includes/panels/backup.inc.php:40
+#: modules/dashboard/includes/panels/backup.inc.php:41
 msgid "Backup configured : "
 msgstr "Налаштовано рез. копіювання:"
 
-#: modules/dashboard/includes/panels/backup.inc.php:41
+#: modules/dashboard/includes/panels/backup.inc.php:42
 msgid "Backup not configured : "
 msgstr "Не налаштовано рез. копіювання:"
 
@@ -155,19 +155,19 @@ msgstr "Встановити оновлення"
 msgid "Updates available."
 msgstr "Доступні оновлення."
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:29
+#: modules/dashboard/includes/panels/computersOnline.inc.php:30
 msgid "Machines Online"
 msgstr "Робочі машини"
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:43
+#: modules/dashboard/includes/panels/computersOnline.inc.php:44
 msgid "Machines online : "
 msgstr "Робочі машини:"
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:44
+#: modules/dashboard/includes/panels/computersOnline.inc.php:45
 msgid "Machines offline : "
 msgstr "Неробочі машини:"
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:47
+#: modules/dashboard/includes/panels/computersOnline.inc.php:48
 msgid "A problem occurred while counting machines"
 msgstr "Під час обліку комп'ютерів виникла проблема"
 

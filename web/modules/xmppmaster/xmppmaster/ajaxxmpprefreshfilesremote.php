@@ -74,13 +74,14 @@ $rootfilesystempath = $rootfilesystem;
 if ($rootfilesystem[1] == ":"){
     $rootfilesystempath =substr($lifdirremote['data']['rootfilesystem'],2);
 }
+
 printf ('
 <form>
     <input id ="path_abs_current_remote" type="text" name="path_abs_current_remote" value="%s">
     <input id ="parentdirremote" type="text" name="parentdirremote" value="%s">
     <input id ="rootfilesystem" type="text" name="rootfilesystem" value="%s">
     <input id ="rootfilesystempath" type="text" name="rootfilesystempath" value="%s">
-</form>' ,$lifdir['path_abs_current'],$lifdir['parentdir'],$lifdir['rootfilesystem'],$lifdir['parentdir'],$rootfilesystempath);
+</form>' , $lifdir['path_abs_current'], $lifdir['parentdir'], $lifdir['rootfilesystem'], $lifdir['parentdir'], $rootfilesystempath);
 
 
 

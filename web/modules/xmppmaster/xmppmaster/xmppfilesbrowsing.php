@@ -280,7 +280,7 @@ echo '</script>';
 ?>
 
 <?php
-    $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
+    $lifdirstr = xmlrpc_remotefilesystem("@0@", $machine);
     $lifdirremote = json_decode($lifdirstr, true);
     if (isset($lifdirremote['err'])){
         if ( $lifdirremote['err'] == 'Timeout Error'){
@@ -293,7 +293,10 @@ echo '</script>';
             echo "</h2>";
             exit;
     }
-    $datatree = $lifdirremote['data']['strjsonhierarchy'];
+    $searchchar = array(':', '/', );// repect order
+    $replacechar   = array( '", "children" : [', '{"text" : "');// repect order
+    $datatree = str_replace ( $searchchar, $replacechar, $lifdirremote['data']['strjsonhierarchy'] );
+    unset ($lifdirremote['data']['strjsonhierarchy']);
     // cherche local directory
 
 printf ('
@@ -483,14 +486,12 @@ printf ('
         absolutepath ="";
         init = 1;
         local(namemachine);
-        remote("@");
+        remote("@1@");
         jQuery('#directoryremote')
             .on("changed.jstree", function (e, data) {
                 if(data.selected.length) {
                     var pathlinux = data.instance.get_path(data.node, '/');
-
-                    var rs = jQuery('#rootfilesystempath').val();
-                    remote(pathlinux.substr(rs.length));
+                    remote(pathlinux);
                 }
             })
             .jstree({
@@ -504,7 +505,6 @@ printf ('
             ;
             timetmp = user + "-" + datetimenow();
             jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" );
-
             jQuery('#directoryremote').on('ready.jstree', function() {
                 jQuery('#directoryremote').jstree("open_all");
             });

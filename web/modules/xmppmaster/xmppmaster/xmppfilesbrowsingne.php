@@ -282,7 +282,7 @@ echo '</script>';
 ?>
 
   <?php
-    $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
+    $lifdirstr = xmlrpc_remotefilesystem("@0@", $machine);
     $lifdir = json_decode($lifdirstr, true);
 
 
@@ -304,7 +304,11 @@ echo '</script>';
             echo "</h2>";
             exit;
     }
-    $datatree = $lifdir['data']['strjsonhierarchy'];
+    $searchchar = array(':', '/', );
+    $replacechar   = array( '", "children" : [', '{"text" : "');
+    $datatree = str_replace ( $searchchar, $replacechar, $lifdir['data']['strjsonhierarchy'] );
+    unset ($lifdir['data']['strjsonhierarchy']);
+    //$datatree = $lifdir['data']['strjsonhierarchy'];
 ?>
 
 <div id="messageaction">
@@ -379,20 +383,20 @@ echo '</script>';
         filenamelocal = "";
         timetmp = "";
         taillefile ="";
-        rootfilesystem     = "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystem); ?>";
-        rootfilesystempath = "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystempath); ?>";
+        rootfilesystem     = ""; // "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystem); ?>";
+        rootfilesystempath = ""; //"<?php echo str_replace ('\\' ,'\\\\',$rootfilesystempath); ?>";
         jid = "<?php echo $ma['jid']; ?>";
         user = "<?php echo $_SESSION['login']; ?>";
         nameremotepath = "";
         absolutepath ="";
         init = 1;
         local();
-        remote("@");
+        remote("@1@");
 	jQuery('#directoryremote')
 		.on("changed.jstree", function (e, data) {
 			if(data.selected.length) {
                 var pathlinux = data.instance.get_path(data.node,'/');
-                remote(pathlinux.substr(rootfilesystempath.length));
+                remote(pathlinux);
 			}
 		})
 		.jstree({

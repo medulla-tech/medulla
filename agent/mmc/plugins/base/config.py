@@ -70,6 +70,17 @@ class BasePluginConfig(PluginConfig, LDAPConnectionConfig, AuditConfig, Subscrip
         self.backupdir = self.get("backup-tools", "destpath")
         self.username = self.getdn("ldap", "rootName")
         self.password = self.getpassword("ldap", "password")
+        #########################################################
+
+        self.leak_memorytime = 3600
+        if self.has_option("memoryinfo", "time"):
+            self.leak_memorytime = self.getint("memoryinfo", "time")
+        self.fileoutresult = "/tmp/leak_memory.data"
+        if self.has_option("memoryinfo", "outfile"):
+            self.fileoutresult   = self.get("memoryinfo", "outfile")
+        self.leak_memory_disable = True
+        if self.has_option("memoryinfo", "disable"):
+            self.leak_memory_disable = self.getboolean("memoryinfo", "disable")
 
     def setDefault(self):
         PluginConfig.setDefault(self)
