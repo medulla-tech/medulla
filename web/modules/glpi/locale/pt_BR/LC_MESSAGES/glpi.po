@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 18:44+0100\n"
+"POT-Creation-Date: 2018-12-19 14:20+0100\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -288,7 +288,7 @@ msgstr "Nenhum antivrus encontrado em %s"
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
 #: modules/glpi/glpi/createMachinesStaticGroup.php:75
-#: modules/glpi/glpi/createOSStaticGroup.php:52
+#: modules/glpi/glpi/createOSStaticGroup.php:54
 #: modules/glpi/glpi/createStaticGroup.php:43
 #: modules/glpi/glpi/createBackupStaticGroup.php:69
 #, php-format
@@ -636,10 +636,10 @@ msgstr "Lista de locais"
 msgid "All locations"
 msgstr "Todos os locais"
 
-#: modules/glpi/glpi/createOSStaticGroup.php:34
+#: modules/glpi/glpi/createOSStaticGroup.php:40
 #, php-format
-msgid "Machine with %s installed at %s"
-msgstr "Mquina com %s instalada em %s"
+msgid "Machine with %s %s installed at %s"
+msgstr ""
 
 #: modules/glpi/glpi/addLocation.php:34
 msgid "The location has been added successfully."
@@ -789,7 +789,7 @@ msgstr "Esconder Updates do Windows"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:109
+#: modules/glpi/includes/panels/os_repartition.inc.php:67
 msgid "Create a group"
 msgstr "Criar um grupo"
 
@@ -821,14 +821,6 @@ msgstr "> %s dias: %percent% (%d)"
 msgid "Latest Inventory Date"
 msgstr "ltima data do inventrio"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:32
+#: modules/glpi/includes/panels/os_repartition.inc.php:33
 msgid "Operating systems"
 msgstr "Sistemas operacionais"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:54
-msgid "Other"
-msgstr "Outro"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:63
-msgid "Other Windows"
-msgstr "Outro Windows"
