@@ -1,3 +1,5 @@
+* [FEATURE] Switch from RaphaelJS to d3.js
+* [BUGFIX]  Fix creating groups when the database is not called glpi
 
 Pulse 2 4.5.1
 =============
@@ -18,6 +20,7 @@ Pulse 2 4.5.1
 Pulse 2 4.5
 ===========
 * [FEATURE] Add glpi 9.2 support
+* [FEATURE] Add glpi 9.3 support
 * [FEATURE] Add Agent "Auto Update" feature
 * [FEATURE] Show the presence status in backup machine list
 * [FEATURE] New imaging post-install scripts available

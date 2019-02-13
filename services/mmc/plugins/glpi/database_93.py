@@ -22,7 +22,7 @@
 
 """
 This module declare all the necessary stuff to connect to a glpi database in it's
-version 9.2
+version 9.3
 """
 import os
 import logging
@@ -66,9 +66,9 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback,sys
-class Glpi92(DyngroupDatabaseHelper):
+class Glpi93(DyngroupDatabaseHelper):
     """
-    Singleton Class to query the glpi database in version > 0.80.
+    Singleton Class to query the glpi database in version >= 9.3
 
     """
     is_activated = False
@@ -85,18 +85,18 @@ class Glpi92(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.2')
+        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.3')
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
-        if LooseVersion(self._glpi_version) >=  LooseVersion("9.2") and LooseVersion(self._glpi_version) <=  LooseVersion("9.2.4"):
+        if LooseVersion(self._glpi_version) >=  LooseVersion("9.3") and LooseVersion(self._glpi_version) <=  LooseVersion("9.3.5"):
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
-            logging.getLogger().debug('GLPI higher than version 9.2 was not detected')
+            logging.getLogger().debug('GLPI higher than version 9.3 was not detected')
             return False
 
     @property
@@ -121,12 +121,12 @@ class Glpi92(DyngroupDatabaseHelper):
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
             self.db.execute(u'SELECT "\xe9"')
-            setattr(Glpi92, "decode", decode_utf8)
-            setattr(Glpi92, "encode", encode_utf8)
+            setattr(Glpi93, "decode", decode_utf8)
+            setattr(Glpi93, "encode", encode_utf8)
         except:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
-            setattr(Glpi92, "decode", decode_latin1)
-            setattr(Glpi92, "encode", encode_latin1)
+            setattr(Glpi93, "decode", decode_latin1)
+            setattr(Glpi93, "encode", encode_latin1)
 
         try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
@@ -307,9 +307,9 @@ class Glpi92(DyngroupDatabaseHelper):
                 autoload = True)
             mapper(FusionAgents, self.fusionagents)
 
-        # glpi_computerdisks
-        self.disk = Table('glpi_computerdisks', self.metadata,
-                          Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+        # glpi_items_disks
+        self.disk = Table('glpi_items_disks', self.metadata,
+                          Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                           Column('filesystems_id', Integer, ForeignKey('glpi_filesystems.id')),
                           autoload = True)
         mapper(Disk, self.disk)
@@ -679,7 +679,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 if 'owner' in self.config.summary or \
                    'owner_firstname' in self.config.summary or \
                    'owner_realname' in self.config.summary:
-                    join_query = join_query.outerjoin(self.user, self.machine.c.users_id == self.user.c.id)
+                    join_query = join_query.outerjoin(self.user)
                 try:
                     if regs[0]:
                         join_query = join_query.outerjoin(self.regcontents)
@@ -1408,7 +1408,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 if 'type' in self.config.summary:
                     type = l.pop()
                 if 'os' in self.config.summary:
-                    oslocal = l.pop()
+                    os = l.pop()
 
                 m = l.pop()
             owner_login, owner_firstname, owner_realname = self.getMachineOwner(m)
@@ -1438,7 +1438,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 if 'type' in self.config.summary:
                     datas['type'] = type
                 if 'os' in self.config.summary:
-                    datas['os'] = oslocal
+                    datas['os'] = os
                 if 'owner' in self.config.summary:
                     datas['owner'] = owner_login
                 if 'owner_firstname' in self.config.summary:
@@ -2297,7 +2297,6 @@ class Glpi92(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_computertypes) \
                 .outerjoin(self.glpi_computermodels) \
                 .outerjoin(self.glpi_operatingsystemservicepacks) \
-                .outerjoin(self.glpi_operatingsystemversions) \
                 .outerjoin(self.glpi_operatingsystemarchitectures) \
                 .outerjoin(self.state) \
                 .outerjoin(self.fusionagents) \
@@ -2308,7 +2307,7 @@ class Glpi92(DyngroupDatabaseHelper):
             ret = query.count()
         else:
             ret = []
-            for machine, infocoms, entity, location, oslocal, manufacturer, type, model, servicepack, version, architecture, domain, state, last_contact in query:
+            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, version, architecture, domain, state, last_contact in query:
                 endDate = ''
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -2367,7 +2366,7 @@ class Glpi92(DyngroupDatabaseHelper):
                     ['Owner', owner_login],
                     ['Owner Firstname', owner_firstname],
                     ['Owner Realname', owner_realname],
-                    ['OS', oslocal],
+                    ['OS', os],
                     ['Service Pack', servicepack],
                     ['Version', version],
                     ['Architecture', architecture],
@@ -4758,11 +4757,9 @@ ON
 left JOIN
   glpi_operatingsystemversions
 ON
-  operatingsystemversions_id = glpi_operatingsystemversions.id
-ORDER BY
- glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
+  operatingsystemversions_id = glpi_operatingsystemversions.id;"""
         res = self.db.execute(sql)
-        result = [{'os': os, 'version': version, 'count':1} for os, version in res]
+        result = [{'os': os, 'version': version} for os, version in res]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
@@ -4784,33 +4781,26 @@ ORDER BY
 
         final_list = []
         for machine in result:
-            if machine['os'].startswith('Debian'):
+            machine['count'] = 1
+            if machine['os'].startswith('Android'):
+                pass
+            elif machine['os'].startswith('Debian'):
                 machine['os'] = 'Debian'
-                machine['version'] = machine['version'].split(" ")[0]
+                machine['version'] = machine['version'].split(" ")
+                machine['version'] = machine['version'][0]
             elif machine['os'].startswith('Microsoft'):
                 machine['os'] = machine['os'].split(' ')[1:3]
                 machine['os'] = ' '.join(machine['os'])
             elif machine['os'].startswith('Ubuntu'):
                 machine['os'] = 'Ubuntu'
                 # We want just the XX.yy version number
-                machine['version'] = machine['version'].split(" ")[0].split(".")
+                machine['version'] = machine['version'].split(" ")[0]
+                machine['version'] = machine['version'].split(".")
                 if len(machine['version']) >= 2:
                     machine['version'] = machine['version'][0:2]
                 machine['version'] = '.'.join(machine['version'])
             elif machine['os'].startswith('Mageia'):
                 machine['os'] = machine['os'].split(" ")[0]
-            elif machine['os'].startswith('Unknown'):
-                machine['os'] = machine['os'].split("(")[0]
-                machine['version'] = ""
-            elif machine['os'].startswith("CentOS"):
-                machine['os'] = machine['os'].split(" ")[0]
-                machine['version'] = machine['version'].split("(")[0].split(".")[0:2]
-                machine['version'] = ".".join(machine['version'])
-
-            elif machine['os'].startswith("macOS") or machine['os'].startswith("OS X"):
-                machine['version'] = machine['version'].split(" (")[0].split(".")[0:2]
-                machine['version'] = ".".join(machine['version'])
-
             else:
                 pass
 
@@ -4870,7 +4860,7 @@ class Machine(object):
     def toH(self):
         return { 'hostname':self.name, 'uuid':toUUID(self.id) }
     def to_a(self):
-        owner_login, owner_firstname, owner_realname = Glpi92().getMachineOwner(self)
+        owner_login, owner_firstname, owner_realname = Glpi93().getMachineOwner(self)
         return [
             ['name',self.name],
             ['comments',self.comment],
@@ -4894,7 +4884,7 @@ class Machine(object):
             ['model',self.computermodels_id],
             ['type',self.computertypes_id],
             ['entity',self.entities_id],
-            ['uuid',Glpi92().getMachineUUID(self)]
+            ['uuid',Glpi93().getMachineUUID(self)]
         ]
 
 class Entities(object):

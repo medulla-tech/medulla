@@ -506,7 +506,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         for deploy in wolupdatemachine:
             UUID = deploy['UUID']
-            #UUID = str(deploy.Target.target_uuid)
 
             if UUID in self.machineWakeOnLan:
                 if 'count' in self.machineWakeOnLan[UUID]:
@@ -515,14 +514,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     self.machineWakeOnLan[UUID] = {}
                     self.machineWakeOnLan[UUID]['count'] = 0
                 if not 'mac' in self.machineWakeOnLan[UUID]:
-                    self.machineWakeOnLan[UUID]['mac'] = deploy.Target.target_macaddr
+                    self.machineWakeOnLan[UUID]['mac'] = deploy['mac']
                 if not 'commanid' in self.machineWakeOnLan[UUID]:
-                    self.machineWakeOnLan[UUID]['commanid'] = deploy.Commands.id
+                    self.machineWakeOnLan[UUID]['commanid'] = deploy['commandid']
             else:
                 self.machineWakeOnLan[UUID] = {}
                 self.machineWakeOnLan[UUID]['count'] = 0
-                self.machineWakeOnLan[UUID]['commanid'] = deploy.Commands.id
-                self.machineWakeOnLan[UUID]['mac'] = deploy.Target.target_macaddr
+                self.machineWakeOnLan[UUID]['commanid'] = deploy['commandid']
+                self.machineWakeOnLan[UUID]['mac'] = deploy['mac']
 
         for uuidmachine in self.machineWakeOnLan:
             # TODO : Replace print by log
