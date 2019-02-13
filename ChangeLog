@@ -1,3 +1,4 @@
+* [BUGFIX] Fix creating groups when the database is not called glpi
 
 Pulse 2 4.5.1
 =============
