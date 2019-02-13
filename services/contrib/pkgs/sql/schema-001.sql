@@ -68,4 +68,20 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`packages`
   preCommand_name varchar(50)  null,
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC));
 
+
+  create table if not exists extensions
+  (
+    id            int auto_increment
+      primary key,
+    name          varchar(255) null comment 'basename for software',
+    extension     varchar(255) null comment 'Ext file or empty',
+    magic_command varchar(255) null comment 'Magic number of the file',
+    bang          varchar(255) null comment 'The bang file can be declared',
+    file          varchar(255) null comment 'Elements found by the file command',
+    string_head   varchar(255) null comment 'Elements found by the strings command in the head of the file',
+    string_tail   varchar(255) null comment 'Elements found by the strings command in the end of the file.
+  10 lines are efficient',
+    proposition   varchar(255) null comment 'The proposed result for the researched file'
+  );
+
 COMMIT;

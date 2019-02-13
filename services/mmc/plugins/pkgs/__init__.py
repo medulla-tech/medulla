@@ -83,6 +83,10 @@ def list_all():
     return pkgmanage().list_all()
 
 
+def list_all_extensions():
+    return pkgmanage().list_all_extensions()
+
+
 def activate():
     logger = logging.getLogger()
     logger.debug("Pkgs is activating")

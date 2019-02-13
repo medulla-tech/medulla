@@ -40,6 +40,7 @@ import datetime
 # ORM mappings
 from pulse2.database.pkgs.orm.version import Version
 from pulse2.database.pkgs.orm.pakages import Packages
+from pulse2.database.pkgs.orm.extensions import Extensions
 from mmc.database.database_helper import DatabaseHelper
 #from pulse2.database.xmppmaster import XmppMasterDatabase
 # Pulse 2 stuff
@@ -100,6 +101,12 @@ class PkgsDatabase(DatabaseHelper):
                 autoload = True
             )
 
+            # extensions
+            self.extensions = Table(
+                "extensions",
+                self.metadata,
+                autoload = True
+            )
         except NoSuchTableError, e:
             self.logger.error("Cant load the Pkgs database : table '%s' does not exists"%(str(e.args[0])))
             return False
@@ -110,7 +117,7 @@ class PkgsDatabase(DatabaseHelper):
         Initialize all SQLalchemy mappers needed for the Pkgs database
         """
         mapper(Packages, self.package)
-        # FIXME: Version is missing
+        mapper(Extensions, self.extensions)
 
     ####################################
 
@@ -141,3 +148,11 @@ class PkgsDatabase(DatabaseHelper):
         for package in ret:
             packages.append(package.to_array())
         return packages
+
+    @DatabaseHelper._sessionm
+    def list_all_extensions(self, session):
+        ret = session.query(Extensions).all()
+        extensions = []
+        for extension in ret:
+            extensions.append(extension.getId())
+        return extensions

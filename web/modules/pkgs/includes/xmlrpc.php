@@ -167,4 +167,12 @@ function get_xmpp_package($packageUuid){
 function get_meta_from_xmpp_package($packageUuid){
     return xmlCall("pkgs.get_meta_from_xmpp_package", array($packageUuid));
 }
+
+function list_all() {
+   return xmlCall("pkgs.list_all");
+}
+
+function list_all_extensions() {
+   return xmlCall("pkgs.list_all_extensions");
+}
 ?>
