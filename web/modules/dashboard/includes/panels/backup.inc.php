@@ -46,7 +46,7 @@ class BackupPanel extends Panel {
           <script>
             var backupDatas = [
               {"label": "$configured_text", "value":$machines_backup, "href":"$urlRedirect&backup=yes"},
-              {'label': '$not_configured_text', 'value': $machines_not_backup, "href": "$urlRedirect&backup=yes"}
+              {'label': '$not_configured_text', 'value': $machines_not_backup, "href": "$urlRedirect&backup=no"}
             ];
 
             donut("backup",backupDatas, "Total", $total_machines);
