@@ -4808,7 +4808,7 @@ ON
         return final_list
 
     @DatabaseHelper._sessionm
-    def get_machines_with_os_and_version(self, session, os, version = ''):
+    def get_machines_with_os_and_version(self, session, oslocal, version = ''):
         """This function returns a list of id of selected OS for dashboard
         Params:
             os: string which contains the searched OS
@@ -4820,28 +4820,32 @@ ON
         criterion = ''
 
         if version == "":
-            criterion = 'glpi.glpi_operatingsystemversions.name IS NULL'
+            criterion = self.config.dbname+'.glpi_operatingsystemversions.name IS NULL'
         else:
-            criterion = 'glpi.glpi_operatingsystemversions.name like "%%%s%%"' % version
+            criterion = self.config.dbname+'.glpi_operatingsystemversions.name like "%%%s%%"' % version
 
         sql="""SELECT
-    glpi.glpi_computers_pulse.id,
-    glpi.glpi_computers_pulse.name
+    %s.glpi_computers_pulse.id,
+    %s.glpi_computers_pulse.name
 FROM
-    glpi.glpi_computers_pulse
+    %s.glpi_computers_pulse
 INNER JOIN
-    glpi.glpi_operatingsystems
+    %s.glpi_operatingsystems
 ON
-    operatingsystems_id = glpi.glpi_operatingsystems.id
+    operatingsystems_id = %s.glpi_operatingsystems.id
 left JOIN
-    glpi.glpi_operatingsystemversions
+    %s.glpi_operatingsystemversions
 ON
-    operatingsystemversions_id = glpi.glpi_operatingsystemversions.id
+    operatingsystemversions_id = %s.glpi_operatingsystemversions.id
 WHERE
-  glpi.glpi_operatingsystems.name LIKE "%%%s%%"
+  %s.glpi_operatingsystems.name LIKE "%%%s%%"
 AND
   %s
-;""" % (os, criterion)
+;""" % (self.config.dbname, self.config.dbname,
+        self.config.dbname,self.config.dbname,
+        self.config.dbname,self.config.dbname,
+        self.config.dbname,self.config.dbname,
+        oslocal, criterion)
 
         res = session.execute(sql)
         result = [{'id':a, 'hostname':b} for a,b in res]
