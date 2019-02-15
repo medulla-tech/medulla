@@ -71,7 +71,7 @@ from sleekxmpp.stanza.iq import Iq
 from lib.manage_xmppbrowsing import xmppbrowsing
 
 from mmc.plugins.msc.database import MscDatabase
-
+from mmc.plugins.msc import convergence_reschedule
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster"))
 
@@ -1930,6 +1930,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             '',
                                                             "Master")
                             self.callinventory(data['from'])
+                            sleep(20)
+                            convergence_reschedule()
                 else:
                     logger.error("** Database registration error")
                     return
