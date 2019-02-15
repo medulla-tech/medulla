@@ -229,7 +229,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
 $p_api_id = base64_decode($_GET['p_api']);
 $pid = base64_decode($_GET['pid']);
-
+$p_api_id = "UUID/package_api_get1";
 if (isset($_GET['delete_file'], $_GET['filename'])) {
     $ret = removeFilesFromPackage($p_api_id, $pid, array($_GET['filename']));
     if (!isXMLRPCError() and is_array($ret)) {
