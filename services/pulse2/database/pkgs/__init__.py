@@ -41,6 +41,7 @@ import datetime
 from pulse2.database.pkgs.orm.version import Version
 from pulse2.database.pkgs.orm.pakages import Packages
 from pulse2.database.pkgs.orm.extensions import Extensions
+from pulse2.database.pkgs.orm.dependencies import Dependencies
 from mmc.database.database_helper import DatabaseHelper
 #from pulse2.database.xmppmaster import XmppMasterDatabase
 # Pulse 2 stuff
@@ -107,6 +108,13 @@ class PkgsDatabase(DatabaseHelper):
                 self.metadata,
                 autoload = True
             )
+
+            # Dependencies
+            self.dependencies = Table(
+                "dependencies",
+                self.metadata,
+                autoload = True
+            )
         except NoSuchTableError, e:
             self.logger.error("Cant load the Pkgs database : table '%s' does not exists"%(str(e.args[0])))
             return False
@@ -118,6 +126,7 @@ class PkgsDatabase(DatabaseHelper):
         """
         mapper(Packages, self.package)
         mapper(Extensions, self.extensions)
+        mapper(Dependencies, self.dependencies)
 
     ####################################
 
@@ -128,8 +137,8 @@ class PkgsDatabase(DatabaseHelper):
         """
         bdl = Packages()
         bdl.label = name
-        bdl.uuid = uuid
-        bdl.descriptif = descriptif
+        bdl.id = uuid
+        bdl.description = descriptif
         session.add(bdl)
         session.flush()
         return bdl
