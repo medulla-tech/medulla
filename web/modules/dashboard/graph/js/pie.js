@@ -42,7 +42,7 @@ function customPie(selector, datas){
   var height = 200, width = 200;
   var outerRadius = 70;
   var innerRadius = 2;
-  var widgetWidth = d3.select("#backup").node().getBoundingClientRect().width;
+  var widgetWidth = d3.select("#"+selector).node().getBoundingClientRect().width;
 
   var colors = d3.scaleOrdinal()
     .range([
@@ -97,7 +97,7 @@ function customPie(selector, datas){
         .attr("text-anchor", "start")
         .text(function(data,id){
           if(d.data.version != "")
-            return d.data.label + " v." + d.data.version + " : " + d.data.value + " (" + ((d.data.value/total)*100).toFixed(0) + "%)";
+            return d.data.label + " (" + d.data.version + ") : " + d.data.value + " (" + ((d.data.value/total)*100).toFixed(0) + "%)";
           else
             return d.data.label + " : " + d.data.value + " (" + ((d.data.value/total)*100).toFixed(0) + "%)";
           })
