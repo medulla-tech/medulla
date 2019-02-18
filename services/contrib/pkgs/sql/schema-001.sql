@@ -84,4 +84,12 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`packages`
     proposition   varchar(255) null comment 'The proposed result for the researched file'
   );
 
+create table if not exists dependencies
+(
+    id            int auto_increment
+      primary key,
+    id_package    int not null comment 'UUID of the package',
+    id_dependency int not null comment 'UUID of the corresponding dependency'
+  );
+
 COMMIT;
