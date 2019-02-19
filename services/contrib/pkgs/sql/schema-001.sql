@@ -92,4 +92,15 @@ create table if not exists dependencies
     id_dependency int not null comment 'UUID of the corresponding dependency'
   );
 
+create table if not exists syncthingsync
+(
+  id              int auto_increment
+    primary key,
+  date            timestamp   default CURRENT_TIMESTAMP not null,
+  uuidpackage     varchar(45)                           not null,
+  typesynchro     varchar(45) default 'create'          not null,
+  relayserver_jid varchar(255)                          not null,
+  watching        varchar(3)  default 'yes'             null
+);
+
 COMMIT;
