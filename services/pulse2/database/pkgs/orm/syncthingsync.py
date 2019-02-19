@@ -23,7 +23,7 @@ import logging
 from sqlalchemy.orm import create_session
 
 
-class syncthingsync(object):
+class Syncthingsync(object):
 
     def getId(self):
         if self.id is not None:
