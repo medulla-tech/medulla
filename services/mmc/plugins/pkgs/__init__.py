@@ -50,6 +50,7 @@ from mmc.plugins.pkgs.config import PkgsConfig
 from pulse2.managers.location import ComputerLocationManager
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
+import traceback
 
 from pulse2.database.pkgs import PkgsDatabase
 
@@ -82,6 +83,58 @@ class pkgmanage():
 def list_all():
     return pkgmanage().list_all()
 
+def getTemporaryFileSuggestedCommand1(papi, tempdir, pid):
+    logger.info("hehe getTemporaryFileSuggestedCommand1")
+    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
+    ret = {
+            "version": '0.1',
+            "commandcmd": [],
+        }
+    suggestedCommand = []
+    if not isinstance(tempdir, list):
+        if os.path.exists(tmp_input_dir):
+            for f in os.listdir(os.path.join(tmp_input_dir, tempdir)):
+                fileadd = os.path.join(tmp_input_dir, tempdir, f)
+                if os.path.isfile(fileadd):
+                    c = getCommand(fileadd)
+                    command = c.getCommand()
+                    if command is not None:
+                        suggestedCommand.append(command)
+    ret['commandcmd'] = '\n'.join(suggestedCommand)
+    return ret
+
+
+def pushPackage(random_dir, files, local_files):
+    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
+    logging.getLogger().info("pushing package from a local mmc-agent")
+    if not os.path.exists(tmp_input_dir):
+        os.makedirs(tmp_input_dir)
+    filepath = os.path.join(tmp_input_dir, random_dir)
+    if not os.path.exists(filepath):
+        os.mkdir(filepath)
+    for file in files:
+        logging.getLogger().debug("Move file : %s to %s "%( os.path.join(file['tmp_dir'],
+                                                            random_dir, file['filename']),os.path.join(filepath, file['filename'])))
+        try:
+            shutil.move(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
+                            os.path.join(filepath, file['filename']))
+            os.chmod(os.path.join(filepath, file['filename']), 0660)
+        except (shutil.Error, OSError, IOError):
+            logging.getLogger().error("%s"%(traceback.format_exc()))
+            return False
+    return True
+
+def removeFilesFromPackage( pid, files):
+    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "packages")
+    retournbool = False
+    if pid !='' and len(files) > 0:
+        for filedelete in files:
+            filepath = os.path.join(tmp_input_dir, pid, filedelete)
+            if os.path.isfile(filepath):
+                os.remove(filepath)
+                return False
+        return True
+    return False
 
 def list_all_extensions():
     return pkgmanage().list_all_extensions()
@@ -864,3 +917,206 @@ def package_exists(uuid):
         return True
     else:
         return False
+
+class getCommand(object):
+    def __init__(self, file):
+        self.file = file
+        self.logger =logging.getLogger()
+
+    def getStringsData(self):
+        """
+        Get strings command output as XML string if <?xml is found
+        else return all strings datas
+        """
+        strings_command = 'strings "%s"' % self.file
+        filestrings_data = os.popen(strings_command)
+        strings_data = filestrings_data.read()
+        filestrings_data.close()
+
+        xml_pos = strings_data.find('<?xml')
+        if xml_pos != -1:
+            strings_data = strings_data[xml_pos:]
+            end_pos = strings_data.find('</assembly>') + 11
+            return strings_data[:end_pos]
+        else:
+            self.logger.debug('getStringsData: <?xml tag not found :-(, return all strings_data')
+            return strings_data
+
+    def getFileData(self):
+        """
+        return file command output as dictionary
+        """
+        file_command = 'file "%s"' % self.file
+        file_data = os.popen(file_command).read()
+        l = file_data.split(': ')
+        n = len(l)
+        d = {}
+
+        # this awful piece of code convert file output to a dictionnary
+        for i in range(n-1, 0, -1):
+            lcount = len(l[i].split(', '))
+            if lcount == 1: lcount = 2 # lcount is at least equal to 2 to prevent empty values
+            d[l[i-1].split(', ').pop()] = " ".join(l[i].split(', ')[:lcount-1]).replace('\n', '')
+
+        return d
+
+    def getAdobeCommand(self):
+        return '"%s" /sAll' % basename(self.file)
+
+    def getInnoCommand(self):
+        return '"%s" /SP /VERYSILENT /NORESTART' % basename(self.file)
+
+    def getNSISCommand(self):
+        return '"%s" /S' % basename(self.file)
+
+    def getNSISUpdateCommand(self):
+        return '"%s" /S /UPDATE' % basename(self.file)
+
+    def getMozillaCommand(self):
+        return '"%s" -ms' % basename(self.file)
+
+    def get7ZipCommand(self):
+        return '"%s" /S' % basename(self.file)
+
+    def getMSICommand(self):
+        return """msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
+
+if errorlevel 1 (
+  type install.log
+  echo "MSI INSTALLER FAILED WITH CODE %%errorlevel%%. SEE LOG ABOVE."
+  exit /b %%errorlevel%%
+) else (
+  del /F install.log
+  exit 0
+)""" % basename(self.file)
+
+    def getMSIUpdateCommand(self):
+        """
+        Command for *.msp files (MSI update packages)
+        """
+        return 'msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
+
+    def getRegCommand(self):
+        return 'regedit /s "%s"' % basename(self.file)
+
+    def getDpkgCommand(self):
+        return """export DEBIAN_FRONTEND=noninteractive
+export UCF_FORCE_CONFFOLD=yes
+dpkg -i --force-confdef --force-confold "%s" """ % basename(self.file)
+
+    def getRpmCommand(self):
+        return """if [ ! -e /etc/os-release ]; then
+  echo "We are not able to find your linux distibution"
+  exit 1
+else
+  . /etc/os-release
+fi
+
+case "$ID" in
+  mageia)
+    urpmi --auto "%s"
+    ;;
+  redhat|fedora)
+    dnf -y install "%s"
+    ;;
+  *)
+    echo "Your distribution is not supported yet or is not rpm based"
+    exit 1
+    ;;
+esac""" %(basename(self.file), basename(self.file))
+
+    def getAptCommand(self):
+        return 'apt -q -y install "%s" --reinstall' % basename(self.file)
+
+    def getBatCommand(self):
+        return 'cmd.exe /c "%s"' % basename(self.file)
+
+    def getShCommand(self):
+        return './"%s"' % basename(self.file)
+
+    def getCommand(self):
+        self.logger.debug("Parsing %s:" % self.file)
+
+        strings_data = self.getStringsData()
+        file_data = self.getFileData()
+        self.logger.debug("File data: %s" % file_data)
+
+        if "PE32 executable" in file_data[self.file]:
+            # Not an MSI file, maybe InnoSetup or NSIS
+            self.logger.debug("%s is a PE32 executable" % self.file)
+            installer = None
+
+            # If strings_data startswith <?xml, it is propably
+            # standard InnoSetup or NSIS installer
+            # else, we check for another custom installer
+            # (Adobe, ....)
+
+            if strings_data.startswith('<?xml'):
+                xmldoc = minidom.parseString(strings_data)
+                identity = xmldoc.getElementsByTagName('assemblyidentity')
+
+                if len(identity) == 0:
+                    # if assemblyIdentity don't exists, try assemblyIdentity
+                    identity = xmldoc.getElementsByTagName('assemblyIdentity')
+
+                if identity > 0:
+                    if identity[0].hasAttribute('name'):
+                        installer = identity[0].getAttribute('name')
+                        self.logger.debug("Installer: %s" % installer)
+            elif 'AdobeSelfExtractorApp' in strings_data:
+                self.logger.debug('Adobe application detected')
+                return self.getAdobeCommand()
+
+            if installer == "JR.Inno.Setup":
+                self.logger.debug("InnoSetup detected")
+                return self.getInnoCommand()
+            elif installer == "Nullsoft.NSIS.exehead":
+                self.logger.debug("NSIS detected")
+                if re.match('^pulse2-secure-agent-.*\.exe$', basename(self.file)) and not re.search('plugin', basename(self.file)):
+                    self.logger.debug("Pulse Secure Agent detected, add /UPDATE flag")
+                    return self.getNSISUpdateCommand()
+                return self.getNSISCommand()
+            elif installer == "7zS.sfx.exe":
+                self.logger.debug("7zS.sfx detected (Mozilla app inside ?)")
+                if not os.system("grep Mozilla '%s' > /dev/null" % self.file): # return code is 0 if file match
+                    self.logger.debug("Mozilla App detected")
+                    return self.getMozillaCommand()
+                else:
+                    return self.logger.info("I can't get a command for %s" % self.file)
+            elif installer == "7-Zip.7-Zip.7zipInstall":
+                self.logger.debug("7-Zip detected")
+                return self.get7ZipCommand()
+            else:
+                return self.logger.info("I can't get a command for %s" % self.file)
+
+        elif "Name of Creating Application" in file_data:
+            # MSI files are created with Windows Installer, but some apps like Flash Plugin, No
+            if "Windows Installer" in file_data['Name of Creating Application'] or "Document Little Endian" in file_data[self.file]:
+                # MSI files
+                if re.match('(x64|Intel);[0-9]+', file_data['Template']):
+                    if self.file.endswith('.msp'):
+                        self.logger.debug("%s is a MSI Update file" % self.file)
+                        return self.getMSIUpdateCommand()
+                    else:
+                        self.logger.debug("%s is a MSI file" % self.file)
+                        return self.getMSICommand()
+                else:
+                    return self.logger.info("No Template Key for %s" % self.file)
+        elif "Debian binary package" in file_data[self.file] or self.file.endswith(".deb"):
+            self.logger.debug("Debian package detected")
+            return self.getDpkgCommand()
+        elif self.file.endswith(".reg"):
+            self.logger.debug("Reg file detected")
+            return self.getRegCommand()
+        elif self.file.endswith(".bat"):
+            self.logger.debug("MS-DOS Batch file detected")
+            return self.getBatCommand()
+        elif self.file.endswith(".sh"):
+            self.logger.debug("sh file detected")
+            return self.getShCommand()
+        elif self.file.endswith(".rpm"):
+            self.logger.debug("rpm file detected")
+            return self.getRpmCommand()
+        else:
+            return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))
+

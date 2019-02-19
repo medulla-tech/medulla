@@ -38,6 +38,10 @@ function pushPackage($papi, $random_dir, $files, $local_mmc) {
     return xmlCall("pkgs.ppa_pushPackage", array($papi, $random_dir, $files, $local_mmc));
 }
 
+function pushPackage1($random_dir, $files, $local_mmc) {
+    return xmlCall("pkgs.pushPackage", array($random_dir, $files, $local_mmc));
+}
+
 function getPackageDetail($papiid, $pid) {
     return xmlCall("pkgs.ppa_getPackageDetail", array($papiid, $pid));
 }
@@ -64,12 +68,16 @@ function getTemporaryFileSuggestedCommand($papiid, $tempdir) {
     return xmlcall("pkgs.ppa_getTemporaryFileSuggestedCommand", array($papiid, $tempdir));
 }
 
+function getTemporaryFileSuggestedCommand1($papi,$tempdir, $pid) {
+    return xmlcall("pkgs.getTemporaryFileSuggestedCommand1", array($papi, $tempdir, $pid));
+}
+
 function associatePackages($papiid, $pid, $files, $level = 0) {
     return xmlCall("pkgs.ppa_associatePackages", array($papiid, $pid, $files, $level));
 }
 
-function removeFilesFromPackage($papiid, $pid, $files) {
-    return xmlCall("pkgs.ppa_removeFilesFromPackage", array($papiid, $pid, $files));
+function removeFilesFromPackage($pid, $files) {
+    return xmlCall("pkgs.removeFilesFromPackage", array($pid, $files));
 }
 
 function dropPackage($p_api, $pid) {
