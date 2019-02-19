@@ -1,5 +1,4 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
@@ -42,7 +41,7 @@ $p->display();
 
 // var formating
 $_GET['p_api'] = isset($_GET['p_api']) ? $_GET['p_api'] : "";
-
+$_GET['p_api'] = "UUID/package_api_get1";
 $package = array();
 
 /*
@@ -227,18 +226,25 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     }
 }
 
+//start formulaire
 $p_api_id = base64_decode($_GET['p_api']);
-$pid = base64_decode($_GET['pid']);
+
 $p_api_id = "UUID/package_api_get1";
-if (isset($_GET['delete_file'], $_GET['filename'])) {
-    $ret = removeFilesFromPackage($p_api_id, $pid, array($_GET['filename']));
+//$p_api_id = "UUID/package_api_get1";
+
+$pid = base64_decode($_GET['pid']);
+
+if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
+    //$ret = removeFilesFromPackage($p_api_id, $pid, array($_GET['filename']));
+    // RPC method call from user root: pkgs.removeFilesFromPackage(['firefox-64.0.tar.bz2'], '')
+
+    $ret = removeFilesFromPackage($_GET['packageUuid'], array($_GET['filename']));
     if (!isXMLRPCError() and is_array($ret)) {
         if ($ret[0]) {
             $explain = '';
             if (count($ret) > 1) {
                 $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
             }
-            //ICI
             $str = sprintf(_T("File successfully deleted.", "pkgs"));
             new NotifyWidgetSuccess($str);
              xmlrpc_setfrompkgslogxmpp( $str,
@@ -252,7 +258,8 @@ if (isset($_GET['delete_file'], $_GET['filename'])) {
                                         '',
                                         "session user ".$_SESSION["login"],
                                         'Packaging | Files | Delete | Manual');
-        } else {
+        } 
+        else {
             $reason = '';
             if (count($ret) > 1) {
                 $reason = sprintf(" : <br/>%s", $ret[1]);
@@ -271,7 +278,8 @@ if (isset($_GET['delete_file'], $_GET['filename'])) {
                                         "session user ".$_SESSION["login"],
                                         'Packaging | Files | Delete | Manual');
         }
-    } else {
+    } 
+    else {
         $str = _T("Failed to delete files", "pkgs");
         new NotifyWidgetFailure($str);
         xmlrpc_setfrompkgslogxmpp( $str,
@@ -287,27 +295,23 @@ if (isset($_GET['delete_file'], $_GET['filename'])) {
                                     'Packaging | Files | Delete | Manual');
     }
     header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'], 'packageUuid' => $_GET['packageUuid'])));
+    exit(0);
 }
-if (count($package) == 0) {
-    $title = _T("Edit a package", "pkgs");
-    $activeItem = "index";
-    # get existing package
-    $pid = base64_decode($_GET['pid']);
-    //$package = getPackageDetail($p_api_id, $pid);
-    $package = xmpp_getPackageDetail($pid);
-    if ($package['do_reboot']) {
-        $package['reboot'] = $package['do_reboot'];
+    $formElt = new HiddenTpl("id");//use in js for createUploader
+    $selectpapi = new HiddenTpl('p_api');//use in js for createUploader
+
+    if (count($package) == 0) {
+
+        $title = _T("Edit a package", "pkgs");
+        $activeItem = "index";
+        # get existing package
+        $pid = base64_decode($_GET['pid']);
+        $package = xmpp_getPackageDetail($pid);
+        if ($package['do_reboot']) {
+            $package['reboot'] = $package['do_reboot'];
+        }
+        $p_api_number = count(getUserPackageApi());
     }
-
-    $formElt = new HiddenTpl("id");
-
-    $selectpapi = new HiddenTpl('p_api');
-    $p_api_number = count(getUserPackageApi());
-} else {
-    $formElt = new HiddenTpl("id");
-    $selectpapi = new HiddenTpl('p_api');
-}
-
 /*
  * Page form
  */
@@ -316,21 +320,25 @@ if (count($package) == 0) {
 $f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
 $f->push(new Table());
 
-$p_api_id = ($_GET['p_api']) ? base64_decode($_GET['p_api']) : base64_decode($_POST['p_api']);
-$selectpapi = new HiddenTpl('p_api');
 
 if ($p_api_number > 1) {
     $f->add(
-            new TrFormElement(_T("Package API", "pkgs"), $selectpapi), array("value" => $p_api_id, "hide" => $hide)
+            new TrFormElement(_T("PIP", "pkgs"), $selectpapi), array("value" => $pid, "hide" => $hide)
+    );
+    $f->add(
+            new TrFormElement(_T("Package API", "pkgs"), $formElt), array("value" => $p_api_id, "hide" => $hide)
     );
 } else {
     $f->add(
             $selectpapi, array("value" => $p_api_id, "hide" => True)
     );
+    $f->add(
+            $formElt, array("value" => $pid, "hide" => True)
+    );
 }
 
-$f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 
+$f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 // Uploaded field,
 $f->add(new HiddenTpl("files_uploaded"), array("value" => 0, "hide" => True));
 
@@ -346,19 +354,16 @@ $fields = array(
 if(!isExpertMode())
 {
 
-$cmds = array(
-    array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')), /*
-          array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
-          array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
-          array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
-          array('postCommandSuccess', _T('postCommandSuccess', 'pkgs'), _T('postCommandSuccess', 'pkgs')) // */
-);
+    $cmds = array(
+        array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')), 
+    );
 
-$options = array(
-    array('reboot', _T('Need a reboot ?', 'pkgs'))
-);
+    $options = array(
+        array('reboot', _T('Need a reboot ?', 'pkgs'))
+    );
 
 }
+
 $os = array(
     array('win', 'linux', 'mac'),
     array(_T('Windows'), _T('Linux'), _T('Mac OS'))
@@ -525,21 +530,13 @@ $names = array();
 $cssClasses = array();
 $params = array();
 
-// Get Papi details
-$papi_details = getPApiDetail($p_api_id);
 $pserver_base_url = '';
-// Very dirty hack: TODO: read conf from package server
-if ($papi_details['mountpoint'] == '/package_api_get1')
-    $mirror = 'mirror1';
-elseif ($papi_details['mountpoint'] == '/appstream')
-    $mirror = 'appstream';
 
-$pserver_base_url = $papi_details['protocol'] . '://' . $papi_details['server'] . ':' . $papi_details['port'] . '/' . $mirror . "_files/$pid/";
 
 foreach ($package['files'] as $file) {
     if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json")
         continue;
-    $names[] = sprintf('<a href="%s">%s</a>', $pserver_base_url . $file['name'] , $file['name']);
+    $names[] = $file['name'];
     $params[] = array(
         'p_api' => $_GET['p_api'],
         'pid' => $_GET['pid'],
@@ -547,7 +544,6 @@ foreach ($package['files'] as $file) {
         'filename' => $file['name'],
         'delete_file' => 1
     );
-    //$sizes[$i] = formatFileSize($sizes[$i]);
     $viewVersionsActions[] = $viewVersionsAction;
     $cssClasses[] = 'file';
 }
@@ -577,7 +573,7 @@ if (isset($_SESSION['random_dir'])) {
     delete_directory($upload_tmp_dir . '/' . $_SESSION['random_dir']);
 }
 
-$m = new MultiFileTpl2('filepackage');
+$m = new MultiFileTpl3('filepackage');
 _T("Click here to select files", "pkgs");
 _T("Upload Queued Files", "pkgs");
 
@@ -605,3 +601,5 @@ $f->addValidateButton("bcreate");
 $f->display();
 
 ?>
+
+</script>
