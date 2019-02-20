@@ -58,8 +58,7 @@ function donut(selector, datas, title, subtitle){
   var widgetWidth = d3.select("#"+selector).node().getBoundingClientRect().width;
 
   //var colors = d3.scaleOrdinal(d3.schemeCategory10);
-  var colors = d3.scaleOrdinal()
-    .range(["#52b749","#e03c3c", "#f48f42"]);
+  var colors = ["#52b749","#e03c3c", "#f48f42"];
 
   var canvas = d3.select("#"+selector).append("svg")
     .attr("width", width)
@@ -105,7 +104,7 @@ function donut(selector, datas, title, subtitle){
     .enter()
     .append("path")
     .attr("d", segments)
-    .attr("fill", function(d){return colors(d.data.value)})
+    .attr("fill", function(d, i){return colors[i]})
 
     // Actions executed when the mouse is over the section
     .on("mouseover", function(d,i){
@@ -195,9 +194,9 @@ function donut(selector, datas, title, subtitle){
     .style("font-size", "2em")
     .style("line-height","0.5em")
     .attr("class",function(d,i){return selector+'Label'+i})
-    .style("color",function(d){
+    .style("color",function(d, i){
       var tmp = segments(d);
-      return colors(d.data.value);
+      return colors[i];
     })
     .style("display", function(d,i){
       if(d.data.value == 0)
