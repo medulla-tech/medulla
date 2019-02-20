@@ -125,16 +125,24 @@ def pushPackage(random_dir, files, local_files):
     return True
 
 def removeFilesFromPackage( pid, files):
-    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "packages")
-    retournbool = False
-    if pid !='' and len(files) > 0:
+    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
+    ret = []
+    success=[]
+    error=[]
+    if pid != '' and len(files) > 0:
         for filedelete in files:
             filepath = os.path.join(tmp_input_dir, pid, filedelete)
             if os.path.isfile(filepath):
-                os.remove(filepath)
-                return False
-        return True
-    return False
+                try:
+                    os.remove(filepath)
+                    success.append(filedelete)
+                except OSError as e:
+                    error.append("%s : %s"%(filedelete, str(e)))
+    else:
+        error.append("error file missing for deleted : %s"%(files))
+    ret.append(success)
+    ret.append(error)
+    return ret
 
 def list_all_extensions():
     return pkgmanage().list_all_extensions()

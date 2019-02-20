@@ -240,31 +240,15 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
 
     $ret = removeFilesFromPackage($_GET['packageUuid'], array($_GET['filename']));
     if (!isXMLRPCError() and is_array($ret)) {
-        if ($ret[0]) {
-            $explain = '';
-            if (count($ret) > 1) {
-                $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
+        $errorexplain = "";
+        $successexplain = "";
+        if (count($ret[1]) > 0) {$errorexplain   = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));}
+        if (count($ret[0]) > 0) {$successexplain = sprintf(" : <br/>%s", implode("<br/>", $ret[0]));}
+        if (count($ret[1]) > 0){
+            $str = sprintf(_T("Failed to delete files%s", "pkgs"), $errorexplain);
+            if (count($ret[0]) > 0){
+                $str += sprintf(_T("<br/>File successfully deleted. %s", "pkgs"), $successexplain);
             }
-            $str = sprintf(_T("File successfully deleted.", "pkgs"));
-            new NotifyWidgetSuccess($str);
-             xmlrpc_setfrompkgslogxmpp( $str,
-                                        "PKG",
-                                        '',
-                                        0,
-                                        $_GET['filename'],
-                                        'Manuel',
-                                        '',
-                                        '',
-                                        '',
-                                        "session user ".$_SESSION["login"],
-                                        'Packaging | Files | Delete | Manual');
-        } 
-        else {
-            $reason = '';
-            if (count($ret) > 1) {
-                $reason = sprintf(" : <br/>%s", $ret[1]);
-            }
-            $str = sprintf(_T("Failed to delete files%s", "pkgs"), $reason);
             new NotifyWidgetFailure($str);
             xmlrpc_setfrompkgslogxmpp( $str,
                                         "PKG",
@@ -278,7 +262,22 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
                                         "session user ".$_SESSION["login"],
                                         'Packaging | Files | Delete | Manual');
         }
-    } 
+        else{
+            $str = sprintf(_T("<br/>File successfully deleted. %s", "pkgs"), $successexplain);
+            new NotifyWidgetSuccess($str);
+            xmlrpc_setfrompkgslogxmpp( $str,
+                                        "PKG",
+                                        '',
+                                        0,
+                                        $_GET['filename'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Files | Delete | Manual');
+        }
+    }
     else {
         $str = _T("Failed to delete files", "pkgs");
         new NotifyWidgetFailure($str);
