@@ -65,7 +65,10 @@ class XmppMasterDatabase(DatabaseHelper):
         if self.is_activated:
             return None
         self.config = config
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
+        self.db = create_engine(self.makeConnectionPath(), 
+                                pool_recycle = self.config.dbpoolrecycle, 
+                                pool_size = self.config.dbpoolsize,
+                                pool_timeout = self.config.dbpooltimeout)
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
