@@ -34,7 +34,7 @@ if (isset($_POST["bconfirm"])) {
     //jfkjfk
     $uuid =  isset($_GET["packageUuid"]) ? $_GET["packageUuid"] : base64_decode($pid);
     $ret = remove_xmpp_package($uuid);
-    xmlrpc_xmpp_delete_synchro_package($uuid);
+    xmlrpc_pkgs_delete_synchro_package($uuid);
     // $ret = dropPackage(base64_decode($p_api),base64_decode($pid) );
     $expire_result = expire_all_package_commands($uuid);
     if ($ret == "1") {

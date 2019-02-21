@@ -72,7 +72,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($package, $need_assign);
-    xmlrpc_xmpp_regiter_synchro_package($ret[1],'chang');
+    xmlrpc_pkgs_register_synchro_package($ret[1],'chang');
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
 
@@ -240,7 +240,7 @@ if(!isExpertMode())
 {
 
     $cmds = array(
-        array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')), 
+        array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')),
     );
 
     $options = array(

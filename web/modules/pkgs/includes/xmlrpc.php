@@ -181,5 +181,17 @@ function list_all() {
 
 function list_all_extensions() {
    return xmlCall("pkgs.list_all_extensions");
-   }
+}
+
+function xmlrpc_pkgs_register_synchro_package($uuid, $type){
+  return xmlCall("pkgs.pkgs_register_synchro_package", [$uuid, $type]);
+}
+
+function xmlrpc_pkgs_delete_synchro_package($uuid){
+  return xmlCall("pkgs.pkgs_delete_synchro_package", [$uuid]);
+}
+
+function xmlrpc_pkgs_get_info_synchro_packageid($pid_ppackage){
+    return xmlCall("pkgs.pkgs_get_info_synchro_packageid", array($pid_ppackage));
+}
 ?>

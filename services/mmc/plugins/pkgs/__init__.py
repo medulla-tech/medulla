@@ -54,7 +54,7 @@ import json
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 from pulse2.database.pkgs import PkgsDatabase
-
+from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
 from mmc.plugins.xmppmaster.master.lib.utils import simplecommand, name_random
 from unidecode import unidecode
@@ -84,15 +84,36 @@ class pkgmanage():
         self.args = args
         self.kwargs = kwargs
 
-
-    def list_all(param):
+    def list_all(self, param):
         return PkgsDatabase().list_all()
+
+    def pkgs_register_synchro_package(self, uuidpackage, typesynchro):
+        return PkgsDatabase().pkgs_register_synchro_package(uuidpackage, typesynchro)
+
+    def pkgs_delete_synchro_package(self, uuidpackage):
+        return PkgsDatabase().pkgs_delete_synchro_package(uuidpackage)
+
+    def get_relayservers_no_sync_for_packageuuid(self, uuidpackage):
+        return PkgsDatabase().get_relayservers_no_sync_for_packageuuid(uuidpackage)
+
 
 def dirpackage():
     return PkgsDatabase().dirpackage
 
 def list_all():
     return pkgmanage().list_all()
+
+############### synchro syncthing package #####################
+def pkgs_register_synchro_package(uuidpackage, typesynchro):
+    return pkgmanage().pkgs_register_synchro_package(uuidpackage, typesynchro)
+
+def pkgs_delete_synchro_package(uuidpackage):
+    return pkgmanage().pkgs_delete_synchro_package(uuidpackage)
+
+def pkgs_get_info_synchro_packageid(uuidpackage):
+    list_relayservernosync = pkgmanage().get_relayservers_no_sync_for_packageuuid(uuidpackage)
+    list_relayserver = XmppMasterDatabase().getRelayServer(enable = True )
+    return [list_relayservernosync, list_relayserver]
 
 def associatePackages(pid, fs, level = 0):
     tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
@@ -190,8 +211,8 @@ def to_json_xmppdeploy( package):
                       "description": package['description'],
                       "metagenerator": "standard",
                       "methodetransfert": "pullcurl",
-                      "name": str(package['label'] + ' ' + 
-                                  package['version'] + ' (' + 
+                      "name": str(package['label'] + ' ' +
+                                  package['version'] + ' (' +
                                   package['id']+')'),
                       "software": package['label'],
                       "transferfile": True,
@@ -226,12 +247,12 @@ def putPackageDetail( package, need_assign = True):
         "entity_id" : "0",
         "id" : package['id'],
         "commands" :{
-            "postCommandSuccess" : {"command" : "", "name" : ""}, 
+            "postCommandSuccess" : {"command" : "", "name" : ""},
             "installInit" : {"command" : "", "name" : ""},
             "postCommandFailure" : {"command" : "", "name" : ""},
             "command" : {
-                "command" : package['command']['command'], 
-                "name" : ""}, 
+                "command" : package['command']['command'],
+                "name" : ""},
             "preCommand": {"command" : "", "name" : ""}
         },
         "name" : package['label'],
@@ -1312,4 +1333,3 @@ esac""" %(basename(self.file), basename(self.file))
             return self.getRpmCommand()
         else:
             return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))
-

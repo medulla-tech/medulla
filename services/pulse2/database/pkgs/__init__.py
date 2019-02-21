@@ -44,7 +44,7 @@ from pulse2.database.pkgs.orm.extensions import Extensions
 from pulse2.database.pkgs.orm.dependencies import Dependencies
 from pulse2.database.pkgs.orm.syncthingsync import Syncthingsync
 from mmc.database.database_helper import DatabaseHelper
-#from pulse2.database.xmppmaster import XmppMasterDatabase
+from pulse2.database.xmppmaster import XmppMasterDatabase
 # Pulse 2 stuff
 #from pulse2.managers.location import ComputerLocationManager
 # Imported last
@@ -174,3 +174,56 @@ class PkgsDatabase(DatabaseHelper):
         for extension in ret:
             extensions.append(extension.getId())
         return extensions
+
+    @DatabaseHelper._sessionm
+    def pkgs_register_synchro_package(self, session, uuidpackage, typesynchro ):
+
+        #list id server relay
+        list_server_relay = XmppMasterDatabase().get_List_jid_ServerRelay_enable(enabled=1)
+        for jid in list_server_relay:
+            #exclude local package server
+            if jid[0].startswith("rspulse@pulse/"):
+                continue
+            self.setSyncthingsync(uuidpackage, jid[0], typesynchro , watching = 'yes')
+
+    @DatabaseHelper._sessionm
+    def setSyncthingsync( self, session, uuidpackage, relayserver_jid, typesynchro = "create", watching = 'yes'):
+        try:
+            new_Syncthingsync = Syncthingsync()
+            new_Syncthingsync.uuidpackage = uuidpackage
+            new_Syncthingsync.typesynchro =  typesynchro
+            new_Syncthingsync.relayserver_jid = relayserver_jid
+            new_Syncthingsync.watching =  watching
+            session.add(new_Syncthingsync)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+
+    @DatabaseHelper._sessionm
+    def pkgs_delete_synchro_package(self, session, uuidpackage):
+        session.query(Syncthingsync).filter(Syncthingsync.uuidpackage == uuidpackage).delete()
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
+    def get_relayservers_no_sync_for_packageuuid(self, session, uuidpackage):
+        result_list = []
+        try:
+            relayserversync = session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage)).all()
+            session.commit()
+            session.flush()
+
+            for relayserver in relayserversync:
+                res={}
+                res['uuidpackage'] = relayserver.uuidpackage
+                res['typesynchro'] = relayserver.typesynchro
+                res['relayserver_jid'] = relayserver.relayserver_jid
+                res['watching'] = relayserver.watching
+                res['date'] = relayserver.date
+                result_list.append(res)
+            return result_list
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            traceback.print_exc(file=sys.stdout)
+            return []

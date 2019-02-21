@@ -40,7 +40,7 @@ $p->display();
 $_SESSION['pkgs-add-reloaded'] = array();
 
 
-if (isset($_POST['bconfirm'])) 
+if (isset($_POST['bconfirm']))
     $p_api_id = $_POST['p_api'];
     $random_dir = $_SESSION['random_dir'];
     $need_assign = True;
@@ -66,12 +66,12 @@ if (isset($_POST['bconfirm']))
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($package, $need_assign);
-    xmlrpc_xmpp_regiter_synchro_package($ret[1],'create');
+    xmlrpc_pkgs_register_synchro_package($ret[1], 'create');
     $pid = $ret[3]['id'];
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
 
-   
+
 
     $package_uuid = "";
     if(isset($_POST['saveList']))
