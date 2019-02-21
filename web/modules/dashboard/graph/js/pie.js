@@ -191,7 +191,7 @@ function customPie(selector, datas){
     .attr("href", function(d){return d.data.href})
     .text(function(d,i){
       if(d.data.version != "")
-        return d.data.label+" v."+ d.data.version+" : "+d.data.value
+        return d.data.label+" ("+ d.data.version+") : "+d.data.value
       else
         return d.data.label+ d.data.version+" : "+d.data.value
       });
