@@ -1544,6 +1544,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     return True
         except Exception:
             logger.error("** Update error on inventory %s" % (jid))
+            logger.error("%s"%(traceback.format_exc()))
         return False
 
     # TODO : The to variable is unused
