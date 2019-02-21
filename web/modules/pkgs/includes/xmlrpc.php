@@ -30,8 +30,8 @@ function getUserPackageApi() {
     return xmlCall("pkgs.upaa_getUserPackageApi");
 }
 
-function putPackageDetail($papi, $package, $need_assign = True) {
-    return xmlCall("pkgs.ppa_putPackageDetail", array($papi, $package, $need_assign));
+function putPackageDetail($package, $need_assign = True) {
+    return xmlCall("pkgs.putPackageDetail", array($package, $need_assign));
 }
 
 function pushPackage($papi, $random_dir, $files, $local_mmc) {
@@ -72,8 +72,8 @@ function getTemporaryFileSuggestedCommand1($papi,$tempdir, $pid) {
     return xmlcall("pkgs.getTemporaryFileSuggestedCommand1", array($papi, $tempdir, $pid));
 }
 
-function associatePackages($papiid, $pid, $files, $level = 0) {
-    return xmlCall("pkgs.ppa_associatePackages", array($papiid, $pid, $files, $level));
+function associatePackages($pid, $files, $level = 0) {
+    return xmlCall("pkgs.associatePackages", array($pid, $files, $level));
 }
 
 function removeFilesFromPackage($pid, $files) {
@@ -163,7 +163,6 @@ function xmlrpc_setfrompkgslogxmpp(   $text,
                                                     $fromuser));
 }
 
-
 function remove_xmpp_package($packageUuid){
     return xmlCall("pkgs.remove_xmpp_package", array($packageUuid));
 }
@@ -182,5 +181,5 @@ function list_all() {
 
 function list_all_extensions() {
    return xmlCall("pkgs.list_all_extensions");
-}
+   }
 ?>

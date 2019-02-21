@@ -40,8 +40,7 @@ $p->display();
 $_SESSION['pkgs-add-reloaded'] = array();
 
 
-if (isset($_POST['bconfirm'])) {
-
+if (isset($_POST['bconfirm'])) 
     $p_api_id = $_POST['p_api'];
     $random_dir = $_SESSION['random_dir'];
     $need_assign = True;
@@ -66,11 +65,13 @@ if (isset($_POST['bconfirm'])) {
     $package['sub_packages'] = array();
 
     // Send Package Infos via XMLRPC
-    $ret = putPackageDetail($p_api_id, $package, $need_assign);
+    $ret = putPackageDetail($package, $need_assign);
     xmlrpc_xmpp_regiter_synchro_package($ret[1],'create');
     $pid = $ret[3]['id'];
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
+
+   
 
     $package_uuid = "";
     if(isset($_POST['saveList']))
@@ -97,7 +98,7 @@ if (isset($_POST['bconfirm'])) {
                 $cbx[] = $_POST['rdo_files'];
             }
         }
-        $ret = associatePackages($p_api_id, $pid, $cbx, $level);
+        $ret = associatePackages($pid, $cbx, $level);
         if (!isXMLRPCError() and is_array($ret)) {
             if ($ret[0]) {
                 $explain = '';
@@ -163,11 +164,11 @@ if (isset($_POST['bconfirm'])) {
     }
 
     $span = new SpanElement(_T("Choose package source", "pkgs"), "pkgs-title");
-
+/*
     $selectpapi = new SelectItem('p_api');
     $selectpapi->setElements($list);
     $selectpapi->setElementsVal($list_val);
-    $_SESSION['pkgs_selected'] = array_values($list_val)[0];
+    $_SESSION['pkgs_selected'] = array_values($list_val)[0];*/
 
     $f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
     $f->push(new Table());
@@ -181,10 +182,10 @@ if (isset($_POST['bconfirm'])) {
     $r->setValues($vals);
     $r->setChoices($keys);
 
-    // Package API
-    $f->add(
-            new TrFormElement("<div id=\"p_api_label\">" . _T("Package API", "pkgs") . "</div>", $selectpapi), array("value" => $p_api_id, "required" => True)
-    );
+//     // Package API
+//     $f->add(
+//             new TrFormElement("<div id=\"p_api_label\">" . _T("Package API", "pkgs") . "</div>", $selectpapi), array("value" => $p_api_id, "required" => True)
+//     );
 
     $f->add(new TrFormElement(_T("Package source", "pkgs"), $r), array());
     $f->add(new TrFormElement("<div id='directory-label'>" . _T("Files directory", "pkgs") . "</div>", new Div(array("id" => "package-temp-directory"))), array());

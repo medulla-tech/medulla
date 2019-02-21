@@ -71,7 +71,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $package['sub_packages'] = array();
 
     // Send Package Infos via XMLRPC
-    $ret = putPackageDetail($p_api_id, $package, $need_assign);
+    $ret = putPackageDetail($package, $need_assign);
     xmlrpc_xmpp_regiter_synchro_package($ret[1],'chang');
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
@@ -89,7 +89,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $saveList = $_POST['saveList'];
         $saveList1 = clean_json($saveList);
         //$saveList1 = iconv("utf-8","ascii//TRANSLIT",$saveList1);
-        $result = save_xmpp_json($ret[2],$saveList1);
+        $result = save_xmpp_json($ret[2], $saveList1);
     }
 
     if (!isXMLRPCError() and $ret and $ret != -1) {
@@ -97,17 +97,6 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
             if ($_GET["action"] == "add") {
                 $str = sprintf(_T("Package successfully added in %s", "pkgs"), $ret[2]);
                 new NotifyWidgetSuccess($str);
-                xmlrpc_setfrompkgslogxmpp( $str,
-                                            "PKG",
-                                            '',
-                                            0,
-                                            $ret[2],
-                                            'Manuel',
-                                            '',
-                                            '',
-                                            '',
-                                            "session user ".$_SESSION["login"],
-                                            'Packaging | List | Create | Manual');
                 if (!isset($_POST["bassoc"])) {
                     header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id)))); # TODO add params to go on the good p_api
                     exit;
@@ -115,17 +104,6 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
             } else {//ICI
                 $str= _T("Package successfully edited", "pkgs");
                 new NotifyWidgetSuccess($str);
-                xmlrpc_setfrompkgslogxmpp( $str,
-                                            "PKG",
-                                            '',
-                                            0,
-                                            "",
-                                            'Manuel',
-                                            '',
-                                            '',
-                                            '',
-                                            "session user ".$_SESSION["login"],
-                                            'Packaging | List | | Create |Manual');
                 $package = $ret[3];
             }
             $pid = $package['id'];
@@ -134,95 +112,34 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
             // If there is uploaded files to associate
             if ($_POST['files_uploaded']) {
                 // === BEGIN ASSOCIATING FILES ==========================
-                $ret = associatePackages($p_api_id, $pid, $cbx, 1);
+                $ret = associatePackages($pid, $cbx, 1);
                 if (!isXMLRPCError() and is_array($ret)) {
                     if ($ret[0]) {
-                        $explain = '';
-                        if (count($ret) > 1) {
-                            $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
-                        }
                         // ICI$_POST['files_uploaded']
                         $str = sprintf(_T("Files successfully added to the package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion);
                         new NotifyWidgetSuccess($str);
-                        xmlrpc_setfrompkgslogxmpp( $str,
-                                                    "PKG",
-                                                    '',
-                                                    0,
-                                                    $_POST['files_uploaded'],
-                                                    'Manuel',
-                                                    '',
-                                                    '',
-                                                    '',
-                                                    "session user ".$_SESSION["login"],
-                                                    'Packaging | List | Manual');
-
                         header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                         exit;
                     } else {
                         $reason = '';
-                        if (count($ret) > 1) {
+                        if (count($ret[1]) > 0) {
                             $reason = sprintf(" : <br/>%s", $ret[1]);
                         }
-                        //ICI
                         $str = sprintf(_T("Failed to associate files%s", "pkgs"), $reason);
                         new NotifyWidgetFailure($str);
-                        xmlrpc_setfrompkgslogxmpp( $str,
-                                                    "PKG",
-                                                    '',
-                                                    0,
-                                                    $_POST['files_uploaded'],
-                                                    'Manuel',
-                                                    '',
-                                                    '',
-                                                    '',
-                                                    "session user ".$_SESSION["login"],
-                                                    'Packaging | Files | Manual');
                     }
                 } else {
                     $str= _T("Failed to associate files", "pkgs");
                     new NotifyWidgetFailure($str);
-                    xmlrpc_setfrompkgslogxmpp( $str,
-                                                "PKG",
-                                                '',
-                                                0,
-                                                $_POST['files_uploaded'],
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Packaging | Files | Manual');
                 }
                 // === END ASSOCIATING FILES ==========================
             }
         } else {
             new NotifyWidgetFailure($ret[1]);
-            xmlrpc_setfrompkgslogxmpp( $ret[1],
-                                        "PKG",
-                                        '',
-                                        0,
-                                        "",
-                                        'Manuel',
-                                        '',
-                                        '',
-                                        '',
-                                        "session user ".$_SESSION["login"],
-                                        'Packaging | Files | Manual');
         }
     } else {
         $str =_T("Package failed to save", "pkgs");
         new NotifyWidgetFailure($str);
-        xmlrpc_setfrompkgslogxmpp( $str,
-                                        "PKG",
-                                        '',
-                                        0,
-                                        "",
-                                        'Manuel',
-                                        '',
-                                        '',
-                                        '',
-                                        "session user ".$_SESSION["login"],
-                                        'Packaging | Files | Manual');
     }
 }
 
@@ -233,6 +150,7 @@ $p_api_id = "UUID/package_api_get1";
 //$p_api_id = "UUID/package_api_get1";
 
 $pid = base64_decode($_GET['pid']);
+//Result for root, pkgs.removeFilesFromPackage: ([['Administratif.zip'], []],)
 
 if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
     //$ret = removeFilesFromPackage($p_api_id, $pid, array($_GET['filename']));
@@ -242,6 +160,7 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
     if (!isXMLRPCError() and is_array($ret)) {
         $errorexplain = "";
         $successexplain = "";
+        print_r($ret);
         if (count($ret[1]) > 0) {$errorexplain   = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));}
         if (count($ret[0]) > 0) {$successexplain = sprintf(" : <br/>%s", implode("<br/>", $ret[0]));}
         if (count($ret[1]) > 0){
@@ -250,48 +169,15 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
                 $str += sprintf(_T("<br/>File successfully deleted. %s", "pkgs"), $successexplain);
             }
             new NotifyWidgetFailure($str);
-            xmlrpc_setfrompkgslogxmpp( $str,
-                                        "PKG",
-                                        '',
-                                        0,
-                                        $_GET['filename'],
-                                        'Manuel',
-                                        '',
-                                        '',
-                                        '',
-                                        "session user ".$_SESSION["login"],
-                                        'Packaging | Files | Delete | Manual');
         }
         else{
             $str = sprintf(_T("<br/>File successfully deleted. %s", "pkgs"), $successexplain);
             new NotifyWidgetSuccess($str);
-            xmlrpc_setfrompkgslogxmpp( $str,
-                                        "PKG",
-                                        '',
-                                        0,
-                                        $_GET['filename'],
-                                        'Manuel',
-                                        '',
-                                        '',
-                                        '',
-                                        "session user ".$_SESSION["login"],
-                                        'Packaging | Files | Delete | Manual');
         }
     }
     else {
         $str = _T("Failed to delete files", "pkgs");
         new NotifyWidgetFailure($str);
-        xmlrpc_setfrompkgslogxmpp( $str,
-                                    "PKG",
-                                    '',
-                                    0,
-                                    $_GET['filename'],
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Packaging | Files | Delete | Manual');
     }
     header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'], 'packageUuid' => $_GET['packageUuid'])));
     exit(0);
@@ -309,7 +195,7 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
         if ($package['do_reboot']) {
             $package['reboot'] = $package['do_reboot'];
         }
-        $p_api_number = count(getUserPackageApi());
+        //$p_api_number = count(getUserPackageApi());
     }
 /*
  * Page form
@@ -320,21 +206,21 @@ $f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
 $f->push(new Table());
 
 
-if ($p_api_number > 1) {
-    $f->add(
-            new TrFormElement(_T("PIP", "pkgs"), $selectpapi), array("value" => $pid, "hide" => $hide)
-    );
-    $f->add(
-            new TrFormElement(_T("Package API", "pkgs"), $formElt), array("value" => $p_api_id, "hide" => $hide)
-    );
-} else {
+// if ($p_api_number > 1) {
+//     $f->add(
+//             new TrFormElement(_T("PIP", "pkgs"), $selectpapi), array("value" => $pid, "hide" => $hide)
+//     );
+//     $f->add(
+//             new TrFormElement(_T("Package API", "pkgs"), $formElt), array("value" => $p_api_id, "hide" => $hide)
+//     );
+// } else {
     $f->add(
             $selectpapi, array("value" => $p_api_id, "hide" => True)
     );
     $f->add(
             $formElt, array("value" => $pid, "hide" => True)
     );
-}
+// }
 
 
 $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));

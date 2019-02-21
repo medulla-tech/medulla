@@ -1,3 +1,4 @@
+# -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2008 Mandriva
@@ -48,11 +49,18 @@ from mmc.plugins.pkgs.package_put_api import PackagePutA
 from mmc.plugins.pkgs.user_packageapi_api import UserPackageApiApi
 from mmc.plugins.pkgs.config import PkgsConfig
 from pulse2.managers.location import ComputerLocationManager
-
+import uuid
+import json
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
-import traceback
 
 from pulse2.database.pkgs import PkgsDatabase
+
+import traceback
+from mmc.plugins.xmppmaster.master.lib.utils import simplecommand, name_random
+from unidecode import unidecode
+import uuid
+
+logger = logging.getLogger()
 
 APIVERSION = "0:0:0"
 
@@ -76,12 +84,189 @@ class pkgmanage():
         self.args = args
         self.kwargs = kwargs
 
+
     def list_all(param):
         return PkgsDatabase().list_all()
 
+def dirpackage():
+    return PkgsDatabase().dirpackage
 
 def list_all():
     return pkgmanage().list_all()
+
+def associatePackages(pid, fs, level = 0):
+    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
+    packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
+    destination = os.path.join(packages_input_dir, pid )
+    errortransfert = []
+    result = []
+    boolsucess = True
+    if len(fs) > 0:
+        # file a associe
+        for repfiles in fs:
+            source = os.path.join(tmp_input_dir, repfiles )
+            cmd = "rsync -a %s/ %s/"%( source, destination )
+            rest = simplecommand(cmd)
+            if rest['code'] != 0:
+                boolsucess = False
+                errortransfert.append(rest['code'])
+            #efface repertoire
+            simplecommand("rm -rf %s"%source)
+    return [ boolsucess, errortransfert ]
+
+def _remove_non_ascii(text):
+    return unidecode(unicode(text, encoding = "utf-8"))
+
+def _create_uuid_sympa(label):
+    data = _remove_non_ascii((str(uuid.uuid1())[:9] + label+"_").replace(' ', '_'))
+    data = name_random(36 , pref=data)[:36]
+    return data
+
+def to_json_xmppdeploy( package):
+        """
+            create JSON xmppdeploy descriptor
+        """
+        execscript = 0
+        if package['reboot']:
+            success = execscript + 2
+        else:
+            success = execscript + 1
+        error = success + 1
+        ###------------------------
+        ### metaparameter
+        ###------------------------
+        metaparameter = { "os": [ package['targetos'] ] }
+        metaparameter[package['targetos']] = {
+                                                "label": {
+                                                            "END_ERROR"      : error,
+                                                            "END_SUCCESS"    : success,
+                                                            "EXECUTE_SCRIPT" : execscript
+                                                }
+        }
+        sequence = []
+        ###------------------------
+        ### actionprocessscriptfile
+        ###------------------------
+        sequence .append({ "step": 0,
+                           "action": "actionprocessscriptfile",
+                           "@resultcommand": "@resultcommand",
+                           "actionlabel": "EXECUTE_SCRIPT",
+                           "codereturn": "",
+                           "error": error,
+                           "script": package['command']['command'],
+                           "success": success,
+                           "typescript": "Batch" })
+        ###------------------------
+        ### actionrestart
+        ###------------------------
+        if package['reboot']:
+            sequence .append({ "action": "actionrestart",
+                               "actionlabel": "REBOOT",
+                               "step": 1})
+        ###------------------------
+        ### actionsuccescompletedend
+        ###------------------------
+        dsuccess = { "action": "actionsuccescompletedend",
+                     "actionlabel": "END_SUCCESS",
+                     "clear": "True",
+                     "inventory" : "True",
+                     "step": success}
+        #if str(package['associateinventory']) != "0":
+            #dsuccess['inventory'] = "True"
+        #else:
+            #dsuccess['inventory'] = "False"
+        sequence .append(dsuccess)
+        ###------------------------
+        ### actionerrorcompletedend
+        ###------------------------
+        sequence .append({"step": error,
+                          "action": "actionerrorcompletedend",
+                          "actionlabel": "END_ERROR"})
+        ###------------------------
+        ### info
+        ###------------------------
+        data = {
+            "info": { "Dependency": [],
+                      "description": package['description'],
+                      "metagenerator": "standard",
+                      "methodetransfert": "pullcurl",
+                      "name": str(package['label'] + ' ' + 
+                                  package['version'] + ' (' + 
+                                  package['id']+')'),
+                      "software": package['label'],
+                      "transferfile": True,
+                      "version": package['version']
+            }
+        }
+
+        data['metaparameter'] = metaparameter
+        data[package['targetos']]={}
+        data[package['targetos']]['sequence'] = sequence
+
+        return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+
+def putPackageDetail( package, need_assign = True):
+    if package['id'] == "" :
+        # create uuid
+        #package['id'] = str( uuid.uuid1())
+        package['id'] = _create_uuid_sympa(package['label'])
+    if len(package['id']) != 36:
+        return False
+    packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
+    packages_id_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages", package['id'] )
+
+    if packages_input_dir == packages_id_input_dir:
+        return False
+    # si le dossier n existe pas alors le creéer
+    if not os.path.isdir(packages_id_input_dir):
+        os.mkdir(packages_id_input_dir, 0755)
+    confjson={
+        "sub_packages" : [],
+        "description" : package['description'],
+        "entity_id" : "0",
+        "id" : package['id'],
+        "commands" :{
+            "postCommandSuccess" : {"command" : "", "name" : ""}, 
+            "installInit" : {"command" : "", "name" : ""},
+            "postCommandFailure" : {"command" : "", "name" : ""},
+            "command" : {
+                "command" : package['command']['command'], 
+                "name" : ""}, 
+            "preCommand": {"command" : "", "name" : ""}
+        },
+        "name" : package['label'],
+        "targetos" : package['targetos'],
+        "reboot" : package['reboot'],
+        "version" : package['version'],
+        "metagenerator" : package['metagenerator'],
+        "inventory" : {
+            "associateinventory" : str(package['associateinventory']),
+            "licenses": package['licenses'],
+            "queries": {
+                "Qversion": package['Qversion'],
+                "Qvendor": package['Qvendor'],
+                "boolcnd": package['boolcnd'],
+                "Qsoftware": package['Qsoftware']
+            }
+        }
+    }
+    # writte file to xmpp deploy
+    xmppdeployfile = to_json_xmppdeploy(package)
+    fichier = open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" )
+    fichier.write(xmppdeployfile)
+    fichier.close()
+    # writte file to repertoire package
+
+    with open( os.path.join(packages_id_input_dir,"conf.json"), "w" ) as outfile:
+        json.dump(confjson, outfile, indent = 4)
+
+    result = package
+    package['postCommandSuccess'] = {"command" : "", "name" : ""}
+    package['installInit'] = {"command" : "", "name" : ""},
+    package['postCommandFailure'] = {"command" : "", "name" : ""}
+    package['preCommand'] =  {"command" : "", "name" : ""}
+    result = [True, package['id'], packages_id_input_dir, package]
+    return result
 
 def getTemporaryFileSuggestedCommand1(papi, tempdir, pid):
     logger.info("hehe getTemporaryFileSuggestedCommand1")
@@ -146,7 +331,6 @@ def removeFilesFromPackage( pid, files):
 
 def list_all_extensions():
     return pkgmanage().list_all_extensions()
-
 
 def activate():
     logger = logging.getLogger()
@@ -295,6 +479,7 @@ class RpcProxy(RpcProxyI):
         return d
 
     def ppa_putPackageDetail(self, pp_api_id, package, need_assign = True):
+        print json.dumps(package, indent=4)
         # Patching package with entity_id
         ctx = self.currentContext
         locations = ComputerLocationManager().getUserLocations(ctx.userid)
