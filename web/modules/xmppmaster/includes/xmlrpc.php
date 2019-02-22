@@ -412,13 +412,13 @@ function xmlrpc_getCountOnlineMachine() {
 //######################################
 
 
-function xmlrpc_xmpp_regiter_synchro_package($packageid, $typesynchro = "create") {
-    return xmlCall("xmppmaster.xmpp_regiter_synchro_package", array($packageid, $typesynchro));
-}
+// function xmlrpc_xmpp_regiter_synchro_package($packageid, $typesynchro = "create") {
+//     return xmlCall("xmppmaster.xmpp_regiter_synchro_package", array($packageid, $typesynchro));
+// }
 
-function xmlrpc_xmpp_delete_synchro_package($packageid) {
-    return xmlCall("xmppmaster.xmpp_delete_synchro_package", array($packageid));
-}
+// function xmlrpc_xmpp_delete_synchro_package($packageid) {
+//     return xmlCall("xmppmaster.xmpp_delete_synchro_package", array($packageid));
+// }
 
 //jfkjfk
 function xmlrpc_xmpp_get_info_synchro_packageid($pid_ppackage){
