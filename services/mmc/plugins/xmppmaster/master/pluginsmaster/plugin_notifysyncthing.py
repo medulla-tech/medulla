@@ -28,10 +28,10 @@ import os
 import utils
 import pprint
 import logging
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from pulse2.database.xmppmaster import PkgsDatabase
 logger = logging.getLogger()
 
-plugin = { "VERSION" : "1.0", "NAME" : "notifysyncthing", "TYPE" : "master" }
+plugin = { "VERSION" : "1.1", "NAME" : "notifysyncthing", "TYPE" : "master" }
 
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("=====================================================")
@@ -39,8 +39,12 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("=====================================================")
     print json.dumps(data, indent = 4)
     if 'suppdir' in data or 'adddir' in data:
-        print "supprime %s %s %s"%( data['packageid'], 'create', str(message['from'])) 
-        XmppMasterDatabase().xmpp_unregiter_synchro_package( data['packageid'], 'create', str(message['from']))
+        logger.debug("supprime %s %s %s"%( data['packageid'], 'create', str(message['from'])))
+        PkgsDatabase().pkgs_unregiter_synchro_package( data['packageid'],
+                                                      'create', 
+                                                      str(message['from']))
     elif 'MotifyFile' in data:
-        print "supprime %s %s %s"%( data['packageid'], 'chang', str(message['from'])) 
-        XmppMasterDatabase().xmpp_unregiter_synchro_package( data['packageid'], 'chang', str(message['from']))
+        logger.debug("supprime %s %s %s"%( data['packageid'], 'chang', str(message['from'])))
+        PkgsDatabase().pkgs_unregiter_synchro_package( data['packageid'], 
+                                                      'chang', 
+                                                      str(message['from']))

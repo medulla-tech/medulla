@@ -660,8 +660,8 @@ def xmpp_getPackageDetail(pid_package):
 def xmpp_regiter_synchro_package(uuidpackage, typesynchro):
     return XmppMasterDatabase().xmpp_regiter_synchro_package(uuidpackage, typesynchro)
 
-def xmpp_delete_synchro_package(uuidpackage):
-    return XmppMasterDatabase().xmpp_delete_synchro_package(uuidpackage)
+#def xmpp_delete_synchro_package(uuidpackage):
+    #return XmppMasterDatabase().xmpp_delete_synchro_package(uuidpackage)
 
 def xmpp_get_info_synchro_packageid(uuidpackage):
     list_relayservernosync = XmppMasterDatabase().get_relayservers_no_sync_for_packageuuid(uuidpackage)
