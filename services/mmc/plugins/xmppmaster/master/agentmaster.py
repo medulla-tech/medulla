@@ -51,6 +51,7 @@ from mmc.plugins.base import getModList
 from mmc.plugins.base.computers import ComputerManager
 from lib.manage_scheduler import manage_scheduler
 from pulse2.database.xmppmaster import XmppMasterDatabase
+from pulse2.database.xmppmaster import PkgsDatabase
 import traceback
 import pprint
 import pluginsmaster
@@ -318,7 +319,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # Clear machine table
         XmppMasterDatabase().clearMachine()
         # clears synchros
-        XmppMasterDatabase().clear_old_pending_synchro_package(timeseconde=900)
+        PkgsDatabase().clear_old_pending_synchro_package(timeseconde=900)
         self.idm = ""
         self.presencedeployment = {}
         self.updateguacamoleconfig = {}
@@ -951,7 +952,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.session.decrementesessiondatainfo()
 
     def loadPluginList(self):
-        XmppMasterDatabase().clear_old_pending_synchro_package(timeseconde=3600)
+        PkgsDatabase().clear_old_pending_synchro_package(timeseconde=3600)
         logger.debug("Load and Verify base plugin")
         self.plugindata = {}
         self.plugintype = {}
