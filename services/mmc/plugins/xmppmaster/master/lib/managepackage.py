@@ -8,7 +8,7 @@ import json
 import logging
 from utils import md5, simplecommand
 from pulse2.database.xmppmaster import XmppMasterDatabase
-from pulse2.database.xmppmaster import PkgsDatabase
+from pulse2.database.pkgs import PkgsDatabase
 logger = logging.getLogger()
 
 class apimanagepackagemsc:

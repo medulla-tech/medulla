@@ -205,38 +205,38 @@ class XmppMasterDatabase(DatabaseHelper):
                 continue
             self.setSyncthingsync(uuidpackage, jid[0], typesynchro , watching = 'yes')
 
-    @DatabaseHelper._sessionm
-    def xmpp_unregiter_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
-        session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
-                                                 Syncthingsync.relayserver_jid == jid_relayserver, 
-                                                 Syncthingsync.typesynchro == typesynchro)).delete()
-        session.commit()
-        session.flush()
+    #@DatabaseHelper._sessionm
+    #def xmpp_unregiter_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
+        #session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
+                                                 #Syncthingsync.relayserver_jid == jid_relayserver, 
+                                                 #Syncthingsync.typesynchro == typesynchro)).delete()
+        #session.commit()
+        #session.flush()
 
-    @DatabaseHelper._sessionm
-    def xmpp_delete_synchro_package(self, session, uuidpackage):
-        session.query(Syncthingsync).filter(Syncthingsync.uuidpackage == uuidpackage).delete()
-        session.commit()
-        session.flush()
+    #@DatabaseHelper._sessionm
+    #def xmpp_delete_synchro_package(self, session, uuidpackage):
+        #session.query(Syncthingsync).filter(Syncthingsync.uuidpackage == uuidpackage).delete()
+        #session.commit()
+        #session.flush()
 
-    @DatabaseHelper._sessionm
-    def list_pending_synchro_package(self, session):
-        pendinglist = session.query(distinct(Syncthingsync.uuidpackage).label("uuidpackage")).all()
-        session.commit()
-        session.flush()
-        result_list = []
-        for packageuid in pendinglist:
-            result_list.append(packageuid.uuidpackage)
-        return result_list
+    #@DatabaseHelper._sessionm
+    #def list_pending_synchro_package(self, session):
+        #pendinglist = session.query(distinct(Syncthingsync.uuidpackage).label("uuidpackage")).all()
+        #session.commit()
+        #session.flush()
+        #result_list = []
+        #for packageuid in pendinglist:
+            #result_list.append(packageuid.uuidpackage)
+        #return result_list
 
-    @DatabaseHelper._sessionm
-    def clear_old_pending_synchro_package(self, session, timeseconde=35):
-        sql ="""DELETE FROM `xmppmaster`.`syncthingsync` 
-            WHERE
-                `syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d SECOND);"""%timeseconde
-        session.execute(sql)
-        session.commit()
-        session.flush()
+    #@DatabaseHelper._sessionm
+    #def clear_old_pending_synchro_package(self, session, timeseconde=35):
+        #sql ="""DELETE FROM `xmppmaster`.`syncthingsync` 
+            #WHERE
+                #`syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d SECOND);"""%timeseconde
+        #session.execute(sql)
+        #session.commit()
+        #session.flush()
 
     # =====================================================================
     # xmppmaster FUNCTIONS

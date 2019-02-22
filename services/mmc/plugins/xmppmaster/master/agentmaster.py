@@ -51,7 +51,7 @@ from mmc.plugins.base import getModList
 from mmc.plugins.base.computers import ComputerManager
 from lib.manage_scheduler import manage_scheduler
 from pulse2.database.xmppmaster import XmppMasterDatabase
-from pulse2.database.xmppmaster import PkgsDatabase
+from pulse2.database.pkgs import PkgsDatabase
 import traceback
 import pprint
 import pluginsmaster

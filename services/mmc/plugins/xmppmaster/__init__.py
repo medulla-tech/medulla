@@ -26,13 +26,15 @@ import logging
 import os
 import sys
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
-from  master.lib.managepackage import apimanagepackagemsc
+from master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
+from pulse2.database.pkgs import PkgsDatabase
+
 import zlib
 import base64
 from master.lib.utils import name_random, simplecommand, file_get_contents
@@ -657,8 +659,12 @@ def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)
 
 ############### synchro syncthing package #####################
-def xmpp_regiter_synchro_package(uuidpackage, typesynchro):
-    return XmppMasterDatabase().xmpp_regiter_synchro_package(uuidpackage, typesynchro)
+
+def pkgs_regiter_synchro_package(uuidpackage, typesynchro):
+    return PkgsDatabase().pkgs_regiter_synchro_package(uuidpackage, typesynchro)
+
+def pkgs_delete_synchro_package(uuidpackage):
+    return PkgsDatabase().pkgs_delete_synchro_package(uuidpackage)
 
 #def xmpp_delete_synchro_package(uuidpackage):
     #return XmppMasterDatabase().xmpp_delete_synchro_package(uuidpackage)

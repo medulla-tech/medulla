@@ -28,7 +28,7 @@ import os
 import utils
 import pprint
 import logging
-from pulse2.database.xmppmaster import PkgsDatabase
+from pulse2.database.pkgs import PkgsDatabase
 logger = logging.getLogger()
 
 plugin = { "VERSION" : "1.1", "NAME" : "notifysyncthing", "TYPE" : "master" }
