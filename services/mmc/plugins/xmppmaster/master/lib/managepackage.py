@@ -8,6 +8,7 @@ import json
 import logging
 from utils import md5, simplecommand
 from pulse2.database.xmppmaster import XmppMasterDatabase
+from pulse2.database.xmppmaster import PkgsDatabase
 logger = logging.getLogger()
 
 class apimanagepackagemsc:
@@ -30,7 +31,7 @@ class apimanagepackagemsc:
     def packagelistmscconfjson(pending = False):
         folderpackages = os.path.join("/", "var" ,"lib","pulse2","packages")
         listfichierconf =  [ os.path.join(folderpackages,x,"conf.json") for x in os.listdir(folderpackages) if os.path.isdir(os.path.join(folderpackages,x)) and str(os.path.join(folderpackages,x))[-9:] != ".stfolder" ]
-        listpackagependig = XmppMasterDatabase().list_pending_synchro_package()
+        listpackagependig = PkgsDatabase().list_pending_synchro_package()
         listpendingfichierconf = []
         listnotpendingfichierconf = []
         for pathuuidpackage in listfichierconf:
