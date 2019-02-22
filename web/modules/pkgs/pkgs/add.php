@@ -40,7 +40,7 @@ $p->display();
 $_SESSION['pkgs-add-reloaded'] = array();
 
 
-if (isset($_POST['bconfirm']))
+if (isset($_POST['bconfirm'])){
     $p_api_id = $_POST['p_api'];
     $random_dir = $_SESSION['random_dir'];
     $need_assign = True;
