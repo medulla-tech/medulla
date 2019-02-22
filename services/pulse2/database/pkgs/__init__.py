@@ -63,7 +63,6 @@ class PkgsDatabase(DatabaseHelper):
     Singleton Class to query the Pkgs database.
 
     """
-
     def db_check(self):
         self.my_name = "pkgs"
         self.configfile = "pkgs.ini"
@@ -177,7 +176,6 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def pkgs_register_synchro_package(self, session, uuidpackage, typesynchro ):
-
         #list id server relay
         list_server_relay = XmppMasterDatabase().get_List_jid_ServerRelay_enable(enabled=1)
         for jid in list_server_relay:
@@ -186,6 +184,9 @@ class PkgsDatabase(DatabaseHelper):
                 continue
             self.setSyncthingsync(uuidpackage, jid[0], typesynchro , watching = 'yes')
 
+    # =====================================================================
+    # pkgs FUNCTIONS synch syncthing
+    # =====================================================================
     @DatabaseHelper._sessionm
     def setSyncthingsync( self, session, uuidpackage, relayserver_jid, typesynchro = "create", watching = 'yes'):
         try:
@@ -199,12 +200,6 @@ class PkgsDatabase(DatabaseHelper):
             session.flush()
         except Exception, e:
             logging.getLogger().error(str(e))
-
-    @DatabaseHelper._sessionm
-    def pkgs_delete_synchro_package(self, session, uuidpackage):
-        session.query(Syncthingsync).filter(Syncthingsync.uuidpackage == uuidpackage).delete()
-        session.commit()
-        session.flush()
 
     @DatabaseHelper._sessionm
     def get_relayservers_no_sync_for_packageuuid(self, session, uuidpackage):
@@ -227,3 +222,46 @@ class PkgsDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             traceback.print_exc(file=sys.stdout)
             return []
+
+    @DatabaseHelper._sessionm
+    def pkgs_regiter_synchro_package(self, session, uuidpackage, typesynchro ):
+        #list id server relay
+        list_server_relay = self.get_List_jid_ServerRelay_enable(enabled=1)
+        for jid in list_server_relay:
+            #exclude local package server
+            if jid[0].startswith("rspulse@pulse/"):
+                continue
+            self.setSyncthingsync(uuidpackage, jid[0], typesynchro , watching = 'yes')
+
+    @DatabaseHelper._sessionm
+    def pkgs_unregiter_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
+        session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
+                                                 Syncthingsync.relayserver_jid == jid_relayserver, 
+                                                 Syncthingsync.typesynchro == typesynchro)).delete()
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
+    def pkgs_delete_synchro_package(self, session, uuidpackage):
+        session.query(Syncthingsync).filter(Syncthingsync.uuidpackage == uuidpackage).delete()
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
+    def list_pending_synchro_package(self, session):
+        pendinglist = session.query(distinct(Syncthingsync.uuidpackage).label("uuidpackage")).all()
+        session.commit()
+        session.flush()
+        result_list = []
+        for packageuid in pendinglist:
+            result_list.append(packageuid.uuidpackage)
+        return result_list
+
+    @DatabaseHelper._sessionm
+    def clear_old_pending_synchro_package(self, session, timeseconde=35):
+        sql ="""DELETE FROM `pkgs`.`syncthingsync` 
+            WHERE
+                `syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d SECOND);"""%timeseconde
+        session.execute(sql)
+        session.commit()
+        session.flush()
