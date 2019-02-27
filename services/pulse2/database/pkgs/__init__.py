@@ -235,9 +235,13 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def pkgs_unregiter_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
-        session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
-                                                 Syncthingsync.relayserver_jid == jid_relayserver, 
-                                                 Syncthingsync.typesynchro == typesynchro)).delete()
+        if typesynchro != None:
+            session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
+                                                    Syncthingsync.relayserver_jid == jid_relayserver, 
+                                                    Syncthingsync.typesynchro == typesynchro)).delete()
+        else:
+            session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
+                                                    Syncthingsync.relayserver_jid == jid_relayserver)).delete()
         session.commit()
         session.flush()
 

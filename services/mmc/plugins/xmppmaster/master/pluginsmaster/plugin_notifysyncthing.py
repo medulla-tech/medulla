@@ -31,7 +31,7 @@ import logging
 from pulse2.database.pkgs import PkgsDatabase
 logger = logging.getLogger()
 
-plugin = { "VERSION" : "1.1", "NAME" : "notifysyncthing", "TYPE" : "master" }
+plugin = { "VERSION" : "1.2", "NAME" : "notifysyncthing", "TYPE" : "master" }
 
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("=====================================================")
@@ -41,7 +41,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     if 'suppdir' in data or 'adddir' in data:
         logger.debug("supprime %s %s %s"%( data['packageid'], 'create', str(message['from'])))
         PkgsDatabase().pkgs_unregiter_synchro_package( data['packageid'],
-                                                      'create', 
+                                                      None, 
                                                       str(message['from']))
     elif 'MotifyFile' in data:
         logger.debug("supprime %s %s %s"%( data['packageid'], 'chang', str(message['from'])))
