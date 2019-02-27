@@ -78,11 +78,12 @@ function openSocket($proto, $conf) {
         $sock = stream_socket_client('tls://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
         $ret = array($sock, $errNo, $errString);
     }
-    error_reporting($errLevel);
+    error_reporting(E_ERROR | E_WARNING );
     if ($sock !== False) {
         /* Setting timeout on a SSL socket only works with PHP >= 5.2.1 */
-        stream_set_timeout($sock, $conf[$_SESSION["agent"]]["timeout"]);
+        stream_set_timeout($sock, $conf[$_SESSION["agent"]]["timeout"] );
     }
+    error_reporting($errLevel);
     return $ret;
 }
 
@@ -271,7 +272,7 @@ function xmlCall($method, $params = null) {
     }
 
     /* If debug is on, print the XML-RPC call and result */
-    if ($conf["debug"]["level"]!=0) {
+    if (isset($conf["debug"]) && $conf["debug"]["level"]!=0) {
         $str = '<div class="alert alert-info">';
         $str .= "XML RPC CALL FUNCTION: $method(";
         if (!$params) {
