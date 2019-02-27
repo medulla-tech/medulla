@@ -38,7 +38,7 @@ function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $
             'Please type 3 characters for suggestion.<br>
             Wildcard is \'%\', %text% matches any string containing \'text\'.<br>
             If unsure, leave Vendor and Version fields blank.',
-            pkgs);
+            'pkgs');
     $Form->add(
             new TrFormElement($p[1], $auto,
                     array('class' => 'associateinventory', 'style' => $style, 'tooltip' => $tooltip)),

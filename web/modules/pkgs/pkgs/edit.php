@@ -236,6 +236,8 @@ $fields = array(
     array("version", _T("Package version", "pkgs"), array("required" => True)),
     array('description', _T("Description", "pkgs"), array()),
 );
+$cmds = array();
+$options = array();
 if(!isExpertMode())
 {
 
@@ -412,7 +414,7 @@ global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
 $names = array();
-$cssClasses = array();
+// $cssClasses = array();
 $params = array();
 
 $pserver_base_url = '';
@@ -429,8 +431,8 @@ foreach ($package['files'] as $file) {
         'filename' => $file['name'],
         'delete_file' => 1
     );
-    $viewVersionsActions[] = $viewVersionsAction;
-    $cssClasses[] = 'file';
+//     $viewVersionsActions[] = $viewVersionsAction;
+//     $cssClasses[] = 'file';
 }
 
 $count = count($names);

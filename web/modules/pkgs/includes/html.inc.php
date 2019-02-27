@@ -26,7 +26,7 @@ class MultiFileTpl extends AbstractTpl {
         $this->name = $name;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         // FIXME use session or not ?
         $random_dir = "pulse_rdir_" . uniqid();
         $_SESSION['random_dir'] = $random_dir;
@@ -119,7 +119,7 @@ class MultiFileTpl2 extends AbstractTpl {
         $this->name = $name;
     }
 
-    function display() {
+    function display($arrParam = array()) {
 
         $random_dir = "pulse_rdir_" . uniqid();
         print '<div id="file-uploader">
@@ -210,7 +210,7 @@ class MultiFileTpl3 extends AbstractTpl {
         $this->name = $name;
     }
 
-    function display() {
+    function display($arrParam = array()) {
 
         $random_dir = "pulse_rdir_" . uniqid();
         print '<div id="file-uploader">
@@ -307,7 +307,7 @@ class buttonTpl extends AbstractTpl {
         $this->cssClass = $class;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
         if (isset($this->id,$this->text))
             printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
     }
