@@ -79,7 +79,6 @@ extract($_POST);
                 $options .= "<option value='".$val['value']."'>".$val['label']."</option>";
         }
 
-
                 echo '<th width="16%">
                     Script language
                 </th>
@@ -92,7 +91,17 @@ extract($_POST);
         <tr>
             <th>Script</th>
             <th>
-              <?php $script = (base64_decode($script, true) != false) ? $script = base64_decode($script) : $script; ?>
+            <?php 
+                if (isset($script)){
+                    $script = base64_decode($script, true);
+                    if( $script ==  False){
+                        $script = base64_decode($script);
+                    }
+                }
+                else{
+                    $script="";
+                }
+            ?>
               <textarea name="script" cols="5" rows="5"><?php echo $script ;?></textarea>
             </th>
         </tr>
