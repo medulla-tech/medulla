@@ -234,7 +234,7 @@ class PkgsDatabase(DatabaseHelper):
             self.setSyncthingsync(uuidpackage, jid[0], typesynchro , watching = 'yes')
 
     @DatabaseHelper._sessionm
-    def pkgs_unregiter_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
+    def pkgs_unregister_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
         if typesynchro != None:
             session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
                                                     Syncthingsync.relayserver_jid == jid_relayserver, 
