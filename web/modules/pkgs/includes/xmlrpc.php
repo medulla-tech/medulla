@@ -42,9 +42,9 @@ function pushPackage1($random_dir, $files, $local_mmc) {
     return xmlCall("pkgs.pushPackage", array($random_dir, $files, $local_mmc));
 }
 
-function getPackageDetail($papiid, $pid) {
-    return xmlCall("pkgs.ppa_getPackageDetail", array($papiid, $pid));
-}
+// function getPackageDetail($papiid, $pid) {
+//     return xmlCall("pkgs.ppa_getPackageDetail", array($papiid, $pid));
+// }
 
 // function getTemporaryFiles($papiid) {
 //     return xmlCall("pkgs.ppa_getTemporaryFiles", array($papiid));
