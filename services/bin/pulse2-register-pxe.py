@@ -537,7 +537,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
                         # add Mc:mac address end of datagram
                         header='<?xml version="1.0" encoding="utf-8"?>'
                         file_content=file_content[:-10]
-                        xmldata="%s%s\nMc:%s</REQUEST>"%(header,file_content,mac)
+                        xmldata="%s%sMc:%s</REQUEST>"%(header,file_content,mac)
                         logging.getLogger().debug("XML recv from pxe client %s"% xmldata)
                         os.remove(name)
                         senddata(xmldata,'127.0.0.1',conf['port'])
