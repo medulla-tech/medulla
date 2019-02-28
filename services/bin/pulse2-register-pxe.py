@@ -466,15 +466,11 @@ def mac_adressexmlpxe(file_content):
                     for dd in cc:
                         if dd.tag == "MACADDRPXE":
                             if dd.text !='00:00:00:00:00:00':
-                                addr.append(dd.text)
-                            #return dd.text
-    addr=list(set(addr))
-    if len(addr) > 0:
-        logging.getLogger().debug("<MACADDRPXE> selected : %s"%addr[0])
-        return addr[0]
-    else:
-        logging.getLogger().debug("no interface report for PXE")
-        return None
+                                logging.getLogger().debug("<MACADDRPXE> selected : %s"%dd.text)
+                                return dd.text
+
+    logging.getLogger().debug("no interface report for PXE")
+    return None
 
 def mac_adressexml(file_content):
     macadrss = mac_adressexmlpxe(file_content)
@@ -540,7 +536,8 @@ class MyEventHandler(pyinotify.ProcessEvent):
                     try:
                         # add Mc:mac address end of datagram
                         header='<?xml version="1.0" encoding="utf-8"?>'
-                        xmldata="%s%s\nMc:%s"%(header,file_content,mac)
+                        file_content=file_content[:-10]
+                        xmldata="%s%s\nMc:%s</REQUEST>"%(header,file_content,mac)
                         logging.getLogger().debug("XML recv from pxe client %s"% xmldata)
                         os.remove(name)
                         senddata(xmldata,'127.0.0.1',conf['port'])
