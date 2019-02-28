@@ -78,9 +78,9 @@ $page = new Page("ajaxRefreshPackageTempDir", 'Display Package API Temporary Dir
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxGetSuggestedCommand", 'Get suggested command');
-$page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
-$submod->addPage($page);
+// $page = new Page("ajaxGetSuggestedCommand", 'Get suggested command');
+// $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
+// $submod->addPage($page);
 
 $page = new Page("ajaxGetSuggestedCommand1", 'Get suggested command');
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));

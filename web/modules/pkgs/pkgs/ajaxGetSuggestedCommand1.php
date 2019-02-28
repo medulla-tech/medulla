@@ -23,7 +23,7 @@
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 extract($_GET);
-$datas = getTemporaryFileSuggestedCommand1($papiid, $tempdir, $packageUuid);
+$datas = getTemporaryFileSuggestedCommand1( $tempdir);
 header('Content-type: application/json');
 print(json_encode($datas));
 ?>

@@ -65,7 +65,7 @@ class MultiFileTpl extends AbstractTpl {
                     }
                     // DEBUG: write action to do when upload complete
 
-                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand") . '&papiid=\' + selectedPapi;
+                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand1") . '&papiid=\' + selectedPapi;
                     url += \'&tempdir=' . $random_dir . '\';
 
                     jQuery.ajax({
@@ -159,7 +159,7 @@ class MultiFileTpl2 extends AbstractTpl {
                     // Set files_uploaded to 1
                     jQuery(\'[name=files_uploaded]\').val(1);
 
-                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand") . '&papiid=\' + selectedPapi;
+                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand1") . '&papiid=\' + selectedPapi;
                     url += \'&tempdir=' . $random_dir . '\';
 
                     jQuery.ajax({

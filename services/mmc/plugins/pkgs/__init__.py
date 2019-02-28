@@ -289,7 +289,16 @@ def putPackageDetail( package, need_assign = True):
     result = [True, package['id'], packages_id_input_dir, package]
     return result
 
-def getTemporaryFileSuggestedCommand1(papi, tempdir, pid):
+def pkgs_getTemporaryFiles(pp_api_id):
+    logging.getLogger().debug("getTemporaryFiles")
+    ret = []
+    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
+    if os.path.exists(tmp_input_dir):
+        for f in os.listdir(tmp_input_dir):
+            ret.append([f, os.path.isdir(os.path.join(tmp_input_dir, f))])
+    return ret
+
+def getTemporaryFileSuggestedCommand1(tempdir):
     logger.info("hehe getTemporaryFileSuggestedCommand1")
     tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
     ret = {
@@ -529,15 +538,15 @@ class RpcProxy(RpcProxyI):
         d.addCallback(_ppa_dropPackage)
         return d
 
-    def ppa_getTemporaryFiles(self, pp_api_id):
-        def _ppa_getTemporaryFiles(result, pp_api_id = pp_api_id):
-            for upa in result:
-                if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).getTemporaryFiles()
-            return []
-        d = self.upaa_getUserPackageApi()
-        d.addCallback(_ppa_getTemporaryFiles)
-        return d
+    #def ppa_getTemporaryFiles(self, pp_api_id):
+        #def _ppa_getTemporaryFiles(result, pp_api_id = pp_api_id):
+            #for upa in result:
+                #if upa['uuid'] == pp_api_id:
+                    #return PackagePutA(upa).getTemporaryFiles()
+            #return []
+        #d = self.upaa_getUserPackageApi()
+        #d.addCallback(_ppa_getTemporaryFiles)
+        #return d
 
     def ppa_getTemporaryFileSuggestedCommand(self, pp_api_id, tempdir):
         def _ppa_getTemporaryFilesSuggestedCommand(result, pp_api_id = pp_api_id, tempdir = tempdir):

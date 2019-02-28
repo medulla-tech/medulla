@@ -46,9 +46,9 @@ function getPackageDetail($papiid, $pid) {
     return xmlCall("pkgs.ppa_getPackageDetail", array($papiid, $pid));
 }
 
-function getTemporaryFiles($papiid) {
-    return xmlCall("pkgs.ppa_getTemporaryFiles", array($papiid));
-}
+// function getTemporaryFiles($papiid) {
+//     return xmlCall("pkgs.ppa_getTemporaryFiles", array($papiid));
+// }
 
 function xmlrpc_getMMCIP() {
     return xmlCall('pkgs.getMMCIP');
@@ -68,8 +68,12 @@ function getTemporaryFileSuggestedCommand($papiid, $tempdir) {
     return xmlcall("pkgs.ppa_getTemporaryFileSuggestedCommand", array($papiid, $tempdir));
 }
 
-function getTemporaryFileSuggestedCommand1($papi,$tempdir, $pid) {
-    return xmlcall("pkgs.getTemporaryFileSuggestedCommand1", array($papi, $tempdir, $pid));
+function getTemporaryFiles() {
+    return xmlCall("pkgs.pkgs_getTemporaryFiles", array());
+}
+
+function getTemporaryFileSuggestedCommand1($tempdir) {
+    return xmlcall("pkgs.getTemporaryFileSuggestedCommand1", array( $tempdir));
 }
 
 function associatePackages($pid, $files, $level = 0) {

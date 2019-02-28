@@ -27,7 +27,7 @@ $papiid = $_GET['papiid'];
 
 if (!isset($_GET['tempdir'])) {
     // No tempdir defined, get default value
-    $tempdir = getTemporaryFiles($papiid);
+    $tempdir = getTemporaryFiles();
     if (count($tempdir) > 0) $tempdir = $tempdir[0][0];
 }
 else {
