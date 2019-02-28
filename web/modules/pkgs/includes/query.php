@@ -69,7 +69,7 @@ function addQuerySection($Form, $p) {
 
     $check = '';
     $style = 'display:none';
-    if ($p['associateinventory'] == 1){
+    if (isset($p['associateinventory']) && $p['associateinventory'] == 1){
         $check = 'checked';
         $style = '';
     }
@@ -90,9 +90,11 @@ function addQuerySection($Form, $p) {
 
     $Bool = new TrFormElement(_T('Bool', 'pkgs'), new InputTpl('boolcnd'));
     $Bool->setStyle("display:none");
+    isset($p['boolcnd']) ? $p['boolcnd'] = $p['boolcnd'] : $p['boolcnd'] = "" ;
     $Form->add($Bool, array("value" => $p['boolcnd']));
     /* ================= END QUERY ===================== */
     /* =================   BEGIN LICENSE   ===================== */
+    isset($p['licenses']) ? $p['licenses'] = $p['licenses'] : $p['licenses'] = "" ;
     $Form->add(
             new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses'),
                     array('class' => 'associateinventory', 'style' => $style)),

@@ -202,7 +202,8 @@ if (isset($_POST['bconfirm'])){
         array('description', _T("Description", "pkgs"), array()),
     );
 
-
+    $options = array();
+    $cmds = array();
     if(!isExpertMode())
     {
         $command = _T('Command:', 'pkgs') . '<br /><br />';
