@@ -87,6 +87,9 @@ class pkgmanage():
     def list_all(self, param):
         return PkgsDatabase().list_all()
 
+    def add_package(self, package):
+        return PkgsDatabase().createPackage(package)
+
     def pkgs_register_synchro_package(self, uuidpackage, typesynchro):
         return PkgsDatabase().pkgs_register_synchro_package(uuidpackage, typesynchro)
 
@@ -276,8 +279,10 @@ def putPackageDetail( package, need_assign = True):
     fichier = open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" )
     fichier.write(xmppdeployfile)
     fichier.close()
-    # writte file to repertoire package
+    # Add the package into the database
+    pkgmanage().add_package(confjson)
 
+    # write file to package directory
     with open( os.path.join(packages_id_input_dir,"conf.json"), "w" ) as outfile:
         json.dump(confjson, outfile, indent = 4)
 

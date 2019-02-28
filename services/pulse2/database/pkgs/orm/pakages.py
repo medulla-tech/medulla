@@ -77,7 +77,7 @@ class Packages(object):
         if self.sub_packages is not None:
             return self.sub_packages
         else:
-            return []
+            return ""
 
     def getReboot(self):
         if self.reboot is not None:
@@ -157,8 +157,8 @@ class Packages(object):
             return ""
 
     def getCommand_command(self):
-        if self.postCommandFailure_command is not None:
-            return self.postCommandFailure_command
+        if self.command_command is not None:
+            return self.command_command
         else:
             return ""
 

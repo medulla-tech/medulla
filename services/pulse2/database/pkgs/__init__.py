@@ -139,17 +139,50 @@ class PkgsDatabase(DatabaseHelper):
     ####################################
 
     @DatabaseHelper._sessionm
-    def createPackage(self, name = '', descriptif ="", uuid = ''):
+    def createPackage(self, session, package):
         """
-        Return a new pkgs
+        Insert the package config into database.
+        Param:
+            package : dict of the historical config of the package
+        Returns:
+            Packages object
         """
-        bdl = Packages()
-        bdl.label = name
-        bdl.id = uuid
-        bdl.description = descriptif
-        session.add(bdl)
+
+        new_package = Packages()
+
+        new_package.label = package['name']
+        new_package.uuid = package['id']
+        new_package.description = package['description']
+        new_package.version = package['version']
+        new_package.os = package['targetos']
+        new_package.metagenerator = package['metagenerator']
+        new_package.entity_id = package['entity_id']
+        if type(package['sub_packages']) is str:
+            new_package.sub_packages = package['sub_packages']
+        elif type(package['sub_packages']) is list:
+            new_package.sub_packages = ",".join(package['sub_packages'])
+        new_package.reboot = package['reboot']
+        new_package.inventory_associateinventory = package['inventory']['associateinventory']
+        new_package.inventory_licenses = package['inventory']['licenses']
+        new_package.Qversion = package['inventory']['queries']['Qversion']
+        new_package.Qvendor = package['inventory']['queries']['Qvendor']
+        new_package.Qsoftware = package['inventory']['queries']['Qsoftware']
+        new_package.boolcnd = package['inventory']['queries']['boolcnd']
+        new_package.postCommandSuccess_command = package['commands']['postCommandSuccess']['command']
+        new_package.postCommandSuccess_name = package['commands']['postCommandSuccess']['name']
+        new_package.installInit_command = package['commands']['installInit']['command']
+        new_package.installInit_name = package['commands']['installInit']['name']
+        new_package.postCommandFailure_command = package['commands']['postCommandFailure']['command']
+        new_package.postCommandFailure_name = package['commands']['postCommandFailure']['name']
+        new_package.command_command = package['commands']['command']['command']
+        new_package.command_name = package['commands']['command']['name']
+        new_package.preCommand_command = package['commands']['preCommand']['command']
+        new_package.preCommand_name = package['commands']['preCommand']['name']
+
+        session.add(new_package)
+        session.commit()
         session.flush()
-        return bdl
+        return new_package
 
     @DatabaseHelper._sessionm
     def list_all(self, session):
@@ -237,7 +270,7 @@ class PkgsDatabase(DatabaseHelper):
     def pkgs_unregister_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
         if typesynchro != None:
             session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
-                                                    Syncthingsync.relayserver_jid == jid_relayserver, 
+                                                    Syncthingsync.relayserver_jid == jid_relayserver,
                                                     Syncthingsync.typesynchro == typesynchro)).delete()
         else:
             session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
@@ -263,7 +296,7 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def clear_old_pending_synchro_package(self, session, timeseconde=35):
-        sql ="""DELETE FROM `pkgs`.`syncthingsync` 
+        sql ="""DELETE FROM `pkgs`.`syncthingsync`
             WHERE
                 `syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d SECOND);"""%timeseconde
         session.execute(sql)
