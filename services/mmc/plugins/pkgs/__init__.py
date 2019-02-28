@@ -99,6 +99,8 @@ class pkgmanage():
     def get_relayservers_no_sync_for_packageuuid(self, uuidpackage):
         return PkgsDatabase().get_relayservers_no_sync_for_packageuuid(uuidpackage)
 
+    def remove_package(self, uuid):
+        return PkgsDatabase().remove_package(uuid)
 
 def dirpackage():
     return PkgsDatabase().dirpackage
@@ -1060,6 +1062,8 @@ def remove_xmpp_package(package_uuid):
     pathpackagename = os.path.join(_path_package(), package_uuid)
     if os.path.exists(pathpackagename):
         shutil.rmtree(pathpackagename)
+        # Delete the package from the bdd
+        pkgmanage().remove_package(package_uuid)
         return True
     else :
         return False

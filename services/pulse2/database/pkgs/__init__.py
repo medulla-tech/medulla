@@ -200,6 +200,16 @@ class PkgsDatabase(DatabaseHelper):
         return packages
 
     @DatabaseHelper._sessionm
+    def remove_package(self, session, uuid):
+        """Delete the specified package from the DB
+        Param :
+            uuid: string of the uuid of the specified package.
+        """
+        session.query(Packages).filter(Packages.uuid == uuid).delete()
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
     def list_all_extensions(self, session):
         ret = session.query(Extensions).all()
         extensions = []
