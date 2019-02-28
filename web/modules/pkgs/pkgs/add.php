@@ -148,20 +148,20 @@ if (isset($_POST['bconfirm'])){
     }
 } else {
     // Get number of PackageApi
-    $res = getUserPackageApi();
-
-    // set first Package Api found as default Package API
-    $p_api_id = $res[0]['uuid'];
-
-    $list_val = $list = array();
-    if (!isset($_SESSION['PACKAGEAPI'])) {
-        $_SESSION['PACKAGEAPI'] = array();
-    }
-    foreach ($res as $mirror) {
-        $list_val[$mirror['uuid']] = $mirror['uuid'];
-        $list[$mirror['uuid']] = $mirror['mountpoint'];
-        $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
-    }
+//     $res = getUserPackageApi();
+// 
+//     // set first Package Api found as default Package API
+//     $p_api_id = $res[0]['uuid'];
+// 
+//     $list_val = $list = array();
+//     if (!isset($_SESSION['PACKAGEAPI'])) {
+//         $_SESSION['PACKAGEAPI'] = array();
+//     }
+//     foreach ($res as $mirror) {
+//         $list_val[$mirror['uuid']] = $mirror['uuid'];
+//         $list[$mirror['uuid']] = $mirror['mountpoint'];
+//         $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
+//     }
 
     $span = new SpanElement(_T("Choose package source", "pkgs"), "pkgs-title");
 /*
