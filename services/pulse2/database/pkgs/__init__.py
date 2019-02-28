@@ -148,7 +148,12 @@ class PkgsDatabase(DatabaseHelper):
             Packages object
         """
 
-        new_package = Packages()
+        request = session.query(Packages).filter(Packages.uuid == package['id']).first()
+
+        if request is None:
+            new_package = Packages()
+        else:
+            new_package = request
 
         new_package.label = package['name']
         new_package.uuid = package['id']
@@ -179,7 +184,8 @@ class PkgsDatabase(DatabaseHelper):
         new_package.preCommand_command = package['commands']['preCommand']['command']
         new_package.preCommand_name = package['commands']['preCommand']['name']
 
-        session.add(new_package)
+        if request is None:
+            session.add(new_package)
         session.commit()
         session.flush()
         return new_package
