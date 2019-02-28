@@ -21,16 +21,23 @@ class apimanagepackagemsc:
     @staticmethod
     def packagelistmsc():
         folderpackages = os.path.join("/", "var" ,"lib","pulse2","packages")
-        return [ os.path.join(folderpackages,x) for x in os.listdir(folderpackages) if os.path.isdir(os.path.join(folderpackages,x)) and str(os.path.join(folderpackages,x))[-9:] != ".stfolder" ]
+        return [ os.path.join(folderpackages,x) for x in os.listdir(folderpackages) \
+            if os.path.isdir(os.path.join(folderpackages,x)) \
+                and str(os.path.join(folderpackages,x))[-9:] != ".stfolder" ]
 
     @staticmethod
     def listfilepackage(folderpackages):
-        return [ os.path.join(folderpackages,x) for x in os.listdir(folderpackages) if not os.path.isdir(os.path.join(folderpackages,x)) ]
+        return [ os.path.join(folderpackages,x) for x in os.listdir(folderpackages) \
+            if not os.path.isdir(os.path.join(folderpackages,x)) \
+            and str(os.path.join(folderpackages,x))[-9:] != ".stfolder"]
 
     @staticmethod
     def packagelistmscconfjson(pending = False):
         folderpackages = os.path.join("/", "var" ,"lib","pulse2","packages")
-        listfichierconf =  [ os.path.join(folderpackages,x,"conf.json") for x in os.listdir(folderpackages) if os.path.isdir(os.path.join(folderpackages,x)) and str(os.path.join(folderpackages,x))[-9:] != ".stfolder" ]
+        listfichierconf =  [ os.path.join(folderpackages,x,"conf.json") \
+            for x in os.listdir(folderpackages) \
+                if os.path.isdir(os.path.join(folderpackages,x)) \
+                    and str(os.path.join(folderpackages,x))[-9:] != ".stfolder" ]
         listpackagependig = PkgsDatabase().list_pending_synchro_package()
         listpendingfichierconf = []
         listnotpendingfichierconf = []
@@ -44,6 +51,7 @@ class apimanagepackagemsc:
             return listpendingfichierconf
         else:
             return listnotpendingfichierconf
+
     @staticmethod
     def sizedirectory(path): 
         size = 0 
@@ -166,7 +174,10 @@ class managepackage:
 
     @staticmethod
     def listpackages():
-        return [os.path.join(managepackage.packagedir(), x) for x in os.listdir(managepackage.packagedir()) if os.path.isdir(os.path.join(managepackage.packagedir(), x))]
+        return [os.path.join(managepackage.packagedir(), x) \
+            for x in os.listdir(managepackage.packagedir()) \
+                if os.path.isdir(os.path.join(managepackage.packagedir(), x)) \
+                    and str(os.path.join(managepackage.packagedir(), x))[-9:] != ".stfolder"]
 
     @staticmethod
     def loadjsonfile(filename):

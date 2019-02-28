@@ -80,7 +80,7 @@ $params["max_connection_attempt"] = web_def_attempts();
 if ($_GET['editConvergence']) {
     $ServerAPI = new ServerAPI();
     $ServerAPI->fromURI($papi);
-    $cmd_id = xmlrpc_get_convergence_command_id($gid, $ServerAPI, $pid);
+    $cmd_id = xmlrpc_get_convergence_command_id($gid, $pid);
     $command_details = command_detail($cmd_id);
     $command_phases = xmlrpc_get_convergence_phases($gid, $ServerAPI, $pid);
 

@@ -442,8 +442,12 @@ function xmlrpc_getConvergenceStatus($gid) {
     return xmlCall("dyngroup.getConvergenceStatus", array($gid));
 }
 
-function xmlrpc_get_convergence_groups_to_update($papi_id, $package) {
-    return xmlCall("dyngroup.get_convergence_groups_to_update", array($papi_id, $package));
+// function xmlrpc_get_convergence_groups_to_update($papi_id, $package) {
+//     return xmlCall("dyngroup.get_convergence_groups_to_update", array($papi_id, $package));
+// }
+
+function xmlrpc_get_convergence_groups_to_update($package) {
+    return xmlCall("dyngroup.get_convergence_groups_to_update", array($package));
 }
 
 function xmlrpc_get_active_convergence_commands($papi_id, $package) {
@@ -514,10 +518,10 @@ function restart_active_convergence_commands($papi_id, $package) {
     }
 }
 
-function update_convergence_groups_request($papi_id, $package) {
+function update_convergence_groups_request($package) {
     $package = (object) $package;
     // Get convergence groups to update
-    $group_ids = xmlrpc_get_convergence_groups_to_update($papi_id, $package->id);
+    $group_ids = xmlrpc_get_convergence_groups_to_update( $package->id);
     foreach ($group_ids as $gid) {
         $convergence_group = new ConvergenceGroup($gid);
         $convergence_group->setPackage($package);
@@ -525,8 +529,8 @@ function update_convergence_groups_request($papi_id, $package) {
     }
 }
 
-function xmlrpc_get_convergence_command_id($gid, $p_api, $pid) {
-    return xmlCall("dyngroup.get_convergence_command_id", array($gid, $p_api, $pid));
+function xmlrpc_get_convergence_command_id($gid,$pid) {
+    return xmlCall("dyngroup.get_convergence_command_id", array($gid, $pid));
 }
 
 function xmlrpc_get_convergence_phases($gid, $p_api, $pid) {

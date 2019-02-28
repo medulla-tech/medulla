@@ -995,16 +995,15 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             'pid': x[2]} for x in query]
 
     @DatabaseHelper._session
-    def get_convergence_groups_to_update(self, session, mountpoint, package_id):
-        if mountpoint.startswith('UUID/'):
-            # mountpoint param is normally package API UUID
-            # package API UUID = UUID/mountpoint
-            # So remove this silly UUID/
-            mountpoint = mountpoint[5:]
+    def get_convergence_groups_to_update(self, session, package_id):
+        #if mountpoint.startswith('UUID/'):
+            ## mountpoint param is normally package API UUID
+            ## package API UUID = UUID/mountpoint
+            ## So remove this silly UUID/
+            #mountpoint = mountpoint[5:]
         ret = []
         query = session.query(Convergence)
-        query = query.filter(and_(
-                    Convergence.papi.like('%' + mountpoint + '%'),
+        query = query.filter(and_(#Convergence.papi.like('%' + mountpoint + '%'),
                     Convergence.packageUUID == package_id,
                 ))
         for line in query:
@@ -1012,10 +1011,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return ret
 
     @DatabaseHelper._session
-    def get_convergence_command_id(self, session, gid, papi, package_id):
+    def get_convergence_command_id(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:

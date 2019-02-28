@@ -234,7 +234,7 @@ function start_a_command($proxy = array()) {
             $cmd_type = 2; // Convergence command type
             if (quick_get('editConvergence')) {
                 /* Stop command */
-                $cmd_id = xmlrpc_get_convergence_command_id($gid, $p_api, $pid);
+                $cmd_id = xmlrpc_get_convergence_command_id($gid, $pid);
                 stop_command($cmd_id);
                 /* Set end date of this command to now(), don't touch to start date */
                 $start_date = _get_command_start_date($cmd_id);

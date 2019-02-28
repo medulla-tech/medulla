@@ -78,7 +78,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
     if (in_array('dyngroup', $_SESSION['modulesList'])) {
         // update convergence groups request if any
-        update_convergence_groups_request($p_api_id, $package);
+        update_convergence_groups_request($package);
         // stop current active convergence commands and set new commands
         restart_active_convergence_commands($p_api_id, $package);
     }
