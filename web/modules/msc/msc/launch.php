@@ -258,7 +258,7 @@ function start_a_command($proxy = array()) {
                     'commandId' => intval($command_id),
                     'cmdPhases' => $params,
                 );
-                xmlrpc_edit_convergence_datas($gid, $p_api, $pid, $updated_datas);
+                xmlrpc_edit_convergence_datas($gid, $pid, $updated_datas);
             }
             else {
                 /* Create convergence */

@@ -511,7 +511,7 @@ function restart_active_convergence_commands($papi_id, $package) {
                 'commandId' => intval($command_id),
                 'cmdPhases' => $params,
             );
-            xmlrpc_edit_convergence_datas($gid, $ServerAPI, $package->id, $updated_datas);
+            xmlrpc_edit_convergence_datas($gid, $package->id, $updated_datas);
         }
     }
 }
@@ -547,8 +547,8 @@ function xmlrpc_getDeployGroupId($gid, $package_id) {
     return xmlCall("dyngroup.get_deploy_group_id", array($gid, $package_id));
 }
 
-function xmlrpc_edit_convergence_datas($gid, $p_api, $pid, $datas) {
-    return xmlCall("dyngroup.edit_convergence_datas", array($gid, $p_api, $pid, $datas));
+function xmlrpc_edit_convergence_datas($gid, $pid, $datas) {
+    return xmlCall("dyngroup.edit_convergence_datas", array($gid, $pid, $datas));
 }
 
 function xmlrpc_get_convergence_parent_group_id($gid) {
