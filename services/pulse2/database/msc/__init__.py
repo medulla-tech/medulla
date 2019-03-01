@@ -1890,7 +1890,7 @@ class MscDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def getCommands(self, session, ctx, cmd_id):
-        if cmd_id == None or cmd_id == '':
+        if cmd_id == "0" or cmd_id == None or cmd_id == '':
             return False
         a_targets = map(lambda target:target[0], self.getTargets(cmd_id, True))
         if ComputerLocationManager().doesUserHaveAccessToMachines(ctx, a_targets):
