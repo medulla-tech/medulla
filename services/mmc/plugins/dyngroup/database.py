@@ -1022,10 +1022,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return None
 
     @DatabaseHelper._session
-    def get_convergence_phases(self, session, gid, papi, package_id):
+    def get_convergence_phases(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:

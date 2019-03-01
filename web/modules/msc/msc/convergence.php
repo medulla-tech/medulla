@@ -82,7 +82,7 @@ if ($_GET['editConvergence']) {
     $ServerAPI->fromURI($papi);
     $cmd_id = xmlrpc_get_convergence_command_id($gid, $pid);
     $command_details = command_detail($cmd_id);
-    $command_phases = xmlrpc_get_convergence_phases($gid, $ServerAPI, $pid);
+    $command_phases = xmlrpc_get_convergence_phases($gid, $pid);
 
     $params["ltitle"] = $command_details['title'];
     $params["maxbw"] = $command_details['maxbw'] / 1024;

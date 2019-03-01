@@ -503,7 +503,7 @@ function restart_active_convergence_commands($papi_id, $package) {
             extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
             /* Create new command */
             $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $package->id);
-            $params = xmlrpc_get_convergence_phases($gid, $ServerAPI, $package->id);
+            $params = xmlrpc_get_convergence_phases($gid, $package->id);
             $command_id = add_command_api($package->id, NULL, $params, $ServerAPI, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
             /* Update convergence DB */
             $updated_datas = array(
@@ -531,8 +531,8 @@ function xmlrpc_get_convergence_command_id($gid,$pid) {
     return xmlCall("dyngroup.get_convergence_command_id", array($gid, $pid));
 }
 
-function xmlrpc_get_convergence_phases($gid, $p_api, $pid) {
-    return xmlCall("dyngroup.get_convergence_phases", array($gid, $p_api, $pid));
+function xmlrpc_get_convergence_phases($gid, $pid) {
+    return xmlCall("dyngroup.get_convergence_phases", array($gid, $pid));
 }
 
 function xmlrpc_is_convergence_active($gid,  $pid) {
