@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`packages`
       primary key,
     name          varchar(255) null comment 'basename for software',
     extension     varchar(255) null comment 'Ext file or empty',
+    os            varchar(255) null comment 'Specifies the os of the file',
     magic_command varchar(255) null comment 'Magic number of the file',
     bang          varchar(255) null comment 'The bang file can be declared',
     file          varchar(255) null comment 'Elements found by the file command',
