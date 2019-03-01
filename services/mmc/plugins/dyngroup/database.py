@@ -915,11 +915,10 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return True
 
     @DatabaseHelper._session
-    def edit_convergence_datas(self, session, gid, papi, package_id, datas):
+    def edit_convergence_datas(self, session, gid, package_id, datas):
         datas['cmdPhases'] = cPickle.dumps(datas['cmdPhases'])
         return session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         ).update(datas)
 
