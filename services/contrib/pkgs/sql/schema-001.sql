@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`packages`
   preCommand_command varchar(50)  null,
   preCommand_name varchar(50)  null,
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC));
-
+  CREATE INDEX `id_packages_uuid` ON `packages` (`uuid`);
 
   create table if not exists extensions
   (
@@ -88,8 +88,8 @@ create table if not exists dependencies
 (
     id            int auto_increment
       primary key,
-    id_package    int not null comment 'UUID of the package',
-    id_dependency int not null comment 'UUID of the corresponding dependency'
+    uuid_package    varchar(255) not null comment 'UUID of the package',
+    uuid_dependency varchar(255) not null comment 'UUID of the corresponding dependency'
   );
 
 create table if not exists syncthingsync

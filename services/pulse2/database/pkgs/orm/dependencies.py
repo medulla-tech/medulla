@@ -31,17 +31,17 @@ class Dependencies(object):
         else:
             return 0
 
-    def getId_package(self):
-        if self.id_package is not None:
-            return self.id_package
+    def getUuid_package(self):
+        if self.uuid_package is not None:
+            return self.uuid_package
         else:
-            return 0
+            return ""
 
-    def getId_dependency(self):
-        if self.id_dependency is not None:
-            return self.id_dependency
+    def getUuid_dependency(self):
+        if self.uuid_dependency is not None:
+            return self.uuid_dependency
         else:
-            return 0
+            return ""
 
     def to_array(self):
         """
@@ -52,6 +52,6 @@ class Dependencies(object):
         """
         return {
             'id' : self.getId(),
-            'id_package': self.getId_package(),
-            'id_dependency': self.getId_dependency()
+            'uuid_package': self.getUuid_package(),
+            'uuid_dependency': self.getUuid_dependency()
         }
