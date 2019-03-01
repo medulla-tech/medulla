@@ -284,9 +284,8 @@ def prepareCommand(pinfos, params):
 
 
 class SendPackageCommand:
-    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = [], cmd_type = 0):
+    def __init__(self, ctx, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = [], cmd_type = 0):
         self.ctx = ctx
-        self.p_api = p_api.copy()
         self.pid = pid
         self.targets = targets
         self.params = params.copy()
@@ -297,43 +296,31 @@ class SendPackageCommand:
         self.proxies = proxies
         self.cmd_type = cmd_type
 
-    def onError(self, error):
-        logging.getLogger().error("SendPackageCommand: %s", str(error))
-        return self.deferred.errback(error)
-
-    def sendResult(self, id_command = -1):
-        return self.deferred.callback(id_command)
-
     def send(self):
-        #if (self.pid == None or self.pid == '') and 'launchAction' in self.params:
-        if (self.pid == None or self.pid == '') and self.params.has_key('launchAction'):
-            # this is a QA passing by the advanced page
-            idcmd = self.params['launchAction']
-            result, qas = qa_list_files()
-            if result and idcmd in qas:
-                self.params['command'] = qas[idcmd]['command']
-            else:
-                logging.getLogger().warn("Failed to get the QA %s"%(idcmd))
+        #if (self.pid == None or self.pid == '') and self.params.has_key('launchAction'):
+            ## this is a QA passing by the advanced page
+            #idcmd = self.params['launchAction']
+            #result, qas = qa_list_files()
+            #if result and idcmd in qas:
+                #self.params['command'] = qas[idcmd]['command']
+            #else:
+                #logging.getLogger().warn("Failed to get the QA %s"%(idcmd))
 
-            self.pinfos = {
-                    "files":None,
-                    "command":{"command":self.params['command']}
-            }
-            self.pid = None
-            self.setRoot('')
-        else:
-            d = PackageGetA(self.p_api).getPackageDetail(self.pid)
-            d.addCallbacks(self.setPackage, self.onError)
-
-    def setPackage(self, package):
-        if not package:
-            self.onError("Can't get informations on package %s" % self.pid)
-        else:
-            self.pinfos = package
-            d = PackageGetA(self.p_api).getLocalPackagePath(self.pid)
-            d.addCallbacks(self.setRoot, self.onError)
+            #self.pinfos = {
+                    #"files":None,
+                    #"command":{"command":self.params['command']}
+            #}
+            #self.pid = None
+            #self.setRoot('')
+        #else:
+        ### module xmppmaster missing  initialisation after this module
+        from mmc.plugins.xmppmaster.master.lib.managepackage import apimanagepackagemsc
+        self.pinfos =  apimanagepackagemsc.getPackageDetail(self.pid)
+        print self.pinfos
+        self.setRoot("/var/lib/pulse2/packages")
 
     def setRoot(self, root):
+        #### create command
         logging.getLogger().debug(root)
         if self.pid != None and self.pid != '' and not root:
             return self.onError("Can't get path for package %s" % self.pid)
@@ -394,11 +381,7 @@ class SendPackageCommand:
             cmd['state'],
             cmd_type = self.cmd_type
         )
-
-        if type(addCmd) != int:
-            addCmd.addCallbacks(self.sendResult, self.onError)
-        else:
-            self.onError('Error while creating the command')
+        return addcmd
 
 def convert_date(date = '0000-00-00 00:00:00'):
     try:

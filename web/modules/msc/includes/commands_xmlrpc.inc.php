@@ -79,8 +79,8 @@ function is_commands_convergence_type($cmd_id) {
     return xmlCall('msc.is_commands_convergence_type', array($cmd_id));
 }
 
-function add_command_api($pid, $target, $params, $p_api, $mode, $gid = null, $proxy = array(), $cmd_type = 0) {
-    return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $mode, $gid, $proxy, $cmd_type));
+function add_command_api($pid, $target, $params, $mode, $gid = null, $proxy = array(), $cmd_type = 0) {
+    return xmlCall('msc.add_command_api', array($pid, $target, $params, $mode, $gid, $proxy, $cmd_type));
 }
 
 function add_bundle_api($porders, $target, $params, $mode, $gid = null, $proxy = array()) {

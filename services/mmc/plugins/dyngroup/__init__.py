@@ -536,8 +536,8 @@ class RpcProxy(RpcProxyI):
                 host_convergences.append(cv)
         return host_convergences
 
-    def get_active_convergence_commands(self, papi_id, package_id):
-        ret = DyngroupDatabase().get_active_convergence_commands(papi_id, package_id)
+    def get_active_convergence_commands(self,package_id):
+        ret = DyngroupDatabase().get_active_convergence_commands(package_id)
         return xmlrpcCleanup(ret)
 
     def get_convergence_groups_to_update(self, package_id):

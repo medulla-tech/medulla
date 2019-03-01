@@ -962,16 +962,10 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return ret
 
     @DatabaseHelper._session
-    def get_active_convergence_commands(self, session, mountpoint, package_id):
-        if mountpoint.startswith('UUID/'):
-            # mountpoint param is normally package API UUID
-            # package API UUID = UUID/mountpoint
-            # So remove this silly UUID/
-            mountpoint = mountpoint[5:]
+    def get_active_convergence_commands(self, session, package_id):
         ret = []
         query = session.query(Convergence)
         query = query.filter(and_(
-                    Convergence.papi.like('%' + mountpoint + '%'),
                     Convergence.packageUUID == package_id,
                     Convergence.active == 1,
                 ))

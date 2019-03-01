@@ -601,7 +601,8 @@ class RpcProxy(RpcProxyI):
 
     # UserPackageApiApi
     def upaa_getUserPackageApi(self):
-        ctx = self.currentContext
+        # cf class UserPackageApi package_server/user_package_api/__init__.py
+         ctx = self.currentContext
         return UserPackageApiApi().getUserPackageApi(ctx.userid)
 
     #def getMMCIP(self):

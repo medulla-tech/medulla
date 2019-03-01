@@ -163,7 +163,7 @@ function start_a_command($proxy = array()) {
         $tab = 'tablogs';
         /* record new command */
 
-        $id = add_command_api($pid, $target, $params, $p_api, $mode, NULL);
+        $id = add_command_api($pid, $target, $params, $mode, NULL);
         if(in_array("xmppmaster", $_SESSION["modulesList"])) {
             $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
             $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
@@ -241,7 +241,7 @@ function start_a_command($proxy = array()) {
                 extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
                 /* Create new command */
                 $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $pid);
-                $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+                $command_id = add_command_api($pid, NULL, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
                     xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0, 0);
@@ -272,7 +272,7 @@ function start_a_command($proxy = array()) {
                 $done_group_id = $convergence_groups['done_group_id'];
 
                 // Add command on sub-group
-                $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+                $command_id = add_command_api($pid, NULL, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
                     xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id, $countmachine );
@@ -292,7 +292,7 @@ function start_a_command($proxy = array()) {
         }
         else {
             // deploy on group
-            $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
+            $id = add_command_api($pid, NULL, $params, $mode, $gid, $ordered_proxies);
             if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                 $countmachine = getRestrictedComputersListLen( array('gid' => $gid));
                 $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
