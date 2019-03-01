@@ -102,6 +102,9 @@ class pkgmanage():
     def remove_package(self, uuid):
         return PkgsDatabase().remove_package(uuid)
 
+    def refresh_dependencies(self, uuid, dependencies_list):
+        PkgsDatabase().refresh_dependencies(uuid, dependencies_list)
+
 def dirpackage():
     return PkgsDatabase().dirpackage
 
@@ -983,6 +986,10 @@ def save_xmpp_json(folder, json_content):
                     stepseq['error'] = valerror
     json_content= json.dumps(structpackage)
     _save_xmpp_json(folder, json_content)
+    # Refresh the dependencies list
+    uuid = folder.split('/')[-1]
+    dependencies_list = structpackage['info']['Dependency']
+    pkgmanage().refresh_dependencies(uuid, dependencies_list)
 
 def _aliasforstep(step, dictstepseq):
     for t in dictstepseq:

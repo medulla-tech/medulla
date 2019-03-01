@@ -191,6 +191,39 @@ class PkgsDatabase(DatabaseHelper):
         return new_package
 
     @DatabaseHelper._sessionm
+    def remove_dependencies(self, session, package_uuid, status="delete"):
+        """
+        Remove the dependencies for the specified package.
+        Params:
+            package_uuid : string of the uuid of the package given as reference.
+            status : string (default : delete) if the status is delete, then the
+                function delete all in the dependencies table which refers to the package
+        """
+        session.query(Dependencies).filter(Dependencies.uuid_package == package_uuid).delete()
+        if status == "delete":
+            session.query(Dependencies).filter(Dependencies.uuid_dependency == package_uuid).delete()
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
+    def refresh_dependencies(self, session, package_uuid, uuid_list):
+        """
+        Refresh the list of the dependencies for a specified package.
+        Params:
+            package_uuid : string of the reference uuid
+            uuid_list : list of the dependencies associated to the reference.
+                One reference has many dependencies.
+        """
+        self.remove_dependencies(package_uuid, "refresh")
+        for dependency in uuid_list:
+            new_dependency = Dependencies()
+            new_dependency.uuid_package = package_uuid
+            new_dependency.uuid_dependency = dependency
+            session.add(new_dependency)
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
     def list_all(self, session):
         """
         Get the list of all the packages stored in database.
