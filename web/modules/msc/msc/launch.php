@@ -240,7 +240,7 @@ function start_a_command($proxy = array()) {
                 $start_date = _get_command_start_date($cmd_id);
                 extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
                 /* Create new command */
-                $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $p_api, $pid);
+                $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $pid);
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));

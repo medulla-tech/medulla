@@ -552,12 +552,12 @@ class RpcProxy(RpcProxyI):
         ret = DyngroupDatabase().get_convergence_phases(gid, papi, package_id)
         return xmlrpcCleanup(ret)
 
-    def is_convergence_active(self, gid, papi, package_id):
-        ret = DyngroupDatabase().is_convergence_active(gid, papi, package_id)
+    def is_convergence_active(self, gid, package_id):
+        ret = DyngroupDatabase().is_convergence_active(gid, package_id)
         return xmlrpcCleanup(ret)
 
-    def get_deploy_group_id(self, gid, papi, package_id):
-        ret = DyngroupDatabase().get_deploy_group_id(gid, papi, package_id)
+    def get_deploy_group_id(self, gid, package_id):
+        ret = DyngroupDatabase().get_deploy_group_id(gid, package_id)
         return xmlrpcCleanup(ret)
 
     def get_convergence_group_parent_id(self, gid):

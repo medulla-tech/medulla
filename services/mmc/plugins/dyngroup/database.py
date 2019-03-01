@@ -875,10 +875,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return True
 
     @DatabaseHelper._session
-    def get_deploy_group_id(self, session, gid, papi, package_id):
+    def get_deploy_group_id(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:
@@ -1041,10 +1040,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return False
 
     @DatabaseHelper._session
-    def is_convergence_active(self, session, gid, papi, package_id):
+    def is_convergence_active(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:

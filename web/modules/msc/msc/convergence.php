@@ -90,7 +90,7 @@ if ($_GET['editConvergence']) {
     $params["deployment_intervals"] = $command_details['deployment_intervals'];
     $params["parameters"] = $command_details['parameters'];
     $params["editConvergence"] = True;
-    $params["active"] = (xmlrpc_is_convergence_active($gid, $ServerAPI, $pid)) ? 'on' : '';
+    $params["active"] = (xmlrpc_is_convergence_active($gid, $pid)) ? 'on' : '';
 
     // phases
     foreach(array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'do_inventory', 'do_halt') as $key) {

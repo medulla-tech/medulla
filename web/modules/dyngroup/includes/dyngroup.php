@@ -430,9 +430,7 @@ function xmlrpc_isProfileAssociatedToImagingServer($gid) { return xmlCall("dyngr
 /*
  * Get deploy sub-group id for given group
  */
-function xmlrpc_getDeployGroupId($gid, $package_id) {
-    return xmlCall("dyngroup.get_deploy_group_id", array($gid, $package_id));
-}
+
 
 function xmlrpc_add_convergence_datas($parent_group_id, $deploy_group_id, $done_group_id, $pid, $p_api, $command_id, $active, $params) {
     return xmlCall("dyngroup.add_convergence_datas", array($parent_group_id, $deploy_group_id, $done_group_id, $pid, $p_api, $command_id, $active, $params));
@@ -504,7 +502,7 @@ function restart_active_convergence_commands($papi_id, $package) {
             $start_date = __get_command_start_date($cmd_id);
             extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
             /* Create new command */
-            $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $ServerAPI, $package->id);
+            $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $package->id);
             $params = xmlrpc_get_convergence_phases($gid, $ServerAPI, $package->id);
             $command_id = add_command_api($package->id, NULL, $params, $ServerAPI, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
             /* Update convergence DB */
@@ -537,12 +535,16 @@ function xmlrpc_get_convergence_phases($gid, $p_api, $pid) {
     return xmlCall("dyngroup.get_convergence_phases", array($gid, $p_api, $pid));
 }
 
-function xmlrpc_is_convergence_active($gid, $p_api, $pid) {
-    return xmlCall("dyngroup.is_convergence_active", array($gid, $p_api, $pid));
+function xmlrpc_is_convergence_active($gid,  $pid) {
+    return xmlCall("dyngroup.is_convergence_active", array($gid, $pid));
 }
 
-function xmlrpc_get_deploy_group_id($gid, $p_api, $pid) {
-    return xmlCall("dyngroup.get_deploy_group_id", array($gid, $p_api, $pid));
+function xmlrpc_get_deploy_group_id($gid, $pid) {
+    return xmlCall("dyngroup.get_deploy_group_id", array($gid, $pid));
+}
+
+function xmlrpc_getDeployGroupId($gid, $package_id) {
+    return xmlCall("dyngroup.get_deploy_group_id", array($gid, $package_id));
 }
 
 function xmlrpc_edit_convergence_datas($gid, $p_api, $pid, $datas) {
