@@ -282,7 +282,6 @@ def prepareCommand(pinfos, params):
         ret['files'] = ''
     return ret
 
-
 class SendPackageCommand:
     def __init__(self, ctx, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = [], cmd_type = 0):
         self.ctx = ctx
@@ -297,43 +296,21 @@ class SendPackageCommand:
         self.cmd_type = cmd_type
 
     def send(self):
-        #if (self.pid == None or self.pid == '') and self.params.has_key('launchAction'):
-            ## this is a QA passing by the advanced page
-            #idcmd = self.params['launchAction']
-            #result, qas = qa_list_files()
-            #if result and idcmd in qas:
-                #self.params['command'] = qas[idcmd]['command']
-            #else:
-                #logging.getLogger().warn("Failed to get the QA %s"%(idcmd))
-
-            #self.pinfos = {
-                    #"files":None,
-                    #"command":{"command":self.params['command']}
-            #}
-            #self.pid = None
-            #self.setRoot('')
-        #else:
-        ### module xmppmaster missing  initialisation after this module
         from mmc.plugins.xmppmaster.master.lib.managepackage import apimanagepackagemsc
         self.pinfos =  apimanagepackagemsc.getPackageDetail(self.pid)
-        print self.pinfos
-        self.setRoot("/var/lib/pulse2/packages")
+        return self.setRoot("/var/lib/pulse2/packages")
 
     def setRoot(self, root):
-        #### create command
         logging.getLogger().debug(root)
         if self.pid != None and self.pid != '' and not root:
             return self.onError("Can't get path for package %s" % self.pid)
         self.root = root
-
         # If is an empty Package, avoid file uploading
         if 'size' in self.pinfos:
             if self.pinfos['size'] == 0 :
                 self.pinfos['files'] = None
-
         # Prepare command parameters for database insertion
         cmd = prepareCommand(self.pinfos, self.params)
-
         # cmd['maxbw'] is in kbits, set in bits
         cmd['maxbw'] = int(cmd['maxbw']) * 1024
         cmd['do_wol_with_imaging'] = 'disable'
@@ -345,9 +322,7 @@ class SendPackageCommand:
                      'do_windows_update': cmd['do_windows_update'],
                      'do_inventory': cmd['do_inventory'],
                      }
-        cmd['start_file'], patternActions = MscDatabase().applyCmdPatterns(cmd['start_file'],
-                                                                          _patterns)
-
+        cmd['start_file'], patternActions = MscDatabase().applyCmdPatterns(cmd['start_file'], _patterns)
         addCmd = MscDatabase().addCommand(  # TODO: refactor to get less args
             self.ctx,
             self.pid,
@@ -381,7 +356,7 @@ class SendPackageCommand:
             cmd['state'],
             cmd_type = self.cmd_type
         )
-        return addcmd
+        return addCmd
 
 def convert_date(date = '0000-00-00 00:00:00'):
     try:

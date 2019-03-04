@@ -458,15 +458,11 @@ class MscDatabase(msc.MscDatabase):
         """
         if root == None:
             root = self.config.repopath
-
         time_defaults = self.__getTimeDefaults(start_date, end_date)
         start_date, end_date, max_connection_attempt = time_defaults
-
-
         targets_to_insert = []
         targets_name = []
         coh_to_insert = []
-
         targets, targetsdata = self.getComputersData(ctx, targets, group_id)
         # type 2 is convergence command
         # a convergence command can contains no targets
@@ -474,55 +470,20 @@ class MscDatabase(msc.MscDatabase):
         if not targets and cmd_type != 2:
             self.logger.error("The machine list is empty, does your machines have a network interface ?")
             return -2
-
-        def cbGetTargetsMirrors(schedulers):
-            args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
-            d1 = MirrorApi().getMirrors(args)
-            d1.addCallback(cbGetTargetsFallbackMirrors, schedulers)
-            d1.addErrback(lambda err: err)
-            return d1
-
-        def cbGetTargetsFallbackMirrors(mirrors, schedulers):
-            args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
-            d2 = MirrorApi().getFallbackMirrors(args)
-            d2.addCallback(cbCreateTargets, mirrors, schedulers)
-            d2.addErrback(lambda err: err)
-            return d2
-
-        def cbPushModeCreateTargets(schedulers):
-            return cbCreateTargets(None, None, schedulers, push_pull = False)
-
-        def cbCreateTargets(fbmirrors, mirrors, schedulers, push_pull = True):
-
+        def cbCreateTargets():
             for i in range(len(targets)):
-                if push_pull:
-                    # FIXME: we only take the the first mirrors
-                    mirror = mirrors[i]
-                    fallback = fbmirrors[i]
-                    uri = '%s://%s:%s%s' % (mirror['protocol'],
-                                            mirror['server'],
-                                            str(mirror['port']),
-                                            mirror['mountpoint']) \
-                        + '||' + '%s://%s:%s%s' % (fallback['protocol'],
-                                                   fallback['server'],
-                                                   str(fallback['port']),
-                                                   fallback['mountpoint'])
-                else:
-                    uri = '%s://%s' % ('file', root)
-
+                uri = '%s://%s' % ('file', root)
                 targetsdata[i]['mirrors'] = uri
                 # Keep not blacklisted target name for commands_on_host
                 # creation.
                 targets_name.append(targets[i][1])
                 # Maybe could be done in prepareTarget
                 targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
-
                 targets_to_insert.append((targetsdata[i],
                                           targets[i][1],
-                                          schedulers[i]))
+                                          ""))
             session = create_session()
             session.begin()
-
             cmd = self.createCommand(session, package_id, start_file, parameters,
                                      files, start_script, clean_on_success,
                                      start_date, end_date, connect_as, ctx.userid,
@@ -538,7 +499,6 @@ class MscDatabase(msc.MscDatabase):
             # so return command_id if no targets
             if not targets and cmd_type == 2:
                 return cmd.getId()
-
             for atarget, target_name, ascheduler in targets_to_insert :
                 target = Target()
                 target.target_macaddr = atarget["target_macaddr"]
@@ -549,12 +509,10 @@ class MscDatabase(msc.MscDatabase):
                 target.target_ipaddr = atarget["target_ipaddr"]
                 target.mirrors = atarget["mirrors"]
                 target.target_network = atarget["target_network"]
-
                 session.add(target)
                 session.flush()
                 if hasattr(session, "refresh") :
                     session.refresh(target)
-
                 order_in_proxy = None
                 max_clients_per_proxy = 0
                 try:
@@ -575,7 +533,6 @@ class MscDatabase(msc.MscDatabase):
                                                                order_in_proxy,
                                                                max_clients_per_proxy))
             session.execute(self.commands_on_host.insert(), coh_to_insert)
-
             cohs = cmd.getCohIds()
             self._createPhases(session,
                                cohs,
@@ -593,14 +550,7 @@ class MscDatabase(msc.MscDatabase):
             cmd.ready = True
             session.commit()
             return cmd.getId()
-
-        d = self.getMachinesSchedulers(targets)
-        if mode == 'push_pull':
-            d.addCallback(cbGetTargetsMirrors)
-        else:
-            d.addCallback(cbPushModeCreateTargets)
-        d.addErrback(lambda err: err)
-        return d
+        return cbCreateTargets()
 
     @DatabaseHelper._session
     def get_package_cmds(self, session, pid):
