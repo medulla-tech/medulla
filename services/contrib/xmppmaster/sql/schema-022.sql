@@ -26,9 +26,8 @@ START TRANSACTION;
 --
 -- Table logs
 --
-
 ALTER TABLE `xmppmaster`.`logs` 
-CHANGE COLUMN `text` `text` TEXT NOT NULL ;
+CHANGE COLUMN `text` `text` VARCHAR(1024) NOT NULL ;
 
 UPDATE version SET Number = 22;
 
