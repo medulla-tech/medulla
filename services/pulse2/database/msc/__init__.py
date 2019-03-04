@@ -1862,24 +1862,24 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return map(lambda x: x.toH(), ret)
 
-    def getBundle(self, ctx, fk_bundle):
-        session = create_session()
-        try:
-            ret = session.query(Bundle).filter(self.bundle.c.id == fk_bundle).first().toH()
-        except:
-            self.logger.info("Bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
-            return [None, []]
-        try:
-            cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands.c.order_in_bundle).all())
-        except:
-            self.logger.info("Commands for bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
-            return [ret, []]
-        session.close()
-        try:
-            ret['creation_date'] = cmds[0]['creation_date']
-        except:
-            ret['creation_date'] = ''
-        return [ret, cmds]
+    #def getBundle(self, ctx, fk_bundle):
+        #session = create_session()
+        #try:
+            #ret = session.query(Bundle).filter(self.bundle.c.id == fk_bundle).first().toH()
+        #except:
+            #self.logger.info("Bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
+            #return [None, []]
+        #try:
+            #cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands.c.order_in_bundle).all())
+        #except:
+            #self.logger.info("Commands for bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
+            #return [ret, []]
+        #session.close()
+        #try:
+            #ret['creation_date'] = cmds[0]['creation_date']
+        #except:
+            #ret['creation_date'] = ''
+        #return [ret, cmds]
 
     @DatabaseHelper._session
     def isCommandsCconvergenceType(self, session, ctx, cmd_id):

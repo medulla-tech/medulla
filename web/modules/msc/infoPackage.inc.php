@@ -104,8 +104,8 @@ if (!empty($submod)) {
     $tab = new Tab("grouptablaunch", _T("MSC launch tab for a group", "msc"));
     $page->addTab($tab);
 
-    $tab = new Tab("grouptabbundle", _T("MSC bundle tab for a group", "msc"));
-    $page->addTab($tab);
+//     $tab = new Tab("grouptabbundle", _T("MSC bundle tab for a group", "msc"));
+//     $page->addTab($tab);
 
     $tab = new Tab("grouptablogs", _T("MSC logs tab for a group", "msc"));
     $page->addTab($tab);

@@ -401,15 +401,15 @@ class RpcProxy(RpcProxyI):
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
         return mmc.plugins.msc.package_api.SendPackageCommand(ctx, pid, target, params, mode, gid, proxies = proxy, cmd_type = cmd_type).send()
 
-    def add_bundle_api(self, porders, target, params, mode, gid = None, proxy = []):
-        ctx = self.currentContext
-        if gid:
-            target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
-        g = mmc.plugins.msc.package_api.SendBundleCommand(ctx, porders, target, params, mode, gid, proxy)
-        g.deferred = defer.Deferred()
-        g.send()
-        g.deferred.addCallbacks(xmlrpcCleanup, lambda err: err)
-        return g.deferred
+    #def add_bundle_api(self, porders, target, params, mode, gid = None, proxy = []):
+        #ctx = self.currentContext
+        #if gid:
+            #target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
+        #g = mmc.plugins.msc.package_api.SendBundleCommand(ctx, porders, target, params, mode, gid, proxy)
+        #g.deferred = defer.Deferred()
+        #g.send()
+        #g.deferred.addCallbacks(xmlrpcCleanup, lambda err: err)
+        #return g.deferred
 
     def get_id_command_on_host(self, id_command):
         ctx = self.currentContext
@@ -655,9 +655,9 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandsHistory(ctx, coh_id))
 
-    def get_bundle(self, bundle_id):
-        ctx = self.currentContext
-        return xmlrpcCleanup2(MscDatabase().getBundle(ctx, bundle_id))
+    #def get_bundle(self, bundle_id):
+        #ctx = self.currentContext
+        #return xmlrpcCleanup2(MscDatabase().getBundle(ctx, bundle_id))
 
     def get_commands(self, cmd_id):
         ctx = self.currentContext
