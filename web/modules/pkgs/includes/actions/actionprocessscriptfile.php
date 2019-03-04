@@ -91,15 +91,11 @@ extract($_POST);
         <tr>
             <th>Script</th>
             <th>
-            <?php 
+            <?php
                 if (isset($script)){
-                    $script = base64_decode($script, true);
-                    if( $script ==  False){
+                    if( base64_decode($script, true) != false){
                         $script = base64_decode($script);
                     }
-                }
-                else{
-                    $script="";
                 }
             ?>
               <textarea name="script" cols="5" rows="5"><?php echo $script ;?></textarea>
