@@ -44,8 +44,8 @@ $submod->setDefaultPage("pkgs/pkgs/index");
 $page = new Page("index", _T('Show all packages', 'pkgs'));
 $submod->addPage($page);
 
-$page = new Page("bundleList", _T('Show all bundles', 'pkgs'));
-$submod->addPage($page);
+// $page = new Page("bundleList", _T('Show all bundles', 'pkgs'));
+// $submod->addPage($page);
 
 $page = new Page("add", _T('Add a package', 'pkgs'));
 $submod->addPage($page);
@@ -53,11 +53,11 @@ $submod->addPage($page);
 $page = new Page("edit", _T('Edit a package', 'pkgs'));
 $submod->addPage($page);
 
-$page = new Page("addBundle", _T('Add a bundle', 'pkgs'));
-$submod->addPage($page);
-
-$page = new Page("editBundle", _T('Edit a bundle', 'pkgs'));
-$submod->addPage($page);
+// $page = new Page("addBundle", _T('Add a bundle', 'pkgs'));
+// $submod->addPage($page);
+// 
+// $page = new Page("editBundle", _T('Edit a bundle', 'pkgs'));
+// $submod->addPage($page);
 
 $page = new Page("addXMPP", 'Add XMPP package');
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>False));

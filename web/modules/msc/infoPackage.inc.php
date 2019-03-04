@@ -119,8 +119,8 @@ if (!empty($submod)) {
     $tab = new Tab("tablaunch", _T("MSC launch tab for a machine", "msc"));
     $page->addTab($tab);
 
-    $tab = new Tab("tabbundle", _T("MSC bundle tab for a machine", "msc"));
-    $page->addTab($tab);
+//     $tab = new Tab("tabbundle", _T("MSC bundle tab for a machine", "msc"));
+//     $page->addTab($tab);
 
     $tab = new Tab("tablogs", _T("MSC logs tab for a machine", "msc"));
     $page->addTab($tab);

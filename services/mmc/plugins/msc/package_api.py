@@ -63,146 +63,146 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
         else:
             pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, credentials, self.server_addr)
 
-def get_default_bundle_name(bundle_elem_nb = 0):
-    localtime = time.localtime()
-    title = "Bundle (%d) - %04d/%02d/%02d %02d:%02d:%02d" % (
-        bundle_elem_nb,
-        localtime[0],
-        localtime[1],
-        localtime[2],
-        localtime[3],
-        localtime[4],
-        localtime[5]
-    )
-    return title
+#def get_default_bundle_name(bundle_elem_nb = 0):
+    #localtime = time.localtime()
+    #title = "Bundle (%d) - %04d/%02d/%02d %02d:%02d:%02d" % (
+        #bundle_elem_nb,
+        #localtime[0],
+        #localtime[1],
+        #localtime[2],
+        #localtime[3],
+        #localtime[4],
+        #localtime[5]
+    #)
+    #return title
 
-class SendBundleCommand:
-    def __init__(self, ctx, porders, targets, params, mode, gid = None, proxies = []):
-        self.ctx = ctx
-        self.porders = porders
-        self.targets = targets
-        self.params = params
-        self.mode = mode
-        self.gid = gid
-        self.bundle_id = None
-        self.proxies = proxies
-        self.pids = []
-        self.session = None
+#class SendBundleCommand:
+    #def __init__(self, ctx, porders, targets, params, mode, gid = None, proxies = []):
+        #self.ctx = ctx
+        #self.porders = porders
+        #self.targets = targets
+        #self.params = params
+        #self.mode = mode
+        #self.gid = gid
+        #self.bundle_id = None
+        #self.proxies = proxies
+        #self.pids = []
+        #self.session = None
 
-    def onError(self, error):
-        logging.getLogger().error("SendBundleCommand: %s", str(error))
-        if self.session:
-            # Rollback the transaction
-            self.session.rollback()
-            self.session.close()
-        return self.deferred.callback([])
+    #def onError(self, error):
+        #logging.getLogger().error("SendBundleCommand: %s", str(error))
+        #if self.session:
+            ## Rollback the transaction
+            #self.session.rollback()
+            #self.session.close()
+        #return self.deferred.callback([])
 
-    def sendResult(self, result):
-        return self.deferred.callback([self.bundle_id, result])
+    #def sendResult(self, result):
+        #return self.deferred.callback([self.bundle_id, result])
 
-    def send(self):
-        self.last_order = 0
-        self.first_order = len(self.porders)
-        for id in self.porders:
-            p_api, pid, order = self.porders[id]
-            self.pids.append(pid)
-            if int(order) > int(self.last_order):
-                self.last_order = order
-            if int(order) < int(self.first_order):
-                self.first_order = order
+    #def send(self):
+        #self.last_order = 0
+        #self.first_order = len(self.porders)
+        #for id in self.porders:
+            #p_api, pid, order = self.porders[id]
+            #self.pids.append(pid)
+            #if int(order) > int(self.last_order):
+                #self.last_order = order
+            #if int(order) < int(self.first_order):
+                #self.first_order = order
 
-        # treat bundle inventory and halt (put on the last command)
-        self.do_wol = self.params['do_wol']
-        self.do_imaging_menu = 'disable'
-        self.do_inventory = self.params['do_inventory']
-        self.issue_halt_to = self.params["issue_halt_to"]
+        ## treat bundle inventory and halt (put on the last command)
+        #self.do_wol = self.params['do_wol']
+        #self.do_imaging_menu = 'disable'
+        #self.do_inventory = self.params['do_inventory']
+        #self.issue_halt_to = self.params["issue_halt_to"]
 
-        # Build the list of all the different package APIs to connect to
-        self.p_apis = []
-        for p in self.porders:
-            p_api, _, _ = self.porders[p]
-            if p_api not in self.p_apis:
-                self.p_apis.append(p_api)
+        ## Build the list of all the different package APIs to connect to
+        #self.p_apis = []
+        #for p in self.porders:
+            #p_api, _, _ = self.porders[p]
+            #if p_api not in self.p_apis:
+                #self.p_apis.append(p_api)
 
-        self.packages = {}
-        self.ppaths = {}
-        self.packageApiLoop()
+        #self.packages = {}
+        #self.ppaths = {}
+        #self.packageApiLoop()
 
-    def packageApiLoop(self):
-        """
-        Loop over all packages package API to get package informations
-        """
-        if self.p_apis:
-            self.p_api = self.p_apis.pop()
-            # Get package ID linked to the selected package API
-            self.p_api_pids = []
-            for p in self.porders:
-                p_api, pid, _ = self.porders[p]
-                if p_api == self.p_api:
-                    self.p_api_pids.append(pid)
+    #def packageApiLoop(self):
+        #"""
+        #Loop over all packages package API to get package informations
+        #"""
+        #if self.p_apis:
+            #self.p_api = self.p_apis.pop()
+            ## Get package ID linked to the selected package API
+            #self.p_api_pids = []
+            #for p in self.porders:
+                #p_api, pid, _ = self.porders[p]
+                #if p_api == self.p_api:
+                    #self.p_api_pids.append(pid)
 
-            d = PackageGetA(self.p_api).getPackagesDetail(self.p_api_pids)
-            d.addCallbacks(self.setPackagesDetail, self.onError)
-        else:
-            self.createBundle()
+            #d = PackageGetA(self.p_api).getPackagesDetail(self.p_api_pids)
+            #d.addCallbacks(self.setPackagesDetail, self.onError)
+        #else:
+            #self.createBundle()
 
-    def setPackagesDetail(self, packages):
-        for i in range(len(self.p_api_pids)):
-            self.packages[self.p_api_pids[i]] = packages[i]
-        d = PackageGetA(self.p_api).getLocalPackagesPath(self.p_api_pids)
-        d.addCallbacks(self.setLocalPackagesPath, self.onError)
+    #def setPackagesDetail(self, packages):
+        #for i in range(len(self.p_api_pids)):
+            #self.packages[self.p_api_pids[i]] = packages[i]
+        #d = PackageGetA(self.p_api).getLocalPackagesPath(self.p_api_pids)
+        #d.addCallbacks(self.setLocalPackagesPath, self.onError)
 
-    def setLocalPackagesPath(self, ppaths):
-        for i in range(len(self.p_api_pids)):
-            self.ppaths[self.p_api_pids[i]] = ppaths[i]
-        self.packageApiLoop()
+    #def setLocalPackagesPath(self, ppaths):
+        #for i in range(len(self.p_api_pids)):
+            #self.ppaths[self.p_api_pids[i]] = ppaths[i]
+        #self.packageApiLoop()
 
-    def createBundle(self):
-        # treat bundle title
-        try:
-            title = self.params['bundle_title']
-        except:
-            title = '' # ie. "no title"
-        self.params['bundle_title'] = None
+    #def createBundle(self):
+        ## treat bundle title
+        #try:
+            #title = self.params['bundle_title']
+        #except:
+            #title = '' # ie. "no title"
+        #self.params['bundle_title'] = None
 
-        if title == None or title == '':
-            title = get_default_bundle_name(len(self.porders))
-        # Insert bundle object
-        self.session = create_session()
-        bundle = MscDatabase().createBundle(title, self.session)
+        #if title == None or title == '':
+            #title = get_default_bundle_name(len(self.porders))
+        ## Insert bundle object
+        #self.session = create_session()
+        #bundle = MscDatabase().createBundle(title, self.session)
 
-        commands = []
-        for p in self.porders:
-            p_api, pid, order = self.porders[p]
-            pinfos = self.packages[pid]
-            ppath = self.ppaths[pid]
-            params = self.params.copy()
+        #commands = []
+        #for p in self.porders:
+            #p_api, pid, order = self.porders[p]
+            #pinfos = self.packages[pid]
+            #ppath = self.ppaths[pid]
+            #params = self.params.copy()
 
-            if int(order) == int(self.first_order):
-                params['do_wol'] = self.do_wol
-            else:
-                params['do_wol'] = 'off'
+            #if int(order) == int(self.first_order):
+                #params['do_wol'] = self.do_wol
+            #else:
+                #params['do_wol'] = 'off'
 
 
-            # override possible choice of do_reboot from the gui by the one declared in the package
-            # (in bundle mode, the gui does not offer enough choice to say when to reboot)
-            params['do_reboot'] = pinfos['do_reboot']
-            cmd = prepareCommand(pinfos, params)
-            command = cmd.copy()
-            command['package_id'] = pid
-            command['connect_as'] = 'root'
-            command['mode'] = self.mode
-            command['root'] = ppath
-            command['order_in_bundle'] = order
-            command['proxies'] = self.proxies
-            command['fk_bundle'] = bundle.id
-            command['do_windows_update'] = "disable"
-            commands.append(command)
-        add = MscDatabase().addCommands(self.ctx, self.session, self.targets, commands, self.gid)
-        if type(add) != int:
-            add.addCallbacks(self.sendResult, self.onError)
-        else:
-            self.onError("Error while creating the bundle")
+            ## override possible choice of do_reboot from the gui by the one declared in the package
+            ## (in bundle mode, the gui does not offer enough choice to say when to reboot)
+            #params['do_reboot'] = pinfos['do_reboot']
+            #cmd = prepareCommand(pinfos, params)
+            #command = cmd.copy()
+            #command['package_id'] = pid
+            #command['connect_as'] = 'root'
+            #command['mode'] = self.mode
+            #command['root'] = ppath
+            #command['order_in_bundle'] = order
+            #command['proxies'] = self.proxies
+            #command['fk_bundle'] = bundle.id
+            #command['do_windows_update'] = "disable"
+            #commands.append(command)
+        #add = MscDatabase().addCommands(self.ctx, self.session, self.targets, commands, self.gid)
+        #if type(add) != int:
+            #add.addCallbacks(self.sendResult, self.onError)
+        #else:
+            #self.onError("Error while creating the bundle")
 
 def prepareCommand(pinfos, params):
     """

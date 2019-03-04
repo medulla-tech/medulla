@@ -67,9 +67,9 @@ function get_command_history($coh_id) {
     return xmlCall('msc.get_commands_history', array($coh_id));
 }
 
-function bundle_detail($bundle_id) {
-    return xmlCall('msc.get_bundle', array($bundle_id));
-}
+// function bundle_detail($bundle_id) {
+//     return xmlCall('msc.get_bundle', array($bundle_id));
+// }
 
 function command_detail($cmd_id) {
     return xmlCall('msc.get_commands', array($cmd_id));
@@ -83,9 +83,9 @@ function add_command_api($pid, $target, $params, $mode, $gid = null, $proxy = ar
     return xmlCall('msc.add_command_api', array($pid, $target, $params, $mode, $gid, $proxy, $cmd_type));
 }
 
-function add_bundle_api($porders, $target, $params, $mode, $gid = null, $proxy = array()) {
-    return xmlCall('msc.add_bundle_api', array($porders, $target, $params, $mode, $gid, $proxy));
-}
+// function add_bundle_api($porders, $target, $params, $mode, $gid = null, $proxy = array()) {
+//     return xmlCall('msc.add_bundle_api', array($porders, $target, $params, $mode, $gid, $proxy));
+// }
 
 function add_command_quick($cmd, $hosts, $desc, $gid = null) {
     return xmlCall('msc.add_command_quick', array($cmd, $hosts, $desc, $gid));
