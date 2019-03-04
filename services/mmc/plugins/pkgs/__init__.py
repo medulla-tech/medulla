@@ -299,7 +299,7 @@ def putPackageDetail( package, need_assign = True):
     result = [True, package['id'], packages_id_input_dir, package]
     return result
 
-def pkgs_getTemporaryFiles(pp_api_id):
+def pkgs_getTemporaryFiles():
     logging.getLogger().debug("getTemporaryFiles")
     ret = []
     tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
