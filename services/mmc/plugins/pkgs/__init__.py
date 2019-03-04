@@ -24,6 +24,7 @@
 
 import logging
 import os
+from os.path import basename
 import shutil
 import requests
 import json
@@ -59,6 +60,7 @@ import traceback
 from mmc.plugins.xmppmaster.master.lib.utils import simplecommand, name_random
 from unidecode import unidecode
 import uuid
+from xml.dom import minidom
 
 logger = logging.getLogger()
 
