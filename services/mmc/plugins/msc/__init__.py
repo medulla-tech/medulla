@@ -54,7 +54,7 @@ from mmc.plugins.dyngroup.config import DGConfig
 import mmc.plugins.msc.actions
 import mmc.plugins.msc.keychain
 import mmc.plugins.msc.package_api
-from mmc.plugins.msc.package_api import get_default_bundle_name
+#from mmc.plugins.msc.package_api import get_default_bundle_name
 
 # health check
 from mmc.plugins.msc.health import scheduleCheckStatus
