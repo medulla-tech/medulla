@@ -30,6 +30,7 @@ import requests
 import json
 import tempfile
 import urllib2
+import re
 from contextlib import closing
 from ConfigParser import ConfigParser
 from base64 import b64encode, b64decode
@@ -311,7 +312,6 @@ def pkgs_getTemporaryFiles():
     return ret
 
 def getTemporaryFileSuggestedCommand1(tempdir):
-    logger.info("hehe getTemporaryFileSuggestedCommand1")
     tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
     ret = {
             "version": '0.1',
@@ -327,6 +327,52 @@ def getTemporaryFileSuggestedCommand1(tempdir):
                     command = c.getCommand()
                     if command is not None:
                         suggestedCommand.append(command)
+                    else:
+                        # No proposition found : try with the new parser
+                        rules = PkgsDatabase().list_all_extensions()
+                        filename = fileadd.split("/")[-1]
+                        filebasename = filename.split(".")[0]
+                        fileextension = filename.split(".")[-1]
+
+                        for rule in rules:
+                            proposition = ''
+                            test_proposition = True
+                            proposition = rule['proposition']
+
+                            if 'name' in rule and rule['name'] != "":
+                                if re.search(rule['name'], filebasename, re.IGNORECASE):
+                                    test_proposition = test_proposition and True
+                                else:
+                                    test_proposition = test_proposition and False
+
+                            if 'extension' in rule and rule['extension'] != "":
+                                if re.search(rule['extension'], fileextension, re.IGNORECASE):
+                                    test_proposition = test_proposition and True
+                                else:
+                                    test_proposition = test_proposition and False
+
+                            if 'magic_command' in rule and rule['magic_command'] != "":
+                                pass
+
+                            if 'bang' in rule and rule['bang'] != "":
+                                pass
+
+                            if 'file' in rule and rule['file'] != "":
+                                pass
+
+                            if 'string_head' in rule and rule['string_head'] != "":
+                                pass
+
+                            if 'string_tail' in rule and rule['string_tail'] != "":
+                                pass
+
+                            # If all the criterion's rule are validate, no need to test an another rule
+                            # This one is corresponding with the
+                            if test_proposition is True:
+                                logging.getLogger().warning(proposition, filename)
+                                ret['commandcmd'] = proposition% filename
+                                return ret
+
     ret['commandcmd'] = '\n'.join(suggestedCommand)
     return ret
 

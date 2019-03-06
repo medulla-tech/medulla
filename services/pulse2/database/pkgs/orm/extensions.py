@@ -78,3 +78,23 @@ class Extensions(object):
             return self.proposition
         else:
             return ""
+
+    def getRule_order(self):
+        if self.rule_order is not None:
+            return self.rule_order
+        else:
+            return 0
+
+    def to_array(self):
+        return {
+            'id': self.getId(),
+            'order': self.getRule_order(),
+            'name': self.getName(),
+            'extension':self.getExtension(),
+            'magic_command': self.getMagic_command(),
+            'bang': self.getBang(),
+            'file': self.getFile(),
+            'string_head': self.getString_head(),
+            'string_tail': self.getString_tail(),
+            'proposition': self.getProposition()
+        }

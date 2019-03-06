@@ -250,10 +250,10 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def list_all_extensions(self, session):
-        ret = session.query(Extensions).all()
+        ret = session.query(Extensions).order_by(asc(Extensions.rule_order)).all()
         extensions = []
         for extension in ret:
-            extensions.append(extension.getId())
+            extensions.append(extension.to_array())
         return extensions
 
     @DatabaseHelper._sessionm

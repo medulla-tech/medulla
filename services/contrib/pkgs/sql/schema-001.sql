@@ -36,8 +36,6 @@ CREATE TABLE IF NOT EXISTS version (
   Number tinyint(4) unsigned NOT NULL default '0'
 );
 
-INSERT INTO version VALUES( '1' );
-
 CREATE TABLE IF NOT EXISTS `pkgs`.`packages`
 (
   id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -73,9 +71,9 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`packages`
   (
     id            int auto_increment
       primary key,
+    rule_order    int null          comment 'The order of the rule determines which one is run firstly',
     name          varchar(255) null comment 'basename for software',
     extension     varchar(255) null comment 'Ext file or empty',
-    os            varchar(255) null comment 'Specifies the os of the file',
     magic_command varchar(255) null comment 'Magic number of the file',
     bang          varchar(255) null comment 'The bang file can be declared',
     file          varchar(255) null comment 'Elements found by the file command',
@@ -103,5 +101,10 @@ create table if not exists syncthingsync
   relayserver_jid varchar(255)                          not null,
   watching        varchar(3)  default 'yes'             null
 );
+
+INSERT INTO extensions VALUES(NULL, 1, "firefox", "exe", "", "", "", "", "", '"%s" -ms');
+INSERT INTO extensions VALUES(NULL, 2, "7z", "exe", "", "", "", "", "", "", '"%s" /S');
+
+INSERT INTO version VALUES( '1' );
 
 COMMIT;
