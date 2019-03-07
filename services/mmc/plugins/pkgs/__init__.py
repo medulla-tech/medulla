@@ -349,7 +349,14 @@ def getTemporaryFileSuggestedCommand1(tempdir):
                                 pass
 
                             if 'bang' in rule and rule['bang'] != "":
-                                pass
+                                line = ""
+                                with open(fileadd) as file:
+                                    # Read the first line of the file
+                                    line = file.readline()
+                                    file.close()
+
+                                if re.search(rule['bang'], line, re.IGNORECASE) == None:
+                                    test_proposition = False
 
                             if 'file' in rule and rule['file'] != "":
                                 result = simplecommand("file %s"%fileadd.replace(" ", "\ "))
