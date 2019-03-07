@@ -340,17 +340,11 @@ def getTemporaryFileSuggestedCommand1(tempdir):
                             proposition = rule['proposition']
 
                             if 'name' in rule and rule['name'] != "":
-                                if re.search(rule['name'], filebasename, re.IGNORECASE):
-                                    test_proposition = test_proposition and True
-                                else:
-                                    test_proposition = test_proposition and False
-
+                                if not re.search(rule['name'], filebasename, re.IGNORECASE):
+                                    test_proposition = False
                             if 'extension' in rule and rule['extension'] != "":
-                                if re.search(rule['extension'], fileextension, re.IGNORECASE):
-                                    test_proposition = test_proposition and True
-                                else:
-                                    test_proposition = test_proposition and False
-
+                                if not re.search(rule['extension'], fileextension, re.IGNORECASE):
+                                    test_proposition = False
                             if 'magic_command' in rule and rule['magic_command'] != "":
                                 pass
 
@@ -358,7 +352,13 @@ def getTemporaryFileSuggestedCommand1(tempdir):
                                 pass
 
                             if 'file' in rule and rule['file'] != "":
-                                pass
+                                result = simplecommand("file %s"%fileadd.replace(" ", "\ "))
+                                if result['code'] == 0:
+                                    result = result['result'][0]
+                                    if re.search(rule['file'], result, re.IGNORECASE) is None:
+                                        test_proposition = False
+                                else:
+                                    test_proposition = False
 
                             if 'string_head' in rule and rule['string_head'] != "":
                                 pass
