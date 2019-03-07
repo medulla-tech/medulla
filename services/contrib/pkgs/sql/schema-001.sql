@@ -77,10 +77,9 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`packages`
     magic_command varchar(255) null comment 'Magic number of the file',
     bang          varchar(255) null comment 'The bang file can be declared',
     file          varchar(255) null comment 'Elements found by the file command',
-    string_head   varchar(255) null comment 'Elements found by the strings command in the head of the file',
-    string_tail   varchar(255) null comment 'Elements found by the strings command in the end of the file.
-  10 lines are efficient',
-    proposition   varchar(255) null comment 'The proposed result for the researched file'
+    strings       varchar(255) null comment 'Elements found by the strings command in the head of the file',
+    proposition   varchar(255) null comment 'The proposed result for the researched file',
+    description   varchar(255) null comment 'A description for the rule'
   );
 
 create table if not exists dependencies
@@ -102,8 +101,11 @@ create table if not exists syncthingsync
   watching        varchar(3)  default 'yes'             null
 );
 
-INSERT INTO extensions VALUES(NULL, 1, "firefox", "exe", "", "", "", "", "", '"%s" -ms');
-INSERT INTO extensions VALUES(NULL, 2, "7z", "exe", "", "", "", "", "", "", '"%s" /S');
+INSERT INTO extensions VALUES(NULL, 1, "firefox", "exe", "", "", "", "", '"%s" -ms', "Rule for Firefox");
+INSERT INTO extensions VALUES(NULL, 2, "7z", "exe", "", "", "", "7zipInstall", '"%s" /S', "Rule for 7-zip");
+insert into extensions values(null, 3, "", "", "", "bash", "", "", './"%s"', "Rule for bash scripts");
+insert into extensions values(null, 4, '', 'exe', '', '', ' Nullsoft', '', '"%s" /S', 'Rule for NSIS installer');
+insert into extensions values(null, 5, '', 'exe', '', '', '', 'JR.Inno.Setup', '"%s" /SP /VERYSILENT /NORESTART', "Rule for Inno installer");
 
 INSERT INTO version VALUES( '1' );
 

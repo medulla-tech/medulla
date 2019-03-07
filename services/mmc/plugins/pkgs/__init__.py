@@ -342,9 +342,11 @@ def getTemporaryFileSuggestedCommand1(tempdir):
                             if 'name' in rule and rule['name'] != "":
                                 if not re.search(rule['name'], filebasename, re.IGNORECASE):
                                     test_proposition = False
+
                             if 'extension' in rule and rule['extension'] != "":
                                 if not re.search(rule['extension'], fileextension, re.IGNORECASE):
                                     test_proposition = False
+
                             if 'magic_command' in rule and rule['magic_command'] != "":
                                 pass
 
@@ -367,11 +369,13 @@ def getTemporaryFileSuggestedCommand1(tempdir):
                                 else:
                                     test_proposition = False
 
-                            if 'string_head' in rule and rule['string_head'] != "":
-                                pass
-
-                            if 'string_tail' in rule and rule['string_tail'] != "":
-                                pass
+                            if 'strings' in rule and rule['strings'] != "":
+                                result = simplecommand("strings %s |grep %s"%(fileadd.replace(" ", "\ "), rule['strings']))
+                                if result['code'] == 0:
+                                    if len(result['result']) == 0:
+                                        test_proposition = False
+                                else:
+                                    test_proposition = False
 
                             # If all the criterion's rule are validate, no need to test an another rule
                             # This one is corresponding with the

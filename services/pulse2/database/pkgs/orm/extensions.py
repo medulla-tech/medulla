@@ -31,6 +31,12 @@ class Extensions(object):
         else:
             return 0
 
+    def getRule_order(self):
+        if self.rule_order is not None:
+            return self.rule_order
+        else:
+            return 0
+
     def getName(self):
         if self.name is not None:
             return self.name
@@ -61,15 +67,9 @@ class Extensions(object):
         else:
             return ""
 
-    def getString_head(self):
-        if self.string_head is not None:
-            return self.string_head
-        else:
-            return ""
-
-    def getString_tail(self):
-        if self.string_tail is not None:
-            return self.string_tail
+    def getStrings(self):
+        if self.strings is not None:
+            return self.strings
         else:
             return ""
 
@@ -79,22 +79,22 @@ class Extensions(object):
         else:
             return ""
 
-    def getRule_order(self):
-        if self.rule_order is not None:
-            return self.rule_order
+    def getDescription(self):
+        if self.description is not None:
+            return self.description
         else:
-            return 0
+            return ""
 
     def to_array(self):
         return {
             'id': self.getId(),
-            'order': self.getRule_order(),
+            'rule_order': self.getRule_order(),
             'name': self.getName(),
             'extension':self.getExtension(),
             'magic_command': self.getMagic_command(),
             'bang': self.getBang(),
             'file': self.getFile(),
-            'string_head': self.getString_head(),
-            'string_tail': self.getString_tail(),
-            'proposition': self.getProposition()
+            'strings': self.getStrings(),
+            'proposition': self.getProposition(),
+            'description': self.getDescription()
         }
