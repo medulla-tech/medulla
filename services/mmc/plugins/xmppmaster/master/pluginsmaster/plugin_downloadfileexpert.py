@@ -154,18 +154,16 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
 
 
 def scpfile(scr, dest):
-    if reverbool:
-
-        cmdpre = "scp -C -rp3 "\
-                    "-o IdentityFile=/root/.ssh/id_rsa "\
-                    "-o StrictHostKeyChecking=no "\
-                    "-o LogLevel=ERROR "\
-                    "-o UserKnownHostsFile=/dev/null "\
-                    "-o Batchmode=yes "\
-                    "-o PasswordAuthentication=no "\
-                    "-o ServerAliveInterval=10 "\
-                    "-o CheckHostIP=no "\
-                    "-o ConnectTimeout=10 "
+    cmdpre = "scp -C -rp3 "\
+                "-o IdentityFile=/root/.ssh/id_rsa "\
+                "-o StrictHostKeyChecking=no "\
+                "-o LogLevel=ERROR "\
+                "-o UserKnownHostsFile=/dev/null "\
+                "-o Batchmode=yes "\
+                "-o PasswordAuthentication=no "\
+                "-o ServerAliveInterval=10 "\
+                "-o CheckHostIP=no "\
+                "-o ConnectTimeout=10 "
     cmdpre =  "%s %s %s"%(cmdpre, scr, dest)
     return cmdpre
 
