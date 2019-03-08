@@ -41,6 +41,7 @@ from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 plugin = {"VERSION": "1.0", "NAME": "downloadfileexpert", "TYPE": "master"}
 
+
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug("=====================================================")
     logging.getLogger().debug(plugin)
@@ -150,3 +151,21 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     except Exception as e:
         logging.getLogger().error("Error in plugin %s : %s" % (plugin['NAME'], str(e)))
         traceback.print_exc(file=sys.stdout)
+
+
+def scpfile(scr, dest):
+    if reverbool:
+
+        cmdpre = "scp -C -rp3 "\
+                    "-o IdentityFile=/root/.ssh/id_rsa "\
+                    "-o StrictHostKeyChecking=no "\
+                    "-o LogLevel=ERROR "\
+                    "-o UserKnownHostsFile=/dev/null "\
+                    "-o Batchmode=yes "\
+                    "-o PasswordAuthentication=no "\
+                    "-o ServerAliveInterval=10 "\
+                    "-o CheckHostIP=no "\
+                    "-o ConnectTimeout=10 "
+    cmdpre =  "%s %s %s"%(cmdpre, scr, dest)
+    return cmdpre
+
