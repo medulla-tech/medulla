@@ -37,6 +37,12 @@ class Extensions(object):
         else:
             return 0
 
+    def getRule_name(self):
+        if self.rule_name is not None:
+            return self.rule_name
+        else:
+            return ""
+
     def getName(self):
         if self.name is not None:
             return self.name
@@ -89,6 +95,7 @@ class Extensions(object):
         return {
             'id': self.getId(),
             'rule_order': self.getRule_order(),
+            'rule_name': self.getRule_name(),
             'name': self.getName(),
             'extension':self.getExtension(),
             'magic_command': self.getMagic_command(),

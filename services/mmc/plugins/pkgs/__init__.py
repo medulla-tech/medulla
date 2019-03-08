@@ -380,7 +380,7 @@ def getTemporaryFileSuggestedCommand1(tempdir):
                             # If all the criterion's rule are validate, no need to test an another rule
                             # This one is corresponding with the
                             if test_proposition is True:
-                                logging.getLogger().warning(proposition, filename)
+                                logging.getLogger().debug("Rule # %s found the proposition :%s ",str(rule['id']), proposition%filename)
                                 ret['commandcmd'] = proposition% filename
                                 return ret
 

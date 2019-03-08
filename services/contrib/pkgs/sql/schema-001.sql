@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`packages`
     id            int auto_increment
       primary key,
     rule_order    int null          comment 'The order of the rule determines which one is run firstly',
+    rule_name     varchar(255) null comment 'The rule name',
     name          varchar(255) null comment 'basename for software',
     extension     varchar(255) null comment 'Ext file or empty',
     magic_command varchar(255) null comment 'Magic number of the file',
@@ -101,11 +102,11 @@ create table if not exists syncthingsync
   watching        varchar(3)  default 'yes'             null
 );
 
-INSERT INTO extensions VALUES(NULL, 1, "firefox", "exe", "", "", "", "", '"%s" -ms', "Rule for Firefox");
-INSERT INTO extensions VALUES(NULL, 2, "7z", "exe", "", "", "", "7zipInstall", '"%s" /S', "Rule for 7-zip");
-insert into extensions values(null, 3, "", "", "", "bash", "", "", './"%s"', "Rule for bash scripts");
-insert into extensions values(null, 4, '', 'exe', '', '', ' Nullsoft', '', '"%s" /S', 'Rule for NSIS installer');
-insert into extensions values(null, 5, '', 'exe', '', '', '', 'JR.Inno.Setup', '"%s" /SP /VERYSILENT /NORESTART', "Rule for Inno installer");
+INSERT INTO extensions VALUES(NULL, 1, "Firefox Rule", "firefox", "exe", "", "", "", "", '"%s" -ms', "Rule for Firefox");
+INSERT INTO extensions VALUES(NULL, 2, "7zip Rule","7z", "exe", "", "", "", "7zipInstall", '"%s" /S', "Rule for 7-zip");
+insert into extensions values(null, 3, "Bash Rule","", "", "", "bash", "", "", './"%s"', "Rule for bash scripts");
+insert into extensions values(null, 4, "Nullsoft Rule", '', 'exe', '', '', ' Nullsoft', '', '"%s" /S', 'Rule for NSIS installer');
+insert into extensions values(null, 5, "InnoSetup Rule", '', 'exe', '', '', '', 'JR.Inno.Setup', '"%s" /SP /VERYSILENT /NORESTART', "Rule for Inno installer");
 
 INSERT INTO version VALUES( '1' );
 
