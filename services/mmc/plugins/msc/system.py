@@ -23,20 +23,20 @@
 
 from mmc.support.mmctools import shLaunchDeferred
 
-def sysPing(ip, port = 22):
-    """
-    This function all to ping machines. Default port is 22
+#def sysPing(ip, port = 22):
+    #"""
+    #This function all to ping machines. Default port is 22
 
-    :param ip: IP of the machine to ping
-    :param port: Port to ping ( default 22 )
+    #:param ip: IP of the machine to ping
+    #:param port: Port to ping ( default 22 )
 
-    """
-    def cb(shprocess):
-        return shprocess.exitCode == 0
+    #"""
+    #def cb(shprocess):
+        #return shprocess.exitCode == 0
 
-    if ip == "":
-         return False;
+    #if ip == "":
+         #return False;
 
-    d = shLaunchDeferred("ping -c 1 '%s'" % ip)
-    d.addCallback(cb)
-    return d
+    #d = shLaunchDeferred("ping -c 1 '%s'" % ip)
+    #d.addCallback(cb)
+    #return d

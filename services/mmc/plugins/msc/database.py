@@ -39,7 +39,7 @@ from sqlalchemy.orm import create_session, object_session
 
 # MMC modules
 from mmc.plugins.base.computers import ComputerManager
-from mmc.plugins.msc.mirror_api import MirrorApi
+#from mmc.plugins.msc.mirror_api import MirrorApi
 from mmc.plugins.msc.scheduler_api import SchedulerApi
 from mmc.database.database_helper import DatabaseHelper
 
@@ -702,48 +702,48 @@ class MscDatabase(msc.MscDatabase):
             is_quick_action
         )
 
-    def startBundle(self, fk_bundle):
-        """
-        Start a bundle. In fact we set all its related commands_on_host to the
-        scheduled state, and set next_launch_date to immediately.
-        """
-        conn = self.getDbConnection()
-        trans = conn.begin()
-        c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
-        c_ids = map(lambda x:x[0], c_ids)
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state = "scheduled", next_launch_date = "0000-00-00 00:00:00")
-        trans.commit()
+    #def startBundle(self, fk_bundle):
+        #"""
+        #Start a bundle. In fact we set all its related commands_on_host to the
+        #scheduled state, and set next_launch_date to immediately.
+        #"""
+        #conn = self.getDbConnection()
+        #trans = conn.begin()
+        #c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
+        #c_ids = map(lambda x:x[0], c_ids)
+        #self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state = "scheduled", next_launch_date = "0000-00-00 00:00:00")
+        #trans.commit()
 
-    def stopBundle(self, fk_bundle):
-        """
-        Stop a bundle, by stopping all its related commands_on_host.
-        """
-        conn = self.getDbConnection()
-        trans = conn.begin()
-        c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
-        c_ids = map(lambda x:x[0], c_ids)
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state ="stopped", next_launch_date = "2031-12-31 23:59:59")
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute(uploaded = "FAILED")
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute(executed = "FAILED")
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute(deleted = "FAILED")
-        trans.commit()
+    #def stopBundle(self, fk_bundle):
+        #"""
+        #Stop a bundle, by stopping all its related commands_on_host.
+        #"""
+        #conn = self.getDbConnection()
+        #trans = conn.begin()
+        #c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
+        #c_ids = map(lambda x:x[0], c_ids)
+        #self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.current_state != 'done', self.commands_on_host.c.current_state != 'failed')).execute(current_state ="stopped", next_launch_date = "2031-12-31 23:59:59")
+        #self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.uploaded == 'WORK_IN_PROGRESS')).execute(uploaded = "FAILED")
+        #self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.executed == 'WORK_IN_PROGRESS')).execute(executed = "FAILED")
+        #self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids), self.commands_on_host.c.deleted == 'WORK_IN_PROGRESS')).execute(deleted = "FAILED")
+        #trans.commit()
 
 
-    def pauseBundle(self, fk_bundle):
-        """
-        Pause a bundle, by pausing all its related commands_on_host.
-        """
-        conn = self.getDbConnection()
-        trans = conn.begin()
-        c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
-        c_ids = map(lambda x:x[0], c_ids)
-        self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids),\
-                self.commands_on_host.c.current_state != 'done',\
-                self.commands_on_host.c.current_state != 'failed',\
-                self.commands_on_host.c.current_state != 'stop',\
-                self.commands_on_host.c.current_state != 'stopped'
-                )).execute(current_state ="pause")
-        trans.commit()
+    #def pauseBundle(self, fk_bundle):
+        #"""
+        #Pause a bundle, by pausing all its related commands_on_host.
+        #"""
+        #conn = self.getDbConnection()
+        #trans = conn.begin()
+        #c_ids = select([self.commands.c.id], self.commands.c.fk_bundle == fk_bundle).execute()
+        #c_ids = map(lambda x:x[0], c_ids)
+        #self.commands_on_host.update(and_(self.commands_on_host.c.fk_commands.in_(c_ids),\
+                #self.commands_on_host.c.current_state != 'done',\
+                #self.commands_on_host.c.current_state != 'failed',\
+                #self.commands_on_host.c.current_state != 'stop',\
+                #self.commands_on_host.c.current_state != 'stopped'
+                #)).execute(current_state ="pause")
+        #trans.commit()
 
     def startCommand(self, c_id):
         """
@@ -840,146 +840,146 @@ class MscDatabase(msc.MscDatabase):
         machines_in_deploy_group = ComputerManager().getRestrictedComputersList(ctx, filt={'gid': convergence_deploy_group_id}, justId=True)
         return [x for x in machines_in_deploy_group if x not in machines_in_command]
 
-    def addMachinesToCommand(self,
-                             ctx,
-                             cmd_id,
-                             targets,
-                             group_id='',
-                             root=None,
-                             mode='push',
-                             proxies=[],
-                             phases={}
-            ):
-        """
-        Main func to inject a new command in our MSC database
+    #def addMachinesToCommand(self,
+                             #ctx,
+                             #cmd_id,
+                             #targets,
+                             #group_id='',
+                             #root=None,
+                             #mode='push',
+                             #proxies=[],
+                             #phases={}
+            #):
+        #"""
+        #Main func to inject a new command in our MSC database
 
-        Return a Deferred object resulting to the command id
-        """
-        cmd = self.getCommands(ctx, cmd_id)
-        if root == None:
-            root = self.config.repopath
+        #Return a Deferred object resulting to the command id
+        #"""
+        #cmd = self.getCommands(ctx, cmd_id)
+        #if root == None:
+            #root = self.config.repopath
 
-        targets_to_insert = []
-        targets_name = []
-        coh_to_insert = []
-        target_uuids = targets
-        existing_coh_ids = [coh.id for coh in cmd.getCohIds(target_uuids=target_uuids)]
+        #targets_to_insert = []
+        #targets_name = []
+        #coh_to_insert = []
+        #target_uuids = targets
+        #existing_coh_ids = [coh.id for coh in cmd.getCohIds(target_uuids=target_uuids)]
 
-        targets, targetsdata = self.getComputersData(ctx, targets, group_id)
-        #if targets ==False:
-        if len(targets) == 0:
-            self.logger.error("The machine list is empty, does your machines have a network interface ?")
-            return -2
+        #targets, targetsdata = self.getComputersData(ctx, targets, group_id)
+        ##if targets ==False:
+        #if len(targets) == 0:
+            #self.logger.error("The machine list is empty, does your machines have a network interface ?")
+            #return -2
 
-        def cbGetTargetsMirrors(schedulers):
-            args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
-            d1 = MirrorApi().getMirrors(args)
-            d1.addCallback(cbGetTargetsFallbackMirrors, schedulers)
-            d1.addErrback(lambda err: err)
-            return d1
+        #def cbGetTargetsMirrors(schedulers):
+            #args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
+            #d1 = MirrorApi().getMirrors(args)
+            #d1.addCallback(cbGetTargetsFallbackMirrors, schedulers)
+            #d1.addErrback(lambda err: err)
+            #return d1
 
-        def cbGetTargetsFallbackMirrors(mirrors, schedulers):
-            args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
-            d2 = MirrorApi().getFallbackMirrors(args)
-            d2.addCallback(cbCreateTargets, mirrors, schedulers)
-            d2.addErrback(lambda err: err)
-            return d2
+        #def cbGetTargetsFallbackMirrors(mirrors, schedulers):
+            #args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
+            #d2 = MirrorApi().getFallbackMirrors(args)
+            #d2.addCallback(cbCreateTargets, mirrors, schedulers)
+            #d2.addErrback(lambda err: err)
+            #return d2
 
-        def cbPushModeCreateTargets(schedulers):
-            return cbCreateTargets(None, None, schedulers, push_pull = False)
+        #def cbPushModeCreateTargets(schedulers):
+            #return cbCreateTargets(None, None, schedulers, push_pull = False)
 
-        def cbCreateTargets(fbmirrors, mirrors, schedulers, push_pull = True):
-            for i in range(len(targets)):
-                if push_pull:
-                    # FIXME: we only take the the first mirrors
-                    mirror = mirrors[i]
-                    fallback = fbmirrors[i]
-                    uri = '%s://%s:%s%s' % (mirror['protocol'],
-                                            mirror['server'],
-                                            str(mirror['port']),
-                                            mirror['mountpoint']) \
-                        + '||' + '%s://%s:%s%s' % (fallback['protocol'],
-                                                   fallback['server'],
-                                                   str(fallback['port']),
-                                                   fallback['mountpoint'])
-                else:
-                    uri = '%s://%s' % ('file', root)
+        #def cbCreateTargets(fbmirrors, mirrors, schedulers, push_pull = True):
+            #for i in range(len(targets)):
+                #if push_pull:
+                    ## FIXME: we only take the the first mirrors
+                    #mirror = mirrors[i]
+                    #fallback = fbmirrors[i]
+                    #uri = '%s://%s:%s%s' % (mirror['protocol'],
+                                            #mirror['server'],
+                                            #str(mirror['port']),
+                                            #mirror['mountpoint']) \
+                        #+ '||' + '%s://%s:%s%s' % (fallback['protocol'],
+                                                   #fallback['server'],
+                                                   #str(fallback['port']),
+                                                   #fallback['mountpoint'])
+                #else:
+                    #uri = '%s://%s' % ('file', root)
 
-                targetsdata[i]['mirrors'] = uri
-                # Keep not blacklisted target name for commands_on_host
-                # creation.
-                targets_name.append(targets[i][1])
-                # Maybe could be done in prepareTarget
-                targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
+                #targetsdata[i]['mirrors'] = uri
+                ## Keep not blacklisted target name for commands_on_host
+                ## creation.
+                #targets_name.append(targets[i][1])
+                ## Maybe could be done in prepareTarget
+                #targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
 
-                targets_to_insert.append((targetsdata[i],
-                                          targets[i][1],
-                                          schedulers[i]))
-            session = create_session()
-            session.begin()
+                #targets_to_insert.append((targetsdata[i],
+                                          #targets[i][1],
+                                          #schedulers[i]))
+            #session = create_session()
+            #session.begin()
 
-            for atarget, target_name, ascheduler in targets_to_insert :
-                target = Target()
-                target.target_macaddr = atarget["target_macaddr"]
-                target.id_group = atarget["id_group"]
-                target.target_uuid = atarget["target_uuid"]
-                target.target_bcast = atarget["target_bcast"]
-                target.target_name = atarget["target_name"]
-                target.target_ipaddr = atarget["target_ipaddr"]
-                target.mirrors = atarget["mirrors"]
-                target.target_network = atarget["target_network"]
+            #for atarget, target_name, ascheduler in targets_to_insert :
+                #target = Target()
+                #target.target_macaddr = atarget["target_macaddr"]
+                #target.id_group = atarget["id_group"]
+                #target.target_uuid = atarget["target_uuid"]
+                #target.target_bcast = atarget["target_bcast"]
+                #target.target_name = atarget["target_name"]
+                #target.target_ipaddr = atarget["target_ipaddr"]
+                #target.mirrors = atarget["mirrors"]
+                #target.target_network = atarget["target_network"]
 
-                session.add(target)
-                session.flush()
-                if hasattr(session, "refresh") :
-                    session.refresh(target)
+                #session.add(target)
+                #session.flush()
+                #if hasattr(session, "refresh") :
+                    #session.refresh(target)
 
-                order_in_proxy = None
-                max_clients_per_proxy = 0
-                try:
-                    candidates = filter(lambda(x): x['uuid'] == atarget["target_uuid"], proxies)
-                    if len(candidates) == 1:
-                        max_clients_per_proxy = candidates[0]['max_clients']
-                        order_in_proxy = candidates[0]['priority']
-                except ValueError:
-                    self.logger.warn("Failed to get values 'order_in_proxy' or 'max_clients'")
-                coh_to_insert.append(self.createCommandsOnHost(cmd_id,
-                                                               atarget,
-                                                               target.id,
-                                                               target_name,
-                                                               cmd.max_connection_attempt,
-                                                               cmd.start_date,
-                                                               cmd.end_date,
-                                                               ascheduler,
-                                                               order_in_proxy,
-                                                               max_clients_per_proxy))
-            session.execute(self.commands_on_host.insert(), coh_to_insert)
+                #order_in_proxy = None
+                #max_clients_per_proxy = 0
+                #try:
+                    #candidates = filter(lambda(x): x['uuid'] == atarget["target_uuid"], proxies)
+                    #if len(candidates) == 1:
+                        #max_clients_per_proxy = candidates[0]['max_clients']
+                        #order_in_proxy = candidates[0]['priority']
+                #except ValueError:
+                    #self.logger.warn("Failed to get values 'order_in_proxy' or 'max_clients'")
+                #coh_to_insert.append(self.createCommandsOnHost(cmd_id,
+                                                               #atarget,
+                                                               #target.id,
+                                                               #target_name,
+                                                               #cmd.max_connection_attempt,
+                                                               #cmd.start_date,
+                                                               #cmd.end_date,
+                                                               #ascheduler,
+                                                               #order_in_proxy,
+                                                               #max_clients_per_proxy))
+            #session.execute(self.commands_on_host.insert(), coh_to_insert)
 
-            cohs = [coh for coh in cmd.getCohIds(target_uuids=target_uuids) if coh.id not in existing_coh_ids]
-            def _get_phase(name):
-                return phases.get(name, False) == 'on' and 'enable' or 'disable'
+            #cohs = [coh for coh in cmd.getCohIds(target_uuids=target_uuids) if coh.id not in existing_coh_ids]
+            #def _get_phase(name):
+                #return phases.get(name, False) == 'on' and 'enable' or 'disable'
 
-            self._createPhases(session,
-                               cohs,
-                               cmd.do_imaging_menu,
-                               _get_phase('do_wol'),
-                               cmd.files,
-                               _get_phase('start_script'),
-                               _get_phase('clean_on_success'),
-                               _get_phase('do_inventory'),
-                               _get_phase('do_halt'),
-                               _get_phase('do_reboot'),
-                               _get_phase('do_windows_update'),
-                               is_quick_action = False)
-            session.commit()
-            self._force_command_type(cmd_id, 2)
-            self._set_command_ready(cmd_id)
-            return cmd_id
+            #self._createPhases(session,
+                               #cohs,
+                               #cmd.do_imaging_menu,
+                               #_get_phase('do_wol'),
+                               #cmd.files,
+                               #_get_phase('start_script'),
+                               #_get_phase('clean_on_success'),
+                               #_get_phase('do_inventory'),
+                               #_get_phase('do_halt'),
+                               #_get_phase('do_reboot'),
+                               #_get_phase('do_windows_update'),
+                               #is_quick_action = False)
+            #session.commit()
+            #self._force_command_type(cmd_id, 2)
+            #self._set_command_ready(cmd_id)
+            #return cmd_id
 
-        d = self.getMachinesSchedulers(targets)
-        if mode == 'push_pull':
-            d.addCallback(cbGetTargetsMirrors)
-        else:
-            d.addCallback(cbPushModeCreateTargets)
-        d.addErrback(lambda err: err)
-        return d
+        #d = self.getMachinesSchedulers(targets)
+        #if mode == 'push_pull':
+            #d.addCallback(cbGetTargetsMirrors)
+        #else:
+            #d.addCallback(cbPushModeCreateTargets)
+        #d.addErrback(lambda err: err)
+        #return d

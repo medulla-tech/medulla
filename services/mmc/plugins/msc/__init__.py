@@ -46,9 +46,9 @@ from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.location import ComputerLocationManager
 from mmc.plugins.msc.database import MscDatabase
 from mmc.plugins.msc.config import MscConfig
-from mmc.plugins.msc.qaction import qa_list_files, qa_detailled_info
+#from mmc.plugins.msc.qaction import qa_list_files, qa_detailled_info
 from mmc.plugins.msc.machines import Machines, Machine
-from mmc.plugins.msc.download import MscDownloadedFiles, MscDownloadProcess
+#from mmc.plugins.msc.download import MscDownloadedFiles, MscDownloadProcess
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 from mmc.plugins.dyngroup.config import DGConfig
 import mmc.plugins.msc.actions
@@ -57,7 +57,7 @@ import mmc.plugins.msc.package_api
 #from mmc.plugins.msc.package_api import get_default_bundle_name
 
 # health check
-from mmc.plugins.msc.health import scheduleCheckStatus
+#from mmc.plugins.msc.health import scheduleCheckStatus
 
 # XMLRPC client functions
 import mmc.plugins.msc.client.scheduler
@@ -111,14 +111,14 @@ def activate():
 def activate_2():
     conf = MscConfig()
     conf.init('msc')
-    dldir = conf.download_directory_path
-    # Clean all lock or error status file in the download directory pool
-    if os.path.exists(dldir):
-        logging.getLogger().info('Cleaning lock file in %s' % dldir)
-        for root, dirs, files in os.walk(dldir):
-            for name in files:
-                if name.endswith(MscDownloadedFiles.LOCKEXT) or name.endswith(MscDownloadedFiles.ERROREXT):
-                    os.remove(os.path.join(root, name))
+    #dldir = conf.download_directory_path
+    ## Clean all lock or error status file in the download directory pool
+    #if os.path.exists(dldir):
+        #logging.getLogger().info('Cleaning lock file in %s' % dldir)
+        #for root, dirs, files in os.walk(dldir):
+            #for name in files:
+                #if name.endswith(MscDownloadedFiles.LOCKEXT) or name.endswith(MscDownloadedFiles.ERROREXT):
+                    #os.remove(os.path.join(root, name))
     return True
 
 class ContextMaker(ContextMakerI):
@@ -139,77 +139,77 @@ def getRepositoryPath():
 ##
 # msc_script
 ##
-def msc_script_list_file():
-    return qa_list_files()
+#def msc_script_list_file():
+    #return qa_list_files()
 
-def msc_script_detailled_info(file):
-    return xmlrpcCleanup(qa_detailled_info(file))
+#def msc_script_detailled_info(file):
+    #return xmlrpcCleanup(qa_detailled_info(file))
 
-##
-# exec
-##
-def msc_exec(command):
-    return xmlrpcCleanup(mmc.plugins.msc.actions.msc_exec(command))
+###
+## exec
+###
+#def msc_exec(command):
+    #return xmlrpcCleanup(mmc.plugins.msc.actions.msc_exec(command))
 
-def msc_ssh(user, ip, command):
-    return xmlrpcCleanup(mmc.plugins.msc.actions.msc_ssh(user, ip, command))
+#def msc_ssh(user, ip, command):
+    #return xmlrpcCleanup(mmc.plugins.msc.actions.msc_ssh(user, ip, command))
 
-def msc_scp(user, ip, source, destination):
-    return xmlrpcCleanup(mmc.plugins.msc.actions.msc_scp(user, ip, source, destination))
+#def msc_scp(user, ip, source, destination):
+    #return xmlrpcCleanup(mmc.plugins.msc.actions.msc_scp(user, ip, source, destination))
 
 
-def create_update_command(ctx, target, update_list, gid = None):
-    """
-    Create the Windows Update command.
+#def create_update_command(ctx, target, update_list, gid = None):
+    #"""
+    #Create the Windows Update command.
 
-    @param target: list of target UUIDs
-    @type target: list
+    #@param target: list of target UUIDs
+    #@type target: list
 
-    @param update_list: list of KB numbers to install
-    @type update_list: list
+    #@param update_list: list of KB numbers to install
+    #@type update_list: list
 
-    @param gid: group id - if not None, apply command to a group of machine
-    @type gid: str
+    #@param gid: group id - if not None, apply command to a group of machine
+    #@type gid: str
 
-    @return: command id
-    @rtype: Deferred
-    """
-    if update_list:
-        cmd = "%s -i %s" % (MscConfig().wu_command,
-                              " ".join(update_list))
-    else:
-        cmd = ''
-    cmd = cmd + ("\n%s -l --json" % MscConfig().wu_command)
-    desc = "Install Windows Updates"
+    #@return: command id
+    #@rtype: Deferred
+    #"""
+    #if update_list:
+        #cmd = "%s -i %s" % (MscConfig().wu_command,
+                              #" ".join(update_list))
+    #else:
+        #cmd = ''
+    #cmd = cmd + ("\n%s -l --json" % MscConfig().wu_command)
+    #desc = "Install Windows Updates"
 
-    if gid:
-        target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
+    #if gid:
+        #target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
 
-    do_wol = "disable"
-    if MscConfig().web_def_awake == 1:
-        do_wol = "enable"
+    #do_wol = "disable"
+    #if MscConfig().web_def_awake == 1:
+        #do_wol = "enable"
 
-    # set end_date to now() + 24H Refs #2313
-    fmt = "%Y-%m-%d %H:%M:%S"
-    end_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(fmt)
+    ## set end_date to now() + 24H Refs #2313
+    #fmt = "%Y-%m-%d %H:%M:%S"
+    #end_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(fmt)
 
-    d = defer.maybeDeferred(MscDatabase().addCommand, ctx,
-                             None,
-                             cmd,
-                             "",
-                             [],
-                             target,
-                             'push',
-                             gid,
-                             end_date = end_date,
-                             title = desc,
-                             do_wol = do_wol,
-                             do_windows_update = "enable",
-                             cmd_type = 4)
+    #d = defer.maybeDeferred(MscDatabase().addCommand, ctx,
+                             #None,
+                             #cmd,
+                             #"",
+                             #[],
+                             #target,
+                             #'push',
+                             #gid,
+                             #end_date = end_date,
+                             #title = desc,
+                             #do_wol = do_wol,
+                             #do_windows_update = "enable",
+                             #cmd_type = 4)
 
-    d.addCallback(xmlrpcCleanup)
+    #d.addCallback(xmlrpcCleanup)
 
-    return d
+    #return d
 
 class RpcProxy(RpcProxyI):
     ##
@@ -309,30 +309,30 @@ class RpcProxy(RpcProxyI):
             computer[1]['fullname'] = computer[1]['cn'][0]
         return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.tcp_sproxy(scheduler, computer, requestor_ip, MscConfig().web_vnc_port))
 
-    def pa_adv_countAllPackages(self, filt):
-        ctx = self.currentContext
-        g = mmc.plugins.msc.package_api.GetPackagesAdvanced(ctx, filt)
-        g.deferred = defer.Deferred()
-        g.get()
-        g.deferred.addCallback(lambda x: len(x))
-        return g.deferred
+    #def pa_adv_countAllPackages(self, filt):
+        #ctx = self.currentContext
+        #g = mmc.plugins.msc.package_api.GetPackagesAdvanced(ctx, filt)
+        #g.deferred = defer.Deferred()
+        #g.get()
+        #g.deferred.addCallback(lambda x: len(x))
+        #return g.deferred
 
-    def _range(self, result, start, end, filter=""):
-        if filter != "":
-            result=[ x  for x in result if (filter.lower() in x[0]['label'].lower() or filter in x[0]['description'].lower()) ]
-        if end == -1:
-            return (len(result), result[start:len(result)])
-        return (len(result), result[start:end])
+    #def _range(self, result, start, end, filter=""):
+        #if filter != "":
+            #result=[ x  for x in result if (filter.lower() in x[0]['label'].lower() or filter in x[0]['description'].lower()) ]
+        #if end == -1:
+            #return (len(result), result[start:len(result)])
+        #return (len(result), result[start:end])
 
-    def pa_adv_getAllPackages(self, filt, start, end):
-        start = int(start)
-        end = int(end)
-        ctx = self.currentContext
-        g = mmc.plugins.msc.package_api.GetPackagesAdvanced(ctx, filt)
-        g.deferred = defer.Deferred()
-        g.get()
-        g.deferred.addCallback(self._range, start, end ,filt['filter'])
-        return g.deferred
+    #def pa_adv_getAllPackages(self, filt, start, end):
+        #start = int(start)
+        #end = int(end)
+        #ctx = self.currentContext
+        #g = mmc.plugins.msc.package_api.GetPackagesAdvanced(ctx, filt)
+        #g.deferred = defer.Deferred()
+        #g.get()
+        #g.deferred.addCallback(self._range, start, end ,filt['filter'])
+        #return g.deferred
 
     ##
     # commands management
@@ -371,14 +371,14 @@ class RpcProxy(RpcProxyI):
         return ret
 
 
-    def add_command_quick(self, cmd, target, desc, gid = None):
-        """
-        Deprecated
-        """
-        ctx = self.currentContext
-        d = MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid)
-        d.addCallbacks(xmlrpcCleanup, lambda err: err)
-        return d
+    #def add_command_quick(self, cmd, target, desc, gid = None):
+        #"""
+        #Deprecated
+        #"""
+        #ctx = self.currentContext
+        #d = MscDatabase().addCommandQuick(ctx, cmd, target, desc, gid)
+        #d.addCallbacks(xmlrpcCleanup, lambda err: err)
+        #return d
 
     def getContext(self, user='root'):
             s = SecurityContext()
@@ -447,34 +447,34 @@ class RpcProxy(RpcProxyI):
             DyngroupDatabase().delete_package_convergence(pid)
         return True
 
-    def extend_command(self, cmd_id, start_date, end_date):
-        """
-        Custom command re-scheduling.
+    #def extend_command(self, cmd_id, start_date, end_date):
+        #"""
+        #Custom command re-scheduling.
 
-        @param cmd_id: Commands id
-        @type cmd_id: int
+        #@param cmd_id: Commands id
+        #@type cmd_id: int
 
-        @param start_date: new start date of command
-        @type start_date: str
+        #@param start_date: new start date of command
+        #@type start_date: str
 
-        @param end_date: new end date of command
-        @type end_date: str
-        """
-        d = defer.maybeDeferred(MscDatabase().extend_command,
-                                cmd_id,
-                                start_date,
-                                end_date)
-        return d
+        #@param end_date: new end date of command
+        #@type end_date: str
+        #"""
+        #d = defer.maybeDeferred(MscDatabase().extend_command,
+                                #cmd_id,
+                                #start_date,
+                                #end_date)
+        #return d
 
 
-    def delete_bundle(self, bundle_id):
-        """
-        Deletes a bundle with all related sub-elements.
+    #def delete_bundle(self, bundle_id):
+        #"""
+        #Deletes a bundle with all related sub-elements.
 
-        @param bundle_id: Bundle id
-        @type bundle_id: int
-        """
-        return MscDatabase().deleteBundle(bundle_id)
+        #@param bundle_id: Bundle id
+        #@type bundle_id: int
+        #"""
+        #return MscDatabase().deleteBundle(bundle_id)
 
 
     def delete_command(self, cmd_id):
@@ -969,29 +969,29 @@ def pa_isAvailable(p_api, pid, mirror):
 
 #############################
 ################# Mirrors API
-from mmc.plugins.msc.mirror_api import MirrorApi
+#from mmc.plugins.msc.mirror_api import MirrorApi
 
-def ma_getMirror(machine):
-    return MirrorApi().getMirror(machine)
+#def ma_getMirror(machine):
+    #return MirrorApi().getMirror(machine)
 
-def ma_getMirrors(machines):
-    return MirrorApi().getMirrors(machines)
+#def ma_getMirrors(machines):
+    #return MirrorApi().getMirrors(machines)
 
-def ma_getFallbackMirror(machine):
-    return MirrorApi().getFallbackMirror(machine)
+#def ma_getFallbackMirror(machine):
+    #return MirrorApi().getFallbackMirror(machine)
 
-def ma_getFallbackMirrors(machines):
-    return MirrorApi().getFallbackMirrors(machines)
+#def ma_getFallbackMirrors(machines):
+    #return MirrorApi().getFallbackMirrors(machines)
 
-def ma_getApiPackage(machine):
-    return MirrorApi().getApiPackage(machine)
+#def ma_getApiPackage(machine):
+    #return MirrorApi().getApiPackage(machine)
 
-def ma_getApiPackages(machines):
-    return MirrorApi().getApiPackages(machines)
+#def ma_getApiPackages(machines):
+    #return MirrorApi().getApiPackages(machines)
 
 ############################
-def get_new_bundle_title(nb = 0):
-    return get_default_bundle_name(nb)
+#def get_new_bundle_title(nb = 0):
+    #return get_default_bundle_name(nb)
 
 #############################
 def xmlrpcCleanup2(obj):
