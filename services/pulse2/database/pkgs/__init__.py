@@ -250,11 +250,31 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def list_all_extensions(self, session):
+        """Generates the list of the rules as array
+        Returns:
+            list of the rules
+        """
         ret = session.query(Extensions).order_by(asc(Extensions.rule_order)).all()
         extensions = []
         for extension in ret:
             extensions.append(extension.to_array())
         return extensions
+
+    @DatabaseHelper._sessionm
+    def delete_extension(self,session, id):
+        """Delete the rule selected by id
+        Param :
+            id: int corresponding of rule's id
+        Returns:
+            True if success or False if failure
+        """
+        try:
+            session.query(Extensions).filter(Extensions.id == id).delete()
+            session.commit()
+            session.flush()
+            return True
+        except:
+            return False
 
     @DatabaseHelper._sessionm
     def pkgs_register_synchro_package(self, session, uuidpackage, typesynchro ):

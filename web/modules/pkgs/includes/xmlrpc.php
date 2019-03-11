@@ -183,8 +183,13 @@ function list_all() {
    return xmlCall("pkgs.list_all");
 }
 
+// ------- Rules -------
 function list_all_extensions() {
    return xmlCall("pkgs.list_all_extensions");
+}
+
+function delete_extension($id) {
+  return xmlCall("pkgs.delete_extension", [$id]);
 }
 
 function xmlrpc_pkgs_register_synchro_package($uuid, $type){

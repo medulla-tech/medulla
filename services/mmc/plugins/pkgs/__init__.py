@@ -108,6 +108,12 @@ class pkgmanage():
     def refresh_dependencies(self, uuid, dependencies_list):
         PkgsDatabase().refresh_dependencies(uuid, dependencies_list)
 
+    def list_all_extensions(self):
+        return PkgsDatabase().list_all_extensions()
+
+    def delete_extension(self, id):
+        return PkgsDatabase().delete_extension(id)
+
 def dirpackage():
     return PkgsDatabase().dirpackage
 
@@ -125,6 +131,13 @@ def pkgs_get_info_synchro_packageid(uuidpackage):
     list_relayservernosync = pkgmanage().get_relayservers_no_sync_for_packageuuid(uuidpackage)
     list_relayserver = XmppMasterDatabase().getRelayServer(enable = True )
     return [list_relayservernosync, list_relayserver]
+
+########### Extensions ###########
+def delete_extension(id):
+    pkgmanage().delete_extension(id)
+
+def list_all_extensions():
+    return pkgmanage().list_all_extensions()
 
 def associatePackages(pid, fs, level = 0):
     tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
@@ -427,9 +440,6 @@ def removeFilesFromPackage( pid, files):
     ret.append(success)
     ret.append(error)
     return ret
-
-def list_all_extensions():
-    return pkgmanage().list_all_extensions()
 
 def activate():
     logger = logging.getLogger()
