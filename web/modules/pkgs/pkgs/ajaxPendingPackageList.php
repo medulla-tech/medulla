@@ -28,13 +28,13 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-$filter = array('filter'=> $_GET["filter"], 'location'=> $_GET['location'], 'pending'=>true);
-$filter1 = $_GET["filter"]. '##'.$_GET['location'];
+$filter = array('filter'=> $_GET["filter"],  'pending'=>true);//'location'=> $_GET['location'],
+$filter1 = $_GET["filter"];//. '##'.$_GET['location']
 
-if ($_GET['location']) {
-    $filter['packageapi'] = getPApiDetail(base64_decode($_GET['location']));
-//    $_SESSION['PACKAGEAPI'][base64_decode($_GET['location'])];
-}
+// if ($_GET['location']) {
+//     $filter['packageapi'] = getPApiDetail(base64_decode($_GET['location']));
+// //    $_SESSION['PACKAGEAPI'][base64_decode($_GET['location'])];
+// }
 if (isset($_GET["start"])) $start = $_GET["start"];
 else $start = 0;
 
@@ -48,20 +48,20 @@ $packages = $packages[1];
 
 $empty = new EmptyActionItem();
 $assoc = new ActionItem(_T("Associate package", "pkgs"), "associate_files", "associate_files", "pkgs", "pkgs", "pkgs");
-$assoc_list = array();
+//$assoc_list = array();
 $desc = $params = $names = $versions = $os = array();
 foreach ($packages as $p) {
     $p = $p[0];
-    if ($p['why'] || $p['why'] == 'association') {
-        $assoc_list[] = $assoc;
-    } else {
-        $assoc_list[] = $empty;
-    }
+//     if ($p['why'] || $p['why'] == 'association') {
+//         $assoc_list[] = $assoc;
+//     } else {
+//         $assoc_list[] = $empty;
+//     }
     $names[] = $p['label'];
     $versions[] = $p['version'];
     $desc[] = $p['description'];
     $os[] = $p['targetos'];
-    $params[] = array('pid'=>base64_encode($p['id']), 'from'=>'pending', 'plabel'=>base64_encode($p['label']), 'pversion'=>base64_encode($p['version']), 'mode'=>'edit', 'why'=>$p['why']);
+    $params[] = array('pid'=>base64_encode($p['id']), 'from'=>'pending', 'plabel'=>base64_encode($p['label']), 'pversion'=>base64_encode($p['version']), 'mode'=>'edit');//, 'why'=>$p['why']
 }
 $n = new OptimizedListInfos($names, _T("Package name", "pkgs"));
 $n->setCssClass("package");
@@ -74,7 +74,7 @@ $n->setNavBar(new AjaxNavBar($count, $filter1));
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count - 1;
-$n->addActionItem($assoc_list);
+//$n->addActionItem($assoc_list);
 $n->addActionItem(new ActionPopupItem(_T("Show mirrors", "pkgs"), "rsync", "info", "pkgs", "pkgs", "pkgs"));
 //$n->addActionItem(new ActionPopupItem(_T("Delete a package", "pkgs"),"delete","delete","pkgs", "pkgs", "pkgs"));
 
