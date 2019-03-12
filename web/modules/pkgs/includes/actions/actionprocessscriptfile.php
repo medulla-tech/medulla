@@ -97,6 +97,9 @@ extract($_POST);
                         $script = base64_decode($script);
                     }
                 }
+                else{
+                    $script = '';
+                }
             ?>
               <textarea name="script" cols="5" rows="5"><?php echo $script ;?></textarea>
             </th>
