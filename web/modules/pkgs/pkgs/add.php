@@ -41,7 +41,7 @@ $_SESSION['pkgs-add-reloaded'] = array();
 
 
 if (isset($_POST['bconfirm'])){
-    $p_api_id = $_POST['p_api'];
+//     $p_api_id = $_POST['p_api'];
     $random_dir = $_SESSION['random_dir'];
     $need_assign = True;
     $mode = $_POST['mode'];
@@ -83,6 +83,7 @@ if (isset($_POST['bconfirm'])){
         $package_uuid = $ret[2];
         $result = save_xmpp_json($package_uuid,$saveList1);
     }
+    $cbx = array();
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($_POST['package-method'] == "upload") {
             $cbx = array($random_dir);
@@ -108,18 +109,7 @@ if (isset($_POST['bconfirm'])){
                 //ICI
                 $str = sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain);
                 new NotifyWidgetSuccess($str);
-                xmlrpc_setfrompkgslogxmpp(  $str,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $explain ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Packaging | List | Manual');
-                header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
+                header("Location: " . urlStrRedirect("pkgs/pkgs/index")));//, array('location' => base64_encode($p_api_id)
                 exit;
             } else {
                 $reason = '';
@@ -128,17 +118,6 @@ if (isset($_POST['bconfirm'])){
                 }
                 $str = sprintf(_T("Failed to associate files%s", "pkgs"), $reason);
                 new NotifyWidgetFailure($str);
-                xmlrpc_setfrompkgslogxmpp(  $str,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $reason ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Packaging | List | Manual');
                 if($package_uuid != '')
                     remove_xmpp_package($package_uuid);
             }
@@ -465,13 +444,13 @@ if (isset($_POST['bconfirm'])){
         });
     });
 <?php
-// if one package API, hide field
-if (count($list) < 2) {
-    echo <<< EOT
-            // Hide package api field
-            jQuery('#p_api').parents('tr:first').hide();
-
-EOT;
-}
+// // if one package API, hide field
+// if (count($list) < 2) {
+//     echo <<< EOT
+//             // Hide package api field
+//             jQuery('#p_api').parents('tr:first').hide();
+// 
+// EOT;
+// }
 ?>
 </script>
