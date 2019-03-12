@@ -192,6 +192,15 @@ function delete_extension($id) {
   return xmlCall("pkgs.delete_extension", [$id]);
 }
 
+function raise_extension($id) {
+  return xmlCall("pkgs.raise_extension", [$id]);
+}
+
+function lower_extension($id) {
+  return xmlCall("pkgs.lower_extension", [$id]);
+}
+
+// ------- syncthing -------
 function xmlrpc_pkgs_register_synchro_package($uuid, $type){
   return xmlCall("pkgs.pkgs_register_synchro_package", [$uuid, $type]);
 }

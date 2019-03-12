@@ -41,7 +41,7 @@ $submod->setDescription(_T("Packages", "pkgs"));
 $submod->setImg('modules/pkgs/img/navbar/pkgs');
 $submod->setDefaultPage("pkgs/pkgs/index");
 
-//------ Rules -----
+//------ Rules ------
 $page = new Page("rulesList" ,_T("Rules list", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/rulesList.php");
 $submod->addPage($page);
@@ -58,6 +58,7 @@ $page = new Page("deleteRule",_T("Delete a rule", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/deleteRule.php", array("AJAX" => True,"noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
+//------ Packages ------
 $page = new Page("index", _T('Show all packages', 'pkgs'));
 $submod->addPage($page);
 

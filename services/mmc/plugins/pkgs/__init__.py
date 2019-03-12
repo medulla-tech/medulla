@@ -108,11 +108,18 @@ class pkgmanage():
     def refresh_dependencies(self, uuid, dependencies_list):
         PkgsDatabase().refresh_dependencies(uuid, dependencies_list)
 
+    # ------ Extensions / Rules ------
     def list_all_extensions(self):
         return PkgsDatabase().list_all_extensions()
 
     def delete_extension(self, id):
         return PkgsDatabase().delete_extension(id)
+
+    def lower_extension(self, id):
+        return PkgsDatabase().lower_extension(id)
+
+    def raise_extension(self, id):
+        return PkgsDatabase().raise_extension(id)
 
 def dirpackage():
     return PkgsDatabase().dirpackage
@@ -133,11 +140,17 @@ def pkgs_get_info_synchro_packageid(uuidpackage):
     return [list_relayservernosync, list_relayserver]
 
 ########### Extensions ###########
+def list_all_extensions():
+    return pkgmanage().list_all_extensions()
+
 def delete_extension(id):
     pkgmanage().delete_extension(id)
 
-def list_all_extensions():
-    return pkgmanage().list_all_extensions()
+def lower_extension(id):
+    return pkgmanage().lower_extension(id)
+
+def raise_extension(id):
+    return pkgmanage().raise_extension(id)
 
 def associatePackages(pid, fs, level = 0):
     tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")

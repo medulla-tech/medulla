@@ -37,6 +37,21 @@ if(isset($_GET['success']))
 }
 
 
+if(isset($_GET['id'], $_GET['mod']))
+{
+  $_GET['id'] = (int)$_GET['id'];
+  $_GET['mod'] = htmlentities($_GET['mod']);
+
+  if($_GET['mod'] == "raise")
+    raise_extension($_GET['id']);
+
+  if($_GET['mod'] == "lower")
+    lower_extension($_GET['id']);
+
+  header("Location: " . urlStrRedirect("pkgs/pkgs/rulesList"));
+}
+
+
 $rules = list_all_extensions();
 
 $rule_orders = [];
@@ -60,19 +75,10 @@ $n->addExtraInfo($rule_orders, _T("Rule Order", "pkgs"));
 $n->addExtraInfo($descriptions, _T("Rule Description", "pkgs"));
 $n->addExtraInfo($propositions, _T("Rule Proposition", "pkgs"));
 
-// parameters are :
-// - label
-// - action
-// - class (icon)
-// - profile get parameter
-// - module
-// - submodule
-
-
-$action_upOrder = new ActionItem(_T("Raise order priority","pkgs"), "upRule", "up","rule","pkgs","pkgs");
-$action_downOrder = new ActionItem(_T("Lower order priority","pkgs"), "downRule", "down","rule","pkgs","pkgs");
+$action_upOrder = new ActionItem(_T("Raise order priority","pkgs"), "rulesList", "up","","pkgs","pkgs", "", "raise");
+$action_downOrder = new ActionItem(_T("Lower order priority","pkgs"), "rulesList", "down","down","pkgs","pkgs", "", "lower");
 $action_editRule = new ActionItem(_T("Edit Profil",'kiosk'), "editRule", "edit", "rule", "pkgs", "pkgs");
-$action_deleteRule = new ActionPopupItem(_T("Delete Profil",'kiosk'), "deleteRule", "delete", "pkgs", "pkgs", "pkgs");
+$action_deleteRule = new ActionPopupItem(_T("Delete Profil",'kiosk'), "deleteRule", "delete", "", "pkgs", "pkgs");
 
 $n->setParamInfo($params);
 $n->addActionItemArray($action_upOrder);
