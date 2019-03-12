@@ -42,16 +42,7 @@ if (isset($_GET["end"])) $end = $_GET["end"];
 else $end = 9;
 
 
-//jfkjfk
 $packages = xmlrpc_xmppGetAllPackages($filter, $start, $end);
-$packages[0][1] = 0;
-$packages[0][2] = array();
-$packages[0][2]["mountpoint"] = "/package_api_get1";
-$packages[0][2]["server"] = "localhost";
-$packages[0][2]["protocol"] = "https";
-$packages[0][2]["uuid"] = "UUID/package_api_get1";
-$packages[0][2]["port"] = 9990;
-//$packages = advGetAllPackages($filter, $start, $end);
 $count = $packages[0];
 $packages = $packages[1];
 
@@ -70,9 +61,8 @@ foreach ($packages as $p) {
     $versions[] = $p['version'];
     $desc[] = $p['description'];
     $os[] = $p['targetos'];
-    $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']), 'from'=>'pending', 'plabel'=>base64_encode($p['label']), 'pversion'=>base64_encode($p['version']), 'mode'=>'edit', 'why'=>$p['why']);
+    $params[] = array('pid'=>base64_encode($p['id']), 'from'=>'pending', 'plabel'=>base64_encode($p['label']), 'pversion'=>base64_encode($p['version']), 'mode'=>'edit', 'why'=>$p['why']);
 }
-
 $n = new OptimizedListInfos($names, _T("Package name", "pkgs"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
