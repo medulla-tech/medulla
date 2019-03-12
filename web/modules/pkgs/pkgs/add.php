@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * file: pkgs/pkgs/add.php
  */
 require("localSidebar.php");
 require("graph/navbar.inc.php");
@@ -29,7 +30,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/query.php");
 require_once("modules/pkgs/includes/class.php");
-//jfkjfk
+
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 $p = new PageGenerator(_T("Add package", "pkgs"));
 $p->setSideMenu($sidemenu);
@@ -41,8 +42,8 @@ $_SESSION['pkgs-add-reloaded'] = array();
 
 
 if (isset($_POST['bconfirm'])){
-//     $p_api_id = $_POST['p_api'];
-    $random_dir = $_SESSION['random_dir'];
+    //$p_api_id = $_POST['p_api'];
+    $random_dir = isset($_SESSION['random_dir'])?$_SESSION['random_dir'] : "";
     $need_assign = True;
     $mode = $_POST['mode'];
     $level = 0;
@@ -53,12 +54,24 @@ if (isset($_POST['bconfirm'])){
     foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware',
             'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
         //$package[$post] = iconv("utf-8","ascii//TRANSLIT",$_POST[$post]);
-        $package[$post] = $_POST[$post];
+        if(isset($_POST[$post])) {
+            $package[$post] = $_POST[$post];
+        }
+        else{
+            $package[$post] = "";
+        }
     }
     foreach (array('reboot', 'associateinventory') as $post) {
-        $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
+        if(isset($_POST[$post] )){
+            $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
+        }
+        else{
+            $package[$post] = 0;
+        }
     }
     // Package command
+    $_POST['commandname'] = isset($_POST['commandname'])?$_POST['commandname']:"";
+    $_POST['commandcmd'] = isset($_POST['commandcmd'])?$_POST['commandcmd']:"";
     $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
 
     // Simple package: not a bundle
@@ -99,6 +112,7 @@ if (isset($_POST['bconfirm'])){
                 $cbx[] = $_POST['rdo_files'];
             }
         }
+
         $ret = associatePackages($pid, $cbx, $level);
         if (!isXMLRPCError() and is_array($ret)) {
             if ($ret[0]) {
@@ -109,7 +123,8 @@ if (isset($_POST['bconfirm'])){
                 //ICI
                 $str = sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain);
                 new NotifyWidgetSuccess($str);
-                header("Location: " . urlStrRedirect("pkgs/pkgs/index")));//, array('location' => base64_encode($p_api_id)
+                header("Location: " . urlStrRedirect("pkgs/pkgs/index", array()));
+                //'location' => base64_encode($p_api_id)
                 exit;
             } else {
                 $reason = '';
@@ -444,7 +459,7 @@ if (isset($_POST['bconfirm'])){
         });
     });
 <?php
-// // if one package API, hide field
+// if one package API, hide field
 // if (count($list) < 2) {
 //     echo <<< EOT
 //             // Hide package api field
