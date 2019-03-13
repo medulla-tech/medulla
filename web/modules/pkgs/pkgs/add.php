@@ -454,8 +454,6 @@ if (isset($_POST['bconfirm'])){
                 jQuery('#directory-label').html("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
                 jQuery('#directory-label').parent().parent().fadeIn();
             }
-
-
         });
     });
 <?php
