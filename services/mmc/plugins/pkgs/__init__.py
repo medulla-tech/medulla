@@ -368,67 +368,75 @@ def getTemporaryFileSuggestedCommand1(tempdir):
             for f in os.listdir(os.path.join(tmp_input_dir, tempdir)):
                 fileadd = os.path.join(tmp_input_dir, tempdir, f)
                 if os.path.isfile(fileadd):
+                    rules = PkgsDatabase().list_all_extensions()
+                    filename = fileadd.split("/")[-1]
+                    filebasename = filename.split(".")[0]
+                    fileextension = filename.split(".")[-1]
+
+                    for rule in rules:
+                        proposition = ''
+                        test_proposition = True
+                        proposition = rule['proposition']
+                        proposition = proposition.replace("\\", "")
+
+                        if 'name' in rule and rule['name'] != "":
+                            rule['name'] = rule['name'].replace('\\', '')
+                            if not re.search(rule['name'], filebasename, re.IGNORECASE):
+                                test_proposition = False
+
+                        if 'extension' in rule and rule['extension'] != "":
+                            rule['extension'] = rule['extension'].replace("\\", "")
+                            if not re.search(rule['extension'], fileextension, re.IGNORECASE):
+                                test_proposition = False
+
+                        if 'magic_command' in rule and rule['magic_command'] != "":
+                            rule['magic_command'] = rule['magic_command'].replace('\\', '')
+                            pass
+
+                        if 'bang' in rule and rule['bang'] != "":
+                            rule['bang'] = rule['bang'].replace('\\', '')
+                            line = ""
+                            with open(fileadd) as file:
+                                # Read the first line of the file
+                                line = file.readline()
+                                file.close()
+
+                            if re.search(rule['bang'], line, re.IGNORECASE) == None:
+                                test_proposition = False
+
+                        if 'file' in rule and rule['file'] != "":
+                            rule['file'] = rule['file'].replace('\\', '')
+                            result = simplecommand("file %s"%fileadd.replace(" ", "\ "))
+                            if result['code'] == 0:
+                                result = result['result'][0]
+                                if re.search(rule['file'], result, re.IGNORECASE) is None:
+                                    test_proposition = False
+                            else:
+                                test_proposition = False
+
+                        if 'strings' in rule and rule['strings'] != "":
+                            rule['strings'] = rule['strings'].replace('\\', '')
+                            result = simplecommand("strings %s |grep %s"%(fileadd.replace(" ", "\ "), rule['strings']))
+                            if result['code'] == 0:
+                                if len(result['result']) == 0:
+                                    test_proposition = False
+                            else:
+                                test_proposition = False
+
+                        # If all the criterion's rule are validate, no need to test an another rule
+                        # This one is corresponding with the
+                        if test_proposition is True:
+                            logging.getLogger().debug("Rule # %s found the proposition :%s ",str(rule['id']), proposition%filename)
+                            ret['commandcmd'] = proposition%filename
+                            return ret
+
+                    logging.getLogger().info("No command found with rules.")
                     c = getCommand(fileadd)
                     command = c.getCommand()
                     if command is not None:
                         suggestedCommand.append(command)
                     else:
-                        # No proposition found : try with the new parser
-                        rules = PkgsDatabase().list_all_extensions()
-                        filename = fileadd.split("/")[-1]
-                        filebasename = filename.split(".")[0]
-                        fileextension = filename.split(".")[-1]
-
-                        for rule in rules:
-                            proposition = ''
-                            test_proposition = True
-                            proposition = rule['proposition']
-
-                            if 'name' in rule and rule['name'] != "":
-                                if not re.search(rule['name'], filebasename, re.IGNORECASE):
-                                    test_proposition = False
-
-                            if 'extension' in rule and rule['extension'] != "":
-                                if not re.search(rule['extension'], fileextension, re.IGNORECASE):
-                                    test_proposition = False
-
-                            if 'magic_command' in rule and rule['magic_command'] != "":
-                                pass
-
-                            if 'bang' in rule and rule['bang'] != "":
-                                line = ""
-                                with open(fileadd) as file:
-                                    # Read the first line of the file
-                                    line = file.readline()
-                                    file.close()
-
-                                if re.search(rule['bang'], line, re.IGNORECASE) == None:
-                                    test_proposition = False
-
-                            if 'file' in rule and rule['file'] != "":
-                                result = simplecommand("file %s"%fileadd.replace(" ", "\ "))
-                                if result['code'] == 0:
-                                    result = result['result'][0]
-                                    if re.search(rule['file'], result, re.IGNORECASE) is None:
-                                        test_proposition = False
-                                else:
-                                    test_proposition = False
-
-                            if 'strings' in rule and rule['strings'] != "":
-                                result = simplecommand("strings %s |grep %s"%(fileadd.replace(" ", "\ "), rule['strings']))
-                                if result['code'] == 0:
-                                    if len(result['result']) == 0:
-                                        test_proposition = False
-                                else:
-                                    test_proposition = False
-
-                            # If all the criterion's rule are validate, no need to test an another rule
-                            # This one is corresponding with the
-                            if test_proposition is True:
-                                logging.getLogger().debug("Rule # %s found the proposition :%s ",str(rule['id']), proposition%filename)
-                                ret['commandcmd'] = proposition% filename
-                                return ret
-
+                        logging.getLogger().debug("No command found")
     ret['commandcmd'] = '\n'.join(suggestedCommand)
     return ret
 
