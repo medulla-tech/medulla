@@ -171,6 +171,9 @@ def get_extension(id):
     return pkgmanage().get_extension(id)
 
 ########### Json ###########
+def chown(uuid):
+    simplecommand("chown -R syncthing:syncthing %s"%os.path.join(_path_package(), uuid))
+
 def associatePackages(pid, fs, level = 0):
     tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
     packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")

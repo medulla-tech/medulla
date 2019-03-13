@@ -139,6 +139,10 @@ function save_xmpp_json($folder, $json){
     return xmlCall("pkgs.save_xmpp_json", array($folder, $json));
 }
 
+function xmlrpc_chown($package_uuid){
+  return xmlCall("pkgs.chown",[$package_uuid]);
+}
+
 function xmpp_packages_list(){
     return xmlCall("pkgs.xmpp_packages_list", array());
 }

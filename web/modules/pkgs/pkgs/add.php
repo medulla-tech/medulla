@@ -123,6 +123,8 @@ if (isset($_POST['bconfirm'])){
                 //ICI
                 $str = sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain);
                 new NotifyWidgetSuccess($str);
+                if($package_uuid != "")
+                  xmlrpc_chown($package_uuid);
                 header("Location: " . urlStrRedirect("pkgs/pkgs/index", array()));
                 //'location' => base64_encode($p_api_id)
                 exit;
@@ -143,10 +145,10 @@ if (isset($_POST['bconfirm'])){
 } else {
     // Get number of PackageApi
 //     $res = getUserPackageApi();
-// 
+//
 //     // set first Package Api found as default Package API
 //     $p_api_id = $res[0]['uuid'];
-// 
+//
 //     $list_val = $list = array();
 //     if (!isset($_SESSION['PACKAGEAPI'])) {
 //         $_SESSION['PACKAGEAPI'] = array();
@@ -462,7 +464,7 @@ if (isset($_POST['bconfirm'])){
 //     echo <<< EOT
 //             // Hide package api field
 //             jQuery('#p_api').parents('tr:first').hide();
-// 
+//
 // EOT;
 // }
 ?>

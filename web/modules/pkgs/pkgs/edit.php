@@ -83,9 +83,10 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         restart_active_convergence_commands($p_api_id, $package);
     }
 
-
+    $package_uuid = "";
     if(isset($_POST['saveList']))
     {
+        $package_uuid = $ret[2];
         $saveList = $_POST['saveList'];
         $saveList1 = clean_json($saveList);
         //$saveList1 = iconv("utf-8","ascii//TRANSLIT",$saveList1);
@@ -118,6 +119,8 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                         // ICI$_POST['files_uploaded']
                         $str = sprintf(_T("Files successfully added to the package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion);
                         new NotifyWidgetSuccess($str);
+                        if($package_uuid != "")
+                          xmlrpc_chown($package_uuid);
                         header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                         exit;
                     } else {
