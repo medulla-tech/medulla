@@ -1995,6 +1995,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 StrictVersion(self.pluginagentmin[nameplugin]) > StrictVersion(data['versionagent']):
                                 logger.warning("can t install plugin '%s' (%s) on %s ( agent version(%s) < agent version plugin(%s) )" % (nameplugin, versionplugin, msg['from'], data['versionagent'], self.pluginagentmin[nameplugin]))
                                 continue
+                        else:
+                             if self.pluginagentmin[nameplugin] != "0.0.0":
+                                 continue
+                                 
                         if self.config.showplugins:
                             logger.info("deploy %s versionplugin %s on %s" % (nameplugin,
                                                                               versionplugin,
