@@ -63,7 +63,7 @@ from datetime import datetime
 from multiprocessing import Process, Queue, TimeoutError
 from mmc.agent import PluginManager
 from lib.update_remote_agent import Update_Remote_Agent
-
+from distutils.version import LooseVersion, StrictVersion
 from sleekxmpp.exceptions import IqError, IqTimeout
 from sleekxmpp.xmlstream.stanzabase import ElementBase, ET, JID
 from sleekxmpp.stanza.iq import Iq
@@ -893,6 +893,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("Jid from : %s" % data['from'])
             logger.info("Machine : %s" % data['machine'])
             logger.info("Platform : %s" % data['platform'])
+            if 'versionagent' in data:
+                logger.info("Version agent : %s" % data['versionagent'])
             if "win" in data['platform'].lower():
                 logger.info("__________________________")
                 logger.info("ACTIVE DIRECTORY")
@@ -953,6 +955,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         logger.debug("Load and Verify base plugin")
         self.plugindata = {}
         self.plugintype = {}
+        self.pluginagentmin = {}
         for element in [x for x in os.listdir(self.config.dirplugins) if x[-3:] == ".py" and x[:7] == "plugin_"]:
             element_name = os.path.join(self.config.dirplugins, element)
             # verify syntax error for plugin python
@@ -970,6 +973,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             self.plugintype[plugin['NAME']] = plugin['TYPE']
                         except:
                             self.plugintype[plugin['NAME']] = "machine"
+                        try:
+                            self.pluginagentmin[plugin['NAME']] = plugin['VERSIONAGENT']
+                        except:
+                            self.pluginagentmin[plugin['NAME']] = "0.0.0"
                         break
             else:
                 logger.error("As long as the ERROR SYNTAX is not fixed, the plugin [%s] is ignored." % os.path.join(
@@ -1698,6 +1705,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                       mtype='chat')
                 # ##################################
                 logger.debug("** display data")
+                if not 'versionagent' in data:
+                    data['versionagent'] = "0.0.0"
                 self.displayData(data)
                 longitude = ""
                 latitude = ""
@@ -1959,32 +1968,42 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 restartAgent = False
                 if self.config.showplugins:
                     logger.info("_____________Deploy plugin_________________")
-                for k, v in self.plugindata.iteritems():
+                #search des plugins a mettre a jour
+                for nameplugin, versionplugin in self.plugindata.iteritems():
                     deploy = False
                     try:
                         # Check version
-                        if data['plugin'][k] != v:
-                            logger.info("update %s version %s to version %s" % (k,
-                                                                                data['plugin'][k],
-                                                                                v))
+                        if data['plugin'][nameplugin] != versionplugin :
+                            #version a installer
                             deploy = True
                     except:
+                        # si le plugin existe pas on install
                         deploy = True
+
                     if data['agenttype'] != "all":
-                        if data['agenttype'] == "relayserver" and self.plugintype[k] == 'machine':
+                        if data['agenttype'] == "relayserver" and self.plugintype[nameplugin] == 'machine':
                             deploy = False
-                        if data['agenttype'] == "machine" and self.plugintype[k] == 'relayserver':
+                        if data['agenttype'] == "machine" and self.plugintype[nameplugin] == 'relayserver':
                             deploy = False
+
                     if deploy:
+                        # verify version agent pour savoir si on doit déploye
+                        if data['versionagent'] != "0.0.0":
+                            # on a la version de l'agent
+                            # si celle ci est egale ou superieur a celle du plugin on install le plugin.
+                            if nameplugin in self.pluginagentmin and \
+                                StrictVersion(self.pluginagentmin[nameplugin]) > StrictVersion(data['versionagent']):
+                                logger.warning("can t install plugin '%s' (%s) on %s ( agent version(%s) < agent version plugin(%s) )" % (nameplugin, versionplugin, msg['from'], data['versionagent'], self.pluginagentmin[nameplugin]))
+                                continue
                         if self.config.showplugins:
-                            logger.info("deploy %s version %s on %s" % (k, v, msg['from']))
-
+                            logger.info("deploy %s versionplugin %s on %s" % (nameplugin,
+                                                                              versionplugin,
+                                                                              msg['from']))
                         self.file_deploy_plugin.append(
-                            {'dest': msg['from'], 'plugin': k, 'type': 'deployPlugin'})
-                        if self.config.showplugins:
-                            logger.info("__________________________________________")
-                        return True
-
+                            {'dest': msg['from'], 'plugin': nameplugin, 'type': 'deployPlugin'})
+                if self.config.showplugins:
+                    logger.info("__________________________________________")
+                        #return True
                 if 'pluginscheduled' in data:
                     if self.config.showplugins:
                         logger.info("_____________Deploy plugin scheduled_________________")
