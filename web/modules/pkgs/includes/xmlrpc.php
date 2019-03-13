@@ -200,6 +200,18 @@ function lower_extension($id) {
   return xmlCall("pkgs.lower_extension", [$id]);
 }
 
+function get_last_extension_order(){
+  return xmlCall("pkgs.get_last_extension_order",[]);
+}
+
+function add_extension($datas){
+  return xmlCall("pkgs.add_extension", [$datas]);
+}
+
+function get_extension($id){
+  return xmlCall("pkgs.get_extension", [$id]);
+}
+
 // ------- syncthing -------
 function xmlrpc_pkgs_register_synchro_package($uuid, $type){
   return xmlCall("pkgs.pkgs_register_synchro_package", [$uuid, $type]);

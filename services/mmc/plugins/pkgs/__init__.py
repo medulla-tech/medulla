@@ -121,6 +121,15 @@ class pkgmanage():
     def raise_extension(self, id):
         return PkgsDatabase().raise_extension(id)
 
+    def get_last_extension_order(self):
+        return PkgsDatabase().get_last_extension_order()
+
+    def add_extension(self, datas):
+        return PkgsDatabase().add_extension(datas)
+
+    def get_extension(self, id):
+        return PkgsDatabase().get_extension(id)
+
 def dirpackage():
     return PkgsDatabase().dirpackage
 
@@ -152,6 +161,16 @@ def lower_extension(id):
 def raise_extension(id):
     return pkgmanage().raise_extension(id)
 
+def get_last_extension_order():
+    return pkgmanage().get_last_extension_order()
+
+def add_extension(datas):
+    return pkgmanage().add_extension(datas)
+
+def get_extension(id):
+    return pkgmanage().get_extension(id)
+
+########### Json ###########
 def associatePackages(pid, fs, level = 0):
     tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
     packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")

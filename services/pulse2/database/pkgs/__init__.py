@@ -248,12 +248,9 @@ class PkgsDatabase(DatabaseHelper):
         session.commit()
         session.flush()
 
+    ######## Extensions / Rules ##########
     @DatabaseHelper._sessionm
     def list_all_extensions(self, session):
-        """Generates the list of the rules as array
-        Returns:
-            list of the rules
-        """
         ret = session.query(Extensions).order_by(asc(Extensions.rule_order)).all()
         extensions = []
         for extension in ret:
@@ -262,12 +259,6 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def delete_extension(self,session, id):
-        """Delete the rule selected by id
-        Param :
-            id: int corresponding of rule's id
-        Returns:
-            True if success or False if failure
-        """
         try:
             session.query(Extensions).filter(Extensions.id == id).delete()
             session.commit()
@@ -275,16 +266,6 @@ class PkgsDatabase(DatabaseHelper):
             return True
         except:
             return False
-
-    @DatabaseHelper._sessionm
-    def pkgs_register_synchro_package(self, session, uuidpackage, typesynchro ):
-        #list id server relay
-        list_server_relay = XmppMasterDatabase().get_List_jid_ServerRelay_enable(enabled=1)
-        for jid in list_server_relay:
-            #exclude local package server
-            if jid[0].startswith("rspulse@pulse/"):
-                continue
-            self.setSyncthingsync(uuidpackage, jid[0], typesynchro , watching = 'yes')
 
     @DatabaseHelper._sessionm
     def raise_extension(self,session, id):
@@ -312,6 +293,74 @@ class PkgsDatabase(DatabaseHelper):
         rule_to_lower.rule_order, rule_to_switch.rule_order = rule_to_switch.getRule_order(), rule_to_lower.getRule_order()
         session.commit()
         session.flush()
+
+    @DatabaseHelper._sessionm
+    def get_last_extension_order(self,session):
+        """ Lower the selected rule
+        Param:
+            id: int corresponding to the rule id we want to raise
+        """
+        last_rule = session.query(Extensions).order_by(desc(Extensions.rule_order)).first()
+        session.commit()
+        session.flush()
+
+        return last_rule.getRule_order()
+
+
+    @DatabaseHelper._sessionm
+    def add_extension(self,session, datas):
+        """ Lower the selected rule
+        Param:
+            id: int corresponding to the rule id we want to raise
+        """
+        if 'id' in datas:
+            request = session.query(Extensions).filter(Extensions.id == datas['id']).first()
+            rule = request
+            if request is None:
+                rule = Extensions()
+        else:
+            request = None
+            rule = Extensions()
+
+        if 'rule_order' in datas:
+            rule.rule_order = datas['rule_order']
+
+        if 'rule_name' in datas:
+            rule.rule_name = datas['rule_name']
+
+        if 'name' in datas:
+            rule.name = datas['name']
+
+        if 'extension' in datas:
+            rule.extension = datas['extension']
+
+        if 'magic_command' in datas:
+            rule.magic_command = datas['magic_command']
+
+        if 'bang' in datas:
+            rule.bang = datas['bang']
+
+        if 'file' in datas:
+            rule.file = datas['file']
+
+        if 'strings' in datas:
+            rule.strings = datas['strings']
+
+        if 'proposition' in datas:
+            rule.proposition = datas['proposition']
+
+        if 'description' in datas:
+            rule.description = datas['description']
+
+        if request is None:
+            session.add(rule)
+
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
+    def get_extension(self, session, id):
+        return session.query(Extensions).filter(Extensions.id == id).first().to_array()
 
     # =====================================================================
     # pkgs FUNCTIONS synch syncthing

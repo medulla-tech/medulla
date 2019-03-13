@@ -64,7 +64,6 @@ foreach($rules as $id=>$rule)
 {
     $rule_names[] = $rule['rule_name'];
     $rule_orders[] = $rule['rule_order'];
-    $propositions[] = $rule['proposition'];
     $descriptions[] = $rule['description'];
     $params[] = ['id'=>$rule['id']];
 }
@@ -73,7 +72,6 @@ $n = new OptimizedListInfos($rule_names, _T("Rule Name", "pkgs"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($rule_orders, _T("Rule Order", "pkgs"));
 $n->addExtraInfo($descriptions, _T("Rule Description", "pkgs"));
-$n->addExtraInfo($propositions, _T("Rule Proposition", "pkgs"));
 
 $action_upOrder = new ActionItem(_T("Raise order priority","pkgs"), "rulesList", "up","","pkgs","pkgs", "", "raise");
 $action_downOrder = new ActionItem(_T("Lower order priority","pkgs"), "rulesList", "down","down","pkgs","pkgs", "", "lower");
@@ -101,5 +99,4 @@ if(jQuery(".down")[length-1] != "undefined")
   jQuery(jQuery(".down")[length-1]).hide();
   jQuery(jQuery(".up")[length-1]).css("margin-right", "35px");
 }
-
 </script>
