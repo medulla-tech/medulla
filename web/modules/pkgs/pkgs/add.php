@@ -374,7 +374,7 @@ if (isset($_POST['bconfirm'])){
                 'url': url,
                 type: 'get',
                 success: function(data) {
-                    jQuery('#version').val(data.version);
+                    //jQuery('#version').val(data.version);
                     jQuery('#commandcmd').val(data.commandcmd);
 
                 }
@@ -409,7 +409,7 @@ if (isset($_POST['bconfirm'])){
                 jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
 
                 // reset form fields
-                jQuery('#version').val("");
+                //jQuery('#version').val("");
                 jQuery('#commandcmd').val("");
             }
 
@@ -451,7 +451,7 @@ if (isset($_POST['bconfirm'])){
             else if (selectedValue == "upload") {
                 jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
                 // reset form fields
-                jQuery('#version').val("");
+                //jQuery('#version').val("");
                 jQuery('#commandcmd').val("");
                 jQuery('#directory-label').html("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
                 jQuery('#directory-label').parent().parent().fadeIn();
