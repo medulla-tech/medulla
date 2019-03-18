@@ -123,6 +123,10 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
             self.autoupdate = self.getboolean('global', 'autoupdate')
         else:
             self.autoupdate = True
+        if self.has_option("global", "autoupdatebyrelay"):
+            self.autoupdatebyrelay = self.getboolean('global', 'autoupdatebyrelay')
+        else:
+            self.autoupdatebyrelay = False
         self.dirplugins = self.get('plugins', 'dirplugins')
         self.dirschedulerplugins = self.get('plugins', 'dirschedulerplugins')
         self.information = {}
