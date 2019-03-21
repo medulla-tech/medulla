@@ -283,8 +283,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.session = session()
         self.domaindefault = "pulse"
         # ######################Update remote agent#########################
-        self.Update_Remote_Agentlist = Update_Remote_Agent(
-            self.config.diragentbase, self.config.autoupdate)
+        autoupdatebool = self.config.autoupdatebyrelay or self.config.autoupdate
+        self.Update_Remote_Agentlist = Update_Remote_Agent(self.config.diragentbase,
+                                                           autoupdatebool)
         # ######################Update remote agent#########################
         self.file_deploy_plugin = []
         # ##clear conf compte.
@@ -1989,11 +1990,32 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
                 # ######################Update remote agent#########################
                 # Manage update remote agent
-                if self.config.autoupdate and 'md5agent' in data and self.Update_Remote_Agentlist.get_fingerprint_agent_base() != data['md5agent']:
-                    if data['md5agent'].upper() != "DEV" or data['md5agent'].upper() != "DEBUG":
-                        # send md5 descriptor of the agent for remote update.
-                        self.senddescriptormd5(msg['from'])
-
+                #if self.config.autoupdate and 'md5agent' in data and self.Update_Remote_Agentlist.get_fingerprint_agent_base() != data['md5agent']:
+                    #if data['md5agent'].upper() != "DEV" or data['md5agent'].upper() != "DEBUG":
+                        ## send md5 descriptor of the agent for remote update.
+                        #self.senddescriptormd5(msg['from'])
+                if 'md5agent' in data:
+                    if (data['md5agent'].upper() != "DEV" or data['md5agent'].upper() != "DEBUG") \
+                    and self.Update_Remote_Agentlist.get_fingerprint_agent_base() != data['md5agent']:
+                        if self.config.autoupdate:
+                            #update from master
+                            # send md5 descriptor of the agent for remote update.
+                            self.senddescriptormd5(msg['from'])
+                        elif self.config.autoupdatebyrelay:
+                            #update from ARS
+                            datasend = { "action": "updateagent",
+                                         "data": { "subaction": "ars_update",
+                                                "jidagent": str(msg['from']),
+                                                "descriptoragent" : data['md5agent'],
+                                                "ars_update" : data['deployment']},
+                                        "ret": 0,
+                                        "sessionid" : name_random(5, "updateagent")}
+                            # Send catalog of files.
+                            logger.debug("Send descriptor to ARS %s for update agent [%s]" % 
+                                            (data['deployment'], msg['from']))
+                            self.send_message( data['deployment'],
+                                                mbody=json.dumps(datasend),
+                                                mtype='chat')
                 # Show plugins information logs
                 if self.config.showplugins:
                     logger.info("__________________________________________")
