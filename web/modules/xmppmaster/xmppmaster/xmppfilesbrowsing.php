@@ -506,7 +506,7 @@ printf ('
             timetmp = user + "-" + datetimenow();
             jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" );
             jQuery('#directoryremote').on('ready.jstree', function() {
-                jQuery('#directoryremote').jstree("open_all");
+                jQuery('#directoryremote').jstree("close_all");
             });
     });
 

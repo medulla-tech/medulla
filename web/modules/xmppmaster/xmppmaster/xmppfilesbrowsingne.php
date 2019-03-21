@@ -408,7 +408,7 @@ echo '</script>';
 			}
 		});
 	jQuery('#directoryremote').on('ready.jstree', function() {
-                jQuery('#directoryremote').jstree("open_all");
+                jQuery('#directoryremote').jstree("close_all");
         });
     });
 
