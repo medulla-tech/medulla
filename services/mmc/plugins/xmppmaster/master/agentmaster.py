@@ -537,6 +537,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for deployuuid in self.machineDeploy:
             try:
                 deployobject = self.machineDeploy[deployuuid].pop(0)
+                listobjsupp.append(deployuuid)
                 logging.debug("send deploy on machine %s package %s" %
                               (deployuuid, deployobject['pakkageid']))
                 self.applicationdeployjsonUuidMachineAndUuidPackage(deployuuid,
