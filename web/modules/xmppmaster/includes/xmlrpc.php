@@ -407,6 +407,22 @@ function xmlrpc_getCountOnlineMachine() {
     return xmlCall("xmppmaster.getCountOnlineMachine", array());
 }
 
+//######################################
+// descriptor agent base
+//######################################
+//##jfkjfk
+function xmlrpc_get_agent_descriptor_base(){
+    return xmlCall("xmppmaster.get_agent_descriptor_base", array());
+}
+
+function xmlrpc_get_conf_master_agent(){
+   return xmlCall("xmppmaster.get_conf_master_agent", array());
+}
+
+function xmlrpc_get_plugin_lists(){
+   return xmlCall("xmppmaster.get_plugin_lists", array());
+}
+
 function xmlrpc_get_list_of_users_for_shared_qa($namecmd){
   return xmlCall("xmppmaster.get_list_of_users_for_shared_qa", array($namecmd));
 }
