@@ -556,8 +556,13 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                 $se[] = $tx;
                                 }
                             }
+
                             $re['actiontxt'] = str_replace( $txtsearch,"", $re['actiontxt']);
                             $re['actiontxt'] = str_replace( "][", "],[", $re['actiontxt']);
+                            $re['actiontxt'] = str_replace( ",,", ",", $re['actiontxt']);
+                            $re['actiontxt'] = str_replace( ",[,", "[", $re['actiontxt']);
+                            $re['actiontxt'] = str_replace( ",]", "]", $re['actiontxt']);
+
                             $json_data = json_decode('[' . $re['actiontxt'] . ']', true);
 
                             if (count($se) != count($json_data)){
