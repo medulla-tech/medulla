@@ -408,6 +408,22 @@ function xmlrpc_getCountOnlineMachine() {
 }
 
 //######################################
+// descriptor agent base
+//######################################
+//##jfkjfk
+function xmlrpc_get_agent_descriptor_base(){
+    return xmlCall("xmppmaster.get_agent_descriptor_base", array());
+}
+
+function xmlrpc_get_conf_master_agent(){
+   return xmlCall("xmppmaster.get_conf_master_agent", array());
+}
+
+function xmlrpc_get_plugin_lists(){
+   return xmlCall("xmppmaster.get_plugin_lists", array());
+}
+
+//######################################
 // package et syncthing
 //######################################
 
