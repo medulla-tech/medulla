@@ -89,9 +89,11 @@ def ObjectXmpp():
     return PluginManager().getEnabledPlugins()['xmppmaster'].xmppMasterthread().xmpp
 
 
-def getXmppConfiguration():
-    return str(xmppMasterConfig())
+def getXmppstrConfiguration():
+    return str(xmppMasterConfig().__dict__)
 
+def getXmppConfiguration():
+    return xmppMasterConfig().__dict__
 
 def send_message_json(to, jsonstring):
     xmppob = ObjectXmpp()
