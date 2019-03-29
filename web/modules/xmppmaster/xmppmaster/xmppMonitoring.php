@@ -295,7 +295,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     echo "<tr>";
                         // ------------------------------ PLUGIN BASE ----------------------------------------
                         echo "<td>";
-                            echo "<Hn>list pulgin base</Hn>";
+                            echo "<Hn>list plugin base</Hn>";
                             echo "<ul>";
                             foreach($lp[0] as $k => $v ){
                                 echo "<li>";
@@ -309,10 +309,10 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                     if ($v[1] == "relayserver"){
                                         echo "</span>";
                                     }
-                                echo "</li>"; 
+                                echo "</li>";
                             }
                             echo "</ul>";
-                            echo "<Hn>list pulgin scheduler</Hn>";
+                            echo "<Hn>list plugin scheduler</Hn>";
                             echo "<ul>";
                                 foreach($lp[1] as $k => $v ){
                                     echo "<li>";
@@ -536,6 +536,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                         echo "</td>";
                         echo "<td colspan=\"2\">";
                             printf("<h2 style=\"color:blue; font-weight: bold;\">%s</h2>",_T("diff information", "xmppmaster"));
+                            $re['information'] = str_replace( "imagethe", "image. The",$re['information']);
                             echo "<p>".$re['information']."</p>";
                         echo "</td>";
                     echo "</tr>";
