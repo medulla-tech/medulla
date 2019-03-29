@@ -449,10 +449,6 @@ def getQAforMachine(cmd_id, uuidmachine):
     return resultdata
 
 
-def getXmppConfiguration():
-    return getXmppConfiguration()
-
-
 def runXmppApplicationDeployment(*args, **kwargs):
     for count, thing in enumerate(args):
         print '{0}. {1}'.format(count, thing)
@@ -673,6 +669,34 @@ def xmpp_get_info_synchro_packageid(uuidpackage):
     list_relayservernosync = XmppMasterDatabase().get_relayservers_no_sync_for_packageuuid(uuidpackage)
     list_relayserver = XmppMasterDatabase().getRelayServer(enable = True )
     return [list_relayservernosync, list_relayserver]
+
+def get_agent_descriptor_base():
+    return  ObjectXmpp().Update_Remote_Agentlist
+
+def get_plugin_lists():
+    pluginlist = {}
+    for t in ObjectXmpp().plugindata:
+        pluginlist[t] = [ ObjectXmpp().plugindata[t],
+                          ObjectXmpp().plugintype[t],
+                          ObjectXmpp().pluginagentmin[t]]
+
+    result = [pluginlist,
+              ObjectXmpp().plugindatascheduler]
+    return result
+
+
+def get_conf_master_agent():
+    rest={}
+    conf =  dict(getXmppConfiguration())
+    for t in conf:
+        if t in ['passwordconnection',
+                 'dbpasswd', 
+                 'confpasswordmuc' ]:
+            continue
+        if isinstance(conf[t], (dict, list, tuple, int, basestring)):
+            rest[t] =  conf[t]
+    return  json.dumps(rest, indent = 4)
+
 
 def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)
