@@ -200,6 +200,24 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             }
             echo "</table>";
         break;
+        case 'litlog':
+            echo "<h2>AGENT LOG MACHINE</h2>";
+            $suject = array();
+            $suject['subaction'] = 'litlog';
+            $r = explode(",", $_GET['args']);
+            if (count($r) != 0 and $r[0] != ""){
+                $suject['args'] = $r;
+            }else{
+                $suject['args'] = array();
+            }
+            $suject['kwargs'] =  json_decode($_GET['kwargs'], true);
+            $sujectmonitoring = json_encode ($suject);
+            //print_r($sujectmonitoring);
+            $re =  xmlrpc_remoteXmppMonitoring($sujectmonitoring, $jidmachine, 100);
+            //$description = nl2br($re['result'][0]);
+            $description = str_replace(array("\\r\\n","\\r","\\n"),"<br/>", $re['result'][0]);
+            echo "$description";
+        break;
         case 'cputimes':
             echo "TIMES CPU\n";
             //todo mise en forme result
