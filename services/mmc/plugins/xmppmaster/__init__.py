@@ -27,14 +27,12 @@ import os
 import sys
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
-from master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
-from pulse2.database.pkgs import PkgsDatabase
 
 import zlib
 import base64
