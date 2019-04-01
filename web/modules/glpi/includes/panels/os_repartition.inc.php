@@ -39,6 +39,10 @@ class os_repartitionPanel extends Panel {
   function display_content() {
     $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
     $pcs = xmlrpc_get_os_for_dashboard();
+
+    $uninventorized_text = _T("Uninventoried Machines", "dashboard");
+    $uninventorized = $total = get_computer_count_for_dashboard()['unregistered'];
+
     $pcs = array_map(function($pcs) {
     return array(
         'label' => $pcs['os'],
@@ -47,6 +51,14 @@ class os_repartitionPanel extends Panel {
         'href' => urlStrRedirect("base/computers/createOSStaticGroup").'&os='.$pcs['os'].'&version='.$pcs['version'],
     );
 }, $pcs);
+
+  // Add the uninventorized machines to the os list
+  $pcs[] = array(
+      'label' => $uninventorized_text,
+      'value' => $uninventorized,
+      'version' => '',
+      'href' => '',
+  );
 
     $datas = json_encode($pcs);
         echo <<< SPACE
