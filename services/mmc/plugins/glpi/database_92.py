@@ -4746,24 +4746,18 @@ class Glpi92(DyngroupDatabaseHelper):
             ]
         """
 
-        sql="""SELECT
-  glpi_operatingsystems.name as os,
-  glpi_operatingsystemversions.name as version_name
-FROM
-  glpi_computers_pulse
-INNER JOIN
-  glpi_operatingsystems
-ON
-  operatingsystems_id = glpi_operatingsystems.id
+        sql = session.query(Machine.operatingsystems_id,
+            Machine.operatingsystemversions_id,
+            OS.name,
+            OsVersion.name)\
+        .join(OS, OS.id == Machine.operatingsystems_id)\
+        .join(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
+        .order_by(asc(OsVersion.name))
+        sql = self.__filter_on(sql)
 
-left JOIN
-  glpi_operatingsystemversions
-ON
-  operatingsystemversions_id = glpi_operatingsystemversions.id
-ORDER BY
- glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
-        res = self.db.execute(sql)
-        result = [{'os': os, 'version': version, 'count':1} for os, version in res]
+        res = sql.all()
+
+        result = [{'os': element[2], 'version': element[3], 'count':1} for element in res]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
