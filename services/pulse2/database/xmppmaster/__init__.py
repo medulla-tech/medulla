@@ -66,8 +66,8 @@ class XmppMasterDatabase(DatabaseHelper):
         if self.is_activated:
             return None
         self.config = config
-        self.db = create_engine(self.makeConnectionPath(), 
-                                pool_recycle = self.config.dbpoolrecycle, 
+        self.db = create_engine(self.makeConnectionPath(),
+                                pool_recycle = self.config.dbpoolrecycle,
                                 pool_size = self.config.dbpoolsize,
                                 pool_timeout = self.config.dbpooltimeout)
         if not self.db_check():
@@ -208,7 +208,7 @@ class XmppMasterDatabase(DatabaseHelper):
     #@DatabaseHelper._sessionm
     #def xmpp_unregiter_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
         #session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
-                                                 #Syncthingsync.relayserver_jid == jid_relayserver, 
+                                                 #Syncthingsync.relayserver_jid == jid_relayserver,
                                                  #Syncthingsync.typesynchro == typesynchro)).delete()
         #session.commit()
         #session.flush()
@@ -231,7 +231,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     #@DatabaseHelper._sessionm
     #def clear_old_pending_synchro_package(self, session, timeseconde=35):
-        #sql ="""DELETE FROM `xmppmaster`.`syncthingsync` 
+        #sql ="""DELETE FROM `xmppmaster`.`syncthingsync`
             #WHERE
                 #`syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d SECOND);"""%timeseconde
         #session.execute(sql)
@@ -3460,3 +3460,13 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
         return [element for element in result]
+
+    @DatabaseHelper._sessionm
+    def get_machines_online_for_dashboard(self, session):
+        ret = session.query(Machines.uuid_inventorymachine, Machines.macaddress).filter(Machines.agenttype != "relayserver").all()
+
+        if ret is None:
+            ret = []
+        else:
+            ret = [{'uuid':machine[0], 'macaddress':machine[1]} for machine in ret]
+        return ret
