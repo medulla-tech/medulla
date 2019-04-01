@@ -195,8 +195,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 if ($pos1 !== false) {
 //                     echo '<td id="winservices" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 }
-                echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
-                 echo '<td id="disk_usage" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+                echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/navbar/process.png" height="45" width="45"> </td>';
+                 echo '<td id="disk_usage" align="center"><img src="modules/base/graph/navbar/diskusage.png" height="45" width="45"> </td>';
 //                 echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="mmemory" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="ifconfig" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
@@ -206,7 +206,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 echo '<td id="netstat" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="cputimes" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
                 echo '<td id="agentinfo" align="center"><img src="modules/base/graph/navbar/information.png" height="45" width="45"> </td>';
-                echo '<td id="litlog" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+                echo '<td id="litlog" align="center"><img src="modules/base/graph/navbar/listlog.png" height="45" width="45"> </td>';
             echo "</tr>";
             echo '<tr>';
 //                 echo '<td id="battery0" align="center">battery </td>';
@@ -226,7 +226,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 echo '<td id="cputimes0" align="center">cpu times</td>';
                 echo '<td id="agentinfo0" align="center">Agent details</td>';
                 echo '<td  style="max-width:50px;" align="center">
-                        <span id="litlog0">lit log file</span>';
+                        <span id="litlog0">last log</span>';
                         echo '<form name="nblinelog">
                     <input  style="width:35px;" id="nbline" type="number" step="2" value="100" min="50" max="400">
                     </form>';
