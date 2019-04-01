@@ -4872,17 +4872,24 @@ AND
 
         unregistred_online_machine = []
         registered_online_machine = []
+        registered_offline_machine = []
 
+        registered_online_uuid_list = []
         for machine in online_machines:
-            if machine['uuid'] is None:
+            if machine['uuid'] is None or machine['uuid'] == "":
                 unregistred_online_machine.append(machine)
             else:
+                registered_online_uuid_list.append(machine['uuid'])
                 registered_online_machine.append(machine)
 
+        for machine in inventory_filtered_machines:
+            if machine not in registered_online_machine:
+                registered_offline_machine.append(machine)
+
         if count is True:
-            return {"registered" : len(inventory_filtered_machines), "online": len(registered_online_machine), 'unregistered': len(unregistred_online_machine)}
+            return {"registered" : len(inventory_filtered_machines), "online": len(registered_online_machine), 'offline': len(registered_offline_machine), 'unregistered': len(unregistred_online_machine)}
         else:
-            return {"registered" : inventory_filtered_machines, "online": registered_online_machine, 'unregistered': unregistred_online_machine}
+            return {"registered" : inventory_filtered_machines, "online": registered_online_machine, 'offline': registered_offline_machine,'unregistered': unregistred_online_machine}
 
 
 # Class for SQLalchemy mapping
