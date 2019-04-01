@@ -40,7 +40,7 @@ class os_repartitionPanel extends Panel {
     $urlRedirect = urlStrRedirect("base/computers/createOSStaticGroup");
     $pcs = xmlrpc_get_os_for_dashboard();
 
-    $uninventorized_text = _T("Uninventoried Machines", "dashboard");
+    $uninventorized_text = _T("Uninventorized Machines", "dashboard");
     $uninventorized = $total = get_computer_count_for_dashboard()['unregistered'];
 
     $pcs = array_map(function($pcs) {
