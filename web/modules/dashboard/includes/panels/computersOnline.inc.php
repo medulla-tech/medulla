@@ -21,6 +21,7 @@
 
 require_once("modules/dashboard/includes/panel.class.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
 
 $options = array(
@@ -35,28 +36,31 @@ class ComputersOnlinePanel extends Panel {
 
     function display_content() {
         $urlRedirect = urlStrRedirect("base/computers/createMachinesStaticGroup");
-        $total_machines = getSimpleComputerCount();
-        $machines_online = xmlrpc_getCountOnlineMachine();
+        $total = get_computer_count_for_dashboard();
 
-        if($total_machines >= $machines_online) {
-          $machines_offline = $total_machines - $machines_online;
-          $online_text = _T("Machines online : ","dashboard");
-          $offline_text = _T("Machines offline : ","dashboard");
+        $total_machines = $total['online'] + $total['offline']+ $total['unregistered'];
+        $machines_online = $total['online'];
 
+        $machines_offline = $total['registered'] - $total['online'];
+
+        $online_text = _T("Machines online : ","dashboard");
+        $offline_text = _T("Machines offline : ","dashboard");
+        $unregistered_text = _T("Unregistered Machines : ","dashboard");
+        $unregistered = $total["unregistered"];
+
+        $total_machines = $machines_online + $machines_offline + $total['unregistered'];
           echo <<< ONLINE
           <script>
             var onlineDatas = [
               {"label": "$online_text", "value":$machines_online, "href":"$urlRedirect&machines=online"},
-              {'label': '$offline_text', 'value': $machines_offline, "href": "$urlRedirect&machines=offline"}
+              {'label': '$offline_text', 'value': $machines_offline, "href": "$urlRedirect&machines=offline"},
+              {'label': '', 'value': 0, "href": ""},
+              {'label': '$unregistered_text', 'value': $unregistered, "href": ""},
             ];
 
             donut("computersOnline",onlineDatas, "Total", $total_machines);
           </script>
 ONLINE;
-        }
-        else {
-          echo '<span style="color:red">'._T("A problem occurred while counting machines").'</span>';
-        }
     }
 }
 ?>
