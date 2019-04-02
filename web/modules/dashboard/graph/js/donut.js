@@ -18,16 +18,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
- function getDivWidth (div) {
-     var width = d3.select(div)
-       // get the width of div element
-       .style('width')
-       // take of 'px'
-       .slice(0, -2)
-     // return as an integer
-     return Math.round(Number(width))
-   }
-
 function donut(selector, datas, title, subtitle){
   /*
   * the donut function creates a donut with the datas provided and print it inside the specified selector
@@ -52,9 +42,9 @@ function donut(selector, datas, title, subtitle){
     total += datas[i].value;
   }
 
-  var height = 135, width = 125;
-  var outerRadius = 45;
-  var innerRadius = 30;
+  var height = 175, width = 200;
+  var outerRadius = 60;
+  var innerRadius = 40;
   var widgetWidth = d3.select("#"+selector).node().getBoundingClientRect().width;
 
   //var colors = d3.scaleOrdinal(d3.schemeCategory10);
@@ -64,7 +54,6 @@ function donut(selector, datas, title, subtitle){
   var canvas = d3.select("#"+selector).append("svg")
     .attr("width", width)
     .attr("height", height)
-    .style("margin-left",(getDivWidth("#"+selector)-width)/2+"px");
 
   var group = canvas.append("g")
     .attr("transform", "translate("+width/2+","+ height/2+")");
@@ -111,8 +100,11 @@ function donut(selector, datas, title, subtitle){
     .on("mouseover", function(d,i){
       canvas.attr("width", 300);
       d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
-        .style("font-weight","bold");
+        .style("font-size", "2.3em")
+        .style("line-height","0.5em");
+
       d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i).select("a")
+      .style("font-size", "1.1em")
       .style("font-weight","bold");
       // Add the tooltip text
       canvas.append("g")
