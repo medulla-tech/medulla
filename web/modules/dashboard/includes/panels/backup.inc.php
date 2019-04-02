@@ -46,7 +46,6 @@ class BackupPanel extends Panel {
           <script>
             var backupDatas = [
               {"label": "$configured_text", "value":$machines_backup, "href":"$urlRedirect&backup=yes"},
-              {'label': '', 'value': 0, "href": ""},
               {'label': '$not_configured_text', 'value': $machines_not_backup, "href": "$urlRedirect&backup=no"}
             ];
 
