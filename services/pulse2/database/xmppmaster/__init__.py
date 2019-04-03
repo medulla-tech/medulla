@@ -65,8 +65,8 @@ class XmppMasterDatabase(DatabaseHelper):
         if self.is_activated:
             return None
         self.config = config
-        self.db = create_engine(self.makeConnectionPath(), 
-                                pool_recycle = self.config.dbpoolrecycle, 
+        self.db = create_engine(self.makeConnectionPath(),
+                                pool_recycle = self.config.dbpoolrecycle,
                                 pool_size = self.config.dbpoolsize,
                                 pool_timeout = self.config.dbpooltimeout)
         if not self.db_check():
@@ -3389,3 +3389,13 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
         return [element for element in result]
+
+    @DatabaseHelper._sessionm
+    def get_machines_online_for_dashboard(self, session):
+        ret = session.query(Machines.uuid_inventorymachine, Machines.macaddress).filter(Machines.agenttype != "relayserver").all()
+
+        if ret is None:
+            ret = []
+        else:
+            ret = [{'uuid':machine[0], 'macaddress':machine[1]} for machine in ret]
+        return ret
