@@ -564,6 +564,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 pass
 
     def start(self, event):
+        if self.config.executiontimeplugins:
+            cmd = "cat /proc/%s/status | grep Threads"%os.getpid()
+            obj = simplecommandstr(cmd)
+            file_put_contents("/tmp/Execution_time_plugin.txt",
+                              "%s | %s \n" %(str(datetime.now()),
+                              obj['result'] ))
         self.get_roster()
         self.send_presence()
         chatroomjoin = [self.config.confjidchatroom]
