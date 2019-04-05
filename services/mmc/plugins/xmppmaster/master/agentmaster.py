@@ -589,6 +589,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logging.error("Executing plugin %s %s" % (plugin, str(e)))
                 traceback.print_exc(file=sys.stdout)
 
+        # reinitialize of relay server charge
+        msg_ars_init_charge = {'action': "cluster",
+                               'sessionid': name_random(5, "clusterchargeinit"),
+                               'data': {'subaction': 'startmmc'} }
+        for ars in  XmppMasterDatabase().get_List_jid_ServerRelay_enable():
+            self.send_message(mto=ars[0],
+                              mbody=json.dumps(msg_ars_init_charge),
+                              mtype='chat')
+
     def xmpplog(self,
                 text,
                 type='noset',
