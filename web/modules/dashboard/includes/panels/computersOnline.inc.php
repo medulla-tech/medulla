@@ -45,7 +45,7 @@ class ComputersOnlinePanel extends Panel {
 
         $online_text = _T("Machines online","dashboard")." : ";
         $offline_text = _T("Machines offline","dashboard")." : ";
-        $uninventorized_text = _T("Uninventorized Machines","dashboard")." : ";
+        $uninventorized_text = _T("Uninventoried Machines","dashboard")." : ";
         $uninventorized = $total["unregistered"];
 
         $total_machines = $machines_online + $machines_offline + $total['unregistered'];
