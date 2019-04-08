@@ -439,6 +439,17 @@ class PkgsDatabase(DatabaseHelper):
             result_list.append(packageuid.uuidpackage)
         return result_list
 
+
+    @DatabaseHelper._sessionm
+    def pkgs_register_synchro_package(self, session, uuidpackage, typesynchro ):
+        #list id server relay
+        list_server_relay = XmppMasterDatabase().get_List_jid_ServerRelay_enable(enabled=1)
+        for jid in list_server_relay:
+            #exclude local package server
+            if jid[0].startswith("rspulse@pulse/"):
+                continue
+            self.setSyncthingsync(uuidpackage, jid[0], typesynchro , watching = 'yes')
+
     @DatabaseHelper._sessionm
     def clear_old_pending_synchro_package(self, session, timeseconde=35):
         sql ="""DELETE FROM `pkgs`.`syncthingsync`
