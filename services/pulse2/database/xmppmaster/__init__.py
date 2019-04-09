@@ -36,7 +36,7 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Organization, Packages_list, Qa_custom_command,\
     Cluster_ars, Has_cluster_ars,\
     Command_action, Command_qa,\
-    Organization_ad
+    Organization_ad, Cluster_resources
 # Imported last
 import logging
 import json
@@ -1143,6 +1143,63 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
         return new_deploy.id
+
+    @DatabaseHelper._sessionm
+    def addcluster_resources(self,
+                             session,
+                             jidmachine,
+                             jidrelay,
+                             hostname,
+                             sessionid,
+                             login="",
+                             startcmd = None,
+                             endcmd = None
+                            ):
+        """
+            add ressource for cluster ressource
+        """
+        try:
+            new_cluster_resources = Cluster_resources()
+            new_cluster_resources.jidmachine = jidmachine
+            new_cluster_resources.jidrelay = jidrelay
+            new_cluster_resources.hostname = hostname
+            new_cluster_resources.sessionid = sessionid
+            new_cluster_resources.login = login
+            new_cluster_resources.startcmd =startcmd
+            new_cluster_resources.endcmd = endcmd
+            session.add(new_cluster_resources)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+        return new_cluster_resources.id
+
+    @DatabaseHelper._sessionm
+    def getcluster_resources(self, session, jidmachine):
+        clusterresources = session.query(Cluster_resources).filter( Cluster_resources.jidmachine == str(jidmachine)).all()
+        session.commit()
+        session.flush()
+        ret = { 'len' : len(clusterresources) }
+        arraylist=[]
+        for t in clusterresources:
+            obj = {}
+            obj['jidmachine'] = t.jidmachine
+            obj['jidrelay'] = t.jidrelay
+            obj['hostname'] = t.hostname
+            obj['sessionid'] = t.sessionid
+            obj['login'] = t.login
+            obj['startcmd'] = t.startcmd
+            obj['endcmd'] = t.endcmd
+            arraylist.append(obj)
+        ret['resource']= arraylist
+        self.clean_resources(jidmachine)
+        return ret
+
+    @DatabaseHelper._sessionm
+    def clean_resources(self, session, jidmachine):
+        session.query(Cluster_resources).filter( Cluster_resources.jidmachine == str(jidmachine) ).delete()
+        session.commit()
+        session.flush()
 
     @DatabaseHelper._sessionm
     def getlinelogswolcmd(self, session, idcommand, uuid):
