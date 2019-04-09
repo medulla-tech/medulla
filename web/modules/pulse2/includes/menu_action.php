@@ -158,7 +158,55 @@ foreach ($actions as $action){
                 $paramArray['establishproxy'] = "yes";
             }
         }
-        echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+        switch($action->action)
+        {
+          case "invtabs":
+            if(hasCorrectAcl('base', 'computers', "glpitabs"))
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+            else
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
+            break;
+          case "vnc_client":
+            if(hasCorrectAcl('base', 'computers', "vnc_client"))
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+            else
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
+            break;
+          case "hostStatus":
+            if(hasCorrectAcl('backuppc', 'backuppc', "hostStatus"))
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+            else
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
+            break;
+          case "msctabs":
+            if(hasCorrectAcl('base', 'computers', "msctabs"))
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+            else
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
+            break;
+          case "imgtabs":
+            if(hasCorrectAcl('base', 'computers', "imgtabs"))
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+            else
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
+            break;
+          case "xmppfilesbrowsingne":
+            if(hasCorrectAcl('xmppmaster', 'xmppmaster', "xmppfilesbrowsingne"))
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+            else
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
+            break;
+          case "consolecomputerxmpp":
+            if(hasCorrectAcl('xmppmaster', 'xmppmaster', "consolecomputerxmpp"))
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+            else
+              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
+            break;
+          default:
+            echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+            break;
+        }
+
         $urlChunk = "&".strval(http_build_query($paramArray));
 //         if (is_array($paramArray) & !empty($paramArray)){
 //             $urlChunk = $action->buildUrlChunk($paramArray);
