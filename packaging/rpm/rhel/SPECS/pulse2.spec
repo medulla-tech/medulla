@@ -177,11 +177,6 @@ service pulse2-launchers start >/dev/null 2>&1 || :
 service pulse2-launchers stop >/dev/null 2>&1 || :
 
 %files -n pulse2-launchers
-service asks the launcher to connect to a set of target computers and start
-a deployment. Multiple launchers can be instantiated at the same time for
-scalability.
-
-%files -n pulse2-launchers
 %{_sysconfdir}/mmc/pulse2/launchers/keys
 
 #--------------------------------------------------------------------
@@ -386,6 +381,21 @@ This package contains the pkgs plugin for the MMC agent.
 
 #--------------------------------------------------------------------
 
+%package -n python-mmc-kiosk
+Summary:    Kiosk plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+
+%description -n python-mmc-kiosk
+This package contains the pkgs plugin for the MMC agent.
+
+%files -n python-mmc-kiosk
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/kiosk.ini
+%python2_sitelib/mmc/plugins/kiosk
+%python2_sitelib/pulse2/database/kiosk
+
+#--------------------------------------------------------------------
+
 %package -n python-mmc-xmppmaster
 Summary:    Xmppmaster plugin for the MMC agent
 Group:      System/Servers
@@ -435,6 +445,22 @@ interface.
 
 %files -n mmc-web-pkgs
 %{_datadir}/mmc/modules/pkgs
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-kiosk
+Summary:        Kiosk plugin for the MMC web interface
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       mmc-web-base >= %mmc_version
+
+
+%description -n mmc-web-kiosk
+This package contains the kiosk plugin for the MMC web
+interface.
+
+%files -n mmc-web-kiosk
+%{_datadir}/mmc/modules/kiosk
 
 #--------------------------------------------------------------------
 
@@ -502,7 +528,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-packageparser.py
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
-config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
+%config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
 %_var/lib/pulse2/file-transfer
 #FIXME: Move on the correct package later
 # Does not belong to here, lefover file.

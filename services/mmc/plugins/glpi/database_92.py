@@ -66,6 +66,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback,sys
+
 class Glpi92(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
@@ -4745,24 +4746,18 @@ class Glpi92(DyngroupDatabaseHelper):
             ]
         """
 
-        sql="""SELECT
-  glpi_operatingsystems.name as os,
-  glpi_operatingsystemversions.name as version_name
-FROM
-  glpi_computers_pulse
-INNER JOIN
-  glpi_operatingsystems
-ON
-  operatingsystems_id = glpi_operatingsystems.id
+        sql = session.query(Machine.operatingsystems_id,
+            Machine.operatingsystemversions_id,
+            OS.name,
+            OsVersion.name)\
+        .join(OS, OS.id == Machine.operatingsystems_id)\
+        .join(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
+        .order_by(asc(OsVersion.name))
+        sql = self.__filter_on(sql)
 
-left JOIN
-  glpi_operatingsystemversions
-ON
-  operatingsystemversions_id = glpi_operatingsystemversions.id
-ORDER BY
- glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
-        res = self.db.execute(sql)
-        result = [{'os': os, 'version': version, 'count':1} for os, version in res]
+        res = sql.all()
+
+        result = [{'os': element[2], 'version': element[3], 'count':1} for element in res]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
@@ -4860,6 +4855,37 @@ AND
         res = session.execute(sql)
         result = [{'id':a, 'hostname':b} for a,b in res]
         return result
+
+    @DatabaseHelper._sessionm
+    def get_computer_count_for_dashboard(self, session, count=True):
+        inventory_filtered_machines = self.__filter_on(session.query(Machine.id)).all()
+
+        inventory_filtered_machines = ['UUID%s'%id[0] for id in inventory_filtered_machines]
+        online_machines = XmppMasterDatabase().get_machines_online_for_dashboard()
+
+        registered_offline_machine = []
+
+        unregistred_online_machine = []
+        registered_online_machine = []
+        registered_offline_machine = []
+
+        registered_online_uuid_list = []
+        for machine in online_machines:
+            if machine['uuid'] is None or machine['uuid'] == "":
+                unregistred_online_machine.append(machine)
+            else:
+                registered_online_uuid_list.append(machine['uuid'])
+                registered_online_machine.append(machine)
+
+        for machine in inventory_filtered_machines:
+            if machine not in registered_online_machine:
+                registered_offline_machine.append(machine)
+
+        if count is True:
+            return {"registered" : len(inventory_filtered_machines), "online": len(registered_online_machine), 'offline': len(registered_offline_machine), 'unregistered': len(unregistred_online_machine)}
+        else:
+            return {"registered" : inventory_filtered_machines, "online": registered_online_machine, 'offline': registered_offline_machine,'unregistered': unregistred_online_machine}
+
 
 # Class for SQLalchemy mapping
 class Machine(object):

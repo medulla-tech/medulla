@@ -36,6 +36,8 @@ class AntivirusPanel extends Panel {
     function display_content() {
 
         $count = getAntivirusStatus();
+        $uninventorized_text = _T("Uninventoried Machines", "dashboard");
+        $uninventorized = get_computer_count_for_dashboard()['unregistered'];
 
         $jsonCount = json_encode($count);
         $createGroupText = json_encode(_T("Create a group", "glpi"));
@@ -51,6 +53,7 @@ class AntivirusPanel extends Panel {
         greenMessage = $greenMessage,
         orangeMessage = $orangeMessage,
         redMessage = $redMessage,
+        uninventorized = $uninventorized,
         createGroupText = $createGroupText,
         urlRedirect = $urlRedirect;
 
@@ -70,8 +73,13 @@ class AntivirusPanel extends Panel {
             'value':("orange" in machineCount)?machineCount["orange"]:0,
             'href':urlRedirect+"&group=orange",
           },
+          {
+            'label': '$uninventorized_text',
+            'value': uninventorized,
+            'href':"",
+          }
         ];
-      donut("antivirus-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"]);
+      donut("antivirus-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"]+uninventorized);
     </script>
 ANTIVIRUS;
     }

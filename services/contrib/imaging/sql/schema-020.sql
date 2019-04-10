@@ -32,4 +32,4 @@ SET
 WHERE
     `id` = '2';
 
-UPDATE version set Number = 18;
+UPDATE version set Number = 20;

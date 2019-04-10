@@ -53,6 +53,22 @@ Pulse 2 4.5
 * [BUGFIX]  Fix abort of deployments in cases where jidmachine and jidrelay are fake
 
 
+Pulse 2 4.4.1
+===========
+* [BUGFIX]Fix displaying OSes in 'Operating system' dashboard widget
+* [BUGFIX] Fix the display of the command executed
+* [BUGFIX] Remove sql file to handle UEFI ( we need new davos first )
+* [BUGFIX] Improve the creation of the groups for machineOnline widget
+* [BUGFIX] Allow to modify imaging groups for machines with more than one
+           ethernet card
+* [BUGFIX] Fix editing configuration files in client machine
+* [BUGFIX] Root can delete imaging groups shared with him
+* [BUGFIX] The action navbar is uniformized
+* [BUGFIX] In backuppc the computer icon is colored when the machine is
+           on line
+* [BUGFIX] use one database access instead of two
+* [BUGFIX] Add the config button in the xmpp console page
+
 Pulse 2 4.4
 ===========
 * [FEATURE] Improve registry settings description in config files

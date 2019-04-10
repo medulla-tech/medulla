@@ -40,9 +40,12 @@ class GlpiPanel extends Panel {
 
         $jsonCount = json_encode($count);
         $jsonDays= json_encode($days);
+        $total = get_computer_count_for_dashboard();
+        $unregistered = json_encode($total['unregistered']);
         $createGroupText = json_encode(_T("Create a group", "glpi"));
         $lessThanText = json_encode(_T("< %s days: %percent% (%d)", "glpi"));
         $moreThanText = json_encode(_T("> %s days: %percent% (%d)", "glpi"));
+        $unregisteredText = json_encode(_T("Uninventoried machines", "glpi"));
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
 
         echo <<< INVENTORY
@@ -50,8 +53,10 @@ class GlpiPanel extends Panel {
     <script type="text/javascript">
     var machineCount = $jsonCount,
         days = $jsonDays,
+        unregistered = $unregistered,
         lessThanText = $lessThanText,
         moreThanText = $moreThanText,
+        unregisteredText = $unregisteredText,
         createGroupText = $createGroupText,
         urlRedirect = $urlRedirect;
 
@@ -70,10 +75,14 @@ class GlpiPanel extends Panel {
         'label': moreThanText.replace("%s", days['orange']).split(": %percent%")[0],
         'value':("orange" in machineCount)?machineCount["orange"]:0,
         'href':urlRedirect+"&group=orange&days="+days['orange'],
+      },
+      {
+        'label': unregisteredText,
+        'value':unregistered,
+        'href':'',
       }
     ];
-    donut("inventory-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"])
-
+    donut("inventory-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"]+unregistered)
     </script>
 INVENTORY;
     }

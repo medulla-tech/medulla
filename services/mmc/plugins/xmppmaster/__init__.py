@@ -28,10 +28,12 @@ import sys
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+
 import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
+
 import zlib
 import base64
 from master.lib.utils import name_random, simplecommand, file_get_contents
@@ -446,10 +448,6 @@ def getQAforMachine(cmd_id, uuidmachine):
     return resultdata
 
 
-def getXmppConfiguration():
-    return getXmppConfiguration()
-
-
 def runXmppApplicationDeployment(*args, **kwargs):
     for count, thing in enumerate(args):
         print '{0}. {1}'.format(count, thing)
@@ -542,7 +540,6 @@ def remotefileeditaction(jidmachine, data):
     if 'data' in objout:
         return objout['data']
     return objout
-
 
 def getcontentfile(pathfile, deletefile):
     if os.path.isfile(pathfile):
@@ -646,6 +643,34 @@ def runXmppScript(cmd, machine):
 
 def getCountOnlineMachine():
     return XmppMasterDatabase().getCountOnlineMachine()
+
+
+def get_agent_descriptor_base():
+    return  ObjectXmpp().Update_Remote_Agentlist
+
+def get_plugin_lists():
+    pluginlist = {}
+    for t in ObjectXmpp().plugindata:
+        pluginlist[t] = [ ObjectXmpp().plugindata[t],
+                          ObjectXmpp().plugintype[t],
+                          ObjectXmpp().pluginagentmin[t]]
+
+    result = [pluginlist,
+              ObjectXmpp().plugindatascheduler]
+    return result
+
+
+def get_conf_master_agent():
+    rest={}
+    conf =  dict(getXmppConfiguration())
+    for t in conf:
+        if t in ['passwordconnection',
+                 'dbpasswd',
+                 'confpasswordmuc' ]:
+            continue
+        if isinstance(conf[t], (dict, list, tuple, int, basestring)):
+            rest[t] =  conf[t]
+    return  json.dumps(rest, indent = 4)
 
 
 def get_list_of_users_for_shared_qa(namecmd):

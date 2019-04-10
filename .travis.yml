@@ -1,5 +1,6 @@
 branches:
   only:
+  - master
   - xmppmaster
 before_install:
 - sudo sh -c "echo 'deb https://git.siveo.net xmppmaster mmc-core' > /etc/apt/sources.list.d/pulse.list"

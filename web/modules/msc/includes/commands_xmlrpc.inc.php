@@ -110,7 +110,6 @@ function xmlrpc_get_count_timeout_wol_deploy($command_id, $datestart){
     return xmlCall('msc.get_count_timeout_wol_deploy', array($command_id, $datestart));
 }
 
-
 function xmlrpc_updategroup($grp_id){
     return xmlCall('msc.updategroup', array($grp_id));
 }

@@ -1,11 +1,8 @@
-# Pulse (devel branch)*
+# Pulse
 
-*The devel branch corresponds to the release actively under development.*
+[![Build Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=master)](https://travis-ci.org/pulse-project/pulse2/branches)
 
-
-[![Build Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=xmppmaster)](https://travis-ci.org/pulse-project/pulse2/branches)
-
-Pulse is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are.
+Pulse is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are. 
 
 Pulse provides a real-time management solution for complex and distributed environments.
 
@@ -26,6 +23,12 @@ Pulse provides a real-time management solution for complex and distributed envir
 
 ## Installation
 
+* Stable branch and previous tagged version
+
+Read INSTALL files of each project (first mmc-core and pulse2) 
+
+* Devel branch
+
 Installation process had been simplified to easily install all differents components from one command line.
 
 [Easy install process](https://github.com/pulse-project/tools/tree/master/install)
@@ -33,11 +36,11 @@ Installation process had been simplified to easily install all differents compon
 
 ## Supported clients
 
-Pulse manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX
+Pulse manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX 
 
 ## Documentation
 
-Read [documentation](http://pulse-automation-tools.readthedocs.org/)
+Read [documentation](http://pulse-automation-tools.readthedocs.org/) 
 
 Read [code documentation](http://doc.siveo.net/)
 

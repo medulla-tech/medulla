@@ -65,8 +65,8 @@ class XmppMasterDatabase(DatabaseHelper):
         if self.is_activated:
             return None
         self.config = config
-        self.db = create_engine(self.makeConnectionPath(), 
-                                pool_recycle = self.config.dbpoolrecycle, 
+        self.db = create_engine(self.makeConnectionPath(),
+                                pool_recycle = self.config.dbpoolrecycle,
                                 pool_size = self.config.dbpoolsize,
                                 pool_timeout = self.config.dbpooltimeout)
         if not self.db_check():
@@ -3075,6 +3075,68 @@ class XmppMasterDatabase(DatabaseHelper):
         return resulttypemachine
 
     @DatabaseHelper._sessionm
+    def getPresencejiduser(self, session, userjid):
+        sql = """SELECT COUNT(jid) AS nb
+            FROM
+                 xmppmaster.machines
+             WHERE
+              jid LIKE ('%s%%');"""%(userjid)
+        presencejid = session.execute(sql)
+        session.commit()
+        session.flush()
+        ret=[m[0] for m in presencejid]
+        if ret[0] == 0 :
+            return False
+        return True
+
+    @DatabaseHelper._sessionm
+    def delPresenceMachinebyjiduser(self, session, jiduser):
+        result = ['-1']
+        typemachine = "machine"
+        try:
+            sql = """SELECT
+                        id, hostname, agenttype
+                    FROM
+                        xmppmaster.machines
+                    WHERE
+                        xmppmaster.machines.jid like('%s@%%');"""%jiduser
+            id = session.execute(sql)
+            session.commit()
+            session.flush()
+            result=[x for x in id][0]
+            sql  = """DELETE FROM `xmppmaster`.`machines`
+                    WHERE
+                        `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
+
+            sql1 = """DELETE FROM `xmppmaster`.`network`
+                    WHERE
+                        `network`.`machines_id` = '%s';"""%result[0]
+            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers`
+                    WHERE
+                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
+            if result[2] == "relayserver":
+                typemachine = "relayserver"
+                sql2 = """UPDATE `xmppmaster`.`relayserver`
+                            SET
+                                `enabled` = '0'
+                            WHERE
+                                `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
+                session.execute(sql2)
+            session.execute(sql)
+            session.execute(sql1)
+            session.execute(sql3)
+            session.commit()
+            session.flush()
+        except IndexError:
+            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jiduser)
+            return {}
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return {}
+        resulttypemachine={"type" : typemachine }
+        return resulttypemachine
+
+    @DatabaseHelper._sessionm
     def getGuacamoleRelayServerMachineUuid(self, session, uuid):
         relayserver = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).one()
         session.commit()
@@ -3384,3 +3446,13 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
         return [element for element in result]
+
+    @DatabaseHelper._sessionm
+    def get_machines_online_for_dashboard(self, session):
+        ret = session.query(Machines.uuid_inventorymachine, Machines.macaddress).filter(Machines.agenttype != "relayserver").all()
+
+        if ret is None:
+            ret = []
+        else:
+            ret = [{'uuid':machine[0], 'macaddress':machine[1]} for machine in ret]
+        return ret
