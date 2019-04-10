@@ -31,11 +31,11 @@ $p->display();
 <style>
 .shadow
 {
-  -moz-box-shadow: 4px 4px 10px #888;  
-  -webkit-box-shadow: 4px 4px 10px #888;  
+  -moz-box-shadow: 4px 4px 10px #888;
+  -webkit-box-shadow: 4px 4px 10px #888;
   box-shadow:4px 4px 6px #888;
 }
- 
+
  li.folder a {
         padding: 0px 0px  5px 22px;
         margin: 0 0px 0 0px;
@@ -151,14 +151,14 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
 
 
     if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT ABORT"){
-        echo "<H1>DEPLOYMENT ABORT</H1>"; 
+        echo "<H1>DEPLOYMENT ABORT</H1>";
     }
 
     $boolterminate = false;
     if(isset($info['objectdeploy'][0]['sessionid'])){
         if (isset($_POST['bStop'])){
             $_SESSION[$info['objectdeploy'][0]['sessionid']]="end";
-            // if stop deploy message direct in les log 
+            // if stop deploy message direct in les log
             // session for session id
             //xmlrpc_getlinelogssession($sessionxmpp);
             xmlrpc_set_simple_log('<span style="color : Orange, font-style : bold">WARNING !!! </span><span  style="color : Orange ">Request for a stop of deployment</span>',
@@ -289,7 +289,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                                     $deploymachine['enddateh'][2],
                                     $deploymachine['enddateh'][0]);
         $end_date_plan_msc = date("Y-m-d H:i:s", $end_date_plan_msc);
-         
+
             echo "<br>";
             echo "<h2 class='replytab' id='detailmach'>Hide Machine Details</h2>";
             echo "<div id='titledetailmach'>";
@@ -299,7 +299,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                             echo '<td style="width: 210px;">';
                                 echo '<span style=" padding-left: 32px;">Machine</span>';
                             echo '</td>';
-                   
+
                             echo '<td style="width: ;">';
                                 echo '<span style=" padding-left: 32px;">Ip Machine</span>';
                             echo '</td>';
@@ -313,7 +313,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                             echo "<td>";
                                 echo $hostname;
                             echo "</td>";
-                            
+
                             echo "<td>";
                                 echo $deploymachine['target_ipaddr'];
                             echo "</td>";
@@ -397,10 +397,10 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                 echo "</div>";
                 echo '<br>';
         }
-    
+
     if ( $info['len'] != 0)
     {
-        if(isset($info['objectdeploy'][0]['state']) && 
+        if(isset($info['objectdeploy'][0]['state']) &&
             (   $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START" ||
                 $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
             if ( !$boolterminate && !isset($_POST['bStop'])){
@@ -418,8 +418,10 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         $jidmachine = $info['objectdeploy'][0]['jidmachine'];
         $jid_relay = $info['objectdeploy'][0]['jid_relay'];
         $datestart =  date("Y-m-d H:i:s", $start);
+        $scalardate = get_object_vars($info['objectdeploy'][0]['start'])['scalar'];
+        $formateddate = substr($scalardate, 0,4).'-'.substr($scalardate, 4,2).'-'.substr($scalardate, 6,2).' '.substr($scalardate, 9);
         echo "<div>";
-            echo '<H2 style="align=center;">Start deployment :'.$datestart."</H2>";
+            echo '<H2 style="align=center;">Start deployment : '.$formateddate."</H2>";
         echo "</div>";
         if (isset($infoslist)){
             if ( $info['len'] != 0){
@@ -604,7 +606,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                 }
 
                 if (isset($step->completed)){
-                    echo '<div class="shadow" 
+                    echo '<div class="shadow"
                                 style="  color:'.$color.';
                                         display: none;
                                             padding:0 10px;">';
