@@ -21,6 +21,7 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("modules/base/includes/users-xmlrpc.inc.php");
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     require_once("modules/xmppmaster/includes/xmlrpc.php");
 }
@@ -55,11 +56,9 @@ $_SESSION['cn'] = isset($_SESSION['cn']) ? $_SESSION['cn'] : null;
 $paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID'],'vnctype' => $element, "presencemachinexmpp" => $presencemachinexmpp);
 
 $inventAction = new ActionItem(_T("Inventory", "pulse2"),"invtabs","inventory","inventory", "base", "computers");
-$extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
-$backupAction = new ActionItem(_("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc");
-
+$extticketAction = new ActionItem(_T("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
+$backupAction = new ActionItem(_T("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc");
 $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
-
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
@@ -73,8 +72,6 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
     $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
     $DeployQuickxmpp->setWidth(600);
-
-
 
     if ($presencemachinexmpp != 1) {
         $logAction = new EmptyActionItem1(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
@@ -118,7 +115,6 @@ else{
  * @param string $action an action
  * @return bool
  */
-
 function modIsActive($action) {
     $modActionAssoc = array(
         "img" => "imaging",
@@ -158,54 +154,14 @@ foreach ($actions as $action){
                 $paramArray['establishproxy'] = "yes";
             }
         }
-        switch($action->action)
-        {
-          case "invtabs":
-            if(hasCorrectAcl('base', 'computers', "glpitabs"))
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-            else
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
-            break;
-          case "vnc_client":
-            if(hasCorrectAcl('base', 'computers', "vnc_client"))
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-            else
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
-            break;
-          case "hostStatus":
-            if(hasCorrectAcl('backuppc', 'backuppc', "hostStatus"))
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-            else
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
-            break;
-          case "msctabs":
-            if(hasCorrectAcl('base', 'computers', "msctabs"))
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-            else
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
-            break;
-          case "imgtabs":
-            if(hasCorrectAcl('base', 'computers', "imgtabs"))
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-            else
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
-            break;
-          case "xmppfilesbrowsingne":
-            if(hasCorrectAcl('xmppmaster', 'xmppmaster', "xmppfilesbrowsingne"))
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-            else
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
-            break;
-          case "consolecomputerxmpp":
-            if(hasCorrectAcl('xmppmaster', 'xmppmaster', "consolecomputerxmpp"))
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-            else
-              echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity: 0.5;\" >";
-            break;
-          default:
+        if($action->action !="invtabs" && hasCorrectAcl($action->module, $action->submod, $action->action))
             echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-            break;
-        }
+        else if($action->action =="invtabs" && hasCorrectAcl($action->module, $action->submod, 'glpitabs'))
+            echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+        else
+            echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; opacity:0.5;\" >";
+
+
 
         $urlChunk = "&".strval(http_build_query($paramArray));
 //         if (is_array($paramArray) & !empty($paramArray)){
@@ -215,6 +171,7 @@ foreach ($actions as $action){
 //             $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
 //
 //         }
+
         if (modIsActive($action->action)) {
             switch($action->action){
                 case "vnc_client":
@@ -232,18 +189,30 @@ foreach ($actions as $action){
                     }
                     break;
                 case "deployquick" :
-                    echo '<a title="' . $action->desc . '" onclick="PopupWindow(event, \'' . urlStr($action->path) . $urlChunk . '\'); return false;" href="#">&nbsp;</a>';
+                    if(hasCorrectAcl($action->module,$action->submod, $action->action))
+                      echo '<a title="' . $action->desc . '" onclick="PopupWindow(event, \'' . urlStr($action->path) . $urlChunk . '\'); return false;" href="#">&nbsp;</a>';
+                    else
+                      echo '<a title="' . $action->desc . '" href="#">&nbsp;</a>';
                     break;
 
                 case "consolecomputerxmpp":
                     if ($presencemachinexmpp == 1){
                         $url =  $action->path;
-                        echo "<a title=\"".$action->desc."\" href=\"" . urlStr($url) . $urlChunk . "\">&nbsp;</a>";
+                        if (hasCorrectAcl($action->module, $action->submod, $action->action))
+                          echo "<a title=\"".$action->desc."\" href=\"" . urlStr($url) . $urlChunk . "\">&nbsp;</a>";
+                        else {
+                          echo "<a title=\"".$action->desc."\" href=\"\">&nbsp;</a>";
+                        }
                     }
                     break;
                 default:
                     $url = (in_array('glpi', $_SESSION['supportModList']) && $action->path == 'base/computers/invtabs') ? 'base/computers/glpitabs' : $action->path;
-                    echo "<a title=\"".$action->desc."\" href=\"" . urlStr($url) . $urlChunk . "\">&nbsp;</a>";
+                    if($action->action=="invtabs")
+                      $action->action ="glpitabs";
+                    if (hasCorrectAcl($action->module, $action->submod, $action->action))
+                      echo "<a title=\"".$action->desc."\" href=\"" . urlStr($url) . $urlChunk . "\">&nbsp;</a>";
+                    else
+                      echo "<a title=\"".$action->desc."\" href=\"#\">&nbsp;</a>";
                     break;
             }
         }
