@@ -70,7 +70,7 @@ var i = 0,
 	duration = 750,
 	root;
 
-var tree = d3.layout.tree()
+var tree = d3.tree()
 	.size([height, width]);
 
 var diagonal = d3.svg.diagonal()
