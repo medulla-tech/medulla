@@ -73,31 +73,6 @@ Requires:   python-memory-profiler
 XMLRPC server of the Console API.
 This is the underlying service used by the MMC web interface.
 
-%post -n mmc-agent
-# Workaround segfaults in the services plugin
-# https://qa.mandriva.com/show_bug.cgi?id=66109
-sed -i 's/^#multithreading = 1/multithreading = 0/' %{_sysconfdir}/mmc/agent/config.ini
-%if %_vendor == "Mageia"
-%_post_service mmc-agent
-%else
-service mmc-agent start >/dev/null 2>&1 || :
-%endif
-
-%preun -n mmc-agent
-# Stop mmc-agent on uninstall
-if [ $1 -eq 0 ]; then
-   %if %_vendor == "Mageia"
-       %_preun_service mmc-agent
-   %else
-       service mmc-agent stop >/dev/null 2>&1 || :
-   %endif
-fi
-
-# Filetriggers to restart mmc-agent if a new module is installed.
-%transfiletriggerin -n mmc-agent --  %{py_puresitedir}/mmc
-[ -z \$MMC_AGENT ] && service mmc-agent restart
-
-
 %files -n mmc-agent
 %defattr(-,root,root,0755)
 %doc COPYING ChangeLog

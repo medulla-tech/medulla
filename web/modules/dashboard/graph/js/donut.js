@@ -18,15 +18,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
- function getDivWidth (div) {
-     var width = d3.select(div)
-       // get the width of div element
-       .style('width')
-       // take of 'px'
-       .slice(0, -2)
-     // return as an integer
-     return Math.round(Number(width))
-   }
+function getDivWidth (div) {
+  var width = d3.select(div)
+    // get the width of div element
+    .style('width')
+    // take of 'px'
+    .slice(0, -2)
+  // return as an integer
+  return Math.round(Number(width))
+}
 
 function donut(selector, datas, title, subtitle){
   /*
@@ -51,14 +51,13 @@ function donut(selector, datas, title, subtitle){
       datas[i].unit = "";
     total += datas[i].value;
   }
-
   var height = 135, width = 125;
   var outerRadius = 45;
   var innerRadius = 30;
   var widgetWidth = d3.select("#"+selector).node().getBoundingClientRect().width;
 
   //var colors = d3.scaleOrdinal(d3.schemeCategory10);
-  var colors = ["#52b749","#e03c3c", "#f48f42"];
+  var colors = ["#52b749","#e03c3c", "#f48f42", "#523c42"];
 
   var canvas = d3.select("#"+selector).append("svg")
     .attr("width", width)
@@ -110,7 +109,8 @@ function donut(selector, datas, title, subtitle){
     .on("mouseover", function(d,i){
       canvas.attr("width", 300);
       d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
-        .style("font-weight","bold");
+      .style("font-weight","bold");
+
       d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i).select("a")
       .style("font-weight","bold");
       // Add the tooltip text

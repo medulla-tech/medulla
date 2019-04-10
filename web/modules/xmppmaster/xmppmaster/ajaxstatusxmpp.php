@@ -244,6 +244,7 @@ $n->setParamInfo($params);
 // $n->end = (isset($_GET['end'])?$_GET['end']:$maxperpage);
 $n->start = 0;
 $n->end = $arraydeploy['lentotal'];
+
 $n->display();
 echo "<br>";
 ?>

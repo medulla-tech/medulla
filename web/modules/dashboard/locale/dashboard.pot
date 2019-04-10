@@ -152,11 +152,11 @@ msgstr ""
 msgid "Machines Online"
 msgstr ""
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:43
+#: modules/dashboard/includes/panels/computersOnline.inc.php:44
 msgid "Machines online : "
 msgstr ""
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:44
+#: modules/dashboard/includes/panels/computersOnline.inc.php:45
 msgid "Machines offline : "
 msgstr ""
 

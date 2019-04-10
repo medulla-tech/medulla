@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2017 siveo, http://www.siveo.net/
+ * (c) 2015 siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -186,10 +186,10 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             echo "<input id='kwargs' type= 'hidden' name = 'kwargs' value=''>";
         echo '</form>';
 
-//         if ($_GET['presencemachinexmpp']){
-//             echo "<h2>Status Machine :".$_GET['cn']."</h2>";
-//             echo "<table>";
-//             echo '<tr>';
+        if ($_GET['presencemachinexmpp']){
+            //echo "<h2>Status Machine :".$_GET['cn']."</h2>";
+            echo "<table>";
+            echo '<tr>';
 //                 echo '<td id="battery" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 $pos1 = stripos($_GET['os'], "win");
 //                 if ($pos1 !== false) {
@@ -200,11 +200,14 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="mmemory" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="ifconfig" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
-//                 //echo '<td id="cpu_num" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+// 
+//                echo '<td id="cpu_num" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+//  
 //                 echo '<td id="netstat" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="cputimes" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
-//             echo "</tr>";
-//             echo '<tr>';
+                echo '<td id="agentinfo" align="center"><img src="modules/base/graph/navbar/information.png" height="45" width="45"> </td>';
+            echo "</tr>";
+            echo '<tr>';
 //                 echo '<td id="battery0" align="center">battery </td>';
 //                 $pos1 = stripos($_GET['os'], "win");
 //                 if ($pos1 !== false) {
@@ -215,12 +218,15 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 echo '<td id="sensors_fans0" align="center">sensors_fans</td>';
 //                 echo '<td id="mmemory0" align="center">memory</td>';
 //                 echo '<td id="ifconfig0" align="center">if config</td>';
-//                 //echo '<td id="cpu_num0" align="center">cpu_num</td>';
+// 
+//                 echo '<td id="cpu_num0" align="center">cpu_num</td>';
+// 
 //                 echo '<td id="netstat0" align="center">netstat</td>';
 //                 echo '<td id="cputimes0" align="center">cpu times</td>';
-//             echo "</tr>";
-//             echo "</table>";
-//         }
+                echo '<td id="agentinfo0" align="center">Agent details</td>';
+            echo "</tr>";
+            echo "</table>";
+        }
              ?>
     </div>
 <script type="text/javascript">
@@ -298,6 +304,10 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     jQuery('#informationmonitor').val('cputimes');
                     jQuery('#args').val('');
                     jQuery('#kwargs').val('{\"percpu\" : true}');
+                    jQuery( '#formmonitoring' ).submit();
+                })
+                jQuery('#agentinfo, #agentinfo0').click(function() {
+                    jQuery('#informationmonitor').val('agentinfos');
                     jQuery( '#formmonitoring' ).submit();
                 })
                 ";
