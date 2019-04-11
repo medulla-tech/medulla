@@ -1,5 +1,6 @@
 * [FEATURE] Switch from RaphaelJS to d3.js
 * [BUGFIX]  Fix creating groups when the database is not called glpi
+* [BUGFIX]  Display the actions in gray if the use has not the ACL 
 
 Pulse 2 4.5.1
 =============
