@@ -1188,8 +1188,8 @@ class XmppMasterDatabase(DatabaseHelper):
             obj['hostname'] = t.hostname
             obj['sessionid'] = t.sessionid
             obj['login'] = t.login
-            obj['startcmd'] = t.startcmd
-            obj['endcmd'] = t.endcmd
+            obj['startcmd'] = str(t.startcmd)
+            obj['endcmd'] = str(t.endcmd)
             arraylist.append(obj)
         ret['resource']= arraylist
         self.clean_resources(jidmachine)
