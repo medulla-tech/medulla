@@ -671,7 +671,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         cluster = { 'action': "cluster",
                                     'sessionid': name_random(5, "cluster"),
                                     'data': {'subaction': 'removeresource',
-                                             'data': { "jidmachine" :str(msg_changed_status['from'])
+                                             'data': { "machinejid" :str(msg_changed_status['from'])
                                              }
                                     }
                          }
