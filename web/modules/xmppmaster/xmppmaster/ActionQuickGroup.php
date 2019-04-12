@@ -37,7 +37,10 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     $p->setSideMenu($sidemenu);
     $p->display();
 
-$ajax->setRefresh(20000);
+    $refresh = new RefreshButton();
+    $refresh->display();
+
+$ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 $ajax->displayDivToUpdate();
 

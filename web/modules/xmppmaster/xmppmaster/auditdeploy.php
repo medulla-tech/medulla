@@ -31,7 +31,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
-$refresh = new RefreshButton(htmlentities($_GET['action']));
+$refresh = new RefreshButton();
 $p = new PageGenerator(_T("All users tasks", 'xmppmaster'));
 
 $p->setSideMenu($sidemenu);
