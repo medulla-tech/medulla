@@ -40,16 +40,16 @@ $p = new PageGenerator(_T("My Tasks [".$_SESSION['login']."]", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$refreshObj = new RefreshButton(htmlentities($_GET['action']));
-$refreshObj->display();
+$refresh = new RefreshButton();
+$refresh->display();
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1'), 'formRunning'  );
-$ajax->setRefresh($refreshObj->refreshtime());
+$ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 $ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => $_SESSION['login']), 'formRunning1' );
-$ajax1->setRefresh($refreshObj->refreshtime());
+$ajax1->setRefresh($refresh->refreshtime());
 $ajax1->display();
 print "<br/><br/><br/>";
 $ajax1->displayDivToUpdate();

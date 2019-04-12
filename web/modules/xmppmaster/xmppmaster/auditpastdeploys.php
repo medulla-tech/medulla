@@ -35,7 +35,7 @@ $p = new PageGenerator(_T("All users past tasks", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$refresh = new RefreshButton(htmlentities($_GET['action']));
+$refresh = new RefreshButton();
 $refresh->display();
 
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => ''), 'formRunning'  );

@@ -34,7 +34,7 @@ require_once("modules/pulse2/includes/utilities.php");
 $p = new PageGenerator(_T("My past tasks", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
-$refresh = new RefreshButton(htmlentities($_GET['action']));
+$refresh = new RefreshButton();
 $refresh->display();
 
 
