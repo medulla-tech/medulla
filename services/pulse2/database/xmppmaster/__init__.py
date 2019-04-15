@@ -1203,6 +1203,12 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._sessionm
+    def delete_resources(self, session, sessionid):
+        session.query(Cluster_resources).filter( Cluster_resources.sessionid == str(sessionid) ).delete()
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
     def getlinelogswolcmd(self, session, idcommand, uuid):
         log = session.query(Logs).filter(and_( Logs.sessionname == str(idcommand) , Logs.type == 'wol', Logs.who == uuid)).order_by(Logs.id)
         log = log.all()
