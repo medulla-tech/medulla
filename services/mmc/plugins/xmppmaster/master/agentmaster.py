@@ -677,14 +677,51 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                           mtype='chat')
                 else:
                     obj = XmppMasterDatabase().getcluster_resources(msg_changed_status['from'])
-                    print json.dumps(obj, indent=4)
                     arscluster = []
                     for t in obj['resource']:
-                        arscluster.append(t['jidrelay'])
-                    arscluster = list(set(arscluster))
+                        if t['jidmachine'] == msg_changed_status['from']:
+                            logger.debug("*** resource recovery on ARS %s for deploy"\
+                                "sessionid %s on machine  (connection loss) %s " % (t['jidrelay'],
+                                                                                    t['sessionid'],
+                                                                                    t['hostname']))
+                            arscluster.append([ t['jidrelay'],
+                                                t['sessionid'], 
+                                                t['hostname'], 
+                                                t['jidmachine'] ])
+                            logger.debug("*** %s"%t)
+                            XmppMasterDatabase().updatedeploystate(t['sessionid'],"DEPLOYMENT ERROR")
+                            self.xmpplog("resource recovery on ARS %s for deploy"\
+                                "sessionid %s on machine  (connection loss) %s " % (t['jidrelay'],
+                                                                                    t['sessionid'],
+                                                                                    t['hostname']),
+                                type = 'deploy',
+                                sessionname = t['sessionid'],
+                                priority = -1,
+                                action = "",
+                                who = "",
+                                how = "",
+                                why =  t['jidmachine'],
+                                module = "Deployment| Notify | Cluster",
+                                date = None,
+                                fromuser = "",
+                                touser = "")
 
-                    for ars in arscluster:
-                        listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(ars)
+                            self.xmpplog('DEPLOYMENT TERMINATE',
+                                type = 'deploy',
+                                sessionname = t['sessionid'],
+                                priority = -1,
+                                action = "",
+                                who =  t['jidmachine'],
+                                how = "",
+                                why = "",
+                                module = "Deployment | Error | Terminate | Notify",
+                                date = None ,
+                                fromuser = "master",
+                                touser = "")
+                    #arscluster = list(set(arscluster))
+                    if len(arscluster) > 0:
+                        #logger.debug("*** START SEND MSG ARS")
+                        listrelayserver = XmppMasterDatabase().getRelayServer(enable = True)
                         cluster = { 'action': "cluster",
                                     'sessionid': name_random(5, "cluster"),
                                     'data': {'subaction': 'removeresource',
@@ -692,15 +729,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                              }
                                     }
                          }
-                        # all Relays server in the cluster are notified.
-                        for ARScluster in listrelayserver:
-                            self.send_message(mto=ARScluster,
-                                            mbody=json.dumps(cluster),
-                                            mtype='chat')
+                        #logger.debug("*** list relayserver")
+                        for ars in listrelayserver:
+                            logger.debug("removeresource on  %s for machine %s "%(ars,str(msg_changed_status['from'])))
+                            self.send_message(mto=ars['jid'],
+                                              mbody=json.dumps(cluster),
+                                              mtype='chat')
+
             except:
-                traceback.print_exc(file=sys.stdout)
+                logger.error("%s"%(traceback.format_exc()))
 
             self.showListClient()
+
     def showListClient(self):
         if self.config.showinfomaster:
             self.presencedeployment = {}
