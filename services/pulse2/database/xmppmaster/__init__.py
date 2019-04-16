@@ -2036,6 +2036,23 @@ class XmppMasterDatabase(DatabaseHelper):
                                             Deploy.state == 'DEPLOYMENT ABORT'))
 
         lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
+
+        # It is the same as deploylog, but for unknown reason, the count doesn't works with ORM
+        count = """select count(*) as nb from (
+          select count(id) as nb
+          from deploy
+          where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
+          AND (state LIKE "%%%s%%"
+          or pathpackage LIKE "%%%s%%"
+          or start LIKE "%%%s%%"
+          or login LIKE "%%%s%%"
+          or host LIKE "%%%s%%"
+          )
+          group by title
+          ) as x;"""%(filt,filt,filt,filt,filt,)
+        count = session.execute(count)
+        count = [nbcount for nbcount in count]
+
         deploylog = deploylog.group_by(Deploy.title)
 
         deploylog = deploylog.order_by(desc(Deploy.id))
@@ -2069,7 +2086,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 'title' : []}}
 
         #ret['lentotal'] = nbfilter
-        ret['lentotal'] = lentaillerequette[0]
+        ret['lentotal'] = count[0][0]
         for linedeploy in result:
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
