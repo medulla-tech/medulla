@@ -4673,26 +4673,6 @@ class Glpi92(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def get_mac_address_from_ip(self, ip):
-        """Get the mac addresses associated with the ip addresse
-        Param:
-            ip: string of the ip
-        Returns:
-            String of the macs associated with the machine which have the ip
-        """
-        session = create_session()
-        query = session.query(IPAddresses.name, NetworkPorts.mac).join(NetworkPorts, NetworkPorts.items_id == IPAddresses.items_id)
-        query = query.filter(IPAddresses.name == ip)
-
-        res = query.all()
-        result = ""
-        res = [mac[1] for mac in res]
-        for mac in res:
-            result += mac
-            if len(res) > 1 and mac != res[-1]:
-                result += ' || '
-        return result
-
     def getAllArchitectures(self, ctx, filt = ''):
         """ @return: all hostnames defined in the GLPI database """
         session = create_session()
