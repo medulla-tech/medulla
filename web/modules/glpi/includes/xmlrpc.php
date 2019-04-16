@@ -187,4 +187,8 @@ function xmlrpc_get_machines_with_os_and_version($os, $version){
 function get_computer_count_for_dashboard() {
     return xmlCall("glpi.get_computer_count_for_dashboard");
 }
+
+function xmlrpc_get_mac_address_from_ip($ip){
+  return xmlCall("glpi.get_mac_address_from_ip", [$ip]);
+}
 ?>

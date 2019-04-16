@@ -289,3 +289,9 @@ def get_machines_with_os_and_version(os, version):
 
 def get_computer_count_for_dashboard():
     return xmlrpcCleanup(Glpi().get_computer_count_for_dashboard())
+
+def get_mac_address_from_ip(ip):
+    if ip is not None or ip != "":
+        return xmlrpcCleanup(Glpi().get_mac_address_from_ip(ip))
+    else:
+        return ""
