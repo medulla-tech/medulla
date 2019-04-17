@@ -867,7 +867,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                               "applicationdeploymentjson",
                                               data,
                                               datasession=None,
-                                              encodebase64=False)
+                                              encodebase64=False,
+                                              prefix = "deploy")
         self.xmpplog("Start deploy on machine %s" % jidmachine,
                      type='deploy',
                      sessionname=sessionid,
@@ -2204,13 +2205,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
         pass
 
     def send_session_command(self, jid, action, data={}, datasession=None,
-                             encodebase64=False, time=20, eventthread=None):
+                             encodebase64=False, time=20, eventthread=None,
+                             prefix=None):
+        if prefix is None:
+            prefix = "command"
         logging.debug("Send command and creation session")
         if datasession == None:
             datasession = {}
         command = {'action': action,
                    'base64': encodebase64,
-                   'sessionid': name_random(5, "command"),
+                   'sessionid': name_randomplus(25, pref=prefix),
                    'data': ''
                    }
 
