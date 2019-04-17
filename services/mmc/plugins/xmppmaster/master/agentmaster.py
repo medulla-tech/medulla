@@ -839,6 +839,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
         datastr = re.sub(r"(?i) *: *true", " : true", datastr)
         file_put_contents(path, datastr)
 
+    def totimestamp(self, dt, epoch=datetime(1970,1,1)):
+        td = dt - epoch
+        # return td.total_seconds()
+        return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
+
     def applicationdeploymentjson(self,
                                   jidrelay,
                                   jidmachine,
@@ -878,6 +883,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "login": login,
                 "idcmd": idcommand,
                 "advanced": objdeployadvanced,
+                "stardate" : self.totimestamp(start_date),
+                "enddate" : self.totimestamp(end_date),
                 'methodetransfert': 'pushrsync',
                 "path": path,
                 "packagefile": os.listdir(path),
