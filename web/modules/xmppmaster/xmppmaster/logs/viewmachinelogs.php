@@ -143,7 +143,7 @@ li.quickg a {
 require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/pulse2/includes/menu_actionaudit.php');
-include_once('modules/glpi/includes/xmlrpc.php'):
+include_once('modules/glpi/includes/xmlrpc.php');
     // Retrieve information deploy. For cmn_id
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
