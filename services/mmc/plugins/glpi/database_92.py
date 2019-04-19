@@ -4863,8 +4863,6 @@ AND
         inventory_filtered_machines = ['UUID%s'%id[0] for id in inventory_filtered_machines]
         online_machines = XmppMasterDatabase().get_machines_online_for_dashboard()
 
-        registered_offline_machine = []
-
         unregistred_online_machine = []
         registered_online_machine = []
         registered_offline_machine = []
@@ -4872,10 +4870,10 @@ AND
         registered_online_uuid_list = []
         for machine in online_machines:
             if machine['uuid'] is None or machine['uuid'] == "":
-                unregistred_online_machine.append(machine)
+                unregistred_online_machine.append(machine['macaddress'])
             else:
                 registered_online_uuid_list.append(machine['uuid'])
-                registered_online_machine.append(machine)
+                registered_online_machine.append(machine['uuid'])
 
         for machine in inventory_filtered_machines:
             if machine not in registered_online_machine:
