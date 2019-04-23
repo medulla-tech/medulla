@@ -350,7 +350,7 @@ printf ('
 
         <tr>
             <td style = "width:10%; font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Folders', 'xmppmaster')); ?>:</td>
-            <td id="filedirectory" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
+            <td id="filedirectory" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"><ul></ul></td>
             <td style = "width:10%;">
             <span id="poplistdirectory" title="<?php echo sprintf(_T('Remove last folder', 'xmppmaster')); ?>" class="pop" ></span>
                 <span id="deletelistdirectory" title="<?php echo sprintf(_T('Remove all folders', 'xmppmaster')); ?>" class="delete" ></span>
@@ -359,7 +359,7 @@ printf ('
 
         <tr>
             <td style = "width:10%;font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Files', 'xmppmaster')); ?>:</td>
-            <td id="filelist" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
+            <td id="filelist" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"><ul></ul></td>
             <td style = "width:10%;">
             <span  id="poplistfile" title="<?php echo sprintf(_T('Remove last file', 'xmppmaster')); ?>"  class="pop" ></span>
                 <span  id="deletelistfile" title="<?php echo sprintf(_T('Remove all files', 'xmppmaster')); ?>"  class="delete" ></span>
@@ -523,12 +523,12 @@ printf ('
     });
 
     function del_list(type){
-        // type "files" ou "directory"
+        // type is "files" or "directory"
         listfileusermachinejson[type].splice(0,listfileusermachinejson[type].length)
     }
 
     function pop_list(type){
-        // type "files" ou "directory"
+        // type is "files" or "directory"
         listfileusermachinejson[type].pop()
     }
 
@@ -640,7 +640,7 @@ printf ('
                     if (typeof dirsel == 'undefined'){
                         var dirsel = "";
                     }
-                    //  recupere repertoire en local
+                    //  Get the folder in local dir
                     local(dirsel);
                 });
             })
@@ -689,7 +689,10 @@ printf ('
                             if(jQuery.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
                         });
                         listfileusermachinejson['directory'] = uniqueNames;
-                        jQuery('#filedirectory').html(listfileusermachinejson['directory'].join(' ; '));
+                        jQuery('#filedirectory ul').html("");
+                        jQuery.each(listfileusermachinejson['directory'], function(id, dir){
+                            jQuery('#filedirectory ul').append('<li>'+dir+'</li>');
+                        })
                 });
             });
             jQuery(".download").click(function() {
@@ -700,7 +703,11 @@ printf ('
                             if(jQuery.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
                         });
                         listfileusermachinejson['files'] = uniqueNames;
-                        jQuery('#filelist').html(listfileusermachinejson['files'].join(' ; '));
+                        jQuery('#filelist ul').html("");
+                        jQuery.each(listfileusermachinejson['files'],function(id, element){
+                          jQuery('#filelist ul').append('<li>'+element+'</li>');
+                        });
+
                 } );
             });
             if (init == 1){
@@ -729,26 +736,36 @@ printf ('
     }
 
     jQuery("#downloadlist").click(function() {
-        var dir  = jQuery('#filedirectory').text().split(";")
-        var file = jQuery('#filelist').text().split(";")
+        var dir  = [];
+        jQuery.each(jQuery('#filedirectory ul li'), function(id, element){
+          dir.push(jQuery(element).text());
+        });
+
+        var file = [];
+        jQuery.each(jQuery('#filelist ul li'), function(id, element){
+          file.push(jQuery(element).text());
+        });
+
         msg = "<h1><?php echo sprintf(_T('Download from', 'xmppmaster')); ?>" + " " + namemachine + "</h1>"+
-        "<p>"+
+        "<p><em>"+
         "<?php echo sprintf(_T('Folders list', 'xmppmaster')); ?>" + " : " +
-        "</p>";
+        "</em></p>";
+        msg = msg + '<ul>';
         for (var i = 0; i < dir.length; i++) {
-            msg = msg + "<p>" + dir[i] + "</p>";
+            msg = msg + "<li>" + dir[i] + "</li>";
         }
-        msg = msg + "<br>";
-        msg = msg + "<p>"+
+        msg = msg + "</ul>";
+        msg = msg + '<em>'+
         "<?php echo sprintf(_T('Files list', 'xmppmaster')); ?>" + " : " +
-        "</p>";
+        "</em></p><ul>";
+
         for (var i = 0; i < file.length; i++) {
-            msg = msg + "<p>" + file[i] + "</p>";
+            msg = msg + "<li>" + file[i] + "</li>";
         }
-         msg = msg + "<br>";
-        msg = msg + "<p>"+
+         msg = msg + "</ul>";
+        msg = msg + "<p><em>"+
         "<?php echo sprintf(_T('To local folder', 'xmppmaster')); ?>" + " : "+
-        "</p>";
+        "</em></p>";
         msg = msg + "<br>";
         msg = msg + "<p>"+
         jQuery('#dest_string').text()+
@@ -772,8 +789,8 @@ printf ('
                             jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php",  {
                                         "dest"          : jQuery('#dest_string').text(),
                                         "directory"     : jQuery('#dest_string').text(),
-                                        "listdirectory" : jQuery('#filedirectory').text(),
-                                        "listfile"      : jQuery('#filelist').text(),
+                                        "listdirectory" : dir.join(";"),
+                                        "listfile"      : file.join(";"),
                                         "jidmachine"    : jid
                                         },function(data){
                                             jQuery('#dialog-notification-download-file').attr('title', '<?php echo sprintf(_T('The list (folder & files) copy has been requested successfully', 'xmppmaster')); ?>');
@@ -797,22 +814,28 @@ printf ('
     });
 
     jQuery("#deletelistdirectory").click(function() {
-        jQuery('#filedirectory').html("");
+        jQuery('#filedirectory ul').html("");
         del_list("directory");
     });
 
     jQuery("#deletelistfile").click(function() {
-        jQuery("#filelist").html("");
+        jQuery("#filelist ul").html("");
         del_list("files");
     });
 
     jQuery("#poplistdirectory").click(function() {
          pop_list("directory");
-         jQuery('#filedirectory').html(listfileusermachinejson['directory'].join(' ; '));
+         jQuery('#filedirectory ul').html("");
+         jQuery.each(listfileusermachinejson['directory'], function(id, element){
+           jQuery('#filedirectory ul').append('<li>'+element+'</li>');
+         });
     });
 
     jQuery("#poplistfile").click(function() {
         pop_list("files");
-        jQuery('#filelist').html(listfileusermachinejson['files'].join(' ; '));
+        ('#filelist ul').html("");
+        jQuery.each(listfileusermachinejson['files'], function(id, element){
+          jQuery('#filelist ul').append('<li>'+element+'</li>');
+        });
     });
     </script>
