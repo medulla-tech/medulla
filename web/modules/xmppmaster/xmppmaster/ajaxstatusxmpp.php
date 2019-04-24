@@ -193,7 +193,14 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         if ($sucess == 0){
             $arraystate[] = "<span style='font-weight: bold; color : red;'>".$sucess."%"."</span>" ;
         }else{
-            $arraystate[] = "<span style='background-color:".$color." ;'>".$sucess."%"."</span>" ;
+            if ($sucess == 100) {
+                $arraystate[] = "<span style='font-weight: bold; color: green ;'>DEPLOY SUCCESS FULL</span>" ;
+            }
+            else{
+                $arraystate[] = "<span style='background-color:".$color." ;'>".$sucess."%"."</span>" ;
+            }
+
+            //$arraystate[] = "<span style='background-color:".$color." ;'>".$sucess."%"."</span>" ;
         }
         //'<progress max="'.$stat['nbmachine'].'" value="'.$stat['nbdeploydone'].'" form="form-id"></progress>';
         $group = new Group($groupid, true, true);
