@@ -633,7 +633,16 @@ printf ('
                 });
             })
     }
+    function removeElement(element, type){
+      var node = jQuery(element).parent('li')
+      var textvalue = jQuery(node).find(".element-text").text()
+      var index = listfileusermachinejson[type].indexOf(textvalue)
 
+      if (index > -1) {
+       listfileusermachinejson[type].splice(index, 1);
+      }
+      jQuery(node).hide()
+    }
     function remote(selectdir){
         if (typeof selectdir == 'undefined'){
             var selectdir = "";
@@ -679,7 +688,7 @@ printf ('
                         listfileusermachinejson['directory'] = uniqueNames;
                         jQuery('#filedirectory ul').html("");
                         jQuery.each(listfileusermachinejson['directory'], function(id, dir){
-                            jQuery('#filedirectory ul').append('<li>'+dir+'</li>');
+                            jQuery('#filedirectory ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this,\'directory\')" class="delete"></span><span class="element-text">'+dir+'</span></li>');
                         })
                 });
             });
@@ -693,7 +702,7 @@ printf ('
                         listfileusermachinejson['files'] = uniqueNames;
                         jQuery('#filelist ul').html("");
                         jQuery.each(listfileusermachinejson['files'],function(id, element){
-                          jQuery('#filelist ul').append('<li>'+element+'</li>');
+                          jQuery('#filelist ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this, \'files\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
                         });
 
                 } );
@@ -704,11 +713,43 @@ printf ('
                     jQuery(this).find(':nth-child(2)').hide();
                 });
             }
+
+            //If directory mouseover : highlight the row
+            var selecteddir = null;
+            jQuery("ul.rightdir > li").on('mouseover', function(){
+              jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
+            })
+
+            //If directory mouseout : clean the row if not selected
+            jQuery("ul.rightdir > li").on('mouseout', function(){
+              if(selecteddir != this)
+                jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#ececec',});
+            })
+
+            //If directory clicked : select it and highlight it
+            jQuery("ul.rightdir > li").on('click', function(){
+              selecteddir = this;
+              jQuery("ul.rightdir li").each(function(){
+                jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#ececec',});
+              })
+              jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
+            })
+
+            var selectedfile = null;
+            jQuery("ul.rightfile > li").on('mouseout', function(){
+              if(selectedfile != this)
+                jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#ececec',});
+            });
+
+            jQuery("ul.rightfile > li").on('mouseover', function(){
+              jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
+            })
             jQuery("ul.rightfile > li").click(function() {
+              selectedfile = this
                 //  recupere file en remote
                 fileremote = true;
                 jQuery(".rightfile LI").each(function(){
-                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#C0C0C0',});
+                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#ececec',});
                     jQuery(this).find(':nth-child(2)').hide()
                 });
                 jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
@@ -815,15 +856,15 @@ printf ('
          pop_list("directory");
          jQuery('#filedirectory ul').html("");
          jQuery.each(listfileusermachinejson['directory'], function(id, element){
-           jQuery('#filedirectory ul').append('<li>'+element+'</li>');
+           jQuery('#filedirectory ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this, \'directory\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
          });
     });
 
     jQuery("#poplistfile").click(function() {
         pop_list("files");
-        ('#filelist ul').html("");
+        jQuery('#filelist ul').html("");
         jQuery.each(listfileusermachinejson['files'], function(id, element){
-          jQuery('#filelist ul').append('<li>'+element+'</li>');
+          jQuery('#filelist ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this, \'files\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
         });
     });
     </script>
