@@ -331,6 +331,7 @@ if ($info['len'] != 0){
                 $uuiderror[] = $val['inventoryuuid'];
                 break;
             case "DEPLOYMENT START":
+            case "DEPLOYMENT START (REBOOT)":
             case "DEPLOYMENT DIFFERED":
                 $uuidprocess[] = $val['inventoryuuid'];
                 break;
