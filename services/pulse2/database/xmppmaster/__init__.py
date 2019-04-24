@@ -1158,6 +1158,7 @@ class XmppMasterDatabase(DatabaseHelper):
         """
             add ressource for cluster ressource
         """
+        self.clean_resources(jidmachine)
         try:
             new_cluster_resources = Cluster_resources()
             new_cluster_resources.jidmachine = jidmachine
