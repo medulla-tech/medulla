@@ -1007,7 +1007,7 @@ class XmppMasterDatabase(DatabaseHelper):
         #).update({ Deploy.state : "DEPLOYMENT ERROR"})
         datenow = datetime.now()
         result = session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
-                                            Deploy.state == "DEPLOYMENT START")
+                                            Deploy.state.like('DEPLOYMENT START%%'))
         ).all()
         session.flush()
         session.close()
@@ -1301,7 +1301,7 @@ class XmppMasterDatabase(DatabaseHelper):
             #count error deploy
             machineerrordeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'DEPLOYMENT ERROR')))
             #count process deploy
-            machineprocessdeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'DEPLOYMENT START')))
+            machineprocessdeploy   = self.get_count(machinedeploy.filter(or_(Deploy.state.like('DEPLOYMENT START%%'))))
             #count abort deploy
             machineabortdeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'DEPLOYMENT ABORT')))
             return { 'totalmachinedeploy' : totalmachinedeploy,
