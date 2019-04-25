@@ -242,6 +242,18 @@ li.quickg a {
     require("graph/navbar.inc.php");
     require_once("modules/xmppmaster/includes/xmlrpc.php");
 
+    if(isexpertmode())
+    {
+      $url = "xmppmaster/xmppmaster/xmppfilesbrowsing";
+      $get = [];
+      foreach($_GET as $key=>$value)
+      {
+        if(!in_array($key, ["module","submod", "action"]))
+          $get[$key] = $value;
+      }
+      header("Location: " . urlStrRedirect($url, $get));
+    }
+
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
