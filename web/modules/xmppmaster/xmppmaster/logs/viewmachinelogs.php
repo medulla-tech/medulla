@@ -257,8 +257,8 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         $end_date = date("Y-m-d H:i:s", $end_date);
         echo "<h2>Please wait (".$result['title'].")</h2>";
         if(isset($info['objectdeploy'][0]['state']) &&
-            (   $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START" ||
-                $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
+            ( strpos($info['objectdeploy'][0]['state'], "DEPLOYMENT START")!==false ||
+              $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
             echo "<br>Preparing deployment. Please wait...";
             echo "<img src='modules/xmppmaster/img/waitting.gif'>";
             echo "<br>";
@@ -401,7 +401,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
     if ( $info['len'] != 0)
     {
         if(isset($info['objectdeploy'][0]['state']) && 
-            (   $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START" ||
+            (   strpos($info['objectdeploy'][0]['state'], "DEPLOYMENT START")!==false ||
                 $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
             if ( !$boolterminate && !isset($_POST['bStop'])){
                 if (!isset($_SESSION[$info['objectdeploy'][0]['sessionid']])){
