@@ -657,11 +657,32 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         self.send_message(mto=ARScluster,
                                           mbody=json.dumps(cluster),
                                           mtype='chat')
+                else:
+                    obj = XmppMasterDatabase().getcluster_resources(msg_changed_status['from'])
+                    print json.dumps(obj, indent=4)
+                    arscluster = []
+                    for t in obj['resource']:
+                        arscluster.append(t['jidrelay'])
+                    arscluster = list(set(arscluster))
+
+                    for ars in arscluster:
+                        listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(ars)
+                        cluster = { 'action': "cluster",
+                                    'sessionid': name_random(5, "cluster"),
+                                    'data': {'subaction': 'removeresource',
+                                             'data': { "jidmachine" :str(msg_changed_status['from'])
+                                             }
+                                    }
+                         }
+                        # all Relays server in the cluster are notified.
+                        for ARScluster in listrelayserver:
+                            self.send_message(mto=ARScluster,
+                                            mbody=json.dumps(cluster),
+                                            mtype='chat')
             except:
                 traceback.print_exc(file=sys.stdout)
 
             self.showListClient()
-
     def showListClient(self):
         if self.config.showinfomaster:
             self.presencedeployment = {}
@@ -806,9 +827,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.error("package Name missing (%s)" % (name))
             return False
         descript = managepackage.loadjsonfile(os.path.join(path, 'xmppdeploy.json'))
-        
-        
-        
+
         self.parsexmppjsonfile(os.path.join(path, 'xmppdeploy.json'))
         if descript is None:
             logger.error("deploy %s on %s  error : xmppdeploy.json missing" % (name, uuidmachine))
@@ -869,6 +888,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                        endcmd=end_date,
                                        macadress=macadress
                                        )
+        XmppMasterDatabase().addcluster_resources(jidmachine,
+                                                  jidrelay,
+                                                  jidmachine,
+                                                  sessionid,
+                                                  login=login,
+                                                  startcmd = start_date,
+                                                  endcmd = end_date
+                                                  )
         return sessionid
 
     def pluginaction(self, rep):

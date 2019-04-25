@@ -249,6 +249,17 @@ class Deploy(Base, XmppMasterDBObj):
     command = Column(Integer)
     macadress=Column(String(255))
 
+class Cluster_resources(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'cluster_resources'
+    # ====== Fields =============================
+    hostname = Column(String(45))
+    jidmachine = Column(String(255), nullable=False)
+    jidrelay = Column(String(255), nullable=False)
+    startcmd = Column(DateTime, default=None)
+    endcmd = Column(DateTime, default=None)
+    login = Column(String(45), nullable=False)
+    sessionid = Column(String(45), nullable=False)
 
 class Command_qa(Base, XmppMasterDBObj):
     # ====== Table name =========================
