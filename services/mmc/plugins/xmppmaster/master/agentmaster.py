@@ -703,7 +703,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 fromuser = "",
                                 touser = "")
 
-                            self.xmpplog('<span style="font-weight: bold;color : Orange;">WAITTING REBOOT</span>',
+                            self.xmpplog('<span style="font-weight: bold;color : Orange;">WAITING REBOOT</span>',
                                 type = 'deploy',
                                 sessionname = t['sessionid'],
                                 priority = -1,
