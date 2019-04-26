@@ -3267,6 +3267,20 @@ class XmppMasterDatabase(DatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
+    def get_List_jid_ServerRelay_enable(self, session, enabled=1):
+        """ return list enable server relay id """
+        sql = """SELECT
+                    jid
+                FROM
+                    xmppmaster.relayserver
+                WHERE
+                        `relayserver`.`enabled` = %d;"""%(enabled)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+    
+    @DatabaseHelper._sessionm
     def getRelayServerfromjid(self, session, jid):
         relayserver = session.query(RelayServer).filter(RelayServer.jid == jid)
         relayserver = relayserver.first()
