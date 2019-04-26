@@ -412,7 +412,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
 
     if ( $info['len'] != 0)
     {
-        if(isset($info['objectdeploy'][0]['state']) &&
+        if(isset($info['objectdeploy'][0]['state']) && 
             (   strpos($info['objectdeploy'][0]['state'], "DEPLOYMENT START")!==false ||
                 $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
             if ( !$boolterminate && !isset($_POST['bStop'])){
