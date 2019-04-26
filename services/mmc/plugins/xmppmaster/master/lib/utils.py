@@ -43,6 +43,8 @@ import uuid
 import time
 from datetime import datetime
 
+logger = logging.getLogger()
+
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "pluginsmaster"))
 
 if sys.platform.startswith('win'):
