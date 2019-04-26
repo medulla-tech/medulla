@@ -300,7 +300,7 @@ Requires:   	mmc-web-dashboard >= %{version}
 Console web interface designed by Linbox.
 
 %post -n mmc-web-base
-if [ ! -f "/usr/share/mmc/jsframework/d3" ];
+if [ ! -L "/usr/share/mmc/jsframework/d3" ];
 then
     ln -s /usr/lib/node_modules/d3 /usr/share/mmc/jsframework/d3
 fi
