@@ -2,6 +2,7 @@ branches:
   only:
   - master
   - xmppmaster
+dist: xenial
 before_install:
 - sudo sh -c "echo 'deb https://git.siveo.net xmppmaster mmc-core' > /etc/apt/sources.list.d/pulse.list"
 - sudo wget -qO - https://git.siveo.net/pubkey.txt | sudo apt-key add -
