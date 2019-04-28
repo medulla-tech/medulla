@@ -562,6 +562,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 pass
 
     def start(self, event):
+        if self.config.executiontimeplugins:
+            cmd = "cat /proc/%s/status | grep Threads"%os.getpid()
+            obj = simplecommandstr(cmd)
+            file_put_contents("/tmp/Execution_time_plugin.txt",
+                              "%s | %s \n" %(str(datetime.now()),
+                              obj['result'] ))
         self.get_roster()
         self.send_presence()
         chatroomjoin = [self.config.confjidchatroom]
@@ -698,7 +704,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 fromuser = "",
                                 touser = "")
 
-                            self.xmpplog('<span style="font-weight: bold;color : Orange;">WAITTING REBOOT</span>',
+                            self.xmpplog('<span style="font-weight: bold;color : Orange;">WAITING REBOOT</span>',
                                 type = 'deploy',
                                 sessionname = t['sessionid'],
                                 priority = -1,
@@ -717,7 +723,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         cluster = { 'action': "cluster",
                                     'sessionid': name_random(5, "cluster"),
                                     'data': {'subaction': 'removeresource',
-                                             'data': { "machinejid" :str(msg_changed_status['from'])
+                                             'data': { "jidmachine" :str(msg_changed_status['from'])
                                              }
                                     }
                          }
