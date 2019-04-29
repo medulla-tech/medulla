@@ -1627,22 +1627,27 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def XmppUpdateInventoried(self, jid):
         try:
             machine = XmppMasterDatabase().getMachinefromjid(jid)
-            result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
-            results = result[0].split(",")
-            logging.getLogger().debug("listMacAdressforMachine   %s" % results)
-            uuid = ''
-            for t in results:
-                computer = ComputerManager().getComputerByMac(t)
-                if computer != None:
-                    uuid = 'UUID' + str(computer.id)
-                    logger.debug("** Update uuid %s for machine %s " % (uuid, machine['jid']))
-                    if machine['uuid_inventorymachine'] != "":
-                        logger.debug("** Update in Organization_ad uuid %s to %s " % (machine['uuid_inventorymachine'],
-                                                                                      uuid))
-                        XmppMasterDatabase().replace_Organization_ad_id_inventory(machine['uuid_inventorymachine'],
-                                                                                  uuid)
-                    XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
-                    return True
+            if len(machine) !=0:
+                result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
+                results = result[0].split(",")
+                logging.getLogger().debug("listMacAdressforMachine   %s" % results)
+                uuid = ''
+                for t in results:
+                    computer = ComputerManager().getComputerByMac(t)
+                    if computer != None:
+                        uuid = 'UUID' + str(computer.id)
+                        logger.debug("** Update uuid %s for machine %s " % (uuid, machine['jid']))
+                        if machine['uuid_inventorymachine'] != "":
+                            logger.debug("** Update in Organization_ad uuid %s to %s " % (machine['uuid_inventorymachine'],
+                                                                                        uuid))
+                            XmppMasterDatabase().replace_Organization_ad_id_inventory(machine['uuid_inventorymachine'],
+                                                                                    uuid)
+                        XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
+                        return True
+                    else:
+                        logging.getLogger().warning("Incoherence in the address mac %s" % jid)
+            else:
+                logging.getLogger().warning("machine [%s] not present. Cant update uuid in machine table." % jid)
         except Exception:
             logger.error("** Update error on inventory %s" % (jid))
             logger.error("%s"%(traceback.format_exc()))
