@@ -23,7 +23,7 @@
 START TRANSACTION;
 
 LOCK TABLES `qa_custom_command` WRITE;
-/*!40000 ALTER TABLE `qa_custom_command` DISABLE KEYS */;
+
 INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Show process List','wmic process list brief','Get list of processes from WMI');
 INSERT INTO `qa_custom_command` VALUES ('allusers','windows','View task list','tasklist','Get list of tasks');
 INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Show process List','ps aux','Get list of processes');
@@ -56,9 +56,7 @@ INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Restart machine agen
 INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Download agent log to file-transfer folder','plugin_downloadfile@_@C:\\Program Files\\Pulse\\var\\log\\xmpp-agent.log','Download agent full log to file-transfer folder');
 INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Download agent log to file-transfer folder','plugin_downloadfile@_@/var/log/pulse/xmpp-agent.log','Download agent full log to file-transfer folder');
 INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Download agent log to file-transfer folder','plugin_downloadfile@_@/Library/Application Support/Pulse/var/log/xmpp-agent.log','Download agent full log to file-transfer folder');
-/*!40000 ALTER TABLE `qa_custom_command` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 
 -- ----------------------------------------------------------------------
