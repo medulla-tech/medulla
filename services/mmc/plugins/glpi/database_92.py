@@ -4781,14 +4781,20 @@ class Glpi92(DyngroupDatabaseHelper):
         for machine in result:
             if machine['os'].startswith('Debian'):
                 machine['os'] = 'Debian'
-                machine['version'] = machine['version'].split(" ")[0]
+                try:
+                    machine['version'] = machine['version'].split(" ")[0]
+                except AttributeError:
+                    machine['version'] = ""
             elif machine['os'].startswith('Microsoft'):
                 machine['os'] = machine['os'].split(' ')[1:3]
                 machine['os'] = ' '.join(machine['os'])
             elif machine['os'].startswith('Ubuntu'):
                 machine['os'] = 'Ubuntu'
                 # We want just the XX.yy version number
+            try:
                 machine['version'] = machine['version'].split(" ")[0].split(".")
+            except AttributeError:
+                machine['version'] = ""
                 if len(machine['version']) >= 2:
                     machine['version'] = machine['version'][0:2]
                 machine['version'] = '.'.join(machine['version'])
@@ -4799,13 +4805,18 @@ class Glpi92(DyngroupDatabaseHelper):
                 machine['version'] = ""
             elif machine['os'].startswith("CentOS"):
                 machine['os'] = machine['os'].split(" ")[0]
-                machine['version'] = machine['version'].split("(")[0].split(".")[0:2]
-                machine['version'] = ".".join(machine['version'])
+                try:
+                    machine['version'] = machine['version'].split("(")[0].split(".")[0:2]
+                    machine['version'] = ".".join(machine['version'])
+                except AttributeError:
+                    machine['version'] = ""
 
             elif machine['os'].startswith("macOS") or machine['os'].startswith("OS X"):
-                machine['version'] = machine['version'].split(" (")[0].split(".")[0:2]
-                machine['version'] = ".".join(machine['version'])
-
+                try:
+                    machine['version'] = machine['version'].split(" (")[0].split(".")[0:2]
+                    machine['version'] = ".".join(machine['version'])
+                except AttributeError:
+                    machine['version'] = ""
             else:
                 pass
 
