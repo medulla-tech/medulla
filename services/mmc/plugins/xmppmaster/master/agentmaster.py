@@ -567,7 +567,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
             file_put_contents("/tmp/Execution_time_plugin.txt",
                               "%s | %s \n" %(str(datetime.now()),
                               obj['result'] ))
-        self.get_roster()
+        #self.get_roster()
+        #try:
+            #self.get_roster()
+        #except IqError as err:
+            #print('Error: %s' % err.iq['error']['condition'])
+        #except IqTimeout:
+            #print('Error: Request timed out')
         self.send_presence()
         chatroomjoin = [self.config.confjidchatroom]
         for chatroom in chatroomjoin:
