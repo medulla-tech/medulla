@@ -4791,13 +4791,13 @@ class Glpi92(DyngroupDatabaseHelper):
             elif machine['os'].startswith('Ubuntu'):
                 machine['os'] = 'Ubuntu'
                 # We want just the XX.yy version number
-            try:
-                machine['version'] = machine['version'].split(" ")[0].split(".")
-            except AttributeError:
-                machine['version'] = ""
+                try:
+                    machine['version'] = machine['version'].split(" ")[0].split(".")
+                except AttributeError:
+                    machine['version'] = ""
                 if len(machine['version']) >= 2:
                     machine['version'] = machine['version'][0:2]
-                machine['version'] = '.'.join(machine['version'])
+                    machine['version'] = '.'.join(machine['version'])
             elif machine['os'].startswith('Mageia'):
                 machine['os'] = machine['os'].split(" ")[0]
             elif machine['os'].startswith('Unknown'):
