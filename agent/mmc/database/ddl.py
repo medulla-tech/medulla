@@ -438,5 +438,5 @@ class DBControl:
         else:
             self.log.error("Database '%s' version conflict" % self.module)
             self.log.error("Installed version is %d, but you are trying to install the version %d." %
-                           (self.module, version_in_db, version_to_install))
+                           (version_in_db, version_to_install))
             return False
