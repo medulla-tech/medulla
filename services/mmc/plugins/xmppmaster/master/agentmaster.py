@@ -349,14 +349,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         self.add_event_handler("session_start", self.start)
         """ New presence in Conf chatroom """
-        self.add_event_handler("muc::%s::presence" % conf.confjidchatroom,
-                               self.muc_presenceConf)
+        #self.add_event_handler("muc::%s::presence" % conf.confjidchatroom,
+                               #self.muc_presenceConf)
         """ Unsubscribe from Conf chatroom """
-        self.add_event_handler("muc::%s::got_offline" % conf.confjidchatroom,
-                               self.muc_offlineConf)
+        #self.add_event_handler("muc::%s::got_offline" % conf.confjidchatroom,
+                               #self.muc_offlineConf)
         """ Subscribe to Conf chatroom """
-        self.add_event_handler("muc::%s::got_online" % conf.confjidchatroom,
-                               self.muc_onlineConf)
+        #self.add_event_handler("muc::%s::got_online" % conf.confjidchatroom,
+                               #self.muc_onlineConf)
         # install plugins list file is not empty.
         self.schedule('remote update plugin', 60, self.remoteinstallPlugin, repeat=True)
         # Call function
@@ -368,7 +368,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # Strophe is received from any chat room. If you too
         # Save a handler for the 'message' event, MUC messages
         # Will be processed by both managers.
-        self.add_event_handler("groupchat_message", self.muc_message)
+        #self.add_event_handler("groupchat_message", self.muc_message)
         self.add_event_handler("pluginaction", self.pluginaction)
 
         self.add_event_handler('changed_status', self.changed_status)
@@ -2264,8 +2264,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logging.error("Message structure %s   %s " % (msg, str(e)))
             traceback.print_exc(file=sys.stdout)
 
-    def muc_offlineMaster(self, presence):
-        pass
+    #def muc_offlineMaster(self, presence):
+        #pass
 
     def muc_presenceMaster(self, presence):
         if presence['muc']['nick'] != self.config.NickName:
