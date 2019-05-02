@@ -1,7 +1,7 @@
 * [BUGFIX]  Add refresh button for all the audit page
 * [BUGFIX]  Fix the start deployment date
 * [BUGFIX]  Add the refresh object for some page
-
+* [BUGFIX]  Fix the start deployment date
 mmc-core 4.5.1
 ==============
 * [FEATURE] New history page for file transfers
