@@ -579,7 +579,7 @@ class Glpi92(DyngroupDatabaseHelper):
         if session == None:
             session = create_session()
 
-        query = (count and session.query(func.count(Machine.id))) or session.query(Machine)
+        query = (count and session.query(func.count(Machine.id.distinct()))) or session.query(Machine)
         # manage criterion  for xmppmaster
         ret = self.__xmppmasterfilter(filt)
 
