@@ -296,6 +296,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.debug(a['result'])
         except Exception as e:
             pass
+        #del old message offline
+        logger.debug('del old message offline')
+        cmd = "ejabberdctl delete_old_message 1"
+        try:
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+        except Exception as e:
+            pass
         # The queues. These objects are like shared lists
         # The command processes use this queue to notify an event to the event manager
         # self.queue_read_event_from_command = Queue()
