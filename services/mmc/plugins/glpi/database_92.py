@@ -2134,6 +2134,12 @@ class Glpi92(DyngroupDatabaseHelper):
                 .outerjoin(self.registries) \
             ), int(str(uuid).replace("UUID", "")))
 
+        if min != 0:
+            query = query.offset(min)
+        if max != -1:
+            max = int(max) - int(min)
+            query = query.limit(max)
+
         if count:
             ret = query.count()
         else:
