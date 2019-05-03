@@ -2173,7 +2173,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
         return False
 
     def message(self, msg):
-        logger.debug("*******MESSAGE %s" % msg['from'])
+        try:
+            msgfrom = str(msg['from'])
+            logger.debug("*******MESSAGE %s"%msgfrom)
+        except:
+            return
         # logger.debug(msg['body'])
         if msg['body'] == "This room is not anonymous":
             return False
