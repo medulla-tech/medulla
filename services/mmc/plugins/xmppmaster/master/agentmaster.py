@@ -298,7 +298,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             pass
         #del old message offline
         logger.debug('del old message offline')
-        cmd = "ejabberdctl delete_old_message 1"
+        cmd = "ejabberdctl delete_old_messages 1"
         try:
             a = simplecommandstr(cmd)
             logger.debug(a['result'])
