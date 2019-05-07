@@ -79,7 +79,7 @@ class GlpiPanel extends Panel {
       {
         'label': unregisteredText,
         'value':unregistered,
-        'href':'',
+        'href':'#',
       }
     ];
     donut("inventory-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"]+unregistered)
