@@ -41,7 +41,7 @@ from master.lib.utils import name_random, simplecommand, file_get_contents
 from xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
     callXmppFunction, ObjectXmpp, callXmppPlugin,\
-    callInventory, callrestartbymaster,\
+    callInventory, callrestartbymaster, callrestartbotbymaster,\
     callshutdownbymaster, send_message_json,\
     callvncchangepermsbymaster, callInstallKey,\
     callremotefile, calllocalfile, callremotecommandshell,\
@@ -149,6 +149,9 @@ def updatedeploystate1(sessionxmppmessage, status):
 def getstepdeployinsession(sessionname):
     return XmppMasterDatabase().getstepdeployinsession(sessionname)
 
+
+def delMachineXmppPresence(uuidinventory):
+    return XmppMasterDatabase().delMachineXmppPresence(uuidinventory)
 
 def setlogxmpp(text,
                type,
@@ -473,6 +476,14 @@ def callInventoryinterface(uuid):
         logging.getLogger().error("for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
 
+def callrestartbot(uuid):
+    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+    if jid != "":
+        callrestartbotbymaster(jid)
+        return jid
+    else:
+        logging.getLogger().error("call restart bot for machine %s : jid xmpp missing" % uuid)
+        return "jid missing"
 
 def createdirectoryuser(directory):
     if not os.path.exists(directory):
@@ -499,7 +510,6 @@ def callrestart(uuid):
     else:
         logging.getLogger().error("callrestartbymaster for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
-
 
 def callshutdown(uuid, time, msg):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)

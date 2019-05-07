@@ -121,6 +121,9 @@ def callrestartbymaster(to):
     return ObjectXmpp().callrestartbymaster(to)
 
 
+def callrestartbotbymaster(to):
+    return ObjectXmpp().restartAgent(to)
+
 def callshutdownbymaster(to, time, msg):
     return ObjectXmpp().callshutdownbymaster(to, time, msg)
 
@@ -329,7 +332,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.machineDeploy = {}
 
         # Clear machine table
-        XmppMasterDatabase().clearMachine()
+        #XmppMasterDatabase().clearMachine()
+        XmppMasterDatabase().resetPresenceMachine()
         # clears synchros
         PkgsDatabase().clear_old_pending_synchro_package(timeseconde=900)
         self.idm = ""
