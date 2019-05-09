@@ -55,7 +55,7 @@ class ComputersOnlinePanel extends Panel {
               {"label": "$online_text", "value":$machines_online, "href":"$urlRedirect&machines=online"},
               {'label': '$offline_text', 'value': $machines_offline, "href": "$urlRedirect&machines=offline"},
               {'label': '', 'value': 0, "href": ""},
-              {'label': '$uninventorized_text', 'value': $uninventorized, "href": ""},
+              {'label': '$uninventorized_text', 'value': $uninventorized, "href": "#"},
             ];
 
             donut("computersOnline",onlineDatas, "Total", $total_machines);
