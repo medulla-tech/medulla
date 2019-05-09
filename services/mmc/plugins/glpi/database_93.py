@@ -2297,6 +2297,7 @@ class Glpi93(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_computertypes) \
                 .outerjoin(self.glpi_computermodels) \
                 .outerjoin(self.glpi_operatingsystemservicepacks) \
+                .outerjoin(self.glpi_operatingsystemversions) \
                 .outerjoin(self.glpi_operatingsystemarchitectures) \
                 .outerjoin(self.state) \
                 .outerjoin(self.fusionagents) \
