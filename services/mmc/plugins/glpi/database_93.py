@@ -4851,6 +4851,30 @@ AND
         result = [{'id':a, 'hostname':b} for a,b in res]
         return result
 
+    @DatabaseHelper._sessionm
+    def get_computer_count_for_dashboard(self, session, count=True):
+        inventory_filtered_machines = self.__filter_on(session.query(Machine.id)).all()
+
+        inventory_filtered_machines = ['UUID%s'%id[0] for id in inventory_filtered_machines]
+        online_machines = XmppMasterDatabase().get_machines_online_for_dashboard()
+
+        registered_offline_machine = []
+
+        unregistred_online_machine = []
+        registered_online_machine = []
+
+        for machine in online_machines:
+            if machine['uuid'] is None:
+                unregistred_online_machine.append(machine)
+            else:
+                registered_online_machine.append(machine)
+
+        if count is True:
+            return {"registered" : len(inventory_filtered_machines), "online": len(registered_online_machine), 'unregistered': len(unregistred_online_machine)}
+        else:
+            return {"registered" : inventory_filtered_machines, "online": registered_online_machine, 'unregistered': unregistred_online_machine}
+
+
 # Class for SQLalchemy mapping
 class Machine(object):
     __tablename__ = 'glpi_computers_pulse'
