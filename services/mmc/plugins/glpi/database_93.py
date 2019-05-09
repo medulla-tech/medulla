@@ -4855,7 +4855,7 @@ AND
         return result
 
     @DatabaseHelper._sessionm
-    def get_computer_count_for_dashboard(self, session, count):
+    def get_computer_count_for_dashboard(self, session, count=True):
         inventory_filtered_machines = self.__filter_on(session.query(Machine.id)).all()
 
         inventory_filtered_machines = ['UUID%s'%id[0] for id in inventory_filtered_machines]
