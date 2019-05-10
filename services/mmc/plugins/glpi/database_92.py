@@ -4759,6 +4759,7 @@ class Glpi92(DyngroupDatabaseHelper):
         .join(OS, OS.id == Machine.operatingsystems_id)\
         .join(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
         .order_by(asc(OsVersion.name))
+        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
         sql = self.__filter_on(sql)
 
         res = sql.all()
@@ -4839,43 +4840,24 @@ class Glpi92(DyngroupDatabaseHelper):
             list of all the machines with specified OS and specified version
         """
 
-        criterion = ''
+        sql = session.query(Machine.id, Machine.name)\
+        .join(OS, OS.id == Machine.operatingsystems_id)\
+        .outerjoin(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
+        .filter(and_(OS.name.like('%'+oslocal+'%')), OsVersion.name.like('%'+version+'%'))
 
-        if version == "":
-            criterion = self.config.dbname+'.glpi_operatingsystemversions.name IS NULL'
-        else:
-            criterion = self.config.dbname+'.glpi_operatingsystemversions.name like "%%%s%%"' % version
-
-        sql="""SELECT
-    %s.glpi_computers_pulse.id,
-    %s.glpi_computers_pulse.name
-FROM
-    %s.glpi_computers_pulse
-INNER JOIN
-    %s.glpi_operatingsystems
-ON
-    operatingsystems_id = %s.glpi_operatingsystems.id
-left JOIN
-    %s.glpi_operatingsystemversions
-ON
-    operatingsystemversions_id = %s.glpi_operatingsystemversions.id
-WHERE
-  %s.glpi_operatingsystems.name LIKE "%%%s%%"
-AND
-  %s
-;""" % (self.config.dbname, self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        oslocal, criterion)
-
+        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
+        sql = self.__filter_on(sql)
         res = session.execute(sql)
+
         result = [{'id':a, 'hostname':b} for a,b in res]
+
         return result
 
     @DatabaseHelper._sessionm
     def get_computer_count_for_dashboard(self, session, count=True):
-        inventory_filtered_machines = self.__filter_on(session.query(Machine.id)).all()
+        inventory_filtered_machines = self.__filter_on(session.query(Machine.id).filter(Machine.is_deleted == 0, \
+                                                                                        Machine.is_template == 0)).all()
+        ret = self.__getRestrictedComputersListQuery(None, '', session, True, False)
 
         inventory_filtered_machines = ['UUID%s'%id[0] for id in inventory_filtered_machines]
         online_machines = XmppMasterDatabase().get_machines_online_for_dashboard()
