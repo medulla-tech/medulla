@@ -4744,22 +4744,19 @@ class Glpi93(DyngroupDatabaseHelper):
             ]
         """
 
-        sql="""SELECT
-  glpi_operatingsystems.name as os,
-  glpi_operatingsystemversions.name as version_name
-FROM
-  glpi_computers_pulse
-INNER JOIN
-  glpi_operatingsystems
-ON
-  operatingsystems_id = glpi_operatingsystems.id
+        sql = session.query(Machine.operatingsystems_id,
+            Machine.operatingsystemversions_id,
+            OS.name,
+            OsVersion.name)\
+        .join(OS, OS.id == Machine.operatingsystems_id)\
+        .join(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
+        .order_by(asc(OsVersion.name))
+        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
+        sql = self.__filter_on(sql)
 
-left JOIN
-  glpi_operatingsystemversions
-ON
-  operatingsystemversions_id = glpi_operatingsystemversions.id;"""
-        res = self.db.execute(sql)
-        result = [{'os': os, 'version': version} for os, version in res]
+        res = sql.all()
+
+        result = [{'os': element[2], 'version': element[3], 'count':1} for element in res]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
@@ -4781,26 +4778,33 @@ ON
 
         final_list = []
         for machine in result:
-            machine['count'] = 1
-            if machine['os'].startswith('Android'):
-                pass
-            elif machine['os'].startswith('Debian'):
+            if machine['os'].startswith('Debian'):
                 machine['os'] = 'Debian'
-                machine['version'] = machine['version'].split(" ")
-                machine['version'] = machine['version'][0]
+                machine['version'] = machine['version'].split(" ")[0]
             elif machine['os'].startswith('Microsoft'):
                 machine['os'] = machine['os'].split(' ')[1:3]
                 machine['os'] = ' '.join(machine['os'])
             elif machine['os'].startswith('Ubuntu'):
                 machine['os'] = 'Ubuntu'
                 # We want just the XX.yy version number
-                machine['version'] = machine['version'].split(" ")[0]
-                machine['version'] = machine['version'].split(".")
+                machine['version'] = machine['version'].split(" ")[0].split(".")
                 if len(machine['version']) >= 2:
                     machine['version'] = machine['version'][0:2]
                 machine['version'] = '.'.join(machine['version'])
             elif machine['os'].startswith('Mageia'):
                 machine['os'] = machine['os'].split(" ")[0]
+            elif machine['os'].startswith('Unknown'):
+                machine['os'] = machine['os'].split("(")[0]
+                machine['version'] = ""
+            elif machine['os'].startswith("CentOS"):
+                machine['os'] = machine['os'].split(" ")[0]
+                machine['version'] = machine['version'].split("(")[0].split(".")[0:2]
+                machine['version'] = ".".join(machine['version'])
+
+            elif machine['os'].startswith("macOS") or machine['os'].startswith("OS X"):
+                machine['version'] = machine['version'].split(" (")[0].split(".")[0:2]
+                machine['version'] = ".".join(machine['version'])
+
             else:
                 pass
 
@@ -4817,62 +4821,48 @@ ON
             list of all the machines with specified OS and specified version
         """
 
-        criterion = ''
+        sql = session.query(Machine.id, Machine.name)\
+        .join(OS, OS.id == Machine.operatingsystems_id)\
+        .outerjoin(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
+        .filter(and_(OS.name.like('%'+oslocal+'%')), OsVersion.name.like('%'+version+'%'))
 
-        if version == "":
-            criterion = self.config.dbname+'.glpi_operatingsystemversions.name IS NULL'
-        else:
-            criterion = self.config.dbname+'.glpi_operatingsystemversions.name like "%%%s%%"' % version
-
-        sql="""SELECT
-    %s.glpi_computers_pulse.id,
-    %s.glpi_computers_pulse.name
-FROM
-    %s.glpi_computers_pulse
-INNER JOIN
-    %s.glpi_operatingsystems
-ON
-    operatingsystems_id = %s.glpi_operatingsystems.id
-left JOIN
-    %s.glpi_operatingsystemversions
-ON
-    operatingsystemversions_id = %s.glpi_operatingsystemversions.id
-WHERE
-  %s.glpi_operatingsystems.name LIKE "%%%s%%"
-AND
-  %s
-;""" % (self.config.dbname, self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        oslocal, criterion)
-
+        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
+        sql = self.__filter_on(sql)
         res = session.execute(sql)
+
         result = [{'id':a, 'hostname':b} for a,b in res]
+
         return result
 
     @DatabaseHelper._sessionm
-    def get_computer_count_for_dashboard(self, session, count):
-        inventory_filtered_machines = self.__filter_on(session.query(Machine.id)).all()
+    def get_computer_count_for_dashboard(self, session, count=True):
+        inventory_filtered_machines = self.__filter_on(session.query(Machine.id).filter(Machine.is_deleted == 0, \
+                                                                                        Machine.is_template == 0)).all()
+        ret = self.__getRestrictedComputersListQuery(None, '', session, True, False)
 
         inventory_filtered_machines = ['UUID%s'%id[0] for id in inventory_filtered_machines]
         online_machines = XmppMasterDatabase().get_machines_online_for_dashboard()
 
-        registered_offline_machine = []
-
         unregistred_online_machine = []
         registered_online_machine = []
+        registered_offline_machine = []
 
+        registered_online_uuid_list = []
         for machine in online_machines:
-            if machine['uuid'] is None:
-                unregistred_online_machine.append(machine)
+            if machine['uuid'] is None or machine['uuid'] == "":
+                unregistred_online_machine.append(machine['macaddress'])
             else:
-                registered_online_machine.append(machine)
+                registered_online_uuid_list.append(machine['uuid'])
+                registered_online_machine.append(machine['uuid'])
+
+        for machine in inventory_filtered_machines:
+            if machine not in registered_online_machine:
+                registered_offline_machine.append(machine)
 
         if count is True:
-            return {"registered" : len(inventory_filtered_machines), "online": len(registered_online_machine), 'unregistered': len(unregistred_online_machine)}
+            return {"registered" : len(inventory_filtered_machines), "online": len(registered_online_machine), 'offline': len(registered_offline_machine), 'unregistered': len(unregistred_online_machine)}
         else:
-            return {"registered" : inventory_filtered_machines, "online": registered_online_machine, 'unregistered': unregistred_online_machine}
+            return {"registered" : inventory_filtered_machines, "online": registered_online_machine, 'offline': registered_offline_machine,'unregistered': unregistred_online_machine}
 
 # Class for SQLalchemy mapping
 class Machine(object):
