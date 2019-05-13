@@ -1761,13 +1761,20 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return True
         return False
 
-    def XmppUpdateInventoried(self, jid):
+    def XmppUpdateInventoried(self, jid, timewaittinginventor = 50):
+        machine = {}
+        rangetimewaittinginventor = int(timewaittinginventor) / 2
         try:
             machine = XmppMasterDatabase().getMachinefromjid(jid)
-            if len(machine) !=0:
+            if not 'id' in machine:
+                for t in range( rangetimewaittinginventor ):
+                    if 'id' in machine: break
+                    sleep(2)
+                    machine = XmppMasterDatabase().getMachinefromjid(jid)
+            if 'id' in machine:
                 result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
                 results = result[0].split(",")
-                logging.getLogger().debug("listMacAdressforMachine   %s" % results)
+                #logging.getLogger().debug("listMacAdressforMachine   %s" % results)
                 uuid = ''
                 for t in results:
                     computer = ComputerManager().getComputerByMac(t)
@@ -1785,7 +1792,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     else:
                         logging.getLogger().warning("Incoherence in the address mac %s" % jid)
             else:
-                logging.getLogger().warning("machine [%s] not present. Cant update uuid in machine table." % jid)
+                logging.getLogger().warning("machine [%s] not present. Cant update uuid "\
+                    "in machine table. Waitting %s seconds after inject inventory" % (jid, timewaittinginventor))
+                return False
         except Exception:
             logger.error("** Update error on inventory %s" % (jid))
             logger.error("%s"%(traceback.format_exc()))
