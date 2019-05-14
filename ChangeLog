@@ -1,5 +1,17 @@
+
+
+Pulse 2 4.5.2
+=============
+* [FEATURE] Allow install of plugin if a specific version of client is met
 * [FEATURE] Switch from RaphaelJS to d3.js
+* [FEATURE] Function to record execution time of plugins
 * [BUGFIX]  Fix creating groups when the database is not called glpi
+* [BUGFIX]  Fix dashboard counters
+* [BUGFIX]  Fix the release of resources after a deployment
+* [BUGFIX]  Fix generation of random deployment session names
+* [BUGFIX]  Fix the release of resources in case of lost connections
+* [BUGFIX]  Fix reconnection of master agent to xmpp server
+
 
 Pulse 2 4.5.1
 =============
