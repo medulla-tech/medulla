@@ -11,6 +11,12 @@ mmc-core 4.5.2
 * [BUGFIX]  Fix dashboard counters
 * [BUGFIX]  Fix the release of resources in case of lost connections
 
+mmc-core 4.5.2
+==============
+* [FEATURE] Switch from RaphaelJS to d3.js
+* [BUGFIX]  Fix dashboard counters
+* [BUGFIX]  Fix the release of resources in case of lost connections
+
 mmc-core 4.5.1
 ==============
 * [FEATURE] New history page for file transfers
