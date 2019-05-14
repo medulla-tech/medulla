@@ -2180,12 +2180,67 @@ class MUCBot(sleekxmpp.ClientXMPP):
         logger.debug("%s not in room %s" % (jid, room))
         return False
 
+    def errorhandlingstanza(self, msg, msgfrom, msgkey):
+        logger.error("child elements message")
+        messagestanza=""
+        for t in msgkey:
+            if t != 'error' or t != "lang":
+                e = str(msg[t])
+                if e != "":
+                    messagestanza+="%s : %s\n"%(t, e)
+        if 'error' in msgkey:
+            messagestanza+="Error information\n"
+            msgkeyerror = msg['error'].keys()
+            for t in msg['error'].keys():
+                if t != "lang":
+                    e = str(msg['error'][t])
+                    if e != "":
+                        messagestanza+="%s : %s\n"%(t, e)
+        if messagestanza != "":
+            logger.error(messagestanza)
+
     def message(self, msg):
+        """
+            ref stanza eg: https://xmpp.org/rfcs/rfc3921.html#stanzas
+        """
         try:
+            msgkey = msg.keys()
+            msgfrom = ""
+            if not 'from' in msgkey:
+                logger.error("Stanza message bad format %s"%msg)
+                return False
             msgfrom = str(msg['from'])
+
             logger.debug("*******MESSAGE %s"%msgfrom)
+            if 'type' in msgkey:
+                # eg: ref section 2.1
+                type = str(msg['type'])
+                if type == "chat" or type == "groupchat":
+                    pass
+                elif type == "headline":
+                    "message automated service"
+                    logger.warning("MESSAGE stanza headline %s"%msg)
+                    return
+                elif type == "normal":
+                    "message automated service"
+                    logger.warning("MESSAGE stanza normal %s"%msg)
+                    msg.reply('Thank you, but I do not treat normal messages').send()
+                    return
+                elif type == 'error':
+                    logger.error("Stanza message from %s"%msgfrom)
+                    self.errorhandlingstanza(msg, msgfrom, msgkey)
+                    return
+                else:
+                    logger.error("Stanza message type %s"%type)
+                    return
         except:
+            logger.error("Stanza message bad format %s"%msg)
+            traceback.print_exc(file=sys.stdout)
             return
+        if not 'body' in msgkey:
+            logger.error("Stanza message body missing %s"%msg)
+            return False
+
         # logger.debug(msg['body'])
         if msg['body'] == "This room is not anonymous":
             return False
