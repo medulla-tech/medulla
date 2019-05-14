@@ -2184,7 +2184,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         logger.error("child elements message")
         messagestanza=""
         for t in msgkey:
-            if t != 'error' or t != "lang":
+            if t != 'error' and t != "lang":
                 e = str(msg[t])
                 if e != "":
                     messagestanza+="%s : %s\n"%(t, e)
