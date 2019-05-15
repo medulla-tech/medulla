@@ -663,6 +663,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if msg_changed_status['type'] == 'unavailable':
             try:
                 result = XmppMasterDatabase().delPresenceMachine(msg_changed_status['from'])
+                if result is None:
+                    return
                 if "type" in result and result['type'] == "relayserver":
                     # recover list of cluster ARS
                     listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(
