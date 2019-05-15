@@ -290,6 +290,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # ######################Update remote agent#########################
         self.file_deploy_plugin = []
         # ##clear conf compte.
+        self.confaccount=[] #list des account for clear
         logger.debug('Clear MUC conf account')
         cmd = "for i in  $(ejabberdctl registered_users pulse | grep '^conf' ); do echo $i; ejabberdctl unregister $i pulse; done"
         try:
@@ -1581,6 +1582,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
             self.send_message(mto=msg['from'],
                               mbody=json.dumps(reponse),
                               mtype='chat')
+            #add account for delete
+            self.confaccount.append(msg['from'].user)
         except Exception:
             logger.error("Unable to configure the relay server : missing")
 
@@ -2248,6 +2251,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if msg['from'].bare == self.config.jidchatroommaster or msg['from'].bare == self.config.confjidchatroom:
             return False
         if self.jidInRoom1(self.config.confjidchatroom, msg['from']):
+            if str(msg['from'].user) in self.confaccount:
+                self.confaccount.remove(str(msg['from'].user))
+                self.callpluginmaster(msg)
+                return
             self.MessagesAgentFromChatroomConfig(msg)
             return
         if msg['type'] == 'groupchat':
