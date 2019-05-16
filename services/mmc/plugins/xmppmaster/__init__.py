@@ -421,8 +421,8 @@ def getshowmachinegrouprelayserver():
     return array
 
 
-def get_qaction(groupname, user, grp):
-    return XmppMasterDatabase().get_qaction(groupname, user, grp)
+def get_qaction(groupname, user, grp, completename):
+    return XmppMasterDatabase().get_qaction(groupname, user, grp, completename)
 
 def setCommand_qa(command_name, command_action, command_login, command_grp="", command_machine='', command_os=""):
     return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os)

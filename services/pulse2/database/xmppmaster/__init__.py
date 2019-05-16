@@ -2068,7 +2068,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def get_qaction(self, session, namecmd, user, grp):
+    def get_qaction(self, session, namecmd, user, grp, completename):
         """
             return quick actions informations
         """
@@ -2076,7 +2076,25 @@ class XmppMasterDatabase(DatabaseHelper):
             qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.namecmd==namecmd, Qa_custom_command.user==user))
             qa_custom_command = qa_custom_command.first()
         else:
-            qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.customcmd==namecmd, or_(Qa_custom_command.user==user,Qa_custom_command.user=="allusers")))
+            osdetection = ""
+            if completename != "":
+                if completename.endswith('(windows)'):
+                    osdetection = "windows"
+                elif completename.endswith('(macos)'):
+                    osdetection = "macos"
+                elif completename.endswith('(linux)'):
+                    osdetection = "linux"
+            if osdetection == "":
+                qa_custom_command = session.query(Qa_custom_command).\
+                    filter(and_(Qa_custom_command.customcmd==namecmd,
+                                or_(Qa_custom_command.user==user,
+                                    Qa_custom_command.user=="allusers")))
+            else:
+                qa_custom_command = session.query(Qa_custom_command).\
+                    filter(and_(Qa_custom_command.customcmd==namecmd,
+                                Qa_custom_command.os== osdetection,
+                                or_(Qa_custom_command.user==user,
+                                    Qa_custom_command.user=="allusers")))
             qa_custom_command = qa_custom_command.first()
         if qa_custom_command:
             result = {  "user" : qa_custom_command.user,
