@@ -264,8 +264,8 @@ function xmlrpc_getshowmachinegrouprelayserver() {
     return xmlCall("xmppmaster.getshowmachinegrouprelayserver", array());
 }
 
-function xmlrpc_get_qaction($groupname, $user, $grp = 0){
-    return xmlCall("xmppmaster.get_qaction", array($groupname, $user, $grp));
+function xmlrpc_get_qaction($groupname, $user, $grp = 0, $completename = ""){
+    return xmlCall("xmppmaster.get_qaction", array($groupname, $user, $grp, $completename));
 }
 
 function xmlrpc_setCommand_qa($command_name, $command_action, $command_login, $command_grp="", $command_machine='', $command_os=""){
