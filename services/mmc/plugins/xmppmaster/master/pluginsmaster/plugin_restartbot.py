@@ -21,22 +21,21 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-# file pluginsmaster/force_setup_agent.py
+# file pluginsmaster/plugin_restartbot.py
 # this plugin can be called from quick action
 
 import json
 import logging
 
-plugin = {"VERSION": "1.0", "NAME": "restartbot", "TYPE": "master"}
+logger = logging.getLogger()
+
+plugin = {"VERSION": "1.1", "NAME": "restartbot", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    print "_________________________"
-    logging.getLogger().debug(plugin)
-    # print json.dumps(data, indent = 4)
-    print data['data'][0]
-    print "_________________________"
-
+    logger.debug("###################################################")
+    logger.debug("call %s from %s"%(plugin,message['from']))
+    logger.debug("###################################################")
     command = {'action': 'restartbot',
                'base64': False,
                'sessionid': sessionid,
