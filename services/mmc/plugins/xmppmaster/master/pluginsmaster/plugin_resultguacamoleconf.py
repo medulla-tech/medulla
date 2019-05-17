@@ -31,10 +31,11 @@ plugin = {"VERSION": "1.0", "NAME": "resultguacamoleconf", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
-    logging.getLogger().debug(plugin)
+    logger.debug("#################################################")
+    logger.debug(plugin)
+    logger.debug("#################################################")
     try:
         XmppMasterDatabase().addlistguacamoleidforiventoryid(data['uuid'], data['connection'])
     except Exception, e:
-        logging.getLogger().error("Error: %s" % str(e))
-        traceback.print_exc(file=sys.stdout)
+        logger.error("plugin resultguacamoleconf Error: %s" % str(e))
         pass
