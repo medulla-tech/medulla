@@ -2051,10 +2051,14 @@ class MscDatabase(DatabaseHelper):
 
     def getstatbycmd(self, ctx, cmd_id):
         session = create_session()
-        ret = session.query(func.count(self.commands_on_host.c.current_state), CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).scalar()
-        nbmachinegroupe = int(ret)
         ret = session.query(func.count(self.commands_on_host.c.current_state),
-                            CommandsOnHost).filter(and_(self.commands_on_host.c.fk_commands == cmd_id,self.commands_on_host.c.current_state == "done")).scalar()
+                            CommandsOnHost).\
+                                filter(self.commands_on_host.c.fk_commands == cmd_id).scalar()
+        nbmachinegroupe = int(ret)
+
+        ret = session.query(func.count(self.commands_on_host.c.current_state),
+                            CommandsOnHost).\
+                                filter(and_(self.commands_on_host.c.fk_commands == cmd_id, self.commands_on_host.c.current_state == "done")).scalar()
         nbdeploydone = int(ret)
         session.close()
         return { "nbmachine" : nbmachinegroupe, "nbdeploydone" : nbdeploydone  }
@@ -2065,11 +2069,61 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return ret
 
+    def _getcommanddatadate(self, CommandsOnHostdata):
+        start_dateunixtime = time.mktime(CommandsOnHostdata.start_date.timetuple())
+        end_dateunixtime   = time.mktime(CommandsOnHostdata.end_date.timetuple())
+        next_launch_dateunixtime = time.mktime(CommandsOnHostdata.next_launch_date.timetuple())
+        return {"start_dateunixtime" : start_dateunixtime,
+                "end_dateunixtime" : end_dateunixtime,
+                "next_launch_dateunixtime" : next_launch_dateunixtime
+            }
+
+    def _getcommanddata(self, CommandsOnHostdata):
+        ret =  {"uploaded" : CommandsOnHostdata.uploaded,
+                "next_attempt_date_time" : CommandsOnHostdata.next_attempt_date_time,
+                "deleted" : CommandsOnHostdata.deleted,
+                "imgmenu_changed" : CommandsOnHostdata.imgmenu_changed,
+                "halted" : CommandsOnHostdata.halted,
+                "host" : CommandsOnHostdata.host,
+                "attempts_left" : CommandsOnHostdata.attempts_left,
+                "scheduler" : CommandsOnHostdata.scheduler,
+                "fk_commands" : CommandsOnHostdata.fk_commands,
+                "fk_target" : CommandsOnHostdata.fk_target,
+                "stage" : CommandsOnHostdata.stage,
+                "last_wol_attempt" : CommandsOnHostdata.last_wol_attempt,
+                "rebooted" : CommandsOnHostdata.rebooted,
+                "executed" : CommandsOnHostdata.executed,
+                "inventoried" : CommandsOnHostdata.inventoried,
+                "awoken" : CommandsOnHostdata.awoken,
+                "max_clients_per_proxy" : CommandsOnHostdata.max_clients_per_proxy,
+                "id" : CommandsOnHostdata.id,
+                "order_in_proxy" : CommandsOnHostdata.order_in_proxy,
+                "phases" : CommandsOnHostdata.phases,
+                "end_date" : CommandsOnHostdata.end_date,
+                "current_launcher" : CommandsOnHostdata.current_launcher,
+                "start_date" : CommandsOnHostdata.start_date,
+                "next_launch_date" : CommandsOnHostdata.next_launch_date,
+                "current_state" : CommandsOnHostdata.current_state,
+                "fk_use_as_proxy" : CommandsOnHostdata.fk_use_as_proxy
+                }
+        return dict(ret, **self._getcommanddatadate(CommandsOnHostdata))
+
     def getLastCommandsOncmd_id(self, ctx, cmd_id):
         session = create_session()
-        ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
+        ret = session.query(CommandsOnHost).\
+            filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
         session.close()
-        return ret
+        return self._getcommanddata(ret)
+
+    def getLastCommandsOncmd_id_start_end(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(CommandsOnHost.start_date,
+                            CommandsOnHost.end_date,
+                            CommandsOnHost.next_launch_date).\
+            filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
+        session.close()
+        return self._getcommanddatadate(ret)
+
 
     def getCommandOnGroupByState(self, ctx, cmd_id, state, min = 0, max = -1):
         session = create_session()

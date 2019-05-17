@@ -256,6 +256,10 @@ function get_last_commands_on_cmd_id($cmd_id) {
     return xmlCall('msc.get_last_commands_on_cmd_id', array($cmd_id));
 }
 
+function get_last_commands_on_cmd_id_start_end($cmd_id) {
+    return xmlCall('msc.get_last_commands_on_cmd_id_start_end', array($cmd_id));
+}
+
 function get_def_package_label($label, $version) {
     return xmlCall('msc.get_def_package_label', array($label, $version));
 }

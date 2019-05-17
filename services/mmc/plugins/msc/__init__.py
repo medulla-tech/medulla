@@ -700,8 +700,6 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getstatbycmd(ctx, cmd_id))
 
-
-
     def get_first_commands_on_cmd_id(self, cmd_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getFirstCommandsOncmd_id(ctx, cmd_id))
@@ -709,6 +707,10 @@ class RpcProxy(RpcProxyI):
     def get_last_commands_on_cmd_id(self, cmd_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getLastCommandsOncmd_id(ctx, cmd_id))
+
+    def get_last_commands_on_cmd_id_start_end(self, cmd_id):
+        ctx = self.currentContext
+        return xmlrpcCleanup2(MscDatabase().getLastCommandsOncmd_id_start_end(ctx, cmd_id))
 
     def set_commands_filter(self, filterType):
         ctx = self.currentContext

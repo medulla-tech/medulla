@@ -1409,31 +1409,38 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getstatdeployfromcommandidstartdate(self, session, command_id, datestart):
         try:
-            machinedeploy = session.query(Deploy).filter(and_( Deploy.command == command_id,
+            machinedeploy =session.query(Deploy.state,
+                                         func.count(Deploy.state)).\
+                                             filter(and_( Deploy.command == command_id,
+
                                                             Deploy.startcmd == datestart
                                                         )
-                                                )
-            totalmachinedeploy =  self.get_count(machinedeploy)
-            #count success deploy
-            machinesuccessdeploy = self.get_count(machinedeploy.filter(and_(Deploy.state == 'DEPLOYMENT SUCCESS')))
-            #count error deploy
-            machineerrordeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'DEPLOYMENT ERROR')))
-            #count process deploy
-            machineprocessdeploy   = self.get_count(machinedeploy.filter(or_(Deploy.state.like('DEPLOYMENT START%%'))))
-            #count abort deploy
-            machineabortdeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'DEPLOYMENT ABORT')))
-            return { 'totalmachinedeploy' : totalmachinedeploy,
-                    'machinesuccessdeploy' : machinesuccessdeploy,
-                    'machineerrordeploy' : machineerrordeploy,
-                    'machineprocessdeploy' : machineprocessdeploy,
-                    'machineabortdeploy' : machineabortdeploy }
-        except Exception:
-            return { 'totalmachinedeploy' : 0,
+                                                ).group_by(Deploy.state)
+            machinedeploy = machinedeploy.all()
+            ret = { 'totalmachinedeploy' : 0,
                     'machinesuccessdeploy' : 0,
                     'machineerrordeploy' : 0,
                     'machineprocessdeploy' : 0,
-                    'machineabortdeploy' : 0 }
+                    'machineabortdeploy' : 0,
+                    'autrestatus' : 0}
 
+            liststatus = { x[0] : x[1] for x in machinedeploy}
+            totalmachinedeploy = 0
+            for t in liststatus:
+                ret['totalmachinedeploy'] += liststatus[t]
+                if t == 'DEPLOYMENT SUCCESS':
+                    ret['machinesuccessdeploy'] = liststatus[t]
+                elif t == 'DEPLOYMENT ERROR':
+                    ret['machineerrordeploy'] = liststatus[t]
+                elif t == 'DEPLOYMENT START':
+                    ret['machineprocessdeploy'] = liststatus[t]
+                elif t == 'DEPLOYMENT ABORT':
+                    ret['machineabortdeploy'] = liststatus[t]
+                else:
+                    ret['autrestatus'] = liststatus[t]
+            return ret
+        except Exception:
+            return ret
 
     @DatabaseHelper._sessionm
     def getdeployfromcommandid(self, session, command_id, uuid):
