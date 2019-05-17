@@ -53,26 +53,25 @@ $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getNam
 $p->setSideMenu($sidemenu);
 $p->display();
 
-
-$resultfrommsc = xmlrpc_getstatbycmd($cmd_id);
-$total_machine_from_msc  = $resultfrommsc['nbmachine'];
-$nb_machine_deployer_from_msc     = $resultfrommsc['nbdeploydone'];
-$nb_deployer_machine_yet_from_msc = $total_machine_from_msc - $total_machine_from_msc;
-
-$convergenceonpackage = is_commands_convergence_type($cmd_id);
-$command_detail = command_detail($cmd_id);
+//FROM MSC BASE
+// search nbmachinegroupe dans groupe, et nbdeploydone deja deploye depuis mmc
+$resultfrommsc = xmlrpc_getstatbycmd($cmd_id); 
+$MSC_nb_mach_grp_for_deploy  = $resultfrommsc['nbmachine'];
+$MSC_nb_mach_grp_done_deploy     = $resultfrommsc['nbdeploydone'];
+//$nb_deployer_machine_yet_from_msc = $MSC_nb_mach_grp_for_deploy - $MSC_nb_mach_grp_for_deploy;
 
 
+$bool_convergence_grp_on_package_from_msc = is_commands_convergence_type($cmd_id);
+// $command_detail = command_detail($cmd_id);
 
 
-$lastcommandid = get_last_commands_on_cmd_id($cmd_id);
-$start_date = mktime(   $lastcommandid['start_date'][3],
-                        $lastcommandid['start_date'][4],
-                        $lastcommandid['start_date'][5],
-                        $lastcommandid['start_date'][1],
-                        $lastcommandid['start_date'][2],
-                        $lastcommandid['start_date'][0]);
+// search from msc table CommandsOnHost 
+$lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id);
+$start_date =  $lastcommandid['start_dateunixtime'];
+$end_date = $lastcommandid['end_dateunixtime'];
+$timestampnow = time();
 
+//FROM XMPPMASTER
 $resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,
                                                                 date("Y-m-d H:i:s",
                                                                 $start_date));
@@ -94,20 +93,15 @@ $machine_wol_from_deploy       = $totalmachinedeploy-($machineerrordeploy + $mac
 $terminate = 0;
 $deployinprogress = 0;
 
-$waiting = $total_machine_from_msc - ($total_machine_from_deploy + $machine_timeout_from_deploy);
+$waiting = $MSC_nb_mach_grp_for_deploy - ($total_machine_from_deploy + $machine_timeout_from_deploy);
 
 // $evolution
 if ($waiting == 0 && $machine_process_from_deploy == 0 ){
     $terminate = 1;
 }
 //echo $terminate;
-$end_date = mktime(     $lastcommandid['end_date'][3],
-                        $lastcommandid['end_date'][4],
-                        $lastcommandid['end_date'][5],
-                        $lastcommandid['end_date'][1],
-                        $lastcommandid['end_date'][2],
-                        $lastcommandid['end_date'][0]);
-$timestampnow = time();
+
+
 echo "<br>";
 
 $start_deploy = 0;
@@ -123,7 +117,7 @@ if ($timestampnow > ($end_date)){
 
 
 echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date);
-if ($convergenceonpackage !=0 ){
+if ($bool_convergence_grp_on_package_from_msc !=0 ){
     echo "<img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/>";
 }
 echo "<br>";
@@ -194,17 +188,17 @@ else{
     }
     echo "<br>";
 
-    $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $nb_machine_deployer_from_msc;
-    $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $total_machine_from_msc) * 100,2);
+    $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $MSC_nb_mach_grp_done_deploy;
+    $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $MSC_nb_mach_grp_for_deploy) * 100,2);
     $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
     echo '<div class="bars">';
         echo '<span style="width: 200px;">';
-            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$total_machine_from_msc.'" value="'.$nb_machine_deployer_avec_timeout_deploy .'" form="form-id"></progress>';
+            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$MSC_nb_mach_grp_for_deploy.'" value="'.$nb_machine_deployer_avec_timeout_deploy .'" form="form-id"></progress>';
         echo '</span>';
     echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
 
-    $wol = ( $total_machine_from_msc - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
-    echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$total_machine_from_msc;
+    $wol = ( $MSC_nb_mach_grp_for_deploy - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
+    echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$MSC_nb_mach_grp_for_deploy;
     echo "<br>"._T("Number of current deployments","xmppmaster")." : ". $deploymachine;
     echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machine_timeout_from_deploy;
     echo "<br>"._T("Deployment summary","xmppmaster").":";
