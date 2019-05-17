@@ -465,11 +465,13 @@ class MscDatabase(DatabaseHelper):
         """
         #datenow = datetime.datetime.now()
         session = create_session()
-        q = session.query(CommandsOnHost).filter(and_(CommandsOnHost.fk_commands == id_command,
-                                                 CommandsOnHost.stage == 'ended',
-                                                 CommandsOnHost.current_state == 'over_timed',
-                                                 CommandsOnHost.start_date == start_date))
-        return self.get_counta(q)
+        q = session.query(func.count(CommandsOnHost)).\
+            filter(and_(CommandsOnHost.fk_commands == id_command,
+                        CommandsOnHost.stage == 'ended',
+                        CommandsOnHost.current_state == 'over_timed',
+                        CommandsOnHost.start_date == start_date)).\
+                            scalar()
+        return q
 
     def deployxmpponmachine(self, command_id):
         result = {}

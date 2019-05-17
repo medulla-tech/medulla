@@ -89,6 +89,9 @@ ADD INDEX `ind_packid` (`package_id` ASC);
 ALTER TABLE `kiosk`.`package_has_profil` 
 ADD INDEX `ind_profil` (`profil_id` ASC);
 
+ALTER TABLE `xmppmaster`.`deploy` 
+ADD INDEX `ind_start_cmd` (`startcmd` ASC),
+ADD INDEX `ind_end_cmd` (`endcmd` ASC);
 
 
 UPDATE version SET Number = 26;
