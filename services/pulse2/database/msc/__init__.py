@@ -2071,6 +2071,21 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return ret
 
+    def _getarraycommanddatadate(self, arrayCommandsOnHostdata):
+        ret =[]
+        listcmd = [ x for x in arrayCommandsOnHostdata]
+        for x in listcmd:
+            t= {    "fk_target" : x[0],
+                    "startdate" : x[1].strftime('%Y-%m-%d %H:%M:%S'),
+                    "enddate" : x[2].strftime('%Y-%m-%d %H:%M:%S'),
+                    "next_launch_date" : x[3].strftime('%Y-%m-%d %H:%M:%S'),
+                    "start_dateunixtime" : time.mktime(x[1].timetuple()),
+                    "end_dateunixtime" :time.mktime(x[2].timetuple()),
+                    "next_launch_dateunixtime" :time.mktime(x[3].timetuple())
+            }
+            ret.append(t)
+        return ret
+
     def _getcommanddatadate(self, CommandsOnHostdata):
         start_dateunixtime = time.mktime(CommandsOnHostdata.start_date.timetuple())
         end_dateunixtime   = time.mktime(CommandsOnHostdata.end_date.timetuple())
@@ -2125,6 +2140,21 @@ class MscDatabase(DatabaseHelper):
             filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
         session.close()
         return self._getcommanddatadate(ret)
+
+    def getarrayLastCommandsOncmd_id_start_end(self, ctx, array_cmd_id):
+        print array_cmd_id
+        session = create_session()
+        ret = session.query(distinct(CommandsOnHost.fk_target),
+                            CommandsOnHost.start_date,
+                            CommandsOnHost.end_date,
+                            CommandsOnHost.next_launch_date).\
+            filter(self.commands_on_host.c.fk_commands.in_(array_cmd_id)).\
+        order_by(desc(self.commands_on_host.c.id))
+        print  ret
+
+        ret.all()
+        session.close()
+        return self._getarraycommanddatadate(ret)
 
 
     def getCommandOnGroupByState(self, ctx, cmd_id, state, min = 0, max = -1):

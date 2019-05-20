@@ -712,6 +712,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getLastCommandsOncmd_id_start_end(ctx, cmd_id))
 
+    def get_array_last_commands_on_cmd_id_start_end(self, array_cmd_id):
+        ctx = self.currentContext
+        return xmlrpcCleanup2(MscDatabase().getarrayLastCommandsOncmd_id_start_end(ctx, array_cmd_id))
+
     def set_commands_filter(self, filterType):
         ctx = self.currentContext
         if not filterType in ['mine', 'all']:
