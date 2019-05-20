@@ -88,6 +88,8 @@ for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
     $params[] = $param;
 }
 
+$lastcommandid = get_array_last_commands_on_cmd_id_start_end($arraydeploy['tabdeploy']['command']);
+
 $index = 0;
 foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $error = False;
@@ -98,15 +100,8 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
     }
 
-    $lastcommandid = get_last_commands_on_cmd_id($arraydeploy['tabdeploy']['command'][$index]);
-    $start_date = date("Y-m-d H:i:s", mktime( $lastcommandid['start_date'][3],
-                              $lastcommandid['start_date'][4],
-                              $lastcommandid['start_date'][5],
-                              $lastcommandid['start_date'][1],
-                              $lastcommandid['start_date'][2],
-                              $lastcommandid['start_date'][0]));
-
-        $result = xmlrpc_getstatdeployfromcommandidstartdate($arraydeploy['tabdeploy']['command'][$index], $start_date);
+        $result = xmlrpc_getstatdeployfromcommandidstartdate($arraydeploy['tabdeploy']['command'][$index],
+                                                             $lastcommandid[$index]['startdate']);
 
         $total_machine_from_deploy     = $result['totalmachinedeploy'];
         $machine_error_from_deploy     = $result['machineerrordeploy'];
