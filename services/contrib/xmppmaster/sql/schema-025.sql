@@ -24,7 +24,7 @@
 --
 START TRANSACTION;
 
-ALTER TABLE `xmppmaster`.`machines` 
+ALTER TABLE `xmppmaster`.`machines` ;
 CHANGE COLUMN `enabled` `enabled` TINYINT(1) NULL DEFAULT '0' AFTER `jid`;
 
 -- ----------------------------------------------------------------------
