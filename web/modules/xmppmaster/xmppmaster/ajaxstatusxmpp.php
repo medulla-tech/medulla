@@ -73,7 +73,12 @@ foreach( $arraydeploy['tabdeploy']['start'] as $ss){
     }
 }
 
-$logAction = new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
+$logAction = new ActionItem(_("detaildeploy"),
+                                "viewlogs",
+                                "logfile",
+                                "computer",
+                                "xmppmaster",
+                                "xmppmaster");
 
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
 
@@ -89,7 +94,8 @@ for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
 }
 
 $lastcommandid = get_array_last_commands_on_cmd_id_start_end($arraydeploy['tabdeploy']['command']);
-
+$statarray = xmlrpc_getarraystatbycmd($arraydeploy['tabdeploy']['command']);
+$convergence = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
 $index = 0;
 foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $error = False;
@@ -108,13 +114,10 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $machine_success_from_deploy   = $result['machinesuccessdeploy'];
         $machine_process_from_deploy   = $result['machineprocessdeploy'];
         $machine_abort_from_deploy     = $result['machineabortdeploy'];
-
-        $stat = xmlrpc_getstatbycmd($arraydeploy['tabdeploy']['command'][$index]);
-        $total_machine_from_msc  = $stat['nbmachine'];
         // from msc
         $machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy($arraydeploy['tabdeploy']['command'][$index], $start_date);
-        $resultfrommsc = xmlrpc_getstatbycmd($arraydeploy['tabdeploy']['command'][$index]);
-        $total_machine_from_msc  = $resultfrommsc['nbmachine'];
+
+        $total_machine_from_msc  =  $statarray['nbmachine'][$arraydeploy['tabdeploy']['command'][$index]];
 
         $wol = ( $total_machine_from_msc - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
 
@@ -137,7 +140,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
             $namegrp = "";
         }
         //recherche information de deployement sur ce groupe.
-        if ( is_commands_convergence_type($arraydeploy['tabdeploy']['command'][$index]) != 0 ){
+        if ($convergence[$arraydeploy['tabdeploy']['command'][$index]] != 0 ){
             $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_convergence.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
         }else{
             $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_package.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
