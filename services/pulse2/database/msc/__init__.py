@@ -1943,6 +1943,20 @@ class MscDatabase(DatabaseHelper):
         return result.type
 
     @DatabaseHelper._session
+    def isArrayCommandsCconvergenceType(self, session, ctx, arraycmd_id):
+        result={}
+        for idcmd in arraycmd_id:
+            result[idcmd] = 0
+            try:
+                ret = session.query(Commands.type).\
+                    filter_by(id=idcmd).one()
+                print ret
+                result[idcmd] = int(ret[0])
+            except:
+                pass
+        return result
+
+    @DatabaseHelper._session
     def getCommands(self, session, ctx, cmd_id):
         if cmd_id == None or cmd_id == '':
             return False
@@ -2053,17 +2067,38 @@ class MscDatabase(DatabaseHelper):
 
     def getstatbycmd(self, ctx, cmd_id):
         session = create_session()
-        ret = session.query(func.count(self.commands_on_host.c.current_state),
-                            CommandsOnHost).\
+        ret = session.query(func.count(self.commands_on_host.c.current_state)).\
                                 filter(self.commands_on_host.c.fk_commands == cmd_id).scalar()
         nbmachinegroupe = int(ret)
-
         ret = session.query(func.count(self.commands_on_host.c.current_state),
                             CommandsOnHost).\
-                                filter(and_(self.commands_on_host.c.fk_commands == cmd_id, self.commands_on_host.c.current_state == "done")).scalar()
+                                filter(and_(self.commands_on_host.c.fk_commands == cmd_id,
+                                            self.commands_on_host.c.current_state == "done")).scalar()
         nbdeploydone = int(ret)
         session.close()
         return { "nbmachine" : nbmachinegroupe, "nbdeploydone" : nbdeploydone  }
+
+    def getarraystatbycmd(self, ctx, arraycmd_id):
+        result = {'nbmachine' : {}}
+        #result = {'nbmachine' : {}, 'nbdeploydone' : {}}
+        session = create_session()
+        ret = session.query(CommandsOnHost.fk_commands.label("idcmd") ,
+                            func.count(self.commands_on_host.c.current_state).label("nb")).\
+                                filter(and_(self.commands_on_host.c.fk_commands.in_(arraycmd_id))).\
+                                    group_by(self.commands_on_host.c.fk_commands)
+        ret.all()
+        for x in ret:
+            result['nbmachine'][x[0]]=x[1]
+
+        #ret = session.query(CommandsOnHost.fk_commands.label("idcmd") ,
+                            #func.count(self.commands_on_host.c.current_state).label("nb")).\
+                                #filter(and_(self.commands_on_host.c.fk_commands.in_(arraycmd_id),
+                                       #self.commands_on_host.c.current_state == "done")).\
+                                    #group_by(self.commands_on_host.c.fk_commands)
+        #ret.all()
+        #for x in ret:
+            #result['nbdeploydone'][x[0]]=x[1]
+        return result
 
     def getFirstCommandsOncmd_id(self, ctx, cmd_id):
         session = create_session()
