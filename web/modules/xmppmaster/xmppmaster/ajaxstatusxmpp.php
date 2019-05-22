@@ -22,7 +22,8 @@
  *
  * file ajaxstatusxmpp.php
  */
-require("modules/dyngroup/includes/includes.php");
+ require_once("modules/dyngroup/includes/xmlrpc.php");
+//require("modules/dyngroup/includes/includes.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 ?>
@@ -96,6 +97,7 @@ for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
 $lastcommandid = get_array_last_commands_on_cmd_id_start_end($arraydeploy['tabdeploy']['command']);
 $statarray = xmlrpc_getarraystatbycmd($arraydeploy['tabdeploy']['command']);
 $convergence = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
+$groupname = getInfosNameGroup($arraydeploy['tabdeploy']['group_uuid']);
 $index = 0;
 foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $error = False;
@@ -132,11 +134,9 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     if($groupid){
 
         if (isset($arraydeploy['tabdeploy']['group_uuid'][$index])){
-            $countmachine = getRestrictedComputersListLen( array('gid' => $arraydeploy['tabdeploy']['group_uuid'][$index]));
-            $namegrp = getPGobject($arraydeploy['tabdeploy']['group_uuid'][$index], true)->getName();
+            $namegrp = $groupname[$arraydeploy['tabdeploy']['group_uuid'][$index]]['name'];
         }
         else{
-            $countmachine = "";
             $namegrp = "";
         }
         //recherche information de deployement sur ce groupe.
@@ -197,16 +197,14 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
             else{
                 $arraystate[] = "<span style='background-color:".$color." ;'>".$sucess."%"."</span>" ;
             }
-
-            //$arraystate[] = "<span style='background-color:".$color." ;'>".$sucess."%"."</span>" ;
         }
         //'<progress max="'.$stat['nbmachine'].'" value="'.$stat['nbdeploydone'].'" form="form-id"></progress>';
-        $group = new Group($groupid, true, true);
-        if ($group->exists == False) {
-            $arrayname[] ="This group doesn't exist";
+        if (! isset($groupname[$groupid]['name']))
+        {
+            $arrayname[] = "This group doesn't exist";
         }
         else {
-            $arrayname[] = "<span style='text-decoration : underline;'><img style='position:relative;top : 5px;'src='img/machines/icn_groupsList.gif'/>" . $group->getName()."</span>";
+            $arrayname[] = "<span style='text-decoration : underline;'><img style='position:relative;top : 5px;'src='img/machines/icn_groupsList.gif'/>" . $groupname[$groupid]['name']."</span>";
         }
     }
     else{
