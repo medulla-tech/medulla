@@ -62,7 +62,7 @@ $startdeploy = array();
 $tolmach=array();
 $wolmach=array();
 $successmach=array();
-$êrrormach=array();
+$errormach=array();
 $timeoutmach=array();
 $abortmachuser = array();
 $processmachr = array();
@@ -127,7 +127,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $tolmach[] = $total_machine_from_msc;
         $wolmach[]=$wol;
         $successmach[]=$machine_success_from_deploy;
-        $êrrormach[]=$machine_error_from_deploy;
+        $errormach[]=$machine_error_from_deploy;
         $timeoutmach[]=$machine_timeout_from_deploy;
         $abortmachuser[] = $machine_abort_from_deploy;
 
@@ -230,7 +230,7 @@ $n->addExtraInfo( $arraystate, _T("Status", "xmppmaster"));
 $n->addExtraInfo( $tolmach, _T("Total Machines", "xmppmaster"));
 $n->addExtraInfo( $processmachr, _T("In progress", "xmppmaster"));
 $n->addExtraInfo( $successmach, _T("Success", "xmppmaster"));
-$n->addExtraInfo( $êrrormach, _T("Error", "xmppmaster"));
+$n->addExtraInfo( $errormach, _T("Error", "xmppmaster"));
 $n->addExtraInfo( $wolmach, _T("Waiting Wol", "xmppmaster"));
 $n->addExtraInfo( $timeoutmach, _T("Timed out", "xmppmaster"));
 $n->addExtraInfo( $abortmachuser, _T("Aborted", "xmppmaster"));
