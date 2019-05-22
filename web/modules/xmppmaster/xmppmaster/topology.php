@@ -34,12 +34,14 @@ $response = xmlrpc_topology_pulse();
 <style>
 	.node {
 		cursor: pointer;
+		fill: steelblue;
+	  stroke: none;
 	}
 
 	.node circle {
 	  fill: #fff;
 	  stroke: steelblue;
-	  stroke-width: 3px;
+	  stroke-width: 5px;
 	}
 
 	.node text {
@@ -59,180 +61,164 @@ $response = xmlrpc_topology_pulse();
     $p->display();
     echo '<div id="body"></div>';
 ?>
+
+<svg width="200" height="200">
+</svg>
+
 <script>
+var widthscrollable = jQuery(window).width()-20;
+var heightscrollable = jQuery(window).height()-20;
 
-// ************** Generate the tree diagram	 *****************
-var margin = {top: 20, right: 120, bottom: 20, left: 120},
-	width = 960 - margin.right - margin.left,
-	height = 800 - margin.top - margin.bottom;
+jQuery("svg").width(widthscrollable);
+jQuery("svg").height(heightscrollable);
 
-var i = 0,
-	duration = 750,
-	root;
+data = d3.json("datatopology/topology.json").then(function(json) {
+	root = json;
+	var root = d3.hierarchy(root)
+	update(root);
+});
 
-var tree = d3.tree()
-	.size([height, width]);
+var svg = d3.select("svg");
 
-var diagonal = d3.svg.diagonal()
-	.projection(function(d) { return [d.y, d.x]; });
+var help = svg.append("g")
+	.classed("help", true)
+	.attr("transform","translate(5,5)")
 
-var svg = d3.select("#body").append("svg")
-	.attr("width", width + margin.right + margin.left)
-	.attr("height", height + margin.top + margin.bottom)
-  .append("g")
-	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+help.append("text").attr("y", "1em").text("Tip :")
+help.append("text").attr("y", "2em").text("- Drag & drop : move the graph")
+help.append("text").attr("y", "3em").text("- Zoom : wheel")
 
-d3.json("datatopology/topology.json", function(json) {
-    root = json;
-    root.x0 = height / 2;
-    root.y0 = 0;
-    update(root);
- });
+svg.append("rect")
+		.attr("fill", "none")
+		.attr("pointer-events", "all")
+		.attr("width", widthscrollable)
+		.attr("height", heightscrollable)
+		.call(d3.zoom()
+			.scaleExtent([0.3, 2])
+			.on("zoom", zoom));
 
-/*
-var treeData = [
-  {
-    "name": "Top Level",
-    "parent": "null",
-    "children": [
-      {
-        "name": "Level 2: A",
-        "parent": "Top Level",
-        "children": [
-          {
-            "name": "Son of A",
-            "parent": "Level 2: A"
-          },
-          {
-            "name": "Daughter of A",
-            "parent": "Level 2: A"
-          }
-        ]
-      },
-      {
-        "name": "Level 2: B",
-        "parent": "Top Level"
-      }
-    ]
-  }
-];
+var g = svg.append("g").attr("transform", "translate(100,100)");
 
-root = treeData[0];
-root.x0 = height / 2;
-root.y0 = 0;
+g.append("g").attr("class", "links");
+g.append("g").attr("class", "nodes");
 
-update(root);
-*/
+var width = 400;
+var height = 200;
+var cluster = d3.cluster()
+	// Set the general space between
+  .nodeSize([50, 350])
 
-d3.select(self.frameElement).style("height", "500px");
+function update(source)
+{
+	var root = source;
+	cluster(root)
 
-function update(source) {
+	// Nodes
+	var node = d3.select('svg g.nodes')
+	  .selectAll('circle.node')
+	  .data(root.descendants());
 
-  // Compute the new tree layout.
-  var nodes = tree.nodes(root).reverse(),
-	  links = tree.links(nodes);
 
-  // Normalize for fixed-depth.
-  nodes.forEach(function(d) { d.y = d.depth * 180; });
+	var nodeEnter = node.enter()
+		.append("g")
+		.attr("class", function(d){
+			return "node "+d.data.type;
+		})
+		.attr("data-number", function(d, i){
+			d.data.datanumber = i
+			return i})
+		.on("click", click);
 
-  // Update the nodes…
-  var node = svg.selectAll("g.node")
-	  .data(nodes, function(d) { return d.id || (d.id = ++i); });
+	nodeEnter.append('circle')
+		.attr('cx', function(d) {return d.y;})
+		.attr('cy', function(d) {return d.x;})
+		.attr('r', 10);
 
-  // Enter any new nodes at the parent's previous position.
-  var nodeEnter = node.enter().append("g")
-	  .attr("class", "node")
-	  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-	  .on("click", click);
+	nodeEnter.append("text")
+		.attr("x", function(d) {
+			return d.children || d._children ? d.y-13 : d.y+13; })
+		.attr("y", function(d){
+			var ars = d3.selectAll(".ARS").enter()
+			if(d.data.type == "ARS" && ars._groups[0].length == 1)
+			return d.x-7
+			else
+				return d.x
+		})
+		.attr("dy", ".35em")
+		.attr("text-anchor", function(d) { return d.data.children || d.data._children ? "end" : "start"; })
+		.text(function(d) {
+			if(d.data.display_name == "" || typeof(d.data.display_name) == "undefined")
+				return d.data.name;
+			else
+				return d.data.display_name;
+	 });
 
-  nodeEnter.append("circle")
-	  .attr("r", 1e-6)
-	  .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
-
-  nodeEnter.append("text")
-	  .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
-	  .attr("dy", ".35em")
-	  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-	  .text(function(d) { return d.display_name; })
-	  .style("fill-opacity", 1e-6);
-
-  // Transition nodes to their new position.
-  var nodeUpdate = node.transition()
-	  .duration(duration)
-	  .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
-
-  nodeUpdate.select("circle")
-	  .attr("r", 10)
-	  .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
-
-  nodeUpdate.select("text")
-	  .style("fill-opacity", 1);
-
-  // Transition exiting nodes to the parent's new position.
-  var nodeExit = node.exit().transition()
-	  .duration(duration)
-	  .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
-	  .remove();
-
-  nodeExit.select("circle")
-	  .attr("r", 1e-6);
-
-  nodeExit.select("text")
-	  .style("fill-opacity", 1e-6);
-
-  // Update the links…
-  var link = svg.selectAll("path.link")
-	  .data(links, function(d) { return d.target.id; });
-
-  // Enter any new links at the parent's previous position.
-  link.enter().insert("path", "g")
-	  .attr("class", "link")
-	  .attr("d", function(d) {
-		var o = {x: source.x0, y: source.y0};
-		return diagonal({source: o, target: o});
-	  });
-
-  // Transition links to their new position.
-  link.transition()
-	  .duration(duration)
-	  .attr("d", diagonal);
-
-  // Transition exiting nodes to the parent's new position.
-  link.exit().transition()
-	  .duration(duration)
-	  .attr("d", function(d) {
-		var o = {x: source.x, y: source.y};
-		return diagonal({source: o, target: o});
-	  })
-	  .remove();
-
-  // Stash the old positions for transition.
-  nodes.forEach(function(d) {
-	d.x0 = d.x;
-	d.y0 = d.y;
-  });
+	// Links
+	var link = d3.select('svg g.links')
+	  .selectAll('line.link')
+	  .data(root.links())
+	  .enter()
+	  .append('line')
+	  .classed('link', true)
+	  .attr('x1', function(d) {return d.source.y;})
+	  .attr('y1', function(d) {return d.source.x;})
+	  .attr('x2', function(d) {return d.target.y;})
+	  .attr('y2', function(d) {return d.target.x;});
 }
 
+function zoom() {
+	g.attr("transform", d3.event.transform);
+}
 
 function click(d) {
-    if (d.type == "AM")
+    if (d.data.type == "AM")
     {
         // redirect to xmpp detail
-        document.location.href="main.php?module=xmppmaster&submod=xmppmaster&action=machine_xmpp_detail&machine=" + d.name
+        document.location.href="main.php?module=xmppmaster&submod=xmppmaster&action=machine_xmpp_detail&machine=" + d.data.name
         return
     }
     // TODO :
     // if type is ARS def promise js. infos ARS in intern page <div id=ARS_info><div>
 
   // Toggle children on click.
+	if(isNodeOpen(d))
+	{
+		collapse(d)
+	}
+	else {
+		expand(d)
+	}
+
+	var current = d
+	while (typeof(current.parent) != "undefined" && current.parent != null)
+	{
+		current = current.parent
+	}
+	d3.selectAll('.node').remove()
+	d3.selectAll('.link').remove()
+	update(current)
+
+}
+// Collapse nodes
+function collapse(d) {
   if (d.children) {
-	d._children = d.children;
-	d.children = null;
-  } else {
-	d.children = d._children;
-	d._children = null;
-  }
-  update(d);
+      d._children = d.children;
+      d._children.forEach(collapse);
+      d.children = null;
+    }
 }
 
-</script>
+function expand(d){
+	if (d._children) {
+      d.children = d._children;
+      d.children.forEach(expand);
+      d._children = null;
+    }
+}
+
+function isNodeOpen(d){
+	if(d.children){return true;}
+	return false;
+}
+
+  </script>
