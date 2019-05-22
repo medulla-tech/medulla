@@ -1944,13 +1944,12 @@ class MscDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def isArrayCommandsCconvergenceType(self, session, ctx, arraycmd_id):
-        result={}
+        result = {}
         for idcmd in arraycmd_id:
             result[idcmd] = 0
             try:
                 ret = session.query(Commands.type).\
                     filter_by(id=idcmd).one()
-                print ret
                 result[idcmd] = int(ret[0])
             except:
                 pass
@@ -2177,17 +2176,13 @@ class MscDatabase(DatabaseHelper):
         return self._getcommanddatadate(ret)
 
     def getarrayLastCommandsOncmd_id_start_end(self, ctx, array_cmd_id):
-        print array_cmd_id
         session = create_session()
         ret = session.query(distinct(CommandsOnHost.fk_target),
                             CommandsOnHost.start_date,
                             CommandsOnHost.end_date,
                             CommandsOnHost.next_launch_date).\
             filter(self.commands_on_host.c.fk_commands.in_(array_cmd_id)).\
-        order_by(desc(self.commands_on_host.c.id))
-        print  ret
-
-        ret.all()
+        order_by(desc(self.commands_on_host.c.id)).all()
         session.close()
         return self._getarraycommanddatadate(ret)
 

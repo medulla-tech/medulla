@@ -353,6 +353,19 @@ class DyngroupDatabase(DatabaseHelper):
             self.logger.debug("going to update %s name to %s in dyngroup machines cache"%(uuid, machines[uuid]))
             self.machines.update(self.machines.c.uuid==uuid).execute(name=machines[uuid])
 
+    def getInfosNameGroup(self, arrayuuidgroup):
+        arrayuuidgroup = list(set([x for x in arrayuuidgroup if x != ""]))
+        session = create_session()
+        result = { }
+        ret = session.query(Groups.id,
+                            Groups.type,
+                            Groups.name ).\
+                                filter(self.groups.c.id.in_(arrayuuidgroup)).all()
+        for resultatline in ret:
+            result[str(resultatline.id)]= {"name" : resultatline.name,
+                                      "type" : resultatline.type}
+        return result
+
     ####################################
     ## PROFILE ACCESS
     def getProfileByNameImagingServer(self, name, is_uuid):
