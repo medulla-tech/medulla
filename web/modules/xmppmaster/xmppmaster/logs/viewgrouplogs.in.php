@@ -26,14 +26,8 @@ require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/includes.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-echo '
-<script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>
-<script type="text/javascript" src="jsframework/lib/raphael/g.raphael-min.js"></script>
-<script type="text/javascript" src="jsframework/lib/raphael/g.pie-min.js"></script>
-<script type="text/javascript" src="jsframework/lib/raphael/g.line-min.js"></script>
-<script type="text/javascript" src="jsframework/lib/raphael/g.bar-min.js"></script>
-<script type="text/javascript" src="jsframework/lib/raphael/utilities.js"></script>';
 ?>
+<script src="jsframework/d3/d3.js"></script>
 <style>
     li.groupshare a {
         padding: 3px 0px 5px 20px;
@@ -54,8 +48,8 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 //FROM MSC BASE
-// search nbmachinegroupe dans groupe, et nbdeploydone deja deploye depuis mmc
-$resultfrommsc = xmlrpc_getstatbycmd($cmd_id); 
+// search nbmachinegroupe in group, and nbdeploydone already deployed from mmc
+$resultfrommsc = xmlrpc_getstatbycmd($cmd_id);
 $MSC_nb_mach_grp_for_deploy  = $resultfrommsc['nbmachine'];
 $MSC_nb_mach_grp_done_deploy     = $resultfrommsc['nbdeploydone'];
 //$nb_deployer_machine_yet_from_msc = $MSC_nb_mach_grp_for_deploy - $MSC_nb_mach_grp_for_deploy;
@@ -65,7 +59,7 @@ $bool_convergence_grp_on_package_from_msc = is_commands_convergence_type($cmd_id
 // $command_detail = command_detail($cmd_id);
 
 
-// search from msc table CommandsOnHost 
+// search from msc table CommandsOnHost
 $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id);
 $start_date =  $lastcommandid['start_dateunixtime'];
 $end_date = $lastcommandid['end_dateunixtime'];
@@ -340,89 +334,36 @@ if ($info['len'] != 0){
     $machineinprocess = count ( $uuidprocess );
     //$machinewol       = $state['nbmachine']-$state['nbdeploydone'];
         echo '
+        <script src="modules/xmppmaster/graph/js/chart.js"></script>
         <script>
             var u = "";
             var r = "";
             window.onload = function () {
-                var datadeploy = new Array();
-                var legend = new Array();
-                var href = new Array();
-                var color = new Array();
+                var datas = new Array();
                 ';
 
                 if ($machine_success_from_deploy > 0){
-                    echo 'datadeploy.push('.$machine_success_from_deploy.');';
-                    echo 'legend.push("%%.%% - Success");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'");';
-                    echo 'color.push("#2EFE2E");';
+                  echo 'datas.push({"label":"Success", "value":'.$machine_success_from_deploy.', "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'"})';
                 }
                 if ($machine_error_from_deploy > 0){
-                    echo 'datadeploy.push('.$machine_error_from_deploy.');';
-                    echo 'legend.push("%%.%% - Error");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'");';
-                    echo 'color.push("#FE2E64");';
+                  echo 'datas.push({"label":"Error", "value":'.$machine_error_from_deploy.', "color": "#FE2E64", "href":"'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'"})';
                 }
                 if ($machine_process_from_deploy > 0){
-                    echo 'datadeploy.push('.$machine_process_from_deploy.');';
-                    echo 'legend.push("%%.%% - In progress");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'");';
-                    echo 'color.push("#2E9AFE");';
+                  echo 'datas.push({"label":"In progress", "value":'.$machine_process_from_deploy.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'"})';
                 }
                 if ($wol > 0){
-                    echo 'datadeploy.push('.$wol.');';
-                    echo 'legend.push("%%.%% - Waiting (WOL sent)");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
-                    echo 'color.push("#DBA901");';
+                  echo 'datas.push({"label":"Waiting (WOL sent)", "value":'.$wol.', "color": "#DBA901", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"})';
                 }
                 if ($machine_timeout_from_deploy > 0){
-                    echo 'datadeploy.push('.$machine_timeout_from_deploy.');';
-                    echo 'legend.push("%%.%% - Timed out");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
-                    echo 'color.push("#FF4500");';
+                  echo 'datas.push({"label":"Timed out", "value":'.$machine_timeout_from_deploy.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"})';
                 }
                 if ($machine_abort_from_deploy > 0){
-                    echo 'datadeploy.push('.$machine_abort_from_deploy.');';
-                    echo 'legend.push("%%.%% - Aborted");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'");';
-                    echo 'color.push("#ff5050");';
+                  echo 'datas.push({"label":"Aborted", "value":'.$machine_abort_from_deploy.', "color": "#ff5050", "href":"'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'"})';
                 }
                 echo'
-                r = Raphael("holder"),
-                    pie = r.piechart(100, 60, 50, datadeploy,
-                        {   legend: legend,
-                            legendpos: "est",
-                            href: href,
-                            colors: color
-                        }
-                    );
-
-                r.text(210, 50, "Deployments").attr({ font: "20px sans-serif" });
-
-                pie.hover(function () {
-                    u = this;                 // My Code
-                    u.onclick = clickEvent;   //  hook to the function
-                this.sector.stop();
-                    this.sector.scale(1.1, 1.1, this.cx, this.cy);  // Scale slice
-
-                    if (this.label) {                               // Scale button and bolden text
-                        this.label[0].stop();
-                        this.label[0].attr({ r: 7.5 });
-                        this.label[1].attr({ "font-weight": 800 });
-                    }
-                }, function () {
-                    this.sector.animate({ transform: \'s1 1 \' + this.cx + \' \' + this.cy }, 500, "bounce");
-
-
-                    if (this.label) {
-                        this.label[0].animate({ r: 5 }, 1500, "bounce");
-                        this.label[1].attr({ "font-weight": 400 });
-                    }
-                });
-
+                chart("holder", datas);
             };
-            function clickEvent(){
-                console.log("Clicked!")
-            }
+
         </script>';
     }
 
