@@ -355,10 +355,10 @@ if ($info['len'] != 0){
                   echo 'datas.push({"label":"Waiting (WOL sent)", "value":'.$wol.', "color": "#DBA901", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
                 }
                 if ($machine_timeout_from_deploy > 0){
-                echo 'datas.push({"label":"Timed out", "value":'.$machine_timeout_from_deploy.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"})';
+                echo 'datas.push({"label":"Timed out", "value":'.$machine_timeout_from_deploy.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
                 }
                 if ($machine_abort_from_deploy > 0){
-                  echo 'datas.push({"label":"Aborted", "value":'.$machine_abort_from_deploy.', "color": "#ff5050", "href":"'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'"})';
+                  echo 'datas.push({"label":"Aborted", "value":'.$machine_abort_from_deploy.', "color": "#ff5050", "href":"'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
                 }
                 echo'
                 chart("holder", datas);
