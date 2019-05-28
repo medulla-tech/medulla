@@ -1121,6 +1121,8 @@ class Imaging(object):
         try:
             if os.path.exists("/tmp/MultiSessionParameters.ini") :
                 os.remove("/tmp/MultiSessionParameters.ini")
+            if os.path.exists("/tmp/udp-sender.log"):
+                os.remove("/tmp/udp-sender.log")
             return True
         except:
             return False
