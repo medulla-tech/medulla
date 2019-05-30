@@ -79,6 +79,10 @@ function is_commands_convergence_type($cmd_id) {
     return xmlCall('msc.is_commands_convergence_type', array($cmd_id));
 }
 
+function is_array_commands_convergence_type($arraycmd_id) {
+    return xmlCall('msc.is_array_commands_convergence_type', array($arraycmd_id));
+}
+
 function add_command_api($pid, $target, $params, $p_api, $mode, $gid = null, $proxy = array(), $cmd_type = 0) {
     return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $mode, $gid, $proxy, $cmd_type));
 }
@@ -243,6 +247,9 @@ function get_command_on_host_in_commands($cmd_id) {
     return xmlCall('msc.get_command_on_host_in_commands', array($cmd_id));
 }
 
+function xmlrpc_getarraystatbycmd($arraycmd_id){
+    return xmlCall('msc.getarraystatbycmd', array($arraycmd_id));
+}
 
 function xmlrpc_getstatbycmd($cmd_id){
     return xmlCall('msc.getstatbycmd', array($cmd_id));
@@ -254,6 +261,14 @@ function get_first_commands_on_cmd_id($cmd_id) {
 
 function get_last_commands_on_cmd_id($cmd_id) {
     return xmlCall('msc.get_last_commands_on_cmd_id', array($cmd_id));
+}
+
+function get_last_commands_on_cmd_id_start_end($cmd_id) {
+    return xmlCall('msc.get_last_commands_on_cmd_id_start_end', array($cmd_id));
+}
+
+function get_array_last_commands_on_cmd_id_start_end($array_cmd_id) {
+    return xmlCall('msc.get_array_last_commands_on_cmd_id_start_end', array($array_cmd_id));
 }
 
 function get_def_package_label($label, $version) {

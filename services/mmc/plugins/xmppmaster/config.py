@@ -103,6 +103,13 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.ordreallagent = self.getboolean('global', 'inter_agent')
         self.showinfomaster = self.getboolean('master', 'showinfo')
         self.showplugins = self.getboolean('master', 'showplugins')
+        ###################time execcution plugin ####################
+        # write execution time in fichier /tmp/Execution_time_plugin.txt
+        #
+        if self.has_option("global", "executiontimeplugins"):
+            self.executiontimeplugins = self.getboolean('global', 'executiontimeplugins')
+        else:
+            self.executiontimeplugins = False
         #################default connection ###################
         ### Connection server parameters if no relay server is available ####
         self.defaultrelayserverip = ipfromdns(self.get('defaultconnection', 'serverip'))
@@ -123,6 +130,10 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
             self.autoupdate = self.getboolean('global', 'autoupdate')
         else:
             self.autoupdate = True
+        if self.has_option("global", "autoupdatebyrelay"):
+            self.autoupdatebyrelay = self.getboolean('global', 'autoupdatebyrelay')
+        else:
+            self.autoupdatebyrelay = False
         self.dirplugins = self.get('plugins', 'dirplugins')
         self.dirschedulerplugins = self.get('plugins', 'dirschedulerplugins')
         self.information = {}

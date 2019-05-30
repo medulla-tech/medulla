@@ -138,6 +138,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	msc/sql/schema-026.sql \
 	msc/sql/schema-027.sql \
 	msc/sql/schema-028.sql \
+	msc/sql/schema-029.sql \
 	msc/qactions/101mdv_test_utf8.msc \
 	msc/qactions/102mdv_test_blocking.msc \
 	msc/qactions/103mdv_test_demux.msc \
@@ -207,6 +208,11 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	xmppmaster/sql/schema-019.sql \
 	xmppmaster/sql/schema-020.sql \
 	xmppmaster/sql/schema-021.sql \
+	xmppmaster/sql/schema-022.sql \
+	xmppmaster/sql/schema-023.sql \
+	xmppmaster/sql/schema-024.sql \
+	xmppmaster/sql/schema-025.sql \
+	xmppmaster/sql/schema-026.sql \
 	kiosk/sql/schema-001.sql \
 	kiosk/sql/schema-002.sql \
 	kiosk/sql/schema-003.sql \

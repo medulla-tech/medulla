@@ -465,11 +465,13 @@ class MscDatabase(DatabaseHelper):
         """
         #datenow = datetime.datetime.now()
         session = create_session()
-        q = session.query(CommandsOnHost).filter(and_(CommandsOnHost.fk_commands == id_command,
-                                                 CommandsOnHost.stage == 'ended',
-                                                 CommandsOnHost.current_state == 'over_timed',
-                                                 CommandsOnHost.start_date == start_date))
-        return self.get_counta(q)
+        q = session.query(func.count(CommandsOnHost)).\
+            filter(and_(CommandsOnHost.fk_commands == id_command,
+                        CommandsOnHost.stage == 'ended',
+                        CommandsOnHost.current_state == 'over_timed',
+                        CommandsOnHost.start_date == start_date)).\
+                            scalar()
+        return q
 
     def deployxmpponmachine(self, command_id):
         result = {}
@@ -1941,6 +1943,19 @@ class MscDatabase(DatabaseHelper):
         return result.type
 
     @DatabaseHelper._session
+    def isArrayCommandsCconvergenceType(self, session, ctx, arraycmd_id):
+        result = {}
+        for idcmd in arraycmd_id:
+            result[idcmd] = 0
+            try:
+                ret = session.query(Commands.type).\
+                    filter_by(id=idcmd).one()
+                result[idcmd] = int(ret[0])
+            except:
+                pass
+        return result
+
+    @DatabaseHelper._session
     def getCommands(self, session, ctx, cmd_id):
         if cmd_id == None or cmd_id == '':
             return False
@@ -2051,13 +2066,38 @@ class MscDatabase(DatabaseHelper):
 
     def getstatbycmd(self, ctx, cmd_id):
         session = create_session()
-        ret = session.query(func.count(self.commands_on_host.c.current_state), CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).scalar()
+        ret = session.query(func.count(self.commands_on_host.c.current_state)).\
+                                filter(self.commands_on_host.c.fk_commands == cmd_id).scalar()
         nbmachinegroupe = int(ret)
         ret = session.query(func.count(self.commands_on_host.c.current_state),
-                            CommandsOnHost).filter(and_(self.commands_on_host.c.fk_commands == cmd_id,self.commands_on_host.c.current_state == "done")).scalar()
+                            CommandsOnHost).\
+                                filter(and_(self.commands_on_host.c.fk_commands == cmd_id,
+                                            self.commands_on_host.c.current_state == "done")).scalar()
         nbdeploydone = int(ret)
         session.close()
         return { "nbmachine" : nbmachinegroupe, "nbdeploydone" : nbdeploydone  }
+
+    def getarraystatbycmd(self, ctx, arraycmd_id):
+        result = {'nbmachine' : {}}
+        #result = {'nbmachine' : {}, 'nbdeploydone' : {}}
+        session = create_session()
+        ret = session.query(CommandsOnHost.fk_commands.label("idcmd") ,
+                            func.count(self.commands_on_host.c.current_state).label("nb")).\
+                                filter(and_(self.commands_on_host.c.fk_commands.in_(arraycmd_id))).\
+                                    group_by(self.commands_on_host.c.fk_commands)
+        ret.all()
+        for x in ret:
+            result['nbmachine'][x[0]]=x[1]
+
+        #ret = session.query(CommandsOnHost.fk_commands.label("idcmd") ,
+                            #func.count(self.commands_on_host.c.current_state).label("nb")).\
+                                #filter(and_(self.commands_on_host.c.fk_commands.in_(arraycmd_id),
+                                       #self.commands_on_host.c.current_state == "done")).\
+                                    #group_by(self.commands_on_host.c.fk_commands)
+        #ret.all()
+        #for x in ret:
+            #result['nbdeploydone'][x[0]]=x[1]
+        return result
 
     def getFirstCommandsOncmd_id(self, ctx, cmd_id):
         session = create_session()
@@ -2065,11 +2105,87 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return ret
 
+    def _getarraycommanddatadate(self, arrayCommandsOnHostdata):
+        ret =[]
+        listcmd = [ x for x in arrayCommandsOnHostdata]
+        for x in listcmd:
+            t= {    "fk_target" : x[0],
+                    "startdate" : x[1].strftime('%Y-%m-%d %H:%M:%S'),
+                    "enddate" : x[2].strftime('%Y-%m-%d %H:%M:%S'),
+                    "next_launch_date" : x[3].strftime('%Y-%m-%d %H:%M:%S'),
+                    "start_dateunixtime" : time.mktime(x[1].timetuple()),
+                    "end_dateunixtime" :time.mktime(x[2].timetuple()),
+                    "next_launch_dateunixtime" :time.mktime(x[3].timetuple())
+            }
+            ret.append(t)
+        return ret
+
+    def _getcommanddatadate(self, CommandsOnHostdata):
+        start_dateunixtime = time.mktime(CommandsOnHostdata.start_date.timetuple())
+        end_dateunixtime   = time.mktime(CommandsOnHostdata.end_date.timetuple())
+        next_launch_dateunixtime = time.mktime(CommandsOnHostdata.next_launch_date.timetuple())
+        return {"start_dateunixtime" : start_dateunixtime,
+                "end_dateunixtime" : end_dateunixtime,
+                "next_launch_dateunixtime" : next_launch_dateunixtime
+            }
+
+    def _getcommanddata(self, CommandsOnHostdata):
+        ret =  {"uploaded" : CommandsOnHostdata.uploaded,
+                "next_attempt_date_time" : CommandsOnHostdata.next_attempt_date_time,
+                "deleted" : CommandsOnHostdata.deleted,
+                "imgmenu_changed" : CommandsOnHostdata.imgmenu_changed,
+                "halted" : CommandsOnHostdata.halted,
+                "host" : CommandsOnHostdata.host,
+                "attempts_left" : CommandsOnHostdata.attempts_left,
+                "scheduler" : CommandsOnHostdata.scheduler,
+                "fk_commands" : CommandsOnHostdata.fk_commands,
+                "fk_target" : CommandsOnHostdata.fk_target,
+                "stage" : CommandsOnHostdata.stage,
+                "last_wol_attempt" : CommandsOnHostdata.last_wol_attempt,
+                "rebooted" : CommandsOnHostdata.rebooted,
+                "executed" : CommandsOnHostdata.executed,
+                "inventoried" : CommandsOnHostdata.inventoried,
+                "awoken" : CommandsOnHostdata.awoken,
+                "max_clients_per_proxy" : CommandsOnHostdata.max_clients_per_proxy,
+                "id" : CommandsOnHostdata.id,
+                "order_in_proxy" : CommandsOnHostdata.order_in_proxy,
+                "phases" : CommandsOnHostdata.phases,
+                "end_date" : CommandsOnHostdata.end_date,
+                "current_launcher" : CommandsOnHostdata.current_launcher,
+                "start_date" : CommandsOnHostdata.start_date,
+                "next_launch_date" : CommandsOnHostdata.next_launch_date,
+                "current_state" : CommandsOnHostdata.current_state,
+                "fk_use_as_proxy" : CommandsOnHostdata.fk_use_as_proxy
+                }
+        return dict(ret, **self._getcommanddatadate(CommandsOnHostdata))
+
     def getLastCommandsOncmd_id(self, ctx, cmd_id):
         session = create_session()
-        ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
+        ret = session.query(CommandsOnHost).\
+            filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
         session.close()
-        return ret
+        return self._getcommanddata(ret)
+
+    def getLastCommandsOncmd_id_start_end(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(CommandsOnHost.start_date,
+                            CommandsOnHost.end_date,
+                            CommandsOnHost.next_launch_date).\
+            filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
+        session.close()
+        return self._getcommanddatadate(ret)
+
+    def getarrayLastCommandsOncmd_id_start_end(self, ctx, array_cmd_id):
+        session = create_session()
+        ret = session.query(distinct(CommandsOnHost.fk_target),
+                            CommandsOnHost.start_date,
+                            CommandsOnHost.end_date,
+                            CommandsOnHost.next_launch_date).\
+            filter(self.commands_on_host.c.fk_commands.in_(array_cmd_id)).\
+        order_by(desc(self.commands_on_host.c.id)).all()
+        session.close()
+        return self._getarraycommanddatadate(ret)
+
 
     def getCommandOnGroupByState(self, ctx, cmd_id, state, min = 0, max = -1):
         session = create_session()

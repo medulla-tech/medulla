@@ -39,6 +39,12 @@ from importlib import import_module
 import threading
 import socket
 import urllib
+import uuid
+import time
+from datetime import datetime
+
+logger = logging.getLogger()
+
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "pluginsmaster"))
 
 if sys.platform.startswith('win'):
@@ -79,6 +85,11 @@ def file_put_contents(filename,  data):
     f.write(data)
     f.close()
 
+def file_put_contents_w_a(filename, data, option = "w"):
+    if option == "a" or  option == "w":
+        f = open( filename, option )
+        f.write(data)
+        f.close()
 
 def displayDataJson(jsondata):
     pp = pprint.PrettyPrinter(indent=4)
@@ -93,8 +104,24 @@ def load_plugin(name):
 
 
 def call_plugin(name, *args, **kwargs):
-    pluginaction = load_plugin(name)
-    pluginaction.action(*args, **kwargs)
+    objxmpp = args[0]
+    if objxmpp.config.executiontimeplugins:
+        tmps1=time.clock()
+        pluginaction = load_plugin(name)
+        pluginaction.action(*args, **kwargs)
+        tmps2=time.clock()-tmps1
+        logger.info("_xmpp_ %s Execution time: [%s] %s"% (str(datetime.now()), name, tmps2 ) )
+        cmd = "cat /proc/%s/status | grep Threads"%os.getpid()
+        obj = simplecommandstr(cmd)
+        file_put_contents_w_a("/tmp/Execution_time_plugin.txt",
+                            "%s  [%s] Execution time: %s | %s \n" %(str(datetime.now()),
+                                                                    name,
+                                                                    tmps2,
+                                                                    obj['result'] ) ,
+                            "a")
+    else:
+        pluginaction = load_plugin(name)
+        pluginaction.action(*args, **kwargs)
 
 
 def pathbase():
@@ -228,6 +255,14 @@ def name_random(nb, pref=""):
         d = d+a[random.randint(0, 35)]
     return d
 
+def name_randomplus(nb, pref=""):
+    a = "abcdefghijklnmopqrstuvwxyz0123456789"
+    q = str(uuid.uuid4())
+    q = pref + q.replace("-","")
+    for t in range(nb):
+        d = a[random.randint(0, 35)]
+    res = q + d
+    return res[:nb]
 
 def md5(fname):
     hash = hashlib.md5()

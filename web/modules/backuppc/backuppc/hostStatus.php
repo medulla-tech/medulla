@@ -267,10 +267,7 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     if (strpos($os, 'ubuntu') !== false || strpos($os, 'linux') !== false ){
         $cfg['RsyncClientPath'] = " sudo '".$rsync_path."' ";
     }
-    $username = "pulse";
-    if (strpos($os, 'ubuntu') !== false || strpos($os, 'linux') !== false ){
-        $username = "pulseuser";
-    }
+    $username = "pulseuser";
     $sudo="";
     if (strtolower($os) == 'macos' || strpos($os, 'ubuntu') || strpos($os, 'linux') ) {
         $sudo="sudo";

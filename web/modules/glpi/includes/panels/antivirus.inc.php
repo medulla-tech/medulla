@@ -76,7 +76,7 @@ class AntivirusPanel extends Panel {
           {
             'label': '$uninventorized_text',
             'value': uninventorized,
-            'href':"",
+            'href':"#",
           }
         ];
       donut("antivirus-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"]+uninventorized);

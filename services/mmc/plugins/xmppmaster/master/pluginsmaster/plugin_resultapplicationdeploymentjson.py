@@ -26,23 +26,29 @@ import json
 import logging
 import traceback
 import sys
+from pulse2.database.xmppmaster import XmppMasterDatabase
 
-plugin = {"VERSION": "1.0", "NAME": "resultapplicationdeploymentjson", "TYPE": "master"}
+logger = logging.getLogger()
+
+
+plugin = {"VERSION": "1.1", "NAME": "resultapplicationdeploymentjson", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
+    logging.getLogger().debug("=====================================================")
     logging.getLogger().debug(plugin)
+    logging.getLogger().debug("=====================================================")
     try:
         if ret == 0:
-            ###logging.getLogger().debug("deploiement session %s success"% sessionid)
-            logging.getLogger().debug("Succes deploy on %s Package : %s Session : %s" % (data['jidmachine'],
-                                                                                         data['descriptor']['info']['name'],
-                                                                                         sessionid))
-            #logging.getLogger().debug("%s"%json.dumps(data, indent=4, sort_keys=True))
+            logger.debug("Succes deploy on %s Package "\
+                ": %s Session : %s" % (data['jidmachine'],
+                                       data['descriptor']['info']['name'],
+                                       sessionid))
+            XmppMasterDatabase().delete_resources(sessionid)
         else:
-            logging.getLogger().error("Error deploy on %s Package : %s Session : %s" % (data['jidmachine'],
-                                                                                        data['descriptor']['info']['name'],
-                                                                                        sessionid))
-            #logging.getLogger().error("%s"%json.dumps(data, indent=4, sort_keys=True))
+            logger.error("Error deploy on %s Package "\
+                ": %s Session : %s" % (data['jidmachine'],
+                                       data['descriptor']['info']['name'],
+                                       sessionid))
     except:
-        traceback.print_exc(file=sys.stdout)
+        logger.error("%s"%(traceback.format_exc()))

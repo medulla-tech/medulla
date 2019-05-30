@@ -19,9 +19,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-SERVICES='mmc-agent pulse2-inventory-server pulse2-package-server \
-          pulse-xmpp-agent-relay pulse-xmpp-agent-log \
-          pulse2-register-pxe isc-dhcp-server tftpd-hpa'
+SERVICES='mmc-agent \
+          pulse2-inventory-server \
+          pulse2-package-server \
+          pulse-xmpp-agent-relay \
+          pulse-xmpp-agent-log \
+          pulse2-register-pxe \
+          isc-dhcp-server \
+          tftpd-hpa \
+          pulse-xmpp-master-substitute-inventory \
+          pulse-xmpp-master-substitute-registration'
 
 for service in ${SERVICES}; do
   if systemctl is-enabled ${service} &>/dev/null ; then
