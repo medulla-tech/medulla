@@ -29,7 +29,7 @@ from mmc.plugins.dashboard.config import DashboardConfig
 from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel, ProcessPanel, \
                                         ComputersOnlinePanel, UpdatePanel, BackupPanel
 
-VERSION = "4.5.1"
+VERSION = "4.5.2"
 APIVERSION = "0:1:0"
 REVISION = ""
 

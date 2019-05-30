@@ -49,7 +49,7 @@ class BackupPanel extends Panel {
               {"label": "$configured_text", "value":$machines_backup, "href":"$urlRedirect&backup=yes"},
               {'label': '', 'value': 0, "href": ""},
               {'label': '$not_configured_text', 'value': $machines_not_backup, "href": "$urlRedirect&backup=no"},
-              {'label': '$uninventorized_text', 'value': $uninventorized, "href": ""}
+              {'label': '$uninventorized_text', 'value': $uninventorized, "href": "#"}
             ];
 
             donut("backup",backupDatas, "Total", $total_machines+$uninventorized);

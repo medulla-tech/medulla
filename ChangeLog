@@ -1,9 +1,16 @@
+* [BUGFIX]  Update topology for d3 V5 
 * [BUGFIX]  Add refresh button for all the audit page
 * [BUGFIX]  Fix the start deployment date
 * [BUGFIX]  Add the refresh object for some page
 * [BUGFIX]  Fix the start deployment date
 * [BUGFIX]  Add some behaviours to the expert file manager
 * [BUGFIX]  Transform file and dir one-line list to real list in the bucket
+
+mmc-core 4.5.2
+==============
+* [FEATURE] Switch from RaphaelJS to d3.js
+* [BUGFIX]  Fix dashboard counters
+* [BUGFIX]  Fix the release of resources in case of lost connections
 
 mmc-core 4.5.1
 ==============
@@ -33,6 +40,7 @@ mmc-core 4.5
 * [BUGFIX]  Fix sharing Quick Actions
 * [BUGFIX]  Fix Audit page pagination
 * [BUGFIX]  Fix refresh rate in the audit page 
+* [BUGFIX]  Add ubuntu detection to quick action
 
 mmc-core 4.4.1
 --------------

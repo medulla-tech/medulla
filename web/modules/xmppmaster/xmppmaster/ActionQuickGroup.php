@@ -29,7 +29,7 @@
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
+require_once("modules/xmppmaster/includes/html.inc.php");
 
     $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxGroupactionquick"));
 

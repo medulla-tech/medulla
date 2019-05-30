@@ -24,7 +24,7 @@
 %define debug_package          %{nil}
 %define use_git                1
 %define git                    SHA
-%define version                4.5.1
+%define version                4.5.2
 
 Summary:	Management Console
 Name:		mmc-core
@@ -300,7 +300,7 @@ Requires:   	mmc-web-dashboard >= %{version}
 Console web interface designed by Linbox.
 
 %post -n mmc-web-base
-if [ ! -d "/usr/share/mmc/jsframework/d3" ];
+if [ ! -L "/usr/share/mmc/jsframework/d3" ];
 then
     ln -s /usr/lib/node_modules/d3 /usr/share/mmc/jsframework/d3
 fi

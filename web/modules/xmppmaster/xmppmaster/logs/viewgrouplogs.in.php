@@ -26,14 +26,8 @@ require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/includes.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-echo '
-<script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>
-<script type="text/javascript" src="jsframework/lib/raphael/g.raphael-min.js"></script>
-<script type="text/javascript" src="jsframework/lib/raphael/g.pie-min.js"></script>
-<script type="text/javascript" src="jsframework/lib/raphael/g.line-min.js"></script>
-<script type="text/javascript" src="jsframework/lib/raphael/g.bar-min.js"></script>
-<script type="text/javascript" src="jsframework/lib/raphael/utilities.js"></script>';
 ?>
+<script src="jsframework/d3/d3.js"></script>
 <style>
     li.groupshare a {
         padding: 3px 0px 5px 20px;
@@ -53,26 +47,25 @@ $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getNam
 $p->setSideMenu($sidemenu);
 $p->display();
 
-
+//FROM MSC BASE
+// search nbmachinegroupe in group, and nbdeploydone already deployed from mmc
 $resultfrommsc = xmlrpc_getstatbycmd($cmd_id);
-$total_machine_from_msc  = $resultfrommsc['nbmachine'];
-$nb_machine_deployer_from_msc     = $resultfrommsc['nbdeploydone'];
-$nb_deployer_machine_yet_from_msc = $total_machine_from_msc - $total_machine_from_msc;
-
-$convergenceonpackage = is_commands_convergence_type($cmd_id);
-$command_detail = command_detail($cmd_id);
+$MSC_nb_mach_grp_for_deploy  = $resultfrommsc['nbmachine'];
+$MSC_nb_mach_grp_done_deploy     = $resultfrommsc['nbdeploydone'];
+//$nb_deployer_machine_yet_from_msc = $MSC_nb_mach_grp_for_deploy - $MSC_nb_mach_grp_for_deploy;
 
 
+$bool_convergence_grp_on_package_from_msc = is_commands_convergence_type($cmd_id);
+// $command_detail = command_detail($cmd_id);
 
 
-$lastcommandid = get_last_commands_on_cmd_id($cmd_id);
-$start_date = mktime(   $lastcommandid['start_date'][3],
-                        $lastcommandid['start_date'][4],
-                        $lastcommandid['start_date'][5],
-                        $lastcommandid['start_date'][1],
-                        $lastcommandid['start_date'][2],
-                        $lastcommandid['start_date'][0]);
+// search from msc table CommandsOnHost
+$lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id);
+$start_date =  $lastcommandid['start_dateunixtime'];
+$end_date = $lastcommandid['end_dateunixtime'];
+$timestampnow = time();
 
+//FROM XMPPMASTER
 $resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,
                                                                 date("Y-m-d H:i:s",
                                                                 $start_date));
@@ -94,20 +87,15 @@ $machine_wol_from_deploy       = $totalmachinedeploy-($machineerrordeploy + $mac
 $terminate = 0;
 $deployinprogress = 0;
 
-$waiting = $total_machine_from_msc - ($total_machine_from_deploy + $machine_timeout_from_deploy);
+$waiting = $MSC_nb_mach_grp_for_deploy - ($total_machine_from_deploy + $machine_timeout_from_deploy);
 
 // $evolution
 if ($waiting == 0 && $machine_process_from_deploy == 0 ){
     $terminate = 1;
 }
 //echo $terminate;
-$end_date = mktime(     $lastcommandid['end_date'][3],
-                        $lastcommandid['end_date'][4],
-                        $lastcommandid['end_date'][5],
-                        $lastcommandid['end_date'][1],
-                        $lastcommandid['end_date'][2],
-                        $lastcommandid['end_date'][0]);
-$timestampnow = time();
+
+
 echo "<br>";
 
 $start_deploy = 0;
@@ -123,7 +111,7 @@ if ($timestampnow > ($end_date)){
 
 
 echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date);
-if ($convergenceonpackage !=0 ){
+if ($bool_convergence_grp_on_package_from_msc !=0 ){
     echo "<img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/>";
 }
 echo "<br>";
@@ -194,17 +182,17 @@ else{
     }
     echo "<br>";
 
-    $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $nb_machine_deployer_from_msc;
-    $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $total_machine_from_msc) * 100,2);
+    $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $MSC_nb_mach_grp_done_deploy;
+    $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $MSC_nb_mach_grp_for_deploy) * 100,2);
     $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
     echo '<div class="bars">';
         echo '<span style="width: 200px;">';
-            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$total_machine_from_msc.'" value="'.$nb_machine_deployer_avec_timeout_deploy .'" form="form-id"></progress>';
+            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$MSC_nb_mach_grp_for_deploy.'" value="'.$nb_machine_deployer_avec_timeout_deploy .'" form="form-id"></progress>';
         echo '</span>';
     echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
 
-    $wol = ( $total_machine_from_msc - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
-    echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$total_machine_from_msc;
+    $wol = ( $MSC_nb_mach_grp_for_deploy - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
+    echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$MSC_nb_mach_grp_for_deploy;
     echo "<br>"._T("Number of current deployments","xmppmaster")." : ". $deploymachine;
     echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machine_timeout_from_deploy;
     echo "<br>"._T("Deployment summary","xmppmaster").":";
@@ -225,7 +213,7 @@ else{
         <td>".$machine_abort_from_deploy."</td>";
     echo "</tr></table>";
 echo '</div>';
-      echo'<div  style="float:left; height: 120px" id="holder"></div>';
+      echo'<div  style="float:left; margin-left:200px;height: 120px" id="holder"></div>';
 echo "<br>";
     if ($info['len'] != 0){
         $uuid=$info['objectdeploy'][0]['inventoryuuid'];
@@ -331,6 +319,7 @@ if ($info['len'] != 0){
                 $uuiderror[] = $val['inventoryuuid'];
                 break;
             case "DEPLOYMENT START":
+            case "DEPLOYMENT START (REBOOT)":
             case "DEPLOYMENT DIFFERED":
                 $uuidprocess[] = $val['inventoryuuid'];
                 break;
@@ -345,89 +334,36 @@ if ($info['len'] != 0){
     $machineinprocess = count ( $uuidprocess );
     //$machinewol       = $state['nbmachine']-$state['nbdeploydone'];
         echo '
+        <script src="modules/xmppmaster/graph/js/chart.js"></script>
         <script>
             var u = "";
             var r = "";
             window.onload = function () {
-                var datadeploy = new Array();
-                var legend = new Array();
-                var href = new Array();
-                var color = new Array();
+                var datas = new Array();
                 ';
 
                 if ($machine_success_from_deploy > 0){
-                    echo 'datadeploy.push('.$machine_success_from_deploy.');';
-                    echo 'legend.push("%%.%% - Success");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'");';
-                    echo 'color.push("#2EFE2E");';
+                  echo 'datas.push({"label":"Success", "value":'.$machine_success_from_deploy.', "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
                 }
                 if ($machine_error_from_deploy > 0){
-                    echo 'datadeploy.push('.$machine_error_from_deploy.');';
-                    echo 'legend.push("%%.%% - Error");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'");';
-                    echo 'color.push("#FE2E64");';
+                  echo 'datas.push({"label":"Error", "value":'.$machine_error_from_deploy.', "color": "#FE2E64", "href":"'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
                 }
                 if ($machine_process_from_deploy > 0){
-                    echo 'datadeploy.push('.$machine_process_from_deploy.');';
-                    echo 'legend.push("%%.%% - In progress");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'");';
-                    echo 'color.push("#2E9AFE");';
+                  echo 'datas.push({"label":"In progress", "value":'.$machine_process_from_deploy.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
                 }
                 if ($wol > 0){
-                    echo 'datadeploy.push('.$wol.');';
-                    echo 'legend.push("%%.%% - Waiting (WOL sent)");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
-                    echo 'color.push("#DBA901");';
+                  echo 'datas.push({"label":"Waiting (WOL sent)", "value":'.$wol.', "color": "#DBA901", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
                 }
                 if ($machine_timeout_from_deploy > 0){
-                    echo 'datadeploy.push('.$machine_timeout_from_deploy.');';
-                    echo 'legend.push("%%.%% - Timed out");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
-                    echo 'color.push("#FF4500");';
+                echo 'datas.push({"label":"Timed out", "value":'.$machine_timeout_from_deploy.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
                 }
                 if ($machine_abort_from_deploy > 0){
-                    echo 'datadeploy.push('.$machine_abort_from_deploy.');';
-                    echo 'legend.push("%%.%% - Aborted");';
-                    echo 'href.push("'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'");';
-                    echo 'color.push("#ff5050");';
+                  echo 'datas.push({"label":"Aborted", "value":'.$machine_abort_from_deploy.', "color": "#ff5050", "href":"'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
                 }
                 echo'
-                r = Raphael("holder"),
-                    pie = r.piechart(100, 60, 50, datadeploy,
-                        {   legend: legend,
-                            legendpos: "est",
-                            href: href,
-                            colors: color
-                        }
-                    );
-
-                r.text(210, 50, "Deployments").attr({ font: "20px sans-serif" });
-
-                pie.hover(function () {
-                    u = this;                 // My Code
-                    u.onclick = clickEvent;   //  hook to the function
-                this.sector.stop();
-                    this.sector.scale(1.1, 1.1, this.cx, this.cy);  // Scale slice
-
-                    if (this.label) {                               // Scale button and bolden text
-                        this.label[0].stop();
-                        this.label[0].attr({ r: 7.5 });
-                        this.label[1].attr({ "font-weight": 800 });
-                    }
-                }, function () {
-                    this.sector.animate({ transform: \'s1 1 \' + this.cx + \' \' + this.cy }, 500, "bounce");
-
-
-                    if (this.label) {
-                        this.label[0].animate({ r: 5 }, 1500, "bounce");
-                        this.label[1].attr({ "font-weight": 400 });
-                    }
-                });
-
+                chart("holder", datas);
             };
-            function clickEvent(){
-                console.log("Clicked!")
-            }
+
         </script>';
     }
 

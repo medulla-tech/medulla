@@ -143,6 +143,7 @@ li.quickg a {
 require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/pulse2/includes/menu_actionaudit.php');
+include_once('modules/glpi/includes/xmlrpc.php');
     // Retrieve information deploy. For cmn_id
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
@@ -190,6 +191,17 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
     $iprelay =  $otherinfos[0]->iprelay;
     $ipmachine = $otherinfos[0]->ipmachine;
     unset($resultinfo->otherinfos);
+
+    $ipmachine = $otherinfos[0]->ipmachine;
+    $macstr = "";
+    $macList = getMachinesMac($otherinfos[0]->uuid)[strtoupper($otherinfos[0]->uuid)];
+
+    foreach($macList as $mac)
+    {
+      $macstr .= $mac;
+      if(sizeof($macList) > 1 && $mac != end($macList))
+        $macstr .= " || ";
+    }
 //     if ( isset($resultinfo->title)){
 //         echo "User : $resultinfo->user "."PACKAGE ". $resultinfo->title."<br>";
 //     }
@@ -257,8 +269,8 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         $end_date = date("Y-m-d H:i:s", $end_date);
         echo "<h2>Please wait (".$result['title'].")</h2>";
         if(isset($info['objectdeploy'][0]['state']) &&
-            (   $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START" ||
-                $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
+            ( strpos($info['objectdeploy'][0]['state'], "DEPLOYMENT START")!==false ||
+              $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
             echo "<br>Preparing deployment. Please wait...";
             echo "<img src='modules/xmppmaster/img/waitting.gif'>";
             echo "<br>";
@@ -315,10 +327,10 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                             echo "</td>";
 
                             echo "<td>";
-                                echo $deploymachine['target_ipaddr'];
+                                echo $otherinfos[0]->ipmachine;
                             echo "</td>";
                             echo "<td>";
-                                echo  $deploymachine['target_macaddr'];
+                                echo $macstr;
                             echo "</td>";
                         echo "</tr>";
                     echo "</tbody>";
@@ -400,8 +412,8 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
 
     if ( $info['len'] != 0)
     {
-        if(isset($info['objectdeploy'][0]['state']) &&
-            (   $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START" ||
+        if(isset($info['objectdeploy'][0]['state']) && 
+            (   strpos($info['objectdeploy'][0]['state'], "DEPLOYMENT START")!==false ||
                 $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
             if ( !$boolterminate && !isset($_POST['bStop'])){
                 if (!isset($_SESSION[$info['objectdeploy'][0]['sessionid']])){

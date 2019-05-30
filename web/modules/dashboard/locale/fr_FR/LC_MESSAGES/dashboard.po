@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:32+0100\n"
+"POT-Creation-Date: 2019-02-10 20:41+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -80,10 +80,6 @@ msgid "Not Supported"
 msgstr "Non supportés"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:92
-#: modules/dashboard/includes/panels/backup.inc.php:41
-#: modules/dashboard/includes/panels/backup.inc.php:42
-#: modules/dashboard/includes/panels/computersOnline.inc.php:44
-#: modules/dashboard/includes/panels/computersOnline.inc.php:45
 msgid "Create a group"
 msgstr "Créer un groupe"
 
@@ -91,30 +87,35 @@ msgstr "Créer un groupe"
 msgid "Shortcuts"
 msgstr "Raccourcis"
 
-#: modules/dashboard/includes/panels/general.inc.php:28
+#: modules/dashboard/includes/panels/general.inc.php:29
 msgid "General"
 msgstr "Général"
 
-#: modules/dashboard/includes/panels/general.inc.php:38
-msgid "on"
-msgstr "sur"
-
-#: modules/dashboard/includes/panels/general.inc.php:39
-msgid "Uptime"
-msgstr "Uptime"
-
-#: modules/dashboard/includes/panels/general.inc.php:40
-msgid "Load"
-msgstr "Charge"
-
-#: modules/dashboard/includes/panels/general.inc.php:43
-msgid "RAM"
-msgstr "RAM"
-
-#: modules/dashboard/includes/panels/general.inc.php:74
+#: modules/dashboard/includes/panels/general.inc.php:37
 #: modules/dashboard/includes/panels/space.inc.php:37
 msgid "free"
 msgstr "libre"
+
+#: modules/dashboard/includes/panels/general.inc.php:38
+#: modules/dashboard/includes/panels/space.inc.php:36
+msgid "used"
+msgstr "utilisé"
+
+#: modules/dashboard/includes/panels/general.inc.php:39
+msgid "on"
+msgstr "sur"
+
+#: modules/dashboard/includes/panels/general.inc.php:40
+msgid "Uptime"
+msgstr "Uptime"
+
+#: modules/dashboard/includes/panels/general.inc.php:41
+msgid "Load"
+msgstr "Charge"
+
+#: modules/dashboard/includes/panels/general.inc.php:44
+msgid "RAM"
+msgstr "RAM"
 
 #: modules/dashboard/includes/panels/plugins.inc.php:29
 msgid "Plugins loaded"
@@ -124,17 +125,9 @@ msgstr "Plugins chargés"
 msgid "Disk usage"
 msgstr "Utilisation des disques"
 
-#: modules/dashboard/includes/panels/space.inc.php:36
-msgid "used"
-msgstr "utilisé"
-
-#: modules/dashboard/includes/panels/backup.inc.php:29
+#: modules/dashboard/includes/panels/backup.inc.php:30
 msgid "Machines backup"
 msgstr "Sauvegarde des machines"
-
-#: modules/dashboard/includes/panels/backup.inc.php:40
-msgid "Total machines : "
-msgstr "Nombre de machines :"
 
 #: modules/dashboard/includes/panels/backup.inc.php:41
 msgid "Backup configured : "
@@ -143,6 +136,10 @@ msgstr "Sauvegarde configurée :"
 #: modules/dashboard/includes/panels/backup.inc.php:42
 msgid "Backup not configured : "
 msgstr "Sauvegarde non configurée :"
+
+#: modules/dashboard/includes/panels/backup.inc.php:43
+msgid "Total machines : "
+msgstr "Nombre de machines :"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:30
 msgid "Pulse Updates"
@@ -160,15 +157,15 @@ msgstr "Mise à jour disponible."
 msgid "Machines Online"
 msgstr "Machines en ligne"
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:44
+#: modules/dashboard/includes/panels/computersOnline.inc.php:43
 msgid "Machines online : "
 msgstr "Machines en ligne : "
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:45
+#: modules/dashboard/includes/panels/computersOnline.inc.php:44
 msgid "Machines offline : "
 msgstr "Machines hors ligne :"
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:48
+#: modules/dashboard/includes/panels/computersOnline.inc.php:58
 msgid "A problem occurred while counting machines"
 msgstr "Un problème est survenu lors du comptage des machines"
 
