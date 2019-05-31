@@ -41,7 +41,7 @@ class BackupPanel extends Panel {
         $configured_text = _T("Backup configured", "dashboard")." : ";
         $not_configured_text = _T("Backup not configured", "dashboard")." : ";
         $total_machines_text =  _T("Total machines", "dashboard")." :" ;
-        $uninventorized_text = _T("Uninventorized Machines","dashboard")." : ";
+        $uninventorized_text = _T("Uninventoried Machines","dashboard")." : ";
         $uninventorized = get_computer_count_for_dashboard()["unregistered"];
         echo <<< BACKUP
           <script>
@@ -49,7 +49,7 @@ class BackupPanel extends Panel {
               {"label": "$configured_text", "value":$machines_backup, "href":"$urlRedirect&backup=yes"},
               {'label': '', 'value': 0, "href": ""},
               {'label': '$not_configured_text', 'value': $machines_not_backup, "href": "$urlRedirect&backup=no"},
-              {'label': '$uninventorized_text', 'value': $uninventorized, "href": ""}
+              {'label': '$uninventorized_text', 'value': $uninventorized, "href": "#"}
             ];
 
             donut("backup",backupDatas, "Total", $total_machines+$uninventorized);

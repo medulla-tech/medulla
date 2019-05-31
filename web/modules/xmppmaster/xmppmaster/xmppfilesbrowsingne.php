@@ -242,6 +242,18 @@ li.quickg a {
     require("graph/navbar.inc.php");
     require_once("modules/xmppmaster/includes/xmlrpc.php");
 
+    if(isexpertmode())
+    {
+      $url = "xmppmaster/xmppmaster/xmppfilesbrowsing";
+      $get = [];
+      foreach($_GET as $key=>$value)
+      {
+        if(!in_array($key, ["module","submod", "action"]))
+          $get[$key] = $value;
+      }
+      header("Location: " . urlStrRedirect($url, $get));
+    }
+
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
@@ -282,7 +294,7 @@ echo '</script>';
 ?>
 
   <?php
-    $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
+    $lifdirstr = xmlrpc_remotefilesystem("@0@", $machine);
     $lifdir = json_decode($lifdirstr, true);
 
 
@@ -383,15 +395,15 @@ echo '</script>';
         filenamelocal = "";
         timetmp = "";
         taillefile ="";
-        rootfilesystem     = "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystem); ?>";
-        rootfilesystempath = "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystempath); ?>";
+        rootfilesystem     = ""; // "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystem); ?>";
+        rootfilesystempath = ""; //"<?php echo str_replace ('\\' ,'\\\\',$rootfilesystempath); ?>";
         jid = "<?php echo $ma['jid']; ?>";
         user = "<?php echo $_SESSION['login']; ?>";
         nameremotepath = "";
         absolutepath ="";
         init = 1;
         local();
-        remote("@");
+        remote("@1@");
 	jQuery('#directoryremote')
 		.on("changed.jstree", function (e, data) {
 			if(data.selected.length) {
@@ -408,7 +420,7 @@ echo '</script>';
 			}
 		});
 	jQuery('#directoryremote').on('ready.jstree', function() {
-                jQuery('#directoryremote').jstree("open_all");
+                jQuery('#directoryremote').jstree("close_all");
         });
     });
 

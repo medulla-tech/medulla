@@ -29,7 +29,7 @@
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
+require_once("modules/xmppmaster/includes/html.inc.php");
 
     $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxGroupactionquick"));
 
@@ -37,7 +37,10 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     $p->setSideMenu($sidemenu);
     $p->display();
 
-$ajax->setRefresh(20000);
+    $refresh = new RefreshButton();
+    $refresh->display();
+
+$ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 $ajax->displayDivToUpdate();
 

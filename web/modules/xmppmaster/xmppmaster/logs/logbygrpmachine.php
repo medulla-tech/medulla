@@ -20,8 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- 
- 
+
+
  file logbygrpmachine.php
  */
 //require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
@@ -45,8 +45,12 @@ $params['login'] = $_SESSION['login'];
 $p = new PageGenerator(_T("Computer deploy group", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
+
+$refresh = new RefreshButton();
+$refresh->display();
+
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxlogsgrpxmpp"), "container",$params, 'logsxmppgrp');
-$ajax->setRefresh(30000);
+$ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 
 print "<br/><br/><br/>";

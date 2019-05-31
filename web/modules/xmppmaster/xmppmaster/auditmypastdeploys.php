@@ -25,7 +25,7 @@
 require("graph/navbar.inc.php");
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
+require_once("modules/xmppmaster/includes/html.inc.php");
 
 require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
@@ -34,9 +34,12 @@ require_once("modules/pulse2/includes/utilities.php");
 $p = new PageGenerator(_T("My past tasks", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
+$refresh = new RefreshButton();
+$refresh->display();
+
 
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login']), 'formRunning'  );
-$ajax->setRefresh(15000);
+$ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();

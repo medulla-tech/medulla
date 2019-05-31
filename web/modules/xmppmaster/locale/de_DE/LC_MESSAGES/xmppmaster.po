@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 18:35+0100\n"
+"POT-Creation-Date: 2019-02-10 20:41+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: German (Germany) (https://www.transifex.com/siveo/teams/72118/de_DE/)\n"
@@ -27,7 +27,7 @@ msgid "Console"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:177
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:296
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:298
 #: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:65
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:60
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:60
@@ -37,9 +37,9 @@ msgid "Sorry, the remote machine [%s] takes too much time to answer."
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:179
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:298
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:300
 #: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:68
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:256
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:289
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:62
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:62
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:69
@@ -60,32 +60,32 @@ msgstr ""
 msgid "Mac address"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:253
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:214
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:250
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:247
 msgid "File manager"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:536
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:535
 msgid "Copy remote folder"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:540
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:539
 msgid "to local folder"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:566
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:565
 msgid "The folder copy has been requested successfully"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:590
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:589
 msgid "Copy remote file"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:596
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:595
 msgid "to local File"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:620
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:619
 msgid "The file copy has been requested successfully"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgstr "Paket"
 msgid "User"
 msgstr "Benutzer"
 
-#: modules/xmppmaster/xmppmaster/topology.php:59
+#: modules/xmppmaster/xmppmaster/topology.php:57
 msgid "Topology Pulse"
 msgstr ""
 
@@ -234,7 +234,7 @@ msgid "Quick Action results"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:534
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:568
 msgid "File Manager"
 msgstr ""
 
@@ -280,7 +280,7 @@ msgstr ""
 msgid "Select a package"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/index.php:38
+#: modules/xmppmaster/xmppmaster/index.php:41
 msgid "My Tasks ["
 msgstr ""
 
@@ -310,93 +310,96 @@ msgstr ""
 msgid "To"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:254
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:287
 #, php-format
 msgid "Sorry, the remote machine [%s] takes too long to answer."
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:300
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:336
 msgid "Downloads basket"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:304
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:340
 msgid "Folders"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:307
-msgid "Delete last folder added"
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:343
+msgid "Remove last folder"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:308
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:317
-msgid "Delete Remote File Select"
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:344
+msgid "Remove all folders"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:313
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:349
 msgid "Files"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:316
-msgid "Delete last file added"
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:352
+msgid "Remove last file"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:322
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:353
+msgid "Remove all files"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:358
 msgid "Downloads basket to"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:325
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:361
 msgid "Download list selection"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:342
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:378
 msgid "Local folder"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:367
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:403
 msgid "Remote tree view"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:370
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:406
 msgid "root:"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:373
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:409
 msgid "Current path: "
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:504
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:538
 msgid "Computer view"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:514
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:548
 msgid "Refresh"
 msgstr "aktualisieren"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:524
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:558
 msgid "History download"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:688
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:722
 msgid "Download from"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:690
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:724
 msgid "Folders list"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:697
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:731
 msgid "Files list"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:704
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:738
 msgid "To local folder"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:721
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:755
 msgid "Confirm"
 msgstr "bestätigen"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:733
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:767
 msgid "The list (folder & files) copy has been requested successfully"
 msgstr ""
 
@@ -688,11 +691,11 @@ msgid "Custom quick action"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:151
-msgid "ajax refrech files remote"
+msgid "ajax refresh files remote"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:156
-msgid "ajax refrech files local"
+msgid "ajax refresh files local"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:200

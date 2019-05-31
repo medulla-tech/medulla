@@ -1,5 +1,16 @@
-mmc-core UNRELEASED
+* [BUGFIX]  Update topology for d3 V5 
+* [BUGFIX]  Add refresh button for all the audit page
+* [BUGFIX]  Fix the start deployment date
+* [BUGFIX]  Add the refresh object for some page
+* [BUGFIX]  Fix the start deployment date
+* [BUGFIX]  Add some behaviours to the expert file manager
+* [BUGFIX]  Transform file and dir one-line list to real list in the bucket
+
+mmc-core 4.5.2
 ==============
+* [FEATURE] Switch from RaphaelJS to d3.js
+* [BUGFIX]  Fix dashboard counters
+* [BUGFIX]  Fix the release of resources in case of lost connections
 
 mmc-core 4.5.1
 ==============
@@ -14,7 +25,7 @@ mmc-core 4.5.1
 * [BUGFIX]  Fix abort of deployments on groups
 
 mmc-core 4.5
-============
+--------------
 * [FEATURE] The Quick Actions can be shared with others users
 * [FEATURE] A "copy to clipboard" button is added to error popups
 * [BUGFIX]  Fix the wrong count of machines in MachineOnline widget
@@ -28,10 +39,16 @@ mmc-core 4.5
 * [BUGFIX]  Add root to share user list
 * [BUGFIX]  Fix sharing Quick Actions
 * [BUGFIX]  Fix Audit page pagination
-* [BUGFIX] Fix inactive Wake On Lan button in quick action
+* [BUGFIX]  Fix refresh rate in the audit page 
+* [BUGFIX]  Add ubuntu detection to quick action
+
+mmc-core 4.4.1
+--------------
+* [BUGFIX] Fix wake on lan problem
+* [BUGFIX] Modify the configuration icon computers action
 
 mmc-core 4.4
-============
+--------------
 * [FEATURE] Ability to use quick actions installed by the sql schemas for all users
 * [FEATURE] Ability to run a custom quick action on a group
 * [BUGFIX] Fix remote console shell for long commands
@@ -67,7 +84,8 @@ mmc-core 4.1
 * [FEATURE] New history view that captures all operations
 * [FEATURE] Pulse update module widget is now a standalone widget
 * [FEATURE] Create and run custom quick actions
-* [BUGFIX] Fix authentication to GLPI for user provisioning
+* [BUGFIX]  Fix authentication to GLPI for user provisioning
+* [BUGFIX]  Fix service module with new systemd
 
 mmc-core 3.1.1
 --------------

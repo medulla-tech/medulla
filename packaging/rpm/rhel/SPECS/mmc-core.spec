@@ -24,7 +24,7 @@
 %define debug_package          %{nil}
 %define use_git                1
 %define git                    SHA
-%define version                4.5.1
+%define version                4.5.2
 
 Summary:	Management Console
 Name:		mmc-core
@@ -72,31 +72,6 @@ Requires:   python-memory-profiler
 %description -n mmc-agent
 XMLRPC server of the Console API.
 This is the underlying service used by the MMC web interface.
-
-%post -n mmc-agent
-# Workaround segfaults in the services plugin
-# https://qa.mandriva.com/show_bug.cgi?id=66109
-sed -i 's/^#multithreading = 1/multithreading = 0/' %{_sysconfdir}/mmc/agent/config.ini
-%if %_vendor == "Mageia"
-%_post_service mmc-agent
-%else
-service mmc-agent start >/dev/null 2>&1 || :
-%endif
-
-%preun -n mmc-agent
-# Stop mmc-agent on uninstall
-if [ $1 -eq 0 ]; then
-   %if %_vendor == "Mageia"
-       %_preun_service mmc-agent
-   %else
-       service mmc-agent stop >/dev/null 2>&1 || :
-   %endif
-fi
-
-# Filetriggers to restart mmc-agent if a new module is installed.
-%transfiletriggerin -n mmc-agent --  %{py_puresitedir}/mmc
-[ -z \$MMC_AGENT ] && service mmc-agent restart
-
 
 %files -n mmc-agent
 %defattr(-,root,root,0755)
@@ -325,7 +300,7 @@ Requires:   	mmc-web-dashboard >= %{version}
 Console web interface designed by Linbox.
 
 %post -n mmc-web-base
-if [ ! -d "/usr/share/mmc/jsframework/d3" ];
+if [ ! -L "/usr/share/mmc/jsframework/d3" ];
 then
     ln -s /usr/lib/node_modules/d3 /usr/share/mmc/jsframework/d3
 fi

@@ -1,10 +1,11 @@
 #!/bin/bash
 
-VERSION='4.5.1'
+VERSION='4.5.2'
 
 rm -f mmc-core-*.tar.gz mmc-core-*.tar.gz.md5
 git clean -fdx && ./autogen.sh && ./configure --sysconfdir=/etc --localstatedir=/var --disable-python-check --disable-conf && make distcheck
 tar xzvf mmc-core-$VERSION.tar.gz
+rm -frv mmc-core-$VERSION.tar.gz
 cp setup.py mmc-core-$VERSION
 cp -frv debian pulse2-$VERSION
 tar czvf mmc-core-$VERSION.tar.gz mmc-core-$VERSION

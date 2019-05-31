@@ -206,7 +206,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 echo '<td id="netstat" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="cputimes" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
                 echo '<td id="agentinfo" align="center"><img src="modules/base/graph/navbar/information.png" height="45" width="45"> </td>';
-                echo '<td id="litlog" align="center"><img src="modules/base/graph/navbar/listlog.png" height="45" width="45"> </td>';
             echo "</tr>";
             echo '<tr>';
 //                 echo '<td id="battery0" align="center">battery </td>';
@@ -225,12 +224,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 echo '<td id="netstat0" align="center">netstat</td>';
 //                 echo '<td id="cputimes0" align="center">cpu times</td>';
                 echo '<td id="agentinfo0" align="center">Agent details</td>';
-                echo '<td  style="max-width:50px;" align="center">
-                        <span id="litlog0">last log</span>';
-                        echo '<form name="nblinelog">
-                    <input  style="width:35px;" id="nbline" type="number" step="2" value="100" min="50" max="400">
-                    </form>';
-                echo "</td>";
             echo "</tr>";
             echo "</table>";
         }
@@ -317,13 +310,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     jQuery('#informationmonitor').val('agentinfos');
                     jQuery( '#formmonitoring' ).submit();
                 })
-                jQuery('#litlog, #litlog0').click(function() {
-                    jQuery('#informationmonitor').val('litlog');
-                    var tt=jQuery('#nbline').val();
-                    jQuery('#args').val('');
-                    jQuery('#kwargs').val('{ \"nbline\" :'+ tt+' }');
-                    jQuery( '#formmonitoring' ).submit();
-                    console.log( jQuery('#kwargs').val());
                 ";
         };
     ?>

@@ -239,6 +239,18 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
+if(!isexpertmode())
+{
+  $url = "xmppmaster/xmppmaster/xmppfilesbrowsingne";
+  $get = [];
+  foreach($_GET as $key=>$value)
+  {
+    if(!in_array($key, ["module","submod", "action"]))
+      $get[$key] = $value;
+  }
+  header("Location: " . urlStrRedirect($url, $get));
+}
+
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
@@ -280,7 +292,7 @@ echo '</script>';
 ?>
 
 <?php
-    $lifdirstr = xmlrpc_remotefilesystem("@", $machine);
+    $lifdirstr = xmlrpc_remotefilesystem("@0@", $machine);
     $lifdirremote = json_decode($lifdirstr, true);
     if (isset($lifdirremote['err'])){
         if ( $lifdirremote['err'] == 'Timeout Error'){
@@ -338,7 +350,7 @@ printf ('
 
         <tr>
             <td style = "width:10%; font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Folders', 'xmppmaster')); ?>:</td>
-            <td id="filedirectory" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
+            <td id="filedirectory" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"><ul></ul></td>
             <td style = "width:10%;">
             <span id="poplistdirectory" title="<?php echo sprintf(_T('Remove last folder', 'xmppmaster')); ?>" class="pop" ></span>
                 <span id="deletelistdirectory" title="<?php echo sprintf(_T('Remove all folders', 'xmppmaster')); ?>" class="delete" ></span>
@@ -347,7 +359,7 @@ printf ('
 
         <tr>
             <td style = "width:10%;font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Files', 'xmppmaster')); ?>:</td>
-            <td id="filelist" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"></td>
+            <td id="filelist" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"><ul></ul></td>
             <td style = "width:10%;">
             <span  id="poplistfile" title="<?php echo sprintf(_T('Remove last file', 'xmppmaster')); ?>"  class="pop" ></span>
                 <span  id="deletelistfile" title="<?php echo sprintf(_T('Remove all files', 'xmppmaster')); ?>"  class="delete" ></span>
@@ -486,7 +498,7 @@ printf ('
         absolutepath ="";
         init = 1;
         local(namemachine);
-        remote("@");
+        remote("@1@");
         jQuery('#directoryremote')
             .on("changed.jstree", function (e, data) {
                 if(data.selected.length) {
@@ -506,17 +518,17 @@ printf ('
             timetmp = user + "-" + datetimenow();
             jQuery('#dest_string').text(jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" );
             jQuery('#directoryremote').on('ready.jstree', function() {
-                jQuery('#directoryremote').jstree("open_all");
+                jQuery('#directoryremote').jstree("close_all");
             });
     });
 
     function del_list(type){
-        // type "files" ou "directory"
+        // type is "files" or "directory"
         listfileusermachinejson[type].splice(0,listfileusermachinejson[type].length)
     }
 
     function pop_list(type){
-        // type "files" ou "directory"
+        // type is "files" or "directory"
         listfileusermachinejson[type].pop()
     }
 
@@ -628,12 +640,21 @@ printf ('
                     if (typeof dirsel == 'undefined'){
                         var dirsel = "";
                     }
-                    //  recupere repertoire en local
+                    //  Get the folder in local dir
                     local(dirsel);
                 });
             })
     }
+    function removeElement(element, type){
+      var node = jQuery(element).parent('li')
+      var textvalue = jQuery(node).find(".element-text").text()
+      var index = listfileusermachinejson[type].indexOf(textvalue)
 
+      if (index > -1) {
+       listfileusermachinejson[type].splice(index, 1);
+      }
+      jQuery(node).hide()
+    }
     function remote(selectdir){
         if (typeof selectdir == 'undefined'){
             var selectdir = "";
@@ -677,7 +698,10 @@ printf ('
                             if(jQuery.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
                         });
                         listfileusermachinejson['directory'] = uniqueNames;
-                        jQuery('#filedirectory').html(listfileusermachinejson['directory'].join(' ; '));
+                        jQuery('#filedirectory ul').html("");
+                        jQuery.each(listfileusermachinejson['directory'], function(id, dir){
+                            jQuery('#filedirectory ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this,\'directory\')" class="delete"></span><span class="element-text">'+dir+'</span></li>');
+                        })
                 });
             });
             jQuery(".download").click(function() {
@@ -688,7 +712,11 @@ printf ('
                             if(jQuery.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
                         });
                         listfileusermachinejson['files'] = uniqueNames;
-                        jQuery('#filelist').html(listfileusermachinejson['files'].join(' ; '));
+                        jQuery('#filelist ul').html("");
+                        jQuery.each(listfileusermachinejson['files'],function(id, element){
+                          jQuery('#filelist ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this, \'files\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
+                        });
+
                 } );
             });
             if (init == 1){
@@ -697,11 +725,43 @@ printf ('
                     jQuery(this).find(':nth-child(2)').hide();
                 });
             }
+
+            //If directory mouseover : highlight the row
+            var selecteddir = null;
+            jQuery("ul.rightdir > li").on('mouseover', function(){
+              jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
+            })
+
+            //If directory mouseout : clean the row if not selected
+            jQuery("ul.rightdir > li").on('mouseout', function(){
+              if(selecteddir != this)
+                jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#ececec',});
+            })
+
+            //If directory clicked : select it and highlight it
+            jQuery("ul.rightdir > li").on('click', function(){
+              selecteddir = this;
+              jQuery("ul.rightdir li").each(function(){
+                jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#ececec',});
+              })
+              jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
+            })
+
+            var selectedfile = null;
+            jQuery("ul.rightfile > li").on('mouseout', function(){
+              if(selectedfile != this)
+                jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#ececec',});
+            });
+
+            jQuery("ul.rightfile > li").on('mouseover', function(){
+              jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
+            })
             jQuery("ul.rightfile > li").click(function() {
+              selectedfile = this
                 //  recupere file en remote
                 fileremote = true;
                 jQuery(".rightfile LI").each(function(){
-                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#C0C0C0',});
+                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : '#ececec',});
                     jQuery(this).find(':nth-child(2)').hide()
                 });
                 jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
@@ -717,26 +777,36 @@ printf ('
     }
 
     jQuery("#downloadlist").click(function() {
-        var dir  = jQuery('#filedirectory').text().split(";")
-        var file = jQuery('#filelist').text().split(";")
+        var dir  = [];
+        jQuery.each(jQuery('#filedirectory ul li'), function(id, element){
+          dir.push(jQuery(element).text());
+        });
+
+        var file = [];
+        jQuery.each(jQuery('#filelist ul li'), function(id, element){
+          file.push(jQuery(element).text());
+        });
+
         msg = "<h1><?php echo sprintf(_T('Download from', 'xmppmaster')); ?>" + " " + namemachine + "</h1>"+
-        "<p>"+
+        "<p><em>"+
         "<?php echo sprintf(_T('Folders list', 'xmppmaster')); ?>" + " : " +
-        "</p>";
+        "</em></p>";
+        msg = msg + '<ul>';
         for (var i = 0; i < dir.length; i++) {
-            msg = msg + "<p>" + dir[i] + "</p>";
+            msg = msg + "<li>" + dir[i] + "</li>";
         }
-        msg = msg + "<br>";
-        msg = msg + "<p>"+
+        msg = msg + "</ul>";
+        msg = msg + '<em>'+
         "<?php echo sprintf(_T('Files list', 'xmppmaster')); ?>" + " : " +
-        "</p>";
+        "</em></p><ul>";
+
         for (var i = 0; i < file.length; i++) {
-            msg = msg + "<p>" + file[i] + "</p>";
+            msg = msg + "<li>" + file[i] + "</li>";
         }
-         msg = msg + "<br>";
-        msg = msg + "<p>"+
+         msg = msg + "</ul>";
+        msg = msg + "<p><em>"+
         "<?php echo sprintf(_T('To local folder', 'xmppmaster')); ?>" + " : "+
-        "</p>";
+        "</em></p>";
         msg = msg + "<br>";
         msg = msg + "<p>"+
         jQuery('#dest_string').text()+
@@ -760,8 +830,8 @@ printf ('
                             jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php",  {
                                         "dest"          : jQuery('#dest_string').text(),
                                         "directory"     : jQuery('#dest_string').text(),
-                                        "listdirectory" : jQuery('#filedirectory').text(),
-                                        "listfile"      : jQuery('#filelist').text(),
+                                        "listdirectory" : dir.join(";"),
+                                        "listfile"      : file.join(";"),
                                         "jidmachine"    : jid
                                         },function(data){
                                             jQuery('#dialog-notification-download-file').attr('title', '<?php echo sprintf(_T('The list (folder & files) copy has been requested successfully', 'xmppmaster')); ?>');
@@ -785,22 +855,28 @@ printf ('
     });
 
     jQuery("#deletelistdirectory").click(function() {
-        jQuery('#filedirectory').html("");
+        jQuery('#filedirectory ul').html("");
         del_list("directory");
     });
 
     jQuery("#deletelistfile").click(function() {
-        jQuery("#filelist").html("");
+        jQuery("#filelist ul").html("");
         del_list("files");
     });
 
     jQuery("#poplistdirectory").click(function() {
          pop_list("directory");
-         jQuery('#filedirectory').html(listfileusermachinejson['directory'].join(' ; '));
+         jQuery('#filedirectory ul').html("");
+         jQuery.each(listfileusermachinejson['directory'], function(id, element){
+           jQuery('#filedirectory ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this, \'directory\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
+         });
     });
 
     jQuery("#poplistfile").click(function() {
         pop_list("files");
-        jQuery('#filelist').html(listfileusermachinejson['files'].join(' ; '));
+        jQuery('#filelist ul').html("");
+        jQuery.each(listfileusermachinejson['files'], function(id, element){
+          jQuery('#filelist ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this, \'files\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
+        });
     });
     </script>

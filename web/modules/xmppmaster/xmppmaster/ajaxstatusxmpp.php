@@ -22,7 +22,8 @@
  *
  * file ajaxstatusxmpp.php
  */
-require("modules/dyngroup/includes/includes.php");
+ require_once("modules/dyngroup/includes/xmlrpc.php");
+//require("modules/dyngroup/includes/includes.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 ?>
@@ -61,7 +62,7 @@ $startdeploy = array();
 $tolmach=array();
 $wolmach=array();
 $successmach=array();
-$êrrormach=array();
+$errormach=array();
 $timeoutmach=array();
 $abortmachuser = array();
 $processmachr = array();
@@ -73,7 +74,12 @@ foreach( $arraydeploy['tabdeploy']['start'] as $ss){
     }
 }
 
-$logAction = new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
+$logAction = new ActionItem(_("detaildeploy"),
+                                "viewlogs",
+                                "logfile",
+                                "computer",
+                                "xmppmaster",
+                                "xmppmaster");
 
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
 
@@ -88,38 +94,32 @@ for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
     $params[] = $param;
 }
 
+$lastcommandid = get_array_last_commands_on_cmd_id_start_end($arraydeploy['tabdeploy']['command']);
+$statarray = xmlrpc_getarraystatbycmd($arraydeploy['tabdeploy']['command']);
+$convergence = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
+$groupname = getInfosNameGroup($arraydeploy['tabdeploy']['group_uuid']);
 $index = 0;
 foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $error = False;
-    if(($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT START" ||
-        $arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT DIFFERED") &&
+    if(($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT DIFFERED" ||
+        strpos($arraydeploy['tabdeploy']['state'][$index], "DEPLOYMENT START")!==false) &&
             (get_object_vars($arraydeploy['tabdeploy']['endcmd'][$index])['timestamp']- time()) < 0){
         $error = True;
         $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
     }
 
-    $lastcommandid = get_last_commands_on_cmd_id($arraydeploy['tabdeploy']['command'][$index]);
-    $start_date = date("Y-m-d H:i:s", mktime( $lastcommandid['start_date'][3],
-                              $lastcommandid['start_date'][4],
-                              $lastcommandid['start_date'][5],
-                              $lastcommandid['start_date'][1],
-                              $lastcommandid['start_date'][2],
-                              $lastcommandid['start_date'][0]));
-
-        $result = xmlrpc_getstatdeployfromcommandidstartdate($arraydeploy['tabdeploy']['command'][$index], $start_date);
+        $result = xmlrpc_getstatdeployfromcommandidstartdate($arraydeploy['tabdeploy']['command'][$index],
+                                                             $lastcommandid[$index]['startdate']);
 
         $total_machine_from_deploy     = $result['totalmachinedeploy'];
         $machine_error_from_deploy     = $result['machineerrordeploy'];
         $machine_success_from_deploy   = $result['machinesuccessdeploy'];
         $machine_process_from_deploy   = $result['machineprocessdeploy'];
         $machine_abort_from_deploy     = $result['machineabortdeploy'];
-
-        $stat = xmlrpc_getstatbycmd($arraydeploy['tabdeploy']['command'][$index]);
-        $total_machine_from_msc  = $stat['nbmachine'];
         // from msc
         $machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy($arraydeploy['tabdeploy']['command'][$index], $start_date);
-        $resultfrommsc = xmlrpc_getstatbycmd($arraydeploy['tabdeploy']['command'][$index]);
-        $total_machine_from_msc  = $resultfrommsc['nbmachine'];
+
+        $total_machine_from_msc  =  $statarray['nbmachine'][$arraydeploy['tabdeploy']['command'][$index]];
 
         $wol = ( $total_machine_from_msc - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
 
@@ -127,22 +127,20 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $tolmach[] = $total_machine_from_msc;
         $wolmach[]=$wol;
         $successmach[]=$machine_success_from_deploy;
-        $êrrormach[]=$machine_error_from_deploy;
+        $errormach[]=$machine_error_from_deploy;
         $timeoutmach[]=$machine_timeout_from_deploy;
         $abortmachuser[] = $machine_abort_from_deploy;
 
     if($groupid){
 
         if (isset($arraydeploy['tabdeploy']['group_uuid'][$index])){
-            $countmachine = getRestrictedComputersListLen( array('gid' => $arraydeploy['tabdeploy']['group_uuid'][$index]));
-            $namegrp = getPGobject($arraydeploy['tabdeploy']['group_uuid'][$index], true)->getName();
+            $namegrp = $groupname[$arraydeploy['tabdeploy']['group_uuid'][$index]]['name'];
         }
         else{
-            $countmachine = "";
             $namegrp = "";
         }
         //recherche information de deployement sur ce groupe.
-        if ( is_commands_convergence_type($arraydeploy['tabdeploy']['command'][$index]) != 0 ){
+        if ($convergence[$arraydeploy['tabdeploy']['command'][$index]] != 0 ){
             $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_convergence.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
         }else{
             $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_package.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
@@ -193,15 +191,20 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         if ($sucess == 0){
             $arraystate[] = "<span style='font-weight: bold; color : red;'>".$sucess."%"."</span>" ;
         }else{
-            $arraystate[] = "<span style='background-color:".$color." ;'>".$sucess."%"."</span>" ;
+            if ($sucess == 100) {
+                $arraystate[] = "<span style='font-weight: bold; color: green ;'>DEPLOY SUCCESS FULL</span>" ;
+            }
+            else{
+                $arraystate[] = "<span style='background-color:".$color." ;'>".$sucess."%"."</span>" ;
+            }
         }
         //'<progress max="'.$stat['nbmachine'].'" value="'.$stat['nbdeploydone'].'" form="form-id"></progress>';
-        $group = new Group($groupid, true, true);
-        if ($group->exists == False) {
-            $arrayname[] ="This group doesn't exist";
+        if (! isset($groupname[$groupid]['name']))
+        {
+            $arrayname[] = "This group doesn't exist";
         }
         else {
-            $arrayname[] = "<span style='text-decoration : underline;'><img style='position:relative;top : 5px;'src='img/machines/icn_groupsList.gif'/>" . $group->getName()."</span>";
+            $arrayname[] = "<span style='text-decoration : underline;'><img style='position:relative;top : 5px;'src='img/machines/icn_groupsList.gif'/>" . $groupname[$groupid]['name']."</span>";
         }
     }
     else{
@@ -227,7 +230,7 @@ $n->addExtraInfo( $arraystate, _T("Status", "xmppmaster"));
 $n->addExtraInfo( $tolmach, _T("Total Machines", "xmppmaster"));
 $n->addExtraInfo( $processmachr, _T("In progress", "xmppmaster"));
 $n->addExtraInfo( $successmach, _T("Success", "xmppmaster"));
-$n->addExtraInfo( $êrrormach, _T("Error", "xmppmaster"));
+$n->addExtraInfo( $errormach, _T("Error", "xmppmaster"));
 $n->addExtraInfo( $wolmach, _T("Waiting Wol", "xmppmaster"));
 $n->addExtraInfo( $timeoutmach, _T("Timed out", "xmppmaster"));
 $n->addExtraInfo( $abortmachuser, _T("Aborted", "xmppmaster"));
@@ -244,6 +247,7 @@ $n->setParamInfo($params);
 // $n->end = (isset($_GET['end'])?$_GET['end']:$maxperpage);
 $n->start = 0;
 $n->end = $arraydeploy['lentotal'];
+
 $n->display();
 echo "<br>";
 ?>

@@ -30,7 +30,7 @@
     require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
     // recuperation des donnees de la custom qa
-    $customqa = xmlrpc_get_qaction($_GET['namecmd'], $_GET['user'], 1);
+    $customqa = xmlrpc_get_qaction($_GET['namecmd'], $_GET['user'], 1, $_GET['namecmdos']);
     $customqa['customcmd'] = trim($customqa['customcmd']);
     $OS = strtoupper ($customqa['os']);
     $GROUP = $_GET['gid'];

@@ -264,8 +264,8 @@ function xmlrpc_getshowmachinegrouprelayserver() {
     return xmlCall("xmppmaster.getshowmachinegrouprelayserver", array());
 }
 
-function xmlrpc_get_qaction($groupname, $user, $grp = 0){
-    return xmlCall("xmppmaster.get_qaction", array($groupname, $user, $grp));
+function xmlrpc_get_qaction($groupname, $user, $grp = 0, $completename = ""){
+    return xmlCall("xmppmaster.get_qaction", array($groupname, $user, $grp, $completename));
 }
 
 function xmlrpc_setCommand_qa($command_name, $command_action, $command_login, $command_grp="", $command_machine='', $command_os=""){
@@ -436,7 +436,6 @@ function xmlrpc_get_plugin_lists(){
 //     return xmlCall("xmppmaster.xmpp_delete_synchro_package", array($packageid));
 // }
 
-//jfkjfk
 function xmlrpc_xmpp_get_info_synchro_packageid($pid_ppackage){
     return xmlCall("xmppmaster.xmpp_get_info_synchro_packageid", array($pid_ppackage));
 }
@@ -453,6 +452,7 @@ function xmpp_getPackageDetail($pid){
     return xmlCall("xmppmaster.xmpp_getPackageDetail", array($pid));
 }
 
+=======
 function xmlrpc_get_list_of_users_for_shared_qa($namecmd){
   return xmlCall("xmppmaster.get_list_of_users_for_shared_qa", array($namecmd));
 }

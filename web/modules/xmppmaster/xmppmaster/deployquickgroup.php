@@ -186,6 +186,7 @@ input[type="text"] {
                     }
                     echo "<input type='hidden' id='action'  name ='action' value ='ActionQuickGroup'>";
                     echo "<input type='hidden' id='namecmd'  name ='namecmd' value =''>";
+                    echo "<input type='hidden' id='namecmdos'  name ='namecmdos' value =''>";
                     echo "<input type='hidden' id='user'  name ='user' value ='root'>";
                     echo "<input type='hidden' id='cmdid'  name ='cmdid' value =''>";
                 echo "</form>";
@@ -197,14 +198,19 @@ input[type="text"] {
         jQuery(function() {
             var t = jQuery('#select option:selected').val();
             jQuery('#namecmd').val(t);
+            var y = jQuery('#select option:selected').text();
+            jQuery('#namecmdos').val(y);
         });
         jQuery('#select').on('change', function() {
             var t = jQuery('#select option:selected').val();
             jQuery('#namecmd').val(t);
+            var y = jQuery('#select option:selected').text();
+            jQuery('#namecmdos').val(y);
         });
 
         jQuery( '#buttoncmd' ).click(function() {
             groupinfo["namecmd"]=jQuery('#namecmd').val()
+            groupinfo["namecmdos"]=jQuery('#namecmdos').val()
             groupinfo["user"]=jQuery('#user').val()
             groupinfo["actionqa"]=jQuery('#action').val()
             groupinfo["groupname"] = jQuery('#groupname').val()

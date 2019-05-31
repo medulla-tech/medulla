@@ -23,6 +23,7 @@
 
 /*require("graph/navbar.inc.php")*/;
 require("graph/navbar.inc.php");
+require_once("modules/xmppmaster/includes/html.inc.php");
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
@@ -30,19 +31,21 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
-
+$refresh = new RefreshButton();
 $p = new PageGenerator(_T("All users tasks", 'xmppmaster'));
+
 $p->setSideMenu($sidemenu);
 $p->display();
+$refresh->display();
 
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => '', 'currenttasks' => '1'), 'formRunning' );
-$ajax->setRefresh(10000);
+$ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 $ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => ''), 'formRunning1' );
-$ajax1->setRefresh(10000);
+$ajax1->setRefresh($refresh->refreshtime());
 $ajax1->display();
 print "<br/><br/><br/>";
 $ajax1->displayDivToUpdate();
