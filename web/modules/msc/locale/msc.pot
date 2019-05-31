@@ -2149,12 +2149,12 @@ msgstr ""
 msgid "Cancel bundle creation"
 msgstr ""
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:138
+#: modules/msc/includes/commands_xmlrpc.inc.php:137
 #, php-format
 msgid "%s deployment subgroup - %s"
 msgstr ""
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:161
+#: modules/msc/includes/commands_xmlrpc.inc.php:160
 #, php-format
 msgid ""
 "Deploy subgroup created successfully. <br/><a href=\"%s\" target=\"_blank"

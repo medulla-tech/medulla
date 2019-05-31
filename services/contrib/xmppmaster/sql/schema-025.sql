@@ -1,9 +1,9 @@
 --
--- (c) 2016 Siveo, http://siveo.net/
+-- (c) 2018 Siveo, http://www.siveo.net/
 --
 -- $Id$
 --
--- This file is part of Pulse 2, http://siveo.net
+-- This file is part of Pulse 2, http://www.siveo.net/
 --
 -- Pulse 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,17 +19,16 @@
 -- along with Pulse 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
+-- insert item params_json  parameters deployement general
 
-SET SESSION character_set_server=UTF8;
-SET NAMES 'utf8';
+--
+START TRANSACTION;
 
--- Update parameters for clonezilla in Entity table
-UPDATE `imaging`.`BootService`
-SET
-    `value` = 'KERNEL ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL##
-        APPEND ##PULSE2_KERNEL_OPTS## ##PULSE2_REVO_RAW## ##PULSE2_DISKLESS_OPTS## davos_action=REGISTER ##PULSE2_DAVOS_OPTS## dump_path=##PULSE2_INVENTORIES_DIR## timereboot=##PULSE2_PXE_TIME_REBOOT## tftp_ip=##PULSE2_PXE_TFTP_IP##
-        INITRD ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##'
-WHERE
-    `id` = '2';
+ALTER TABLE `xmppmaster`.`machines` 
+ADD COLUMN `enabled` TINYINT(1) NULL DEFAULT '0' AFTER `jid`;
 
-UPDATE version set Number = 20;
+-- ----------------------------------------------------------------------
+-- Database version
+-- ----------------------------------------------------------------------
+UPDATE version SET Number = 25;
+COMMIT;

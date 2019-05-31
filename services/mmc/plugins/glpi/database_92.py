@@ -66,6 +66,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback,sys
+
 class Glpi92(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
@@ -578,7 +579,7 @@ class Glpi92(DyngroupDatabaseHelper):
         if session == None:
             session = create_session()
 
-        query = (count and session.query(func.count(Machine.id))) or session.query(Machine)
+        query = (count and session.query(func.count(Machine.id.distinct()))) or session.query(Machine)
         # manage criterion  for xmppmaster
         ret = self.__xmppmasterfilter(filt)
 
@@ -2132,6 +2133,12 @@ class Glpi92(DyngroupDatabaseHelper):
             .select_from(self.machine.outerjoin(self.regcontents) \
                 .outerjoin(self.registries) \
             ), int(str(uuid).replace("UUID", "")))
+
+        if min != 0:
+            query = query.offset(min)
+        if max != -1:
+            max = int(max) - int(min)
+            query = query.limit(max)
 
         if count:
             ret = query.count()
@@ -4752,6 +4759,7 @@ class Glpi92(DyngroupDatabaseHelper):
         .join(OS, OS.id == Machine.operatingsystems_id)\
         .join(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
         .order_by(asc(OsVersion.name))
+        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
         sql = self.__filter_on(sql)
 
         res = sql.all()
@@ -4780,17 +4788,23 @@ class Glpi92(DyngroupDatabaseHelper):
         for machine in result:
             if machine['os'].startswith('Debian'):
                 machine['os'] = 'Debian'
-                machine['version'] = machine['version'].split(" ")[0]
+                try:
+                    machine['version'] = machine['version'].split(" ")[0]
+                except AttributeError:
+                    machine['version'] = ""
             elif machine['os'].startswith('Microsoft'):
                 machine['os'] = machine['os'].split(' ')[1:3]
                 machine['os'] = ' '.join(machine['os'])
             elif machine['os'].startswith('Ubuntu'):
                 machine['os'] = 'Ubuntu'
                 # We want just the XX.yy version number
-                machine['version'] = machine['version'].split(" ")[0].split(".")
+                try:
+                    machine['version'] = machine['version'].split(" ")[0].split(".")
+                except AttributeError:
+                    machine['version'] = ""
                 if len(machine['version']) >= 2:
                     machine['version'] = machine['version'][0:2]
-                machine['version'] = '.'.join(machine['version'])
+                    machine['version'] = '.'.join(machine['version'])
             elif machine['os'].startswith('Mageia'):
                 machine['os'] = machine['os'].split(" ")[0]
             elif machine['os'].startswith('Unknown'):
@@ -4798,13 +4812,18 @@ class Glpi92(DyngroupDatabaseHelper):
                 machine['version'] = ""
             elif machine['os'].startswith("CentOS"):
                 machine['os'] = machine['os'].split(" ")[0]
-                machine['version'] = machine['version'].split("(")[0].split(".")[0:2]
-                machine['version'] = ".".join(machine['version'])
+                try:
+                    machine['version'] = machine['version'].split("(")[0].split(".")[0:2]
+                    machine['version'] = ".".join(machine['version'])
+                except AttributeError:
+                    machine['version'] = ""
 
             elif machine['os'].startswith("macOS") or machine['os'].startswith("OS X"):
-                machine['version'] = machine['version'].split(" (")[0].split(".")[0:2]
-                machine['version'] = ".".join(machine['version'])
-
+                try:
+                    machine['version'] = machine['version'].split(" (")[0].split(".")[0:2]
+                    machine['version'] = ".".join(machine['version'])
+                except AttributeError:
+                    machine['version'] = ""
             else:
                 pass
 
@@ -4821,48 +4840,27 @@ class Glpi92(DyngroupDatabaseHelper):
             list of all the machines with specified OS and specified version
         """
 
-        criterion = ''
+        sql = session.query(Machine.id, Machine.name)\
+        .join(OS, OS.id == Machine.operatingsystems_id)\
+        .outerjoin(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
+        .filter(and_(OS.name.like('%'+oslocal+'%')), OsVersion.name.like('%'+version+'%'))
 
-        if version == "":
-            criterion = self.config.dbname+'.glpi_operatingsystemversions.name IS NULL'
-        else:
-            criterion = self.config.dbname+'.glpi_operatingsystemversions.name like "%%%s%%"' % version
-
-        sql="""SELECT
-    %s.glpi_computers_pulse.id,
-    %s.glpi_computers_pulse.name
-FROM
-    %s.glpi_computers_pulse
-INNER JOIN
-    %s.glpi_operatingsystems
-ON
-    operatingsystems_id = %s.glpi_operatingsystems.id
-left JOIN
-    %s.glpi_operatingsystemversions
-ON
-    operatingsystemversions_id = %s.glpi_operatingsystemversions.id
-WHERE
-  %s.glpi_operatingsystems.name LIKE "%%%s%%"
-AND
-  %s
-;""" % (self.config.dbname, self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        oslocal, criterion)
-
+        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
+        sql = self.__filter_on(sql)
         res = session.execute(sql)
+
         result = [{'id':a, 'hostname':b} for a,b in res]
+
         return result
 
     @DatabaseHelper._sessionm
-    def get_computer_count_for_dashboard(self, session, count):
-        inventory_filtered_machines = self.__filter_on(session.query(Machine.id)).all()
+    def get_computer_count_for_dashboard(self, session, count=True):
+        inventory_filtered_machines = self.__filter_on(session.query(Machine.id).filter(Machine.is_deleted == 0, \
+                                                                                        Machine.is_template == 0)).all()
+        ret = self.__getRestrictedComputersListQuery(None, '', session, True, False)
 
         inventory_filtered_machines = ['UUID%s'%id[0] for id in inventory_filtered_machines]
         online_machines = XmppMasterDatabase().get_machines_online_for_dashboard()
-
-        registered_offline_machine = []
 
         unregistred_online_machine = []
         registered_online_machine = []
@@ -4871,10 +4869,10 @@ AND
         registered_online_uuid_list = []
         for machine in online_machines:
             if machine['uuid'] is None or machine['uuid'] == "":
-                unregistred_online_machine.append(machine)
+                unregistred_online_machine.append(machine['macaddress'])
             else:
                 registered_online_uuid_list.append(machine['uuid'])
-                registered_online_machine.append(machine)
+                registered_online_machine.append(machine['uuid'])
 
         for machine in inventory_filtered_machines:
             if machine not in registered_online_machine:

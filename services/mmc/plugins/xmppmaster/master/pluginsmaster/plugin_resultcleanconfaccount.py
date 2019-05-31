@@ -20,23 +20,30 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-# file pluginsmaster/plugin_resultguacamoleconf.py
+# file /pluginsmaster/plugin_resultcleanconfaccount.py
 
+import logging
 import traceback
 import sys
-from pulse2.database.xmppmaster import XmppMasterDatabase
-import logging
+import json
+from utils import simplecommandstr, file_get_content, file_put_content
 
-plugin = {"VERSION": "1.1", "NAME": "resultguacamoleconf", "TYPE": "master"}
 logger = logging.getLogger()
 
-def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
-    logger.debug("#################################################")
-    logger.debug(plugin)
-    logger.debug("#################################################")
+plugin = {"VERSION": "1.0", "NAME": "resultcleanconfaccount", "TYPE": "master"}
+
+
+def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
+    logging.getLogger().debug("=====================================================")
+    logging.getLogger().debug(plugin)
+    logging.getLogger().debug("=====================================================")
     try:
-        XmppMasterDatabase().addlistguacamoleidforiventoryid(data['uuid'], data['connection'])
-    except Exception, e:
-        logger.error("plugin resultguacamoleconf Error: %s" % str(e))
-        #logger.error("\n%s"%(traceback.format_exc()))
+        destinataire = str(msg['from'].user)
+        if data['useraccount'].startswith("conf"):
+            logger.debug('Clear MUC conf account')
+            cmd = "ejabberdctl unregister %s pulse"%destinataire
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+    except Exception as e:
         pass
+

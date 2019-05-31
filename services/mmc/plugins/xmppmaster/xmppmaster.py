@@ -74,10 +74,10 @@ class xmppMasterthread(threading.Thread):
         self.xmpp.register_plugin('xep_0045')  # Multi-User Chat
         self.xmpp.register_plugin('xep_0004')  # Data Forms
         self.xmpp.register_plugin('xep_0050')  # Adhoc Commands
-        self.xmpp.register_plugin('xep_0199', {'keepalive': False,
-                                               'frequency': 600,
-                                               'interval': 600,
-                                               'timeout': 500})
+        self.xmpp.register_plugin('xep_0199', {'keepalive': True,
+                                               'frequency': 300,
+                                               'interval': 300,
+                                               'timeout': 200})
         self.xmpp.register_plugin('xep_0077')  # Registration
         # xmpp.register_plugin('xep_0047') # In-band Registration
         # xmpp.register_plugin('xep_0096') # file transfer

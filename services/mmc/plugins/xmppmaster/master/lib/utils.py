@@ -39,8 +39,11 @@ from importlib import import_module
 import threading
 import socket
 import urllib
+import uuid
 import time
 from datetime import datetime
+
+logger = logging.getLogger()
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "pluginsmaster"))
 
@@ -252,6 +255,14 @@ def name_random(nb, pref=""):
         d = d+a[random.randint(0, 35)]
     return d
 
+def name_randomplus(nb, pref=""):
+    a = "abcdefghijklnmopqrstuvwxyz0123456789"
+    q = str(uuid.uuid4())
+    q = pref + q.replace("-","")
+    for t in range(nb):
+        d = a[random.randint(0, 35)]
+    res = q + d
+    return res[:nb]
 
 def md5(fname):
     hash = hashlib.md5()

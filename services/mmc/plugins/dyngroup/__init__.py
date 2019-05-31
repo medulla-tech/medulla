@@ -471,6 +471,9 @@ class RpcProxy(RpcProxyI):
         dyndatabase.updateNewNames(need_update)
         return len(need_update)
 
+    def getInfosNameGroup(self, arrayuuidgroup):
+        return  DyngroupDatabase().getInfosNameGroup(arrayuuidgroup)
+
     def getMachineforentityList(self,min,max,filt):
         return ComputerManager().getMachineforentityList(min,max,filt)
 

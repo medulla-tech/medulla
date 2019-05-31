@@ -70,8 +70,9 @@ def md5file(fname):
      return hash.hexdigest()
 
 class ImagingRpcProxy(RpcProxyI):
-    checkThread = {}
-    checkThreadData={}
+    checkThread = {} # check thread actif waitting transfert
+    checkThreadData={} # check thread transfert
+
     def getGeneratedMenu(self, mac):
         # uuid
         logger = logging.getLogger()
@@ -434,6 +435,8 @@ class ImagingRpcProxy(RpcProxyI):
         except KeyError:
             ImagingRpcProxy.checkThread[objmenu['location']] = True
         finally:
+            self.ClearMulticastMultiSessionParameters(objmenu['location'])
+            time.sleep(2)
             a = threading.Thread(None, self.monitorsUDPSender, None, (objmenu,))
             a.start()
         location=objmenu['location']
@@ -665,37 +668,41 @@ class ImagingRpcProxy(RpcProxyI):
         s.stdout.close()
         return returnprocesspid
 
-    def monitorsUDPSender(self,objmenu):
+    def monitorsUDPSender(self, objmenu):
         """
             Menu group regenerated immediately started transferring multicast udp
         """
+        ImagingRpcProxy.checkThread={}
+        ImagingRpcProxy.checkThreadData={}
+        ImagingRpcProxy.checkThread[objmenu['location']] = True
+        ImagingRpcProxy.checkThreadData[objmenu['location']]={'data': '', 'tranfert' : False}
         temp=10;
         while(ImagingRpcProxy.checkThread[objmenu['location']] == True):
+            logging.getLogger().info("Multicast while object checkThread is %s"%ImagingRpcProxy.checkThread)
             for i in threading.enumerate():
                 if i.getName() == "MainThread" and not i.isAlive():
-                    logging.getLogger().debug("[checkThreadData terminate monitorsUDPSender]")
+                    logging.getLogger().debug("[Multicast TERMINATE  monitorsUDPSender]")
                     ImagingRpcProxy.checkThread[objmenu['location']] = False
                     return
             time.sleep(temp)
-            logging.getLogger().debug("monitorsUDPSender")
+            logging.getLogger().debug("Multicast monitorsUDPSender")
             result=self.checkDeploymentUDPSender(objmenu)
+            logging.getLogger().info("check whether Multicast transfer is in progress %s"%result)
             try:
-                logging.getLogger().debug("[checkThreadData] %s"%ImagingRpcProxy.checkThreadData)
-                logging.getLogger().debug("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
                 if ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] == True:
-                    logging.getLogger().debug("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
                     ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
                     ImagingRpcProxy.checkThread[objmenu['location']] = False
-                    logging.getLogger().debug("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
+                    logging.getLogger().debug("Multicast REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
                     self.synchroProfile(objmenu['group'])
                     return
             except KeyError:
-                logging.getLogger().debug("[initialisation checkThreadData]")
+                logger.error("Multicast error monitorsUDPSender\n%s"%(traceback.format_exc()))
                 ImagingRpcProxy.checkThreadData[objmenu['location']]={}
                 ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
         else:
-            logging.getLogger().debug("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
+            logging.getLogger().debug("Multicast REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
             self.synchroProfile(objmenu['group'])
+
 
     def checkDeploymentUDPSender(self,process):
         """

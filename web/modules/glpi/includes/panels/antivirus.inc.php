@@ -36,7 +36,7 @@ class AntivirusPanel extends Panel {
     function display_content() {
 
         $count = getAntivirusStatus();
-        $uninventorized_text = _T("Uninventorzied Machines", "dashboard");
+        $uninventorized_text = _T("Uninventoried Machines", "dashboard");
         $uninventorized = get_computer_count_for_dashboard()['unregistered'];
 
         $jsonCount = json_encode($count);
@@ -76,7 +76,7 @@ class AntivirusPanel extends Panel {
           {
             'label': '$uninventorized_text',
             'value': uninventorized,
-            'href':"",
+            'href':"#",
           }
         ];
       donut("antivirus-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"]+uninventorized);

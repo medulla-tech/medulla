@@ -285,14 +285,23 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.session = session()
         self.domaindefault = "pulse"
         # ######################Update remote agent#########################
-        autoupdatebool = self.config.autoupdatebyrelay or self.config.autoupdate
-        self.Update_Remote_Agentlist = Update_Remote_Agent(self.config.diragentbase,
-                                                           autoupdatebool)
+        self.autoupdatebool = self.config.autoupdatebyrelay or self.config.autoupdate
+        self.Update_Remote_Agentlist = Update_Remote_Agent( self.config.diragentbase, 
+                                                            self.autoupdatebool)
         # ######################Update remote agent#########################
         self.file_deploy_plugin = []
         # ##clear conf compte.
+        self.confaccount=[] #list des account for clear
         logger.debug('Clear MUC conf account')
         cmd = "for i in  $(ejabberdctl registered_users pulse | grep '^conf' ); do echo $i; ejabberdctl unregister $i pulse; done"
+        try:
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+        except Exception as e:
+            pass
+        #del old message offline
+        logger.debug('del old message offline')
+        cmd = "ejabberdctl delete_old_messages 1"
         try:
             a = simplecommandstr(cmd)
             logger.debug(a['result'])
@@ -350,15 +359,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.schedule('update plugin', 900, self.loadPluginList, repeat=True)
 
         self.add_event_handler("session_start", self.start)
-        """ New presence in Conf chatroom """
-        self.add_event_handler("muc::%s::presence" % conf.confjidchatroom,
-                               self.muc_presenceConf)
-        """ Unsubscribe from Conf chatroom """
-        self.add_event_handler("muc::%s::got_offline" % conf.confjidchatroom,
-                               self.muc_offlineConf)
-        """ Subscribe to Conf chatroom """
-        self.add_event_handler("muc::%s::got_online" % conf.confjidchatroom,
-                               self.muc_onlineConf)
         # install plugins list file is not empty.
         self.schedule('remote update plugin', 60, self.remoteinstallPlugin, repeat=True)
         # Call function
@@ -370,7 +370,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # Strophe is received from any chat room. If you too
         # Save a handler for the 'message' event, MUC messages
         # Will be processed by both managers.
-        self.add_event_handler("groupchat_message", self.muc_message)
         self.add_event_handler("pluginaction", self.pluginaction)
 
         self.add_event_handler('changed_status', self.changed_status)
@@ -570,7 +569,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
             file_put_contents("/tmp/Execution_time_plugin.txt",
                               "%s | %s \n" %(str(datetime.now()),
                               obj['result'] ))
-        self.get_roster()
+        #self.get_roster()
+        #try:
+            #self.get_roster()
+        #except IqError as err:
+            #print('Error: %s' % err.iq['error']['condition'])
+        #except IqTimeout:
+            #print('Error: Request timed out')
         self.send_presence()
         chatroomjoin = [self.config.confjidchatroom]
         for chatroom in chatroomjoin:
@@ -660,6 +665,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if msg_changed_status['type'] == 'unavailable':
             try:
                 result = XmppMasterDatabase().delPresenceMachine(msg_changed_status['from'])
+                if result is None:
+                    return
                 if "type" in result and result['type'] == "relayserver":
                     # recover list of cluster ARS
                     listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(
@@ -689,7 +696,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 t['hostname'], 
                                                 t['jidmachine'] ])
                             logger.debug("*** %s"%t)
-                            XmppMasterDatabase().updatedeploystate(t['sessionid'],"DEPLOYMENT ERROR")
+                            XmppMasterDatabase().updatedeploystate(t['sessionid'], "DEPLOYMENT START (REBOOT)")
                             self.xmpplog("resource recovery on ARS %s for deploy"\
                                 "sessionid %s on machine  (connection loss) %s " % (t['jidrelay'],
                                                                                     t['sessionid'],
@@ -706,7 +713,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 fromuser = "",
                                 touser = "")
 
-                            self.xmpplog('DEPLOYMENT TERMINATE',
+                            self.xmpplog('<span style="font-weight: bold;color : Orange;">WAITING REBOOT</span>',
                                 type = 'deploy',
                                 sessionname = t['sessionid'],
                                 priority = -1,
@@ -856,6 +863,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
         datastr = re.sub(r"(?i) *: *true", " : true", datastr)
         file_put_contents(path, datastr)
 
+    def totimestamp(self, dt, epoch=datetime(1970,1,1)):
+        td = dt - epoch
+        # return td.total_seconds()
+        return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
+
     def applicationdeploymentjson(self,
                                   jidrelay,
                                   jidmachine,
@@ -895,6 +907,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "login": login,
                 "idcmd": idcommand,
                 "advanced": objdeployadvanced,
+                "stardate" : self.totimestamp(start_date),
+                "enddate" : self.totimestamp(end_date),
                 'methodetransfert': 'pushrsync',
                 "path": path,
                 "packagefile": os.listdir(path),
@@ -916,7 +930,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                               "applicationdeploymentjson",
                                               data,
                                               datasession=None,
-                                              encodebase64=False)
+                                              encodebase64=False,
+                                              prefix = "command")
         self.xmpplog("Start deploy on machine %s" % jidmachine,
                      type='deploy',
                      sessionname=sessionid,
@@ -1574,6 +1589,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
             self.send_message(mto=msg['from'],
                               mbody=json.dumps(reponse),
                               mtype='chat')
+            #add account for delete
+            self.confaccount.append(msg['from'].user)
         except Exception:
             logger.error("Unable to configure the relay server : missing")
 
@@ -1624,22 +1641,28 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def XmppUpdateInventoried(self, jid):
         try:
             machine = XmppMasterDatabase().getMachinefromjid(jid)
-            result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
-            results = result[0].split(",")
-            logging.getLogger().debug("listMacAdressforMachine   %s" % results)
-            uuid = ''
-            for t in results:
-                computer = ComputerManager().getComputerByMac(t)
-                if computer != None:
-                    uuid = 'UUID' + str(computer.id)
-                    logger.debug("** Update uuid %s for machine %s " % (uuid, machine['jid']))
-                    if machine['uuid_inventorymachine'] != "":
-                        logger.debug("** Update in Organization_ad uuid %s to %s " % (machine['uuid_inventorymachine'],
-                                                                                      uuid))
-                        XmppMasterDatabase().replace_Organization_ad_id_inventory(machine['uuid_inventorymachine'],
-                                                                                  uuid)
-                    XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
-                    return True
+            if len(machine) !=0:
+                result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
+                results = result[0].split(",")
+                logging.getLogger().debug("listMacAdressforMachine   %s" % results)
+                uuid = ''
+                for t in results:
+                    computer = ComputerManager().getComputerByMac(t)
+                    if computer != None:
+                        uuid = 'UUID' + str(computer.id)
+                        logger.debug("** Update uuid %s for machine %s " % (uuid, machine['jid']))
+                        if machine['uuid_inventorymachine'] != "" and \
+                            machine['uuid_inventorymachine'] != None:
+                            logger.debug("** Update in Organization_ad uuid %s to %s " % (machine['uuid_inventorymachine'],
+                                                                                        uuid))
+                            XmppMasterDatabase().replace_Organization_ad_id_inventory(machine['uuid_inventorymachine'],
+                                                                                    uuid)
+                        XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
+                        return True
+                    else:
+                        logging.getLogger().warning("Incoherence in the address mac %s" % jid)
+            else:
+                logging.getLogger().warning("machine [%s] not present. Cant update uuid in machine table." % jid)
         except Exception:
             logger.error("** Update error on inventory %s" % (jid))
             logger.error("%s"%(traceback.format_exc()))
@@ -2039,10 +2062,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
                 # ######################Update remote agent#########################
                 # Manage update remote agent
-                #if self.config.autoupdate and 'md5agent' in data and self.Update_Remote_Agentlist.get_fingerprint_agent_base() != data['md5agent']:
-                    #if data['md5agent'].upper() != "DEV" or data['md5agent'].upper() != "DEBUG":
-                        ## send md5 descriptor of the agent for remote update.
-                        #self.senddescriptormd5(msg['from'])
                 if 'md5agent' in data:
                     if (data['md5agent'].upper() != "DEV" or data['md5agent'].upper() != "DEBUG") \
                     and self.Update_Remote_Agentlist.get_fingerprint_agent_base() != data['md5agent']:
@@ -2053,7 +2072,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         elif self.config.autoupdatebyrelay:
                             #update from ARS
                             datasend = { "action": "updateagent",
-                                         "data": { "subaction": "ars_update",
+                                        "data": { "subaction": "ars_update",
                                                 "jidagent": str(msg['from']),
                                                 "descriptoragent" : data['md5agent'],
                                                 "ars_update" : data['deployment']},
@@ -2172,14 +2191,77 @@ class MUCBot(sleekxmpp.ClientXMPP):
         logger.debug("%s not in room %s" % (jid, room))
         return False
 
+    def errorhandlingstanza(self, msg, msgfrom, msgkey):
+        logger.error("child elements message")
+        messagestanza=""
+        for t in msgkey:
+            if t != 'error' and t != "lang":
+                e = str(msg[t])
+                if e != "":
+                    messagestanza+="%s : %s\n"%(t, e)
+        if 'error' in msgkey:
+            messagestanza+="Error information\n"
+            msgkeyerror = msg['error'].keys()
+            for t in msg['error'].keys():
+                if t != "lang":
+                    e = str(msg['error'][t])
+                    if e != "":
+                        messagestanza+="%s : %s\n"%(t, e)
+        if messagestanza != "":
+            logger.error(messagestanza)
+
     def message(self, msg):
-        logger.debug("*******MESSAGE %s" % msg['from'])
+        """
+            ref stanza eg: https://xmpp.org/rfcs/rfc3921.html#stanzas
+        """
+        try:
+            msgkey = msg.keys()
+            msgfrom = ""
+            if not 'from' in msgkey:
+                logger.error("Stanza message bad format %s"%msg)
+                return False
+            msgfrom = str(msg['from'])
+
+            logger.debug("*******MESSAGE %s"%msgfrom)
+            if 'type' in msgkey:
+                # eg: ref section 2.1
+                type = str(msg['type'])
+                if type == "chat" or type == "groupchat":
+                    pass
+                elif type == "headline":
+                    "message automated service"
+                    logger.warning("MESSAGE stanza headline %s"%msg)
+                    return
+                elif type == "normal":
+                    "message automated service"
+                    logger.warning("MESSAGE stanza normal %s"%msg)
+                    msg.reply('Thank you, but I do not treat normal messages').send()
+                    return
+                elif type == 'error':
+                    logger.error("Stanza message from %s"%msgfrom)
+                    self.errorhandlingstanza(msg, msgfrom, msgkey)
+                    return
+                else:
+                    logger.error("Stanza message type %s"%type)
+                    return
+        except:
+            logger.error("Stanza message bad format %s"%msg)
+            traceback.print_exc(file=sys.stdout)
+            return
+        if not 'body' in msgkey:
+            logger.error("Stanza message body missing %s"%msg)
+            return False
+
         # logger.debug(msg['body'])
         if msg['body'] == "This room is not anonymous":
             return False
         if msg['from'].bare == self.config.jidchatroommaster or msg['from'].bare == self.config.confjidchatroom:
             return False
         if self.jidInRoom1(self.config.confjidchatroom, msg['from']):
+            if str(msg['from'].user) in self.confaccount:
+                self.confaccount.remove(str(msg['from'].user))
+                self.callpluginmaster(msg)
+                return
             self.MessagesAgentFromChatroomConfig(msg)
             return
         if msg['type'] == 'groupchat':
@@ -2247,15 +2329,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     traceback.print_exc(file=sys.stdout)
 
                 except Exception as e:
-                    logging.error("Executing plugin %s %s" % (dataobj['action'], str(e)))
+                    logging.error("Executing plugin (%s) %s %s" % (msg['from'], dataobj['action'], str(e)))
                     traceback.print_exc(file=sys.stdout)
 
         except Exception as e:
             logging.error("Message structure %s   %s " % (msg, str(e)))
             traceback.print_exc(file=sys.stdout)
-
-    def muc_offlineMaster(self, presence):
-        pass
 
     def muc_presenceMaster(self, presence):
         if presence['muc']['nick'] != self.config.NickName:
@@ -2277,13 +2356,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
         pass
 
     def send_session_command(self, jid, action, data={}, datasession=None,
-                             encodebase64=False, time=20, eventthread=None):
+                             encodebase64=False, time=20, eventthread=None,
+                             prefix=None):
+        if prefix is None:
+            prefix = "command"
         logging.debug("Send command and creation session")
         if datasession == None:
             datasession = {}
         command = {'action': action,
                    'base64': encodebase64,
-                   'sessionid': name_random(5, "command"),
+                   'sessionid': name_randomplus(25, pref=prefix),
                    'data': ''
                    }
 

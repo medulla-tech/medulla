@@ -181,8 +181,7 @@ In tools repository, 'install-pulse-git' allow a quick setup.
 	--glpi-dbname=<database name> \
 	--glpi-dbuser=<database username> \
 	--glpi-dbpasswd=<database user password> \
-	--glpi-dbrootpasswd=<mysql root password>
-	--branch=<devel branche to use>
-
+	--glpi-dbrootpasswd=<mysql root password> 
+  	--branch=<devel branche to use>
 
 Repository for devel branch http://git.siveo.net/

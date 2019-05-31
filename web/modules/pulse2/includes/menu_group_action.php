@@ -53,7 +53,6 @@ if ($is_gp != 1) { // Simple group
     $actions['edit'] = new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers");
     $actions['share'] = new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "groupshare", "id", "base", "computers");
     if (in_array("msc", $_SESSION["supportModList"])) {
-        $actions['log'] = new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs");
         $actions['deploy'] = new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers");
     }
     if (in_array("update", $_SESSION["supportModList"])) {
@@ -70,7 +69,6 @@ if ($is_gp != 1) { // Simple group
     $actions['edit'] = new ActionItem(_T("Edit this imaging group", 'dyngroup'), "computersgroupedit", "edit", "id", "imaging", "manage");
     $actions['share'] = new ActionItem(_T("Share this imaging group", 'dyngroup'), "edit_share", "groupshare", "id", "imaging", "manage");
     if (in_array("msc", $_SESSION["supportModList"])) {
-        $actions['log'] = new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "imaging", "manage", "grouptablogs");
         $actions['deploy'] = new ActionItem(_T("Software deployment on this imaging group", "dyngroup"),"groupmsctabs","install","computer", "imaging", "manage");
     }
     if (in_array("imaging", $_SESSION["supportModList"])) {

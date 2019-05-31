@@ -667,6 +667,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().isCommandsCconvergenceType(ctx, cmd_id))
 
+    def is_array_commands_convergence_type(self, array_cmd_id):
+        ctx = self.currentContext
+        return xmlrpcCleanup2(MscDatabase().isArrayCommandsCconvergenceType(ctx, array_cmd_id))
+
     def get_command_on_group_status(self, cmd_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandOnGroupStatus(ctx, cmd_id))
@@ -695,7 +699,9 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getstatbycmd(ctx, cmd_id))
 
-
+    def getarraystatbycmd(self, arraycmd_id):
+        ctx = self.currentContext
+        return xmlrpcCleanup2(MscDatabase().getarraystatbycmd(ctx, arraycmd_id))
 
     def get_first_commands_on_cmd_id(self, cmd_id):
         ctx = self.currentContext
@@ -704,6 +710,14 @@ class RpcProxy(RpcProxyI):
     def get_last_commands_on_cmd_id(self, cmd_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getLastCommandsOncmd_id(ctx, cmd_id))
+
+    def get_last_commands_on_cmd_id_start_end(self, cmd_id):
+        ctx = self.currentContext
+        return xmlrpcCleanup2(MscDatabase().getLastCommandsOncmd_id_start_end(ctx, cmd_id))
+
+    def get_array_last_commands_on_cmd_id_start_end(self, array_cmd_id):
+        ctx = self.currentContext
+        return xmlrpcCleanup2(MscDatabase().getarrayLastCommandsOncmd_id_start_end(ctx, array_cmd_id))
 
     def set_commands_filter(self, filterType):
         ctx = self.currentContext

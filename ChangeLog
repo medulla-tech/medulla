@@ -1,7 +1,17 @@
-Pulse 2 UNRELEASED
+* [FEATURE] Add glpi 9.4 support
+
+Pulse 2 4.5.2
 =============
+* [FEATURE] Allow install of plugin if a specific version of client is met
 * [FEATURE] Switch from RaphaelJS to d3.js
+* [FEATURE] Function to record execution time of plugins
 * [BUGFIX]  Fix creating groups when the database is not called glpi
+* [BUGFIX]  Fix dashboard counters
+* [BUGFIX]  Fix the release of resources after a deployment
+* [BUGFIX]  Fix generation of random deployment session names
+* [BUGFIX]  Fix the release of resources in case of lost connections
+* [BUGFIX]  Fix reconnection of master agent to xmpp server
+
 
 Pulse 2 4.5.1
 =============
@@ -17,6 +27,7 @@ Pulse 2 4.5.1
 * [BUGFIX]  Check package format before doing a deployment
 * [BUGFIX]  Do not log machines info and plugins by default
 * [BUGFIX]  Fix abort of deployments on groups in cases where the machines are offline
+* [BUGFIX]  Fix copy of files when machine is connected to a relay server that is not on main Pulse server
 
 
 Pulse 2 4.5
@@ -53,6 +64,22 @@ Pulse 2 4.5
 * [BUGFIX]  Fix detection of uploaded file types in package creation
 * [BUGFIX]  Fix abort of deployments in cases where jidmachine and jidrelay are fake
 
+
+Pulse 2 4.4.1
+===========
+* [BUGFIX]Fix displaying OSes in 'Operating system' dashboard widget
+* [BUGFIX] Fix the display of the command executed
+* [BUGFIX] Remove sql file to handle UEFI ( we need new davos first )
+* [BUGFIX] Improve the creation of the groups for machineOnline widget
+* [BUGFIX] Allow to modify imaging groups for machines with more than one
+           ethernet card
+* [BUGFIX] Fix editing configuration files in client machine
+* [BUGFIX] Root can delete imaging groups shared with him
+* [BUGFIX] The action navbar is uniformized
+* [BUGFIX] In backuppc the computer icon is colored when the machine is
+           on line
+* [BUGFIX] use one database access instead of two
+* [BUGFIX] Add the config button in the xmpp console page
 
 Pulse 2 4.4
 ===========

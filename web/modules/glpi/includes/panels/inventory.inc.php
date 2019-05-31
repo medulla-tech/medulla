@@ -45,7 +45,7 @@ class GlpiPanel extends Panel {
         $createGroupText = json_encode(_T("Create a group", "glpi"));
         $lessThanText = json_encode(_T("< %s days: %percent% (%d)", "glpi"));
         $moreThanText = json_encode(_T("> %s days: %percent% (%d)", "glpi"));
-        $unregisteredText = json_encode(_T("Unregistered machines", "glpi"));
+        $unregisteredText = json_encode(_T("Uninventoried machines", "glpi"));
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
 
         echo <<< INVENTORY
@@ -79,7 +79,7 @@ class GlpiPanel extends Panel {
       {
         'label': unregisteredText,
         'value':unregistered,
-        'href':'',
+        'href':'#',
       }
     ];
     donut("inventory-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"]+unregistered)
