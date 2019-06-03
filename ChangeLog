@@ -1,3 +1,5 @@
+mmc-core UNRELEASED
+==============
 * [BUGFIX]  Update topology for d3 V5 
 * [BUGFIX]  Add refresh button for all the audit page
 * [BUGFIX]  Fix the start deployment date
