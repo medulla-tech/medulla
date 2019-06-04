@@ -112,12 +112,13 @@ function start_a_command($proxy = array()) {
                     'ltitle',
                     'parameters',
                     'papi',
-                    'maxbw', 
+                    'maxbw',
                     'deployment_intervals',
                     'max_clients_per_proxy',
                     'launchAction',
-                    'spooling') as $param) {
-                        if ( $param != "spooling"){ 
+                    'spooling',
+                    'syncthing') as $param) {
+                        if ( $param != "spooling"){
                             $params[$param] = $post[$param];
                         }
                         else
@@ -176,14 +177,14 @@ function start_a_command($proxy = array()) {
             }
             xmlrpc_addlogincommand( $_SESSION['login'],
                                     $id,
-                                    '', 
-                                    '', 
-                                    '', 
-                                    $exec_date, 
-                                    $parameterspacquage, 
-                                    $rebootrequired, 
-                                    $shutdownrequired, 
-                                    $limit_rate_ko, 
+                                    '',
+                                    '',
+                                    '',
+                                    $exec_date,
+                                    $parameterspacquage,
+                                    $rebootrequired,
+                                    $shutdownrequired,
+                                    $limit_rate_ko,
                                     $params);
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
@@ -294,6 +295,7 @@ function start_a_command($proxy = array()) {
             // deploy on group
             $id = add_command_api($pid, NULL, $params, $mode, $gid, $ordered_proxies);
             if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+                $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
                 $countmachine = getRestrictedComputersListLen( array('gid' => $gid));
                 $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
                 $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
@@ -314,7 +316,8 @@ function start_a_command($proxy = array()) {
                                         $parameterspacquage,
                                         $rebootrequired,
                                         $shutdownrequired,
-                                        $limit_rate_ko);
+                                        $limit_rate_ko,
+                                        $syncthing);
 
                 header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                     'uuid' => $uuid,
@@ -723,6 +726,13 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                 ), array("value" => quick_get('Spoolingselect', True) == 'on' ? 'checked' : '')
             );
 
+        // parameter syncthing deployment for groups ONLY
+        if($_GET['action'] == 'groupmsctabs')
+          $f->add(
+                  new TrFormElement(
+                      _T('Syncthing deployment', 'msc'), new CheckboxTpl('syncthing')
+                  ), array("value" => quick_get('syncthing', True) == 'on' ? 'checked' : '')
+              );
                 $rb = new RadioTpl("spooling");
                 $rb->setChoices(array(_T('high priority', 'msc'), _T('ordinary priority', 'msc')));
                 $rb->setvalues(array('high', 'ordinary'));

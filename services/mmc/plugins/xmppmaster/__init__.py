@@ -297,6 +297,7 @@ def addlogincommand(login,
                     rebootrequired,
                     shutdownrequired,
                     limit_rate_ko,
+                    syncthing,
                     params):
     return XmppMasterDatabase().addlogincommand(login,
                                                 commandid,
@@ -308,6 +309,7 @@ def addlogincommand(login,
                                                 rebootrequired,
                                                 shutdownrequired,
                                                 limit_rate_ko,
+                                                syncthing,
                                                 params)
 
 
@@ -689,7 +691,7 @@ def get_conf_master_agent():
     conf =  dict(getXmppConfiguration())
     for t in conf:
         if t in ['passwordconnection',
-                 'dbpasswd', 
+                 'dbpasswd',
                  'confpasswordmuc' ]:
             continue
         if isinstance(conf[t], (dict, list, tuple, int, basestring)):

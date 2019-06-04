@@ -1592,6 +1592,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         rebootrequired,
                         shutdownrequired,
                         bandwidth,
+                        syncthing,
                         params):
         try:
             new_logincommand = Has_login_command()
@@ -1617,6 +1618,10 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_logincommand.shutdownrequired = False
             else:
                 new_logincommand.shutdownrequired = True
+            if syncthing == 0:
+                new_logincommand.syncthing = False
+            else:
+                new_logincommand.syncthing = True
             if (type(params) is list or type(params) is dict) and len(params) != 0:
                 new_logincommand.params_json = json.dumps(params)
 
@@ -3518,7 +3523,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [x for x in result]
-    
+
     @DatabaseHelper._sessionm
     def getRelayServerfromjid(self, session, jid):
         relayserver = session.query(RelayServer).filter(RelayServer.jid == jid)
