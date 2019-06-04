@@ -377,6 +377,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def schedulerfunction(self):
         self.manage_scheduler.process_on_event()
+        #call deploy syncthing
+        self.syncthingdeploy()
+
+    def syncthingdeploy(self):
+        #nanlyse la table deploy et recupere les deployement syncthing.
+        time.sleep(5)
+        ##XmppMasterDatabase().deploysyncthingxmpp(800)
+        pass
 
     def iqsendpulse(self, to, datain, timeout):
         # send iq synchronous message

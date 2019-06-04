@@ -1133,6 +1133,14 @@ class XmppMasterDatabase(DatabaseHelper):
         return "pause"
 
     @DatabaseHelper._sessionm
+    def deploysyncthingxmpp(self):
+    """
+     analyse table deploy est etablie les partage syncthing
+    """
+
+        pass
+
+    @DatabaseHelper._sessionm
     def update_status_deploy_end(self, session):
         """ this function schedued by xmppmaster """
         #session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
