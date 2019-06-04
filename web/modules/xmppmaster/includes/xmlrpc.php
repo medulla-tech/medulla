@@ -161,6 +161,7 @@ function xmlrpc_addlogincommand($login,
                                 $rebootrequired = 0,
                                 $shutdownrequired = 0,
                                 $limit_rate_ko = 0,
+                                $syncthing = 0,
                                 $params = array()
                                 ) {
 
@@ -185,6 +186,7 @@ function xmlrpc_addlogincommand($login,
                                                         $rebootrequired,
                                                         $shutdownrequired,
                                                         $limit_rate_ko,
+                                                        $syncthing,
                                                         $params));
 }
 
@@ -441,7 +443,7 @@ function xmlrpc_xmpp_get_info_synchro_packageid($pid_ppackage){
 }
 
 //######################################
-// package 
+// package
 //######################################
 
 function xmlrpc_xmppGetAllPackages($filter, $start, $end) {
