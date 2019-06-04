@@ -926,7 +926,27 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "descriptor": descript,
                 "transfert": True
                 }
-        sessionid = self.send_session_command(jidrelay,
+        ###### ici on peut savoir si c'est 1 groupe et si syncthing est demande
+
+        if data['advanced']['grp'] != None and \
+            'syncthing' in data['advanced'] and \
+            data['advanced']['syncthing'] == 1 :
+            # deploiement avec syncthing
+            # call plugin preparesyncthing on master or assesseur master
+            #addition session
+
+            assessor = self.boundjid.bare  # sera definie dans configuration
+            sessionid = self.send_session_command(assessor,
+                                                None,#"deploysyncthing",
+                                                data,
+                                                datasession=None,
+                                                encodebase64=False,
+                                                prefix = "command")
+            result = json.dumps(data, indent = 4)
+        else:
+            data['advanced']['syncthing'] == 0
+            result = None
+            sessionid = self.send_session_command(jidrelay,
                                               "applicationdeploymentjson",
                                               data,
                                               datasession=None,
@@ -959,7 +979,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                        group_uuid=GUID,
                                        startcmd=start_date,
                                        endcmd=end_date,
-                                       macadress=macadress
+                                       macadress=macadress,
+                                       result = result,
+                                       syncthing = data['advanced']['syncthing']
                                        )
         XmppMasterDatabase().addcluster_resources(jidmachine,
                                                   jidrelay,
@@ -2287,12 +2309,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
         """
         pass
 
-    def callpluginmasterfrommmc(self, plugin, data):
+    def callpluginmasterfrommmc(self, plugin, data, sessionid=None):
+        if sessionid == None:
+            sessionid = name_random(5, plugin)
         msg = {}
         msg['from'] = self.boundjid.bare
         msg['body'] = json.dumps({'action': plugin,
                                   'ret': 0,
-                                  'sessionid': name_random(5, plugin),
+                                  'sessionid': sessionid,
                                   'data': data})
         self.callpluginmaster(msg)
 
@@ -2360,7 +2384,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                              prefix=None):
         if prefix is None:
             prefix = "command"
-        logging.debug("Send command and creation session")
         if datasession == None:
             datasession = {}
         command = {'action': action,
@@ -2368,7 +2391,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                    'sessionid': name_randomplus(25, pref=prefix),
                    'data': ''
                    }
-
         if encodebase64:
             command['data'] = base64.b64encode(json.dumps(data))
         else:
@@ -2376,9 +2398,20 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         datasession['data'] = data
         datasession['callbackcommand'] = "commandend"
-        self.session.createsessiondatainfo(command['sessionid'], datasession=data,
-                                           timevalid=time, eventend=eventthread)
-        self.send_message(mto=jid,
-                          mbody=json.dumps(command),
-                          mtype='chat')
+        self.session.createsessiondatainfo(command['sessionid'],
+                                           datasession=data,
+                                           timevalid=time,
+                                           eventend=eventthread)
+        if action is not None:
+            logging.debug("Send command and creation session")
+            if jid == self.boundjid.bare:
+                self.callpluginmasterfrommmc(action, 
+                                            data,
+                                            sessionid = command['sessionid'])
+            else:
+                self.send_message(mto=jid,
+                                mbody=json.dumps(command),
+                                mtype='chat')
+        else:
+            logging.debug("creation session")
         return command['sessionid']

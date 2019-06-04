@@ -22,8 +22,9 @@ import glob
 import os
 import json
 import pprint
+import logging
 
-
+logger = logging.getLogger()
 class Session(Exception):
     pass
 
@@ -52,7 +53,7 @@ class sessiondatainfo:
         self.pathfile = pathfile
         if pathfile == None:
             raise Sessionpathsauvemissing
-        print "SESSION INFO CREATION"
+        logger.debug("SESSION INFO CREATION")
 
     def jsonsession(self):
         session = {'sessionid': self.sessionid,
@@ -68,7 +69,7 @@ class sessiondatainfo:
 
     def updatesessionfromfile(self):
         namefilesession = os.path.join(self.pathfile, self.sessionid)
-        print "SESSION INFO UPDATE SESSION"
+        logger.debug( "SESSION INFO UPDATE SESSION")
         with open(namefilesession, "r") as fichier:
             session = json.load(fichier)
         self.datasession = session['datasession']
@@ -88,7 +89,7 @@ class sessiondatainfo:
     def decrementation(self):
         self.timevalid = self.timevalid - 1
         if self.timevalid <= 0:
-            print "appelle callend"
+            logger.debug( "appelle callend")
             self.callend()
         else:
             self.sauvesession()
@@ -100,7 +101,7 @@ class sessiondatainfo:
         return sessionid == self.sessionid
 
     def callend(self):
-        print "signaler session fin"
+        logger.debug( "signaler session fin")
         if self.handlefunc != None:
             self.handlefunc(self.datasession)
         if self.eventend != None:
@@ -126,7 +127,7 @@ class session:
 
         if not os.path.exists(self.dirsavesession):
             os.makedirs(self.dirsavesession, mode=0007)
-        print "SESSION %s " % self.dirsavesession
+        logger.debug( "SESSION %s " % self.dirsavesession)
         self.loadsessions()
 
     def addsessiondatainfo(self, sessiondatainfo):
@@ -140,7 +141,7 @@ class session:
         return len(self.sessiondata)
 
     def createsessiondatainfo(self, sessionid,  datasession={}, timevalid=10, eventend=None):
-        print "SESSION CREATION UNE SESSION"
+        logger.debug( "SESSION CREATION UNE SESSION")
         obj = sessiondatainfo(sessionid, datasession, timevalid,
                               eventend, pathfile=self.dirsavesession)
         self.sessiondata.append(obj)
@@ -202,7 +203,8 @@ class session:
 
     def __aff__(self, x):
         if x != None:
-            print x
+            logger.info(x)
+            pass
 
     def len(self):
         return len(self.sessiondata)

@@ -19,10 +19,27 @@
 -- MA 02110-1301, USA.
 
 
-ALTER TABLE `msc`.`commands_on_host` 
-ADD INDEX `idx_star_date` (`start_date` ASC);
-ALTER TABLE `msc`.`commands_on_host` 
-ADD INDEX `idx_end_date` (`end_date` ASC);
+
+-- check exist index before creation
+IF (SELECT 1
+    FROM `INFORMATION_SCHEMA`.`STATISTICS`
+    WHERE `TABLE_SCHEMA` = 'msc' 
+    AND `TABLE_NAME` = 'commands_on_host'
+    AND `INDEX_NAME` = 'idx_star_date') IS NULL THEN
+
+    ALTER TABLE `msc`.`commands_on_host` ADD INDEX `idx_star_date` (`start_date` ASC);
+
+END IF;
+
+IF (SELECT 1
+    FROM `INFORMATION_SCHEMA`.`STATISTICS`
+    WHERE `TABLE_SCHEMA` = 'msc' 
+    AND `TABLE_NAME` = 'commands_on_host'
+    AND `INDEX_NAME` = 'idx_end_date') IS NULL THEN
+
+    ALTER TABLE `msc`.`commands_on_host` ADD INDEX `idx_end_date` (`end_date` ASC);
+
+END IF;
 
 
 UPDATE version SET Number = 29;

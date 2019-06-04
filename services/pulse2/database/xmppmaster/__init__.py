@@ -1231,7 +1231,9 @@ class XmppMasterDatabase(DatabaseHelper):
                   group_uuid = None,
                   startcmd = None,
                   endcmd = None,
-                  macadress = None
+                  macadress = None,
+                  result = None,
+                  syncthing = None
                   ):
         """
         parameters
@@ -1270,6 +1272,10 @@ class XmppMasterDatabase(DatabaseHelper):
             new_deploy.start = createcommand
             new_deploy.macadress = macadress
             new_deploy.title = title
+            if result is not None:
+                new_deploy.result = result
+            if syncthing is not None:
+                new_deploy.syncthing = syncthing
             session.add(new_deploy)
             session.commit()
             session.flush()
