@@ -185,6 +185,7 @@ function start_a_command($proxy = array()) {
                                     $rebootrequired,
                                     $shutdownrequired,
                                     $limit_rate_ko,
+                                    0, // Syncthing param set to 0 because it is a single machine
                                     $params);
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
@@ -245,7 +246,8 @@ function start_a_command($proxy = array()) {
                 $command_id = add_command_api($pid, NULL, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
-                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0, 0);
+                    $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0, 0, $syncthing);
                 }
 
                 if (!$active) {
