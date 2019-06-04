@@ -728,13 +728,6 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                 ), array("value" => quick_get('Spoolingselect', True) == 'on' ? 'checked' : '')
             );
 
-        // parameter syncthing deployment for groups ONLY
-        if($_GET['action'] == 'groupmsctabs')
-          $f->add(
-                  new TrFormElement(
-                      _T('Syncthing deployment', 'msc'), new CheckboxTpl('syncthing')
-                  ), array("value" => quick_get('syncthing', True) == 'on' ? 'checked' : '')
-              );
                 $rb = new RadioTpl("spooling");
                 $rb->setChoices(array(_T('high priority', 'msc'), _T('ordinary priority', 'msc')));
                 $rb->setvalues(array('high', 'ordinary'));
@@ -744,6 +737,13 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                     _T('Install Spooling', 'msc'), $rb,array("trid"=>"choixspooling")
                 )
             );
+            // parameter syncthing deployment for groups ONLY
+            if($_GET['action'] == 'groupmsctabs')
+              $f->add(
+                      new TrFormElement(
+                          _T('Syncthing deployment', 'msc'), new CheckboxTpl('syncthing')
+                      ), array("value" => quick_get('syncthing', True) == 'on' ? 'checked' : '')
+                  );
         if (isExpertMode()){
             if( isset($gid)){
                 $nbmachineforexec = array(
@@ -869,7 +869,26 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
     }
 ?>
 
+jQuery("#syncthing").on("click", updateSyncthing);
 
+function updateSyncthing(){
+  if(jQuery("#syncthing").is(":checked"))
+  {
+    jQuery("#Spoolingselect").attr("disabled", true)
+    jQuery("#Spoolingselect").prop("checked", false)
+    jQuery("#limit_rate_ko").attr("disabled", true)
+    jQuery("#Delay_install").attr("disabled", true)
+    jQuery("#Delay_install").prop("checked", false)
+
+    jQuery("#choixmethod").hide()
+    jQuery("#choixspooling").hide()
+  }
+  else{
+    jQuery("#Spoolingselect").attr("disabled", false)
+    jQuery("#limit_rate_ko").attr("disabled", false)
+    jQuery("#Delay_install").attr("disabled", false)
+  }
+}
     function toTimestamp(strDate){
         var datum = Date.parse(strDate);
         return datum/1000;
