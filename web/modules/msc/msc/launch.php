@@ -691,7 +691,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             $f->add(
                 new TrFormElement(
                     _T('Delay install', 'msc'), new CheckboxTpl('Delay_install')
-                ), array("value" => quick_get('Delay_install', True) == 'on' ? 'checked' : '')
+                ), array("value" => quick_get('Delay_install', True) == 'on' ? 'checked' : ''), array('trid' => "tr_delay_install")
             );
             if( isset($gid)){
                 $rb = new RadioTpl("choix_methode_exec");
@@ -724,7 +724,8 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         // parameter avanced spooling priority
         $f->add(
                 new TrFormElement(
-                    _T('Spooling priority', 'msc'), new CheckboxTpl('Spoolingselect')
+                    _T('Spooling priority', 'msc'), new CheckboxTpl('Spoolingselect'),
+                    array('trid' => 'tr_spooling')
                 ), array("value" => quick_get('Spoolingselect', True) == 'on' ? 'checked' : '')
             );
 
@@ -768,7 +769,8 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
             $f->add(
                 new TrFormElement(
-                    _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw')
+                    _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw'),
+                    array('trid' => 'tr_bandwidth')
                 ), array("value" => $max_bw, "required" => true)
             );
         }
@@ -874,21 +876,40 @@ jQuery("#syncthing").on("click", updateSyncthing);
 function updateSyncthing(){
   if(jQuery("#syncthing").is(":checked"))
   {
+    // Desactivate the spooling option
     jQuery("#Spoolingselect").attr("disabled", true)
     jQuery("#Spoolingselect").prop("checked", false)
+    jQuery("#tr_spooling").hide()
+    jQuery("#spooling").attr("disabled", true)
+    jQuery("#Spooling").hide()
+
+    //desactivate the bandwidth option
     jQuery("#limit_rate_ko").attr("disabled", true)
+    jQuery("#tr_bandwidth").hide()
+
+    // Desactivate delay install option
     jQuery("#Delay_install").attr("disabled", true)
     jQuery("#Delay_install").prop("checked", false)
+    jQuery("#idexecdate").hide()
+    jQuery("#tr_delay_install").hide()
 
+    // Desactivate spooling option
     jQuery("#choixmethod").hide()
     jQuery("#choixspooling").hide()
+    jQuery("#spooling").attr("disabled", true)
+
   }
   else{
+    jQuery("#tr_spooling").show()
+    jQuery("#tr_bandwidth").show()
+    jQuery("#tr_delay_install").show()
     jQuery("#Spoolingselect").attr("disabled", false)
     jQuery("#limit_rate_ko").attr("disabled", false)
     jQuery("#Delay_install").attr("disabled", false)
+    jQuery("#spooling").attr("disabled", false)
   }
 }
+
     function toTimestamp(strDate){
         var datum = Date.parse(strDate);
         return datum/1000;
