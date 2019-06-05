@@ -1197,6 +1197,7 @@ class XmppMasterDatabase(DatabaseHelper):
             obj['rebootrequired'] = result.rebootrequired
             obj['shutdownrequired'] = result.shutdownrequired
             obj['limit_rate_ko'] = result.bandwidth
+            obj['syncthing'] = result.syncthing
             if result.params_json is not None:
                 try:
                     params_json = json.loads(result.params_json)
