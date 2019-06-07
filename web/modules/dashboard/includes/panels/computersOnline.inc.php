@@ -50,6 +50,7 @@ class ComputersOnlinePanel extends Panel {
 
         $total_machines = $machines_online + $machines_offline + $total['unregistered'];
           echo <<< ONLINE
+          <div id="computersonline-graph"></div>
           <script>
             var onlineDatas = [
               {"label": "$online_text", "value":$machines_online, "href":"$urlRedirect&machines=online"},
@@ -58,7 +59,7 @@ class ComputersOnlinePanel extends Panel {
               {'label': '$uninventorized_text', 'value': $uninventorized, "href": "#"},
             ];
 
-            donut("computersOnline",onlineDatas, "Total", $total_machines);
+            donut("computersonline-graph",onlineDatas, "Total", $total_machines);
           </script>
 ONLINE;
     }
