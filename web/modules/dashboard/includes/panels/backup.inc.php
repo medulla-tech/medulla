@@ -44,6 +44,7 @@ class BackupPanel extends Panel {
         $uninventorized_text = _T("Uninventoried Machines","dashboard")." : ";
         $uninventorized = get_computer_count_for_dashboard()["unregistered"];
         echo <<< BACKUP
+        <div id="backup-graph"></div>
           <script>
             var backupDatas = [
               {"label": "$configured_text", "value":$machines_backup, "href":"$urlRedirect&backup=yes"},
@@ -52,7 +53,7 @@ class BackupPanel extends Panel {
               {'label': '$uninventorized_text', 'value': $uninventorized, "href": "#"}
             ];
 
-            donut("backup",backupDatas, "Total", $total_machines+$uninventorized);
+            donut("backup-graph",backupDatas, "Total", $total_machines+$uninventorized);
           </script>
 BACKUP;
       }
