@@ -50,73 +50,76 @@ DEFAULT 0;
 -- Table `xmppmaster`.`syncthing_deploy_group`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `xmppmaster`.`syncthing_deploy_group` (
-  `id` INT NOT NULL,
-  `namepartage` VARCHAR(45) NULL,
-  `directory_tmp` VARCHAR(45) NULL,
-  `creation` VARCHAR(45) NULL,
-  `grp_parent` VARCHAR(45) NULL,
-  `cmd` VARCHAR(45) NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `namepartage` VARCHAR(80) NULL,
+  `directory_tmp` VARCHAR(80) NULL,
+  `datecreation`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` VARCHAR(6) NOT NULL DEFAULT 'C',
+  `package` VARCHAR(90) NOT NULL,
+  `grp_parent` INT(11) NOT NULL ,
+  `cmd` INT(11) NOT NULL ,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-
+-- "path": "/var/lib/pulse2/packages/66836348-85c7-11e9-950b-000c292ae18d",
+-- -----------------------------------------------------
+-- Table `xmppmaster`.`syncthing_ars_cluster`
+-- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Table `xmppmaster`.`syncthing_ars_cluster`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `xmppmaster`.`syncthing_ars_cluster` (
-  `id` INT NOT NULL,
-  `ars` VARCHAR(45) NULL,
-  `keypartage` VARCHAR(45) NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `numcluster` INT(11) NOT NULL ,
+  `namecluster` VARCHAR(45) NULL,
+  `liststrcluster` TEXT NOT NULL,
+  `arsmastercluster` VARCHAR(255) NOT NULL,
+  `keypartage` VARCHAR(255) NULL,
   `fk_deploy` INT NOT NULL,
   `type_partage` VARCHAR(45) NULL,
+  `devivesyncthing` VARCHAR(512) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_ARS_cluster_syncthing_deploy_group_syncthing1_idx` (`fk_deploy` ASC),
   CONSTRAINT `fk_syncthing_cluster_deploy_group`
     FOREIGN KEY (`fk_deploy`)
     REFERENCES `xmppmaster`.`syncthing_deploy_group` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+    ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `xmppmaster`.`syncthing_machine`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `xmppmaster`.`syncthing_machine` (
-  `id` INT NOT NULL,
-  `jidmachine` VARCHAR(45) NULL,
-  `uidmachine` VARCHAR(45) NULL,
-  `comment` VARCHAR(45) NULL,
-  `fk_arscluster` INT NOT NULL,
+    `id`            INT NOT NULL AUTO_INCREMENT,
+    `jidmachine`    VARCHAR(255) NOT NULL,
+    `inventoryuuid` INT(11) NULL,
+    `title`         VARCHAR(255) NULL,
+    `jid_relay`     VARCHAR(255) NOT NULL,
+    `cluster`       VARCHAR(1024) NOT NULL,
+    `pathpackage`   VARCHAR(100)  NOT NULL,
+    `state`         VARCHAR(45)  NOT NULL,
+    `sessionid`     VARCHAR(45)  NOT NULL,
+    `start`         TIMESTAMP    NOT NULL,
+    `startcmd`      TIMESTAMP    NOT NULL,
+    `endcmd`        TIMESTAMP    NOT NULL,
+    `user`          VARCHAR(45)  NULL,
+    `command`       INT(11)      NOT NULL,
+    `group_uuid`    INT(11)  NOT NULL,
+    `login`         VARCHAR(45)  NULL,
+    `macadress`     VARCHAR(255) NULL,
+    `syncthing`     INT(11)      NOT NULL,
+    `result`        TEXT         NOT NULL,
+    `comment`       VARCHAR(45) NULL,
+    `fk_arscluster` INT NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_syncthing_machine_ars_cluster`
     FOREIGN KEY (`fk_arscluster`)
     REFERENCES `xmppmaster`.`syncthing_ars_cluster` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-DELIMITER $$
-USE `xmppmaster`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `xmppmaster`.`syncthing_deploy_group_BEFORE_DELETE` 
-BEFORE DELETE ON `syncthing_deploy_group` FOR EACH ROW
-BEGIN
-DELETE FROM syncthing_ars_cluster
-    WHERE syncthing_ars_cluster.fk_deploy = Old.id;
-END$$
-
-
-CREATE DEFINER = CURRENT_USER TRIGGER `xmppmaster`.`syncthing_ars_cluster_BEFORE_DELETE` 
-BEFORE DELETE ON `syncthing_ars_cluster` FOR EACH ROW
-BEGIN
-DELETE FROM syncthing_ars_cluster
-    WHERE syncthing_machine.fk_arscluster = Old.id;
-END$$
-
-
-
-DELIMITER ;
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+  ENGINE = InnoDB;
 
 
 -- ----------------------------------------------------------------------

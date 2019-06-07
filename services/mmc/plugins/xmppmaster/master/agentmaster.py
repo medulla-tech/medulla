@@ -377,14 +377,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def schedulerfunction(self):
         self.manage_scheduler.process_on_event()
-        #call deploy syncthing
-        self.syncthingdeploy()
+
 
     def syncthingdeploy(self):
-        #nanlyse la table deploy et recupere les deployement syncthing.
-        time.sleep(5)
-        ##XmppMasterDatabase().deploysyncthingxmpp(800)
-        pass
+        # anlyse la table deploy et recupere les deployement syncthing.
+        XmppMasterDatabase().deploysyncthingxmpp()
 
     def iqsendpulse(self, to, datain, timeout):
         # send iq synchronous message
@@ -936,6 +933,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 }
         ###### ici on peut savoir si c'est 1 groupe et si syncthing est demande
 
+        state = "DEPLOYMENT START"
         if data['advanced']['grp'] != None and \
             'syncthing' in data['advanced'] and \
             data['advanced']['syncthing'] == 1 :
@@ -952,7 +950,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 prefix = "command")
             result = json.dumps(data, indent = 4)
         else:
-            data['advanced']['syncthing'] == 0
+            data['advanced']['syncthing'] = 0
             result = None
             sessionid = self.send_session_command(jidrelay,
                                               "applicationdeploymentjson",
@@ -979,7 +977,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                        jidmachine,
                                        uuidmachine,
                                        descript['info']['name'],
-                                       "DEPLOYMENT START",
+                                       state,
                                        sessionid,
                                        user="",
                                        login=login,
@@ -999,6 +997,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                   startcmd = start_date,
                                                   endcmd = end_date
                                                   )
+        self.syncthingdeploy()
         return sessionid
 
     def pluginaction(self, rep):

@@ -34,10 +34,16 @@ from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,\
     Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs, ParametersDeploy, \
     Organization, Packages_list, Qa_custom_command,\
-    Cluster_ars, Has_cluster_ars,\
-    Command_action, Command_qa,\
+    Cluster_ars,\
+    Has_cluster_ars,\
+    Command_action,\
+    Command_qa,\
     Syncthingsync,\
-    Organization_ad, Cluster_resources
+    Organization_ad,\
+    Cluster_resources,\
+    Syncthing_ars_cluster,\
+    Syncthing_machine,\
+    Syncthing_deploy_group
 # Imported last
 import logging
 import json
@@ -47,6 +53,7 @@ import os, pwd
 import traceback
 import sys
 import re
+import uuid
 
 class XmppMasterDatabase(DatabaseHelper):
     """
@@ -105,6 +112,118 @@ class XmppMasterDatabase(DatabaseHelper):
         if not ret:
             raise "Database connection error"
         return ret
+
+    # =====================================================================
+    # xmppmaster FUNCTIONS deploy syncthing
+    # =====================================================================
+    @DatabaseHelper._sessionm
+    def setSyncthing_deploy_group(self,
+                                  session,
+                                  namepartage, 
+                                  directory_tmp,
+                                  package,
+                                  cmd,
+                                  grp_parent,
+                                  status = "C"):
+        try:
+            new_Syncthing_deploy_group = Syncthing_deploy_group()
+            new_Syncthing_deploy_group.namepartage = directory_tmp
+            new_Syncthing_deploy_group.directory_tmp =  directory_tmp
+            new_Syncthing_deploy_group.cmd = cmd
+            new_Syncthing_deploy_group.status = status
+            new_Syncthing_deploy_group.package =  package
+            new_Syncthing_deploy_group.grp_parent =  grp_parent
+            session.add(new_Syncthing_deploy_group)
+            session.commit()
+            session.flush()
+            return new_Syncthing_deploy_group.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def setSyncthing_ars_cluster(self,
+                                 session,
+                                 numcluster,
+                                 namecluster,
+                                 liststrcluster,
+                                 arsmastercluster,
+                                 fk_deploy,
+                                 type_partage= "",
+                                 devivesyncthing = "",
+                                 keypartage=''):
+        try:
+            new_Syncthing_ars_cluster = Syncthing_ars_cluster()
+            new_Syncthing_ars_cluster.numcluster = numcluster
+            new_Syncthing_ars_cluster.namecluster = namecluster
+            new_Syncthing_ars_cluster.liststrcluster = liststrcluster
+            new_Syncthing_ars_cluster.arsmastercluster = arsmastercluster
+            new_Syncthing_ars_cluster.keypartage =  keypartage
+            new_Syncthing_ars_cluster.fk_deploy = fk_deploy
+            new_Syncthing_ars_cluster.type_partage =  type_partage
+            new_Syncthing_ars_cluster.devivesyncthing = devivesyncthing
+            session.add(new_Syncthing_ars_cluster)
+            session.commit()
+            session.flush()
+            return new_Syncthing_ars_cluster.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def setSyncthing_machine(self,
+                             session,
+                             jidmachine,
+                             jid_relay,
+                             cluster,
+                             pathpackage,
+                             sessionid,
+                             start,
+                             startcmd,
+                             endcmd,
+                             command,
+                             group_uuid,
+                             result,
+                             fk_arscluster,
+                             syncthing = 1,
+                             state ="",
+                             user ="",
+                             type_partage= "",
+                             title="" ,
+                             inventoryuuid=None, 
+                             login=None,
+                             macadress=None,
+                             comment = ""):
+        try:
+            new_Syncthing_machine = Syncthing_machine()
+            new_Syncthing_machine.jidmachine = jidmachine
+            new_Syncthing_machine.jid_relay = jid_relay
+            new_Syncthing_machine.cluster = cluster
+            new_Syncthing_machine.pathpackage = pathpackage
+            new_Syncthing_machine.state = state
+            new_Syncthing_machine.sessionid = sessionid
+            new_Syncthing_machine.start = start
+            new_Syncthing_machine.startcmd = startcmd
+            new_Syncthing_machine.endcmd = endcmd
+            new_Syncthing_machine.user = user
+            new_Syncthing_machine.command = command
+            new_Syncthing_machine.group_uuid = group_uuid
+            new_Syncthing_machine.result = result
+            new_Syncthing_machine.syncthing = syncthing
+            new_Syncthing_machine.type_partage = type_partage
+            new_Syncthing_machine.title = title
+            new_Syncthing_machine.inventoryuuid = inventoryuuid
+            new_Syncthing_machine.login = login
+            new_Syncthing_machine.macadress = macadress
+            new_Syncthing_machine.comment = comment
+            new_Syncthing_machine.fk_arscluster = fk_arscluster
+            session.add(new_Syncthing_machine)
+            session.commit()
+            session.flush()
+            return new_Syncthing_machine.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
 
     # =====================================================================
     # xmppmaster FUNCTIONS synch syncthing
@@ -1132,13 +1251,156 @@ class XmppMasterDatabase(DatabaseHelper):
                 self.updatedeploystate(id,"DEPLOYMENT DIFFERED")
         return "pause"
 
-    @DatabaseHelper._sessionm
-    def deploysyncthingxmpp(self):
-    """
-     analyse table deploy est etablie les partage syncthing
-    """
+    def deploysyncthingxmpp(self, session):
+        """
+            analyse table deploy est etablie les partages syncthing
+        """
 
-        pass
+        #### todo   recuperedevice des ARS
+        datenow = datetime.now()
+        result = session.query(Deploy).filter( and_( Deploy.startcmd <= datenow,
+                                                     Deploy.syncthing == 1)).all()
+        session.commit()
+        session.flush()
+        list_id_ars={}
+        list_ars = set( )
+        list_cluster = set( )
+        # syncthing et passer a etat (2) prise en compte
+        self.chang_status_deploy_syncthing(datenow)
+
+        cluster = self.clusterlistars()
+        cluster_pris_encharge = []
+        gr_pris_en_charge = -1
+        command_pris_en_charge = -1
+        #deploynum = uuid.uuid4()
+
+        namepartage = ""
+        id_deploy = -1
+        for t in result:
+            if t.group_uuid == "":
+                #machine doit faire partie d un grp
+                continue
+            if command_pris_en_charge == -1:
+                #on deploy qu'une commande sur 1 group a la fois en syncthing
+                command_pris_en_charge = t.command
+                gr_pris_en_charge = t.group_uuid
+            if t.command != command_pris_en_charge or \
+               t.group_uuid != gr_pris_en_charge:
+                continue
+            if t.inventoryuuid.startswith("UUID"):
+                inventoryid = int(t.inventoryuuid[4:])
+            else:
+                inventoryid = int(t.inventoryuuid)
+            if namepartage == "" and id_deploy == -1:
+                namepartage = uuid.uuid4()
+                logging.getLogger().debug( "add partage syncthing [%s] for cmd %s grp %s"%(namepartage,
+                                                                                           command_pris_en_charge,
+                                                                                           gr_pris_en_charge))
+                e = json.loads(t.result)
+                package = os.path.basename( e['path'])
+                id_deploy = self.setSyncthing_deploy_group( namepartage,
+                                                            namepartage,
+                                                            package,
+                                                            command_pris_en_charge,
+                                                            gr_pris_en_charge)
+            if id_deploy == -1:
+                continue
+
+            clusterdata = {}
+            for z in cluster:
+                if t.jid_relay in cluster[z]['listarscluster']:
+                    # on trouve le cluster qui possede ars
+                    clusterdata = cluster[z]
+                    if not z in list_cluster:
+                        list_cluster.add(z)
+                        idars = self.setSyncthing_ars_cluster(  z,#numcluster
+                                                                cluster[z]['namecluster'],
+                                                                ",".join(clusterdata['listarscluster']),
+                                                                t.jid_relay,
+                                                                id_deploy,
+                                                                type_partage="cluster",
+                                                                devivesyncthing="",
+                                                                keypartage='')
+                        for arsinlist in clusterdata['listarscluster']:
+                            list_id_ars[arsinlist]=idars
+
+            #machine= {'id' : t.id, 
+                      #'title' : t.title,
+                      #'jidmachine' : t.jidmachine,
+                      #'jid_relay' :  t.jid_relay,
+                      #'cluster' : clusterdata,
+                      #'pathpackage' : t.pathpackage,
+                      #'state' : t.state,
+                      #'sessionid' : t.sessionid,
+                      #'start' : t.start,
+                      #'startcmd' : t.startcmd,
+                      #'endcmd' : t.endcmd,
+                      #'inventoryuuid' : inventoryid,
+                      #'user' : t.user,
+                      #'command' : t.command,
+                      #'group_uuid' :  t.group_uuid,
+                      #'login' : t.login,
+                      #'macadress' : t.macadress,
+                      #'syncthing' : t.syncthing,
+                      #'result' : t.result }
+            self.setSyncthing_machine(  t.jidmachine,
+                                        t.jid_relay,
+                                        json.dumps(clusterdata),
+                                        t.pathpackage,
+                                        t.sessionid,
+                                        t.start,
+                                        t.startcmd,
+                                        t.endcmd,
+                                        t.command,
+                                        t.group_uuid,
+                                        t.result,
+                                        list_id_ars[t.jid_relay],
+                                        syncthing = t.syncthing,
+                                        state =t.state,
+                                        user =t.user,
+                                        type_partage= "",
+                                        title=t.title,
+                                        inventoryuuid=inventoryid,
+                                        login=t.login,
+                                        macadress=t.macadress,
+                                        comment = "%s_%s"%(command_pris_en_charge,
+                                                           gr_pris_en_charge))
+
+
+    @DatabaseHelper._sessionm
+    def clusterlistars(self, session):
+        sql = """SELECT 
+            GROUP_CONCAT(`jid`) AS 'listarsincluster',
+            cluster_ars.name AS 'namecluster',
+            cluster_ars.id AS 'numcluster'
+        FROM
+            xmppmaster.relayserver
+                INNER JOIN
+            xmppmaster.has_cluster_ars ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
+                INNER JOIN
+            xmppmaster.cluster_ars ON xmppmaster.cluster_ars.id = xmppmaster.has_cluster_ars.id_cluster
+        WHERE
+            `relayserver`.`enabled` = 1
+        GROUP BY xmppmaster.has_cluster_ars.id_cluster;"""
+        listars = session.execute(sql)
+        session.commit()
+        session.flush()
+        cluster={}
+        for z in listars:
+            cluster[z[2]] = { 'listarscluster' : z[0].split(","),
+                             'namecluster' : z[1],
+                             'numcluster' : z[2]}
+        return cluster
+
+    @DatabaseHelper._sessionm
+    def chang_status_deploy_syncthing(self, session, datenow= None):
+        if datenow is None:
+            datenow = datetime.now()
+        sql =""" UPDATE `xmppmaster`.`deploy` SET `syncthing`='2' 
+                WHERE `startcmd`<= "%s" and syncthing = 1;"""%datenow
+        session.execute(sql)
+        session.commit()
+        session.flush()
 
     @DatabaseHelper._sessionm
     def update_status_deploy_end(self, session):
