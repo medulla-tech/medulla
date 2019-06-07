@@ -1,5 +1,4 @@
-mmc-core 4.5.3 UNRELEASED
-==============
+* [BUGFIX]  Add a toggle button for each panel
 * [BUGFIX]  Update topology for d3 V5 
 * [BUGFIX]  Add refresh button for all the audit page
 * [BUGFIX]  Fix the start deployment date
