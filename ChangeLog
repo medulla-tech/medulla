@@ -1,5 +1,5 @@
-* [BUGFIX]  Add a toggle button for each panel
-* [BUGFIX]  Update topology for d3 V5 
+* [FEATURE] Add a toggle button for each panel. For each panel the user's choice is persistant
+* [BUGFIX]  Update topology for d3 V5
 * [BUGFIX]  Add refresh button for all the audit page
 * [BUGFIX]  Fix the start deployment date
 * [BUGFIX]  Add the refresh object for some page
@@ -40,7 +40,7 @@ mmc-core 4.5
 * [BUGFIX]  Add root to share user list
 * [BUGFIX]  Fix sharing Quick Actions
 * [BUGFIX]  Fix Audit page pagination
-* [BUGFIX]  Fix refresh rate in the audit page 
+* [BUGFIX]  Fix refresh rate in the audit page
 * [BUGFIX]  Add ubuntu detection to quick action
 
 mmc-core 4.4.1

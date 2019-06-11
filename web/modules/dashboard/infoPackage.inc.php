@@ -52,6 +52,11 @@ $page = new Page("ajaxPanels", _T("Panels", "dashboard"));
 $page->setOptions(array("visible" => False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("ajaxSessionPanels", _T("Session Panels", "dashboard"));
+$page->setFile("modules/dashboard/main/ajaxSessionPanels.php");
+$page->setOptions(array("visible" => False, "AJAX" =>True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 $MMCApp->addModule($mod);
 
