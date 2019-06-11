@@ -917,7 +917,8 @@ class XmppMasterDatabase(DatabaseHelper):
                            ad_ou_user = "",
                            ad_ou_machine = "",
                            kiosk_presence = "False",
-                           lastuser = ""):
+                           lastuser = "",
+                           keysyncthing = ""):
         try:
             new_machine = Machines()
             new_machine.jid = jid
@@ -938,6 +939,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_machine.ad_ou_machine = ad_ou_machine
             new_machine.kiosk_presence = kiosk_presence
             new_machine.lastuser = lastuser
+            new_machine.keysyncthing = keysyncthing
             session.add(new_machine)
             session.commit()
             session.flush()
@@ -951,8 +953,6 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             return -1
         return new_machine.id
-
-
 
     @DatabaseHelper._sessionm
     def is_jiduser_organization_ad(self, session, jiduser):
@@ -2027,7 +2027,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         classutil="private",
                         packageserverip ="",
                         packageserverport = "",
-                        moderelayserver = "static"):
+                        moderelayserver = "static",
+                        keysyncthing = ""):
         sql = "SELECT count(*) as nb FROM xmppmaster.relayserver where `relayserver`.`nameserver`='%s';"%nameserver
         nb = session.execute(sql)
         session.commit()
@@ -2053,6 +2054,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_relayserver.package_server_ip = packageserverip
                 new_relayserver.package_server_port = packageserverport
                 new_relayserver.moderelayserver = moderelayserver
+                new_relayserver.keysyncthing = keysyncthing
                 session.add(new_relayserver)
                 session.commit()
                 session.flush()

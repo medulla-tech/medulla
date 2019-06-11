@@ -1902,6 +1902,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 # Add relayserver or update status in database
                 logger.debug("** Add relayserver or update status in database %s" %
                              msg['from'].bare)
+                if not 'keysyncthing' in data:
+                    data['keysyncthing'] = ""
                 if data['agenttype'] == "relayserver":
                     data["adorgbyuser"] = ""
                     data["adorgbymachine"] = ""
@@ -1927,7 +1929,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                         data['classutil'],
                                                         data['packageserver']['public_ip'],
                                                         data['packageserver']['port'],
-                                                        moderelayserver=moderelayserver
+                                                        moderelayserver=moderelayserver,
+                                                        keysyncthing=data['keysyncthing']
                                                         )
                     # Recover list of cluster ARS
                     listrelayserver = XmppMasterDatabase(
@@ -1975,7 +1978,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     ad_ou_user=data['adorgbyuser'],
                                                                     ad_ou_machine=data['adorgbymachine'],
                                                                     kiosk_presence=kiosk_presence,
-                                                                    lastuser=data['lastusersession']
+                                                                    lastuser=data['lastusersession'],
+                                                                    keysyncthing=data['keysyncthing']
                                                                     )
                 if idmachine != -1:
                     if useradd != -1:

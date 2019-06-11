@@ -38,6 +38,21 @@ CHANGE COLUMN `group_uuid` `group_uuid` VARCHAR(11) NULL DEFAULT NULL AFTER `com
 CHANGE COLUMN `result` `result` TEXT NULL DEFAULT NULL AFTER `syncthing`;
 
 -- -----------------------------------------------------
+-- Table `xmppmaster`.`machine`
+-- add key device syncthing remote agent
+-- -----------------------------------------------------
+ALTER TABLE `xmppmaster`.`machines` 
+ADD COLUMN `keysyncthing` VARCHAR(70) NULL DEFAULT '\"\"' AFTER `syncthing`;
+
+-- -----------------------------------------------------
+-- Table `xmppmaster`.`relayserver`
+-- add key device syncthing relayserver
+-- -----------------------------------------------------
+
+ALTER TABLE `xmppmaster`.`relayserver` 
+ADD COLUMN `keysyncthing` VARCHAR(75) NULL DEFAULT '\"\"'  AFTER `moderelayserver`;
+
+-- -----------------------------------------------------
 -- Table `xmppmaster`.`.has_login_command`
 -- Valeur par défaut = 0
 -- -----------------------------------------------------
