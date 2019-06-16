@@ -30,8 +30,11 @@ import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
 import traceback
-from utils import name_random
+from utils import name_random, name_randomplus
+
+
 import logging
+from random import randint
 
 logger = logging.getLogger()
 # plugin run wake on lan on mac adress
@@ -43,9 +46,63 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("=====================================================")
     logger.debug(plugin)
     logger.debug("=====================================================")
-    #logger.debug("%s"%json.dumps(data, indent=4))
-    #XmppMasterDatabase().listserverrelay()
+    logger.debug("%s"%json.dumps(data, indent=4))
+    logger.debug("=====================================================")
+    print "listserverrelay"
+    print XmppMasterDatabase().listserverrelay()
+    logger.debug("=====================================================")
+    print "clusterlistars"
+    print XmppMasterDatabase().clusterlistars()
+    
+    logger.debug("=====================================================")
+    print "getMachine_deploy_Syncthing"
+    print XmppMasterDatabase().getMachine_deploy_Syncthing(data['iddeploy'])
+    logger.debug("=====================================================")
+    # le plugin a pour mission de deployer les partage sur les ARS du cluster.
+    # puis propager les partages vers les machines. les machines en fonction de leur ARS attribués.
+    # pour les partages entre ARS, il faut choisir 1 ARS comme le patron.
+    # on appelle cette tache l election syncthing.
+    # On choisie au hazard 1 ars static, dans la liste des ars du cluster.
+    # la function getCluster_deploy_syncthing renvoi les ARS du cluster
+    logger.debug("=====================================================")
+    print "getCluster_deploy_syncthing"
+    clusterobjet = XmppMasterDatabase().getCluster_deploy_syncthing(data['iddeploy'])
+    namedeploy = clusterobjet[0][0]
+    repertoiredeploy = clusterobjet[0][1]
+    packagedeploy = clusterobjet[0][2]
+    clusterdescriptor = json.loads(clusterobjet[0][6])
+    listarsdeploy = clusterdescriptor["listarscluster"]
+    listkey = clusterdescriptor["keysyncthing"]
+    groupdeploy = clusterobjet[0][6]
+    cmddeploy = clusterobjet[0][7]
+    #### election ####
+    nbr_ars_in_cluster = len(listarsdeploy)
+    if nbr_ars_in_cluster == 0:
+        #  probleme a voir le cluster des relay
+        print "probleme a voir le cluster des relay et deploy %s"%data['iddeploy']
+        return
+    indexarselected = randint(0,nbr_ars_in_cluster -1)
+    elected = listarsdeploy[indexarselected]
+    keyelected = listkey[indexarselected]
 
-
-
-
+    datasend = {'action' : "deploysyncthing",
+                "sessionid" : name_randomplus(30, "syncthingclusterinit"),
+                "ret" : 0,
+                "base64" : False,
+                "data" : { "subaction" : "syncthingdeploycluster",
+                        "namedeploy" : namedeploy,
+                        "packagedeploy" : packagedeploy,
+                        "repertoiredeploy" : repertoiredeploy,
+                        "clusterdescriptor" : clusterdescriptor,
+                        "listarsdeploy" : listarsdeploy,
+                        "listkey" : listkey,
+                        "groupdeploy" : groupdeploy,
+                        "cmddeploy" : cmddeploy,
+                        "elected" : elected,
+                        "keyelected" : keyelected,
+                        }
+                }
+    for t in listarsdeploy:
+        xmppobject.send_message(mto=t,
+                                mbody=json.dumps(datasend),
+                                mtype='chat')

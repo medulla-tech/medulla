@@ -378,10 +378,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def schedulerfunction(self):
         self.manage_scheduler.process_on_event()
 
-
     def syncthingdeploy(self):
-        # anlyse la table deploy et recupere les deployement syncthing.
-        XmppMasterDatabase().deploysyncthingxmpp()
+        #nanlyse la table deploy et recupere les deployement syncthing.
+        iddeploy = XmppMasterDatabase().deploysyncthingxmpp()
+        if iddeploy != -1:
+            # les tables sont create
+            # maintenant on appelle le plugin master de syncthing
+            data = { "subaction" : "initialisation",
+                     "iddeploy" : iddeploy }
+            self.callpluginmasterfrommmc("deploysyncthing",
+                                           data,
+                                           sessionid = name_randomplus(25,
+                                               pref="deploysyncthing"))
 
     def iqsendpulse(self, to, datain, timeout):
         # send iq synchronous message
@@ -838,6 +846,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
             jidrelay = objmachine['groupdeploy']
             jidmachine = objmachine['jid']
+            keysyncthing = objmachine['keysyncthing']
             if jidmachine != None and jidmachine != "" and jidrelay != None and jidrelay != "":
 
                 return self.applicationdeploymentjson(jidrelay,
@@ -852,7 +861,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                       end_date=end_date,
                                                       title=title,
                                                       macadress=macadress,
-                                                      GUID=GUID)
+                                                      GUID=GUID,
+                                                      keysyncthing = keysyncthing)
             else:
                 logger.error("deploy %s error on machine %s" % (name, uuidmachine))
                 return False
@@ -886,7 +896,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                   end_date=None,
                                   title=None,
                                   macadress=None,
-                                  GUID=None):
+                                  GUID=None,
+                                  keysyncthing = ""):
         """ For a deployment
         1st action: synchronizes the previous package name
         The package is already on the machine and also in relay server.
