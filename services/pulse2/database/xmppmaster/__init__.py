@@ -3863,7 +3863,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getRelayServerfromjid(self, session, jid):
-        relayserver = session.query(RelayServer).filter(RelayServer.jid == jid)
+        relayserver = session.query(RelayServer).filter(RelayServer.jid.like("%s%%"%jid))
         relayserver = relayserver.first()
         session.commit()
         session.flush()

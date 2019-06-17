@@ -1343,6 +1343,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             'action': 'resultconnectionconf',
             'sessionid': data['sessionid'],
             'data': [],
+            'syncthing' : "",
             'ret': 255
         }
         self.send_message(mto=msg['from'],
@@ -1619,11 +1620,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
             listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2], "static")
             z = [listars[x] for x in listars]
             z1 = sorted(z, key=operator.itemgetter(4))
+            arsjid = XmppMasterDatabase().getRelayServerfromjid("rspulse@pulse")
             # Start relay server agent configuration
             # we order the ARS from the least used to the most used.
             reponse = {'action': 'resultconnectionconf',
                        'sessionid': data['sessionid'],
                        'data': z1,
+                       'syncthing' : "https://%s:8443"%arsjid['ipconnection'],
                        'ret': 0
                        }
             self.send_message(mto=msg['from'],
