@@ -172,7 +172,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         if self.has_option("syncthing", "announce_server"):
             self.announce_server = self.get('syncthing', 'announce_server')
         else:
-            self.announce_server = ""
+            self.announce_server = "default"
 
     def check(self):
         """
