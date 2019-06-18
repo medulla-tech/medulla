@@ -42,7 +42,7 @@ CHANGE COLUMN `result` `result` TEXT NULL DEFAULT NULL AFTER `syncthing`;
 -- add key device syncthing remote agent
 -- -----------------------------------------------------
 ALTER TABLE `xmppmaster`.`machines` 
-ADD COLUMN `keysyncthing` VARCHAR(70) NULL DEFAULT '\"\"' AFTER `syncthing`;
+ADD COLUMN `keysyncthing` VARCHAR(70) NULL DEFAULT '\"\"' AFTER `lastuser`;
 
 -- -----------------------------------------------------
 -- Table `xmppmaster`.`relayserver`
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `xmppmaster`.`syncthing_ars_cluster` (
 CREATE TABLE IF NOT EXISTS `xmppmaster`.`syncthing_machine` (
     `id`            INT NOT NULL AUTO_INCREMENT,
     `jidmachine`    VARCHAR(255) NOT NULL,
-    `inventoryuuid` INT(11) NULL,
+    `inventoryuuid` VARCHAR(45)   NULL,
     `title`         VARCHAR(255) NULL,
     `jid_relay`     VARCHAR(255) NOT NULL,
     `cluster`       VARCHAR(1024) NOT NULL,
