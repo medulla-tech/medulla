@@ -106,11 +106,20 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                         "groupdeploy" : groupdeploy,
                         "cmddeploy" : cmddeploy,
                         "elected" : elected,
-                        "keyelected" : keyelected,
-                        "machinespartage" : partagemachine
+                        "keyelected" : keyelected
                         }
                 }
     for t in listarsdeploy:
+        machines = XmppMasterDatabase().getMachine_deploy_Syncthing(data['iddeploy'], ars = t)
+        partagemachine = []
+        for machine in machines:
+            partagemachine.append({ 'mach' : machine[2],
+                                    "rel"  : machine[1],
+                                    "ses"  : machine[0],
+                                    "devi" : machine[3],
+                                    "result" : machine[4]})
+        datasend['data']['machinespartage'] = partagemachine
+
         xmppobject.send_message(mto=t,
                                 mbody=json.dumps(datasend),
                                 mtype='chat')

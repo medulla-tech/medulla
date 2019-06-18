@@ -253,25 +253,11 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x for x in result]
 
-
-                    #xmppmaster.syncthing_deploy_group.namepartage,
-                    #xmppmaster.syncthing_deploy_group.directory_tmp,
-                    #xmppmaster.syncthing_deploy_group.package,
-                    #xmppmaster.syncthing_deploy_group.grp_parent,
-                    #xmppmaster.syncthing_deploy_group.cmd,
-                    #xmppmaster.syncthing_machine.sessionid,
-                    #xmppmaster.syncthing_machine.jid_relay,
-                    #xmppmaster.syncthing_machine.login,
-                    #xmppmaster.syncthing_machine.result,
-                    #xmppmaster.syncthing_machine.startcmd,
-                    #xmppmaster.syncthing_machine.endcmd,
-                    #xmppmaster.syncthing_machine.jidmachine,
-                    #xmppmaster.machines.keysyncthing
-
     @DatabaseHelper._sessionm
     def getMachine_deploy_Syncthing(self,
                                     session,
-                                    iddeploy):
+                                    iddeploy,
+                                    ars = None):
         sql = """SELECT
                     xmppmaster.syncthing_machine.sessionid,
                     xmppmaster.syncthing_machine.jid_relay,
@@ -293,7 +279,12 @@ class XmppMasterDatabase(DatabaseHelper):
                             ON xmppmaster.machines.uuid_inventorymachine =
                                 xmppmaster.syncthing_machine.inventoryuuid
                 WHERE
-                    xmppmaster.syncthing_deploy_group.id=%s;"""%iddeploy
+                    xmppmaster.syncthing_deploy_group.id=%s """%iddeploy
+        if ars is not None:
+            sql = sql + """ 
+            and
+            xmppmaster.syncthing_machine.jid_relay like '%s'"""%ars
+        sql = sql +";"
         result = session.execute(sql)
         session.commit()
         session.flush()
