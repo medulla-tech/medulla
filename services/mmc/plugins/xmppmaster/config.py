@@ -169,6 +169,10 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
                         setattr(self, keyparameter, valueparameter)
                 else:
                     logging.getLogger().error("Parameter File Plugin %s : missing" % namefile)
+        if self.has_option("syncthing", "announce_server"):
+            self.announce_server = self.get('syncthing', 'announce_server')
+        else:
+            self.announce_server = ""
 
     def check(self):
         """
