@@ -1626,7 +1626,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             reponse = {'action': 'resultconnectionconf',
                        'sessionid': data['sessionid'],
                        'data': z1,
-                       'syncthing' : "https://%s:8443"%arsjid['ipconnection'],
+                       'syncthing' : self.config.announce_server,
                        'ret': 0
                        }
             self.send_message(mto=msg['from'],
