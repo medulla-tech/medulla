@@ -135,7 +135,7 @@ class Syncthing_machine(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     # id = Column(Integer, primary_key=True)
     jidmachine      = Column(String(255), nullable=False)
-    inventoryuuid   = Column(Integer)
+    inventoryuuid   = Column(String(45), nullable=False)
     title           = Column(String(255))
     jid_relay       = Column(String(255), nullable=False)
     cluster         = Column(String(1024), nullable=False)

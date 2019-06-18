@@ -253,25 +253,51 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x for x in result]
 
+
+                    #xmppmaster.syncthing_deploy_group.namepartage,
+                    #xmppmaster.syncthing_deploy_group.directory_tmp,
+                    #xmppmaster.syncthing_deploy_group.package,
+                    #xmppmaster.syncthing_deploy_group.grp_parent,
+                    #xmppmaster.syncthing_deploy_group.cmd,
+                    #xmppmaster.syncthing_machine.sessionid,
+                    #xmppmaster.syncthing_machine.jid_relay,
+                    #xmppmaster.syncthing_machine.login,
+                    #xmppmaster.syncthing_machine.result,
+                    #xmppmaster.syncthing_machine.startcmd,
+                    #xmppmaster.syncthing_machine.endcmd,
+                    #xmppmaster.syncthing_machine.jidmachine,
+                    #xmppmaster.machines.keysyncthing
+
     @DatabaseHelper._sessionm
     def getMachine_deploy_Syncthing(self,
                                     session,
                                     iddeploy):
-        sql = """SELECT 
-                    *
+        sql = """SELECT
+                    xmppmaster.syncthing_machine.sessionid,
+                    xmppmaster.syncthing_machine.jid_relay,
+                    xmppmaster.syncthing_machine.jidmachine,
+                    xmppmaster.machines.keysyncthing,
+                    xmppmaster.syncthing_machine.result
                 FROM
                     xmppmaster.syncthing_deploy_group
                         INNER JOIN
-                    xmppmaster.syncthing_ars_cluster ON xmppmaster.syncthing_deploy_group.id = xmppmaster.syncthing_ars_cluster.fk_deploy
+                    xmppmaster.syncthing_ars_cluster 
+                            ON xmppmaster.syncthing_deploy_group.id =
+                                xmppmaster.syncthing_ars_cluster.fk_deploy
                         INNER JOIN
-                    xmppmaster.syncthing_machine ON xmppmaster.syncthing_ars_cluster.id = xmppmaster.syncthing_machine.fk_arscluster
+                    xmppmaster.syncthing_machine 
+                            ON xmppmaster.syncthing_ars_cluster.id =
+                                xmppmaster.syncthing_machine.fk_arscluster
+                        INNER JOIN
+                    xmppmaster.machines 
+                            ON xmppmaster.machines.uuid_inventorymachine =
+                                xmppmaster.syncthing_machine.inventoryuuid
                 WHERE
-                    xmppmaster.syncthing_deploy_group.id = %s;"""%iddeploy
+                    xmppmaster.syncthing_deploy_group.id=%s;"""%iddeploy
         result = session.execute(sql)
         session.commit()
         session.flush()
         return [x for x in result]
-        pass
 
     # =====================================================================
     # xmppmaster FUNCTIONS synch syncthing
@@ -1337,10 +1363,10 @@ class XmppMasterDatabase(DatabaseHelper):
             if t.command != command_pris_en_charge or \
                t.group_uuid != gr_pris_en_charge:
                 continue
-            if t.inventoryuuid.startswith("UUID"):
-                inventoryid = int(t.inventoryuuid[4:])
-            else:
-                inventoryid = int(t.inventoryuuid)
+            #if t.inventoryuuid.startswith("UUID"):
+                #inventoryid = int(t.inventoryuuid[4:])
+            #else:
+                #inventoryid = int(t.inventoryuuid)
             if namepartage == "" and id_deploy == -1:
                 namepartage = uuid.uuid4()
                 logging.getLogger().debug( "add partage syncthing [%s] for cmd %s grp %s"%(namepartage,
@@ -1385,7 +1411,7 @@ class XmppMasterDatabase(DatabaseHelper):
                       #'start' : t.start,
                       #'startcmd' : t.startcmd,
                       #'endcmd' : t.endcmd,
-                      #'inventoryuuid' : inventoryid,
+                      #'inventoryuuid' : t.inventoryuuid,
                       #'user' : t.user,
                       #'command' : t.command,
                       #'group_uuid' :  t.group_uuid,
@@ -1411,7 +1437,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                             user =t.user,
                                             type_partage= "",
                                             title=t.title,
-                                            inventoryuuid=inventoryid,
+                                            inventoryuuid=t.inventoryuuid,
                                             login=t.login,
                                             macadress=t.macadress,
                                             comment = "%s_%s"%(command_pris_en_charge,

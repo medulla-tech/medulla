@@ -47,16 +47,23 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug(plugin)
     logger.debug("=====================================================")
     logger.debug("%s"%json.dumps(data, indent=4))
-    logger.debug("=====================================================")
-    print "listserverrelay"
-    print XmppMasterDatabase().listserverrelay()
-    logger.debug("=====================================================")
-    print "clusterlistars"
-    print XmppMasterDatabase().clusterlistars()
-    
-    logger.debug("=====================================================")
-    print "getMachine_deploy_Syncthing"
-    print XmppMasterDatabase().getMachine_deploy_Syncthing(data['iddeploy'])
+    #logger.debug("=====================================================")
+    #print "listserverrelay"
+    #print XmppMasterDatabase().listserverrelay()
+    #logger.debug("=====================================================")
+    #print "clusterlistars"
+    #print XmppMasterDatabase().clusterlistars()
+    # logger.debug("=====================================================")
+    # print "getMachine_deploy_Syncthing"
+    machines = XmppMasterDatabase().getMachine_deploy_Syncthing(data['iddeploy'])
+    partagemachine = []
+    for machine in machines:
+        partagemachine.append({ 'mach' : machine[2],
+                                "rel"  : machine[1],
+                                "ses"  : machine[0],
+                                "devi" : machine[3],
+                                "result" : machine[4]})
+
     logger.debug("=====================================================")
     # le plugin a pour mission de deployer les partage sur les ARS du cluster.
     # puis propager les partages vers les machines. les machines en fonction de leur ARS attribués.
@@ -100,6 +107,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                         "cmddeploy" : cmddeploy,
                         "elected" : elected,
                         "keyelected" : keyelected,
+                        "machinespartage" : partagemachine
                         }
                 }
     for t in listarsdeploy:
