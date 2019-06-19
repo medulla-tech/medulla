@@ -919,6 +919,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.error("deploy %s on %s  error : xmppdeploy.json missing" % (name, uuidmachine))
             return False
         objdeployadvanced = XmppMasterDatabase().datacmddeploy(idcommand)
+        
+        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+        print objdeployadvanced
+        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+
         data = {"name": name,
                 "login": login,
                 "idcmd": idcommand,
@@ -943,8 +956,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "transfert": True
                 }
         ###### ici on peut savoir si c'est 1 groupe et si syncthing est demande
-
         state = "DEPLOYMENT START"
+        #data['advanced']['syncthing'] = 1
         if data['advanced']['grp'] != None and \
             'syncthing' in data['advanced'] and \
             data['advanced']['syncthing'] == 1 :
@@ -953,13 +966,24 @@ class MUCBot(sleekxmpp.ClientXMPP):
             #addition session
 
             assessor = self.boundjid.bare  # sera definie dans configuration
-            sessionid = self.send_session_command(assessor,
-                                                None,#"deploysyncthing",
-                                                data,
-                                                datasession=None,
-                                                encodebase64=False,
-                                                prefix = "command")
+            #sessionid = self.send_session_command( assessor,
+                                                   #None,#"deploysyncthing",
+                                                   #data,
+                                                   #datasession=None,
+                                                   #encodebase64=False,
+                                                   #prefix = "command")
+            for ta in range(15): 
+                print "eeeee"
+            sessionid = self.send_session_command( jidmachine,
+                                                   "deploysyncthing",
+                                                   data,
+                                                   datasession=None,
+                                                   encodebase64=False,
+                                                   prefix = "command")
+            print sessionid
+            
             result = json.dumps(data, indent = 4)
+            #state = "DEPLOYMENT SYNCTHING"
         else:
             data['advanced']['syncthing'] = 0
             result = None
@@ -969,6 +993,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                               datasession=None,
                                               encodebase64=False,
                                               prefix = "command")
+
         self.xmpplog("Start deploy on machine %s" % jidmachine,
                      type='deploy',
                      sessionname=sessionid,
@@ -1000,14 +1025,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                        result = result,
                                        syncthing = data['advanced']['syncthing']
                                        )
-        XmppMasterDatabase().addcluster_resources(jidmachine,
-                                                  jidrelay,
-                                                  jidmachine,
-                                                  sessionid,
-                                                  login=login,
-                                                  startcmd = start_date,
-                                                  endcmd = end_date
-                                                  )
+        if data['advanced']['syncthing'] == 0:
+            XmppMasterDatabase().addcluster_resources(jidmachine,
+                                                    jidrelay,
+                                                    jidmachine,
+                                                    sessionid,
+                                                    login=login,
+                                                    startcmd = start_date,
+                                                    endcmd = end_date
+                                                    )
         self.syncthingdeploy()
         return sessionid
 
@@ -1585,8 +1611,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         logger.debug("AD organized by User rule selects relay server for machine %s user %s \n %s" % (
                             data['information']['info']['hostname'], data['information']['users'][0], result))
                         break
-                    
-            
 
             # Network Rule : 9
             elif x[0] == 9:
