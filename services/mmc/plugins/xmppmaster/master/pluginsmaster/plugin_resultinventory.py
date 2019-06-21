@@ -25,16 +25,16 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
         logging.getLogger().debug(plugin)
         logging.getLogger().debug("=====================================================")
 
-        if not 'inventorylistage' in xmppobject.config.__dict__:
-            xmppobject.config.__dict__['inventorylistage'] = False
+        if not 'inventoryslot' in xmppobject.config.__dict__:
+            xmppobject.config.__dict__['inventoryslot'] = False
         else:
-            if isinstance(xmppobject.config.__dict__['inventorylistage'], basestring):
-                if xmppobject.config.__dict__['inventorylistage'].lower() == "true" or\
-                    xmppobject.config.__dict__['inventorylistage'].lower() == "1" or\
-                        xmppobject.config.__dict__['inventorylistage'].lower() == "yes":
-                    xmppobject.config.__dict__['inventorylistage'] = True
+            if isinstance(xmppobject.config.__dict__['inventoryslot'], basestring):
+                if xmppobject.config.__dict__['inventoryslot'].lower() == "true" or\
+                    xmppobject.config.__dict__['inventoryslot'].lower() == "1" or\
+                        xmppobject.config.__dict__['inventoryslot'].lower() == "yes":
+                    xmppobject.config.__dict__['inventoryslot'] = True
                 else:
-                    xmppobject.config.__dict__['inventorylistage'] = False
+                    xmppobject.config.__dict__['inventoryslot'] = False
 
         # Directory inventaire.
         RecvInventory = os.path.abspath(  os.path.join( os.path.dirname( __file__), "..", "RecvInventory"))
@@ -48,7 +48,7 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
 
         inventory = zlib.decompress(base64.b64decode(data['inventory']))
 
-        if xmppobject.config.inventorylistage:
+        if xmppobject.config.inventoryslot:
             # copy fichier to
             namefile = os.path.join(RecvInventory, "%s_%s.xml"%(time.time(), message['from'].user))
 
@@ -80,7 +80,7 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
                                                 '',
                                                 '',
                                                 "Master")
-        if not xmppobject.config.inventorylistage:
+        if not xmppobject.config.inventoryslot:
             timedata = 6
         else:
             timedata = 20
