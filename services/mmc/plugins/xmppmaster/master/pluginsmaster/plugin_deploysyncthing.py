@@ -55,13 +55,14 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     #print XmppMasterDatabase().clusterlistars()
     # logger.debug("=====================================================")
     # print "getMachine_deploy_Syncthing"
-    machines = XmppMasterDatabase().getMachine_deploy_Syncthing(data['iddeploy'])
-    partagemachine = []
-    for machine in machines:
-        partagemachine.append({ 'mach' : machine[2],
-                                "rel"  : machine[1],
-                                "ses"  : machine[0],
-                                "devi" : machine[3]})
+    #machines = XmppMasterDatabase().getMachine_deploy_Syncthing(data['iddeploy'],
+                                                                #status=2)
+    #partagemachine = []
+    #for machine in machines:
+        #partagemachine.append({ 'mach' : machine[2],
+                                #"rel"  : machine[1],
+                                #"ses"  : machine[0],
+                                #"devi" : machine[3]})
 
     logger.debug("=====================================================")
     # le plugin a pour mission de deployer les partage sur les ARS du cluster.
@@ -109,15 +110,22 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                         }
                 }
     for t in listarsdeploy:
-        print "************send to %s"%t
-        print t
-        machines = XmppMasterDatabase().getMachine_deploy_Syncthing(data['iddeploy'], ars = t)
+        updatedata=[]
+        machines = XmppMasterDatabase().getMachine_deploy_Syncthing(data['iddeploy'], 
+                                                                    ars = t, 
+                                                                    status=2)
         partagemachine = []
         for machine in machines:
             partagemachine.append({ 'mach' : machine[2],
                                     "rel"  : machine[1],
                                     "ses"  : machine[0],
                                     "devi" : machine[3]})
+            updatedata.append(machine[5])
+        # chang status machine dans table       
+        XmppMasterDatabase().updateMachine_deploy_Syncthing(updatedata,
+                                                            statusold=2,
+                                                            statusnew=3)
+
         datasend['data']['machinespartage'] = partagemachine
 
         xmppobject.send_message(mto=t,
