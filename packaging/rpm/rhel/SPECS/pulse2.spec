@@ -379,6 +379,7 @@ This package contains the pkgs plugin for the MMC agent.
 %files -n python-mmc-pkgs
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/pkgs.ini
 %python2_sitelib/mmc/plugins/pkgs
+%python2_sitelib/pulse2/database/pkgs
 
 #--------------------------------------------------------------------
 
