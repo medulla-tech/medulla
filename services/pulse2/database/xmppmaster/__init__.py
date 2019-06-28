@@ -198,20 +198,65 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def search_ars_master_cluster_( self,
                                     session,
-                                    idpartage):
+                                    idpartage,
+                                    numcluster):
         result = -1
-        sql="""SELECT xmppmaster.syncthing_ars_cluster.arsmastercluster
+        sql="""SELECT DISTINCT xmppmaster.syncthing_ars_cluster.arsmastercluster
                 FROM
                     xmppmaster.syncthing_ars_cluster
-                where xmppmaster.syncthing_ars_cluster.fk_deploy = %s limit 1;"""%(idpartage)
+                where 
+                    xmppmaster.syncthing_ars_cluster.fk_deploy = %s
+                      and
+                    xmppmaster.syncthing_ars_cluster.numcluster = %s limit 1;"""%(idpartage, numcluster)
         result = session.execute(sql)
         session.commit()
         session.flush()
         resultat =  [x for x in result]
-        if len(resultat) == 0:
+        countresult = len(resultat)
+        
+        if countresult == 0:
             return ""
-        else:
+        elif countresult == 1:
             return resultat[0][0]
+        else:
+            #il y a plusieurs cluster dans le deployement.
+            #il faut donc choisir celui correspondant au cluster
+            ljidars = [x[0] for x in resultat]
+            for jidars in ljidars:
+                print jidars
+                if self.ars_in_num_cluster(jidars, numcluster):
+                    return jidars
+        return ""
+
+    @DatabaseHelper._sessionm
+    def ars_in_num_cluster(self,
+                           session,
+                           jidars,
+                           numcluster):
+        """
+            test si jidars est dans le cluster number.
+        """
+        sql="""SELECT 
+                    id_ars
+                FROM
+                    xmppmaster.has_cluster_ars
+                INNER JOIN
+                    xmppmaster.relayserver
+                        ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
+                where xmppmaster.relayserver.jid like '%s'
+                  and 
+                  xmppmaster.has_cluster_ars.id_cluster= %s;"""%(jidars, 
+                                                                 numcluster )
+        print sql
+
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        resultat =  [x for x in result]
+        if len(resultat) != 0:
+            return True
+        else:
+            return False
 
     @DatabaseHelper._sessionm
     def setSyncthing_ars_cluster(self,
@@ -226,10 +271,11 @@ class XmppMasterDatabase(DatabaseHelper):
                                  keypartage=''):
         try:
             #search ars elu if exist for partage
-            arsmasterclusterexist = self.search_ars_master_cluster_(fk_deploy)
-            ars_cluster_id = self.search_ars_cluster_for_package(fk_deploy, liststrcluster)
+            arsmasterclusterexist = self.search_ars_master_cluster_(fk_deploy,
+                                                                    numcluster)
+            ars_cluster_id = self.search_ars_cluster_for_package(fk_deploy,
+                                                                 liststrcluster)
             if ars_cluster_id == -1:
-                print "creation"
                 new_Syncthing_ars_cluster = Syncthing_ars_cluster()
                 new_Syncthing_ars_cluster.numcluster = numcluster
                 new_Syncthing_ars_cluster.namecluster = namecluster
@@ -309,8 +355,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getCluster_deploy_syncthing(self,
-                          session,
-                          iddeploy):
+                                    session,
+                                    iddeploy):
         sql = """SELECT 
                     xmppmaster.syncthing_deploy_group.namepartage,
                     xmppmaster.syncthing_deploy_group.directory_tmp,
@@ -328,8 +374,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         INNER JOIN
                     xmppmaster.syncthing_machine ON xmppmaster.syncthing_ars_cluster.id = xmppmaster.syncthing_machine.fk_arscluster
                 WHERE
-                    xmppmaster.syncthing_deploy_group.id = %s
-                LIMIT 1;"""%iddeploy
+                    xmppmaster.syncthing_deploy_group.id = %s ;"""%iddeploy
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -1441,9 +1486,10 @@ class XmppMasterDatabase(DatabaseHelper):
         ###TODO search keysyncthing in table machine.
         session.commit()
         session.flush()
+        id_deploylist=set()
         print len(result)
         if len(result) == 0:
-            return -1
+            return list(id_deploylist)
         list_id_ars={}
         list_ars = set( )
         list_cluster = set( )
@@ -1469,6 +1515,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                                         t.command,
                                                         t.group_uuid,
                                                         datecreation = t.endcmd)
+            id_deploylist.add(id_deploy)
             clu =  self.clusternum(t.jid_relay)
             ars_cluster_id = self.setSyncthing_ars_cluster( clu['numcluster'],
                                                             clu['namecluster'],
@@ -1507,7 +1554,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                         comment = "%s_%s"%( t.command,
                                                             t.group_uuid,))
 
-        return id_deploy
+        return list(id_deploylist)
 
     @DatabaseHelper._sessionm
     def clusterlistars(self, session):

@@ -380,16 +380,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def syncthingdeploy(self):
         #nanlyse la table deploy et recupere les deployement syncthing.
-        iddeploy = XmppMasterDatabase().deploysyncthingxmpp()
-        if iddeploy != -1:
-            # les tables sont create
-            # maintenant on appelle le plugin master de syncthing
-            data = { "subaction" : "initialisation",
-                     "iddeploy" : iddeploy }
-            self.callpluginmasterfrommmc("deploysyncthing",
-                                           data,
-                                           sessionid = name_randomplus(25,
-                                               pref="deploysyncthing"))
+        iddeploylist = XmppMasterDatabase().deploysyncthingxmpp()
+        if len(iddeploylist)!= 0:
+            for iddeploy in iddeploylist:
+                # les tables sont create
+                # maintenant on appelle le plugin master de syncthing
+                data = { "subaction" : "initialisation",
+                            "iddeploy" : iddeploy }
+                self.callpluginmasterfrommmc("deploysyncthing",
+                                                data,
+                                                sessionid = name_randomplus(25,
+                                                pref="deploysyncthing"))
 
     def iqsendpulse(self, to, datain, timeout):
         # send iq synchronous message
