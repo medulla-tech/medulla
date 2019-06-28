@@ -380,16 +380,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def syncthingdeploy(self):
         #nanlyse la table deploy et recupere les deployement syncthing.
-        iddeploy = XmppMasterDatabase().deploysyncthingxmpp()
-        if iddeploy != -1:
-            # les tables sont create
-            # maintenant on appelle le plugin master de syncthing
-            data = { "subaction" : "initialisation",
-                     "iddeploy" : iddeploy }
-            self.callpluginmasterfrommmc("deploysyncthing",
-                                           data,
-                                           sessionid = name_randomplus(25,
-                                               pref="deploysyncthing"))
+        iddeploylist = XmppMasterDatabase().deploysyncthingxmpp()
+        if len(iddeploylist)!= 0:
+            for iddeploy in iddeploylist:
+                # les tables sont create
+                # maintenant on appelle le plugin master de syncthing
+                data = { "subaction" : "initialisation",
+                            "iddeploy" : iddeploy }
+                self.callpluginmasterfrommmc("deploysyncthing",
+                                                data,
+                                                sessionid = name_randomplus(25,
+                                                pref="deploysyncthing"))
 
     def iqsendpulse(self, to, datain, timeout):
         # send iq synchronous message
@@ -550,6 +551,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress})
 
         listobjsupp = []
+        nbdeploy=len(self.machineDeploy)
         for deployuuid in self.machineDeploy:
             try:
                 deployobject = self.machineDeploy[deployuuid].pop(0)
@@ -566,7 +568,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     end_date=deployobject['end_date'],
                                                                     title=deployobject['title'],
                                                                     macadress=deployobject['mac'],
-                                                                    GUID=deployobject['GUID'])
+                                                                    GUID=deployobject['GUID'],
+                                                                    nbdeploy=nbdeploy)
             except Exception:
                 listobjsupp.append(deployuuid)
         for objsupp in listobjsupp:
@@ -809,7 +812,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                        end_date=None,
                                                        macadress=None,
                                                        GUID=None,
-                                                       title=None):
+                                                       title=None,
+                                                       nbdeploy=-1):
         name = managepackage.getnamepackagefromuuidpackage(uuidpackage)
         if name is not None:
             return self.applicationdeployjsonuuid(str(uuidmachine),
@@ -821,7 +825,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                   end_date=end_date,
                                                   macadress=macadress,
                                                   GUID=GUID,
-                                                  title=title)
+                                                  title=title,
+                                                  nbdeploy=nbdeploy)
         else:
             logger.warn('%s package is not a xmpp package : (The json xmpp descriptor is missing)')
             return False
@@ -838,7 +843,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                   end_date=None,
                                   title=None,
                                   macadress=None,
-                                  GUID=None):
+                                  GUID=None,
+                                  nbdeploy=-1):
 
         try:
             # search group deploy and jid machine
@@ -862,7 +868,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                       title=title,
                                                       macadress=macadress,
                                                       GUID=GUID,
-                                                      keysyncthing = keysyncthing)
+                                                      keysyncthing = keysyncthing,
+                                                      nbdeploy=nbdeploy)
             else:
                 logger.error("deploy %s error on machine %s" % (name, uuidmachine))
                 return False
@@ -897,7 +904,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                   title=None,
                                   macadress=None,
                                   GUID=None,
-                                  keysyncthing = ""):
+                                  keysyncthing = "",
+                                  nbdeploy=-1):
         """ For a deployment
         1st action: synchronizes the previous package name
         The package is already on the machine and also in relay server.
@@ -919,19 +927,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.error("deploy %s on %s  error : xmppdeploy.json missing" % (name, uuidmachine))
             return False
         objdeployadvanced = XmppMasterDatabase().datacmddeploy(idcommand)
-        
-        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-        print objdeployadvanced
-        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-        print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-
         data = {"name": name,
                 "login": login,
                 "idcmd": idcommand,
@@ -953,46 +948,36 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "Devent": "DEPLOYMENT START",
                 "uuid": uuidmachine,
                 "descriptor": descript,
-                "transfert": True
+                "transfert": True,
+                "nbdeploy" : nbdeploy
                 }
         ###### ici on peut savoir si c'est 1 groupe et si syncthing est demande
         state = "DEPLOYMENT START"
         #data['advanced']['syncthing'] = 1
         if data['advanced']['grp'] != None and \
             'syncthing' in data['advanced'] and \
-            data['advanced']['syncthing'] == 1 :
+            data['advanced']['syncthing'] == 1 and \
+                nbdeploy > 2:
             # deploiement avec syncthing
             # call plugin preparesyncthing on master or assesseur master
-            #addition session
-
-            assessor = self.boundjid.bare  # sera definie dans configuration
-            #sessionid = self.send_session_command( assessor,
-                                                   #None,#"deploysyncthing",
-                                                   #data,
-                                                   #datasession=None,
-                                                   #encodebase64=False,
-                                                   #prefix = "command")
-            for ta in range(15): 
-                print "eeeee"
+            # addition session
+            # send deploy descriptor to machine
             sessionid = self.send_session_command( jidmachine,
                                                    "deploysyncthing",
                                                    data,
                                                    datasession=None,
                                                    encodebase64=False,
                                                    prefix = "command")
-            print sessionid
-            
-            result = json.dumps(data, indent = 4)
             #state = "DEPLOYMENT SYNCTHING"
         else:
             data['advanced']['syncthing'] = 0
             result = None
             sessionid = self.send_session_command(jidrelay,
-                                              "applicationdeploymentjson",
-                                              data,
-                                              datasession=None,
-                                              encodebase64=False,
-                                              prefix = "command")
+                                                  "applicationdeploymentjson",
+                                                  data,
+                                                  datasession=None,
+                                                  encodebase64=False,
+                                                  prefix = "command")
 
         self.xmpplog("Start deploy on machine %s" % jidmachine,
                      type='deploy',
@@ -1040,7 +1025,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def pluginaction(self, rep):
         if 'sessionid' in rep.keys():
             sessiondata = self.session.sessionfromsessiondata(rep['sessionid'])
-            if 'shell' in sessiondata.getdatasession().keys() and sessiondata.getdatasession()['shell']:
+            if 'shell' in sessiondata.getdatasession().keys() and \
+                sessiondata.getdatasession()['shell']:
                 self.send_message(mto=jid.JID("commandrelay@localhost"),
                                   mbody=json.dumps(rep),
                                   mtype='chat')

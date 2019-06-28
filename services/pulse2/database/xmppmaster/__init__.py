@@ -119,27 +119,144 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def setSyncthing_deploy_group(self,
                                   session,
-                                  namepartage, 
+                                  namepartage,
                                   directory_tmp,
-                                  package,
+                                  packagename,
                                   cmd,
                                   grp_parent,
-                                  status = "C"):
+                                  status = "C",
+                                  datecreation= None):
         try:
-            new_Syncthing_deploy_group = Syncthing_deploy_group()
-            new_Syncthing_deploy_group.namepartage = namepartage
-            new_Syncthing_deploy_group.directory_tmp =  directory_tmp
-            new_Syncthing_deploy_group.cmd = cmd
-            new_Syncthing_deploy_group.status = status
-            new_Syncthing_deploy_group.package =  package
-            new_Syncthing_deploy_group.grp_parent =  grp_parent
-            session.add(new_Syncthing_deploy_group)
-            session.commit()
-            session.flush()
-            return new_Syncthing_deploy_group.id
+            idpartage =  self.search_partage_for_package(packagename)
+            print idpartage
+            if idpartage == -1:
+                print "add partage"
+                #il faut cree le partage.
+                new_Syncthing_deploy_group = Syncthing_deploy_group()
+                new_Syncthing_deploy_group.namepartage = namepartage
+                new_Syncthing_deploy_group.directory_tmp =  directory_tmp
+                new_Syncthing_deploy_group.cmd = cmd
+                new_Syncthing_deploy_group.status = status
+                new_Syncthing_deploy_group.package =  packagename
+                new_Syncthing_deploy_group.grp_parent =  grp_parent
+                if datecreation:
+                    new_Syncthing_deploy_group.datecreation =  datecreation
+                session.add(new_Syncthing_deploy_group)
+                session.commit()
+                session.flush()
+                return new_Syncthing_deploy_group.id
+            else:
+                return idpartage
         except Exception, e:
             logging.getLogger().error(str(e))
             return -1
+
+
+    @DatabaseHelper._sessionm
+    def search_partage_for_package( self,
+                                    session,
+                                    packagename):
+        result = -1
+        sql=""" SELECT 
+                    xmppmaster.syncthing_deploy_group.id
+                FROM
+                    xmppmaster.syncthing_deploy_group
+                WHERE
+                    xmppmaster.syncthing_deploy_group.package LIKE '%s'
+                        AND xmppmaster.syncthing_deploy_group.datecreation > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                limit 1;"""%(packagename)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        resultat =  [x for x in result]
+        if len(resultat) == 0:
+            return -1
+        else:
+            return resultat[0][0]
+
+    @DatabaseHelper._sessionm
+    def search_ars_cluster_for_package( self,
+                                    session,
+                                    idpartage,
+                                    ars):
+        sql="""SELECT
+                xmppmaster.syncthing_ars_cluster.id
+                FROM
+                    xmppmaster.syncthing_ars_cluster
+                where xmppmaster.syncthing_ars_cluster.fk_deploy = %s and
+                xmppmaster.syncthing_ars_cluster.liststrcluster like '%s'
+                LIMIT 1;"""%(idpartage,   ars )
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        resultat =  [x for x in result]
+        if len(resultat) == 0:
+            return -1
+        else:
+            return resultat[0][0]
+
+    @DatabaseHelper._sessionm
+    def search_ars_master_cluster_( self,
+                                    session,
+                                    idpartage,
+                                    numcluster):
+        result = -1
+        sql="""SELECT DISTINCT xmppmaster.syncthing_ars_cluster.arsmastercluster
+                FROM
+                    xmppmaster.syncthing_ars_cluster
+                where 
+                    xmppmaster.syncthing_ars_cluster.fk_deploy = %s
+                      and
+                    xmppmaster.syncthing_ars_cluster.numcluster = %s limit 1;"""%(idpartage, numcluster)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        resultat =  [x for x in result]
+        countresult = len(resultat)
+        
+        if countresult == 0:
+            return ""
+        elif countresult == 1:
+            return resultat[0][0]
+        else:
+            #il y a plusieurs cluster dans le deployement.
+            #il faut donc choisir celui correspondant au cluster
+            ljidars = [x[0] for x in resultat]
+            for jidars in ljidars:
+                print jidars
+                if self.ars_in_num_cluster(jidars, numcluster):
+                    return jidars
+        return ""
+
+    @DatabaseHelper._sessionm
+    def ars_in_num_cluster(self,
+                           session,
+                           jidars,
+                           numcluster):
+        """
+            test si jidars est dans le cluster number.
+        """
+        sql="""SELECT 
+                    id_ars
+                FROM
+                    xmppmaster.has_cluster_ars
+                INNER JOIN
+                    xmppmaster.relayserver
+                        ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
+                where xmppmaster.relayserver.jid like '%s'
+                  and 
+                  xmppmaster.has_cluster_ars.id_cluster= %s;"""%(jidars, 
+                                                                 numcluster )
+        print sql
+
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        resultat =  [x for x in result]
+        if len(resultat) != 0:
+            return True
+        else:
+            return False
 
     @DatabaseHelper._sessionm
     def setSyncthing_ars_cluster(self,
@@ -153,19 +270,30 @@ class XmppMasterDatabase(DatabaseHelper):
                                  devivesyncthing = "",
                                  keypartage=''):
         try:
-            new_Syncthing_ars_cluster = Syncthing_ars_cluster()
-            new_Syncthing_ars_cluster.numcluster = numcluster
-            new_Syncthing_ars_cluster.namecluster = namecluster
-            new_Syncthing_ars_cluster.liststrcluster = liststrcluster
-            new_Syncthing_ars_cluster.arsmastercluster = arsmastercluster
-            new_Syncthing_ars_cluster.keypartage =  keypartage
-            new_Syncthing_ars_cluster.fk_deploy = fk_deploy
-            new_Syncthing_ars_cluster.type_partage =  type_partage
-            new_Syncthing_ars_cluster.devivesyncthing = devivesyncthing
-            session.add(new_Syncthing_ars_cluster)
-            session.commit()
-            session.flush()
-            return new_Syncthing_ars_cluster.id
+            #search ars elu if exist for partage
+            arsmasterclusterexist = self.search_ars_master_cluster_(fk_deploy,
+                                                                    numcluster)
+            ars_cluster_id = self.search_ars_cluster_for_package(fk_deploy,
+                                                                 liststrcluster)
+            if ars_cluster_id == -1:
+                new_Syncthing_ars_cluster = Syncthing_ars_cluster()
+                new_Syncthing_ars_cluster.numcluster = numcluster
+                new_Syncthing_ars_cluster.namecluster = namecluster
+                new_Syncthing_ars_cluster.liststrcluster = liststrcluster
+                if arsmasterclusterexist == "":
+                    new_Syncthing_ars_cluster.arsmastercluster = arsmastercluster
+                else:
+                    new_Syncthing_ars_cluster.arsmastercluster = arsmasterclusterexist
+                new_Syncthing_ars_cluster.keypartage =  keypartage
+                new_Syncthing_ars_cluster.fk_deploy = fk_deploy
+                new_Syncthing_ars_cluster.type_partage =  type_partage
+                new_Syncthing_ars_cluster.devivesyncthing = devivesyncthing
+                session.add(new_Syncthing_ars_cluster)
+                session.commit()
+                session.flush()
+                return new_Syncthing_ars_cluster.id
+            else:
+                return ars_cluster_id
         except Exception, e:
             logging.getLogger().error(str(e))
             return -1
@@ -197,8 +325,8 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             new_Syncthing_machine = Syncthing_machine()
             new_Syncthing_machine.jidmachine = jidmachine
-            new_Syncthing_machine.jid_relay = jid_relay
             new_Syncthing_machine.cluster = cluster
+            new_Syncthing_machine.jid_relay = jid_relay
             new_Syncthing_machine.pathpackage = pathpackage
             new_Syncthing_machine.state = state
             new_Syncthing_machine.sessionid = sessionid
@@ -227,8 +355,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getCluster_deploy_syncthing(self,
-                          session,
-                          iddeploy):
+                                    session,
+                                    iddeploy):
         sql = """SELECT 
                     xmppmaster.syncthing_deploy_group.namepartage,
                     xmppmaster.syncthing_deploy_group.directory_tmp,
@@ -246,24 +374,50 @@ class XmppMasterDatabase(DatabaseHelper):
                         INNER JOIN
                     xmppmaster.syncthing_machine ON xmppmaster.syncthing_ars_cluster.id = xmppmaster.syncthing_machine.fk_arscluster
                 WHERE
-                    xmppmaster.syncthing_deploy_group.id = %s
-                LIMIT 1;"""%iddeploy
+                    xmppmaster.syncthing_deploy_group.id = %s ;"""%iddeploy
         result = session.execute(sql)
         session.commit()
         session.flush()
         return [x for x in result]
 
     @DatabaseHelper._sessionm
+    def updateMachine_deploy_Syncthing(self,
+                                    session,
+                                    listidmachine,
+                                    statusold=2,
+                                    statusnew=3):
+        if isintance(listidmachine, (int,str)):
+            listidmachine = [listidmachine]
+        if len(listidmachine) == 0:
+            return
+        listidmachine = ",".join([ str(x) for x in listidmachine]) 
+
+        sql = """UPDATE
+                    xmppmaster.syncthing_machine
+                SET
+                    xmppmaster.syncthing_machine.syncthing = %s
+                where
+                    syncthing = %s
+                    and
+                    id in (%s);"""%(statusnew, statusold, listidmachine)
+        print sql
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
     def getMachine_deploy_Syncthing(self,
                                     session,
                                     iddeploy,
-                                    ars = None):
+                                    ars = None,
+                                    status = None):
         sql = """SELECT
                     xmppmaster.syncthing_machine.sessionid,
                     xmppmaster.syncthing_machine.jid_relay,
                     xmppmaster.syncthing_machine.jidmachine,
                     xmppmaster.machines.keysyncthing,
-                    xmppmaster.syncthing_machine.result
+                    xmppmaster.syncthing_machine.result,
+                    xmppmaster.syncthing_machine.id
                 FROM
                     xmppmaster.syncthing_deploy_group
                         INNER JOIN
@@ -281,9 +435,13 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     xmppmaster.syncthing_deploy_group.id=%s """%iddeploy
         if ars is not None:
-            sql = sql + """ 
+            sql = sql + """
             and
-            xmppmaster.syncthing_machine.jid_relay like '%s'"""%ars
+            xmppmaster.syncthing_machine.jid_relay like '%s' """%ars
+        if status is not None:
+            sql = sql + """
+            and
+            xmppmaster.syncthing_machine.syncthing = %s """%status
         sql = sql +";"
         result = session.execute(sql)
         session.commit()
@@ -1316,128 +1474,87 @@ class XmppMasterDatabase(DatabaseHelper):
                 self.updatedeploystate(id,"DEPLOYMENT DIFFERED")
         return "pause"
 
+    @DatabaseHelper._sessionm
     def deploysyncthingxmpp(self, session):
         """
             analyse table deploy est etablie les partages syncthing
         """
-
         #### todo   recuperedevice des ARS
         datenow = datetime.now()
         result = session.query(Deploy).filter( and_( Deploy.startcmd <= datenow,
                                                      Deploy.syncthing == 1)).all()
+        ###TODO search keysyncthing in table machine.
         session.commit()
         session.flush()
+        id_deploylist=set()
+        print len(result)
         if len(result) == 0:
-            return -1
+            return list(id_deploylist)
         list_id_ars={}
         list_ars = set( )
         list_cluster = set( )
         # syncthing et passer a etat (2) prise en compte
         self.chang_status_deploy_syncthing(datenow)
-
         cluster = self.clusterlistars()
+        ###### keysyncthing  = getMachinefromjid(jid)
         cluster_pris_encharge = []
         gr_pris_en_charge = -1
         command_pris_en_charge = -1
-        #deploynum = uuid.uuid4()
-
-        namepartage = ""
-        id_deploy = -1
+      
         for t in result:
             if t.group_uuid == "":
                 #machine doit faire partie d un grp
                 continue
-            if command_pris_en_charge == -1:
-                #on deploy qu'une commande sur 1 group a la fois en syncthing
-                command_pris_en_charge = t.command
-                gr_pris_en_charge = t.group_uuid
-            if t.command != command_pris_en_charge or \
-               t.group_uuid != gr_pris_en_charge:
-                continue
-            #if t.inventoryuuid.startswith("UUID"):
-                #inventoryid = int(t.inventoryuuid[4:])
-            #else:
-                #inventoryid = int(t.inventoryuuid)
-            if namepartage == "" and id_deploy == -1:
-                namepartage = uuid.uuid4()
-                logging.getLogger().debug( "add partage syncthing [%s] for cmd %s grp %s"%(namepartage,
-                                                                                           command_pris_en_charge,
-                                                                                           gr_pris_en_charge))
-                e = json.loads(t.result)
-                package = os.path.basename( e['path'])
-                id_deploy = self.setSyncthing_deploy_group( namepartage,
-                                                            namepartage,
-                                                            package,
-                                                            command_pris_en_charge,
-                                                            gr_pris_en_charge)
-            if id_deploy == -1:
-                continue
-
+            
+            e = json.loads(t.result)
+            package = os.path.basename( e['path'])
+            #creation du partage si celui ci n'existe pas.
+            id_deploy = self.setSyncthing_deploy_group( t.title,
+                                                        uuid.uuid4(),#namepartage
+                                                        package,
+                                                        t.command,
+                                                        t.group_uuid,
+                                                        datecreation = t.endcmd)
+            id_deploylist.add(id_deploy)
+            clu =  self.clusternum(t.jid_relay)
+            ars_cluster_id = self.setSyncthing_ars_cluster( clu['numcluster'],
+                                                            clu['namecluster'],
+                                                            t.jid_relay,
+                                                            clu['choose'],
+                                                            id_deploy,
+                                                            type_partage="cluster",
+                                                            devivesyncthing="",
+                                                            keypartage='')
+            cluster = self.clusterlistars()
             clusterdata = {}
             for z in cluster:
                 if t.jid_relay in cluster[z]['listarscluster']:
                     # on trouve le cluster qui possede ars
                     clusterdata = cluster[z]
-                    if not z in list_cluster:
-                        list_cluster.add(z)
-                        idars = self.setSyncthing_ars_cluster(  z,#numcluster
-                                                                cluster[z]['namecluster'],
-                                                                ",".join(clusterdata['listarscluster']),
-                                                                t.jid_relay,
-                                                                id_deploy,
-                                                                type_partage="cluster",
-                                                                devivesyncthing="",
-                                                                keypartage='')
-                        for arsinlist in cluster[z]['listarscluster']:
-                            list_id_ars[arsinlist]=idars
-            #keysyncthing  = self.getMachinefromjid(t.jidmachine)['keysyncthing']
-            #machine= {'id' : t.id, 
-                      #'title' : t.title,
-                      #'jidmachine' : t.jidmachine,
-                      #'jid_relay' :  t.jid_relay,
-                      #'cluster' : clusterdata,
-                      #'pathpackage' : t.pathpackage,
-                      #'state' : t.state,
-                      #'sessionid' : t.sessionid,
-                      #'start' : t.start,
-                      #'startcmd' : t.startcmd,
-                      #'endcmd' : t.endcmd,
-                      #'inventoryuuid' : t.inventoryuuid,
-                      #'user' : t.user,
-                      #'command' : t.command,
-                      #'group_uuid' :  t.group_uuid,
-                      #'login' : t.login,
-                      #'macadress' : t.macadress,
-                      #'syncthing' : t.syncthing,
-                      #'result' : t.result }
-            if  t.jid_relay in list_id_ars:
-                self.setSyncthing_machine(  t.jidmachine,
-                                            t.jid_relay,
-                                            json.dumps(clusterdata),
-                                            t.pathpackage,
-                                            t.sessionid,
-                                            t.start,
-                                            t.startcmd,
-                                            t.endcmd,
-                                            t.command,
-                                            t.group_uuid,
-                                            t.result,
-                                            list_id_ars[t.jid_relay],
-                                            syncthing = t.syncthing,
-                                            state =t.state,
-                                            user =t.user,
-                                            type_partage= "",
-                                            title=t.title,
-                                            inventoryuuid=t.inventoryuuid,
-                                            login=t.login,
-                                            macadress=t.macadress,
-                                            comment = "%s_%s"%(command_pris_en_charge,
-                                                            gr_pris_en_charge))
-            else:
-                # message pour signaler un soucis avec un ars du cluster
-                # 1 ars doit être eteint
-                pass
-        return id_deploy
+            self.setSyncthing_machine(  t.jidmachine,
+                                        t.jid_relay,
+                                        json.dumps(clusterdata),
+                                        package,
+                                        t.sessionid,
+                                        t.start,
+                                        t.startcmd,
+                                        t.endcmd,
+                                        t.command,
+                                        t.group_uuid,
+                                        t.result,
+                                        ars_cluster_id,
+                                        syncthing = t.syncthing,
+                                        state =t.state,
+                                        user =t.user,
+                                        type_partage= "",
+                                        title=t.title,
+                                        inventoryuuid=t.inventoryuuid,
+                                        login=t.login,
+                                        macadress=t.macadress,
+                                        comment = "%s_%s"%( t.command,
+                                                            t.group_uuid,))
+
+        return list(id_deploylist)
 
     @DatabaseHelper._sessionm
     def clusterlistars(self, session):
