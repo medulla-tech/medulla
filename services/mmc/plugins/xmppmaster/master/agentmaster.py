@@ -978,8 +978,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                   datasession=None,
                                                   encodebase64=False,
                                                   prefix = "command")
-
-        self.xmpplog("Start deploy on machine %s" % jidmachine,
+        if data['advanced']['syncthing'] == 0:
+            msglog = "Start deploy on machine %s" % jidmachine
+        else:
+            msglog = "Start deploy Syncthing on machine %s" % jidmachine
+        self.xmpplog(msglog,
                      type='deploy',
                      sessionname=sessionid,
                      priority=-1,
