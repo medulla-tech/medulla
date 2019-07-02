@@ -372,6 +372,7 @@ Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 Requires:   python2-requests
+Requires:   python2-unidecode
 
 %description -n python-mmc-pkgs
 This package contains the pkgs plugin for the MMC agent.
