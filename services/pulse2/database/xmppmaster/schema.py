@@ -102,7 +102,7 @@ class Syncthing_deploy_group(Base, XmppMasterDBObj):
     #id = Column(Integer, primary_key=True)
     namepartage = Column(String(80), nullable=False)
     directory_tmp = Column(String(80), nullable=False)
-    datecreation = Column(DateTime, default=datetime.datetime.now)
+    dateend = Column(DateTime, default=datetime.datetime.now)
     package= Column(String(90), nullable=False)
     status = Column(String(6), nullable=False)
     grp_parent = Column(Integer, nullable=False)
