@@ -497,6 +497,28 @@ class MUCBot(sleekxmpp.ClientXMPP):
             #print "______________________________"
 
     def scheduledeploy(self):
+        ##test
+        #self.syncthingdeploy()
+        # nettoyage deploiement syncthing.
+        # cherche tout les deploiement syncthing de terminer. et fait 1 netoyage sur le reseau et sur les machines
+        deploys_to_clean = XmppMasterDatabase().get_syncthing_deploy_to_clean()
+        if type(deploys_to_clean) is list:
+            for deploydata in deploys_to_clean:
+                ars = XmppMasterDatabase().get_list_ars_from_cluster(deploydata['numcluster'])
+                datasend = {  "action" : "deploysyncthing",
+                          "sessionid" : name_random(5, "cleansyncthing"),
+                          "data" : {
+                                    "subaction" : "cleandeploy",
+                                    "iddeploy" : deploydata['directory_tmp'],
+                                    "jidmachines" : deploydata['jidmachines'],
+                                    "jidrelays" : deploydata['jidrelays']
+                            }
+                        }
+                for relay in ars:
+                    self.send_message(mto=relay['jid'],
+                                      mbody=json.dumps(datasend), 
+                                      mtype='chat')
+                XmppMasterDatabase().refresh_syncthing_deploy_clean(deploydata['id'])
         listobjsupp = []
         #search deploy to rumming
         resultdeploymachine, wolupdatemachine = MscDatabase().deployxmpp(800)

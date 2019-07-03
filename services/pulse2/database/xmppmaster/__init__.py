@@ -4328,22 +4328,26 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_syncthing_deploy_to_clean(self, session):
-
-        ret = session.query(distinct(Syncthing_deploy_group.id),
-                            Syncthing_machine.jidmachine,
-                            Syncthing_ars_cluster.numcluster,
-                            Syncthing_deploy_group.directory_tmp).\
-                                join(Syncthing_ars_cluster, Syncthing_deploy_group.id == Syncthing_ars_cluster.fk_deploy).\
-                                join(Syncthing_machine, Syncthing_ars_cluster.id == Syncthing_machine.fk_arscluster).\
-                            filter(cast(Syncthing_deploy_group.dateend, Date) < datetime.today())
-        ret=ret.all()
-
-        if ret is None:
-            ret = []
-        else:
-            ret = [{'id': share[0], 'jidmachine': share[1], 'numcluster': share[2], 'directory_tmp': share[3]} for share in ret]
-
-
+        sql="""
+    SELECT 
+        distinct xmppmaster.syncthing_deploy_group.id,
+        GROUP_CONCAT(xmppmaster.syncthing_machine.jidmachine) AS jidmachines,
+        GROUP_CONCAT(xmppmaster.syncthing_machine.jid_relay) AS jidrelays,
+        xmppmaster.syncthing_ars_cluster.numcluster,
+        syncthing_deploy_group.directory_tmp
+    FROM
+        xmppmaster.syncthing_deploy_group
+            INNER JOIN
+        xmppmaster.syncthing_ars_cluster ON xmppmaster.syncthing_deploy_group.id = xmppmaster.syncthing_ars_cluster.fk_deploy
+            INNER JOIN
+        xmppmaster.syncthing_machine ON xmppmaster.syncthing_ars_cluster.fk_deploy = xmppmaster.syncthing_deploy_group.id
+    WHERE
+        xmppmaster.syncthing_deploy_group.dateend < NOW()
+    GROUP BY xmppmaster.syncthing_ars_cluster.numcluster; """
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        ret = [{'id': x[0], 'jidmachines': x[1], 'jidrelays': x[2], 'numcluster': x[3],  'directory_tmp': x[4]} for x in result]
         return ret
 
     @DatabaseHelper._sessionm
