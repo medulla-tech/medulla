@@ -4329,7 +4329,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_syncthing_deploy_to_clean(self, session):
         sql="""
-    SELECT 
+    SELECT
         distinct xmppmaster.syncthing_deploy_group.id,
         GROUP_CONCAT(xmppmaster.syncthing_machine.jidmachine) AS jidmachines,
         GROUP_CONCAT(xmppmaster.syncthing_machine.jid_relay) AS jidrelays,
@@ -4368,4 +4368,6 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def refresh_syncthing_deploy_clean(self, session, iddeploy):
         sql = """DELETE FROM `xmppmaster`.`syncthing_deploy_group` WHERE  id= %s;"""%iddeploy
-        pass
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
