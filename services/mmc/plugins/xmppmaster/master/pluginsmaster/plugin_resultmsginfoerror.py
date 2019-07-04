@@ -25,11 +25,14 @@
 import logging
 
 DEBUGPULSEPLUGIN = 25
-plugin = {"VERSION": "1.0", "NAME": "resultmsginfoerror", "TYPE": "master"}
+plugin = {"VERSION": "1.1", "NAME": "resultmsginfoerror", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
     if 'msg' in data:
-        logging.getLogger().error("Error plugin : %s" % data['msg'])
+        if ret >= 50 and ret <= 80:
+            logging.getLogger().warning("Warning plugin : %s" % data['msg'])
+        else:
+            logging.getLogger().error("Error plugin : %s" % data['msg'])
     pass
