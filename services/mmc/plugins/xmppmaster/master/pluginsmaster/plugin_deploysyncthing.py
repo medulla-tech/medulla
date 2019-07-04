@@ -115,7 +115,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                         "ses"  : machine[0],
                                         "devi" : machine[3]})
                 updatedata.append(machine[5])
-            # chang status machine dans table       
+            # chang status machine dans table
             XmppMasterDatabase().updateMachine_deploy_Syncthing(updatedata,
                                                                 statusold=2,
                                                                 statusnew=3)
