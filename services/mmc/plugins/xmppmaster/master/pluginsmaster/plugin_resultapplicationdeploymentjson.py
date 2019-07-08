@@ -41,13 +41,13 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     try:
         if ret == 0:
             logger.debug("Succes deploy on %s Package "\
-                ": %s Session : %s" % (data['jidmachine'],
+                ": %s Session : %s" % (message['from'],
                                        data['descriptor']['info']['name'],
                                        sessionid))
             XmppMasterDatabase().delete_resources(sessionid)
         else:
             logger.error("Error deploy on %s Package "\
-                ": %s Session : %s" % (data['jidmachine'],
+                ": %s Session : %s" % (message['from'],
                                        data['descriptor']['info']['name'],
                                        sessionid))
     except:
