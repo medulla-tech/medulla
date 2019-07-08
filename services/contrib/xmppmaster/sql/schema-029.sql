@@ -27,6 +27,8 @@ START TRANSACTION;
 -- -----------------------------------------------------
 ALTER TABLE xmppmaster.syncthing_deploy_group
 CHANGE COLUMN datecreation dateend timestamp NOT NULL;
+ALTER TABLE xmppmaster.syncthing_deploy_group
+ADD COLUMN nbtransfert INT NOT NULL DEFAULT 0 AFTER `cmd`;
 
 -- ----------------------------------------------------------------------
 -- Database version

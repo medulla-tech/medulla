@@ -134,7 +134,8 @@ class XmppMasterDatabase(DatabaseHelper):
                                   cmd,
                                   grp_parent,
                                   status = "C",
-                                  dateend= None, deltatime=60):
+                                  dateend= None, 
+                                  deltatime=60):
         try:
             idpartage =  self.search_partage_for_package(packagename)
             print idpartage
@@ -148,10 +149,10 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_Syncthing_deploy_group.status = status
                 new_Syncthing_deploy_group.package =  packagename
                 new_Syncthing_deploy_group.grp_parent =  grp_parent
-                if dateend:
-                    new_Syncthing_deploy_group.dateend =  dateend
+                if dateend is None:
+                    dateend = datetime.now() + timedelta(minutes=deltatime)
                 else:
-                    dateend = datetime.today() + timedelta(minutes=deltatime)
+                    new_Syncthing_deploy_group.dateend =  dateend + timedelta(minutes=deltatime)
                 session.add(new_Syncthing_deploy_group)
                 session.commit()
                 session.flush()
@@ -162,6 +163,19 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             return -1
 
+    @DatabaseHelper._sessionm
+    def incr_count_transfert_terminate(self,
+                                       session,
+                                       iddeploy):
+        sql = """UPDATE xmppmaster.syncthing_deploy_group 
+                SET
+                    nbtransfert = nbtransfert + 1
+                WHERE
+                    id = %s;"""%(iddeploy)
+        print "incr_count_transfert_terminate", sql
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
 
     @DatabaseHelper._sessionm
     def search_partage_for_package( self,
@@ -378,7 +392,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.syncthing_ars_cluster.numcluster,
                     xmppmaster.syncthing_machine.cluster,
                     xmppmaster.syncthing_deploy_group.grp_parent,
-                    xmppmaster.syncthing_deploy_group.cmd
+                    xmppmaster.syncthing_deploy_group.cmd,
+                    xmppmaster.syncthing_deploy_group.id
                 FROM
                     xmppmaster.syncthing_deploy_group
                         INNER JOIN

@@ -107,6 +107,7 @@ class Syncthing_deploy_group(Base, XmppMasterDBObj):
     status = Column(String(6), nullable=False)
     grp_parent = Column(Integer, nullable=False)
     cmd = Column(Integer, nullable=False)
+    nbtransfert = Column(Integer, nullable=False, default = 0)
 
 class Syncthing_ars_cluster(Base, XmppMasterDBObj):
     # ====== Table name =========================
