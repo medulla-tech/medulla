@@ -371,6 +371,10 @@ class RpcProxy(RpcProxyI):
         return ret
 
 
+    def getnotdeploybyuserrecent(self, login, time, min, max, filt):
+        return MscDatabase().getnotdeploybyuserrecent(login, time, min, max, filt)
+
+
     #def add_command_quick(self, cmd, target, desc, gid = None):
         #"""
         #Deprecated
