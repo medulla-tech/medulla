@@ -178,6 +178,87 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._sessionm
+    def update_transfert_progress(self,
+                                      session,
+                                      progress,
+                                      iddeploy,
+                                      jidmachine):
+        """ this function update this level progress"""
+        sql="""
+                UPDATE xmppmaster.syncthing_machine
+                        INNER JOIN
+                    syncthing_ars_cluster 
+                      ON xmppmaster.syncthing_ars_cluster.id =
+                             xmppmaster.syncthing_machine.fk_arscluster
+                        INNER JOIN
+                    xmppmaster.syncthing_deploy_group
+                      ON xmppmaster.syncthing_deploy_group.id =
+                      xmppmaster.syncthing_ars_cluster.fk_deploy
+                SET
+                    xmppmaster.syncthing_machine.progress = IF(%s>=xmppmaster.syncthing_machine.progress,%s,xmppmaster.syncthing_machine.progress)
+                WHERE
+                    xmppmaster.syncthing_deploy_group.id = %s
+                        AND xmppmaster.syncthing_machine.jidmachine LIKE '%s';"""%(progress,
+                                                                                   progress,
+                                                                                   iddeploy,
+                                                                                   jidmachine)
+        print "update_transfert_progress", sql
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+
+
+    @DatabaseHelper._sessionm
+    def get_ars_for_pausing_syncthing(self,
+                                      session,
+                                      nbtransfert = 2):
+        sql = """SELECT 
+                    xmppmaster.syncthing_deploy_group.id,
+                    xmppmaster.syncthing_ars_cluster.liststrcluster,
+                    xmppmaster.syncthing_deploy_group.directory_tmp,
+                    xmppmaster.syncthing_deploy_group.nbtransfert,
+                    xmppmaster.syncthing_ars_cluster.id
+                FROM
+                    xmppmaster.syncthing_deploy_group
+                        INNER JOIN
+                    xmppmaster.syncthing_ars_cluster
+                      ON 
+                         xmppmaster.syncthing_deploy_group.id = 
+                         xmppmaster.syncthing_ars_cluster.fk_deploy
+                WHERE
+                    xmppmaster.syncthing_deploy_group.nbtransfert >= %s
+                    and 
+                    xmppmaster.syncthing_ars_cluster.keypartage != "pausing";"""%(nbtransfert)
+        print "get_ars_for_pausing_syncthing", sql
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        if result is None:
+            return -1
+        else:
+            re =  [y for y in [x for x in result]]
+            for arssyncthing in re:
+                self.update_ars_status(arssyncthing[4], "pausing")
+        return re
+
+    @DatabaseHelper._sessionm
+    def update_ars_status( self,
+                           session,
+                           idars,
+                           keystatus="pausing"):
+        sql = """UPDATE 
+                    xmppmaster.syncthing_ars_cluster
+                SET
+                    xmppmaster.syncthing_ars_cluster.keypartage = '%s'
+                WHERE
+                    xmppmaster.syncthing_ars_cluster.id = '%s';"""%(keystatus, idars)
+        print "update_ars_status", sql
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+
+
+    @DatabaseHelper._sessionm
     def search_partage_for_package( self,
                                     session,
                                     packagename):
@@ -4355,9 +4436,11 @@ class XmppMasterDatabase(DatabaseHelper):
     FROM
         xmppmaster.syncthing_deploy_group
             INNER JOIN
-        xmppmaster.syncthing_ars_cluster ON xmppmaster.syncthing_deploy_group.id = xmppmaster.syncthing_ars_cluster.fk_deploy
+        xmppmaster.syncthing_ars_cluster 
+            ON xmppmaster.syncthing_deploy_group.id = xmppmaster.syncthing_ars_cluster.fk_deploy
             INNER JOIN
-        xmppmaster.syncthing_machine ON xmppmaster.syncthing_ars_cluster.fk_deploy = xmppmaster.syncthing_deploy_group.id
+        xmppmaster.syncthing_machine 
+            ON xmppmaster.syncthing_ars_cluster.fk_deploy = xmppmaster.syncthing_deploy_group.id
     WHERE
         xmppmaster.syncthing_deploy_group.dateend < NOW()
     GROUP BY xmppmaster.syncthing_ars_cluster.numcluster; """
@@ -4370,10 +4453,10 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_list_ars_from_cluster(self, session, cluster=0):
         sql ="""SELECT jid, nameserver, keysyncthing  FROM xmppmaster.has_cluster_ars
-                inner join
-                xmppmaster.relayserver ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
-
-                where id_cluster = %s;"""%cluster
+                INNER JOIN
+                xmppmaster.relayserver 
+                    ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
+                WHERE id_cluster = %s;"""%cluster
         result = session.execute(sql)
         session.commit()
         session.flush()

@@ -50,8 +50,15 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
         # this action is calling for machine after terminate transfert syncthing
         if "counttransfertterminate" in data["subaction"]:
             # on ajoute 1 au compteur syncthing dans le groupe.
-            #XmppMasterDatabase().incr_count_transfert_terminate(data["iddeploybase"])
-            pass
+            XmppMasterDatabase().incr_count_transfert_terminate(data["iddeploybase"])
+            XmppMasterDatabase().update_transfert_progress( 100, 
+                                                            data["iddeploybase"],
+                                                            message['from'])
+        elif "completion" in data["subaction"]:
+            # on update le niveau de progressions de transfert
+            XmppMasterDatabase().update_transfert_progress( data["completion"],
+                                                            data["iddeploybase"],
+                                                            message['from'])
         elif "initialisation" in data["subaction"]:
             #logger.debug("%s"%json.dumps(data, indent=4))
             #logger.debug("=====================================================")
@@ -84,7 +91,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                     ##  probleme a voir le cluster des relay
                     #print "probleme a voir le cluster des relay et deploy %s"%data['iddeploy']
                     #return
-
                 #{"listarscluster": ["rspulse@pulse/dev-mmc"], "keysyncthing": ["IGQIW2T-OHEFK3P-JHSB6KH-OHHYABS-YEWJRVC-M6F4NLZ-D6U55ES-VXIVMA3"], "namecluster": "Public", "numcluster": 1}
 
                 #indexarselected = randint(0,nbr_ars_in_cluster -1)
