@@ -42,12 +42,22 @@ $p->display();
 
 $refresh = new RefreshButton();
 $refresh->display();
+
+print "<br/><br/><br/>";
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
+print "<br/><br/><br/>";
+$ajax_notd = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusnotlaunched"), "container_notd", array('login' => $_SESSION['login'], 'currenttasks' => '1'), 'formRunning_notd'  );
+$ajax_notd->setRefresh($refresh->refreshtime());
+$ajax_notd->display();
+print "<br/><br/><br/>";
+$ajax_notd->displayDivToUpdate();
+
+print "<br/><br/><br/>";
 $ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => $_SESSION['login']), 'formRunning1' );
 $ajax1->setRefresh($refresh->refreshtime());
 $ajax1->display();

@@ -287,6 +287,11 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("ajaxstatusxmppscheduler",_T("List computer deploy","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
