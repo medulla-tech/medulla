@@ -793,7 +793,7 @@ class MscDatabase(DatabaseHelper):
         """
         datenow = datetime.datetime.now()
         sqlselect="""
-        SELECT 
+        SELECT
                 `commands`.`id` AS commands_id,
                 `commands`.`title` AS commands_title,
                 `commands`.`creator` AS commands_creator,
@@ -815,17 +815,79 @@ class MscDatabase(DatabaseHelper):
                 `phase` ON `phase`.fk_commands_on_host = `commands_on_host`.`id`
             WHERE
                 `phase`.`name` = 'execute'
-                    AND 
+                    AND
                 `phase`.`state` = 'ready'
-                    AND 
+                    AND
                 commands.start_date <= '%s'
-                    AND 
+                    AND
                 commands.end_date > DATE_SUB("%s",
                                              INTERVAL %s SECOND);"""%(datenow,
-                                                                      datenow, 
+                                                                      datenow,
                                                                       intervalsearch)
         resultsql = self.db.execute(sqlselect)
         return resultsql
+
+    @DatabaseHelper._sessionm
+    def getnotdeploybyuserrecent(self, session, login, intervalsearch, min, max, filt):
+        """
+            select deploys not deployed
+        """
+
+        datenow = datetime.datetime.now()
+        delta = datetime.timedelta(seconds=intervalsearch)
+        datereduced = datenow - delta
+
+        query = session.query(Commands.id,
+                              func.count(Commands.id).label('nb_machine'),
+                              Commands.title,
+                              Commands.creator,
+                              Commands.package_id,
+                              Commands.start_date,
+                              Commands.end_date,
+                              CommandsOnHost.id,
+                              Target.target_name,
+                              Target.target_uuid,
+                              Target.id_group,
+                              Target.target_macaddr)\
+        .join(CommandsOnHost, Commands.id == CommandsOnHost.fk_commands)\
+        .join(Target, Target.id == CommandsOnHost.fk_target)\
+        .join(CommandsOnHostPhase, CommandsOnHostPhase.fk_commands_on_host == CommandsOnHost.id)\
+        .filter(CommandsOnHostPhase.name == 'upload')\
+        .filter(CommandsOnHostPhase.state == 'ready')\
+        .filter(Commands.end_date > datereduced)
+
+        if filt:
+            query = query.filter(or_(Commands.title.like("%%%s%%"%filt), \
+                                     Commands.creator.like("%%%s%%"%filt),\
+                                     Commands.package_id.like("%%%s%%"%filt),\
+                                     Commands.start_date.like("%%%s%%"%filt),\
+                                     Commands.end_date.like("%%%s%%"%filt),\
+                                     CommandsOnHost.id.like("%%%s%%"%filt),\
+                                     Target.target_name.like("%%%s%%"%filt),\
+                                     Target.target_uuid.like("%%%s%%"%filt),\
+                                     Target.id_group.like("%%%s%%"%filt),\
+                                     Target.target_macaddr.like("%%%s%%"%filt)))
+
+        query = query.group_by(Commands.id, CommandsOnHostPhase.state)
+        nb = query.count()
+        query = query.offset(int(min)).limit(int(max)-int(min))
+        res = query.all()
+
+        result = {'total': nb, 'elements':[]}
+        for element in res:
+
+            result['elements'].append({'cmd_id': element[0],
+                           'nb_machines': element[1],
+                           'package_name': element[2],
+                           'login': element[3],
+                           'package_uuid': element[4],
+                           'date_start': element[5],
+                           'date_end': element[6],
+                           'machine_name':element[8],
+                           'uuid_inventory':element[9],
+                           'gid': element[10],
+                           'mac_address': element[11]})
+        return result
 
     @DatabaseHelper._sessionm
     def __dispach_deploy(self, session, q):
@@ -839,11 +901,11 @@ class MscDatabase(DatabaseHelper):
             presence = XmppMasterDatabase().getPresenceuuid(x.target_target_uuid)
             if presence:
                 self.logger.debug("machine %s [%s] presente for deploy package %s"%(x.target_target_name,
-                                                                                    x.target_target_uuid, 
+                                                                                    x.target_target_uuid,
                                                                                     x.commands_package_id))
             else:
                 self.logger.debug("machine %s [%s] missing for deploy package %s"%(x.target_target_name,
-                                                                                    x.target_target_uuid, 
+                                                                                    x.target_target_uuid,
                                                                                     x.commands_package_id))
             deployobject = {'pakkageid': str(x.commands_package_id),
                             'commandid':  x.commands_id,
