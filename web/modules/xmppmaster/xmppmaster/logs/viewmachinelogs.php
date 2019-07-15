@@ -412,7 +412,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
 
     if ( $info['len'] != 0)
     {
-        if(isset($info['objectdeploy'][0]['state']) && 
+        if(isset($info['objectdeploy'][0]['state']) &&
             (   strpos($info['objectdeploy'][0]['state'], "DEPLOYMENT START")!==false ||
                 $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
             if ( !$boolterminate && !isset($_POST['bStop'])){
@@ -553,11 +553,13 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
             echo "</thead>";
                 echo "<tbody>";
         foreach($infodeploy['log'] as $line){
+            $scalardate = get_object_vars($info['objectdeploy'][0]['start'])['scalar'];
+            $formateddate = substr($scalardate, 0,4).'-'.substr($scalardate, 4,2).'-'.substr($scalardate, 6,2).' '.substr($scalardate, 9);
             $startsteparray= get_object_vars( $line['date']);
             $datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);
             echo '<tr class="alternate">';
                 echo "<td>";
-                    echo $datestartstep;
+                    echo $formateddate;
                 echo "</td>";
                 echo "<td>";
                 echo '<span  style="padding-left:10px;">';
