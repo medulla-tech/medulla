@@ -987,6 +987,24 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "transfert": True,
                 "nbdeploy" : nbdeploy
                 }
+
+        #TODO on verify dans la table syncthing machine
+        # si il n'y a pas un partage syncthing en cour pour cette machine
+        # si c'est la cas on ignore cette machine car deja en deploy.
+        #res = XmppMasterDatabase().deploy_machine_partage_exist( jidmachine,
+                                        #descript['info']['packageUuid'])
+        #if len(res) > 0:
+            #print "il existe 1 deployement de ce package [%s]"\
+                #"sur la machine [%s]"%(descript['info']['packageUuid'],
+                                       #jidmachine)
+            #logger.debug("il existe 1 deployement de ce package [%s]"\
+                #"sur la machine [%s]"%(descript['info']['packageUuid'],
+                                       #jidmachine))
+            #return
+
+        # todo rattacher 1 deployement d'un package d'une machine si partage syncthing sur cluster existe deja pour d'autre machines.
+        # res = XmppMasterDatabase().getnumcluster_for_ars(jidrelay)
+
         ###### ici on peut savoir si c'est 1 groupe et si syncthing est demande
         state = "DEPLOYMENT START"
         #data['advanced']['syncthing'] = 1

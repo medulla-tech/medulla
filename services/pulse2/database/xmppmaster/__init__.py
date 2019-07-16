@@ -461,6 +461,26 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
+    def getnumcluster_for_ars(self,
+                            session,
+                            jidrelay):
+        sql = """SELECT 
+                    xmppmaster.has_cluster_ars.id_cluster
+                FROM
+                    xmppmaster.relayserver
+                        INNER JOIN
+                    xmppmaster.has_cluster_ars 
+                      ON `has_cluster_ars`.`id_ars` = xmppmaster.relayserver.id
+                WHERE
+                    `relayserver`.`jid` LIKE '%s' 
+                LIMIT 1;"""%jidrelay
+        print "getnumclusterforars", sql
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result][0]
+
+    @DatabaseHelper._sessionm
     def getCluster_deploy_syncthing(self,
                                     session,
                                     iddeploy):
@@ -1954,6 +1974,28 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
         return new_deploy.id
+
+    @DatabaseHelper._sessionm
+    def deploy_machine_partage_exist(self,
+                                    session,
+                                    jidmachine,
+                                    uidpackage):
+        sql = """SELECT
+                    *
+                FROM
+                    xmppmaster.syncthing_machine
+                        INNER JOIN
+                    xmppmaster.syncthing_ars_cluster ON xmppmaster.syncthing_ars_cluster.id = xmppmaster.syncthing_machine.fk_arscluster
+                        INNER JOIN
+                    xmppmaster.syncthing_deploy_group ON xmppmaster.syncthing_deploy_group.id = xmppmaster.syncthing_ars_cluster.fk_deploy
+                WHERE
+                    xmppmaster.syncthing_machine.jidmachine LIKE '%s'
+                        AND xmppmaster.syncthing_deploy_group.package LIKE '%s'
+                LIMIT 1;"""%(jidmachine, uidpackage)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result][0]
 
 
     @DatabaseHelper._sessionm
