@@ -75,7 +75,7 @@ class Update_Remote_Agent:
             os.path.join(self.dir_agent_base, 'agentversion')).replace("\n","").replace("\r","").strip()
         self.directory["version_agent"] = hashlib.md5(self.directory["version"]).hexdigest()
         listmd5.append(self.directory["version_agent"])
-        list_script_python_for_update = ['agentxmpp.py', 'launcher.py', 'connectionagent.py']
+        list_script_python_for_update = ['agentxmpp.py', 'launcher.py', 'connectionagent.py', 'replicator.py']
 
         # for fichiername in [ x for x in os.listdir(self.dir_agent_base) if x[-3:]== ".py"]:
         for fichiername in list_script_python_for_update:
