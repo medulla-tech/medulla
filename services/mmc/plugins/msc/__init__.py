@@ -446,40 +446,10 @@ class RpcProxy(RpcProxyI):
             for cmd_id, start_date in cmds.items():
                 logging.getLogger().info('Expires command %d' % cmd_id)
                 end_date = time.strftime("%Y-%m-%d %H:%M:%S")
-                #self.extend_command(cmd_id, start_date, end_date)
+
             # Delete convergence groups if any
             DyngroupDatabase().delete_package_convergence(pid)
         return True
-
-    #def extend_command(self, cmd_id, start_date, end_date):
-        #"""
-        #Custom command re-scheduling.
-
-        #@param cmd_id: Commands id
-        #@type cmd_id: int
-
-        #@param start_date: new start date of command
-        #@type start_date: str
-
-        #@param end_date: new end date of command
-        #@type end_date: str
-        #"""
-        #d = defer.maybeDeferred(MscDatabase().extend_command,
-                                #cmd_id,
-                                #start_date,
-                                #end_date)
-        #return d
-
-
-    #def delete_bundle(self, bundle_id):
-        #"""
-        #Deletes a bundle with all related sub-elements.
-
-        #@param bundle_id: Bundle id
-        #@type bundle_id: int
-        #"""
-        #return MscDatabase().deleteBundle(bundle_id)
-
 
     def delete_command(self, cmd_id):
         """
