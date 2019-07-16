@@ -287,8 +287,8 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxstatusxmppscheduler",_T("List computer deploy","xmppmaster"));
-$page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php");
+$page = new Page("ajaxstatusnotlaunched",_T("List of not launched deployments","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
