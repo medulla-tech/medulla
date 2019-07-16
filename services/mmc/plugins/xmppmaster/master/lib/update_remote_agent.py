@@ -86,7 +86,7 @@ class Update_Remote_Agent:
             self.directory["lib_agent"][fichiername] = hashlib.md5(file_get_contents(
                 os.path.join(self.dir_agent_base, 'lib', fichiername))).hexdigest()
             listmd5.append(self.directory["lib_agent"][fichiername])
-        for fichiername in [x for x in os.listdir(os.path.join(self.dir_agent_base, 'script')) if x[-3:] == ".py"]:
+        for fichiername in [x for x in os.listdir(os.path.join(self.dir_agent_base, 'script')):
             self.directory["script_agent"][fichiername] = hashlib.md5(file_get_contents(
                 os.path.join(self.dir_agent_base, 'script', fichiername))).hexdigest()
             listmd5.append(self.directory["script_agent"][fichiername])
