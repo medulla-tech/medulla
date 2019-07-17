@@ -1023,6 +1023,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                    encodebase64=False,
                                                    prefix = "command")
             #state = "DEPLOYMENT SYNCTHING"
+            result = json.dumps(data, indent = 4)
         else:
             data['advanced']['syncthing'] = 0
             result = None
