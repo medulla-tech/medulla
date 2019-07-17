@@ -41,6 +41,11 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
     }
 </style>
 <?php
+
+function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy , $cmddeploy_id ){
+    $urlRedirect1 = urlStrRedirect("base/computers/createMachinesStaticGroupdeploy&gid=".$g_id."&login=".$login_deploy."&cmd_id=".$cmddeploy_id."&type=".$typegroup);
+    return $urlRedirect1;
+}
 $nbdeploy = 0;
 $group = getPGobject($gid, true);
 $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
@@ -50,6 +55,7 @@ $p->display();
 //FROM MSC BASE
 // search nbmachinegroupe in group, and nbdeploydone already deployed from mmc
 $resultfrommsc = xmlrpc_getstatbycmd($cmd_id);
+
 $MSC_nb_mach_grp_for_deploy  = $resultfrommsc['nbmachine'];
 $MSC_nb_mach_grp_done_deploy     = $resultfrommsc['nbdeploydone'];
 //$nb_deployer_machine_yet_from_msc = $MSC_nb_mach_grp_for_deploy - $MSC_nb_mach_grp_for_deploy;
@@ -69,6 +75,7 @@ $timestampnow = time();
 $resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,
                                                                 date("Y-m-d H:i:s",
                                                                 $start_date));
+
 $total_machine_from_deploy     = $resultfromdeploy['totalmachinedeploy'];
 $machine_error_from_deploy     = $resultfromdeploy['machineerrordeploy'];
 $machine_success_from_deploy   = $resultfromdeploy['machinesuccessdeploy'];
@@ -108,7 +115,30 @@ if ($timestampnow > ($end_date)){
     $end_deploy = 1;
 };
 
+$info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
+$statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'], $_GET['cmd_id'] );
+
+
+if ($statsyncthing['package'] == ""){
+    echo " Partage syncthing terminer ou inexistant";
+}else{
+    echo "Partage syncthing on package ". $statsyncthing['package'];
+    echo "nombre participant est".$statsyncthing['nbmachine'];
+    echo "progress transfert is".$statsyncthing['progresstransfert'];
+}
+
+if ($info['len'] != 0){
+    $uuid=$info['objectdeploy'][0]['inventoryuuid'];
+    $state=$info['objectdeploy'][0]['state'];
+    $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
+    $result=$info['objectdeploy'][0]['result'];
+
+    $resultatdeploy =json_decode($result, true);
+    $host=$info['objectdeploy'][0]['host'];
+    $jidmachine=$info['objectdeploy'][0]['jidmachine'];
+    $jid_relay=$info['objectdeploy'][0]['jid_relay'];
+}
 
 echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date);
 if ($bool_convergence_grp_on_package_from_msc !=0 ){
@@ -116,14 +146,10 @@ if ($bool_convergence_grp_on_package_from_msc !=0 ){
 }
 echo "<br>";
 
-
-function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy , $cmddeploy_id ){
-    $urlRedirect1 = urlStrRedirect("base/computers/createMachinesStaticGroupdeploy&gid=".$g_id."&login=".$login_deploy."&cmd_id=".$cmddeploy_id."&type=".$typegroup);
-    return $urlRedirect1;
+if (isset($resultatdeploy['infoslist'][0]['packageUuid'])){
+    echo "Package : ".$resultatdeploy['infoslist'][0]['name']." [". $resultatdeploy['infoslist'][0]['packageUuid']."]";
+    echo "<br>";
 }
-
-$info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
-
 
 if (!isset($_GET['refresh'])){
     $_GET['refresh'] = 1;
@@ -138,6 +164,10 @@ $_GET['id']=isset($_GET['id']) ? $_GET['id'] : "";
 $_GET['ses']=isset($_GET['ses']) ? $_GET['ses'] : "";
 $_GET['hos']=isset($_GET['hos']) ? $_GET['hos'] : "";
 $_GET['sta']=isset($_GET['sta']) ? $_GET['sta'] : "";
+
+
+
+
 foreach ($info['objectdeploy'] as $val)
 {
    $_GET['id']  .= $val['inventoryuuid']."@@";
@@ -174,13 +204,13 @@ else{
 }
 
     //if ($deployinprogress ){
-    if($terminate == 0){
-        $f = new ValidatingForm();
-        $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
-        $f->addButton("bStop", _T("Abort Deployment", 'xmppmaster'));
-        $f->display();
-    }
-    echo "<br>";
+if($terminate == 0){
+    $f = new ValidatingForm();
+    $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
+    $f->addButton("bStop", _T("Abort Deployment", 'xmppmaster'));
+    $f->display();
+}
+echo "<br>";
 
     $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $MSC_nb_mach_grp_done_deploy;
     $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $MSC_nb_mach_grp_for_deploy) * 100,2);
@@ -215,61 +245,61 @@ else{
 echo '</div>';
       echo'<div  style="float:left; margin-left:200px;height: 120px" id="holder"></div>';
 echo "<br>";
-    if ($info['len'] != 0){
-        $uuid=$info['objectdeploy'][0]['inventoryuuid'];
-        $state=$info['objectdeploy'][0]['state'];
-        $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
-        $result=$info['objectdeploy'][0]['result'];
+if ($info['len'] != 0){
+//     $uuid=$info['objectdeploy'][0]['inventoryuuid'];
+//     $state=$info['objectdeploy'][0]['state'];
+//     $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
+//     $result=$info['objectdeploy'][0]['result'];
+// 
+//     $resultatdeploy =json_decode($result, true);
+//     $host=$info['objectdeploy'][0]['host'];
+//     $jidmachine=$info['objectdeploy'][0]['jidmachine'];
+//     $jid_relay=$info['objectdeploy'][0]['jid_relay'];
 
-        $resultatdeploy =json_decode($result, true);
-        $host=$info['objectdeploy'][0]['host'];
-        $jidmachine=$info['objectdeploy'][0]['jidmachine'];
-        $jid_relay=$info['objectdeploy'][0]['jid_relay'];
+    $datestart =  date("Y-m-d H:i:s", $start);
+    $timestampstart = strtotime($datestart);
+    $timestampnow = time();
+    $nbsecond = $timestampnow - $timestampstart;
 
-        $datestart =  date("Y-m-d H:i:s", $start);
-        $timestampstart = strtotime($datestart);
-        $timestampnow = time();
-        $nbsecond = $timestampnow - $timestampstart;
-
-       if (isset($resultatdeploy['descriptor']['info'])){
-        echo "<br>";
-        echo "<h2>Package</h2>";
-            echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
-                echo "<thead>";
-                    echo "<tr>";
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Name</span>';
-                        echo '</td>';
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Software</span>';
-                        echo '</td>';
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Version</span>';
-                        echo '</td>';
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Description</span>';
-                        echo '</td>';
-                    echo "</tr>";
-                echo "</thead>";
-                echo "<tbody>";
-                    echo "<tr>";
-                        echo "<td>";
-                            echo $resultatdeploy['descriptor']['info']['description'];
-                        echo "</td>";
-                        echo "<td>";
-                            echo $resultatdeploy['descriptor']['info']['name'];
-                        echo "</td>";
-                        echo "<td>";
-                            echo $resultatdeploy['descriptor']['info']['software'];
-                        echo "</td>";
-                        echo "<td>";
-                            echo $resultatdeploy['descriptor']['info']['version'];
-                        echo "</td>";
-                    echo "</tr>";
-                echo "</tbody>";
-            echo "</table>";
-            echo '<br>';
-      }
+    if (isset($resultatdeploy['descriptor']['info'])){
+    echo "<br>";
+    echo "<h2>Package</h2>";
+        echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
+            echo "<thead>";
+                echo "<tr>";
+                    echo '<td style="width: ;">';
+                        echo '<span style=" padding-left: 32px;">Name</span>';
+                    echo '</td>';
+                    echo '<td style="width: ;">';
+                        echo '<span style=" padding-left: 32px;">Software</span>';
+                    echo '</td>';
+                    echo '<td style="width: ;">';
+                        echo '<span style=" padding-left: 32px;">Version</span>';
+                    echo '</td>';
+                    echo '<td style="width: ;">';
+                        echo '<span style=" padding-left: 32px;">Description</span>';
+                    echo '</td>';
+                echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+                echo "<tr>";
+                    echo "<td>";
+                        echo $resultatdeploy['descriptor']['info']['description'];
+                    echo "</td>";
+                    echo "<td>";
+                        echo $resultatdeploy['descriptor']['info']['name'];
+                    echo "</td>";
+                    echo "<td>";
+                        echo $resultatdeploy['descriptor']['info']['software'];
+                    echo "</td>";
+                    echo "<td>";
+                        echo $resultatdeploy['descriptor']['info']['version'];
+                    echo "</td>";
+                echo "</tr>";
+            echo "</tbody>";
+        echo "</table>";
+        echo '<br>';
+    }
 }
  if($terminate == 0){
         echo'
