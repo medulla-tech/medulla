@@ -461,6 +461,39 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
+    def stat_syncthing_transfert(self,
+                                 session,
+                                 idgrp,
+                                 idcmd):
+        sql = """SELECT 
+                    pathpackage,
+                    COUNT(*) AS nb,
+                    CAST((SUM(xmppmaster.syncthing_machine.progress) / COUNT(*)) AS CHAR) AS progress
+                FROM
+                    xmppmaster.syncthing_machine
+                WHERE
+                    xmppmaster.syncthing_machine.group_uuid = %s
+                        AND xmppmaster.syncthing_machine.command = %s;
+                        """%(idgrp, idcmd)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        re = [x for x in result]
+        re = re[0]
+        if re[0] is None:
+            return {'package' : "",
+                    'nbmachine' : 0,
+                    'progresstransfert' : 0}
+        try:
+            progress = int(float(re[2]))
+        except exceptions.ValueError:
+            progress = 0
+
+        return { 'package' : re[0],
+                 'nbmachine' : re[1],
+                 'progresstransfert' : progress }
+
+    @DatabaseHelper._sessionm
     def getnumcluster_for_ars(self,
                             session,
                             jidrelay):
