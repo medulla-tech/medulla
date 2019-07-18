@@ -184,38 +184,14 @@ $page->addTab($tab);
 $tab = new Tab("tab8", _T("Registry tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
+$tab = new Tab("tab9", _T("Connections tab (GLPI)", "glpi"));
+$page->addTab($tab);
+
 $submod->addPage($page);
 
 $page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
 $page->setFile("modules/glpi/glpi/tabs.php");
 $page->setOptions(array("visible"=>False));
-
-$tab = new Tab("tab0", _T("Summary tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab1", _T("Hardware tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab2", _T("Storage tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab3", _T("Network tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab4", _T("Softwares tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab5", _T("Administrative tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab6", _T("History tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab7", _T("Antivirus tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab8", _T("Registry tab (GLPI)", 'glpi'));
-$page->addTab($tab);
 
 $submod->addPage($page);
 

@@ -492,6 +492,32 @@ class Glpi92(DyngroupDatabaseHelper):
             autoload = True)
         mapper(RegContents, self.regcontents)
 
+        # items contents
+        self.computersitems = Table("glpi_computers_items", self.metadata,
+            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+            autoload = True)
+        mapper(Computersitems, self.computersitems)
+
+        # Monitors items
+        self.monitors = Table("glpi_monitors", self.metadata,
+            autoload = True)
+        mapper(Monitors, self.monitors)
+
+        # Phones items
+        self.phones = Table("glpi_phones", self.metadata,
+            autoload = True)
+        mapper(Phones, self.phones)
+
+        # Printers items
+        self.printers = Table("glpi_printers", self.metadata,
+            autoload = True)
+        mapper(Printers, self.printers)
+
+        # Peripherals items
+        self.peripherals = Table("glpi_peripherals", self.metadata,
+            autoload = True)
+        mapper(Peripherals, self.peripherals)
+
     ##################### internal query generators
     def __filter_on(self, query):
         """
@@ -2681,6 +2707,45 @@ class Glpi92(DyngroupDatabaseHelper):
 
         session.close()
         return ret
+
+    def getLastMachineConnectionsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
+        session = create_session()
+        # knokno
+        uuid = int(uuid.replace('UUID', ''))
+        query = session.query(distinct(Computersitems.itemtype)).filter(Computersitems.computers_id == uuid)
+        query = self.__filter_on(query)
+        ret = session.execute(query)
+
+        connectionslist = []
+
+        for element in ret:
+            itemtype = element[0]
+            _itemtype = itemtype.lower()+"s"
+            if hasattr(self, _itemtype):
+                connection = eval("self.%s"%_itemtype)
+                query = session.query(Computersitems.items_id,Computersitems.itemtype, connection.c.name, connection.c.serial).\
+                        join(connection, connection.c.id == Computersitems.items_id).\
+                        filter(Computersitems.computers_id == uuid, Computersitems.itemtype == itemtype)
+                query = self.__filter_on(query).all()
+
+            connectionslist += query
+        session.close()
+
+        table = []
+        for row in connectionslist:
+            tmprow = []
+
+            tmprow.append(['type', row[1]])
+            tmprow.append(['name', row[2]])
+            tmprow.append(['serial', row[3]])
+            table.append(tmprow)
+
+        if count:
+            return len(table)
+
+        return table
 
     def getSearchOptionValue(self, log):
         try:
@@ -5069,4 +5134,19 @@ class RuleAction(DbTOA):
     pass
 
 class OsVersion(DbTOA):
+    pass
+
+class Computersitems(DbTOA):
+    pass
+
+class Monitors(DbTOA):
+    pass
+
+class Phones(DbTOA):
+    pass
+
+class Printers(DbTOA):
+    pass
+
+class Peripherals(DbTOA):
     pass

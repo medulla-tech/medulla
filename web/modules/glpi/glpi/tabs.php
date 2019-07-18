@@ -77,6 +77,7 @@ $i = 0;
 $tabList = array(
     'Summary' => _T('Summary', "glpi"),
     'Hardware' => _T('Hardware', "glpi"),
+    'Connections' => _t("Connections", "glpi"),
     'Storage' => _T('Storage', "glpi"),
     'Network' => _T('Network', "glpi"),
     'Softwares' => _T('Software', "glpi"),
