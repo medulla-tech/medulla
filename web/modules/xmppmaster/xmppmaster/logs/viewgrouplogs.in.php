@@ -121,11 +121,11 @@ $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'], $_GET['cmd_id'] 
 
 
 if ($statsyncthing['package'] == ""){
-    echo " Partage syncthing terminer ou inexistant";
+    echo "Syncthing sharing done or non-existant";
 }else{
-    echo "Partage syncthing on package ". $statsyncthing['package'];
-    echo "nombre participant est".$statsyncthing['nbmachine'];
-    echo "progress transfert is".$statsyncthing['progresstransfert'];
+    echo "Syncthing sharing on package : ". $statsyncthing['package'];
+    echo "participant's number is : ".$statsyncthing['nbmachine'];
+    echo "progress transfert is : ".$statsyncthing['progresstransfert'];
 }
 
 if ($info['len'] != 0){
@@ -250,7 +250,7 @@ if ($info['len'] != 0){
 //     $state=$info['objectdeploy'][0]['state'];
 //     $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
 //     $result=$info['objectdeploy'][0]['result'];
-// 
+//
 //     $resultatdeploy =json_decode($result, true);
 //     $host=$info['objectdeploy'][0]['host'];
 //     $jidmachine=$info['objectdeploy'][0]['jidmachine'];
@@ -262,8 +262,6 @@ if ($info['len'] != 0){
     $nbsecond = $timestampnow - $timestampstart;
 
     if (isset($resultatdeploy['descriptor']['info'])){
-    echo "<br>";
-    echo "<h2>Package</h2>";
         echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
             echo "<thead>";
                 echo "<tr>";
