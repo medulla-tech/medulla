@@ -42,6 +42,7 @@ if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1'){
   $LastdeployINsecond = 3600*24;
   echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
   $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter) ;
+  $arraynotdeploy = xmlrpc_getnotdeploybyuserrecent($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
 }
 else {
   $LastdeployINsecond = 3600*2160;
@@ -52,6 +53,10 @@ else {
 if (isset($arraydeploy['total_of_rows']))
 {
   $arraydeploy['lentotal'] = $arraydeploy['total_of_rows'];
+  if (isset($arraynotdeploy['total']))
+  {
+    $arraydeploy['lentotal'] += $arraynotdeploy['total'];
+  }
 }
 $arrayname = array();
 $arraytitlename = array();
@@ -221,6 +226,49 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $index++;
 }
 
+foreach($arraynotdeploy['elements'] as $id=>$deploy)
+{
+    $param = [
+    'cmd_id'=>$deploy['cmd_id'],
+    'login'=>$deploy['login'],
+    'gid'=>$deploy['gid'],
+    'uuid'=>$deploy['uuid_inventory']];
+    $logs[] = $logAction;
+    $params[] = $param;
+
+    $arraytitlename[] = '<img style="position:relative;top : 5px;" src="modules/msc/graph/images/install_package.png" /> '.$deploy['package_name'];
+
+    $name = "";
+    if($deploy['gid'] != "")
+    {
+        $name = getInfosNameGroup($deploy['gid']);
+        $name = $name[$deploy['gid']]['name'];
+        $name = '<img style="position:relative;top : 5px;" src="img/machines/icn_groupsList.gif"/> '.$name;
+        //echo '<a href="main.php?module=xmppmaster&submod=xmppmaster&action=viewlogs&tab=grouptablogs&uuid=&hostname=&gid='.$deploy['gid'].'&cmd_id='.$deploy['cmd_id'].'&login='.$deploy['login'].'">'.$deploy['package_name'].'</a><br />';
+      }
+
+    else
+    {
+        $name = $deploy['machine_name'];
+        $name = '<img style="position:relative;top : 5px;" src="img/machines/icn_machinesList.gif"/> '.$name;
+    }
+    $arrayname[] = $name;
+
+    $date = (array)$deploy['date_start'];
+    $arraydeploy['tabdeploy']['start'][] = date("Y-m-d H:i:s",$date['timestamp']);
+    //TODO
+    $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline</span>';
+    $tolmach[] = $deploy['nb_machines'];
+    $processmachr[] = 0;
+    $successmach[] = 0;
+    $errormach[] = 0;
+    $wolmach[] = 0;
+    $wolmach[] = 0;
+    $timeoutmach[] = 0;
+    $abortmachuser[] = 0;
+    $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
+}
+
 $n = new OptimizedListInfos( $arraytitlename, _T("Deployment", "xmppmaster"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
@@ -234,7 +282,6 @@ $n->addExtraInfo( $errormach, _T("Error", "xmppmaster"));
 $n->addExtraInfo( $wolmach, _T("Waiting Wol", "xmppmaster"));
 $n->addExtraInfo( $timeoutmach, _T("Timed out", "xmppmaster"));
 $n->addExtraInfo( $abortmachuser, _T("Aborted", "xmppmaster"));
-
 $n->addExtraInfo( $arraydeploy['tabdeploy']['login'],_T("User", "xmppmaster"));
 //$n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
