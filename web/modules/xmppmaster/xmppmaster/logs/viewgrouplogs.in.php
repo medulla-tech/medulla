@@ -123,9 +123,12 @@ $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'], $_GET['cmd_id'] 
 if ($statsyncthing['package'] == ""){
     echo "Syncthing sharing done or non-existant";
 }else{
-    echo "Syncthing sharing on package : ". $statsyncthing['package'];
-    echo "participant's number is : ".$statsyncthing['nbmachine'];
-    echo "progress transfert is : ".$statsyncthing['progresstransfert'];
+    echo "Share name : ". $statsyncthing['package'];
+    echo '<br />';
+    echo "Number of participants : ".$statsyncthing['nbmachine'];
+    echo '<br />';
+    echo "Transfer progress : ".$statsyncthing['progresstransfert'].' %';
+    echo '<br />';
 }
 
 if ($info['len'] != 0){
