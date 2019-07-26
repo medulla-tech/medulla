@@ -286,7 +286,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.domaindefault = "pulse"
         # ######################Update remote agent#########################
         self.autoupdatebool = self.config.autoupdatebyrelay or self.config.autoupdate
-        self.Update_Remote_Agentlist = Update_Remote_Agent( self.config.diragentbase, 
+        self.Update_Remote_Agentlist = Update_Remote_Agent( self.config.diragentbase,
                                                             self.autoupdatebool)
         # ######################Update remote agent#########################
         self.file_deploy_plugin = []
@@ -471,7 +471,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             #self.mesure = ""
             #self.mesuref = 0.0
             #self.name_file_log_leak_memory = "/tmp/data.txt"
-        
+
         #self.countseconde += self.timecheck
         #mem_usage = memory_usage(-1, interval=1, timeout=1)
         #mesure = str(mem_usage[0]).replace(".",",")
@@ -744,8 +744,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                                     t['sessionid'],
                                                                                     t['hostname']))
                             arscluster.append([ t['jidrelay'],
-                                                t['sessionid'], 
-                                                t['hostname'], 
+                                                t['sessionid'],
+                                                t['hostname'],
                                                 t['jidmachine'] ])
                             logger.debug("*** %s"%t)
                             XmppMasterDatabase().updatedeploystate(t['sessionid'], "DEPLOYMENT START (REBOOT)")
@@ -2194,7 +2194,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                         "ret": 0,
                                         "sessionid" : name_random(5, "updateagent")}
                             # Send catalog of files.
-                            logger.debug("Send descriptor to ARS %s for update agent [%s]" % 
+                            logger.debug("Send descriptor to ARS %s for update agent [%s]" %
                                             (data['deployment'], msg['from']))
                             self.send_message( data['deployment'],
                                                 mbody=json.dumps(datasend),
@@ -2244,7 +2244,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         else:
                              if self.pluginagentmin[nameplugin] != "0.0.0":
                                  continue
-                                 
+
                         if self.config.showplugins:
                             logger.info("deploy %s versionplugin %s on %s" % (nameplugin,
                                                                               versionplugin,
@@ -2498,7 +2498,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if action is not None:
             logging.debug("Send command and creation session")
             if jid == self.boundjid.bare:
-                self.callpluginmasterfrommmc(action, 
+                self.callpluginmasterfrommmc(action,
                                             data,
                                             sessionid = command['sessionid'])
             else:
