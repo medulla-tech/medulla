@@ -497,10 +497,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
             #print "______________________________"
 
     def scheduledeploy(self):
-        # met en pause les folder deja transfere sur les ars
-        # nettoyage deploiement syncthing.
-        # cherche tout les deploiement syncthing de terminer
-        # et fait 1 netoyage sur le reseau et sur les machines
+        """
+            # Set to pause the folders already shared into the ars.
+            # Clean the syncthing deployments.
+            # Search all the syncthing deployment done
+            # and clean into the network and the machines
+        """
+
+        # Firstly we replace the current rule by a new one.
+        # 2 transfers done limit the ARS bandwidth.
+        # Be aware of the new's deploy creation, its remove the limite rate.
+        # TODO
+        # If 1 package is in pending state, then the limit rate is removed.
         list_ars_syncthing_pause =  XmppMasterDatabase().get_ars_for_pausing_syncthing(2)
         for arssyncthing in list_ars_syncthing_pause:
             datasend = {  "action" : "deploysyncthing",
