@@ -121,7 +121,8 @@ $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'], $_GET['cmd_id'] 
 
 
 if ($statsyncthing['package'] == ""){
-    echo "Syncthing sharing done or non-existant";
+    echo _T("Syncthing done or non-existant", "xmppmaster");
+    echo "<br />";
 }else{
     echo _T("Share name", "xmppmaster")." : ". $statsyncthing['package'];
     echo '<br />';
