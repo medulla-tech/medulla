@@ -831,5 +831,7 @@ cp -fv %buildroot%_datadir/mmc/conf/apache/pulse.conf %buildroot%_sysconfdir/htt
 
 mkdir -p %buildroot%_var/lib/pulse2/file-transfer
 
+cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/mmc/contrib/
+
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
