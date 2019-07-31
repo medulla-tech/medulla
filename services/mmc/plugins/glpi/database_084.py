@@ -185,13 +185,19 @@ class Glpi084(DyngroupDatabaseHelper):
         mapper(Location, self.location)
 
 		# rules
-        self.rules = Table("glpi_rules", self.metadata, autoload = True)
+        self.rules = Table("glpi_rules", self.metadata,
+        Column('id', Integer, primary_key=True),
+        autoload = True)
         mapper(Rule, self.rules)
 
-        self.rule_criterias = Table("glpi_rulecriterias", self.metadata, autoload = True)
+        self.rule_criterias = Table("glpi_rulecriterias", self.metadata,
+        Column('id', Integer, primary_key=True),
+        autoload = True)
         mapper(RuleCriterion, self.rule_criterias)
 
-        self.rule_actions = Table("glpi_ruleactions", self.metadata, autoload = True)
+        self.rule_actions = Table("glpi_ruleactions", self.metadata,
+        Column('id', Integer, primary_key=True),
+        autoload = True)
         mapper(RuleAction, self.rule_actions)
 
         # location
