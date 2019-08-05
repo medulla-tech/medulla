@@ -271,6 +271,9 @@ class Glpi084(DyngroupDatabaseHelper):
         self.diskfs = Table('glpi_filesystems', self.metadata, autoload = True)
         mapper(DiskFs, self.diskfs)
 
+        self.disk = Table("glpi_computerdisks", self.metadata, autoload = True)
+        mapper(Disk, self.disk)
+
         # glpi_operatingsystemversions
         self.os_version = Table('glpi_operatingsystemversions', self.metadata, autoload = True)
         mapper(OsVersion, self.os_version)
@@ -464,11 +467,6 @@ class Glpi084(DyngroupDatabaseHelper):
         # group
         self.group = Table("glpi_groups", self.metadata, autoload = True)
         mapper(Group, self.group)
-
-        # registries contents
-        self.regcontents = Table("ocs_glpi_registrykeys", self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers.id')), autoload = True)
-        mapper(RegContents, self.regcontents)
 
     ##################### internal query generators
     def __filter_on(self, query):
@@ -672,14 +670,6 @@ class Glpi084(DyngroupDatabaseHelper):
             if 'antivirus' in filt: # Used for Antivirus dashboard
                 join_query = join_query.outerjoin(self.fusionantivirus)
                 join_query = join_query.outerjoin(self.os)
-
-            #r=re.compile('reg_key_.*')
-            #regs=filter(r.search, self.config.summary)
-            #try:
-                #if regs[0]:
-                    #join_query = join_query.outerjoin(self.regcontents)
-            #except IndexError:
-                #pass
 
             if query_filter is None:
                 query = query.select_from(join_query)
@@ -926,10 +916,6 @@ class Glpi084(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.softwareversions, self.software, self.manufacturers]
         elif query[2] == 'User location':
             return base + [self.user, self.locations]
-        elif query[2] == 'Register key':
-            return base + [ self.regcontents]#self.collects, self.registries,
-        elif query[2] == 'Register key value':
-            return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         elif query[2] == 'OS Version':
             return base + [ self.os_version ]
         return []
@@ -1070,10 +1056,6 @@ class Glpi084(DyngroupDatabaseHelper):
             return [[self.software.c.name, query[3][0]], [self.softwareversions.c.name, query[3][1]]]
         elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
             return [[self.manufacturers.c.name, query[3][0]], [self.software.c.name, query[3][1]], [self.softwareversions.c.name, query[3][2]]]
-        elif query[2] == 'Register key':
-            return [[self.registries.c.name, query[3]]]
-        elif query[2] == 'Register key value':
-            return [[self.registries.c.name, query[3][0]], [self.regcontents.c.value , query[3][1]]]
         elif query[2] == 'OS Version':
             return [[self.os_version.c.name, query[3]]]
         return []
@@ -1771,21 +1753,7 @@ class Glpi084(DyngroupDatabaseHelper):
         @rtype: tuple
         """
 
-        ret = None
-        session = create_session()
-
-        query = session.query(RegContents).add_column(self.registries.c.name) \
-            .add_column(self.regcontents.c.key) \
-            .add_column(self.regcontents.c.value) \
-            .select_from(self.machine.outerjoin(self.regcontents) \
-                .outerjoin(self.registries))
-        query = query.filter(self.machine.c.id == machine.id, self.regcontents.c.key == regkey)
-
-        if query.first() is not None:
-            ret = query.first().name, query.first().value
-
-        session.close()
-        return ret
+        return []
 
     def doesUserHaveAccessToMachines(self, ctx, a_machine_uuid, all = True):
         """
@@ -2008,10 +1976,13 @@ class Glpi084(DyngroupDatabaseHelper):
 
     def getLastMachineStoragePart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         #Mutable dict options used as default argument to a method or function
-        query = self.filterOnUUID(
-            session.query(Disk).add_column(self.diskfs.c.name).select_from(
-                self.machine.outerjoin(self.disk).outerjoin(self.diskfs)
-            ), uuid)
+
+        uuid = uuid.replace("UUID","")
+        uuid = int(uuid)
+        query = session.query(Disk).add_column(self.diskfs.c.name)\
+        .join(self.diskfs, self.disk.c.filesystems_id == self.diskfs.c.id)\
+        .filter(self.disk.c.computers_id == uuid)
+
         if count:
             ret = query.count()
         else:
@@ -2095,26 +2066,7 @@ class Glpi084(DyngroupDatabaseHelper):
 
     def getLastMachineRegistryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         #Mutable dict options used as default argument to a method or function
-        query = self.filterOnUUID(
-            session.query(RegContents).add_column(self.registries.c.name) \
-            .add_column(self.regcontents.c.key) \
-            .add_column(self.regcontents.c.value) \
-            .select_from(self.machine.outerjoin(self.regcontents) \
-                .outerjoin(self.registries) \
-            ), int(str(uuid).replace("UUID", "")))
-
-        if count:
-            ret = query.count()
-        else:
-            ret = []
-            for row in query:
-                if row.key is not None:
-                    l = [
-                        ['Registry key', row.name],
-                        ['Value', row.value],
-                    ]
-                    ret.append(l)
-        return ret
+        return []
 
     def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         #Mutable dict options used as default argument to a method or function
@@ -2256,7 +2208,7 @@ class Glpi084(DyngroupDatabaseHelper):
             .add_column(self.glpi_operatingsystemversions.c.name) \
             .add_column(self.glpi_domains.c.name) \
             .add_column(self.state.c.name) \
-            .add_column(self.fusionagents.c.last_contact) \
+            #.add_column(self.fusionagents.c.last_contact) \
             .select_from(
                 self.machine.outerjoin(self.entities) \
                 .outerjoin(self.locations) \
@@ -2268,7 +2220,6 @@ class Glpi084(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_operatingsystemservicepacks) \
                 .outerjoin(self.glpi_operatingsystemversions) \
                 .outerjoin(self.state) \
-                .outerjoin(self.fusionagents) \
                 .outerjoin(self.glpi_domains)
             ), uuid)
 
@@ -2276,7 +2227,7 @@ class Glpi084(DyngroupDatabaseHelper):
             ret = query.count()
         else:
             ret = []
-            for machine, infocoms, entity, location, oslocal, manufacturer, type, model, servicepack, version, domain, state, last_contact in query:
+            for machine, infocoms, entity, location, oslocal, manufacturer, type, model, servicepack, version, domain, state in query:
                 endDate = ''
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -2323,9 +2274,6 @@ class Glpi084(DyngroupDatabaseHelper):
                 # Last inventory date
                 date_mod = machine.date_mod
 
-                if self.fusionagents is not None and last_contact is not None:
-                    date_mod = last_contact
-
                 l = [
                     ['Computer Name', ['computer_name', 'text', machine.name]],
                     ['Description', ['description', 'text', machine.comment]],
@@ -2338,7 +2286,6 @@ class Glpi084(DyngroupDatabaseHelper):
                     ['OS', oslocal],
                     ['Service Pack', servicepack],
                     ['Version', version],
-                    #['Windows Key', machine.license_number],
                     ['Model / Type', modelType],
                     ['Manufacturer', manufacturer],
                     ['Serial Number', serialNumber],
@@ -3527,31 +3474,14 @@ class Glpi084(DyngroupDatabaseHelper):
         Returns the registry keys name.
         @return: list Register key name
         """
-        ret = None
-        session = create_session()
-        query = session.query(Registries.name)
-        query = self.__filter_on_entity(query, ctx)
-        if filter != '':
-            query = query.filter(self.registries.c.name.like('%'+filt+'%'))
-        ret = query.all()
-        session.close()
-        return ret
+        return []
 
     @DatabaseHelper._sessionm
     def getAllRegistryKeyValue(self, session, ctx, keyregister, value):
         """
         @return: all key value defined in the GLPI database
         """
-        ret = None
-        #if not hasattr(ctx, 'locationsid'):
-            #complete_ctx(ctx)
-        session = create_session()
-        query = session.query(distinct(RegContents.value))
-        query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.registries.c.key.like('%'+keyregister+'%'))
-        ret = query.all()
-        session.close()
-        return ret
+        return []
 
     def getMachineByLocation(self, ctx, filt):
         """ @return: all machines that have this contact number """
@@ -4588,17 +4518,7 @@ class Glpi084(DyngroupDatabaseHelper):
         """
 
         # Split into hive / path / key
-        hive = full_key.split('\\')[0]
-        key = full_key.split('\\')[-1]
-        path = full_key.replace(hive+'\\','').replace('\\'+key,'')
-        path = '/'+path+'/'
-        # Get registry_id
-        try:
-            registry_id = session.query(Registries).filter_by(hive=hive,path=path,key=key).first().id
-            if registry_id:
-                return registry_id
-        except:
-            return False
+        return []
 
     @DatabaseHelper._sessionm
     def addRegistryCollect(self, session, full_key, key_name):
@@ -4616,26 +4536,7 @@ class Glpi084(DyngroupDatabaseHelper):
         """
 
         # Split into hive / path / key
-        hive = full_key.split('\\')[0]
-        key = full_key.split('\\')[-1]
-        path = full_key.replace(hive+'\\','').replace('\\'+key,'')
-        path = '/'+path+'/'
-        # Insert in database
-        registry = Registries()
-        registry.name = key_name
-        # Get collects_id
-        try:
-            collects_id = session.query(Collects).filter_by(name='PulseRegistryCollects').first().id
-        except:
-            return False
-        registry.plugin_fusioninventory_collects_id = collects_id
-        registry.hive = hive
-        registry.path = path
-        registry.key = key
-        session.add(registry)
-        session.commit()
-        session.flush()
-        return True
+        return []
 
     def getAllOsVersions(self, ctx, filt = ''):
         """ @return: all os versions defined in the GLPI database """
@@ -4669,25 +4570,7 @@ class Glpi084(DyngroupDatabaseHelper):
         """
 
         # Check if already present
-        try:
-            contents_id = session.query(RegContents).filter_by(computers_id=computers_id,plugin_fusioninventory_collects_registries_id=registry_id,key=key).first().id
-            if contents_id:
-                # Update database
-                session.query(RegContents).filter_by(id=contents_id).update({'value': str(value)})
-                session.commit()
-                session.flush()
-                return True
-        except AttributeError:
-            # Insert in database
-            regcontents = RegContents()
-            regcontents.computers_id = int(computers_id)
-            regcontents.plugin_fusioninventory_collects_registries_id = int(registry_id)
-            regcontents.key = str(key)
-            regcontents.value = str(value)
-            session.add(regcontents)
-            session.commit()
-            session.flush()
-            return True
+        return []
 
     @DatabaseHelper._sessionm
     def get_os_for_dashboard(self, session):
@@ -4993,9 +4876,6 @@ class IPAddresses_IPNetworks(object):
     pass
 
 class Collects(object):
-    pass
-
-class Registries(object):
     pass
 
 class RegContents(object):
