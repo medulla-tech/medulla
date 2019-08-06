@@ -209,6 +209,9 @@ def getInventoryEM(part):
 def getGlpiMachineUri():
     return Glpi().config.glpi_computer_uri
 
+def glpi_version():
+    return Glpi().glpi_version
+
 def getMachineUUIDByMacAddress(mac):
     return xmlrpcCleanup(Glpi().getMachineUUIDByMacAddress(mac))
 

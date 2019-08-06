@@ -191,4 +191,8 @@ function get_computer_count_for_dashboard() {
 function getMachinesMac($uuid){
   return xmlCall("glpi.getMachinesMac", [$uuid]);
 }
+
+function glpi_version(){
+  return xmlCall("glpi.glpi_version", []);
+}
 ?>
