@@ -69,6 +69,8 @@ Requires(pre): python-mmc-base
 Requires:   python-mmc-base
 Requires:   ajax-php-file-manager
 Requires:   python-memory-profiler
+Requires:   python-dateutil
+
 %description -n mmc-agent
 XMLRPC server of the Console API.
 This is the underlying service used by the MMC web interface.
