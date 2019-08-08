@@ -297,6 +297,7 @@ Requires:       php
 Requires:       php-xmlrpc
 Requires:       php-iconv
 Requires:   	mmc-web-dashboard >= %{version}
+Requires:       node-d3
 
 %description -n mmc-web-base
 Console web interface designed by Linbox.
