@@ -7,6 +7,7 @@ git clean -fdx && ./autogen.sh && ./configure --sysconfdir=/etc --localstatedir=
 tar xzvf pulse2-$VERSION.tar.gz
 cp setup.py pulse2-$VERSION
 cp -frv debian pulse2-$VERSION
+cp -frv services/contrib/glpi-92.sql pulse2-$VERSION/services/contrib/ 
 tar czvf pulse2-$VERSION.tar.gz pulse2-$VERSION
 mv pulse2-$VERSION.tar.gz pulse2_$VERSION.orig.tar.gz
 rm -fr pulse2-$VERSION/
