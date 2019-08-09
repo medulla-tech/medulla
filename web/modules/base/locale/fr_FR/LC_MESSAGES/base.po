@@ -4,18 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
 # Stephane Pointu <spointu@gmail.com>, 2018
 # Guillaume <guillaume.lassarre@siveo.net>, 2018
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:41+0100\n"
+"POT-Creation-Date: 2019-05-22 11:44+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Guillaume <guillaume.lassarre@siveo.net>, 2018\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,7 @@ msgstr "Un lien vous a été envoyé pour remettre à zéro votre mot de passe."
 #: forgotpassword.php:26
 msgid "Can't reset your password. Please contact your administrator."
 msgstr ""
-"Impossible de remettre à zéro votre mot de passe. Contactez votre "
+"Impossible de remettre à zéro votre mot de passe. Veuillez contacter votre "
 "administrateur."
 
 #: forgotpassword.php:74 forgotpassword.php:80
@@ -208,7 +208,7 @@ msgstr "Journal de l'Inventaire"
 
 #: modules/base/logview/logsdownload.php:133
 msgid "Transfert File Logs"
-msgstr ""
+msgstr "Journal des transfert de fichiers"
 
 #: modules/base/logview/logsimaging.php:158
 msgid "Imaging Logs"
@@ -1186,7 +1186,7 @@ msgstr "Inventaire GLPI"
 #: modules/base/includes/computers_list.inc.php:102
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:76
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:77
 msgid "detaildeploy"
 msgstr "Détail du déploiment"
 
@@ -2098,29 +2098,29 @@ msgstr "Copier dans le presse-papier"
 msgid "Complete Traceback"
 msgstr "Traceback complète"
 
-#: includes/xmlrpc.inc.php:160
+#: includes/xmlrpc.inc.php:161
 msgid "Can't connect to MMC agent"
 msgstr "Impossible de se connecter à l'agent MMC"
 
-#: includes/xmlrpc.inc.php:161
+#: includes/xmlrpc.inc.php:162
 msgid "MMC agent seems to be down or not correctly configured."
 msgstr ""
 "L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
 
-#: includes/xmlrpc.inc.php:173
+#: includes/xmlrpc.inc.php:174
 msgid "Can't send XML-RPC request to MMC agent"
 msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
 
-#: includes/xmlrpc.inc.php:174
+#: includes/xmlrpc.inc.php:175
 msgid "MMC agent seems to be not correctly configured."
 msgstr "L'agent MMC semble ne pas être correctement configuré."
 
-#: includes/xmlrpc.inc.php:190 includes/xmlrpc.inc.php:215
-#: includes/xmlrpc.inc.php:238
+#: includes/xmlrpc.inc.php:191 includes/xmlrpc.inc.php:216
+#: includes/xmlrpc.inc.php:239
 msgid "MMC agent communication problem"
 msgstr "Problème de communication avec l'agent MMC"
 
-#: includes/xmlrpc.inc.php:191
+#: includes/xmlrpc.inc.php:192
 msgid ""
 "Timeout when reading data from the MMC agent. Please check network "
 "connectivity and server load."
@@ -2128,15 +2128,15 @@ msgstr ""
 "Temps dépassé lors de la réception de données en provenance de l'agent MMC. "
 "Veuillez vérifier les connexions réseau et la charge du serveur."
 
-#: includes/xmlrpc.inc.php:200
+#: includes/xmlrpc.inc.php:201
 msgid "Error while reading MMC agent XML-RPC response."
 msgstr "Erreur lors de la réception de la réponse XML-RPC de l'agent."
 
-#: includes/xmlrpc.inc.php:201
+#: includes/xmlrpc.inc.php:202
 msgid "Please check network connectivity."
 msgstr "Veuillez vérifier les connexions réseau."
 
-#: includes/xmlrpc.inc.php:216
+#: includes/xmlrpc.inc.php:217
 msgid ""
 "Can't communicate with MMC agent. Please check you're using the right TCP "
 "port and the right protocol."
@@ -2144,7 +2144,7 @@ msgstr ""
 "Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré "
 "le bon port TCP et le bon protocole."
 
-#: includes/xmlrpc.inc.php:239
+#: includes/xmlrpc.inc.php:240
 msgid ""
 "The MMC agent didn't give us a session number. Please check the MMC agent "
 "version."
@@ -2152,11 +2152,11 @@ msgstr ""
 "L'agent MMC n'a pas fourni de numéro de session. Veuillez vérifier la "
 "version de l'agent MMC."
 
-#: includes/xmlrpc.inc.php:349
+#: includes/xmlrpc.inc.php:350
 msgid "unknown error"
 msgstr "erreur inconnue"
 
-#: includes/xmlrpc.inc.php:350
+#: includes/xmlrpc.inc.php:351
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."

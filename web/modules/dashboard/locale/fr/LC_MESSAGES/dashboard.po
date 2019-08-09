@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:41+0100\n"
+"POT-Creation-Date: 2019-05-22 11:44+0200\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -130,16 +130,21 @@ msgid "Machines backup"
 msgstr "Sauvegarde des machines"
 
 #: modules/dashboard/includes/panels/backup.inc.php:41
-msgid "Backup configured : "
-msgstr "Sauvegarde configurée :"
+msgid "Backup configured"
+msgstr ""
 
 #: modules/dashboard/includes/panels/backup.inc.php:42
-msgid "Backup not configured : "
-msgstr "Sauvegarde non configurée :"
+msgid "Backup not configured"
+msgstr ""
 
 #: modules/dashboard/includes/panels/backup.inc.php:43
-msgid "Total machines : "
-msgstr "Nombre de machines :"
+msgid "Total machines"
+msgstr ""
+
+#: modules/dashboard/includes/panels/backup.inc.php:44
+#: modules/dashboard/includes/panels/computersOnline.inc.php:48
+msgid "Uninventoried Machines"
+msgstr ""
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:30
 msgid "Pulse Updates"
@@ -153,21 +158,17 @@ msgstr "Installer les mises à jour"
 msgid "Updates available."
 msgstr "Mise à jour disponible."
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:30
+#: modules/dashboard/includes/panels/computersOnline.inc.php:31
 msgid "Machines Online"
 msgstr "Machines en ligne"
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:43
-msgid "Machines online : "
-msgstr "Machines en ligne : "
+#: modules/dashboard/includes/panels/computersOnline.inc.php:46
+msgid "Machines online"
+msgstr ""
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:44
-msgid "Machines offline : "
-msgstr "Machines hors ligne :"
-
-#: modules/dashboard/includes/panels/computersOnline.inc.php:58
-msgid "A problem occurred while counting machines"
-msgstr "Un problème est survenu lors du comptage des machines"
+#: modules/dashboard/includes/panels/computersOnline.inc.php:47
+msgid "Machines offline"
+msgstr ""
 
 #: modules/dashboard/includes/panels/process.inc.php:28
 msgid "Pulse processes"

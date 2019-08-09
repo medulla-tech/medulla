@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:41+0100\n"
+"POT-Creation-Date: 2019-05-22 11:44+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: German (Germany) (https://www.transifex.com/siveo/teams/72118/de_DE/)\n"
@@ -1177,7 +1177,7 @@ msgstr "GLPI Inventar"
 #: modules/base/includes/computers_list.inc.php:102
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:76
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:77
 msgid "detaildeploy"
 msgstr ""
 
@@ -2089,29 +2089,29 @@ msgstr ""
 msgid "Complete Traceback"
 msgstr "vollständiger Traceback"
 
-#: includes/xmlrpc.inc.php:160
+#: includes/xmlrpc.inc.php:161
 msgid "Can't connect to MMC agent"
 msgstr "kann nicht zum MMC Agent verbinden"
 
-#: includes/xmlrpc.inc.php:161
+#: includes/xmlrpc.inc.php:162
 msgid "MMC agent seems to be down or not correctly configured."
 msgstr ""
 "MMC-Agent scheint nicht zu laufen oder ist nicht richtig konfiguriert."
 
-#: includes/xmlrpc.inc.php:173
+#: includes/xmlrpc.inc.php:174
 msgid "Can't send XML-RPC request to MMC agent"
 msgstr "kann keine XML-RPC-Anfrage an MMC-Agent senden"
 
-#: includes/xmlrpc.inc.php:174
+#: includes/xmlrpc.inc.php:175
 msgid "MMC agent seems to be not correctly configured."
 msgstr "MMC-Agent scheint nicht richtig konfiguriert zu sein."
 
-#: includes/xmlrpc.inc.php:190 includes/xmlrpc.inc.php:215
-#: includes/xmlrpc.inc.php:238
+#: includes/xmlrpc.inc.php:191 includes/xmlrpc.inc.php:216
+#: includes/xmlrpc.inc.php:239
 msgid "MMC agent communication problem"
 msgstr "MMC-Agent Kommunikations-Problem"
 
-#: includes/xmlrpc.inc.php:191
+#: includes/xmlrpc.inc.php:192
 msgid ""
 "Timeout when reading data from the MMC agent. Please check network "
 "connectivity and server load."
@@ -2121,15 +2121,15 @@ msgstr ""
 " der Daten von der MMC-Agent. Bitte überprüfen Sie die Netzwerkverbindung "
 "und Serverbelastung."
 
-#: includes/xmlrpc.inc.php:200
+#: includes/xmlrpc.inc.php:201
 msgid "Error while reading MMC agent XML-RPC response."
 msgstr "Fehler beim Lesen der MMC Agent XML-RPC-Antwort."
 
-#: includes/xmlrpc.inc.php:201
+#: includes/xmlrpc.inc.php:202
 msgid "Please check network connectivity."
 msgstr "Bitte überprüfen Sie die Netzwerkverbindung."
 
-#: includes/xmlrpc.inc.php:216
+#: includes/xmlrpc.inc.php:217
 msgid ""
 "Can't communicate with MMC agent. Please check you're using the right TCP "
 "port and the right protocol."
@@ -2137,7 +2137,7 @@ msgstr ""
 "Kann nicht mit MMC-Agent kommunizieren. Bitte überprüfen Sie die Nutzung des"
 " richtigen TCP-Ports und des richtigen Protokolls."
 
-#: includes/xmlrpc.inc.php:239
+#: includes/xmlrpc.inc.php:240
 msgid ""
 "The MMC agent didn't give us a session number. Please check the MMC agent "
 "version."
@@ -2145,11 +2145,11 @@ msgstr ""
 "Keine Session-Nummer vom MMC-Agent erhalten. Bitte überprüfen Sie die MMC-"
 "Agent Version."
 
-#: includes/xmlrpc.inc.php:349
+#: includes/xmlrpc.inc.php:350
 msgid "unknown error"
 msgstr "unbekannter Fehler"
 
-#: includes/xmlrpc.inc.php:350
+#: includes/xmlrpc.inc.php:351
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
