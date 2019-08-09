@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2018
+# Yuri Chornoivan <yurchor@ukr.net>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2019-02-10 20:46+0100\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -529,8 +529,12 @@ msgstr "Список вибраних груп"
 #: modules/dyngroup/dyngroup/add_groups.php:82
 #: modules/dyngroup/dyngroup/add_groups.php:302
 #, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "Список комп'ютерів обрізано до %d записів"
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
+msgstr ""
+"Список комп'ютерів обрізано до %d записів. Скористайтеся фільтром для пошуку"
+" потрібних вам комп'ютерів."
 
 #: modules/dyngroup/dyngroup/add_groups.php:162
 msgid "Group successfully modified"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2019-02-10 20:46+0100\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
@@ -289,7 +289,6 @@ msgstr ""
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
 #: modules/glpi/glpi/createMachinesStaticGroup.php:75
 #: modules/glpi/glpi/createOSStaticGroup.php:54
-#: modules/glpi/glpi/createStaticGroup.php:43
 #: modules/glpi/glpi/createBackupStaticGroup.php:69
 #, php-format
 msgid "Computers list has been truncated at %d computers"
@@ -701,7 +700,7 @@ msgid "History"
 msgstr ""
 
 #: modules/glpi/glpi/tabs.php:85
-#: modules/glpi/includes/panels/antivirus.inc.php:30
+#: modules/glpi/includes/panels/antivirus.inc.php:31
 msgid "Antivirus"
 msgstr ""
 
@@ -721,6 +720,13 @@ msgstr ""
 #: modules/glpi/glpi/createStaticGroup.php:33
 #, php-format
 msgid "Latest inventory is more than %s days at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createStaticGroup.php:43
+#, php-format
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
 msgstr ""
 
 #: modules/glpi/glpi/createBackupStaticGroup.php:55
@@ -785,26 +791,25 @@ msgstr ""
 msgid "Hide Windows Updates"
 msgstr ""
 
-#: modules/glpi/includes/panels/antivirus.inc.php:40
+#: modules/glpi/includes/panels/antivirus.inc.php:41
 #: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:67
 msgid "Create a group"
 msgstr ""
 
-#: modules/glpi/includes/panels/antivirus.inc.php:41
+#: modules/glpi/includes/panels/antivirus.inc.php:42
 msgid "OK: %percent% (%d)"
 msgstr ""
 
-#: modules/glpi/includes/panels/antivirus.inc.php:42
+#: modules/glpi/includes/panels/antivirus.inc.php:43
 msgid "Not running or not up-to-date: %percent% (%d)"
 msgstr ""
 
-#: modules/glpi/includes/panels/antivirus.inc.php:43
+#: modules/glpi/includes/panels/antivirus.inc.php:44
 msgid "No antivirus found: %percent% (%d)"
 msgstr ""
 
 #: modules/glpi/includes/panels/inventory.inc.php:30
-msgid "Computers"
+msgid "Inventories"
 msgstr ""
 
 #: modules/glpi/includes/panels/inventory.inc.php:44
@@ -815,10 +820,6 @@ msgstr ""
 msgid "> %s days: %percent% (%d)"
 msgstr ""
 
-#: modules/glpi/includes/panels/inventory.inc.php:48
-msgid "Latest Inventory Date"
-msgstr ""
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:33
+#: modules/glpi/includes/panels/os_repartition.inc.php:35
 msgid "Operating systems"
 msgstr ""

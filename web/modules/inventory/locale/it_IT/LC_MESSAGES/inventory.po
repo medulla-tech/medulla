@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2019-02-10 20:46+0100\n"
 "PO-Revision-Date: 2017-10-11 08:07+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/siveo/teams/72118/it_IT/)\n"
@@ -1380,7 +1380,9 @@ msgstr ""
 
 #: modules/inventory/inventory/createStaticGroup.php:43
 #, php-format
-msgid "Computers list has been truncated at %d computers"
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
 msgstr ""
 
 #: modules/inventory/inventory/deleteEntity.php:46

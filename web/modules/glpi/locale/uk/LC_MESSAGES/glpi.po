@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2018
+# Yuri Chornoivan <yurchor@ukr.net>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2019-02-10 20:46+0100\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -294,7 +294,6 @@ msgstr "На %s не знайдено антивірусів"
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
 #: modules/glpi/glpi/createMachinesStaticGroup.php:75
 #: modules/glpi/glpi/createOSStaticGroup.php:54
-#: modules/glpi/glpi/createStaticGroup.php:43
 #: modules/glpi/glpi/createBackupStaticGroup.php:69
 #, php-format
 msgid "Computers list has been truncated at %d computers"
@@ -711,7 +710,7 @@ msgid "History"
 msgstr "Журнал"
 
 #: modules/glpi/glpi/tabs.php:85
-#: modules/glpi/includes/panels/antivirus.inc.php:30
+#: modules/glpi/includes/panels/antivirus.inc.php:31
 msgid "Antivirus"
 msgstr "Антивірус"
 
@@ -732,6 +731,15 @@ msgstr "Останній облік було здійснено менше за 
 #, php-format
 msgid "Latest inventory is more than %s days at %s"
 msgstr "Останній облік було здійснено більше за %s днів тому на %s"
+
+#: modules/glpi/glpi/createStaticGroup.php:43
+#, php-format
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
+msgstr ""
+"Список комп'ютерів обрізано до %d записів. Скористайтеся фільтром для пошуку"
+" потрібних вам комп'ютерів."
 
 #: modules/glpi/glpi/createBackupStaticGroup.php:55
 #, php-format
@@ -795,27 +803,26 @@ msgstr "Додати запису право"
 msgid "Hide Windows Updates"
 msgstr "Приховати оновлення Windows"
 
-#: modules/glpi/includes/panels/antivirus.inc.php:40
+#: modules/glpi/includes/panels/antivirus.inc.php:41
 #: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:67
 msgid "Create a group"
 msgstr "Створити групу"
 
-#: modules/glpi/includes/panels/antivirus.inc.php:41
+#: modules/glpi/includes/panels/antivirus.inc.php:42
 msgid "OK: %percent% (%d)"
 msgstr "Виконано: %percent% (%d)"
 
-#: modules/glpi/includes/panels/antivirus.inc.php:42
+#: modules/glpi/includes/panels/antivirus.inc.php:43
 msgid "Not running or not up-to-date: %percent% (%d)"
 msgstr "Не працює або застаріло: %percent% (%d)"
 
-#: modules/glpi/includes/panels/antivirus.inc.php:43
+#: modules/glpi/includes/panels/antivirus.inc.php:44
 msgid "No antivirus found: %percent% (%d)"
 msgstr "Не знайдено антивірусів: %percent% (%d)"
 
 #: modules/glpi/includes/panels/inventory.inc.php:30
-msgid "Computers"
-msgstr "Комп'ютери"
+msgid "Inventories"
+msgstr "Обліки"
 
 #: modules/glpi/includes/panels/inventory.inc.php:44
 msgid "< %s days: %percent% (%d)"
@@ -825,10 +832,6 @@ msgstr "< %s днів: %percent% (%d)"
 msgid "> %s days: %percent% (%d)"
 msgstr "> %s днів: %percent% (%d)"
 
-#: modules/glpi/includes/panels/inventory.inc.php:48
-msgid "Latest Inventory Date"
-msgstr "Найсвіжіша дата обліку"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:33
+#: modules/glpi/includes/panels/os_repartition.inc.php:35
 msgid "Operating systems"
 msgstr "Операційні системи"

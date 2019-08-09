@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2019-02-10 20:46+0100\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -528,8 +528,10 @@ msgstr ""
 #: modules/dyngroup/dyngroup/add_groups.php:82
 #: modules/dyngroup/dyngroup/add_groups.php:302
 #, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr " %d "
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
+msgstr ""
 
 #: modules/dyngroup/dyngroup/add_groups.php:162
 msgid "Group successfully modified"
