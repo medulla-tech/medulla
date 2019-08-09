@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:46+0100\n"
+"POT-Creation-Date: 2019-08-09 23:03+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -21,35 +21,26 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: modules/support/infoPackage.inc.php:31
-#: modules/support/includes/panels/license.inc.php:54
-msgid "Support"
-msgstr "Support"
+#: modules/support/includes/panels/remotesupport.inc.php:30
+msgid "Extract logs"
+msgstr "Extraire les journaux"
 
-#: modules/support/infoPackage.inc.php:35
-msgid "Remote support"
-msgstr "Support distant"
+#: modules/support/includes/panels/remotesupport.inc.php:42
+msgid "Download archive"
+msgstr "Télécharger l'archive"
 
-#: modules/support/infoPackage.inc.php:40
-msgid "Collect"
-msgstr "Collecter"
-
-#: modules/support/infoPackage.inc.php:42
-msgid "Connect"
-msgstr "Connexion"
-
-#: modules/support/infoPackage.inc.php:44
-msgid "Disconnect"
-msgstr "Déconnexion"
-
-#: modules/support/infoPackage.inc.php:46
-msgid "Download an archive including logs and config files"
-msgstr ""
-"Télécharger une archive contenant les logs et fichiers de configuration"
+#: modules/support/includes/panels/remotesupport.inc.php:45
+msgid "Extract log and config files"
+msgstr "Extraire les logs et fichiers de configuration"
 
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
 msgstr "Informations de souscription"
+
+#: modules/support/includes/panels/license.inc.php:54
+#: modules/support/infoPackage.inc.php:31
+msgid "Support"
+msgstr "Support"
 
 #: modules/support/includes/panels/license.inc.php:57
 msgid "Phone"
@@ -83,14 +74,23 @@ msgstr "Liens"
 msgid "Activate again / Use another subscription"
 msgstr "Réactiver / Utiliser une autre souscription"
 
-#: modules/support/includes/panels/remotesupport.inc.php:30
-msgid "Extract logs"
-msgstr "Extraire les journaux"
+#: modules/support/infoPackage.inc.php:35
+msgid "Remote support"
+msgstr "Support distant"
 
-#: modules/support/includes/panels/remotesupport.inc.php:42
-msgid "Download archive"
-msgstr "Télécharger l'archive"
+#: modules/support/infoPackage.inc.php:40
+msgid "Collect"
+msgstr "Collecter"
 
-#: modules/support/includes/panels/remotesupport.inc.php:45
-msgid "Extract log and config files"
-msgstr "Extraire les logs et fichiers de configuration"
+#: modules/support/infoPackage.inc.php:42
+msgid "Connect"
+msgstr "Connexion"
+
+#: modules/support/infoPackage.inc.php:44
+msgid "Disconnect"
+msgstr "Déconnexion"
+
+#: modules/support/infoPackage.inc.php:46
+msgid "Download an archive including logs and config files"
+msgstr ""
+"Télécharger une archive contenant les logs et fichiers de configuration"

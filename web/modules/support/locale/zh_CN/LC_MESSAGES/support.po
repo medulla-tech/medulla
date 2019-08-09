@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:46+0100\n"
+"POT-Creation-Date: 2019-08-09 23:03+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -21,34 +21,26 @@ msgstr ""
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: modules/support/infoPackage.inc.php:31
-#: modules/support/includes/panels/license.inc.php:54
-msgid "Support"
-msgstr "支援"
-
-#: modules/support/infoPackage.inc.php:35
-msgid "Remote support"
-msgstr "远端支援"
-
-#: modules/support/infoPackage.inc.php:40
-msgid "Collect"
+#: modules/support/includes/panels/remotesupport.inc.php:30
+msgid "Extract logs"
 msgstr ""
 
-#: modules/support/infoPackage.inc.php:42
-msgid "Connect"
-msgstr "连线"
+#: modules/support/includes/panels/remotesupport.inc.php:42
+msgid "Download archive"
+msgstr ""
 
-#: modules/support/infoPackage.inc.php:44
-msgid "Disconnect"
-msgstr "断开连线"
-
-#: modules/support/infoPackage.inc.php:46
-msgid "Download an archive including logs and config files"
+#: modules/support/includes/panels/remotesupport.inc.php:45
+msgid "Extract log and config files"
 msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
 msgstr "订阅资讯"
+
+#: modules/support/includes/panels/license.inc.php:54
+#: modules/support/infoPackage.inc.php:31
+msgid "Support"
+msgstr "支援"
 
 #: modules/support/includes/panels/license.inc.php:57
 msgid "Phone"
@@ -82,14 +74,22 @@ msgstr "连结"
 msgid "Activate again / Use another subscription"
 msgstr ""
 
-#: modules/support/includes/panels/remotesupport.inc.php:30
-msgid "Extract logs"
+#: modules/support/infoPackage.inc.php:35
+msgid "Remote support"
+msgstr "远端支援"
+
+#: modules/support/infoPackage.inc.php:40
+msgid "Collect"
 msgstr ""
 
-#: modules/support/includes/panels/remotesupport.inc.php:42
-msgid "Download archive"
-msgstr ""
+#: modules/support/infoPackage.inc.php:42
+msgid "Connect"
+msgstr "连线"
 
-#: modules/support/includes/panels/remotesupport.inc.php:45
-msgid "Extract log and config files"
+#: modules/support/infoPackage.inc.php:44
+msgid "Disconnect"
+msgstr "断开连线"
+
+#: modules/support/infoPackage.inc.php:46
+msgid "Download an archive including logs and config files"
 msgstr ""
