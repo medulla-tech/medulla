@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-22 11:44+0200\n"
+"POT-Creation-Date: 2019-08-09 22:36+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/zh_TW/)\n"
@@ -21,195 +21,9 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:156
-#: modules/xmppmaster/xmppmaster/consolexmpp.php:49
-msgid "Console"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:177
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:310
-#: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:65
-#: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:60
-#: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:60
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:67
-#, php-format
-msgid "Sorry, the remote machine [%s] takes too much time to answer."
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:179
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:312
-#: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:68
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:301
-#: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:62
-#: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:62
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:69
-#, php-format
-msgid "Error : %s"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:220
-#: modules/xmppmaster/xmppmaster/consolexmpp.php:108
-msgid "Press return key to start your command"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/wakeonlan.php:35
-msgid "Wake On Lan"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/wakeonlan.php:41
-msgid "Mac address"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:262
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:259
-msgid "File manager"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:547
-msgid "Copy remote folder"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:551
-msgid "to local folder"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:577
-msgid "The folder copy has been requested successfully"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:601
-msgid "Copy remote file"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:607
-msgid "to local File"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:631
-msgid "The file copy has been requested successfully"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:77
-msgid "detaildeploy"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:89
-#: modules/xmppmaster/xmppmaster/deployxmpp.php:39
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:80
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:224
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:86
-msgid "Deployment"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
-msgid "Name"
-msgstr "名稱"
-
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:91
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:82
-msgid "Start"
-msgstr "開始"
-
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:92
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:83
-msgid "State"
-msgstr "狀態"
-
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:93
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:84
-msgid "Package"
-msgstr "封裝"
-
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:238
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
-msgid "User"
-msgstr "使用者"
-
-#: modules/xmppmaster/xmppmaster/topology.php:59
-msgid "Topology Pulse"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:54
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:89
-msgid "Os"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:65
-msgid "Group : "
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:75
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:93
-msgid "Computer"
-msgstr "電腦"
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:86
-msgid "Custom Command"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:90
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
-msgid "Start date"
-msgstr "開始日期"
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:92
-msgid "Type"
-msgstr "類型"
-
-#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:27
-msgid "My tasks"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:28
 #: modules/xmppmaster/xmppmaster/auditdeploy.php:35
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:28
 msgid "All users tasks"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:29
-#: modules/xmppmaster/xmppmaster/auditmypastdeploys.php:34
-msgid "My past tasks"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:30
-#: modules/xmppmaster/xmppmaster/auditpastdeploys.php:34
-msgid "All users past tasks"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/editqa.php:63
-#, php-format
-msgid "Edit custom quick action : %s"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/editqa.php:65
-msgid "Create a custom quick action"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/editqa.php:78
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
-msgid "Operating System"
-msgstr "作業系統"
-
-#: modules/xmppmaster/xmppmaster/editqa.php:80
-msgid "Command name"
-msgstr "命令名稱"
-
-#: modules/xmppmaster/xmppmaster/editqa.php:82
-msgid "Command"
-msgstr "命令"
-
-#: modules/xmppmaster/xmppmaster/editqa.php:84
-msgid "Command description"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/removeqa.php:35
-#, php-format
-msgid "Delete this Quick Action :%s"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:26
@@ -242,70 +56,187 @@ msgstr ""
 msgid "Machines Topology"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
-msgid "Custom command name"
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:156
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:49
+msgid "Console"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
-msgid "Description"
-msgstr "說明"
-
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:106
-msgid "Edit a Quick Action"
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:177
+#: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:60
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:67
+#: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:60
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:310
+#: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:65
+#, php-format
+msgid "Sorry, the remote machine [%s] takes too much time to answer."
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:107
-msgid "Share a Quick Action"
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:179
+#: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:62
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:301
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:69
+#: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:62
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:312
+#: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:68
+#, php-format
+msgid "Error : %s"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:108
-msgid "Delete a Quick Action"
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:220
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:108
+msgid "Press return key to start your command"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/listfichierconf.php:158
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:230
+#: modules/xmppmaster/xmppmaster/ActionQuickGroup.php:36
+msgid "Quick action results"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
+msgid "Planned tasks"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
+msgid "Delete deploy"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:86
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:273
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:118
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:89
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:80
+#: modules/xmppmaster/xmppmaster/deployxmpp.php:39
+msgid "Deployment"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:276
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:121
+msgid "Target"
+msgstr "目標"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:277
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:122
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:90
+msgid "Start date"
+msgstr "開始日期"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:286
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
+msgid "User"
+msgstr "使用者"
+
+#: modules/xmppmaster/xmppmaster/editqa.php:63
+#, php-format
+msgid "Edit custom quick action : %s"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/editqa.php:65
+msgid "Create a custom quick action"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/editqa.php:78
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
+msgid "Operating System"
+msgstr "作業系統"
+
+#: modules/xmppmaster/xmppmaster/editqa.php:80
+msgid "Command name"
+msgstr "命令名稱"
+
+#: modules/xmppmaster/xmppmaster/editqa.php:82
+msgid "Command"
+msgstr "命令"
+
+#: modules/xmppmaster/xmppmaster/editqa.php:84
+msgid "Command description"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:43
+msgid "Current tasks (last 24 hours)"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:49
+msgid "Past tasks (last 3 months)"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:82
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
+msgid "detaildeploy"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:278
+msgid "Status"
+msgstr "狀態"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:279
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:123
+msgid "Total Machines"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:280
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:236
+msgid "In progress"
+msgstr "進行中"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:281
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:234
+msgid "Success"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:282
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:235
+msgid "Error"
+msgstr "錯誤"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:283
+msgid "Waiting Wol"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:284
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:238
+msgid "Timed out"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:285
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:239
+msgid "Aborted"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/auditmypastdeploys.php:34
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:29
+msgid "My past tasks"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:43
+msgid "Deployments Launched on Offline Items (last 24 hours)"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:47
+msgid "Deployments Launched on Offline Items (last 3 months)"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:230
+#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:230
+#: modules/xmppmaster/xmppmaster/listfichierconf.php:158
 msgid "Edit config file"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:42
-msgid "Quick monitoring"
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
+#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:329
+msgid "Save Configuration"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:530
-msgid "check img remote agent"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:538
-msgid "diff information"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:547
-msgid "Action diff"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/deployxmpp.php:88
-msgid "Select a machine"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/deployxmpp.php:96
-msgid "Select a package"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/index.php:39
-msgid "My Tasks ["
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:66
-msgid "Sorry the operating system of the machine is"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:66
-msgid "The custom QA is defined for operating system"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:71
-msgid "Sorry the machine is off"
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
+#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:329
+msgid "File :"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:44
@@ -320,6 +251,36 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:48
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:46
 msgid "To"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/auditpastdeploys.php:34
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:30
+msgid "All users past tasks"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:42
+msgid "Quick monitoring"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:548
+msgid "check img remote agent"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:556
+msgid "diff information"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:565
+msgid "Action diff"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:47
+msgid "Console Agent Relay Server"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:259
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:262
+msgid "File manager"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:299
@@ -415,144 +376,6 @@ msgstr "確認"
 msgid "The list (folder & files) copy has been requested successfully"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:81
-msgid "Computer Name"
-msgstr "電腦名稱"
-
-#: modules/xmppmaster/xmppmaster/consolexmpp.php:47
-msgid "Console Agent Relay Server"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:65
-#, php-format
-msgid ""
-"Sorry the operating system of the machine %s is [%s].<br>The custom QA is "
-"defined for operating system [%s]"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:71
-#, php-format
-msgid "Sorry the machine '%s' is off"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
-msgid "Computer deploy"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:52
-msgid "Deployment [ group"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:168
-msgid "Deployment completed"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:173
-msgid "Deployment in progress"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:174
-msgid "Started since"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:179
-msgid "WAITING FOR START "
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:186
-msgid "Abort Deployment"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:201
-msgid "Number of machines in the group"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:202
-msgid "Number of current deployments"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:203
-msgid "Number of deployments in timeout"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:204
-msgid "Deployment summary"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:206
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:232
-msgid "Success"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:207
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:233
-msgid "Error"
-msgstr "錯誤"
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:208
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:231
-msgid "In progress"
-msgstr "進行中"
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:209
-msgid "Waiting"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:210
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:235
-msgid "Timed out"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:211
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:236
-msgid "Aborted"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
-msgid "Deployment [machine "
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/logbygrpmachine.php:45
-msgid "Computer deploy group"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:43
-msgid "Current tasks (last 24 hours)"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:48
-msgid "Past tasks (last 3 months)"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:227
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
-msgid "Target"
-msgstr "目標"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:229
-msgid "Status"
-msgstr "狀態"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:230
-msgid "Total Machines"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:234
-msgid "Waiting Wol"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ActionQuickGroup.php:36
-msgid "Quick action results"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
-msgid "Planned tasks"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
-msgid "Delete deploy"
-msgstr ""
-
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
 msgid "Edit config files"
 msgstr ""
@@ -561,23 +384,53 @@ msgstr ""
 msgid "Config file"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:329
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
-msgid "Save Configuration"
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:27
+msgid "My tasks"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:329
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
-msgid "File :"
+#: modules/xmppmaster/xmppmaster/topology.php:59
+msgid "Topology Pulse"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:142
-msgid "Quick action on machine"
+#: modules/xmppmaster/xmppmaster/customQA.php:38
+#, php-format
+msgid "Quick action list for user %s"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:149
-msgid "Name of Quick Action  :"
+#: modules/xmppmaster/xmppmaster/customQA.php:45
+msgid "Create new Quick Action"
 msgstr ""
+
+#: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:66
+msgid "Sorry the operating system of the machine is"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:66
+msgid "The custom QA is defined for operating system"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:71
+msgid "Sorry the machine is off"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
+msgid "Name"
+msgstr "名稱"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:91
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:82
+msgid "Start"
+msgstr "開始"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:92
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:83
+msgid "State"
+msgstr "狀態"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:93
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:84
+msgid "Package"
+msgstr "封裝"
 
 #: modules/xmppmaster/xmppmaster/shareqa.php:60
 msgid "Share the Quick Action"
@@ -599,13 +452,183 @@ msgstr ""
 msgid "Selected users"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/customQA.php:38
-#, php-format
-msgid "Quick action list for user %s"
+#: modules/xmppmaster/xmppmaster/wakeonlan.php:35
+msgid "Wake On Lan"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/customQA.php:45
-msgid "Create new Quick Action"
+#: modules/xmppmaster/xmppmaster/wakeonlan.php:41
+msgid "Mac address"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:142
+msgid "Quick action on machine"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:149
+msgid "Name of Quick Action  :"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:54
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:89
+msgid "Os"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:65
+msgid "Group : "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:75
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:93
+msgid "Computer"
+msgstr "電腦"
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:86
+msgid "Custom Command"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:92
+msgid "Type"
+msgstr "類型"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
+msgid "Deployment [machine "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/logbygrpmachine.php:45
+msgid "Computer deploy group"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
+msgid "Computer deploy"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:51
+msgid "Deployment [ group"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:124
+msgid "Syncthing done or non-existant"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:127
+msgid "Share name"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:129
+msgid "Number of participants"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:131
+msgid "Transfer progress"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:196
+msgid "Deployment completed"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:201
+msgid "Deployment in progress"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:202
+msgid "Started since"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:207
+msgid "WAITING FOR START "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:214
+msgid "Abort Deployment"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:229
+msgid "Number of machines in the group"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:230
+msgid "Number of current deployments"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:231
+msgid "Number of deployments in timeout"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:232
+msgid "Deployment summary"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:237
+msgid "Waiting"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/index.php:43
+msgid "My Tasks ["
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/removeqa.php:35
+#, php-format
+msgid "Delete this Quick Action :%s"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:81
+msgid "Computer Name"
+msgstr "電腦名稱"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:547
+msgid "Copy remote folder"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:551
+msgid "to local folder"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:577
+msgid "The folder copy has been requested successfully"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:601
+msgid "Copy remote file"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:607
+msgid "to local File"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:631
+msgid "The file copy has been requested successfully"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
+msgid "Custom command name"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
+msgid "Description"
+msgstr "說明"
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:106
+msgid "Edit a Quick Action"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:107
+msgid "Share a Quick Action"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:108
+msgid "Delete a Quick Action"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:65
+#, php-format
+msgid ""
+"Sorry the operating system of the machine %s is [%s].<br>The custom QA is "
+"defined for operating system [%s]"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:71
+#, php-format
+msgid "Sorry the machine '%s' is off"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:43
@@ -614,6 +637,14 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:44
 msgid "From"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/deployxmpp.php:88
+msgid "Select a machine"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/deployxmpp.php:96
+msgid "Select a package"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:32
@@ -773,4 +804,8 @@ msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:285
 msgid "List computer deploy"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:290
+msgid "List of not launched deployments"
 msgstr ""
