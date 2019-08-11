@@ -27,7 +27,7 @@ require("graph/navbar.inc.php");
 require("modules/pkgs/pkgs/localSidebar.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 
-$p = new PageGenerator(_T("Rules List",'pkgs'));
+$p = new PageGenerator(_T("Rules list",'pkgs'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
