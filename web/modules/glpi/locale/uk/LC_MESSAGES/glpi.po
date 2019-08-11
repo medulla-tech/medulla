@@ -74,7 +74,7 @@ msgstr "> %s днів: %percent% (%d)"
 
 #: modules/glpi/includes/panels/inventory.inc.php:48
 msgid "Uninventoried machines"
-msgstr ""
+msgstr "Машин без обліку"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:31
 #: modules/glpi/glpi/tabs.php:88
@@ -237,7 +237,7 @@ msgstr "Вкладка реєстру (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:187
 msgid "Connections tab (GLPI)"
-msgstr ""
+msgstr "Вкладка з'єднань (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:192
 msgid "Inventory (GLPI) on machine"

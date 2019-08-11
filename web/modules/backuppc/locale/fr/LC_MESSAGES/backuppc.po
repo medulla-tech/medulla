@@ -6,7 +6,7 @@
 # Translators:
 # Stephane Pointu <spointu@gmail.com>, 2017
 # Guillaume <guillaume.lassarre@siveo.net>, 2018
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-09 23:03+0200\n"
 "PO-Revision-Date: 2017-09-12 12:18+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -751,7 +751,7 @@ msgstr "Nb incrémentales"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:95
 msgid "Last backup (days)"
-msgstr "Age de la dernière sauvegarde (en jours)"
+msgstr "Dernière sauvegarde (en jours)"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:96
 msgid "Current state"

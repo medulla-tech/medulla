@@ -105,19 +105,19 @@ msgstr "Пакунки"
 
 #: modules/pkgs/infoPackage.inc.php:45 modules/pkgs/pkgs/localSidebar.php:30
 msgid "Rules list"
-msgstr ""
+msgstr "Список правил"
 
 #: modules/pkgs/infoPackage.inc.php:49 modules/pkgs/pkgs/localSidebar.php:31
 msgid "Add a rule"
-msgstr ""
+msgstr "Додати правило"
 
 #: modules/pkgs/infoPackage.inc.php:53
 msgid "Edit a rule"
-msgstr ""
+msgstr "Редагувати правило"
 
 #: modules/pkgs/infoPackage.inc.php:57
 msgid "Delete a rule"
-msgstr ""
+msgstr "Вилучити правило"
 
 #: modules/pkgs/infoPackage.inc.php:62
 msgid "Show all packages"
@@ -211,40 +211,40 @@ msgstr "Вилучити цей пакунок"
 
 #: modules/pkgs/pkgs/rulesList.php:30
 msgid "Rules List"
-msgstr ""
+msgstr "Список правил"
 
 #: modules/pkgs/pkgs/rulesList.php:36
 msgid "The rule has been removed"
-msgstr ""
+msgstr "Правило було вилучено"
 
 #: modules/pkgs/pkgs/rulesList.php:71 modules/pkgs/pkgs/addRule.php:59
 #: modules/pkgs/pkgs/editRule.php:64
 msgid "Rule Name"
-msgstr ""
+msgstr "Назва правила"
 
 #: modules/pkgs/pkgs/rulesList.php:73
 msgid "Rule Order"
-msgstr ""
+msgstr "Порядок правил"
 
 #: modules/pkgs/pkgs/rulesList.php:74
 msgid "Rule Description"
-msgstr ""
+msgstr "Опис правила"
 
 #: modules/pkgs/pkgs/rulesList.php:76
 msgid "Raise order priority"
-msgstr ""
+msgstr "Підняти пріоритетність"
 
 #: modules/pkgs/pkgs/rulesList.php:77
 msgid "Lower order priority"
-msgstr ""
+msgstr "Знизити пріоритетність"
 
 #: modules/pkgs/pkgs/rulesList.php:78
 msgid "Edit Profil"
-msgstr ""
+msgstr "Змінити профіль"
 
 #: modules/pkgs/pkgs/rulesList.php:79
 msgid "Delete Profil"
-msgstr ""
+msgstr "Вилучити профіль"
 
 #: modules/pkgs/pkgs/edit.php:38
 msgid "Edit package"
@@ -287,7 +287,7 @@ msgstr "Не вдалося вилучити файли%s"
 #: modules/pkgs/pkgs/edit.php:172 modules/pkgs/pkgs/edit.php:177
 #, php-format
 msgid "<br/>File successfully deleted. %s"
-msgstr ""
+msgstr "<br/>Файл успішно вилучено. %s"
 
 #: modules/pkgs/pkgs/edit.php:182
 msgid "Failed to delete files"
@@ -483,11 +483,11 @@ msgstr "Активувати цей потік Appstream?"
 
 #: modules/pkgs/pkgs/rsync.php:74
 msgid "Relay servers already synchronized : "
-msgstr ""
+msgstr "Проміжні сервери, які вже синхронізовано:"
 
 #: modules/pkgs/pkgs/rsync.php:93
 msgid "Relay servers not yet synchronized : "
-msgstr ""
+msgstr "Проміжні сервери, які ще не синхронізовано:"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:83
 msgid "Please switch to Expert mode to edit this package"
@@ -510,7 +510,7 @@ msgstr "Розмір пакунка"
 
 #: modules/pkgs/pkgs/deletePackage.php:38
 msgid "Delete this rule"
-msgstr ""
+msgstr "Вилучити це правило"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:39
 #, php-format
@@ -554,61 +554,61 @@ msgstr "Пароль"
 
 #: modules/pkgs/pkgs/addRule.php:29
 msgid "Add a Rule"
-msgstr ""
+msgstr "Додати правило"
 
 #: modules/pkgs/pkgs/addRule.php:41
 #, php-format
 msgid "The rule %s has been created"
-msgstr ""
+msgstr "Створено правило %s"
 
 #: modules/pkgs/pkgs/addRule.php:61 modules/pkgs/pkgs/editRule.php:66
 msgid "Search in Name"
-msgstr ""
+msgstr "Шукати у назві"
 
 #: modules/pkgs/pkgs/addRule.php:61 modules/pkgs/pkgs/editRule.php:66
 msgid "File Name"
-msgstr ""
+msgstr "Назва файла"
 
 #: modules/pkgs/pkgs/addRule.php:62 modules/pkgs/pkgs/editRule.php:67
 msgid "Search in Extension"
-msgstr ""
+msgstr "Шукати у суфіксі"
 
 #: modules/pkgs/pkgs/addRule.php:62 modules/pkgs/pkgs/editRule.php:67
 msgid "File Extension"
-msgstr ""
+msgstr "Суфікс файла"
 
 #: modules/pkgs/pkgs/addRule.php:63 modules/pkgs/pkgs/editRule.php:68
 msgid "Search in Bang"
-msgstr ""
+msgstr "Шукати у Bang"
 
 #: modules/pkgs/pkgs/addRule.php:63 modules/pkgs/pkgs/editRule.php:68
 msgid "Element in Bang"
-msgstr ""
+msgstr "Елемент у Bang"
 
 #: modules/pkgs/pkgs/addRule.php:64 modules/pkgs/pkgs/editRule.php:69
 msgid "Search into File command"
-msgstr ""
+msgstr "Шукати у команді File"
 
 #: modules/pkgs/pkgs/addRule.php:64 modules/pkgs/pkgs/editRule.php:69
 msgid "Element in File Result"
-msgstr ""
+msgstr "Елемент у результаті File"
 
 #: modules/pkgs/pkgs/addRule.php:65 modules/pkgs/pkgs/editRule.php:70
 msgid "Search into Strings command"
-msgstr ""
+msgstr "Шукати у команді Strings"
 
 #: modules/pkgs/pkgs/addRule.php:65 modules/pkgs/pkgs/editRule.php:70
 msgid "Element in Strings Result"
-msgstr ""
+msgstr "Елемент у результаті Strings"
 
 #: modules/pkgs/pkgs/editRule.php:29
 msgid "Edit a Rule"
-msgstr ""
+msgstr "Редагувати правило"
 
 #: modules/pkgs/pkgs/editRule.php:41
 #, php-format
 msgid "The rule %s has been modified"
-msgstr ""
+msgstr "Змінено правило %s"
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:55
 msgid "Validity (months)"

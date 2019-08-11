@@ -4,8 +4,8 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
 # Stephane Pointu <spointu@gmail.com>, 2019
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-09 23:03+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Stephane Pointu <spointu@gmail.com>, 2019\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,19 +106,19 @@ msgstr "Packages"
 
 #: modules/pkgs/infoPackage.inc.php:45 modules/pkgs/pkgs/localSidebar.php:30
 msgid "Rules list"
-msgstr ""
+msgstr "Liste des règles"
 
 #: modules/pkgs/infoPackage.inc.php:49 modules/pkgs/pkgs/localSidebar.php:31
 msgid "Add a rule"
-msgstr ""
+msgstr "Ajoutéerune règle"
 
 #: modules/pkgs/infoPackage.inc.php:53
 msgid "Edit a rule"
-msgstr ""
+msgstr "Éditer une règle"
 
 #: modules/pkgs/infoPackage.inc.php:57
 msgid "Delete a rule"
-msgstr ""
+msgstr "Supprimer une règle"
 
 #: modules/pkgs/infoPackage.inc.php:62
 msgid "Show all packages"
@@ -216,7 +216,7 @@ msgstr ""
 
 #: modules/pkgs/pkgs/rulesList.php:36
 msgid "The rule has been removed"
-msgstr ""
+msgstr "La règle a été supprimée"
 
 #: modules/pkgs/pkgs/rulesList.php:71 modules/pkgs/pkgs/addRule.php:59
 #: modules/pkgs/pkgs/editRule.php:64
