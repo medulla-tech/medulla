@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-09 23:03+0200\n"
+"POT-Creation-Date: 2019-08-11 14:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -97,6 +97,7 @@ msgid "Packages"
 msgstr ""
 
 #: modules/pkgs/infoPackage.inc.php:45 modules/pkgs/pkgs/localSidebar.php:30
+#: modules/pkgs/pkgs/rulesList.php:30
 msgid "Rules list"
 msgstr ""
 
@@ -200,10 +201,6 @@ msgstr ""
 
 #: modules/pkgs/pkgs/remove.php:67
 msgid "Delete this package"
-msgstr ""
-
-#: modules/pkgs/pkgs/rulesList.php:30
-msgid "Rules List"
 msgstr ""
 
 #: modules/pkgs/pkgs/rulesList.php:36
