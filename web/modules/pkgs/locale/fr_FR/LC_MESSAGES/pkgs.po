@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-09 23:03+0200\n"
+"POT-Creation-Date: 2019-08-11 14:24+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -105,12 +105,13 @@ msgid "Packages"
 msgstr "Packages"
 
 #: modules/pkgs/infoPackage.inc.php:45 modules/pkgs/pkgs/localSidebar.php:30
+#: modules/pkgs/pkgs/rulesList.php:30
 msgid "Rules list"
 msgstr "Liste des règles"
 
 #: modules/pkgs/infoPackage.inc.php:49 modules/pkgs/pkgs/localSidebar.php:31
 msgid "Add a rule"
-msgstr "Ajouter une règle"
+msgstr "Ajoutéerune règle"
 
 #: modules/pkgs/infoPackage.inc.php:53
 msgid "Edit a rule"
@@ -210,10 +211,6 @@ msgstr "La suppression du package a échoué."
 msgid "Delete this package"
 msgstr "Supprimer ce package"
 
-#: modules/pkgs/pkgs/rulesList.php:30
-msgid "Rules List"
-msgstr ""
-
 #: modules/pkgs/pkgs/rulesList.php:36
 msgid "The rule has been removed"
 msgstr "La règle a été supprimée"
@@ -221,7 +218,7 @@ msgstr "La règle a été supprimée"
 #: modules/pkgs/pkgs/rulesList.php:71 modules/pkgs/pkgs/addRule.php:59
 #: modules/pkgs/pkgs/editRule.php:64
 msgid "Rule Name"
-msgstr ""
+msgstr "Nom de la règle"
 
 #: modules/pkgs/pkgs/rulesList.php:73
 msgid "Rule Order"
@@ -229,7 +226,7 @@ msgstr ""
 
 #: modules/pkgs/pkgs/rulesList.php:74
 msgid "Rule Description"
-msgstr ""
+msgstr "Description de la règle"
 
 #: modules/pkgs/pkgs/rulesList.php:76
 msgid "Raise order priority"
@@ -241,11 +238,11 @@ msgstr ""
 
 #: modules/pkgs/pkgs/rulesList.php:78
 msgid "Edit Profil"
-msgstr ""
+msgstr "Éditer le profil"
 
 #: modules/pkgs/pkgs/rulesList.php:79
 msgid "Delete Profil"
-msgstr ""
+msgstr "Supprimer le profil"
 
 #: modules/pkgs/pkgs/edit.php:38
 msgid "Edit package"
@@ -510,7 +507,7 @@ msgstr "Taille du package"
 
 #: modules/pkgs/pkgs/deletePackage.php:38
 msgid "Delete this rule"
-msgstr ""
+msgstr "Supprimer cette règle"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:39
 #, php-format
@@ -553,12 +550,12 @@ msgstr "Mot de passe"
 
 #: modules/pkgs/pkgs/addRule.php:29
 msgid "Add a Rule"
-msgstr ""
+msgstr "Ajouter une règle"
 
 #: modules/pkgs/pkgs/addRule.php:41
 #, php-format
 msgid "The rule %s has been created"
-msgstr ""
+msgstr "La règle %s a été créée"
 
 #: modules/pkgs/pkgs/addRule.php:61 modules/pkgs/pkgs/editRule.php:66
 msgid "Search in Name"
@@ -574,7 +571,7 @@ msgstr ""
 
 #: modules/pkgs/pkgs/addRule.php:62 modules/pkgs/pkgs/editRule.php:67
 msgid "File Extension"
-msgstr ""
+msgstr "Extension du fichier"
 
 #: modules/pkgs/pkgs/addRule.php:63 modules/pkgs/pkgs/editRule.php:68
 msgid "Search in Bang"
@@ -602,12 +599,12 @@ msgstr ""
 
 #: modules/pkgs/pkgs/editRule.php:29
 msgid "Edit a Rule"
-msgstr ""
+msgstr "Éditer une règle"
 
 #: modules/pkgs/pkgs/editRule.php:41
 #, php-format
 msgid "The rule %s has been modified"
-msgstr ""
+msgstr "La règle %s n'a pas été modifiée"
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:55
 msgid "Validity (months)"
