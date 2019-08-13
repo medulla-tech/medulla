@@ -116,21 +116,44 @@ if ($timestampnow > ($end_date)){
 };
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
-
+echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date)."<br>";
 $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'], $_GET['cmd_id'] );
 
-
 if ($statsyncthing['package'] == ""){
-    echo _T("Syncthing done or non-existant", "xmppmaster");
-    echo "<br />";
+    echo "Syncthing sharing done or non-existant";
 }else{
-    echo _T("Share name", "xmppmaster")." : ". $statsyncthing['package'];
-    echo '<br />';
-    echo _T("Number of participants", "xmppmaster")." : ".$statsyncthing['nbmachine'];
-    echo '<br />';
-    echo _T("Transfer progress", "xmppmaster")." : ".$statsyncthing['progresstransfert'].' %';
-    echo '<br />';
+echo '<div class="bars1" style="color:blue">';
+echo'
+<table>
+  <tr>
+    <th >Partage syncthing</th>
+    <th >nb mach</th>
+    <th >transfert</th>
+  </tr>
+  <tr>
+    <td rowspan="2">';
+                echo _T("Share name", "xmppmaster")." : ". $statsyncthing['package'];
+                echo '<br />';
+                echo _T("Number of participants", "xmppmaster")." : ".$statsyncthing['nbmachine'];
+                echo '<br />';
+                echo _T("Transfer progress", "xmppmaster")." : ".$statsyncthing['progresstransfert'].' %';
+                echo '<br />';
+    echo '</td>';
+
+    $entete = "";
+    foreach ( $statsyncthing['distibution']['data_dist'] as $arrayval){
+        echo $entete ."
+                <td>$arrayval[1]</td>
+                <td>$arrayval[0]%</td>
+            </tr>";
+            if ($entete==""){$entete = "<tr>";}
+    }
+    echo '</table>';
+echo '</div>';
 }
+echo'<br><br><br><br><br><br><br><br>';
+echo "<Hr>";
+
 
 if ($info['len'] != 0){
     $uuid=$info['objectdeploy'][0]['inventoryuuid'];
@@ -144,7 +167,6 @@ if ($info['len'] != 0){
     $jid_relay=$info['objectdeploy'][0]['jid_relay'];
 }
 
-echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date);
 if ($bool_convergence_grp_on_package_from_msc !=0 ){
     echo "<img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/>";
 }
@@ -442,6 +464,11 @@ progress::-moz-progress-bar {
 
 .bars{
     width: 400px;
+    float:left;
+}
+
+.bars1{
+    width:650px;
     float:left;
 }
 </style>
