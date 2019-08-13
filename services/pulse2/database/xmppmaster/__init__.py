@@ -461,10 +461,38 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
+    def stat_syncthing_distributon(self,
+                                   session,
+                                   idgrp,
+                                   idcmd,
+                                   valuecount= [0,100]):
+        setvalues =" "
+        if len(valuecount) != 0:
+             setvalues = "AND xmppmaster.syncthing_machine.progress in (%s)"%",".join([str(x) for x in valuecount])
+        sql = """SELECT DISTINCT progress, COUNT(progress)
+                    FROM 
+                        xmppmaster.syncthing_machine 
+                    WHERE
+                        xmppmaster.syncthing_machine.group_uuid = %s
+                        AND xmppmaster.syncthing_machine.command = %s
+                        """%(idgrp, idcmd)
+        sql = sql + setvalues + "\nGROUP BY progress ;"
+
+        print sql
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [(x[0],x[1]) for x in result]
+
+    @DatabaseHelper._sessionm
     def stat_syncthing_transfert(self,
                                  session,
                                  idgrp,
                                  idcmd):
+
+        ddistribution = self.stat_syncthing_distributon(idgrp, idcmd)
+        distibution = {'nbvalue' : len(ddistribution), "data_dist" : ddistribution}
+
         sql = """SELECT 
                     pathpackage,
                     COUNT(*) AS nb,
@@ -483,7 +511,9 @@ class XmppMasterDatabase(DatabaseHelper):
         if re[0] is None:
             return {'package' : "",
                     'nbmachine' : 0,
-                    'progresstransfert' : 0}
+                    'progresstransfert' : 0,
+                    'distibution' : distibution
+                    }
         try:
             progress = int(float(re[2]))
         except exceptions.ValueError:
@@ -491,7 +521,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
         return { 'package' : re[0],
                  'nbmachine' : re[1],
-                 'progresstransfert' : progress }
+                 'progresstransfert' : progress ,
+                 'distibution' : distibution}
 
     @DatabaseHelper._sessionm
     def getnumcluster_for_ars(self,
