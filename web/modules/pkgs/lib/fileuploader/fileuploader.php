@@ -10,29 +10,50 @@ session_start();
 require_once("../../../../includes/xmlrpc.inc.php"); // For isXMLRPCError() function
 require_once("../../../../modules/pkgs/includes/xmlrpc.php");
 require_once("../../../../modules/pkgs/includes/functions.php");
+include_once("../../../../modules/base/includes/users-xmlrpc.inc.php");
 
+$protocol = 'http://';
+if(isset($_SESSION['login']))
+{
+  $hasright = false;
+  if($_SESSION['login'] != "root")
+  {
+    $aclString = getAcl($_SESSION['login']);
+    $hasright = preg_match('#(pkgs\#){2}(add|edit)#', $aclString);
+  }
+  else
+    $hasright = true;
 
-// list of valid extensions, ex. array("jpeg", "xml", "bmp")
-$allowedExtensions = array();
-// max file size in bytes
-$sizeLimit = get_php_max_upload_size() * 1024 * 1024;
+  if($hasright)
+  {
+    // list of valid extensions, ex. array("jpeg", "xml", "bmp")
+    $allowedExtensions = array();
+    // max file size in bytes
+    $sizeLimit = get_php_max_upload_size() * 1024 * 1024;
 
-//require('valums-file-uploader/server/php.php');
-$uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+    //require('valums-file-uploader/server/php.php');
+    $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
 
-// Call handleUpload() with the name of the folder, relative to PHP's getcwd()
+    // Call handleUpload() with the name of the folder, relative to PHP's getcwd()
 
-// Put uploaded file in PHP upload_tmp_dir / random_dir
-// FIXME: With IE, can't use $_GET values ?? So I use $_SESSION values
-$random_dir = (isset($_GET['random_dir'])) ? $_GET['random_dir'] : $_SESSION['random_dir'];
-// $p_api_id = (isset($_GET['selectedPapi'])) ? $_GET['selectedPapi'] : $_SESSION['p_api_id'];
-$upload_tmp_dir = sys_get_temp_dir();
-mkdir($upload_tmp_dir . '/' . $random_dir);
+    // Put uploaded file in PHP upload_tmp_dir / random_dir
+    // FIXME: With IE, can't use $_GET values ?? So I use $_SESSION values
+    $random_dir = (isset($_GET['random_dir'])) ? $_GET['random_dir'] : $_SESSION['random_dir'];
+    // $p_api_id = (isset($_GET['selectedPapi'])) ? $_GET['selectedPapi'] : $_SESSION['p_api_id'];
+    $upload_tmp_dir = sys_get_temp_dir();
+    mkdir($upload_tmp_dir . '/' . $random_dir);
 
-$result = $uploader->handleUpload($upload_tmp_dir, $random_dir, $p_api_id);
+    $result = $uploader->handleUpload($upload_tmp_dir, $random_dir, $p_api_id);
 
-// to pass data through iframe you will need to encode all html tags
-echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+    // to pass data through iframe you will need to encode all html tags
+    echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+  }
+  else
+    header("location: ".$protocol.$_SERVER['HTTP_HOST']);
+
+}
+else
+  header("location: ".$protocol.$_SERVER['HTTP_HOST']);
 
 /**
  * Handle file uploads via XMLHttpRequest
