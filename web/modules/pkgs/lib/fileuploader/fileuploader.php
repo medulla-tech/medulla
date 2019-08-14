@@ -26,6 +26,9 @@ if(isset($_SESSION['login']))
 
   if($hasright)
   {
+    if(isset($_GET['qqfile']))
+      $_GET['qqfile'] = str_replace('../', '', $_GET['qqfile']);
+
     // list of valid extensions, ex. array("jpeg", "xml", "bmp")
     $allowedExtensions = array();
     // max file size in bytes
@@ -39,6 +42,7 @@ if(isset($_SESSION['login']))
     // Put uploaded file in PHP upload_tmp_dir / random_dir
     // FIXME: With IE, can't use $_GET values ?? So I use $_SESSION values
     $random_dir = (isset($_GET['random_dir'])) ? $_GET['random_dir'] : $_SESSION['random_dir'];
+    $random_dir = str_replace('../', '', $random_dir);
     // $p_api_id = (isset($_GET['selectedPapi'])) ? $_GET['selectedPapi'] : $_SESSION['p_api_id'];
     $upload_tmp_dir = sys_get_temp_dir();
     mkdir($upload_tmp_dir . '/' . $random_dir);
