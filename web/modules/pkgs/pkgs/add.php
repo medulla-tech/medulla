@@ -255,8 +255,7 @@ if (isset($_POST['bconfirm'])){
         $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
 
         $methodtransfer = new SelectItem('methodetransfert');
-//         $methodtransfer->setElements(['pullcurl', 'pushrsync', 'pullrsync', 'pullscp']);
-//         $methodtransfer->setElementsVal(['pullcurl', 'pushrsync', 'pullrsync', 'pullscp']);
+        // Allowed methods are pullcurl, pushrsync, pullrsync, pullscp
         $methodtransfer->setElements([ 'pushrsync', 'pullrsync']);
         $methodtransfer->setElementsVal([ 'pushrsync', 'pullrsync']);
         $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer,['trid'=>'trTransfermethod']),['value'=>'']);

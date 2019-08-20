@@ -301,8 +301,7 @@ if(isExpertMode())
         $setmethodetransfert = 'pushrsync';
     }
     $methodtransfer = new SelectItem('methodetransfert');
-    // $methodtransfer->setElements(['pullcurl','pushrsync', 'pullrsync', 'pullscp']);
-    // $methodtransfer->setElementsVal(['pullcurl','pushrsync', 'pullrsync', 'pullscp']);
+    // Allowed methods are pullcurl, pushrsync, pullrsync, pullscp
     $methodtransfer->setElements(['pushrsync', 'pullrsync']);
     $methodtransfer->setElementsVal(['pushrsync', 'pullrsync']);
     $methodtransfer->setSelected($setmethodetransfert);
