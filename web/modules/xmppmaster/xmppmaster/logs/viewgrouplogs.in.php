@@ -23,15 +23,6 @@
  */
 ?>
 
-<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
-
-
 <?php
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
@@ -203,14 +194,8 @@ echo "<div style='width :100%; color:blue;'>";
                             jQuery('#tablelog').DataTable({
                             'retrieve': true,
                             "iDisplayLength": 5,
-                            "dom": 'rt<"bottom"fBp><"clear">',
-                            'order': [[ 0, "desc" ]],
-                            buttons: [
-                            { extend: 'copy', className: 'btn btn-primary', text: 'Copy to clipboard' },
-                            { extend: 'csv', className: 'btn btn-primary',  text: 'Save to csv file' },
-                            { extend: 'excel', className: 'btn btn-primary',  text: 'Save to Excel file' },
-                            { extend: 'print', className: 'btn btn-primary',  text: 'Print logs' }
-                            ]
+                            "dom": 'rt<"bottom"fp><"clear">',
+                            'order': [[ 0, "desc" ]]
                         } )
                             .ajax.url(
                                 url
