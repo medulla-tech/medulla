@@ -103,6 +103,10 @@ function xmlrpc_updateName_Qa_custom_command($login, $os, $namecmd, $customcmd, 
     return xmlCall("xmppmaster.updateName_Qa_custom_command", array($login, $os, $namecmd, $customcmd, $description));
 }
 
+function xmlrpc_syncthingmachineless($grp, $cmd){
+    return xmlCall("xmppmaster.syncthingmachineless", array($grp, $cmd));
+}
+
 function xmlrpc_getLogxmpp($start_date="", $end_date="", $type="" , $action="", $module="", $user="", $how="",$who="", $why="", $headercolumn=""){
     return xmlCall("xmppmaster.getLogxmpp", array($start_date, $end_date, $type, $action, $module, $user, $how, $who, $why, $headercolumn));
 }

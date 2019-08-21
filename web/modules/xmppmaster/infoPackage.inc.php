@@ -292,6 +292,13 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+
+$page = new Page("ajaxsyncthingmachineless",_T("Transfert syncthing list no transfered","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxsyncthingmachineless.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

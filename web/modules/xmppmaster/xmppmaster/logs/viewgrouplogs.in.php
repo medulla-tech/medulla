@@ -21,7 +21,18 @@
  *
  * file viewgrouplogs.in.php
  */
+?>
 
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
+
+
+<?php
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/includes.php");
@@ -46,6 +57,7 @@ function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy , $cmddep
     $urlRedirect1 = urlStrRedirect("base/computers/createMachinesStaticGroupdeploy&gid=".$g_id."&login=".$login_deploy."&cmd_id=".$cmddeploy_id."&type=".$typegroup);
     return $urlRedirect1;
 }
+
 $nbdeploy = 0;
 $group = getPGobject($gid, true);
 $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
@@ -117,44 +129,114 @@ if ($timestampnow > ($end_date)){
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date)."<br>";
-$statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'], $_GET['cmd_id'] );
+$statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
+// echo "yyyyyyyyyyy";
+// print_r($_SESSION['computerpresence']);
+// echo "yyyyyyyyyyy";
+//// ####$_SESSION['computerpresence'] : "all_computer");
+    if ($statsyncthing['package'] == ""){
+        echo _T("Syncthing sharing done or non-existant");
+    }else{
+echo "<div style='width :100%; color:blue;'>";
+    echo "<table><tr><td>";
+    echo'
+            <table>
+            <tr>
+                <th >Partage syncthing</th>
+                <th >nb mach</th>
+                <th >transfert</th>
+            </tr>
+            <tr>
+                <td rowspan="2">';
+                            echo _T("Share name", "xmppmaster")." : ". $statsyncthing['package'];
+                            echo '<br />';
+                            echo _T("Number of participants", "xmppmaster")." : ".$statsyncthing['nbmachine'];
+                            echo '<br />';
+                            echo _T("Transfer progress", "xmppmaster")." : ".$statsyncthing['progresstransfert'].' %';
+                            echo '<br />';
+                echo '</td>';
 
-if ($statsyncthing['package'] == ""){
-    echo "Syncthing sharing done or non-existant";
-}else{
-echo '<div class="bars1" style="color:blue">';
-echo'
-<table>
-  <tr>
-    <th >Partage syncthing</th>
-    <th >nb mach</th>
-    <th >transfert</th>
-  </tr>
-  <tr>
-    <td rowspan="2">';
-                echo _T("Share name", "xmppmaster")." : ". $statsyncthing['package'];
-                echo '<br />';
-                echo _T("Number of participants", "xmppmaster")." : ".$statsyncthing['nbmachine'];
-                echo '<br />';
-                echo _T("Transfer progress", "xmppmaster")." : ".$statsyncthing['progresstransfert'].' %';
-                echo '<br />';
-    echo '</td>';
+                $entete = "";
+                foreach ( $statsyncthing['distibution']['data_dist'] as $arrayval){
+                    echo $entete ."
+                            <td>$arrayval[1]</td>
+                            <td>$arrayval[0]%</td>
+                        </tr>";
+                        if ($entete==""){$entete = "<tr>";}
+                }
 
-    $entete = "";
-    foreach ( $statsyncthing['distibution']['data_dist'] as $arrayval){
-        echo $entete ."
-                <td>$arrayval[1]</td>
-                <td>$arrayval[0]%</td>
-            </tr>";
-            if ($entete==""){$entete = "<tr>";}
-    }
-    echo '</table>';
-echo '</div>';
+                echo '</table>';
+        echo "</td>
+        <td>
+        <input id='buttontransfertsyncthing' class='btn btn-primary' type='button' value='show transfert'></td>
+        </td>
+        </tr>
+        </table>";
+?>
+
+<?php
+    echo "<div>";
+        echo "<div id='tablesyncthing'>";
+?>
+        <table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
+                <thead>
+                    <tr>
+                        <th style="width: 12%;"><?php echo _('cluster list'); ?></th>
+                        <th style="width: 7%;"><?php echo _('cluster nb ars'); ?></th>
+                        <th style="width: 7%;"><?php echo _('machine'); ?></th>
+                        <th style="width: 7%;"><?php echo _('progress'); ?></th>
+                        <th style="width: 7%;"><?php echo _('start'); ?></th>
+                        <th style="width: 7%;"><?php echo _('end'); ?></th>
+                    </tr>
+                </thead>
+            </table>
+<?php
+        echo "</div>";
+    echo "</div>";
+    echo "<Hr>";
+    echo '</div>';
 }
-echo'<br><br><br><br><br><br><br><br>';
-echo "<Hr>";
+?>
 
+<script type="text/javascript">
+    function searchlogs(url){
+                            jQuery('#tablelog').DataTable({
+                            'retrieve': true,
+                            "iDisplayLength": 5,
+                            "dom": 'rt<"bottom"fBp><"clear">',
+                            'order': [[ 0, "desc" ]],
+                            buttons: [
+                            { extend: 'copy', className: 'btn btn-primary', text: 'Copy to clipboard' },
+                            { extend: 'csv', className: 'btn btn-primary',  text: 'Save to csv file' },
+                            { extend: 'excel', className: 'btn btn-primary',  text: 'Save to Excel file' },
+                            { extend: 'print', className: 'btn btn-primary',  text: 'Print logs' }
+                            ]
+                        } )
+                            .ajax.url(
+                                url
+                            )
+                            .load();
+    }
 
+    jQuery(function(){
+        searchlogs("modules/xmppmaster/xmppmaster/ajaxsyncthingmachineless.php?grp=<?php echo $_GET['gid']; ?>&cmd=<?php echo $cmd_id ?>")
+    } );
+
+jQuery( "#tablesyncthing" ).hide();
+var levelshow = 0;
+jQuery( "#buttontransfertsyncthing" ).click(function() {
+    //jQuery( "#tablesyncthing" ).toggle();
+
+    if (levelshow == 0){
+        jQuery( "#tablesyncthing" ).show();
+        levelshow = 1;
+    }else{
+        document.location.reload();
+    }
+});
+    </script>
+
+<?php
 if ($info['len'] != 0){
     $uuid=$info['objectdeploy'][0]['inventoryuuid'];
     $state=$info['objectdeploy'][0]['state'];
@@ -191,9 +273,6 @@ $_GET['ses']=isset($_GET['ses']) ? $_GET['ses'] : "";
 $_GET['hos']=isset($_GET['hos']) ? $_GET['hos'] : "";
 $_GET['sta']=isset($_GET['sta']) ? $_GET['sta'] : "";
 
-
-
-
 foreach ($info['objectdeploy'] as $val)
 {
    $_GET['id']  .= $val['inventoryuuid']."@@";
@@ -212,136 +291,140 @@ foreach ($info['objectdeploy'] as $val)
 //     $deployinprogress = 0;
 // }
 
-if ( $start_deploy){
-    echo "<br>";
-    if ($end_deploy || $terminate == 1){
-        echo "<h2>"._T("Deployment completed","xmppmaster")."</h2>";
-        $terminate = 1;
-        $deployinprogress = 0;
+
+//start deployement status
+echo "<div>";
+    if ( $start_deploy){
         echo "<br>";
-    }else{
-        echo "<h2>"._T("Deployment in progress","xmppmaster")."</h2>";
-        echo _T("Started since","xmppmaster")." <span>".($timestampnow - $start_date)."</span> s";
-        $deployinprogress = 1;
+        if ($end_deploy || $terminate == 1){
+            echo "<h2>"._T("Deployment completed","xmppmaster")."</h2>";
+            $terminate = 1;
+            $deployinprogress = 0;
+            echo "<br>";
+        }else{
+            echo "<h2>"._T("Deployment in progress","xmppmaster")."</h2>";
+            echo _T("Started since","xmppmaster")." <span>".($timestampnow - $start_date)."</span> s";
+            $deployinprogress = 1;
+        }
     }
-}
-else{
-    echo _T("WAITING FOR START ","xmppmaster").date("Y-m-d H:i:s", $start_date);
-}
+    else{
+        echo _T("WAITING FOR START ","xmppmaster").date("Y-m-d H:i:s", $start_date);
+    }
 
-    //if ($deployinprogress ){
-if($terminate == 0){
-    $f = new ValidatingForm();
-    $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
-    $f->addButton("bStop", _T("Abort Deployment", 'xmppmaster'));
-    $f->display();
-}
-echo "<br>";
+        //if ($deployinprogress ){
+    if($terminate == 0){
+        $f = new ValidatingForm();
+        $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
+        $f->addButton("bStop", _T("Abort Deployment", 'xmppmaster'));
+        $f->display();
+    }
+    echo "<br>";
 
-    $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $MSC_nb_mach_grp_done_deploy;
-    $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $MSC_nb_mach_grp_for_deploy) * 100,2);
-    $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
-    echo '<div class="bars">';
-        echo '<span style="width: 200px;">';
-            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$MSC_nb_mach_grp_for_deploy.'" value="'.$nb_machine_deployer_avec_timeout_deploy .'" form="form-id"></progress>';
-        echo '</span>';
-    echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
+        $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $MSC_nb_mach_grp_done_deploy;
+        $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $MSC_nb_mach_grp_for_deploy) * 100,2);
+        $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
+        echo '<div class="bars">';
+            echo '<span style="width: 200px;">';
+                echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$MSC_nb_mach_grp_for_deploy.'" value="'.$nb_machine_deployer_avec_timeout_deploy .'" form="form-id"></progress>';
+            echo '</span>';
+        echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
 
-    $wol = ( $MSC_nb_mach_grp_for_deploy - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
-    echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$MSC_nb_mach_grp_for_deploy;
-    echo "<br>"._T("Number of current deployments","xmppmaster")." : ". $deploymachine;
-    echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machine_timeout_from_deploy;
-    echo "<br>"._T("Deployment summary","xmppmaster").":";
-    echo "<table><tr>";
-    echo "<td>"._T("Success","xmppmaster")."</td>
-        <td>"._T("Error","xmppmaster")."</td>
-        <td>"._T("In progress","xmppmaster")."</td>
-        <td>"._T("Waiting","xmppmaster")."</td>
-        <td>"._T("Timed out","xmppmaster")."</td>
-        <td>"._T("Aborted","xmppmaster")."</td>";
-    echo "</tr>
-    <tr>";
-    echo "<td>".$machine_success_from_deploy."</td>
-        <td>".$machine_error_from_deploy."</td>
-        <td>".$machine_process_from_deploy."</td>
-        <td>".$wol."</td>
-        <td>".$machine_timeout_from_deploy."</td>
-        <td>".$machine_abort_from_deploy."</td>";
-    echo "</tr></table>";
-echo '</div>';
+        $wol = ( $MSC_nb_mach_grp_for_deploy - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
+        echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$MSC_nb_mach_grp_for_deploy;
+        echo "<br>"._T("Number of current deployments","xmppmaster")." : ". $deploymachine;
+        echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machine_timeout_from_deploy;
+        echo "<br>"._T("Deployment summary","xmppmaster").":";
+        echo "<table><tr>";
+        echo "<td>"._T("Success","xmppmaster")."</td>
+            <td>"._T("Error","xmppmaster")."</td>
+            <td>"._T("In progress","xmppmaster")."</td>
+            <td>"._T("Waiting","xmppmaster")."</td>
+            <td>"._T("Timed out","xmppmaster")."</td>
+            <td>"._T("Aborted","xmppmaster")."</td>";
+        echo "</tr>
+        <tr>";
+        echo "<td>".$machine_success_from_deploy."</td>
+            <td>".$machine_error_from_deploy."</td>
+            <td>".$machine_process_from_deploy."</td>
+            <td>".$wol."</td>
+            <td>".$machine_timeout_from_deploy."</td>
+            <td>".$machine_abort_from_deploy."</td>";
+        echo "</tr></table>";
+    echo '</div>';
       echo'<div  style="float:left; margin-left:200px;height: 120px" id="holder"></div>';
-echo "<br>";
-if ($info['len'] != 0){
-//     $uuid=$info['objectdeploy'][0]['inventoryuuid'];
-//     $state=$info['objectdeploy'][0]['state'];
-//     $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
-//     $result=$info['objectdeploy'][0]['result'];
-//
-//     $resultatdeploy =json_decode($result, true);
-//     $host=$info['objectdeploy'][0]['host'];
-//     $jidmachine=$info['objectdeploy'][0]['jidmachine'];
-//     $jid_relay=$info['objectdeploy'][0]['jid_relay'];
+    echo "<br>";
+    if ($info['len'] != 0){
+    //     $uuid=$info['objectdeploy'][0]['inventoryuuid'];
+    //     $state=$info['objectdeploy'][0]['state'];
+    //     $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
+    //     $result=$info['objectdeploy'][0]['result'];
+    //
+    //     $resultatdeploy =json_decode($result, true);
+    //     $host=$info['objectdeploy'][0]['host'];
+    //     $jidmachine=$info['objectdeploy'][0]['jidmachine'];
+    //     $jid_relay=$info['objectdeploy'][0]['jid_relay'];
 
-    $datestart =  date("Y-m-d H:i:s", $start);
-    $timestampstart = strtotime($datestart);
-    $timestampnow = time();
-    $nbsecond = $timestampnow - $timestampstart;
+        $datestart =  date("Y-m-d H:i:s", $start);
+        $timestampstart = strtotime($datestart);
+        $timestampnow = time();
+        $nbsecond = $timestampnow - $timestampstart;
 
-    if (isset($resultatdeploy['descriptor']['info'])){
-        echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
-            echo "<thead>";
-                echo "<tr>";
-                    echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">Name</span>';
-                    echo '</td>';
-                    echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">Software</span>';
-                    echo '</td>';
-                    echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">Version</span>';
-                    echo '</td>';
-                    echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">Description</span>';
-                    echo '</td>';
-                echo "</tr>";
-            echo "</thead>";
-            echo "<tbody>";
-                echo "<tr>";
-                    echo "<td>";
-                        echo $resultatdeploy['descriptor']['info']['description'];
-                    echo "</td>";
-                    echo "<td>";
-                        echo $resultatdeploy['descriptor']['info']['name'];
-                    echo "</td>";
-                    echo "<td>";
-                        echo $resultatdeploy['descriptor']['info']['software'];
-                    echo "</td>";
-                    echo "<td>";
-                        echo $resultatdeploy['descriptor']['info']['version'];
-                    echo "</td>";
-                echo "</tr>";
-            echo "</tbody>";
-        echo "</table>";
-        echo '<br>';
+        if (isset($resultatdeploy['descriptor']['info'])){
+            echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
+                echo "<thead>";
+                    echo "<tr>";
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">Name</span>';
+                        echo '</td>';
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">Software</span>';
+                        echo '</td>';
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">Version</span>';
+                        echo '</td>';
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">Description</span>';
+                        echo '</td>';
+                    echo "</tr>";
+                echo "</thead>";
+                echo "<tbody>";
+                    echo "<tr>";
+                        echo "<td>";
+                            echo $resultatdeploy['descriptor']['info']['description'];
+                        echo "</td>";
+                        echo "<td>";
+                            echo $resultatdeploy['descriptor']['info']['name'];
+                        echo "</td>";
+                        echo "<td>";
+                            echo $resultatdeploy['descriptor']['info']['software'];
+                        echo "</td>";
+                        echo "<td>";
+                            echo $resultatdeploy['descriptor']['info']['version'];
+                        echo "</td>";
+                    echo "</tr>";
+                echo "</tbody>";
+            echo "</table>";
+            echo '<br>';
+        }
     }
-}
- if($terminate == 0){
-        echo'
-            <script type="text/javascript">
-            console.log("hello");
-                setTimeout(refresh, 120000);
-                function  refresh(){
-                        location.reload()
-                }
-            </script>
-            ';
-}
+    if($terminate == 0){
+            echo'
+                <script type="text/javascript">
+                //console.log("hello");
+                    setTimeout(refresh, 120000);
+                    function  refresh(){
+                            location.reload()
+                    }
+                </script>
+                ';
+    }
 
+//fin deployement status
+echo "</div>";
 // group includ computers_list.php
 // les parametres get sont utilisés par computers_list pour l'appel de ajaxComputersList qui compose l'appel a list_computers
 // mmc/modules/base/includes/computers_list.inc.php
 
-echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";;echo "<br>";
 $group->prettyDisplay();
 
 
@@ -425,10 +508,9 @@ if ($info['len'] != 0){
 
         </script>';
     }
-
-
-
 ?>
+
+
 <style>
 li.remove_machine a {
         /*padding: 1px 3px 5px 20px;*/
@@ -466,7 +548,6 @@ progress::-moz-progress-bar {
     width: 400px;
     float:left;
 }
-
 .bars1{
     width:650px;
     float:left;
