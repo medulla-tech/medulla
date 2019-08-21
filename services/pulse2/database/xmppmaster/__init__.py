@@ -516,7 +516,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     }
         try:
             progress = int(float(re[2]))
-        except exceptions.ValueError:
+        except :
             progress = 0
 
         return { 'package' : re[0],
@@ -2666,6 +2666,49 @@ class XmppMasterDatabase(DatabaseHelper):
             #lentotal = session.query(func.count(Deploy.id)).filter(Deploy.login == login).scalar()
         else:
             return self.get_count(session.query(Deploy))
+
+    @DatabaseHelper._sessionm
+    def syncthingmachineless(self,session, grp, cmd):
+        mach = session.query(Syncthing_machine.jidmachine, 
+                             Syncthing_machine.progress,
+                             Syncthing_machine.startcmd,
+                             Syncthing_machine.endcmd,
+                             Syncthing_machine.cluster
+                             ).filter(
+                                        and_(Syncthing_machine.group_uuid == grp,
+                                            Syncthing_machine.command == cmd))
+        result = mach.all()
+        session.commit()
+        session.flush()
+        ret = {"data" : []}
+
+        for linemach in result:
+            listchamp = []
+            try:
+                machime = linemach.jidmachine.split('/')[1]
+            except:
+                machime = linemach.jidmachine
+            try:
+                cluster = json.loads(linemach.cluster)
+                ars = [ x.split('@')[0] for x in cluster["listarscluster"]]
+                ###clusterlist = ",".join(cluster["listarscluster"])
+                clusterlist = ",".join(ars)
+                nbclustermachine = str(cluster["numcluster"])
+            except:
+                clusterlist = ""
+                nbclustermachine =""
+            listchamp.append(clusterlist)
+            listchamp.append(nbclustermachine)
+            listchamp.append(machime)
+            if linemach.progress is None:
+                progress = "000%"
+            else:
+                progress = "%03d%%" % progress
+            listchamp.append(progress)
+            listchamp.append(str(linemach.startcmd))
+            listchamp.append(str(linemach.endcmd))
+            ret["data"].append(listchamp)
+        return ret
 
     @DatabaseHelper._sessionm
     def getLogxmpp( self,

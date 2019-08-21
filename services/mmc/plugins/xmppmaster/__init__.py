@@ -173,6 +173,8 @@ def setlogxmpp(text,
                                            touser,
                                            fromuser)
 
+def syncthingmachineless( grp, cmd):
+    return XmppMasterDatabase().syncthingmachineless(grp, cmd)
 
 def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, why, headercolumn):
     if typelog == "None" and action == "None" and module == "None" and start_date == "":
