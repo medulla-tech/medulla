@@ -1379,7 +1379,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 Machines.ad_ou_machine : ad_ou_machine,
                                 Machines.kiosk_presence : kiosk_presence,
                                 Machines.lastuser : lastuser,
-                                Machines.keysyncthing = keysyncthing,
+                                Machines.keysyncthing : keysyncthing,
                                 Machines.enabled : '1'
                                 })
             session.commit()
