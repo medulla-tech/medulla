@@ -4250,6 +4250,77 @@ class XmppMasterDatabase(DatabaseHelper):
         return resulttypemachine
 
     @DatabaseHelper._sessionm
+    def SetPresenceMachine(self, session, jid, presence=0):
+        """
+            chang presence in table machines
+        """
+        user = str(jid).split("@")[0]
+        try:
+            sql = """UPDATE
+                        `xmppmaster`.`machines`
+                    SET
+                        `xmppmaster`.`machines`.`enabled` = '%s'
+                    WHERE
+                        `xmppmaster`.`machines`.jid like('%s@%%');"""%(presence, user)
+            session.execute(sql)
+            session.commit()
+            session.flush()
+            return True
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return False
+
+    @DatabaseHelper._sessionm
+    def GetMachine(self, session, jid):
+        """
+            Initialize boolean presence in table machines
+        """
+        user = str(jid).split("@")[0]
+        try:
+            sql = """SELECT
+                        id, hostname, agenttype
+                    FROM
+                        `xmppmaster`.`machines`
+                    WHERE
+                        `xmppmaster`.`machines`.jid like('%s@%%')
+                    LIMIT 1;"""%user
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            return [x for x in result]
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return None
+
+    @DatabaseHelper._sessionm
+    def initialisePresenceMachine(self, session, jid, presence=0):
+        """
+            Initialize presence in table machines and relay
+        """
+        mach = self.GetMachine(jid)
+        if mach is not None:
+            self.SetPresenceMachine(jid)
+            if mach[2] != "machine":
+                try:
+                    sql = """UPDATE
+                                `xmppmaster`.`relayserver`
+                            SET
+                                `xmppmaster`.`relayserver`.`enabled` = '%s'
+                            WHERE
+                                `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%(presence, mach[1])
+                    session.execute(sql)
+                    session.commit()
+                    session.flush()
+                except Exception, e:
+                    logging.getLogger().error(str(e))
+                finally:
+                    return "relayserver"
+            else:
+                return "machine"
+        else:
+            return None
+
+    @DatabaseHelper._sessionm
     def delPresenceMachine(self, session, jid):
         """
             del machine of table machines
