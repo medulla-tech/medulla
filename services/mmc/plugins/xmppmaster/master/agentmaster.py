@@ -728,7 +728,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         logger.debug("%s %s" % (msg_changed_status['from'], msg_changed_status['type']))
         if msg_changed_status['type'] == 'unavailable':
             try:
-                result = XmppMasterDatabase().delPresenceMachine(msg_changed_status['from'])
+                result = XmppMasterDatabase().initialisePresenceMachine(msg_changed_status['from'])
                 if result is None:
                     return
                 if "type" in result and result['type'] == "relayserver":
@@ -776,7 +776,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 date = None,
                                 fromuser = "",
                                 touser = "")
-
                             self.xmpplog('<span style="font-weight: bold;color : Orange;">WAITING REBOOT</span>',
                                 type = 'deploy',
                                 sessionname = t['sessionid'],
@@ -806,11 +805,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             self.send_message(mto=ars['jid'],
                                               mbody=json.dumps(cluster),
                                               mtype='chat')
-
             except:
                 logger.error("%s"%(traceback.format_exc()))
-
             self.showListClient()
+        elif msg_changed_status['type'] == "available":
+            result = XmppMasterDatabase().initialisePresenceMachine(msg_changed_status['from'],
+                                                                    presence=1)
 
     def showListClient(self):
         if self.config.showinfomaster:

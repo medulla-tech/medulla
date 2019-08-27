@@ -4287,7 +4287,7 @@ class XmppMasterDatabase(DatabaseHelper):
             result = session.execute(sql)
             session.commit()
             session.flush()
-            return [x for x in result]
+            return [x for x in result][0]
         except Exception, e:
             logging.getLogger().error(str(e))
             return None
@@ -4299,7 +4299,7 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         mach = self.GetMachine(jid)
         if mach is not None:
-            self.SetPresenceMachine(jid)
+            self.SetPresenceMachine(jid, presence)
             if mach[2] != "machine":
                 try:
                     sql = """UPDATE
