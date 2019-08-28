@@ -4267,7 +4267,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
             return True
         except Exception, e:
-            logging.getLogger().error(str(e))
+            logging.getLogger().error("SetPresenceMachine : %s"%str(e))
             return False
 
     @DatabaseHelper._sessionm
@@ -4291,7 +4291,7 @@ class XmppMasterDatabase(DatabaseHelper):
         except IndexError:
             return None
         except Exception, e:
-            logging.getLogger().error(str(e))
+            logging.getLogger().error("GetMachine : %s"%str(e))
             return None
 
     @DatabaseHelper._sessionm
@@ -4314,7 +4314,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     session.commit()
                     session.flush()
                 except Exception, e:
-                    logging.getLogger().error(str(e))
+                    logging.getLogger().error("initialisePresenceMachine : %s"%str(e))
                 finally:
                     return "relayserver"
             else:
