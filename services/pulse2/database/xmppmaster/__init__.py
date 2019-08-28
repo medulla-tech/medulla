@@ -3373,9 +3373,9 @@ class XmppMasterDatabase(DatabaseHelper):
         sql = """SELECT
                     ip_xmpp
                 FROM
-                    enabled = '1' and
                     xmppmaster.machines
                 WHERE
+                    enabled = '1' and
                     jid LIKE ('%s%%')
                                 LIMIT 1;"""%jid
         result = session.execute(sql)
