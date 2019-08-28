@@ -4502,9 +4502,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getGuacamoleRelayServerMachineUuid(self, session, uuid):
-        relayserver = session.query(Machines).\
+        querymachine = session.query(Machines).\
             filter(and_(Machines.uuid_inventorymachine == uuid,
-                        Machines.enabled == '1')).one()
+                        Machines.enabled == '1'))
+        machine = querymachine.one()
         session.commit()
         session.flush()
         try:
