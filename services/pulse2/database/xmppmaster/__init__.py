@@ -4288,6 +4288,8 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
             return [x for x in result][0]
+        except IndexError:
+            return None
         except Exception, e:
             logging.getLogger().error(str(e))
             return None
