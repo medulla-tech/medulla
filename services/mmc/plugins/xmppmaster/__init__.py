@@ -712,3 +712,6 @@ def get_conf_master_agent():
 
 def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)
+
+def delcomputer(uuid):
+    return XmppMasterDatabase().delMachineXmppPresence(uuid)
