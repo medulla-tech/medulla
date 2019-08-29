@@ -3879,8 +3879,10 @@ class XmppMasterDatabase(DatabaseHelper):
         sql = """SELECT
                     jid
                 FROM
-                    enabled = '%s' and
-                    xmppmaster.machines;"""%enable
+                    xmppmaster.machines
+                WHERE
+                    xmppmaster.machines.enabled = '%s' and
+                    xmppmaster.machines.agenttype="machine";"""%enable
         result = session.execute(sql)
         session.commit()
         session.flush()
