@@ -4722,7 +4722,7 @@ class Machine(object):
     def toH(self):
         return { 'hostname':self.name, 'uuid':toUUID(self.id) }
     def to_a(self):
-        owner_login, owner_firstname, owner_realname = Glpi94().getMachineOwner(self)
+        owner_login, owner_firstname, owner_realname = Glpi084().getMachineOwner(self)
         return [
             ['name',self.name],
             ['comments',self.comment],
@@ -4745,7 +4745,7 @@ class Machine(object):
             ['model',self.computermodels_id],
             ['type',self.computertypes_id],
             ['entity',self.entities_id],
-            ['uuid',Glpi94().getMachineUUID(self)]
+            ['uuid',Glpi084().getMachineUUID(self)]
         ]
 
 class Entities(object):
