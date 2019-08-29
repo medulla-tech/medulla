@@ -3995,8 +3995,10 @@ class XmppMasterDatabase(DatabaseHelper):
         sql = """SELECT DISTINCT
                     groupdeploy
                 FROM
-                    xmppmaster.enabled = '1' and
-                    xmppmaster.machines;"""
+                    xmppmaster.machines
+                WHERE
+                    xmppmaster.machines.enabled = '1' and
+                    xmppmaster.machines.agenttype="relayserver";"""
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4015,7 +4017,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 FROM
                     xmppmaster.machines
                 WHERE
-                    xmppmaster.enabled = '1' and
+                    xmppmaster.machines.enabled = '1' and
                     xmppmaster.machines.agenttype = 'machine'
                 GROUP BY
                     groupdeploy;"""
