@@ -287,11 +287,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.config = conf
         self.session = session()
         self.domaindefault = "pulse"
-        # ######################Update remote agent#########################
-        self.autoupdatebool = self.config.autoupdatebyrelay or self.config.autoupdate
-        self.Update_Remote_Agentlist = Update_Remote_Agent( self.config.diragentbase,
-                                                            self.autoupdatebool)
-        # ######################Update remote agent#########################
         self.file_deploy_plugin = []
         # ##clear conf compte.
         self.confaccount=[] #list des account for clear
@@ -319,9 +314,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.deploywaitting = {}
         self.plugintype = {}
         self.plugindata = {}
-        self.loadPluginList()
         self.plugindatascheduler = {}
-        self.loadPluginschedulerList()  # ##update variable self.plugindatascheduler
+        self.loadbasepluginagnet() # update base list plugin and remote agent
         sleekxmpp.ClientXMPP.__init__(self, conf.jidagent, conf.passwordconnection)
 
         self.manage_scheduler = manage_scheduler(self)
@@ -359,8 +353,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # Decrement session time
         self.schedule('manage session', 15, self.handlemanagesession, repeat=True)
 
-        # Reload plugins list every 15 minutes
-        self.schedule('update plugin', 900, self.loadPluginList, repeat=True)
+        # Reload plugins lists and fingerprint remote agent every 15 minutes
+        self.schedule('reload_bases', 900, self.loadbasepluginagnet, repeat=True)
 
         self.add_event_handler("session_start", self.start)
         # install plugins list file is not empty.
@@ -1176,6 +1170,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def handlemanagesession(self):
         self.session.decrementesessiondatainfo()
 
+    def loadbasepluginagnet(self):
+        self.loadPluginList()
+        self.loadPluginschedulerList()
+        self.loadfingerprintagentbase()
+
+    def loadfingerprintagentbase(self):
+        logger.debug("Load finger print base agent")
+        self.autoupdatebool = self.config.autoupdatebyrelay or self.config.autoupdate
+        self.Update_Remote_Agentlist = Update_Remote_Agent(self.config.diragentbase,
+                                                           self.autoupdatebool)
+
     def loadPluginList(self):
         PkgsDatabase().clear_old_pending_synchro_package(timeseconde=3600)
         logger.debug("Load and Verify base plugin")
@@ -1209,7 +1214,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     self.config.dirplugins, element))
 
     def loadPluginschedulerList(self):
-        logger.debug("Verify base plugin scheduler")
+        logger.debug("Load and Verify base plugin scheduler")
         self.plugindatascheduler = {}
         self.plugintypescheduler = {}
         for element in os.listdir(self.config.dirschedulerplugins):
