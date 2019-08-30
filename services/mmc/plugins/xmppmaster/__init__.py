@@ -714,4 +714,5 @@ def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)
 
 def delcomputer(uuid):
+    callrestartbot(uuid)
     return XmppMasterDatabase().delMachineXmppPresence(uuid)
