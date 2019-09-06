@@ -70,9 +70,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             # la function getCluster_deploy_syncthing renvoi les ARS du cluster
             #logger.debug("=====================================================")
             listclusterobjet = XmppMasterDatabase().getCluster_deploy_syncthing(data['iddeploy'])
-            #print "yyyy"
-            #print listclusterobjet
-            #print "yyyy"
             for clusterobjet in listclusterobjet:
                 namedeploy = clusterobjet[0]
                 repertoiredeploy = clusterobjet[1]
@@ -115,12 +112,11 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                     "id" : data['iddeploy']
                                     }
                             }
-                for t in listarsdeploy:
+                for ars in listarsdeploy:
                     updatedata=[]
-                    machines = XmppMasterDatabase().getMachine_deploy_Syncthing(data['iddeploy'], 
-                                                                                ars = t, 
+                    machines = XmppMasterDatabase().getMachine_deploy_Syncthing(data['iddeploy'],
+                                                                                ars = ars,
                                                                                 status=2)
-
                     partagemachine = []
                     for machine in machines:
                         partagemachine.append({ 'mach' : machine[2],
@@ -133,6 +129,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                                                         statusold=2,
                                                                         statusnew=3)
                     datasend['data']['machinespartage'] = partagemachine
-                    xmppobject.send_message(mto=t,
+                    xmppobject.send_message(mto=ars,
                                             mbody=json.dumps(datasend),
                                             mtype='chat')
