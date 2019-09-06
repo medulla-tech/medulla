@@ -30,12 +30,12 @@ CHANGE COLUMN datecreation dateend TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP
 ALTER TABLE xmppmaster.syncthing_deploy_group
 ADD COLUMN nbtransfert INT NOT NULL DEFAULT 0 AFTER `cmd`;
 ALTER TABLE `xmppmaster`.`syncthing_machine`
-ADD COLUMN `progress` INT(11) NULL DEFAULT 0 AFTER `fk_arscluster`;
+ADD COLUMN `progress` INT(11) NOT NULL DEFAULT 0 AFTER `fk_arscluster`;
 ALTER TABLE `xmppmaster`.`syncthing_machine` 
 CHANGE COLUMN `start` `start` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
 -- chang position in table
 ALTER TABLE `xmppmaster`.`syncthing_machine` 
-CHANGE COLUMN `progress` `progress` INT(11) NULL DEFAULT '0' AFTER `jidmachine`;
+CHANGE COLUMN `progress` `progress` INT(11) NOT NULL DEFAULT '0' AFTER `jidmachine`;
 
 -- ----------------------------------------------------------------------
 -- Database version
