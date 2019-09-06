@@ -231,7 +231,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.syncthing_deploy_group.nbtransfert >= %s
                     and
                     xmppmaster.syncthing_ars_cluster.keypartage != "pausing";"""%(nbtransfert)
-        print "get_ars_for_pausing_syncthing", sql
+        #print "get_ars_for_pausing_syncthing"#, sql
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -2787,7 +2787,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if linemach.progress is None:
                 progress = "000%"
             else:
-                progress = "%03d%%" % progress
+                progress = "%03d%%" % linemach.progress
             listchamp.append(progress)
             listchamp.append(str(linemach.startcmd))
             listchamp.append(str(linemach.endcmd))
