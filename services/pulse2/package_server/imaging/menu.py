@@ -462,7 +462,7 @@ class ImagingMenu:
         """
             set the default item number
         """
-        self.default_item = value
+        self.default_item = value.replace(" ","-")
 
     def addImageEntry(self, position, entry):
         """
@@ -630,7 +630,7 @@ class ImagingItem:
         """
         self.logger = logging.getLogger('imaging')
         self._convertEntry(entry)
-        self.label = entry['name']  # the item label
+        self.label = entry['name'].replace(" ","-")  # the item label
         self.menulabel = entry['desc']  # the item menulabel
         assert(type(self.label) == unicode)
         assert(type(self.menulabel) == unicode)
