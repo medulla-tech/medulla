@@ -1,4 +1,6 @@
 * [FEATURE] Add glpi 9.4 support
+* [BUGFIX]  Fix generating pxelinux menus for restoring.
+
 
 Pulse 2 4.5.2
 =============
