@@ -4752,19 +4752,24 @@ class Glpi92(DyngroupDatabaseHelper):
             ]
         """
 
-        sql = session.query(Machine.operatingsystems_id,
-            Machine.operatingsystemversions_id,
-            OS.name,
-            OsVersion.name)\
-        .join(OS, OS.id == Machine.operatingsystems_id)\
-        .join(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
-        .order_by(asc(OsVersion.name))
-        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
-        sql = self.__filter_on(sql)
+        sql="""SELECT
+  glpi_operatingsystems.name as os,
+  glpi_operatingsystemversions.name as version_name
+FROM
+  glpi_computers_pulse
+INNER JOIN
+  glpi_operatingsystems
+ON
+  operatingsystems_id = glpi_operatingsystems.id
 
-        res = sql.all()
-
-        result = [{'os': element[2], 'version': element[3], 'count':1} for element in res]
+left JOIN
+  glpi_operatingsystemversions
+ON
+  operatingsystemversions_id = glpi_operatingsystemversions.id
+ORDER BY
+ glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
+        res = self.db.execute(sql)
+        result = [{'os': os, 'version': version, 'count':1} for os, version in res]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
@@ -4840,18 +4845,41 @@ class Glpi92(DyngroupDatabaseHelper):
             list of all the machines with specified OS and specified version
         """
 
-        sql = session.query(Machine.id, Machine.name)\
-        .join(OS, OS.id == Machine.operatingsystems_id)\
-        .outerjoin(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
-        .filter(and_(OS.name.like('%'+oslocal+'%')), OsVersion.name.like('%'+version+'%'))
+        criterion = ''
 
-        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
-        sql = self.__filter_on(sql)
+        if version == "":
+            criterion = self.config.dbname+'.glpi_operatingsystemversions.name IS NULL'
+        else:
+            criterion = self.config.dbname+'.glpi_operatingsystemversions.name like "%%%s%%"' % version
+
+        sql="""SELECT
+    %s.glpi_computers_pulse.id,
+    %s.glpi_computers_pulse.name
+FROM
+    %s.glpi_computers_pulse
+INNER JOIN
+    %s.glpi_operatingsystems
+ON
+    operatingsystems_id = %s.glpi_operatingsystems.id
+left JOIN
+    %s.glpi_operatingsystemversions
+ON
+    operatingsystemversions_id = %s.glpi_operatingsystemversions.id
+WHERE
+  %s.glpi_operatingsystems.name LIKE "%%%s%%"
+AND
+  %s
+;""" % (self.config.dbname, self.config.dbname,
+        self.config.dbname,self.config.dbname,
+        self.config.dbname,self.config.dbname,
+        self.config.dbname,self.config.dbname,
+        oslocal, criterion)
+
         res = session.execute(sql)
-
         result = [{'id':a, 'hostname':b} for a,b in res]
-
         return result
+
+
 
     @DatabaseHelper._sessionm
     def get_computer_count_for_dashboard(self, session, count=True):
