@@ -175,4 +175,4 @@ msgstr "Панелі"
 
 #: modules/dashboard/infoPackage.inc.php:55
 msgid "Session Panels"
-msgstr ""
+msgstr "Панелі сеансів"

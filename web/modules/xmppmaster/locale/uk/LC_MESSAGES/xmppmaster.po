@@ -221,10 +221,13 @@ msgstr "Ваші останні завдання"
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:43
 msgid "Deployments Launched on Offline Items (last 24 hours)"
 msgstr ""
+"Розгортання, які було запущено для записів поза мережею (попередні 24 "
+"години)"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:47
 msgid "Deployments Launched on Offline Items (last 3 months)"
 msgstr ""
+"Розгортання, які було запущено для записів поза мережею (попередні 3 місяці)"
 
 #: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:230
 #: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:230
@@ -513,19 +516,19 @@ msgstr "Розгортання [група"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:124
 msgid "Syncthing done or non-existant"
-msgstr ""
+msgstr "Syncthing виконано або його не існує"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:127
 msgid "Share name"
-msgstr ""
+msgstr "Назва спільного ресурсу"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:129
 msgid "Number of participants"
-msgstr ""
+msgstr "Кількість учасників"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:131
 msgid "Transfer progress"
-msgstr ""
+msgstr "Поступ передавання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:196
 msgid "Deployment completed"
@@ -815,4 +818,4 @@ msgstr "Список розгортання комп'ютерів"
 
 #: modules/xmppmaster/infoPackage.inc.php:290
 msgid "List of not launched deployments"
-msgstr ""
+msgstr "Список запущених розгортань"

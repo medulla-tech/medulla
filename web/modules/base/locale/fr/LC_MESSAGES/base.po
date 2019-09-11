@@ -294,7 +294,7 @@ msgstr "Agent MMC"
 
 #: includes/ErrorHandling.php:78
 msgid "Copied"
-msgstr ""
+msgstr "copié"
 
 #: includes/ErrorHandling.php:87
 msgid "Show complete trackback"
