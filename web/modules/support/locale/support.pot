@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-11 14:24+0200\n"
+"POT-Creation-Date: 2019-09-11 18:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,25 +17,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: modules/support/includes/panels/remotesupport.inc.php:30
-msgid "Extract logs"
+#: modules/support/infoPackage.inc.php:31
+#: modules/support/includes/panels/license.inc.php:54
+msgid "Support"
 msgstr ""
 
-#: modules/support/includes/panels/remotesupport.inc.php:42
-msgid "Download archive"
+#: modules/support/infoPackage.inc.php:35
+msgid "Remote support"
 msgstr ""
 
-#: modules/support/includes/panels/remotesupport.inc.php:45
-msgid "Extract log and config files"
+#: modules/support/infoPackage.inc.php:40
+msgid "Collect"
+msgstr ""
+
+#: modules/support/infoPackage.inc.php:42
+msgid "Connect"
+msgstr ""
+
+#: modules/support/infoPackage.inc.php:44
+msgid "Disconnect"
+msgstr ""
+
+#: modules/support/infoPackage.inc.php:46
+msgid "Download an archive including logs and config files"
 msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
-msgstr ""
-
-#: modules/support/includes/panels/license.inc.php:54
-#: modules/support/infoPackage.inc.php:31
-msgid "Support"
 msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:57
@@ -70,22 +78,14 @@ msgstr ""
 msgid "Activate again / Use another subscription"
 msgstr ""
 
-#: modules/support/infoPackage.inc.php:35
-msgid "Remote support"
+#: modules/support/includes/panels/remotesupport.inc.php:30
+msgid "Extract logs"
 msgstr ""
 
-#: modules/support/infoPackage.inc.php:40
-msgid "Collect"
+#: modules/support/includes/panels/remotesupport.inc.php:42
+msgid "Download archive"
 msgstr ""
 
-#: modules/support/infoPackage.inc.php:42
-msgid "Connect"
-msgstr ""
-
-#: modules/support/infoPackage.inc.php:44
-msgid "Disconnect"
-msgstr ""
-
-#: modules/support/infoPackage.inc.php:46
-msgid "Download an archive including logs and config files"
+#: modules/support/includes/panels/remotesupport.inc.php:45
+msgid "Extract log and config files"
 msgstr ""
