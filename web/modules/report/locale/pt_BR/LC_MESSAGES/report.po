@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-09 22:36+0200\n"
+"POT-Creation-Date: 2019-09-11 18:14+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -20,6 +20,33 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: modules/report/infoPackage.inc.php:32
+msgid "Reporting"
+msgstr "Relatório"
+
+#: modules/report/infoPackage.inc.php:36
+msgid "Report"
+msgstr "Relatar"
+
+#: modules/report/infoPackage.inc.php:41 modules/report/report/index.php:44
+#: modules/report/report/localSidebar.php:27
+msgid "Report creation"
+msgstr "Criação de relatórios"
+
+#: modules/report/infoPackage.inc.php:44
+msgid "Download a file from report module (report or PNG)"
+msgstr "Baixar um arquivo do módulo de relatórios (relatório ou PNG)"
+
+#: modules/report/includes/report.inc.php:36
+#: modules/report/includes/report.inc.php:80
+msgid "Less detail"
+msgstr "Sem detalhes"
+
+#: modules/report/includes/report.inc.php:39
+#: modules/report/includes/report.inc.php:197
+msgid "More detail"
+msgstr "Mais detalhes"
 
 #: modules/report/includes/html.inc.php:100
 msgid "January"
@@ -201,34 +228,6 @@ msgstr "Sábados"
 #: modules/report/includes/html.inc.php:141
 msgid "Wk"
 msgstr "Semanal"
-
-#: modules/report/includes/report.inc.php:36
-#: modules/report/includes/report.inc.php:80
-msgid "Less detail"
-msgstr "Sem detalhes"
-
-#: modules/report/includes/report.inc.php:39
-#: modules/report/includes/report.inc.php:197
-msgid "More detail"
-msgstr "Mais detalhes"
-
-#: modules/report/infoPackage.inc.php:32
-msgid "Reporting"
-msgstr "Relatório"
-
-#: modules/report/infoPackage.inc.php:36
-msgid "Report"
-msgstr "Relatar"
-
-#: modules/report/infoPackage.inc.php:41
-#: modules/report/report/localSidebar.php:27
-#: modules/report/report/index.php:44
-msgid "Report creation"
-msgstr "Criação de relatórios"
-
-#: modules/report/infoPackage.inc.php:44
-msgid "Download a file from report module (report or PNG)"
-msgstr "Baixar um arquivo do módulo de relatórios (relatório ou PNG)"
 
 #: modules/report/report/index.php:62
 msgid "Period"

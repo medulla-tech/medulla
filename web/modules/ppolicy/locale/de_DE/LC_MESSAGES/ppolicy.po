@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-09 22:36+0200\n"
+"POT-Creation-Date: 2019-09-11 18:14+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: German (Germany) (https://www.transifex.com/siveo/teams/72118/de_DE/)\n"
@@ -21,16 +21,64 @@ msgstr ""
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: modules/ppolicy/infoPackage.inc.php:36
+msgid "Password Policy"
+msgstr "Password Policy"
+
+#: modules/ppolicy/infoPackage.inc.php:46
 #: modules/ppolicy/includes/localSidebar.php:27
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
-#: modules/ppolicy/infoPackage.inc.php:46
 msgid "Password policies"
 msgstr "Passwort Policies"
 
+#: modules/ppolicy/infoPackage.inc.php:52
 #: modules/ppolicy/includes/localSidebar.php:28
-#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
+#: modules/ppolicy/default/edit.php:44
 msgid "Add a password policy"
 msgstr "Eine Passwortpolicy hinzufügen"
+
+#: modules/ppolicy/infoPackage.inc.php:58
+msgid "Edit a password policy"
+msgstr "Eine Passwortpolicy ändern"
+
+#: modules/ppolicy/infoPackage.inc.php:63
+msgid "Delete a password policy"
+msgstr "Eine Passwortpolicy löschen"
+
+#: modules/ppolicy/infoPackage.inc.php:79
+msgid "Default "
+msgstr "Standart"
+
+#: modules/ppolicy/infoPackage.inc.php:82
+msgid "Enable user specific password policy"
+msgstr "Aktiviere Benutzer spezifischen Passwort-Policy"
+
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "ppolicy Attribute ändern"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "ppolicy Attribut löschen"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "ppolicy dem Benutzer hinzufügen"
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "ppolicy für Benutzer aktualisieren"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "ppolicy bei Benutzer löschen"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "PPolicy"
 
 #: modules/ppolicy/includes/publicFunc.php:37
 #: modules/ppolicy/includes/publicFunc.php:63
@@ -298,32 +346,45 @@ msgstr ""
 "durchführen wird, und wenn der Server nicht in der Lage ist wird das "
 "Passwort abgelehnt."
 
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "ppolicy Attribute ändern"
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
 
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "ppolicy Attribut löschen"
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
 
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "ppolicy dem Benutzer hinzufügen"
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Passwort-Policies Liste"
 
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "ppolicy für Benutzer aktualisieren"
+#: modules/ppolicy/default/delete.php:29
+msgid "The password policy has been deleted."
+msgstr "Die Passwortpolicy wurde gelöscht."
 
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "ppolicy bei Benutzer löschen"
+#: modules/ppolicy/default/delete.php:41
+#, php-format
+msgid ""
+"You will delete the password policy <strong>%s</strong>. Default password "
+"policy will be applied to users that use this password policy."
+msgstr ""
+"Sie werden die <strong>Kennwortrichtlinie %s</strong> löschen. Standard "
+"Passwort-Policy wird für Benutzer, die diese Passwort-Policy nutzen "
+"angewendet werden."
 
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr "PPolicy"
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "Löschen"
+
+#: modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Abbrechen"
 
 #: modules/ppolicy/default/edit.php:48
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
@@ -375,66 +436,6 @@ msgstr "Passwort maximale Fehlversuche"
 msgid "Lockout duration (seconds)"
 msgstr "Lockoutdauer (Sekunden)"
 
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning: you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning: your password has been reset by an administrator. Your LDAP account"
-" is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-
-#: modules/ppolicy/default/delete.php:29
-msgid "The password policy has been deleted."
-msgstr "Die Passwortpolicy wurde gelöscht."
-
-#: modules/ppolicy/default/delete.php:41
-#, php-format
-msgid ""
-"You will delete the password policy <strong>%s</strong>. Default password "
-"policy will be applied to users that use this password policy."
-msgstr ""
-"Sie werden die <strong>Kennwortrichtlinie %s</strong> löschen. Standard "
-"Passwort-Policy wird für Benutzer, die diese Passwort-Policy nutzen "
-"angewendet werden."
-
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
-msgstr "Löschen"
-
-#: modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Passwort-Policies Liste"
-
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
 msgid "Delete password policy"
 msgstr "Passwort-Policy löschen"
-
-#: modules/ppolicy/infoPackage.inc.php:36
-msgid "Password Policy"
-msgstr "Password Policy"
-
-#: modules/ppolicy/infoPackage.inc.php:58
-msgid "Edit a password policy"
-msgstr "Eine Passwortpolicy ändern"
-
-#: modules/ppolicy/infoPackage.inc.php:63
-msgid "Delete a password policy"
-msgstr "Eine Passwortpolicy löschen"
-
-#: modules/ppolicy/infoPackage.inc.php:79
-msgid "Default "
-msgstr "Standart"
-
-#: modules/ppolicy/infoPackage.inc.php:82
-msgid "Enable user specific password policy"
-msgstr "Aktiviere Benutzer spezifischen Passwort-Policy"
