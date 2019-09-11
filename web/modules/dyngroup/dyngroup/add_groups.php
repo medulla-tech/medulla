@@ -293,10 +293,15 @@ if (isset($_POST["bdelmachine_x"])) {
             }
         }
     }
-
+    /*
+    //Historical machine list, do not remove
     $listOfMachines = getMachineforentityList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'),
                                                     'imaging_server'=>$imaging_server,
                                                     'fk_entity' => $entitieval));
+*/
+
+    $listOfMachines = getRestrictedComputersList(0, -1, array('get'=>array('cn', 'objectUUID'), 'imaging_server'=>$imaging_server), False);
+
     $count = getRestrictedComputersListLen(array('imaging_server'=>$imaging_server));
     if ($truncate_limit < $count) {
         new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers. Use the filter to find specific machines.", "dyngroup"), $truncate_limit));
