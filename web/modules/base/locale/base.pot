@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 17:59+0200\n"
+"POT-Creation-Date: 2019-09-11 18:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -431,6 +431,19 @@ msgstr ""
 msgid "Backup"
 msgstr ""
 
+#: modules/base/computers/index.php:48
+#: modules/base/computers/localSidebar.php:5
+msgid "All computers"
+msgstr ""
+
+#: modules/base/computers/index.php:52
+msgid "Online computers"
+msgstr ""
+
+#: modules/base/computers/index.php:56
+msgid "Offline computers"
+msgstr ""
+
 #: modules/base/computers/trads.php:26
 msgid "Computer Name"
 msgstr ""
@@ -493,10 +506,6 @@ msgstr ""
 
 #: modules/base/computers/edit.php:123
 msgid "Location"
-msgstr ""
-
-#: modules/base/computers/localSidebar.php:5
-msgid "All computers"
 msgstr ""
 
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
