@@ -716,11 +716,11 @@ msgstr "Désolé la machine est éteinte"
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:299
 #, php-format
 msgid "Sorry, the remote machine [%s] takes too long to answer."
-msgstr ""
+msgstr "Désolé, la machine distante [%s] met trop de temps à répondre."
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:348
 msgid "Downloads basket"
-msgstr ""
+msgstr "Panier de téléchargement"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:352
 msgid "Folders"
@@ -748,31 +748,31 @@ msgstr "Supprimer tous les fichiers"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:370
 msgid "Downloads basket to"
-msgstr ""
+msgstr "Télécharger le panier vers"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:373
 msgid "Download list selection"
-msgstr ""
+msgstr "Télécharger la sélection"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:390
 msgid "Local folder"
-msgstr ""
+msgstr "Dossier local"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:415
 msgid "Remote tree view"
-msgstr ""
+msgstr "Vue distante:"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:418
 msgid "root:"
-msgstr ""
+msgstr "racine:"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:421
 msgid "Current path: "
-msgstr ""
+msgstr "Chemin actuel:"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:550
 msgid "Computer view"
-msgstr ""
+msgstr "Vue ordinateur"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:560
 msgid "Refresh"
@@ -780,7 +780,7 @@ msgstr "Rafraichir"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:570
 msgid "History download"
-msgstr ""
+msgstr "Historique des téléchargements"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:580
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
@@ -789,15 +789,15 @@ msgstr "Navigateur de fichiers"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:790
 msgid "Download from"
-msgstr ""
+msgstr "Télécharger depuis"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:792
 msgid "Folders list"
-msgstr ""
+msgstr "Liste des dossiers"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:800
 msgid "Files list"
-msgstr ""
+msgstr "Liste des fichiers"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:808
 msgid "To local folder"
@@ -809,7 +809,7 @@ msgstr "Valider"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:837
 msgid "The list (folder & files) copy has been requested successfully"
-msgstr ""
+msgstr "La demande de copie ( fichiers et dossiers) a été enregistrée"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
 msgid "Planned tasks"
@@ -829,7 +829,7 @@ msgstr "Nom de l'action rapide"
 
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:45
 msgid "Download files and folders"
-msgstr ""
+msgstr "Télécharger les fichiers et les dossiers"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:34
 msgid "Custom Quick Actions"
