@@ -563,7 +563,7 @@ msgstr ""
 
 #: modules/pkgs/pkgs/addRule.php:61 modules/pkgs/pkgs/editRule.php:66
 msgid "File Name"
-msgstr ""
+msgstr "Nom du fichier"
 
 #: modules/pkgs/pkgs/addRule.php:62 modules/pkgs/pkgs/editRule.php:67
 msgid "Search in Extension"
