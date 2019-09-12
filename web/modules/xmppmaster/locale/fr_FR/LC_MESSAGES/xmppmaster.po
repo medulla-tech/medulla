@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
 # Stephane Pointu <spointu@gmail.com>, 2019
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 18:47+0200\n"
+"POT-Creation-Date: 2019-09-11 18:52+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
-"Last-Translator: Stephane Pointu <spointu@gmail.com>, 2019\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -196,11 +196,11 @@ msgstr "Liste des ordinateurs deployé "
 
 #: modules/xmppmaster/infoPackage.inc.php:290
 msgid "List of not launched deployments"
-msgstr ""
+msgstr "Liste des déploiements non lancés"
 
 #: modules/xmppmaster/infoPackage.inc.php:296
 msgid "Transfert syncthing list no transfered"
-msgstr ""
+msgstr "Liste des transfert syncthing non démarrés"
 
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
 #, php-format
@@ -225,23 +225,23 @@ msgstr "Déploiement [ groupe"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:129
 msgid "Syncthing sharing done or non-existant"
-msgstr ""
+msgstr "Partage syncthing terminé ou non-existant"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:142
 msgid "Share name"
-msgstr ""
+msgstr "Nom du partage"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:144
 msgid "Number of participants"
-msgstr ""
+msgstr "Nombre de participants"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:146
 msgid "Transfer progress"
-msgstr ""
+msgstr "État d'avancement du transfert"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:175
 msgid "cluster list"
-msgstr ""
+msgstr "Liste des clusters"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:176
 msgid "cluster nb ars"
@@ -249,7 +249,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:177
 msgid "machine"
-msgstr ""
+msgstr "machine"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
 msgid "progress"
@@ -257,11 +257,11 @@ msgstr "en cours"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:179
 msgid "start"
-msgstr ""
+msgstr "début"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:180
 msgid "end"
-msgstr ""
+msgstr "fin"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:285
 msgid "Deployment completed"
@@ -421,10 +421,11 @@ msgstr "Créer une nouvelle Action Rapide"
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:43
 msgid "Deployments Launched on Offline Items (last 24 hours)"
 msgstr ""
+"Déploiements lancés sur des machines hors-lignes (dernières 24 heures )"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:47
 msgid "Deployments Launched on Offline Items (last 3 months)"
-msgstr ""
+msgstr "Déploiements lancés sur des machines hors-lignes (derniers 3 mois )"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
@@ -480,7 +481,7 @@ msgstr "Tâches passées (derniers 3 mois)"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:278
 msgid "Status"
-msgstr "Etat"
+msgstr "État"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:283
 msgid "Waiting Wol"
@@ -544,7 +545,7 @@ msgstr "Paquet"
 #: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:230
 #: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:230
 msgid "Edit config file"
-msgstr "Editer fichier de configuration"
+msgstr "Éditer fichier de configuration"
 
 #: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:326
 #: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:329
@@ -684,7 +685,7 @@ msgstr "OS"
 
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:65
 msgid "Group : "
-msgstr ""
+msgstr "Groupe:"
 
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:75
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:93
@@ -723,27 +724,27 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:352
 msgid "Folders"
-msgstr ""
+msgstr "Dossiers"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:355
 msgid "Remove last folder"
-msgstr ""
+msgstr "Supprimer le dernier dossier"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:356
 msgid "Remove all folders"
-msgstr ""
+msgstr "Supprimer tous les dossiers"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:361
 msgid "Files"
-msgstr ""
+msgstr "Fichiers"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:364
 msgid "Remove last file"
-msgstr ""
+msgstr "Supprimer le dernier fichier"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:365
 msgid "Remove all files"
-msgstr ""
+msgstr "Supprimer tous les fichiers"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:370
 msgid "Downloads basket to"
@@ -800,7 +801,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:808
 msgid "To local folder"
-msgstr ""
+msgstr "vers le dossier local"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:825
 msgid "Confirm"

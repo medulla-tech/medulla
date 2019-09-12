@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 18:47+0200\n"
+"POT-Creation-Date: 2019-09-11 18:52+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -34,7 +34,7 @@ msgstr "Ключ не є чинним"
 #: token.php:70
 msgid "Error while validating your token. Please contact your administrator."
 msgstr ""
-"Помилка під час проби перевірити чинність вашого ключа. Будь ласка, "
+"Помилка під час спроби перевірити чинність вашого ключа. Будь ласка, "
 "зв'яжіться із вашим системним адміністратором."
 
 #: modules/base/audit/indexbase.php:29 modules/base/audit/logview.php:75
@@ -1681,27 +1681,27 @@ msgstr[3] "%d неактивних служб"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:175
 msgid "cluster list"
-msgstr ""
+msgstr "список кластерів"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:176
 msgid "cluster nb ars"
-msgstr ""
+msgstr "к-ть стовпчиків кл."
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:177
 msgid "machine"
-msgstr ""
+msgstr "комп'ютер"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
 msgid "progress"
-msgstr ""
+msgstr "поступ"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:179
 msgid "start"
-msgstr ""
+msgstr "початок"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:180
 msgid "end"
-msgstr ""
+msgstr "кінець"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 msgid "Delete deploy"

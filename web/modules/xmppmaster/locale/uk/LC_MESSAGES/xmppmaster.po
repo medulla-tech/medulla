@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 18:47+0200\n"
+"POT-Creation-Date: 2019-09-11 18:52+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -200,7 +200,7 @@ msgstr "Список запущених розгортань"
 
 #: modules/xmppmaster/infoPackage.inc.php:296
 msgid "Transfert syncthing list no transfered"
-msgstr ""
+msgstr "Список передавань syncthing не передано"
 
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
 #, php-format
@@ -225,7 +225,7 @@ msgstr "Розгортання [група"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:129
 msgid "Syncthing sharing done or non-existant"
-msgstr ""
+msgstr "Оприлюднення Syncthing виконано або його не існує"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:142
 msgid "Share name"
@@ -241,27 +241,27 @@ msgstr "Поступ передавання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:175
 msgid "cluster list"
-msgstr ""
+msgstr "список кластерів"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:176
 msgid "cluster nb ars"
-msgstr ""
+msgstr "к-ть стовпчиків кл."
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:177
 msgid "machine"
-msgstr ""
+msgstr "комп'ютер"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
 msgid "progress"
-msgstr ""
+msgstr "поступ"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:179
 msgid "start"
-msgstr ""
+msgstr "початок"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:180
 msgid "end"
-msgstr ""
+msgstr "кінець"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:285
 msgid "Deployment completed"

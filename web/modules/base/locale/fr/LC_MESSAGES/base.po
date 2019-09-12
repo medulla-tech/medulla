@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 18:47+0200\n"
+"POT-Creation-Date: 2019-09-11 18:52+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -1691,7 +1691,7 @@ msgstr[1] "%d services inactifs"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:175
 msgid "cluster list"
-msgstr ""
+msgstr "Liste des clusters"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:176
 msgid "cluster nb ars"
@@ -1699,7 +1699,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:177
 msgid "machine"
-msgstr ""
+msgstr "machine"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
 msgid "progress"
@@ -1707,11 +1707,11 @@ msgstr "en cours"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:179
 msgid "start"
-msgstr ""
+msgstr "début"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:180
 msgid "end"
-msgstr ""
+msgstr "fin"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 msgid "Delete deploy"
