@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 18:52+0200\n"
+"POT-Creation-Date: 2019-09-17 01:25+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -214,6 +214,129 @@ msgstr ""
 msgid "Deployment [machine "
 msgstr ""
 
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:306
+msgid "Hide Machine Details"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:312
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:44
+msgid "Machine"
+msgstr "電腦"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:316
+msgid "Ip Machine"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:319
+msgid "Mac Address"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:341
+msgid "Hide Package Details"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:347
+msgid "Creator"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:501
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
+msgid "Name"
+msgstr "名稱"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:353
+msgid "Folder"
+msgstr "資料夾"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:356
+msgid "Creation Date"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:379
+msgid "Hide Deployment plan"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:385
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:286
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
+msgid "User"
+msgstr "使用者"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:388
+msgid "Start Date"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:391
+msgid "Stop Date"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:443
+msgid "Hide xmpp information"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:449
+msgid "jid machine"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:452
+msgid "jid Relay server"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:455
+msgid "ip machine"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:458
+msgid "ip relayserver"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:461
+msgid "ip master"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:495
+msgid "Hide Package and Dependency"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:504
+msgid "Software"
+msgstr "軟體"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:507
+msgid "Version"
+msgstr "版本"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:510
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
+msgid "Description"
+msgstr "說明"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:538
+msgid "Hide Deployment phases"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:544
+msgid "START"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:547
+msgid "STEP"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:550
+msgid "DESCRIPTION"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:684
+msgid "Hide Environment"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
 msgid "Computer deploy"
 msgstr ""
@@ -355,11 +478,6 @@ msgstr ""
 msgid "Quick action results"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
-#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:44
-msgid "Machine"
-msgstr "電腦"
-
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:43
 msgid "Download File"
 msgstr ""
@@ -458,15 +576,6 @@ msgstr "開始日期"
 msgid "Total Machines"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:286
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
-msgid "User"
-msgstr "使用者"
-
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:43
 msgid "Current tasks (last 24 hours)"
 msgstr ""
@@ -517,10 +626,6 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/topology.php:59
 msgid "Topology Pulse"
 msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
-msgid "Name"
-msgstr "名稱"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:91
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:82
@@ -649,10 +754,6 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Custom command name"
 msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
-msgid "Description"
-msgstr "說明"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:106
 msgid "Edit a Quick Action"

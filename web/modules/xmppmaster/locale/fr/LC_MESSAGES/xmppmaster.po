@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 18:52+0200\n"
+"POT-Creation-Date: 2019-09-17 01:25+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -215,6 +215,129 @@ msgstr "Groupe de déploiement ordinateurs"
 msgid "Deployment [machine "
 msgstr "Déploiement [machine "
 
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:306
+msgid "Hide Machine Details"
+msgstr "Cacher les détails de la machine"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:312
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:44
+msgid "Machine"
+msgstr "Ordinateur"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:316
+msgid "Ip Machine"
+msgstr "Adresse IP de la machine"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:319
+msgid "Mac Address"
+msgstr "Adresse MAC"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:341
+msgid "Hide Package Details"
+msgstr "Cacher les détails du package"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:347
+msgid "Creator"
+msgstr "Crateur"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:501
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
+msgid "Name"
+msgstr "Nom"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:353
+msgid "Folder"
+msgstr "Dossier"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:356
+msgid "Creation Date"
+msgstr "Date de création"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:379
+msgid "Hide Deployment plan"
+msgstr "Cacher le plan de déploiement"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:385
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:286
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
+msgid "User"
+msgstr "Utilisateur"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:388
+msgid "Start Date"
+msgstr "Date de début"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:391
+msgid "Stop Date"
+msgstr "Date de fin"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:443
+msgid "Hide xmpp information"
+msgstr "Cacher les informations xmpp"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:449
+msgid "jid machine"
+msgstr "JID de la machine"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:452
+msgid "jid Relay server"
+msgstr "JID du serveur relai"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:455
+msgid "ip machine"
+msgstr "Adresse IP de la machine"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:458
+msgid "ip relayserver"
+msgstr "Adresse IP du serveur relai"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:461
+msgid "ip master"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:495
+msgid "Hide Package and Dependency"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:504
+msgid "Software"
+msgstr "Logiciel"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:507
+msgid "Version"
+msgstr "Version"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:510
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
+msgid "Description"
+msgstr "Description"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:538
+msgid "Hide Deployment phases"
+msgstr "Cacher les phases de déploiement"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:544
+msgid "START"
+msgstr "DÉBUT"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:547
+msgid "STEP"
+msgstr "ÉTAPE"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:550
+msgid "DESCRIPTION"
+msgstr "DESCRIPTION"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:684
+msgid "Hide Environment"
+msgstr "Cacher les variables d'environnement"
+
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
 msgid "Computer deploy"
 msgstr "Déploiement d'ordinateur"
@@ -356,11 +479,6 @@ msgstr ""
 msgid "Quick action results"
 msgstr "Résultats d'Actions Rapides"
 
-#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
-#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:44
-msgid "Machine"
-msgstr "Ordinateur"
-
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:43
 msgid "Download File"
 msgstr "Télécharger le fichier"
@@ -462,15 +580,6 @@ msgstr "Date de démarrage"
 msgid "Total Machines"
 msgstr "Nb de machines total"
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:286
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
-msgid "User"
-msgstr "Utilisateur"
-
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:43
 msgid "Current tasks (last 24 hours)"
 msgstr "Tâches en cours (dernières 24h)"
@@ -521,10 +630,6 @@ msgstr "Les tâches passées de tous les utilisateurs"
 #: modules/xmppmaster/xmppmaster/topology.php:59
 msgid "Topology Pulse"
 msgstr "Topologie Pulse"
-
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
-msgid "Name"
-msgstr "Nom"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:91
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:82
@@ -653,10 +758,6 @@ msgstr "Description de la commande"
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Custom command name"
 msgstr "Nom de la commande personalisée"
-
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
-msgid "Description"
-msgstr "Description"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:106
 msgid "Edit a Quick Action"
