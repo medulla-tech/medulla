@@ -638,8 +638,15 @@ function xmlrpc_editWindowsAnswerFile($xmlWAFG, $title)
 }
 
 function xmlrpc_getClonezillaParamsForTarget($target_uuid) {
-    return xmlCall("imaging.getClonezillaParamsForTarget", array($target_uuid));
+        return xmlCall("imaging.getClonezillaParamsForTarget", array($target_uuid));
+
 }
+
+function xmlrpc_isWolImaging($target_uuid) {
+        return xmlCall("imaging.isWolImaging", array($target_uuid));
+
+}
+
 function xmlrpc_setimaginglogxmpp(   $text,
                                             $type = "infouser",
                                             $sessionname = '' ,

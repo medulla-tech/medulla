@@ -167,3 +167,6 @@ class ImagingApi (MyXmlrpc):
 
     def xmlrpc_getClonezillaParamsForTarget(self, computerUUID):
         return self.api.getClonezillaParamsForTarget(computerUUID)
+
+    def xmlrpc_isWolImaging(self, computerUUID):
+        return self.api.isWolImaging(computerUUID)

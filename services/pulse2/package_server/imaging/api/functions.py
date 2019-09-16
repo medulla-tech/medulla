@@ -1314,3 +1314,21 @@ class Imaging(object):
         func = 'imaging.getClonezillaParamsForTarget'
         d = client.callRemote(func, computer_uuid)
         return d
+
+    def isWolImaging(self, computer_uuid):
+        """
+        Method to see if an imaging is asked with wol for a computer using its UUID.
+
+        @param computer_uuid: The target UUID
+        @type computer_uuid: str
+
+        @return: true if this is a wol imaging, false otherwise
+        @rtype: bool
+        """
+        client = self._getXMLRPCClient()
+        func = 'imaging.isWolImaging'
+        # TODO: Add a SQL query to see if this is a imaging wol
+        iswol = """SELECT imaging.isWolImaging WHERE uuid = %s ;""", computer_uuid
+
+        d = client.callRemote(func, iswol)
+        return d
