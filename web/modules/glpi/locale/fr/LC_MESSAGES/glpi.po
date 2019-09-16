@@ -5,6 +5,7 @@
 # 
 # Translators:
 # Stephane Pointu <spointu@gmail.com>, 2017
+# tekmans <yvan.manon@siveo.net>, 2019
 # Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # 
 #, fuzzy
@@ -145,7 +146,7 @@ msgstr "Onglet registre (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:187
 msgid "Connections tab (GLPI)"
-msgstr ""
+msgstr "Onglet connexions (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:192
 msgid "Inventory (GLPI) on machine"
@@ -198,7 +199,7 @@ msgstr "Ajouter un droit d'entité"
 
 #: modules/glpi/includes/panels/inventory.inc.php:30
 msgid "Inventories"
-msgstr ""
+msgstr "Inventaires"
 
 #: modules/glpi/includes/panels/inventory.inc.php:45
 #: modules/glpi/includes/panels/antivirus.inc.php:43
@@ -215,7 +216,7 @@ msgstr "> %s jours: %percent% (%d)"
 
 #: modules/glpi/includes/panels/inventory.inc.php:48
 msgid "Uninventoried machines"
-msgstr ""
+msgstr "Ordinateurs non inventoriés"
 
 #: modules/glpi/includes/panels/os_repartition.inc.php:35
 msgid "Operating systems"
@@ -224,7 +225,7 @@ msgstr "Systèmes d'exploitation"
 #: modules/glpi/includes/panels/os_repartition.inc.php:43
 #: modules/glpi/includes/panels/antivirus.inc.php:39
 msgid "Uninventoried Machines"
-msgstr ""
+msgstr "Ordinateurs non inventoriés"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:31
 #: modules/glpi/glpi/tabs.php:88
@@ -805,7 +806,7 @@ msgstr "Nom du lieu"
 #: modules/glpi/glpi/createOSStaticGroup.php:40
 #, php-format
 msgid "Machine with %s %s installed at %s"
-msgstr ""
+msgstr "Ordinateurs avec %s %s installé le %s"
 
 #: modules/glpi/glpi/deleteEntityRule.php:31
 msgid "The entity rule has been deleted successfully."

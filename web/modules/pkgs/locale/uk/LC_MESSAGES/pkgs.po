@@ -448,7 +448,7 @@ msgstr "Правило було вилучено"
 
 #: modules/pkgs/pkgs/rulesList.php:73
 msgid "Rules Order"
-msgstr ""
+msgstr "Порядок правил"
 
 #: modules/pkgs/pkgs/rulesList.php:74
 msgid "Rule Description"

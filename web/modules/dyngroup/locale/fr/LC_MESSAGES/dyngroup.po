@@ -6,6 +6,7 @@
 # Translators:
 # Stephane Pointu <spointu@gmail.com>, 2018
 # Nicolas Lécureuil <neoclust@mageia.org>, 2019
+# tekmans <yvan.manon@siveo.net>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-16 13:58+0200\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
+"Last-Translator: tekmans <yvan.manon@siveo.net>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,27 +36,27 @@ msgstr "Créateur de groupe d'ordinateurs"
 #: modules/dyngroup/infoPackage.inc.php:65
 #: modules/dyngroup/infoPackage.inc.php:79
 msgid "Dynamic group creation's tab"
-msgstr "Onglet de création d'un groupe dynamique"
+msgstr "Onglet de création de groupe dynamique"
 
 #: modules/dyngroup/infoPackage.inc.php:54
 #: modules/dyngroup/infoPackage.inc.php:68
 #: modules/dyngroup/infoPackage.inc.php:82
 msgid "Static group creation's tab"
-msgstr "Onglet de création d'un groupe statique"
+msgstr "Onglet de création de groupe statique"
 
 #: modules/dyngroup/infoPackage.inc.php:57
 #: modules/dyngroup/infoPackage.inc.php:71
 #: modules/dyngroup/infoPackage.inc.php:85
 msgid "Static group creation from import's tab"
-msgstr "Onglet de création d'un groupe statique  partir d'un import"
+msgstr "Onglet de création de groupe statique à partir d'un import"
 
 #: modules/dyngroup/infoPackage.inc.php:61
 msgid "Computers Group Creator Sub Request Editor"
-msgstr "Page d'édition d'une sous requête de groupe d'ordinateurs"
+msgstr "Page d'édition de sous requête de groupe d'ordinateurs"
 
 #: modules/dyngroup/infoPackage.inc.php:75
 msgid "Computers Group Creator Sub Request Delete"
-msgstr "Page de suppression d'une sous requête de groupe d'ordinateurs"
+msgstr "Page de suppression de sous requête de groupe d'ordinateurs"
 
 #: modules/dyngroup/infoPackage.inc.php:89
 #: modules/dyngroup/infoPackage.inc.php:113
@@ -68,7 +69,7 @@ msgstr "Page d'édition d'une sous requête de groupe d'ordinateurs"
 
 #: modules/dyngroup/infoPackage.inc.php:99
 msgid "Computers Group Sub Request Delete"
-msgstr "Page de suppression d'une sous requête de groupe d'ordinateurs"
+msgstr "Page de suppression de sous requête de groupe d'ordinateurs"
 
 #: modules/dyngroup/infoPackage.inc.php:104
 #: modules/dyngroup/dyngroup/tmpdisplay.php:33

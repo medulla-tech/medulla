@@ -6,6 +6,7 @@
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
 # Stephane Pointu <spointu@gmail.com>, 2018
+# tekmans <yvan.manon@siveo.net>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-16 13:58+0200\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
-"Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
+"Last-Translator: tekmans <yvan.manon@siveo.net>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1972,7 +1973,7 @@ msgstr "Exécuter le déploiement à l'heure spécifiée"
 
 #: modules/msc/msc/launch.php:727
 msgid "Spooling priority"
-msgstr ""
+msgstr "Priorité de la file d'attente"
 
 #: modules/msc/msc/launch.php:733
 msgid "high priority"
@@ -1984,11 +1985,11 @@ msgstr "Priorité normale"
 
 #: modules/msc/msc/launch.php:738
 msgid "Install Spooling"
-msgstr ""
+msgstr "Création de la file d'attente"
 
 #: modules/msc/msc/launch.php:745
 msgid "Syncthing deployment"
-msgstr ""
+msgstr "Déploiement en pair-à-pair"
 
 #: modules/msc/msc/launch.php:816
 msgid "Probe status"
