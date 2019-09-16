@@ -748,7 +748,7 @@ msgstr "Supprimer tous les fichiers"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:370
 msgid "Downloads basket to"
-msgstr "Télécharger le panier vers"
+msgstr "Télécharger le panier vers :"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:373
 msgid "Download list selection"
@@ -760,7 +760,7 @@ msgstr "Dossier local"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:415
 msgid "Remote tree view"
-msgstr "Vue distante:"
+msgstr "Vue distante"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:418
 msgid "root:"

@@ -7,6 +7,7 @@
 # Guillaume <guillaume.lassarre@siveo.net>, 2018
 # Stephane Pointu <spointu@gmail.com>, 2019
 # Nicolas Lécureuil <neoclust@mageia.org>, 2019
+# tekmans <yvan.manon@siveo.net>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-11 18:52+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
+"Last-Translator: tekmans <yvan.manon@siveo.net>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -241,7 +242,7 @@ msgstr "Éditer les ACL d'un utilisateur"
 
 #: modules/base/infoPackage.inc.php:232
 msgid "Logged user actions"
-msgstr "Actions de l'utilisateur enregistrées"
+msgstr "Actions enregistrées de l'utilisateur"
 
 #: modules/base/infoPackage.inc.php:237
 msgid "Action details"
@@ -756,7 +757,7 @@ msgstr "Choisissez un langage"
 
 #: modules/base/includes/publicFunc.php:412
 msgid "Preferred language"
-msgstr "Langage préféré"
+msgstr "Langue préférée"
 
 #: modules/base/includes/publicFunc.php:420
 msgid "Disable user's shell"
@@ -1227,7 +1228,7 @@ msgstr "Journal de l'Inventaire"
 
 #: modules/base/logview/logsimaging.php:158
 msgid "Imaging Logs"
-msgstr "Journal de l'Imaging"
+msgstr "Journal de l'imaging"
 
 #: modules/base/logview/logspackaging.php:141
 msgid "Packaging Logs"
@@ -1719,7 +1720,7 @@ msgstr "Supprimer le déploiement"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:30
 msgid "Clients Update"
-msgstr "Mise à jour du Client"
+msgstr "Mise à jour du client"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:30
 msgid "Pulse Updates"
@@ -1919,7 +1920,7 @@ msgstr "Tout désélectionner"
 
 #: includes/ErrorHandling.php:78
 msgid "Copied"
-msgstr "copié"
+msgstr "Copié"
 
 #: includes/ErrorHandling.php:87
 msgid "Show complete trackback"
