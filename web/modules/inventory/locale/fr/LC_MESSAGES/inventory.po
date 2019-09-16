@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
 # Stephane Pointu <spointu@gmail.com>, 2018
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-11 14:24+0200\n"
+"POT-Creation-Date: 2019-09-16 13:58+0200\n"
 "PO-Revision-Date: 2017-10-11 08:07+0000\n"
-"Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,145 +22,376 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: modules/inventory/inventory/localComputersSidebar.php:27
-msgid "Entities"
-msgstr "Entités"
+#: modules/inventory/infoPackage.inc.php:31
+#: modules/inventory/infoPackage.inc.php:36
+#: modules/inventory/inventory/history.php:80
+msgid "Inventory"
+msgstr "Inventaire"
 
-#: modules/inventory/inventory/localComputersSidebar.php:28
-msgid "Add an entity"
-msgstr "Ajouter une entité"
-
-#: modules/inventory/inventory/localComputersSidebar.php:29
-#: modules/inventory/inventory/entityRules.php:28
-msgid "Entity rules"
-msgstr "Règles d'entités"
-
-#: modules/inventory/inventory/localComputersSidebar.php:30
-msgid "Add entity rule"
-msgstr "Ajouter une règle d'entité"
-
-#: modules/inventory/inventory/infos.php:33
-msgid "Additionnal informations"
-msgstr "Informations additionnelles"
-
-#: modules/inventory/inventory/infos.php:43
-msgid "First apparition"
-msgstr "Première apparition"
-
-#: modules/inventory/inventory/localSidebar.php:28
 #: modules/inventory/infoPackage.inc.php:40
+#: modules/inventory/inventory/localSidebar.php:28
 msgid "Incoming"
 msgstr "Nouvelles arrivés"
 
-#: modules/inventory/inventory/localSidebar.php:29
-#: modules/inventory/inventory/i18n_labels.php:28
 #: modules/inventory/infoPackage.inc.php:42
+#: modules/inventory/inventory/i18n_labels.php:28
+#: modules/inventory/inventory/localSidebar.php:29
 msgid "Bios"
 msgstr "Bios"
 
-#: modules/inventory/inventory/localSidebar.php:30
-#: modules/inventory/inventory/i18n_labels.php:82
 #: modules/inventory/infoPackage.inc.php:44
+#: modules/inventory/inventory/i18n_labels.php:82
+#: modules/inventory/inventory/localSidebar.php:30
 msgid "Hardware"
 msgstr "Matériel"
 
-#: modules/inventory/inventory/localSidebar.php:31
-#: modules/inventory/inventory/i18n_labels.php:141
-#: modules/inventory/infoPackage.inc.php:71
-msgid "Software"
-msgstr "Logiciel"
-
-#: modules/inventory/inventory/localSidebar.php:32
-#: modules/inventory/inventory/i18n_labels.php:107
 #: modules/inventory/infoPackage.inc.php:46
+#: modules/inventory/inventory/i18n_labels.php:107
+#: modules/inventory/inventory/localSidebar.php:32
 msgid "Network"
 msgstr "Réseau"
 
-#: modules/inventory/inventory/localSidebar.php:33
-#: modules/inventory/inventory/i18n_labels.php:47
 #: modules/inventory/infoPackage.inc.php:48
+#: modules/inventory/inventory/i18n_labels.php:47
+#: modules/inventory/inventory/localSidebar.php:33
 msgid "Controller"
 msgstr "Contrleur"
 
-#: modules/inventory/inventory/localSidebar.php:34
-#: modules/inventory/infoPackage.inc.php:73
-msgid "Registry"
-msgstr "Registre"
+#: modules/inventory/infoPackage.inc.php:50
+#: modules/inventory/inventory/body.php:41
+msgid "Summary"
+msgstr "Résumé"
 
-#: modules/inventory/inventory/localSidebar.php:37
-#: modules/inventory/inventory/i18n_labels.php:64
 #: modules/inventory/infoPackage.inc.php:53
+#: modules/inventory/inventory/i18n_labels.php:64
+#: modules/inventory/inventory/localSidebar.php:37
 msgid "Drive"
 msgstr "Disque"
 
-#: modules/inventory/inventory/localSidebar.php:38
-#: modules/inventory/inventory/i18n_labels.php:87
 #: modules/inventory/infoPackage.inc.php:55
+#: modules/inventory/inventory/i18n_labels.php:87
+#: modules/inventory/inventory/localSidebar.php:38
 msgid "Input"
 msgstr "Entrée"
 
-#: modules/inventory/inventory/localSidebar.php:39
+#: modules/inventory/infoPackage.inc.php:57
 #: modules/inventory/inventory/ajaxViewPart.php:227
 #: modules/inventory/inventory/ajaxViewPart.php:607
 #: modules/inventory/inventory/i18n_labels.php:100
-#: modules/inventory/infoPackage.inc.php:57
+#: modules/inventory/inventory/localSidebar.php:39
 msgid "Memory"
 msgstr "Mémoire"
 
-#: modules/inventory/inventory/localSidebar.php:40
-#: modules/inventory/inventory/i18n_labels.php:105
 #: modules/inventory/infoPackage.inc.php:59
+#: modules/inventory/inventory/i18n_labels.php:105
+#: modules/inventory/inventory/localSidebar.php:40
 msgid "Monitor"
 msgstr "écran"
 
-#: modules/inventory/inventory/localSidebar.php:41
-#: modules/inventory/inventory/i18n_labels.php:118
 #: modules/inventory/infoPackage.inc.php:61
+#: modules/inventory/inventory/i18n_labels.php:118
+#: modules/inventory/inventory/localSidebar.php:41
 msgid "Port"
 msgstr "Port"
 
-#: modules/inventory/inventory/localSidebar.php:42
-#: modules/inventory/inventory/i18n_labels.php:120
 #: modules/inventory/infoPackage.inc.php:63
+#: modules/inventory/inventory/i18n_labels.php:120
+#: modules/inventory/inventory/localSidebar.php:42
 msgid "Printer"
 msgstr "Imprimante"
 
-#: modules/inventory/inventory/localSidebar.php:43
-#: modules/inventory/inventory/i18n_labels.php:142
 #: modules/inventory/infoPackage.inc.php:65
+#: modules/inventory/inventory/i18n_labels.php:142
+#: modules/inventory/inventory/localSidebar.php:43
 msgid "Sound"
 msgstr "Son"
 
-#: modules/inventory/inventory/localSidebar.php:44
+#: modules/inventory/infoPackage.inc.php:67
 #: modules/inventory/inventory/ajaxViewPart.php:228
 #: modules/inventory/inventory/i18n_labels.php:148
-#: modules/inventory/infoPackage.inc.php:67
+#: modules/inventory/inventory/localSidebar.php:44
 msgid "Storage"
 msgstr "Stockage"
 
-#: modules/inventory/inventory/localSidebar.php:45
 #: modules/inventory/infoPackage.inc.php:69
+#: modules/inventory/inventory/localSidebar.php:45
 msgid "VideoCard"
 msgstr "Carte vidéo"
+
+#: modules/inventory/infoPackage.inc.php:71
+#: modules/inventory/inventory/i18n_labels.php:141
+#: modules/inventory/inventory/localSidebar.php:31
+msgid "Software"
+msgstr "Logiciel"
+
+#: modules/inventory/infoPackage.inc.php:73
+#: modules/inventory/inventory/localSidebar.php:34
+msgid "Registry"
+msgstr "Registre"
+
+#: modules/inventory/infoPackage.inc.php:76
+#: modules/inventory/inventory/ajaxIncoming.php:84
+#: modules/inventory/inventory/ajaxViewPart.php:540
+msgid "View"
+msgstr "Voir"
+
+#: modules/inventory/infoPackage.inc.php:80
+#: modules/inventory/inventory/ajaxIncoming.php:85
+#: modules/inventory/inventory/ajaxViewPart.php:541
+msgid "Information"
+msgstr "Informations"
+
+#: modules/inventory/infoPackage.inc.php:84
+msgid "Charts"
+msgstr "Graphiques"
+
+#: modules/inventory/infoPackage.inc.php:88
+#: modules/inventory/inventory/graphs.php:35
+msgid "Chart"
+msgstr "Graphique"
+
+#: modules/inventory/infoPackage.inc.php:92
+msgid "Csv's export"
+msgstr "Export au format CSV"
+
+#: modules/inventory/infoPackage.inc.php:96
+msgid "Create static group from dashboard"
+msgstr "Créer un groupe statique depuis le tableau de bord"
+
+#: modules/inventory/infoPackage.inc.php:113
+msgid "Header"
+msgstr "Entête"
+
+#: modules/inventory/infoPackage.inc.php:130
+msgid "Inventory on a group of computers"
+msgstr "Inventaire d'un groupe de machines"
+
+#: modules/inventory/infoPackage.inc.php:133
+msgid "Hardware tab for a group"
+msgstr "Onglet matériel pour un groupe"
+
+#: modules/inventory/infoPackage.inc.php:136
+msgid "Bios tab for a group"
+msgstr "Onglet BIOS pour un groupe"
+
+#: modules/inventory/infoPackage.inc.php:139
+msgid "Summary tab for a group"
+msgstr "Onglet résumé pour un groupe"
+
+#: modules/inventory/infoPackage.inc.php:142
+msgid "Storage tab for a group"
+msgstr "Onglet stockage pour un groupe"
+
+#: modules/inventory/infoPackage.inc.php:145
+msgid "Software tab for a group"
+msgstr "Onglet logiciel pour un groupe"
+
+#: modules/inventory/infoPackage.inc.php:148
+msgid "Network tab for a group"
+msgstr "Onglet réseau pour un groupe"
+
+#: modules/inventory/infoPackage.inc.php:151
+msgid "Controller tab for a group"
+msgstr "Onglet contrôleur pour un groupe"
+
+#: modules/inventory/infoPackage.inc.php:154
+msgid "Registry tab for a group"
+msgstr "Onglet registre pour un groupe"
+
+#: modules/inventory/infoPackage.inc.php:157
+msgid "Hardware tab for a computer in a group"
+msgstr "Onglet matériel pour un ordinateur dans un groupe"
+
+#: modules/inventory/infoPackage.inc.php:160
+msgid "Summary tab for a computer in a group"
+msgstr "Onglet résumé pour une machine"
+
+#: modules/inventory/infoPackage.inc.php:163
+msgid "Storage tab for a computer in a group"
+msgstr "Onglet stockage pour une machine"
+
+#: modules/inventory/infoPackage.inc.php:166
+msgid "Bios tab for a computer in a group"
+msgstr "Onglet BIOS pour un ordinateur dans un groupe"
+
+#: modules/inventory/infoPackage.inc.php:169
+msgid "Software tab for a computer in a group"
+msgstr "Onglet logiciel pour un ordinateur dans un groupe"
+
+#: modules/inventory/infoPackage.inc.php:172
+msgid "Network tab for a computer in a group"
+msgstr "Onglet réseau pour un ordinateur dans un groupe"
+
+#: modules/inventory/infoPackage.inc.php:175
+msgid "Controller tab for a computer in a group"
+msgstr "Onglet contrôleur pour un ordinateur dans un groupe"
+
+#: modules/inventory/infoPackage.inc.php:178
+msgid "Registry tab for a computer in a group"
+msgstr "Onglet registre pour un ordinateur dans un groupe"
+
+#: modules/inventory/infoPackage.inc.php:183
+msgid "Inventory on a single computer"
+msgstr "Inventaire de la machine"
+
+#: modules/inventory/infoPackage.inc.php:187
+msgid "Hardware tab for a computer"
+msgstr "Onglet matériel pour un ordinateur"
+
+#: modules/inventory/infoPackage.inc.php:190
+msgid "Software tab for a computer"
+msgstr "Onglet logiciel pour un ordinateur"
+
+#: modules/inventory/infoPackage.inc.php:193
+msgid "Network tab for a computer"
+msgstr "Onglet réseau pour un ordinateur"
+
+#: modules/inventory/infoPackage.inc.php:196
+msgid "Controller tab for a computer"
+msgstr "Onglet contrôleur pour un ordinateur"
+
+#: modules/inventory/infoPackage.inc.php:199
+msgid "Registry tab for a computer"
+msgstr "Onglet registre pour un ordinateur"
+
+#: modules/inventory/infoPackage.inc.php:204
+msgid "Differences between two inventories"
+msgstr "Diffrences entre deux inventaires"
+
+#: modules/inventory/infoPackage.inc.php:210
+msgid "Entities (ajax)"
+msgstr "Entités (ajax)"
+
+#: modules/inventory/infoPackage.inc.php:215
+msgid "Entity rules (ajax)"
+msgstr "Règles d'entité (ajax)"
+
+#: modules/inventory/infoPackage.inc.php:221
+msgid "Change entity rule order (up)"
+msgstr "Augmenter la priorité de cette règle (monter)"
+
+#: modules/inventory/infoPackage.inc.php:226
+msgid "Change entity rule order (down)"
+msgstr "Diminuer la priorité de cette règle (descendre)"
+
+#: modules/inventory/includes/html.php:65
+#: modules/inventory/inventory/ajaxViewPart.php:188
+#: modules/inventory/inventory/ajaxViewPart.php:609
+#: modules/inventory/inventory/i18n_labels.php:53
+msgid "Date"
+msgstr "Date"
+
+#: modules/inventory/includes/html.php:98
+msgid "Filter software"
+msgstr "Filtrer les logiciels"
+
+#: modules/inventory/includes/html.php:103
+msgid "Hide Windows Updates"
+msgstr "Masquer les MAJ Windows Update"
+
+#: modules/inventory/includes/html.php:117
+msgid "Refresh"
+msgstr "Rafraichir"
+
+#: modules/inventory/includes/publicFunc.php:57
+#: modules/inventory/includes/publicFunc.php:90
+msgid "Entity right"
+msgstr "Droits sur l'entité"
+
+#: modules/inventory/includes/publicFunc.php:83
+#: modules/inventory/inventory/addEntityRule.php:180
+msgid "Remove"
+msgstr "Supprimer"
+
+#: modules/inventory/includes/publicFunc.php:83
+msgid "Remove entity for user"
+msgstr "Supprimer les droits sur l'entité"
+
+#: modules/inventory/includes/publicFunc.php:95
+msgid "Add entity right"
+msgstr "Ajouter les droits sur l'entité"
+
+#: modules/inventory/includes/publicFunc.php:95
+msgid "Add entity right for user"
+msgstr "Ajouter les droits sur l'entité pour l'utilisateur"
+
+#: modules/inventory/includes/panels/inventory.inc.php:30
+msgid "Computers"
+msgstr "Machines"
+
+#: modules/inventory/includes/panels/inventory.inc.php:43
+msgid "Create a group"
+msgstr "Créer un groupe"
+
+#: modules/inventory/includes/panels/inventory.inc.php:44
+msgid "< %s days: %percent% (%d)"
+msgstr "< %s jours: %percent% (%d)"
+
+#: modules/inventory/includes/panels/inventory.inc.php:45
+msgid "> %s days: %percent% (%d)"
+msgstr "> %s jours: %percent% (%d)"
+
+#: modules/inventory/includes/panels/inventory.inc.php:48
+msgid "Latest Inventory Date"
+msgstr "Date du dernier inventaire"
+
+#: modules/inventory/inventory/EditEntity.php:45
+msgid "The entity has not been updated."
+msgstr "L'entité n'a pas été mise à jour."
+
+#: modules/inventory/inventory/EditEntity.php:49
+msgid "Edit entity"
+msgstr "Editer entité"
+
+#: modules/inventory/inventory/EditEntity.php:55
+#: modules/inventory/inventory/addEntity.php:50
+#: modules/inventory/inventory/ajaxViewPart.php:571
+#: modules/inventory/inventory/ajaxViewPart.php:587
+#: modules/inventory/inventory/i18n_labels.php:106
+#: modules/inventory/inventory/deleteEntity.php:64
+msgid "Name"
+msgstr "Nom"
 
 #: modules/inventory/inventory/slot.php:27
 #: modules/inventory/inventory/i18n_labels.php:134
 msgid "Slot"
 msgstr "Emplacement"
 
-#: modules/inventory/inventory/ajaxEntityList.php:51
-#: modules/inventory/inventory/ajaxEntityRules.php:52
-msgid "No entry found"
-msgstr "Pas d'entrée trouvé"
+#: modules/inventory/inventory/tabs.php:63
+#: modules/inventory/inventory/tabs.php:71
+msgid "This client has been registered in pull mode"
+msgstr "Ce client est configuré en mode pull"
 
-#: modules/inventory/inventory/ajaxEntityList.php:56
-msgid "Entity name"
-msgstr "Nom de l'entité"
+#: modules/inventory/inventory/tabs.php:65
+msgid "Leave pull mode"
+msgstr "Quitter le mode pull"
 
-#: modules/inventory/inventory/ajaxEntityList.php:63
-#: modules/inventory/inventory/ajaxEntityList.php:64
-msgid "Edit Entity"
-msgstr "Editer l'entité"
+#: modules/inventory/inventory/tabs.php:77
+#, php-format
+msgid "%s's inventory"
+msgstr "Inventaire de %s"
+
+#: modules/inventory/inventory/tabs.php:79
+#, php-format
+msgid "%s's content inventory"
+msgstr "Inventaire du contenu de %s"
+
+#: modules/inventory/inventory/tabs.php:106
+msgid "History"
+msgstr "Historique"
+
+#: modules/inventory/inventory/tabs.php:117
+msgid "Get XLS Report"
+msgstr "Obtenir un rapport XLS"
+
+#: modules/inventory/inventory/entityRules.php:28
+#: modules/inventory/inventory/localComputersSidebar.php:29
+msgid "Entity rules"
+msgstr "Règles d'entités"
+
+#: modules/inventory/inventory/entityRules.php:35
+msgid "All rules"
+msgstr "Toutes les règles"
 
 #: modules/inventory/inventory/entityList.php:27
 msgid "Entity list"
@@ -170,109 +401,119 @@ msgstr "Liste des entités"
 msgid "All entities"
 msgstr "Toutes les entités"
 
-#: modules/inventory/inventory/body.php:40
-msgid "Bios list"
-msgstr "Liste des BIOS"
+#: modules/inventory/inventory/pci.php:27
+#: modules/inventory/inventory/i18n_labels.php:115
+msgid "Pci"
+msgstr "Pci"
 
-#: modules/inventory/inventory/body.php:41
-#: modules/inventory/infoPackage.inc.php:50
-msgid "Summary"
-msgstr "Résumé"
+#: modules/inventory/inventory/incoming.php:46
+msgid "Incoming Inventories"
+msgstr "Nouveaux inventaires"
 
-#: modules/inventory/inventory/body.php:42
-msgid "Hardware and OS information list"
-msgstr "Liste des matériels et des OS"
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last week"
+msgstr "La semaine dernière"
 
-#: modules/inventory/inventory/body.php:43
-msgid "Software list"
-msgstr "Liste des logiciels"
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last month"
+msgstr "Le mois dernier"
 
-#: modules/inventory/inventory/body.php:44
-msgid "Network card and configuration list"
-msgstr "Listes des cartes réseau et de leur configuration"
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last quarter"
+msgstr "Le trimestre dernier"
 
-#: modules/inventory/inventory/body.php:45
-msgid "Controller list"
-msgstr "Liste des contrôleurs"
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last semester"
+msgstr "Le semestre dernier"
 
-#: modules/inventory/inventory/body.php:46
-msgid "Registry keys/values list"
-msgstr "Listes des clés/valeurs des bases de registre"
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last year"
+msgstr "L'année dernière"
 
-#: modules/inventory/inventory/body.php:47
-msgid "Drive list"
-msgstr "Liste des lecteurs"
+#: modules/inventory/inventory/incoming.php:67
+msgid "Period"
+msgstr "Période"
 
-#: modules/inventory/inventory/body.php:48
-msgid "Input device list"
-msgstr "Liste des périphériques d'entrée"
+#: modules/inventory/inventory/incoming.php:72
+msgid "Only new computers"
+msgstr "Seulement les nouveaux ordinateurs"
 
-#: modules/inventory/inventory/body.php:49
-msgid "Memory module list"
-msgstr "Liste des modules mémoire"
+#: modules/inventory/inventory/incoming.php:73
+msgid "Load only the computers which were new when the inventory was made"
+msgstr "Charger seulement les inventaires apparaissant pour la première fois"
 
-#: modules/inventory/inventory/body.php:50
-msgid "Monitor list"
-msgstr "Liste des moniteurs"
+#: modules/inventory/inventory/ajaxEntityRules.php:52
+#: modules/inventory/inventory/ajaxEntityList.php:51
+msgid "No entry found"
+msgstr "Pas d'entrée trouvé"
 
-#: modules/inventory/inventory/body.php:51
-msgid "Port list"
-msgstr "Liste des ports"
+#: modules/inventory/inventory/ajaxEntityRules.php:63
+msgid "Rule"
+msgstr "Règle"
 
-#: modules/inventory/inventory/body.php:52
-msgid "Printer list"
-msgstr "Liste des imprimantes"
+#: modules/inventory/inventory/ajaxEntityRules.php:64
+msgid "actif"
+msgstr "actif"
 
-#: modules/inventory/inventory/body.php:53
-msgid "Sound list"
-msgstr "Liste des cartes son"
+#: modules/inventory/inventory/ajaxEntityRules.php:65
+msgid "entitie"
+msgstr "entité"
 
-#: modules/inventory/inventory/body.php:54
-msgid "Storage medium list"
-msgstr "Liste des périphériques de stockage"
+#: modules/inventory/inventory/ajaxEntityRules.php:66
+msgid "aggregator"
+msgstr "aggregateur"
 
-#: modules/inventory/inventory/body.php:55
-msgid "Video card list"
-msgstr "Liste des cartes vidéo"
+#: modules/inventory/inventory/ajaxEntityRules.php:67
+msgid "lvalue"
+msgstr "valeur de gauche"
 
-#: modules/inventory/inventory/view.php:44
-#, php-format
-msgid "Inventory of %s"
-msgstr "Inventaire de %s"
+#: modules/inventory/inventory/ajaxEntityRules.php:68
+msgid "operator"
+msgstr "opérateur"
 
-#: modules/inventory/inventory/view.php:74
-#: modules/inventory/inventory/ajaxViewPart.php:121
-msgid "Properties"
-msgstr "Propriétés"
+#: modules/inventory/inventory/ajaxEntityRules.php:69
+msgid "rvalue"
+msgstr "valeur de droite"
 
-#: modules/inventory/inventory/view.php:75
-#: modules/inventory/inventory/inventory_diff.php:76
-#: modules/inventory/inventory/inventory_diff.php:101
-#: modules/inventory/inventory/ajaxViewPart.php:122
-#: modules/inventory/inventory/i18n_labels.php:161
-msgid "Value"
-msgstr "Valeur"
+#: modules/inventory/inventory/ajaxEntityRules.php:72
+msgid "Edit rule"
+msgstr "Editer la règle"
 
-#: modules/inventory/inventory/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr "Dernier inventaire de moins de %s jours au %s"
+#: modules/inventory/inventory/ajaxEntityRules.php:73
+msgid "Move rule up"
+msgstr "Remonter la rgle"
 
-#: modules/inventory/inventory/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr "Dernier inventaire de plus de %s jours au %s"
+#: modules/inventory/inventory/ajaxEntityRules.php:74
+msgid "Move rule down"
+msgstr "Descendre la rgle"
 
-#: modules/inventory/inventory/createStaticGroup.php:43
-#, php-format
-msgid ""
-"Computers list has been truncated at %d computers. Use the filter to find "
-"specific machines."
-msgstr ""
+#: modules/inventory/inventory/ajaxEntityRules.php:75
+msgid "Delete rule"
+msgstr "Supprimer la rgle"
 
-#: modules/inventory/inventory/entityRules.php:35
-msgid "All rules"
-msgstr "Toutes les règles"
+#: modules/inventory/inventory/addEntity.php:42
+msgid "Add entity"
+msgstr "Ajouter entité"
+
+#: modules/inventory/inventory/addEntity.php:64
+msgid "Parent entity"
+msgstr "Entité parent"
+
+#: modules/inventory/inventory/ajaxIncoming.php:78
+msgid "Computer name"
+msgstr "Nom de l'ordinateur"
+
+#: modules/inventory/inventory/ajaxIncoming.php:80
+msgid "Inventory date"
+msgstr "Date d'inventaire"
+
+#: modules/inventory/inventory/ajaxIncoming.php:82
+msgid "New computer"
+msgstr "Nouvel ordinateur"
+
+#: modules/inventory/inventory/ajaxIncoming.php:91
+msgid "Elements"
+msgstr "éléments"
 
 #: modules/inventory/inventory/addEntityRule.php:64
 msgid "The entity rule has been added successfully."
@@ -410,11 +651,6 @@ msgstr "expression régulière ou valeur"
 msgid "must not contain space character"
 msgstr "ne doit pas contenir d'espace"
 
-#: modules/inventory/inventory/addEntityRule.php:180
-#: modules/inventory/includes/publicFunc.php:83
-msgid "Remove"
-msgstr "Supprimer"
-
 #: modules/inventory/inventory/addEntityRule.php:194
 msgid "Criterion"
 msgstr "Critère"
@@ -423,58 +659,39 @@ msgstr "Critère"
 msgid "Add criterion"
 msgstr "Ajouter un critère"
 
-#: modules/inventory/inventory/inventory_diff.php:48
-msgid "Inventory changes"
-msgstr "Changement dans l'inventaire"
+#: modules/inventory/inventory/view.php:44
+#, php-format
+msgid "Inventory of %s"
+msgstr "Inventaire de %s"
 
-#: modules/inventory/inventory/inventory_diff.php:75
-#: modules/inventory/inventory/inventory_diff.php:100
-msgid "Element"
-msgstr "élément"
+#: modules/inventory/inventory/view.php:74
+#: modules/inventory/inventory/ajaxViewPart.php:121
+msgid "Properties"
+msgstr "Propriétés"
 
-#: modules/inventory/inventory/inventory_diff.php:114
-msgid "Added elements"
-msgstr "éléments ajoutés"
+#: modules/inventory/inventory/view.php:75
+#: modules/inventory/inventory/ajaxViewPart.php:122
+#: modules/inventory/inventory/i18n_labels.php:161
+#: modules/inventory/inventory/inventory_diff.php:76
+#: modules/inventory/inventory/inventory_diff.php:101
+msgid "Value"
+msgstr "Valeur"
 
-#: modules/inventory/inventory/inventory_diff.php:123
-msgid "Removed elements"
-msgstr "éléments supprimés"
+#: modules/inventory/inventory/localComputersSidebar.php:27
+msgid "Entities"
+msgstr "Entités"
 
-#: modules/inventory/inventory/incoming.php:46
-msgid "Incoming Inventories"
-msgstr "Nouveaux inventaires"
+#: modules/inventory/inventory/localComputersSidebar.php:28
+msgid "Add an entity"
+msgstr "Ajouter une entité"
 
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last week"
-msgstr "La semaine dernière"
+#: modules/inventory/inventory/localComputersSidebar.php:30
+msgid "Add entity rule"
+msgstr "Ajouter une règle d'entité"
 
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last month"
-msgstr "Le mois dernier"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last quarter"
-msgstr "Le trimestre dernier"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last semester"
-msgstr "Le semestre dernier"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last year"
-msgstr "L'année dernière"
-
-#: modules/inventory/inventory/incoming.php:67
-msgid "Period"
-msgstr "Période"
-
-#: modules/inventory/inventory/incoming.php:72
-msgid "Only new computers"
-msgstr "Seulement les nouveaux ordinateurs"
-
-#: modules/inventory/inventory/incoming.php:73
-msgid "Load only the computers which were new when the inventory was made"
-msgstr "Charger seulement les inventaires apparaissant pour la première fois"
+#: modules/inventory/inventory/graphs.php:47
+msgid "back"
+msgstr "retour"
 
 #: modules/inventory/inventory/ajaxViewPart.php:83
 msgid " (Not an antivirus)"
@@ -504,13 +721,6 @@ msgstr ""
 msgid "No record found."
 msgstr "Aucune entrée."
 
-#: modules/inventory/inventory/ajaxViewPart.php:188
-#: modules/inventory/inventory/ajaxViewPart.php:609
-#: modules/inventory/inventory/i18n_labels.php:53
-#: modules/inventory/includes/html.php:65
-msgid "Date"
-msgstr "Date"
-
 #: modules/inventory/inventory/ajaxViewPart.php:226
 msgid "Processors"
 msgstr "Processeurs"
@@ -539,18 +749,6 @@ msgstr "Cartes Sons"
 msgid "Others"
 msgstr "Autres"
 
-#: modules/inventory/inventory/ajaxViewPart.php:540
-#: modules/inventory/inventory/ajaxIncoming.php:84
-#: modules/inventory/infoPackage.inc.php:76
-msgid "View"
-msgstr "Voir"
-
-#: modules/inventory/inventory/ajaxViewPart.php:541
-#: modules/inventory/inventory/ajaxIncoming.php:85
-#: modules/inventory/infoPackage.inc.php:80
-msgid "Information"
-msgstr "Informations"
-
 #: modules/inventory/inventory/ajaxViewPart.php:569
 msgid "Yes"
 msgstr "Oui"
@@ -558,15 +756,6 @@ msgstr "Oui"
 #: modules/inventory/inventory/ajaxViewPart.php:570
 msgid "No"
 msgstr "Non"
-
-#: modules/inventory/inventory/ajaxViewPart.php:571
-#: modules/inventory/inventory/ajaxViewPart.php:587
-#: modules/inventory/inventory/EditEntity.php:55
-#: modules/inventory/inventory/i18n_labels.php:106
-#: modules/inventory/inventory/addEntity.php:50
-#: modules/inventory/inventory/deleteEntity.php:64
-msgid "Name"
-msgstr "Nom"
 
 #: modules/inventory/inventory/ajaxViewPart.php:572
 #: modules/inventory/inventory/i18n_labels.php:108
@@ -781,86 +970,6 @@ msgstr "Activé"
 #: modules/inventory/inventory/ajaxViewPart.php:625
 msgid "Up-to-date"
 msgstr "A jour"
-
-#: modules/inventory/inventory/ajaxIncoming.php:78
-msgid "Computer name"
-msgstr "Nom de l'ordinateur"
-
-#: modules/inventory/inventory/ajaxIncoming.php:80
-msgid "Inventory date"
-msgstr "Date d'inventaire"
-
-#: modules/inventory/inventory/ajaxIncoming.php:82
-msgid "New computer"
-msgstr "Nouvel ordinateur"
-
-#: modules/inventory/inventory/ajaxIncoming.php:91
-msgid "Elements"
-msgstr "éléments"
-
-#: modules/inventory/inventory/tabs.php:63
-#: modules/inventory/inventory/tabs.php:71
-msgid "This client has been registered in pull mode"
-msgstr "Ce client est configuré en mode pull"
-
-#: modules/inventory/inventory/tabs.php:65
-msgid "Leave pull mode"
-msgstr "Quitter le mode pull"
-
-#: modules/inventory/inventory/tabs.php:77
-#, php-format
-msgid "%s's inventory"
-msgstr "Inventaire de %s"
-
-#: modules/inventory/inventory/tabs.php:79
-#, php-format
-msgid "%s's content inventory"
-msgstr "Inventaire du contenu de %s"
-
-#: modules/inventory/inventory/tabs.php:106
-msgid "History"
-msgstr "Historique"
-
-#: modules/inventory/inventory/tabs.php:117
-msgid "Get XLS Report"
-msgstr "Obtenir un rapport XLS"
-
-#: modules/inventory/inventory/csv.php:67
-#: modules/inventory/inventory/csv.php:107
-#: modules/inventory/inventory/i18n_labels.php:96
-msgid "Computer"
-msgstr "Machine"
-
-#: modules/inventory/inventory/graphs.php:35
-#: modules/inventory/infoPackage.inc.php:88
-msgid "Chart"
-msgstr "Graphique"
-
-#: modules/inventory/inventory/graphs.php:47
-msgid "back"
-msgstr "retour"
-
-#: modules/inventory/inventory/EditEntity.php:45
-msgid "The entity has not been updated."
-msgstr "L'entité n'a pas été mise à jour."
-
-#: modules/inventory/inventory/EditEntity.php:49
-msgid "Edit entity"
-msgstr "Editer entité"
-
-#: modules/inventory/inventory/history.php:66
-msgid "View differences since previous inventory"
-msgstr "Voir les diffrences depuis l'inventaire précédent"
-
-#: modules/inventory/inventory/history.php:75
-msgid "Inventory Date"
-msgstr "Date d'inventaire"
-
-#: modules/inventory/inventory/history.php:80
-#: modules/inventory/infoPackage.inc.php:31
-#: modules/inventory/infoPackage.inc.php:36
-msgid "Inventory"
-msgstr "Inventaire"
 
 #: modules/inventory/inventory/i18n_labels.php:26
 msgid "Application"
@@ -1082,6 +1191,12 @@ msgstr "MIB"
 msgid "Mac Addr"
 msgstr "Adresse MAC"
 
+#: modules/inventory/inventory/i18n_labels.php:96
+#: modules/inventory/inventory/csv.php:67
+#: modules/inventory/inventory/csv.php:107
+msgid "Computer"
+msgstr "Machine"
+
 #: modules/inventory/inventory/i18n_labels.php:97
 msgid "Manuf"
 msgstr "Fabricant"
@@ -1121,11 +1236,6 @@ msgstr "Date d'installation de l'OS"
 #: modules/inventory/inventory/i18n_labels.php:113
 msgid "Os Architecture"
 msgstr "Architecture de l'OS"
-
-#: modules/inventory/inventory/i18n_labels.php:115
-#: modules/inventory/inventory/pci.php:27
-msgid "Pci"
-msgstr "Pci"
 
 #: modules/inventory/inventory/i18n_labels.php:116
 msgid "Phone"
@@ -1283,65 +1393,22 @@ msgstr "Groupe de travail"
 msgid "WorkingDate"
 msgstr "Date de fonctionnement"
 
-#: modules/inventory/inventory/addEntity.php:42
-msgid "Add entity"
-msgstr "Ajouter entité"
+#: modules/inventory/inventory/inventory_diff.php:48
+msgid "Inventory changes"
+msgstr "Changement dans l'inventaire"
 
-#: modules/inventory/inventory/addEntity.php:64
-msgid "Parent entity"
-msgstr "Entité parent"
+#: modules/inventory/inventory/inventory_diff.php:75
+#: modules/inventory/inventory/inventory_diff.php:100
+msgid "Element"
+msgstr "élément"
 
-#: modules/inventory/inventory/deleteEntityRule.php:30
-msgid "The entity rule has been deleted successfully."
-msgstr "La règle d'entité a été supprimé"
+#: modules/inventory/inventory/inventory_diff.php:114
+msgid "Added elements"
+msgstr "éléments ajoutés"
 
-#: modules/inventory/inventory/deleteEntityRule.php:33
-msgid "Delete this rule?"
-msgstr "Supprimer cette règle"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:63
-msgid "Rule"
-msgstr "Règle"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:64
-msgid "actif"
-msgstr "actif"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:65
-msgid "entitie"
-msgstr "entité"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:66
-msgid "aggregator"
-msgstr "aggregateur"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:67
-msgid "lvalue"
-msgstr "valeur de gauche"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:68
-msgid "operator"
-msgstr "opérateur"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:69
-msgid "rvalue"
-msgstr "valeur de droite"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:72
-msgid "Edit rule"
-msgstr "Editer la règle"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:73
-msgid "Move rule up"
-msgstr "Remonter la rgle"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:74
-msgid "Move rule down"
-msgstr "Descendre la rgle"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:75
-msgid "Delete rule"
-msgstr "Supprimer la rgle"
+#: modules/inventory/inventory/inventory_diff.php:123
+msgid "Removed elements"
+msgstr "éléments supprimés"
 
 #: modules/inventory/inventory/deleteEntity.php:46
 msgid "The entity has not been deleted."
@@ -1351,179 +1418,114 @@ msgstr "L'entité n'a pas t supprime"
 msgid "Delete entity"
 msgstr "Supprimer l'entité"
 
-#: modules/inventory/includes/publicFunc.php:57
-#: modules/inventory/includes/publicFunc.php:90
-msgid "Entity right"
-msgstr "Droits sur l'entité"
+#: modules/inventory/inventory/infos.php:33
+msgid "Additionnal informations"
+msgstr "Informations additionnelles"
 
-#: modules/inventory/includes/publicFunc.php:83
-msgid "Remove entity for user"
-msgstr "Supprimer les droits sur l'entité"
+#: modules/inventory/inventory/infos.php:43
+msgid "First apparition"
+msgstr "Première apparition"
 
-#: modules/inventory/includes/publicFunc.php:95
-msgid "Add entity right"
-msgstr "Ajouter les droits sur l'entité"
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr "Voir les diffrences depuis l'inventaire précédent"
 
-#: modules/inventory/includes/publicFunc.php:95
-msgid "Add entity right for user"
-msgstr "Ajouter les droits sur l'entité pour l'utilisateur"
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr "Date d'inventaire"
 
-#: modules/inventory/includes/panels/inventory.inc.php:30
-msgid "Computers"
-msgstr "Machines"
+#: modules/inventory/inventory/deleteEntityRule.php:30
+msgid "The entity rule has been deleted successfully."
+msgstr "La règle d'entité a été supprimé"
 
-#: modules/inventory/includes/panels/inventory.inc.php:43
-msgid "Create a group"
-msgstr "Créer un groupe"
+#: modules/inventory/inventory/deleteEntityRule.php:33
+msgid "Delete this rule?"
+msgstr "Supprimer cette règle"
 
-#: modules/inventory/includes/panels/inventory.inc.php:44
-msgid "< %s days: %percent% (%d)"
-msgstr "< %s jours: %percent% (%d)"
+#: modules/inventory/inventory/ajaxEntityList.php:56
+msgid "Entity name"
+msgstr "Nom de l'entité"
 
-#: modules/inventory/includes/panels/inventory.inc.php:45
-msgid "> %s days: %percent% (%d)"
-msgstr "> %s jours: %percent% (%d)"
+#: modules/inventory/inventory/ajaxEntityList.php:63
+#: modules/inventory/inventory/ajaxEntityList.php:64
+msgid "Edit Entity"
+msgstr "Editer l'entité"
 
-#: modules/inventory/includes/panels/inventory.inc.php:48
-msgid "Latest Inventory Date"
-msgstr "Date du dernier inventaire"
+#: modules/inventory/inventory/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "Dernier inventaire de moins de %s jours au %s"
 
-#: modules/inventory/includes/html.php:98
-msgid "Filter software"
-msgstr "Filtrer les logiciels"
+#: modules/inventory/inventory/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "Dernier inventaire de plus de %s jours au %s"
 
-#: modules/inventory/includes/html.php:103
-msgid "Hide Windows Updates"
-msgstr "Masquer les MAJ Windows Update"
+#: modules/inventory/inventory/createStaticGroup.php:43
+#, php-format
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
+msgstr ""
+"La liste des ordinateurs a été réduite à %d ordinateurs. Veuillez utiliser "
+"un filtre afin de trouver des machines précise."
 
-#: modules/inventory/includes/html.php:117
-msgid "Refresh"
-msgstr "Rafraichir"
+#: modules/inventory/inventory/body.php:40
+msgid "Bios list"
+msgstr "Liste des BIOS"
 
-#: modules/inventory/infoPackage.inc.php:84
-msgid "Charts"
-msgstr "Graphiques"
+#: modules/inventory/inventory/body.php:42
+msgid "Hardware and OS information list"
+msgstr "Liste des matériels et des OS"
 
-#: modules/inventory/infoPackage.inc.php:92
-msgid "Csv's export"
-msgstr "Export au format CSV"
+#: modules/inventory/inventory/body.php:43
+msgid "Software list"
+msgstr "Liste des logiciels"
 
-#: modules/inventory/infoPackage.inc.php:96
-msgid "Create static group from dashboard"
-msgstr "Créer un groupe statique depuis le tableau de bord"
+#: modules/inventory/inventory/body.php:44
+msgid "Network card and configuration list"
+msgstr "Listes des cartes réseau et de leur configuration"
 
-#: modules/inventory/infoPackage.inc.php:113
-msgid "Header"
-msgstr "Entête"
+#: modules/inventory/inventory/body.php:45
+msgid "Controller list"
+msgstr "Liste des contrôleurs"
 
-#: modules/inventory/infoPackage.inc.php:130
-msgid "Inventory on a group of computers"
-msgstr "Inventaire d'un groupe de machines"
+#: modules/inventory/inventory/body.php:46
+msgid "Registry keys/values list"
+msgstr "Listes des clés/valeurs des bases de registre"
 
-#: modules/inventory/infoPackage.inc.php:133
-msgid "Hardware tab for a group"
-msgstr "Onglet matériel pour un groupe"
+#: modules/inventory/inventory/body.php:47
+msgid "Drive list"
+msgstr "Liste des lecteurs"
 
-#: modules/inventory/infoPackage.inc.php:136
-msgid "Bios tab for a group"
-msgstr "Onglet BIOS pour un groupe"
+#: modules/inventory/inventory/body.php:48
+msgid "Input device list"
+msgstr "Liste des périphériques d'entrée"
 
-#: modules/inventory/infoPackage.inc.php:139
-msgid "Summary tab for a group"
-msgstr "Onglet résumé pour un groupe"
+#: modules/inventory/inventory/body.php:49
+msgid "Memory module list"
+msgstr "Liste des modules mémoire"
 
-#: modules/inventory/infoPackage.inc.php:142
-msgid "Storage tab for a group"
-msgstr "Onglet stockage pour un groupe"
+#: modules/inventory/inventory/body.php:50
+msgid "Monitor list"
+msgstr "Liste des moniteurs"
 
-#: modules/inventory/infoPackage.inc.php:145
-msgid "Software tab for a group"
-msgstr "Onglet logiciel pour un groupe"
+#: modules/inventory/inventory/body.php:51
+msgid "Port list"
+msgstr "Liste des ports"
 
-#: modules/inventory/infoPackage.inc.php:148
-msgid "Network tab for a group"
-msgstr "Onglet réseau pour un groupe"
+#: modules/inventory/inventory/body.php:52
+msgid "Printer list"
+msgstr "Liste des imprimantes"
 
-#: modules/inventory/infoPackage.inc.php:151
-msgid "Controller tab for a group"
-msgstr "Onglet contrôleur pour un groupe"
+#: modules/inventory/inventory/body.php:53
+msgid "Sound list"
+msgstr "Liste des cartes son"
 
-#: modules/inventory/infoPackage.inc.php:154
-msgid "Registry tab for a group"
-msgstr "Onglet registre pour un groupe"
+#: modules/inventory/inventory/body.php:54
+msgid "Storage medium list"
+msgstr "Liste des périphériques de stockage"
 
-#: modules/inventory/infoPackage.inc.php:157
-msgid "Hardware tab for a computer in a group"
-msgstr "Onglet matériel pour un ordinateur dans un groupe"
-
-#: modules/inventory/infoPackage.inc.php:160
-msgid "Summary tab for a computer in a group"
-msgstr "Onglet résumé pour une machine"
-
-#: modules/inventory/infoPackage.inc.php:163
-msgid "Storage tab for a computer in a group"
-msgstr "Onglet stockage pour une machine"
-
-#: modules/inventory/infoPackage.inc.php:166
-msgid "Bios tab for a computer in a group"
-msgstr "Onglet BIOS pour un ordinateur dans un groupe"
-
-#: modules/inventory/infoPackage.inc.php:169
-msgid "Software tab for a computer in a group"
-msgstr "Onglet logiciel pour un ordinateur dans un groupe"
-
-#: modules/inventory/infoPackage.inc.php:172
-msgid "Network tab for a computer in a group"
-msgstr "Onglet réseau pour un ordinateur dans un groupe"
-
-#: modules/inventory/infoPackage.inc.php:175
-msgid "Controller tab for a computer in a group"
-msgstr "Onglet contrôleur pour un ordinateur dans un groupe"
-
-#: modules/inventory/infoPackage.inc.php:178
-msgid "Registry tab for a computer in a group"
-msgstr "Onglet registre pour un ordinateur dans un groupe"
-
-#: modules/inventory/infoPackage.inc.php:183
-msgid "Inventory on a single computer"
-msgstr "Inventaire de la machine"
-
-#: modules/inventory/infoPackage.inc.php:187
-msgid "Hardware tab for a computer"
-msgstr "Onglet matériel pour un ordinateur"
-
-#: modules/inventory/infoPackage.inc.php:190
-msgid "Software tab for a computer"
-msgstr "Onglet logiciel pour un ordinateur"
-
-#: modules/inventory/infoPackage.inc.php:193
-msgid "Network tab for a computer"
-msgstr "Onglet réseau pour un ordinateur"
-
-#: modules/inventory/infoPackage.inc.php:196
-msgid "Controller tab for a computer"
-msgstr "Onglet contrôleur pour un ordinateur"
-
-#: modules/inventory/infoPackage.inc.php:199
-msgid "Registry tab for a computer"
-msgstr "Onglet registre pour un ordinateur"
-
-#: modules/inventory/infoPackage.inc.php:204
-msgid "Differences between two inventories"
-msgstr "Diffrences entre deux inventaires"
-
-#: modules/inventory/infoPackage.inc.php:210
-msgid "Entities (ajax)"
-msgstr "Entités (ajax)"
-
-#: modules/inventory/infoPackage.inc.php:215
-msgid "Entity rules (ajax)"
-msgstr "Règles d'entité (ajax)"
-
-#: modules/inventory/infoPackage.inc.php:221
-msgid "Change entity rule order (up)"
-msgstr "Augmenter la priorité de cette règle (monter)"
-
-#: modules/inventory/infoPackage.inc.php:226
-msgid "Change entity rule order (down)"
-msgstr "Diminuer la priorité de cette règle (descendre)"
+#: modules/inventory/inventory/body.php:55
+msgid "Video card list"
+msgstr "Liste des cartes vidéo"

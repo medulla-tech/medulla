@@ -5,114 +5,22 @@
 # 
 # Translators:
 # Stephane Pointu <spointu@gmail.com>, 2017
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-11 14:24+0200\n"
+"POT-Creation-Date: 2019-09-16 13:58+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#: modules/glpi/includes/publicFunc.php:86
-msgid "Entity attributes"
-msgstr "Attributs d'entités"
-
-#: modules/glpi/includes/publicFunc.php:130
-msgid "Dynamic"
-msgstr "Dynamique"
-
-#: modules/glpi/includes/publicFunc.php:130
-msgid "Static"
-msgstr "Statique"
-
-#: modules/glpi/includes/publicFunc.php:142
-#: modules/glpi/glpi/addEntityRule.php:138
-msgid "Remove"
-msgstr "Supprimer"
-
-#: modules/glpi/includes/publicFunc.php:154
-msgid "Entity right"
-msgstr "Droit d'entité"
-
-#: modules/glpi/includes/publicFunc.php:160
-msgid "Add entity right"
-msgstr "Ajouter un droit d'entité"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:35
-msgid "Operating systems"
-msgstr "Systèmes d'exploitation"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:43
-#: modules/glpi/includes/panels/antivirus.inc.php:39
-msgid "Uninventoried Machines"
-msgstr ""
-
-#: modules/glpi/includes/panels/inventory.inc.php:30
-msgid "Inventories"
-msgstr ""
-
-#: modules/glpi/includes/panels/inventory.inc.php:45
-#: modules/glpi/includes/panels/antivirus.inc.php:43
-msgid "Create a group"
-msgstr "Créer un groupe"
-
-#: modules/glpi/includes/panels/inventory.inc.php:46
-msgid "< %s days: %percent% (%d)"
-msgstr "< %s jours: %percent% (%d)"
-
-#: modules/glpi/includes/panels/inventory.inc.php:47
-msgid "> %s days: %percent% (%d)"
-msgstr "> %s jours: %percent% (%d)"
-
-#: modules/glpi/includes/panels/inventory.inc.php:48
-msgid "Uninventoried machines"
-msgstr ""
-
-#: modules/glpi/includes/panels/antivirus.inc.php:31
-#: modules/glpi/glpi/tabs.php:88
-msgid "Antivirus"
-msgstr "Antivirus"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:44
-msgid "OK: %percent% (%d)"
-msgstr "OK: %percent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:45
-msgid "Not running or not up-to-date: %percent% (%d)"
-msgstr "Inactif ou pas  jour: %percent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:46
-msgid "No antivirus found: %percent% (%d)"
-msgstr "Pas d'antivirus détecté: %percent% (%d)"
-
-#: modules/glpi/includes/html.php:49
-msgid "Hide Windows Updates"
-msgstr "Masquer les MAJ Windows Update"
-
-#: modules/glpi/includes/html.php:57 modules/glpi/glpi/ajaxViewPart.php:255
-msgid "Today"
-msgstr "Aujourd'hui"
-
-#: modules/glpi/includes/html.php:58 modules/glpi/glpi/ajaxViewPart.php:256
-msgid "Last 7 days"
-msgstr "Les 7 derniers jours"
-
-#: modules/glpi/includes/html.php:59 modules/glpi/glpi/ajaxViewPart.php:257
-msgid "Last 30 days"
-msgstr "Les 30 derniers jours"
-
-#: modules/glpi/includes/html.php:60 modules/glpi/glpi/ajaxViewPart.php:258
-msgid "All"
-msgstr "Tout"
 
 #: modules/glpi/infoPackage.inc.php:32
 msgid "GLPI Inventory"
@@ -243,6 +151,159 @@ msgstr ""
 msgid "Inventory (GLPI) on machine"
 msgstr "Inventaire (GLPI) de la machine"
 
+#: modules/glpi/includes/html.php:49
+msgid "Hide Windows Updates"
+msgstr "Masquer les MAJ Windows Update"
+
+#: modules/glpi/includes/html.php:57 modules/glpi/glpi/ajaxViewPart.php:255
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#: modules/glpi/includes/html.php:58 modules/glpi/glpi/ajaxViewPart.php:256
+msgid "Last 7 days"
+msgstr "Les 7 derniers jours"
+
+#: modules/glpi/includes/html.php:59 modules/glpi/glpi/ajaxViewPart.php:257
+msgid "Last 30 days"
+msgstr "Les 30 derniers jours"
+
+#: modules/glpi/includes/html.php:60 modules/glpi/glpi/ajaxViewPart.php:258
+msgid "All"
+msgstr "Tout"
+
+#: modules/glpi/includes/publicFunc.php:86
+msgid "Entity attributes"
+msgstr "Attributs d'entités"
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Dynamic"
+msgstr "Dynamique"
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Static"
+msgstr "Statique"
+
+#: modules/glpi/includes/publicFunc.php:142
+#: modules/glpi/glpi/addEntityRule.php:138
+msgid "Remove"
+msgstr "Supprimer"
+
+#: modules/glpi/includes/publicFunc.php:154
+msgid "Entity right"
+msgstr "Droit d'entité"
+
+#: modules/glpi/includes/publicFunc.php:160
+msgid "Add entity right"
+msgstr "Ajouter un droit d'entité"
+
+#: modules/glpi/includes/panels/inventory.inc.php:30
+msgid "Inventories"
+msgstr ""
+
+#: modules/glpi/includes/panels/inventory.inc.php:45
+#: modules/glpi/includes/panels/antivirus.inc.php:43
+msgid "Create a group"
+msgstr "Créer un groupe"
+
+#: modules/glpi/includes/panels/inventory.inc.php:46
+msgid "< %s days: %percent% (%d)"
+msgstr "< %s jours: %percent% (%d)"
+
+#: modules/glpi/includes/panels/inventory.inc.php:47
+msgid "> %s days: %percent% (%d)"
+msgstr "> %s jours: %percent% (%d)"
+
+#: modules/glpi/includes/panels/inventory.inc.php:48
+msgid "Uninventoried machines"
+msgstr ""
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:35
+msgid "Operating systems"
+msgstr "Systèmes d'exploitation"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:43
+#: modules/glpi/includes/panels/antivirus.inc.php:39
+msgid "Uninventoried Machines"
+msgstr ""
+
+#: modules/glpi/includes/panels/antivirus.inc.php:31
+#: modules/glpi/glpi/tabs.php:88
+msgid "Antivirus"
+msgstr "Antivirus"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:44
+msgid "OK: %percent% (%d)"
+msgstr "OK: %percent% (%d)"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:45
+msgid "Not running or not up-to-date: %percent% (%d)"
+msgstr "Inactif ou pas  jour: %percent% (%d)"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:46
+msgid "No antivirus found: %percent% (%d)"
+msgstr "Pas d'antivirus détecté: %percent% (%d)"
+
+#: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
+msgid "This client has been registered in pull mode"
+msgstr "Ce client a été enregistré en mode pull"
+
+#: modules/glpi/glpi/tabs.php:62
+msgid "Leave pull mode"
+msgstr "Quitter le mode pull"
+
+#: modules/glpi/glpi/tabs.php:72
+#, php-format
+msgid "%s's inventory %s"
+msgstr "Inventaire de %s %s"
+
+#: modules/glpi/glpi/tabs.php:80
+msgid "Summary"
+msgstr "Résumé"
+
+#: modules/glpi/glpi/tabs.php:81
+msgid "Hardware"
+msgstr "Matériel"
+
+#: modules/glpi/glpi/tabs.php:83
+msgid "Storage"
+msgstr "Stockage"
+
+#: modules/glpi/glpi/tabs.php:84
+msgid "Network"
+msgstr "Réseau"
+
+#: modules/glpi/glpi/tabs.php:85
+msgid "Software"
+msgstr "Logiciels"
+
+#: modules/glpi/glpi/tabs.php:86
+msgid "Administrative"
+msgstr "Administratif"
+
+#: modules/glpi/glpi/tabs.php:87
+msgid "History"
+msgstr "Historique"
+
+#: modules/glpi/glpi/tabs.php:93
+msgid "Registry"
+msgstr "Registre"
+
+#: modules/glpi/glpi/tabs.php:107
+msgid "Get XLS Report"
+msgstr "Obtenir un rapport XLS"
+
+#: modules/glpi/glpi/entityRules.php:36
+msgid "All rules"
+msgstr "Toutes les règles"
+
+#: modules/glpi/glpi/entityList.php:28
+msgid "Entity list"
+msgstr "Liste des entités"
+
+#: modules/glpi/glpi/entityList.php:36
+msgid "All entities"
+msgstr "Toutes les entités"
+
 #: modules/glpi/glpi/addLocation.php:34
 msgid "The location has been added successfully."
 msgstr "Le lieu a été ajouté avec succès"
@@ -260,9 +321,10 @@ msgstr "Ajouter un lieu"
 msgid "Edit location"
 msgstr "Editer un lieu"
 
-#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/addEntityRule.php:72
+#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/addEntity.php:78
+#: modules/glpi/glpi/addEntityRule.php:72
 #: modules/glpi/glpi/ajaxViewPart.php:212
-#: modules/glpi/glpi/ajaxViewPart.php:229 modules/glpi/glpi/addEntity.php:78
+#: modules/glpi/glpi/ajaxViewPart.php:229
 msgid "Name"
 msgstr "Nom"
 
@@ -270,35 +332,53 @@ msgstr "Nom"
 msgid "Parent location"
 msgstr "Lieu parent"
 
-#: modules/glpi/glpi/addLocation.php:101
+#: modules/glpi/glpi/addLocation.php:101 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/addEntityRule.php:77
-#: modules/glpi/glpi/ajaxViewPart.php:232 modules/glpi/glpi/addEntity.php:100
+#: modules/glpi/glpi/ajaxViewPart.php:232
 msgid "Description"
 msgstr "Description"
 
-#: modules/glpi/glpi/locationList.php:28
-msgid "Location list"
-msgstr "Liste des lieux"
-
-#: modules/glpi/glpi/locationList.php:36
-msgid "All locations"
-msgstr "Tous les lieux"
-
+#: modules/glpi/glpi/ajaxEntityRules.php:51
 #: modules/glpi/glpi/ajaxLocationList.php:51
 #: modules/glpi/glpi/ajaxEntityList.php:51
-#: modules/glpi/glpi/ajaxEntityRules.php:51
 msgid "No entry found"
 msgstr "Aucune entrée trouvée"
 
-#: modules/glpi/glpi/ajaxLocationList.php:66
-msgid "Location name"
-msgstr "Nom du lieu"
+#: modules/glpi/glpi/ajaxEntityRules.php:66
+msgid "Rule name"
+msgstr "Nom de la règle"
 
-#: modules/glpi/glpi/ajaxLocationList.php:68
-#: modules/glpi/glpi/ajaxEntityList.php:68
-#: modules/glpi/glpi/ajaxViewPart.php:250
-msgid "Comment"
-msgstr "Commentaire"
+#: modules/glpi/glpi/ajaxEntityRules.php:69
+msgid "Edit rule"
+msgstr "Editer la règle"
+
+#: modules/glpi/glpi/ajaxEntityRules.php:70
+msgid "Move rule up"
+msgstr "Déplacer la règle vers le haut"
+
+#: modules/glpi/glpi/ajaxEntityRules.php:71
+msgid "Move rule down"
+msgstr "Déplacer la règle vers le bas"
+
+#: modules/glpi/glpi/ajaxEntityRules.php:72
+msgid "Delete rule"
+msgstr "Supprimer la règle"
+
+#: modules/glpi/glpi/addEntity.php:34
+msgid "The entity has been added successfully."
+msgstr "L'entité a été ajoutée avec succès"
+
+#: modules/glpi/glpi/addEntity.php:38
+msgid "The entity has been edited successfully."
+msgstr "L'entité a été éditée avec sucès"
+
+#: modules/glpi/glpi/addEntity.php:52 modules/glpi/glpi/ajaxEntityList.php:70
+msgid "Edit entity"
+msgstr "Editer l'entité"
+
+#: modules/glpi/glpi/addEntity.php:95
+msgid "Parent entity"
+msgstr "Entité parente"
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:61
 #, php-format
@@ -312,63 +392,11 @@ msgstr "Machines éteinte à %s"
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:75
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
-#: modules/glpi/glpi/createOSStaticGroup.php:54
 #: modules/glpi/glpi/createBackupStaticGroup.php:69
+#: modules/glpi/glpi/createOSStaticGroup.php:54
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "La liste des machines a été tronquée  %d ordinateurs"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
-#, php-format
-msgid "Antivirus status is OK at %s"
-msgstr "Antivirus OK au %s"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
-#, php-format
-msgid "Antivirus is not running or not up-to-date at %s"
-msgstr "Antivirus inactif ou pas  jour au %s"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
-#, php-format
-msgid "No antivirus found at %s"
-msgstr "Pas d'antivirus au %s"
-
-#: modules/glpi/glpi/ajaxEntityList.php:66
-msgid "Entity name"
-msgstr "Nom de l'entité"
-
-#: modules/glpi/glpi/ajaxEntityList.php:70 modules/glpi/glpi/addEntity.php:52
-msgid "Edit entity"
-msgstr "Editer l'entité"
-
-#: modules/glpi/glpi/entityList.php:28
-msgid "Entity list"
-msgstr "Liste des entités"
-
-#: modules/glpi/glpi/entityList.php:36
-msgid "All entities"
-msgstr "Toutes les entités"
-
-#: modules/glpi/glpi/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr "Dernier inventaire de moins de %s jours au %s"
-
-#: modules/glpi/glpi/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr "Dernier inventaire de plus de %s jours au %s"
-
-#: modules/glpi/glpi/createStaticGroup.php:43
-#, php-format
-msgid ""
-"Computers list has been truncated at %d computers. Use the filter to find "
-"specific machines."
-msgstr ""
-
-#: modules/glpi/glpi/entityRules.php:36
-msgid "All rules"
-msgstr "Toutes les règles"
 
 #: modules/glpi/glpi/addEntityRule.php:31
 msgid "The entity rule has been added successfully."
@@ -687,6 +715,12 @@ msgstr "Bande Passante"
 msgid "Writer"
 msgstr "Graveur"
 
+#: modules/glpi/glpi/ajaxViewPart.php:250
+#: modules/glpi/glpi/ajaxLocationList.php:68
+#: modules/glpi/glpi/ajaxEntityList.php:68
+msgid "Comment"
+msgstr "Commentaire"
+
 #: modules/glpi/glpi/ajaxViewPart.php:251
 msgid "Date"
 msgstr "Date"
@@ -739,59 +773,20 @@ msgstr "A jour"
 msgid "Invalid hostname"
 msgstr "Nom de machine invalide"
 
-#: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
-msgid "This client has been registered in pull mode"
-msgstr "Ce client a été enregistré en mode pull"
-
-#: modules/glpi/glpi/tabs.php:62
-msgid "Leave pull mode"
-msgstr "Quitter le mode pull"
-
-#: modules/glpi/glpi/tabs.php:72
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
 #, php-format
-msgid "%s's inventory %s"
-msgstr "Inventaire de %s %s"
+msgid "Antivirus status is OK at %s"
+msgstr "Antivirus OK au %s"
 
-#: modules/glpi/glpi/tabs.php:80
-msgid "Summary"
-msgstr "Résumé"
-
-#: modules/glpi/glpi/tabs.php:81
-msgid "Hardware"
-msgstr "Matériel"
-
-#: modules/glpi/glpi/tabs.php:83
-msgid "Storage"
-msgstr "Stockage"
-
-#: modules/glpi/glpi/tabs.php:84
-msgid "Network"
-msgstr "Réseau"
-
-#: modules/glpi/glpi/tabs.php:85
-msgid "Software"
-msgstr "Logiciels"
-
-#: modules/glpi/glpi/tabs.php:86
-msgid "Administrative"
-msgstr "Administratif"
-
-#: modules/glpi/glpi/tabs.php:87
-msgid "History"
-msgstr "Historique"
-
-#: modules/glpi/glpi/tabs.php:93
-msgid "Registry"
-msgstr "Registre"
-
-#: modules/glpi/glpi/tabs.php:107
-msgid "Get XLS Report"
-msgstr "Obtenir un rapport XLS"
-
-#: modules/glpi/glpi/createOSStaticGroup.php:40
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
 #, php-format
-msgid "Machine with %s %s installed at %s"
-msgstr ""
+msgid "Antivirus is not running or not up-to-date at %s"
+msgstr "Antivirus inactif ou pas  jour au %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
+#, php-format
+msgid "No antivirus found at %s"
+msgstr "Pas d'antivirus au %s"
 
 #: modules/glpi/glpi/createBackupStaticGroup.php:55
 #, php-format
@@ -803,17 +798,14 @@ msgstr "Sauvegarde des machines configurée %s"
 msgid "Machines backup not configured at %s"
 msgstr "Sauvegarde des machines non configurée %s"
 
-#: modules/glpi/glpi/addEntity.php:34
-msgid "The entity has been added successfully."
-msgstr "L'entité a été ajoutée avec succès"
+#: modules/glpi/glpi/ajaxLocationList.php:66
+msgid "Location name"
+msgstr "Nom du lieu"
 
-#: modules/glpi/glpi/addEntity.php:38
-msgid "The entity has been edited successfully."
-msgstr "L'entité a été éditée avec sucès"
-
-#: modules/glpi/glpi/addEntity.php:95
-msgid "Parent entity"
-msgstr "Entité parente"
+#: modules/glpi/glpi/createOSStaticGroup.php:40
+#, php-format
+msgid "Machine with %s %s installed at %s"
+msgstr ""
 
 #: modules/glpi/glpi/deleteEntityRule.php:31
 msgid "The entity rule has been deleted successfully."
@@ -823,22 +815,33 @@ msgstr "La règle d'entité a été supprimée avec succès"
 msgid "Delete this rule?"
 msgstr "Supprimer cette règle ?"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:66
-msgid "Rule name"
-msgstr "Nom de la règle"
+#: modules/glpi/glpi/locationList.php:28
+msgid "Location list"
+msgstr "Liste des lieux"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:69
-msgid "Edit rule"
-msgstr "Editer la règle"
+#: modules/glpi/glpi/locationList.php:36
+msgid "All locations"
+msgstr "Tous les lieux"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:70
-msgid "Move rule up"
-msgstr "Déplacer la règle vers le haut"
+#: modules/glpi/glpi/ajaxEntityList.php:66
+msgid "Entity name"
+msgstr "Nom de l'entité"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:71
-msgid "Move rule down"
-msgstr "Déplacer la règle vers le bas"
+#: modules/glpi/glpi/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "Dernier inventaire de moins de %s jours au %s"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:72
-msgid "Delete rule"
-msgstr "Supprimer la règle"
+#: modules/glpi/glpi/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "Dernier inventaire de plus de %s jours au %s"
+
+#: modules/glpi/glpi/createStaticGroup.php:43
+#, php-format
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
+msgstr ""
+"La liste des ordinateurs a été réduite à %d ordinateurs. Veuillez utiliser "
+"un filtre afin de trouver des machines précise."
