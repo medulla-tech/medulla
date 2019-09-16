@@ -70,19 +70,19 @@ foreach($rules as $id=>$rule)
 
 $n = new OptimizedListInfos($rule_names, _T("Rule Name", "pkgs"));
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($rule_orders, _T("Rules Order", "pkgs"));
+$n->addExtraInfo($rule_orders, _T("Rule Order", "pkgs"));
 $n->addExtraInfo($descriptions, _T("Rule Description", "pkgs"));
 
 $action_upOrder = new ActionItem(_T("Raise order priority","pkgs"), "rulesList", "up","","pkgs","pkgs", "", "raise");
 $action_downOrder = new ActionItem(_T("Lower order priority","pkgs"), "rulesList", "down","down","pkgs","pkgs", "", "lower");
-$action_editRule = new ActionItem(_T("Edit rule",'pkgs'), "editRule", "edit", "rule", "pkgs", "pkgs");
-$action_deleteRule = new ActionPopupItem(_T("Delete rule",'pkgs'), "deleteRule", "delete", "", "pkgs", "pkgs");
+$action_editRule = new ActionItem(_T("Edit Profil",'kiosk'), "editRule", "edit", "rule", "pkgs", "pkgs");
+$action_deleteRule = new ActionPopupItem(_T("Delete Profil",'kiosk'), "deleteRule", "delete", "", "pkgs", "pkgs");
 
 $n->setParamInfo($params);
-$n->addActionItemArray($action_upOrder);
-$n->addActionItemArray($action_downOrder);
-$n->addActionItemArray($action_editRule);
-$n->addActionItemArray($action_deleteRule);
+$n->addActionItem($action_upOrder);
+$n->addActionItem($action_downOrder);
+$n->addActionItem($action_editRule);
+$n->addActionItem($action_deleteRule);
 $n->setNavBar(new AjaxNavBar(0, 0));
 
 $n->display();
