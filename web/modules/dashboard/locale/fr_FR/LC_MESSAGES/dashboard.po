@@ -35,7 +35,7 @@ msgstr "Panneaux"
 
 #: modules/dashboard/infoPackage.inc.php:55
 msgid "Session Panels"
-msgstr ""
+msgstr "Panels de sessions"
 
 #: modules/dashboard/includes/panels/space.inc.php:28
 msgid "Disk usage"
@@ -112,15 +112,15 @@ msgstr "Sauvegarde des machines"
 
 #: modules/dashboard/includes/panels/backup.inc.php:41
 msgid "Backup configured"
-msgstr ""
+msgstr "Sauvegarde configurée"
 
 #: modules/dashboard/includes/panels/backup.inc.php:42
 msgid "Backup not configured"
-msgstr ""
+msgstr "Sauvegarde non configurée"
 
 #: modules/dashboard/includes/panels/backup.inc.php:43
 msgid "Total machines"
-msgstr ""
+msgstr "Total ordinateurs"
 
 #: modules/dashboard/includes/panels/backup.inc.php:44
 #: modules/dashboard/includes/panels/computersOnline.inc.php:48
@@ -137,11 +137,11 @@ msgstr "Machines en ligne"
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:46
 msgid "Machines online"
-msgstr ""
+msgstr "Ordinateurs en ligne"
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:47
 msgid "Machines offline"
-msgstr ""
+msgstr "Ordinateurs hors ligne"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:30
 msgid "Pulse Updates"
