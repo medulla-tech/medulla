@@ -111,7 +111,7 @@ msgstr "Liste des règles"
 
 #: modules/pkgs/infoPackage.inc.php:49 modules/pkgs/pkgs/localSidebar.php:31
 msgid "Add a rule"
-msgstr "Ajoutéerune règle"
+msgstr "Ajouter une règle"
 
 #: modules/pkgs/infoPackage.inc.php:53
 msgid "Edit a rule"
@@ -230,11 +230,11 @@ msgstr "Description de la règle"
 
 #: modules/pkgs/pkgs/rulesList.php:76
 msgid "Raise order priority"
-msgstr ""
+msgstr "Augmenter la priorité de la règle"
 
 #: modules/pkgs/pkgs/rulesList.php:77
 msgid "Lower order priority"
-msgstr ""
+msgstr "Diminuer la priorité de la règle"
 
 #: modules/pkgs/pkgs/rulesList.php:78
 msgid "Edit Profil"
@@ -285,7 +285,7 @@ msgstr "Impossible de supprimer les fichiers%s"
 #: modules/pkgs/pkgs/edit.php:172 modules/pkgs/pkgs/edit.php:177
 #, php-format
 msgid "<br/>File successfully deleted. %s"
-msgstr ""
+msgstr "Le fichier a été supprimé avec succès. %s"
 
 #: modules/pkgs/pkgs/edit.php:182
 msgid "Failed to delete files"
@@ -482,11 +482,11 @@ msgstr "Activer ce flux Appstream ?"
 
 #: modules/pkgs/pkgs/rsync.php:74
 msgid "Relay servers already synchronized : "
-msgstr ""
+msgstr "Serveurs relais déjà synchronisés :"
 
 #: modules/pkgs/pkgs/rsync.php:93
 msgid "Relay servers not yet synchronized : "
-msgstr ""
+msgstr "Serveurs relais pas encore synchronisés :"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:83
 msgid "Please switch to Expert mode to edit this package"
@@ -559,7 +559,7 @@ msgstr "La règle %s a été créée"
 
 #: modules/pkgs/pkgs/addRule.php:61 modules/pkgs/pkgs/editRule.php:66
 msgid "Search in Name"
-msgstr ""
+msgstr "Rechercher dans le nom"
 
 #: modules/pkgs/pkgs/addRule.php:61 modules/pkgs/pkgs/editRule.php:66
 msgid "File Name"
@@ -567,7 +567,7 @@ msgstr "Nom du fichier"
 
 #: modules/pkgs/pkgs/addRule.php:62 modules/pkgs/pkgs/editRule.php:67
 msgid "Search in Extension"
-msgstr ""
+msgstr "Rechercher dans l'extension"
 
 #: modules/pkgs/pkgs/addRule.php:62 modules/pkgs/pkgs/editRule.php:67
 msgid "File Extension"
@@ -575,7 +575,7 @@ msgstr "Extension du fichier"
 
 #: modules/pkgs/pkgs/addRule.php:63 modules/pkgs/pkgs/editRule.php:68
 msgid "Search in Bang"
-msgstr ""
+msgstr "Rechercher dans le shebang"
 
 #: modules/pkgs/pkgs/addRule.php:63 modules/pkgs/pkgs/editRule.php:68
 msgid "Element in Bang"
@@ -583,7 +583,7 @@ msgstr ""
 
 #: modules/pkgs/pkgs/addRule.php:64 modules/pkgs/pkgs/editRule.php:69
 msgid "Search into File command"
-msgstr ""
+msgstr "Rechercher dans la commande du fichier"
 
 #: modules/pkgs/pkgs/addRule.php:64 modules/pkgs/pkgs/editRule.php:69
 msgid "Element in File Result"
