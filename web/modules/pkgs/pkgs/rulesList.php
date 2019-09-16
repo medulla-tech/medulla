@@ -70,7 +70,7 @@ foreach($rules as $id=>$rule)
 
 $n = new OptimizedListInfos($rule_names, _T("Rule Name", "pkgs"));
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($rule_orders, _T("Rule Order", "pkgs"));
+$n->addExtraInfo($rule_orders, _T("Rules Order", "pkgs"));
 $n->addExtraInfo($descriptions, _T("Rule Description", "pkgs"));
 
 $action_upOrder = new ActionItem(_T("Raise order priority","pkgs"), "rulesList", "up","","pkgs","pkgs", "", "raise");
