@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 18:52+0200\n"
+"POT-Creation-Date: 2019-09-11 15:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,17 +17,53 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: modules/report/report/localSidebar.php:27 modules/report/report/index.php:44
+#: modules/report/infoPackage.inc.php:41
+msgid "Report creation"
+msgstr ""
+
+#: modules/report/report/index.php:62
+msgid "Period"
+msgstr ""
+
+#: modules/report/report/index.php:63
+msgid "from"
+msgstr ""
+
+#: modules/report/report/index.php:63
+msgid "to"
+msgstr ""
+
+#: modules/report/report/index.php:76
+msgid "Entities"
+msgstr ""
+
+#: modules/report/report/index.php:90
+msgid "Generate Report"
+msgstr ""
+
+#: modules/report/report/index.php:132
+msgid "Select some data to include in the report."
+msgstr ""
+
+#: modules/report/report/index.php:194
+msgid "Download image"
+msgstr ""
+
+#: modules/report/report/index.php:234
+msgid "Get XLS Report"
+msgstr ""
+
+#: modules/report/report/index.php:236
+msgid "Get PDF Report"
+msgstr ""
+
 #: modules/report/infoPackage.inc.php:32
 msgid "Reporting"
 msgstr ""
 
 #: modules/report/infoPackage.inc.php:36
 msgid "Report"
-msgstr ""
-
-#: modules/report/infoPackage.inc.php:41 modules/report/report/index.php:44
-#: modules/report/report/localSidebar.php:27
-msgid "Report creation"
 msgstr ""
 
 #: modules/report/infoPackage.inc.php:44
@@ -223,40 +259,4 @@ msgstr ""
 
 #: modules/report/includes/html.inc.php:141
 msgid "Wk"
-msgstr ""
-
-#: modules/report/report/index.php:62
-msgid "Period"
-msgstr ""
-
-#: modules/report/report/index.php:63
-msgid "from"
-msgstr ""
-
-#: modules/report/report/index.php:63
-msgid "to"
-msgstr ""
-
-#: modules/report/report/index.php:76
-msgid "Entities"
-msgstr ""
-
-#: modules/report/report/index.php:90
-msgid "Generate Report"
-msgstr ""
-
-#: modules/report/report/index.php:132
-msgid "Select some data to include in the report."
-msgstr ""
-
-#: modules/report/report/index.php:194
-msgid "Download image"
-msgstr ""
-
-#: modules/report/report/index.php:234
-msgid "Get XLS Report"
-msgstr ""
-
-#: modules/report/report/index.php:236
-msgid "Get PDF Report"
 msgstr ""

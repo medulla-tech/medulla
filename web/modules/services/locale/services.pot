@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 18:52+0200\n"
+"POT-Creation-Date: 2019-09-11 15:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,8 +29,8 @@ msgstr ""
 
 #: modules/services/infoPackage.inc.php:42
 #: modules/services/infoPackage.inc.php:45
-#: modules/services/control/index.php:26
 #: modules/services/control/localSidebar.php:25
+#: modules/services/control/index.php:26
 msgid "Core services"
 msgstr ""
 
@@ -51,11 +51,6 @@ msgstr ""
 #: modules/services/infoPackage.inc.php:92
 #: modules/services/includes/panels/system.inc.php:49
 msgid "Poweroff"
-msgstr ""
-
-#: modules/services/control/others.php:29
-#: modules/services/control/localSidebar.php:28
-msgid "Other services"
 msgstr ""
 
 #: modules/services/control/ajaxServicesFilter.php:28
@@ -99,6 +94,16 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
+#: modules/services/control/log.php:36
+#, php-format
+msgid "%s service log"
+msgstr ""
+
+#: modules/services/control/localSidebar.php:28
+#: modules/services/control/others.php:29
+msgid "Other services"
+msgstr ""
+
 #: modules/services/control/ajaxLogFilter.php:53
 msgid "Date"
 msgstr ""
@@ -117,11 +122,6 @@ msgstr ""
 
 #: modules/services/control/ajaxLogFilter.php:61
 msgid "Message"
-msgstr ""
-
-#: modules/services/control/log.php:36
-#, php-format
-msgid "%s service log"
 msgstr ""
 
 #: modules/services/includes/panels/system.inc.php:29

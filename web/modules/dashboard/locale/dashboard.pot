@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 18:52+0200\n"
+"POT-Creation-Date: 2019-09-11 15:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,18 +31,50 @@ msgstr ""
 msgid "Session Panels"
 msgstr ""
 
+#: modules/dashboard/includes/panels/shortcuts.inc.php:29
+msgid "Shortcuts"
+msgstr ""
+
+#: modules/dashboard/includes/panels/plugins.inc.php:29
+msgid "Plugins loaded"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:29
+msgid "General"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:37
+#: modules/dashboard/includes/panels/space.inc.php:37
+msgid "free"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:38
+#: modules/dashboard/includes/panels/space.inc.php:36
+msgid "used"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:39
+msgid "on"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:40
+msgid "Uptime"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:41
+msgid "Load"
+msgstr ""
+
+#: modules/dashboard/infoPackage.inc.php:51
+msgid "Panels"
+msgstr ""
+
 #: modules/dashboard/includes/panels/space.inc.php:28
 msgid "Disk usage"
 msgstr ""
 
-#: modules/dashboard/includes/panels/space.inc.php:36
-#: modules/dashboard/includes/panels/general.inc.php:38
-msgid "used"
-msgstr ""
-
-#: modules/dashboard/includes/panels/space.inc.php:37
-#: modules/dashboard/includes/panels/general.inc.php:37
-msgid "free"
+#: modules/dashboard/includes/panels/process.inc.php:28
+msgid "Pulse processes"
 msgstr ""
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:30
@@ -96,10 +128,6 @@ msgstr ""
 msgid "Create a group"
 msgstr ""
 
-#: modules/dashboard/includes/panels/plugins.inc.php:29
-msgid "Plugins loaded"
-msgstr ""
-
 #: modules/dashboard/includes/panels/backup.inc.php:30
 msgid "Machines backup"
 msgstr ""
@@ -121,22 +149,6 @@ msgstr ""
 msgid "Uninventoried Machines"
 msgstr ""
 
-#: modules/dashboard/includes/panels/process.inc.php:28
-msgid "Pulse processes"
-msgstr ""
-
-#: modules/dashboard/includes/panels/computersOnline.inc.php:31
-msgid "Machines Online"
-msgstr ""
-
-#: modules/dashboard/includes/panels/computersOnline.inc.php:46
-msgid "Machines online"
-msgstr ""
-
-#: modules/dashboard/includes/panels/computersOnline.inc.php:47
-msgid "Machines offline"
-msgstr ""
-
 #: modules/dashboard/includes/panels/product_updates.inc.php:30
 msgid "Pulse Updates"
 msgstr ""
@@ -149,26 +161,14 @@ msgstr ""
 msgid "Updates available."
 msgstr ""
 
-#: modules/dashboard/includes/panels/general.inc.php:29
-msgid "General"
+#: modules/dashboard/includes/panels/computersOnline.inc.php:31
+msgid "Machines Online"
 msgstr ""
 
-#: modules/dashboard/includes/panels/general.inc.php:39
-msgid "on"
+#: modules/dashboard/includes/panels/computersOnline.inc.php:46
+msgid "Machines online"
 msgstr ""
 
-#: modules/dashboard/includes/panels/general.inc.php:40
-msgid "Uptime"
-msgstr ""
-
-#: modules/dashboard/includes/panels/general.inc.php:41
-msgid "Load"
-msgstr ""
-
-#: modules/dashboard/includes/panels/general.inc.php:44
-msgid "RAM"
-msgstr ""
-
-#: modules/dashboard/includes/panels/shortcuts.inc.php:29
-msgid "Shortcuts"
+#: modules/dashboard/includes/panels/computersOnline.inc.php:47
+msgid "Machines offline"
 msgstr ""
