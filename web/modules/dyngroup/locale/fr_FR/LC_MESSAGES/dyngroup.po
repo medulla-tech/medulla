@@ -5,17 +5,17 @@
 # 
 # Translators:
 # Stephane Pointu <spointu@gmail.com>, 2018
-# Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # tekmans <yvan.manon@siveo.net>, 2019
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-16 13:58+0200\n"
+"POT-Creation-Date: 2019-09-16 17:41+0200\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
-"Last-Translator: tekmans <yvan.manon@siveo.net>, 2019\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,7 +123,7 @@ msgstr "Export CSV"
 
 #: modules/dyngroup/infoPackage.inc.php:187
 msgid "Update machine cache"
-msgstr "Mise  jour du cache de machines"
+msgstr "Mise à jour du cache de machines"
 
 #: modules/dyngroup/includes/dyngroup.php:470
 msgid "Failed to load some pkgs module"
@@ -327,7 +327,7 @@ msgstr "Le groupe d'imaging a été modifié avec succès"
 #: modules/dyngroup/dyngroup/add_groups.php:211
 #: modules/dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully created"
-msgstr "Groupe créer avec succès"
+msgstr "Groupe créé avec succès"
 
 #: modules/dyngroup/dyngroup/add_groups.php:247
 msgid "Group failed to modify"
@@ -430,7 +430,7 @@ msgstr "Le groupe d'imaging %s a été supprimé avec succès"
 #: modules/dyngroup/dyngroup/delete_group.php:95
 #, php-format
 msgid "Group %s was successfully deleted"
-msgstr "Le groupe %s "
+msgstr "Le groupe %s a été supprimé avec succès"
 
 #: modules/dyngroup/dyngroup/update.php:30
 msgid "Update machines name cache in dyngroup"
@@ -459,7 +459,7 @@ msgstr "Date"
 
 #: modules/dyngroup/dyngroup/creator.php:303
 msgid "The request is : "
-msgstr "La requte est : "
+msgstr "La requête est : "
 
 #: modules/dyngroup/dyngroup/creator.php:320
 msgid "Go to save step"
@@ -475,7 +475,7 @@ msgstr "Nom de machine"
 
 #: modules/dyngroup/dyngroup/creator.php:329
 msgid "Hostname of the computer"
-msgstr "Le \"hostname\" de la machine"
+msgstr "Le nom d'hôte de la machine"
 
 #: modules/dyngroup/dyngroup/creator.php:330
 msgid "Description"
@@ -487,15 +487,15 @@ msgstr "Description de la machine"
 
 #: modules/dyngroup/dyngroup/creator.php:332
 msgid "Inventory number"
-msgstr "Numro d'inventaire"
+msgstr "Numéro d'inventaire"
 
 #: modules/dyngroup/dyngroup/creator.php:333
 msgid "Your internal inventory number"
-msgstr "Numro d'inventaire interne"
+msgstr "Numéro d'inventaire interne"
 
 #: modules/dyngroup/dyngroup/creator.php:334
 msgid "Hardware"
-msgstr "Matriel"
+msgstr "Matériel"
 
 #: modules/dyngroup/dyngroup/creator.php:335
 msgid "System type"
@@ -553,7 +553,7 @@ msgstr "Logiciel"
 
 #: modules/dyngroup/dyngroup/creator.php:348
 msgid "Operating system"
-msgstr "Systme d'exploitation"
+msgstr "Système d'exploitation"
 
 #: modules/dyngroup/dyngroup/creator.php:349
 msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
@@ -561,7 +561,7 @@ msgstr "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
 
 #: modules/dyngroup/dyngroup/creator.php:350
 msgid "Installed software"
-msgstr "Logiciel install"
+msgstr "Logiciel installé"
 
 #: modules/dyngroup/dyngroup/creator.php:351
 msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
@@ -569,7 +569,7 @@ msgstr "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
 
 #: modules/dyngroup/dyngroup/creator.php:352
 msgid "Installed software (specific version)"
-msgstr "Logiciel install (version spcifique)"
+msgstr "Logiciel installé (version spécifique)"
 
 #: modules/dyngroup/dyngroup/creator.php:353
 msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
@@ -665,7 +665,7 @@ msgstr "Voir le contenu"
 #: modules/dyngroup/dyngroup/details.php:30
 #, php-format
 msgid "%s's details"
-msgstr "Dtails de %s"
+msgstr "Détails de %s"
 
 #: modules/dyngroup/dyngroup/details.php:49
 msgid "Close"
@@ -673,7 +673,7 @@ msgstr "Fermer"
 
 #: modules/dyngroup/dyngroup/details.php:52
 msgid "Regenerate"
-msgstr "Regénérer"
+msgstr "Régénérer"
 
 #: modules/dyngroup/dyngroup/details.php:55
 msgid "Hide"
@@ -732,11 +732,11 @@ msgstr "Création d'un groupe statique"
 
 #: modules/dyngroup/dyngroup/tab.php:44
 msgid "Static group creation from import"
-msgstr "Cration d'un groupe statique  partir d'un import"
+msgstr "Création d'un groupe statique  partir d'un import"
 
 #: modules/dyngroup/dyngroup/tab.php:62
 msgid "Imaging group creation"
-msgstr "Cration d'un groupe d'imaging"
+msgstr "Création d'un groupe d'imaging"
 
 #: modules/dyngroup/dyngroup/tab.php:79
 msgid "Static imaging group"
@@ -806,7 +806,7 @@ msgstr "Déploiement de logiciels sur ce groupe"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:136
 msgid "Update on this group"
-msgstr "Mettre  jour dans ce groupe"
+msgstr "Mettre à jour dans ce groupe"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:139
 msgid "Display this imaging group's content"
