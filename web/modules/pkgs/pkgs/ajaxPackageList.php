@@ -102,21 +102,21 @@ foreach ($packages as $p) {
         case "expert":
             $arraypackagename[] = "<img style='position:relative; top : 5px;' 
                                         src='modules/pkgs/graph/img/package_expert.png'/>" .
-                                        "<span style='border-bottom: 4px double blue' title='Pakage Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                        "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                             $p['label'].
                                         "</span>" ;
         break;
         case "standard":
             $arraypackagename[] = "<img style='position:relative; top : 5px;
                                         'src='modules/pkgs/graph/img/package.png'/>".
-                                        "<span style='border-bottom: 4px double black' title='Pakage Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                        "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                             $p['label'].
                                         "</span>"  ;
         break;
         default: //"manual":
             $arraypackagename[] = "<img style='position:relative; top : 5px;' 
                                         src='modules/pkgs/graph/img/package.png'/>".
-                                        "<span style='border-bottom: 4px double green' title='Pakage manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                        "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                             $p['label'].
                                         "</span>" ;
         break;
