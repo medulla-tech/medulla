@@ -75,8 +75,8 @@ $n->addExtraInfo($descriptions, _T("Rule Description", "pkgs"));
 
 $action_upOrder = new ActionItem(_T("Raise order priority","pkgs"), "rulesList", "up","","pkgs","pkgs", "", "raise");
 $action_downOrder = new ActionItem(_T("Lower order priority","pkgs"), "rulesList", "down","down","pkgs","pkgs", "", "lower");
-$action_editRule = new ActionItem(_T("Edit Profil",'kiosk'), "editRule", "edit", "rule", "pkgs", "pkgs");
-$action_deleteRule = new ActionPopupItem(_T("Delete Profil",'kiosk'), "deleteRule", "delete", "", "pkgs", "pkgs");
+$action_editRule = new ActionItem(_T("Edit Profil",'pkgs'), "editRule", "edit", "rule", "pkgs", "pkgs");
+$action_deleteRule = new ActionPopupItem(_T("Delete Profil",'pkgs'), "deleteRule", "delete", "", "pkgs", "pkgs");
 
 $n->setParamInfo($params);
 $n->addActionItemArray($action_upOrder);
