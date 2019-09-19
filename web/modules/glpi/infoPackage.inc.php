@@ -153,10 +153,10 @@ $page->setFile("modules/glpi/glpi/ajaxSetGlpiEditableValue.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
-$page = new Page("groupglpitabs", _T("Inventory (GLPI) on a group of machines", "glpi"));
+
+$page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
 $page->setFile("modules/glpi/glpi/tabs.php");
 $page->setOptions(array("visible"=>False));
-
 $tab = new Tab("tab0", _T("Summary tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
@@ -186,12 +186,6 @@ $page->addTab($tab);
 
 $tab = new Tab("tab9", _T("Connections tab (GLPI)", "glpi"));
 $page->addTab($tab);
-
-$submod->addPage($page);
-
-$page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
-$page->setFile("modules/glpi/glpi/tabs.php");
-$page->setOptions(array("visible"=>False));
 
 $submod->addPage($page);
 
