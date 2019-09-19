@@ -25,7 +25,110 @@
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
+?>
+<style>
+li.folder a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/folder.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
 
+li.folderg a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/folder.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+li.console a {
+        padding: 3px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/console.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.consoleg a {
+        padding: 3px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/console.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+li.quick a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/quick.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.guaca a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/guaca.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.guacag a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/guaca.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+li.quickg a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/quick.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+</style>
+<?php
 /*
  * Display right top shortcuts menu
  */
