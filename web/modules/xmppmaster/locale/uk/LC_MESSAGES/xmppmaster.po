@@ -217,7 +217,7 @@ msgstr "Розгортання [машина "
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:306
 msgid "Hide Machine Details"
-msgstr ""
+msgstr "Приховати параметри комп'ютера"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:312
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
@@ -227,15 +227,15 @@ msgstr "Комп’ютер"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:316
 msgid "Ip Machine"
-msgstr ""
+msgstr "IP комп'ютера"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:319
 msgid "Mac Address"
-msgstr ""
+msgstr "MAC-адреса"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:341
 msgid "Hide Package Details"
-msgstr ""
+msgstr "Приховати параметри пакунка"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:347
 msgid "Creator"
@@ -253,11 +253,11 @@ msgstr "Тека"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:356
 msgid "Creation Date"
-msgstr ""
+msgstr "Дата створення"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:379
 msgid "Hide Deployment plan"
-msgstr ""
+msgstr "Приховати план розгортання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:385
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
@@ -271,39 +271,39 @@ msgstr "Користувач"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:388
 msgid "Start Date"
-msgstr ""
+msgstr "Дата початку"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:391
 msgid "Stop Date"
-msgstr ""
+msgstr "Дата припинення"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:443
 msgid "Hide xmpp information"
-msgstr ""
+msgstr "Приховати відомості щодо XMPP"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:449
 msgid "jid machine"
-msgstr ""
+msgstr "JID комп'ютера"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:452
 msgid "jid Relay server"
-msgstr ""
+msgstr "JID сервера трансляції"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:455
 msgid "ip machine"
-msgstr ""
+msgstr "IP комп'ютера"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:458
 msgid "ip relayserver"
-msgstr ""
+msgstr "IP сервера трансляції"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:461
 msgid "ip master"
-msgstr ""
+msgstr "IP основного"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:495
 msgid "Hide Package and Dependency"
-msgstr ""
+msgstr "Приховати пакунок і залежності"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:504
 msgid "Software"
@@ -320,23 +320,23 @@ msgstr "Опис"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:538
 msgid "Hide Deployment phases"
-msgstr ""
+msgstr "Приховати фази розгортання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:544
 msgid "START"
-msgstr ""
+msgstr "ПОЧАТОК"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:547
 msgid "STEP"
-msgstr ""
+msgstr "КРОК"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:550
 msgid "DESCRIPTION"
-msgstr ""
+msgstr "ОПИС"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:684
 msgid "Hide Environment"
-msgstr ""
+msgstr "Приховати середовище"
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
 msgid "Computer deploy"

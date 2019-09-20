@@ -5,6 +5,7 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-17 01:25+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,219 +24,219 @@ msgstr ""
 
 #: modules/report/infoPackage.inc.php:32
 msgid "Reporting"
-msgstr ""
+msgstr "Rapportering"
 
 #: modules/report/infoPackage.inc.php:36
 msgid "Report"
-msgstr ""
+msgstr "Rapport"
 
 #: modules/report/infoPackage.inc.php:41 modules/report/report/index.php:44
 #: modules/report/report/localSidebar.php:27
 msgid "Report creation"
-msgstr ""
+msgstr "Skape rapport"
 
 #: modules/report/infoPackage.inc.php:44
 msgid "Download a file from report module (report or PNG)"
-msgstr ""
+msgstr "Last ned en fil fra rapportmodulen (rapport eller PNG)"
 
 #: modules/report/includes/report.inc.php:36
 #: modules/report/includes/report.inc.php:80
 msgid "Less detail"
-msgstr ""
+msgstr "Mindre detaljer"
 
 #: modules/report/includes/report.inc.php:39
 #: modules/report/includes/report.inc.php:197
 msgid "More detail"
-msgstr ""
+msgstr "Flere detaljer"
 
 #: modules/report/includes/html.inc.php:100
 msgid "January"
-msgstr ""
+msgstr "Januar"
 
 #: modules/report/includes/html.inc.php:101
 msgid "February"
-msgstr ""
+msgstr "Februar"
 
 #: modules/report/includes/html.inc.php:102
 msgid "March"
-msgstr ""
+msgstr "Mars"
 
 #: modules/report/includes/html.inc.php:103
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #: modules/report/includes/html.inc.php:104
 #: modules/report/includes/html.inc.php:116
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #: modules/report/includes/html.inc.php:105
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #: modules/report/includes/html.inc.php:106
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #: modules/report/includes/html.inc.php:107
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #: modules/report/includes/html.inc.php:108
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #: modules/report/includes/html.inc.php:109
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #: modules/report/includes/html.inc.php:110
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #: modules/report/includes/html.inc.php:111
 msgid "December"
-msgstr ""
+msgstr "Desember"
 
 #: modules/report/includes/html.inc.php:112
 msgid "Jan"
-msgstr ""
+msgstr "Jan"
 
 #: modules/report/includes/html.inc.php:113
 msgid "Feb"
-msgstr ""
+msgstr "Feb"
 
 #: modules/report/includes/html.inc.php:114
 msgid "Mar"
-msgstr ""
+msgstr "Mar"
 
 #: modules/report/includes/html.inc.php:115
 msgid "Apr"
-msgstr ""
+msgstr "Apr"
 
 #: modules/report/includes/html.inc.php:117
 msgid "Jun"
-msgstr ""
+msgstr "Jun"
 
 #: modules/report/includes/html.inc.php:118
 msgid "Jul"
-msgstr ""
+msgstr "Jul"
 
 #: modules/report/includes/html.inc.php:119
 msgid "Aug"
-msgstr ""
+msgstr "Aug"
 
 #: modules/report/includes/html.inc.php:120
 msgid "Sep"
-msgstr ""
+msgstr "Sep"
 
 #: modules/report/includes/html.inc.php:121
 msgid "Oct"
-msgstr ""
+msgstr "Okt"
 
 #: modules/report/includes/html.inc.php:122
 msgid "Nov"
-msgstr ""
+msgstr "Nov"
 
 #: modules/report/includes/html.inc.php:123
 msgid "Dec"
-msgstr ""
+msgstr "Des"
 
 #: modules/report/includes/html.inc.php:124
 msgid "Sunday"
-msgstr ""
+msgstr "Søndag"
 
 #: modules/report/includes/html.inc.php:125
 msgid "Monday"
-msgstr ""
+msgstr "Mandag"
 
 #: modules/report/includes/html.inc.php:126
 msgid "Tuesday"
-msgstr ""
+msgstr "Tirsdag"
 
 #: modules/report/includes/html.inc.php:127
 msgid "Wednesday"
-msgstr ""
+msgstr "Onsdag"
 
 #: modules/report/includes/html.inc.php:128
 msgid "Thursday"
-msgstr ""
+msgstr "Torsdag"
 
 #: modules/report/includes/html.inc.php:129
 msgid "Friday"
-msgstr ""
+msgstr "Fredag"
 
 #: modules/report/includes/html.inc.php:130
 msgid "Saturday"
-msgstr ""
+msgstr "Lørdag"
 
 #: modules/report/includes/html.inc.php:131
 msgid "Sun"
-msgstr ""
+msgstr "Søn"
 
 #: modules/report/includes/html.inc.php:132
 msgid "Mon"
-msgstr ""
+msgstr "Man"
 
 #: modules/report/includes/html.inc.php:133
 msgid "Tue"
-msgstr ""
+msgstr "Tir"
 
 #: modules/report/includes/html.inc.php:134
 msgid "Wed"
-msgstr ""
+msgstr "Ons"
 
 #: modules/report/includes/html.inc.php:135
 msgid "Thu"
-msgstr ""
+msgstr "Tor"
 
 #: modules/report/includes/html.inc.php:136
 msgid "Fri"
-msgstr ""
+msgstr "Fre"
 
 #: modules/report/includes/html.inc.php:137
 msgid "Sat"
-msgstr ""
+msgstr "Lør"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Su"
-msgstr ""
+msgstr "Søn"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Mo"
-msgstr ""
+msgstr "Ma"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Tu"
-msgstr ""
+msgstr "Ti"
 
 #: modules/report/includes/html.inc.php:139
 msgid "We"
-msgstr ""
+msgstr "On"
 
 #: modules/report/includes/html.inc.php:139
 msgid "Th"
-msgstr ""
+msgstr "To"
 
 #: modules/report/includes/html.inc.php:139
 msgid "Fr"
-msgstr ""
+msgstr "Fr"
 
 #: modules/report/includes/html.inc.php:140
 msgid "Sa"
-msgstr ""
+msgstr "Lø"
 
 #: modules/report/includes/html.inc.php:141
 msgid "Wk"
-msgstr ""
+msgstr "Uk"
 
 #: modules/report/report/index.php:62
 msgid "Period"
-msgstr ""
+msgstr "Periode"
 
 #: modules/report/report/index.php:63
 msgid "from"
-msgstr ""
+msgstr "fra"
 
 #: modules/report/report/index.php:63
 msgid "to"
@@ -243,24 +244,24 @@ msgstr "til"
 
 #: modules/report/report/index.php:76
 msgid "Entities"
-msgstr ""
+msgstr "Forekomster"
 
 #: modules/report/report/index.php:90
 msgid "Generate Report"
-msgstr ""
+msgstr "Generer rapport"
 
 #: modules/report/report/index.php:132
 msgid "Select some data to include in the report."
-msgstr ""
+msgstr "Velg data for rapporten"
 
 #: modules/report/report/index.php:194
 msgid "Download image"
-msgstr ""
+msgstr "Last ned bilde"
 
 #: modules/report/report/index.php:234
 msgid "Get XLS Report"
-msgstr ""
+msgstr "Hent XLS Rapport"
 
 #: modules/report/report/index.php:236
 msgid "Get PDF Report"
-msgstr ""
+msgstr "Hent PDF Rapport"
