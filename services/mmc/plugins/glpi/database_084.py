@@ -1572,36 +1572,67 @@ class Glpi084(DyngroupDatabaseHelper):
             # (which is not declared explicitly in glpi...
             # we have to emulate it...)
             session = create_session()
-            entids = session.query(UserProfile).select_from(self.userprofile.join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(self.config.activeProfiles)).all()
+            query = session.query(UserProfile).select_from(self.userprofile.join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(self.config.activeProfiles))
+            self.logger.debug("*** Query Users Profiles for Entities ***")
+            self.logger.debug("Parameters :")
+            self.logger.debug(" User : %s"%user)
+            self.logger.debug(" Profile : %s"%self.config.activeProfiles)
+            self.logger.debug("Query : ")
+            self.logger.debug("%s"%query)
+
+            entids = query.all()
+            self.logger.debug("Query Result : ")
+            self.logger.debug("%s"%entids)
+
             for entid in entids:
                 if entid.entities_id == 0 and entid.is_recursive == 1:
+                    self.logger.debug("Root Entity found with recursivity = return all entities")
                     session.close()
                     return self.__get_all_locations()
 
+
             # the normal case...
-            plocs = session.query(Entities).add_column(self.userprofile.c.is_recursive).select_from(self.entities.join(self.userprofile).join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(self.config.activeProfiles)).all()
+            query2 = session.query(Entities).add_column(self.userprofile.c.is_recursive).select_from(self.entities.join(self.userprofile).join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(self.config.activeProfiles))
+            self.logger.debug("*** Query Entities ***")
+            self.logger.debug("Parameters :")
+            self.logger.debug(" User : %s"%user)
+            self.logger.debug(" Profile : %s"%self.config.activeProfiles)
+            self.logger.debug("Query : ")
+            self.logger.debug("%s"%query2)
+            plocs = query2.all()
+            self.logger.debug("Query Result : ")
+            self.logger.debug("%s"%entids)
             for ploc in plocs:
                 if ploc[1]:
                     # The user profile link to the entities is recursive, and so
                     # the children locations should be added too
+                    self.logger.info("Recursive entity detected")
                     for l in self.__add_children(ploc[0]):
+                        self.logger.debug("Add Child : %s"%l)
                         ret.append(l)
                 else:
                     ret.append(ploc[0])
             if len(ret) == 0:
                 ret = []
             session.close()
-
+        self.logger.debug("Entities Found : ")
+        self.logger.debug("%s"%ret)
         ret = map(lambda l: setUUID(l), ret)
         return ret
 
     def __get_all_locations(self):
         ret = []
         session = create_session()
-        q = session.query(Entities).group_by(self.entities.c.completename).order_by(asc(self.entities.c.completename)).all()
+        query = session.query(Entities).group_by(self.entities.c.completename).order_by(asc(self.entities.c.completename))
+        self.logger.debug("*** Get All Entities ***")
+        self.logger.debug("Query : ")
+        self.logger.debug("%s"%query)
+        q = query.all()
         session.close()
         for entities in q:
             ret.append(entities)
+        self.logger.debug("Result : ")
+        self.logger.debug("%s"%ret)
         return ret
 
     def __add_children(self, child):
