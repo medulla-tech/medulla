@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-17 01:25+0200\n"
+"POT-Creation-Date: 2019-09-20 19:59+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -215,51 +215,63 @@ msgstr "Група розгортання комп'ютерів"
 msgid "Deployment [machine "
 msgstr "Розгортання [машина "
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:306
-msgid "Hide Machine Details"
-msgstr "Приховати параметри комп'ютера"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:30
+msgid "Hide"
+msgstr "Сховати"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:312
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:31
+msgid "Show"
+msgstr "Показати"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:213
+msgid "Wan on Lan"
+msgstr "WAN на LAN"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:309
+msgid "Machine Details"
+msgstr "Параметри комп'ютера"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:315
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:44
 msgid "Machine"
 msgstr "Комп’ютер"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:316
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:319
 msgid "Ip Machine"
 msgstr "IP комп'ютера"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:319
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:322
 msgid "Mac Address"
 msgstr "MAC-адреса"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:341
-msgid "Hide Package Details"
-msgstr "Приховати параметри пакунка"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:344
+msgid "Package Details"
+msgstr "Параметри пакунка"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:347
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
 msgid "Creator"
 msgstr "Творець"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:501
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:353
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:504
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
 msgid "Name"
 msgstr "Назва"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:353
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:356
 msgid "Folder"
 msgstr "Тека"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:356
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:359
 msgid "Creation Date"
 msgstr "Дата створення"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:379
-msgid "Hide Deployment plan"
-msgstr "Приховати план розгортання"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:382
+msgid "Deployment plan"
+msgstr "План розгортання"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:385
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:388
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:286
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
@@ -269,74 +281,78 @@ msgstr "Приховати план розгортання"
 msgid "User"
 msgstr "Користувач"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:388
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:391
 msgid "Start Date"
 msgstr "Дата початку"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:391
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:394
 msgid "Stop Date"
 msgstr "Дата припинення"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:443
-msgid "Hide xmpp information"
-msgstr "Приховати відомості щодо XMPP"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:446
+msgid "xmpp information"
+msgstr "Дані XMPP"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:449
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:452
 msgid "jid machine"
 msgstr "JID комп'ютера"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:452
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:455
 msgid "jid Relay server"
 msgstr "JID сервера трансляції"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:455
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:458
 msgid "ip machine"
 msgstr "IP комп'ютера"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:458
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:461
 msgid "ip relayserver"
 msgstr "IP сервера трансляції"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:461
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:464
 msgid "ip master"
 msgstr "IP основного"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:495
-msgid "Hide Package and Dependency"
-msgstr "Приховати пакунок і залежності"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:498
+msgid "Package and Dependency"
+msgstr "Пакунок і залежності"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:504
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:507
 msgid "Software"
 msgstr "Програмне забезпечення"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:507
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:510
 msgid "Version"
 msgstr "Версія"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:510
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:513
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
 msgid "Description"
 msgstr "Опис"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:538
-msgid "Hide Deployment phases"
-msgstr "Приховати фази розгортання"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:541
+msgid "Deployment phases"
+msgstr "Фази розгортання"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:544
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:547
 msgid "START"
 msgstr "ПОЧАТОК"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:547
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:550
 msgid "STEP"
 msgstr "КРОК"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:550
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:553
 msgid "DESCRIPTION"
 msgstr "ОПИС"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:684
-msgid "Hide Environment"
-msgstr "Приховати середовище"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:596
+msgid "Deployment result"
+msgstr "Результат розгортання"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:687
+msgid "Environment"
+msgstr "Середовище"
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
 msgid "Computer deploy"

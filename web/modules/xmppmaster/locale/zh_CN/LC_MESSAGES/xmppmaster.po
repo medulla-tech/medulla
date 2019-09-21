@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-17 01:25+0200\n"
+"POT-Creation-Date: 2019-09-20 19:59+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -214,51 +214,63 @@ msgstr ""
 msgid "Deployment [machine "
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:306
-msgid "Hide Machine Details"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:30
+msgid "Hide"
+msgstr "隐藏"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:31
+msgid "Show"
+msgstr "显示"
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:213
+msgid "Wan on Lan"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:312
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:309
+msgid "Machine Details"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:315
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:44
 msgid "Machine"
 msgstr "电脑"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:316
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:319
 msgid "Ip Machine"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:319
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:322
 msgid "Mac Address"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:341
-msgid "Hide Package Details"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:347
-msgid "Creator"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:344
+msgid "Package Details"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:501
+msgid "Creator"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:353
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:504
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
 msgid "Name"
 msgstr "名称"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:353
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:356
 msgid "Folder"
 msgstr "资料夹"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:356
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:359
 msgid "Creation Date"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:379
-msgid "Hide Deployment plan"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:382
+msgid "Deployment plan"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:385
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:388
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:286
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
@@ -268,73 +280,77 @@ msgstr ""
 msgid "User"
 msgstr "使用者"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:388
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:391
 msgid "Start Date"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:391
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:394
 msgid "Stop Date"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:443
-msgid "Hide xmpp information"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:449
-msgid "jid machine"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:446
+msgid "xmpp information"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:452
-msgid "jid Relay server"
+msgid "jid machine"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:455
-msgid "ip machine"
+msgid "jid Relay server"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:458
-msgid "ip relayserver"
+msgid "ip machine"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:461
+msgid "ip relayserver"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:464
 msgid "ip master"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:495
-msgid "Hide Package and Dependency"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:498
+msgid "Package and Dependency"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:504
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:507
 msgid "Software"
 msgstr "软体"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:507
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:510
 msgid "Version"
 msgstr "版本"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:510
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:513
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
 msgid "Description"
 msgstr "说明"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:538
-msgid "Hide Deployment phases"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:544
-msgid "START"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:541
+msgid "Deployment phases"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:547
-msgid "STEP"
+msgid "START"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:550
+msgid "STEP"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:553
 msgid "DESCRIPTION"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:684
-msgid "Hide Environment"
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:596
+msgid "Deployment result"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:687
+msgid "Environment"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
