@@ -763,11 +763,11 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         });
         jQuery( ".replytab" ).click(function() {
             a = jQuery(this).text();
-            if (a.search( 'Show' ) != -1){
-                a = a.replace("Show ", "Hide ");
+            if (a.search( "<?php echo $showText;?>" ) != -1){
+                a = a.replace( "<?php echo $showText;?> ",  "<?php echo $hideText;?> ");
             }
             else{
-                a = a.replace("Hide ", "Show ");
+                a = a.replace("<?php echo $hideText;?> ",  "<?php echo $showText;?> ");
             }
             jQuery(this).text(a);
             jQuery(this).next('div').toggle();
