@@ -278,7 +278,7 @@ if (isset($_POST['bconfirm'])){
         {
             $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
         }
-        $f->add(new TrFormElement("Dependencies",new SpanElement('<div id="grouplist">
+        $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">
     <table style="border: none;" cellspacing="0">
         <tr>
             <td style="border: none;">
@@ -288,7 +288,7 @@ if (isset($_POST['bconfirm'])){
                 </div>
             </td>
             <td style="border: none;">
-                <h3>Added dependencies</h3>
+                <h3><?php echo _T('Added dependencies', 'pkgs') ?></h3>
                 <div class="list">
                     <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
 
@@ -303,7 +303,7 @@ if (isset($_POST['bconfirm'])){
             </td>
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
-                    <h3>Available dependencies</h3>
+                    <h3><?php echo _T('Available dependencies', 'pkgs') ?></h3>
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOption.'
                     </select>

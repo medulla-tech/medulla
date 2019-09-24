@@ -33,7 +33,7 @@ $options = "";
         }
 ?>
 <div class="header">
-    <h1>Restart</h1>
+    <h1><?php echo _T('Restart', 'pkgs') ?></h1
 </div>
 
 <div class="content">
