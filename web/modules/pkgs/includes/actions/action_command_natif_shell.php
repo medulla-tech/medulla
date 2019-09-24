@@ -1,4 +1,6 @@
 <?php
+require_once("../../../../includes/i18n.inc.php");
+
 extract($_POST);
 /*
 echo "<pre>";
@@ -63,15 +65,15 @@ echo "</pre>";*/
         <tr>
             <?php
         $resultlist = array(
-                            array('label' => '10 first lines of result','value' => "10@firstlines"),
-                            array('label' => '20 first lines of result','value' => "20@firstlines"),
-                            array('label' => '30 first lines of result','value' => "30@firstlines"),
-                            array('label' => 'Complete results','value' => "@resultcommand"),
-                            array('label' => '10 last lines of result','value' => "10@lastlines"),
-                            array('label' => '20 last lines of result','value' => "20@lastlines"),
-                            array('label' => '30 last lines of result','value' => "30@lastlines"),
-                            array('label' => '20 last lines of result','value' => "2@lastlines"),
-                            array('label' => 'The last line of result','value' => "1@lastlines"),
+                            array('label' => _T('10 first lines of result','pkgs'),'value' => "10@firstlines"),
+                            array('label' => _T('20 first lines of result','pkgs'),'value' => "20@firstlines"),
+                            array('label' => _T('30 first lines of result','pkgs'),'value' => "30@firstlines"),
+                            array('label' => _T('Complete results','pkgs'),'value' => "@resultcommand"),
+                            array('label' => _T('10 last lines of result','pkgs'),'value' => "10@lastlines"),
+                            array('label' => _T('20 last lines of result','pkgs'),'value' => "20@lastlines"),
+                            array('label' => _T('30 last lines of result','pkgs'),'value' => "30@lastlines"),
+                            array('label' => _T('20 last lines of result','pkgs'),'value' => "2@lastlines"),
+                            array('label' => _T('The last line of result','pkgs'),'value' => "1@lastlines"),
         );
         $posibleresultname = array(
                                     "10@firstlines",
