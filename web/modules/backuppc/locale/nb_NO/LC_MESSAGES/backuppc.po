@@ -5,15 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-16 17:41+0200\n"
+"POT-Creation-Date: 2019-09-24 10:28+0200\n"
 "PO-Revision-Date: 2017-09-12 12:18+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,15 +30,15 @@ msgstr "Sikkerhetskopi"
 #: modules/backuppc/infoPackage.inc.php:42
 #: modules/backuppc/backuppc/index.php:62
 msgid "Backup status"
-msgstr ""
+msgstr "Backup status"
 
 #: modules/backuppc/infoPackage.inc.php:45
 msgid "Host backup status"
-msgstr ""
+msgstr "Backup status for vertsmaskin"
 
 #: modules/backuppc/infoPackage.inc.php:48
 msgid "Host summary"
-msgstr ""
+msgstr "Sammendrag for vertsmaskin"
 
 #: modules/backuppc/infoPackage.inc.php:51
 msgid "Edit host config"
@@ -63,7 +64,7 @@ msgstr ""
 
 #: modules/backuppc/infoPackage.inc.php:70
 msgid "See pending packages"
-msgstr ""
+msgstr "Se ventende pakker"
 
 #: modules/backuppc/infoPackage.inc.php:73
 msgid "Restore points"
@@ -110,7 +111,7 @@ msgstr ""
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
 #: modules/backuppc/backuppc/ajaxFileSearch.php:34
 msgid "Bytes"
-msgstr ""
+msgstr "Bytes"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:106
 msgid "Current directory :  "
@@ -156,11 +157,11 @@ msgstr ""
 
 #: modules/backuppc/backuppc/deleteProfile.php:60
 msgid "Delete this profile"
-msgstr ""
+msgstr "Slett denne profilen"
 
 #: modules/backuppc/backuppc/ajaxFileSearch.php:116
 msgid "File"
-msgstr ""
+msgstr "Fil"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:77
 msgid "Edit schedule"
@@ -182,7 +183,7 @@ msgstr ""
 #: modules/backuppc/backuppc/EditPeriodProfile.php:97
 #: modules/backuppc/backuppc/EditBackupProfile.php:88
 msgid "Name"
-msgstr "Etternavn"
+msgstr "Navn"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:103
 #: modules/backuppc/backuppc/edit.php:173
@@ -197,37 +198,37 @@ msgstr ""
 #: modules/backuppc/backuppc/EditPeriodProfile.php:114
 #: modules/backuppc/backuppc/edit.php:182
 msgid "Monday"
-msgstr ""
+msgstr "Mandag"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:115
 #: modules/backuppc/backuppc/edit.php:183
 msgid "Tuesday"
-msgstr ""
+msgstr "Tirsdag"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:116
 #: modules/backuppc/backuppc/edit.php:184
 msgid "Wednesday"
-msgstr ""
+msgstr "Onsdag"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:117
 #: modules/backuppc/backuppc/edit.php:185
 msgid "Thursday"
-msgstr ""
+msgstr "Torsdag"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:118
 #: modules/backuppc/backuppc/edit.php:186
 msgid "Friday"
-msgstr ""
+msgstr "Fredag"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:119
 #: modules/backuppc/backuppc/edit.php:187
 msgid "Saturday"
-msgstr ""
+msgstr "Lørdag"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:120
 #: modules/backuppc/backuppc/edit.php:188
 msgid "Sunday"
-msgstr ""
+msgstr "Søndag"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:144
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
@@ -238,7 +239,7 @@ msgstr "til"
 #: modules/backuppc/backuppc/EditPeriodProfile.php:146
 #: modules/backuppc/backuppc/edit.php:213
 msgid "on"
-msgstr ""
+msgstr "på"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:148
 #: modules/backuppc/backuppc/edit.php:131
@@ -283,7 +284,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/restorePopup.php:26
 msgid "Host"
-msgstr ""
+msgstr "Vert"
 
 #: modules/backuppc/backuppc/restorePopup.php:35
 msgid "Destination Folder"
@@ -416,7 +417,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/hostSummary.php:250
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: modules/backuppc/backuppc/hostSummary.php:251
 msgid "Duration (min.)"

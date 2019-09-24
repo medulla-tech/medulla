@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-16 17:41+0200\n"
+"POT-Creation-Date: 2019-09-24 10:28+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -29,7 +29,7 @@ msgstr "Support"
 
 #: modules/support/infoPackage.inc.php:35
 msgid "Remote support"
-msgstr "Fjern support"
+msgstr "Fjernsupport"
 
 #: modules/support/infoPackage.inc.php:40
 msgid "Collect"
@@ -45,11 +45,11 @@ msgstr "Koble fra"
 
 #: modules/support/infoPackage.inc.php:46
 msgid "Download an archive including logs and config files"
-msgstr ""
+msgstr "Last ned et arkiv med logger og konfigurasjonsfiler"
 
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
-msgstr ""
+msgstr "Abonnementsinfo"
 
 #: modules/support/includes/panels/license.inc.php:57
 msgid "Phone"
@@ -65,11 +65,11 @@ msgstr "Timer"
 
 #: modules/support/includes/panels/license.inc.php:75
 msgid "Your subscription"
-msgstr ""
+msgstr "Abonnementet ditt"
 
 #: modules/support/includes/panels/license.inc.php:91
 msgid "Computers"
-msgstr ""
+msgstr "Datamaskiner"
 
 #: modules/support/includes/panels/license.inc.php:106
 msgid "End"
@@ -81,16 +81,16 @@ msgstr "Lenker"
 
 #: modules/support/includes/panels/license.inc.php:132
 msgid "Activate again / Use another subscription"
-msgstr ""
+msgstr "Aktiver igjen / Bruk et annet abonnement"
 
 #: modules/support/includes/panels/remotesupport.inc.php:30
 msgid "Extract logs"
-msgstr ""
+msgstr "Hent ut logger"
 
 #: modules/support/includes/panels/remotesupport.inc.php:42
 msgid "Download archive"
-msgstr ""
+msgstr "Last ned arkiv"
 
 #: modules/support/includes/panels/remotesupport.inc.php:45
 msgid "Extract log and config files"
-msgstr ""
+msgstr "Hent ut logger og konfig filer"

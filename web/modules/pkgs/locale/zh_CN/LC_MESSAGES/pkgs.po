@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-16 17:41+0200\n"
+"POT-Creation-Date: 2019-09-24 10:28+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -411,6 +411,10 @@ msgstr ""
 msgid "Spooling"
 msgstr ""
 
+#: modules/pkgs/pkgs/edit.php:369 modules/pkgs/pkgs/add.php:281
+msgid "Dependencies"
+msgstr ""
+
 #: modules/pkgs/pkgs/edit.php:443
 msgid "File"
 msgstr "档案"
@@ -440,7 +444,7 @@ msgid "The rule has been removed"
 msgstr ""
 
 #: modules/pkgs/pkgs/rulesList.php:73
-msgid "Rules Order"
+msgid "Rule Order"
 msgstr ""
 
 #: modules/pkgs/pkgs/rulesList.php:74
@@ -456,11 +460,11 @@ msgid "Lower order priority"
 msgstr ""
 
 #: modules/pkgs/pkgs/rulesList.php:78
-msgid "Edit rule"
+msgid "Edit Profil"
 msgstr ""
 
 #: modules/pkgs/pkgs/rulesList.php:79
-msgid "Delete rule"
+msgid "Delete Profil"
 msgstr ""
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:55
@@ -553,6 +557,34 @@ msgstr " php.ini  post_max_size  upload_max_filesize "
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr " %d "
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:34
+msgid "Execute script"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:92
+msgid "Script"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionrestart.php:36
+msgid "Restart"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_set_environ.php:28
+msgid "Set Environment variables"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_set_environ.php:36
+msgid "Step label : "
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_set_environ.php:44
+msgid "Environment variable"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscript.php:25
+msgid "Run command"
+msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151

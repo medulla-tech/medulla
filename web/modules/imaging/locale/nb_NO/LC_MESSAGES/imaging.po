@@ -5,15 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-16 17:41+0200\n"
+"POT-Creation-Date: 2019-09-24 10:28+0200\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -262,15 +263,15 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:293
 msgid "Delete a group of computers"
-msgstr ""
+msgstr "Slett en gruppe av maskiner"
 
 #: modules/imaging/infoPackage.inc.php:297
 msgid "Computers Group Editor"
-msgstr ""
+msgstr "Editor for maskingruppe"
 
 #: modules/imaging/infoPackage.inc.php:301
 msgid "Share a group of computers"
-msgstr ""
+msgstr "Del en maskingruppe"
 
 #: modules/imaging/infoPackage.inc.php:307
 msgid "Secure control on a group of computers"
@@ -353,7 +354,7 @@ msgstr ""
 #: modules/imaging/includes/logs.inc.php:26
 #: modules/imaging/manage/ajaxLogs.php:59
 msgid "Inventory"
-msgstr ""
+msgstr "Inventar"
 
 #: modules/imaging/includes/logs.inc.php:27
 #: modules/imaging/manage/ajaxLogs.php:55
@@ -567,7 +568,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:49
 msgid "File"
-msgstr ""
+msgstr "Fil"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:50
 msgid "available"
@@ -677,13 +678,13 @@ msgstr ""
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1474
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1498
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1413
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1478
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1502
 msgid "No"
-msgstr ""
+msgstr "Nei"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1430
 msgid "Enable"
@@ -1407,16 +1408,16 @@ msgstr "Swap"
 
 #: modules/imaging/includes/includes.php:221
 msgid "Never"
-msgstr ""
+msgstr "Aldri"
 
 #: modules/imaging/includes/includes.php:224
 #: modules/imaging/includes/includes.php:230
 msgid "As soon as possible"
-msgstr ""
+msgstr "Så fort som mulig"
 
 #: modules/imaging/includes/includes.php:232
 msgid "<i>undefined</i>"
-msgstr ""
+msgstr "<i>udefinert</i>"
 
 #: modules/imaging/includes/includes.php:301
 msgid "Backup log messages"
@@ -1965,7 +1966,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin7.php:722
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:673
 msgid "Group"
-msgstr ""
+msgstr "Gruppe"
 
 #: modules/imaging/manage/ajaxFormWin10.php:821
 #: modules/imaging/manage/ajaxFormWin8.php:814
@@ -2027,7 +2028,7 @@ msgstr ""
 
 #: modules/imaging/manage/unattended.php:126
 msgid "Choose package source"
-msgstr ""
+msgstr "Velg kilde for pakken"
 
 #: modules/imaging/manage/imaging_server_link.php:60
 #, php-format
@@ -2077,12 +2078,12 @@ msgstr ""
 #: modules/imaging/manage/ajaxLogs.php:111
 #: modules/imaging/imaging/ajaxLogs.php:94
 msgid "Target"
-msgstr ""
+msgstr "Mål"
 
 #: modules/imaging/manage/ajaxLogs.php:112
 #: modules/imaging/imaging/ajaxLogs.php:95
 msgid "Message"
-msgstr ""
+msgstr "Melding"
 
 #: modules/imaging/manage/bootmenu_up.php:37
 #, php-format
@@ -2450,7 +2451,7 @@ msgstr ""
 
 #: modules/imaging/manage/synchromaster.php:122
 msgid "In progress"
-msgstr ""
+msgstr "Pågående"
 
 #: modules/imaging/manage/synchromaster.php:135
 msgid "Copy of master complete"
@@ -2707,7 +2708,7 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxStatus.php:133
 msgid "Up-to-date"
-msgstr ""
+msgstr "Oppdatert"
 
 #: modules/imaging/manage/ajaxStatus.php:139
 msgid "Stats"
@@ -3015,7 +3016,7 @@ msgstr ""
 #: modules/imaging/imaging/creategroupcustonmenu.php:70
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "Datamaskinlisten er avkortet ved %d datamaskiner"
 
 #: modules/imaging/imaging/bootmenu.php:63
 #, php-format
@@ -3369,7 +3370,7 @@ msgstr ""
 #: modules/imaging/imaging/images.php:125
 #: modules/imaging/imaging/images.php:152
 msgid "Save"
-msgstr ""
+msgstr "Lagre"
 
 #: modules/imaging/imaging/images.php:127
 msgid "Save (converting to image)"
