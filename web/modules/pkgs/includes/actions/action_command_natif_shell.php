@@ -8,7 +8,7 @@ echo "<pre>";
 echo "</pre>";*/
 ?>
 <div class="header">
-    <h1>Run Command in shell</h1>
+    <h1><?php echo _T('Run Command in shell', 'pkgs') ?></h1>
 </div>
 <div class="content">
 
@@ -18,11 +18,11 @@ echo "</pre>";*/
         <input type="hidden" name="codereturn" value=""/>
     <table>
         <tr>
-            <th>Step label:</th>
+            <th><?php echo _T('Step label :', 'pkgs') ?></th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/></th>
         </tr>
         <tr>
-            <th>Command</th>
+            <th><?php echo _T('Command', 'pkgs') ?></th>
             <th>
               <textarea name="command" cols="5" rows="5"><?php echo (isset($command)) ? $command : "" ;?></textarea>
             </th>
