@@ -33,7 +33,7 @@ $environstr = trim($environstr,",\n\r");
         <input type="hidden" name="step" />
             <table id="tableToggle">
                 <tr class="toggleable">
-                    <th width="16%"><?php echo _T('Step label : ', 'pkgs') ?></th>
+                    <th width="16%"><?php echo _T('Step label', 'pkgs').' : '; ?></th>
                     <th width="25%">
                         <?php echo'  <input type="text" name="actionlabel" value="'.$lab.'"/>'; ?>
                     </th>

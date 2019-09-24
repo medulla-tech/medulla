@@ -22,7 +22,7 @@ extract($_POST);
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1><?php echo _T('Run command', 'pkgs') ?></h1>
+    <h1><?php echo _T('Run command', 'pkgs'); ?></h1>
 </div>
 <div class="content">
 

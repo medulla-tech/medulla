@@ -31,7 +31,7 @@ extract($_POST);
         }
 ?>
 <div class="header">
-    <h1><?php echo _T('Execute script', 'pkgs') ?></h1>
+    <h1><?php echo _T('Execute script', 'pkgs'); ?></h1>
 </div>
 <div class="content">
     <div>
@@ -89,7 +89,7 @@ extract($_POST);
     ?>
 
         <tr>
-            <h1><?php echo _T('Script', 'pkgs') ?></h1>
+            <h1><?php echo _T('Script', 'pkgs'); ?></h1>
             <th>
             <?php
                 if (isset($script)){

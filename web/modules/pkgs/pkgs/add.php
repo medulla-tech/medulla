@@ -288,7 +288,7 @@ if (isset($_POST['bconfirm'])){
                 </div>
             </td>
             <td style="border: none;">
-                <h3><?php echo _T('Added dependencies', 'pkgs') ?></h3>
+                <h3>'._T('Added dependencies', 'pkgs').'</h3>
                 <div class="list">
                     <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
 
@@ -303,7 +303,7 @@ if (isset($_POST['bconfirm'])){
             </td>
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
-                    <h3><?php echo _T('Available dependencies', 'pkgs') ?></h3>
+                    <h3>'._T('Available dependencies', 'pkgs').'</h3>
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOption.'
                     </select>
