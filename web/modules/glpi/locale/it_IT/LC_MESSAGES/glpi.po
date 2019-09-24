@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-24 10:28+0200\n"
+"POT-Creation-Date: 2019-09-24 13:08+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/siveo/teams/72118/it_IT/)\n"
@@ -98,8 +98,8 @@ msgstr ""
 msgid "Display locations"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:156
-msgid "Inventory (GLPI) on a group of machines"
+#: modules/glpi/infoPackage.inc.php:157
+msgid "Inventory (GLPI) on machine"
 msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:160
@@ -140,10 +140,6 @@ msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:187
 msgid "Connections tab (GLPI)"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:192
-msgid "Inventory (GLPI) on machine"
 msgstr ""
 
 #: modules/glpi/includes/html.php:49

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-24 10:28+0200\n"
+"POT-Creation-Date: 2019-09-24 13:08+0200\n"
 "PO-Revision-Date: 2017-09-12 12:18+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -435,7 +435,7 @@ msgid "Backup size (new) [Mb]"
 msgstr "[Mb]"
 
 #: modules/backuppc/backuppc/hostSummary.php:262
-#: modules/backuppc/backuppc/BrowseShareNames.php:68
+#: modules/backuppc/backuppc/BrowseShareNames.php:171
 msgid "Browse"
 msgstr "浏览"
 
@@ -710,7 +710,7 @@ msgstr "排除的档案"
 
 #: modules/backuppc/backuppc/edit.php:142
 #: modules/backuppc/backuppc/EditBackupProfile.php:149
-#: modules/backuppc/backuppc/BrowseShareNames.php:60
+#: modules/backuppc/backuppc/BrowseShareNames.php:163
 #: modules/backuppc/backuppc/fileSearch.php:127
 msgid "Folder"
 msgstr "资料夹"
@@ -737,7 +737,7 @@ msgstr "XferLog"
 msgid "Error log"
 msgstr "错误记录"
 
-#: modules/backuppc/backuppc/BrowseShareNames.php:34
+#: modules/backuppc/backuppc/BrowseShareNames.php:137
 msgid "Browse backup"
 msgstr "浏览备份"
 

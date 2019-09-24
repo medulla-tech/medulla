@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-24 10:28+0200\n"
+"POT-Creation-Date: 2019-09-24 13:08+0200\n"
 "PO-Revision-Date: 2017-09-12 12:18+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -436,7 +436,7 @@ msgid "Backup size (new) [Mb]"
 msgstr ""
 
 #: modules/backuppc/backuppc/hostSummary.php:262
-#: modules/backuppc/backuppc/BrowseShareNames.php:68
+#: modules/backuppc/backuppc/BrowseShareNames.php:171
 msgid "Browse"
 msgstr ""
 
@@ -711,7 +711,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/edit.php:142
 #: modules/backuppc/backuppc/EditBackupProfile.php:149
-#: modules/backuppc/backuppc/BrowseShareNames.php:60
+#: modules/backuppc/backuppc/BrowseShareNames.php:163
 #: modules/backuppc/backuppc/fileSearch.php:127
 msgid "Folder"
 msgstr ""
@@ -738,7 +738,7 @@ msgstr ""
 msgid "Error log"
 msgstr ""
 
-#: modules/backuppc/backuppc/BrowseShareNames.php:34
+#: modules/backuppc/backuppc/BrowseShareNames.php:137
 msgid "Browse backup"
 msgstr ""
 
