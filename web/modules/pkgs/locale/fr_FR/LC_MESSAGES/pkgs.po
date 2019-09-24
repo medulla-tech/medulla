@@ -418,7 +418,7 @@ msgstr "Mise en file"
 
 #: modules/pkgs/pkgs/edit.php:369 modules/pkgs/pkgs/add.php:281
 msgid "Dependencies"
-msgstr ""
+msgstr "Dépendances"
 
 #: modules/pkgs/pkgs/edit.php:443
 msgid "File"
@@ -573,7 +573,7 @@ msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:34
 msgid "Execute script"
-msgstr ""
+msgstr "Éxecuter le script"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:92
 msgid "Script"
@@ -597,7 +597,7 @@ msgstr "Variable d'environnement"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:25
 msgid "Run command"
-msgstr ""
+msgstr "Éxecuter la commande"
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151
