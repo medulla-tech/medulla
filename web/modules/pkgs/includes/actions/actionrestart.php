@@ -1,5 +1,5 @@
 <?php
-
+require_once("../../../../includes/i18n.inc.php");
 // {
 //     "action": "actionrestart",
 //     "step": 0,
