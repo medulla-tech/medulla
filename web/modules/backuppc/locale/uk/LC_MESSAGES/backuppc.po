@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-11 14:24+0200\n"
+"POT-Creation-Date: 2019-09-16 17:41+0200\n"
 "PO-Revision-Date: 2017-09-12 12:18+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -22,17 +22,159 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:70
-msgid "Edit fileset"
-msgstr "Змінити набір файлів"
+#: modules/backuppc/infoPackage.inc.php:33
+#: modules/backuppc/infoPackage.inc.php:38
+msgid "Backup"
+msgstr "Резервування"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:72
-#: modules/backuppc/backuppc/localSidebar.php:29
-msgid "Add fileset"
-msgstr "Додати набір файлів"
+#: modules/backuppc/infoPackage.inc.php:42
+#: modules/backuppc/backuppc/index.php:62
+msgid "Backup status"
+msgstr "Стан резервного копіювання"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:75
+#: modules/backuppc/infoPackage.inc.php:45
+msgid "Host backup status"
+msgstr "Стан копіювання вузла"
+
+#: modules/backuppc/infoPackage.inc.php:48
+msgid "Host summary"
+msgstr "Резюме щодо вузла"
+
+#: modules/backuppc/infoPackage.inc.php:51
+msgid "Edit host config"
+msgstr "Змінити налаштування вузла"
+
+#: modules/backuppc/infoPackage.inc.php:54
+#: modules/backuppc/backuppc/hostStatus.php:324
+msgid "Advanced scripts"
+msgstr "Додаткові скрипти"
+
+#: modules/backuppc/infoPackage.inc.php:57
+#: modules/backuppc/backuppc/hostStatus.php:325
+msgid "File search"
+msgstr "Пошук файлів"
+
+#: modules/backuppc/infoPackage.inc.php:62
+msgid "Edit Backup Profile"
+msgstr "Змінити профіль копіювання"
+
+#: modules/backuppc/infoPackage.inc.php:66
+msgid "Edit Backup period Profile"
+msgstr "Змінити профіль періоду копіювання"
+
+#: modules/backuppc/infoPackage.inc.php:70
+msgid "See pending packages"
+msgstr "Переглянути пакунки з черги"
+
+#: modules/backuppc/infoPackage.inc.php:73
+msgid "Restore points"
+msgstr "Точки відновлення"
+
+#: modules/backuppc/infoPackage.inc.php:76
+msgid "Share names"
+msgstr "Назви спільних ресурсів"
+
+#: modules/backuppc/infoPackage.inc.php:79
+#: modules/backuppc/backuppc/BrowseFiles.php:32
+msgid "Browse files"
+msgstr "Переглянути файли"
+
+#: modules/backuppc/infoPackage.inc.php:82
+msgid "Backup Profiles"
+msgstr "Профілі копіювання"
+
+#: modules/backuppc/infoPackage.inc.php:85
+#: modules/backuppc/backuppc/ViewProfiles.php:40
+#: modules/backuppc/backuppc/ViewProfiles.php:90
+msgid "Delete profile"
+msgstr "Вилучити профіль"
+
+#: modules/backuppc/infoPackage.inc.php:91
+msgid "Download files/ZIP from backup"
+msgstr "Отримати файли/ZIP з копії"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
+#: modules/backuppc/backuppc/ajaxFileSearch.php:28
+msgid "GB"
+msgstr "ГБ"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
+#: modules/backuppc/backuppc/ajaxFileSearch.php:30
+msgid "MB"
+msgstr "МБ"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
+#: modules/backuppc/backuppc/ajaxFileSearch.php:32
+msgid "KB"
+msgstr "кБ"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
+#: modules/backuppc/backuppc/ajaxFileSearch.php:34
+msgid "Bytes"
+msgstr "Байти"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:106
+msgid "Current directory :  "
+msgstr "Поточний каталог: "
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:132
+#: modules/backuppc/backuppc/viewFileVersions.php:25
+msgid "View all versions"
+msgstr "Переглянути усі версії"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:170
+#: modules/backuppc/backuppc/ajaxFileSearch.php:118
+msgid "Size"
+msgstr "Розмір"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
+msgid "Download selected (ZIP)"
+msgstr "Отримати позначене (ZIP)"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
+msgid "Restore to host (overwrite)"
+msgstr "Відновити на вузлі (перезаписати)"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:193
+msgid "Restore to host (subfolder)"
+msgstr "Відновити на вузлі (до підтеки)"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:194
+msgid "Advanced restore"
+msgstr "Розширене відновлення"
+
+#: modules/backuppc/backuppc/deleteProfile.php:43
+msgid "The profile has been deleted successfully."
+msgstr "Профіль успішно вилучено."
+
+#: modules/backuppc/backuppc/deleteProfile.php:46
+msgid "Failed to delete the selected profile"
+msgstr "Не вдалося вилучити позначений профіль"
+
+#: modules/backuppc/backuppc/deleteProfile.php:58
+msgid "Error : Default profiles cannot be deleted"
+msgstr "Помилка: типові профілі не можна вилучати"
+
+#: modules/backuppc/backuppc/deleteProfile.php:60
+msgid "Delete this profile"
+msgstr "Вилучити цей профіль"
+
+#: modules/backuppc/backuppc/ajaxFileSearch.php:116
+msgid "File"
+msgstr "Файл"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:77
+msgid "Edit schedule"
+msgstr "Змінити розклад"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:79
+#: modules/backuppc/backuppc/edit.php:232
+#: modules/backuppc/backuppc/localSidebar.php:30
+msgid "Add schedule"
+msgstr "Додати розклад"
+
 #: modules/backuppc/backuppc/EditPeriodProfile.php:86
+#: modules/backuppc/backuppc/EditBackupProfile.php:75
 msgid ""
 "Default profiles can't be modified. Your changes will be saved as a new "
 "profile."
@@ -40,109 +182,119 @@ msgstr ""
 "Не можна вносити зміни до типових профілів. Ваші зміни буде збережено у "
 "новому профілі."
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:88
 #: modules/backuppc/backuppc/EditPeriodProfile.php:97
+#: modules/backuppc/backuppc/EditBackupProfile.php:88
 msgid "Name"
 msgstr "Назва"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:97
-#: modules/backuppc/backuppc/edit.php:89
-msgid "Windows-1252 - Western Europe"
-msgstr "Windows-1252 — західноєвропейська"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:103
+#: modules/backuppc/backuppc/edit.php:173
+msgid "Interval between two full backups (days)"
+msgstr "Інтервал між двома повними резервними копіюваннями (у днях)"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:98
-#: modules/backuppc/backuppc/edit.php:90
-msgid "Windows-874 - Thai"
-msgstr "Windows-874 — тайська"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:109
+#: modules/backuppc/backuppc/edit.php:178
+msgid "Interval between two incr backups (days)"
+msgstr "Інтервал між двома нарощувальними резервними копіюваннями (у днях)"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:99
-#: modules/backuppc/backuppc/edit.php:91
-msgid "Windows-932 - Japanese"
-msgstr "Windows-932 — японські ієрогліфи"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:114
+#: modules/backuppc/backuppc/edit.php:182
+msgid "Monday"
+msgstr "понеділок"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:100
-#: modules/backuppc/backuppc/edit.php:92
-msgid "Windows-936 - Chinese (simplified)"
-msgstr "Windows-936 — китайські ієрогліфи (спрощені)"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:115
+#: modules/backuppc/backuppc/edit.php:183
+msgid "Tuesday"
+msgstr "вівторок"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:101
-#: modules/backuppc/backuppc/edit.php:93
-msgid "Windows-949 - Korean"
-msgstr "Windows-949 — корейські ієрогліфи"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:116
+#: modules/backuppc/backuppc/edit.php:184
+msgid "Wednesday"
+msgstr "середу"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:102
-#: modules/backuppc/backuppc/edit.php:94
-msgid "Windows-950 - Chinese (traditional)"
-msgstr "Windows-950 — китайські ієрогліфи (традиційні)"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:117
+#: modules/backuppc/backuppc/edit.php:185
+msgid "Thursday"
+msgstr "четвер"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:103
-#: modules/backuppc/backuppc/edit.php:95
-msgid "Windows-1250 - Latin (Central Europe)"
-msgstr "Windows-1250 — латиниця (Центральна Європа)"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:118
+#: modules/backuppc/backuppc/edit.php:186
+msgid "Friday"
+msgstr "п'ятницю"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:104
-#: modules/backuppc/backuppc/edit.php:96
-msgid "Windows-1251 - Cyrillic"
-msgstr "Windows-1251, кирилиця"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:119
+#: modules/backuppc/backuppc/edit.php:187
+msgid "Saturday"
+msgstr "суботу"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:105
-#: modules/backuppc/backuppc/edit.php:97
-msgid "Windows-1253 - Greek"
-msgstr "Windows-1253 — грецька"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:120
+#: modules/backuppc/backuppc/edit.php:188
+msgid "Sunday"
+msgstr "неділю"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:106
-#: modules/backuppc/backuppc/edit.php:98
-msgid "Windows-1254 - Turkish"
-msgstr "Windows-1254 — турецька"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:144
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
+#: modules/backuppc/backuppc/edit.php:211
+msgid "to"
+msgstr "до"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:107
-#: modules/backuppc/backuppc/edit.php:99
-msgid "Windows-1255 - Hebrew"
-msgstr "Windows-1255 — іврит"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:146
+#: modules/backuppc/backuppc/edit.php:213
+msgid "on"
+msgstr "у"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:108
-#: modules/backuppc/backuppc/edit.php:100
-msgid "Windows-1256 - Arabic"
-msgstr "Windows-1256 — арабська"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:109
-#: modules/backuppc/backuppc/edit.php:101
-msgid "Windows-1257 - Latin (Baltic languages)"
-msgstr "Windows-1257 — латиниця (балтійські мови)"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:110
-#: modules/backuppc/backuppc/edit.php:102
-msgid "Windows-1258 - Vietnamese"
-msgstr "Windows-1258 — в'єтнамська"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:119
-#: modules/backuppc/backuppc/edit.php:110
-msgid "Client encoding"
-msgstr "Кодування клієнта"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:136
-#: modules/backuppc/backuppc/edit.php:129
-msgid "Excluded files"
-msgstr "Виключені файли"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:138
+#: modules/backuppc/backuppc/EditPeriodProfile.php:148
 #: modules/backuppc/backuppc/edit.php:131
 #: modules/backuppc/backuppc/edit.php:215
-#: modules/backuppc/backuppc/EditPeriodProfile.php:148
+#: modules/backuppc/backuppc/EditBackupProfile.php:138
 msgid "Remove"
 msgstr "Вилучити"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:149
-#: modules/backuppc/backuppc/edit.php:142
-#: modules/backuppc/backuppc/fileSearch.php:127
-#: modules/backuppc/backuppc/BrowseShareNames.php:60
-msgid "Folder"
-msgstr "Тека"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:160
+#: modules/backuppc/backuppc/edit.php:227
+msgid "Do not backup from"
+msgstr "Не копіювати з"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:155
-#: modules/backuppc/backuppc/edit.php:147
-msgid "Add folder"
-msgstr "Додати теку"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:168
+msgid "Add exclusion"
+msgstr "Додати виключення"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:201
+#: modules/backuppc/backuppc/EditPeriodProfile.php:202
+#: modules/backuppc/backuppc/EditPeriodProfile.php:226
+#: modules/backuppc/backuppc/EditPeriodProfile.php:227
+#: modules/backuppc/backuppc/edit.php:284
+#: modules/backuppc/backuppc/edit.php:285
+msgid "Select days"
+msgstr "Вибрати дні"
+
+#: modules/backuppc/backuppc/startBackup.php:74
+msgid "Choose the backup type."
+msgstr "Виберіть тип резервного копіювання."
+
+#: modules/backuppc/backuppc/startBackup.php:78
+msgid "Full backup"
+msgstr "Повне копіювання"
+
+#: modules/backuppc/backuppc/startBackup.php:79
+msgid "Incremental backup"
+msgstr "Нарощувальне копіювання"
+
+#: modules/backuppc/backuppc/restorePopup.php:25
+msgid "Restore files"
+msgstr "Відновити файли"
+
+#: modules/backuppc/backuppc/restorePopup.php:26
+msgid "Host"
+msgstr "Вузол"
+
+#: modules/backuppc/backuppc/restorePopup.php:35
+msgid "Destination Folder"
+msgstr "Тека призначення"
+
+#: modules/backuppc/backuppc/restorePopup.php:37
+msgid "Restore"
+msgstr "Відновити"
 
 #: modules/backuppc/backuppc/advScripts.php:40
 #: modules/backuppc/backuppc/hostStatus.php:302
@@ -165,78 +317,19 @@ msgstr "Скрипт перед відновленням"
 msgid "Post-restore script"
 msgstr "Скрипт після відновлення"
 
-#: modules/backuppc/backuppc/viewXferLog.php:25
-msgid "XferLog"
-msgstr "XferLog"
+#: modules/backuppc/backuppc/ajaxHostsList.php:57
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:91
+msgid "Host name"
+msgstr "Назва вузла"
 
-#: modules/backuppc/backuppc/viewXferLog.php:35
-msgid "Error log"
-msgstr "Журнал помилок"
+#: modules/backuppc/backuppc/ajaxHostsList.php:64
+#: modules/backuppc/backuppc/BrowseBackups.php:68
+msgid "View"
+msgstr "Перегляд"
 
-#: modules/backuppc/backuppc/hostStatus.php:148
-msgid "Notify Error : Backup configuration Computer"
-msgstr "Помилка: комп'ютер налаштувань резервного копіювання"
-
-#: modules/backuppc/backuppc/hostStatus.php:162
-#: modules/backuppc/backuppc/hostStatus.php:291
-msgid "Notify Computer :"
-msgstr "Комп'ютер сповіщення:"
-
-#: modules/backuppc/backuppc/hostStatus.php:162
-msgid "has been added to backup system successfully."
-msgstr "успішно додано до системи резервного копіювання."
-
-#: modules/backuppc/backuppc/hostStatus.php:173
-#, php-format
-msgid ""
-"Computer %s has been added to backup system successfully.<br />You can now "
-"configure its filesets and scheduling."
-msgstr ""
-"Комп'ютер %s успішно додано до системи резервного копіювання.<br />Тепер ви "
-"можете налаштувати для нього набори файлів і створити план резервного "
-"копіювання."
-
-#: modules/backuppc/backuppc/hostStatus.php:291
-msgid "Save configure host "
-msgstr "Зберегти налаштування вузла "
-
-#: modules/backuppc/backuppc/hostStatus.php:316
-#, php-format
-msgid "%s's backup status"
-msgstr "Стан резервного копіювання %s"
-
-#: modules/backuppc/backuppc/hostStatus.php:319
-msgid "Summary"
-msgstr "Резюме"
-
-#: modules/backuppc/backuppc/hostStatus.php:323
-msgid "Configuration"
-msgstr "Налаштування"
-
-#: modules/backuppc/backuppc/hostStatus.php:324
-#: modules/backuppc/infoPackage.inc.php:54
-msgid "Advanced scripts"
-msgstr "Додаткові скрипти"
-
-#: modules/backuppc/backuppc/hostStatus.php:325
-#: modules/backuppc/infoPackage.inc.php:57
-msgid "File search"
-msgstr "Пошук файлів"
-
-#: modules/backuppc/backuppc/localSidebar.php:27
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
-msgid "Status"
-msgstr "Стан"
-
-#: modules/backuppc/backuppc/localSidebar.php:28
-msgid "Profiles"
-msgstr "Профілі"
-
-#: modules/backuppc/backuppc/localSidebar.php:30
-#: modules/backuppc/backuppc/edit.php:232
-#: modules/backuppc/backuppc/EditPeriodProfile.php:79
-msgid "Add schedule"
-msgstr "Додати розклад"
+#: modules/backuppc/backuppc/ajaxHostsList.php:65
+msgid "Edit config"
+msgstr "Редагувати налаштування"
 
 #: modules/backuppc/backuppc/hostSummary.php:94
 msgid "Action requested successfully"
@@ -358,382 +451,9 @@ msgstr "Вибрати"
 msgid "View errors"
 msgstr "Перегляд помилок"
 
-#: modules/backuppc/backuppc/edit.php:43
-msgid "Host backup is not set."
-msgstr "Вузол резервного копіювання не встановлено."
-
-#: modules/backuppc/backuppc/edit.php:66
-msgid "Enabled"
-msgstr "Увімкнено"
-
-#: modules/backuppc/backuppc/edit.php:73
-#: modules/backuppc/backuppc/edit.php:158
-msgid "Custom"
-msgstr "Нетиповий"
-
-#: modules/backuppc/backuppc/edit.php:81
-#: modules/backuppc/backuppc/ViewProfiles.php:68
-msgid "Fileset"
-msgstr "Набір файлів"
-
-#: modules/backuppc/backuppc/edit.php:166
-#: modules/backuppc/backuppc/ViewProfiles.php:118
-msgid "Schedule"
-msgstr "Розклад"
-
-#: modules/backuppc/backuppc/edit.php:173
-#: modules/backuppc/backuppc/EditPeriodProfile.php:103
-msgid "Interval between two full backups (days)"
-msgstr "Інтервал між двома повними резервними копіюваннями (у днях)"
-
-#: modules/backuppc/backuppc/edit.php:178
-#: modules/backuppc/backuppc/EditPeriodProfile.php:109
-msgid "Interval between two incr backups (days)"
-msgstr "Інтервал між двома нарощувальними резервними копіюваннями (у днях)"
-
-#: modules/backuppc/backuppc/edit.php:182
-#: modules/backuppc/backuppc/EditPeriodProfile.php:114
-msgid "Monday"
-msgstr "понеділок"
-
-#: modules/backuppc/backuppc/edit.php:183
-#: modules/backuppc/backuppc/EditPeriodProfile.php:115
-msgid "Tuesday"
-msgstr "вівторок"
-
-#: modules/backuppc/backuppc/edit.php:184
-#: modules/backuppc/backuppc/EditPeriodProfile.php:116
-msgid "Wednesday"
-msgstr "середу"
-
-#: modules/backuppc/backuppc/edit.php:185
-#: modules/backuppc/backuppc/EditPeriodProfile.php:117
-msgid "Thursday"
-msgstr "четвер"
-
-#: modules/backuppc/backuppc/edit.php:186
-#: modules/backuppc/backuppc/EditPeriodProfile.php:118
-msgid "Friday"
-msgstr "п'ятницю"
-
-#: modules/backuppc/backuppc/edit.php:187
-#: modules/backuppc/backuppc/EditPeriodProfile.php:119
-msgid "Saturday"
-msgstr "суботу"
-
-#: modules/backuppc/backuppc/edit.php:188
-#: modules/backuppc/backuppc/EditPeriodProfile.php:120
-msgid "Sunday"
-msgstr "неділю"
-
-#: modules/backuppc/backuppc/edit.php:211
-#: modules/backuppc/backuppc/EditPeriodProfile.php:144
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
-msgid "to"
-msgstr "до"
-
-#: modules/backuppc/backuppc/edit.php:213
-#: modules/backuppc/backuppc/EditPeriodProfile.php:146
-msgid "on"
-msgstr "у"
-
-#: modules/backuppc/backuppc/edit.php:227
-#: modules/backuppc/backuppc/EditPeriodProfile.php:160
-msgid "Do not backup from"
-msgstr "Не копіювати з"
-
-#: modules/backuppc/backuppc/edit.php:284
-#: modules/backuppc/backuppc/edit.php:285
-#: modules/backuppc/backuppc/EditPeriodProfile.php:201
-#: modules/backuppc/backuppc/EditPeriodProfile.php:202
-#: modules/backuppc/backuppc/EditPeriodProfile.php:226
-#: modules/backuppc/backuppc/EditPeriodProfile.php:227
-msgid "Select days"
-msgstr "Вибрати дні"
-
-#: modules/backuppc/backuppc/viewFileVersions.php:25
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:132
-msgid "View all versions"
-msgstr "Переглянути усі версії"
-
-#: modules/backuppc/backuppc/viewFileVersions.php:37
-msgid "No other version."
-msgstr "Немає іншої версії."
-
-#: modules/backuppc/backuppc/viewFileVersions.php:49
-msgid "Restore from "
-msgstr "Відновити з "
-
-#: modules/backuppc/backuppc/startBackup.php:74
-msgid "Choose the backup type."
-msgstr "Виберіть тип резервного копіювання."
-
-#: modules/backuppc/backuppc/startBackup.php:78
-msgid "Full backup"
-msgstr "Повне копіювання"
-
-#: modules/backuppc/backuppc/startBackup.php:79
-msgid "Incremental backup"
-msgstr "Нарощувальне копіювання"
-
-#: modules/backuppc/backuppc/deleteProfile.php:43
-msgid "The profile has been deleted successfully."
-msgstr "Профіль успішно вилучено."
-
-#: modules/backuppc/backuppc/deleteProfile.php:46
-msgid "Failed to delete the selected profile"
-msgstr "Не вдалося вилучити позначений профіль"
-
-#: modules/backuppc/backuppc/deleteProfile.php:58
-msgid "Error : Default profiles cannot be deleted"
-msgstr "Помилка: типові профілі не можна вилучати"
-
-#: modules/backuppc/backuppc/deleteProfile.php:60
-msgid "Delete this profile"
-msgstr "Вилучити цей профіль"
-
-#: modules/backuppc/backuppc/ajaxFileSearch.php:28
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
-msgid "GB"
-msgstr "ГБ"
-
-#: modules/backuppc/backuppc/ajaxFileSearch.php:30
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
-msgid "MB"
-msgstr "МБ"
-
-#: modules/backuppc/backuppc/ajaxFileSearch.php:32
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
-msgid "KB"
-msgstr "кБ"
-
-#: modules/backuppc/backuppc/ajaxFileSearch.php:34
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
-msgid "Bytes"
-msgstr "Байти"
-
-#: modules/backuppc/backuppc/ajaxFileSearch.php:116
-msgid "File"
-msgstr "Файл"
-
-#: modules/backuppc/backuppc/ajaxFileSearch.php:118
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:170
-msgid "Size"
-msgstr "Розмір"
-
-#: modules/backuppc/backuppc/BrowseFiles.php:32
-#: modules/backuppc/infoPackage.inc.php:79
-msgid "Browse files"
-msgstr "Переглянути файли"
-
-#: modules/backuppc/backuppc/restoreZip.php:52
-msgid ""
-"Your ZIP file is being prepared, please wait.<br/>Please use 7zip to open "
-"this archive (for proper special characters handling)."
-msgstr ""
-"Приготування вашого файла ZIP ще не завершено, будь ласка, "
-"зачекайте.<br/>Будь ласка, скористайтеся 7zip, щоб відкрити цей архів (для "
-"належної обробки спеціальних символів)."
-
-#: modules/backuppc/backuppc/ajaxRestoreFile.php:30
-msgid "Your file is being prepared, please wait."
-msgstr "Приготування вашого файла ще не завершено, будь ласка, зачекайте."
-
-#: modules/backuppc/backuppc/restoreToHost.php:51
-msgid "No file selected."
-msgstr "Не позначено жодного файла."
-
-#: modules/backuppc/backuppc/restoreToHost.php:58
-msgid "The selected files are going to be restored to"
-msgstr "Позначені файли буде відновлено до"
-
 #: modules/backuppc/backuppc/ajaxGetStatus.php:39
 msgid "Error while retrieving status."
 msgstr "Помилка під час спроби отримати стан."
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:77
-msgid "Edit schedule"
-msgstr "Змінити розклад"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:168
-msgid "Add exclusion"
-msgstr "Додати виключення"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:43
-msgid "Requested restores"
-msgstr "Запитані відновлення"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:63
-msgid "Download"
-msgstr "Отримати"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
-msgid "Latest direct restore to host"
-msgstr "Останнє безпосереднє відновлення на вузлі"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:111
-msgid "Destination"
-msgstr "Призначення"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:112
-msgid "Restore time"
-msgstr "Час відновлення"
-
-#: modules/backuppc/backuppc/fileSearch.php:53
-msgid "There is no backup for this machine yet."
-msgstr "Для цієї машини ще немає резервних копій."
-
-#: modules/backuppc/backuppc/fileSearch.php:83
-msgid "File name"
-msgstr "Назва файла"
-
-#: modules/backuppc/backuppc/fileSearch.php:92
-#: modules/backuppc/backuppc/fileSearch.php:114
-msgid "All"
-msgstr "Всі"
-
-#: modules/backuppc/backuppc/fileSearch.php:95
-#: modules/backuppc/backuppc/BrowseBackups.php:59
-msgid "Backup#"
-msgstr "№ копії"
-
-#: modules/backuppc/backuppc/fileSearch.php:105
-msgid "Date"
-msgstr "Дата"
-
-#: modules/backuppc/backuppc/fileSearch.php:149
-msgid "Any size"
-msgstr "Будь-якого розміру"
-
-#: modules/backuppc/backuppc/fileSearch.php:150
-msgid "Less than 1 Mb"
-msgstr "Мерше за 1 МБ"
-
-#: modules/backuppc/backuppc/fileSearch.php:151
-msgid "1 Mb to 10 Mb"
-msgstr "Від 1 МБ до 10 МБ"
-
-#: modules/backuppc/backuppc/fileSearch.php:152
-msgid "10 Mb to 100 Mb"
-msgstr "Від 10 МБ до 100 МБ"
-
-#: modules/backuppc/backuppc/fileSearch.php:153
-msgid "Greater than 100 Mb"
-msgstr "Понад 100 МБ"
-
-#: modules/backuppc/backuppc/fileSearch.php:164
-msgid "File size"
-msgstr "Розмір файла"
-
-#: modules/backuppc/backuppc/fileSearch.php:181
-msgid "Search"
-msgstr "Пошук"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:27
-msgid "Filesets"
-msgstr "Набори файлів"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:39
-#: modules/backuppc/backuppc/ViewProfiles.php:89
-msgid "Edit profile"
-msgstr "Змінити профіль"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:40
-#: modules/backuppc/backuppc/ViewProfiles.php:90
-#: modules/backuppc/infoPackage.inc.php:85
-msgid "Delete profile"
-msgstr "Вилучити профіль"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:85
-msgid "Schedules"
-msgstr "Розклади"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:133
-msgid "Linux (User files)"
-msgstr "Linux (файли користувачів)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:134
-msgid "Linux (Whole drive)"
-msgstr "Linux (увесь диск)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:135
-msgid "macOS (User files)"
-msgstr "macOS (файли користувачів)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:136
-msgid "macOS (Whole drive)"
-msgstr "macOS (увесь диск)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:137
-msgid "Windows 7/Vista (User files)"
-msgstr "Windows 7/Vista (файли користувачів)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:138
-msgid "Windows 7/Vista (Whole C: Drive)"
-msgstr "Windows 7/Vista (увесь диск C:)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:139
-msgid "Windows XP (User files)"
-msgstr "Windows XP (файли користувачів)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:140
-msgid "Windows XP (Whole C: Drive)"
-msgstr "Windows XP (увесь диск C:)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:141
-msgid "Daytime"
-msgstr "Щодня"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:142
-msgid "Nightly"
-msgstr "Щоночі"
-
-#: modules/backuppc/backuppc/BrowseBackups.php:28
-msgid "View restore points"
-msgstr "Переглянути точки відновлення"
-
-#: modules/backuppc/backuppc/BrowseBackups.php:68
-#: modules/backuppc/backuppc/ajaxHostsList.php:64
-msgid "View"
-msgstr "Перегляд"
-
-#: modules/backuppc/backuppc/index.php:58
-msgid "The computer has been removed from the backup system."
-msgstr "Комп'ютер було вилучено із системи резервного копіювання."
-
-#: modules/backuppc/backuppc/index.php:62
-#: modules/backuppc/infoPackage.inc.php:42
-msgid "Backup status"
-msgstr "Стан резервного копіювання"
-
-#: modules/backuppc/backuppc/ajaxHostsList.php:57
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:91
-msgid "Host name"
-msgstr "Назва вузла"
-
-#: modules/backuppc/backuppc/ajaxHostsList.php:65
-msgid "Edit config"
-msgstr "Редагувати налаштування"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:106
-msgid "Current directory :  "
-msgstr "Поточний каталог: "
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
-msgid "Download selected (ZIP)"
-msgstr "Отримати позначене (ZIP)"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
-msgid "Restore to host (overwrite)"
-msgstr "Відновити на вузлі (перезаписати)"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:193
-msgid "Restore to host (subfolder)"
-msgstr "Відновити на вузлі (до підтеки)"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:194
-msgid "Advanced restore"
-msgstr "Розширене відновлення"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:53
 msgid "No entry found."
@@ -779,25 +499,302 @@ msgstr "Скасувати копіювання"
 msgid "Are you sure you want to unset backup for this computer?"
 msgstr "Ви справді хочете скасувати резервне копіювання для цього комп'ютера"
 
-#: modules/backuppc/backuppc/restorePopup.php:25
-msgid "Restore files"
-msgstr "Відновити файли"
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:43
+msgid "Requested restores"
+msgstr "Запитані відновлення"
 
-#: modules/backuppc/backuppc/restorePopup.php:26
-msgid "Host"
-msgstr "Вузол"
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:63
+msgid "Download"
+msgstr "Отримати"
 
-#: modules/backuppc/backuppc/restorePopup.php:35
-msgid "Destination Folder"
-msgstr "Тека призначення"
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
+msgid "Latest direct restore to host"
+msgstr "Останнє безпосереднє відновлення на вузлі"
 
-#: modules/backuppc/backuppc/restorePopup.php:37
-msgid "Restore"
-msgstr "Відновити"
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:111
+msgid "Destination"
+msgstr "Призначення"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:112
+msgid "Restore time"
+msgstr "Час відновлення"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
+#: modules/backuppc/backuppc/localSidebar.php:27
+msgid "Status"
+msgstr "Стан"
+
+#: modules/backuppc/backuppc/BrowseBackups.php:28
+msgid "View restore points"
+msgstr "Переглянути точки відновлення"
+
+#: modules/backuppc/backuppc/BrowseBackups.php:59
+#: modules/backuppc/backuppc/fileSearch.php:95
+msgid "Backup#"
+msgstr "№ копії"
+
+#: modules/backuppc/backuppc/viewFileVersions.php:37
+msgid "No other version."
+msgstr "Немає іншої версії."
+
+#: modules/backuppc/backuppc/viewFileVersions.php:49
+msgid "Restore from "
+msgstr "Відновити з "
+
+#: modules/backuppc/backuppc/index.php:58
+msgid "The computer has been removed from the backup system."
+msgstr "Комп'ютер було вилучено із системи резервного копіювання."
+
+#: modules/backuppc/backuppc/restoreZip.php:52
+msgid ""
+"Your ZIP file is being prepared, please wait.<br/>Please use 7zip to open "
+"this archive (for proper special characters handling)."
+msgstr ""
+"Приготування вашого файла ZIP ще не завершено, будь ласка, "
+"зачекайте.<br/>Будь ласка, скористайтеся 7zip, щоб відкрити цей архів (для "
+"належної обробки спеціальних символів)."
+
+#: modules/backuppc/backuppc/ViewProfiles.php:27
+msgid "Filesets"
+msgstr "Набори файлів"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:39
+#: modules/backuppc/backuppc/ViewProfiles.php:89
+msgid "Edit profile"
+msgstr "Змінити профіль"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:68
+#: modules/backuppc/backuppc/edit.php:81
+msgid "Fileset"
+msgstr "Набір файлів"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:85
+msgid "Schedules"
+msgstr "Розклади"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:118
+#: modules/backuppc/backuppc/edit.php:166
+msgid "Schedule"
+msgstr "Розклад"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:133
+msgid "Linux (User files)"
+msgstr "Linux (файли користувачів)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:134
+msgid "Linux (Whole drive)"
+msgstr "Linux (увесь диск)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:135
+msgid "macOS (User files)"
+msgstr "macOS (файли користувачів)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:136
+msgid "macOS (Whole drive)"
+msgstr "macOS (увесь диск)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:137
+msgid "Windows 7/Vista (User files)"
+msgstr "Windows 7/Vista (файли користувачів)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:138
+msgid "Windows 7/Vista (Whole C: Drive)"
+msgstr "Windows 7/Vista (увесь диск C:)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:139
+msgid "Windows XP (User files)"
+msgstr "Windows XP (файли користувачів)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:140
+msgid "Windows XP (Whole C: Drive)"
+msgstr "Windows XP (увесь диск C:)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:141
+msgid "Daytime"
+msgstr "Щодня"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:142
+msgid "Nightly"
+msgstr "Щоночі"
+
+#: modules/backuppc/backuppc/restoreToHost.php:51
+msgid "No file selected."
+msgstr "Не позначено жодного файла."
+
+#: modules/backuppc/backuppc/restoreToHost.php:58
+msgid "The selected files are going to be restored to"
+msgstr "Позначені файли буде відновлено до"
+
+#: modules/backuppc/backuppc/edit.php:43
+msgid "Host backup is not set."
+msgstr "Вузол резервного копіювання не встановлено."
+
+#: modules/backuppc/backuppc/edit.php:66
+msgid "Enabled"
+msgstr "Увімкнено"
+
+#: modules/backuppc/backuppc/edit.php:73
+#: modules/backuppc/backuppc/edit.php:158
+msgid "Custom"
+msgstr "Нетиповий"
+
+#: modules/backuppc/backuppc/edit.php:89
+#: modules/backuppc/backuppc/EditBackupProfile.php:97
+msgid "Windows-1252 - Western Europe"
+msgstr "Windows-1252 — західноєвропейська"
+
+#: modules/backuppc/backuppc/edit.php:90
+#: modules/backuppc/backuppc/EditBackupProfile.php:98
+msgid "Windows-874 - Thai"
+msgstr "Windows-874 — тайська"
+
+#: modules/backuppc/backuppc/edit.php:91
+#: modules/backuppc/backuppc/EditBackupProfile.php:99
+msgid "Windows-932 - Japanese"
+msgstr "Windows-932 — японські ієрогліфи"
+
+#: modules/backuppc/backuppc/edit.php:92
+#: modules/backuppc/backuppc/EditBackupProfile.php:100
+msgid "Windows-936 - Chinese (simplified)"
+msgstr "Windows-936 — китайські ієрогліфи (спрощені)"
+
+#: modules/backuppc/backuppc/edit.php:93
+#: modules/backuppc/backuppc/EditBackupProfile.php:101
+msgid "Windows-949 - Korean"
+msgstr "Windows-949 — корейські ієрогліфи"
+
+#: modules/backuppc/backuppc/edit.php:94
+#: modules/backuppc/backuppc/EditBackupProfile.php:102
+msgid "Windows-950 - Chinese (traditional)"
+msgstr "Windows-950 — китайські ієрогліфи (традиційні)"
+
+#: modules/backuppc/backuppc/edit.php:95
+#: modules/backuppc/backuppc/EditBackupProfile.php:103
+msgid "Windows-1250 - Latin (Central Europe)"
+msgstr "Windows-1250 — латиниця (Центральна Європа)"
+
+#: modules/backuppc/backuppc/edit.php:96
+#: modules/backuppc/backuppc/EditBackupProfile.php:104
+msgid "Windows-1251 - Cyrillic"
+msgstr "Windows-1251, кирилиця"
+
+#: modules/backuppc/backuppc/edit.php:97
+#: modules/backuppc/backuppc/EditBackupProfile.php:105
+msgid "Windows-1253 - Greek"
+msgstr "Windows-1253 — грецька"
+
+#: modules/backuppc/backuppc/edit.php:98
+#: modules/backuppc/backuppc/EditBackupProfile.php:106
+msgid "Windows-1254 - Turkish"
+msgstr "Windows-1254 — турецька"
+
+#: modules/backuppc/backuppc/edit.php:99
+#: modules/backuppc/backuppc/EditBackupProfile.php:107
+msgid "Windows-1255 - Hebrew"
+msgstr "Windows-1255 — іврит"
+
+#: modules/backuppc/backuppc/edit.php:100
+#: modules/backuppc/backuppc/EditBackupProfile.php:108
+msgid "Windows-1256 - Arabic"
+msgstr "Windows-1256 — арабська"
+
+#: modules/backuppc/backuppc/edit.php:101
+#: modules/backuppc/backuppc/EditBackupProfile.php:109
+msgid "Windows-1257 - Latin (Baltic languages)"
+msgstr "Windows-1257 — латиниця (балтійські мови)"
+
+#: modules/backuppc/backuppc/edit.php:102
+#: modules/backuppc/backuppc/EditBackupProfile.php:110
+msgid "Windows-1258 - Vietnamese"
+msgstr "Windows-1258 — в'єтнамська"
+
+#: modules/backuppc/backuppc/edit.php:110
+#: modules/backuppc/backuppc/EditBackupProfile.php:119
+msgid "Client encoding"
+msgstr "Кодування клієнта"
+
+#: modules/backuppc/backuppc/edit.php:129
+#: modules/backuppc/backuppc/EditBackupProfile.php:136
+msgid "Excluded files"
+msgstr "Виключені файли"
+
+#: modules/backuppc/backuppc/edit.php:142
+#: modules/backuppc/backuppc/EditBackupProfile.php:149
+#: modules/backuppc/backuppc/BrowseShareNames.php:60
+#: modules/backuppc/backuppc/fileSearch.php:127
+msgid "Folder"
+msgstr "Тека"
+
+#: modules/backuppc/backuppc/edit.php:147
+#: modules/backuppc/backuppc/EditBackupProfile.php:155
+msgid "Add folder"
+msgstr "Додати теку"
+
+#: modules/backuppc/backuppc/EditBackupProfile.php:70
+msgid "Edit fileset"
+msgstr "Змінити набір файлів"
+
+#: modules/backuppc/backuppc/EditBackupProfile.php:72
+#: modules/backuppc/backuppc/localSidebar.php:29
+msgid "Add fileset"
+msgstr "Додати набір файлів"
+
+#: modules/backuppc/backuppc/viewXferLog.php:25
+msgid "XferLog"
+msgstr "XferLog"
+
+#: modules/backuppc/backuppc/viewXferLog.php:35
+msgid "Error log"
+msgstr "Журнал помилок"
 
 #: modules/backuppc/backuppc/BrowseShareNames.php:34
 msgid "Browse backup"
 msgstr "Навігація резервною копією"
+
+#: modules/backuppc/backuppc/fileSearch.php:53
+msgid "There is no backup for this machine yet."
+msgstr "Для цієї машини ще немає резервних копій."
+
+#: modules/backuppc/backuppc/fileSearch.php:83
+msgid "File name"
+msgstr "Назва файла"
+
+#: modules/backuppc/backuppc/fileSearch.php:92
+#: modules/backuppc/backuppc/fileSearch.php:114
+msgid "All"
+msgstr "Всі"
+
+#: modules/backuppc/backuppc/fileSearch.php:105
+msgid "Date"
+msgstr "Дата"
+
+#: modules/backuppc/backuppc/fileSearch.php:149
+msgid "Any size"
+msgstr "Будь-якого розміру"
+
+#: modules/backuppc/backuppc/fileSearch.php:150
+msgid "Less than 1 Mb"
+msgstr "Мерше за 1 МБ"
+
+#: modules/backuppc/backuppc/fileSearch.php:151
+msgid "1 Mb to 10 Mb"
+msgstr "Від 1 МБ до 10 МБ"
+
+#: modules/backuppc/backuppc/fileSearch.php:152
+msgid "10 Mb to 100 Mb"
+msgstr "Від 10 МБ до 100 МБ"
+
+#: modules/backuppc/backuppc/fileSearch.php:153
+msgid "Greater than 100 Mb"
+msgstr "Понад 100 МБ"
+
+#: modules/backuppc/backuppc/fileSearch.php:164
+msgid "File size"
+msgstr "Розмір файла"
+
+#: modules/backuppc/backuppc/fileSearch.php:181
+msgid "Search"
+msgstr "Пошук"
 
 #: modules/backuppc/backuppc/viewHostLog.php:25
 msgid "backup Log"
@@ -807,47 +804,50 @@ msgstr "журнал резервного копіювання"
 msgid "backup log"
 msgstr "журнал резервного копіювання"
 
-#: modules/backuppc/infoPackage.inc.php:33
-#: modules/backuppc/infoPackage.inc.php:38
-msgid "Backup"
-msgstr "Резервування"
+#: modules/backuppc/backuppc/hostStatus.php:148
+msgid "Notify Error : Backup configuration Computer"
+msgstr "Помилка: комп'ютер налаштувань резервного копіювання"
 
-#: modules/backuppc/infoPackage.inc.php:45
-msgid "Host backup status"
-msgstr "Стан копіювання вузла"
+#: modules/backuppc/backuppc/hostStatus.php:162
+#: modules/backuppc/backuppc/hostStatus.php:291
+msgid "Notify Computer :"
+msgstr "Комп'ютер сповіщення:"
 
-#: modules/backuppc/infoPackage.inc.php:48
-msgid "Host summary"
-msgstr "Резюме щодо вузла"
+#: modules/backuppc/backuppc/hostStatus.php:162
+msgid "has been added to backup system successfully."
+msgstr "успішно додано до системи резервного копіювання."
 
-#: modules/backuppc/infoPackage.inc.php:51
-msgid "Edit host config"
-msgstr "Змінити налаштування вузла"
+#: modules/backuppc/backuppc/hostStatus.php:173
+#, php-format
+msgid ""
+"Computer %s has been added to backup system successfully.<br />You can now "
+"configure its filesets and scheduling."
+msgstr ""
+"Комп'ютер %s успішно додано до системи резервного копіювання.<br />Тепер ви "
+"можете налаштувати для нього набори файлів і створити план резервного "
+"копіювання."
 
-#: modules/backuppc/infoPackage.inc.php:62
-msgid "Edit Backup Profile"
-msgstr "Змінити профіль копіювання"
+#: modules/backuppc/backuppc/hostStatus.php:291
+msgid "Save configure host "
+msgstr "Зберегти налаштування вузла "
 
-#: modules/backuppc/infoPackage.inc.php:66
-msgid "Edit Backup period Profile"
-msgstr "Змінити профіль періоду копіювання"
+#: modules/backuppc/backuppc/hostStatus.php:316
+#, php-format
+msgid "%s's backup status"
+msgstr "Стан резервного копіювання %s"
 
-#: modules/backuppc/infoPackage.inc.php:70
-msgid "See pending packages"
-msgstr "Переглянути пакунки з черги"
+#: modules/backuppc/backuppc/hostStatus.php:319
+msgid "Summary"
+msgstr "Резюме"
 
-#: modules/backuppc/infoPackage.inc.php:73
-msgid "Restore points"
-msgstr "Точки відновлення"
+#: modules/backuppc/backuppc/hostStatus.php:323
+msgid "Configuration"
+msgstr "Налаштування"
 
-#: modules/backuppc/infoPackage.inc.php:76
-msgid "Share names"
-msgstr "Назви спільних ресурсів"
+#: modules/backuppc/backuppc/ajaxRestoreFile.php:30
+msgid "Your file is being prepared, please wait."
+msgstr "Приготування вашого файла ще не завершено, будь ласка, зачекайте."
 
-#: modules/backuppc/infoPackage.inc.php:82
-msgid "Backup Profiles"
-msgstr "Профілі копіювання"
-
-#: modules/backuppc/infoPackage.inc.php:91
-msgid "Download files/ZIP from backup"
-msgstr "Отримати файли/ZIP з копії"
+#: modules/backuppc/backuppc/localSidebar.php:28
+msgid "Profiles"
+msgstr "Профілі"

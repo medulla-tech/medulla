@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-11 14:24+0200\n"
+"POT-Creation-Date: 2019-09-16 17:41+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -22,18 +22,33 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: modules/pulse2/update/installProductUpdates.php:41
-msgid "Installing updates ..."
-msgstr "Встановлюємо оновлення…"
+#: modules/pulse2/infoPackage.inc.php:34
+msgid "Pulse2"
+msgstr "Pulse2"
 
-#: modules/pulse2/update/viewProductUpdates.php:25
-#: modules/pulse2/update/viewProductUpdates.php:51
-msgid "Available updates"
-msgstr "Доступні оновлення"
+#: modules/pulse2/infoPackage.inc.php:45
+msgid "Computers list"
+msgstr "Список комп'ютерів"
 
-#: modules/pulse2/update/viewProductUpdates.php:38
-msgid "Update"
-msgstr "Оновити"
+#: modules/pulse2/infoPackage.inc.php:50
+msgid "Location selection in computer edit"
+msgstr "Вибір розташування у редагуванні комп'ютера"
+
+#: modules/pulse2/infoPackage.inc.php:60
+msgid "update"
+msgstr "оновлення"
+
+#: modules/pulse2/infoPackage.inc.php:66
+msgid "viewProductUpdates"
+msgstr "viewProductUpdates"
+
+#: modules/pulse2/infoPackage.inc.php:72
+msgid "install Product Updates"
+msgstr "Встановити оновлення продукту"
+
+#: modules/pulse2/infoPackage.inc.php:78
+msgid "Product Updates installation (ajax)"
+msgstr "Встановлення оновлень продукту (ajax)"
 
 #: modules/pulse2/includes/menu_actionaudit.php:59
 #: modules/pulse2/includes/menu_action.php:58
@@ -85,10 +100,6 @@ msgstr "навігація файлами"
 #: modules/pulse2/includes/menu_actionaudit.php:75
 msgid "Edit config files"
 msgstr "Редагувати файли налаштувань"
-
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
-msgstr "Усі ваші записи"
 
 #: modules/pulse2/includes/menu_action.php:59
 msgid "extTicket issue"
@@ -150,34 +161,23 @@ msgstr "Групова швидка дія"
 msgid "Csv export"
 msgstr "Експорт до CSV"
 
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
+msgstr "Усі ваші записи"
+
 #: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Кореневий запис"
 
-#: modules/pulse2/infoPackage.inc.php:34
-msgid "Pulse2"
-msgstr "Pulse2"
+#: modules/pulse2/update/installProductUpdates.php:41
+msgid "Installing updates ..."
+msgstr "Встановлюємо оновлення…"
 
-#: modules/pulse2/infoPackage.inc.php:45
-msgid "Computers list"
-msgstr "Список комп'ютерів"
+#: modules/pulse2/update/viewProductUpdates.php:25
+#: modules/pulse2/update/viewProductUpdates.php:51
+msgid "Available updates"
+msgstr "Доступні оновлення"
 
-#: modules/pulse2/infoPackage.inc.php:50
-msgid "Location selection in computer edit"
-msgstr "Вибір розташування у редагуванні комп'ютера"
-
-#: modules/pulse2/infoPackage.inc.php:60
-msgid "update"
-msgstr "оновлення"
-
-#: modules/pulse2/infoPackage.inc.php:66
-msgid "viewProductUpdates"
-msgstr "viewProductUpdates"
-
-#: modules/pulse2/infoPackage.inc.php:72
-msgid "install Product Updates"
-msgstr "Встановити оновлення продукту"
-
-#: modules/pulse2/infoPackage.inc.php:78
-msgid "Product Updates installation (ajax)"
-msgstr "Встановлення оновлень продукту (ajax)"
+#: modules/pulse2/update/viewProductUpdates.php:38
+msgid "Update"
+msgstr "Оновити"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-11 14:24+0200\n"
+"POT-Creation-Date: 2019-09-16 17:41+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/siveo/teams/72118/it_IT/)\n"
@@ -21,25 +21,33 @@ msgstr ""
 "Language: it_IT\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/support/includes/panels/remotesupport.inc.php:30
-msgid "Extract logs"
+#: modules/support/infoPackage.inc.php:31
+#: modules/support/includes/panels/license.inc.php:54
+msgid "Support"
 msgstr ""
 
-#: modules/support/includes/panels/remotesupport.inc.php:42
-msgid "Download archive"
+#: modules/support/infoPackage.inc.php:35
+msgid "Remote support"
 msgstr ""
 
-#: modules/support/includes/panels/remotesupport.inc.php:45
-msgid "Extract log and config files"
+#: modules/support/infoPackage.inc.php:40
+msgid "Collect"
+msgstr ""
+
+#: modules/support/infoPackage.inc.php:42
+msgid "Connect"
+msgstr "Connetti"
+
+#: modules/support/infoPackage.inc.php:44
+msgid "Disconnect"
+msgstr ""
+
+#: modules/support/infoPackage.inc.php:46
+msgid "Download an archive including logs and config files"
 msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
-msgstr ""
-
-#: modules/support/includes/panels/license.inc.php:54
-#: modules/support/infoPackage.inc.php:31
-msgid "Support"
 msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:57
@@ -74,22 +82,14 @@ msgstr ""
 msgid "Activate again / Use another subscription"
 msgstr ""
 
-#: modules/support/infoPackage.inc.php:35
-msgid "Remote support"
+#: modules/support/includes/panels/remotesupport.inc.php:30
+msgid "Extract logs"
 msgstr ""
 
-#: modules/support/infoPackage.inc.php:40
-msgid "Collect"
+#: modules/support/includes/panels/remotesupport.inc.php:42
+msgid "Download archive"
 msgstr ""
 
-#: modules/support/infoPackage.inc.php:42
-msgid "Connect"
-msgstr "Connetti"
-
-#: modules/support/infoPackage.inc.php:44
-msgid "Disconnect"
-msgstr ""
-
-#: modules/support/infoPackage.inc.php:46
-msgid "Download an archive including logs and config files"
+#: modules/support/includes/panels/remotesupport.inc.php:45
+msgid "Extract log and config files"
 msgstr ""
