@@ -420,7 +420,7 @@ msgstr "Буферизація"
 
 #: modules/pkgs/pkgs/edit.php:369 modules/pkgs/pkgs/add.php:281
 msgid "Dependencies"
-msgstr ""
+msgstr "Залежності"
 
 #: modules/pkgs/pkgs/edit.php:443
 msgid "File"
@@ -574,11 +574,11 @@ msgstr "Список комп'ютерів обрізано до %d записі
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:34
 msgid "Execute script"
-msgstr ""
+msgstr "Виконати скрипт"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:92
 msgid "Script"
-msgstr ""
+msgstr "Скрипт"
 
 #: modules/pkgs/includes/actions/actionrestart.php:36
 msgid "Restart"
@@ -586,19 +586,19 @@ msgstr "Перезапустити"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:28
 msgid "Set Environment variables"
-msgstr ""
+msgstr "Встановити змінні середовища"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:36
 msgid "Step label : "
-msgstr ""
+msgstr "Мітка кроку:"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:44
 msgid "Environment variable"
-msgstr ""
+msgstr "Змінна середовища"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:25
 msgid "Run command"
-msgstr ""
+msgstr "Виконати команду"
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151
