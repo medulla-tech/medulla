@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-16 17:41+0200\n"
+"POT-Creation-Date: 2019-08-11 14:24+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -21,33 +21,18 @@ msgstr ""
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: modules/pulse2/infoPackage.inc.php:34
-msgid "Pulse2"
-msgstr "Pulse2"
+#: modules/pulse2/update/installProductUpdates.php:41
+msgid "Installing updates ..."
+msgstr "Instalando atualizações..."
 
-#: modules/pulse2/infoPackage.inc.php:45
-msgid "Computers list"
-msgstr "Lista de computadores"
+#: modules/pulse2/update/viewProductUpdates.php:25
+#: modules/pulse2/update/viewProductUpdates.php:51
+msgid "Available updates"
+msgstr "Atualizações disponíveis"
 
-#: modules/pulse2/infoPackage.inc.php:50
-msgid "Location selection in computer edit"
-msgstr "Seleo de localizao em um computador"
-
-#: modules/pulse2/infoPackage.inc.php:60
-msgid "update"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:66
-msgid "viewProductUpdates"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:72
-msgid "install Product Updates"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:78
-msgid "Product Updates installation (ajax)"
-msgstr "Instalação de Atualizações de Produto (ajax)"
+#: modules/pulse2/update/viewProductUpdates.php:38
+msgid "Update"
+msgstr "Atualizar"
 
 #: modules/pulse2/includes/menu_actionaudit.php:59
 #: modules/pulse2/includes/menu_action.php:58
@@ -99,6 +84,10 @@ msgstr ""
 #: modules/pulse2/includes/menu_actionaudit.php:75
 msgid "Edit config files"
 msgstr ""
+
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
+msgstr "Todas as minhas entidades"
 
 #: modules/pulse2/includes/menu_action.php:59
 msgid "extTicket issue"
@@ -160,23 +149,34 @@ msgstr ""
 msgid "Csv export"
 msgstr "Exportar em CSV"
 
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
-msgstr "Todas as minhas entidades"
-
 #: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
 msgstr "Entidade root"
 
-#: modules/pulse2/update/installProductUpdates.php:41
-msgid "Installing updates ..."
-msgstr "Instalando atualizações..."
+#: modules/pulse2/infoPackage.inc.php:34
+msgid "Pulse2"
+msgstr "Pulse2"
 
-#: modules/pulse2/update/viewProductUpdates.php:25
-#: modules/pulse2/update/viewProductUpdates.php:51
-msgid "Available updates"
-msgstr "Atualizações disponíveis"
+#: modules/pulse2/infoPackage.inc.php:45
+msgid "Computers list"
+msgstr "Lista de computadores"
 
-#: modules/pulse2/update/viewProductUpdates.php:38
-msgid "Update"
-msgstr "Atualizar"
+#: modules/pulse2/infoPackage.inc.php:50
+msgid "Location selection in computer edit"
+msgstr "Seleo de localizao em um computador"
+
+#: modules/pulse2/infoPackage.inc.php:60
+msgid "update"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:66
+msgid "viewProductUpdates"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:72
+msgid "install Product Updates"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:78
+msgid "Product Updates installation (ajax)"
+msgstr "Instalação de Atualizações de Produto (ajax)"

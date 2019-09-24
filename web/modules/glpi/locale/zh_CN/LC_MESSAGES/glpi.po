@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-16 17:41+0200\n"
+"POT-Creation-Date: 2019-08-11 14:24+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -20,6 +20,98 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: modules/glpi/includes/publicFunc.php:86
+msgid "Entity attributes"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Dynamic"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Static"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:142
+#: modules/glpi/glpi/addEntityRule.php:138
+msgid "Remove"
+msgstr "移除"
+
+#: modules/glpi/includes/publicFunc.php:154
+msgid "Entity right"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:160
+msgid "Add entity right"
+msgstr ""
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:35
+msgid "Operating systems"
+msgstr "作业系统"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:43
+#: modules/glpi/includes/panels/antivirus.inc.php:39
+msgid "Uninventoried Machines"
+msgstr ""
+
+#: modules/glpi/includes/panels/inventory.inc.php:30
+msgid "Inventories"
+msgstr ""
+
+#: modules/glpi/includes/panels/inventory.inc.php:45
+#: modules/glpi/includes/panels/antivirus.inc.php:43
+msgid "Create a group"
+msgstr "建立一个群组"
+
+#: modules/glpi/includes/panels/inventory.inc.php:46
+msgid "< %s days: %percent% (%d)"
+msgstr "< %s %percent% (%d)"
+
+#: modules/glpi/includes/panels/inventory.inc.php:47
+msgid "> %s days: %percent% (%d)"
+msgstr "> %s %percent% (%d)"
+
+#: modules/glpi/includes/panels/inventory.inc.php:48
+msgid "Uninventoried machines"
+msgstr ""
+
+#: modules/glpi/includes/panels/antivirus.inc.php:31
+#: modules/glpi/glpi/tabs.php:88
+msgid "Antivirus"
+msgstr "防病毒程式"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:44
+msgid "OK: %percent% (%d)"
+msgstr "%percent% (%d)"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:45
+msgid "Not running or not up-to-date: %percent% (%d)"
+msgstr "%percent% (%d)"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:46
+msgid "No antivirus found: %percent% (%d)"
+msgstr "%percent% (%d)"
+
+#: modules/glpi/includes/html.php:49
+msgid "Hide Windows Updates"
+msgstr " Windows "
+
+#: modules/glpi/includes/html.php:57 modules/glpi/glpi/ajaxViewPart.php:255
+msgid "Today"
+msgstr "今天"
+
+#: modules/glpi/includes/html.php:58 modules/glpi/glpi/ajaxViewPart.php:256
+msgid "Last 7 days"
+msgstr " 7 "
+
+#: modules/glpi/includes/html.php:59 modules/glpi/glpi/ajaxViewPart.php:257
+msgid "Last 30 days"
+msgstr " 30 "
+
+#: modules/glpi/includes/html.php:60 modules/glpi/glpi/ajaxViewPart.php:258
+msgid "All"
+msgstr "全部"
 
 #: modules/glpi/infoPackage.inc.php:32
 msgid "GLPI Inventory"
@@ -146,159 +238,6 @@ msgstr ""
 msgid "Inventory (GLPI) on machine"
 msgstr " (GLPI)"
 
-#: modules/glpi/includes/html.php:49
-msgid "Hide Windows Updates"
-msgstr " Windows "
-
-#: modules/glpi/includes/html.php:57 modules/glpi/glpi/ajaxViewPart.php:255
-msgid "Today"
-msgstr "今天"
-
-#: modules/glpi/includes/html.php:58 modules/glpi/glpi/ajaxViewPart.php:256
-msgid "Last 7 days"
-msgstr " 7 "
-
-#: modules/glpi/includes/html.php:59 modules/glpi/glpi/ajaxViewPart.php:257
-msgid "Last 30 days"
-msgstr " 30 "
-
-#: modules/glpi/includes/html.php:60 modules/glpi/glpi/ajaxViewPart.php:258
-msgid "All"
-msgstr "全部"
-
-#: modules/glpi/includes/publicFunc.php:86
-msgid "Entity attributes"
-msgstr ""
-
-#: modules/glpi/includes/publicFunc.php:130
-msgid "Dynamic"
-msgstr ""
-
-#: modules/glpi/includes/publicFunc.php:130
-msgid "Static"
-msgstr ""
-
-#: modules/glpi/includes/publicFunc.php:142
-#: modules/glpi/glpi/addEntityRule.php:138
-msgid "Remove"
-msgstr "移除"
-
-#: modules/glpi/includes/publicFunc.php:154
-msgid "Entity right"
-msgstr ""
-
-#: modules/glpi/includes/publicFunc.php:160
-msgid "Add entity right"
-msgstr ""
-
-#: modules/glpi/includes/panels/inventory.inc.php:30
-msgid "Inventories"
-msgstr ""
-
-#: modules/glpi/includes/panels/inventory.inc.php:45
-#: modules/glpi/includes/panels/antivirus.inc.php:43
-msgid "Create a group"
-msgstr "建立一个群组"
-
-#: modules/glpi/includes/panels/inventory.inc.php:46
-msgid "< %s days: %percent% (%d)"
-msgstr "< %s %percent% (%d)"
-
-#: modules/glpi/includes/panels/inventory.inc.php:47
-msgid "> %s days: %percent% (%d)"
-msgstr "> %s %percent% (%d)"
-
-#: modules/glpi/includes/panels/inventory.inc.php:48
-msgid "Uninventoried machines"
-msgstr ""
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:35
-msgid "Operating systems"
-msgstr "作业系统"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:43
-#: modules/glpi/includes/panels/antivirus.inc.php:39
-msgid "Uninventoried Machines"
-msgstr ""
-
-#: modules/glpi/includes/panels/antivirus.inc.php:31
-#: modules/glpi/glpi/tabs.php:88
-msgid "Antivirus"
-msgstr "防病毒程式"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:44
-msgid "OK: %percent% (%d)"
-msgstr "%percent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:45
-msgid "Not running or not up-to-date: %percent% (%d)"
-msgstr "%percent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:46
-msgid "No antivirus found: %percent% (%d)"
-msgstr "%percent% (%d)"
-
-#: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
-msgid "This client has been registered in pull mode"
-msgstr " pull "
-
-#: modules/glpi/glpi/tabs.php:62
-msgid "Leave pull mode"
-msgstr " pull "
-
-#: modules/glpi/glpi/tabs.php:72
-#, php-format
-msgid "%s's inventory %s"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:80
-msgid "Summary"
-msgstr "概要"
-
-#: modules/glpi/glpi/tabs.php:81
-msgid "Hardware"
-msgstr "硬体"
-
-#: modules/glpi/glpi/tabs.php:83
-msgid "Storage"
-msgstr "储存空间"
-
-#: modules/glpi/glpi/tabs.php:84
-msgid "Network"
-msgstr "网路"
-
-#: modules/glpi/glpi/tabs.php:85
-msgid "Software"
-msgstr "软体"
-
-#: modules/glpi/glpi/tabs.php:86
-msgid "Administrative"
-msgstr "管理"
-
-#: modules/glpi/glpi/tabs.php:87
-msgid "History"
-msgstr "历史记录"
-
-#: modules/glpi/glpi/tabs.php:93
-msgid "Registry"
-msgstr "登录"
-
-#: modules/glpi/glpi/tabs.php:107
-msgid "Get XLS Report"
-msgstr "取得 XLS 报告"
-
-#: modules/glpi/glpi/entityRules.php:36
-msgid "All rules"
-msgstr ""
-
-#: modules/glpi/glpi/entityList.php:28
-msgid "Entity list"
-msgstr ""
-
-#: modules/glpi/glpi/entityList.php:36
-msgid "All entities"
-msgstr ""
-
 #: modules/glpi/glpi/addLocation.php:34
 msgid "The location has been added successfully."
 msgstr ""
@@ -316,10 +255,9 @@ msgstr ""
 msgid "Edit location"
 msgstr ""
 
-#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/addEntity.php:78
-#: modules/glpi/glpi/addEntityRule.php:72
+#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/addEntityRule.php:72
 #: modules/glpi/glpi/ajaxViewPart.php:212
-#: modules/glpi/glpi/ajaxViewPart.php:229
+#: modules/glpi/glpi/ajaxViewPart.php:229 modules/glpi/glpi/addEntity.php:78
 msgid "Name"
 msgstr "名称"
 
@@ -327,53 +265,35 @@ msgstr "名称"
 msgid "Parent location"
 msgstr ""
 
-#: modules/glpi/glpi/addLocation.php:101 modules/glpi/glpi/addEntity.php:100
+#: modules/glpi/glpi/addLocation.php:101
 #: modules/glpi/glpi/addEntityRule.php:77
-#: modules/glpi/glpi/ajaxViewPart.php:232
+#: modules/glpi/glpi/ajaxViewPart.php:232 modules/glpi/glpi/addEntity.php:100
 msgid "Description"
 msgstr "说明"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:51
+#: modules/glpi/glpi/locationList.php:28
+msgid "Location list"
+msgstr ""
+
+#: modules/glpi/glpi/locationList.php:36
+msgid "All locations"
+msgstr ""
+
 #: modules/glpi/glpi/ajaxLocationList.php:51
 #: modules/glpi/glpi/ajaxEntityList.php:51
+#: modules/glpi/glpi/ajaxEntityRules.php:51
 msgid "No entry found"
 msgstr "找不到任何项目"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:66
-msgid "Rule name"
+#: modules/glpi/glpi/ajaxLocationList.php:66
+msgid "Location name"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityRules.php:69
-msgid "Edit rule"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityRules.php:70
-msgid "Move rule up"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityRules.php:71
-msgid "Move rule down"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityRules.php:72
-msgid "Delete rule"
-msgstr ""
-
-#: modules/glpi/glpi/addEntity.php:34
-msgid "The entity has been added successfully."
-msgstr ""
-
-#: modules/glpi/glpi/addEntity.php:38
-msgid "The entity has been edited successfully."
-msgstr ""
-
-#: modules/glpi/glpi/addEntity.php:52 modules/glpi/glpi/ajaxEntityList.php:70
-msgid "Edit entity"
-msgstr ""
-
-#: modules/glpi/glpi/addEntity.php:95
-msgid "Parent entity"
-msgstr ""
+#: modules/glpi/glpi/ajaxLocationList.php:68
+#: modules/glpi/glpi/ajaxEntityList.php:68
+#: modules/glpi/glpi/ajaxViewPart.php:250
+msgid "Comment"
+msgstr "注解"
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:61
 #, php-format
@@ -387,11 +307,63 @@ msgstr ""
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:75
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
-#: modules/glpi/glpi/createBackupStaticGroup.php:69
 #: modules/glpi/glpi/createOSStaticGroup.php:54
+#: modules/glpi/glpi/createBackupStaticGroup.php:69
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr " %d "
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
+#, php-format
+msgid "Antivirus status is OK at %s"
+msgstr " %s "
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
+#, php-format
+msgid "Antivirus is not running or not up-to-date at %s"
+msgstr " %s "
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
+#, php-format
+msgid "No antivirus found at %s"
+msgstr " %s "
+
+#: modules/glpi/glpi/ajaxEntityList.php:66
+msgid "Entity name"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxEntityList.php:70 modules/glpi/glpi/addEntity.php:52
+msgid "Edit entity"
+msgstr ""
+
+#: modules/glpi/glpi/entityList.php:28
+msgid "Entity list"
+msgstr ""
+
+#: modules/glpi/glpi/entityList.php:36
+msgid "All entities"
+msgstr ""
+
+#: modules/glpi/glpi/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr " %s  %s "
+
+#: modules/glpi/glpi/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr " %s  %s "
+
+#: modules/glpi/glpi/createStaticGroup.php:43
+#, php-format
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
+msgstr ""
+
+#: modules/glpi/glpi/entityRules.php:36
+msgid "All rules"
+msgstr ""
 
 #: modules/glpi/glpi/addEntityRule.php:31
 msgid "The entity rule has been added successfully."
@@ -708,12 +680,6 @@ msgstr "频宽"
 msgid "Writer"
 msgstr "写入器"
 
-#: modules/glpi/glpi/ajaxViewPart.php:250
-#: modules/glpi/glpi/ajaxLocationList.php:68
-#: modules/glpi/glpi/ajaxEntityList.php:68
-msgid "Comment"
-msgstr "注解"
-
 #: modules/glpi/glpi/ajaxViewPart.php:251
 msgid "Date"
 msgstr "日期"
@@ -766,20 +732,59 @@ msgstr "最新"
 msgid "Invalid hostname"
 msgstr "无效的主机名称"
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
-#, php-format
-msgid "Antivirus status is OK at %s"
-msgstr " %s "
+#: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
+msgid "This client has been registered in pull mode"
+msgstr " pull "
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
-#, php-format
-msgid "Antivirus is not running or not up-to-date at %s"
-msgstr " %s "
+#: modules/glpi/glpi/tabs.php:62
+msgid "Leave pull mode"
+msgstr " pull "
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
+#: modules/glpi/glpi/tabs.php:72
 #, php-format
-msgid "No antivirus found at %s"
-msgstr " %s "
+msgid "%s's inventory %s"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:80
+msgid "Summary"
+msgstr "概要"
+
+#: modules/glpi/glpi/tabs.php:81
+msgid "Hardware"
+msgstr "硬体"
+
+#: modules/glpi/glpi/tabs.php:83
+msgid "Storage"
+msgstr "储存空间"
+
+#: modules/glpi/glpi/tabs.php:84
+msgid "Network"
+msgstr "网路"
+
+#: modules/glpi/glpi/tabs.php:85
+msgid "Software"
+msgstr "软体"
+
+#: modules/glpi/glpi/tabs.php:86
+msgid "Administrative"
+msgstr "管理"
+
+#: modules/glpi/glpi/tabs.php:87
+msgid "History"
+msgstr "历史记录"
+
+#: modules/glpi/glpi/tabs.php:93
+msgid "Registry"
+msgstr "登录"
+
+#: modules/glpi/glpi/tabs.php:107
+msgid "Get XLS Report"
+msgstr "取得 XLS 报告"
+
+#: modules/glpi/glpi/createOSStaticGroup.php:40
+#, php-format
+msgid "Machine with %s %s installed at %s"
+msgstr ""
 
 #: modules/glpi/glpi/createBackupStaticGroup.php:55
 #, php-format
@@ -791,13 +796,16 @@ msgstr ""
 msgid "Machines backup not configured at %s"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxLocationList.php:66
-msgid "Location name"
+#: modules/glpi/glpi/addEntity.php:34
+msgid "The entity has been added successfully."
 msgstr ""
 
-#: modules/glpi/glpi/createOSStaticGroup.php:40
-#, php-format
-msgid "Machine with %s %s installed at %s"
+#: modules/glpi/glpi/addEntity.php:38
+msgid "The entity has been edited successfully."
+msgstr ""
+
+#: modules/glpi/glpi/addEntity.php:95
+msgid "Parent entity"
 msgstr ""
 
 #: modules/glpi/glpi/deleteEntityRule.php:31
@@ -808,31 +816,22 @@ msgstr ""
 msgid "Delete this rule?"
 msgstr ""
 
-#: modules/glpi/glpi/locationList.php:28
-msgid "Location list"
+#: modules/glpi/glpi/ajaxEntityRules.php:66
+msgid "Rule name"
 msgstr ""
 
-#: modules/glpi/glpi/locationList.php:36
-msgid "All locations"
+#: modules/glpi/glpi/ajaxEntityRules.php:69
+msgid "Edit rule"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityList.php:66
-msgid "Entity name"
+#: modules/glpi/glpi/ajaxEntityRules.php:70
+msgid "Move rule up"
 msgstr ""
 
-#: modules/glpi/glpi/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr " %s  %s "
+#: modules/glpi/glpi/ajaxEntityRules.php:71
+msgid "Move rule down"
+msgstr ""
 
-#: modules/glpi/glpi/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr " %s  %s "
-
-#: modules/glpi/glpi/createStaticGroup.php:43
-#, php-format
-msgid ""
-"Computers list has been truncated at %d computers. Use the filter to find "
-"specific machines."
+#: modules/glpi/glpi/ajaxEntityRules.php:72
+msgid "Delete rule"
 msgstr ""

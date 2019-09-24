@@ -5,16 +5,15 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-16 17:41+0200\n"
+"POT-Creation-Date: 2019-08-11 14:24+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,18 +21,66 @@ msgstr ""
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/support/infoPackage.inc.php:31
+#: modules/support/includes/panels/remotesupport.inc.php:30
+msgid "Extract logs"
+msgstr ""
+
+#: modules/support/includes/panels/remotesupport.inc.php:42
+msgid "Download archive"
+msgstr ""
+
+#: modules/support/includes/panels/remotesupport.inc.php:45
+msgid "Extract log and config files"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:30
+msgid "Subscription info"
+msgstr ""
+
 #: modules/support/includes/panels/license.inc.php:54
+#: modules/support/infoPackage.inc.php:31
 msgid "Support"
-msgstr "Support"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:57
+msgid "Phone"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:61
+msgid "Email"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:65
+msgid "Hours"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:75
+msgid "Your subscription"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:91
+msgid "Computers"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:106
+msgid "End"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:118
+msgid "Links"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:132
+msgid "Activate again / Use another subscription"
+msgstr ""
 
 #: modules/support/infoPackage.inc.php:35
 msgid "Remote support"
-msgstr "Fjernsupport"
+msgstr ""
 
 #: modules/support/infoPackage.inc.php:40
 msgid "Collect"
-msgstr "Samle"
+msgstr ""
 
 #: modules/support/infoPackage.inc.php:42
 msgid "Connect"
@@ -41,56 +88,8 @@ msgstr "Koble til"
 
 #: modules/support/infoPackage.inc.php:44
 msgid "Disconnect"
-msgstr "Koble fra"
+msgstr ""
 
 #: modules/support/infoPackage.inc.php:46
 msgid "Download an archive including logs and config files"
-msgstr "Last ned et arkiv med logger og konfigurasjonsfiler"
-
-#: modules/support/includes/panels/license.inc.php:30
-msgid "Subscription info"
-msgstr "Abonnementsinfo"
-
-#: modules/support/includes/panels/license.inc.php:57
-msgid "Phone"
-msgstr "Telefon"
-
-#: modules/support/includes/panels/license.inc.php:61
-msgid "Email"
-msgstr "E-post"
-
-#: modules/support/includes/panels/license.inc.php:65
-msgid "Hours"
-msgstr "Timer"
-
-#: modules/support/includes/panels/license.inc.php:75
-msgid "Your subscription"
-msgstr "Abonnementet ditt"
-
-#: modules/support/includes/panels/license.inc.php:91
-msgid "Computers"
-msgstr "Datamaskiner"
-
-#: modules/support/includes/panels/license.inc.php:106
-msgid "End"
-msgstr "Slutt"
-
-#: modules/support/includes/panels/license.inc.php:118
-msgid "Links"
-msgstr "Lenker"
-
-#: modules/support/includes/panels/license.inc.php:132
-msgid "Activate again / Use another subscription"
-msgstr "Aktiver igjen / Bruk et annet abonnement"
-
-#: modules/support/includes/panels/remotesupport.inc.php:30
-msgid "Extract logs"
-msgstr "Hent ut logger"
-
-#: modules/support/includes/panels/remotesupport.inc.php:42
-msgid "Download archive"
-msgstr "Last ned arkiv"
-
-#: modules/support/includes/panels/remotesupport.inc.php:45
-msgid "Extract log and config files"
-msgstr "Hent ut logger og konfig filer"
+msgstr ""

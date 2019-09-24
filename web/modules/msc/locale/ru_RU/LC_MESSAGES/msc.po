@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-16 17:41+0200\n"
+"POT-Creation-Date: 2019-08-11 14:24+0200\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -21,372 +21,220 @@ msgstr ""
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: modules/msc/logs/running.php:33
-msgid "Show all running task's logs"
-msgstr "Показать журналы всех запущенных задач"
-
-#: modules/msc/logs/pending.php:33
-msgid "Show all pending task's logs"
-msgstr "Показать журналы всех ожидающих задач"
-
-#: modules/msc/logs/consult.php:39 modules/msc/msc/logs.php:33
-msgid "Current tasks"
-msgstr ""
-
-#: modules/msc/logs/consult.php:64 modules/msc/msc/logs.php:38
-msgid "Expired tasks"
-msgstr ""
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:55
-#: modules/msc/logs/ajaxLogsFilter.php:58
-#: modules/msc/includes/command_history.php:91
-#: modules/msc/includes/command_history.php:147
-#: modules/msc/includes/command_history.php:244
-#: modules/msc/msc/ajaxLogsFilter.php:103
-msgid "Start"
-msgstr "Запуск"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:57
-#: modules/msc/msc/ajaxLogsFilter.php:105
-msgid "Delete"
-msgstr "Удалить"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:58
-#: modules/msc/logs/ajaxLogsFilter.php:60
-#: modules/msc/includes/command_history.php:93
-#: modules/msc/includes/command_history.php:148
-#: modules/msc/includes/command_history.php:245
-#: modules/msc/msc/ajaxLogsFilter.php:106
-msgid "Stop"
-msgstr "Завершение"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:59
-#: modules/msc/logs/ajaxConsultLogsFilter.php:60
-#: modules/msc/msc/ajaxLogsFilter.php:107
-#: modules/msc/msc/ajaxDownloadFile.php:90
-msgid "Status"
-msgstr "Состояние"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:136
-#: modules/msc/logs/ajaxConsultLogsFilter.php:142
-#: modules/msc/msc/ajaxPackageFilter.php:177 modules/msc/msc/packages.php:40
-msgid "Package"
-msgstr "Пакет"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:138
-#: modules/msc/includes/command_history.php:142
-msgid "Bundle"
-msgstr "набор пакетов"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:154
-msgid "Unavailable computer"
-msgstr "Доступный компьютер"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:156
-#: modules/msc/logs/ajaxConsultLogsFilter.php:168
-#: modules/msc/logs/ajaxConsultLogsFilter.php:171
-msgid "Machine"
-msgstr "Машина"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:159
-msgid "Unavailable group"
-msgstr "Доступная группа"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:161
-#: modules/msc/logs/ajaxConsultLogsFilter.php:176
-msgid "Group"
-msgstr "Группа"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:221
-#: modules/msc/logs/ajaxLogsFilter.php:134
-#: modules/msc/msc/ajaxLogsFilter.php:246
-#: modules/msc/msc/ajaxLogsFilter.php:395
-#: modules/msc/msc/package_detail.php:37
-msgid "Command"
-msgstr "Команда"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:222
-msgid "Creator"
-msgstr "Создатель"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:224
-#: modules/msc/logs/ajaxLogsFilter.php:131
-#: modules/msc/includes/command_history.php:36
-#: modules/msc/includes/command_history.php:143
-#: modules/msc/includes/command_history.php:182
-#: modules/msc/msc/ajaxLogsFilter.php:248
-#: modules/msc/msc/ajaxLogsFilter.php:390 modules/msc/msc/reschedule.php:43
-msgid "Start date"
-msgstr "дата начала"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:225
-#: modules/msc/logs/ajaxLogsFilter.php:129
-#: modules/msc/includes/command_history.php:37
-#: modules/msc/includes/command_history.php:144
-#: modules/msc/includes/command_history.php:183
-#: modules/msc/msc/ajaxLogsFilter.php:249
-#: modules/msc/msc/ajaxLogsFilter.php:388
-msgid "End date"
-msgstr "дата окончания"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:226
-#: modules/msc/includes/command_history.php:38
-#: modules/msc/includes/bundle_widgets.php:363 modules/msc/msc/launch.php:667
-msgid "Deployment interval"
-msgstr ""
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:227
-msgid "Target"
-msgstr "пользователь"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:228
-#: modules/msc/msc/ajaxLogsFilter.php:250
-msgid "Success percent"
-msgstr ""
-
-#: modules/msc/logs/ajaxLogsFilter.php:59
-#: modules/msc/msc/ajaxLogsFilter.php:104
-msgid "Pause"
-msgstr "Пауза"
-
-#: modules/msc/logs/ajaxLogsFilter.php:61
-#: modules/msc/logs/ajaxLogsFilter.php:62 modules/msc/logs/viewLogs.php:96
-#: modules/msc/logs/viewLogs.php:114 modules/msc/logs/viewLogs.php:181
-#: modules/msc/logs/viewLogs.php:212 modules/msc/msc/ajaxLogsFilter.php:109
-#: modules/msc/msc/packages.php:44
-msgid "Details"
-msgstr "Подробнее"
-
-#: modules/msc/logs/ajaxLogsFilter.php:84
+#: modules/msc/includes/widgets.inc.php:27
 #, php-format
-msgid "<a href='' class='bundle' title='%s'>(in bundle %s)</a>"
-msgstr "<a href='' class='bundle' title='%s'>(  %s)</a>"
+msgid "Quick action path %s doesn't exist"
+msgstr ""
 
-#: modules/msc/logs/ajaxLogsFilter.php:87
+#: modules/msc/includes/widgets.inc.php:33
+msgid "Other/N.A."
+msgstr "/N.A."
+
+#: modules/msc/includes/widgets.inc.php:45
 #, php-format
-msgid "%s on %s %s"
-msgstr "%s  %s %s"
+msgid "%s status"
+msgstr " %s"
 
-#: modules/msc/logs/ajaxLogsFilter.php:127
-msgid "Date"
-msgstr "Дата"
+#: modules/msc/includes/widgets.inc.php:74
+#, php-format
+msgid ""
+"group \"%s\" is not defined in the MSC module, or you don't have permissions"
+" to access it"
+msgstr " \"%s\"     MSC,        "
 
-#: modules/msc/logs/ajaxLogsFilter.php:135
-#: modules/msc/msc/ajaxLogsFilter.php:253
-msgid "Current state"
-msgstr "текущее состояние"
+#: modules/msc/includes/widgets.inc.php:96
+#, php-format
+msgid ""
+"%s host is not defined in the MSC module, or you don't have permissions to "
+"access it"
+msgstr " %s     MSC,        "
 
-#: modules/msc/logs/finished.php:33
-msgid "Show all finished task's logs"
-msgstr "Показать журналы всех завершенных задач"
+#: modules/msc/includes/widgets.inc.php:117
+msgid "You don't have the right permissions to display this command"
+msgstr "У вас нет права доступа для просмотра данной команды"
 
-#: modules/msc/logs/viewLogs.php:117 modules/msc/logs/viewLogs.php:185
-#: modules/msc/logs/viewLogs.php:217
-msgid "The group you are working on is empty."
-msgstr ",    , ."
+#: modules/msc/includes/widgets.inc.php:184
+#, php-format
+msgid "Quick action on %s"
+msgstr "   %s"
 
-#: modules/msc/logs/all.php:33
-msgid "Show all task logs"
-msgstr "Показать журналы всех задач"
+#: modules/msc/includes/widgets.inc.php:232
+msgid "Execute action..."
+msgstr "..."
 
-#: modules/msc/logs/custom.php:33
-msgid "Show custom status task's logs"
-msgstr "Показать пользовательские журналы состояния задач"
+#: modules/msc/includes/widgets.inc.php:255
+msgid "Quick action list is empty"
+msgstr "список быстрых действий пуст"
 
-#: modules/msc/logs/localSidebar.php:28 modules/msc/infoPackage.inc.php:52
 #: modules/msc/includes/widgets.inc.php:345
-#: modules/msc/includes/widgets.inc.php:517
+#: modules/msc/includes/widgets.inc.php:517 modules/msc/infoPackage.inc.php:52
+#: modules/msc/logs/localSidebar.php:28
 msgid "My commands"
 msgstr "Мои команды"
 
-#: modules/msc/logs/localSidebar.php:29 modules/msc/infoPackage.inc.php:55
-msgid "All user commands"
+#: modules/msc/includes/widgets.inc.php:345
+#: modules/msc/includes/widgets.inc.php:517
+msgid "All users commands"
+msgstr "Команды всех пользователей"
+
+#: modules/msc/includes/widgets.inc.php:387
+msgid "State filter"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:44
-msgid "Secure Control"
-msgstr "Безопасное Управление"
-
-#: modules/msc/infoPackage.inc.php:48
-msgid "Audit"
+#: modules/msc/includes/widgets.inc.php:389
+#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
+#: modules/msc/includes/functions.php:334
+#: modules/msc/msc/ajaxLogsFilter.php:429
+msgid "Done"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:58
-msgid "Commands logs"
+#: modules/msc/includes/widgets.inc.php:391
+#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
+#: modules/msc/includes/functions.php:333
+#: modules/msc/msc/ajaxLogsFilter.php:430
+msgid "Failed"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:61
-msgid "Show all logs"
-msgstr "Показать все журналы"
-
-#: modules/msc/infoPackage.inc.php:63
-msgid "Show pending task's logs"
-msgstr "Показать журналы ожидающих задач"
-
-#: modules/msc/infoPackage.inc.php:65
-msgid "Show running task's logs"
-msgstr "Показать журналы выполняющихся задач"
-
-#: modules/msc/infoPackage.inc.php:67
-msgid "Show finished task's logs"
-msgstr "Показать журналы завершенных задач"
-
-#: modules/msc/infoPackage.inc.php:70
-msgid "Show custom state task's logs"
-msgstr "Показать пользовательские журналы состояний задач"
-
-#: modules/msc/infoPackage.inc.php:73 modules/msc/infoPackage.inc.php:267
-#: modules/msc/infoPackage.inc.php:272
-msgid "logs list"
-msgstr "Список журналов"
-
-#: modules/msc/infoPackage.inc.php:76
-msgid "consolidated logs list"
-msgstr "консолидированный список журналов"
-
-#: modules/msc/infoPackage.inc.php:79
-msgid "the state list"
-msgstr "список состояний"
-
-#: modules/msc/infoPackage.inc.php:89
-msgid "Remove machine from pull mode"
+#: modules/msc/includes/widgets.inc.php:393
+msgid "In progress"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:95
-msgid "Deploy specific package"
+#: modules/msc/includes/widgets.inc.php:395
+#: modules/msc/msc/ajaxLogsFilter.php:432
+msgid "Overtime"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:100
-msgid "Secure control on a group of computers"
-msgstr "Безопасное управление группой компьютеров"
+#: modules/msc/includes/widgets.inc.php:397
+#: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
+#: modules/msc/msc/ajaxLogsFilter.php:431
+msgid "Stopped"
+msgstr "Остановлен"
 
-#: modules/msc/infoPackage.inc.php:104
-msgid "MSC launch tab for a group"
-msgstr "  MSC  "
-
-#: modules/msc/infoPackage.inc.php:110
-msgid "MSC logs tab for a group"
-msgstr "  MSC  "
-
-#: modules/msc/infoPackage.inc.php:115
-msgid "Secure control on computer"
-msgstr "Безопасное упрявление компьютером"
-
-#: modules/msc/infoPackage.inc.php:119
-msgid "MSC launch tab for a machine"
-msgstr "  MSC  "
-
-#: modules/msc/infoPackage.inc.php:125
-msgid "MSC logs tab for a machine"
-msgstr "  MSC  "
-
-#: modules/msc/infoPackage.inc.php:130
-msgid "Download file from a computer"
-msgstr "Загрузить файс с компьютера"
-
-#: modules/msc/infoPackage.inc.php:136
-msgid "Remove a downloaded file"
-msgstr "Удалить загруженный файл"
-
-#: modules/msc/infoPackage.inc.php:142
-msgid "Get a downloaded file"
-msgstr "Получить загруженный файл"
-
-#: modules/msc/infoPackage.inc.php:148
-msgid "Take control of a computer"
-msgstr "Управлять компьютером"
-
-#: modules/msc/infoPackage.inc.php:155
-msgid "Play a command"
-msgstr "Запустить команду"
-
-#: modules/msc/infoPackage.inc.php:161
-msgid "Pause a command"
-msgstr "Приостановить команду"
-
-#: modules/msc/infoPackage.inc.php:167
-msgid "Stop a command"
-msgstr "Остановить команду"
-
-#: modules/msc/infoPackage.inc.php:173
-msgid "Command status"
-msgstr "Состояние команды"
-
-#: modules/msc/infoPackage.inc.php:179
-msgid "Reschedule a command"
+#: modules/msc/includes/widgets.inc.php:401
+msgid "Create a group"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:185
-msgid "Delete a command"
-msgstr ""
+#: modules/msc/includes/bundle_widgets.php:119
+msgid "Set order"
+msgstr "Установить порядок"
 
-#: modules/msc/infoPackage.inc.php:192
-msgid "Single command status"
-msgstr "Состояние одной команды"
+#: modules/msc/includes/bundle_widgets.php:150
+#: modules/msc/msc/ajaxPackageFilter.php:174
+msgid "Please contact your administrator."
+msgstr ",    ."
 
-#: modules/msc/infoPackage.inc.php:197
-msgid "Show package's details"
-msgstr "Показать информацию о пакетах"
+#: modules/msc/includes/bundle_widgets.php:158
+#: modules/msc/includes/bundle_widgets.php:187
+msgid "Actions in bundle"
+msgstr "Действия в наборе пакетов"
 
-#: modules/msc/infoPackage.inc.php:204
-msgid "Launch a command"
-msgstr "Запустить команду"
+#: modules/msc/includes/bundle_widgets.php:159
+#: modules/msc/includes/bundle_widgets.php:188
+msgid "Possible actions"
+msgstr "Возможные действия"
 
-#: modules/msc/infoPackage.inc.php:210
-msgid "Launch a advanced command"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:216
-msgid "Software convergence configuration"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:222
-msgid "Launch a quick action command"
-msgstr "Запустить команду быстрого действия"
-
-#: modules/msc/infoPackage.inc.php:227 modules/msc/msc/packages.php:29
-msgid "Packages"
-msgstr "Пакеты"
-
-#: modules/msc/infoPackage.inc.php:232
-msgid "Ping and probe"
-msgstr "  ing  "
-
-#: modules/msc/infoPackage.inc.php:237
-msgid "Ping"
-msgstr "Ping"
-
-#: modules/msc/infoPackage.inc.php:242
-msgid "Platform"
-msgstr "Платформа"
-
-#: modules/msc/infoPackage.inc.php:247
-msgid "MAC Addr."
-msgstr "MAC-"
-
-#: modules/msc/infoPackage.inc.php:252
-msgid "IP Addr."
-msgstr "IP-"
-
-#: modules/msc/infoPackage.inc.php:257 modules/msc/msc/download_file.php:32
-msgid "Download file page"
-msgstr "Загрузить страницу файла"
-
-#: modules/msc/infoPackage.inc.php:262
-msgid "Csv's export"
-msgstr " csv"
-
-#: modules/msc/includes/commands_xmlrpc.inc.php:141
+#: modules/msc/includes/bundle_widgets.php:170
+#: modules/msc/includes/bundle_widgets.php:199
+#: modules/msc/msc/ajaxPackageFilter.php:146
 #, php-format
-msgid "%s deployment subgroup - %s"
+msgid "MMC failed to contact package server %s."
+msgstr "  MMC    %s"
+
+#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/packages.php:43
+msgid "Launch"
+msgstr "Запуск"
+
+#: modules/msc/includes/bundle_widgets.php:285
+msgid "Launch (advanced)"
 msgstr ""
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:164
-#, php-format
-msgid ""
-"Deploy subgroup created successfully. <br/><a href=\"%s\" "
-"target=\"_blank\">View group</a>"
+#: modules/msc/includes/bundle_widgets.php:286
+msgid "Cancel"
+msgstr "Отмена"
+
+#: modules/msc/includes/bundle_widgets.php:304
+msgid "awake"
+msgstr "пробудить"
+
+#: modules/msc/includes/bundle_widgets.php:306
+msgid "invent."
+msgstr "."
+
+#: modules/msc/includes/bundle_widgets.php:349
+msgid "Bundle title"
+msgstr "Заголовок набора пакетов"
+
+#: modules/msc/includes/bundle_widgets.php:350
+msgid "Wake on lan"
+msgstr "Wake on lan"
+
+#: modules/msc/includes/bundle_widgets.php:351
+msgid "Start the script"
+msgstr "Запустить сценарий"
+
+#: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:576
+msgid "Delete files after a successful execution"
+msgstr "Удалить файлы после успешного выполнения"
+
+#: modules/msc/includes/bundle_widgets.php:353
+msgid "Start inventory"
+msgstr "Запустить инвентаризацию"
+
+#: modules/msc/includes/bundle_widgets.php:355
+msgid "Halt client after"
+msgstr "Остановить клиент после"
+
+#: modules/msc/includes/bundle_widgets.php:360
+msgid "Command parameters"
+msgstr "Параметры команды"
+
+#: modules/msc/includes/bundle_widgets.php:361
+msgid "Beginning of validity"
+msgstr "Начало срока действия"
+
+#: modules/msc/includes/bundle_widgets.php:362
+msgid "End of validity"
+msgstr "Окончание срока действия"
+
+#: modules/msc/includes/bundle_widgets.php:363
+#: modules/msc/includes/command_history.php:38 modules/msc/msc/launch.php:667
+#: modules/msc/logs/ajaxConsultLogsFilter.php:226
+msgid "Deployment interval"
 msgstr ""
+
+#: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:772
+msgid "Max bandwidth (kbits/s)"
+msgstr ""
+
+#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:785
+msgid "push"
+msgstr "нажать"
+
+#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:785
+msgid "push / pull"
+msgstr "/"
+
+#: modules/msc/includes/bundle_widgets.php:373 modules/msc/msc/launch.php:788
+msgid "Copy Mode"
+msgstr "Режим копирования"
+
+#: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:792
+msgid "Deploy using a local proxy"
+msgstr ",   "
+
+#: modules/msc/includes/bundle_widgets.php:389
+#: modules/msc/includes/bundle_widgets.php:405
+msgid "Cancel bundle creation"
+msgstr "Отмена генерации набора пакетов"
+
+#: modules/msc/includes/utilities.php:32
+msgid "Bytes"
+msgstr "Байты"
+
+#: modules/msc/includes/utilities.php:35
+#, php-format
+msgid "%3.1f %s%s"
+msgstr "%3.1f %s%s"
 
 #: modules/msc/includes/command_history.php:34
 #: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:552
@@ -397,6 +245,26 @@ msgstr "Название команды"
 #: modules/msc/includes/command_history.php:35
 msgid "Host"
 msgstr ""
+
+#: modules/msc/includes/command_history.php:36
+#: modules/msc/includes/command_history.php:143
+#: modules/msc/includes/command_history.php:182
+#: modules/msc/msc/ajaxLogsFilter.php:248
+#: modules/msc/msc/ajaxLogsFilter.php:390 modules/msc/msc/reschedule.php:43
+#: modules/msc/logs/ajaxLogsFilter.php:131
+#: modules/msc/logs/ajaxConsultLogsFilter.php:224
+msgid "Start date"
+msgstr "дата начала"
+
+#: modules/msc/includes/command_history.php:37
+#: modules/msc/includes/command_history.php:144
+#: modules/msc/includes/command_history.php:183
+#: modules/msc/msc/ajaxLogsFilter.php:249
+#: modules/msc/msc/ajaxLogsFilter.php:388
+#: modules/msc/logs/ajaxLogsFilter.php:129
+#: modules/msc/logs/ajaxConsultLogsFilter.php:225
+msgid "End date"
+msgstr "дата окончания"
 
 #: modules/msc/includes/command_history.php:39
 #: modules/msc/msc/msctabssinglestatus.php:38
@@ -418,6 +286,29 @@ msgstr "Имя"
 #: modules/msc/msc/package_detail.php:41
 msgid "Value"
 msgstr "Значение"
+
+#: modules/msc/includes/command_history.php:91
+#: modules/msc/includes/command_history.php:147
+#: modules/msc/includes/command_history.php:244
+#: modules/msc/msc/ajaxLogsFilter.php:103
+#: modules/msc/logs/ajaxLogsFilter.php:58
+#: modules/msc/logs/ajaxConsultLogsFilter.php:55
+msgid "Start"
+msgstr "Запуск"
+
+#: modules/msc/includes/command_history.php:93
+#: modules/msc/includes/command_history.php:148
+#: modules/msc/includes/command_history.php:245
+#: modules/msc/msc/ajaxLogsFilter.php:106
+#: modules/msc/logs/ajaxLogsFilter.php:60
+#: modules/msc/logs/ajaxConsultLogsFilter.php:58
+msgid "Stop"
+msgstr "Завершение"
+
+#: modules/msc/includes/command_history.php:142
+#: modules/msc/logs/ajaxConsultLogsFilter.php:138
+msgid "Bundle"
+msgstr "набор пакетов"
 
 #: modules/msc/includes/command_history.php:145
 msgid "Bundle success percent"
@@ -748,209 +639,6 @@ msgstr "Как можно скорее"
 msgid "<i>undefined</i>"
 msgstr "<i></i>"
 
-#: modules/msc/includes/widgets.inc.php:27
-#, php-format
-msgid "Quick action path %s doesn't exist"
-msgstr ""
-
-#: modules/msc/includes/widgets.inc.php:33
-msgid "Other/N.A."
-msgstr "/N.A."
-
-#: modules/msc/includes/widgets.inc.php:45
-#, php-format
-msgid "%s status"
-msgstr " %s"
-
-#: modules/msc/includes/widgets.inc.php:74
-#, php-format
-msgid ""
-"group \"%s\" is not defined in the MSC module, or you don't have permissions"
-" to access it"
-msgstr " \"%s\"     MSC,        "
-
-#: modules/msc/includes/widgets.inc.php:96
-#, php-format
-msgid ""
-"%s host is not defined in the MSC module, or you don't have permissions to "
-"access it"
-msgstr " %s     MSC,        "
-
-#: modules/msc/includes/widgets.inc.php:117
-msgid "You don't have the right permissions to display this command"
-msgstr "У вас нет права доступа для просмотра данной команды"
-
-#: modules/msc/includes/widgets.inc.php:184
-#, php-format
-msgid "Quick action on %s"
-msgstr "   %s"
-
-#: modules/msc/includes/widgets.inc.php:232
-msgid "Execute action..."
-msgstr "..."
-
-#: modules/msc/includes/widgets.inc.php:255
-msgid "Quick action list is empty"
-msgstr "список быстрых действий пуст"
-
-#: modules/msc/includes/widgets.inc.php:345
-#: modules/msc/includes/widgets.inc.php:517
-msgid "All users commands"
-msgstr "Команды всех пользователей"
-
-#: modules/msc/includes/widgets.inc.php:387
-msgid "State filter"
-msgstr ""
-
-#: modules/msc/includes/widgets.inc.php:389
-#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
-#: modules/msc/includes/functions.php:334
-#: modules/msc/msc/ajaxLogsFilter.php:429
-msgid "Done"
-msgstr ""
-
-#: modules/msc/includes/widgets.inc.php:391
-#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
-#: modules/msc/includes/functions.php:333
-#: modules/msc/msc/ajaxLogsFilter.php:430
-msgid "Failed"
-msgstr ""
-
-#: modules/msc/includes/widgets.inc.php:393
-msgid "In progress"
-msgstr ""
-
-#: modules/msc/includes/widgets.inc.php:395
-#: modules/msc/msc/ajaxLogsFilter.php:432
-msgid "Overtime"
-msgstr ""
-
-#: modules/msc/includes/widgets.inc.php:397
-#: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
-#: modules/msc/msc/ajaxLogsFilter.php:431
-msgid "Stopped"
-msgstr "Остановлен"
-
-#: modules/msc/includes/widgets.inc.php:401
-msgid "Create a group"
-msgstr ""
-
-#: modules/msc/includes/utilities.php:32
-msgid "Bytes"
-msgstr "Байты"
-
-#: modules/msc/includes/utilities.php:35
-#, php-format
-msgid "%3.1f %s%s"
-msgstr "%3.1f %s%s"
-
-#: modules/msc/includes/bundle_widgets.php:119
-msgid "Set order"
-msgstr "Установить порядок"
-
-#: modules/msc/includes/bundle_widgets.php:150
-#: modules/msc/msc/ajaxPackageFilter.php:174
-msgid "Please contact your administrator."
-msgstr ",    ."
-
-#: modules/msc/includes/bundle_widgets.php:158
-#: modules/msc/includes/bundle_widgets.php:187
-msgid "Actions in bundle"
-msgstr "Действия в наборе пакетов"
-
-#: modules/msc/includes/bundle_widgets.php:159
-#: modules/msc/includes/bundle_widgets.php:188
-msgid "Possible actions"
-msgstr "Возможные действия"
-
-#: modules/msc/includes/bundle_widgets.php:170
-#: modules/msc/includes/bundle_widgets.php:199
-#: modules/msc/msc/ajaxPackageFilter.php:146
-#, php-format
-msgid "MMC failed to contact package server %s."
-msgstr "  MMC    %s"
-
-#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/packages.php:43
-msgid "Launch"
-msgstr "Запуск"
-
-#: modules/msc/includes/bundle_widgets.php:285
-msgid "Launch (advanced)"
-msgstr ""
-
-#: modules/msc/includes/bundle_widgets.php:286
-msgid "Cancel"
-msgstr "Отмена"
-
-#: modules/msc/includes/bundle_widgets.php:304
-msgid "awake"
-msgstr "пробудить"
-
-#: modules/msc/includes/bundle_widgets.php:306
-msgid "invent."
-msgstr "."
-
-#: modules/msc/includes/bundle_widgets.php:349
-msgid "Bundle title"
-msgstr "Заголовок набора пакетов"
-
-#: modules/msc/includes/bundle_widgets.php:350
-msgid "Wake on lan"
-msgstr "Wake on lan"
-
-#: modules/msc/includes/bundle_widgets.php:351
-msgid "Start the script"
-msgstr "Запустить сценарий"
-
-#: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:576
-msgid "Delete files after a successful execution"
-msgstr "Удалить файлы после успешного выполнения"
-
-#: modules/msc/includes/bundle_widgets.php:353
-msgid "Start inventory"
-msgstr "Запустить инвентаризацию"
-
-#: modules/msc/includes/bundle_widgets.php:355
-msgid "Halt client after"
-msgstr "Остановить клиент после"
-
-#: modules/msc/includes/bundle_widgets.php:360
-msgid "Command parameters"
-msgstr "Параметры команды"
-
-#: modules/msc/includes/bundle_widgets.php:361
-msgid "Beginning of validity"
-msgstr "Начало срока действия"
-
-#: modules/msc/includes/bundle_widgets.php:362
-msgid "End of validity"
-msgstr "Окончание срока действия"
-
-#: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:772
-msgid "Max bandwidth (kbits/s)"
-msgstr ""
-
-#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:785
-msgid "push"
-msgstr "нажать"
-
-#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:785
-msgid "push / pull"
-msgstr "/"
-
-#: modules/msc/includes/bundle_widgets.php:373 modules/msc/msc/launch.php:788
-msgid "Copy Mode"
-msgstr "Режим копирования"
-
-#: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:792
-msgid "Deploy using a local proxy"
-msgstr ",   "
-
-#: modules/msc/includes/bundle_widgets.php:389
-#: modules/msc/includes/bundle_widgets.php:405
-msgid "Cancel bundle creation"
-msgstr "Отмена генерации набора пакетов"
-
 #: modules/msc/includes/functions.php:25
 msgid "Upload in progress"
 msgstr "Выполняется загрузка"
@@ -1123,6 +811,182 @@ msgstr ""
 msgid "Running"
 msgstr ""
 
+#: modules/msc/includes/commands_xmlrpc.inc.php:141
+#, php-format
+msgid "%s deployment subgroup - %s"
+msgstr ""
+
+#: modules/msc/includes/commands_xmlrpc.inc.php:164
+#, php-format
+msgid ""
+"Deploy subgroup created successfully. <br/><a href=\"%s\" "
+"target=\"_blank\">View group</a>"
+msgstr ""
+
+#: modules/msc/msc/ajaxPackageFilter.php:46
+#, php-format
+msgid "These packages can be installed on computer \"%s\""
+msgstr "       \"%s\""
+
+#: modules/msc/msc/ajaxPackageFilter.php:48
+#, php-format
+msgid "These packages can be installed on group \"%s\""
+msgstr "       \"%s\""
+
+#: modules/msc/msc/ajaxPackageFilter.php:77
+msgid "Available"
+msgstr ""
+
+#: modules/msc/msc/ajaxPackageFilter.php:79
+msgid "Active"
+msgstr ""
+
+#: modules/msc/msc/ajaxPackageFilter.php:81
+msgid "Inactive"
+msgstr ""
+
+#: modules/msc/msc/ajaxPackageFilter.php:84
+msgid "Not available"
+msgstr ""
+
+#: modules/msc/msc/ajaxPackageFilter.php:93
+#: modules/msc/msc/ajaxPackageFilter.php:182
+msgid "Convergence"
+msgstr ""
+
+#: modules/msc/msc/ajaxPackageFilter.php:177 modules/msc/msc/packages.php:40
+#: modules/msc/logs/ajaxConsultLogsFilter.php:136
+#: modules/msc/logs/ajaxConsultLogsFilter.php:142
+msgid "Package"
+msgstr "Пакет"
+
+#: modules/msc/msc/ajaxPackageFilter.php:178
+msgid "Description"
+msgstr "Описание"
+
+#: modules/msc/msc/ajaxPackageFilter.php:179 modules/msc/msc/packages.php:41
+#: modules/msc/msc/package_detail.php:37
+msgid "Version"
+msgstr "Версия"
+
+#: modules/msc/msc/ajaxPackageFilter.php:180
+msgid "Package size"
+msgstr "Размер пакета"
+
+#: modules/msc/msc/ajaxPackageFilter.php:194
+#: modules/msc/msc/ajaxPackageFilter.php:198
+msgid "Advanced launch"
+msgstr ""
+
+#: modules/msc/msc/ajaxPackageFilter.php:195
+#: modules/msc/msc/ajaxPackageFilter.php:200
+msgid "Direct launch"
+msgstr ""
+
+#: modules/msc/msc/ajaxLogsFilter.php:104
+#: modules/msc/logs/ajaxLogsFilter.php:59
+msgid "Pause"
+msgstr "Пауза"
+
+#: modules/msc/msc/ajaxLogsFilter.php:105
+#: modules/msc/logs/ajaxConsultLogsFilter.php:57
+msgid "Delete"
+msgstr "Удалить"
+
+#: modules/msc/msc/ajaxLogsFilter.php:107
+#: modules/msc/msc/ajaxDownloadFile.php:90
+#: modules/msc/logs/ajaxConsultLogsFilter.php:59
+#: modules/msc/logs/ajaxConsultLogsFilter.php:60
+msgid "Status"
+msgstr "Состояние"
+
+#: modules/msc/msc/ajaxLogsFilter.php:109 modules/msc/msc/packages.php:44
+#: modules/msc/logs/ajaxLogsFilter.php:61
+#: modules/msc/logs/ajaxLogsFilter.php:62 modules/msc/logs/viewLogs.php:96
+#: modules/msc/logs/viewLogs.php:114 modules/msc/logs/viewLogs.php:181
+#: modules/msc/logs/viewLogs.php:212
+msgid "Details"
+msgstr "Подробнее"
+
+#: modules/msc/msc/ajaxLogsFilter.php:141
+msgid "Can't get bundle for the requested id"
+msgstr "      id"
+
+#: modules/msc/msc/ajaxLogsFilter.php:145
+#, php-format
+msgid "Bundle #%s"
+msgstr " #%s"
+
+#: modules/msc/msc/ajaxLogsFilter.php:246
+#: modules/msc/msc/ajaxLogsFilter.php:395
+#: modules/msc/msc/package_detail.php:37
+#: modules/msc/logs/ajaxLogsFilter.php:134
+#: modules/msc/logs/ajaxConsultLogsFilter.php:221
+msgid "Command"
+msgstr "Команда"
+
+#: modules/msc/msc/ajaxLogsFilter.php:250
+#: modules/msc/logs/ajaxConsultLogsFilter.php:228
+msgid "Success percent"
+msgstr ""
+
+#: modules/msc/msc/ajaxLogsFilter.php:253
+#: modules/msc/logs/ajaxLogsFilter.php:135
+msgid "Current state"
+msgstr "текущее состояние"
+
+#: modules/msc/msc/ajaxLogsFilter.php:298
+#, php-format
+msgid ", using proxy %s"
+msgstr ",  - %s"
+
+#: modules/msc/msc/ajaxLogsFilter.php:303
+msgid "Pull"
+msgstr ""
+
+#: modules/msc/msc/ajaxLogsFilter.php:306
+#: modules/msc/msc/ajaxLogsFilter.php:319
+msgid "Normal"
+msgstr "Нормальный"
+
+#: modules/msc/msc/ajaxLogsFilter.php:310
+#, php-format
+msgid "Multiple, client mode%s"
+msgstr ",   %s"
+
+#: modules/msc/msc/ajaxLogsFilter.php:312
+msgid "Multiple, server mode"
+msgstr ",  "
+
+#: modules/msc/msc/ajaxLogsFilter.php:315
+#, php-format
+msgid "Single, client mode%s"
+msgstr ",   %s"
+
+#: modules/msc/msc/ajaxLogsFilter.php:317
+msgid "Single, server mode"
+msgstr ",  "
+
+#: modules/msc/msc/ajaxLogsFilter.php:393
+msgid "Mode"
+msgstr "Режим"
+
+#: modules/msc/msc/ajaxLogsFilter.php:397
+msgid "Client"
+msgstr "Клиент"
+
+#: modules/msc/msc/ajaxLogsFilter.php:400
+msgid "Global State"
+msgstr ""
+
+#: modules/msc/msc/ajaxLogsFilter.php:402
+msgid "Current step"
+msgstr ""
+
+#: modules/msc/msc/ajaxLogsFilter.php:443
+msgid "Deploy status"
+msgstr ""
+
 #: modules/msc/msc/start_quick_action.php:100
 msgid "Failed to retrieve this quick action."
 msgstr "     ."
@@ -1135,13 +999,89 @@ msgstr ", ,       "
 msgid "Advanced"
 msgstr "Расширенный"
 
-#: modules/msc/msc/download_file_remove.php:28
-msgid "The file has been deleted."
-msgstr "   ."
+#: modules/msc/msc/local_proxy.php:68
+msgid "Random (indicate number of proxies) : "
+msgstr " (  ):"
 
-#: modules/msc/msc/download_file_remove.php:32
-msgid "Please confirm file deletion"
-msgstr ",  ."
+#: modules/msc/msc/local_proxy.php:74
+msgid "Or designate the proxies manually below : "
+msgstr "    : "
+
+#: modules/msc/msc/local_proxy.php:79
+msgid "Computers in this command"
+msgstr "   :"
+
+#: modules/msc/msc/local_proxy.php:99
+msgid "Local proxies"
+msgstr "Локальные прокси"
+
+#: modules/msc/msc/local_proxy.php:217
+msgid "Local Proxy Mode"
+msgstr "Local Proxy Mode"
+
+#: modules/msc/msc/local_proxy.php:226
+msgid "Maximum number of simultaneous connections to a proxy"
+msgstr "Максимальное число одновременных подключений к прокси"
+
+#: modules/msc/msc/local_proxy.php:248
+msgid "Local proxies selection"
+msgstr "Выбор локальных прокси"
+
+#: modules/msc/msc/localSidebar.php:27
+msgid "Repository"
+msgstr "Репозиторий"
+
+#: modules/msc/msc/msctabsplay.php:120 modules/msc/msc/msctabspause.php:119
+#: modules/msc/msc/msctabsstop.php:119
+msgid "action"
+msgstr "действие"
+
+#: modules/msc/msc/msctabsplay.php:122 modules/msc/msc/msctabspause.php:121
+#: modules/msc/msc/msctabsstop.php:121
+msgid "bundle"
+msgstr ""
+
+#: modules/msc/msc/msctabsplay.php:125
+#, php-format
+msgid "Start %s %s on this group"
+msgstr ""
+
+#: modules/msc/msc/msctabsplay.php:127
+#, php-format
+msgid "Start %s %s on host %s"
+msgstr ""
+
+#: modules/msc/msc/ajaxDownloadFile.php:34
+msgid "Download file"
+msgstr "Загрузить файл"
+
+#: modules/msc/msc/ajaxDownloadFile.php:35
+msgid "Delete file"
+msgstr "Удалить файл"
+
+#: modules/msc/msc/ajaxDownloadFile.php:67
+msgid "Downloading"
+msgstr "Загрузка"
+
+#: modules/msc/msc/ajaxDownloadFile.php:72
+msgid "Error"
+msgstr "Ошибка"
+
+#: modules/msc/msc/ajaxDownloadFile.php:86
+msgid "Timestamp"
+msgstr "Время создания"
+
+#: modules/msc/msc/ajaxDownloadFile.php:87
+msgid "From computer"
+msgstr "Из компьютера"
+
+#: modules/msc/msc/ajaxDownloadFile.php:88
+msgid "File name"
+msgstr "Имя файла"
+
+#: modules/msc/msc/ajaxDownloadFile.php:89
+msgid "Length"
+msgstr "Длина"
 
 #: modules/msc/msc/msctabssinglestatus.php:33
 #, php-format
@@ -1164,15 +1104,90 @@ msgstr "удалено"
 msgid "error : cmd_id must be given"
 msgstr ":    cmd_id "
 
-#: modules/msc/msc/vnc_client_no_vnc.php:57
 #: modules/msc/msc/vnc_client_java.php:45
+#: modules/msc/msc/vnc_client_no_vnc.php:57
 msgid "Connection Failed !"
 msgstr ""
 
-#: modules/msc/msc/vnc_client_no_vnc.php:59
 #: modules/msc/msc/vnc_client_java.php:47
+#: modules/msc/msc/vnc_client_no_vnc.php:59
 msgid "Connection was refused by the other side."
 msgstr "      ."
+
+#: modules/msc/msc/vnc_client_java.php:71
+msgid "Connection Succeeded !"
+msgstr ""
+
+#: modules/msc/msc/vnc_client_java.php:73
+msgid "This connection will be automatically shut down in 60 minutes."
+msgstr ""
+
+#: modules/msc/msc/vnc_client_java.php:75
+msgid "Please close this window when you are done."
+msgstr ""
+
+#: modules/msc/msc/vnc_client_java.php:168
+msgid ""
+"Java Plugin is not installed on <u>your own computer</u>. Please download it"
+" from <a "
+"href='http://www.java.com/download/'>http://www.java.com/download/</a>, "
+"install it, restart your browser and then, verify your installation on <a "
+"target='_blank' "
+"href='http://www.java.com/verify/'>http://www.java.com/verify/</a>."
+msgstr ""
+
+#: modules/msc/msc/vnc_client_java.php:172
+#: modules/msc/msc/vnc_client_no_vnc.php:355
+msgid "Take control of this computer"
+msgstr ""
+
+#: modules/msc/msc/download_file.php:32 modules/msc/infoPackage.inc.php:257
+msgid "Download file page"
+msgstr "Загрузить страницу файла"
+
+#: modules/msc/msc/download_file.php:39
+msgid "The download is in progress."
+msgstr " ."
+
+#: modules/msc/msc/download_file.php:42
+msgid "A file is already being downloaded."
+msgstr "  ."
+
+#: modules/msc/msc/download_file.php:44
+#: modules/msc/msc/download_file_get.php:28
+msgid "The download has failed."
+msgstr "   ."
+
+#: modules/msc/msc/download_file.php:54
+msgid ""
+"Click below to start downloading file from this computer. Warning: the "
+"download may last a long time"
+msgstr " ,       . :     "
+
+#: modules/msc/msc/download_file.php:56
+#, php-format
+msgid "Start download from computer %s"
+msgstr "    %s"
+
+#: modules/msc/msc/reschedule.php:40
+msgid "Reschedule this command"
+msgstr ""
+
+#: modules/msc/msc/reschedule.php:44
+msgid "<br/>End date"
+msgstr ""
+
+#: modules/msc/msc/delete.php:57
+msgid "Delete this command"
+msgstr ""
+
+#: modules/msc/msc/logs.php:33 modules/msc/logs/consult.php:39
+msgid "Current tasks"
+msgstr ""
+
+#: modules/msc/msc/logs.php:38 modules/msc/logs/consult.php:64
+msgid "Expired tasks"
+msgstr ""
 
 #: modules/msc/msc/vnc_client_no_vnc.php:136
 #, php-format
@@ -1230,10 +1245,45 @@ msgstr ""
 msgid "to"
 msgstr "в"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:355
-#: modules/msc/msc/vnc_client_java.php:172
-msgid "Take control of this computer"
+#: modules/msc/msc/ajaxPingProbe.php:37 modules/msc/msc/ajaxPingProbe.php:50
+#: modules/msc/msc/ajaxPingProbe.php:63 modules/msc/msc/ajaxPingProbe.php:72
+msgid ""
+"Connection was refused by the other side while trying to probe the machine"
+msgstr "Было отказано в подключении с другой стороны при исследовании машины"
+
+#: modules/msc/msc/ajaxPingProbe.php:39 modules/msc/msc/ajaxPingProbe.php:52
+#: modules/msc/msc/ajaxPingProbe.php:65 modules/msc/msc/ajaxPingProbe.php:74
+msgid "Error scheduler-side !"
+msgstr " scheduler-side!"
+
+#: modules/msc/msc/ajaxPingProbe.php:42 modules/msc/msc/ajaxPingProbe.php:68
+msgid "Ping failed"
+msgstr "    ping"
+
+#: modules/msc/msc/ajaxPingProbe.php:45
+msgid "Ping succeeded"
+msgstr " ping  "
+
+#: modules/msc/msc/ajaxPingProbe.php:55
+msgid "SSH connection failed"
+msgstr "    SSH"
+
+#: modules/msc/msc/ajaxPingProbe.php:58 modules/msc/msc/ajaxPingProbe.php:80
+#, php-format
+msgid "Target platform is %s"
 msgstr ""
+
+#: modules/msc/msc/ajaxPingProbe.php:77
+msgid "Ping succeeded, SSH connection failed"
+msgstr "Ping  , "
+
+#: modules/msc/msc/ajaxPingProbe.php:85
+msgid "No probe performed"
+msgstr "Не выполнены исследования"
+
+#: modules/msc/msc/packages.php:29 modules/msc/infoPackage.inc.php:227
+msgid "Packages"
+msgstr "Пакеты"
 
 #: modules/msc/msc/tabs.php:48 modules/msc/msc/tabs.php:57
 #, php-format
@@ -1252,212 +1302,6 @@ msgstr "   %s"
 #: modules/msc/msc/tabs.php:84
 msgid "Not enough information"
 msgstr ""
-
-#: modules/msc/msc/ajaxPackageFilter.php:46
-#, php-format
-msgid "These packages can be installed on computer \"%s\""
-msgstr "       \"%s\""
-
-#: modules/msc/msc/ajaxPackageFilter.php:48
-#, php-format
-msgid "These packages can be installed on group \"%s\""
-msgstr "       \"%s\""
-
-#: modules/msc/msc/ajaxPackageFilter.php:77
-msgid "Available"
-msgstr ""
-
-#: modules/msc/msc/ajaxPackageFilter.php:79
-msgid "Active"
-msgstr ""
-
-#: modules/msc/msc/ajaxPackageFilter.php:81
-msgid "Inactive"
-msgstr ""
-
-#: modules/msc/msc/ajaxPackageFilter.php:84
-msgid "Not available"
-msgstr ""
-
-#: modules/msc/msc/ajaxPackageFilter.php:93
-#: modules/msc/msc/ajaxPackageFilter.php:182
-msgid "Convergence"
-msgstr ""
-
-#: modules/msc/msc/ajaxPackageFilter.php:178
-msgid "Description"
-msgstr "Описание"
-
-#: modules/msc/msc/ajaxPackageFilter.php:179 modules/msc/msc/packages.php:41
-#: modules/msc/msc/package_detail.php:37
-msgid "Version"
-msgstr "Версия"
-
-#: modules/msc/msc/ajaxPackageFilter.php:180
-msgid "Package size"
-msgstr "Размер пакета"
-
-#: modules/msc/msc/ajaxPackageFilter.php:194
-#: modules/msc/msc/ajaxPackageFilter.php:198
-msgid "Advanced launch"
-msgstr ""
-
-#: modules/msc/msc/ajaxPackageFilter.php:195
-#: modules/msc/msc/ajaxPackageFilter.php:200
-msgid "Direct launch"
-msgstr ""
-
-#: modules/msc/msc/ajaxLogsFilter.php:141
-msgid "Can't get bundle for the requested id"
-msgstr "      id"
-
-#: modules/msc/msc/ajaxLogsFilter.php:145
-#, php-format
-msgid "Bundle #%s"
-msgstr " #%s"
-
-#: modules/msc/msc/ajaxLogsFilter.php:298
-#, php-format
-msgid ", using proxy %s"
-msgstr ",  - %s"
-
-#: modules/msc/msc/ajaxLogsFilter.php:303
-msgid "Pull"
-msgstr ""
-
-#: modules/msc/msc/ajaxLogsFilter.php:306
-#: modules/msc/msc/ajaxLogsFilter.php:319
-msgid "Normal"
-msgstr "Нормальный"
-
-#: modules/msc/msc/ajaxLogsFilter.php:310
-#, php-format
-msgid "Multiple, client mode%s"
-msgstr ",   %s"
-
-#: modules/msc/msc/ajaxLogsFilter.php:312
-msgid "Multiple, server mode"
-msgstr ",  "
-
-#: modules/msc/msc/ajaxLogsFilter.php:315
-#, php-format
-msgid "Single, client mode%s"
-msgstr ",   %s"
-
-#: modules/msc/msc/ajaxLogsFilter.php:317
-msgid "Single, server mode"
-msgstr ",  "
-
-#: modules/msc/msc/ajaxLogsFilter.php:393
-msgid "Mode"
-msgstr "Режим"
-
-#: modules/msc/msc/ajaxLogsFilter.php:397
-msgid "Client"
-msgstr "Клиент"
-
-#: modules/msc/msc/ajaxLogsFilter.php:400
-msgid "Global State"
-msgstr ""
-
-#: modules/msc/msc/ajaxLogsFilter.php:402
-msgid "Current step"
-msgstr ""
-
-#: modules/msc/msc/ajaxLogsFilter.php:443
-msgid "Deploy status"
-msgstr ""
-
-#: modules/msc/msc/download_file.php:39
-msgid "The download is in progress."
-msgstr " ."
-
-#: modules/msc/msc/download_file.php:42
-msgid "A file is already being downloaded."
-msgstr "  ."
-
-#: modules/msc/msc/download_file.php:44
-#: modules/msc/msc/download_file_get.php:28
-msgid "The download has failed."
-msgstr "   ."
-
-#: modules/msc/msc/download_file.php:54
-msgid ""
-"Click below to start downloading file from this computer. Warning: the "
-"download may last a long time"
-msgstr " ,       . :     "
-
-#: modules/msc/msc/download_file.php:56
-#, php-format
-msgid "Start download from computer %s"
-msgstr "    %s"
-
-#: modules/msc/msc/ajaxPing.php:33
-msgid ""
-"Connection was refused by the other side while trying to ping the machine"
-msgstr ""
-"Было отказано в подключении с другой стороны при попытке проверить связь с "
-"машиной"
-
-#: modules/msc/msc/reschedule.php:40
-msgid "Reschedule this command"
-msgstr ""
-
-#: modules/msc/msc/reschedule.php:44
-msgid "<br/>End date"
-msgstr ""
-
-#: modules/msc/msc/msctabspause.php:119 modules/msc/msc/msctabsstop.php:119
-#: modules/msc/msc/msctabsplay.php:120
-msgid "action"
-msgstr "действие"
-
-#: modules/msc/msc/msctabspause.php:121 modules/msc/msc/msctabsstop.php:121
-#: modules/msc/msc/msctabsplay.php:122
-msgid "bundle"
-msgstr ""
-
-#: modules/msc/msc/msctabspause.php:124
-#, php-format
-msgid "Pause %s %s on this group"
-msgstr " %s %s    "
-
-#: modules/msc/msc/msctabspause.php:126
-#, php-format
-msgid "Pause %s %s on host %s"
-msgstr " %s %s   %s"
-
-#: modules/msc/msc/ajaxDownloadFile.php:34
-msgid "Download file"
-msgstr "Загрузить файл"
-
-#: modules/msc/msc/ajaxDownloadFile.php:35
-msgid "Delete file"
-msgstr "Удалить файл"
-
-#: modules/msc/msc/ajaxDownloadFile.php:67
-msgid "Downloading"
-msgstr "Загрузка"
-
-#: modules/msc/msc/ajaxDownloadFile.php:72
-msgid "Error"
-msgstr "Ошибка"
-
-#: modules/msc/msc/ajaxDownloadFile.php:86
-msgid "Timestamp"
-msgstr "Время создания"
-
-#: modules/msc/msc/ajaxDownloadFile.php:87
-msgid "From computer"
-msgstr "Из компьютера"
-
-#: modules/msc/msc/ajaxDownloadFile.php:88
-msgid "File name"
-msgstr "Имя файла"
-
-#: modules/msc/msc/ajaxDownloadFile.php:89
-msgid "Length"
-msgstr "Длина"
 
 #: modules/msc/msc/msctabsstatus.php:33
 #, php-format
@@ -1827,6 +1671,118 @@ msgstr ""
 msgid "One"
 msgstr "Один"
 
+#: modules/msc/msc/msctabspause.php:124
+#, php-format
+msgid "Pause %s %s on this group"
+msgstr " %s %s    "
+
+#: modules/msc/msc/msctabspause.php:126
+#, php-format
+msgid "Pause %s %s on host %s"
+msgstr " %s %s   %s"
+
+#: modules/msc/msc/msctabsstop.php:124
+#, php-format
+msgid "Stop %s %s on this group"
+msgstr " %s %s   "
+
+#: modules/msc/msc/msctabsstop.php:126
+#, php-format
+msgid "Stop %s %s on host %s"
+msgstr " %s %s   %s"
+
+#: modules/msc/msc/connection_error.php:24
+msgid "Remote control of :"
+msgstr " :"
+
+#: modules/msc/msc/statuscsv.php:91
+msgid "uuid"
+msgstr "uuid"
+
+#: modules/msc/msc/statuscsv.php:92
+msgid "host"
+msgstr "Хост"
+
+#: modules/msc/msc/statuscsv.php:93
+msgid "current state"
+msgstr ""
+
+#: modules/msc/msc/statuscsv.php:94
+msgid "start date"
+msgstr ""
+
+#: modules/msc/msc/statuscsv.php:95
+msgid "end date"
+msgstr ""
+
+#: modules/msc/msc/statuscsv.php:103
+msgid "title"
+msgstr "заголовок"
+
+#: modules/msc/msc/statuscsv.php:104
+msgid "total"
+msgstr "полный"
+
+#: modules/msc/msc/statuscsv.php:105
+msgid "computers successfully deployed"
+msgstr "Компьютеры успешно запущены"
+
+#: modules/msc/msc/statuscsv.php:106
+msgid "computers stopped"
+msgstr "работа компьютеров остановлена"
+
+#: modules/msc/msc/statuscsv.php:107
+msgid "computers paused"
+msgstr "работа компьютеров приостановлена"
+
+#: modules/msc/msc/statuscsv.php:108
+msgid "computers out of the valid period"
+msgstr "истек срок действия работы компьютеров"
+
+#: modules/msc/msc/statuscsv.php:109
+msgid "computers running a deployment"
+msgstr ""
+
+#: modules/msc/msc/statuscsv.php:111
+msgid "waiting to upload and already try"
+msgstr " ,   "
+
+#: modules/msc/msc/statuscsv.php:112
+msgid "running upload"
+msgstr "работает загрузка"
+
+#: modules/msc/msc/statuscsv.php:114
+msgid "waiting to execute and already try"
+msgstr " ,   "
+
+#: modules/msc/msc/statuscsv.php:115
+msgid "running execution"
+msgstr "работает выполнения"
+
+#: modules/msc/msc/statuscsv.php:117
+msgid "waiting to suppress and already try"
+msgstr " ,   "
+
+#: modules/msc/msc/statuscsv.php:118
+msgid "running suppression"
+msgstr "выполняется подавление"
+
+#: modules/msc/msc/statuscsv.php:119
+msgid "computers failed to deploy"
+msgstr "не удалось развернуть компьютеры"
+
+#: modules/msc/msc/statuscsv.php:121
+msgid "unreachable during upload"
+msgstr "недостижимый при загрузке"
+
+#: modules/msc/msc/statuscsv.php:123
+msgid "unreachable during execution"
+msgstr "недостижимый при выполнении"
+
+#: modules/msc/msc/statuscsv.php:125
+msgid "unreachable during suppression"
+msgstr "недостижимый при выполнении"
+
 #: modules/msc/msc/launch.php:82
 msgid "Your start and end dates are not coherent, please check them.<br/>"
 msgstr "       , , . <br/>"
@@ -1954,216 +1910,260 @@ msgstr ""
 msgid "Probe status"
 msgstr ""
 
-#: modules/msc/msc/vnc_client_java.php:71
-msgid "Connection Succeeded !"
-msgstr ""
-
-#: modules/msc/msc/vnc_client_java.php:73
-msgid "This connection will be automatically shut down in 60 minutes."
-msgstr ""
-
-#: modules/msc/msc/vnc_client_java.php:75
-msgid "Please close this window when you are done."
-msgstr ""
-
-#: modules/msc/msc/vnc_client_java.php:168
-msgid ""
-"Java Plugin is not installed on <u>your own computer</u>. Please download it"
-" from <a "
-"href='http://www.java.com/download/'>http://www.java.com/download/</a>, "
-"install it, restart your browser and then, verify your installation on <a "
-"target='_blank' "
-"href='http://www.java.com/verify/'>http://www.java.com/verify/</a>."
-msgstr ""
-
-#: modules/msc/msc/delete.php:57
-msgid "Delete this command"
-msgstr ""
-
-#: modules/msc/msc/local_proxy.php:68
-msgid "Random (indicate number of proxies) : "
-msgstr " (  ):"
-
-#: modules/msc/msc/local_proxy.php:74
-msgid "Or designate the proxies manually below : "
-msgstr "    : "
-
-#: modules/msc/msc/local_proxy.php:79
-msgid "Computers in this command"
-msgstr "   :"
-
-#: modules/msc/msc/local_proxy.php:99
-msgid "Local proxies"
-msgstr "Локальные прокси"
-
-#: modules/msc/msc/local_proxy.php:217
-msgid "Local Proxy Mode"
-msgstr "Local Proxy Mode"
-
-#: modules/msc/msc/local_proxy.php:226
-msgid "Maximum number of simultaneous connections to a proxy"
-msgstr "Максимальное число одновременных подключений к прокси"
-
-#: modules/msc/msc/local_proxy.php:248
-msgid "Local proxies selection"
-msgstr "Выбор локальных прокси"
-
-#: modules/msc/msc/connection_error.php:24
-msgid "Remote control of :"
-msgstr " :"
-
-#: modules/msc/msc/msctabsstop.php:124
-#, php-format
-msgid "Stop %s %s on this group"
-msgstr " %s %s   "
-
-#: modules/msc/msc/msctabsstop.php:126
-#, php-format
-msgid "Stop %s %s on host %s"
-msgstr " %s %s   %s"
-
 #: modules/msc/msc/package_detail.php:37
 msgid "Label"
 msgstr "Ярлык"
 
-#: modules/msc/msc/msctabsplay.php:125
-#, php-format
-msgid "Start %s %s on this group"
-msgstr ""
+#: modules/msc/msc/download_file_remove.php:28
+msgid "The file has been deleted."
+msgstr "   ."
 
-#: modules/msc/msc/msctabsplay.php:127
-#, php-format
-msgid "Start %s %s on host %s"
-msgstr ""
-
-#: modules/msc/msc/statuscsv.php:91
-msgid "uuid"
-msgstr "uuid"
-
-#: modules/msc/msc/statuscsv.php:92
-msgid "host"
-msgstr "Хост"
-
-#: modules/msc/msc/statuscsv.php:93
-msgid "current state"
-msgstr ""
-
-#: modules/msc/msc/statuscsv.php:94
-msgid "start date"
-msgstr ""
-
-#: modules/msc/msc/statuscsv.php:95
-msgid "end date"
-msgstr ""
-
-#: modules/msc/msc/statuscsv.php:103
-msgid "title"
-msgstr "заголовок"
-
-#: modules/msc/msc/statuscsv.php:104
-msgid "total"
-msgstr "полный"
-
-#: modules/msc/msc/statuscsv.php:105
-msgid "computers successfully deployed"
-msgstr "Компьютеры успешно запущены"
-
-#: modules/msc/msc/statuscsv.php:106
-msgid "computers stopped"
-msgstr "работа компьютеров остановлена"
-
-#: modules/msc/msc/statuscsv.php:107
-msgid "computers paused"
-msgstr "работа компьютеров приостановлена"
-
-#: modules/msc/msc/statuscsv.php:108
-msgid "computers out of the valid period"
-msgstr "истек срок действия работы компьютеров"
-
-#: modules/msc/msc/statuscsv.php:109
-msgid "computers running a deployment"
-msgstr ""
-
-#: modules/msc/msc/statuscsv.php:111
-msgid "waiting to upload and already try"
-msgstr " ,   "
-
-#: modules/msc/msc/statuscsv.php:112
-msgid "running upload"
-msgstr "работает загрузка"
-
-#: modules/msc/msc/statuscsv.php:114
-msgid "waiting to execute and already try"
-msgstr " ,   "
-
-#: modules/msc/msc/statuscsv.php:115
-msgid "running execution"
-msgstr "работает выполнения"
-
-#: modules/msc/msc/statuscsv.php:117
-msgid "waiting to suppress and already try"
-msgstr " ,   "
-
-#: modules/msc/msc/statuscsv.php:118
-msgid "running suppression"
-msgstr "выполняется подавление"
-
-#: modules/msc/msc/statuscsv.php:119
-msgid "computers failed to deploy"
-msgstr "не удалось развернуть компьютеры"
-
-#: modules/msc/msc/statuscsv.php:121
-msgid "unreachable during upload"
-msgstr "недостижимый при загрузке"
-
-#: modules/msc/msc/statuscsv.php:123
-msgid "unreachable during execution"
-msgstr "недостижимый при выполнении"
-
-#: modules/msc/msc/statuscsv.php:125
-msgid "unreachable during suppression"
-msgstr "недостижимый при выполнении"
-
-#: modules/msc/msc/ajaxPingProbe.php:37 modules/msc/msc/ajaxPingProbe.php:50
-#: modules/msc/msc/ajaxPingProbe.php:63 modules/msc/msc/ajaxPingProbe.php:72
-msgid ""
-"Connection was refused by the other side while trying to probe the machine"
-msgstr "Было отказано в подключении с другой стороны при исследовании машины"
-
-#: modules/msc/msc/ajaxPingProbe.php:39 modules/msc/msc/ajaxPingProbe.php:52
-#: modules/msc/msc/ajaxPingProbe.php:65 modules/msc/msc/ajaxPingProbe.php:74
-msgid "Error scheduler-side !"
-msgstr " scheduler-side!"
-
-#: modules/msc/msc/ajaxPingProbe.php:42 modules/msc/msc/ajaxPingProbe.php:68
-msgid "Ping failed"
-msgstr "    ping"
-
-#: modules/msc/msc/ajaxPingProbe.php:45
-msgid "Ping succeeded"
-msgstr " ping  "
-
-#: modules/msc/msc/ajaxPingProbe.php:55
-msgid "SSH connection failed"
-msgstr "    SSH"
-
-#: modules/msc/msc/ajaxPingProbe.php:58 modules/msc/msc/ajaxPingProbe.php:80
-#, php-format
-msgid "Target platform is %s"
-msgstr ""
-
-#: modules/msc/msc/ajaxPingProbe.php:77
-msgid "Ping succeeded, SSH connection failed"
-msgstr "Ping  , "
-
-#: modules/msc/msc/ajaxPingProbe.php:85
-msgid "No probe performed"
-msgstr "Не выполнены исследования"
+#: modules/msc/msc/download_file_remove.php:32
+msgid "Please confirm file deletion"
+msgstr ",  ."
 
 #: modules/msc/msc/convergence.php:116
 msgid "Convergence on "
 msgstr ""
 
-#: modules/msc/msc/localSidebar.php:27
-msgid "Repository"
-msgstr "Репозиторий"
+#: modules/msc/msc/ajaxPing.php:33
+msgid ""
+"Connection was refused by the other side while trying to ping the machine"
+msgstr ""
+"Было отказано в подключении с другой стороны при попытке проверить связь с "
+"машиной"
+
+#: modules/msc/infoPackage.inc.php:44
+msgid "Secure Control"
+msgstr "Безопасное Управление"
+
+#: modules/msc/infoPackage.inc.php:48
+msgid "Audit"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:55 modules/msc/logs/localSidebar.php:29
+msgid "All user commands"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:58
+msgid "Commands logs"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:61
+msgid "Show all logs"
+msgstr "Показать все журналы"
+
+#: modules/msc/infoPackage.inc.php:63
+msgid "Show pending task's logs"
+msgstr "Показать журналы ожидающих задач"
+
+#: modules/msc/infoPackage.inc.php:65
+msgid "Show running task's logs"
+msgstr "Показать журналы выполняющихся задач"
+
+#: modules/msc/infoPackage.inc.php:67
+msgid "Show finished task's logs"
+msgstr "Показать журналы завершенных задач"
+
+#: modules/msc/infoPackage.inc.php:70
+msgid "Show custom state task's logs"
+msgstr "Показать пользовательские журналы состояний задач"
+
+#: modules/msc/infoPackage.inc.php:73 modules/msc/infoPackage.inc.php:267
+#: modules/msc/infoPackage.inc.php:272
+msgid "logs list"
+msgstr "Список журналов"
+
+#: modules/msc/infoPackage.inc.php:76
+msgid "consolidated logs list"
+msgstr "консолидированный список журналов"
+
+#: modules/msc/infoPackage.inc.php:79
+msgid "the state list"
+msgstr "список состояний"
+
+#: modules/msc/infoPackage.inc.php:89
+msgid "Remove machine from pull mode"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:95
+msgid "Deploy specific package"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:100
+msgid "Secure control on a group of computers"
+msgstr "Безопасное управление группой компьютеров"
+
+#: modules/msc/infoPackage.inc.php:104
+msgid "MSC launch tab for a group"
+msgstr "  MSC  "
+
+#: modules/msc/infoPackage.inc.php:110
+msgid "MSC logs tab for a group"
+msgstr "  MSC  "
+
+#: modules/msc/infoPackage.inc.php:115
+msgid "Secure control on computer"
+msgstr "Безопасное упрявление компьютером"
+
+#: modules/msc/infoPackage.inc.php:119
+msgid "MSC launch tab for a machine"
+msgstr "  MSC  "
+
+#: modules/msc/infoPackage.inc.php:125
+msgid "MSC logs tab for a machine"
+msgstr "  MSC  "
+
+#: modules/msc/infoPackage.inc.php:130
+msgid "Download file from a computer"
+msgstr "Загрузить файс с компьютера"
+
+#: modules/msc/infoPackage.inc.php:136
+msgid "Remove a downloaded file"
+msgstr "Удалить загруженный файл"
+
+#: modules/msc/infoPackage.inc.php:142
+msgid "Get a downloaded file"
+msgstr "Получить загруженный файл"
+
+#: modules/msc/infoPackage.inc.php:148
+msgid "Take control of a computer"
+msgstr "Управлять компьютером"
+
+#: modules/msc/infoPackage.inc.php:155
+msgid "Play a command"
+msgstr "Запустить команду"
+
+#: modules/msc/infoPackage.inc.php:161
+msgid "Pause a command"
+msgstr "Приостановить команду"
+
+#: modules/msc/infoPackage.inc.php:167
+msgid "Stop a command"
+msgstr "Остановить команду"
+
+#: modules/msc/infoPackage.inc.php:173
+msgid "Command status"
+msgstr "Состояние команды"
+
+#: modules/msc/infoPackage.inc.php:179
+msgid "Reschedule a command"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:185
+msgid "Delete a command"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:192
+msgid "Single command status"
+msgstr "Состояние одной команды"
+
+#: modules/msc/infoPackage.inc.php:197
+msgid "Show package's details"
+msgstr "Показать информацию о пакетах"
+
+#: modules/msc/infoPackage.inc.php:204
+msgid "Launch a command"
+msgstr "Запустить команду"
+
+#: modules/msc/infoPackage.inc.php:210
+msgid "Launch a advanced command"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:216
+msgid "Software convergence configuration"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:222
+msgid "Launch a quick action command"
+msgstr "Запустить команду быстрого действия"
+
+#: modules/msc/infoPackage.inc.php:232
+msgid "Ping and probe"
+msgstr "  ing  "
+
+#: modules/msc/infoPackage.inc.php:237
+msgid "Ping"
+msgstr "Ping"
+
+#: modules/msc/infoPackage.inc.php:242
+msgid "Platform"
+msgstr "Платформа"
+
+#: modules/msc/infoPackage.inc.php:247
+msgid "MAC Addr."
+msgstr "MAC-"
+
+#: modules/msc/infoPackage.inc.php:252
+msgid "IP Addr."
+msgstr "IP-"
+
+#: modules/msc/infoPackage.inc.php:262
+msgid "Csv's export"
+msgstr " csv"
+
+#: modules/msc/logs/ajaxLogsFilter.php:84
+#, php-format
+msgid "<a href='' class='bundle' title='%s'>(in bundle %s)</a>"
+msgstr "<a href='' class='bundle' title='%s'>(  %s)</a>"
+
+#: modules/msc/logs/ajaxLogsFilter.php:87
+#, php-format
+msgid "%s on %s %s"
+msgstr "%s  %s %s"
+
+#: modules/msc/logs/ajaxLogsFilter.php:127
+msgid "Date"
+msgstr "Дата"
+
+#: modules/msc/logs/all.php:33
+msgid "Show all task logs"
+msgstr "Показать журналы всех задач"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:154
+msgid "Unavailable computer"
+msgstr "Доступный компьютер"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:156
+#: modules/msc/logs/ajaxConsultLogsFilter.php:168
+#: modules/msc/logs/ajaxConsultLogsFilter.php:171
+msgid "Machine"
+msgstr "Машина"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:159
+msgid "Unavailable group"
+msgstr "Доступная группа"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:161
+#: modules/msc/logs/ajaxConsultLogsFilter.php:176
+msgid "Group"
+msgstr "Группа"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:222
+msgid "Creator"
+msgstr "Создатель"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:227
+msgid "Target"
+msgstr "пользователь"
+
+#: modules/msc/logs/viewLogs.php:117 modules/msc/logs/viewLogs.php:185
+#: modules/msc/logs/viewLogs.php:217
+msgid "The group you are working on is empty."
+msgstr ",    , ."
+
+#: modules/msc/logs/running.php:33
+msgid "Show all running task's logs"
+msgstr "Показать журналы всех запущенных задач"
+
+#: modules/msc/logs/finished.php:33
+msgid "Show all finished task's logs"
+msgstr "Показать журналы всех завершенных задач"
+
+#: modules/msc/logs/custom.php:33
+msgid "Show custom status task's logs"
+msgstr "Показать пользовательские журналы состояния задач"
+
+#: modules/msc/logs/pending.php:33
+msgid "Show all pending task's logs"
+msgstr "Показать журналы всех ожидающих задач"
