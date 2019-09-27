@@ -153,6 +153,7 @@ ul.leftfile, ul.rightfile {
 .Localdestination:hover {
         Font-Weight : Bold ;
         font-size : 15px;
+        cursor:pointer;
 }
 .delete{
         padding: 3px 0px 5px 20px;
@@ -169,6 +170,7 @@ ul.leftfile, ul.rightfile {
 .delete:hover{
         Font-Weight : Bold ;
         font-size : 15px;
+        cursor:pointer;
 }
 .pop{
         padding: 3px 0px 5px 20px;
@@ -185,6 +187,7 @@ ul.leftfile, ul.rightfile {
 .pop:hover{
         Font-Weight : Bold ;
         font-size : 15px;
+        cursor:pointer;
 }
 .ombremultiple {
         /*width:100%;*/
