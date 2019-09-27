@@ -1245,7 +1245,7 @@ class AjaxFilter extends HtmlElement {
         $root = $conf["global"]["root"];
         $maxperpage = $conf["global"]["maxperpage"];
         ?>
-        <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;">
+        <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;" style="margin-bottom:20px;">
 
             <div id="loader<?php echo $this->formid ?>">
                 <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
