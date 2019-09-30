@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 16:39+0200\n"
+"POT-Creation-Date: 2019-10-01 01:20+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: Japanese (Japan) (https://www.transifex.com/siveo/teams/72118/ja_JP/)\n"
@@ -582,8 +582,37 @@ msgstr ""
 msgid "Go to package folder"
 msgstr ""
 
+#: modules/pkgs/includes/actions/action_pwd_package.php:39
+#: modules/pkgs/includes/actions/action_comment.php:27
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:21
+#: modules/pkgs/includes/actions/actionrestart.php:48
+#: modules/pkgs/includes/actions/actioncleaning.php:23
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:22
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
+#: modules/pkgs/includes/actions/action_set_config_file.php:29
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:30
+msgid "Step label :"
+msgstr ""
+
 #: modules/pkgs/includes/actions/action_comment.php:12
 msgid "Add info in deployment log"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:53
+msgid "Unzip File"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:62
+msgid "Step label:"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:71
+msgid "Zip file:"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:90
+#: modules/pkgs/includes/actions/action_unzip_file.php:104
+msgid "Alternate package"
 msgstr ""
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:119
@@ -646,14 +675,32 @@ msgstr ""
 msgid "The last line of result"
 msgstr ""
 
-#: modules/pkgs/includes/actions/action_command_natif_shell.php:11
-msgid "Run Command in shell"
+#: modules/pkgs/includes/actions/action_unzip_file.php:173
+msgid "Return result"
 msgstr ""
 
-#: modules/pkgs/includes/actions/action_command_natif_shell.php:21
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
-#: modules/pkgs/includes/actions/actionwaitandgoto.php:30
-msgid "Step label :"
+#: modules/pkgs/includes/actions/action_unzip_file.php:214
+#: modules/pkgs/includes/actions/action_unzip_file.php:229
+msgid "Unzip to specified folder"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:248
+#: modules/pkgs/includes/actions/action_unzip_file.php:262
+msgid "Go to step"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:285
+#: modules/pkgs/includes/actions/action_unzip_file.php:300
+msgid "On success go to step"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:320
+#: modules/pkgs/includes/actions/action_unzip_file.php:335
+msgid "On error go to step"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:11
+msgid "Run Command in shell"
 msgstr ""
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:25
@@ -663,6 +710,34 @@ msgstr "コマンド"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
 msgid "Execute script"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:54
+msgid "Native (Windows batch, Linux bash and macOS bash)"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:57
+msgid "Python (Windows, Linux and macOS)"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:60
+msgid "Visual Basic Script (Windows)"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:63
+msgid "Power Shell (Windows)"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:66
+msgid "Korn Shell (Linux & macOS)"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:69
+msgid "C Shell (Linux & macOS)"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:84
+msgid "Script language"
 msgstr ""
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
@@ -679,6 +754,10 @@ msgstr ""
 
 #: modules/pkgs/includes/actions/actionrestart.php:36
 msgid "Restart"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionrestart.php:59
+msgid "Target Restart"
 msgstr ""
 
 #: modules/pkgs/includes/actions/actioncleaning.php:12
@@ -725,8 +804,16 @@ msgstr ""
 msgid "Set config file parameter"
 msgstr ""
 
+#: modules/pkgs/includes/actions/action_set_config_file.php:38
+msgid "Config action description"
+msgstr ""
+
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:21
 msgid "Wait and go to step"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:41
+msgid "Wait for (seconds)"
 msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:60

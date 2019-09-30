@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 16:39+0200\n"
+"POT-Creation-Date: 2019-10-01 01:20+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -398,7 +398,7 @@ msgstr "Mac OS"
 
 #: modules/pkgs/pkgs/edit.php:279 modules/pkgs/pkgs/add.php:241
 msgid "Operating System"
-msgstr "Systeme d'exploitation"
+msgstr "Système d'exploitation"
 
 #: modules/pkgs/pkgs/edit.php:309 modules/pkgs/pkgs/add.php:261
 msgid "Transfer method"
@@ -595,9 +595,38 @@ msgstr "Section de mise-à-jour"
 msgid "Go to package folder"
 msgstr "Aller au dossier du package"
 
+#: modules/pkgs/includes/actions/action_pwd_package.php:39
+#: modules/pkgs/includes/actions/action_comment.php:27
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:21
+#: modules/pkgs/includes/actions/actionrestart.php:48
+#: modules/pkgs/includes/actions/actioncleaning.php:23
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:22
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
+#: modules/pkgs/includes/actions/action_set_config_file.php:29
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:30
+msgid "Step label :"
+msgstr "Nom de l'étape:"
+
 #: modules/pkgs/includes/actions/action_comment.php:12
 msgid "Add info in deployment log"
-msgstr ""
+msgstr "Ajouter les informations dans le journal de déploiement"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:53
+msgid "Unzip File"
+msgstr "Dézipper un fichier"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:62
+msgid "Step label:"
+msgstr "Nom de l'étape:"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:71
+msgid "Zip file:"
+msgstr "Fichier zip:"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:90
+#: modules/pkgs/includes/actions/action_unzip_file.php:104
+msgid "Alternate package"
+msgstr "Package alternatif"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:119
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:68
@@ -659,15 +688,33 @@ msgstr "30 dernières lignes du résultat"
 msgid "The last line of result"
 msgstr "La dernière ligne du résultat"
 
+#: modules/pkgs/includes/actions/action_unzip_file.php:173
+msgid "Return result"
+msgstr "Résultat retourné"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:214
+#: modules/pkgs/includes/actions/action_unzip_file.php:229
+msgid "Unzip to specified folder"
+msgstr "Dézipper dans ce dossier"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:248
+#: modules/pkgs/includes/actions/action_unzip_file.php:262
+msgid "Go to step"
+msgstr "Aller à l'étape"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:285
+#: modules/pkgs/includes/actions/action_unzip_file.php:300
+msgid "On success go to step"
+msgstr "Lors du succès, aller à l'étape"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:320
+#: modules/pkgs/includes/actions/action_unzip_file.php:335
+msgid "On error go to step"
+msgstr "Lors de l'erreur, aller à l'étape"
+
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:11
 msgid "Run Command in shell"
-msgstr ""
-
-#: modules/pkgs/includes/actions/action_command_natif_shell.php:21
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
-#: modules/pkgs/includes/actions/actionwaitandgoto.php:30
-msgid "Step label :"
-msgstr "Nom de l'étape:"
+msgstr "Éxecuter la commande dans un shell"
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:25
 #: modules/pkgs/includes/actions/actionprocessscript.php:40
@@ -677,6 +724,34 @@ msgstr "Commande"
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
 msgid "Execute script"
 msgstr "Éxecuter le script"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:54
+msgid "Native (Windows batch, Linux bash and macOS bash)"
+msgstr "Natif (Windows batch, Linux bash et macOS bash)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:57
+msgid "Python (Windows, Linux and macOS)"
+msgstr "Python (Windows, Linux et macOS) "
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:60
+msgid "Visual Basic Script (Windows)"
+msgstr "Script Visual Basic (Windows)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:63
+msgid "Power Shell (Windows)"
+msgstr "Power Shell (Windows) "
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:66
+msgid "Korn Shell (Linux & macOS)"
+msgstr "Korn Shell (Linux & macOS) "
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:69
+msgid "C Shell (Linux & macOS)"
+msgstr "C Shell (Linux & macOS) "
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:84
+msgid "Script language"
+msgstr "Language de script"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
 msgid "Script"
@@ -693,6 +768,10 @@ msgstr "Redémarrer l'agent machine"
 #: modules/pkgs/includes/actions/actionrestart.php:36
 msgid "Restart"
 msgstr "Redémarrage"
+
+#: modules/pkgs/includes/actions/actionrestart.php:59
+msgid "Target Restart"
+msgstr ""
 
 #: modules/pkgs/includes/actions/actioncleaning.php:12
 msgid "Remove uploaded files"
@@ -738,9 +817,17 @@ msgstr "Nom de l'étape:"
 msgid "Set config file parameter"
 msgstr ""
 
+#: modules/pkgs/includes/actions/action_set_config_file.php:38
+msgid "Config action description"
+msgstr ""
+
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:21
 msgid "Wait and go to step"
 msgstr ""
+
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:41
+msgid "Wait for (seconds)"
+msgstr "Attendre pendant (secondes)"
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151
