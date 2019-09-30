@@ -1,10 +1,11 @@
 <?php
+require_once("../../../../includes/i18n.inc.php");
 extract($_POST);
 $lab = "END_SUCCESS";
 // $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1>End Success</h1>
+    <h1><?php echo _T("End Success, 'pkgs'); ?></h1>
 </div>
 
 <div class="content">
@@ -18,7 +19,7 @@ $lab = "END_SUCCESS";
         echo'
         <table id="tableToggleSuccess">
             <tr class="toggleable">
-                <th width="16%">Step label : </th>
+                <th width="16%">_T('Step label :','pkgs')</th>
                 <th width="25%">'.$lab.'
                 <th></th>
                 <th></th>

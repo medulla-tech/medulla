@@ -51,22 +51,22 @@ extract($_POST);
         $boolselected = false;
         $selectedbyscript = array(
                                     array(
-                                        "label" => 'Native (Windows batch, Linux bash and macOS bash)',
+                                        "label" => "_T('Native (Windows batch, Linux bash and macOS bash)','pkgs')",
                                         "value" => "Batch"),
                                     array(
-                                        "label" => 'Python (Windows, Linux and macOS)',
+                                        "label" => "_T('Python (Windows, Linux and macOS)','pkgs')",
                                         "value" => "python"),
                                     array(
-                                        "label" => 'Visual Basic Script (Windows)',
+                                        "label" => "_T('Visual Basic Script (Windows)','pkgs')",
                                         "value" => "visualbasicscript"),
                                     array(
-                                        "label" => 'Power Shell (Windows)',
+                                        "label" => "_T('Power Shell (Windows)','pkgs')",
                                         "value" => "powershell"),
                                     array(
-                                        "label" => 'Korn Shell (Linux & macOS)',
+                                        "label" => "_T('Korn Shell (Linux & macOS)','pkgs')",
                                         "value" => "unixKornshell"),
                                     array(
-                                        "label" => 'C Shell (Linux & macOS)',
+                                        "label" => "_T('C Shell (Linux & macOS)','pkgs')",
                                             "value" => "unixCshell")
         );
 
@@ -81,7 +81,7 @@ extract($_POST);
         }
 
                 echo '<th width="16%">
-                    Script language
+                    _T("Script language","pkgs")
                 </th>
                 <th width="25%">
                     <select name="typescript">'.$options.'</select>

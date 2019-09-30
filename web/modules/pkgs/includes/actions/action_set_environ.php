@@ -25,7 +25,7 @@ $environstr = trim($environstr,",\n\r");
 ?>
 
 <div class="header">
-    <h1><?php echo _T('Set Environment variables', 'pkgs') ?></h1>
+    <h1><?php echo _T('Set Environment variables', 'pkgs'); ?></h1>
 </div>
 <div class="content">
     <div>

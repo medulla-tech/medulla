@@ -2,13 +2,14 @@
 require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");
+require_once("../../../../includes/i18n.inc.php");
 extract($_POST);
 $tableToggle=  "tableToggle".uniqid();
 $toggleable =  "toggleable".uniqid();
 $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
-    <h1>Add info in deployment log</h1>
+    <h1><?php echo _T("Add info in deployment log","pkgs"); ?></h1>
 </div>
 
 <div class="content">
@@ -23,7 +24,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <?php
         echo'
            <tr class="toggleable">
-                <th width="16%">Step label : </th>
+                <th width="16%">_T("Step label :","pkgs")</th>
                 <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>
                 <th></th>

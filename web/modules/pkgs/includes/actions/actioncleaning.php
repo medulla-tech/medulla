@@ -1,4 +1,5 @@
 <?php
+require_once("../../../../includes/i18n.inc.php");
 extract($_POST);
 //$lab = "PACKAGE_CLEAR";
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
@@ -19,7 +20,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
           <tr class="toggleable">
         <?php
         echo'
-                    <th width="16%">Step label : </th>
+                    <th width="16%">_T("Step label :","pkgs")</th>
                     <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>';
                     echo'

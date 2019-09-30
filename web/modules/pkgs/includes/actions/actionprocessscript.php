@@ -33,11 +33,11 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         <input type="hidden" name="codereturn" value=""/>
     <table id="tableToggle">
         <tr class="toggleable">
-            <th>Step label:</th>
+            <th><?php echo _T('Step label: ', 'pkgs'); ?></th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo $lab; ?>"/></th>
         </tr>
         <tr>
-            <th>Command</th>
+            <th><?php echo _T('Command', 'pkgs'); ?></th>
             <th>
                 <textarea class="special_textarea" name="command" ><?php echo $command; ?></textarea>
             </th>
