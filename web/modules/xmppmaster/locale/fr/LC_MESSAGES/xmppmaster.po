@@ -247,11 +247,11 @@ msgstr "Adresse MAC"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:344
 msgid "Package Details"
-msgstr ""
+msgstr "Détail du package"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
 msgid "Creator"
-msgstr "Crateur"
+msgstr "Créateur"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:353
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:504
@@ -315,7 +315,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:498
 msgid "Package and Dependency"
-msgstr ""
+msgstr "Package et dépendance"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:507
 msgid "Software"

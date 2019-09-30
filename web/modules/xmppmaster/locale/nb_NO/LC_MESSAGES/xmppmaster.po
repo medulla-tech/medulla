@@ -176,7 +176,7 @@ msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:265
 msgid "List all groups of computers"
-msgstr ""
+msgstr "Liste over alle datamaskingrupper"
 
 #: modules/xmppmaster/infoPackage.inc.php:270
 msgid "ajax view grp deploy"

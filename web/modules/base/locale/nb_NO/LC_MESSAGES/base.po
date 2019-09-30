@@ -506,7 +506,7 @@ msgstr ""
 
 #: modules/base/computers/edit.php:84
 msgid "Computer name"
-msgstr ""
+msgstr "Maskinnavn"
 
 #: modules/base/computers/edit.php:89 modules/base/groups/edit.php:102
 msgid "Description"
@@ -514,7 +514,7 @@ msgstr "Beskrivelse"
 
 #: modules/base/computers/edit.php:123
 msgid "Location"
-msgstr ""
+msgstr "Plassering"
 
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
 msgid "Add user"
