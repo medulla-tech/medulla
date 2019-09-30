@@ -1094,7 +1094,7 @@ msgstr "Inventar"
 
 #: modules/msc/includes/functions.php:321
 msgid "Restart"
-msgstr ""
+msgstr "Omstart"
 
 #: modules/msc/includes/functions.php:322
 msgid "Shutdown"

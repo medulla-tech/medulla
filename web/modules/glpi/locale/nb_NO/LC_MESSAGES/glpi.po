@@ -254,7 +254,7 @@ msgstr ""
 
 #: modules/glpi/glpi/tabs.php:81
 msgid "Hardware"
-msgstr ""
+msgstr "Maskinvare"
 
 #: modules/glpi/glpi/tabs.php:83
 msgid "Storage"
@@ -651,11 +651,11 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:234
 msgid "Entity"
-msgstr ""
+msgstr "Enhet"
 
 #: modules/glpi/glpi/ajaxViewPart.php:235
 msgid "Location"
-msgstr ""
+msgstr "Plassering"
 
 #: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Last Logged User"
@@ -833,3 +833,5 @@ msgid ""
 "Computers list has been truncated at %d computers. Use the filter to find "
 "specific machines."
 msgstr ""
+"Datamaskinlisten er avkortet ved %ddatamaskiner. Bruk filteret til å finne "
+"spesifikke maskiner."

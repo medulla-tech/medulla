@@ -43,7 +43,7 @@ msgstr ""
 #: modules/inventory/inventory/i18n_labels.php:82
 #: modules/inventory/inventory/localSidebar.php:30
 msgid "Hardware"
-msgstr ""
+msgstr "Maskinvare"
 
 #: modules/inventory/infoPackage.inc.php:46
 #: modules/inventory/inventory/i18n_labels.php:107
@@ -501,7 +501,7 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxIncoming.php:78
 msgid "Computer name"
-msgstr ""
+msgstr "Maskinnavn"
 
 #: modules/inventory/inventory/ajaxIncoming.php:80
 msgid "Inventory date"
@@ -843,12 +843,12 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxViewPart.php:592
 msgid "Entity"
-msgstr ""
+msgstr "Enhet"
 
 #: modules/inventory/inventory/ajaxViewPart.php:593
 #: modules/inventory/inventory/i18n_labels.php:91
 msgid "Location"
-msgstr ""
+msgstr "Plassering"
 
 #: modules/inventory/inventory/ajaxViewPart.php:594
 msgid "Last Logged User"
@@ -1465,6 +1465,8 @@ msgid ""
 "Computers list has been truncated at %d computers. Use the filter to find "
 "specific machines."
 msgstr ""
+"Datamaskinlisten er avkortet ved %ddatamaskiner. Bruk filteret til å finne "
+"spesifikke maskiner."
 
 #: modules/inventory/inventory/body.php:40
 msgid "Bios list"

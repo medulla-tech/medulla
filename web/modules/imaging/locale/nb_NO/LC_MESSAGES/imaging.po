@@ -2716,7 +2716,7 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxStatus.php:139
 msgid "Entity"
-msgstr ""
+msgstr "Enhet"
 
 #: modules/imaging/manage/ajaxStatus.php:145
 msgid "client(s) registered"
@@ -2896,6 +2896,8 @@ msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
 "running."
 msgstr ""
+"Oppstartsmenyene kan ikke genereres ettersom det en multicast-distribusjon "
+"rulles ut for øyeblikket."
 
 #: modules/imaging/imaging/tabs.php:61
 msgid "Default menu has been successfully restored."
