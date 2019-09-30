@@ -5,7 +5,7 @@ $lab = "END_SUCCESS";
 // $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1><?php echo _T("End Success, 'pkgs'); ?></h1>
+    <h1><?php echo _T("End Success", "pkgs"'); ?></h1>
 </div>
 
 <div class="content">
