@@ -19,7 +19,7 @@ $lab = "END_ERROR";
         echo'
             <table id="tableToggleend">
                  <tr class="toggleable">
-                    <th width="16%">_T("Step label :","pkgs")</th>
+                    <th width="16%">'._T("Step label :","pkgs").'</th>
                     <th width="25%">'.$lab.'
                     </th>
                     <th></th>

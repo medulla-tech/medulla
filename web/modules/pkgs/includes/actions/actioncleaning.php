@@ -9,7 +9,7 @@ $toggleable =  "toggleable".uniqid();
 $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
-    <h1><?php echo _T('Remove uploaded files', 'pkgs') ?></h1>
+    <h1><?php echo _T('Remove uploaded files', 'pkgs'); ?></h1>
 </div>
 
 <div class="content">
@@ -20,7 +20,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
           <tr class="toggleable">
         <?php
         echo'
-                    <th width="16%">_T("Step label :","pkgs")</th>
+                    <th width="16%">'._T("Step label :","pkgs").'</th>
                     <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>';
                     echo'

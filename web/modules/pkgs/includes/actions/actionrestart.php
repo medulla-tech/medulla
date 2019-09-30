@@ -45,7 +45,7 @@ $options = "";
         //---------------------label-----------------------------------
         echo '<tr class="toggleable">';
             echo'
-                    <th width="16%">_T("Step label :","pkgs")</th>
+                    <th width="16%">'._T("Step label :","pkgs").'</th>
                     <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>';
                     echo'
@@ -56,7 +56,7 @@ $options = "";
 
             echo '<tr class="toggleable">';
 
-                echo '<td width="16%">_T("Target Restart","pkgs")</td>
+                echo '<td width="16%">'._T("Target Restart","pkgs").'</td>
                     <td width="25%">
                         <select title="" name="targetrestart">'.$options.'</select>
                     </td>';

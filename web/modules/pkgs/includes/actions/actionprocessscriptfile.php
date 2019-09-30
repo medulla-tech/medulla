@@ -51,22 +51,22 @@ extract($_POST);
         $boolselected = false;
         $selectedbyscript = array(
                                     array(
-                                        "label" => "_T('Native (Windows batch, Linux bash and macOS bash)','pkgs')",
+                                        "label" => _T('Native (Windows batch, Linux bash and macOS bash)','pkgs'),
                                         "value" => "Batch"),
                                     array(
-                                        "label" => "_T('Python (Windows, Linux and macOS)','pkgs')",
+                                        "label" => _T('Python (Windows, Linux and macOS)','pkgs'),
                                         "value" => "python"),
                                     array(
-                                        "label" => "_T('Visual Basic Script (Windows)','pkgs')",
+                                        "label" => _T('Visual Basic Script (Windows)','pkgs'),
                                         "value" => "visualbasicscript"),
                                     array(
-                                        "label" => "_T('Power Shell (Windows)','pkgs')",
+                                        "label" => _T('Power Shell (Windows)','pkgs'),
                                         "value" => "powershell"),
                                     array(
-                                        "label" => "_T('Korn Shell (Linux & macOS)','pkgs')",
+                                        "label" => _T('Korn Shell (Linux & macOS)','pkgs'),
                                         "value" => "unixKornshell"),
                                     array(
-                                        "label" => "_T('C Shell (Linux & macOS)','pkgs')",
+                                        "label" => _T('C Shell (Linux & macOS)','pkgs'),
                                             "value" => "unixCshell")
         );
 
@@ -80,9 +80,9 @@ extract($_POST);
                 $options .= "<option value='".$val['value']."'>".$val['label']."</option>";
         }
 
-                echo '<th width="16%">
-                    _T("Script language","pkgs")
-                </th>
+                echo '<th width="16%">'
+                    ._T("Script language","pkgs").
+                '</th>
                 <th width="25%">
                     <select name="typescript">'.$options.'</select>
                 </th>';

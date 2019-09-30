@@ -26,7 +26,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 
         echo'
            <tr class="toggleable">
-                <th width="16%">_T("Step label :","pkgs")</th>
+                <th width="16%">'._T("Step label :","pkgs").'</th>
                 <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>
                 <th></th>
@@ -35,7 +35,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
             <tr>
              ';
             echo '<td width="16%">
-                   _T("Config action description","pkgs")
+                   '._T("Config action description","pkgs").'
                 </td>
                 <td width="25%">
                 <input title="eg:

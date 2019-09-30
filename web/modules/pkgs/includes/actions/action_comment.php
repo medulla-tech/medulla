@@ -24,7 +24,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <?php
         echo'
            <tr class="toggleable">
-                <th width="16%">_T("Step label :","pkgs")</th>
+                <th width="16%">'._T("Step label :","pkgs").'</th>
                 <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>
                 <th></th>

@@ -37,9 +37,9 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
         <tr>
             <?php
                 echo '
-                <td>
-                    _T("Wait for (seconds)","pkgs")
-                </td>
+                <td>'
+                    ._T("Wait for (seconds)","pkgs").
+                '</td>
                 <td>
                     <input " type="number" min="1" value="'.$waiting.'" name="waiting"  />
                 </td>';
