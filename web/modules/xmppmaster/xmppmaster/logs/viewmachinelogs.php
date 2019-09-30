@@ -436,7 +436,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         $scalardate = get_object_vars($info['objectdeploy'][0]['start'])['scalar'];
         $formateddate = substr($scalardate, 0,4).'-'.substr($scalardate, 4,2).'-'.substr($scalardate, 6,2).' '.substr($scalardate, 9);
         echo "<div>";
-            echo '<H2 style="align=center;">Start deployment : '.$formateddate."</H2>";
+            echo '<H2 style="align=center;">'._T("Start deployment : ","xmppmaster").$formateddate.'</H2>';
         echo "</div>";
         if (isset($infoslist)){
             if ( $info['len'] != 0){
