@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-24 13:08+0200\n"
+"POT-Creation-Date: 2019-09-30 16:39+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
@@ -574,6 +574,18 @@ msgstr ""
 msgid "Computers list has been truncated at %d computers"
 msgstr ""
 
+#: modules/pkgs/includes/actions/action_section_update.php:17
+msgid "Update Section"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_pwd_package.php:12
+msgid "Go to package folder"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_comment.php:12
+msgid "Add info in deployment log"
+msgstr ""
+
 #: modules/pkgs/includes/actions/action_unzip_file.php:119
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:68
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:283
@@ -639,10 +651,13 @@ msgid "Run Command in shell"
 msgstr ""
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:21
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:30
 msgid "Step label :"
 msgstr ""
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:25
+#: modules/pkgs/includes/actions/actionprocessscript.php:40
 msgid "Command"
 msgstr ""
 
@@ -654,28 +669,64 @@ msgstr ""
 msgid "Script"
 msgstr ""
 
+#: modules/pkgs/includes/actions/actionrestart.php:17
+msgid "Restart Machine"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionrestart.php:19
+msgid "Restart Agent Machine"
+msgstr ""
+
 #: modules/pkgs/includes/actions/actionrestart.php:36
 msgid "Restart"
 msgstr ""
 
-#: modules/pkgs/includes/actions/actioncleaning.php:11
+#: modules/pkgs/includes/actions/actioncleaning.php:12
 msgid "Remove uploaded files"
 msgstr ""
 
-#: modules/pkgs/includes/actions/action_set_environ.php:29
+#: modules/pkgs/includes/actions/action_section_uninstall.php:18
+msgid "Uninstall Section"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:7
+msgid "End Error"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_section_install.php:18
+msgid "Install Section"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:8
+msgid "End Success"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_set_environ.php:28
 msgid "Set Environment variables"
 msgstr ""
 
-#: modules/pkgs/includes/actions/action_set_environ.php:37
+#: modules/pkgs/includes/actions/action_set_environ.php:36
 msgid "Step label : "
 msgstr ""
 
-#: modules/pkgs/includes/actions/action_set_environ.php:45
+#: modules/pkgs/includes/actions/action_set_environ.php:44
 msgid "Environment variable"
 msgstr ""
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:26
 msgid "Run command"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscript.php:36
+msgid "Step label: "
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_set_config_file.php:12
+msgid "Set config file parameter"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:21
+msgid "Wait and go to step"
 msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:60

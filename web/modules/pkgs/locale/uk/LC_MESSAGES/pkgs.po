@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-24 13:08+0200\n"
+"POT-Creation-Date: 2019-09-30 16:39+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -588,6 +588,18 @@ msgstr ""
 msgid "Computers list has been truncated at %d computers"
 msgstr "Список комп'ютерів обрізано до %d записів"
 
+#: modules/pkgs/includes/actions/action_section_update.php:17
+msgid "Update Section"
+msgstr "Оновити розділ"
+
+#: modules/pkgs/includes/actions/action_pwd_package.php:12
+msgid "Go to package folder"
+msgstr "Перейти до теки пакунків"
+
+#: modules/pkgs/includes/actions/action_comment.php:12
+msgid "Add info in deployment log"
+msgstr "Додати дані до журналу розгортання"
+
 #: modules/pkgs/includes/actions/action_unzip_file.php:119
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:68
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:283
@@ -653,10 +665,13 @@ msgid "Run Command in shell"
 msgstr "Виконати команду у оболонці"
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:21
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:30
 msgid "Step label :"
 msgstr "Мітка кроку:"
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:25
+#: modules/pkgs/includes/actions/actionprocessscript.php:40
 msgid "Command"
 msgstr "Команда"
 
@@ -668,29 +683,65 @@ msgstr "Виконати скрипт"
 msgid "Script"
 msgstr "Скрипт"
 
+#: modules/pkgs/includes/actions/actionrestart.php:17
+msgid "Restart Machine"
+msgstr "Перезапустити комп'ютер"
+
+#: modules/pkgs/includes/actions/actionrestart.php:19
+msgid "Restart Agent Machine"
+msgstr "Перезапустити комп'ютер агента"
+
 #: modules/pkgs/includes/actions/actionrestart.php:36
 msgid "Restart"
 msgstr "Перезапустити"
 
-#: modules/pkgs/includes/actions/actioncleaning.php:11
+#: modules/pkgs/includes/actions/actioncleaning.php:12
 msgid "Remove uploaded files"
 msgstr "Вилучити вивантажені файли"
 
-#: modules/pkgs/includes/actions/action_set_environ.php:29
+#: modules/pkgs/includes/actions/action_section_uninstall.php:18
+msgid "Uninstall Section"
+msgstr "Вилучити розділ"
+
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:7
+msgid "End Error"
+msgstr "Кінцева помилка"
+
+#: modules/pkgs/includes/actions/action_section_install.php:18
+msgid "Install Section"
+msgstr "Встановити розділ"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:8
+msgid "End Success"
+msgstr "Кінцевий успіх"
+
+#: modules/pkgs/includes/actions/action_set_environ.php:28
 msgid "Set Environment variables"
 msgstr "Встановити змінні середовища"
 
-#: modules/pkgs/includes/actions/action_set_environ.php:37
+#: modules/pkgs/includes/actions/action_set_environ.php:36
 msgid "Step label : "
 msgstr "Мітка кроку:"
 
-#: modules/pkgs/includes/actions/action_set_environ.php:45
+#: modules/pkgs/includes/actions/action_set_environ.php:44
 msgid "Environment variable"
 msgstr "Змінна середовища"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:26
 msgid "Run command"
 msgstr "Виконати команду"
+
+#: modules/pkgs/includes/actions/actionprocessscript.php:36
+msgid "Step label: "
+msgstr "Мітка кроку:"
+
+#: modules/pkgs/includes/actions/action_set_config_file.php:12
+msgid "Set config file parameter"
+msgstr "Встановити параметр файла налаштувань"
+
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:21
+msgid "Wait and go to step"
+msgstr "Зачекати і перейти до кроку"
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151
