@@ -614,20 +614,20 @@ msgstr "Додати дані до журналу розгортання"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:53
 msgid "Unzip File"
-msgstr ""
+msgstr "Розпакувати файл"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:62
 msgid "Step label:"
-msgstr ""
+msgstr "Мітка кроку:"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:71
 msgid "Zip file:"
-msgstr ""
+msgstr "Файл архіву:"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:90
 #: modules/pkgs/includes/actions/action_unzip_file.php:104
 msgid "Alternate package"
-msgstr ""
+msgstr "Альтернативний пакунок"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:119
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:68
@@ -691,27 +691,27 @@ msgstr "Останній рядок результату"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:173
 msgid "Return result"
-msgstr ""
+msgstr "Повернути результат"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:214
 #: modules/pkgs/includes/actions/action_unzip_file.php:229
 msgid "Unzip to specified folder"
-msgstr ""
+msgstr "Розпакувати до вказаної теки"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:248
 #: modules/pkgs/includes/actions/action_unzip_file.php:262
 msgid "Go to step"
-msgstr ""
+msgstr "Перейти до кроку"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:285
 #: modules/pkgs/includes/actions/action_unzip_file.php:300
 msgid "On success go to step"
-msgstr ""
+msgstr "Якщо успішно, перейти до кроку"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:320
 #: modules/pkgs/includes/actions/action_unzip_file.php:335
 msgid "On error go to step"
-msgstr ""
+msgstr "Якщо помилка, перейти до кроку"
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:11
 msgid "Run Command in shell"
@@ -728,31 +728,31 @@ msgstr "Виконати скрипт"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:54
 msgid "Native (Windows batch, Linux bash and macOS bash)"
-msgstr ""
+msgstr "Вбудований (пакетний файл Windows, скрипт bash у Linux та macOS)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:57
 msgid "Python (Windows, Linux and macOS)"
-msgstr ""
+msgstr "Python (Windows, Linux та macOS)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:60
 msgid "Visual Basic Script (Windows)"
-msgstr ""
+msgstr "Скрипт Visual Basic (Windows)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:63
 msgid "Power Shell (Windows)"
-msgstr ""
+msgstr "Power Shell (Windows)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:66
 msgid "Korn Shell (Linux & macOS)"
-msgstr ""
+msgstr "Оболонка Korn (Linux і macOS)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:69
 msgid "C Shell (Linux & macOS)"
-msgstr ""
+msgstr "C Shell (Linux і macOS)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:84
 msgid "Script language"
-msgstr ""
+msgstr "Скриптова мова"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
 msgid "Script"
@@ -772,7 +772,7 @@ msgstr "Перезапустити"
 
 #: modules/pkgs/includes/actions/actionrestart.php:59
 msgid "Target Restart"
-msgstr ""
+msgstr "Перезапуск призначення"
 
 #: modules/pkgs/includes/actions/actioncleaning.php:12
 msgid "Remove uploaded files"
@@ -820,7 +820,7 @@ msgstr "Встановити параметр файла налаштувань"
 
 #: modules/pkgs/includes/actions/action_set_config_file.php:38
 msgid "Config action description"
-msgstr ""
+msgstr "Опис дії із налаштовування"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:21
 msgid "Wait and go to step"
@@ -828,7 +828,7 @@ msgstr "Зачекати і перейти до кроку"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:41
 msgid "Wait for (seconds)"
-msgstr ""
+msgstr "Очікування (у секундах)"
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151

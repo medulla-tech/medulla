@@ -823,7 +823,7 @@ msgstr ""
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:21
 msgid "Wait and go to step"
-msgstr ""
+msgstr "Attendre et aller à l'étape"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:41
 msgid "Wait for (seconds)"
