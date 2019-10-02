@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-02 14:18+0200\n"
+"POT-Creation-Date: 2019-10-02 14:31+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -201,6 +201,15 @@ msgstr "Список запущених розгортань"
 #: modules/xmppmaster/infoPackage.inc.php:296
 msgid "Transfert syncthing list no transfered"
 msgstr "Список передавань syncthing не передано"
+
+#: modules/xmppmaster/includes/html.inc.php:82
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:563
+msgid "Refresh"
+msgstr "Оновити"
+
+#: modules/xmppmaster/includes/html.inc.php:83
+msgid "Change refresh"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
 #, php-format
@@ -899,10 +908,6 @@ msgstr "Поточний шлях:"
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:553
 msgid "Computer view"
 msgstr "Перегляд комп'ютерів"
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:563
-msgid "Refresh"
-msgstr "Оновити"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:573
 msgid "History download"
