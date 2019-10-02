@@ -1,0 +1,158 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-10-01 01:20+0200\n"
+"PO-Revision-Date: 2019-10-02 12:32+0000\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
+"Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/es_ES/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es_ES\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
+msgid "kiosk"
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:43
+msgid "Profile List"
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:47
+msgid "Add Profile"
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:66 modules/kiosk/kiosk/editProfile.php:43
+msgid "Edit Profile"
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:70
+msgid "Delete profile"
+msgstr ""
+
+#: modules/kiosk/kiosk/ajaxEditProfile.php:43
+#, php-format
+msgid "The profile %s has been updated"
+msgstr ""
+
+#: modules/kiosk/kiosk/ajaxEditProfile.php:46
+#, php-format
+msgid "Unable to update the profile %s"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:37
+msgid "List of profils"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
+#: modules/kiosk/kiosk/editProfile.php:73
+msgid "Active"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
+#: modules/kiosk/kiosk/editProfile.php:73
+msgid "Inactive"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:54 modules/kiosk/kiosk/add.php:63
+#: modules/kiosk/kiosk/editProfile.php:65
+msgid "Profile Name"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:56 modules/kiosk/kiosk/add.php:74
+#: modules/kiosk/kiosk/editProfile.php:76
+msgid "Profile Status"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:65
+msgid "Associate Packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:66
+msgid "Edit Profil"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:67
+msgid "Delete Profil"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:43
+msgid "Add New Profile"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:64 modules/kiosk/kiosk/editProfile.php:66
+msgid "Name"
+msgstr "Nombre"
+
+#: modules/kiosk/kiosk/add.php:70 modules/kiosk/kiosk/editProfile.php:72
+msgid "Set the profile to active / inactive state"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:82 modules/kiosk/kiosk/editProfile.php:86
+msgid "Manage packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:99 modules/kiosk/kiosk/editProfile.php:144
+msgid "Available packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:104 modules/kiosk/kiosk/editProfile.php:149
+msgid "Restricted packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:110 modules/kiosk/kiosk/editProfile.php:154
+msgid "Allowed packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:128 modules/kiosk/kiosk/editProfile.php:171
+msgid "Select OUs"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:134
+msgid "Create"
+msgstr "Crear"
+
+#: modules/kiosk/kiosk/add.php:134
+msgid "Create the profile"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:145
+msgid "The LDAP is not configured correctly. Please check your configuration."
+msgstr ""
+
+#: modules/kiosk/kiosk/ajaxAddProfile.php:44
+#, php-format
+msgid "Profile %s successfully added"
+msgstr ""
+
+#: modules/kiosk/kiosk/ajaxAddProfile.php:48
+#, php-format
+msgid "Unable to create the profile %s"
+msgstr ""
+
+#: modules/kiosk/kiosk/editProfile.php:177
+msgid "modify"
+msgstr ""
+
+#: modules/kiosk/kiosk/editProfile.php:177
+msgid "Modify the profile"
+msgstr ""
+
+#: modules/kiosk/kiosk/localSidebar.php:24
+msgid "Profils List"
+msgstr ""
+
+#: modules/kiosk/kiosk/localSidebar.php:25
+msgid "Add Profil"
+msgstr ""

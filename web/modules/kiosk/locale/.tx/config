@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[pulse-1.guacamole]
+[pulse-1.kiosk]
 file_filter = <lang>/LC_MESSAGES/kiosk.po
 source_file = kiosk.pot
 source_lang = en_US
