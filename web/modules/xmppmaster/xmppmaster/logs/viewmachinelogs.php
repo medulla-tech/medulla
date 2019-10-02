@@ -210,7 +210,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
 //     }
    if ($datawol['len'] != 0){
         echo "<br>";
-            echo '<h2 class="replytab" id="wol">'.$hideText.' '._T("Wan on Lan","xmppmaster").'</h2>';
+            echo '<h2 class="replytab" id="wol">'.$hideText.' '._T("Wake on Lan","xmppmaster").'</h2>';
             echo "<div id='titlewol'>";
             echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
                 echo "<thead>";
