@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-20 19:59+0200\n"
+"POT-Creation-Date: 2019-10-02 14:18+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -289,6 +289,10 @@ msgstr "Дата початку"
 msgid "Stop Date"
 msgstr "Дата припинення"
 
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:439
+msgid "Start deployment : "
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:446
 msgid "xmpp information"
 msgstr "Дані XMPP"
@@ -539,7 +543,7 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:69
 #: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:68
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:179
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:301
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:304
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:62
 #, php-format
 msgid "Error : %s"
@@ -683,7 +687,7 @@ msgid "File :"
 msgstr "Файл:"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:262
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:259
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:262
 msgid "File manager"
 msgstr "Керування файлами"
 
@@ -833,103 +837,103 @@ msgstr "Нетипову швидку дію визначено для опер�
 msgid "Sorry the machine is off"
 msgstr "Вибачте, комп'ютер вимкнено"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:299
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:302
 #, php-format
 msgid "Sorry, the remote machine [%s] takes too long to answer."
 msgstr ""
 "Вибачте, віддалений комп'ютер [%s] не надав відповіді протягом відведеного "
 "для цього часу."
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:348
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:351
 msgid "Downloads basket"
 msgstr "Кошик отримання даних"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:352
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:355
 msgid "Folders"
 msgstr "Теки"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:355
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:358
 msgid "Remove last folder"
 msgstr "Вилучити останню теку"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:356
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:359
 msgid "Remove all folders"
 msgstr "Вилучити усі теки"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:361
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:364
 msgid "Files"
 msgstr "Файли"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:364
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:367
 msgid "Remove last file"
 msgstr "Вилучити останній файл"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:365
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:368
 msgid "Remove all files"
 msgstr "Вилучити усі файли"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:370
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:373
 msgid "Downloads basket to"
 msgstr "Отримувати дані до"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:373
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:376
 msgid "Download list selection"
 msgstr "Вибір списку отримання даних"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:390
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:393
 msgid "Local folder"
 msgstr "Локальна тека"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:415
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:418
 msgid "Remote tree view"
 msgstr "Перегляд ієрархії віддаленої теки"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:418
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:421
 msgid "root:"
 msgstr "корінь:"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:421
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:424
 msgid "Current path: "
 msgstr "Поточний шлях:"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:550
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:553
 msgid "Computer view"
 msgstr "Перегляд комп'ютерів"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:560
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:563
 msgid "Refresh"
 msgstr "Оновити"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:570
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:573
 msgid "History download"
 msgstr "Журнал отримання"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:580
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:583
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
 msgid "File Manager"
 msgstr "Керування файлами"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:790
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:793
 msgid "Download from"
 msgstr "Отримання з"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:792
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:795
 msgid "Folders list"
 msgstr "Список тек"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:800
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:803
 msgid "Files list"
 msgstr "Список файлів"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:808
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:811
 msgid "To local folder"
 msgstr "До локальної теки"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:825
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:828
 msgid "Confirm"
 msgstr "Підтвердити"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:837
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:840
 msgid "The list (folder & files) copy has been requested successfully"
 msgstr "Запит щодо списку копіювання (теки і файлів) було успішно надіслано"
 
