@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-02 14:18+0200\n"
+"POT-Creation-Date: 2019-10-02 14:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -195,6 +195,15 @@ msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:296
 msgid "Transfert syncthing list no transfered"
+msgstr ""
+
+#: modules/xmppmaster/includes/html.inc.php:82
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:563
+msgid "Refresh"
+msgstr ""
+
+#: modules/xmppmaster/includes/html.inc.php:83
+msgid "Change refresh"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
@@ -884,10 +893,6 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:553
 msgid "Computer view"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:563
-msgid "Refresh"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:573
