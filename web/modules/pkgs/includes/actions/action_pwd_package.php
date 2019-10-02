@@ -53,7 +53,7 @@ $idclass     =  "#".$tableToggle.' tr.'.$toggleable;
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Alternate package
+                                }" />'._T("Alternate package","pkgs").'
                 </td>
                 <td width="25%">
                     <select name="packageuuid">'.$options.'</select>
@@ -67,7 +67,7 @@ $idclass     =  "#".$tableToggle.' tr.'.$toggleable;
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Alternate package
+                                }" />'._T("Alternate package","pkgs").'
                     </td>
                     <td width="25%">
                         <select disabled name="packageuuid">'.$options.'</select>

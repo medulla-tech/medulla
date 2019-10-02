@@ -54,7 +54,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Alternate package
+                                }" />'._T("Alternate package","pkgs").'
                 </td>
                 <td width="25%">
                     <select name="packageuuid">'.$options.'</select>
@@ -68,7 +68,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Alternate package
+                                }" />'._T("Alternate package","pkgs").'
                     </td>
                     <td width="25%">
                         <select disabled name="packageuuid">'.$options.'</select>
@@ -92,7 +92,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Set timeout
+                    }" />'._T("Set timeout","pkgs").'
                 </td>
                 <td>
                     <input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
@@ -107,7 +107,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Set timeout
+                    }" />'._T("Set timeout","pkgs").'
                 </td>
                 <td>
                     <input type="number" min="0" value="800"  name="timeout"  />
@@ -172,7 +172,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                                                         }
                                                         else{
                                                             jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                        }" />Return result
+                                                        }" />'._T("Return result","pkgs").'
             </td>
             <td>
                 <select  onchange="jQuery(this).attr(\'name\',jQuery(this).val());" name="'.$selectresult.'">'.$options.'</select>
@@ -187,7 +187,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                                                 }
                                                 else{
                                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                }" />Return result
+                                                }" />'._T("Return result","pkgs").'
             </td>
             <td>
             <select disabled onchange="jQuery(this).attr(\'name\',jQuery(this).val());"
@@ -208,7 +208,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$success.'" name="success"  />
@@ -223,7 +223,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_SUCCESS" disabled name="success"  />
@@ -243,7 +243,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$error.'" name="error"  />
@@ -258,7 +258,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_ERROR" enabled name="error"  />

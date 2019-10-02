@@ -39,7 +39,7 @@ $lab = "END_SUCCESS";
                              }
                              else{
                                  jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                             }" />Delete package
+			     }" />'._T("Delete package","pkgs").'
              </td>';
 
 
@@ -81,7 +81,7 @@ $lab = "END_SUCCESS";
                              }
                              else{
                                  jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                             }" />Inventory
+                             }" />'._T("Inventory","pkgs").'
              </td>';
 
              if(isset($inventory) && $inventory == "True")

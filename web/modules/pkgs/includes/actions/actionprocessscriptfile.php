@@ -315,7 +315,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             $selectresult = "1@lastlines";
         }
 
-        foreach($resultlist as $selectedbyscript)
+       foreach($resultlist as $selectedbyscript)
         {
             if(isset($selectresult) && $selectedbyscript['value'] == $selectresult)
             {
@@ -334,7 +334,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                                                         }
                                                         else{
                                                             jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                        }" />Return result
+                                                        }" />'._T("Return result","pkgs").'
             </td>
             <td>
                 <select  onchange="jQuery(this).attr(\'name\',jQuery(this).val());" name="'.$selectresult.'">'.$options.'</select>
@@ -349,7 +349,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                                                 }
                                                 else{
                                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                }" />Return result
+                                                }" />'._T("Return result","pkgs").'
             </td>
             <td>
             <select disabled onchange="jQuery(this).attr(\'name\',jQuery(this).val());"
@@ -371,7 +371,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$success.'" name="success"  />
@@ -386,7 +386,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_SUCCESS" disabled name="success"  />
@@ -406,7 +406,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$error.'" name="error"  />
@@ -421,7 +421,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_ERROR" enabled name="error"  />
