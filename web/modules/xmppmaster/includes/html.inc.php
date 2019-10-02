@@ -79,8 +79,8 @@ class RefreshButton{
 
   //The display function displays the buttons and add the js script which manage the refresh
   function display(){
-    echo '<button class="btn btn-small btn-primary" id="bt1" type="button">_T("Refresh","xmppmaster")</button>';
-    echo '<button class="btn btn-small btn-primary" id="bt" type="button">_T("Change refresh","xmppmaster")</button>';
+    echo '<button class="btn btn-small btn-primary" id="bt1" type="button">'._T("Refresh","xmppmaster").'</button>';
+    echo '<button class="btn btn-small btn-primary" id="bt" type="button">'._T("Change refresh","xmppmaster").'</button>';
     echo '<input  id="nbs" style="width:40px" type="number" min="'.($this->minimum).'" max="500" step="2" value="'.$this->time.'" required> min';
     ?>
     <script type="text/javascript">
