@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 01:20+0200\n"
+"POT-Creation-Date: 2019-10-02 14:53+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -608,9 +608,26 @@ msgstr "Перейти до теки пакунків"
 msgid "Step label :"
 msgstr "Мітка кроку:"
 
+#: modules/pkgs/includes/actions/action_pwd_package.php:56
+#: modules/pkgs/includes/actions/action_pwd_package.php:70
+#: modules/pkgs/includes/actions/action_unzip_file.php:90
+#: modules/pkgs/includes/actions/action_unzip_file.php:104
+#: modules/pkgs/includes/actions/actionprocessscript.php:57
+#: modules/pkgs/includes/actions/actionprocessscript.php:71
+msgid "Alternate package"
+msgstr "Альтернативний пакунок"
+
 #: modules/pkgs/includes/actions/action_comment.php:12
 msgid "Add info in deployment log"
 msgstr "Додати дані до журналу розгортання"
+
+#: modules/pkgs/includes/actions/action_comment.php:36
+msgid "Information"
+msgstr "Інформація"
+
+#: modules/pkgs/includes/actions/action_comment.php:41
+msgid "Your log comments !"
+msgstr ""
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:53
 msgid "Unzip File"
@@ -623,11 +640,6 @@ msgstr "Мітка кроку:"
 #: modules/pkgs/includes/actions/action_unzip_file.php:71
 msgid "Zip file:"
 msgstr "Файл архіву:"
-
-#: modules/pkgs/includes/actions/action_unzip_file.php:90
-#: modules/pkgs/includes/actions/action_unzip_file.php:104
-msgid "Alternate package"
-msgstr "Альтернативний пакунок"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:119
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:68
@@ -690,6 +702,12 @@ msgid "The last line of result"
 msgstr "Останній рядок результату"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:173
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:122
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:137
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:337
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:352
+#: modules/pkgs/includes/actions/actionprocessscript.php:175
+#: modules/pkgs/includes/actions/actionprocessscript.php:190
 msgid "Return result"
 msgstr "Повернути результат"
 
@@ -705,11 +723,23 @@ msgstr "Перейти до кроку"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:285
 #: modules/pkgs/includes/actions/action_unzip_file.php:300
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:158
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:173
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:374
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:389
+#: modules/pkgs/includes/actions/actionprocessscript.php:211
+#: modules/pkgs/includes/actions/actionprocessscript.php:226
 msgid "On success go to step"
 msgstr "Якщо успішно, перейти до кроку"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:320
 #: modules/pkgs/includes/actions/action_unzip_file.php:335
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:193
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:208
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:409
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:424
+#: modules/pkgs/includes/actions/actionprocessscript.php:246
+#: modules/pkgs/includes/actions/actionprocessscript.php:261
 msgid "On error go to step"
 msgstr "Якщо помилка, перейти до кроку"
 
@@ -721,6 +751,12 @@ msgstr "Виконати команду у оболонці"
 #: modules/pkgs/includes/actions/actionprocessscript.php:40
 msgid "Command"
 msgstr "Команда"
+
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:57
+#: modules/pkgs/includes/actions/actionprocessscript.php:95
+#: modules/pkgs/includes/actions/actionprocessscript.php:110
+msgid "Set timeout"
+msgstr ""
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
 msgid "Execute script"
@@ -793,6 +829,14 @@ msgstr "Встановити розділ"
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:8
 msgid "End Success"
 msgstr "Кінцевий успіх"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:42
+msgid "Delete package"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
+msgid "Inventory"
+msgstr "Облік"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:28
 msgid "Set Environment variables"
