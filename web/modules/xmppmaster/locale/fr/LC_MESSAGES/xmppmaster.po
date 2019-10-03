@@ -234,7 +234,7 @@ msgstr "Afficher"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:213
 msgid "Wake on Lan"
-msgstr ""
+msgstr "Wake on Lan"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:309
 msgid "Machine Details"
@@ -324,7 +324,7 @@ msgstr "Adresse IP du serveur relai"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:464
 msgid "ip master"
-msgstr ""
+msgstr "adresse ip du master"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:498
 msgid "Package and Dependency"
@@ -365,15 +365,15 @@ msgstr "le résultat du déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:687
 msgid "Environment"
-msgstr ""
+msgstr "l'environnement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:693
 msgid "key"
-msgstr ""
+msgstr "clef"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:696
 msgid "value"
-msgstr ""
+msgstr "valeur"
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
 msgid "Computer deploy"
