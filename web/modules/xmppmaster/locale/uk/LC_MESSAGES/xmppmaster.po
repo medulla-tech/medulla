@@ -209,7 +209,7 @@ msgstr "Оновити"
 
 #: modules/xmppmaster/includes/html.inc.php:83
 msgid "Change refresh"
-msgstr ""
+msgstr "Оновлення змін"
 
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
 #, php-format
@@ -300,7 +300,7 @@ msgstr "Дата припинення"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:439
 msgid "Start deployment : "
-msgstr ""
+msgstr "Початок розгортання:"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:446
 msgid "xmpp information"
