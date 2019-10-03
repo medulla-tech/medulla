@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-02 14:31+0200\n"
+"POT-Creation-Date: 2019-10-03 19:49+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -68,7 +68,7 @@ msgstr "Topologie machines"
 
 #: modules/xmppmaster/infoPackage.inc.php:70
 msgid "XMPP Machine details"
-msgstr "Détails de la machine"
+msgstr "les détails de la machine"
 
 #: modules/xmppmaster/infoPackage.inc.php:83
 msgid "Edit Custom Quick Action"
@@ -233,7 +233,7 @@ msgid "Show"
 msgstr "Afficher"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:213
-msgid "Wan on Lan"
+msgid "Wake on Lan"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:309
@@ -256,7 +256,7 @@ msgstr "Adresse MAC"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:344
 msgid "Package Details"
-msgstr "Détail du package"
+msgstr "les détails du package"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
 msgid "Creator"
@@ -304,7 +304,7 @@ msgstr "Début du déploiement :"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:446
 msgid "xmpp information"
-msgstr ""
+msgstr "les informations XMPP"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:452
 msgid "jid machine"
@@ -361,10 +361,18 @@ msgstr "DESCRIPTION"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:596
 msgid "Deployment result"
-msgstr ""
+msgstr "le résultat du déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:687
 msgid "Environment"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:693
+msgid "key"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:696
+msgid "value"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45

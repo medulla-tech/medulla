@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-02 14:31+0200\n"
+"POT-Creation-Date: 2019-10-03 19:49+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Language-Team: Danish (Denmark) (https://www.transifex.com/siveo/teams/72118/da_DK/)\n"
 "MIME-Version: 1.0\n"
@@ -228,7 +228,7 @@ msgid "Show"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:213
-msgid "Wan on Lan"
+msgid "Wake on Lan"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:309
@@ -360,6 +360,14 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:687
 msgid "Environment"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:693
+msgid "key"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:696
+msgid "value"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
