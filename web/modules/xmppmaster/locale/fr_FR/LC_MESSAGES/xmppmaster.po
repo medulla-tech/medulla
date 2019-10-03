@@ -328,7 +328,7 @@ msgstr "adresse ip du master"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:498
 msgid "Package and Dependency"
-msgstr "Package et dépendance"
+msgstr "le package et ses dépendances"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:507
 msgid "Software"
