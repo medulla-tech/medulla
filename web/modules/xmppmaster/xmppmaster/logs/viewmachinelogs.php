@@ -604,7 +604,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         foreach (range( 0, count($descriptorslist)-1) as $index1){
             $arraylist= $descriptorslist[$index1];
             echo "<div>";
-            echo "<span class='replytab' style='color : blue; font: italic bold 12px/30px Georgia, serif;'>Hide Result " . $infoslist[$index1]->name."</span>";
+            echo "<span class='replytab' style='color : blue; font: italic bold 12px/30px Georgia, serif;'>" . _T('Hide Result', 'xmppmaster') . $infoslist[$index1]->name."</span>";
             echo "<div>";
             foreach (range( 0, count($arraylist)-1) as $index){
                 $step=$arraylist[$index];
