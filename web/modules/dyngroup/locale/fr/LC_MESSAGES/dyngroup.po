@@ -744,11 +744,11 @@ msgstr "Groupe d'imaging statique"
 
 #: modules/dyngroup/dyngroup/tab.php:82
 msgid "Imaging server selection"
-msgstr "Slection du serveur d'imaging"
+msgstr "Sélection du serveur d'imaging"
 
 #: modules/dyngroup/dyngroup/tab.php:103
 msgid "Select an imaging server for this group"
-msgstr "Slectionner un serveur d'imaging pour ce groupe"
+msgstr "Sélectionner un serveur d'imaging pour ce groupe"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:63
 msgid "Delete this group"

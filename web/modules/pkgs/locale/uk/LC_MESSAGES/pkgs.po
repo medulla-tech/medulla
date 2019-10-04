@@ -627,7 +627,7 @@ msgstr "Інформація"
 
 #: modules/pkgs/includes/actions/action_comment.php:41
 msgid "Your log comments !"
-msgstr ""
+msgstr "Ваші коментарі до журналу!"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:53
 msgid "Unzip File"
@@ -756,7 +756,7 @@ msgstr "Команда"
 #: modules/pkgs/includes/actions/actionprocessscript.php:95
 #: modules/pkgs/includes/actions/actionprocessscript.php:110
 msgid "Set timeout"
-msgstr ""
+msgstr "Встановити часовий пояс"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
 msgid "Execute script"
@@ -832,7 +832,7 @@ msgstr "Кінцевий успіх"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:42
 msgid "Delete package"
-msgstr ""
+msgstr "Вилучити пакунок"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
 msgid "Inventory"

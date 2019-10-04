@@ -42,25 +42,25 @@ msgstr "Sammendrag for vertsmaskin"
 
 #: modules/backuppc/infoPackage.inc.php:51
 msgid "Edit host config"
-msgstr ""
+msgstr "Rediger vertskonfigurasjon"
 
 #: modules/backuppc/infoPackage.inc.php:54
 #: modules/backuppc/backuppc/hostStatus.php:324
 msgid "Advanced scripts"
-msgstr ""
+msgstr "Avanserte skript"
 
 #: modules/backuppc/infoPackage.inc.php:57
 #: modules/backuppc/backuppc/hostStatus.php:325
 msgid "File search"
-msgstr ""
+msgstr "Fil søk"
 
 #: modules/backuppc/infoPackage.inc.php:62
 msgid "Edit Backup Profile"
-msgstr ""
+msgstr "Rediger sikkerhetskopieringsprofil"
 
 #: modules/backuppc/infoPackage.inc.php:66
 msgid "Edit Backup period Profile"
-msgstr ""
+msgstr "Rediger sikkerhetskopieringsprofil"
 
 #: modules/backuppc/infoPackage.inc.php:70
 msgid "See pending packages"
@@ -68,45 +68,45 @@ msgstr "Se ventende pakker"
 
 #: modules/backuppc/infoPackage.inc.php:73
 msgid "Restore points"
-msgstr ""
+msgstr "Gjenopprett punkter"
 
 #: modules/backuppc/infoPackage.inc.php:76
 msgid "Share names"
-msgstr ""
+msgstr "Navn på delte områder"
 
 #: modules/backuppc/infoPackage.inc.php:79
 #: modules/backuppc/backuppc/BrowseFiles.php:32
 msgid "Browse files"
-msgstr ""
+msgstr "Bla igjennom filer"
 
 #: modules/backuppc/infoPackage.inc.php:82
 msgid "Backup Profiles"
-msgstr ""
+msgstr "Sikkerhetskopieringsprofiler"
 
 #: modules/backuppc/infoPackage.inc.php:85
 #: modules/backuppc/backuppc/ViewProfiles.php:40
 #: modules/backuppc/backuppc/ViewProfiles.php:90
 msgid "Delete profile"
-msgstr ""
+msgstr "Slett profil"
 
 #: modules/backuppc/infoPackage.inc.php:91
 msgid "Download files/ZIP from backup"
-msgstr ""
+msgstr "Last ned filer/ZIP fra sikkerhetskopi"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
 #: modules/backuppc/backuppc/ajaxFileSearch.php:28
 msgid "GB"
-msgstr ""
+msgstr "GB"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
 #: modules/backuppc/backuppc/ajaxFileSearch.php:30
 msgid "MB"
-msgstr ""
+msgstr "MB"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
 #: modules/backuppc/backuppc/ajaxFileSearch.php:32
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
 #: modules/backuppc/backuppc/ajaxFileSearch.php:34
@@ -115,45 +115,45 @@ msgstr "Bytes"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:106
 msgid "Current directory :  "
-msgstr ""
+msgstr "Gjeldende katalog:"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:132
 #: modules/backuppc/backuppc/viewFileVersions.php:25
 msgid "View all versions"
-msgstr ""
+msgstr "Vis alle versjoner"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:170
 #: modules/backuppc/backuppc/ajaxFileSearch.php:118
 msgid "Size"
-msgstr ""
+msgstr "Størrelse"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
 msgid "Download selected (ZIP)"
-msgstr ""
+msgstr "Last ned valgt (ZIP)"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
 msgid "Restore to host (overwrite)"
-msgstr ""
+msgstr "Gjenopprett på vert (overskriv)"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:193
 msgid "Restore to host (subfolder)"
-msgstr ""
+msgstr "Gjenopprett på vert (undermappe)"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:194
 msgid "Advanced restore"
-msgstr ""
+msgstr "Avansert gjenoppretting"
 
 #: modules/backuppc/backuppc/deleteProfile.php:43
 msgid "The profile has been deleted successfully."
-msgstr ""
+msgstr "Profilen ble slettet"
 
 #: modules/backuppc/backuppc/deleteProfile.php:46
 msgid "Failed to delete the selected profile"
-msgstr ""
+msgstr "Kunne ikke slette den valgte profilen"
 
 #: modules/backuppc/backuppc/deleteProfile.php:58
 msgid "Error : Default profiles cannot be deleted"
-msgstr ""
+msgstr "Feil: Standardprofiler kan ikke slettes"
 
 #: modules/backuppc/backuppc/deleteProfile.php:60
 msgid "Delete this profile"
@@ -165,13 +165,13 @@ msgstr "Fil"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:77
 msgid "Edit schedule"
-msgstr ""
+msgstr "Rediger skjema"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:79
 #: modules/backuppc/backuppc/edit.php:232
 #: modules/backuppc/backuppc/localSidebar.php:30
 msgid "Add schedule"
-msgstr ""
+msgstr "Legg til skjema"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:86
 #: modules/backuppc/backuppc/EditBackupProfile.php:75
@@ -179,6 +179,8 @@ msgid ""
 "Default profiles can't be modified. Your changes will be saved as a new "
 "profile."
 msgstr ""
+"Standardprofiler kan ikke endres. Endringene dine blir lagret som en ny "
+"profil."
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:97
 #: modules/backuppc/backuppc/EditBackupProfile.php:88
@@ -188,12 +190,12 @@ msgstr "Navn"
 #: modules/backuppc/backuppc/EditPeriodProfile.php:103
 #: modules/backuppc/backuppc/edit.php:173
 msgid "Interval between two full backups (days)"
-msgstr ""
+msgstr "Intervall mellom to fulle sikkerhetskopier (dager)"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:109
 #: modules/backuppc/backuppc/edit.php:178
 msgid "Interval between two incr backups (days)"
-msgstr ""
+msgstr "Intervall mellom to inkr-sikkerhetskopier (dager)"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:114
 #: modules/backuppc/backuppc/edit.php:182
@@ -246,16 +248,16 @@ msgstr "på"
 #: modules/backuppc/backuppc/edit.php:215
 #: modules/backuppc/backuppc/EditBackupProfile.php:138
 msgid "Remove"
-msgstr ""
+msgstr "Fjern"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:160
 #: modules/backuppc/backuppc/edit.php:227
 msgid "Do not backup from"
-msgstr ""
+msgstr "Ikke sikkerhetskopier fra"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:168
 msgid "Add exclusion"
-msgstr ""
+msgstr "Legg til eksklusjon"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:201
 #: modules/backuppc/backuppc/EditPeriodProfile.php:202
@@ -264,23 +266,23 @@ msgstr ""
 #: modules/backuppc/backuppc/edit.php:284
 #: modules/backuppc/backuppc/edit.php:285
 msgid "Select days"
-msgstr ""
+msgstr "Velg dager"
 
 #: modules/backuppc/backuppc/startBackup.php:74
 msgid "Choose the backup type."
-msgstr ""
+msgstr "Velg sikkerhetskopieringstype."
 
 #: modules/backuppc/backuppc/startBackup.php:78
 msgid "Full backup"
-msgstr ""
+msgstr "Full sikkerhetskopi"
 
 #: modules/backuppc/backuppc/startBackup.php:79
 msgid "Incremental backup"
-msgstr ""
+msgstr "Inkrementell sikkerhetskopi"
 
 #: modules/backuppc/backuppc/restorePopup.php:25
 msgid "Restore files"
-msgstr ""
+msgstr "Gjenopprett filer"
 
 #: modules/backuppc/backuppc/restorePopup.php:26
 msgid "Host"
@@ -288,132 +290,133 @@ msgstr "Vert"
 
 #: modules/backuppc/backuppc/restorePopup.php:35
 msgid "Destination Folder"
-msgstr ""
+msgstr "Målmappe"
 
 #: modules/backuppc/backuppc/restorePopup.php:37
 msgid "Restore"
-msgstr ""
+msgstr "Gjenopprett"
 
 #: modules/backuppc/backuppc/advScripts.php:40
 #: modules/backuppc/backuppc/hostStatus.php:302
 msgid "Configuration saved"
-msgstr ""
+msgstr "Konfigurasjonen er lagret"
 
 #: modules/backuppc/backuppc/advScripts.php:64
 msgid "Pre-backup script"
-msgstr ""
+msgstr "Pre-sikkerhetskopierings skript"
 
 #: modules/backuppc/backuppc/advScripts.php:68
 msgid "Post-backup script"
-msgstr ""
+msgstr "Post-sikkerhetskopierings skript"
 
 #: modules/backuppc/backuppc/advScripts.php:72
 msgid "Pre-restore script"
-msgstr ""
+msgstr "Pre-gjenopprettings skript"
 
 #: modules/backuppc/backuppc/advScripts.php:76
 msgid "Post-restore script"
-msgstr ""
+msgstr "Post-gjenopprettings skript"
 
 #: modules/backuppc/backuppc/ajaxHostsList.php:57
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:91
 msgid "Host name"
-msgstr ""
+msgstr "Vertsnavn"
 
 #: modules/backuppc/backuppc/ajaxHostsList.php:64
 #: modules/backuppc/backuppc/BrowseBackups.php:68
 msgid "View"
-msgstr ""
+msgstr "Vis"
 
 #: modules/backuppc/backuppc/ajaxHostsList.php:65
 msgid "Edit config"
-msgstr ""
+msgstr "Rediger konfig"
 
 #: modules/backuppc/backuppc/hostSummary.php:94
 msgid "Action requested successfully"
-msgstr ""
+msgstr "Handlingen ble suksessflt anmodet"
 
 #: modules/backuppc/backuppc/hostSummary.php:114
 msgid "Backup is not set for this computer."
-msgstr ""
+msgstr "Det er ikke satt opp sikkerhetskopi for denne datamaskinen."
 
 #: modules/backuppc/backuppc/hostSummary.php:130
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurer"
 
 #: modules/backuppc/backuppc/hostSummary.php:135
 msgid ""
 "notify warning : There is no backup server assigned for the computer entity."
 msgstr ""
+"advarsel: Det er ikke tildelt noen sikkerhetskopiserver for datamaskinen."
 
 #: modules/backuppc/backuppc/hostSummary.php:146
 msgid "There is no backup server assigned for the computer entity."
-msgstr ""
+msgstr "Det er ikke tildelt noen sikkerhetskopiserver for datamaskinen"
 
 #: modules/backuppc/backuppc/hostSummary.php:173
 #: modules/backuppc/backuppc/ajaxGetStatus.php:43
 msgid "No ping response"
-msgstr ""
+msgstr "Ping svarer ikke"
 
 #: modules/backuppc/backuppc/hostSummary.php:174
 #: modules/backuppc/backuppc/ajaxGetStatus.php:44
 msgid "Backup failed"
-msgstr ""
+msgstr "Sikkerhetskopieringen mislyktes"
 
 #: modules/backuppc/backuppc/hostSummary.php:175
 #: modules/backuppc/backuppc/ajaxGetStatus.php:45
 msgid "Restore failed"
-msgstr ""
+msgstr "Gjenoppretting mislyktes"
 
 #: modules/backuppc/backuppc/hostSummary.php:176
 #: modules/backuppc/backuppc/ajaxGetStatus.php:46
 msgid "Backup up to date"
-msgstr ""
+msgstr "Sikkerhetskopieringen er oppdatert"
 
 #: modules/backuppc/backuppc/hostSummary.php:177
 #: modules/backuppc/backuppc/ajaxGetStatus.php:47
 msgid "Restore done"
-msgstr ""
+msgstr "Gjenoppretting gjennomført"
 
 #: modules/backuppc/backuppc/hostSummary.php:178
 #: modules/backuppc/backuppc/ajaxGetStatus.php:48
 msgid "This computer has never been backed up"
-msgstr ""
+msgstr "Denne datamaskinen har aldri blitt sikkerhetskopiert"
 
 #: modules/backuppc/backuppc/hostSummary.php:179
 #: modules/backuppc/backuppc/ajaxGetStatus.php:49
 msgid "Idle"
-msgstr ""
+msgstr "Tomgang"
 
 #: modules/backuppc/backuppc/hostSummary.php:180
 #: modules/backuppc/backuppc/ajaxGetStatus.php:50
 msgid "Cancelled by user"
-msgstr ""
+msgstr "Avbrutt av bruker"
 
 #: modules/backuppc/backuppc/hostSummary.php:181
 #: modules/backuppc/backuppc/ajaxGetStatus.php:51
 msgid "Backup in progress"
-msgstr ""
+msgstr "Sikkerhetskopiering pågår"
 
 #: modules/backuppc/backuppc/hostSummary.php:184
 msgid "Current state: "
-msgstr ""
+msgstr "Nåværende status:"
 
 #: modules/backuppc/backuppc/hostSummary.php:210
 msgid "Start Full Backup"
-msgstr ""
+msgstr "Start full sikkerhetskopi"
 
 #: modules/backuppc/backuppc/hostSummary.php:212
 msgid "Start an incremental backup"
-msgstr ""
+msgstr "Start en inkrementell sikkerhetskopiering"
 
 #: modules/backuppc/backuppc/hostSummary.php:213
 msgid "Stop Backup"
-msgstr ""
+msgstr "Stopp sikkerhetskopiering"
 
 #: modules/backuppc/backuppc/hostSummary.php:249
 msgid "Backup time"
-msgstr ""
+msgstr "Sikkerhetskopieringstid"
 
 #: modules/backuppc/backuppc/hostSummary.php:250
 msgid "Type"
@@ -421,97 +424,98 @@ msgstr "Type"
 
 #: modules/backuppc/backuppc/hostSummary.php:251
 msgid "Duration (min.)"
-msgstr ""
+msgstr "Varighet (min.)"
 
 #: modules/backuppc/backuppc/hostSummary.php:252
 msgid "Errors"
-msgstr ""
+msgstr "Feil"
 
 #: modules/backuppc/backuppc/hostSummary.php:253
 msgid "File count (new)"
-msgstr ""
+msgstr "Filtelling (ny)"
 
 #: modules/backuppc/backuppc/hostSummary.php:254
 msgid "Backup size (new) [Mb]"
-msgstr ""
+msgstr "Sikkerhetskopiestørrelse (ny) [Mb]"
 
 #: modules/backuppc/backuppc/hostSummary.php:262
 #: modules/backuppc/backuppc/BrowseShareNames.php:171
 msgid "Browse"
-msgstr ""
+msgstr "Søk"
 
 #: modules/backuppc/backuppc/hostSummary.php:263
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:101
 msgid "View errors"
-msgstr ""
+msgstr "Se feil"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:39
 msgid "Error while retrieving status."
-msgstr ""
+msgstr "Feil under henting av status."
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:53
 msgid "No entry found."
-msgstr ""
+msgstr "Ingen oppføringer funnet."
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:92
 msgid "Full number"
-msgstr ""
+msgstr "Fullt nummer"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:93
 msgid "Full size (GB)"
-msgstr ""
+msgstr "Full størrelse (GB)"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:94
 msgid "incr. number"
-msgstr ""
+msgstr "Inkr. tall"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:95
 msgid "Last backup (days)"
-msgstr ""
+msgstr "Siste sikkerhetskopiering (dager)"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:96
 msgid "Current state"
-msgstr ""
+msgstr "Nåværende status:"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:97
 msgid "Last message"
-msgstr ""
+msgstr "Siste melding"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:99
 msgid "Start backup"
-msgstr ""
+msgstr "Start sikkerhetskopiering"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:100
 msgid "Stop backup"
-msgstr ""
+msgstr "Stop sikkerhetskopiering"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:102
 msgid "Unset backup"
-msgstr ""
+msgstr "Ikke angi sikkerhetskopiering"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:102
 msgid "Are you sure you want to unset backup for this computer?"
 msgstr ""
+"Er du sikker på at du vil deaktivere sikkerhetskopi for denne datamaskinen?"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:43
 msgid "Requested restores"
-msgstr ""
+msgstr "Forespurt gjenoppretting"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:63
 msgid "Download"
-msgstr ""
+msgstr "Last ned"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
 msgid "Latest direct restore to host"
-msgstr ""
+msgstr "Siste direkte gjenoppretting til vert"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:111
 msgid "Destination"
-msgstr ""
+msgstr "Bestemmelsessted"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:112
 msgid "Restore time"
-msgstr ""
+msgstr "Gjenopprettelsestid"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
 #: modules/backuppc/backuppc/localSidebar.php:27
@@ -520,240 +524,242 @@ msgstr "Status"
 
 #: modules/backuppc/backuppc/BrowseBackups.php:28
 msgid "View restore points"
-msgstr ""
+msgstr "Vis gjenopprettingspunkter"
 
 #: modules/backuppc/backuppc/BrowseBackups.php:59
 #: modules/backuppc/backuppc/fileSearch.php:95
 msgid "Backup#"
-msgstr ""
+msgstr "Sikkerhetskopi#"
 
 #: modules/backuppc/backuppc/viewFileVersions.php:37
 msgid "No other version."
-msgstr ""
+msgstr "Ingen annen versjon"
 
 #: modules/backuppc/backuppc/viewFileVersions.php:49
 msgid "Restore from "
-msgstr ""
+msgstr "Gjenopprett fra"
 
 #: modules/backuppc/backuppc/index.php:58
 msgid "The computer has been removed from the backup system."
-msgstr ""
+msgstr "Datamaskinen er fjernet fra sikkerhetskopisystemet."
 
 #: modules/backuppc/backuppc/restoreZip.php:52
 msgid ""
 "Your ZIP file is being prepared, please wait.<br/>Please use 7zip to open "
 "this archive (for proper special characters handling)."
 msgstr ""
+"ZIP-filen din forberedes, vennligst vent.<br/> Bruk 7zip for å åpne dette "
+"arkivet (for korrekt håndtering av spesialtegn)."
 
 #: modules/backuppc/backuppc/ViewProfiles.php:27
 msgid "Filesets"
-msgstr ""
+msgstr "Filsett"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:39
 #: modules/backuppc/backuppc/ViewProfiles.php:89
 msgid "Edit profile"
-msgstr ""
+msgstr "Rediger profil"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:68
 #: modules/backuppc/backuppc/edit.php:81
 msgid "Fileset"
-msgstr ""
+msgstr "Filsett"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:85
 msgid "Schedules"
-msgstr ""
+msgstr "Skjema"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:118
 #: modules/backuppc/backuppc/edit.php:166
 msgid "Schedule"
-msgstr ""
+msgstr "Skjema"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:133
 msgid "Linux (User files)"
-msgstr ""
+msgstr "Linux (Brukerfiler)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:134
 msgid "Linux (Whole drive)"
-msgstr ""
+msgstr "Linux (Hele disken)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:135
 msgid "macOS (User files)"
-msgstr ""
+msgstr "macOS (Brukerfiler)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:136
 msgid "macOS (Whole drive)"
-msgstr ""
+msgstr "macOS (Hele disken)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:137
 msgid "Windows 7/Vista (User files)"
-msgstr ""
+msgstr "Windows 7/Vista (Brukerfiler)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:138
 msgid "Windows 7/Vista (Whole C: Drive)"
-msgstr ""
+msgstr "Windows 7/Vista (Hele C: disken)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:139
 msgid "Windows XP (User files)"
-msgstr ""
+msgstr "Windows XP (Brukerfiler)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:140
 msgid "Windows XP (Whole C: Drive)"
-msgstr ""
+msgstr "Windows XP (Hele C: disken)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:141
 msgid "Daytime"
-msgstr ""
+msgstr "Dagtid"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:142
 msgid "Nightly"
-msgstr ""
+msgstr "Nattlig"
 
 #: modules/backuppc/backuppc/restoreToHost.php:51
 msgid "No file selected."
-msgstr ""
+msgstr "Ingen filer er valgt"
 
 #: modules/backuppc/backuppc/restoreToHost.php:58
 msgid "The selected files are going to be restored to"
-msgstr ""
+msgstr "De valgte filene vil bli gjenopprettet til"
 
 #: modules/backuppc/backuppc/edit.php:43
 msgid "Host backup is not set."
-msgstr ""
+msgstr "Sikkerhetskopi verten er ikke satt"
 
 #: modules/backuppc/backuppc/edit.php:66
 msgid "Enabled"
-msgstr ""
+msgstr "Aktivert"
 
 #: modules/backuppc/backuppc/edit.php:73
 #: modules/backuppc/backuppc/edit.php:158
 msgid "Custom"
-msgstr ""
+msgstr "Tilpasset"
 
 #: modules/backuppc/backuppc/edit.php:89
 #: modules/backuppc/backuppc/EditBackupProfile.php:97
 msgid "Windows-1252 - Western Europe"
-msgstr ""
+msgstr "Windows-1252 - Vesteuropeisk"
 
 #: modules/backuppc/backuppc/edit.php:90
 #: modules/backuppc/backuppc/EditBackupProfile.php:98
 msgid "Windows-874 - Thai"
-msgstr ""
+msgstr "Windows-874 - Thai"
 
 #: modules/backuppc/backuppc/edit.php:91
 #: modules/backuppc/backuppc/EditBackupProfile.php:99
 msgid "Windows-932 - Japanese"
-msgstr ""
+msgstr "Windows-932 - Japansk"
 
 #: modules/backuppc/backuppc/edit.php:92
 #: modules/backuppc/backuppc/EditBackupProfile.php:100
 msgid "Windows-936 - Chinese (simplified)"
-msgstr ""
+msgstr "Windows-936 - Kinesisk (forenklet)"
 
 #: modules/backuppc/backuppc/edit.php:93
 #: modules/backuppc/backuppc/EditBackupProfile.php:101
 msgid "Windows-949 - Korean"
-msgstr ""
+msgstr "Windows-949 - Koreansk"
 
 #: modules/backuppc/backuppc/edit.php:94
 #: modules/backuppc/backuppc/EditBackupProfile.php:102
 msgid "Windows-950 - Chinese (traditional)"
-msgstr ""
+msgstr "Windows-950 - Kinesisk(tradisjonell)"
 
 #: modules/backuppc/backuppc/edit.php:95
 #: modules/backuppc/backuppc/EditBackupProfile.php:103
 msgid "Windows-1250 - Latin (Central Europe)"
-msgstr ""
+msgstr "Windows-1250 - Latin (Sentral Europeisk)"
 
 #: modules/backuppc/backuppc/edit.php:96
 #: modules/backuppc/backuppc/EditBackupProfile.php:104
 msgid "Windows-1251 - Cyrillic"
-msgstr ""
+msgstr "Windows-1251 - Kyrillisk"
 
 #: modules/backuppc/backuppc/edit.php:97
 #: modules/backuppc/backuppc/EditBackupProfile.php:105
 msgid "Windows-1253 - Greek"
-msgstr ""
+msgstr "Windows-1253 - Gresk"
 
 #: modules/backuppc/backuppc/edit.php:98
 #: modules/backuppc/backuppc/EditBackupProfile.php:106
 msgid "Windows-1254 - Turkish"
-msgstr ""
+msgstr "Windows-1254 - Tyrkisk"
 
 #: modules/backuppc/backuppc/edit.php:99
 #: modules/backuppc/backuppc/EditBackupProfile.php:107
 msgid "Windows-1255 - Hebrew"
-msgstr ""
+msgstr "Windows-1255 - Hebreisk"
 
 #: modules/backuppc/backuppc/edit.php:100
 #: modules/backuppc/backuppc/EditBackupProfile.php:108
 msgid "Windows-1256 - Arabic"
-msgstr ""
+msgstr "Windows-1256 - Arabisk"
 
 #: modules/backuppc/backuppc/edit.php:101
 #: modules/backuppc/backuppc/EditBackupProfile.php:109
 msgid "Windows-1257 - Latin (Baltic languages)"
-msgstr ""
+msgstr "Windows-1257 - Latin (Baltiske språk)"
 
 #: modules/backuppc/backuppc/edit.php:102
 #: modules/backuppc/backuppc/EditBackupProfile.php:110
 msgid "Windows-1258 - Vietnamese"
-msgstr ""
+msgstr "Windows-1258 - Vietnamesisk"
 
 #: modules/backuppc/backuppc/edit.php:110
 #: modules/backuppc/backuppc/EditBackupProfile.php:119
 msgid "Client encoding"
-msgstr ""
+msgstr "Klient koding"
 
 #: modules/backuppc/backuppc/edit.php:129
 #: modules/backuppc/backuppc/EditBackupProfile.php:136
 msgid "Excluded files"
-msgstr ""
+msgstr "Unnta filer"
 
 #: modules/backuppc/backuppc/edit.php:142
 #: modules/backuppc/backuppc/EditBackupProfile.php:149
 #: modules/backuppc/backuppc/BrowseShareNames.php:163
 #: modules/backuppc/backuppc/fileSearch.php:127
 msgid "Folder"
-msgstr ""
+msgstr "Mappe"
 
 #: modules/backuppc/backuppc/edit.php:147
 #: modules/backuppc/backuppc/EditBackupProfile.php:155
 msgid "Add folder"
-msgstr ""
+msgstr "Legg til mappe"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:70
 msgid "Edit fileset"
-msgstr ""
+msgstr "Rediger filsett"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:72
 #: modules/backuppc/backuppc/localSidebar.php:29
 msgid "Add fileset"
-msgstr ""
+msgstr "Legg til filsett"
 
 #: modules/backuppc/backuppc/viewXferLog.php:25
 msgid "XferLog"
-msgstr ""
+msgstr "XferLog"
 
 #: modules/backuppc/backuppc/viewXferLog.php:35
 msgid "Error log"
-msgstr ""
+msgstr "Feil log"
 
 #: modules/backuppc/backuppc/BrowseShareNames.php:137
 msgid "Browse backup"
-msgstr ""
+msgstr "Søk i sikkerhetskopi"
 
 #: modules/backuppc/backuppc/fileSearch.php:53
 msgid "There is no backup for this machine yet."
-msgstr ""
+msgstr "Det finnes ingen sikkerhetskopi for denne maskinen enda"
 
 #: modules/backuppc/backuppc/fileSearch.php:83
 msgid "File name"
-msgstr ""
+msgstr "Filnavn"
 
 #: modules/backuppc/backuppc/fileSearch.php:92
 #: modules/backuppc/backuppc/fileSearch.php:114
 msgid "All"
-msgstr ""
+msgstr "Alle"
 
 #: modules/backuppc/backuppc/fileSearch.php:105
 msgid "Date"
@@ -761,52 +767,52 @@ msgstr "Dato"
 
 #: modules/backuppc/backuppc/fileSearch.php:149
 msgid "Any size"
-msgstr ""
+msgstr "Enhver størrelse"
 
 #: modules/backuppc/backuppc/fileSearch.php:150
 msgid "Less than 1 Mb"
-msgstr ""
+msgstr "Mindre enn 1 Mb"
 
 #: modules/backuppc/backuppc/fileSearch.php:151
 msgid "1 Mb to 10 Mb"
-msgstr ""
+msgstr "1 Mb til 10 Mb"
 
 #: modules/backuppc/backuppc/fileSearch.php:152
 msgid "10 Mb to 100 Mb"
-msgstr ""
+msgstr "10 Mb til 100 Mb"
 
 #: modules/backuppc/backuppc/fileSearch.php:153
 msgid "Greater than 100 Mb"
-msgstr ""
+msgstr "Større enn 100 Mb"
 
 #: modules/backuppc/backuppc/fileSearch.php:164
 msgid "File size"
-msgstr ""
+msgstr "Filstørrelse"
 
 #: modules/backuppc/backuppc/fileSearch.php:181
 msgid "Search"
-msgstr ""
+msgstr "Søk"
 
 #: modules/backuppc/backuppc/viewHostLog.php:25
 msgid "backup Log"
-msgstr ""
+msgstr "sikkerhetskopilogg"
 
 #: modules/backuppc/backuppc/viewHostLog.php:35
 msgid "backup log"
-msgstr ""
+msgstr "sikkerhetskopilogg"
 
 #: modules/backuppc/backuppc/hostStatus.php:148
 msgid "Notify Error : Backup configuration Computer"
-msgstr ""
+msgstr "Varslingsfeil: Sikkerhetskopieri konfigurasjonsmaskin"
 
 #: modules/backuppc/backuppc/hostStatus.php:162
 #: modules/backuppc/backuppc/hostStatus.php:291
 msgid "Notify Computer :"
-msgstr ""
+msgstr "Varsle datamaskinen:"
 
 #: modules/backuppc/backuppc/hostStatus.php:162
 msgid "has been added to backup system successfully."
-msgstr ""
+msgstr "er lagt til i sikkerhetskopisystemet."
 
 #: modules/backuppc/backuppc/hostStatus.php:173
 #, php-format
@@ -814,28 +820,30 @@ msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
 "configure its filesets and scheduling."
 msgstr ""
+"Datamaskinen %s er lagt til backup-systemet med hell. <br />Du kan nå "
+"konfigurere filsett og planlegging."
 
 #: modules/backuppc/backuppc/hostStatus.php:291
 msgid "Save configure host "
-msgstr ""
+msgstr "Lagre konfigurasjonsverten"
 
 #: modules/backuppc/backuppc/hostStatus.php:316
 #, php-format
 msgid "%s's backup status"
-msgstr ""
+msgstr "%s's sikkerhetskopistatus"
 
 #: modules/backuppc/backuppc/hostStatus.php:319
 msgid "Summary"
-msgstr ""
+msgstr "Sammendrag"
 
 #: modules/backuppc/backuppc/hostStatus.php:323
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurasjon"
 
 #: modules/backuppc/backuppc/ajaxRestoreFile.php:30
 msgid "Your file is being prepared, please wait."
-msgstr ""
+msgstr "Filen din er under forberedelse, vent."
 
 #: modules/backuppc/backuppc/localSidebar.php:28
 msgid "Profiles"
-msgstr ""
+msgstr "Profiler"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 01:20+0200\n"
+"POT-Creation-Date: 2019-10-02 14:53+0200\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -23,19 +23,19 @@ msgstr ""
 
 #: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
 msgid "kiosk"
-msgstr ""
+msgstr "кіоск"
 
 #: modules/kiosk/infoPackage.inc.php:43
 msgid "Profile List"
-msgstr ""
+msgstr "Список профілів"
 
 #: modules/kiosk/infoPackage.inc.php:47
 msgid "Add Profile"
-msgstr ""
+msgstr "Додати профіль"
 
 #: modules/kiosk/infoPackage.inc.php:66 modules/kiosk/kiosk/editProfile.php:43
 msgid "Edit Profile"
-msgstr ""
+msgstr "Змінити профіль"
 
 #: modules/kiosk/infoPackage.inc.php:70
 msgid "Delete profile"
@@ -44,16 +44,16 @@ msgstr "Вилучити профіль"
 #: modules/kiosk/kiosk/ajaxEditProfile.php:43
 #, php-format
 msgid "The profile %s has been updated"
-msgstr ""
+msgstr "Оновлено профіль %s"
 
 #: modules/kiosk/kiosk/ajaxEditProfile.php:46
 #, php-format
 msgid "Unable to update the profile %s"
-msgstr ""
+msgstr "Не вдалося оновити профіль %s"
 
 #: modules/kiosk/kiosk/index.php:37
 msgid "List of profils"
-msgstr ""
+msgstr "Список профілів"
 
 #: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
 #: modules/kiosk/kiosk/editProfile.php:73
@@ -68,16 +68,16 @@ msgstr "Неактивний"
 #: modules/kiosk/kiosk/index.php:54 modules/kiosk/kiosk/add.php:63
 #: modules/kiosk/kiosk/editProfile.php:65
 msgid "Profile Name"
-msgstr ""
+msgstr "Назва профілю"
 
 #: modules/kiosk/kiosk/index.php:56 modules/kiosk/kiosk/add.php:74
 #: modules/kiosk/kiosk/editProfile.php:76
 msgid "Profile Status"
-msgstr ""
+msgstr "Стан профілю"
 
 #: modules/kiosk/kiosk/index.php:65
 msgid "Associate Packages"
-msgstr ""
+msgstr "Пов'язані пакунки"
 
 #: modules/kiosk/kiosk/index.php:66
 msgid "Edit Profil"
@@ -89,7 +89,7 @@ msgstr "Вилучити профіль"
 
 #: modules/kiosk/kiosk/add.php:43
 msgid "Add New Profile"
-msgstr ""
+msgstr "Додати новий профіль"
 
 #: modules/kiosk/kiosk/add.php:64 modules/kiosk/kiosk/editProfile.php:66
 msgid "Name"
@@ -97,27 +97,27 @@ msgstr "Назва"
 
 #: modules/kiosk/kiosk/add.php:70 modules/kiosk/kiosk/editProfile.php:72
 msgid "Set the profile to active / inactive state"
-msgstr ""
+msgstr "Встановити профіль у активний або неактивний стан"
 
 #: modules/kiosk/kiosk/add.php:82 modules/kiosk/kiosk/editProfile.php:86
 msgid "Manage packages"
-msgstr ""
+msgstr "Керування пакунками"
 
 #: modules/kiosk/kiosk/add.php:99 modules/kiosk/kiosk/editProfile.php:144
 msgid "Available packages"
-msgstr ""
+msgstr "Доступні пакунки"
 
 #: modules/kiosk/kiosk/add.php:104 modules/kiosk/kiosk/editProfile.php:149
 msgid "Restricted packages"
-msgstr ""
+msgstr "Заборонені пакунки"
 
 #: modules/kiosk/kiosk/add.php:110 modules/kiosk/kiosk/editProfile.php:154
 msgid "Allowed packages"
-msgstr ""
+msgstr "Дозволені пакунки"
 
 #: modules/kiosk/kiosk/add.php:128 modules/kiosk/kiosk/editProfile.php:171
 msgid "Select OUs"
-msgstr ""
+msgstr "Виберіть OU"
 
 #: modules/kiosk/kiosk/add.php:134
 msgid "Create"
@@ -125,34 +125,35 @@ msgstr "Створити"
 
 #: modules/kiosk/kiosk/add.php:134
 msgid "Create the profile"
-msgstr ""
+msgstr "Створити профіль"
 
 #: modules/kiosk/kiosk/add.php:145
 msgid "The LDAP is not configured correctly. Please check your configuration."
 msgstr ""
+"LDAP не налаштовано належним чином. Будь ласка, перевірте налаштування."
 
 #: modules/kiosk/kiosk/ajaxAddProfile.php:44
 #, php-format
 msgid "Profile %s successfully added"
-msgstr ""
+msgstr "Успішно додано профіль %s"
 
 #: modules/kiosk/kiosk/ajaxAddProfile.php:48
 #, php-format
 msgid "Unable to create the profile %s"
-msgstr ""
+msgstr "Не вдалося створити профіль %s"
 
 #: modules/kiosk/kiosk/editProfile.php:177
 msgid "modify"
-msgstr ""
+msgstr "змінити"
 
 #: modules/kiosk/kiosk/editProfile.php:177
 msgid "Modify the profile"
-msgstr ""
+msgstr "Змінити профіль"
 
 #: modules/kiosk/kiosk/localSidebar.php:24
 msgid "Profils List"
-msgstr ""
+msgstr "Список профілів"
 
 #: modules/kiosk/kiosk/localSidebar.php:25
 msgid "Add Profil"
-msgstr ""
+msgstr "Додати профіль"

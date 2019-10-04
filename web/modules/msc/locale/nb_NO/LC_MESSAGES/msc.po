@@ -108,7 +108,7 @@ msgstr "Kommando"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:222
 msgid "Creator"
-msgstr ""
+msgstr "Skaper"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:224
 #: modules/msc/logs/ajaxLogsFilter.php:131
@@ -175,7 +175,7 @@ msgstr "Dato"
 #: modules/msc/logs/ajaxLogsFilter.php:135
 #: modules/msc/msc/ajaxLogsFilter.php:253
 msgid "Current state"
-msgstr ""
+msgstr "Nåværende status:"
 
 #: modules/msc/logs/finished.php:33
 msgid "Show all finished task's logs"
@@ -393,7 +393,7 @@ msgstr ""
 #: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:552
 #: modules/msc/msc/launch.php:601
 msgid "Command name"
-msgstr ""
+msgstr "Kommandonavn"
 
 #: modules/msc/includes/command_history.php:35
 msgid "Host"
@@ -846,7 +846,7 @@ msgstr "Angi rekkefølge"
 #: modules/msc/includes/bundle_widgets.php:150
 #: modules/msc/msc/ajaxPackageFilter.php:174
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "Kontakt administratoren din."
 
 #: modules/msc/includes/bundle_widgets.php:158
 #: modules/msc/includes/bundle_widgets.php:187
@@ -1070,7 +1070,7 @@ msgstr ""
 
 #: modules/msc/includes/functions.php:315
 msgid "Wake on LAN"
-msgstr ""
+msgstr "Wake on LAN"
 
 #: modules/msc/includes/functions.php:316
 msgid "Upload"
@@ -1264,11 +1264,11 @@ msgstr ""
 
 #: modules/msc/msc/ajaxPackageFilter.php:79
 msgid "Active"
-msgstr ""
+msgstr "Aktive"
 
 #: modules/msc/msc/ajaxPackageFilter.php:81
 msgid "Inactive"
-msgstr ""
+msgstr "Inaktiv"
 
 #: modules/msc/msc/ajaxPackageFilter.php:84
 msgid "Not available"
@@ -1349,7 +1349,7 @@ msgstr ""
 
 #: modules/msc/msc/ajaxLogsFilter.php:397
 msgid "Client"
-msgstr ""
+msgstr "Klient"
 
 #: modules/msc/msc/ajaxLogsFilter.php:400
 msgid "Global State"
@@ -1422,7 +1422,7 @@ msgstr ""
 
 #: modules/msc/msc/ajaxDownloadFile.php:34
 msgid "Download file"
-msgstr ""
+msgstr "Last ned fil"
 
 #: modules/msc/msc/ajaxDownloadFile.php:35
 msgid "Delete file"
@@ -1434,7 +1434,7 @@ msgstr "Laster ned"
 
 #: modules/msc/msc/ajaxDownloadFile.php:72
 msgid "Error"
-msgstr ""
+msgstr "Feil"
 
 #: modules/msc/msc/ajaxDownloadFile.php:86
 msgid "Timestamp"
@@ -1446,11 +1446,11 @@ msgstr ""
 
 #: modules/msc/msc/ajaxDownloadFile.php:88
 msgid "File name"
-msgstr ""
+msgstr "Filnavn"
 
 #: modules/msc/msc/ajaxDownloadFile.php:89
 msgid "Length"
-msgstr ""
+msgstr "Lengde"
 
 #: modules/msc/msc/msctabsstatus.php:33
 #, php-format

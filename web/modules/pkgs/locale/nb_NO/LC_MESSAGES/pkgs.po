@@ -586,11 +586,11 @@ msgstr "Datamaskinlisten er avkortet ved %d datamaskiner"
 
 #: modules/pkgs/includes/actions/action_section_update.php:17
 msgid "Update Section"
-msgstr ""
+msgstr "Oppdater seksjon"
 
 #: modules/pkgs/includes/actions/action_pwd_package.php:12
 msgid "Go to package folder"
-msgstr ""
+msgstr "Gå til pakkemappe"
 
 #: modules/pkgs/includes/actions/action_pwd_package.php:39
 #: modules/pkgs/includes/actions/action_comment.php:27
@@ -611,31 +611,31 @@ msgstr "Trinnetikett:"
 #: modules/pkgs/includes/actions/actionprocessscript.php:57
 #: modules/pkgs/includes/actions/actionprocessscript.php:71
 msgid "Alternate package"
-msgstr ""
+msgstr "Alternativ pakke"
 
 #: modules/pkgs/includes/actions/action_comment.php:12
 msgid "Add info in deployment log"
-msgstr ""
+msgstr "Legg til info i utrullingsloggen"
 
 #: modules/pkgs/includes/actions/action_comment.php:36
 msgid "Information"
-msgstr ""
+msgstr "Informasjon"
 
 #: modules/pkgs/includes/actions/action_comment.php:41
 msgid "Your log comments !"
-msgstr ""
+msgstr "Dine loggkommentarer !"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:53
 msgid "Unzip File"
-msgstr ""
+msgstr "Pakk ut filen"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:62
 msgid "Step label:"
-msgstr ""
+msgstr "Trinnetikett:"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:71
 msgid "Zip file:"
-msgstr ""
+msgstr "Zip fil:"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:119
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:68
@@ -705,17 +705,17 @@ msgstr "Den siste resultatlinjen"
 #: modules/pkgs/includes/actions/actionprocessscript.php:175
 #: modules/pkgs/includes/actions/actionprocessscript.php:190
 msgid "Return result"
-msgstr ""
+msgstr "Returnert resultat"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:214
 #: modules/pkgs/includes/actions/action_unzip_file.php:229
 msgid "Unzip to specified folder"
-msgstr ""
+msgstr "Pakk ut til angitt mappe"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:248
 #: modules/pkgs/includes/actions/action_unzip_file.php:262
 msgid "Go to step"
-msgstr ""
+msgstr "Gå til trinn"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:285
 #: modules/pkgs/includes/actions/action_unzip_file.php:300
@@ -726,7 +726,7 @@ msgstr ""
 #: modules/pkgs/includes/actions/actionprocessscript.php:211
 #: modules/pkgs/includes/actions/actionprocessscript.php:226
 msgid "On success go to step"
-msgstr ""
+msgstr "Ved suksess gå til trinn"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:320
 #: modules/pkgs/includes/actions/action_unzip_file.php:335
@@ -737,7 +737,7 @@ msgstr ""
 #: modules/pkgs/includes/actions/actionprocessscript.php:246
 #: modules/pkgs/includes/actions/actionprocessscript.php:261
 msgid "On error go to step"
-msgstr ""
+msgstr "Ved feil gå til trinn"
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:11
 msgid "Run Command in shell"
@@ -752,7 +752,7 @@ msgstr "Kommando"
 #: modules/pkgs/includes/actions/actionprocessscript.php:95
 #: modules/pkgs/includes/actions/actionprocessscript.php:110
 msgid "Set timeout"
-msgstr ""
+msgstr "Sett timeout"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
 msgid "Execute script"
@@ -760,31 +760,31 @@ msgstr "Kjør skript"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:54
 msgid "Native (Windows batch, Linux bash and macOS bash)"
-msgstr ""
+msgstr "Orginal (Windows batch, Linux bash og macOS bash)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:57
 msgid "Python (Windows, Linux and macOS)"
-msgstr ""
+msgstr "Python (Windows, Linux og macOS)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:60
 msgid "Visual Basic Script (Windows)"
-msgstr ""
+msgstr "Visual Basic Skript (Windows)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:63
 msgid "Power Shell (Windows)"
-msgstr ""
+msgstr "Power Shell (Windows)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:66
 msgid "Korn Shell (Linux & macOS)"
-msgstr ""
+msgstr "Korn Shell (Linux & macOS)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:69
 msgid "C Shell (Linux & macOS)"
-msgstr ""
+msgstr "C Shell (Linux & macOS)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:84
 msgid "Script language"
-msgstr ""
+msgstr "Skriptspråk"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
 msgid "Script"
@@ -792,11 +792,11 @@ msgstr "Skript"
 
 #: modules/pkgs/includes/actions/actionrestart.php:17
 msgid "Restart Machine"
-msgstr ""
+msgstr "Start maskinen på nytt"
 
 #: modules/pkgs/includes/actions/actionrestart.php:19
 msgid "Restart Agent Machine"
-msgstr ""
+msgstr "Start agentmaskinen på nytt"
 
 #: modules/pkgs/includes/actions/actionrestart.php:36
 msgid "Restart"
@@ -804,7 +804,7 @@ msgstr "Omstart"
 
 #: modules/pkgs/includes/actions/actionrestart.php:59
 msgid "Target Restart"
-msgstr ""
+msgstr "Omstart av målet"
 
 #: modules/pkgs/includes/actions/actioncleaning.php:12
 msgid "Remove uploaded files"
@@ -812,23 +812,23 @@ msgstr "Fjern opplastede filer"
 
 #: modules/pkgs/includes/actions/action_section_uninstall.php:18
 msgid "Uninstall Section"
-msgstr ""
+msgstr "Avinstaller seksjonen"
 
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:7
 msgid "End Error"
-msgstr ""
+msgstr "Slutt feil"
 
 #: modules/pkgs/includes/actions/action_section_install.php:18
 msgid "Install Section"
-msgstr ""
+msgstr "Installer seksjon"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:8
 msgid "End Success"
-msgstr ""
+msgstr "Slutt suksess"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:42
 msgid "Delete package"
-msgstr ""
+msgstr "Slett pakke"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
 msgid "Inventory"
@@ -852,23 +852,23 @@ msgstr "Kjør kommando"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:36
 msgid "Step label: "
-msgstr ""
+msgstr "Trinnetikett:"
 
 #: modules/pkgs/includes/actions/action_set_config_file.php:12
 msgid "Set config file parameter"
-msgstr ""
+msgstr "Angi konfigurasjonsfilparameter"
 
 #: modules/pkgs/includes/actions/action_set_config_file.php:38
 msgid "Config action description"
-msgstr ""
+msgstr "Konfigurer handlingsbeskrivelse"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:21
 msgid "Wait and go to step"
-msgstr ""
+msgstr "Vent og gå til trinn"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:41
 msgid "Wait for (seconds)"
-msgstr ""
+msgstr "Vent i (sekunder)"
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151

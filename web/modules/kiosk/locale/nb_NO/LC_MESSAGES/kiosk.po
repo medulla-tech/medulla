@@ -4,7 +4,6 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
 # 
 #, fuzzy
@@ -12,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 01:20+0200\n"
+"POT-Creation-Date: 2019-10-02 14:53+0200\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -24,73 +23,73 @@ msgstr ""
 
 #: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
 msgid "kiosk"
-msgstr ""
+msgstr "kiosk"
 
 #: modules/kiosk/infoPackage.inc.php:43
 msgid "Profile List"
-msgstr ""
+msgstr "Profilliste"
 
 #: modules/kiosk/infoPackage.inc.php:47
 msgid "Add Profile"
-msgstr ""
+msgstr "Legg til profil"
 
 #: modules/kiosk/infoPackage.inc.php:66 modules/kiosk/kiosk/editProfile.php:43
 msgid "Edit Profile"
-msgstr ""
+msgstr "Rediger profil"
 
 #: modules/kiosk/infoPackage.inc.php:70
 msgid "Delete profile"
-msgstr ""
+msgstr "Slett profil"
 
 #: modules/kiosk/kiosk/ajaxEditProfile.php:43
 #, php-format
 msgid "The profile %s has been updated"
-msgstr ""
+msgstr "Profil %s har blitt oppdatert"
 
 #: modules/kiosk/kiosk/ajaxEditProfile.php:46
 #, php-format
 msgid "Unable to update the profile %s"
-msgstr ""
+msgstr "Kan ikke oppdatere profilen %s"
 
 #: modules/kiosk/kiosk/index.php:37
 msgid "List of profils"
-msgstr ""
+msgstr "Liste over profiler"
 
 #: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
 #: modules/kiosk/kiosk/editProfile.php:73
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
 #: modules/kiosk/kiosk/editProfile.php:73
 msgid "Inactive"
-msgstr ""
+msgstr "Inaktiv"
 
 #: modules/kiosk/kiosk/index.php:54 modules/kiosk/kiosk/add.php:63
 #: modules/kiosk/kiosk/editProfile.php:65
 msgid "Profile Name"
-msgstr ""
+msgstr "Profilnavn"
 
 #: modules/kiosk/kiosk/index.php:56 modules/kiosk/kiosk/add.php:74
 #: modules/kiosk/kiosk/editProfile.php:76
 msgid "Profile Status"
-msgstr ""
+msgstr "Profil Status"
 
 #: modules/kiosk/kiosk/index.php:65
 msgid "Associate Packages"
-msgstr ""
+msgstr "Tilhørende pakker"
 
 #: modules/kiosk/kiosk/index.php:66
 msgid "Edit Profil"
-msgstr ""
+msgstr "Rediger profil"
 
 #: modules/kiosk/kiosk/index.php:67
 msgid "Delete Profil"
-msgstr ""
+msgstr "Slett profil"
 
 #: modules/kiosk/kiosk/add.php:43
 msgid "Add New Profile"
-msgstr ""
+msgstr "Legg til ny profil"
 
 #: modules/kiosk/kiosk/add.php:64 modules/kiosk/kiosk/editProfile.php:66
 msgid "Name"
@@ -98,62 +97,62 @@ msgstr "Navn"
 
 #: modules/kiosk/kiosk/add.php:70 modules/kiosk/kiosk/editProfile.php:72
 msgid "Set the profile to active / inactive state"
-msgstr ""
+msgstr "Sett profilen til aktiv/inaktiv"
 
 #: modules/kiosk/kiosk/add.php:82 modules/kiosk/kiosk/editProfile.php:86
 msgid "Manage packages"
-msgstr ""
+msgstr "Håndter pakker"
 
 #: modules/kiosk/kiosk/add.php:99 modules/kiosk/kiosk/editProfile.php:144
 msgid "Available packages"
-msgstr ""
+msgstr "Tilgjengeige pakker"
 
 #: modules/kiosk/kiosk/add.php:104 modules/kiosk/kiosk/editProfile.php:149
 msgid "Restricted packages"
-msgstr ""
+msgstr "Begrensede pakker"
 
 #: modules/kiosk/kiosk/add.php:110 modules/kiosk/kiosk/editProfile.php:154
 msgid "Allowed packages"
-msgstr ""
+msgstr "Tllatte pakker"
 
 #: modules/kiosk/kiosk/add.php:128 modules/kiosk/kiosk/editProfile.php:171
 msgid "Select OUs"
-msgstr ""
+msgstr "Velg OUer"
 
 #: modules/kiosk/kiosk/add.php:134
 msgid "Create"
-msgstr "Legg til"
+msgstr "Opprett"
 
 #: modules/kiosk/kiosk/add.php:134
 msgid "Create the profile"
-msgstr ""
+msgstr "Opprett profilen"
 
 #: modules/kiosk/kiosk/add.php:145
 msgid "The LDAP is not configured correctly. Please check your configuration."
-msgstr ""
+msgstr "LDAP er ikke konfigurert riktig. Vennligst sjekk konfigurasjonen din."
 
 #: modules/kiosk/kiosk/ajaxAddProfile.php:44
 #, php-format
 msgid "Profile %s successfully added"
-msgstr ""
+msgstr "Profilen %s ble lagt til"
 
 #: modules/kiosk/kiosk/ajaxAddProfile.php:48
 #, php-format
 msgid "Unable to create the profile %s"
-msgstr ""
+msgstr "Kan ikke skape profilen %s"
 
 #: modules/kiosk/kiosk/editProfile.php:177
 msgid "modify"
-msgstr ""
+msgstr "endre"
 
 #: modules/kiosk/kiosk/editProfile.php:177
 msgid "Modify the profile"
-msgstr ""
+msgstr "Endre profilen"
 
 #: modules/kiosk/kiosk/localSidebar.php:24
 msgid "Profils List"
-msgstr ""
+msgstr "Liste over profiler"
 
 #: modules/kiosk/kiosk/localSidebar.php:25
 msgid "Add Profil"
-msgstr ""
+msgstr "Legg til profil"

@@ -379,7 +379,7 @@ msgstr ""
 #: modules/imaging/includes/logs.inc.php:31
 #: modules/imaging/manage/ajaxLogs.php:57
 msgid "Error"
-msgstr ""
+msgstr "Feil"
 
 #: modules/imaging/includes/logs.inc.php:33
 #: modules/imaging/manage/ajaxLogs.php:51
@@ -404,17 +404,17 @@ msgstr ""
 #: modules/imaging/includes/logs.inc.php:36
 #: modules/imaging/manage/ajaxLogs.php:62
 msgid "Restore done"
-msgstr ""
+msgstr "Gjenoppretting gjennomført"
 
 #: modules/imaging/includes/logs.inc.php:37
 #: modules/imaging/manage/ajaxLogs.php:63
 msgid "Restore failed"
-msgstr ""
+msgstr "Gjenoppretting mislyktes"
 
 #: modules/imaging/includes/logs.inc.php:38
 #: modules/imaging/manage/ajaxLogs.php:64
 msgid "Backup in progress"
-msgstr ""
+msgstr "Sikkerhetskopiering pågår"
 
 #: modules/imaging/includes/logs.inc.php:39
 #: modules/imaging/manage/ajaxLogs.php:65
@@ -424,7 +424,7 @@ msgstr ""
 #: modules/imaging/includes/logs.inc.php:40
 #: modules/imaging/manage/ajaxLogs.php:66
 msgid "Backup failed"
-msgstr ""
+msgstr "Sikkerhetskopieringen mislyktes"
 
 #: modules/imaging/includes/logs.inc.php:45
 msgid "Boot menu shown"
@@ -1672,7 +1672,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin7.php:440
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:385
 msgid "Computer Name"
-msgstr ""
+msgstr "Maskinnavn"
 
 #: modules/imaging/manage/ajaxFormWin10.php:550
 #: modules/imaging/manage/ajaxFormWin8.php:532
@@ -1880,7 +1880,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin7.php:644
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:589
 msgid "Domain"
-msgstr ""
+msgstr "Domene"
 
 #: modules/imaging/manage/ajaxFormWin10.php:741
 #: modules/imaging/manage/ajaxFormWin8.php:725
@@ -2143,7 +2143,7 @@ msgstr ""
 #: modules/imaging/imaging/bootmenu_remove.php:160
 #: modules/imaging/imaging/showtarget.php:130
 msgid "Remove"
-msgstr ""
+msgstr "Fjern"
 
 #: modules/imaging/manage/master_remove.php:94
 #: modules/imaging/manage/master_iso.php:109
@@ -2393,6 +2393,8 @@ msgid ""
 "The files will be stored in the directory %s of the server at the end of the"
 " backup."
 msgstr ""
+"Filene blir lagret i katalogen %s til serveren på slutten av "
+"sikkerhetskopien."
 
 #: modules/imaging/manage/master_iso.php:50
 msgid "Please go to the status page to check the iso creation status."
@@ -2472,11 +2474,11 @@ msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:83
 msgid "File name"
-msgstr ""
+msgstr "Filnavn"
 
 #: modules/imaging/manage/sysprepList.php:86
 msgid "OS"
-msgstr ""
+msgstr "OS"
 
 #: modules/imaging/manage/sysprepList.php:90
 msgid "Display sysprep file"
@@ -2628,7 +2630,7 @@ msgstr ""
 #: modules/imaging/imaging/configure.php:39
 #: modules/imaging/imaging/showtarget.php:157
 msgid "Computer"
-msgstr ""
+msgstr "Datamaskin"
 
 #: modules/imaging/manage/service_show_used.php:194
 msgid ""
@@ -2644,7 +2646,7 @@ msgstr "Velg alt"
 #: modules/imaging/manage/service_show_used.php:198
 #: modules/imaging/imaging/showtarget.php:129
 msgid "Unselect all"
-msgstr ""
+msgstr "Avmarker alt"
 
 #: modules/imaging/manage/ajaxServiceLevel2.php:49
 msgid "Add service to default boot menu"
@@ -3006,7 +3008,7 @@ msgstr ""
 
 #: modules/imaging/imaging/ajaxLogs.php:96
 msgid "State"
-msgstr ""
+msgstr "Tilstand"
 
 #: modules/imaging/imaging/creategroupcustonmenuimaging.php:59
 #: modules/imaging/imaging/creategroupcustonmenu.php:49
@@ -3203,7 +3205,7 @@ msgstr ""
 
 #: modules/imaging/imaging/configure.php:357
 msgid "Do you want a backup to be done ?"
-msgstr ""
+msgstr "Vil du gjøre en sikkerhetskopi?"
 
 #: modules/imaging/imaging/configure.php:364
 #: modules/imaging/imaging/configure.php:718

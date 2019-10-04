@@ -24,15 +24,15 @@ msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:32
 msgid "GLPI Inventory"
-msgstr ""
+msgstr "GLPI Inventar"
 
 #: modules/glpi/infoPackage.inc.php:38
 msgid "Glpi"
-msgstr ""
+msgstr "Glpi"
 
 #: modules/glpi/infoPackage.inc.php:43
 msgid "Glpi Dashboard"
-msgstr ""
+msgstr "Glpi Dashboard"
 
 #: modules/glpi/infoPackage.inc.php:55
 msgid "Create static group from dashboard widgets (GLPI)"
@@ -149,19 +149,19 @@ msgstr ""
 
 #: modules/glpi/includes/html.php:57 modules/glpi/glpi/ajaxViewPart.php:255
 msgid "Today"
-msgstr ""
+msgstr "I dag"
 
 #: modules/glpi/includes/html.php:58 modules/glpi/glpi/ajaxViewPart.php:256
 msgid "Last 7 days"
-msgstr ""
+msgstr "Siste 7 dager"
 
 #: modules/glpi/includes/html.php:59 modules/glpi/glpi/ajaxViewPart.php:257
 msgid "Last 30 days"
-msgstr ""
+msgstr "Siste 30 dager"
 
 #: modules/glpi/includes/html.php:60 modules/glpi/glpi/ajaxViewPart.php:258
 msgid "All"
-msgstr ""
+msgstr "Alle"
 
 #: modules/glpi/includes/publicFunc.php:86
 msgid "Entity attributes"
@@ -169,16 +169,16 @@ msgstr ""
 
 #: modules/glpi/includes/publicFunc.php:130
 msgid "Dynamic"
-msgstr ""
+msgstr "Dynamisk"
 
 #: modules/glpi/includes/publicFunc.php:130
 msgid "Static"
-msgstr ""
+msgstr "Statisk"
 
 #: modules/glpi/includes/publicFunc.php:142
 #: modules/glpi/glpi/addEntityRule.php:138
 msgid "Remove"
-msgstr ""
+msgstr "Fjern"
 
 #: modules/glpi/includes/publicFunc.php:154
 msgid "Entity right"
@@ -190,7 +190,7 @@ msgstr ""
 
 #: modules/glpi/includes/panels/inventory.inc.php:30
 msgid "Inventories"
-msgstr ""
+msgstr "Inventarier"
 
 #: modules/glpi/includes/panels/inventory.inc.php:45
 #: modules/glpi/includes/panels/antivirus.inc.php:43
@@ -199,11 +199,11 @@ msgstr "Lag gruppe"
 
 #: modules/glpi/includes/panels/inventory.inc.php:46
 msgid "< %s days: %percent% (%d)"
-msgstr ""
+msgstr "< %s dager: %prosent% (%d)"
 
 #: modules/glpi/includes/panels/inventory.inc.php:47
 msgid "> %s days: %percent% (%d)"
-msgstr ""
+msgstr "> %s dager: %prosent% (%d)"
 
 #: modules/glpi/includes/panels/inventory.inc.php:48
 msgid "Uninventoried machines"
@@ -211,7 +211,7 @@ msgstr ""
 
 #: modules/glpi/includes/panels/os_repartition.inc.php:35
 msgid "Operating systems"
-msgstr ""
+msgstr "Operativ system"
 
 #: modules/glpi/includes/panels/os_repartition.inc.php:43
 #: modules/glpi/includes/panels/antivirus.inc.php:39
@@ -221,7 +221,7 @@ msgstr "Maskiner som ikke er i inventaret"
 #: modules/glpi/includes/panels/antivirus.inc.php:31
 #: modules/glpi/glpi/tabs.php:88
 msgid "Antivirus"
-msgstr ""
+msgstr "Antivirus"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:44
 msgid "OK: %percent% (%d)"
@@ -250,7 +250,7 @@ msgstr ""
 
 #: modules/glpi/glpi/tabs.php:80
 msgid "Summary"
-msgstr ""
+msgstr "Sammendrag"
 
 #: modules/glpi/glpi/tabs.php:81
 msgid "Hardware"
@@ -258,11 +258,11 @@ msgstr "Maskinvare"
 
 #: modules/glpi/glpi/tabs.php:83
 msgid "Storage"
-msgstr ""
+msgstr "Lagring"
 
 #: modules/glpi/glpi/tabs.php:84
 msgid "Network"
-msgstr ""
+msgstr "Nettverk"
 
 #: modules/glpi/glpi/tabs.php:85
 msgid "Software"
@@ -270,15 +270,15 @@ msgstr "Programvare"
 
 #: modules/glpi/glpi/tabs.php:86
 msgid "Administrative"
-msgstr ""
+msgstr "Administrativ"
 
 #: modules/glpi/glpi/tabs.php:87
 msgid "History"
-msgstr ""
+msgstr "Historikk"
 
 #: modules/glpi/glpi/tabs.php:93
 msgid "Registry"
-msgstr ""
+msgstr "Register"
 
 #: modules/glpi/glpi/tabs.php:107
 msgid "Get XLS Report"
@@ -286,7 +286,7 @@ msgstr "Hent XLS Rapport"
 
 #: modules/glpi/glpi/entityRules.php:36
 msgid "All rules"
-msgstr ""
+msgstr "Alle regler"
 
 #: modules/glpi/glpi/entityList.php:28
 msgid "Entity list"
@@ -400,24 +400,24 @@ msgstr ""
 
 #: modules/glpi/glpi/addEntityRule.php:67
 msgid "Active"
-msgstr ""
+msgstr "Aktive"
 
 #: modules/glpi/glpi/addEntityRule.php:86
 msgid "Aggregator"
-msgstr ""
+msgstr "Aggregator"
 
 #: modules/glpi/glpi/addEntityRule.php:98
 msgid "IP Address"
-msgstr ""
+msgstr "IP Adresse"
 
 #: modules/glpi/glpi/addEntityRule.php:99
 msgid "Hostname"
-msgstr ""
+msgstr "Vertsnavn"
 
 #: modules/glpi/glpi/addEntityRule.php:100
 #: modules/glpi/glpi/ajaxViewPart.php:262
 msgid "Domain"
-msgstr ""
+msgstr "Domene"
 
 #: modules/glpi/glpi/addEntityRule.php:101
 msgid "Computer serial"
@@ -425,65 +425,65 @@ msgstr ""
 
 #: modules/glpi/glpi/addEntityRule.php:102
 msgid "Subnet"
-msgstr ""
+msgstr "Subnet"
 
 #: modules/glpi/glpi/addEntityRule.php:103
 msgid "Inventory Tag"
-msgstr ""
+msgstr "Inventaretikett"
 
 #: modules/glpi/glpi/addEntityRule.php:113
 msgid "equal to"
-msgstr ""
+msgstr "lik"
 
 #: modules/glpi/glpi/addEntityRule.php:114
 msgid "different from"
-msgstr ""
+msgstr "skiller seg fra"
 
 #: modules/glpi/glpi/addEntityRule.php:115
 msgid "contains"
-msgstr ""
+msgstr "inneholder"
 
 #: modules/glpi/glpi/addEntityRule.php:116
 msgid "does not contain"
-msgstr ""
+msgstr "inneholder ikke"
 
 #: modules/glpi/glpi/addEntityRule.php:117
 msgid "starts with"
-msgstr ""
+msgstr "starter med"
 
 #: modules/glpi/glpi/addEntityRule.php:118
 #: modules/glpi/glpi/addEntityRule.php:119
 msgid "finishes by"
-msgstr ""
+msgstr "slutter med"
 
 #: modules/glpi/glpi/addEntityRule.php:120
 msgid "matches (regex)"
-msgstr ""
+msgstr "matcher (regex)"
 
 #: modules/glpi/glpi/addEntityRule.php:121
 msgid "does not match (regex)"
-msgstr ""
+msgstr "matcher ikke (regex)"
 
 #: modules/glpi/glpi/addEntityRule.php:122
 msgid "exists"
-msgstr ""
+msgstr "eksisterer"
 
 #: modules/glpi/glpi/addEntityRule.php:123
 msgid "does not exist"
-msgstr ""
+msgstr "eksisterer ikke"
 
 #: modules/glpi/glpi/addEntityRule.php:149
 msgid "Criterion"
-msgstr ""
+msgstr "Kriteria"
 
 #: modules/glpi/glpi/addEntityRule.php:155
 msgid "Add criterion"
-msgstr ""
+msgstr "legg til kriteria"
 
 #: modules/glpi/glpi/addEntityRule.php:168
 #: modules/glpi/glpi/addEntityRule.php:190
 msgid "Do not assign"
-msgstr ""
+msgstr "Ikke tildel"
 
 #: modules/glpi/glpi/addEntityRule.php:180
 msgid "Target entity"
@@ -495,7 +495,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:83
 msgid " (Not an antivirus)"
-msgstr ""
+msgstr " (Ikke et antivirus)"
 
 #: modules/glpi/glpi/ajaxViewPart.php:107
 msgid "Click here to see this computer on manufacturer website"
@@ -529,7 +529,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:188
 msgid "Processors"
-msgstr ""
+msgstr "Prosessorer"
 
 #: modules/glpi/glpi/ajaxViewPart.php:189
 #: modules/glpi/glpi/ajaxViewPart.php:249
@@ -538,31 +538,31 @@ msgstr "Minne"
 
 #: modules/glpi/glpi/ajaxViewPart.php:190
 msgid "Hard Drives"
-msgstr ""
+msgstr "Disker"
 
 #: modules/glpi/glpi/ajaxViewPart.php:191
 msgid "Controllers"
-msgstr ""
+msgstr "Kontrollere"
 
 #: modules/glpi/glpi/ajaxViewPart.php:192
 msgid "Network Cards"
-msgstr ""
+msgstr "Nettverkskort"
 
 #: modules/glpi/glpi/ajaxViewPart.php:193
 msgid "Drives"
-msgstr ""
+msgstr "Disker"
 
 #: modules/glpi/glpi/ajaxViewPart.php:194
 msgid "Graphic Cards"
-msgstr ""
+msgstr "Grafikkort"
 
 #: modules/glpi/glpi/ajaxViewPart.php:195
 msgid "Sound Cards"
-msgstr ""
+msgstr "Lydkort"
 
 #: modules/glpi/glpi/ajaxViewPart.php:196
 msgid "Others"
-msgstr ""
+msgstr "Øvrige"
 
 #: modules/glpi/glpi/ajaxViewPart.php:210
 msgid "Yes"
@@ -574,23 +574,23 @@ msgstr "Nei"
 
 #: modules/glpi/glpi/ajaxViewPart.php:213
 msgid "Network Type"
-msgstr ""
+msgstr "Nettverkstype"
 
 #: modules/glpi/glpi/ajaxViewPart.php:214
 msgid "MAC Address"
-msgstr ""
+msgstr "MAC Adresse"
 
 #: modules/glpi/glpi/ajaxViewPart.php:215
 msgid "IP"
-msgstr ""
+msgstr "IP"
 
 #: modules/glpi/glpi/ajaxViewPart.php:216
 msgid "Netmask"
-msgstr ""
+msgstr "Nettmaske"
 
 #: modules/glpi/glpi/ajaxViewPart.php:217
 msgid "Gateway"
-msgstr ""
+msgstr "Gateway"
 
 #: modules/glpi/glpi/ajaxViewPart.php:218
 msgid "Device"
@@ -598,40 +598,40 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:219
 msgid "Mount Point"
-msgstr ""
+msgstr "Monteringspunkt"
 
 #: modules/glpi/glpi/ajaxViewPart.php:220
 msgid "Filesystem"
-msgstr ""
+msgstr "Filsystem"
 
 #: modules/glpi/glpi/ajaxViewPart.php:221
 #: modules/glpi/glpi/ajaxViewPart.php:246
 msgid "Size"
-msgstr ""
+msgstr "Størrelse"
 
 #: modules/glpi/glpi/ajaxViewPart.php:222
 msgid "Free Size"
-msgstr ""
+msgstr "Ledig plass"
 
 #: modules/glpi/glpi/ajaxViewPart.php:223
 msgid "Supplier"
-msgstr ""
+msgstr "Leverandør"
 
 #: modules/glpi/glpi/ajaxViewPart.php:224
 msgid "Invoice Number"
-msgstr ""
+msgstr "Fakturanummer"
 
 #: modules/glpi/glpi/ajaxViewPart.php:225
 msgid "Date Of Purchase"
-msgstr ""
+msgstr "Kjøpsdato"
 
 #: modules/glpi/glpi/ajaxViewPart.php:226
 msgid "Warranty End Date"
-msgstr ""
+msgstr "Sluttdato for garanti"
 
 #: modules/glpi/glpi/ajaxViewPart.php:227
 msgid "Last Inventory Date"
-msgstr ""
+msgstr "Siste inventeringsdato"
 
 #: modules/glpi/glpi/ajaxViewPart.php:228
 msgid "Vendor"
@@ -643,7 +643,7 @@ msgstr "Versjon"
 
 #: modules/glpi/glpi/ajaxViewPart.php:231
 msgid "Computer Name"
-msgstr ""
+msgstr "Maskinnavn"
 
 #: modules/glpi/glpi/ajaxViewPart.php:233
 msgid "Entity (Location)"
@@ -663,7 +663,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:237
 msgid "OS"
-msgstr ""
+msgstr "OS"
 
 #: modules/glpi/glpi/ajaxViewPart.php:238
 msgid "Operating System"
@@ -671,27 +671,27 @@ msgstr "Operativsystem"
 
 #: modules/glpi/glpi/ajaxViewPart.php:239
 msgid "Computer Type"
-msgstr ""
+msgstr "Datamaskin Type"
 
 #: modules/glpi/glpi/ajaxViewPart.php:240
 msgid "Model / Type"
-msgstr ""
+msgstr "Modell / Type"
 
 #: modules/glpi/glpi/ajaxViewPart.php:241
 msgid "Model"
-msgstr ""
+msgstr "Modell"
 
 #: modules/glpi/glpi/ajaxViewPart.php:242
 msgid "Manufacturer"
-msgstr ""
+msgstr "Produsent"
 
 #: modules/glpi/glpi/ajaxViewPart.php:243
 msgid "Serial Number"
-msgstr ""
+msgstr "Serienummer"
 
 #: modules/glpi/glpi/ajaxViewPart.php:244
 msgid "Frequency"
-msgstr ""
+msgstr "Frekvens"
 
 #: modules/glpi/glpi/ajaxViewPart.php:245
 msgid "Type"
@@ -699,7 +699,7 @@ msgstr "Type"
 
 #: modules/glpi/glpi/ajaxViewPart.php:247
 msgid "Bandwidth"
-msgstr ""
+msgstr "Båndbredde"
 
 #: modules/glpi/glpi/ajaxViewPart.php:248
 msgid "Writer"
@@ -709,7 +709,7 @@ msgstr ""
 #: modules/glpi/glpi/ajaxLocationList.php:68
 #: modules/glpi/glpi/ajaxEntityList.php:68
 msgid "Comment"
-msgstr ""
+msgstr "Kommentar"
 
 #: modules/glpi/glpi/ajaxViewPart.php:251
 msgid "Date"
@@ -717,43 +717,43 @@ msgstr "Dato"
 
 #: modules/glpi/glpi/ajaxViewPart.php:252
 msgid "User"
-msgstr ""
+msgstr "Bruker"
 
 #: modules/glpi/glpi/ajaxViewPart.php:253
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #: modules/glpi/glpi/ajaxViewPart.php:254
 msgid "Action"
-msgstr ""
+msgstr "Handling"
 
 #: modules/glpi/glpi/ajaxViewPart.php:259
 msgid "Service Pack"
-msgstr ""
+msgstr "Service Pakke"
 
 #: modules/glpi/glpi/ajaxViewPart.php:260
 msgid "Architecture"
-msgstr ""
+msgstr "Arkitektur"
 
 #: modules/glpi/glpi/ajaxViewPart.php:261
 msgid "Windows Key"
-msgstr ""
+msgstr "Windows Nøkkel"
 
 #: modules/glpi/glpi/ajaxViewPart.php:263
 msgid "State"
-msgstr ""
+msgstr "Tilstand"
 
 #: modules/glpi/glpi/ajaxViewPart.php:264
 msgid "Unknown"
-msgstr ""
+msgstr "Ukjent"
 
 #: modules/glpi/glpi/ajaxViewPart.php:265
 msgid "Inventory Number"
-msgstr ""
+msgstr "Inventarnummer"
 
 #: modules/glpi/glpi/ajaxViewPart.php:267
 msgid "Enabled"
-msgstr ""
+msgstr "Aktivert"
 
 #: modules/glpi/glpi/ajaxViewPart.php:268
 msgid "Up-to-date"
@@ -761,12 +761,12 @@ msgstr "Oppdatert"
 
 #: modules/glpi/glpi/ajaxViewPart.php:301
 msgid "Invalid hostname"
-msgstr ""
+msgstr "Ugyldig vertsnavn"
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:30
 #, php-format
 msgid "Antivirus status is OK at %s"
-msgstr ""
+msgstr "Antivirus status er OK ved %s"
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:33
 #, php-format
@@ -803,7 +803,7 @@ msgstr ""
 
 #: modules/glpi/glpi/deleteEntityRule.php:36
 msgid "Delete this rule?"
-msgstr ""
+msgstr "Slett denne regelen?"
 
 #: modules/glpi/glpi/locationList.php:28
 msgid "Location list"
