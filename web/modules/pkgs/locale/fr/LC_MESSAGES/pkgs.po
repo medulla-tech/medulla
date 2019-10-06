@@ -145,7 +145,7 @@ msgstr "Actions disponible"
 
 #: modules/pkgs/pkgs/addXMPP.php:43
 msgid "Deployment Workflow"
-msgstr ""
+msgstr "Flux de déploiement"
 
 #: modules/pkgs/pkgs/deletePackage.php:38
 msgid "Delete this rule"
@@ -258,7 +258,7 @@ msgstr "Rechercher dans le shebang"
 
 #: modules/pkgs/pkgs/addRule.php:63 modules/pkgs/pkgs/editRule.php:68
 msgid "Element in Bang"
-msgstr ""
+msgstr "Élément dans le shebang"
 
 #: modules/pkgs/pkgs/addRule.php:64 modules/pkgs/pkgs/editRule.php:69
 msgid "Search into File command"
@@ -266,15 +266,15 @@ msgstr "Rechercher dans la commande du fichier"
 
 #: modules/pkgs/pkgs/addRule.php:64 modules/pkgs/pkgs/editRule.php:69
 msgid "Element in File Result"
-msgstr ""
+msgstr "Élément de la commande du fichier"
 
 #: modules/pkgs/pkgs/addRule.php:65 modules/pkgs/pkgs/editRule.php:70
 msgid "Search into Strings command"
-msgstr ""
+msgstr "Chercher via la commande Strings"
 
 #: modules/pkgs/pkgs/addRule.php:65 modules/pkgs/pkgs/editRule.php:70
 msgid "Element in Strings Result"
-msgstr ""
+msgstr "Élément de recherche dans Strings"
 
 #: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
 #: modules/pkgs/pkgs/add.php:342
@@ -626,7 +626,7 @@ msgstr "Informations"
 
 #: modules/pkgs/includes/actions/action_comment.php:41
 msgid "Your log comments !"
-msgstr ""
+msgstr "Vos commentaires a ajouter dans les logs !"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:53
 msgid "Unzip File"
@@ -755,7 +755,7 @@ msgstr "Commande"
 #: modules/pkgs/includes/actions/actionprocessscript.php:95
 #: modules/pkgs/includes/actions/actionprocessscript.php:110
 msgid "Set timeout"
-msgstr ""
+msgstr "Configurer le délai d'attente"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
 msgid "Execute script"
@@ -807,7 +807,7 @@ msgstr "Redémarrage"
 
 #: modules/pkgs/includes/actions/actionrestart.php:59
 msgid "Target Restart"
-msgstr ""
+msgstr "Cible à redémarrer"
 
 #: modules/pkgs/includes/actions/actioncleaning.php:12
 msgid "Remove uploaded files"
@@ -819,7 +819,7 @@ msgstr "Section de désinstallation"
 
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:7
 msgid "End Error"
-msgstr ""
+msgstr "Fin avec erreur"
 
 #: modules/pkgs/includes/actions/action_section_install.php:18
 msgid "Install Section"
@@ -827,11 +827,11 @@ msgstr "Section d'installation"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:8
 msgid "End Success"
-msgstr ""
+msgstr "Fin avec succès"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:42
 msgid "Delete package"
-msgstr ""
+msgstr "Supprimer le package"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
 msgid "Inventory"
@@ -839,7 +839,7 @@ msgstr "Inventaire"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:28
 msgid "Set Environment variables"
-msgstr ""
+msgstr "Configurer les variables d'environnement"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:36
 msgid "Step label : "
@@ -859,7 +859,7 @@ msgstr "Nom de l'étape:"
 
 #: modules/pkgs/includes/actions/action_set_config_file.php:12
 msgid "Set config file parameter"
-msgstr ""
+msgstr "Configurer les paramètres du fichier de configuration"
 
 #: modules/pkgs/includes/actions/action_set_config_file.php:38
 msgid "Config action description"

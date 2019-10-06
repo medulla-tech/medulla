@@ -36,23 +36,23 @@ msgstr "Glpi Dashboard"
 
 #: modules/glpi/infoPackage.inc.php:55
 msgid "Create static group from dashboard widgets (GLPI)"
-msgstr ""
+msgstr "Opprett statisk gruppe fra dashbord-widgeter (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:60
 msgid "Create static group from antivirus dashboard widget (GLPI)"
-msgstr ""
+msgstr "Opprett statisk gruppe fra antiviruspanelet (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:65
 msgid "Create static group from OS distribution dashboard widget (GLPI)"
-msgstr ""
+msgstr "Opprett statisk gruppe fra OS-distribusjonsdashbordwidget (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:70 modules/glpi/infoPackage.inc.php:75
 msgid "Create static group from machines dashboard widget (GLPI)"
-msgstr ""
+msgstr "Opprett statisk gruppe fra maskinens dashbordwidget (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:80
 msgid "Create static group from machines backup widget (GLPI)"
-msgstr ""
+msgstr "Opprett statisk gruppe fra maskinens sikkerhetskopi widget (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:85
 msgid "Entities"
@@ -60,92 +60,92 @@ msgstr "Forekomster"
 
 #: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:102
 msgid "Entities (ajax)"
-msgstr ""
+msgstr "Enheter (ajax)"
 
 #: modules/glpi/infoPackage.inc.php:94 modules/glpi/infoPackage.inc.php:107
 #: modules/glpi/glpi/addEntity.php:43
 msgid "Add entity"
-msgstr ""
+msgstr "Legg til enhet"
 
 #: modules/glpi/infoPackage.inc.php:98
 msgid "Locations"
-msgstr ""
+msgstr "Steder"
 
 #: modules/glpi/infoPackage.inc.php:111 modules/glpi/glpi/entityRules.php:28
 msgid "Entity rules"
-msgstr ""
+msgstr "Enhetsregler"
 
 #: modules/glpi/infoPackage.inc.php:115
 msgid "Entity rules (ajax)"
-msgstr ""
+msgstr "Enhetsregler (ajax)"
 
 #: modules/glpi/infoPackage.inc.php:120 modules/glpi/glpi/addEntityRule.php:59
 msgid "Add entity rule"
-msgstr ""
+msgstr "Legg til Enhetsregel"
 
 #: modules/glpi/infoPackage.inc.php:124
 msgid "Delete entity rule"
-msgstr ""
+msgstr "Slett Enhetsregel"
 
 #: modules/glpi/infoPackage.inc.php:129
 msgid "Change entity rule order (up)"
-msgstr ""
+msgstr "Endre enhetenregel-ordning (opp)"
 
 #: modules/glpi/infoPackage.inc.php:134
 msgid "Change entity rule order (down)"
-msgstr ""
+msgstr "Endre enhetenregel-ordning (ned)"
 
 #: modules/glpi/infoPackage.inc.php:141
 msgid "Display locations"
-msgstr ""
+msgstr "Vis lokasjoner"
 
 #: modules/glpi/infoPackage.inc.php:157
 msgid "Inventory (GLPI) on machine"
-msgstr ""
+msgstr "Inventar (GLPI) på maskinen"
 
 #: modules/glpi/infoPackage.inc.php:160
 msgid "Summary tab (GLPI)"
-msgstr ""
+msgstr "Sammendragsfanen (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:163
 msgid "Hardware tab (GLPI)"
-msgstr ""
+msgstr "Maskinvarefane (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:166
 msgid "Storage tab (GLPI)"
-msgstr ""
+msgstr "Lagringsfane (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:169
 msgid "Network tab (GLPI)"
-msgstr ""
+msgstr "Nettverksfane (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:172
 msgid "Softwares tab (GLPI)"
-msgstr ""
+msgstr "Programvare-fanen (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:175
 msgid "Administrative tab (GLPI)"
-msgstr ""
+msgstr "Administrativ fane (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:178
 msgid "History tab (GLPI)"
-msgstr ""
+msgstr "Historik-fanen (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:181
 msgid "Antivirus tab (GLPI)"
-msgstr ""
+msgstr "Antivirus fane (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:184
 msgid "Registry tab (GLPI)"
-msgstr ""
+msgstr "Register fane (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:187
 msgid "Connections tab (GLPI)"
-msgstr ""
+msgstr "Tilkoblingsfanen (GLPI)"
 
 #: modules/glpi/includes/html.php:49
 msgid "Hide Windows Updates"
-msgstr ""
+msgstr "Skjul Windows-oppdateringer"
 
 #: modules/glpi/includes/html.php:57 modules/glpi/glpi/ajaxViewPart.php:255
 msgid "Today"
@@ -165,7 +165,7 @@ msgstr "Alle"
 
 #: modules/glpi/includes/publicFunc.php:86
 msgid "Entity attributes"
-msgstr ""
+msgstr "Enhetsattributter"
 
 #: modules/glpi/includes/publicFunc.php:130
 msgid "Dynamic"
@@ -182,11 +182,11 @@ msgstr "Fjern"
 
 #: modules/glpi/includes/publicFunc.php:154
 msgid "Entity right"
-msgstr ""
+msgstr "Enhetsrettigheter"
 
 #: modules/glpi/includes/publicFunc.php:160
 msgid "Add entity right"
-msgstr ""
+msgstr "Legg til Enhetsrettigheter"
 
 #: modules/glpi/includes/panels/inventory.inc.php:30
 msgid "Inventories"
@@ -207,7 +207,7 @@ msgstr "> %s dager: %prosent% (%d)"
 
 #: modules/glpi/includes/panels/inventory.inc.php:48
 msgid "Uninventoried machines"
-msgstr ""
+msgstr "Uinnventerte maskiner"
 
 #: modules/glpi/includes/panels/os_repartition.inc.php:35
 msgid "Operating systems"
@@ -225,7 +225,7 @@ msgstr "Antivirus"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:44
 msgid "OK: %percent% (%d)"
-msgstr ""
+msgstr "OK: %prosent% (%d)"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:45
 msgid "Not running or not up-to-date: %percent% (%d)"

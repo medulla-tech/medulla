@@ -260,19 +260,19 @@ msgstr ""
 
 #: modules/inventory/infoPackage.inc.php:210
 msgid "Entities (ajax)"
-msgstr ""
+msgstr "Enheter (ajax)"
 
 #: modules/inventory/infoPackage.inc.php:215
 msgid "Entity rules (ajax)"
-msgstr ""
+msgstr "Enhetsregler (ajax)"
 
 #: modules/inventory/infoPackage.inc.php:221
 msgid "Change entity rule order (up)"
-msgstr ""
+msgstr "Endre enhetenregel-ordning (opp)"
 
 #: modules/inventory/infoPackage.inc.php:226
 msgid "Change entity rule order (down)"
-msgstr ""
+msgstr "Endre enhetenregel-ordning (ned)"
 
 #: modules/inventory/includes/html.php:65
 #: modules/inventory/inventory/ajaxViewPart.php:188
@@ -287,7 +287,7 @@ msgstr ""
 
 #: modules/inventory/includes/html.php:103
 msgid "Hide Windows Updates"
-msgstr ""
+msgstr "Skjul Windows-oppdateringer"
 
 #: modules/inventory/includes/html.php:117
 msgid "Refresh"
@@ -296,7 +296,7 @@ msgstr "Oppdater"
 #: modules/inventory/includes/publicFunc.php:57
 #: modules/inventory/includes/publicFunc.php:90
 msgid "Entity right"
-msgstr ""
+msgstr "Enhetsrettigheter"
 
 #: modules/inventory/includes/publicFunc.php:83
 #: modules/inventory/inventory/addEntityRule.php:180
@@ -309,7 +309,7 @@ msgstr ""
 
 #: modules/inventory/includes/publicFunc.php:95
 msgid "Add entity right"
-msgstr ""
+msgstr "Legg til Enhetsrettigheter"
 
 #: modules/inventory/includes/publicFunc.php:95
 msgid "Add entity right for user"
@@ -387,7 +387,7 @@ msgstr "Hent XLS Rapport"
 #: modules/inventory/inventory/entityRules.php:28
 #: modules/inventory/inventory/localComputersSidebar.php:29
 msgid "Entity rules"
-msgstr ""
+msgstr "Regler for enhet"
 
 #: modules/inventory/inventory/entityRules.php:35
 msgid "All rules"
@@ -493,7 +493,7 @@ msgstr "Slett regel"
 
 #: modules/inventory/inventory/addEntity.php:42
 msgid "Add entity"
-msgstr ""
+msgstr "Legg til enhet"
 
 #: modules/inventory/inventory/addEntity.php:64
 msgid "Parent entity"
@@ -687,7 +687,7 @@ msgstr ""
 
 #: modules/inventory/inventory/localComputersSidebar.php:30
 msgid "Add entity rule"
-msgstr ""
+msgstr "Legg til Enhetsregl"
 
 #: modules/inventory/inventory/graphs.php:47
 msgid "back"
