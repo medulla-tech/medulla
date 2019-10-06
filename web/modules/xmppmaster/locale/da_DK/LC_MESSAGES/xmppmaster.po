@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-03 20:40+0200\n"
+"POT-Creation-Date: 2019-10-07 00:28+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Language-Team: Danish (Denmark) (https://www.transifex.com/siveo/teams/72118/da_DK/)\n"
 "MIME-Version: 1.0\n"
@@ -384,6 +384,18 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:129
 msgid "Syncthing sharing done or non-existant"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:136
+msgid "Syncthing share"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:137
+msgid "Number of machines"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:138
+msgid "transfert"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:142
