@@ -234,7 +234,7 @@ msgstr "Vis"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:213
 msgid "Wake on Lan"
-msgstr ""
+msgstr "Wake on Lan"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:309
 msgid "Machine Details"
@@ -365,7 +365,7 @@ msgstr "Utrullingsresultat"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:607
 msgid "Hide Result"
-msgstr ""
+msgstr "Skjul resultat"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:687
 msgid "Environment"
@@ -373,11 +373,11 @@ msgstr "Miljø"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:693
 msgid "key"
-msgstr ""
+msgstr "nøkkel"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:696
 msgid "value"
-msgstr ""
+msgstr "verdi"
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
 msgid "Computer deploy"

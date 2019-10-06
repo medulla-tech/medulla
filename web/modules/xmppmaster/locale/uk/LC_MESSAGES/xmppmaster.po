@@ -234,7 +234,7 @@ msgstr "Показати"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:213
 msgid "Wake on Lan"
-msgstr ""
+msgstr "Пробудження з LAN"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:309
 msgid "Machine Details"
@@ -365,7 +365,7 @@ msgstr "Результат розгортання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:607
 msgid "Hide Result"
-msgstr ""
+msgstr "Приховати результат"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:687
 msgid "Environment"
@@ -373,11 +373,11 @@ msgstr "Середовище"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:693
 msgid "key"
-msgstr ""
+msgstr "ключ"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:696
 msgid "value"
-msgstr ""
+msgstr "значення"
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
 msgid "Computer deploy"
