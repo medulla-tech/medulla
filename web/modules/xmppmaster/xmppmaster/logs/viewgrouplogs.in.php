@@ -133,9 +133,9 @@ echo "<div style='width :100%; color:blue;'>";
     echo'
             <table>
             <tr>
-                <th >Partage syncthing</th>
-                <th >nb mach</th>
-                <th >transfert</th>
+                <th >'. _T("Syncthing share", "xmppmaster"). '</th>
+                <th >'. _T("Number of machines", "xmppmaster"). '</th>
+                <th >'. _T("transfert", "xmppmaster"). '</th>
             </tr>
             <tr>
                 <td rowspan="2">';
