@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-03 20:40+0200\n"
+"POT-Creation-Date: 2019-10-07 00:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -384,6 +384,18 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:129
 msgid "Syncthing sharing done or non-existant"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:136
+msgid "Syncthing share"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:137
+msgid "Number of machines"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:138
+msgid "transfert"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:142
