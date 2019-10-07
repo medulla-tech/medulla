@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 00:28+0200\n"
+"POT-Creation-Date: 2019-10-07 16:37+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -929,6 +929,11 @@ msgstr "корінь:"
 msgid "Current path: "
 msgstr "Поточний шлях:"
 
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:456
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:465
+msgid "Summary download"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:553
 msgid "Computer view"
 msgstr "Перегляд комп'ютерів"
@@ -965,6 +970,10 @@ msgstr "Підтвердити"
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:840
 msgid "The list (folder & files) copy has been requested successfully"
 msgstr "Запит щодо списку копіювання (теки і файлів) було успішно надіслано"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:848
+msgid "Cancel"
+msgstr "Скасувати"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
 msgid "Planned tasks"

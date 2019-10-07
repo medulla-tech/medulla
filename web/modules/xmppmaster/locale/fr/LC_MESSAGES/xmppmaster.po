@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 00:28+0200\n"
+"POT-Creation-Date: 2019-10-07 16:37+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -924,6 +924,11 @@ msgstr "racine:"
 msgid "Current path: "
 msgstr "Chemin actuel:"
 
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:456
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:465
+msgid "Summary download"
+msgstr "Résumé du téléchargement"
+
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:553
 msgid "Computer view"
 msgstr "Vue ordinateur"
@@ -960,6 +965,10 @@ msgstr "Valider"
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:840
 msgid "The list (folder & files) copy has been requested successfully"
 msgstr "La demande de copie ( fichiers et dossiers) a été enregistrée"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:848
+msgid "Cancel"
+msgstr "Annuler"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
 msgid "Planned tasks"
