@@ -462,7 +462,7 @@ printf ('
   </div>
 </div>
 
-<div id="dialog-confirm-download-file" title="Transfer File">
+<div id="dialog-confirm-download-file" title="Summary download">
   <div>
     <span style="float:left; margin:12px 12px 20px 0;">
         <span id="dialogmsg1">
