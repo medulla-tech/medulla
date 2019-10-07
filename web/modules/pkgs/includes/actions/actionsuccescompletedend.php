@@ -107,7 +107,7 @@ $lab = "END_SUCCESS";
         </table>';
         ?>
     </div>
-    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleSuccess tr.toggleable").toggle();' type="button" value="Options" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleSuccess tr.toggleable").toggle();' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function(){

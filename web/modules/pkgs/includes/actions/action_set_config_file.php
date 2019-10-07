@@ -57,12 +57,12 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
     <input class="btn btn-primary"
            type="button"
            onclick="jQuery(this).parent().parent('li').detach()"
-           value="Delete" />
+           value="<?php echo _T("Delete", "pkgs");?>" />
     <input class="btn btn-primary"
            id="property"
            onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});'
            type="button"
-           value="Options" />
+           value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 
 <script type="text/javascript">

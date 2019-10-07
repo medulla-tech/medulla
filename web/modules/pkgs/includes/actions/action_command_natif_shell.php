@@ -39,8 +39,8 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Set timeout
-                </td>
+                    }" />'._T("Set timeout", "pkgs").
+                '</td>
                 <td>
                     <input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
                 </td>';
@@ -217,5 +217,5 @@ echo "</pre>";*/
         <!-- Option timeout -->
     </div>
 
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
 </div>

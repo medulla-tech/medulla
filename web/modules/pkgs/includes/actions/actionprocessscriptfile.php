@@ -131,7 +131,7 @@ extract($_POST);
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Alternate package
+                                }" />'._T("Alternate package", "pkgs").'
                     </td>
                     <td width="25%">
                         <select disabled name="packageuuid">'.$optionspackage.'</select>
@@ -155,12 +155,12 @@ extract($_POST);
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Force suffix
+                    }" />'._T("Force suffix", "pkgs").'
                 </td>
                 <td>
                     <input  type="text"
-                           title=\'The "Script language" property above applies a suffix to the script by default.
-However, if the "Force suffix" property is set, the imposed suffix will be this one\'
+                           title=\''._T('The "Script language" property above applies a suffix to the script by default.
+However, if the "Force suffix" property is set, the imposed suffix will be this one\'', 'pkgs').'
                             value="'.$suffix.'"
                             name="suffix"  />
                 </td><td></td><td></td>';
@@ -174,12 +174,12 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Force suffix
+                    }" />'._T('Force suffix','pkgs').'
                 </td>
                 <td>
                     <input  type="text"
-                            title=\'The "Script language" property above applies a suffix to the script by default.
- However, if the "Force suffix" property is set, the imposed suffix will be this one\'
+                            title=\''._T('The "Script language" property above applies a suffix to the script by default.
+ However, if the "Force suffix" property is set, the imposed suffix will be this one\'', 'pkgs').'
                             value="" disabled
                             name="suffix"  />
                 </td><td></td><td></td>';
@@ -208,8 +208,8 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                 </td>
                 <td>
                     <input  type="text"
-                            title=\'The "Script language" property above applies a hash-bang to the script by default.
- However, if the "Force hash-bang" property is set, the imposed hash-bang will be this one\'
+                            title=\''._T('The "Script language" property above applies a hash-bang to the script by default.
+ However, if the "Force hash-bang" property is set, the imposed hash-bang will be this one\'','pkgs').'
                             value="'.$bang.'"
                             name="bang"  />
                 </td><td></td><td></td>';
@@ -223,12 +223,12 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Force hash-bang
+                    }" />'._T("Force hash-bang", "pkgs").'
                 </td>
                 <td>
                     <input  type="text"
-                            title=\'The "Script language" property above applies a hash-bang to the script by default.
- However, if the "Force hash-bang" property is set, the imposed hash-bang will be this one\'
+                            title=\''._T('The "Script language" property above applies a hash-bang to the script by default.
+ However, if the "Force hash-bang" property is set, the imposed hash-bang will be this one\'','pkgs').'
                             value="" disabled
                             name="bang"  />
                 </td><td></td><td></td>';
@@ -268,7 +268,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Set timeout
+                    }" />'._T("Set timeout", "pkgs").'
                 </td>
                 <td>
                     <input type="number" min="0" value="10" disabled name="timeout"  />
@@ -433,8 +433,8 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
         <!-- Option timeout -->
     </div>
 
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete","pkgs");?>" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 
 <script type="text/javascript">

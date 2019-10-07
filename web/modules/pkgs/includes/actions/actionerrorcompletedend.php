@@ -31,7 +31,7 @@ $lab = "END_ERROR";
         ?>
         <!-- All extra options are added here-->
     </div>
-  <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleend tr.toggleable").toggle();' type="button" value="Options" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleend tr.toggleable").toggle();' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function(){
