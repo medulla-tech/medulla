@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-02 14:53+0200\n"
+"POT-Creation-Date: 2019-10-07 11:25+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -591,6 +591,23 @@ msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
 msgid "Update Section"
 msgstr "Section de mise-à-jour"
 
+#: modules/pkgs/includes/actions/action_section_update.php:25
+#: modules/pkgs/includes/actions/action_pwd_package.php:84
+#: modules/pkgs/includes/actions/action_comment.php:73
+#: modules/pkgs/includes/actions/action_unzip_file.php:346
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:220
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:436
+#: modules/pkgs/includes/actions/actionrestart.php:72
+#: modules/pkgs/includes/actions/actioncleaning.php:37
+#: modules/pkgs/includes/actions/action_section_uninstall.php:26
+#: modules/pkgs/includes/actions/action_section_install.php:26
+#: modules/pkgs/includes/actions/action_set_environ.php:56
+#: modules/pkgs/includes/actions/actionprocessscript.php:273
+#: modules/pkgs/includes/actions/action_set_config_file.php:60
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:87
+msgid "Delete"
+msgstr "Supprimer"
+
 #: modules/pkgs/includes/actions/action_pwd_package.php:12
 msgid "Go to package folder"
 msgstr "Aller au dossier du package"
@@ -611,10 +628,26 @@ msgstr "Nom de l'étape:"
 #: modules/pkgs/includes/actions/action_pwd_package.php:70
 #: modules/pkgs/includes/actions/action_unzip_file.php:90
 #: modules/pkgs/includes/actions/action_unzip_file.php:104
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:134
 #: modules/pkgs/includes/actions/actionprocessscript.php:57
 #: modules/pkgs/includes/actions/actionprocessscript.php:71
 msgid "Alternate package"
 msgstr "Package alternatif"
+
+#: modules/pkgs/includes/actions/action_pwd_package.php:85
+#: modules/pkgs/includes/actions/action_comment.php:74
+#: modules/pkgs/includes/actions/action_unzip_file.php:347
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:437
+#: modules/pkgs/includes/actions/actionrestart.php:73
+#: modules/pkgs/includes/actions/actioncleaning.php:38
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:34
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:110
+#: modules/pkgs/includes/actions/action_set_environ.php:57
+#: modules/pkgs/includes/actions/actionprocessscript.php:274
+#: modules/pkgs/includes/actions/action_set_config_file.php:65
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:88
+msgid "Options"
+msgstr "Options"
 
 #: modules/pkgs/includes/actions/action_comment.php:12
 msgid "Add info in deployment log"
@@ -751,7 +784,9 @@ msgstr "Éxecuter la commande dans un shell"
 msgid "Command"
 msgstr "Commande"
 
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:42
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:57
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:271
 #: modules/pkgs/includes/actions/actionprocessscript.php:95
 #: modules/pkgs/includes/actions/actionprocessscript.php:110
 msgid "Set timeout"
@@ -792,6 +827,34 @@ msgstr "Language de script"
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
 msgid "Script"
 msgstr "Script"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:158
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:177
+msgid "Force suffix"
+msgstr "Forcer le suffix"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:162
+msgid ""
+"The \"Script language\" property above applies a suffix to the script by default.\n"
+"However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:181
+msgid ""
+"The \"Script language\" property above applies a suffix to the script by default.\n"
+" However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:211
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:230
+msgid ""
+"The \"Script language\" property above applies a hash-bang to the script by default.\n"
+" However, if the \"Force hash-bang\" property is set, the imposed hash-bang will be this one'"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:226
+msgid "Force hash-bang"
+msgstr "Forcer le hash-bang"
 
 #: modules/pkgs/includes/actions/actionrestart.php:17
 msgid "Restart Machine"
