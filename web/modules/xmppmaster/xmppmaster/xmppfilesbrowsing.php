@@ -453,7 +453,7 @@ printf ('
 </div>
 
 
-<div id="dialog-confirm-download-directory" title="Summary download">
+<div id="dialog-confirm-download-directory" title="<?php echo sprintf(_T('Summary download', 'xmppmaster')); ?>">
   <div>
     <span style="float:left; margin:12px 12px 20px 0;">
         <span id="dialogmsg">
@@ -462,7 +462,7 @@ printf ('
   </div>
 </div>
 
-<div id="dialog-confirm-download-file" title="Summary download">
+<div id="dialog-confirm-download-file" title="<?php echo sprintf(_T('Summary download', 'xmppmaster')); ?>">
   <div>
     <span style="float:left; margin:12px 12px 20px 0;">
         <span id="dialogmsg1">
@@ -845,7 +845,7 @@ printf ('
                         },
                         {
                             id: "my-buttoncancel",
-                            text: "Cancel",
+                            text: "<?php echo sprintf(_T('Cancel', 'xmppmaster')); ?>",
                             'class':'btnPrimary',
                             style:"color:#FFFFFF;background-color: #000000;",
                             click:function() {
