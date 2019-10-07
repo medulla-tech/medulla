@@ -393,7 +393,7 @@ msgstr "Оприлюднення Syncthing виконано або його не
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:136
 msgid "Syncthing share"
-msgstr ""
+msgstr "Спільний ресурс Syncthing"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:137
 msgid "Number of machines"
@@ -401,7 +401,7 @@ msgstr "Кількість машин"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:138
 msgid "transfert"
-msgstr ""
+msgstr "передавання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:142
 msgid "Share name"
