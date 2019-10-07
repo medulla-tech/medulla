@@ -648,7 +648,7 @@ msgstr "Альтернативний пакунок"
 #: modules/pkgs/includes/actions/action_set_config_file.php:65
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:88
 msgid "Options"
-msgstr ""
+msgstr "Параметри"
 
 #: modules/pkgs/includes/actions/action_comment.php:12
 msgid "Add info in deployment log"
