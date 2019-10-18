@@ -1,11 +1,20 @@
 * [FEATURE] Add a toggle button for each panel. For each panel the user's choice is persistant
-* [BUGFIX]  Update topology for d3 V5
-* [BUGFIX]  Add refresh button for all the audit page
-* [BUGFIX]  Fix the start deployment date
-* [BUGFIX]  Add the refresh object for some page
-* [BUGFIX]  Fix the start deployment date
-* [BUGFIX]  Add some behaviours to the expert file manager
-* [BUGFIX]  Transform file and dir one-line list to real list in the bucket
+* [FEATURE] Add info of syncthing share
+* [BUGFIX]  Improve translations
+* [BUGFIX]  Update topology for d3 V5 
+* [BUGFIX]  Add refresh button for all the audit page 
+* [BUGFIX]  Fix the start deployment date 
+* [BUGFIX]  Add the refresh object for some page 
+* [BUGFIX]  Fix the start deployment date 
+* [BUGFIX]  Add some behaviours to the expert file manager 
+* [BUGFIX]  Transform file and dir one-line list to real list in the bucket
+* [BUGFIX]  Add spacing after filter input
+* [BUGFIX]  Modify the cursor when it is hover some action icons
+* [BUGFIX]  Translate the hide / show message when we clic on it
+* [BUGFIX]  Fix the status in audit general pag
+* [BUGFIX]  Fix the state for deployments in groups in audit page
+* [BUGFIX]  Fix syncthing message displayed into audit
+* [BUGFIX]  Modify the date into the Deployment Phases table
 
 mmc-core 4.5.2
 ==============
