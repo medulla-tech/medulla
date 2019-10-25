@@ -833,5 +833,11 @@ mkdir -p %buildroot%_var/lib/pulse2/file-transfer
 
 cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/mmc/contrib/
 
+rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
+mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
+
+rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
+mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
+
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
