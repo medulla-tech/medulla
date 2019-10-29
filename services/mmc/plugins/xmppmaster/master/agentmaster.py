@@ -25,19 +25,24 @@
 import sys
 import os
 import re
-
 import ConfigParser
 import operator
 import zlib
-import sleekxmpp
-from sleekxmpp import jid
-
 import netifaces
 import random
 import base64
 import json
-from optparse import OptionParser
 import copy
+import traceback
+import pprint
+import pluginsmaster
+import cPickle
+import logging
+import threading
+import netaddr
+
+from optparse import OptionParser
+
 import lib
 from lib.networkinfo import networkagentinfo
 from lib.managesession import sessiondatainfo, session
@@ -46,33 +51,33 @@ from lib.managepackage import managepackage
 from lib.manageADorganization import manage_fqdn_window_activedirectory
 from lib.manageRSAsigned import MsgsignedRSA
 from lib.localisation import Localisation
+from lib.manage_scheduler import manage_scheduler
+from lib.manage_xmppbrowsing import xmppbrowsing
+from lib.update_remote_agent import Update_Remote_Agent
+
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from mmc.plugins.base import getModList
 from mmc.plugins.base.computers import ComputerManager
-from lib.manage_scheduler import manage_scheduler
+from mmc.plugins.glpi.database import Glpi
+from mmc.agent import PluginManager
+from mmc.plugins.msc.database import MscDatabase
+from mmc.plugins.msc import convergence_reschedule
+
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.pkgs import PkgsDatabase
-import traceback
-import pprint
-import pluginsmaster
-import cPickle
-import logging
-import threading
-import netaddr
+
 from time import mktime, sleep
 from datetime import datetime
 from multiprocessing import Process, Queue, TimeoutError
-from mmc.agent import PluginManager
-from lib.update_remote_agent import Update_Remote_Agent
+
 from distutils.version import LooseVersion, StrictVersion
+
+import sleekxmpp
 from sleekxmpp.exceptions import IqError, IqTimeout
 from sleekxmpp.xmlstream.stanzabase import ElementBase, ET, JID
 from sleekxmpp.stanza.iq import Iq
+from sleekxmpp import jid
 
-from lib.manage_xmppbrowsing import xmppbrowsing
-
-from mmc.plugins.msc.database import MscDatabase
-from mmc.plugins.msc import convergence_reschedule
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster"))
 
@@ -1908,11 +1913,63 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if 'action' in data and data['action'] == 'infomachine':
                 logger.debug(
                     "** Processing machine %s that sends this information (nini inventory)" % msg['from'].bare)
+                machine = XmppMasterDatabase().getMachinefromjid(data['from'])
+                if len(machine) != 0:
+                    # on regarde si coherence avec table network.
+                    try:
+                        result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
+                        if result[0] is None:
+                            raise
+                    except Exception:
+                        # incoherence entre machine et network
+                        # on supprime la machine
+                        # la machine est reincrite
+                        logger.warning("machine %s : incoherence entre table "\
+                            "machine et network."%data['from'])
 
-                if XmppMasterDatabase().getPresencejid(msg['from'].bare):
-                    logger.debug("Machine %s already exists in base" % msg['from'].bare)
-                    return
-
+                        if data['agenttype'] != "relayserver":
+                            machine['enabled'] = 0
+                            logger.warning("reincription complete de la machine")
+                        else:
+                            logger.warning("you must verify cohérence for ARS")
+                    if len(machine) != 0 and data['agenttype'] == "relayserver":
+                        if machine['enabled']:
+                            logger.debug("ARS %s is present in base" % msg['from'].bare)
+                            return
+                info = json.loads(base64.b64decode(data['completedatamachine']))
+                if len(machine) != 0 :
+                    if data['agenttype'] != "relayserver":
+                        if 'uuid_inventorymachine' in machine and \
+                             machine['uuid_inventorymachine'] is not None and \
+                                self.config.check_uuidinventory :
+                            hostname = None
+                            try:
+                                re = Glpi().getLastMachineInventoryFull(machine['uuid_inventorymachine'])
+                                for t in re:
+                                    if t[0] == 'name':
+                                        hostname = t[1]
+                                        break
+                                if hostname and \
+                                    "info" in info and \
+                                        "hostname" in info["info"] and \
+                                            hostname != info["info"]["hostname"]:
+                                    machine['uuid_inventorymachine'] = None
+                                else:
+                                    if machine['enabled']:
+                                        logger.debug("Machine %s is present in base" % msg['from'].bare)
+                                        return
+                            except Exception:
+                                machine['uuid_inventorymachine'] = None
+                            if machine['uuid_inventorymachine'] is None:
+                                logger.warning("When there is an incoherence between xmpp and glpi's uuid, we restore the uuid from glpi")
+                        else:
+                            if machine['enabled']:
+                                logger.debug("machine %s is present in base" % msg['from'].bare)
+                                return
+                    else:
+                        if machine['enabled']:
+                            logger.debug("ARS %s is present in base" % msg['from'].bare)
+                            return
                 if XmppMasterDatabase().getPresencejiduser(msg['from'].user):
                     logger.debug("Machine idem jid, domain change %s" % msg['from'].bare)
                     # The registration of the machine in database must be deleted, so it is updated.

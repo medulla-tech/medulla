@@ -103,6 +103,11 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.ordreallagent = self.getboolean('global', 'inter_agent')
         self.showinfomaster = self.getboolean('master', 'showinfo')
         self.showplugins = self.getboolean('master', 'showplugins')
+
+        self.check_uuidinventory = False
+        if self.has_option("master", "check_uuidinventory"):
+            self.check_uuidinventory = self.getboolean('master', 'check_uuidinventory')
+
         ###################time execcution plugin ####################
         # write execution time in fichier /tmp/Execution_time_plugin.txt
         #
