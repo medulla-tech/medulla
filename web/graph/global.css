@@ -1042,6 +1042,12 @@ input#param.searchfieldreal {
     min-width: 230px;
 }
 
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    #searchBest{
+      width: 456px;
+    }
+}
+
 #searchBest input, #searchBest select{border:0; max-height:28px}
 
 
