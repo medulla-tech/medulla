@@ -298,3 +298,9 @@ def getMachinesMac(uuid):
         return xmlrpcCleanup(Glpi().getMachinesMac(uuid))
     else:
         return ""
+
+def get_machine_for_hostname(strlisthostnale):
+    return xmlrpcCleanup(Glpi().get_machine_for_hostname(strlisthostnale))
+
+def get_machine_for_id(strlistuuid):
+    return xmlrpcCleanup(Glpi().get_machine_for_id(strlistuuid))

@@ -102,6 +102,14 @@ function add_command_quick_with_id($idcmd, $hosts, $lang, $gid = null) {
 function get_id_command_on_host($id) {
     return xmlCall('msc.get_id_command_on_host', array($id));
 }
+// #jfkjfk
+function xmlrpc_get_msc_listhost_commandid($command_id){
+    return xmlCall('msc.get_msc_listhost_commandid', array($command_id));
+}
+
+function xmlrpc_get_msc_listuuid_commandid($command_id){
+    return xmlCall('msc.get_msc_listuuid_commandid', array($command_id));
+}
 
 function xmlrpc_get_deployxmppscheduler($login, $min, $max, $flit){
     return xmlCall('msc.get_deployxmppscheduler', array($login, $min, $max, $flit));
