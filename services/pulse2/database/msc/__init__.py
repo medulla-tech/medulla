@@ -577,6 +577,115 @@ class MscDatabase(DatabaseHelper):
             result['connect_as'] = x.connect_as
         return result
 
+    def get_msc_listuuid_commandid(self, command_id):
+        sqlselect="""
+            SELECT
+                DISTINCT commands_on_host.start_date as dated,
+                commands_on_host.end_date as datef
+            FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+            WHERE
+                    commands_on_host.fk_commands = %s
+            ORDER BY dated DESC
+            LIMIT 1;"""% (command_id)
+        resultsql = self.db.execute(sqlselect)
+        if resultsql is not None:
+            dateintervale = [x for x in resultsql]
+            if len(dateintervale) != 0:
+                datestartstr  = dateintervale[0].dated
+                dateendstr    = dateintervale[0].datef
+            else:
+                self.logger.warning("command [%s] deploy missing msc"%command_id)
+                return ""
+        else:
+            return ""
+        sqlselect="""
+            SELECT
+                GROUP_CONCAT(DISTINCT SUBSTR(target_uuid, 5) SEPARATOR ',') as listuuid
+            FROM
+                (SELECT
+                    commands_on_host.fk_commands,
+                    target.target_name as dname,
+                    target.target_uuid
+                FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+                WHERE
+                    commands_on_host.fk_commands = %s  and
+                    commands_on_host.start_date <= '%s' and
+                    commands_on_host.end_date >= '%s'
+                    ) as listhost;
+                        """% (command_id, datestartstr, dateendstr)
+
+        resultsql = self.db.execute(sqlselect)
+
+        if resultsql is not None:
+            z= [x for x in resultsql][0].listuuid
+            if z is not None:
+                return z
+        self.logger.warning("command [%s] deploy missing for slot [%s,%s]"%(command_id, datestartstr, dateendstr))
+        return ""
+
+    def get_msc_listhost_commandid(self, command_id):
+        sqlselect="""
+            SELECT
+                DISTINCT commands_on_host.start_date as dated,
+                commands_on_host.end_date as datef
+            FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+            WHERE
+                    commands_on_host.fk_commands = %s
+            ORDER BY dated DESC
+            LIMIT 1;"""% (command_id)
+        resultsql = self.db.execute(sqlselect)
+        if resultsql is not None:
+            dateintervale = [x for x in resultsql]
+            if len(dateintervale) != 0:
+                datestartstr  = dateintervale[0].dated
+                dateendstr    = dateintervale[0].datef
+            else:
+                self.logger.warning("command [%s] deploy missing msc"%command_id)
+                return ""
+        else:
+            return ""
+        sqlselect="""
+            SELECT
+                GROUP_CONCAT(DISTINCT CONCAT('"',
+                            SUBSTR(dname,
+                                1,
+                                CHAR_LENGTH(dname) - 1),
+                            '"')
+                    SEPARATOR ',') as listhostname
+            FROM
+                (SELECT
+                    commands_on_host.fk_commands,
+                    target.target_name as dname,
+                    target.target_uuid
+                FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+                WHERE
+                    commands_on_host.fk_commands = %s  and
+                    commands_on_host.start_date <= '%s' and
+                    commands_on_host.end_date >= '%s'
+                    ) as listhost;
+                        """% (command_id, datestartstr, dateendstr)
+
+        resultsql = self.db.execute(sqlselect)
+
+        if resultsql is not None:
+            z= [x for x in resultsql][0].listhostname
+            if z is not None:
+                return z
+        self.logger.warning("command [%s] deploy missing for slot [%s,%s]"%(command_id, datestartstr, dateendstr))
+        return ""
+
     def deployxmppscheduler(self, login, min , max, filt):
         datenow = datetime.datetime.now()
         sqlselect="""
