@@ -284,6 +284,13 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getIdCommandOnHost(ctx, id_command))
 
+    #jfkjfk
+    def get_msc_listhost_commandid(self, command_id):
+        return xmlrpcCleanup(MscDatabase().get_msc_listhost_commandid(command_id))
+
+    def get_msc_listuuid_commandid(self, command_id):
+        return xmlrpcCleanup(MscDatabase().get_msc_listuuid_commandid(command_id))
+
     def get_deployxmppscheduler(self,login,  nin, max, filt):
         return xmlrpcCleanup(MscDatabase().deployxmppscheduler(login, nin, max, filt))
 
