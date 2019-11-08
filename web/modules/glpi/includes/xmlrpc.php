@@ -30,6 +30,10 @@ function getLastMachineGlpiFull($uuid) {
     return xmlCall("glpi.getLastMachineInventoryFull", array($uuid));
 }
 
+function getdbreadonly() {
+    return xmlCall("glpi.getdbreadonly", array());
+}
+
 function getGlpiEM($part) {
     return xmlCall("glpi.getInventoryEM", array($part));
 }

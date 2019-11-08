@@ -150,6 +150,9 @@ def getLicensesCount(vendor, software, version, valcount=1):
 def getLastMachineInventoryFull(uuid):
     return xmlrpcCleanup(Glpi().getLastMachineInventoryFull(uuid))
 
+def getdbreadonly():
+    config = GlpiConfig("glpi")
+    return xmlrpcCleanup(config.dbreadonly)
 
 def inventoryExists(uuid):
     return xmlrpcCleanup(Glpi().inventoryExists(uuid))
