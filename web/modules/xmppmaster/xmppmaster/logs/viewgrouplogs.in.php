@@ -21,9 +21,7 @@
  *
  * file viewgrouplogs.in.php
  */
-?>
 
-<?php
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/includes.php");
@@ -43,6 +41,11 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
     }
 </style>
 <?php
+$filter = "";
+if(isset($_GET['filter']))
+  $filter = $_GET["filter"];
+
+
 
 function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy , $cmddeploy_id ){
     $urlRedirect1 = urlStrRedirect("base/computers/createMachinesStaticGroupdeploy&gid=".$g_id."&login=".$login_deploy."&cmd_id=".$cmddeploy_id."&type=".$typegroup);
@@ -63,7 +66,6 @@ $MSC_nb_mach_grp_for_deploy  = $resultfrommsc['nbmachine'];
 $MSC_nb_mach_grp_done_deploy     = $resultfrommsc['nbdeploydone'];
 //$nb_deployer_machine_yet_from_msc = $MSC_nb_mach_grp_for_deploy - $MSC_nb_mach_grp_for_deploy;
 
-
 $bool_convergence_grp_on_package_from_msc = is_commands_convergence_type($cmd_id);
 // $command_detail = command_detail($cmd_id);
 
@@ -73,6 +75,8 @@ $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id);
 $start_date =  $lastcommandid['start_dateunixtime'];
 $end_date = $lastcommandid['end_dateunixtime'];
 $timestampnow = time();
+$uuids_list = xmlrpc_get_msc_listuuid_commandid($cmd_id);
+$info_from_machines = xmlrpc_get_machine_for_id($uuids_list);
 
 //FROM XMPPMASTER
 $resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,
@@ -85,14 +89,12 @@ $machine_success_from_deploy   = $resultfromdeploy['machinesuccessdeploy'];
 $machine_process_from_deploy   = $resultfromdeploy['machineprocessdeploy'];
 $machine_abort_from_deploy     = $resultfromdeploy['machineabortdeploy'];
 
-
-
 // from msc
 $machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy( $cmd_id,
                                                                 date("Y-m-d H:i:s",
                                                                 $start_date));
 
-$machine_wol_from_deploy       = $totalmachinedeploy-($machineerrordeploy + $machinesuccessdeploy + $machineprocessdeploy + $machine_timeout_from_deploy);
+$machine_wol_from_deploy       = $total_machine_from_deploy-($machine_success_from_deploy + $machine_success_from_deploy + $machine_process_from_deploy + $machine_timeout_from_deploy);
 
 $terminate = 0;
 $deployinprogress = 0;
@@ -103,9 +105,6 @@ $waiting = $MSC_nb_mach_grp_for_deploy - ($total_machine_from_deploy + $machine_
 if ($waiting == 0 && $machine_process_from_deploy == 0 ){
     $terminate = 1;
 }
-//echo $terminate;
-
-
 echo "<br>";
 
 $start_deploy = 0;
@@ -118,13 +117,10 @@ if ($timestampnow > ($end_date)){
     $end_deploy = 1;
 };
 
+// This command gets associated group of cmd_id
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date)."<br>";
 $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
-// echo "yyyyyyyyyyy";
-// print_r($_SESSION['computerpresence']);
-// echo "yyyyyyyyyyy";
-//// ####$_SESSION['computerpresence'] : "all_computer");
     if ($statsyncthing['package'] == ""){
         echo _T("Syncthing sharing done or non-existant");
     }else{
@@ -163,9 +159,7 @@ echo "<div style='width :100%; color:blue;'>";
         </td>
         </tr>
         </table>";
-?>
 
-<?php
     echo "<div>";
         echo "<div id='tablesyncthing'>";
 ?>
@@ -188,7 +182,6 @@ echo "<div style='width :100%; color:blue;'>";
     echo '</div>';
 }
 ?>
-
 <script type="text/javascript">
     function searchlogs(url){
                             jQuery('#tablelog').DataTable({
@@ -223,9 +216,6 @@ jQuery( "#buttontransfertsyncthing" ).click(function() {
 
 <?php
 if ($info['len'] != 0){
-    $uuid=$info['objectdeploy'][0]['inventoryuuid'];
-    $state=$info['objectdeploy'][0]['state'];
-    $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
     $result=$info['objectdeploy'][0]['result'];
 
     $resultatdeploy =json_decode($result, true);
@@ -247,7 +237,6 @@ if (isset($resultatdeploy['infoslist'][0]['packageUuid'])){
 if (!isset($_GET['refresh'])){
     $_GET['refresh'] = 1;
 }
-
 if (isset($_GET['gid'])){
     $countmachine = getRestrictedComputersListLen( array('gid' => $_GET['gid']));
     $_GET['nbgrp']=$countmachine;
@@ -349,7 +338,7 @@ echo "<div>";
     //     $jidmachine=$info['objectdeploy'][0]['jidmachine'];
     //     $jid_relay=$info['objectdeploy'][0]['jid_relay'];
 
-        $datestart =  date("Y-m-d H:i:s", $start);
+        $datestart =  date("Y-m-d H:i:s", $start_date);
         $timestampstart = strtotime($datestart);
         $timestampnow = time();
         $nbsecond = $timestampnow - $timestampstart;
@@ -391,6 +380,7 @@ echo "<div>";
             echo "</table>";
             echo '<br>';
         }
+
     }
     if($terminate == 0){
             echo'
@@ -409,9 +399,6 @@ echo "</div>";
 // group includ computers_list.php
 // les parametres get sont utilisés par computers_list pour l'appel de ajaxComputersList qui compose l'appel a list_computers
 // mmc/modules/base/includes/computers_list.inc.php
-
-$group->prettyDisplay();
-
 
         if (isset($countmachine)){
             if ($info['len'] > $countmachine){
@@ -436,62 +423,106 @@ if ($info['len'] != 0){
         $uuidgr[] =  $key;
     }
 
-    foreach ($info['objectdeploy'] as  $val){
-
-        switch($val['state']){
-            case "DEPLOYMENT SUCCESS":
-                $uuidsuccess[] = $val['inventoryuuid'];
-                break;
-            case "DEPLOYMENT ERROR":
-                $uuiderror[] = $val['inventoryuuid'];
-                break;
-            case "DEPLOYMENT START":
-            case "DEPLOYMENT START (REBOOT)":
-            case "DEPLOYMENT DIFFERED":
-                $uuidprocess[] = $val['inventoryuuid'];
-                break;
-            default:
-                $uuiddefault[] = $val['inventoryuuid'];
-        }
-        $uuidall[] = $val['inventoryuuid'];
-    }
     $other            = count ( $uuiddefault );
     $machinesucess    = count ( $uuidsuccess );
     $machineerror     = count ( $uuiderror );
     $machineinprocess = count ( $uuidprocess );
-    //$machinewol       = $state['nbmachine']-$state['nbdeploydone'];
-        echo '
-        <script src="modules/xmppmaster/graph/js/chart.js"></script>
-        <script>
-            var u = "";
-            var r = "";
-            window.onload = function () {
-                var datas = new Array();
-                ';
 
-                if ($machine_success_from_deploy > 0){
-                  echo 'datas.push({"label":"Success", "value":'.$machine_success_from_deploy.', "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
-                }
-                if ($machine_error_from_deploy > 0){
-                  echo 'datas.push({"label":"Error", "value":'.$machine_error_from_deploy.', "color": "#FE2E64", "href":"'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-                }
-                if ($machine_process_from_deploy > 0){
-                  echo 'datas.push({"label":"In progress", "value":'.$machine_process_from_deploy.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-                }
-                if ($wol > 0){
-                  echo 'datas.push({"label":"Waiting (WOL sent)", "value":'.$wol.', "color": "#DBA901", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-                }
-                if ($machine_timeout_from_deploy > 0){
-                echo 'datas.push({"label":"Timed out", "value":'.$machine_timeout_from_deploy.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-                }
-                if ($machine_abort_from_deploy > 0){
-                  echo 'datas.push({"label":"Aborted", "value":'.$machine_abort_from_deploy.', "color": "#ff5050", "href":"'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-                }
-                echo'
-                chart("holder", datas);
-            };
+  $status = [];
+  foreach ($info['objectdeploy'] as  $val){
+      $status[$val['inventoryuuid']] = $val['state'];
 
-        </script>';
+      switch($val['state']){
+          case "DEPLOYMENT SUCCESS":
+              $uuidsuccess[] = $val['inventoryuuid'];
+              break;
+          case "DEPLOYMENT ERROR":
+              $uuiderror[] = $val['inventoryuuid'];
+              break;
+          case "DEPLOYMENT START":
+          case "DEPLOYMENT START (REBOOT)":
+          case "DEPLOYMENT DIFFERED":
+              $uuidprocess[] = $val['inventoryuuid'];
+              break;
+          default:
+              $uuiddefault[] = $val['inventoryuuid'];
+      }
+      $uuidall[] = $val['inventoryuuid'];
+  }
+  $params = [];
+  foreach($info_from_machines[0] as $key => $value)
+  {
+      if(isset($status['UUID'.$value]))
+        $info_from_machines[7][] = $status['UUID'.$value];
+      $info_from_machines[8][] = 'UUID'.$value;
+      $params[] = [
+        'displayName' => $info_from_machines[2][$key],
+        'cn' => $info_from_machines[1][$key],
+        'type' => $info_from_machines[4][$key],
+        'objectUUID' => 'UUID'.$value,
+        'entity' => $info_from_machines[6][$key],
+        'owner' => $info_from_machines[5][$key],
+        'user' => $_GET['login'],
+        'os' => $info_from_machines[3][$key],
+        'status' => isset($info_from_machines[7][$key]) ? $info_from_machines[7][$key] : "",
+        'gid' => $_GET['gid'],
+        'gr_cmd_id' => $_GET['cmd_id'],
+        'gr_login' => $_GET['login'],
+      ];
+  }
+
+
+  $presencemachinexmpplist = xmlrpc_getPresenceuuids($info_from_machines[8]);
+  foreach($info_from_machines[8] as $key => $value)
+  {
+    $info_from_machines[9][] = ($presencemachinexmpplist[$value] == "1") ? 'machineNamepresente' : 'machineName';
+  }
+
+  $n = new OptimizedListInfos($info_from_machines[1], _T("Machine Name", "xmppmaster"));
+  $n->addExtraInfo($info_from_machines[2], _T("Description", "glpi"));
+  $n->addExtraInfo($info_from_machines[3], _T("Operating System", "xmppmaster"));
+  $n->addExtraInfo($info_from_machines[7], _T("Status", "xmppmaster"));
+  $n->addExtraInfo($info_from_machines[4], _T("Type", "xmppmaster"));
+  $n->addExtraInfo($info_from_machines[5], _T("Last User", "xmppmaster"));
+  $n->addExtraInfo($info_from_machines[6], _T("Entity", "glpi"));
+
+  $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),"viewlogs","logfile","logfile","xmppmaster", "xmppmaster");
+  $n->setParamInfo($params);
+  $n->addActionItemArray($action_log);
+  $n->setMainActionClasses($info_from_machines[9]);
+  $n->setNavBar(new AjaxNavBar(count($info_from_machines[1]), $filter));
+  $n->display();
+
+  echo '
+  <script src="modules/xmppmaster/graph/js/chart.js"></script>
+  <script>
+
+      var u = "";
+      var r = "";
+      var datas = new Array();';
+
+          if ($machine_success_from_deploy > 0){
+            echo 'datas.push({"label":"Success", "value":'.$machine_success_from_deploy.', "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
+          }
+          if ($machine_error_from_deploy > 0){
+            echo 'datas.push({"label":"Error", "value":'.$machine_error_from_deploy.', "color": "#FE2E64", "href":"'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($machine_process_from_deploy > 0){
+            echo 'datas.push({"label":"In progress", "value":'.$machine_process_from_deploy.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($wol > 0){
+            echo 'datas.push({"label":"Waiting (WOL sent)", "value":'.$wol.', "color": "#DBA901", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($machine_timeout_from_deploy > 0){
+          echo 'datas.push({"label":"Timed out", "value":'.$machine_timeout_from_deploy.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($machine_abort_from_deploy > 0){
+            echo 'datas.push({"label":"Aborted", "value":'.$machine_abort_from_deploy.', "color": "#ff5050", "href":"'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          echo'
+          chart("holder", datas);
+  </script>';
+
     }
 ?>
 
@@ -507,6 +538,7 @@ li.remove_machine a {
         text-decoration: none;
         color: #FFF;
 }
+
 
 progress{
     border-color: #ffffff;
