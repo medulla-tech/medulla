@@ -151,7 +151,8 @@ foreach ($packages as $c_package) {
         $a_pos[] = $package->targetos;
         $a_sizes[] = prettyOctetDisplay($package->size);
         if ($group != null) {
-            $current_convergence_status = getConvergenceStatus($p_api->mountpoint, $package->id, $group_convergence_status, $package->associateinventory);
+//             $current_convergence_status = getConvergenceStatus($p_api->mountpoint, $package->id, $group_convergence_status, $package->associateinventory);
+            $current_convergence_status = getConvergenceStatus(0, $package->id, $group_convergence_status, $package->associateinventory);
             // set param_convergence_edit to True if convergence status is active or inactive
             $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
             $a_convergence_status[] = prettyConvergenceStatusDisplay($current_convergence_status);
