@@ -4,8 +4,8 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
 # Nicolas Lécureuil <neoclust@mageia.org>, 2019
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 16:37+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -393,15 +393,15 @@ msgstr "Synkronisering av delt område utført eller er ikke eksisterende"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:136
 msgid "Syncthing share"
-msgstr ""
+msgstr "Synker delt område"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:137
 msgid "Number of machines"
-msgstr ""
+msgstr "Antall maskiner"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:138
 msgid "transfert"
-msgstr ""
+msgstr "Overført"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:142
 msgid "Share name"
@@ -925,7 +925,7 @@ msgstr "Gjeldende sti:"
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:456
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:465
 msgid "Summary download"
-msgstr ""
+msgstr "Last ned sammendrag"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:553
 msgid "Computer view"

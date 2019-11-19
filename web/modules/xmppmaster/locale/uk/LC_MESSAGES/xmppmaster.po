@@ -932,7 +932,7 @@ msgstr "Поточний шлях:"
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:456
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:465
 msgid "Summary download"
-msgstr ""
+msgstr "Резюме отримання"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:553
 msgid "Computer view"
