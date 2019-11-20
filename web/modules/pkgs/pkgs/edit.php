@@ -119,8 +119,6 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                         // ICI$_POST['files_uploaded']
                         $str = sprintf(_T("Files successfully added to the package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion);
                         new NotifyWidgetSuccess($str);
-                        if($package_uuid != "")
-                          xmlrpc_chown($package_uuid);
                         header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                         exit;
                     } else {
@@ -144,6 +142,8 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $str =_T("Package failed to save", "pkgs");
         new NotifyWidgetFailure($str);
     }
+    if($package_uuid != "")
+      xmlrpc_chown($package_uuid);
 }
 
 //start formulaire
