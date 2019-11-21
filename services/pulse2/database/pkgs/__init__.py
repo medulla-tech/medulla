@@ -273,7 +273,7 @@ class PkgsDatabase(DatabaseHelper):
         Param:
             id: int corresponding to the rule id we want to raise
         """
-        rule_to_raise = session.query(Extensions).filter(Extensions.id == id).one_or_none()
+        rule_to_raise = session.query(Extensions).filter(Extensions.id == id).one()
         rule_to_switch = session.query(Extensions).filter(Extensions.rule_order < rule_to_raise.rule_order).order_by(desc(Extensions.rule_order)).first()
 
         rule_to_raise.rule_order, rule_to_switch.rule_order = rule_to_switch.getRule_order(), rule_to_raise.getRule_order()
@@ -287,7 +287,7 @@ class PkgsDatabase(DatabaseHelper):
         Param:
             id: int corresponding to the rule id we want to raise
         """
-        rule_to_lower = session.query(Extensions).filter(Extensions.id == id).one_or_none()
+        rule_to_lower = session.query(Extensions).filter(Extensions.id == id).one()
         rule_to_switch = session.query(Extensions).filter(Extensions.rule_order > rule_to_lower.rule_order).order_by(asc(Extensions.rule_order)).first()
 
         rule_to_lower.rule_order, rule_to_switch.rule_order = rule_to_switch.getRule_order(), rule_to_lower.getRule_order()

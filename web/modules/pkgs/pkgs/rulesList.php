@@ -22,7 +22,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
 require("graph/navbar.inc.php");
 require("modules/pkgs/pkgs/localSidebar.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
@@ -31,11 +30,10 @@ $p = new PageGenerator(_T("Rules list",'pkgs'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-if(isset($_GET['success']))
+if(isset($_GET['success'], $_GET['name']) )
 {
-  new NotifyWidgetSuccess(_T("The rule has been removed", "pkgs"));
+  new NotifyWidgetSuccess(sprintf(_T("The rule %s has been removed", "pkgs"),$_GET['name']));
 }
-
 
 if(isset($_GET['id'], $_GET['mod']))
 {
