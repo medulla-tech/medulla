@@ -49,7 +49,7 @@ if (! in_array("xmppmaster", $_SESSION["supportModList"])) {
     }
     $label->display();
 }
-echo "<br><br>";
+
 function getConvergenceStatus($mountpoint, $pid, $group_convergence_status, $associateinventory) {
     $return = 0;
     if ($associateinventory) {
@@ -84,7 +84,6 @@ function prettyConvergenceStatusDisplay($status) {
             return _T('Not available', 'msc');
     }
 }
-
 if ($group != null) {
     $group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
     $a_convergence_status = array();
@@ -151,17 +150,35 @@ foreach ($packages as $c_package) {
         $a_pos[] = $package->targetos;
         $a_sizes[] = prettyOctetDisplay($package->size);
         if ($group != null) {
-//             $current_convergence_status = getConvergenceStatus($p_api->mountpoint, $package->id, $group_convergence_status, $package->associateinventory);
-            $current_convergence_status = getConvergenceStatus(0, $package->id, $group_convergence_status, $package->associateinventory);
+            $current_convergence_status = getConvergenceStatus(0,
+                                                               $package->id,
+                                                               $group_convergence_status,
+                                                               $package->associateinventory);
             // set param_convergence_edit to True if convergence status is active or inactive
             $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
-            $a_convergence_status[] = prettyConvergenceStatusDisplay($current_convergence_status);
+            $elt_convergence_status = prettyConvergenceStatusDisplay($current_convergence_status);
+            $a_convergence_status[] = $elt_convergence_status;
             $a_convergence_action[] = ($package->associateinventory) ? $convergenceAction : $emptyAction;
         }
+
         if (!empty($_GET['uuid'])) {
-            $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI());
+            $params[] = array('name' => $package->label,
+                              'version' => $package->version,
+                              'pid' => $package->id,
+                              'uuid' => $_GET['uuid'],
+                              'hostname' => $_GET['hostname'],
+                              'from' => 'base|computers|msctabs|tablogs',
+                              'papi' => $p_api->toURI(),
+                              'actionconvergence' => $elt_convergence_status);
         } else {
-            $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'gid' => $group->id, 'from' => 'base|computers|groupmsctabs|tablogs', 'papi' => $p_api->toURI(), 'editConvergence' => $param_convergence_edit);
+            $params[] = array('name' => $package->label,
+                              'version' => $package->version,
+                              'pid' => $package->id,
+                              'gid' => $group->id,
+                              'from' => 'base|computers|groupmsctabs|tablogs',
+                              'papi' => $p_api->toURI(),
+                              'editConvergence' => $param_convergence_edit,
+                              'actionconvergence' => $elt_convergence_status);
         }
         if ($type == 0) {
             $a_css[] = 'primary_list';
@@ -170,7 +187,6 @@ foreach ($packages as $c_package) {
         }
     }
 }
-
 if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "msc")))));
 }

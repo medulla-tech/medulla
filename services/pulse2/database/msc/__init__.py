@@ -871,7 +871,6 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return result
 
-    #jfkjfk
     def xmppstage_statecurrent_xmpp(self):
         """
             this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals

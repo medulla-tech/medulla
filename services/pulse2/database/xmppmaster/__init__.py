@@ -2286,7 +2286,6 @@ class XmppMasterDatabase(DatabaseHelper):
         ret['log']= arraylist
         return ret
 
-    #jfkjf
     @DatabaseHelper._sessionm
     def get_machine_stop_deploy(self, session, cmdid , inventoryuuid):
         """
@@ -2667,7 +2666,7 @@ class XmppMasterDatabase(DatabaseHelper):
             filter(Machines.enabled == '1').\
             scalar()
 
-    ###jfkjfk
+
     @DatabaseHelper._sessionm
     def getIdUserforHostname(self, session, namesession, hostname):
         idresult = session.query(Users.id).filter(and_( Users.namesession == namesession,\
@@ -2675,7 +2674,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return idresult
-    ###jfkjfk
+
     @DatabaseHelper._sessionm
     def adduser(self, session,
                     namesession,
