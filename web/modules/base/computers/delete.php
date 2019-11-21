@@ -51,8 +51,6 @@ if (isset($_POST["bconfirm"])) {
             //$dede = xmlrpc_imagingClearMenuFromUuid($uuid);
             $dede = xmlrpc_imagingClearMenuFromUuidAllLocation($uuid);
         }
-
-        delComputer($uuid, $backup);
         if (in_array("xmppmaster", $_SESSION["supportModList"])){
             xmppmaster_delcomputer($uuid);
         }
@@ -74,8 +72,17 @@ if (isset($_POST["bconfirm"])) {
                                                 'QuickAction | Inventory | Inventory requested');
             }
         }
-
-        if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been deleted."));
+        $Bollreadonly = getdbreadonly();
+        if ($Bollreadonly){
+            new NotifyWidgetSuccess(_("GLPI base is readonly: The computer has been deleted in xmpp. not in GLPI"));
+        }else{
+            delComputer($uuid, $backup);
+            if (!isXMLRPCError()) {
+                new NotifyWidgetSuccess(_("The computer has been deleted."));
+                }else{
+                    new NotifyWidgetFailure(_("The computer has not been deleted."));
+                }
+        }
         header("Location: " . urlStrRedirect("base/computers/index"));
         exit;
     }
