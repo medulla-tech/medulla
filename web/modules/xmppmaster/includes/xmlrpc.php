@@ -421,7 +421,7 @@ function xmlrpc_getCountOnlineMachine() {
 //######################################
 // descriptor agent base
 //######################################
-//##jfkjfk
+
 function xmlrpc_get_agent_descriptor_base(){
     return xmlCall("xmppmaster.get_agent_descriptor_base", array());
 }
