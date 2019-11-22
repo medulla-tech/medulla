@@ -400,7 +400,10 @@ function check_for_real($s, $e) {
     return False;
 }
 
-if ($_GET['actionconvergence'] != 'Active'){
+// if ($_GET['actionconvergence'] != 'Active'){
+//     $_GET['active'] = 'off';
+// }
+if ($_GET['actionconvergenceint'] != 1){
     $_GET['active'] = 'off';
 }
 
@@ -633,7 +636,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                 new HiddenTpl('convergence'), array("value" => quick_get('convergence'), "hide" => True)
             );
 
-            if (quick_get('actionconvergence') == "Active"){
+            if (quick_get('actionconvergenceint') == 1){
                 $f->add(
                     new TrFormElement(
                         _T('Convergence', 'msc'), new TextlabelTpl('active1')
@@ -812,7 +815,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         }
     }
     $f->pop();
-    if (quick_get('actionconvergence') == "Active"){
+    if (quick_get('actionconvergenceint') == 1){
         $f->addButton("bconfirm", _T("Reconfigure", "msc"));
         $f->addButton("bpdesactiver", _T("Deactivate Convergence", "msc"));
     }else{
