@@ -64,7 +64,7 @@ if ($gid) {
     $group = new Group($_GET['gid'], true);
     $cible = $group->getName();
 }
-
+$params["actionconvergenceint"] = $_GET['actionconvergenceint'];
 $params["actionconvergence"] = $_GET['actionconvergence'];
 $params["papi"] = $papi;
 $params["name"] = $hostname;

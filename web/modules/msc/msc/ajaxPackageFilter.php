@@ -169,7 +169,8 @@ foreach ($packages as $c_package) {
                               'hostname' => $_GET['hostname'],
                               'from' => 'base|computers|msctabs|tablogs',
                               'papi' => $p_api->toURI(),
-                              'actionconvergence' => $elt_convergence_status);
+                              'actionconvergence' => $elt_convergence_status,
+                              'actionconvergenceint' => $current_convergence_status);
         } else {
             $params[] = array('name' => $package->label,
                               'version' => $package->version,
@@ -178,7 +179,8 @@ foreach ($packages as $c_package) {
                               'from' => 'base|computers|groupmsctabs|tablogs',
                               'papi' => $p_api->toURI(),
                               'editConvergence' => $param_convergence_edit,
-                              'actionconvergence' => $elt_convergence_status);
+                              'actionconvergence' => $elt_convergence_status,
+                              'actionconvergenceint' => $current_convergence_status);
         }
         if ($type == 0) {
             $a_css[] = 'primary_list';
