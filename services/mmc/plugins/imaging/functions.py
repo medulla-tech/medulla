@@ -920,7 +920,6 @@ class ImagingRpcProxy(RpcProxyI):
         ret = db.getEntityMastersByUUID(loc_id, uuids)
         return xmlrpcCleanup(ret)
 
-    #jfk
     def getComputersWithImageInEntity(self, uuidimagingServer):
         db = ImagingDatabase()
         ret = db.getComputerWithImageInEntity(uuidimagingServer)

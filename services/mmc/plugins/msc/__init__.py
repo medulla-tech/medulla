@@ -284,7 +284,6 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getIdCommandOnHost(ctx, id_command))
 
-    #jfkjfk
     def get_msc_listhost_commandid(self, command_id):
         return xmlrpcCleanup(MscDatabase().get_msc_listhost_commandid(command_id))
 
@@ -322,6 +321,9 @@ class RpcProxy(RpcProxyI):
             # Delete convergence groups if any
             DyngroupDatabase().delete_package_convergence(pid)
         return True
+
+    def extend_command(self, cmd_id, start_date, end_date):
+        MscDatabase().extend_command(cmd_id, start_date, end_date)
 
     def delete_command(self, cmd_id):
         """

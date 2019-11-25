@@ -31,6 +31,22 @@ require_once('modules/msc/includes/package_api.php');
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
+class TextlabelTpl extends AbstractTpl {
+    var $name;
+    function TextlabelTpl($name) {
+        $this->name = $name;
+    }
+    function display($arrParam = array()) {
+        if (!isset($arrParam['disabled'])) {
+            $arrParam['disabled'] = '';
+        }
+        echo '<p name="' . $this->name . '" id="' . $this->name . '" ' . $arrParam["disabled"] . ' />';
+        if (isset($arrParam["value"])) {
+            echo $arrParam["value"];
+        }
+        echo '</p>';
+    }
+}
 
 
 function quick_get($param, $is_checkbox = False) {
@@ -72,7 +88,11 @@ function _get_command_start_date($cmd_id) {
     return sprintf("%s-%s-%s %s:%s:%s", $year, $month, $day, $hour, $minute, $second);
 }
 
-function start_a_command($proxy = array()) {
+function start_a_command($proxy = array(), $activate = true) {
+    if ($activate == false){
+        $active = 0;
+        $_POST['active'] = 'off'; }
+
     if ($_POST['editConvergence']) {
         $changed_params = getChangedParams($_POST);
         if ($changed_params == array('active')) print "We have to edit command....";
@@ -290,6 +310,7 @@ function start_a_command($proxy = array()) {
                 // feed convergence db
                 xmlrpc_add_convergence_datas($gid, $deploy_group_id, $done_group_id, $pid, $p_api, intval($command_id), $active, $params);
             }
+//             if ($activate == false)
             header("Location: " . urlStrRedirect("base/computers/groupmsctabs", array('gid' => $gid)));
             exit;
         }
@@ -384,6 +405,19 @@ function check_for_real($s, $e) {
     return False;
 }
 
+// if ($_GET['actionconvergence'] != 'Active'){
+//     $_GET['active'] = 'off';
+// }
+if ($_GET['actionconvergenceint'] != 1){
+    $_GET['active'] = 'off';
+}
+
+if (isset($_POST["bpdesactiver"])) {
+    //deactiver convergence.
+    $_GET['active'] = 'off';
+    start_a_command(1);
+//     $_POST['bback']="bback";
+}
 /* Validation on local proxies selection page */
 if (isset($_POST["bconfirmproxy"])) {
     $proxy = array();
@@ -435,21 +469,12 @@ if (isset($_POST['local_proxy'])) {
 
 /* Advanced Action Post Handling */
 if (isset($_GET['badvanced']) and isset($_POST['bconfirm']) and !isset($_POST['local_proxy'])) {
+    // active convergence. et start command
     start_a_command();
 }
 
 /* Advanced action: form display */
 if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
-
-
-
-
-
-
-
-
-
-
     // Vars seeding
     $from = quick_get('from');
     $pid = quick_get('pid');
@@ -611,15 +636,25 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
          * and display "active convergence" checkbox
          */
         if (quick_get('convergence')) {
+
             $f->add(
                 new HiddenTpl('convergence'), array("value" => quick_get('convergence'), "hide" => True)
             );
 
-            $f->add(
-                new TrFormElement(
-                    _T('Convergence is active', 'msc'), new CheckboxTpl('active')
-                ), array("value" => quick_get('active') == 'on' ? 'checked' : '')
-            );
+            if (quick_get('actionconvergenceint') == 1){
+                $f->add(
+                    new TrFormElement(
+                        _T('Convergence', 'msc'), new TextlabelTpl('active1')
+                    ), array("value" => "<span style='font-style: gras;color:green'>"._T('ACTIVE', 'msc')."</span>"));
+                    $f->add(new HiddenTpl('active'), array("value" => 'off' , "hide" => True));
+            }
+            else{
+                $f->add(
+                    new TrFormElement(
+                        _T('Convergence', 'msc'), new TextlabelTpl('active1')
+                    ), array("value" => "<span style='font-style: gras; color:blue'>"._T('AVAILABLE', 'msc')."</span>"));
+                    $f->add(new HiddenTpl('active'), array("value" => 'on' , "hide" => True));
+            };
 
             $f->add(
                 new HiddenTpl('start_date'), array("value" => $start_date, "hide" => True)
@@ -794,7 +829,12 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         }
     }
     $f->pop();
-    $f->addValidateButton("bconfirm");
+    if (quick_get('actionconvergenceint') == 1){
+        $f->addButton("bconfirm", _T("Reconfigure", "msc"));
+        $f->addButton("bpdesactiver", _T("Deactivate Convergence", "msc"));
+    }else{
+        $f->addValidateButton("bconfirm");
+    }
     $f->addCancelButton("bback");
     $f->display();
 }

@@ -1754,6 +1754,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logging.getLogger().debug("listMacAdressforMachine   %s" % results)
             uuid = ''
             for t in results:
+                if t in self.config.blacklisted_mac_addresses: continue
                 computer = ComputerManager().getComputerByMac(t)
                 if computer != None:
                     uuid = 'UUID' + str(computer.id)
@@ -1782,6 +1783,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 #logging.getLogger().debug("listMacAdressforMachine   %s" % results)
                 uuid = ''
                 for t in results:
+                    if t in self.config.blacklisted_mac_addresses: continue
                     computer = ComputerManager().getComputerByMac(t)
                     if computer != None:
                         uuid = 'UUID' + str(computer.id)
@@ -2116,6 +2118,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         logging.getLogger().debug("List mac adress for machine   %s" % results)
                         uuid = ''
                         for t in results:
+                            if t in self.config.blacklisted_mac_addresses: continue
                             computer = ComputerManager().getComputerByMac(t)
                             if computer != None:
                                 jidrs = str(jid.JID(data['deployment']).user)
