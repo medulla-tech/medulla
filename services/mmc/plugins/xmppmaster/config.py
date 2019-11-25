@@ -27,7 +27,9 @@ import logging
 from mmc.plugins.xmppmaster.master.lib.utils import ipfromdns
 import os
 import ConfigParser
+import logging
 
+logger = logging.getLogger()
 
 class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
@@ -115,7 +117,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
                 macadrs = t[0:2]+":"+t[2:4]+":"+t[4:6]+":"+t[6:8]+":"+t[8:10]+":"+t[10:12]
                 self.blacklisted_mac_addresses.append(macadrs)
             else:
-                logger.warning("the mac adress in blacklisted_mac_addresses parameter is bad format for value %s"%t )
+                logger.warning("the mac address in blacklisted_mac_addresses parameter is bad format for value %s"%t )
         if "00:00:00:00:00:00" not in self.blacklisted_mac_addresses:
             self.blacklisted_mac_addresses.insert(0,"00:00:00:00:00:00")
         self.blacklisted_mac_addresses=list(set(self.blacklisted_mac_addresses))
