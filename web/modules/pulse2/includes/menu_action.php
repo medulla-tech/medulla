@@ -74,11 +74,9 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     $DeployQuickxmpp->setWidth(600);
 
     if ($presencemachinexmpp != 1) {
-        $logAction = new EmptyActionItem1(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
         $mscAction = new EmptyActionItem1(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
     }
     else{
-        $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
         $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
         if (isExpertMode()){
             $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
@@ -88,7 +86,6 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     }
 }
 else{
-    $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
     $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
 }
 
@@ -100,12 +97,12 @@ if (in_array("xmppmaster", $_SESSION["supportModList"]) && isset($_GET['cmd_id']
 else{
     if (in_array("xmppmaster", $_SESSION["supportModList"])){
         $actions = array($inventAction, $extticketAction, $backupAction,
-                            $vncClientAction, $logAction, $mscAction,
+                            $vncClientAction, $mscAction,
                             $imgAction,$inventxmppbrowsing,$inventconsole,
                             $DeployQuickxmpp);
     }
     else{
-        $actions = array($inventAction, $extticketAction, $backupAction, $vncClientAction, $logAction, $mscAction, $imgAction);
+        $actions = array($inventAction, $extticketAction, $backupAction, $vncClientAction, $mscAction, $imgAction);
     }
 }
 

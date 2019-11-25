@@ -87,6 +87,7 @@ class Machines(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
     jid = Column(String(255), nullable=False)
+    enabled=  Column(Boolean, unique=False)
     platform = Column(String(60))
     hostname = Column(String(45), nullable=False)
     archi= Column(String(45), nullable=False)
@@ -249,6 +250,17 @@ class Deploy(Base, XmppMasterDBObj):
     command = Column(Integer)
     macadress=Column(String(255))
 
+class Cluster_resources(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'cluster_resources'
+    # ====== Fields =============================
+    hostname = Column(String(45))
+    jidmachine = Column(String(255), nullable=False)
+    jidrelay = Column(String(255), nullable=False)
+    startcmd = Column(DateTime, default=None)
+    endcmd = Column(DateTime, default=None)
+    login = Column(String(45), nullable=False)
+    sessionid = Column(String(45), nullable=False)
 
 class Command_qa(Base, XmppMasterDBObj):
     # ====== Table name =========================

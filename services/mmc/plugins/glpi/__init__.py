@@ -286,3 +286,12 @@ def get_os_for_dashboard():
 
 def get_machines_with_os_and_version(os, version):
     return xmlrpcCleanup(Glpi().get_machines_with_os_and_version(os, version))
+
+def get_computer_count_for_dashboard():
+    return xmlrpcCleanup(Glpi().get_computer_count_for_dashboard())
+
+def getMachinesMac(uuid):
+    if uuid != '':
+        return xmlrpcCleanup(Glpi().getMachinesMac(uuid))
+    else:
+        return ""
