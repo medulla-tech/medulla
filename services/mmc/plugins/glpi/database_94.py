@@ -4836,7 +4836,6 @@ class Glpi94(DyngroupDatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
-        @DatabaseHelper._sessionm
     def get_machine_for_hostname(self, session, strlisthostname):
         sqlrequest ="""
             SELECT
