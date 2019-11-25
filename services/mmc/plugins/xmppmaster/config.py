@@ -27,7 +27,6 @@ import logging
 from mmc.plugins.xmppmaster.master.lib.utils import ipfromdns
 import os
 import ConfigParser
-import logging
 
 logger = logging.getLogger()
 
