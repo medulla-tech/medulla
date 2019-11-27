@@ -43,6 +43,9 @@ import uuid
 import time
 from datetime import datetime
 
+from Crypto import Random
+from Crypto.Cipher import AES
+
 logger = logging.getLogger()
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "pluginsmaster"))
@@ -811,3 +814,27 @@ def check_exist_ip_port(name_domaine_or_ip, port):
         return False
     except Exception:
         return False
+
+
+unpad = lambda s : s[0:-ord(s[-1])]
+class AESCipher:
+
+    def __init__( self, key , BS = 32):
+        self.key = key
+        self.BS = BS
+
+    def _pad(self, s):
+        return s + (self.BS - len(s) % self.BS) * chr(self.BS - len(s) % self.BS)
+
+    def encrypt( self, raw ):
+        raw = self._pad(raw)
+        iv = Random.new().read( AES.block_size )
+        cipher = AES.new( self.key, AES.MODE_CBC, iv )
+        return base64.b64encode( iv + cipher.encrypt( raw ) )
+
+    def decrypt( self, enc ):
+        enc = base64.b64decode(enc)
+        iv = enc[:16]
+        cipher = AES.new(self.key, AES.MODE_CBC, iv )
+        return unpad(cipher.decrypt( enc[16:] ))
+
