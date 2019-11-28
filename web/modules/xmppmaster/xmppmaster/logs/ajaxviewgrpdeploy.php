@@ -88,8 +88,10 @@ $uuids_list = $uuids['list'];
 
 
 $re = xmlrpc_get_machine_for_id($uuids_list, $filter, $start, $maxperpage);
+
 $info_from_machines = $re["listelet"];
 $count = $re['total'];
+
 //FROM XMPPMASTER
 $resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,
                                                                 date("Y-m-d H:i:s",
@@ -442,6 +444,7 @@ if ($info['len'] != 0){
 
   $status = [];
   foreach ($info['objectdeploy'] as  $val){
+      $status[$val['inventoryuuid']] = "";
       $status[$val['inventoryuuid']] = $val['state'];
 
       switch($val['state']){
@@ -466,6 +469,8 @@ if ($info['len'] != 0){
   {
       if(isset($status['UUID'.$value]))
         $info_from_machines[7][] = $status['UUID'.$value];
+      else
+        $info_from_machines[7][] = "";
       $info_from_machines[8][] = 'UUID'.$value;
       $params[] = [
         'displayName' => $info_from_machines[2][$key],
@@ -489,6 +494,33 @@ if ($info['len'] != 0){
     $info_from_machines[9][] = ($presencemachinexmpplist[$value] == "1") ? 'machineNamepresente' : 'machineName';
   }
     echo"<br><br><br>";
+$actionvue = array();
+
+if ($count == 0){
+echo'
+<table class="listinfos" cellspacing="0" cellpadding="5" border="1">
+<thead>
+    <tr>
+        <td style="width: ;"><span style=" padding-left: 32px;">Machine Name</span></td>
+        <td style="width: ;"><span style=" ">Description</span></td>
+        <td style="width: ;"><span style=" ">Operating System</span></td>
+        <td style="width: ;"><span style=" ">Status</span></td>
+        <td style="width: ;"><span style=" ">Type</span></td>
+        <td style="width: ;"><span style=" ">Last User</span>
+        </td><td style="width: ;"><span style=" ">Entity</span>
+        </td><td style="text-align: center; width: ;"><span>Actions</span></td>
+    </tr>
+</thead>
+<tbody>
+</tbody>
+</table>';
+}else{
+$action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
+                                    "viewlogs",
+                                    "logfile",
+                                    "logfile",
+                                    "xmppmaster",
+                                    "xmppmaster");
   $n = new OptimizedListInfos($info_from_machines[1], _T("Machine Name", "xmppmaster"));
   $n->setCssClass("package");
   $n->addExtraInfo($info_from_machines[2], _T("Description", "glpi"));
@@ -498,16 +530,15 @@ if ($info['len'] != 0){
   $n->addExtraInfo($info_from_machines[5], _T("Last User", "xmppmaster"));
   $n->addExtraInfo($info_from_machines[6], _T("Entity", "glpi"));
 
-  $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),"viewlogs","logfile",
-  "logfile","xmppmaster", "xmppmaster");
   $n->setParamInfo($params);
-  $n->addActionItemArray($action_log);
+  $n->addActionItem($action_log);
   $n->setMainActionClasses($info_from_machines[9]);
   $n->setItemCount($count);
   $n->setNavBar(new AjaxNavBar($count, $filter));
   $n->start = 0;
   $n->end = $count;
   $n->display();
+}
   echo '
   <script src="modules/xmppmaster/graph/js/chart.js"></script>
   <script>
