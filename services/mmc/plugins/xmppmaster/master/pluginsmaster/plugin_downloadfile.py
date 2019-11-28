@@ -158,7 +158,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 if not os.path.exists(destdir):
                     logging.getLogger().debug("Creating folder: %s" % destdir)
                     os.mkdir(destdir)
-                    os.chmod(machdir, 0777)
+                    os.chmod(destdir, 0777)
                 if '\\' in params[0]:
                     final_folder = os.path.basename(os.path.normpath(
                         params[0].replace('\\', '/').replace(':', '')))
