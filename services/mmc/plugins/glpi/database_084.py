@@ -4715,6 +4715,152 @@ class Glpi084(DyngroupDatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
+    def get_machine_for_hostname(self, session, strlisthostname, filter, start, end):
+        sqlrequest ="""
+            SELECT
+                `glpi_computers`.`id` AS `id`,
+                `glpi_computers`.`name` AS `name`,
+                `glpi_computers`.`comment` AS `description`,
+                `glpi_operatingsystems`.name AS `os`,
+                `glpi_computertypes`.`name` AS `type`,
+                `glpi_computers`.`contact` AS `contact`,
+                `glpi_entities`.`name` as `entity`
+            FROM
+                `glpi`.`glpi_computers`
+                JOIN `glpi_items_operatingsystems` ON glpi.glpi_computers.`id` = `glpi_items_operatingsystems`.`items_id`
+                JOIN `glpi_operatingsystems` ON `glpi_operatingsystems`.`id` = `glpi_items_operatingsystems`.`operatingsystems_id`
+                JOIN glpi.glpi_computertypes ON glpi.glpi_computers.`computertypes_id` = `glpi_computertypes`.`id`
+                JOIN glpi.glpi_entities ON glpi.glpi_computers.`entities_id` = glpi.glpi_entities.id
+                where `glpi_computers`.`is_template` = 0 and `glpi_computers`.`is_deleted` = 0
+                    and  `glpi_computers`.`name` in (%s);"""%(strlisthostname)
+        id=[]
+        name=[]
+        description=[]
+        os=[]
+        typemache=[]
+        contact=[]
+        entity=[]
+        result = []
+        res = self.db.execute(sqlrequest)
+        for element in res:
+            id.append( element.id )
+            name.append( element.name )
+            description.append( element.description )
+            os.append( element.os )
+            typemache.append( element.type )
+            contact.append( element.contact )
+            entity.append( element.entity )
+        result.append(id)
+        result.append(name)
+        result.append(description)
+        result.append(os)
+        result.append(typemache)
+        result.append(contact)
+        result.append(entity)
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
+        start = int(start)
+        limit = int(limit)
+        criteria = ''
+        if filter != "":
+            criteria = 'AND (glpi_computers.name Like "%%%s%%"\
+            OR glpi_computers.comment Like "%%%s%%"\
+            OR glpi_operatingsystems.name Like "%%%s%%"\
+            OR glpi_computertypes.name Like "%%%s%%"\
+            OR glpi_computers.contact Like "%%%s%%"\
+            OR glpi_entities.name Like "%%%s%%"\
+            )'%(filter, filter, filter, filter, filter, filter)
+
+        sqlrequest = """
+SELECT
+    count(*) as nb
+FROM
+    `glpi`.`glpi_computers`
+JOIN
+    `glpi_operatingsystems` ON `glpi`.`glpi_computers`.`operatingsystems_id` = `glpi_operatingsystems`.`id`
+JOIN
+    `glpi`.`glpi_computertypes` ON `glpi`.`glpi_computers`.`computertypes_id` = `glpi_computertypes`.`id`
+JOIN
+    `glpi`.`glpi_entities` ON `glpi`.`glpi_computers`.`entities_id` = `glpi`.`glpi_entities`.`id`
+WHERE
+    `glpi_computers`.`is_template` = 0
+AND `glpi_computers`.`is_deleted` = 0
+AND  `glpi_computers`.`id` in (%s) %s;"""%(strlistuuid,
+                          criteria)
+        print sqlrequest
+        res = session.execute(sqlrequest)
+        session.commit()
+        session.flush()
+        nb=0
+        for element in res:
+            nb = element[0]
+
+        sqlrequest = """
+SELECT
+    `glpi_computers`.`id` AS `id`,
+    `glpi_computers`.`name` AS `name`,
+    `glpi_computers`.`comment` AS `description`,
+    `glpi_operatingsystems`.name AS `os`,
+    `glpi_computertypes`.`name` AS `type`,
+    `glpi_computers`.`contact` AS `contact`,
+    `glpi_entities`.`name` AS `entity`
+FROM
+    `glpi`.`glpi_computers`
+JOIN
+    `glpi_operatingsystems` ON `glpi`.`glpi_computers`.`operatingsystems_id` = `glpi_operatingsystems`.`id`
+JOIN
+    `glpi`.`glpi_computertypes` ON `glpi`.`glpi_computers`.`computertypes_id` = `glpi_computertypes`.`id`
+JOIN
+    `glpi`.`glpi_entities` ON `glpi`.`glpi_computers`.`entities_id` = `glpi`.`glpi_entities`.`id`
+WHERE
+    `glpi_computers`.`is_template` = 0
+AND `glpi_computers`.`is_deleted` = 0
+AND  `glpi_computers`.`id` in (%s) %s
+LIMIT %s, %s;"""%(strlistuuid,
+                          criteria,
+                          start,
+                          limit)
+
+
+        id=[]
+        name=[]
+        description=[]
+        os=[]
+        typemache=[]
+        contact=[]
+        entity=[]
+        result = []
+        res = session.execute(sqlrequest)
+        session.commit()
+        session.flush()
+
+        #res = self.db.execute(sqlrequest)
+        if res is not None:
+            for element in res:
+                id.append( element.id )
+                name.append( element.name )
+                description.append( element.description )
+                os.append( element.os )
+                typemache.append( element.type )
+                contact.append( element.contact )
+                entity.append( element.entity )
+            result.append(id)
+            result.append(name)
+            result.append(description)
+            result.append(os)
+            result.append(typemache)
+            result.append(contact)
+            result.append(entity)
+
+        result1={"total" : nb,
+                 "listelet" : result}
+
+        return result1
+
+
+    @DatabaseHelper._sessionm
     def get_computer_count_for_dashboard(self, session, count=True):
         inventory_filtered_machines = self.__filter_on(session.query(Machine.id).filter(Machine.is_deleted == 0, \
                                                                                         Machine.is_template == 0)).all()
