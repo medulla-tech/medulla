@@ -30,7 +30,7 @@ from utils import simplecommandstr, file_get_content, file_put_content
 
 logger = logging.getLogger()
 
-plugin = {"VERSION": "1.01", "NAME": "resultcleanconfaccount", "TYPE": "master"}
+plugin = {"VERSION": "1.02", "NAME": "resultcleanconfaccount", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
@@ -44,6 +44,6 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
             cmd = "ejabberdctl unregister %s pulse"%destinataire
             a = simplecommandstr(cmd)
             logger.debug(a['result'])
-            logger.info("The account %s has been removed"%destinataire)
+            logger.info("The account %s has been removed :[%s]"%(destinataire, str(msg['from'].resource)))
     except Exception as e:
         pass
