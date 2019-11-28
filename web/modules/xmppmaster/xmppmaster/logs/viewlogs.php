@@ -80,7 +80,16 @@ if ( isset ($_POST['bStop'])) {
         require_once ("modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php");
     }
     else{
-        require_once ("modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php");
+
+      $params = [
+        'uuid'=>$_GET['uuid'],
+        'hostname'=>$_GET['hostname'],
+        'gid'=>$_GET['gid'],
+        'cmd_id'=>$_GET['cmd_id'],
+        'login'=>$_GET['login'],
+
+      ];
+      require_once ("modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php");
     }
 
 ?>
