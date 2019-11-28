@@ -4778,11 +4778,11 @@ SELECT
     count(*) as nb
 FROM
     `glpi`.`glpi_computers`
-JOIN
+LEFT JOIN
     `glpi_operatingsystems` ON `glpi`.`glpi_computers`.`operatingsystems_id` = `glpi_operatingsystems`.`id`
-JOIN
+LEFT JOIN
     `glpi`.`glpi_computertypes` ON `glpi`.`glpi_computers`.`computertypes_id` = `glpi_computertypes`.`id`
-JOIN
+LEFT JOIN
     `glpi`.`glpi_entities` ON `glpi`.`glpi_computers`.`entities_id` = `glpi`.`glpi_entities`.`id`
 WHERE
     `glpi_computers`.`is_template` = 0
@@ -4808,11 +4808,11 @@ SELECT
     `glpi_entities`.`name` AS `entity`
 FROM
     `glpi`.`glpi_computers`
-JOIN
+LEFT JOIN
     `glpi_operatingsystems` ON `glpi`.`glpi_computers`.`operatingsystems_id` = `glpi_operatingsystems`.`id`
-JOIN
+LEFT JOIN
     `glpi`.`glpi_computertypes` ON `glpi`.`glpi_computers`.`computertypes_id` = `glpi_computertypes`.`id`
-JOIN
+LEFT JOIN
     `glpi`.`glpi_entities` ON `glpi`.`glpi_computers`.`entities_id` = `glpi`.`glpi_entities`.`id`
 WHERE
     `glpi_computers`.`is_template` = 0
