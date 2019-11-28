@@ -60,7 +60,6 @@ function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy , $cmddep
 $nbdeploy = 0;
 $group = getPGobject($gid, true);
 $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
-$p->setSideMenu($sidemenu);
 $p->display();
 
 //FROM MSC BASE
@@ -119,7 +118,6 @@ $waiting = $MSC_nb_mach_grp_for_deploy - ($total_machine_from_deploy + $machine_
 if ($waiting == 0 && $machine_process_from_deploy == 0 ){
     $terminate = 1;
 }
-echo "<br><br><br><br><br>";
 
 $start_deploy = 0;
 $end_deploy   = 0;
@@ -241,11 +239,9 @@ if ($info['len'] != 0){
 if ($bool_convergence_grp_on_package_from_msc !=0 ){
     echo "<img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/>";
 }
-echo "<br>";
 
 if (isset($resultatdeploy['infoslist'][0]['packageUuid'])){
     echo "Package : ".$resultatdeploy['infoslist'][0]['name']." [". $resultatdeploy['infoslist'][0]['packageUuid']."]";
-    echo "<br>";
 }
 
 if (!isset($_GET['refresh'])){
@@ -283,12 +279,12 @@ foreach ($info['objectdeploy'] as $val)
 //start deployement status
 echo "<div>";
     if ( $start_deploy){
-        echo "<br>";
+
         if ($end_deploy || $terminate == 1){
             echo "<h2>"._T("Deployment completed","xmppmaster")."</h2>";
             $terminate = 1;
             $deployinprogress = 0;
-            echo "<br>";
+
         }else{
             echo "<h2>"._T("Deployment in progress","xmppmaster")."</h2>";
             echo _T("Started since","xmppmaster")." <span>".($timestampnow - $start_date)."</span> s";
@@ -306,7 +302,6 @@ echo "<div>";
         $f->addButton("bStop", _T("Abort Deployment", 'xmppmaster'));
         $f->display();
     }
-    echo "<br>";
 
         $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $MSC_nb_mach_grp_done_deploy;
         $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $MSC_nb_mach_grp_for_deploy) * 100,2);
@@ -340,7 +335,6 @@ echo "<div>";
         echo "</tr></table>";
     echo '</div>';
       echo'<div  style="float:left; margin-left:200px;height: 120px" id="holder"></div>';
-    echo "<br>";
     if ($info['len'] != 0){
     //     $uuid=$info['objectdeploy'][0]['inventoryuuid'];
     //     $state=$info['objectdeploy'][0]['state'];
@@ -392,14 +386,13 @@ echo "<div>";
                     echo "</tr>";
                 echo "</tbody>";
             echo "</table>";
-            echo '<br>';
+
         }
 
     }
     if($terminate == 0){
             echo'
                 <script type="text/javascript">
-                //console.log("hello");
                     setTimeout(refresh, 120000);
                     function  refresh(){
                             location.reload()
@@ -493,9 +486,8 @@ if ($info['len'] != 0){
   {
     $info_from_machines[9][] = ($presencemachinexmpplist[$value] == "1") ? 'machineNamepresente' : 'machineName';
   }
-    echo"<br><br><br>";
-$actionvue = array();
 
+echo '<div style="clear:both"></div>';
 if ($count == 0){
 echo'
 <table class="listinfos" cellspacing="0" cellpadding="5" border="1">

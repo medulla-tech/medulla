@@ -27,7 +27,6 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
-print "<br/><br/><br/>";
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxviewgrpdeploy"), "container", array(
   'login' => $_SESSION['login'],
   'cmd_id' => $_GET['cmd_id'],
@@ -35,8 +34,8 @@ $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxviewgrpdeploy")
   'hostname' => $_GET['hostname'],
   'uuid' => $_GET['uuid']
 ));
+$sidemenu->display();
 
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 ?>
