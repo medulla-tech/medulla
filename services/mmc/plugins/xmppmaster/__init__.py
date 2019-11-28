@@ -488,7 +488,7 @@ def callrestartbot(uuid):
 def createdirectoryuser(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
-        os.chmod(directory, 0o700)
+        os.chmod(directory, 0o777)
         return True
     return False
 
