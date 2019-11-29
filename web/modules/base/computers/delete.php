@@ -74,7 +74,7 @@ if (isset($_POST["bconfirm"])) {
         }
         $Bollreadonly = getdbreadonly();
         if ($Bollreadonly){
-            new NotifyWidgetSuccess(_("GLPI base is readonly: The computer has been deleted in xmpp. not in GLPI"));
+            new NotifyWidgetSuccess(_("GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"));
         }else{
             delComputer($uuid, $backup);
             if (!isXMLRPCError()) {
