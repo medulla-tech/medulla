@@ -29,7 +29,11 @@ SERVICES='mmc-agent \
           tftpd-hpa \
           pulse-xmpp-master-substitute-inventory \
           pulse-xmpp-master-substitute-registration \
-          pulse-package-watching'
+          pulse-package-watching \
+          pulse-xmpp-master-substitute-assessor \
+          pulse-xmpp-master-substitute-deploy \
+          pulse-xmpp-master-substitute-presence \
+          pulse-xmpp-master-substitute-all'
 
 for service in ${SERVICES}; do
   if systemctl is-enabled ${service} &>/dev/null ; then
