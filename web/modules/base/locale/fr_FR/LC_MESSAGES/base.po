@@ -1515,7 +1515,7 @@ msgstr "lecture/écriture"
 
 #: modules/base/users/editacl.php:182 modules/base/users/editacl.php:185
 msgid "hide"
-msgstr "cacher"
+msgstr "masquer"
 
 #: modules/base/users/editacl.php:185
 msgid "Attribute description"
