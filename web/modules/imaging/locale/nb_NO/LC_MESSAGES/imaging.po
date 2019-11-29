@@ -24,11 +24,11 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:33
 msgid "Imaging service"
-msgstr ""
+msgstr "Avbildingstjenester"
 
 #: modules/imaging/infoPackage.inc.php:38
 msgid "Imaging"
-msgstr ""
+msgstr "Avbilding"
 
 #: modules/imaging/infoPackage.inc.php:43
 msgid "System Image Manager"
@@ -40,7 +40,7 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:51
 msgid "Sysprep List"
-msgstr ""
+msgstr "Sysprep Liste"
 
 #: modules/imaging/infoPackage.inc.php:56
 msgid "Imaging sysprepView"
@@ -49,7 +49,7 @@ msgstr ""
 #: modules/imaging/infoPackage.inc.php:86
 #: modules/imaging/infoPackage.inc.php:91
 msgid "Create static group from menu set"
-msgstr ""
+msgstr "Opprett statisk gruppe fra menysettet"
 
 #: modules/imaging/infoPackage.inc.php:96
 msgid "Server status"
@@ -58,71 +58,71 @@ msgstr "Serverstatus"
 #: modules/imaging/infoPackage.inc.php:99
 #: modules/imaging/manage/localSidebar.php:31
 msgid "Manage masters"
-msgstr ""
+msgstr "Administrer mastere"
 
 #: modules/imaging/infoPackage.inc.php:101
 #: modules/imaging/manage/master_remove.php:89
 msgid "Remove master"
-msgstr ""
+msgstr "Fjern master"
 
 #: modules/imaging/infoPackage.inc.php:104
 #: modules/imaging/manage/master_delete.php:76
 msgid "Delete master"
-msgstr ""
+msgstr "Fjern master"
 
 #: modules/imaging/infoPackage.inc.php:107
 msgid "Edit master"
-msgstr ""
+msgstr "Rediger master"
 
 #: modules/imaging/infoPackage.inc.php:111
 #: modules/imaging/infoPackage.inc.php:114
 msgid "master clone"
-msgstr ""
+msgstr "master klone"
 
 #: modules/imaging/infoPackage.inc.php:118
 msgid "Add master"
-msgstr ""
+msgstr "Legg til master"
 
 #: modules/imaging/infoPackage.inc.php:121
 #: modules/imaging/manage/master_iso.php:44
 msgid "Create iso from master"
-msgstr ""
+msgstr "Skap iso fra master"
 
 #: modules/imaging/infoPackage.inc.php:125
 #: modules/imaging/manage/localSidebar.php:34
 msgid "Manage boot services"
-msgstr ""
+msgstr "Administrer oppstartstjeneser"
 
 #: modules/imaging/infoPackage.inc.php:127
 msgid "Edit service"
-msgstr ""
+msgstr "Rediger tjeneste"
 
 #: modules/imaging/infoPackage.inc.php:130
 #: modules/imaging/infoPackage.inc.php:136
 msgid "Remove service"
-msgstr ""
+msgstr "Fjern tjeneste"
 
 #: modules/imaging/infoPackage.inc.php:133
 msgid "Add service"
-msgstr ""
+msgstr "Legg til tjeneste"
 
 #: modules/imaging/infoPackage.inc.php:139
 msgid "Show used services"
-msgstr ""
+msgstr "Vis brukte tjenester"
 
 #: modules/imaging/infoPackage.inc.php:143
 #: modules/imaging/manage/localSidebar.php:37
 msgid "Default boot menu"
-msgstr ""
+msgstr "Standard boot meny"
 
 #: modules/imaging/infoPackage.inc.php:145
 msgid "Up service"
-msgstr ""
+msgstr "Ta opp tjeneste"
 
 #: modules/imaging/infoPackage.inc.php:148
 #: modules/imaging/infoPackage.inc.php:151
 msgid "Down service"
-msgstr ""
+msgstr "Ta ned tjeneste"
 
 #: modules/imaging/infoPackage.inc.php:155
 #: modules/imaging/manage/localSidebar.php:40
@@ -136,16 +136,16 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:163
 msgid "Create boot service from postinstall script"
-msgstr ""
+msgstr "Opprettboottjeneste fra postinstallasjonsskript"
 
 #: modules/imaging/infoPackage.inc.php:166
 msgid "Redirect to Boot Services page"
-msgstr ""
+msgstr "Viderekobling til Boot Tjeneste-siden"
 
 #: modules/imaging/infoPackage.inc.php:169
 #: modules/imaging/manage/postinstall_delete.php:97
 msgid "Delete post-imaging script"
-msgstr ""
+msgstr "Slett postinstallasjonsskript"
 
 #: modules/imaging/infoPackage.inc.php:173
 msgid "Imaging configuration"
@@ -210,7 +210,7 @@ msgstr ""
 #: modules/imaging/infoPackage.inc.php:246
 #: modules/imaging/infoPackage.inc.php:259
 msgid "List all profiles of computers"
-msgstr ""
+msgstr "List alle maskinprofiler"
 
 #: modules/imaging/infoPackage.inc.php:265
 msgid "Register a profile in the imaging module"
@@ -224,7 +224,7 @@ msgstr ""
 #: modules/imaging/infoPackage.inc.php:353
 #: modules/imaging/imaging/tabs.php:217 modules/imaging/imaging/tabs.php:289
 msgid "Boot menu"
-msgstr ""
+msgstr "Boot meny"
 
 #: modules/imaging/infoPackage.inc.php:276
 #: modules/imaging/infoPackage.inc.php:355
@@ -236,7 +236,7 @@ msgstr ""
 #: modules/imaging/infoPackage.inc.php:357
 #: modules/imaging/imaging/tabs.php:221 modules/imaging/imaging/tabs.php:291
 msgid "Boot services"
-msgstr ""
+msgstr "Boot tjenester"
 
 #: modules/imaging/infoPackage.inc.php:280
 #: modules/imaging/infoPackage.inc.php:359
@@ -247,7 +247,7 @@ msgstr ""
 #: modules/imaging/infoPackage.inc.php:361
 #: modules/imaging/imaging/tabs.php:223 modules/imaging/imaging/tabs.php:293
 msgid "Menu configuration"
-msgstr ""
+msgstr "Meny konfigurasjon"
 
 #: modules/imaging/infoPackage.inc.php:285
 #: modules/imaging/infoPackage.inc.php:366
@@ -255,11 +255,11 @@ msgstr ""
 #: modules/imaging/imaging/bootmenu_remove.php:156
 #: modules/imaging/imaging/ajaxImages.php:79
 msgid "Remove from boot menu"
-msgstr ""
+msgstr "Fjern fra boot meny"
 
 #: modules/imaging/infoPackage.inc.php:289
 msgid "Display computers group content"
-msgstr ""
+msgstr "Vis maskingruppers innehold"
 
 #: modules/imaging/infoPackage.inc.php:293
 msgid "Delete a group of computers"
@@ -275,11 +275,11 @@ msgstr "Del en maskingruppe"
 
 #: modules/imaging/infoPackage.inc.php:307
 msgid "Secure control on a group of computers"
-msgstr ""
+msgstr "Sikker kontroll på en gruppe datamaskiner"
 
 #: modules/imaging/infoPackage.inc.php:311
 msgid "MSC launch tab for a group"
-msgstr ""
+msgstr "MSC-startfanen for en gruppe"
 
 #: modules/imaging/infoPackage.inc.php:314
 msgid "MSC bundle tab for a group"
@@ -287,11 +287,11 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:317
 msgid "MSC logs tab for a group"
-msgstr ""
+msgstr "MSC-loggfanen for en gruppe"
 
 #: modules/imaging/infoPackage.inc.php:320
 msgid "MSC history tab for a group"
-msgstr ""
+msgstr "MSC-historiefanen for en gruppe"
 
 #: modules/imaging/infoPackage.inc.php:340
 msgid "Register a computer in the imaging module"
@@ -311,11 +311,11 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:374
 msgid "Show sync status"
-msgstr ""
+msgstr "Vis synk status"
 
 #: modules/imaging/infoPackage.inc.php:416
 msgid "Add a service to a target"
-msgstr ""
+msgstr "Legg til tjeneste til et mål"
 
 #: modules/imaging/infoPackage.inc.php:420
 msgid "Edit parameters of a service on a target"
@@ -340,16 +340,16 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:441
 msgid "Create iso image"
-msgstr ""
+msgstr "Lag iso bilde"
 
 #: modules/imaging/infoPackage.inc.php:445
 msgid "init multicast"
-msgstr ""
+msgstr "initsier multicast"
 
 #: modules/imaging/includes/logs.inc.php:25
 #: modules/imaging/manage/ajaxLogs.php:53
 msgid "Menu"
-msgstr ""
+msgstr "Meny"
 
 #: modules/imaging/includes/logs.inc.php:26
 #: modules/imaging/manage/ajaxLogs.php:59
@@ -364,17 +364,17 @@ msgstr "Sikkerhetskopi"
 #: modules/imaging/includes/logs.inc.php:28
 #: modules/imaging/manage/ajaxLogs.php:52
 msgid "Boot"
-msgstr ""
+msgstr "Boot"
 
 #: modules/imaging/includes/logs.inc.php:29
 #: modules/imaging/manage/ajaxLogs.php:54
 msgid "Restoration"
-msgstr ""
+msgstr "Gjenopprett"
 
 #: modules/imaging/includes/logs.inc.php:30
 #: modules/imaging/manage/ajaxLogs.php:56
 msgid "Post-imaging"
-msgstr ""
+msgstr "Post-imaging"
 
 #: modules/imaging/includes/logs.inc.php:31
 #: modules/imaging/manage/ajaxLogs.php:57
@@ -385,7 +385,7 @@ msgstr "Feil"
 #: modules/imaging/manage/ajaxLogs.php:51
 #: modules/imaging/manage/ajaxLogs.php:67
 msgid "Status unknown"
-msgstr ""
+msgstr "Ukjent status"
 
 #: modules/imaging/includes/logs.inc.php:34
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:53
@@ -399,7 +399,7 @@ msgstr "Slett"
 #: modules/imaging/includes/logs.inc.php:35
 #: modules/imaging/manage/ajaxLogs.php:61
 msgid "Restore in progress"
-msgstr ""
+msgstr "Gjenoppretting pågår"
 
 #: modules/imaging/includes/logs.inc.php:36
 #: modules/imaging/manage/ajaxLogs.php:62
@@ -419,7 +419,7 @@ msgstr "Sikkerhetskopiering pågår"
 #: modules/imaging/includes/logs.inc.php:39
 #: modules/imaging/manage/ajaxLogs.php:65
 msgid "Backup done"
-msgstr ""
+msgstr "Sikkerhetskopiering ferdig"
 
 #: modules/imaging/includes/logs.inc.php:40
 #: modules/imaging/manage/ajaxLogs.php:66
@@ -428,7 +428,7 @@ msgstr "Sikkerhetskopieringen mislyktes"
 
 #: modules/imaging/includes/logs.inc.php:45
 msgid "Boot menu shown"
-msgstr ""
+msgstr "Vist boot meny"
 
 #: modules/imaging/includes/logs.inc.php:47
 msgid "Hardware Inventory received"
@@ -500,19 +500,19 @@ msgstr ""
 
 #: modules/imaging/includes/logs.inc.php:69
 msgid "Booted"
-msgstr ""
+msgstr "Bootet"
 
 #: modules/imaging/includes/logs.inc.php:70
 msgid "Chosen Menu Entry"
-msgstr ""
+msgstr "Valgt menypunkt"
 
 #: modules/imaging/includes/logs.inc.php:71
 msgid "Restoration Started"
-msgstr ""
+msgstr "Gjenoppretting started"
 
 #: modules/imaging/includes/logs.inc.php:72
 msgid "Restoration Finished"
-msgstr ""
+msgstr "Gjenoppretting ferdig"
 
 #: modules/imaging/includes/logs.inc.php:73
 msgid "Backup Started"
@@ -532,7 +532,7 @@ msgstr ""
 
 #: modules/imaging/includes/logs.inc.php:77
 msgid "Critical error"
-msgstr ""
+msgstr "Kritisk feil"
 
 #: modules/imaging/includes/logs.inc.php:79
 msgid "Hostname Request"
@@ -572,7 +572,7 @@ msgstr "Fil"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:50
 msgid "available"
-msgstr ""
+msgstr "tilgjengelig"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:130
 msgid "Organization Name missing"
@@ -588,7 +588,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1367
 msgid "Administrators"
-msgstr ""
+msgstr "Administratorer"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1368
 msgid "Backup Operators"
@@ -604,7 +604,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1371
 msgid "Guests"
-msgstr ""
+msgstr "Gjester"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1372
 msgid "IUsers"
@@ -2073,7 +2073,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxLogs.php:109
 #: modules/imaging/imaging/ajaxLogs.php:90
 msgid "Timestamp"
-msgstr ""
+msgstr "Tidsstempel"
 
 #: modules/imaging/manage/ajaxLogs.php:111
 #: modules/imaging/imaging/ajaxLogs.php:94
@@ -2313,7 +2313,7 @@ msgstr ""
 #: modules/imaging/imaging/images.php:105
 #: modules/imaging/imaging/ajaxImages.php:169
 msgid "Label"
-msgstr ""
+msgstr "Etikett"
 
 #: modules/imaging/manage/ajaxBootmenu.php:100
 msgid "Default"
@@ -2989,7 +2989,7 @@ msgstr ""
 
 #: modules/imaging/imaging/tabs.php:301
 msgid "Not enough information"
-msgstr ""
+msgstr "Ikke nok informasjon"
 
 #: modules/imaging/imaging/bootmenu_remove.php:61
 #, php-format
@@ -3393,11 +3393,12 @@ msgstr ""
 msgid ""
 "Multicast menu has not been created : there are no computers in the group"
 msgstr ""
+"Multicast-menyen er ikke opprettet: Det er ingen datamaskiner i gruppen"
 
 #: modules/imaging/imaging/multicast.php:66
 #: modules/imaging/imaging/multicast.php:87
 msgid "Multicast menu has not been created : number of computers missing"
-msgstr ""
+msgstr "Multicast-menyen er ikke opprettet: antall datamaskiner mangler"
 
 #: modules/imaging/imaging/multicast.php:104
 #: modules/imaging/imaging/multicast.php:121
@@ -3407,33 +3408,36 @@ msgid ""
 "Multicast menu has not been created : the imaging group contains %d "
 "computers and you have entered %d"
 msgstr ""
+"Multicast-menyen er ikke opprettet: bildegruppen inneholder %d datamaskiner "
+"og du har registrert %d"
 
 #: modules/imaging/imaging/multicast.php:187
 msgid "computers have a [IPV6] interfaces address exclusively in the group"
-msgstr ""
+msgstr "datamaskinene  i gruppen bruker kun et [IPV6] -adresse."
 
 #: modules/imaging/imaging/multicast.php:210
 msgid "Multicast menu has not been created : --max-time-to-wait missing"
-msgstr ""
+msgstr "Multicast-menyen er ikke opprettet: - max-time-to-wait mangler"
 
 #: modules/imaging/imaging/multicast.php:228
 msgid "Multicast menu has not been created : --max-time-to-wait < 60"
-msgstr ""
+msgstr "Multicast-menyen er ikke opprettet: - max-time-to-wait <60"
 
 #: modules/imaging/imaging/multicast.php:254
 msgid ""
 "Multicast menu has not been created : the selected master is missing on disk"
 msgstr ""
+"Multicast-menyen er ikke opprettet: Den valgte masteren mangler på disken"
 
 #: modules/imaging/imaging/multicast.php:293
 msgid "Multicast menu has been successfully created."
-msgstr ""
+msgstr "Multicast-menyen er opprettet."
 
 #: modules/imaging/imaging/multicast.php:311
 msgid ""
 "Multicast menu has not been created : check that the imaging server is "
 "running"
-msgstr ""
+msgstr "Multicast-menyen er ikke opprettet: sjekk at bildeserveren kjører"
 
 #: modules/imaging/imaging/multicast.php:348
 #, php-format
@@ -3441,25 +3445,30 @@ msgid ""
 "deploy the master <strong>%s</strong> to this group <strong>%s</strong> in "
 "multicast"
 msgstr ""
+"distribuer masteren <strong>%s</strong>til denne gruppen "
+"<strong>%s</strong>i multicast"
 
 #: modules/imaging/imaging/multicast.php:355
 msgid "Number of machines to wait for"
-msgstr ""
+msgstr "Antall maskiner å vente på"
 
 #: modules/imaging/imaging/multicast.php:371
 msgid ""
 "start anyways when t seconds since first receiver connection have passed"
 msgstr ""
+"start uansett når t sekunder siden den første mottakerforbindelsen har gått"
 
 #: modules/imaging/imaging/header.php:34
 msgid ""
 "You have modified this target's boot menu, if you are done please click on "
 "\"Generate Menu\" to update the computer boot menu."
 msgstr ""
+"Du har endret oppstartsmenyen til dette målet. Hvis du er ferdig, kan du "
+"klikke på \"Generer meny\" for å oppdatere datamaskinens oppstartsmeny."
 
 #: modules/imaging/imaging/header.php:51
 msgid "This target's boot menu is up-to-date."
-msgstr ""
+msgstr "Oppstartsmenyen for dette målet er oppdatert."
 
 #: modules/imaging/imaging/header.php:60
 #, php-format
@@ -3467,6 +3476,8 @@ msgid ""
 "This computer has a <u>custom boot menu</u>. <a href=\"%s\">Click here</a> "
 "to get back the default one."
 msgstr ""
+"Denne datamaskinen har en<u> tilpasset oppstartsmeny</u>. <a "
+"href=\"%s\">Klikk her </a>for å få tilbake standardinnstillingen."
 
 #: modules/imaging/imaging/header.php:75
 #, php-format
@@ -3474,40 +3485,44 @@ msgid ""
 "This computer is currently member of \"%s\". <a href=\"%s\">Click here</a> "
 "to leave the group and customize the boot menu."
 msgstr ""
+"Denne datamaskinen er for øyeblikket medlem av \"%s\". <a href=\"%s\">Klikk "
+"her </a>for å forlate gruppen og tilpasse oppstartsmenyen."
 
 #: modules/imaging/imaging/showtarget.php:72
 #: modules/imaging/imaging/showtarget.php:84
 msgid "Removal of master failed"
-msgstr ""
+msgstr "Fjerning av master mislyktes"
 
 #: modules/imaging/imaging/showtarget.php:125
 msgid ""
 "If you want to remove this master from one or more targets, check these "
 "targets and click on the remove button"
 msgstr ""
+"Hvis du vil fjerne denne masteren fra ett eller flere mål, sjekk disse "
+"målene og klikk på fjern-knappen"
 
 #: modules/imaging/imaging/showtarget.php:148
 #, php-format
 msgid "Remove this master from imaging server %s"
-msgstr ""
+msgstr "Fjern denne masteren fra avbildingsserveren %s"
 
 #: modules/imaging/imaging/services.php:61
 #, php-format
 msgid "Add service %s"
-msgstr ""
+msgstr "Legg til tjeneste%s"
 
 #: modules/imaging/imaging/ajaxImages.php:78
 msgid "Add image to boot menu"
-msgstr ""
+msgstr "Legg til bilde i oppstartsmenyen"
 
 #: modules/imaging/imaging/ajaxImages.php:83
 msgid "Delete the image"
-msgstr ""
+msgstr "Slett bildet"
 
 #: modules/imaging/imaging/ajaxImages.php:91
 msgid "View image log"
-msgstr ""
+msgstr "Vis bildelogg"
 
 #: modules/imaging/imaging/ajaxImages.php:200
 msgid "Multicast init"
-msgstr ""
+msgstr "Multicast init"

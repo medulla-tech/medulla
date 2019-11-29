@@ -832,19 +832,23 @@ msgstr "Скрипт"
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:158
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:177
 msgid "Force suffix"
-msgstr ""
+msgstr "Примусовий суфікс"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:162
 msgid ""
 "The \"Script language\" property above applies a suffix to the script by default.\n"
 "However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
 msgstr ""
+"Типово, використання властивості «Скриптова мова» призводить до встановлення суфікса назви скрипту.\n"
+"Втім, якщо встановлено властивість «Примусовий суфікс», завжди використовуватиметься суфікс'"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:181
 msgid ""
 "The \"Script language\" property above applies a suffix to the script by default.\n"
 " However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
 msgstr ""
+"Типово, використання властивості «Скриптова мова» призводить до встановлення суфікса назви скрипту.\n"
+"Втім, якщо встановлено властивість «Примусовий суфікс», завжди використовуватиметься суфікс'"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:211
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:230
@@ -852,10 +856,12 @@ msgid ""
 "The \"Script language\" property above applies a hash-bang to the script by default.\n"
 " However, if the \"Force hash-bang\" property is set, the imposed hash-bang will be this one'"
 msgstr ""
+"Типово, використання властивості «Скриптова мова» призводить до встановлення шебанґа у скрипті.\n"
+"Втім, якщо встановлено властивість «Примусовий шебанґ», завжди використовуватиметься шебанґ'"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:226
 msgid "Force hash-bang"
-msgstr ""
+msgstr "Примусовий шебанґ"
 
 #: modules/pkgs/includes/actions/actionrestart.php:17
 msgid "Restart Machine"

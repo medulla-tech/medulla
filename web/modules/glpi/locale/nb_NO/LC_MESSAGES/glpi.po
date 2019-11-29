@@ -229,24 +229,24 @@ msgstr "OK: %prosent% (%d)"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:45
 msgid "Not running or not up-to-date: %percent% (%d)"
-msgstr ""
+msgstr "Kjører ikke eller er ikke oppdatert: %prosent% (%d)"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:46
 msgid "No antivirus found: %percent% (%d)"
-msgstr ""
+msgstr "Ingen antivirus funnet: %prosent% (%d)"
 
 #: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
 msgid "This client has been registered in pull mode"
-msgstr ""
+msgstr "Denne klienten er registrert i trekk-modus"
 
 #: modules/glpi/glpi/tabs.php:62
 msgid "Leave pull mode"
-msgstr ""
+msgstr "Gå ut av trekkmodus"
 
 #: modules/glpi/glpi/tabs.php:72
 #, php-format
 msgid "%s's inventory %s"
-msgstr ""
+msgstr "%ss inventar%s"
 
 #: modules/glpi/glpi/tabs.php:80
 msgid "Summary"
@@ -290,28 +290,28 @@ msgstr "Alle regler"
 
 #: modules/glpi/glpi/entityList.php:28
 msgid "Entity list"
-msgstr ""
+msgstr "Enhetsliste"
 
 #: modules/glpi/glpi/entityList.php:36
 msgid "All entities"
-msgstr ""
+msgstr "Alle enheter"
 
 #: modules/glpi/glpi/addLocation.php:34
 msgid "The location has been added successfully."
-msgstr ""
+msgstr "Plasseringen er lagt til."
 
 #: modules/glpi/glpi/addLocation.php:38
 msgid "The location has been edited successfully."
-msgstr ""
+msgstr "Plasseringen er redigert."
 
 #: modules/glpi/glpi/addLocation.php:43
 msgid "Add location"
-msgstr ""
+msgstr "Legg til plassering"
 
 #: modules/glpi/glpi/addLocation.php:52
 #: modules/glpi/glpi/ajaxLocationList.php:70
 msgid "Edit location"
-msgstr ""
+msgstr "Rediger plassering"
 
 #: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/addEntity.php:78
 #: modules/glpi/glpi/addEntityRule.php:72
@@ -322,7 +322,7 @@ msgstr "Navn"
 
 #: modules/glpi/glpi/addLocation.php:96
 msgid "Parent location"
-msgstr ""
+msgstr "Overordnet plassering"
 
 #: modules/glpi/glpi/addLocation.php:101 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/addEntityRule.php:77
@@ -334,11 +334,11 @@ msgstr "Beskrivelse"
 #: modules/glpi/glpi/ajaxLocationList.php:51
 #: modules/glpi/glpi/ajaxEntityList.php:51
 msgid "No entry found"
-msgstr ""
+msgstr "Ingen oppføring funnet"
 
 #: modules/glpi/glpi/ajaxEntityRules.php:66
 msgid "Rule name"
-msgstr ""
+msgstr "Regelnavn"
 
 #: modules/glpi/glpi/ajaxEntityRules.php:69
 msgid "Edit rule"
@@ -346,11 +346,11 @@ msgstr "Rediger regel"
 
 #: modules/glpi/glpi/ajaxEntityRules.php:70
 msgid "Move rule up"
-msgstr ""
+msgstr "Flytt regel opp"
 
 #: modules/glpi/glpi/ajaxEntityRules.php:71
 msgid "Move rule down"
-msgstr ""
+msgstr "Flytt regel ned"
 
 #: modules/glpi/glpi/ajaxEntityRules.php:72
 msgid "Delete rule"
@@ -358,29 +358,29 @@ msgstr "Slett regel"
 
 #: modules/glpi/glpi/addEntity.php:34
 msgid "The entity has been added successfully."
-msgstr ""
+msgstr "Enheten er lagt til."
 
 #: modules/glpi/glpi/addEntity.php:38
 msgid "The entity has been edited successfully."
-msgstr ""
+msgstr "Enheten er redigert."
 
 #: modules/glpi/glpi/addEntity.php:52 modules/glpi/glpi/ajaxEntityList.php:70
 msgid "Edit entity"
-msgstr ""
+msgstr "Rediger enhet"
 
 #: modules/glpi/glpi/addEntity.php:95
 msgid "Parent entity"
-msgstr ""
+msgstr "Overordnet enhet"
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:61
 #, php-format
 msgid "Machines online at %s"
-msgstr ""
+msgstr "Maskiner er online på%s"
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:66
 #, php-format
 msgid "Machines offline at %s"
-msgstr ""
+msgstr "Maskiner er offline på %s"
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:75
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
@@ -392,11 +392,11 @@ msgstr "Datamaskinlisten er avkortet ved %d datamaskiner"
 
 #: modules/glpi/glpi/addEntityRule.php:31
 msgid "The entity rule has been added successfully."
-msgstr ""
+msgstr "Enhetsregelen er lagt til."
 
 #: modules/glpi/glpi/addEntityRule.php:35
 msgid "The entity rule has been edited successfully."
-msgstr ""
+msgstr "Enhetsregelen er redigert."
 
 #: modules/glpi/glpi/addEntityRule.php:67
 msgid "Active"
@@ -421,7 +421,7 @@ msgstr "Domene"
 
 #: modules/glpi/glpi/addEntityRule.php:101
 msgid "Computer serial"
-msgstr ""
+msgstr "Datamaskinens serienummer"
 
 #: modules/glpi/glpi/addEntityRule.php:102
 msgid "Subnet"
@@ -487,11 +487,11 @@ msgstr "Ikke tildel"
 
 #: modules/glpi/glpi/addEntityRule.php:180
 msgid "Target entity"
-msgstr ""
+msgstr "Målenhet"
 
 #: modules/glpi/glpi/addEntityRule.php:200
 msgid "Target location"
-msgstr ""
+msgstr "Mållokasjon"
 
 #: modules/glpi/glpi/ajaxViewPart.php:83
 msgid " (Not an antivirus)"
@@ -499,11 +499,11 @@ msgstr " (Ikke et antivirus)"
 
 #: modules/glpi/glpi/ajaxViewPart.php:107
 msgid "Click here to see this computer on manufacturer website"
-msgstr ""
+msgstr "Klikk her for å se denne datamaskinen på produsentens nettsted"
 
 #: modules/glpi/glpi/ajaxViewPart.php:124
 msgid "Properties"
-msgstr ""
+msgstr "Egenskaper"
 
 #: modules/glpi/glpi/ajaxViewPart.php:125
 msgid "Value"
@@ -511,21 +511,23 @@ msgstr "Verdi"
 
 #: modules/glpi/glpi/ajaxViewPart.php:143
 msgid "No record found for this period."
-msgstr ""
+msgstr "Ingen poster ble funnet for denne perioden."
 
 #: modules/glpi/glpi/ajaxViewPart.php:146
 msgid "Unable to detect any Antivirus software on this machine."
-msgstr ""
+msgstr "Kan ikke oppdage antivirusprogramvare på denne maskinen."
 
 #: modules/glpi/glpi/ajaxViewPart.php:147
 msgid ""
 "Please ensure you are running GLPI with FusionInventory plugin and "
 "FusionInventory Agent on this client."
 msgstr ""
+"Forsikre deg om at du kjører GLPI med FusionInventarplugin og FusionInventar"
+" Agenten på denne klienten."
 
 #: modules/glpi/glpi/ajaxViewPart.php:150
 msgid "No record found."
-msgstr ""
+msgstr "Ingen poster funnet."
 
 #: modules/glpi/glpi/ajaxViewPart.php:188
 msgid "Processors"
@@ -594,7 +596,7 @@ msgstr "Gateway"
 
 #: modules/glpi/glpi/ajaxViewPart.php:218
 msgid "Device"
-msgstr ""
+msgstr "Enhet"
 
 #: modules/glpi/glpi/ajaxViewPart.php:219
 msgid "Mount Point"
@@ -647,7 +649,7 @@ msgstr "Maskinnavn"
 
 #: modules/glpi/glpi/ajaxViewPart.php:233
 msgid "Entity (Location)"
-msgstr ""
+msgstr "Enhet (Lokasjon)"
 
 #: modules/glpi/glpi/ajaxViewPart.php:234
 msgid "Entity"
@@ -659,7 +661,7 @@ msgstr "Plassering"
 
 #: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Last Logged User"
-msgstr ""
+msgstr "Sist logget bruker"
 
 #: modules/glpi/glpi/ajaxViewPart.php:237
 msgid "OS"
@@ -703,7 +705,7 @@ msgstr "Båndbredde"
 
 #: modules/glpi/glpi/ajaxViewPart.php:248
 msgid "Writer"
-msgstr ""
+msgstr "Writer"
 
 #: modules/glpi/glpi/ajaxViewPart.php:250
 #: modules/glpi/glpi/ajaxLocationList.php:68
@@ -771,35 +773,35 @@ msgstr "Antivirus status er OK ved %s"
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:33
 #, php-format
 msgid "Antivirus is not running or not up-to-date at %s"
-msgstr ""
+msgstr "Antivirus kjører ikke eller er ikke oppdatert på %s"
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:36
 #, php-format
 msgid "No antivirus found at %s"
-msgstr ""
+msgstr "Ingen antivirus funnet på %s"
 
 #: modules/glpi/glpi/createBackupStaticGroup.php:55
 #, php-format
 msgid "Machines backup configured at %s"
-msgstr ""
+msgstr "Maskinens sikkerhetskopiering er konfigurert på %s"
 
 #: modules/glpi/glpi/createBackupStaticGroup.php:60
 #, php-format
 msgid "Machines backup not configured at %s"
-msgstr ""
+msgstr "Maskinens sikkerhetskopiering er ikke konfigurert på %s"
 
 #: modules/glpi/glpi/ajaxLocationList.php:66
 msgid "Location name"
-msgstr ""
+msgstr "Lokasjonsnavn"
 
 #: modules/glpi/glpi/createOSStaticGroup.php:40
 #, php-format
 msgid "Machine with %s %s installed at %s"
-msgstr ""
+msgstr "Maskine med  %s %s er installert på %s"
 
 #: modules/glpi/glpi/deleteEntityRule.php:31
 msgid "The entity rule has been deleted successfully."
-msgstr ""
+msgstr "Enhetsregelen er slettet."
 
 #: modules/glpi/glpi/deleteEntityRule.php:36
 msgid "Delete this rule?"
@@ -807,25 +809,25 @@ msgstr "Slett denne regelen?"
 
 #: modules/glpi/glpi/locationList.php:28
 msgid "Location list"
-msgstr ""
+msgstr "Lokasjonsliste"
 
 #: modules/glpi/glpi/locationList.php:36
 msgid "All locations"
-msgstr ""
+msgstr "Alle lokasjoner"
 
 #: modules/glpi/glpi/ajaxEntityList.php:66
 msgid "Entity name"
-msgstr ""
+msgstr "Navn på enhet"
 
 #: modules/glpi/glpi/createStaticGroup.php:30
 #, php-format
 msgid "Latest inventory is less than %s days at %s"
-msgstr ""
+msgstr "Siste inventeringsdato er yngre enn %s dager på %s"
 
 #: modules/glpi/glpi/createStaticGroup.php:33
 #, php-format
 msgid "Latest inventory is more than %s days at %s"
-msgstr ""
+msgstr "Siste inventeringsdato er eldre enn %s dager på  %s"
 
 #: modules/glpi/glpi/createStaticGroup.php:43
 #, php-format

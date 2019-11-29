@@ -4,8 +4,8 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
 # Nicolas Lécureuil <neoclust@mageia.org>, 2019
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 11:25+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -644,7 +644,7 @@ msgstr "Alternativ pakke"
 #: modules/pkgs/includes/actions/action_set_config_file.php:65
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:88
 msgid "Options"
-msgstr ""
+msgstr "Alternativer"
 
 #: modules/pkgs/includes/actions/action_comment.php:12
 msgid "Add info in deployment log"
@@ -828,19 +828,23 @@ msgstr "Skript"
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:158
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:177
 msgid "Force suffix"
-msgstr ""
+msgstr "Tving suffiks"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:162
 msgid ""
 "The \"Script language\" property above applies a suffix to the script by default.\n"
 "However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
 msgstr ""
+"Egenskapen \"Skriptspråk\" ovenfor, bruker som standard et suffiks på skriptet.\n"
+"Imidlertid, hvis egenskapen \"Tving suffiks\" er satt, vil det pålagte suffikset være dette\""
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:181
 msgid ""
 "The \"Script language\" property above applies a suffix to the script by default.\n"
 " However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
 msgstr ""
+"Egenskapen \"Skriptspråk\" ovenfor, bruker som standard et suffiks på skriptet.\n"
+"Imidlertid, hvis egenskapen \"Tving suffiks\" er satt, vil det pålagte suffikset være dette \""
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:211
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:230
@@ -848,10 +852,12 @@ msgid ""
 "The \"Script language\" property above applies a hash-bang to the script by default.\n"
 " However, if the \"Force hash-bang\" property is set, the imposed hash-bang will be this one'"
 msgstr ""
+"Egenskapen \"Skriptspråk\" ovenfor, bruker et hash-bang på skriptet som standard.\n"
+"Imidlertid, hvis \"Tving hash-bang\" -egenskapen er satt, vil den pålagte hash-bang være dette\""
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:226
 msgid "Force hash-bang"
-msgstr ""
+msgstr "Tving hash-bang"
 
 #: modules/pkgs/includes/actions/actionrestart.php:17
 msgid "Restart Machine"

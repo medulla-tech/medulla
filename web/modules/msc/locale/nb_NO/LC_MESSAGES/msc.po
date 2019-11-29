@@ -24,19 +24,19 @@ msgstr ""
 
 #: modules/msc/logs/running.php:33
 msgid "Show all running task's logs"
-msgstr ""
+msgstr "Vis logger over alle løpende oppgaver"
 
 #: modules/msc/logs/pending.php:33
 msgid "Show all pending task's logs"
-msgstr ""
+msgstr "Vis logger over alle ventende oppgaver"
 
 #: modules/msc/logs/consult.php:39 modules/msc/msc/logs.php:33
 msgid "Current tasks"
-msgstr ""
+msgstr "Pågående oppgaver"
 
 #: modules/msc/logs/consult.php:64 modules/msc/msc/logs.php:38
 msgid "Expired tasks"
-msgstr ""
+msgstr "Utgåtte oppgaver"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:55
 #: modules/msc/logs/ajaxLogsFilter.php:58
@@ -81,7 +81,7 @@ msgstr "Bunt"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:154
 msgid "Unavailable computer"
-msgstr ""
+msgstr "Utilgjengelig datamaskin"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:156
 #: modules/msc/logs/ajaxConsultLogsFilter.php:168
@@ -91,7 +91,7 @@ msgstr "Maskin"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:159
 msgid "Unavailable group"
-msgstr ""
+msgstr "Utilgjengelig gruppe"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:161
 #: modules/msc/logs/ajaxConsultLogsFilter.php:176
@@ -179,20 +179,20 @@ msgstr "Nåværende status:"
 
 #: modules/msc/logs/finished.php:33
 msgid "Show all finished task's logs"
-msgstr ""
+msgstr "Vis logger over alle avsluttede oppgaver"
 
 #: modules/msc/logs/viewLogs.php:117 modules/msc/logs/viewLogs.php:185
 #: modules/msc/logs/viewLogs.php:217
 msgid "The group you are working on is empty."
-msgstr ""
+msgstr "Gruppen du jobber med er tom."
 
 #: modules/msc/logs/all.php:33
 msgid "Show all task logs"
-msgstr ""
+msgstr "Vis logger over alle oppgaver"
 
 #: modules/msc/logs/custom.php:33
 msgid "Show custom status task's logs"
-msgstr ""
+msgstr "Vis logger over status på tilpassede oppgaver"
 
 #: modules/msc/logs/localSidebar.php:28 modules/msc/infoPackage.inc.php:52
 #: modules/msc/includes/widgets.inc.php:345
@@ -214,27 +214,27 @@ msgstr "Revidere"
 
 #: modules/msc/infoPackage.inc.php:58
 msgid "Commands logs"
-msgstr ""
+msgstr "Kommandologger"
 
 #: modules/msc/infoPackage.inc.php:61
 msgid "Show all logs"
-msgstr ""
+msgstr "Vis alle logger"
 
 #: modules/msc/infoPackage.inc.php:63
 msgid "Show pending task's logs"
-msgstr ""
+msgstr "Vis logger over ventende oppgaver"
 
 #: modules/msc/infoPackage.inc.php:65
 msgid "Show running task's logs"
-msgstr ""
+msgstr "Vis logger over kjørende oppgaver"
 
 #: modules/msc/infoPackage.inc.php:67
 msgid "Show finished task's logs"
-msgstr ""
+msgstr "Vis logger over avsluttede oppgaver"
 
 #: modules/msc/infoPackage.inc.php:70
 msgid "Show custom state task's logs"
-msgstr ""
+msgstr "Vis logger over status på tilpassede oppgaver"
 
 #: modules/msc/infoPackage.inc.php:73 modules/msc/infoPackage.inc.php:267
 #: modules/msc/infoPackage.inc.php:272
@@ -243,107 +243,107 @@ msgstr "logg liste"
 
 #: modules/msc/infoPackage.inc.php:76
 msgid "consolidated logs list"
-msgstr ""
+msgstr "liste over konsoliderte logger"
 
 #: modules/msc/infoPackage.inc.php:79
 msgid "the state list"
-msgstr ""
+msgstr "Liste over tilstander"
 
 #: modules/msc/infoPackage.inc.php:89
 msgid "Remove machine from pull mode"
-msgstr ""
+msgstr "Fjern maskinen fra trekkmodus"
 
 #: modules/msc/infoPackage.inc.php:95
 msgid "Deploy specific package"
-msgstr ""
+msgstr "Rull ut spesifikk pakke"
 
 #: modules/msc/infoPackage.inc.php:100
 msgid "Secure control on a group of computers"
-msgstr ""
+msgstr "Sikker kontroll på en gruppe datamaskiner"
 
 #: modules/msc/infoPackage.inc.php:104
 msgid "MSC launch tab for a group"
-msgstr ""
+msgstr "MSC-startfanen for en gruppe"
 
 #: modules/msc/infoPackage.inc.php:110
 msgid "MSC logs tab for a group"
-msgstr ""
+msgstr "MSC-loggfanen for en gruppe"
 
 #: modules/msc/infoPackage.inc.php:115
 msgid "Secure control on computer"
-msgstr ""
+msgstr "Sikker kontroll på datamaskinen"
 
 #: modules/msc/infoPackage.inc.php:119
 msgid "MSC launch tab for a machine"
-msgstr ""
+msgstr "MSC-startfanen for en maskin"
 
 #: modules/msc/infoPackage.inc.php:125
 msgid "MSC logs tab for a machine"
-msgstr ""
+msgstr "MSC-loggfanen for en maskin"
 
 #: modules/msc/infoPackage.inc.php:130
 msgid "Download file from a computer"
-msgstr ""
+msgstr "Last ned fil fra en datamaskin"
 
 #: modules/msc/infoPackage.inc.php:136
 msgid "Remove a downloaded file"
-msgstr ""
+msgstr "Fjern en nedlastet fil"
 
 #: modules/msc/infoPackage.inc.php:142
 msgid "Get a downloaded file"
-msgstr ""
+msgstr "Hent en nedlastet fil"
 
 #: modules/msc/infoPackage.inc.php:148
 msgid "Take control of a computer"
-msgstr ""
+msgstr "Ta kontroll over en datamaskin"
 
 #: modules/msc/infoPackage.inc.php:155
 msgid "Play a command"
-msgstr ""
+msgstr "Kjør en kommando"
 
 #: modules/msc/infoPackage.inc.php:161
 msgid "Pause a command"
-msgstr ""
+msgstr "Sett en kommando på pause"
 
 #: modules/msc/infoPackage.inc.php:167
 msgid "Stop a command"
-msgstr ""
+msgstr "Stopp en kommando"
 
 #: modules/msc/infoPackage.inc.php:173
 msgid "Command status"
-msgstr ""
+msgstr "Kommandostatus"
 
 #: modules/msc/infoPackage.inc.php:179
 msgid "Reschedule a command"
-msgstr ""
+msgstr "Omplanlegging av en kommando "
 
 #: modules/msc/infoPackage.inc.php:185
 msgid "Delete a command"
-msgstr ""
+msgstr "Slett en kommando"
 
 #: modules/msc/infoPackage.inc.php:192
 msgid "Single command status"
-msgstr ""
+msgstr "Status for Enkeltkommando"
 
 #: modules/msc/infoPackage.inc.php:197
 msgid "Show package's details"
-msgstr ""
+msgstr "Vis pakkedetaljer"
 
 #: modules/msc/infoPackage.inc.php:204
 msgid "Launch a command"
-msgstr ""
+msgstr "Start en kommando"
 
 #: modules/msc/infoPackage.inc.php:210
 msgid "Launch a advanced command"
-msgstr ""
+msgstr "Start en avansert kommando"
 
 #: modules/msc/infoPackage.inc.php:216
 msgid "Software convergence configuration"
-msgstr ""
+msgstr "Konvergenskonfigurasjon for programvare"
 
 #: modules/msc/infoPackage.inc.php:222
 msgid "Launch a quick action command"
-msgstr ""
+msgstr "Start en hurtighandlings-kommando"
 
 #: modules/msc/infoPackage.inc.php:227 modules/msc/msc/packages.php:29
 msgid "Packages"
@@ -351,19 +351,19 @@ msgstr "Pakker"
 
 #: modules/msc/infoPackage.inc.php:232
 msgid "Ping and probe"
-msgstr ""
+msgstr "Ping og sonde"
 
 #: modules/msc/infoPackage.inc.php:237
 msgid "Ping"
-msgstr ""
+msgstr "Ping"
 
 #: modules/msc/infoPackage.inc.php:242
 msgid "Platform"
-msgstr ""
+msgstr "Plattform"
 
 #: modules/msc/infoPackage.inc.php:247
 msgid "MAC Addr."
-msgstr ""
+msgstr "MAC Adr."
 
 #: modules/msc/infoPackage.inc.php:252
 msgid "IP Addr."
@@ -371,7 +371,7 @@ msgstr "IP Adr."
 
 #: modules/msc/infoPackage.inc.php:257 modules/msc/msc/download_file.php:32
 msgid "Download file page"
-msgstr ""
+msgstr "Last ned filside"
 
 #: modules/msc/infoPackage.inc.php:262
 msgid "Csv's export"
@@ -380,7 +380,7 @@ msgstr "Csv's eksport"
 #: modules/msc/includes/commands_xmlrpc.inc.php:141
 #, php-format
 msgid "%s deployment subgroup - %s"
-msgstr ""
+msgstr "%s utrulling undergruppe - %s"
 
 #: modules/msc/includes/commands_xmlrpc.inc.php:164
 #, php-format
@@ -388,6 +388,8 @@ msgid ""
 "Deploy subgroup created successfully. <br/><a href=\"%s\" "
 "target=\"_blank\">View group</a>"
 msgstr ""
+"Utrulling av undergruppe utført.. <br/><a href=\"%s\" target=\"_blank\">Se "
+"gruppe</a>"
 
 #: modules/msc/includes/command_history.php:34
 #: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:552
@@ -402,7 +404,7 @@ msgstr "Vert"
 #: modules/msc/includes/command_history.php:39
 #: modules/msc/msc/msctabssinglestatus.php:38
 msgid "Current State"
-msgstr ""
+msgstr "Nåværende tilstand"
 
 #: modules/msc/includes/command_history.php:49
 msgid " on "
@@ -422,11 +424,11 @@ msgstr "Verdi"
 
 #: modules/msc/includes/command_history.php:145
 msgid "Bundle success percent"
-msgstr ""
+msgstr "Suksessprosent for pakkebunt"
 
 #: modules/msc/includes/command_history.php:184
 msgid "User command creator"
-msgstr ""
+msgstr "Oppretting av brukerkommandoer"
 
 #: modules/msc/includes/command_history.php:185
 msgid "Execute file"
@@ -434,31 +436,31 @@ msgstr "Kjør fil"
 
 #: modules/msc/includes/command_history.php:186
 msgid "Execution arguments"
-msgstr ""
+msgstr "Kjøreargumenter"
 
 #: modules/msc/includes/command_history.php:187
 msgid "Start execute file"
-msgstr ""
+msgstr "Start kjøringen av filen"
 
 #: modules/msc/includes/command_history.php:188
 msgid "Start inventory agent"
-msgstr ""
+msgstr "Start inventar agent"
 
 #: modules/msc/includes/command_history.php:189 modules/msc/msc/launch.php:564
 msgid "Start \"Wake On Lan\" query if connection fails"
-msgstr ""
+msgstr "Start \"Wake On Lan\" -forespørsel hvis tilkoblingen mislykkes"
 
 #: modules/msc/includes/command_history.php:190
 msgid "Delay between two connections"
-msgstr ""
+msgstr "Forsinkelse mellom to forbindelser"
 
 #: modules/msc/includes/command_history.php:191
 msgid "Command start date"
-msgstr ""
+msgstr "Startdato for kommando"
 
 #: modules/msc/includes/command_history.php:192
 msgid "Command expiry date"
-msgstr ""
+msgstr "Utløpsdato for kommando"
 
 #: modules/msc/includes/command_history.php:246
 msgid "Reschedule"
@@ -472,35 +474,35 @@ msgstr "<i>ikke satt</i>I"
 #: modules/msc/includes/command_history.php:293
 #, php-format
 msgid "<i>from</i> %s <i>to</i> %s"
-msgstr ""
+msgstr "<i>fra</i> %s <i>til</i> %s"
 
 #: modules/msc/includes/command_history.php:295
 #, php-format
 msgid "<i>from</i> %s"
-msgstr ""
+msgstr "<i>fra</i> %s"
 
 #: modules/msc/includes/command_history.php:297
 #, php-format
 msgid "<i>to</i> %s"
-msgstr ""
+msgstr "<i>til</i> %s"
 
 #: modules/msc/includes/command_history.php:299
 msgid "<i>forever</i>"
-msgstr ""
+msgstr "<i>for alltid</i>"
 
 #: modules/msc/includes/command_history.php:304
 #: modules/msc/includes/command_history.php:309
 msgid "<i>whole day</i>"
-msgstr ""
+msgstr "<i>hele dagen</i>"
 
 #: modules/msc/includes/command_history.php:317
 msgid "<i>as soon as possible</i>"
-msgstr ""
+msgstr "<i>så hurtig som mulig</i>"
 
 #: modules/msc/includes/command_history.php:322
 #: modules/msc/includes/command_history.php:327
 msgid "<i>not yet available</i>"
-msgstr ""
+msgstr "<i>ikke tilgjengelig enda</i>"
 
 #: modules/msc/includes/command_history.php:332
 #: modules/msc/includes/command_history.php:354
@@ -508,26 +510,26 @@ msgstr ""
 #: modules/msc/includes/command_history.php:361
 #: modules/msc/includes/command_history.php:557
 msgid "<i>not available</i>"
-msgstr ""
+msgstr "<i>ikke tilgjengelig</i>"
 
 #: modules/msc/includes/command_history.php:336
 #, php-format
 msgid "%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #: modules/msc/includes/command_history.php:338
 #, php-format
 msgid "%s <i>(no additional parameter given)</i>"
-msgstr ""
+msgstr "%s <i>(ingen ekstra parameter angitt)</i>"
 
 #: modules/msc/includes/command_history.php:343
 msgid "None (Local Proxy Client)"
-msgstr ""
+msgstr "Ingen (lokal proxy-klient)"
 
 #: modules/msc/includes/command_history.php:345
 #, php-format
 msgid "%s (Local Proxy Server)"
-msgstr ""
+msgstr "%s (Lokal Proxy Server)"
 
 #: modules/msc/includes/command_history.php:347
 #: modules/msc/msc/local_proxy.php:208
@@ -537,7 +539,7 @@ msgstr "Multippel"
 #: modules/msc/includes/command_history.php:349
 #: modules/msc/msc/local_proxy.php:208
 msgid "Single with fallback"
-msgstr ""
+msgstr "Enkel med fallback"
 
 #: modules/msc/includes/command_history.php:351
 msgid "No proxy"
@@ -576,41 +578,49 @@ msgid ""
 "Error while connecting to secure agent on this host. Please check network "
 "connectivity, and that the secure agent is installed on this host."
 msgstr ""
+"Feil under tilkobling til sikker agent på denne verten. Sjekk "
+"nettverkstilkoblingen, og at den sikre agenten er installert på verten."
 
 #: modules/msc/includes/command_history.php:406
 msgid "The script was killed by Pulse 2 (timeout ?)."
-msgstr ""
+msgstr "Skriptet ble drept av Pulse 2 (timeout?)."
 
 #: modules/msc/includes/command_history.php:407
 msgid "The script was terminated by Pulse 2."
-msgstr ""
+msgstr "Skriptet ble terminert av Pulse2."
 
 #: modules/msc/includes/command_history.php:409
 msgid "Something goes wrong while checking client identity."
-msgstr ""
+msgstr "Noe gikk galt ved sjekking av klientenidentitet."
 
 #: modules/msc/includes/command_history.php:410
 msgid ""
 "The current host name doesn't match the host name from the inventory "
 "database."
 msgstr ""
+"Det gjeldende vertsnavnet samsvarer ikke med vertsnavnet fra inventar-"
+"databasen."
 
 #: modules/msc/includes/command_history.php:411
 msgid ""
 "The current host IP address doesn't match the IP address from the inventory "
 "database."
 msgstr ""
+"Det gjeldende IP adressen til verten samsvarer ikke med IP adressen fra "
+"inventar-databasen."
 
 #: modules/msc/includes/command_history.php:412
 msgid ""
 "The current host MAC address doesn't match the MAC address from the "
 "inventory database."
 msgstr ""
+"Gjeldende MAC-adresse stemmer ikke overens med MAC-adressen fra inventar-"
+"databasen."
 
 #: modules/msc/includes/command_history.php:414
 #, php-format
 msgid "The package '%s' is not available on any mirror."
-msgstr ""
+msgstr "Pakken '%s' er ikke tilgjengelig i noe speil."
 
 #: modules/msc/includes/command_history.php:415
 #, php-format
@@ -618,6 +628,8 @@ msgid ""
 "Can't get files URI for package '%s' on mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
 msgstr ""
+"Kan ikke hente filer URI for pakke '%s' fra speilet%s.\n"
+"Kontroller at pakken og filene ikke er endret siden oppsettet av kommandoen."
 
 #: modules/msc/includes/command_history.php:416
 #, php-format
@@ -625,6 +637,8 @@ msgid ""
 "Can't get files URI for package '%s' on fallback mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
 msgstr ""
+"Kan ikke hente filer URI for pakke '%s' fra fallback-speilet%s.\n"
+"Kontroller at pakken og filene ikke er endret siden oppsettet av kommandoen."
 
 #: modules/msc/includes/command_history.php:417
 #, php-format
@@ -632,6 +646,8 @@ msgid ""
 "An error occurred when trying to contact the mirror '%s' : the connection "
 "was refused."
 msgstr ""
+"Det oppstod en feil da du prøvde å kontakte speilet '%s': forbindelsen ble "
+"nektet"
 
 #: modules/msc/includes/command_history.php:418
 #, php-format
@@ -639,6 +655,8 @@ msgid ""
 "An error occurred when trying to contact the fallback mirror '%s' : the "
 "connection was refused."
 msgstr ""
+"Det oppstod en feil da du prøvde å kontakte fallback-speilet '%s': "
+"forbindelsen ble nektet."
 
 #: modules/msc/includes/command_history.php:419
 #, php-format
@@ -646,6 +664,8 @@ msgid ""
 "An error occurred when trying to contact the mirror '%s' : the mountpoint "
 "doesn't exists."
 msgstr ""
+"Det oppstod en feil når du prøvde å kontakte speilet '%s': monteringspunktet"
+" eksisterer ikke."
 
 #: modules/msc/includes/command_history.php:420
 #, php-format
@@ -653,6 +673,8 @@ msgid ""
 "An error occurred when trying to contact the fallback mirror '%s' : the "
 "mountpoint doesn't exists."
 msgstr ""
+"Det oppstod en feil når du prøvde å kontakte fallback-speilet '%s': "
+"mountpointet eksisterer ikke."
 
 #: modules/msc/includes/command_history.php:421
 #, php-format
@@ -660,11 +682,13 @@ msgid ""
 "Package '%s' is NOT available on primary mirror %s\n"
 "Package '%s' is available on fallback mirror %s"
 msgstr ""
+"Pakken '%s' er IKKE tilgjengelig i primærspeil %s\n"
+"Pakken '%s' er tilgjengelig på et fallback-speil %s"
 
 #: modules/msc/includes/command_history.php:422
 #, php-format
 msgid "Package '%s' is available on primary mirror %s"
-msgstr ""
+msgstr "Pakken '%s' er tilgjengelig på primærspeil %s"
 
 #: modules/msc/includes/command_history.php:481
 #: modules/msc/includes/command_history.php:512
@@ -673,7 +697,7 @@ msgstr "neste forsøk"
 
 #: modules/msc/includes/command_history.php:497
 msgid "Step log"
-msgstr ""
+msgstr "Trinnlogg"
 
 #: modules/msc/includes/command_history.php:506
 msgid "Show log"
@@ -709,7 +733,7 @@ msgstr "Planlegger"
 
 #: modules/msc/includes/command_history.php:557
 msgid "Current launcher"
-msgstr ""
+msgstr "Nåværende oppstarter"
 
 #: modules/msc/includes/command_history.php:558
 msgid "Current proxy"
@@ -717,7 +741,7 @@ msgstr "Nåværende proxy"
 
 #: modules/msc/includes/command_history.php:560
 msgid "<b>Command Environment</b>"
-msgstr ""
+msgstr "<b>Kommandomiljø</b>"
 
 #: modules/msc/includes/command_history.php:591
 msgid "Y-m-d H:i:s"
@@ -726,7 +750,7 @@ msgstr "Å-m-d T:i:s"
 #: modules/msc/includes/command_history.php:623
 #, php-format
 msgid "Exit code : %s"
-msgstr ""
+msgstr "Exit kode: %s"
 
 #: modules/msc/includes/command_history.php:637
 #: modules/msc/includes/command_history.php:653
@@ -746,11 +770,11 @@ msgstr "<i>udefinert</i>"
 #: modules/msc/includes/widgets.inc.php:27
 #, php-format
 msgid "Quick action path %s doesn't exist"
-msgstr ""
+msgstr "Hurtighandlingssti %s finnes ikke"
 
 #: modules/msc/includes/widgets.inc.php:33
 msgid "Other/N.A."
-msgstr ""
+msgstr "Annet/NA"
 
 #: modules/msc/includes/widgets.inc.php:45
 #, php-format
@@ -763,6 +787,8 @@ msgid ""
 "group \"%s\" is not defined in the MSC module, or you don't have permissions"
 " to access it"
 msgstr ""
+"gruppe \"%s\" er ikke definert i MSC-modulen, eller du har ikke "
+"tilgangsrettigheter"
 
 #: modules/msc/includes/widgets.inc.php:96
 #, php-format
@@ -770,15 +796,17 @@ msgid ""
 "%s host is not defined in the MSC module, or you don't have permissions to "
 "access it"
 msgstr ""
+"%s verten  er ikke definert i MSC-modulen, eller du har ikke "
+"tilgangsrettigheter"
 
 #: modules/msc/includes/widgets.inc.php:117
 msgid "You don't have the right permissions to display this command"
-msgstr ""
+msgstr "Du har ikke rettigheter til å vise denne kommandoen"
 
 #: modules/msc/includes/widgets.inc.php:184
 #, php-format
 msgid "Quick action on %s"
-msgstr ""
+msgstr "Hurtighandling på %s"
 
 #: modules/msc/includes/widgets.inc.php:232
 msgid "Execute action..."
@@ -786,7 +814,7 @@ msgstr "Utfør handlingen"
 
 #: modules/msc/includes/widgets.inc.php:255
 msgid "Quick action list is empty"
-msgstr ""
+msgstr "Listen over hurtighandlinger er tom"
 
 #: modules/msc/includes/widgets.inc.php:345
 #: modules/msc/includes/widgets.inc.php:517
@@ -795,7 +823,7 @@ msgstr "Alle brukerkommandoer"
 
 #: modules/msc/includes/widgets.inc.php:387
 msgid "State filter"
-msgstr ""
+msgstr "Tilstandsfilter"
 
 #: modules/msc/includes/widgets.inc.php:389
 #: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
@@ -851,19 +879,19 @@ msgstr "Kontakt administratoren din."
 #: modules/msc/includes/bundle_widgets.php:158
 #: modules/msc/includes/bundle_widgets.php:187
 msgid "Actions in bundle"
-msgstr ""
+msgstr "Handlinger i bunten"
 
 #: modules/msc/includes/bundle_widgets.php:159
 #: modules/msc/includes/bundle_widgets.php:188
 msgid "Possible actions"
-msgstr ""
+msgstr "Mulige handlinger"
 
 #: modules/msc/includes/bundle_widgets.php:170
 #: modules/msc/includes/bundle_widgets.php:199
 #: modules/msc/msc/ajaxPackageFilter.php:146
 #, php-format
 msgid "MMC failed to contact package server %s."
-msgstr ""
+msgstr "MMC kunne ikke kontakte pakkeserveren %s."
 
 #: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/packages.php:43
 msgid "Launch"
@@ -871,7 +899,7 @@ msgstr "Start"
 
 #: modules/msc/includes/bundle_widgets.php:285
 msgid "Launch (advanced)"
-msgstr ""
+msgstr "Oppstart (avansert)"
 
 #: modules/msc/includes/bundle_widgets.php:286
 msgid "Cancel"
@@ -879,15 +907,15 @@ msgstr "Avbryt"
 
 #: modules/msc/includes/bundle_widgets.php:304
 msgid "awake"
-msgstr ""
+msgstr "oppe"
 
 #: modules/msc/includes/bundle_widgets.php:306
 msgid "invent."
-msgstr ""
+msgstr "inventer"
 
 #: modules/msc/includes/bundle_widgets.php:349
 msgid "Bundle title"
-msgstr ""
+msgstr "Bunttittel"
 
 #: modules/msc/includes/bundle_widgets.php:350
 msgid "Wake on lan"
@@ -899,31 +927,31 @@ msgstr "Start  skriptet"
 
 #: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:576
 msgid "Delete files after a successful execution"
-msgstr ""
+msgstr "Slett filer etter en vellykket utførelse"
 
 #: modules/msc/includes/bundle_widgets.php:353
 msgid "Start inventory"
-msgstr ""
+msgstr "Start inventering"
 
 #: modules/msc/includes/bundle_widgets.php:355
 msgid "Halt client after"
-msgstr ""
+msgstr "Stopp klient etter"
 
 #: modules/msc/includes/bundle_widgets.php:360
 msgid "Command parameters"
-msgstr ""
+msgstr "Kommandoparametre"
 
 #: modules/msc/includes/bundle_widgets.php:361
 msgid "Beginning of validity"
-msgstr ""
+msgstr "Begynnelse av gyldighet"
 
 #: modules/msc/includes/bundle_widgets.php:362
 msgid "End of validity"
-msgstr ""
+msgstr "Slutt på gyldighet"
 
 #: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:772
 msgid "Max bandwidth (kbits/s)"
-msgstr ""
+msgstr "Maks båndvidde (kbits/s)"
 
 #: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:785
 msgid "push"
@@ -939,12 +967,12 @@ msgstr "Kopieringsmodus"
 
 #: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:792
 msgid "Deploy using a local proxy"
-msgstr ""
+msgstr "Rull ut via en lokal proxy"
 
 #: modules/msc/includes/bundle_widgets.php:389
 #: modules/msc/includes/bundle_widgets.php:405
 msgid "Cancel bundle creation"
-msgstr ""
+msgstr "Avbryt opprettelse av en bunt"
 
 #: modules/msc/includes/functions.php:25
 msgid "Upload in progress"
@@ -960,15 +988,15 @@ msgstr "Opplastingen feilet"
 
 #: modules/msc/includes/functions.php:28
 msgid "Execution in progress"
-msgstr ""
+msgstr "Kjøring pågår"
 
 #: modules/msc/includes/functions.php:29
 msgid "Execution done"
-msgstr ""
+msgstr "Kjøring ferdig"
 
 #: modules/msc/includes/functions.php:30
 msgid "Execution failed"
-msgstr ""
+msgstr "Kjøring feilet"
 
 #: modules/msc/includes/functions.php:31
 msgid "Delete in progress"
@@ -1008,31 +1036,31 @@ msgstr "Omstarten er ferdig"
 
 #: modules/msc/includes/functions.php:40
 msgid "WOL request being sent"
-msgstr ""
+msgstr "WOL-forespørsel blir sendt"
 
 #: modules/msc/includes/functions.php:41
 msgid "Failed to send WOL request"
-msgstr ""
+msgstr "Kunne ikke sende WOL-forespørsel"
 
 #: modules/msc/includes/functions.php:42
 msgid "WOL request has been sent"
-msgstr ""
+msgstr "WOL-forespørsel er sendt"
 
 #: modules/msc/includes/functions.php:43
 msgid "Halt in progress"
-msgstr ""
+msgstr "Stopping pågår"
 
 #: modules/msc/includes/functions.php:44
 msgid "Halt done"
-msgstr ""
+msgstr "Stopping ferdig"
 
 #: modules/msc/includes/functions.php:45
 msgid "Halt failed"
-msgstr ""
+msgstr "Klarte ikke å stoppe"
 
 #: modules/msc/includes/functions.php:46
 msgid "Not reachable"
-msgstr ""
+msgstr "Kan ikke nås"
 
 #: modules/msc/includes/functions.php:47
 #: modules/msc/includes/functions.php:331
@@ -1050,11 +1078,11 @@ msgstr "Planlagt"
 
 #: modules/msc/includes/functions.php:53
 msgid "Rescheduled"
-msgstr ""
+msgstr "Omplanlagt"
 
 #: modules/msc/includes/functions.php:55
 msgid "Time Exceeded"
-msgstr ""
+msgstr "Tiden løpte ut"
 
 #: modules/msc/includes/functions.php:56
 msgid "To do"
@@ -1066,7 +1094,7 @@ msgstr "Ignorert"
 
 #: modules/msc/includes/functions.php:60
 msgid "Work in progress"
-msgstr ""
+msgstr "Arbeid pågår"
 
 #: modules/msc/includes/functions.php:315
 msgid "Wake on LAN"
@@ -1074,19 +1102,19 @@ msgstr "Wake on LAN"
 
 #: modules/msc/includes/functions.php:316
 msgid "Upload"
-msgstr ""
+msgstr "Last opp"
 
 #: modules/msc/includes/functions.php:317
 msgid "Execution"
-msgstr ""
+msgstr "Utføring"
 
 #: modules/msc/includes/functions.php:318
 msgid "Windows Update parse"
-msgstr ""
+msgstr "Analysering av Windows oppdatering"
 
 #: modules/msc/includes/functions.php:319
 msgid "Clean"
-msgstr ""
+msgstr "Ren"
 
 #: modules/msc/includes/functions.php:320
 msgid "Inventory"
@@ -1098,76 +1126,76 @@ msgstr "Omstart"
 
 #: modules/msc/includes/functions.php:322
 msgid "Shutdown"
-msgstr ""
+msgstr "Slå av"
 
 #: modules/msc/includes/functions.php:323
 msgid "Before bootmenu actions"
-msgstr ""
+msgstr "Før oppstartsmenyhandlinger"
 
 #: modules/msc/includes/functions.php:324
 msgid "After bootmenu actions"
-msgstr ""
+msgstr "Etter oppstartsmenyhandlinger"
 
 #: modules/msc/includes/functions.php:325
 msgid "Finish"
-msgstr ""
+msgstr "Avslutt"
 
 #: modules/msc/includes/functions.php:332
 #: modules/msc/msc/ajaxLogsFilter.php:356
 #: modules/msc/msc/ajaxLogsFilter.php:428
 msgid "Running"
-msgstr ""
+msgstr "Kjører"
 
 #: modules/msc/msc/start_quick_action.php:100
 msgid "Failed to retrieve this quick action."
-msgstr ""
+msgstr "Kunne ikke hente denne hurtigandlingen."
 
 #: modules/msc/msc/start_quick_action.php:136
 msgid "Please confirm you really want to perform this action"
-msgstr ""
+msgstr "Bekreft at du virkelig vil utføre denne handlingen"
 
 #: modules/msc/msc/start_quick_action.php:138
 msgid "Advanced"
-msgstr ""
+msgstr "Avansert"
 
 #: modules/msc/msc/download_file_remove.php:28
 msgid "The file has been deleted."
-msgstr ""
+msgstr "Filen har blitt slettet"
 
 #: modules/msc/msc/download_file_remove.php:32
 msgid "Please confirm file deletion"
-msgstr ""
+msgstr "Bekreft sletting av fil"
 
 #: modules/msc/msc/msctabssinglestatus.php:33
 #, php-format
 msgid "Command '%s' state concerning <b>%s</b>"
-msgstr ""
+msgstr "Kommandotilstand '%s' angående <b>%s</b>"
 
 #: modules/msc/msc/msctabssinglestatus.php:38
 msgid "uploaded"
-msgstr ""
+msgstr "opplastet"
 
 #: modules/msc/msc/msctabssinglestatus.php:38
 msgid "executed"
-msgstr ""
+msgstr "utført"
 
 #: modules/msc/msc/msctabssinglestatus.php:38
 msgid "deleted"
-msgstr ""
+msgstr "slettet"
 
 #: modules/msc/msc/msctabssinglestatus.php:47
 msgid "error : cmd_id must be given"
-msgstr ""
+msgstr "feil: cmd_id må angis"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:57
 #: modules/msc/msc/vnc_client_java.php:45
 msgid "Connection Failed !"
-msgstr ""
+msgstr "Tilkoblingen mislyktes !"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:59
 #: modules/msc/msc/vnc_client_java.php:47
 msgid "Connection was refused by the other side."
-msgstr ""
+msgstr "Tilkobling ble avvist av den andre siden."
 
 #: modules/msc/msc/vnc_client_no_vnc.php:136
 #, php-format
@@ -1176,50 +1204,53 @@ msgid ""
 "your browser settings or add Pulse Server address (%s) to the excluded hosts"
 " list."
 msgstr ""
+"En HTTP-proxy er blitt oppdaget. Prøv å deaktivere proxy for lokale adresser"
+" i nettleserinnstillingene, eller legg til Pulse Server-adresse (%s) i "
+"listen over ekskluderte verter."
 
 #: modules/msc/msc/vnc_client_no_vnc.php:150
 msgid "Send Ctrl+Alt+Del"
-msgstr ""
+msgstr "Send Ctrl+Alt+Del"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:154
 msgid "Transfer to/from clipboard"
-msgstr ""
+msgstr "Overfør til/fra utklippstavlen"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:221
 msgid "Connecting ..."
-msgstr ""
+msgstr "Kobler opp"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:226
 msgid "through SSH tunnel"
-msgstr ""
+msgstr "gjennom SSH tunell"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:227
 msgid "Connection failed"
-msgstr ""
+msgstr "Oppkobling mislyktes"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:228
 msgid "Waiting for user approval"
-msgstr ""
+msgstr "Venter på brukerens godkjenning"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:229
 msgid "Password Required"
-msgstr ""
+msgstr "Passord kreves"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:230
 msgid "Host rejected connection"
-msgstr ""
+msgstr "Verten avviste tilkobling"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:231
 msgid "Unable to reach remote host"
-msgstr ""
+msgstr "Kan ikke nå ekstern vert"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:232
 msgid "reason"
-msgstr ""
+msgstr "årsak"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:233
 msgid "Connected"
-msgstr ""
+msgstr "Tilkoblet"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:234
 msgid "to"
@@ -1228,39 +1259,39 @@ msgstr "til"
 #: modules/msc/msc/vnc_client_no_vnc.php:355
 #: modules/msc/msc/vnc_client_java.php:172
 msgid "Take control of this computer"
-msgstr ""
+msgstr "Ta kontroll over denne maskinen"
 
 #: modules/msc/msc/tabs.php:48 modules/msc/msc/tabs.php:57
 #, php-format
 msgid "%s's computer secure control"
-msgstr ""
+msgstr "%s datamaskinens sikkerhets kontroll"
 
 #: modules/msc/msc/tabs.php:59 modules/msc/msc/tabs.php:73
 msgid "Launch Actions"
-msgstr ""
+msgstr "Start handlinger"
 
 #: modules/msc/msc/tabs.php:71
 #, php-format
 msgid "%s's group secure control"
-msgstr ""
+msgstr "%s gruppens sikkerhets kontroll"
 
 #: modules/msc/msc/tabs.php:84
 msgid "Not enough information"
-msgstr ""
+msgstr "Ikke nok informasjon"
 
 #: modules/msc/msc/ajaxPackageFilter.php:46
 #, php-format
 msgid "These packages can be installed on computer \"%s\""
-msgstr ""
+msgstr "Disse pakkene kan installeres på datamaskinen \"%s\""
 
 #: modules/msc/msc/ajaxPackageFilter.php:48
 #, php-format
 msgid "These packages can be installed on group \"%s\""
-msgstr ""
+msgstr "Disse pakkene kan installeres på gruppe \"%s\""
 
 #: modules/msc/msc/ajaxPackageFilter.php:77
 msgid "Available"
-msgstr ""
+msgstr "Tilgjengelig"
 
 #: modules/msc/msc/ajaxPackageFilter.php:79
 msgid "Active"
@@ -1272,12 +1303,12 @@ msgstr "Inaktiv"
 
 #: modules/msc/msc/ajaxPackageFilter.php:84
 msgid "Not available"
-msgstr ""
+msgstr "Ikke tilgjengelig"
 
 #: modules/msc/msc/ajaxPackageFilter.php:93
 #: modules/msc/msc/ajaxPackageFilter.php:182
 msgid "Convergence"
-msgstr ""
+msgstr "Konvergens"
 
 #: modules/msc/msc/ajaxPackageFilter.php:178
 msgid "Description"
@@ -1295,57 +1326,57 @@ msgstr "Pakkestørrelse"
 #: modules/msc/msc/ajaxPackageFilter.php:194
 #: modules/msc/msc/ajaxPackageFilter.php:198
 msgid "Advanced launch"
-msgstr ""
+msgstr "Avansert start"
 
 #: modules/msc/msc/ajaxPackageFilter.php:195
 #: modules/msc/msc/ajaxPackageFilter.php:200
 msgid "Direct launch"
-msgstr ""
+msgstr "Direkte start"
 
 #: modules/msc/msc/ajaxLogsFilter.php:141
 msgid "Can't get bundle for the requested id"
-msgstr ""
+msgstr "Kan ikke hente bunt for den forespurte IDen"
 
 #: modules/msc/msc/ajaxLogsFilter.php:145
 #, php-format
 msgid "Bundle #%s"
-msgstr ""
+msgstr "Bunt  #%s"
 
 #: modules/msc/msc/ajaxLogsFilter.php:298
 #, php-format
 msgid ", using proxy %s"
-msgstr ""
+msgstr ", ved hjelp av proxy %s"
 
 #: modules/msc/msc/ajaxLogsFilter.php:303
 msgid "Pull"
-msgstr ""
+msgstr "Dra"
 
 #: modules/msc/msc/ajaxLogsFilter.php:306
 #: modules/msc/msc/ajaxLogsFilter.php:319
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #: modules/msc/msc/ajaxLogsFilter.php:310
 #, php-format
 msgid "Multiple, client mode%s"
-msgstr ""
+msgstr "Flere, klientmodus %s"
 
 #: modules/msc/msc/ajaxLogsFilter.php:312
 msgid "Multiple, server mode"
-msgstr ""
+msgstr "Flere, server modus"
 
 #: modules/msc/msc/ajaxLogsFilter.php:315
 #, php-format
 msgid "Single, client mode%s"
-msgstr ""
+msgstr "Enkelt, klientmodus %s"
 
 #: modules/msc/msc/ajaxLogsFilter.php:317
 msgid "Single, server mode"
-msgstr ""
+msgstr "Enkel, server modus"
 
 #: modules/msc/msc/ajaxLogsFilter.php:393
 msgid "Mode"
-msgstr ""
+msgstr "Modus"
 
 #: modules/msc/msc/ajaxLogsFilter.php:397
 msgid "Client"
@@ -1353,72 +1384,75 @@ msgstr "Klient"
 
 #: modules/msc/msc/ajaxLogsFilter.php:400
 msgid "Global State"
-msgstr ""
+msgstr "Global Status"
 
 #: modules/msc/msc/ajaxLogsFilter.php:402
 msgid "Current step"
-msgstr ""
+msgstr "Nåværende trinn"
 
 #: modules/msc/msc/ajaxLogsFilter.php:443
 msgid "Deploy status"
-msgstr ""
+msgstr "Utrullingsstatus"
 
 #: modules/msc/msc/download_file.php:39
 msgid "The download is in progress."
-msgstr ""
+msgstr "Nedlasting pågår"
 
 #: modules/msc/msc/download_file.php:42
 msgid "A file is already being downloaded."
-msgstr ""
+msgstr "En fil lastes allerede ned"
 
 #: modules/msc/msc/download_file.php:44
 #: modules/msc/msc/download_file_get.php:28
 msgid "The download has failed."
-msgstr ""
+msgstr "Nedlastingen mislyktes"
 
 #: modules/msc/msc/download_file.php:54
 msgid ""
 "Click below to start downloading file from this computer. Warning: the "
 "download may last a long time"
 msgstr ""
+"Klikk nedenfor for å begynne å laste ned filen fra denne datamaskinen. "
+"Advarsel: nedlastingen kan lang tid"
 
 #: modules/msc/msc/download_file.php:56
 #, php-format
 msgid "Start download from computer %s"
-msgstr ""
+msgstr "Start nedlastingen fra datamaskinen %s"
 
 #: modules/msc/msc/ajaxPing.php:33
 msgid ""
 "Connection was refused by the other side while trying to ping the machine"
 msgstr ""
+"Tilkobling ble avvist av den andre siden mens du prøvde å pinge maskinen"
 
 #: modules/msc/msc/reschedule.php:40
 msgid "Reschedule this command"
-msgstr ""
+msgstr "Planlegg denne kommandoen på nytt"
 
 #: modules/msc/msc/reschedule.php:44
 msgid "<br/>End date"
-msgstr ""
+msgstr "<br/>Sluttdato"
 
 #: modules/msc/msc/msctabspause.php:119 modules/msc/msc/msctabsstop.php:119
 #: modules/msc/msc/msctabsplay.php:120
 msgid "action"
-msgstr ""
+msgstr "hendelse"
 
 #: modules/msc/msc/msctabspause.php:121 modules/msc/msc/msctabsstop.php:121
 #: modules/msc/msc/msctabsplay.php:122
 msgid "bundle"
-msgstr ""
+msgstr "bunt"
 
 #: modules/msc/msc/msctabspause.php:124
 #, php-format
 msgid "Pause %s %s on this group"
-msgstr ""
+msgstr "Pause %s %s denne gruppen"
 
 #: modules/msc/msc/msctabspause.php:126
 #, php-format
 msgid "Pause %s %s on host %s"
-msgstr ""
+msgstr "Pause %s %s verten %s"
 
 #: modules/msc/msc/ajaxDownloadFile.php:34
 msgid "Download file"
@@ -1438,11 +1472,11 @@ msgstr "Feil"
 
 #: modules/msc/msc/ajaxDownloadFile.php:86
 msgid "Timestamp"
-msgstr ""
+msgstr "Tidsstempel"
 
 #: modules/msc/msc/ajaxDownloadFile.php:87
 msgid "From computer"
-msgstr ""
+msgstr "Fra datamaskin"
 
 #: modules/msc/msc/ajaxDownloadFile.php:88
 msgid "File name"
@@ -1455,433 +1489,433 @@ msgstr "Lengde"
 #: modules/msc/msc/msctabsstatus.php:33
 #, php-format
 msgid "Command '%s' state concerning <b>one</b> computer"
-msgstr ""
+msgstr "Kommando '%s' tilstand ffor <b>en</b> maskin"
 
 #: modules/msc/msc/msctabsstatus.php:35
 #, php-format
 msgid "Command '%s' state concerning <b>%s</b> computers"
-msgstr ""
+msgstr "Kommando '%s' tilstand for  <b>%s</b> maskiner"
 
 #: modules/msc/msc/msctabsstatus.php:41
 msgid "error : the bundle_id given does not exists in the database."
-msgstr ""
+msgstr "feil: bundle_id som er angitt, eksisterer ikke i databasen."
 
 #: modules/msc/msc/msctabsstatus.php:46
 #, php-format
 msgid "Bundle '%s' state concerning <b>one</b> command on <b>one</b> computer"
-msgstr ""
+msgstr "Bunt '%s' tilstanden berører <b>en</b> kommando på <b>en</b> maskin"
 
 #: modules/msc/msc/msctabsstatus.php:47
 #, php-format
 msgid "Bundle '%s' state concerning <b>one</b> command on <b>%s</b> computers"
-msgstr ""
+msgstr "Bunt '%s' tilstanden berører <b>en</b> kommando på<b>%s</b> maskiner"
 
 #: modules/msc/msc/msctabsstatus.php:49
 #, php-format
 msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>one</b> computer"
-msgstr ""
+msgstr "Bunt '%s' tilstanden berører <b>%s</b>kommandoer på <b>en</b> maskin"
 
 #: modules/msc/msc/msctabsstatus.php:50
 #, php-format
 msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers"
-msgstr ""
+msgstr "Bunt '%s tilstanden berører <b>%s</b>kommando på <b>%s</b> maskiner"
 
 #: modules/msc/msc/msctabsstatus.php:54
 msgid "error : cmd_id or bundle_id must be given"
-msgstr ""
+msgstr "feil: cmd_id eller bunt_id må angis"
 
 #: modules/msc/msc/msctabsstatus.php:61
 msgid "<b>No</b> package installation was successful"
-msgstr ""
+msgstr "<b>Ingen</b> pakkeinstallasjon var vellykket"
 
 #: modules/msc/msc/msctabsstatus.php:62
 msgid "<b>One</b> package installation was successful"
-msgstr ""
+msgstr "<b>En</b> pakkeinstallasjon var vellykket"
 
 #: modules/msc/msc/msctabsstatus.php:63
 #, php-format
 msgid "<b>%s</b> packages installation were successful"
-msgstr ""
+msgstr "<b>%s</b> pakkeinstallasjoner var vellykket"
 
 #: modules/msc/msc/msctabsstatus.php:64
 msgid "Success: %percent% (%d packages)"
-msgstr ""
+msgstr "Suksess: %prosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:67
 msgid "<b>No</b> package installation is stopped"
-msgstr ""
+msgstr "<b>Ingen</b> pakkeinstallasjon er stoppet"
 
 #: modules/msc/msc/msctabsstatus.php:68
 msgid "<b>One</b> package installation is stopped"
-msgstr ""
+msgstr "<b>En</b> pakkeinstallasjon er stoppet"
 
 #: modules/msc/msc/msctabsstatus.php:69
 #, php-format
 msgid "<b>%s</b> packages installation are stopped"
-msgstr ""
+msgstr "<b>%s</b> pakkeinstallasjoner er stoppet"
 
 #: modules/msc/msc/msctabsstatus.php:70
 msgid "Stopped: %percent% (%d packages)"
-msgstr ""
+msgstr "Stoppet: %prosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:73
 msgid "<b>No</b> package installation is paused"
-msgstr ""
+msgstr "<b>Ingen</b> pakkeinstallasjon er pauset"
 
 #: modules/msc/msc/msctabsstatus.php:74
 msgid "<b>One</b> package installation is paused"
-msgstr ""
+msgstr "<b>En</b> pakkeinstallasjon er pauset"
 
 #: modules/msc/msc/msctabsstatus.php:75
 #, php-format
 msgid "<b>%s</b> packages installation are paused"
-msgstr ""
+msgstr "<b>%s</b> pakkeinstallajonen er pauset"
 
 #: modules/msc/msc/msctabsstatus.php:76
 msgid "Paused: %percent% (%d packages)"
-msgstr ""
+msgstr "Pauset: %prosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:79
 msgid "<b>No</b> package installation is in progress"
-msgstr ""
+msgstr "<b>Ingen</b> pakke installasjon pågår"
 
 #: modules/msc/msc/msctabsstatus.php:80
 msgid "<b>One</b> package installation is in progress"
-msgstr ""
+msgstr "<b>En</b>pakke installasjon pågår"
 
 #: modules/msc/msc/msctabsstatus.php:81
 #, php-format
 msgid "<b>%s</b> packages installation are in progress"
-msgstr ""
+msgstr "<b>%s</b> pakke installasjoner pågår"
 
 #: modules/msc/msc/msctabsstatus.php:82
 msgid "In progress: %percent% (%d packages)"
-msgstr ""
+msgstr "Pågår: %prsent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:85
 msgid "<b>No</b> package installation failed"
-msgstr ""
+msgstr "<b>Ingen</b> pakkeinstallasjon feilet"
 
 #: modules/msc/msc/msctabsstatus.php:86
 msgid "<b>One</b> package installation failed"
-msgstr ""
+msgstr "<b>En</b> pakkeinstallasjon feilet"
 
 #: modules/msc/msc/msctabsstatus.php:87
 #, php-format
 msgid "<b>%s</b> packages installation failed"
-msgstr ""
+msgstr "<b>%s</b> pakkeinstallasjonen feilet"
 
 #: modules/msc/msc/msctabsstatus.php:88
 msgid "Failed: %percent% (%d packages)"
-msgstr ""
+msgstr "Feilet: %prosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:94
 msgid "<b>No</b> computer was successfully deployed"
-msgstr ""
+msgstr "<b>Ingen</b> maskin ble utrullet"
 
 #: modules/msc/msc/msctabsstatus.php:95
 msgid "<b>One</b> computer was successfully deployed"
-msgstr ""
+msgstr "<b>En</b> maskin ble utrullet"
 
 #: modules/msc/msc/msctabsstatus.php:96
 #, php-format
 msgid "<b>%s</b> computers were successfully deployed"
-msgstr ""
+msgstr "<b>%s</b> maskiner ble utrullet"
 
 #: modules/msc/msc/msctabsstatus.php:97
 msgid "Success: %percent% (%d computers)"
-msgstr ""
+msgstr "Suksess: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:100
 msgid "<b>No</b> computer is stopped"
-msgstr ""
+msgstr "<b>Ingen</b> maskiner er stoppet"
 
 #: modules/msc/msc/msctabsstatus.php:101
 msgid "<b>One</b> computer is stopped"
-msgstr ""
+msgstr "<b>En</b> maskin er stoppet"
 
 #: modules/msc/msc/msctabsstatus.php:102
 #, php-format
 msgid "<b>%s</b> computers are stopped"
-msgstr ""
+msgstr "<b>%s</b> maskiner er stoppet"
 
 #: modules/msc/msc/msctabsstatus.php:103
 msgid "Stopped: %percent% (%d computers)"
-msgstr ""
+msgstr "Stoppet: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:106
 msgid "<b>No</b> computer is paused"
-msgstr ""
+msgstr "<b>Ingen</b> maskiner er pauset"
 
 #: modules/msc/msc/msctabsstatus.php:107
 msgid "<b>One</b> computer is paused"
-msgstr ""
+msgstr "<b>En</b> maskin er pauset"
 
 #: modules/msc/msc/msctabsstatus.php:108
 #, php-format
 msgid "<b>%s</b> computers are paused"
-msgstr ""
+msgstr "<b>%s</b> maskiner er pauset"
 
 #: modules/msc/msc/msctabsstatus.php:109
 msgid "Paused: %percent% (%d computers)"
-msgstr ""
+msgstr "Pauset: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:112
 msgid "<b>No</b> computer is running a deployment"
-msgstr ""
+msgstr "<b>Ingen</b> maskiner kjører utrulling"
 
 #: modules/msc/msc/msctabsstatus.php:113
 msgid "<b>One</b> computer is running a deployment"
-msgstr ""
+msgstr "<b>En</b> maskin kjører utrulling"
 
 #: modules/msc/msc/msctabsstatus.php:114
 #, php-format
 msgid "<b>%s</b> computers are running a deployment"
-msgstr ""
+msgstr "<b>%s</b> maskiner kjører utrulling"
 
 #: modules/msc/msc/msctabsstatus.php:115
 msgid "In progress: %percent% (%d computers)"
-msgstr ""
+msgstr "Pågår: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:118
 msgid "<b>No</b> computer failed to deploy"
-msgstr ""
+msgstr "<b>Ingen</b> maskiner feilet i utrulling"
 
 #: modules/msc/msc/msctabsstatus.php:119
 msgid "<b>One</b> computer failed to deploy"
-msgstr ""
+msgstr "<b>En</b> maskin feilet i utrulling"
 
 #: modules/msc/msc/msctabsstatus.php:120
 #, php-format
 msgid "<b>%s</b> computers failed to deploy"
-msgstr ""
+msgstr "<b>%s</b> maskiner feilet i utrulling"
 
 #: modules/msc/msc/msctabsstatus.php:121
 msgid "Failed: %percent% (%d computers)"
-msgstr ""
+msgstr "Feilet: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:127 modules/msc/msc/msctabsstatus.php:129
 msgid "is"
-msgstr ""
+msgstr "er"
 
 #: modules/msc/msc/msctabsstatus.php:127 modules/msc/msc/msctabsstatus.php:129
 msgid "are"
-msgstr ""
+msgstr "er"
 
 #: modules/msc/msc/msctabsstatus.php:128
 msgid "has"
-msgstr ""
+msgstr "har"
 
 #: modules/msc/msc/msctabsstatus.php:128
 msgid "have"
-msgstr ""
+msgstr "har"
 
 #: modules/msc/msc/msctabsstatus.php:136 modules/msc/msc/statuscsv.php:110
 msgid "waiting to upload"
-msgstr ""
+msgstr "venter på å laste opp"
 
 #: modules/msc/msc/msctabsstatus.php:136 modules/msc/msc/msctabsstatus.php:138
 #: modules/msc/msc/msctabsstatus.php:140 modules/msc/msc/msctabsstatus.php:142
 #, php-format
 msgid "(with %s already try)"
-msgstr ""
+msgstr "(med%s allerede forsøkt)"
 
 #: modules/msc/msc/msctabsstatus.php:137
 msgid "uploading"
-msgstr ""
+msgstr "laster opp"
 
 #: modules/msc/msc/msctabsstatus.php:138 modules/msc/msc/statuscsv.php:113
 msgid "waiting to execute"
-msgstr ""
+msgstr "venter på å utføre"
 
 #: modules/msc/msc/msctabsstatus.php:139
 msgid "executing"
-msgstr ""
+msgstr "utfører"
 
 #: modules/msc/msc/msctabsstatus.php:140 modules/msc/msc/statuscsv.php:116
 msgid "waiting to suppress"
-msgstr ""
+msgstr "venter på å undertrykke"
 
 #: modules/msc/msc/msctabsstatus.php:141
 msgid "suppressing"
-msgstr ""
+msgstr "undertrykker"
 
 #: modules/msc/msc/msctabsstatus.php:142
 msgid "waiting to inventory"
-msgstr ""
+msgstr "venter på inventering"
 
 #: modules/msc/msc/msctabsstatus.php:143
 msgid "inventoring"
-msgstr ""
+msgstr "inventerer"
 
 #: modules/msc/msc/msctabsstatus.php:146 modules/msc/msc/statuscsv.php:120
 msgid "failed during upload"
-msgstr ""
+msgstr "feilet under opplasting"
 
 #: modules/msc/msc/msctabsstatus.php:146 modules/msc/msc/msctabsstatus.php:149
 #: modules/msc/msc/msctabsstatus.php:152 modules/msc/msc/msctabsstatus.php:155
 #, php-format
 msgid "(with %s being unreachable)"
-msgstr ""
+msgstr "(med%s som ikke kan nås)"
 
 #: modules/msc/msc/msctabsstatus.php:147
 msgid "Upload Failed: %percent% (%d computers)"
-msgstr ""
+msgstr "Opplasting feilet: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:148
 msgid "Upload Failed: %percent% (%d packages)"
-msgstr ""
+msgstr "Opplasting feilet:%pprosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:149 modules/msc/msc/statuscsv.php:122
 msgid "failed during execution"
-msgstr ""
+msgstr "feilet under utføring"
 
 #: modules/msc/msc/msctabsstatus.php:150
 msgid "Execution Failed: %percent% (%d computers)"
-msgstr ""
+msgstr "Utførelse feilet: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:151
 msgid "Execution Failed: %percent% (%d packages)"
-msgstr ""
+msgstr "Utførelse feilet: %prosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:152 modules/msc/msc/statuscsv.php:124
 msgid "failed during suppression"
-msgstr ""
+msgstr "feilet under undertrykking"
 
 #: modules/msc/msc/msctabsstatus.php:153
 msgid "Delete Failed: %percent% (%d computers)"
-msgstr ""
+msgstr "Sletting feilet: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:154
 msgid "Delete Failed: %percent% (%d packages)"
-msgstr ""
+msgstr "Sletting feilet: %prosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:155
 msgid "failed during inventory"
-msgstr ""
+msgstr "feilet under inventering"
 
 #: modules/msc/msc/msctabsstatus.php:156
 msgid "Inventory Failed: %percent% (%d computers)"
-msgstr ""
+msgstr "Inventering feilet: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:157
 msgid "Inventory Failed: %percent% (%d packages)"
-msgstr ""
+msgstr "Inventering feilet: %prosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:158
 msgid "out of the valid period of execution"
-msgstr ""
+msgstr "utenfor gyldig utførelsesperiode"
 
 #: modules/msc/msc/msctabsstatus.php:159
 msgid "Over-timed: %percent% (%d computers)"
-msgstr ""
+msgstr "Overskred tid for %prosent av (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:160
 msgid "Over-timed: %percent% (%d packages)"
-msgstr ""
+msgstr "Overskred tid for %prosent (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:161
 msgid "failed during awake"
-msgstr ""
+msgstr "feilet under oppvåkning"
 
 #: modules/msc/msc/msctabsstatus.php:162
 msgid "Awake Failed: %percent% (%d computers)"
-msgstr ""
+msgstr "Oppvåkning feilet: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:163
 msgid "Awake Failed: %percent% (%d packages)"
-msgstr ""
+msgstr "Oppvåkning feilet: %prosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:164
 msgid "failed during reboot"
-msgstr ""
+msgstr "feilet inder omstart"
 
 #: modules/msc/msc/msctabsstatus.php:165
 msgid "Reboot Failed: %percent% (%d computers)"
-msgstr ""
+msgstr "Omstart feilet: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:166
 msgid "Reboot Failed: %percent% (%d packages)"
-msgstr ""
+msgstr "Omstart feilet: %prosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:167
 msgid "failed during halt"
-msgstr ""
+msgstr "feilet under stopping"
 
 #: modules/msc/msc/msctabsstatus.php:168
 msgid "Halt Failed: %percent% (%d computers)"
-msgstr ""
+msgstr "Stopp feilet: %prosent% (%d maskiner)"
 
 #: modules/msc/msc/msctabsstatus.php:169
 msgid "Halt Failed: %percent% (%d packages)"
-msgstr ""
+msgstr "Stopp feilet: %prosent% (%d pakker)"
 
 #: modules/msc/msc/msctabsstatus.php:277
 msgid "One"
-msgstr ""
+msgstr "En"
 
 #: modules/msc/msc/launch.php:82
 msgid "Your start and end dates are not coherent, please check them.<br/>"
-msgstr ""
+msgstr "Start- og sluttdatoer er ikke sammenfallende, sjekk dem.<br/>"
 
 #: modules/msc/msc/launch.php:145 modules/msc/msc/launch.php:356
 msgid "now"
-msgstr ""
+msgstr "Nå"
 
 #: modules/msc/msc/launch.php:147 modules/msc/msc/launch.php:359
 msgid "never"
-msgstr ""
+msgstr "Aldri"
 
 #: modules/msc/msc/launch.php:472
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
-msgstr ""
+msgstr "Enkel avanser start: handling \"%s\" på\" %s\""
 
 #: modules/msc/msc/launch.php:483
 #, php-format
 msgid "Software Convergence: action \"%s\" on \"%s\""
-msgstr ""
+msgstr "Programvarekonvergens: handling \"%s\" på\"%s\""
 
 #: modules/msc/msc/launch.php:486
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
-msgstr ""
+msgstr "Avansert start for gruppe : handling\"%s\" på\"%s\""
 
 #: modules/msc/msc/launch.php:520 modules/msc/msc/launch.php:634
 msgid "The command must start after"
-msgstr ""
+msgstr "Kommandoen må starte etter"
 
 #: modules/msc/msc/launch.php:532 modules/msc/msc/launch.php:643
 msgid "The command must stop before"
-msgstr ""
+msgstr "Kommandoen må stoppe før"
 
 #: modules/msc/msc/launch.php:558
 msgid "Script parameters"
-msgstr ""
+msgstr "Skript parametere"
 
 #: modules/msc/msc/launch.php:570
 msgid "Start script"
-msgstr ""
+msgstr "Start skript"
 
 #: modules/msc/msc/launch.php:582
 msgid "Do an inventory after a successful execution"
-msgstr ""
+msgstr "Kjør en inventering etter en vellykket utførelse"
 
 #: modules/msc/msc/launch.php:588
 msgid "Reboot client"
-msgstr ""
+msgstr "Start om klienten"
 
 #: modules/msc/msc/launch.php:594
 msgid "Halt client"
-msgstr ""
+msgstr "Stopp klient"
 
 #: modules/msc/msc/launch.php:620
 msgid "Convergence is active"
-msgstr ""
+msgstr "Konvergens er aktiv"
 
 #: modules/msc/msc/launch.php:657
 msgid "Example for lunch and night (24h format): 12-14,20-8"
-msgstr ""
+msgstr "Eksempel på lunsj og natt (24-timers format): 12-14,20-8"
 
 #: modules/msc/msc/launch.php:674
 msgid "bandwidth throttling (ko)"
@@ -1893,39 +1927,39 @@ msgstr "<in ko>"
 
 #: modules/msc/msc/launch.php:678
 msgid "Dynamic parameters Packages"
-msgstr ""
+msgstr "Dynamiske parameterpakker"
 
 #: modules/msc/msc/launch.php:683
 msgid "Reboot required"
-msgstr ""
+msgstr "Omstart kreves"
 
 #: modules/msc/msc/launch.php:688
 msgid "Shutdown required"
-msgstr ""
+msgstr "Nedstenging kreves"
 
 #: modules/msc/msc/launch.php:693
 msgid "Delay install"
-msgstr ""
+msgstr "Utsett installering"
 
 #: modules/msc/msc/launch.php:698 modules/msc/msc/launch.php:704
 msgid "Time constraint"
-msgstr ""
+msgstr "Tidsbegrensning"
 
 #: modules/msc/msc/launch.php:698
 msgid "Successful transfer rate"
-msgstr ""
+msgstr "Vellykket overføringsfart"
 
 #: modules/msc/msc/launch.php:710
 msgid "Install constraint"
-msgstr ""
+msgstr "Installer begrensning"
 
 #: modules/msc/msc/launch.php:717
 msgid "Run the deployment at the specific time"
-msgstr ""
+msgstr "Kjør utrullingen på utsatt tid"
 
 #: modules/msc/msc/launch.php:727
 msgid "Spooling priority"
-msgstr ""
+msgstr "Spolingsprioritet"
 
 #: modules/msc/msc/launch.php:733
 msgid "high priority"
@@ -1937,27 +1971,27 @@ msgstr "ordinær prioritet"
 
 #: modules/msc/msc/launch.php:738
 msgid "Install Spooling"
-msgstr ""
+msgstr "Installer spoling"
 
 #: modules/msc/msc/launch.php:745
 msgid "Syncthing deployment"
-msgstr ""
+msgstr "Synker utrulling"
 
 #: modules/msc/msc/launch.php:816
 msgid "Probe status"
-msgstr ""
+msgstr "Test status"
 
 #: modules/msc/msc/vnc_client_java.php:71
 msgid "Connection Succeeded !"
-msgstr ""
+msgstr "Tilkoblingen lyktes!"
 
 #: modules/msc/msc/vnc_client_java.php:73
 msgid "This connection will be automatically shut down in 60 minutes."
-msgstr ""
+msgstr "Denne forbindelsen blir automatisk stengt om 60 minutter."
 
 #: modules/msc/msc/vnc_client_java.php:75
 msgid "Please close this window when you are done."
-msgstr ""
+msgstr "Lukk dette vinduet når du er ferdig."
 
 #: modules/msc/msc/vnc_client_java.php:168
 msgid ""
@@ -1968,195 +2002,202 @@ msgid ""
 "target='_blank' "
 "href='http://www.java.com/verify/'>http://www.java.com/verify/</a>."
 msgstr ""
+"Java Plugin er ikke installert på <u>din datamaskin</u>. Last ned den fra <a"
+" href='http://www.java.com/download/'>http://www.java.com/download/</a>, "
+"installer den, start nettleseren på nytt og bekreft deretter installasjonen "
+"på <a target='_blank' "
+"href='http://www.java.com/verify/'>http://www.java.com/verify</a>/."
 
 #: modules/msc/msc/delete.php:57
 msgid "Delete this command"
-msgstr ""
+msgstr "Slett denne kommandoen"
 
 #: modules/msc/msc/local_proxy.php:68
 msgid "Random (indicate number of proxies) : "
-msgstr ""
+msgstr "Tilfeldig (angi antall proxier):"
 
 #: modules/msc/msc/local_proxy.php:74
 msgid "Or designate the proxies manually below : "
-msgstr ""
+msgstr "Eller tilegn proxiene manuelt nedenfor:"
 
 #: modules/msc/msc/local_proxy.php:79
 msgid "Computers in this command"
-msgstr ""
+msgstr "Datamaskiner i denne kommandoen"
 
 #: modules/msc/msc/local_proxy.php:99
 msgid "Local proxies"
-msgstr ""
+msgstr "Lokale proxier"
 
 #: modules/msc/msc/local_proxy.php:217
 msgid "Local Proxy Mode"
-msgstr ""
+msgstr "Lokal Proxy Modus"
 
 #: modules/msc/msc/local_proxy.php:226
 msgid "Maximum number of simultaneous connections to a proxy"
-msgstr ""
+msgstr "Maksimalt antall samtidige tilkoblinger til en proxy"
 
 #: modules/msc/msc/local_proxy.php:248
 msgid "Local proxies selection"
-msgstr ""
+msgstr "Valg av lokale proxier"
 
 #: modules/msc/msc/connection_error.php:24
 msgid "Remote control of :"
-msgstr ""
+msgstr "Fjernkontroll av:"
 
 #: modules/msc/msc/msctabsstop.php:124
 #, php-format
 msgid "Stop %s %s on this group"
-msgstr ""
+msgstr "Stopp %s %s på denne gruppen"
 
 #: modules/msc/msc/msctabsstop.php:126
 #, php-format
 msgid "Stop %s %s on host %s"
-msgstr ""
+msgstr "Stopp %s %s på vert %s"
 
 #: modules/msc/msc/package_detail.php:37
 msgid "Label"
-msgstr ""
+msgstr "Etikett"
 
 #: modules/msc/msc/msctabsplay.php:125
 #, php-format
 msgid "Start %s %s on this group"
-msgstr ""
+msgstr "Start %s %s på denne gruppen"
 
 #: modules/msc/msc/msctabsplay.php:127
 #, php-format
 msgid "Start %s %s on host %s"
-msgstr ""
+msgstr "Start %s %s på vert %s"
 
 #: modules/msc/msc/statuscsv.php:91
 msgid "uuid"
-msgstr ""
+msgstr "uuid"
 
 #: modules/msc/msc/statuscsv.php:92
 msgid "host"
-msgstr ""
+msgstr "vert"
 
 #: modules/msc/msc/statuscsv.php:93
 msgid "current state"
-msgstr ""
+msgstr "nåværende tilstand"
 
 #: modules/msc/msc/statuscsv.php:94
 msgid "start date"
-msgstr ""
+msgstr "start dato"
 
 #: modules/msc/msc/statuscsv.php:95
 msgid "end date"
-msgstr ""
+msgstr "sluttdato"
 
 #: modules/msc/msc/statuscsv.php:103
 msgid "title"
-msgstr ""
+msgstr "tittel"
 
 #: modules/msc/msc/statuscsv.php:104
 msgid "total"
-msgstr ""
+msgstr "totalt"
 
 #: modules/msc/msc/statuscsv.php:105
 msgid "computers successfully deployed"
-msgstr ""
+msgstr "datamaskinene er vellykket utrullet"
 
 #: modules/msc/msc/statuscsv.php:106
 msgid "computers stopped"
-msgstr ""
+msgstr "maskinene er stoppet"
 
 #: modules/msc/msc/statuscsv.php:107
 msgid "computers paused"
-msgstr ""
+msgstr "maskinene er pauset"
 
 #: modules/msc/msc/statuscsv.php:108
 msgid "computers out of the valid period"
-msgstr ""
+msgstr "maskiner er utenfor gyldig periode"
 
 #: modules/msc/msc/statuscsv.php:109
 msgid "computers running a deployment"
-msgstr ""
+msgstr "maskiner kjører en utrulling"
 
 #: modules/msc/msc/statuscsv.php:111
 msgid "waiting to upload and already try"
-msgstr ""
+msgstr "venter på å laste opp og allerede prøve"
 
 #: modules/msc/msc/statuscsv.php:112
 msgid "running upload"
-msgstr ""
+msgstr "kjører opplasting"
 
 #: modules/msc/msc/statuscsv.php:114
 msgid "waiting to execute and already try"
-msgstr ""
+msgstr "venter på å utføre og allerede prøve"
 
 #: modules/msc/msc/statuscsv.php:115
 msgid "running execution"
-msgstr ""
+msgstr "Kjører utførelse"
 
 #: modules/msc/msc/statuscsv.php:117
 msgid "waiting to suppress and already try"
-msgstr ""
+msgstr "venter på å undertrykke og allerede prøve"
 
 #: modules/msc/msc/statuscsv.php:118
 msgid "running suppression"
-msgstr ""
+msgstr "kjører undertrykkelse"
 
 #: modules/msc/msc/statuscsv.php:119
 msgid "computers failed to deploy"
-msgstr ""
+msgstr "datamaskiner mislyktes i å rulle ut"
 
 #: modules/msc/msc/statuscsv.php:121
 msgid "unreachable during upload"
-msgstr ""
+msgstr "utilgjengelig under opplasting"
 
 #: modules/msc/msc/statuscsv.php:123
 msgid "unreachable during execution"
-msgstr ""
+msgstr "utilgjengelig under utføring"
 
 #: modules/msc/msc/statuscsv.php:125
 msgid "unreachable during suppression"
-msgstr ""
+msgstr "utilgjengelig under undertrykkelse"
 
 #: modules/msc/msc/ajaxPingProbe.php:37 modules/msc/msc/ajaxPingProbe.php:50
 #: modules/msc/msc/ajaxPingProbe.php:63 modules/msc/msc/ajaxPingProbe.php:72
 msgid ""
 "Connection was refused by the other side while trying to probe the machine"
 msgstr ""
+"Tilkobling ble avvist av den andre siden mens du prøvde å søke etter "
+"maskinen"
 
 #: modules/msc/msc/ajaxPingProbe.php:39 modules/msc/msc/ajaxPingProbe.php:52
 #: modules/msc/msc/ajaxPingProbe.php:65 modules/msc/msc/ajaxPingProbe.php:74
 msgid "Error scheduler-side !"
-msgstr ""
+msgstr "Feil på planlegger-siden!"
 
 #: modules/msc/msc/ajaxPingProbe.php:42 modules/msc/msc/ajaxPingProbe.php:68
 msgid "Ping failed"
-msgstr ""
+msgstr "Ping feilet"
 
 #: modules/msc/msc/ajaxPingProbe.php:45
 msgid "Ping succeeded"
-msgstr ""
+msgstr "Ping lyktes"
 
 #: modules/msc/msc/ajaxPingProbe.php:55
 msgid "SSH connection failed"
-msgstr ""
+msgstr "SSH tilkobling feilet"
 
 #: modules/msc/msc/ajaxPingProbe.php:58 modules/msc/msc/ajaxPingProbe.php:80
 #, php-format
 msgid "Target platform is %s"
-msgstr ""
+msgstr "Målplattformen er %s"
 
 #: modules/msc/msc/ajaxPingProbe.php:77
 msgid "Ping succeeded, SSH connection failed"
-msgstr ""
+msgstr "Ping lyktes, SSH tilkobling feilet"
 
 #: modules/msc/msc/ajaxPingProbe.php:85
 msgid "No probe performed"
-msgstr ""
+msgstr "Ikke noe søk utført"
 
 #: modules/msc/msc/convergence.php:116
 msgid "Convergence on "
-msgstr ""
+msgstr "Konvergens på"
 
 #: modules/msc/msc/localSidebar.php:27
 msgid "Repository"
-msgstr ""
+msgstr "Lager"
