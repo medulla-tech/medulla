@@ -45,8 +45,17 @@ def action(objectxmpp, action, sessionid, data, msg, ret, dataobj):
     logger.debug("=====================================================")
     logger.debug("call %s from %s"%(plugin, msg['from']))
     logger.debug("=====================================================")
-
-    MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, ret, dataobj)
+    try:
+        MessagesAgentFromChatroomConfig(objectxmpp,
+                                        action,
+                                        sessionid,
+                                        data,
+                                        msg,
+                                        ret,
+                                        dataobj)
+    except Exception:
+        sendErrorConnectionConf(objectxmpp, sessionid, msg)
+        logger.error("\n%s"%(traceback.format_exc()))
 
 def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, ret, dataobj):
     logger.debug("MessagesAgentFromChatroomConfig")
@@ -61,7 +70,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         data['information'] = json.loads(base64.b64decode(data['completedatamachine']))
         del data['completedatamachine']
         json.dumps(data, indent = 4)
-    except:
+    except Exception:
         logger.debug("decode msg error from %s"%(codechaine))
         sendErrorConnectionConf(objectxmpp, sessionid, msg)
         return
@@ -74,8 +83,8 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         logger.debug("missing authentification from %s"%(codechaine))
         sendErrorConnectionConf(objectxmpp, sessionid, msg)
         return
-    #jfkjfk voir parameter a ajouter
-    cipher = AESCipher("abcdefghijklnmopqrstuvwxyz012345")
+
+    cipher = AESCipher(objectxmpp.config.keyAES32)
 
     decrypted = cipher.decrypt(data['codechaine'])
     if decrypted != codechaine:
@@ -203,7 +212,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                     break
             except KeyError:
                 logger.error("Error algo rule 3")
-                traceback.print_exc(file=sys.stdout)
+                logger.error("\n%s"%(traceback.format_exc()))
                 continue
 
         # Subnet Rule : 4
@@ -322,7 +331,8 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                         objectxmpp.domaindefault,
                         objectxmpp.config.defaultrelayserverbaseurlguacamole]
     try:
-        listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2], "static")
+        listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2],
+                                                                         "static")
         z = [listars[x] for x in listars]
         z1 = sorted(z, key=operator.itemgetter(4))
         arsjid = XmppMasterDatabase().getRelayServerfromjid("rspulse@pulse")
@@ -343,6 +353,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         sendErrorConnectionConf(objectxmpp,sessionid,msg)
         logger.error("Unable to configure the relay server : missing")
         logger.error("\n%s"%(traceback.format_exc()))
+
 def msg_log(msg_header, hostname, user, result):
     logger.debug("%s Rule selects " \
                  "the relay server for machine " \
