@@ -831,9 +831,9 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->pop();
     if (quick_get('actionconvergenceint') == 1){
         $f->addButton("bconfirm", _T("Reconfigure", "msc"));
-        $f->addButton("bpdesactiver", _T("Deactivate Convergence", "msc"));
+        $f->addButton("bpdesactiver", _T("Disable", "msc"));
     }else{
-        $f->addValidateButton("bconfirm");
+        $f->addValidateButton("bconfirm", _T("Enable", "msc"));
     }
     $f->addCancelButton("bback");
     $f->display();
