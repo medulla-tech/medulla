@@ -106,8 +106,8 @@ function xmlrpc_get_msc_listhost_commandid($command_id){
     return xmlCall('msc.get_msc_listhost_commandid', array($command_id));
 }
 
-function xmlrpc_get_msc_listuuid_commandid($command_id){
-    return xmlCall('msc.get_msc_listuuid_commandid', array($command_id));
+function xmlrpc_get_msc_listuuid_commandid($command_id, $filter="", $start=0, $end=0){
+    return xmlCall('msc.get_msc_listuuid_commandid', array($command_id, $filter, $start, $end));
 }
 
 function xmlrpc_get_deployxmppscheduler($login, $min, $max, $flit){

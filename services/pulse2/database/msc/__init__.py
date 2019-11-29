@@ -577,7 +577,9 @@ class MscDatabase(DatabaseHelper):
             result['connect_as'] = x.connect_as
         return result
 
-    def get_msc_listuuid_commandid(self, command_id):
+    @DatabaseHelper._sessionm
+    def get_msc_listuuid_commandid(self, session, command_id, filter, start, limit):
+        start = int(start)
         sqlselect="""
             SELECT
                 DISTINCT commands_on_host.start_date as dated,
@@ -601,6 +603,34 @@ class MscDatabase(DatabaseHelper):
                 return ""
         else:
             return ""
+
+        query = session.query(Target.target_uuid).distinct()\
+        .filter(CommandsOnHost.fk_commands == command_id)\
+        .filter(CommandsOnHost.start_date <= datestartstr)\
+        .filter(CommandsOnHost.end_date >= dateendstr)\
+        .join(CommandsOnHost, Target.id == CommandsOnHost.fk_target)
+
+        if start != -1:
+            query = query.offset(int(start)).limit(int(limit))
+        query=query.count()
+
+        query1 = session.query(Target.target_uuid).distinct()\
+        .filter(CommandsOnHost.fk_commands == command_id)\
+        .filter(CommandsOnHost.start_date <= datestartstr)\
+        .filter(CommandsOnHost.end_date >= dateendstr)\
+        .join(CommandsOnHost, Target.id == CommandsOnHost.fk_target)
+        if start != -1:
+            query1 = query1.offset(int(start)).limit(int(limit))
+
+        query1 = query1.all()
+        commands = ''
+        if query1 is not None:
+            commands = [element[0].split('UUID')[1] for element in query1]
+            commands = ','.join(commands)
+            return {'total': query, 'list': commands}
+        else:
+            return {'total': 0, 'list': commands}
+
         sqlselect="""
             SELECT
                 GROUP_CONCAT(DISTINCT SUBSTR(target_uuid, 5) SEPARATOR ',') as listuuid
@@ -617,8 +647,9 @@ class MscDatabase(DatabaseHelper):
                     commands_on_host.fk_commands = %s  and
                     commands_on_host.start_date <= '%s' and
                     commands_on_host.end_date >= '%s'
+                    %s
                     ) as listhost;
-                        """% (command_id, datestartstr, dateendstr)
+                        """% (command_id, datestartstr, dateendstr, limit)
 
         resultsql = self.db.execute(sqlselect)
 

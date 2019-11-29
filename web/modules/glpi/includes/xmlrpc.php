@@ -200,12 +200,11 @@ function glpi_version(){
   return xmlCall("glpi.glpi_version", []);
 }
 
-function  xmlrpc_get_machine_for_hostname($str_list_hostname){
-  return xmlCall("glpi.get_machine_for_hostname", [$str_list_hostname]);
+function  xmlrpc_get_machine_for_hostname($str_list_hostname, $filter="", $start=0, $end=0){
+  return xmlCall("glpi.get_machine_for_hostname", [$str_list_hostname, $filter, $start, $end]);
 }
-
-function  xmlrpc_get_machine_for_id($str_list_uuid){
-  return xmlCall("glpi.get_machine_for_id", [$str_list_uuid]);
+function  xmlrpc_get_machine_for_id($str_list_uuid, $filter, $start, $end){
+  return xmlCall("glpi.get_machine_for_id", [$str_list_uuid, $filter, $start, $end]);
 }
 
 
