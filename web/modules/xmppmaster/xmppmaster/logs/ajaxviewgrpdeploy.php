@@ -514,7 +514,6 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
                                     "xmppmaster",
                                     "xmppmaster");
   $n = new OptimizedListInfos($info_from_machines[1], _T("Machine Name", "xmppmaster"));
-  $n->setCssClass("package");
   $n->addExtraInfo($info_from_machines[2], _T("Description", "glpi"));
   $n->addExtraInfo($info_from_machines[3], _T("Operating System", "xmppmaster"));
   $n->addExtraInfo($info_from_machines[7], _T("Status", "xmppmaster"));
