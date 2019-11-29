@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 11:25+0200\n"
+"POT-Creation-Date: 2019-11-29 09:55+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Packages"
 msgstr "Packages"
 
-#: modules/pkgs/infoPackage.inc.php:45 modules/pkgs/pkgs/rulesList.php:30
+#: modules/pkgs/infoPackage.inc.php:45 modules/pkgs/pkgs/rulesList.php:29
 #: modules/pkgs/pkgs/localSidebar.php:30
 msgid "Rules list"
 msgstr "Liste des règles"
@@ -231,7 +231,7 @@ msgstr "Ajouter une règle"
 msgid "The rule %s has been created"
 msgstr "La règle %s a été créée"
 
-#: modules/pkgs/pkgs/addRule.php:59 modules/pkgs/pkgs/rulesList.php:71
+#: modules/pkgs/pkgs/addRule.php:59 modules/pkgs/pkgs/rulesList.php:69
 #: modules/pkgs/pkgs/editRule.php:64
 msgid "Rule Name"
 msgstr "Nom de la règle"
@@ -335,18 +335,18 @@ msgstr "Le package a été correctement édité"
 msgid "Files successfully added to the package <b>%s (%s)</b>"
 msgstr "Fichiers ajoutés au package <b>%s (%s)</b>"
 
-#: modules/pkgs/pkgs/edit.php:131 modules/pkgs/pkgs/add.php:136
+#: modules/pkgs/pkgs/edit.php:129 modules/pkgs/pkgs/add.php:136
 #: modules/pkgs/pkgs/associate_files.php:85
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "L'association de fichiers a échoué %s"
 
-#: modules/pkgs/pkgs/edit.php:135 modules/pkgs/pkgs/add.php:142
+#: modules/pkgs/pkgs/edit.php:133 modules/pkgs/pkgs/add.php:142
 #: modules/pkgs/pkgs/associate_files.php:88
 msgid "Failed to associate files"
 msgstr "L'association de fichiers a échoué"
 
-#: modules/pkgs/pkgs/edit.php:144
+#: modules/pkgs/pkgs/edit.php:142
 msgid "Package failed to save"
 msgstr "La sauvegarde du package a échoué"
 
@@ -460,31 +460,32 @@ msgstr "Cliquer ici pour sélectionner les fichiers"
 msgid "Upload Queued Files"
 msgstr "Transmettre les fichiers en attente"
 
-#: modules/pkgs/pkgs/rulesList.php:36
-msgid "The rule has been removed"
-msgstr "La règle a été supprimée"
+#: modules/pkgs/pkgs/rulesList.php:35
+#, php-format
+msgid "The rule %s has been removed"
+msgstr "La règle %s a été supprimée"
 
-#: modules/pkgs/pkgs/rulesList.php:73
+#: modules/pkgs/pkgs/rulesList.php:71
 msgid "Rules Order"
 msgstr "Ordre des règles"
 
-#: modules/pkgs/pkgs/rulesList.php:74
+#: modules/pkgs/pkgs/rulesList.php:72
 msgid "Rule Description"
 msgstr "Description de la règle"
 
-#: modules/pkgs/pkgs/rulesList.php:76
+#: modules/pkgs/pkgs/rulesList.php:74
 msgid "Raise order priority"
 msgstr "Augmenter la priorité de la règle"
 
-#: modules/pkgs/pkgs/rulesList.php:77
+#: modules/pkgs/pkgs/rulesList.php:75
 msgid "Lower order priority"
 msgstr "Diminuer la priorité de la règle"
 
-#: modules/pkgs/pkgs/rulesList.php:78
+#: modules/pkgs/pkgs/rulesList.php:76
 msgid "Edit rule"
 msgstr "Editer la règle"
 
-#: modules/pkgs/pkgs/rulesList.php:79
+#: modules/pkgs/pkgs/rulesList.php:77
 msgid "Delete rule"
 msgstr "Supprimer la rgle"
 
