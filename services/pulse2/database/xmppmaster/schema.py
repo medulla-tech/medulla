@@ -324,7 +324,7 @@ class Deploy(Base, XmppMasterDBObj):
     startcmd = Column(DateTime, default=None)
     endcmd = Column(DateTime, default=None)
     result = Column(Text )
-    host = Column(String(45), nullable=False)
+    host = Column(String(255), nullable=False)
     user = Column(String(45), nullable=False, default = "")
     login = Column(String(45), nullable=False)
     command = Column(Integer)
