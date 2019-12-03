@@ -1347,7 +1347,6 @@ class XmppMasterDatabase(DatabaseHelper):
         ret['log']= arraylist
         return ret
 
-    #jfkjf
     @DatabaseHelper._sessionm
     def get_machine_stop_deploy(self, session, cmdid , inventoryuuid):
         """

@@ -485,6 +485,9 @@ class RpcProxy(RpcProxyI):
         return MscDatabase().deleteBundle(bundle_id)
 
 
+    def extend_command(self, cmd_id, start_date, end_date):
+        MscDatabase().extend_command(cmd_id, start_date, end_date)
+
     def delete_command(self, cmd_id):
         """
         Deletes a command with all related sub-elements.

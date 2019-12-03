@@ -28,7 +28,6 @@ require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
 require_once('modules/dyngroup/includes/dyngroup.php');
-
 $from = $_GET['from'];
 $path =  explode('|', $from);
 $module = $path[0];
@@ -65,7 +64,8 @@ if ($gid) {
     $group = new Group($_GET['gid'], true);
     $cible = $group->getName();
 }
-
+$params["actionconvergenceint"] = $_GET['actionconvergenceint'];
+$params["actionconvergence"] = $_GET['actionconvergence'];
 $params["papi"] = $papi;
 $params["name"] = $hostname;
 $params["hostname"] = $hostname;
@@ -76,6 +76,7 @@ $params["pid"] = $pid;
 $params["create_directory"] = 'on';
 $params["next_connection_delay"] = web_def_delay();
 $params["max_connection_attempt"] = web_def_attempts();
+$params["papi"] = $papi;
 
 if ($_GET['editConvergence']) {
     $ServerAPI = new ServerAPI();
@@ -122,7 +123,7 @@ else {
     $params["maxbw"] = web_def_maxbw();
     $params["copy_mode"] = web_def_mode();
     $params["deployment_intervals"] = web_def_deployment_intervals();
-    $params["active"] = 'on';
+    $params["active"] = 'off';
 
     $halt = web_def_issue_halt_to();
     foreach ($halt as $h) {
@@ -139,7 +140,7 @@ $params['badvanced'] = True;
 
 $params['convergence'] = True;
 
-header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
+ header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
 exit;
 
 ?>

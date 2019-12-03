@@ -1053,6 +1053,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             ret = query.one()
             return ret.active
         except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.error("is_convergence_active")
             self.logger.warn("Error while fetching convergence command id for group %s (package UUID %s): %s" % (gid, package_id, e))
             return None
 
