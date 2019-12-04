@@ -463,7 +463,7 @@ if ($info['len'] != 0){
       if(isset($status['UUID'.$value]))
         $info_from_machines[7][] = $status['UUID'.$value];
       else
-        $info_from_machines[7][] = "";
+        $info_from_machines[7][] = '<span style="color:red">'._T('OFFLINE','xmppmaster').'</span>';
       $info_from_machines[8][] = 'UUID'.$value;
       $params[] = [
         'displayName' => $info_from_machines[2][$key],
@@ -474,7 +474,7 @@ if ($info['len'] != 0){
         'owner' => $info_from_machines[5][$key],
         'user' => $_GET['login'],
         'os' => $info_from_machines[3][$key],
-        'status' => isset($info_from_machines[7][$key]) ? $info_from_machines[7][$key] : "",
+        'status' => isset($info_from_machines[7][$key]) ? $info_from_machines[7][$key] : '<span style="color:red">'._T('OFFLINE','xmppmaster').'</span>',
         'gid' => $_GET['gid'],
         'gr_cmd_id' => $_GET['cmd_id'],
         'gr_login' => $_GET['login'],
