@@ -57,7 +57,6 @@ function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy , $cmddep
     return $urlRedirect1;
 }
 
-$nbdeploy = 0;
 $group = getPGobject($gid, true);
 $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
 $p->display();
@@ -66,35 +65,28 @@ $p->display();
 // search nbmachinegroupe in group, and nbdeploydone already deployed from mmc
 $resultfrommsc = xmlrpc_getstatbycmd($cmd_id, $filter, $start, $end);
 
-$MSC_nb_mach_grp_for_deploy  = $resultfrommsc['nbmachine'];
-$MSC_nb_mach_grp_done_deploy     = $resultfrommsc['nbdeploydone'];
-//$nb_deployer_machine_yet_from_msc = $MSC_nb_mach_grp_for_deploy - $MSC_nb_mach_grp_for_deploy;
-
 $bool_convergence_grp_on_package_from_msc = is_commands_convergence_type($cmd_id, $filter, $start, $end);
-// $command_detail = command_detail($cmd_id);
-
-
 // search from msc table CommandsOnHost
 $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start, $end);
 $start_date =  $lastcommandid['start_dateunixtime'];
 $end_date = $lastcommandid['end_dateunixtime'];
-$timestampnow = time();
 
-//$uuids = xmlrpc_get_msc_listuuid_commandid($cmd_id, $filter, 0, 10000);
 $uuids = xmlrpc_get_msc_listuuid_commandid($cmd_id, $filter, -1, -1);
 $uuids_list = $uuids['list'];
 
-
-
 $re = xmlrpc_get_machine_for_id($uuids_list, $filter, $start, $maxperpage);
-
-$info_from_machines = $re["listelet"];
 $count = $re['total'];
-
 //FROM XMPPMASTER
-$resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,
-                                                                date("Y-m-d H:i:s",
-                                                                $start_date));
+$resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,  date("Y-m-d H:i:s", $start_date));
+// from msc
+$machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy( $cmd_id, date("Y-m-d H:i:s", $start_date));
+$info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
+$statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
+
+$MSC_nb_mach_grp_for_deploy  = $resultfrommsc['nbmachine'];
+$MSC_nb_mach_grp_done_deploy     = $resultfrommsc['nbdeploydone'];
+$timestampnow = time();
+$info_from_machines = $re["listelet"];
 
 $total_machine_from_deploy     = $resultfromdeploy['totalmachinedeploy'];
 $machine_error_from_deploy     = $resultfromdeploy['machineerrordeploy'];
@@ -102,10 +94,7 @@ $machine_success_from_deploy   = $resultfromdeploy['machinesuccessdeploy'];
 $machine_process_from_deploy   = $resultfromdeploy['machineprocessdeploy'];
 $machine_abort_from_deploy     = $resultfromdeploy['machineabortdeploy'];
 
-// from msc
-$machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy( $cmd_id,
-                                                                date("Y-m-d H:i:s",
-                                                                $start_date));
+
 
 $machine_wol_from_deploy       = $total_machine_from_deploy-($machine_success_from_deploy + $machine_success_from_deploy + $machine_process_from_deploy + $machine_timeout_from_deploy);
 
@@ -130,9 +119,8 @@ if ($timestampnow > ($end_date)){
 };
 
 // This command gets associated group of cmd_id
-$info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
+
 echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date)."<br>";
-$statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
     if ($statsyncthing['package'] == ""){
         echo _T("Syncthing sharing done or non-existant");
     }else{
@@ -247,10 +235,7 @@ if (isset($resultatdeploy['infoslist'][0]['packageUuid'])){
 if (!isset($_GET['refresh'])){
     $_GET['refresh'] = 1;
 }
-if (isset($_GET['gid'])){
-    $countmachine = getRestrictedComputersListLen( array('gid' => $_GET['gid']));
-    $_GET['nbgrp']=$countmachine;
-}
+
 $nbsuccess = 0;
 $_GET['id']=isset($_GET['id']) ? $_GET['id'] : "";
 $_GET['ses']=isset($_GET['ses']) ? $_GET['ses'] : "";
@@ -270,11 +255,6 @@ foreach ($info['objectdeploy'] as $val)
         $nbsuccess ++;
    }
 }
-// if (isset($countmachine) && ($info['len'] == $countmachine)){
-//     $terminate = 1;
-//     $deployinprogress = 0;
-// }
-
 
 //start deployement status
 echo "<div>";
@@ -295,7 +275,7 @@ echo "<div>";
         echo _T("WAITING FOR START ","xmppmaster").date("Y-m-d H:i:s", $start_date);
     }
 
-        //if ($deployinprogress ){
+
     if($terminate == 0){
         $f = new ValidatingForm();
         $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
@@ -313,6 +293,9 @@ echo "<div>";
         echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
 
         $wol = ( $MSC_nb_mach_grp_for_deploy - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
+
+
+
         echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$MSC_nb_mach_grp_for_deploy;
         echo "<br>"._T("Number of current deployments","xmppmaster")." : ". $deploymachine;
         echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machine_timeout_from_deploy;
@@ -336,16 +319,6 @@ echo "<div>";
     echo '</div>';
       echo'<div  style="float:left; margin-left:200px;height: 120px" id="holder"></div>';
     if ($info['len'] != 0){
-    //     $uuid=$info['objectdeploy'][0]['inventoryuuid'];
-    //     $state=$info['objectdeploy'][0]['state'];
-    //     $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
-    //     $result=$info['objectdeploy'][0]['result'];
-    //
-    //     $resultatdeploy =json_decode($result, true);
-    //     $host=$info['objectdeploy'][0]['host'];
-    //     $jidmachine=$info['objectdeploy'][0]['jidmachine'];
-    //     $jid_relay=$info['objectdeploy'][0]['jid_relay'];
-
         $datestart =  date("Y-m-d H:i:s", $start_date);
         $timestampstart = strtotime($datestart);
         $timestampnow = time();
@@ -400,40 +373,21 @@ echo "<div>";
                 </script>
                 ';
     }
-
-//fin deployement status
 echo "</div>";
-// group includ computers_list.php
-// les parametres get sont utilisés par computers_list pour l'appel de ajaxComputersList qui compose l'appel a list_computers
-// mmc/modules/base/includes/computers_list.inc.php
-
-        if (isset($countmachine)){
-            if ($info['len'] > $countmachine){
-                $info['len'] = $countmachine;
-        }
-        if ($nbsuccess > $countmachine){
-                $nbsuccess = $countmachine;
-        }
-    }
+if (isset($countmachine)){
+  if ($info['len'] > $countmachine){
+    $info['len'] = $countmachine;
+  }
+  if ($nbsuccess > $countmachine){
+    $nbsuccess = $countmachine;
+  }
+}
 
 if ($info['len'] != 0){
-    $gr   = getRestrictedComputersList(0,-1, array('gid' =>$gid));
-    $uuidgr = array();
-    $uuidsuccess = array();
-    $uuiderror = array();
-    $uuidprocess = array();
-    $uuiddefault = array();
-    $uuidall = array();
-    $uuidwol = array();
-
-    foreach ($gr as $key => $val){
-        $uuidgr[] =  $key;
-    }
-
-    $other            = count ( $uuiddefault );
-    $machinesucess    = count ( $uuidsuccess );
-    $machineerror     = count ( $uuiderror );
-    $machineinprocess = count ( $uuidprocess );
+  $uuidsuccess = array();
+  $uuiderror = array();
+  $uuidprocess = array();
+  $uuiddefault = array();
 
   $status = [];
   foreach ($info['objectdeploy'] as  $val){
@@ -455,7 +409,6 @@ if ($info['len'] != 0){
           default:
               $uuiddefault[] = $val['inventoryuuid'];
       }
-      $uuidall[] = $val['inventoryuuid'];
   }
   $params = [];
   foreach($info_from_machines[0] as $key => $value)
