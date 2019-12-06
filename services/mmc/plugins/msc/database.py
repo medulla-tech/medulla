@@ -532,21 +532,8 @@ class MscDatabase(msc.MscDatabase):
                                                                ascheduler,
                                                                order_in_proxy,
                                                                max_clients_per_proxy))
-
-            def _getCohIds(session, cmd_id, target_uuids=[]):
-                """
-                Returns the list of commands_on_host linked to this command
-                If list of target_uuids, returns only uuids of this list
-                """
-                myCommandOnHosts = session.query(CommandsOnHost)
-                if target_uuids:
-                    myCommandOnHosts = myCommandOnHosts.join(Target)
-                    myCommandOnHosts = myCommandOnHosts.filter(Target.target_uuid.in_(target_uuids))
-                myCommandOnHosts = myCommandOnHosts.filter(CommandsOnHost.fk_commands ==
-                                                   cmd_id)
-                return myCommandOnHosts.all()
-
-            cohs = _getCohIds(session, cmd.getId())
+            session.execute(self.commands_on_host.insert(), coh_to_insert)
+            cohs = cmd.getCohIds()
             self._createPhases(session,
                                cohs,
                                do_wol_with_imaging,
