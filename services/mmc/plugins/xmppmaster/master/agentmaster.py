@@ -2140,10 +2140,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     self.callinventory(data['from'])
                                     return
                                 osmachine = ComputerManager().getComputersOS(str(computer.id))
-                                if "Unknown operating system (PXE" in osmachine[0]['OSName']:
-                                    logger.debug("** Call inventory on PXE machine")
-                                    self.callinventory(data['from'])
-                                    return
+                                if len(osmachine) !=0:
+                                    if "Unknown operating system (PXE" in osmachine[0]['OSName']:
+                                        logger.debug("** Call inventory on PXE machine")
+                                        self.callinventory(data['from'])
+                                        return
+                                else:
+                                    logger.warning("information about the operating system is missing for %s" %(msg['from'].bare))
                                 if PluginManager().isEnabled("kiosk"):
                                     from mmc.plugins.kiosk import handlerkioskpresence
                                     # send a data message to kiosk when an inventory is registered
