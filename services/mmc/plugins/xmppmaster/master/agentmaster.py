@@ -1910,6 +1910,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if 'action' in data and data['action'] == 'infomachine':
                 logger.debug(
                     "** Processing machine %s that sends this information (nini inventory)" % msg['from'].bare)
+                if not 'baseurlguacamole' in data or \
+                    data['baseurlguacamole'] == "" or \
+                    not 'deployment' in data or \
+                        data['deployment'] == "" :
+                    logger.error("machine %s Configuration Missing"% msg['from'].bare)
+                    logger.error("running  agent configurator on machine %s"% msg['from'].bare)
+                    return
 
                 if XmppMasterDatabase().getPresencejid(msg['from'].bare):
                     logger.debug("Machine %s already exists in base" % msg['from'].bare)
