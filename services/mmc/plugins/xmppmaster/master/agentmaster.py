@@ -1043,16 +1043,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                   GUID=None,
                                   nbdeploy=-1,
                                   wol=0):
-
         try:
             # search group deploy and jid machine
-            objmachine = XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuidmachine)
+            objmachine = XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuidmachine, None)
 
             jidrelay = objmachine['groupdeploy']
             jidmachine = objmachine['jid']
             keysyncthing = objmachine['keysyncthing']
             if jidmachine != None and jidmachine != "" and jidrelay != None and jidrelay != "":
-
                 return self.applicationdeploymentjson(jidrelay,
                                                       jidmachine,
                                                       idcommand,
@@ -1981,7 +1979,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         logging.getLogger().warning("Incoherence in the address mac %s" % jid)
             else:
                 logging.getLogger().warning("machine [%s] not present. Cant update uuid "\
-                    "in machine table. Waiting %s seconds after inject inventory" % (jid, timewaittinginventor))
+                    "in machine table. Waitting %s seconds after inject inventory" % (jid, timewaittinginventor))
                 return False
         except Exception:
             logger.error("** Update error on inventory %s" % (jid))
@@ -2098,7 +2096,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.error("machine %s Configuration Missing"% msg['from'].bare)
                     logger.error("running  agent configurator on machine %s"% msg['from'].bare)
                     return
-
                 if XmppMasterDatabase().getPresencejid(msg['from'].bare):
                     logger.debug("Machine %s already exists in base" % msg['from'].bare)
                     return
@@ -2321,6 +2318,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     self.callinventory(data['from'])
                                     return
                                 osmachine = ComputerManager().getComputersOS(str(computer.id))
+                                logger.error("%s"%osmachine)
                                 if len(osmachine) !=0:
                                     if "Unknown operating system (PXE" in osmachine[0]['OSName']:
                                         logger.debug("** Call inventory on PXE machine")
@@ -2511,6 +2509,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
         except Exception as e:
             logging.getLogger().error("machine info %s" % (str(e)))
+            logger.error("%s"%(traceback.format_exc()))
             traceback.print_exc(file=sys.stdout)
         return False
 
@@ -2556,7 +2555,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.error("Stanza message bad format %s"%msg)
                 return False
             msgfrom = str(msg['from'])
-
             logger.debug("*******MESSAGE %s"%msgfrom)
             if 'type' in msgkey:
                 # eg: ref section 2.1
