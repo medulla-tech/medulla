@@ -2565,15 +2565,29 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def updatedeploystate(self, session, sessionid, state):
+        """
+        update status deploy
+        """
         try:
-            session.query(Deploy).filter(Deploy.sessionid == sessionid).\
-                    update({Deploy.state: state})
-            session.commit()
-            session.flush()
-            return 1
-        except Exception, e:
-            logging.getLogger().error(str(e))
+            deploysession = session.query(Deploy).filter(Deploy.sessionid == sessionid).one()
+            if deploysession:
+                if state == "DEPLOYMENT START (REBOOT)":
+                    if deploysession.state in ["WOL 1",
+                                               "WOL 2",
+                                               "WOL 3",
+                                               "WAITING MACHINE ONLINE"]:
+                        #STATUS NE CHANGE PAS
+                        return 0
+                #update status
+                deploysession.state = state
+                session.commit()
+                session.flush()
+                return 1
+        except Exception:
+            logging.getLogger().error("sql : %s"%traceback.format_exc())
             return -1
+        finally:
+            session.close()
 
     @DatabaseHelper._sessionm
     def addPresenceNetwork(self, session, macaddress, ipaddress, broadcast, gateway, mask, mac, id_machine):

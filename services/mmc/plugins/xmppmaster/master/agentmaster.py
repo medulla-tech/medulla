@@ -907,7 +907,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 t['hostname'],
                                                 t['jidmachine'] ])
                             logger.debug("*** %s"%t)
-                            # XmppMasterDatabase().updatedeploystate(t['sessionid'], "DEPLOYMENT START (REBOOT)")
+                            XmppMasterDatabase().updatedeploystate(t['sessionid'], "DEPLOYMENT START (REBOOT)")
                             self.xmpplog("resource recovery on ARS %s for deploy"\
                                 "sessionid %s on machine  (connection loss) %s " % (t['jidrelay'],
                                                                                     t['sessionid'],
