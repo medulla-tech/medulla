@@ -31,7 +31,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 logger = logging.getLogger()
 
-plugin = {"VERSION": "1.2", "NAME": "resultapplicationdeploymentjson", "TYPE": "master"}
+plugin = {"VERSION": "1.3", "NAME": "resultapplicationdeploymentjson", "TYPE": "master"}
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug("=====================================================")
