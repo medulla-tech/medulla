@@ -546,7 +546,11 @@ class MscDatabase(msc.MscDatabase):
                                                    cmd_id)
                 return myCommandOnHosts.all()
 
-            cohs = _getCohIds(session, cmd.getId())
+            if self.config.dbhost and self.config.dbhost == "localhost":
+               cohs = cmd.getCohIds()
+            else:
+                cohs = _getCohIds(session, cmd.getId())
+
             self._createPhases(session,
                                cohs,
                                do_wol_with_imaging,
