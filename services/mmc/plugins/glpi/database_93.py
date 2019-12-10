@@ -4750,7 +4750,7 @@ class Glpi93(DyngroupDatabaseHelper):
             OS.name,
             OsVersion.name)\
         .join(OS, OS.id == Machine.operatingsystems_id)\
-        .join(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
+        .outerjoin(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
         .order_by(asc(OsVersion.name))
         sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
         sql = self.__filter_on(sql)
