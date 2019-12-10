@@ -96,6 +96,44 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.chatserver = self.get('chat', 'domain')
         # plus petite mac adress
         self.jidagent = "%s@%s/%s" % (utils.name_jid(), self.get('chat', 'domain'), platform.node())
+
+        try:
+            # Interval for installing new plugins on clients (in seconds)
+            self.remote_update_plugin_interval = self.getint('global', 'remote_update_plugin_interval')
+        except Exception:
+            self.remote_update_plugin_interval = 60
+        # Enable memory leaks checks and define interval (in seconds)
+        try:
+            self.memory_leak_check = self.getboolean('global', 'memory_leak_check')
+        except Exception:
+            self.memory_leak_check = False
+        try:
+            self.memory_leak_interval = self.getint('global', 'memory_leak_interval')
+        except Exception:
+            self.memory_leak_interval = 15
+
+        try:
+            self.reload_plugins_base_interval = self.getint('global', 'reload_plugins_base_interval')
+        except Exception:
+            self.reload_plugins_base_interval = 900
+        try:
+            # Interval between two scans for checking for new deployments (in seconds)
+            self.deployment_scan_interval = self.getint('global', 'deployment_scan_interval')
+        except Exception:
+            self.deployment_scan_interval = 30
+        try:
+            self.deployment_end_timeout = self.getint('global', 'deployment_end_timeout')
+        except Exception:
+            self.deployment_end_timeout = 300
+        try:
+            self.session_check_interval = self.getint('global', 'session_check_interval')
+        except Exception:
+            self.session_check_interval = 15
+
+        try:
+            self.wol_interval = self.getint('global', 'wol_interval')
+        except Exception:
+            self.wol_interval = 60
         try:
             self.jidagentsiveo = "%s@%s" % (
                 self.get('global', 'allow_order'), self.get('chat', 'domain'))

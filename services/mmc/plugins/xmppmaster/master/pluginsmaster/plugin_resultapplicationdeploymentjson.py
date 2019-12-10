@@ -22,6 +22,7 @@
 #
 # file pluginsmaster/plugin_resultapplicationdeploymentjson.py
 
+
 import json
 import logging
 import traceback
@@ -30,9 +31,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 logger = logging.getLogger()
 
-
-plugin = {"VERSION": "1.1", "NAME": "resultapplicationdeploymentjson", "TYPE": "master"}
-
+plugin = {"VERSION": "1.3", "NAME": "resultapplicationdeploymentjson", "TYPE": "master"}
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug("=====================================================")
@@ -46,9 +45,23 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                        sessionid))
             XmppMasterDatabase().delete_resources(sessionid)
         else:
-            logger.error("Error deploy on %s Package "\
+            msg = "Error deploy on %s Package "\
                 ": %s Session : %s" % (message['from'],
                                        data['descriptor']['info']['name'],
-                                       sessionid))
+                                       sessionid)
+            logger.error(msg)
+            XmppMasterDatabase().updatedeploystate(sessionid, "DEPLOYMENT ERROR")
+            xmppobject.xmpplog(msg,
+                        type='deploy',
+                        sessionname=sessionid,
+                        priority=-1,
+                        action="",
+                        who="",
+                        how="",
+                        why=xmppobject.boundjid.bare,
+                        module="Deployment | Start | Creation",
+                        date=None,
+                        fromuser="",
+                        touser="")
     except:
         logger.error("%s"%(traceback.format_exc()))
