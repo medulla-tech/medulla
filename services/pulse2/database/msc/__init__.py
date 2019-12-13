@@ -989,7 +989,8 @@ class MscDatabase(DatabaseHelper):
         .join(CommandsOnHostPhase, CommandsOnHostPhase.fk_commands_on_host == CommandsOnHost.id)\
         .filter(CommandsOnHostPhase.name == 'upload')\
         .filter(CommandsOnHostPhase.state == 'ready')\
-        .filter(Commands.end_date > datereduced)
+        .filter(Commands.end_date > datereduced)\
+        .filter(Commands.type != 2)
 
         if filt:
             query = query.filter(or_(Commands.title.like("%%%s%%"%filt), \
