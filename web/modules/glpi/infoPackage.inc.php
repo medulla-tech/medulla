@@ -44,6 +44,21 @@ $page = new Page('glpi_dashboard', _T('Glpi Dashboard', 'glpi'));
 $submod->addPage($page);
 $mod->addSubmod($submod);
 
+// Set the rights for glpi/includes/panels/antivirus.inc.php
+$page = new Page('antivirus_dashboard', _T('Antivirus Panel', 'glpi'));
+$submod->addPage($page);
+$mod->addSubmod($submod);
+
+// Set the rights for glpi/includes/panels/inventory.inc.php
+$page = new Page('inventory_dashboard', _T('Inventory Panel', 'glpi'));
+$submod->addPage($page);
+$mod->addSubmod($submod);
+
+// Set the rights for glpi/includes/panels/os_repartition.inc.php
+$page = new Page('os_repartition_dashboard', _T('Os Repartition Panel', 'glpi'));
+$submod->addPage($page);
+$mod->addSubmod($submod);
+
 $MMCApp->addModule($mod);
 
 /* Get the base module instance */
