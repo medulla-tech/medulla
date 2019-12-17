@@ -550,6 +550,7 @@ class MscDatabase(msc.MscDatabase):
                 session.execute(self.commands_on_host.insert(), coh_to_insert)
                 cohs = cmd.getCohIds()
             else:
+                session.execute(self.commands_on_host.insert(), coh_to_insert)
                 cohs = _getCohIds(session, cmd.getId())
 
             self._createPhases(session,
