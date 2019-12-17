@@ -57,6 +57,21 @@ $page->setFile("modules/dashboard/main/ajaxSessionPanels.php");
 $page->setOptions(array("visible" => False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("computersOnline_dashboard", _T("Computers Online Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("space_dashboard", _T("Space Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("general_dashboard", _T("General Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("backup_dashboard", _T("Backup Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("product_updates_dashboard", _T("Update Panel", "dashboard"));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 $MMCApp->addModule($mod);
 

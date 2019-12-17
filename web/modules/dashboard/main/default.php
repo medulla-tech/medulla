@@ -33,8 +33,11 @@ require("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 <script type="text/javascript" src="jsframework/portlet.js"></script>
 <script src="jsframework/d3/d3.js"></script>
 
-<?php
+<script src="modules/dashboard/graph/js/donut.js"></script>
+<script src="modules/dashboard/graph/js/line.js"></script>
+<script src="modules/dashboard/graph/js/pie.js"></script>
 
+<?php
 $d = new Div(array("id" => "dashboard"));
 $d->display();
 
@@ -46,12 +49,15 @@ foreach(getPanels() as $panelName) {
     foreach($modules as $module) {
         if (hasCorrectModuleAcl($module, false) == true) {
             $basedir = "modules/$module/includes/panels/";
+
             if (is_dir($basedir)) {
                 $h = opendir($basedir);
                 while (false !== ($f = readdir($h))) {
                     if (substr($f, 0, 1) != ".") {
                         if ($f == $panelName . ".inc.php") {
-                            $file = $basedir . $f;
+                          $file = $basedir . $f;
+                          if(hasCorrectDashboardAcl($module, $panelName) == true)
+                          {
                             include_once($file);
                             if (!isset($options["enable"]))
                                 $options["enable"] = True;
@@ -67,6 +73,7 @@ foreach(getPanels() as $panelName) {
                                     print '</div>';
                                 $i++;
                             }
+                          }//End acl tests
                         }
                     }
                 }
