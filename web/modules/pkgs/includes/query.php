@@ -38,7 +38,7 @@ function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $
             'Please type 3 characters for suggestion.<br>
             Wildcard is \'%\', %text% matches any string containing \'text\'.<br>
             If unsure, leave Vendor and Version fields blank.',
-            pkgs);
+            'pkgs');
     $Form->add(
             new TrFormElement($p[1], $auto,
                     array('class' => 'associateinventory', 'style' => $style, 'tooltip' => $tooltip)),
@@ -69,7 +69,7 @@ function addQuerySection($Form, $p) {
 
     $check = '';
     $style = 'display:none';
-    if ($p['associateinventory'] == 1){
+    if (isset($p['associateinventory']) && $p['associateinventory'] == 1){
         $check = 'checked';
         $style = '';
     }
@@ -90,9 +90,11 @@ function addQuerySection($Form, $p) {
 
     $Bool = new TrFormElement(_T('Bool', 'pkgs'), new InputTpl('boolcnd'));
     $Bool->setStyle("display:none");
+    isset($p['boolcnd']) ? $p['boolcnd'] = $p['boolcnd'] : $p['boolcnd'] = "" ;
     $Form->add($Bool, array("value" => $p['boolcnd']));
     /* ================= END QUERY ===================== */
     /* =================   BEGIN LICENSE   ===================== */
+    isset($p['licenses']) ? $p['licenses'] = $p['licenses'] : $p['licenses'] = "" ;
     $Form->add(
             new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses'),
                     array('class' => 'associateinventory', 'style' => $style)),

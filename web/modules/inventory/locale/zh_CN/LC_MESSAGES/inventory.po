@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2019-11-29 09:55+0100\n"
 "PO-Revision-Date: 2017-10-11 08:07+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -33,26 +33,26 @@ msgid "Incoming"
 msgstr "传入"
 
 #: modules/inventory/infoPackage.inc.php:42
-#: modules/inventory/inventory/localSidebar.php:29
 #: modules/inventory/inventory/i18n_labels.php:28
+#: modules/inventory/inventory/localSidebar.php:29
 msgid "Bios"
 msgstr "Bios"
 
 #: modules/inventory/infoPackage.inc.php:44
-#: modules/inventory/inventory/localSidebar.php:30
 #: modules/inventory/inventory/i18n_labels.php:82
+#: modules/inventory/inventory/localSidebar.php:30
 msgid "Hardware"
 msgstr "硬体"
 
 #: modules/inventory/infoPackage.inc.php:46
-#: modules/inventory/inventory/localSidebar.php:32
 #: modules/inventory/inventory/i18n_labels.php:107
+#: modules/inventory/inventory/localSidebar.php:32
 msgid "Network"
 msgstr "网路"
 
 #: modules/inventory/infoPackage.inc.php:48
-#: modules/inventory/inventory/localSidebar.php:33
 #: modules/inventory/inventory/i18n_labels.php:47
+#: modules/inventory/inventory/localSidebar.php:33
 msgid "Controller"
 msgstr "控制器"
 
@@ -62,53 +62,53 @@ msgid "Summary"
 msgstr "概要"
 
 #: modules/inventory/infoPackage.inc.php:53
-#: modules/inventory/inventory/localSidebar.php:37
 #: modules/inventory/inventory/i18n_labels.php:64
+#: modules/inventory/inventory/localSidebar.php:37
 msgid "Drive"
 msgstr "磁碟机"
 
 #: modules/inventory/infoPackage.inc.php:55
-#: modules/inventory/inventory/localSidebar.php:38
 #: modules/inventory/inventory/i18n_labels.php:87
+#: modules/inventory/inventory/localSidebar.php:38
 msgid "Input"
 msgstr "输入"
 
 #: modules/inventory/infoPackage.inc.php:57
 #: modules/inventory/inventory/ajaxViewPart.php:227
 #: modules/inventory/inventory/ajaxViewPart.php:607
-#: modules/inventory/inventory/localSidebar.php:39
 #: modules/inventory/inventory/i18n_labels.php:100
+#: modules/inventory/inventory/localSidebar.php:39
 msgid "Memory"
 msgstr "记忆体"
 
 #: modules/inventory/infoPackage.inc.php:59
-#: modules/inventory/inventory/localSidebar.php:40
 #: modules/inventory/inventory/i18n_labels.php:105
+#: modules/inventory/inventory/localSidebar.php:40
 msgid "Monitor"
 msgstr "监视器"
 
 #: modules/inventory/infoPackage.inc.php:61
-#: modules/inventory/inventory/localSidebar.php:41
 #: modules/inventory/inventory/i18n_labels.php:118
+#: modules/inventory/inventory/localSidebar.php:41
 msgid "Port"
 msgstr "连接埠"
 
 #: modules/inventory/infoPackage.inc.php:63
-#: modules/inventory/inventory/localSidebar.php:42
 #: modules/inventory/inventory/i18n_labels.php:120
+#: modules/inventory/inventory/localSidebar.php:42
 msgid "Printer"
 msgstr "印表机"
 
 #: modules/inventory/infoPackage.inc.php:65
-#: modules/inventory/inventory/localSidebar.php:43
 #: modules/inventory/inventory/i18n_labels.php:142
+#: modules/inventory/inventory/localSidebar.php:43
 msgid "Sound"
 msgstr "声音"
 
 #: modules/inventory/infoPackage.inc.php:67
 #: modules/inventory/inventory/ajaxViewPart.php:228
-#: modules/inventory/inventory/localSidebar.php:44
 #: modules/inventory/inventory/i18n_labels.php:148
+#: modules/inventory/inventory/localSidebar.php:44
 msgid "Storage"
 msgstr "储存空间"
 
@@ -118,8 +118,8 @@ msgid "VideoCard"
 msgstr "视讯卡"
 
 #: modules/inventory/infoPackage.inc.php:71
-#: modules/inventory/inventory/localSidebar.php:31
 #: modules/inventory/inventory/i18n_labels.php:141
+#: modules/inventory/inventory/localSidebar.php:31
 msgid "Software"
 msgstr "软体"
 
@@ -129,14 +129,14 @@ msgid "Registry"
 msgstr "登录"
 
 #: modules/inventory/infoPackage.inc.php:76
-#: modules/inventory/inventory/ajaxViewPart.php:540
 #: modules/inventory/inventory/ajaxIncoming.php:84
+#: modules/inventory/inventory/ajaxViewPart.php:540
 msgid "View"
 msgstr "检视"
 
 #: modules/inventory/infoPackage.inc.php:80
-#: modules/inventory/inventory/ajaxViewPart.php:541
 #: modules/inventory/inventory/ajaxIncoming.php:85
+#: modules/inventory/inventory/ajaxViewPart.php:541
 msgid "Information"
 msgstr "资讯"
 
@@ -273,6 +273,25 @@ msgstr ""
 msgid "Change entity rule order (down)"
 msgstr ""
 
+#: modules/inventory/includes/html.php:65
+#: modules/inventory/inventory/ajaxViewPart.php:188
+#: modules/inventory/inventory/ajaxViewPart.php:609
+#: modules/inventory/inventory/i18n_labels.php:53
+msgid "Date"
+msgstr "日期"
+
+#: modules/inventory/includes/html.php:98
+msgid "Filter software"
+msgstr "筛选软体"
+
+#: modules/inventory/includes/html.php:103
+msgid "Hide Windows Updates"
+msgstr " Windows "
+
+#: modules/inventory/includes/html.php:117
+msgid "Refresh"
+msgstr "重新整理"
+
 #: modules/inventory/includes/publicFunc.php:57
 #: modules/inventory/includes/publicFunc.php:90
 msgid "Entity right"
@@ -295,25 +314,6 @@ msgstr ""
 msgid "Add entity right for user"
 msgstr ""
 
-#: modules/inventory/includes/html.php:65
-#: modules/inventory/inventory/ajaxViewPart.php:188
-#: modules/inventory/inventory/ajaxViewPart.php:609
-#: modules/inventory/inventory/i18n_labels.php:53
-msgid "Date"
-msgstr "日期"
-
-#: modules/inventory/includes/html.php:98
-msgid "Filter software"
-msgstr "筛选软体"
-
-#: modules/inventory/includes/html.php:103
-msgid "Hide Windows Updates"
-msgstr " Windows "
-
-#: modules/inventory/includes/html.php:117
-msgid "Refresh"
-msgstr "重新整理"
-
 #: modules/inventory/includes/panels/inventory.inc.php:30
 msgid "Computers"
 msgstr "电脑"
@@ -334,18 +334,185 @@ msgstr "> %s %percent% (%d)"
 msgid "Latest Inventory Date"
 msgstr "最新清查日期"
 
-#: modules/inventory/inventory/deleteEntityRule.php:30
-msgid "The entity rule has been deleted successfully."
+#: modules/inventory/inventory/EditEntity.php:45
+msgid "The entity has not been updated."
 msgstr ""
 
-#: modules/inventory/inventory/deleteEntityRule.php:33
-msgid "Delete this rule?"
+#: modules/inventory/inventory/EditEntity.php:49
+msgid "Edit entity"
+msgstr ""
+
+#: modules/inventory/inventory/EditEntity.php:55
+#: modules/inventory/inventory/addEntity.php:50
+#: modules/inventory/inventory/ajaxViewPart.php:571
+#: modules/inventory/inventory/ajaxViewPart.php:587
+#: modules/inventory/inventory/i18n_labels.php:106
+#: modules/inventory/inventory/deleteEntity.php:64
+msgid "Name"
+msgstr "名称"
+
+#: modules/inventory/inventory/slot.php:27
+#: modules/inventory/inventory/i18n_labels.php:134
+msgid "Slot"
+msgstr "插槽"
+
+#: modules/inventory/inventory/tabs.php:63
+#: modules/inventory/inventory/tabs.php:71
+msgid "This client has been registered in pull mode"
+msgstr " pull "
+
+#: modules/inventory/inventory/tabs.php:65
+msgid "Leave pull mode"
+msgstr " pull "
+
+#: modules/inventory/inventory/tabs.php:77
+#, php-format
+msgid "%s's inventory"
+msgstr "%s "
+
+#: modules/inventory/inventory/tabs.php:79
+#, php-format
+msgid "%s's content inventory"
+msgstr "%s "
+
+#: modules/inventory/inventory/tabs.php:106
+msgid "History"
+msgstr "历史记录"
+
+#: modules/inventory/inventory/tabs.php:117
+msgid "Get XLS Report"
+msgstr "取得 XLS 报告"
+
+#: modules/inventory/inventory/entityRules.php:28
+#: modules/inventory/inventory/localComputersSidebar.php:29
+msgid "Entity rules"
+msgstr ""
+
+#: modules/inventory/inventory/entityRules.php:35
+msgid "All rules"
+msgstr ""
+
+#: modules/inventory/inventory/entityList.php:27
+msgid "Entity list"
+msgstr ""
+
+#: modules/inventory/inventory/entityList.php:33
+msgid "All entities"
 msgstr ""
 
 #: modules/inventory/inventory/pci.php:27
 #: modules/inventory/inventory/i18n_labels.php:115
 msgid "Pci"
 msgstr "PCI"
+
+#: modules/inventory/inventory/incoming.php:46
+msgid "Incoming Inventories"
+msgstr "传入的清查"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last week"
+msgstr "上星期"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last month"
+msgstr "上个月"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last quarter"
+msgstr "上个季度"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last semester"
+msgstr "上个学期"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last year"
+msgstr "去年"
+
+#: modules/inventory/inventory/incoming.php:67
+msgid "Period"
+msgstr "周期"
+
+#: modules/inventory/inventory/incoming.php:72
+msgid "Only new computers"
+msgstr "仅新电脑"
+
+#: modules/inventory/inventory/incoming.php:73
+msgid "Load only the computers which were new when the inventory was made"
+msgstr "清查时仅载入新电脑"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:52
+#: modules/inventory/inventory/ajaxEntityList.php:51
+msgid "No entry found"
+msgstr "找不到任何项目"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:63
+msgid "Rule"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityRules.php:64
+msgid "actif"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityRules.php:65
+msgid "entitie"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityRules.php:66
+msgid "aggregator"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityRules.php:67
+msgid "lvalue"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityRules.php:68
+msgid "operator"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityRules.php:69
+msgid "rvalue"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityRules.php:72
+msgid "Edit rule"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityRules.php:73
+msgid "Move rule up"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityRules.php:74
+msgid "Move rule down"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityRules.php:75
+msgid "Delete rule"
+msgstr ""
+
+#: modules/inventory/inventory/addEntity.php:42
+msgid "Add entity"
+msgstr ""
+
+#: modules/inventory/inventory/addEntity.php:64
+msgid "Parent entity"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxIncoming.php:78
+msgid "Computer name"
+msgstr "电脑名称"
+
+#: modules/inventory/inventory/ajaxIncoming.php:80
+msgid "Inventory date"
+msgstr "清查日期"
+
+#: modules/inventory/inventory/ajaxIncoming.php:82
+msgid "New computer"
+msgstr "新电脑"
+
+#: modules/inventory/inventory/ajaxIncoming.php:91
+msgid "Elements"
+msgstr "元素"
 
 #: modules/inventory/inventory/addEntityRule.php:64
 msgid "The entity rule has been added successfully."
@@ -491,6 +658,36 @@ msgstr ""
 msgid "Add criterion"
 msgstr ""
 
+#: modules/inventory/inventory/view.php:44
+#, php-format
+msgid "Inventory of %s"
+msgstr "%s "
+
+#: modules/inventory/inventory/view.php:74
+#: modules/inventory/inventory/ajaxViewPart.php:121
+msgid "Properties"
+msgstr "属性"
+
+#: modules/inventory/inventory/view.php:75
+#: modules/inventory/inventory/ajaxViewPart.php:122
+#: modules/inventory/inventory/i18n_labels.php:161
+#: modules/inventory/inventory/inventory_diff.php:76
+#: modules/inventory/inventory/inventory_diff.php:101
+msgid "Value"
+msgstr "值"
+
+#: modules/inventory/inventory/localComputersSidebar.php:27
+msgid "Entities"
+msgstr "实体"
+
+#: modules/inventory/inventory/localComputersSidebar.php:28
+msgid "Add an entity"
+msgstr ""
+
+#: modules/inventory/inventory/localComputersSidebar.php:30
+msgid "Add entity rule"
+msgstr ""
+
 #: modules/inventory/inventory/graphs.php:47
 msgid "back"
 msgstr "上一页"
@@ -502,19 +699,6 @@ msgstr "（不是一个防病毒程式）"
 #: modules/inventory/inventory/ajaxViewPart.php:106
 msgid "Click here to see this computer on manufacturer website"
 msgstr "请按此处在制造商网站上查看此电脑"
-
-#: modules/inventory/inventory/ajaxViewPart.php:121
-#: modules/inventory/inventory/view.php:74
-msgid "Properties"
-msgstr "属性"
-
-#: modules/inventory/inventory/ajaxViewPart.php:122
-#: modules/inventory/inventory/inventory_diff.php:76
-#: modules/inventory/inventory/inventory_diff.php:101
-#: modules/inventory/inventory/view.php:75
-#: modules/inventory/inventory/i18n_labels.php:161
-msgid "Value"
-msgstr "值"
 
 #: modules/inventory/inventory/ajaxViewPart.php:140
 msgid "No record found for this period."
@@ -569,15 +753,6 @@ msgstr "是"
 #: modules/inventory/inventory/ajaxViewPart.php:570
 msgid "No"
 msgstr "否"
-
-#: modules/inventory/inventory/ajaxViewPart.php:571
-#: modules/inventory/inventory/ajaxViewPart.php:587
-#: modules/inventory/inventory/EditEntity.php:55
-#: modules/inventory/inventory/addEntity.php:50
-#: modules/inventory/inventory/i18n_labels.php:106
-#: modules/inventory/inventory/deleteEntity.php:64
-msgid "Name"
-msgstr "名称"
 
 #: modules/inventory/inventory/ajaxViewPart.php:572
 #: modules/inventory/inventory/i18n_labels.php:108
@@ -792,154 +967,6 @@ msgstr "已启用"
 #: modules/inventory/inventory/ajaxViewPart.php:625
 msgid "Up-to-date"
 msgstr "最新"
-
-#: modules/inventory/inventory/EditEntity.php:45
-msgid "The entity has not been updated."
-msgstr ""
-
-#: modules/inventory/inventory/EditEntity.php:49
-msgid "Edit entity"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityList.php:51
-#: modules/inventory/inventory/ajaxEntityRules.php:52
-msgid "No entry found"
-msgstr "找不到任何项目"
-
-#: modules/inventory/inventory/ajaxEntityList.php:56
-msgid "Entity name"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityList.php:63
-#: modules/inventory/inventory/ajaxEntityList.php:64
-msgid "Edit Entity"
-msgstr ""
-
-#: modules/inventory/inventory/addEntity.php:42
-msgid "Add entity"
-msgstr ""
-
-#: modules/inventory/inventory/addEntity.php:64
-msgid "Parent entity"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxIncoming.php:78
-msgid "Computer name"
-msgstr "电脑名称"
-
-#: modules/inventory/inventory/ajaxIncoming.php:80
-msgid "Inventory date"
-msgstr "清查日期"
-
-#: modules/inventory/inventory/ajaxIncoming.php:82
-msgid "New computer"
-msgstr "新电脑"
-
-#: modules/inventory/inventory/ajaxIncoming.php:91
-msgid "Elements"
-msgstr "元素"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Incoming Inventories"
-msgstr "传入的清查"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last week"
-msgstr "上星期"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last month"
-msgstr "上个月"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last quarter"
-msgstr "上个季度"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last semester"
-msgstr "上个学期"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last year"
-msgstr "去年"
-
-#: modules/inventory/inventory/incoming.php:67
-msgid "Period"
-msgstr "周期"
-
-#: modules/inventory/inventory/incoming.php:72
-msgid "Only new computers"
-msgstr "仅新电脑"
-
-#: modules/inventory/inventory/incoming.php:73
-msgid "Load only the computers which were new when the inventory was made"
-msgstr "清查时仅载入新电脑"
-
-#: modules/inventory/inventory/inventory_diff.php:48
-msgid "Inventory changes"
-msgstr "清查变化"
-
-#: modules/inventory/inventory/inventory_diff.php:75
-#: modules/inventory/inventory/inventory_diff.php:100
-msgid "Element"
-msgstr "元素"
-
-#: modules/inventory/inventory/inventory_diff.php:114
-msgid "Added elements"
-msgstr "新增的元素"
-
-#: modules/inventory/inventory/inventory_diff.php:123
-msgid "Removed elements"
-msgstr "已移除的元素"
-
-#: modules/inventory/inventory/view.php:44
-#, php-format
-msgid "Inventory of %s"
-msgstr "%s "
-
-#: modules/inventory/inventory/entityRules.php:28
-#: modules/inventory/inventory/localComputersSidebar.php:29
-msgid "Entity rules"
-msgstr ""
-
-#: modules/inventory/inventory/entityRules.php:35
-msgid "All rules"
-msgstr ""
-
-#: modules/inventory/inventory/tabs.php:63
-#: modules/inventory/inventory/tabs.php:71
-msgid "This client has been registered in pull mode"
-msgstr " pull "
-
-#: modules/inventory/inventory/tabs.php:65
-msgid "Leave pull mode"
-msgstr " pull "
-
-#: modules/inventory/inventory/tabs.php:77
-#, php-format
-msgid "%s's inventory"
-msgstr "%s "
-
-#: modules/inventory/inventory/tabs.php:79
-#, php-format
-msgid "%s's content inventory"
-msgstr "%s "
-
-#: modules/inventory/inventory/tabs.php:106
-msgid "History"
-msgstr "历史记录"
-
-#: modules/inventory/inventory/tabs.php:117
-msgid "Get XLS Report"
-msgstr "取得 XLS 报告"
-
-#: modules/inventory/inventory/infos.php:33
-msgid "Additionnal informations"
-msgstr "其它资讯"
-
-#: modules/inventory/inventory/infos.php:43
-msgid "First apparition"
-msgstr "第一次出现"
 
 #: modules/inventory/inventory/i18n_labels.php:26
 msgid "Application"
@@ -1267,11 +1294,6 @@ msgstr "扇区"
 msgid "Serial"
 msgstr "序列"
 
-#: modules/inventory/inventory/i18n_labels.php:134
-#: modules/inventory/inventory/slot.php:27
-msgid "Slot"
-msgstr "插槽"
-
 #: modules/inventory/inventory/i18n_labels.php:135
 msgid "Slot Count"
 msgstr "插槽数"
@@ -1368,6 +1390,64 @@ msgstr "工作组"
 msgid "WorkingDate"
 msgstr "工作日期"
 
+#: modules/inventory/inventory/inventory_diff.php:48
+msgid "Inventory changes"
+msgstr "清查变化"
+
+#: modules/inventory/inventory/inventory_diff.php:75
+#: modules/inventory/inventory/inventory_diff.php:100
+msgid "Element"
+msgstr "元素"
+
+#: modules/inventory/inventory/inventory_diff.php:114
+msgid "Added elements"
+msgstr "新增的元素"
+
+#: modules/inventory/inventory/inventory_diff.php:123
+msgid "Removed elements"
+msgstr "已移除的元素"
+
+#: modules/inventory/inventory/deleteEntity.php:46
+msgid "The entity has not been deleted."
+msgstr ""
+
+#: modules/inventory/inventory/deleteEntity.php:52
+msgid "Delete entity"
+msgstr ""
+
+#: modules/inventory/inventory/infos.php:33
+msgid "Additionnal informations"
+msgstr "其它资讯"
+
+#: modules/inventory/inventory/infos.php:43
+msgid "First apparition"
+msgstr "第一次出现"
+
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr "检视上次清查之后的差异"
+
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr "清查日期"
+
+#: modules/inventory/inventory/deleteEntityRule.php:30
+msgid "The entity rule has been deleted successfully."
+msgstr ""
+
+#: modules/inventory/inventory/deleteEntityRule.php:33
+msgid "Delete this rule?"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityList.php:56
+msgid "Entity name"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxEntityList.php:63
+#: modules/inventory/inventory/ajaxEntityList.php:64
+msgid "Edit Entity"
+msgstr ""
+
 #: modules/inventory/inventory/createStaticGroup.php:30
 #, php-format
 msgid "Latest inventory is less than %s days at %s"
@@ -1380,35 +1460,9 @@ msgstr " %s  %s "
 
 #: modules/inventory/inventory/createStaticGroup.php:43
 #, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr " %d "
-
-#: modules/inventory/inventory/deleteEntity.php:46
-msgid "The entity has not been deleted."
-msgstr ""
-
-#: modules/inventory/inventory/deleteEntity.php:52
-msgid "Delete entity"
-msgstr ""
-
-#: modules/inventory/inventory/history.php:66
-msgid "View differences since previous inventory"
-msgstr "检视上次清查之后的差异"
-
-#: modules/inventory/inventory/history.php:75
-msgid "Inventory Date"
-msgstr "清查日期"
-
-#: modules/inventory/inventory/localComputersSidebar.php:27
-msgid "Entities"
-msgstr "实体"
-
-#: modules/inventory/inventory/localComputersSidebar.php:28
-msgid "Add an entity"
-msgstr ""
-
-#: modules/inventory/inventory/localComputersSidebar.php:30
-msgid "Add entity rule"
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
 msgstr ""
 
 #: modules/inventory/inventory/body.php:40
@@ -1470,55 +1524,3 @@ msgstr "储存媒体清单"
 #: modules/inventory/inventory/body.php:55
 msgid "Video card list"
 msgstr "视讯卡清单"
-
-#: modules/inventory/inventory/entityList.php:27
-msgid "Entity list"
-msgstr ""
-
-#: modules/inventory/inventory/entityList.php:33
-msgid "All entities"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:63
-msgid "Rule"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:64
-msgid "actif"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:65
-msgid "entitie"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:66
-msgid "aggregator"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:67
-msgid "lvalue"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:68
-msgid "operator"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:69
-msgid "rvalue"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:72
-msgid "Edit rule"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:73
-msgid "Move rule up"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:74
-msgid "Move rule down"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxEntityRules.php:75
-msgid "Delete rule"
-msgstr ""

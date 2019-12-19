@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2019-11-29 09:55+0100\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -21,85 +21,353 @@ msgstr ""
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: modules/dyngroup/dyngroup/details.php:30
+#: modules/dyngroup/infoPackage.inc.php:30
+msgid "Dyngroup"
+msgstr "Grupo Dinmico"
+
+#: modules/dyngroup/infoPackage.inc.php:48
+#: modules/dyngroup/infoPackage.inc.php:109
+msgid "Computers Group Creator"
+msgstr "Criador de Grupo de Computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:51
+#: modules/dyngroup/infoPackage.inc.php:65
+#: modules/dyngroup/infoPackage.inc.php:79
+msgid "Dynamic group creation's tab"
+msgstr "Aba de criao de grupo dinmico"
+
+#: modules/dyngroup/infoPackage.inc.php:54
+#: modules/dyngroup/infoPackage.inc.php:68
+#: modules/dyngroup/infoPackage.inc.php:82
+msgid "Static group creation's tab"
+msgstr "Aba de criao de grupo esttico"
+
+#: modules/dyngroup/infoPackage.inc.php:57
+#: modules/dyngroup/infoPackage.inc.php:71
+#: modules/dyngroup/infoPackage.inc.php:85
+msgid "Static group creation from import's tab"
+msgstr "Aba de criao de grupo esttico a partir de"
+
+#: modules/dyngroup/infoPackage.inc.php:61
+msgid "Computers Group Creator Sub Request Editor"
+msgstr "Edio de Subconsulta de Grupo de Computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:75
+msgid "Computers Group Creator Sub Request Delete"
+msgstr "Remoo de Subconsulta de Grupo de Computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:89
+#: modules/dyngroup/infoPackage.inc.php:113
+msgid "Computers Group Editor"
+msgstr "Editor de Grupo de Computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:94
+msgid "Computers Group Sub Request Editor"
+msgstr "Edio Subconsulta de Grupo de Computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:99
+msgid "Computers Group Sub Request Delete"
+msgstr "Removedor de Subconsulta de Grupo de Computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:104
+#: modules/dyngroup/dyngroup/tmpdisplay.php:33
+msgid "Temporary result display"
+msgstr "Monitor de resultado temporrio"
+
+#: modules/dyngroup/infoPackage.inc.php:119
+msgid "Display a groups of computers"
+msgstr "Exibir grupos de computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:124
+msgid "Share a group of computers"
+msgstr "Compartilhar um grupo de computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:129
+msgid "Second page of result/request group creator"
+msgstr "Segunda pgina da criao de grupo resultado/consulta"
+
+#: modules/dyngroup/infoPackage.inc.php:134
+msgid "Save a group of computers"
+msgstr "Salvar um grupo de computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:139
+msgid "Detailed page of save a group of computers"
+msgstr "Pgina detalhada de um grupo de computadores salvo"
+
+#: modules/dyngroup/infoPackage.inc.php:144
+#: modules/dyngroup/infoPackage.inc.php:152
+msgid "List all groups of computers"
+msgstr "Listar todos os grupos de computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:148
+msgid "List favourite groups"
+msgstr "Listar grupos favoritos"
+
+#: modules/dyngroup/infoPackage.inc.php:157
+msgid "Delete a group of computers"
+msgstr "Excluir um grupo de computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:162
+msgid "Group of computers details"
+msgstr "Detalhes do grupo de computadores"
+
+#: modules/dyngroup/infoPackage.inc.php:167
+msgid "Remove a computer from a computers group"
+msgstr "Remover um computador de um grupo"
+
+#: modules/dyngroup/infoPackage.inc.php:182
+msgid "Csv's export"
+msgstr "Exportar CSV"
+
+#: modules/dyngroup/infoPackage.inc.php:187
+msgid "Update machine cache"
+msgstr "Atualizar cache do computador"
+
+#: modules/dyngroup/includes/dyngroup.php:470
+msgid "Failed to load some pkgs module"
+msgstr "Falha ao carregar alguns mdulos de pacotes"
+
+#: modules/dyngroup/includes/dyngroup.php:477
+msgid "Failed to load some msc module"
+msgstr "Falha ao carregar alguns mdulos do msc"
+
+#: modules/dyngroup/includes/double.php:36
+#: modules/dyngroup/includes/autocomplete.php:29
+#: modules/dyngroup/dyngroup/creator.php:242
+#: modules/dyngroup/dyngroup/creator.php:251
+#: modules/dyngroup/dyngroup/creator.php:275
+#: modules/dyngroup/dyngroup/creator.php:283
+#: modules/dyngroup/dyngroup/creator.php:287
+msgid "Add"
+msgstr "Adicionar"
+
+#: modules/dyngroup/includes/double.php:39
+#: modules/dyngroup/includes/autocomplete.php:31
+#: modules/dyngroup/dyngroup/creator.php:277
+msgid "Modify"
+msgstr "Modificar"
+
+#: modules/dyngroup/includes/double.php:51
+msgid "->"
+msgstr "->"
+
+#: modules/dyngroup/includes/request.php:125
+msgid "Search part"
+msgstr "Procurar integrante"
+
+#: modules/dyngroup/includes/request.php:128
+msgid "Edit"
+msgstr "Editar"
+
+#: modules/dyngroup/includes/request.php:129
+msgid "Delete"
+msgstr "Excluir"
+
+#: modules/dyngroup/includes/request.php:177
 #, php-format
-msgid "%s's details"
-msgstr "Detalhes de %s"
+msgid "%s) Search %s %s (%s) in module %s"
+msgstr "%s) Procurar %s %s (%s) no modulo %s"
 
-#: modules/dyngroup/dyngroup/details.php:49
-msgid "Close"
-msgstr "Fechar"
-
-#: modules/dyngroup/dyngroup/details.php:52
-msgid "Regenerate"
-msgstr "Regerar"
-
-#: modules/dyngroup/dyngroup/details.php:55
-msgid "Hide"
-msgstr "Ocultar"
-
-#: modules/dyngroup/dyngroup/details.php:57
-msgid "Show"
-msgstr "Mostrar"
-
-#: modules/dyngroup/dyngroup/display.php:67
+#: modules/dyngroup/includes/request.php:179
 #, php-format
-msgid "Group '%s' content"
-msgstr "Conteudo do Grupo '%s'"
+msgid "%s) Search %s %s %s in module %s"
+msgstr "%s) Procurar %s %s %s no modulo %s"
 
-#: modules/dyngroup/dyngroup/display.php:73
-msgid "All computers"
-msgstr "Todos os computadores"
+#: modules/dyngroup/includes/groups.inc.php:38
+msgid "All share entities"
+msgstr "Todas as entradas compartilhadas"
 
-#: modules/dyngroup/dyngroup/display.php:77
-msgid "Online computers"
+#: modules/dyngroup/includes/groups.inc.php:61
+msgid "Group share"
+msgstr "Compartilhamento de grupo"
+
+#: modules/dyngroup/includes/groups.inc.php:85
+#: modules/dyngroup/includes/groups.inc.php:283
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: modules/dyngroup/includes/groups.inc.php:86
+#: modules/dyngroup/includes/groups.inc.php:284
+#: modules/dyngroup/dyngroup/delete_group.php:67
+#: modules/dyngroup/dyngroup/delete_group.php:111
+#: modules/dyngroup/dyngroup/remove_machine.php:58
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: modules/dyngroup/includes/groups.inc.php:118
+#: modules/dyngroup/includes/groups.inc.php:122
+#: modules/dyngroup/dyngroup/import_from_file.php:51
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:101
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:103
+msgid "Group name"
+msgstr "Nome do grupo"
+
+#: modules/dyngroup/includes/groups.inc.php:119
+#: modules/dyngroup/includes/groups.inc.php:123
+#: modules/dyngroup/dyngroup/save.php:84
+msgid "Make favourite"
+msgstr "Marcar como favorito"
+
+#: modules/dyngroup/includes/groups.inc.php:120
+#: modules/dyngroup/includes/groups.inc.php:124
+msgid "Group members"
+msgstr "Membros do grupo"
+
+#: modules/dyngroup/includes/groups.inc.php:167
+#: modules/dyngroup/dyngroup/import_from_file.php:54
+#: modules/dyngroup/dyngroup/creator.php:280
+#: modules/dyngroup/dyngroup/creator.php:286
+#: modules/dyngroup/dyngroup/save.php:84
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:89
+msgid "Yes"
+msgstr "Sim"
+
+#: modules/dyngroup/includes/groups.inc.php:168
+#: modules/dyngroup/dyngroup/import_from_file.php:54
+#: modules/dyngroup/dyngroup/creator.php:281
+#: modules/dyngroup/dyngroup/save.php:84
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:89
+msgid "No"
+msgstr "No"
+
+#: modules/dyngroup/includes/groups.inc.php:178
+msgid "All machines"
+msgstr "Todas os computadores"
+
+#: modules/dyngroup/includes/groups.inc.php:242
+msgid "Computers listed below are already part of another imaging group."
+msgstr ""
+"Os computadores listados abaixo j fazem parte de outro grupo de imagem."
+
+#: modules/dyngroup/includes/groups.inc.php:245
+#, php-format
+msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
+msgstr "<li>%s  parte de <a href=\"%s\">%s</a></li>"
+
+#: modules/dyngroup/includes/groups.inc.php:257
+msgid "Computers listed below are already stand-alone registered in imaging."
+msgstr "Os computadores listados abaixo j esto registrados."
+
+#: modules/dyngroup/includes/groups.inc.php:267
+msgid ""
+"<p>These computers will be moved to this group and their bootmenus "
+"<strong>will be rewritten</strong></p>"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/display.php:81
-msgid "Offline computers"
+#: modules/dyngroup/includes/groups.inc.php:268
+msgid "All related images to these computers will be <strong>DELETED</strong>"
+msgstr ""
+"Todas as imagens relacionadas a esse computador sero "
+"<strong>DELETADAS</strong>"
+
+#: modules/dyngroup/includes/autocomplete.php:44
+msgid "Add a value"
+msgstr "Adicionar um valor"
+
+#: modules/dyngroup/dyngroup/listFavourite.php:29
+msgid "Favourite group list"
+msgstr "Lista de grupos favoritos"
+
+#: modules/dyngroup/dyngroup/groupshead.php:35
+msgid "Add a static group"
+msgstr "Adicionar um grupo esttico"
+
+#: modules/dyngroup/dyngroup/groupshead.php:37
+#: modules/dyngroup/dyngroup/edithead.php:52
+msgid "Edit a static group"
+msgstr "Editar um grupo esttico"
+
+#: modules/dyngroup/dyngroup/tmpdisplay.php:31
+#, php-format
+msgid "Temporary result display for '%s'"
+msgstr "Monitor de resultado temporrio para '%s'"
+
+#: modules/dyngroup/dyngroup/tmpdisplay.php:55
+msgid "back"
+msgstr "voltar"
+
+#: modules/dyngroup/dyngroup/add_groups.php:82
+#: modules/dyngroup/dyngroup/add_groups.php:307
+#, php-format
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
 msgstr ""
 
-#: modules/dyngroup/dyngroup/display.php:84
-#, php-format
-msgid "Imaging group '%s' content"
-msgstr "Grupo de imagem '%s' conteudo"
+#: modules/dyngroup/dyngroup/add_groups.php:162
+msgid "Group successfully modified"
+msgstr "Grupo modificado com sucesso"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:41
+#: modules/dyngroup/dyngroup/add_groups.php:176
+msgid ""
+"The bootmenus cannot be generated as a multicast deployment is currently "
+"running."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/add_groups.php:190
+msgid ""
+"Imaging group modified, but some machines were not added to existing imaging"
+" group, because they have more than one ethernet card:"
+msgstr ""
+"Grupo de imagem modificado, mas algumas maquinas no sero adicionadas ao "
+"grupo existente, porque elas tem mais de uma placa de rede:"
+
+#: modules/dyngroup/dyngroup/add_groups.php:206
+msgid "Imaging group successfully modified"
+msgstr "Grupo de imagem modificado com sucesso"
+
 #: modules/dyngroup/dyngroup/add_groups.php:211
+#: modules/dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully created"
 msgstr "Grupo criado com sucesso"
 
+#: modules/dyngroup/dyngroup/add_groups.php:247
+msgid "Group failed to modify"
+msgstr "Grupo falhou ao tentar modificar"
+
+#: modules/dyngroup/dyngroup/add_groups.php:250
+#, php-format
+msgid "Imaging group failed to modify.<br/>Can't add %s"
+msgstr "Falha ao modificar grupo de imagem.<br/>No posso adicionar %s"
+
+#: modules/dyngroup/dyngroup/add_groups.php:252
+msgid "Imaging group failed to modify"
+msgstr "Falha ao modificar grupo de imagem"
+
+#: modules/dyngroup/dyngroup/add_groups.php:258
+#: modules/dyngroup/dyngroup/save.php:100
+#: modules/dyngroup/dyngroup/save.php:102
+msgid "You must specify a group name"
+msgstr "Voc precisa especificar um nome de grupo"
+
+#: modules/dyngroup/dyngroup/add_groups.php:260
+msgid "You must specify an imaging group name"
+msgstr "Voc precisa especificar um nome para o grupo de imagem"
+
+#: modules/dyngroup/dyngroup/add_groups.php:263
 #: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:98
-#: modules/dyngroup/dyngroup/add_groups.php:263
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "J existe um grupo com o nome '%s'"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:51
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:101
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:103
-#: modules/dyngroup/includes/groups.inc.php:118
-#: modules/dyngroup/includes/groups.inc.php:122
-msgid "Group name"
-msgstr "Nome do grupo"
+#: modules/dyngroup/dyngroup/add_groups.php:265
+#, php-format
+msgid "An imaging group already exists with name '%s'"
+msgstr "Um grupo de imagem j existe com o nome '%s'"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:89
-#: modules/dyngroup/dyngroup/creator.php:280
-#: modules/dyngroup/dyngroup/creator.php:286
-#: modules/dyngroup/dyngroup/save.php:84
-#: modules/dyngroup/includes/groups.inc.php:167
-msgid "Yes"
-msgstr "Sim"
+#: modules/dyngroup/dyngroup/edit_share.php:41
+#, php-format
+msgid "Share group '%s' with"
+msgstr "Compartilhar o grupo '%s' com"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:89
-#: modules/dyngroup/dyngroup/creator.php:281
-#: modules/dyngroup/dyngroup/save.php:84
-#: modules/dyngroup/includes/groups.inc.php:168
-msgid "No"
-msgstr "No"
+#: modules/dyngroup/dyngroup/edit_share.php:81
+msgid "Group successfully shared"
+msgstr "Grupo compartilhado com sucesso"
+
+#: modules/dyngroup/dyngroup/edit_share.php:89
+msgid "Group failed to share"
+msgstr "Grupo falhou ao tentar compartilhar"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:57
 msgid "Add shortcut"
@@ -113,6 +381,46 @@ msgstr "Selecione o arquivo que deseja importar"
 msgid "Select what is inside the file"
 msgstr "Selecione o que est dentro do arquivo"
 
+#: modules/dyngroup/dyngroup/delete_group.php:42
+#: modules/dyngroup/dyngroup/delete_group.php:44
+msgid "Delete imaging group"
+msgstr "Deletar esse grupo de imagem"
+
+#: modules/dyngroup/dyngroup/delete_group.php:43
+#, php-format
+msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
+msgstr ""
+"Voc tem certeza que deseja deletar esse grupo de imagem <b>%s</b>?<br/>"
+
+#: modules/dyngroup/dyngroup/delete_group.php:48
+#: modules/dyngroup/dyngroup/delete_group.php:50
+msgid "Delete group"
+msgstr "Excluir grupo"
+
+#: modules/dyngroup/dyngroup/delete_group.php:49
+#, php-format
+msgid ""
+"Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
+"other group)."
+msgstr ""
+"Voc est certo que deseja excluir o grupo <b>%s</b>?<br/> (ele pode ser usado"
+" em outro grupo)."
+
+#: modules/dyngroup/dyngroup/delete_group.php:64
+msgid ""
+"The group cannot be deleted as a multicast deployment is currently running."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:92
+#, php-format
+msgid "Imaging group %s was successfully deleted"
+msgstr "Grupo de imagem %s foi deletado com sucesso"
+
+#: modules/dyngroup/dyngroup/delete_group.php:95
+#, php-format
+msgid "Group %s was successfully deleted"
+msgstr "Grupo %s foi deletado com sucesso"
+
 #: modules/dyngroup/dyngroup/update.php:30
 msgid "Update machines name cache in dyngroup"
 msgstr "Atualizar cache de nome de computadores no grupo dinmico"
@@ -122,173 +430,9 @@ msgstr "Atualizar cache de nome de computadores no grupo dinmico"
 msgid "update machine cache : %s machines"
 msgstr "atualizar cache do computador: %s computadores"
 
-#: modules/dyngroup/dyngroup/remove_machine.php:48
-msgid "Remove a computer"
-msgstr "Remover um computador"
-
-#: modules/dyngroup/dyngroup/remove_machine.php:54
-#, php-format
-msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
-msgstr "Voc vai remover o computador <b>%s</b> do grupo <b>%s</b>."
-
-#: modules/dyngroup/dyngroup/remove_machine.php:57
-msgid "Remove Computer"
-msgstr "Remover Computador"
-
-#: modules/dyngroup/dyngroup/remove_machine.php:58
-#: modules/dyngroup/dyngroup/delete_group.php:67
-#: modules/dyngroup/dyngroup/delete_group.php:111
-#: modules/dyngroup/includes/groups.inc.php:86
-#: modules/dyngroup/includes/groups.inc.php:284
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: modules/dyngroup/dyngroup/tmpdisplay.php:31
-#, php-format
-msgid "Temporary result display for '%s'"
-msgstr "Monitor de resultado temporrio para '%s'"
-
-#: modules/dyngroup/dyngroup/tmpdisplay.php:33
-#: modules/dyngroup/infoPackage.inc.php:104
-msgid "Temporary result display"
-msgstr "Monitor de resultado temporrio"
-
-#: modules/dyngroup/dyngroup/tmpdisplay.php:55
-msgid "back"
-msgstr "voltar"
-
-#: modules/dyngroup/dyngroup/localSidebar.php:29
-msgid "Favourite groups"
-msgstr "Grupos favoritos"
-
-#: modules/dyngroup/dyngroup/localSidebar.php:30
-msgid "All groups"
-msgstr "Todos os grupos"
-
-#: modules/dyngroup/dyngroup/localSidebar.php:31
-msgid "Add a group"
-msgstr "Adicionar um grupo"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:63
-msgid "Delete this group"
-msgstr "Excluir este grupo"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:65
-msgid "Delete this imaging group"
-msgstr "Deletar esse grupo de imagem"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:69
-msgid "Quick action"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
-#, php-format
-msgid "result (%s)"
-msgstr "resultado (%s)"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
-#: modules/dyngroup/dyngroup/save.php:80
-msgid "query"
-msgstr "consulta"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:87
-msgid "static group"
-msgstr "grupo esttico"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:113
-msgid "Type"
-msgstr "Tipo"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:115
-msgid "Favourite"
-msgstr "Favorito"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:119
-msgid "Display this group's content"
-msgstr "Exibir este contedo de grupo"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:121
-msgid "Inventory on this group"
-msgstr "Mostrar o inventrio deste grupo"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:126
-msgid "Edit this group"
-msgstr "Editar este grupo"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:127
-msgid "Share this group"
-msgstr "Compartilhar este grupo"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:131
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:150
-msgid "Read log"
-msgstr "Ver o log"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:133
-msgid "Software deployment on this group"
-msgstr "Instalao de software neste grupo"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:136
-msgid "Update on this group"
-msgstr "Atualizao neste grupo"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:139
-msgid "Display this imaging group's content"
-msgstr "Exibir o conteudo desse grupo de imagem"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:141
-msgid "Inventory on this imaging group"
-msgstr "Inventario nesse grupo de imagem"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:146
-msgid "Edit this imaging group"
-msgstr "Editar este grupo de imagem"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:147
-msgid "Share this imaging group"
-msgstr "Compartilhar este grupo de imagem"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:152
-msgid "Software deployment on this imaging group"
-msgstr "Instalao de software nesse grupo de imagem"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:156
-msgid "Imaging management"
-msgstr "Gerenciamento de Clonagem"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:167
-msgid "Csv export"
-msgstr "Exportar CSV"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:31
-msgid "All imaging groups"
-msgstr "Todos os grupo de imagem"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:34
-msgid "Add an imaging group"
-msgstr "Adicionar um grupo de imagem"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
-msgid "Imaging group:"
-msgstr "Grupo de imagem:"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
-msgid "Dynamic imaging group:"
-msgstr "Grupo de imagem dinamica:"
-
-#: modules/dyngroup/dyngroup/edithead.php:40
-msgid "Edit a dynamic group"
-msgstr "Editar um grupo dinmico"
-
-#: modules/dyngroup/dyngroup/edithead.php:43
-#: modules/dyngroup/dyngroup/edithead.php:54
-msgid "Edit an imaging group"
-msgstr "Editar o grupo de imagem"
-
-#: modules/dyngroup/dyngroup/edithead.php:52
-#: modules/dyngroup/dyngroup/groupshead.php:37
-msgid "Edit a static group"
-msgstr "Editar um grupo esttico"
+#: modules/dyngroup/dyngroup/list_profiles.php:30
+msgid "Imaging groups"
+msgstr "Grupos de imagem"
 
 #: modules/dyngroup/dyngroup/creator.php:133
 msgid "Choose the module you want to query : "
@@ -301,22 +445,6 @@ msgstr "Operador de comparao"
 #: modules/dyngroup/dyngroup/creator.php:239
 msgid "Date"
 msgstr "Data"
-
-#: modules/dyngroup/dyngroup/creator.php:242
-#: modules/dyngroup/dyngroup/creator.php:251
-#: modules/dyngroup/dyngroup/creator.php:275
-#: modules/dyngroup/dyngroup/creator.php:283
-#: modules/dyngroup/dyngroup/creator.php:287
-#: modules/dyngroup/includes/autocomplete.php:29
-#: modules/dyngroup/includes/double.php:36
-msgid "Add"
-msgstr "Adicionar"
-
-#: modules/dyngroup/dyngroup/creator.php:277
-#: modules/dyngroup/includes/autocomplete.php:31
-#: modules/dyngroup/includes/double.php:39
-msgid "Modify"
-msgstr "Modificar"
 
 #: modules/dyngroup/dyngroup/creator.php:303
 msgid "The request is : "
@@ -435,19 +563,27 @@ msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
 msgstr ""
 "Consulta em 2 etapas: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
 
-#: modules/dyngroup/dyngroup/save_detail.php:28
-msgid "Request saver"
-msgstr "Consultar backup"
-
-#: modules/dyngroup/dyngroup/save_detail.php:42
+#: modules/dyngroup/dyngroup/display.php:67
 #, php-format
-msgid "This request has been saved as %s (id=%s)"
-msgstr "Esta consulta foi salva como %s (id=%s)"
+msgid "Group '%s' content"
+msgstr "Conteudo do Grupo '%s'"
 
-#: modules/dyngroup/dyngroup/save_detail.php:44
+#: modules/dyngroup/dyngroup/display.php:73
+msgid "All computers"
+msgstr "Todos os computadores"
+
+#: modules/dyngroup/dyngroup/display.php:77
+msgid "Online computers"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/display.php:81
+msgid "Offline computers"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/display.php:84
 #, php-format
-msgid "This result has been saved as %s (id=%s)"
-msgstr "Este resultado foi salvo como %s (id=%s)"
+msgid "Imaging group '%s' content"
+msgstr "Grupo de imagem '%s' conteudo"
 
 #: modules/dyngroup/dyngroup/save.php:30
 #, php-format
@@ -471,24 +607,17 @@ msgid "save as"
 msgstr "salvar como"
 
 #: modules/dyngroup/dyngroup/save.php:80
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
+msgid "query"
+msgstr "consulta"
+
+#: modules/dyngroup/dyngroup/save.php:80
 msgid "result"
 msgstr "resultado"
-
-#: modules/dyngroup/dyngroup/save.php:84
-#: modules/dyngroup/includes/groups.inc.php:119
-#: modules/dyngroup/includes/groups.inc.php:123
-msgid "Make favourite"
-msgstr "Marcar como favorito"
 
 #: modules/dyngroup/dyngroup/save.php:94
 msgid "Save"
 msgstr "Salvar"
-
-#: modules/dyngroup/dyngroup/save.php:100
-#: modules/dyngroup/dyngroup/save.php:102
-#: modules/dyngroup/dyngroup/add_groups.php:258
-msgid "You must specify a group name"
-msgstr "Voc precisa especificar um nome de grupo"
 
 #: modules/dyngroup/dyngroup/save.php:146
 msgid "Specify a boolean operator between sub-requests"
@@ -518,67 +647,61 @@ msgstr "A equao booleana  vlida"
 msgid "Display content"
 msgstr "Exibir contedo"
 
-#: modules/dyngroup/dyngroup/list_profiles.php:30
-msgid "Imaging groups"
-msgstr "Grupos de imagem"
-
-#: modules/dyngroup/dyngroup/listFavourite.php:29
-msgid "Favourite group list"
-msgstr "Lista de grupos favoritos"
-
-#: modules/dyngroup/dyngroup/add_groups.php:82
-#: modules/dyngroup/dyngroup/add_groups.php:302
+#: modules/dyngroup/dyngroup/details.php:30
 #, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "A lista de computadores foi reduzida em %d computadores"
+msgid "%s's details"
+msgstr "Detalhes de %s"
 
-#: modules/dyngroup/dyngroup/add_groups.php:162
-msgid "Group successfully modified"
-msgstr "Grupo modificado com sucesso"
+#: modules/dyngroup/dyngroup/details.php:49
+msgid "Close"
+msgstr "Fechar"
 
-#: modules/dyngroup/dyngroup/add_groups.php:176
-msgid ""
-"The bootmenus cannot be generated as a multicast deployment is currently "
-"running."
-msgstr ""
+#: modules/dyngroup/dyngroup/details.php:52
+msgid "Regenerate"
+msgstr "Regerar"
 
-#: modules/dyngroup/dyngroup/add_groups.php:190
-msgid ""
-"Imaging group modified, but some machines were not added to existing imaging"
-" group, because they have more than one ethernet card:"
-msgstr ""
-"Grupo de imagem modificado, mas algumas maquinas no sero adicionadas ao "
-"grupo existente, porque elas tem mais de uma placa de rede:"
+#: modules/dyngroup/dyngroup/details.php:55
+msgid "Hide"
+msgstr "Ocultar"
 
-#: modules/dyngroup/dyngroup/add_groups.php:206
-msgid "Imaging group successfully modified"
-msgstr "Grupo de imagem modificado com sucesso"
+#: modules/dyngroup/dyngroup/details.php:57
+msgid "Show"
+msgstr "Mostrar"
 
-#: modules/dyngroup/dyngroup/add_groups.php:247
-msgid "Group failed to modify"
-msgstr "Grupo falhou ao tentar modificar"
+#: modules/dyngroup/dyngroup/save_detail.php:28
+msgid "Request saver"
+msgstr "Consultar backup"
 
-#: modules/dyngroup/dyngroup/add_groups.php:250
+#: modules/dyngroup/dyngroup/save_detail.php:42
 #, php-format
-msgid "Imaging group failed to modify.<br/>Can't add %s"
-msgstr "Falha ao modificar grupo de imagem.<br/>No posso adicionar %s"
+msgid "This request has been saved as %s (id=%s)"
+msgstr "Esta consulta foi salva como %s (id=%s)"
 
-#: modules/dyngroup/dyngroup/add_groups.php:252
-msgid "Imaging group failed to modify"
-msgstr "Falha ao modificar grupo de imagem"
-
-#: modules/dyngroup/dyngroup/add_groups.php:260
-msgid "You must specify an imaging group name"
-msgstr "Voc precisa especificar um nome para o grupo de imagem"
-
-#: modules/dyngroup/dyngroup/add_groups.php:265
+#: modules/dyngroup/dyngroup/save_detail.php:44
 #, php-format
-msgid "An imaging group already exists with name '%s'"
-msgstr "Um grupo de imagem j existe com o nome '%s'"
+msgid "This result has been saved as %s (id=%s)"
+msgstr "Este resultado foi salvo como %s (id=%s)"
 
 #: modules/dyngroup/dyngroup/header.php:28
 msgid "Please choose the type of group you want to create"
 msgstr "Escolha o tipo de grupo que deseja criar"
+
+#: modules/dyngroup/dyngroup/list.php:29
+msgid "Group list"
+msgstr "Lista de grupos"
+
+#: modules/dyngroup/dyngroup/remove_machine.php:48
+msgid "Remove a computer"
+msgstr "Remover um computador"
+
+#: modules/dyngroup/dyngroup/remove_machine.php:54
+#, php-format
+msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
+msgstr "Voc vai remover o computador <b>%s</b> do grupo <b>%s</b>."
+
+#: modules/dyngroup/dyngroup/remove_machine.php:57
+msgid "Remove Computer"
+msgstr "Remover Computador"
 
 #: modules/dyngroup/dyngroup/tab.php:41
 msgid "Group creation"
@@ -612,246 +735,125 @@ msgstr "Seleo do grupo de imagem"
 msgid "Select an imaging server for this group"
 msgstr "Selecione um servidor de imagem para esse grupo"
 
-#: modules/dyngroup/dyngroup/groupshead.php:35
-msgid "Add a static group"
-msgstr "Adicionar um grupo esttico"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:63
+msgid "Delete this group"
+msgstr "Excluir este grupo"
 
-#: modules/dyngroup/dyngroup/list.php:29
-msgid "Group list"
-msgstr "Lista de grupos"
-
-#: modules/dyngroup/dyngroup/edit_share.php:41
-#, php-format
-msgid "Share group '%s' with"
-msgstr "Compartilhar o grupo '%s' com"
-
-#: modules/dyngroup/dyngroup/edit_share.php:81
-msgid "Group successfully shared"
-msgstr "Grupo compartilhado com sucesso"
-
-#: modules/dyngroup/dyngroup/edit_share.php:89
-msgid "Group failed to share"
-msgstr "Grupo falhou ao tentar compartilhar"
-
-#: modules/dyngroup/dyngroup/delete_group.php:42
-#: modules/dyngroup/dyngroup/delete_group.php:44
-msgid "Delete imaging group"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:65
+msgid "Delete this imaging group"
 msgstr "Deletar esse grupo de imagem"
 
-#: modules/dyngroup/dyngroup/delete_group.php:43
-#, php-format
-msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
-msgstr ""
-"Voc tem certeza que deseja deletar esse grupo de imagem <b>%s</b>?<br/>"
-
-#: modules/dyngroup/dyngroup/delete_group.php:48
-#: modules/dyngroup/dyngroup/delete_group.php:50
-msgid "Delete group"
-msgstr "Excluir grupo"
-
-#: modules/dyngroup/dyngroup/delete_group.php:49
-#, php-format
-msgid ""
-"Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
-"other group)."
-msgstr ""
-"Voc est certo que deseja excluir o grupo <b>%s</b>?<br/> (ele pode ser usado"
-" em outro grupo)."
-
-#: modules/dyngroup/dyngroup/delete_group.php:64
-msgid ""
-"The group cannot be deleted as a multicast deployment is currently running."
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:69
+msgid "Quick action"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/delete_group.php:92
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
 #, php-format
-msgid "Imaging group %s was successfully deleted"
-msgstr "Grupo de imagem %s foi deletado com sucesso"
+msgid "result (%s)"
+msgstr "resultado (%s)"
 
-#: modules/dyngroup/dyngroup/delete_group.php:95
-#, php-format
-msgid "Group %s was successfully deleted"
-msgstr "Grupo %s foi deletado com sucesso"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:87
+msgid "static group"
+msgstr "grupo esttico"
 
-#: modules/dyngroup/infoPackage.inc.php:30
-msgid "Dyngroup"
-msgstr "Grupo Dinmico"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:113
+msgid "Type"
+msgstr "Tipo"
 
-#: modules/dyngroup/infoPackage.inc.php:48
-#: modules/dyngroup/infoPackage.inc.php:109
-msgid "Computers Group Creator"
-msgstr "Criador de Grupo de Computadores"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:115
+msgid "Favourite"
+msgstr "Favorito"
 
-#: modules/dyngroup/infoPackage.inc.php:51
-#: modules/dyngroup/infoPackage.inc.php:65
-#: modules/dyngroup/infoPackage.inc.php:79
-msgid "Dynamic group creation's tab"
-msgstr "Aba de criao de grupo dinmico"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:119
+msgid "Display this group's content"
+msgstr "Exibir este contedo de grupo"
 
-#: modules/dyngroup/infoPackage.inc.php:54
-#: modules/dyngroup/infoPackage.inc.php:68
-#: modules/dyngroup/infoPackage.inc.php:82
-msgid "Static group creation's tab"
-msgstr "Aba de criao de grupo esttico"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:121
+msgid "Inventory on this group"
+msgstr "Mostrar o inventrio deste grupo"
 
-#: modules/dyngroup/infoPackage.inc.php:57
-#: modules/dyngroup/infoPackage.inc.php:71
-#: modules/dyngroup/infoPackage.inc.php:85
-msgid "Static group creation from import's tab"
-msgstr "Aba de criao de grupo esttico a partir de"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:126
+msgid "Edit this group"
+msgstr "Editar este grupo"
 
-#: modules/dyngroup/infoPackage.inc.php:61
-msgid "Computers Group Creator Sub Request Editor"
-msgstr "Edio de Subconsulta de Grupo de Computadores"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:127
+msgid "Share this group"
+msgstr "Compartilhar este grupo"
 
-#: modules/dyngroup/infoPackage.inc.php:75
-msgid "Computers Group Creator Sub Request Delete"
-msgstr "Remoo de Subconsulta de Grupo de Computadores"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:131
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:150
+msgid "Read log"
+msgstr "Ver o log"
 
-#: modules/dyngroup/infoPackage.inc.php:89
-#: modules/dyngroup/infoPackage.inc.php:113
-msgid "Computers Group Editor"
-msgstr "Editor de Grupo de Computadores"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:133
+msgid "Software deployment on this group"
+msgstr "Instalao de software neste grupo"
 
-#: modules/dyngroup/infoPackage.inc.php:94
-msgid "Computers Group Sub Request Editor"
-msgstr "Edio Subconsulta de Grupo de Computadores"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:136
+msgid "Update on this group"
+msgstr "Atualizao neste grupo"
 
-#: modules/dyngroup/infoPackage.inc.php:99
-msgid "Computers Group Sub Request Delete"
-msgstr "Removedor de Subconsulta de Grupo de Computadores"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:139
+msgid "Display this imaging group's content"
+msgstr "Exibir o conteudo desse grupo de imagem"
 
-#: modules/dyngroup/infoPackage.inc.php:119
-msgid "Display a groups of computers"
-msgstr "Exibir grupos de computadores"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:141
+msgid "Inventory on this imaging group"
+msgstr "Inventario nesse grupo de imagem"
 
-#: modules/dyngroup/infoPackage.inc.php:124
-msgid "Share a group of computers"
-msgstr "Compartilhar um grupo de computadores"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:146
+msgid "Edit this imaging group"
+msgstr "Editar este grupo de imagem"
 
-#: modules/dyngroup/infoPackage.inc.php:129
-msgid "Second page of result/request group creator"
-msgstr "Segunda pgina da criao de grupo resultado/consulta"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:147
+msgid "Share this imaging group"
+msgstr "Compartilhar este grupo de imagem"
 
-#: modules/dyngroup/infoPackage.inc.php:134
-msgid "Save a group of computers"
-msgstr "Salvar um grupo de computadores"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:152
+msgid "Software deployment on this imaging group"
+msgstr "Instalao de software nesse grupo de imagem"
 
-#: modules/dyngroup/infoPackage.inc.php:139
-msgid "Detailed page of save a group of computers"
-msgstr "Pgina detalhada de um grupo de computadores salvo"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:156
+msgid "Imaging management"
+msgstr "Gerenciamento de Clonagem"
 
-#: modules/dyngroup/infoPackage.inc.php:144
-#: modules/dyngroup/infoPackage.inc.php:152
-msgid "List all groups of computers"
-msgstr "Listar todos os grupos de computadores"
-
-#: modules/dyngroup/infoPackage.inc.php:148
-msgid "List favourite groups"
-msgstr "Listar grupos favoritos"
-
-#: modules/dyngroup/infoPackage.inc.php:157
-msgid "Delete a group of computers"
-msgstr "Excluir um grupo de computadores"
-
-#: modules/dyngroup/infoPackage.inc.php:162
-msgid "Group of computers details"
-msgstr "Detalhes do grupo de computadores"
-
-#: modules/dyngroup/infoPackage.inc.php:167
-msgid "Remove a computer from a computers group"
-msgstr "Remover um computador de um grupo"
-
-#: modules/dyngroup/infoPackage.inc.php:182
-msgid "Csv's export"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:167
+msgid "Csv export"
 msgstr "Exportar CSV"
 
-#: modules/dyngroup/infoPackage.inc.php:187
-msgid "Update machine cache"
-msgstr "Atualizar cache do computador"
+#: modules/dyngroup/dyngroup/edithead.php:40
+msgid "Edit a dynamic group"
+msgstr "Editar um grupo dinmico"
 
-#: modules/dyngroup/includes/request.php:125
-msgid "Search part"
-msgstr "Procurar integrante"
+#: modules/dyngroup/dyngroup/edithead.php:43
+#: modules/dyngroup/dyngroup/edithead.php:54
+msgid "Edit an imaging group"
+msgstr "Editar o grupo de imagem"
 
-#: modules/dyngroup/includes/request.php:128
-msgid "Edit"
-msgstr "Editar"
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:31
+msgid "All imaging groups"
+msgstr "Todos os grupo de imagem"
 
-#: modules/dyngroup/includes/request.php:129
-msgid "Delete"
-msgstr "Excluir"
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:34
+msgid "Add an imaging group"
+msgstr "Adicionar um grupo de imagem"
 
-#: modules/dyngroup/includes/request.php:177
-#, php-format
-msgid "%s) Search %s %s (%s) in module %s"
-msgstr "%s) Procurar %s %s (%s) no modulo %s"
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
+msgid "Imaging group:"
+msgstr "Grupo de imagem:"
 
-#: modules/dyngroup/includes/request.php:179
-#, php-format
-msgid "%s) Search %s %s %s in module %s"
-msgstr "%s) Procurar %s %s %s no modulo %s"
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
+msgid "Dynamic imaging group:"
+msgstr "Grupo de imagem dinamica:"
 
-#: modules/dyngroup/includes/groups.inc.php:38
-msgid "All share entities"
-msgstr "Todas as entradas compartilhadas"
+#: modules/dyngroup/dyngroup/localSidebar.php:29
+msgid "Favourite groups"
+msgstr "Grupos favoritos"
 
-#: modules/dyngroup/includes/groups.inc.php:61
-msgid "Group share"
-msgstr "Compartilhamento de grupo"
+#: modules/dyngroup/dyngroup/localSidebar.php:30
+msgid "All groups"
+msgstr "Todos os grupos"
 
-#: modules/dyngroup/includes/groups.inc.php:85
-#: modules/dyngroup/includes/groups.inc.php:283
-msgid "Confirm"
-msgstr "Confirmar"
-
-#: modules/dyngroup/includes/groups.inc.php:120
-#: modules/dyngroup/includes/groups.inc.php:124
-msgid "Group members"
-msgstr "Membros do grupo"
-
-#: modules/dyngroup/includes/groups.inc.php:178
-msgid "All machines"
-msgstr "Todas os computadores"
-
-#: modules/dyngroup/includes/groups.inc.php:242
-msgid "Computers listed below are already part of another imaging group."
-msgstr ""
-"Os computadores listados abaixo j fazem parte de outro grupo de imagem."
-
-#: modules/dyngroup/includes/groups.inc.php:245
-#, php-format
-msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
-msgstr "<li>%s  parte de <a href=\"%s\">%s</a></li>"
-
-#: modules/dyngroup/includes/groups.inc.php:257
-msgid "Computers listed below are already stand-alone registered in imaging."
-msgstr "Os computadores listados abaixo j esto registrados."
-
-#: modules/dyngroup/includes/groups.inc.php:267
-msgid ""
-"<p>These computers will be moved to this group and their bootmenus "
-"<strong>will be rewritten</strong></p>"
-msgstr ""
-
-#: modules/dyngroup/includes/groups.inc.php:268
-msgid "All related images to these computers will be <strong>DELETED</strong>"
-msgstr ""
-"Todas as imagens relacionadas a esse computador sero "
-"<strong>DELETADAS</strong>"
-
-#: modules/dyngroup/includes/dyngroup.php:468
-msgid "Failed to load some pkgs module"
-msgstr "Falha ao carregar alguns mdulos de pacotes"
-
-#: modules/dyngroup/includes/dyngroup.php:475
-msgid "Failed to load some msc module"
-msgstr "Falha ao carregar alguns mdulos do msc"
-
-#: modules/dyngroup/includes/autocomplete.php:44
-msgid "Add a value"
-msgstr "Adicionar um valor"
-
-#: modules/dyngroup/includes/double.php:51
-msgid "->"
-msgstr "->"
+#: modules/dyngroup/dyngroup/localSidebar.php:31
+msgid "Add a group"
+msgstr "Adicionar um grupo"

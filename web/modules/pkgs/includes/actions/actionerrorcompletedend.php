@@ -1,9 +1,10 @@
 <?php
+require_once("../../../../includes/i18n.inc.php");
 extract($_POST);
 $lab = "END_ERROR";
 ?>
 <div class="header">
-    <h1>End Error</h1>
+    <h1><?php echo _T('End Error', 'pkgs'); ?></h1>
 </div>
 
 <div class="content">
@@ -18,7 +19,7 @@ $lab = "END_ERROR";
         echo'
             <table id="tableToggleend">
                  <tr class="toggleable">
-                    <th width="16%">Step label : </th>
+                    <th width="16%">'._T("Step label :","pkgs").'</th>
                     <th width="25%">'.$lab.'
                     </th>
                     <th></th>
@@ -30,7 +31,7 @@ $lab = "END_ERROR";
         ?>
         <!-- All extra options are added here-->
     </div>
-  <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleend tr.toggleable").toggle();' type="button" value="Options" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleend tr.toggleable").toggle();' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function(){

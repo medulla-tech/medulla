@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Stephane Pointu <spointu@gmail.com>, 2018
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Stephane Pointu <spointu@gmail.com>, 2018
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2019-11-29 09:55+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,55 +51,59 @@ msgid "Product Updates installation (ajax)"
 msgstr "Installation des maj du produit (ajax)"
 
 #: modules/pulse2/includes/menu_actionaudit.php:59
-#: modules/pulse2/includes/menu_action.php:57
+#: modules/pulse2/includes/menu_action.php:58
 msgid "Inventory"
 msgstr "Inventaire"
 
 #: modules/pulse2/includes/menu_actionaudit.php:61
-#: modules/pulse2/includes/menu_action.php:59
+#: modules/pulse2/includes/menu_action.php:60
 msgid "Backup status"
 msgstr "Statut de la sauvegarde"
 
 #: modules/pulse2/includes/menu_actionaudit.php:62
-#: modules/pulse2/includes/menu_group_action.php:78
 #: modules/pulse2/includes/menu_action.php:61
+#: modules/pulse2/includes/menu_group_action.php:76
 msgid "Imaging management"
 msgstr "Gestion de l'imaging"
 
 #: modules/pulse2/includes/menu_actionaudit.php:63
-#: modules/pulse2/includes/menu_action.php:74
+#: modules/pulse2/includes/menu_action.php:73
 msgid "Quick action"
 msgstr "Action rapide"
 
 #: modules/pulse2/includes/menu_actionaudit.php:66
 #: modules/pulse2/includes/menu_actionaudit.php:71
-#: modules/pulse2/includes/menu_action.php:81
-#: modules/pulse2/includes/menu_action.php:85
-#: modules/pulse2/includes/menu_action.php:95
+#: modules/pulse2/includes/menu_action.php:77
+#: modules/pulse2/includes/menu_action.php:80
+#: modules/pulse2/includes/menu_action.php:89
 msgid "Software deployment"
 msgstr "Déploiement logiciel"
 
 #: modules/pulse2/includes/menu_actionaudit.php:70
-#: modules/pulse2/includes/menu_action.php:65
-#: modules/pulse2/includes/menu_action.php:68
+#: modules/pulse2/includes/menu_action.php:64
+#: modules/pulse2/includes/menu_action.php:67
 msgid "Remote control"
 msgstr "Prise en main à distance"
 
 #: modules/pulse2/includes/menu_actionaudit.php:73
-#: modules/pulse2/includes/menu_action.php:73
+#: modules/pulse2/includes/menu_action.php:72
 msgid "xmppconsole"
 msgstr "Console XMPP"
 
 #: modules/pulse2/includes/menu_actionaudit.php:74
 #: modules/pulse2/includes/menu_actionaudit.php:77
-#: modules/pulse2/includes/menu_action.php:87
-#: modules/pulse2/includes/menu_action.php:89
+#: modules/pulse2/includes/menu_action.php:82
+#: modules/pulse2/includes/menu_action.php:84
 msgid "files browsing"
 msgstr "explorateur de fichiers"
 
 #: modules/pulse2/includes/menu_actionaudit.php:75
 msgid "Edit config files"
 msgstr "Éditer les fichiers de configuration"
+
+#: modules/pulse2/includes/menu_action.php:59
+msgid "extTicket issue"
+msgstr "question extTicket"
 
 #: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this group"
@@ -122,60 +126,52 @@ msgid "Share this group"
 msgstr "Partager ce groupe"
 
 #: modules/pulse2/includes/menu_group_action.php:56
-#: modules/pulse2/includes/menu_group_action.php:73
-#: modules/pulse2/includes/menu_action.php:80
-#: modules/pulse2/includes/menu_action.php:84
-#: modules/pulse2/includes/menu_action.php:94
-msgid "Read log"
-msgstr "Lire le rapport"
-
-#: modules/pulse2/includes/menu_group_action.php:57
 msgid "Software deployment on this group"
 msgstr "Télé-déploiement sur ce groupe"
 
-#: modules/pulse2/includes/menu_group_action.php:60
+#: modules/pulse2/includes/menu_group_action.php:59
 msgid "Update on this group"
 msgstr "Mettre à jour sur ce groupe"
 
-#: modules/pulse2/includes/menu_group_action.php:64
+#: modules/pulse2/includes/menu_group_action.php:63
 msgid "Inventory on this profile"
 msgstr "Inventaires de ce profil"
 
-#: modules/pulse2/includes/menu_group_action.php:68
+#: modules/pulse2/includes/menu_group_action.php:67
 msgid "Display this imaging group's content"
 msgstr "Afficher le contenu du groupe d'imaging"
 
-#: modules/pulse2/includes/menu_group_action.php:70
+#: modules/pulse2/includes/menu_group_action.php:69
 msgid "Edit this imaging group"
 msgstr "Modifier ce groupe d'imaging"
 
-#: modules/pulse2/includes/menu_group_action.php:71
+#: modules/pulse2/includes/menu_group_action.php:70
 msgid "Share this imaging group"
 msgstr "Partager ce groupe d'imaging"
 
-#: modules/pulse2/includes/menu_group_action.php:74
+#: modules/pulse2/includes/menu_group_action.php:72
 msgid "Software deployment on this imaging group"
 msgstr "Déploiement sur ce groupe d'imaging"
 
-#: modules/pulse2/includes/menu_group_action.php:84
+#: modules/pulse2/includes/menu_group_action.php:82
 msgid "Group Quick action"
 msgstr "Groupe Action rapide"
 
-#: modules/pulse2/includes/menu_group_action.php:97
+#: modules/pulse2/includes/menu_group_action.php:95
 msgid "Csv export"
 msgstr "Export CSV"
-
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
-msgstr "Entité racine"
 
 #: modules/pulse2/includes/utilities.php:86
 msgid "All my entities"
 msgstr "Toutes mes entités"
 
-#: modules/pulse2/includes/menu_action.php:58
-msgid "extTicket issue"
-msgstr "question extTicket"
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr "Entité racine"
+
+#: modules/pulse2/update/installProductUpdates.php:41
+msgid "Installing updates ..."
+msgstr "Mise à jour en cours d'installation"
 
 #: modules/pulse2/update/viewProductUpdates.php:25
 #: modules/pulse2/update/viewProductUpdates.php:51
@@ -185,7 +181,3 @@ msgstr "Mise à jour disponibles"
 #: modules/pulse2/update/viewProductUpdates.php:38
 msgid "Update"
 msgstr "Mise à jour"
-
-#: modules/pulse2/update/installProductUpdates.php:41
-msgid "Installing updates ..."
-msgstr "Mise à jour en cours d'installation"

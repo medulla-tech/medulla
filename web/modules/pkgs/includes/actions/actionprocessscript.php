@@ -2,6 +2,7 @@
 require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");
+require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
 
@@ -22,7 +23,7 @@ extract($_POST);
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1>Run command</h1>
+    <h1><?php echo _T('Run command', 'pkgs'); ?></h1>
 </div>
 <div class="content">
 
@@ -32,11 +33,11 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         <input type="hidden" name="codereturn" value=""/>
     <table id="tableToggle">
         <tr class="toggleable">
-            <th>Step label:</th>
+            <th><?php echo _T('Step label: ', 'pkgs'); ?></th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo $lab; ?>"/></th>
         </tr>
         <tr>
-            <th>Command</th>
+            <th><?php echo _T('Command', 'pkgs'); ?></th>
             <th>
                 <textarea class="special_textarea" name="command" ><?php echo $command; ?></textarea>
             </th>
@@ -53,7 +54,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Alternate package
+                                }" />'._T("Alternate package","pkgs").'
                 </td>
                 <td width="25%">
                     <select name="packageuuid">'.$options.'</select>
@@ -67,7 +68,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Alternate package
+                                }" />'._T("Alternate package","pkgs").'
                     </td>
                     <td width="25%">
                         <select disabled name="packageuuid">'.$options.'</select>
@@ -91,7 +92,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Set timeout
+                    }" />'._T("Set timeout","pkgs").'
                 </td>
                 <td>
                     <input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
@@ -106,7 +107,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Set timeout
+                    }" />'._T("Set timeout","pkgs").'
                 </td>
                 <td>
                     <input type="number" min="0" value="800"  name="timeout"  />
@@ -117,15 +118,15 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         <tr>
             <?php
         $resultlist = array(
-                            array('label' => '10 first lines of result','value' => "10@firstlines"),
-                            array('label' => '20 first lines of result','value' => "20@firstlines"),
-                            array('label' => '30 first lines of result','value' => "30@firstlines"),
-                            array('label' => 'Complete results','value' => "@resultcommand"),
-                            array('label' => '10 last lines of result','value' => "10@lastlines"),
-                            array('label' => '20 last lines of result','value' => "20@lastlines"),
-                            array('label' => '30 last lines of result','value' => "30@lastlines"),
-                            array('label' => '20 last lines of result','value' => "2@lastlines"),
-                            array('label' => 'The last line of result','value' => "1@lastlines"),
+                            array('label' => _T('10 first lines of result','pkgs'),'value' => "10@firstlines"),
+                            array('label' => _T('20 first lines of result','pkgs'),'value' => "20@firstlines"),
+                            array('label' => _T('30 first lines of result','pkgs'),'value' => "30@firstlines"),
+                            array('label' => _T('Complete results','pkgs'),'value' => "@resultcommand"),
+                            array('label' => _T('10 last lines of result','pkgs'),'value' => "10@lastlines"),
+                            array('label' => _T('20 last lines of result','pkgs'),'value' => "20@lastlines"),
+                            array('label' => _T('30 last lines of result','pkgs'),'value' => "30@lastlines"),
+                            array('label' => _T('20 last lines of result','pkgs'),'value' => "2@lastlines"),
+                            array('label' => _T('The last line of result','pkgs'),'value' => "1@lastlines"),
         );
         $posibleresultname = array(
                                     "10@firstlines",
@@ -171,7 +172,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                                                         }
                                                         else{
                                                             jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                        }" />Return result
+                                                        }" />'._T("Return result","pkgs").'
             </td>
             <td>
                 <select  onchange="jQuery(this).attr(\'name\',jQuery(this).val());" name="'.$selectresult.'">'.$options.'</select>
@@ -186,7 +187,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                                                 }
                                                 else{
                                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                }" />Return result
+                                                }" />'._T("Return result","pkgs").'
             </td>
             <td>
             <select disabled onchange="jQuery(this).attr(\'name\',jQuery(this).val());"
@@ -207,7 +208,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$success.'" name="success"  />
@@ -222,7 +223,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_SUCCESS" disabled name="success"  />
@@ -242,7 +243,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$error.'" name="error"  />
@@ -257,7 +258,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_ERROR" enabled name="error"  />
@@ -269,8 +270,8 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         <!-- Option timeout -->
     </div>
 
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-    <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 
 <script type="text/javascript">

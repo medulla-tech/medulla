@@ -47,7 +47,6 @@ from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.pull_targets import PullTargets
 from pulse2.database.msc.orm.bundle import Bundle
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.xmppmaster import XmppMasterDatabase
 # Pulse 2 stuff
 from pulse2.managers.location import ComputerLocationManager
 # Imported last
@@ -577,6 +576,146 @@ class MscDatabase(DatabaseHelper):
             result['connect_as'] = x.connect_as
         return result
 
+    @DatabaseHelper._sessionm
+    def get_msc_listuuid_commandid(self, session, command_id, filter, start, limit):
+        start = int(start)
+        sqlselect="""
+            SELECT
+                DISTINCT commands_on_host.start_date as dated,
+                commands_on_host.end_date as datef
+            FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+            WHERE
+                    commands_on_host.fk_commands = %s
+            ORDER BY dated DESC
+            LIMIT 1;"""% (command_id)
+        resultsql = self.db.execute(sqlselect)
+        if resultsql is not None:
+            dateintervale = [x for x in resultsql]
+            if len(dateintervale) != 0:
+                datestartstr  = dateintervale[0].dated
+                dateendstr    = dateintervale[0].datef
+            else:
+                self.logger.warning("command [%s] deploy missing msc"%command_id)
+                return ""
+        else:
+            return ""
+
+        query = session.query(Target.target_uuid).distinct()\
+        .filter(CommandsOnHost.fk_commands == command_id)\
+        .filter(CommandsOnHost.start_date <= datestartstr)\
+        .filter(CommandsOnHost.end_date >= dateendstr)\
+        .join(CommandsOnHost, Target.id == CommandsOnHost.fk_target)
+
+        if start != -1:
+            query = query.offset(int(start)).limit(int(limit))
+        query=query.count()
+
+        query1 = session.query(Target.target_uuid).distinct()\
+        .filter(CommandsOnHost.fk_commands == command_id)\
+        .filter(CommandsOnHost.start_date <= datestartstr)\
+        .filter(CommandsOnHost.end_date >= dateendstr)\
+        .join(CommandsOnHost, Target.id == CommandsOnHost.fk_target)
+        if start != -1:
+            query1 = query1.offset(int(start)).limit(int(limit))
+
+        query1 = query1.all()
+        commands = ''
+        if query1 is not None:
+            commands = [element[0].split('UUID')[1] for element in query1]
+            commands = ','.join(commands)
+            return {'total': query, 'list': commands}
+        else:
+            return {'total': 0, 'list': commands}
+
+        sqlselect="""
+            SELECT
+                GROUP_CONCAT(DISTINCT SUBSTR(target_uuid, 5) SEPARATOR ',') as listuuid
+            FROM
+                (SELECT
+                    commands_on_host.fk_commands,
+                    target.target_name as dname,
+                    target.target_uuid
+                FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+                WHERE
+                    commands_on_host.fk_commands = %s  and
+                    commands_on_host.start_date <= '%s' and
+                    commands_on_host.end_date >= '%s'
+                    %s
+                    ) as listhost;
+                        """% (command_id, datestartstr, dateendstr, limit)
+
+        resultsql = self.db.execute(sqlselect)
+
+        if resultsql is not None:
+            z= [x for x in resultsql][0].listuuid
+            if z is not None:
+                return z
+        self.logger.warning("command [%s] deploy missing for slot [%s,%s]"%(command_id, datestartstr, dateendstr))
+        return ""
+
+    def get_msc_listhost_commandid(self, command_id):
+        sqlselect="""
+            SELECT
+                DISTINCT commands_on_host.start_date as dated,
+                commands_on_host.end_date as datef
+            FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+            WHERE
+                    commands_on_host.fk_commands = %s
+            ORDER BY dated DESC
+            LIMIT 1;"""% (command_id)
+        resultsql = self.db.execute(sqlselect)
+        if resultsql is not None:
+            dateintervale = [x for x in resultsql]
+            if len(dateintervale) != 0:
+                datestartstr  = dateintervale[0].dated
+                dateendstr    = dateintervale[0].datef
+            else:
+                self.logger.warning("command [%s] deploy missing msc"%command_id)
+                return ""
+        else:
+            return ""
+        sqlselect="""
+            SELECT
+                GROUP_CONCAT(DISTINCT CONCAT('"',
+                            SUBSTR(dname,
+                                1,
+                                CHAR_LENGTH(dname) - 1),
+                            '"')
+                    SEPARATOR ',') as listhostname
+            FROM
+                (SELECT
+                    commands_on_host.fk_commands,
+                    target.target_name as dname,
+                    target.target_uuid
+                FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+                WHERE
+                    commands_on_host.fk_commands = %s  and
+                    commands_on_host.start_date <= '%s' and
+                    commands_on_host.end_date >= '%s'
+                    ) as listhost;
+                        """% (command_id, datestartstr, dateendstr)
+
+        resultsql = self.db.execute(sqlselect)
+
+        if resultsql is not None:
+            z= [x for x in resultsql][0].listhostname
+            if z is not None:
+                return z
+        self.logger.warning("command [%s] deploy missing for slot [%s,%s]"%(command_id, datestartstr, dateendstr))
+        return ""
+
     def deployxmppscheduler(self, login, min , max, filt):
         datenow = datetime.datetime.now()
         sqlselect="""
@@ -778,15 +917,15 @@ class MscDatabase(DatabaseHelper):
         session.close()
 
 
-    def deployxmpp(self, intervalsearch=800):
+    def deployxmpp(self):
         """
             select deploy machine
         """
-        q = self.__search_command_deploy(intervalsearch)
+        q = self.__search_command_deploy()
         return self.__dispach_deploy(q)
 
     @DatabaseHelper._sessionm
-    def __search_command_deploy(self, session, intervalsearch):
+    def __search_command_deploy(self, session):
         """
             select deploy machine
         """
@@ -817,13 +956,10 @@ class MscDatabase(DatabaseHelper):
                     AND
                 `phase`.`state` = 'ready'
                     AND
-                commands.start_date <= '%s'
-                    AND
-                commands.end_date > DATE_SUB("%s",
-                                             INTERVAL %s SECOND);"""%(datenow,
-                                                                      datenow,
-                                                                      intervalsearch)
-        resultsql = self.db.execute(sqlselect)
+                    '%s' BETWEEN commands.start_date AND commands.end_date;"""%(datenow);
+        resultsql = session.execute(sqlselect)
+        session.commit()
+        session.flush()
         return resultsql
 
     @DatabaseHelper._sessionm
@@ -853,7 +989,8 @@ class MscDatabase(DatabaseHelper):
         .join(CommandsOnHostPhase, CommandsOnHostPhase.fk_commands_on_host == CommandsOnHost.id)\
         .filter(CommandsOnHostPhase.name == 'upload')\
         .filter(CommandsOnHostPhase.state == 'ready')\
-        .filter(Commands.end_date > datereduced)
+        .filter(Commands.end_date > datereduced)\
+        .filter(Commands.type != 2)
 
         if filt:
             query = query.filter(or_(Commands.title.like("%%%s%%"%filt), \
@@ -894,16 +1031,9 @@ class MscDatabase(DatabaseHelper):
         updatemachine = []
         listemachine = []
         machine_do_deploy = {}
-        wolupdatemachine = []
         self.logger.debug("select deploy machine")
         for x in q:
-            presence = XmppMasterDatabase().getPresenceuuid(x.target_target_uuid)
-            if presence:
-                self.logger.debug("machine %s [%s] presente for deploy package %s"%(x.target_target_name,
-                                                                                    x.target_target_uuid,
-                                                                                    x.commands_package_id))
-            else:
-                self.logger.debug("machine %s [%s] missing for deploy package %s"%(x.target_target_name,
+            self.logger.debug("machine %s [%s] presente for deploy package %s"%(x.target_target_name,
                                                                                     x.target_target_uuid,
                                                                                     x.commands_package_id))
             deployobject = {'pakkageid': str(x.commands_package_id),
@@ -917,36 +1047,33 @@ class MscDatabase(DatabaseHelper):
                             'title': str(x.commands_title),
                             'UUID': str(x.target_target_uuid),
                             'GUID': x.target_id_group}
-            if presence:
-                if not x.target_target_uuid in tabmachine:
-                    tabmachine.append(x.target_target_uuid)
-                    #recherche machine existe pour xmpp
-                    self.logger.info("deploy on machine %s [%s] -> %s"%(x.target_target_name,
-                                                                        x.target_target_uuid,
-                                                                        x.commands_package_id))
-                    machine_do_deploy[x.target_target_uuid] = x.commands_package_id
-                    updatemachine.append(deployobject)
+            if not x.target_target_uuid in tabmachine:
+                tabmachine.append(x.target_target_uuid)
+                #recherche machine existe pour xmpp
+                self.logger.info("deploy on machine %s [%s] -> %s"%(x.target_target_name,
+                                                                    x.target_target_uuid,
+                                                                    x.commands_package_id))
+                machine_do_deploy[x.target_target_uuid] = x.commands_package_id
+                updatemachine.append(deployobject)
 
-                    session.query(CommandsOnHost).filter(CommandsOnHost.id == x.commands_on_host_id ).\
-                        update({CommandsOnHost.current_state: "done",
-                                CommandsOnHost.stage : "ended"
-                                })
-                    session.flush()
-                    session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.commands_on_host_id).\
-                        update({ CommandsOnHostPhase.state : "done" })
-                    session.flush()
+                session.query(CommandsOnHost).filter(CommandsOnHost.id == x.commands_on_host_id ).\
+                    update({CommandsOnHost.current_state: "done",
+                            CommandsOnHost.stage : "ended"
+                            })
+                session.flush()
+                session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.commands_on_host_id).\
+                    update({ CommandsOnHostPhase.state : "done" })
+                session.flush()
 
-                else:
-                    self.logger.warn("Cancel deploy in process\n"\
-                        "Deploy on machine %s [%s] -> %s"%(x.target_target_name,
-                                                           x.target_target_uuid,
-                                                           x.commands_package_id))
-                    listemachine.append(deployobject)
             else:
-                wolupdatemachine.append(deployobject)
-        # return updatemachine, machine_do_deploy, wolupdatemachine, listemachine #complete infos
-        return updatemachine, wolupdatemachine
+                self.logger.warn("Cancel deploy in process\n"\
+                    "Deploy on machine %s [%s] -> %s"%(x.target_target_name,
+                                                        x.target_target_uuid,
+                                                        x.commands_package_id))
+                listemachine.append(deployobject)
 
+        # return updatemachine, machine_do_deploy, listemachine #complete infos
+        return updatemachine
 
     def deleteCommand(self, cmd_id):
         """
@@ -1977,24 +2104,24 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return map(lambda x: x.toH(), ret)
 
-    def getBundle(self, ctx, fk_bundle):
-        session = create_session()
-        try:
-            ret = session.query(Bundle).filter(self.bundle.c.id == fk_bundle).first().toH()
-        except:
-            self.logger.info("Bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
-            return [None, []]
-        try:
-            cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands.c.order_in_bundle).all())
-        except:
-            self.logger.info("Commands for bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
-            return [ret, []]
-        session.close()
-        try:
-            ret['creation_date'] = cmds[0]['creation_date']
-        except:
-            ret['creation_date'] = ''
-        return [ret, cmds]
+    #def getBundle(self, ctx, fk_bundle):
+        #session = create_session()
+        #try:
+            #ret = session.query(Bundle).filter(self.bundle.c.id == fk_bundle).first().toH()
+        #except:
+            #self.logger.info("Bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
+            #return [None, []]
+        #try:
+            #cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands.c.order_in_bundle).all())
+        #except:
+            #self.logger.info("Commands for bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
+            #return [ret, []]
+        #session.close()
+        #try:
+            #ret['creation_date'] = cmds[0]['creation_date']
+        #except:
+            #ret['creation_date'] = ''
+        #return [ret, cmds]
 
     @DatabaseHelper._session
     def isCommandsCconvergenceType(self, session, ctx, cmd_id):
@@ -2018,7 +2145,7 @@ class MscDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def getCommands(self, session, ctx, cmd_id):
-        if cmd_id == None or cmd_id == '':
+        if cmd_id == "0" or cmd_id == None or cmd_id == '':
             return False
         a_targets = map(lambda target:target[0], self.getTargets(cmd_id, True))
         if ComputerLocationManager().doesUserHaveAccessToMachines(ctx, a_targets):

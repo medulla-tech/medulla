@@ -41,11 +41,29 @@ $submod->setDescription(_T("Packages", "pkgs"));
 $submod->setImg('modules/pkgs/img/navbar/pkgs');
 $submod->setDefaultPage("pkgs/pkgs/index");
 
+//------ Rules ------
+$page = new Page("rulesList" ,_T("Rules list", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/rulesList.php");
+$submod->addPage($page);
+
+$page = new Page("addRule" ,_T("Add a rule", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/addRule.php");
+$submod->addPage($page);
+
+$page = new Page("editRule" ,_T("Edit a rule", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/editRule.php");
+$submod->addPage($page);
+
+$page = new Page("deleteRule",_T("Delete a rule", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/deleteRule.php", array("AJAX" => True,"noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+//------ Packages ------
 $page = new Page("index", _T('Show all packages', 'pkgs'));
 $submod->addPage($page);
 
-$page = new Page("bundleList", _T('Show all bundles', 'pkgs'));
-$submod->addPage($page);
+// $page = new Page("bundleList", _T('Show all bundles', 'pkgs'));
+// $submod->addPage($page);
 
 $page = new Page("add", _T('Add a package', 'pkgs'));
 $submod->addPage($page);
@@ -53,11 +71,11 @@ $submod->addPage($page);
 $page = new Page("edit", _T('Edit a package', 'pkgs'));
 $submod->addPage($page);
 
-$page = new Page("addBundle", _T('Add a bundle', 'pkgs'));
-$submod->addPage($page);
-
-$page = new Page("editBundle", _T('Edit a bundle', 'pkgs'));
-$submod->addPage($page);
+// $page = new Page("addBundle", _T('Add a bundle', 'pkgs'));
+// $submod->addPage($page);
+//
+// $page = new Page("editBundle", _T('Edit a bundle', 'pkgs'));
+// $submod->addPage($page);
 
 $page = new Page("addXMPP", 'Add XMPP package');
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>False));
@@ -78,7 +96,11 @@ $page = new Page("ajaxRefreshPackageTempDir", 'Display Package API Temporary Dir
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxGetSuggestedCommand", 'Get suggested command');
+// $page = new Page("ajaxGetSuggestedCommand", 'Get suggested command');
+// $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
+// $submod->addPage($page);
+
+$page = new Page("ajaxGetSuggestedCommand1", 'Get suggested command');
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
 

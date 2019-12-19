@@ -39,10 +39,10 @@ class RemoteSupportPanel extends Panel {
 	    }
             else{
 	        if (info_collected()){
-		    echo '<p><div style="text-align: center"><a class="btn btn-info btn-small" href="' . urlStrRedirect("support/support/get_file", array('path' => get_archive_link())) . '">' . _('Download archive') . '</a></div></p>';
+		    echo '<p><div style="text-align: center"><a class="btn btn-info btn-small" href="' . urlStrRedirect("support/support/get_file", array('path' => get_archive_link())) . '">' . _T('Download archive', 'support') . '</a></div></p>';
 	        }
 	        else {
-		    echo '<p><div style="text-align: center"><a class="btn btn-info btn-small" href="' . urlStrRedirect("support/support/collect") . '">' . _('Extract log and config files') . '</a></div></p>';
+		    echo '<p><div style="text-align: center"><a class="btn btn-info btn-small" href="' . urlStrRedirect("support/support/collect") . '">' . _T('Extract log and config files', 'support') . '</a></div></p>';
 	        }
 	    }
 

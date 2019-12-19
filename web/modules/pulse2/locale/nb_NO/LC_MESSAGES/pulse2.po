@@ -3,13 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2019-11-29 09:55+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,168 +23,160 @@ msgstr ""
 
 #: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"
-msgstr ""
+msgstr "Pulse2"
 
 #: modules/pulse2/infoPackage.inc.php:45
 msgid "Computers list"
-msgstr ""
+msgstr "Datamaskinliste"
 
 #: modules/pulse2/infoPackage.inc.php:50
 msgid "Location selection in computer edit"
-msgstr ""
+msgstr "Posisjonsvalg i datamaskinredigering"
 
 #: modules/pulse2/infoPackage.inc.php:60
 msgid "update"
-msgstr ""
+msgstr "oppdater"
 
 #: modules/pulse2/infoPackage.inc.php:66
 msgid "viewProductUpdates"
-msgstr ""
+msgstr "se igjennom Produktoppdateringer"
 
 #: modules/pulse2/infoPackage.inc.php:72
 msgid "install Product Updates"
-msgstr ""
+msgstr "Installer Produktoppdateringer"
 
 #: modules/pulse2/infoPackage.inc.php:78
 msgid "Product Updates installation (ajax)"
-msgstr ""
+msgstr "Installasjon av produktoppdateringer (ajax)"
 
 #: modules/pulse2/includes/menu_actionaudit.php:59
-#: modules/pulse2/includes/menu_action.php:57
+#: modules/pulse2/includes/menu_action.php:58
 msgid "Inventory"
-msgstr ""
+msgstr "Inventar"
 
 #: modules/pulse2/includes/menu_actionaudit.php:61
-#: modules/pulse2/includes/menu_action.php:59
+#: modules/pulse2/includes/menu_action.php:60
 msgid "Backup status"
-msgstr ""
+msgstr "Backup status"
 
 #: modules/pulse2/includes/menu_actionaudit.php:62
-#: modules/pulse2/includes/menu_group_action.php:78
 #: modules/pulse2/includes/menu_action.php:61
+#: modules/pulse2/includes/menu_group_action.php:76
 msgid "Imaging management"
-msgstr ""
+msgstr "Administrering av bildefiler"
 
 #: modules/pulse2/includes/menu_actionaudit.php:63
-#: modules/pulse2/includes/menu_action.php:74
+#: modules/pulse2/includes/menu_action.php:73
 msgid "Quick action"
-msgstr ""
+msgstr "Hurtighandling"
 
 #: modules/pulse2/includes/menu_actionaudit.php:66
 #: modules/pulse2/includes/menu_actionaudit.php:71
-#: modules/pulse2/includes/menu_action.php:81
-#: modules/pulse2/includes/menu_action.php:85
-#: modules/pulse2/includes/menu_action.php:95
+#: modules/pulse2/includes/menu_action.php:77
+#: modules/pulse2/includes/menu_action.php:80
+#: modules/pulse2/includes/menu_action.php:89
 msgid "Software deployment"
-msgstr ""
+msgstr "Utrulling av Programvare"
 
 #: modules/pulse2/includes/menu_actionaudit.php:70
-#: modules/pulse2/includes/menu_action.php:65
-#: modules/pulse2/includes/menu_action.php:68
+#: modules/pulse2/includes/menu_action.php:64
+#: modules/pulse2/includes/menu_action.php:67
 msgid "Remote control"
-msgstr ""
+msgstr "Fjernkontroll"
 
 #: modules/pulse2/includes/menu_actionaudit.php:73
-#: modules/pulse2/includes/menu_action.php:73
+#: modules/pulse2/includes/menu_action.php:72
 msgid "xmppconsole"
-msgstr ""
+msgstr "xmppkonsoll"
 
 #: modules/pulse2/includes/menu_actionaudit.php:74
 #: modules/pulse2/includes/menu_actionaudit.php:77
-#: modules/pulse2/includes/menu_action.php:87
-#: modules/pulse2/includes/menu_action.php:89
+#: modules/pulse2/includes/menu_action.php:82
+#: modules/pulse2/includes/menu_action.php:84
 msgid "files browsing"
-msgstr ""
+msgstr "Bla igjennom filer"
 
 #: modules/pulse2/includes/menu_actionaudit.php:75
 msgid "Edit config files"
-msgstr ""
+msgstr "Rediger konfigurasjonsfiler"
+
+#: modules/pulse2/includes/menu_action.php:59
+msgid "extTicket issue"
+msgstr "extTicket-problem"
 
 #: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this group"
-msgstr ""
+msgstr "Slett denne gruppen"
 
 #: modules/pulse2/includes/menu_group_action.php:49
 msgid "Delete this profile"
-msgstr ""
+msgstr "Slett denne profilen"
 
 #: modules/pulse2/includes/menu_group_action.php:52
 msgid "Display this group's content"
-msgstr ""
+msgstr "Vis denne gruppens innhold"
 
 #: modules/pulse2/includes/menu_group_action.php:53
 msgid "Edit this group"
-msgstr ""
+msgstr "Rediger denne gruppen"
 
 #: modules/pulse2/includes/menu_group_action.php:54
 msgid "Share this group"
-msgstr ""
+msgstr "Del denne gruppen"
 
 #: modules/pulse2/includes/menu_group_action.php:56
-#: modules/pulse2/includes/menu_group_action.php:73
-#: modules/pulse2/includes/menu_action.php:80
-#: modules/pulse2/includes/menu_action.php:84
-#: modules/pulse2/includes/menu_action.php:94
-msgid "Read log"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:57
 msgid "Software deployment on this group"
-msgstr ""
+msgstr "Distribusjon av programvare i denne gruppen"
 
-#: modules/pulse2/includes/menu_group_action.php:60
+#: modules/pulse2/includes/menu_group_action.php:59
 msgid "Update on this group"
-msgstr ""
+msgstr "Oppdater i denne gruppen"
 
-#: modules/pulse2/includes/menu_group_action.php:64
+#: modules/pulse2/includes/menu_group_action.php:63
 msgid "Inventory on this profile"
-msgstr ""
+msgstr "Inventar i denne gruppen"
 
-#: modules/pulse2/includes/menu_group_action.php:68
+#: modules/pulse2/includes/menu_group_action.php:67
 msgid "Display this imaging group's content"
-msgstr ""
+msgstr "Vis innholdet til denne bildebehandlingsgruppen"
+
+#: modules/pulse2/includes/menu_group_action.php:69
+msgid "Edit this imaging group"
+msgstr "Rediger denne bildebehandlingsgruppen"
 
 #: modules/pulse2/includes/menu_group_action.php:70
-msgid "Edit this imaging group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:71
 msgid "Share this imaging group"
-msgstr ""
+msgstr "Del denne bildebehandlingsgruppen"
 
-#: modules/pulse2/includes/menu_group_action.php:74
+#: modules/pulse2/includes/menu_group_action.php:72
 msgid "Software deployment on this imaging group"
-msgstr ""
+msgstr "Utrulling av Programvarei denne bildebehandlingsgruppen"
 
-#: modules/pulse2/includes/menu_group_action.php:84
+#: modules/pulse2/includes/menu_group_action.php:82
 msgid "Group Quick action"
-msgstr ""
+msgstr "Hurtigaksjon for gruppen"
 
-#: modules/pulse2/includes/menu_group_action.php:97
+#: modules/pulse2/includes/menu_group_action.php:95
 msgid "Csv export"
-msgstr ""
-
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
-msgstr ""
+msgstr "Csv eksport"
 
 #: modules/pulse2/includes/utilities.php:86
 msgid "All my entities"
-msgstr ""
+msgstr "Alle mine eheter"
 
-#: modules/pulse2/includes/menu_action.php:58
-msgid "extTicket issue"
-msgstr ""
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr "Root enhet"
+
+#: modules/pulse2/update/installProductUpdates.php:41
+msgid "Installing updates ..."
+msgstr "Installerer oppdateringer...."
 
 #: modules/pulse2/update/viewProductUpdates.php:25
 #: modules/pulse2/update/viewProductUpdates.php:51
 msgid "Available updates"
-msgstr ""
+msgstr "Tilgjengelige oppdateringer"
 
 #: modules/pulse2/update/viewProductUpdates.php:38
 msgid "Update"
-msgstr ""
-
-#: modules/pulse2/update/installProductUpdates.php:41
-msgid "Installing updates ..."
-msgstr ""
+msgstr "Oppdater"

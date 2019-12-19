@@ -26,13 +26,14 @@ import logging
 import os
 import sys
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
-
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from master.lib.managepackage import apimanagepackagemsc
+from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
+from pulse2.database.pkgs import PkgsDatabase
 
 import zlib
 import base64
@@ -40,7 +41,7 @@ from master.lib.utils import name_random, simplecommand, file_get_contents
 from xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
     callXmppFunction, ObjectXmpp, callXmppPlugin,\
-    callInventory, callrestartbymaster,\
+    callInventory, callrestartbymaster, callrestartbotbymaster,\
     callshutdownbymaster, send_message_json,\
     callvncchangepermsbymaster, callInstallKey,\
     callremotefile, calllocalfile, callremotecommandshell,\
@@ -149,6 +150,9 @@ def getstepdeployinsession(sessionname):
     return XmppMasterDatabase().getstepdeployinsession(sessionname)
 
 
+def delMachineXmppPresence(uuidinventory):
+    return XmppMasterDatabase().delMachineXmppPresence(uuidinventory)
+
 def setlogxmpp(text,
                type,
                sessionname,
@@ -172,6 +176,8 @@ def setlogxmpp(text,
                                            touser,
                                            fromuser)
 
+def syncthingmachineless( grp, cmd):
+    return XmppMasterDatabase().syncthingmachineless(grp, cmd)
 
 def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, why, headercolumn):
     if typelog == "None" and action == "None" and module == "None" and start_date == "":
@@ -296,6 +302,7 @@ def addlogincommand(login,
                     rebootrequired,
                     shutdownrequired,
                     limit_rate_ko,
+                    syncthing,
                     params):
     return XmppMasterDatabase().addlogincommand(login,
                                                 commandid,
@@ -307,20 +314,20 @@ def addlogincommand(login,
                                                 rebootrequired,
                                                 shutdownrequired,
                                                 limit_rate_ko,
+                                                syncthing,
                                                 params)
-
 
 def loginbycommand(commandid):
     return XmppMasterDatabase().loginbycommand(commandid)
 
-
 def getdeployfromcommandid(command_id, uuid):
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+def stat_syncthing_transfert(group_id, command_id):
+    return XmppMasterDatabase().stat_syncthing_transfert(group_id, command_id)
 
 def getstatdeployfromcommandidstartdate(command_id, datestart):
     return XmppMasterDatabase().getstatdeployfromcommandidstartdate(command_id, datestart)
-
 
 def get_machine_stop_deploy(cmdid, uuid):
     result = XmppMasterDatabase().get_machine_stop_deploy(cmdid, uuid)
@@ -469,11 +476,19 @@ def callInventoryinterface(uuid):
         logging.getLogger().error("for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
 
+def callrestartbot(uuid):
+    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+    if jid != "":
+        callrestartbotbymaster(jid)
+        return jid
+    else:
+        logging.getLogger().error("call restart bot for machine %s : jid xmpp missing" % uuid)
+        return "jid missing"
 
 def createdirectoryuser(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
-        os.chmod(directory, 0o700)
+        os.chmod(directory, 0o777)
         return True
     return False
 
@@ -495,7 +510,6 @@ def callrestart(uuid):
     else:
         logging.getLogger().error("callrestartbymaster for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
-
 
 def callshutdown(uuid, time, msg):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
@@ -645,6 +659,29 @@ def getCountOnlineMachine():
     return XmppMasterDatabase().getCountOnlineMachine()
 
 
+############### package #####################
+def xmppGetAllPackages(filter,  start, end):
+    return apimanagepackagemsc.loadpackagelistmsc(filter, start, end)
+
+def xmpp_getPackageDetail(pid_package):
+    return apimanagepackagemsc.getPackageDetail(pid_package)
+
+############### synchro syncthing package #####################
+
+def pkgs_regiter_synchro_package(uuidpackage, typesynchro):
+    return PkgsDatabase().pkgs_regiter_synchro_package(uuidpackage, typesynchro)
+
+def pkgs_delete_synchro_package(uuidpackage):
+    return PkgsDatabase().pkgs_delete_synchro_package(uuidpackage)
+
+#def xmpp_delete_synchro_package(uuidpackage):
+    #return XmppMasterDatabase().xmpp_delete_synchro_package(uuidpackage)
+
+def xmpp_get_info_synchro_packageid(uuidpackage):
+    list_relayservernosync = XmppMasterDatabase().get_relayservers_no_sync_for_packageuuid(uuidpackage)
+    list_relayserver = XmppMasterDatabase().getRelayServer(enable = True )
+    return [list_relayservernosync, list_relayserver]
+
 def get_agent_descriptor_base():
     return  ObjectXmpp().Update_Remote_Agentlist
 
@@ -675,3 +712,7 @@ def get_conf_master_agent():
 
 def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)
+
+def delcomputer(uuid):
+    callrestartbot(uuid)
+    return XmppMasterDatabase().delMachineXmppPresence(uuid)

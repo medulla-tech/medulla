@@ -1,3 +1,4 @@
+# -*- coding: utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2008 Mandriva
@@ -23,11 +24,13 @@
 
 import logging
 import os
+from os.path import basename
 import shutil
 import requests
 import json
 import tempfile
 import urllib2
+import re
 from contextlib import closing
 from ConfigParser import ConfigParser
 from base64 import b64encode, b64decode
@@ -48,12 +51,439 @@ from mmc.plugins.pkgs.package_put_api import PackagePutA
 from mmc.plugins.pkgs.user_packageapi_api import UserPackageApiApi
 from mmc.plugins.pkgs.config import PkgsConfig
 from pulse2.managers.location import ComputerLocationManager
-
+import uuid
+import json
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
+
+from pulse2.database.pkgs import PkgsDatabase
+from pulse2.database.xmppmaster import XmppMasterDatabase
+import traceback
+from mmc.plugins.xmppmaster.master.lib.utils import simplecommand, name_random
+from unidecode import unidecode
+import uuid
+from xml.dom import minidom
+
+logger = logging.getLogger()
 
 APIVERSION = "0:0:0"
 
 def getApiVersion(): return APIVERSION
+
+
+def singleton(class_):
+    instances = {}
+
+    def getinstance(*args, **kwargs):
+        if class_ not in instances:
+            instances[class_] = class_(*args, **kwargs)
+        return instances[class_]
+    return getinstance
+
+
+@singleton
+class pkgmanage():
+
+    def __init__(self, args=(), kwargs=None):
+        self.args = args
+        self.kwargs = kwargs
+
+    def list_all(self, param):
+        return PkgsDatabase().list_all()
+
+    def add_package(self, package):
+        return PkgsDatabase().createPackage(package)
+
+    def pkgs_register_synchro_package(self, uuidpackage, typesynchro):
+        return PkgsDatabase().pkgs_register_synchro_package(uuidpackage, typesynchro)
+
+    def pkgs_delete_synchro_package(self, uuidpackage):
+        return PkgsDatabase().pkgs_delete_synchro_package(uuidpackage)
+
+    def get_relayservers_no_sync_for_packageuuid(self, uuidpackage):
+        return PkgsDatabase().get_relayservers_no_sync_for_packageuuid(uuidpackage)
+
+    def remove_package(self, uuid):
+        return PkgsDatabase().remove_package(uuid)
+
+    def refresh_dependencies(self, uuid, dependencies_list):
+        PkgsDatabase().refresh_dependencies(uuid, dependencies_list)
+
+    # ------ Extensions / Rules ------
+    def list_all_extensions(self):
+        return PkgsDatabase().list_all_extensions()
+
+    def delete_extension(self, id):
+        return PkgsDatabase().delete_extension(id)
+
+    def lower_extension(self, id):
+        return PkgsDatabase().lower_extension(id)
+
+    def raise_extension(self, id):
+        return PkgsDatabase().raise_extension(id)
+
+    def get_last_extension_order(self):
+        return PkgsDatabase().get_last_extension_order()
+
+    def add_extension(self, datas):
+        return PkgsDatabase().add_extension(datas)
+
+    def get_extension(self, id):
+        return PkgsDatabase().get_extension(id)
+
+def dirpackage():
+    return PkgsDatabase().dirpackage
+
+def list_all():
+    return pkgmanage().list_all()
+
+############### synchro syncthing package #####################
+def pkgs_register_synchro_package(uuidpackage, typesynchro):
+    return pkgmanage().pkgs_register_synchro_package(uuidpackage, typesynchro)
+
+def pkgs_delete_synchro_package(uuidpackage):
+    return pkgmanage().pkgs_delete_synchro_package(uuidpackage)
+
+def pkgs_get_info_synchro_packageid(uuidpackage):
+    list_relayservernosync = pkgmanage().get_relayservers_no_sync_for_packageuuid(uuidpackage)
+    list_relayserver = XmppMasterDatabase().getRelayServer(enable = True )
+    return [list_relayservernosync, list_relayserver]
+
+########### Extensions ###########
+def list_all_extensions():
+    return pkgmanage().list_all_extensions()
+
+def delete_extension(id):
+    pkgmanage().delete_extension(id)
+
+def lower_extension(id):
+    return pkgmanage().lower_extension(id)
+
+def raise_extension(id):
+    return pkgmanage().raise_extension(id)
+
+def get_last_extension_order():
+    return pkgmanage().get_last_extension_order()
+
+def add_extension(datas):
+    return pkgmanage().add_extension(datas)
+
+def get_extension(id):
+    return pkgmanage().get_extension(id)
+
+########### Json ###########
+def chown(uuid):
+    simplecommand("chown -R syncthing:syncthing %s"%os.path.join(_path_package(), uuid))
+    simplecommand("chmod -R 755 %s"%os.path.join(_path_package(), uuid))
+
+def associatePackages(pid, fs, level = 0):
+    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
+    packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
+    destination = os.path.join(packages_input_dir, pid )
+    errortransfert = []
+    result = []
+    boolsucess = True
+    if len(fs) > 0:
+        # file a associe
+        for repfiles in fs:
+            source = os.path.join(tmp_input_dir, repfiles )
+            cmd = "rsync -a %s/ %s/"%( source, destination )
+            rest = simplecommand(cmd)
+            if rest['code'] != 0:
+                boolsucess = False
+                errortransfert.append(rest['code'])
+            #efface repertoire
+            simplecommand("rm -rf %s"%source)
+    return [ boolsucess, errortransfert ]
+
+def _remove_non_ascii(text):
+    return unidecode(unicode(text, encoding = "utf-8"))
+
+def _create_uuid_sympa(label):
+    data = _remove_non_ascii((str(uuid.uuid1())[:9] + label+"_").replace(' ', '_'))
+    data = name_random(36 , pref=data)[:36]
+    return data
+
+def to_json_xmppdeploy( package):
+        """
+            create JSON xmppdeploy descriptor
+        """
+        execscript = 0
+        if package['reboot']:
+            success = execscript + 2
+        else:
+            success = execscript + 1
+        error = success + 1
+        ###------------------------
+        ### metaparameter
+        ###------------------------
+        metaparameter = { "os": [ package['targetos'] ] }
+        metaparameter[package['targetos']] = {
+                                                "label": {
+                                                            "END_ERROR"      : error,
+                                                            "END_SUCCESS"    : success,
+                                                            "EXECUTE_SCRIPT" : execscript
+                                                }
+        }
+        sequence = []
+        ###------------------------
+        ### actionprocessscriptfile
+        ###------------------------
+        sequence .append({ "step": 0,
+                           "action": "actionprocessscriptfile",
+                           "@resultcommand": "@resultcommand",
+                           "actionlabel": "EXECUTE_SCRIPT",
+                           "codereturn": "",
+                           "error": error,
+                           "script": package['command']['command'],
+                           "success": success,
+                           "typescript": "Batch" })
+        ###------------------------
+        ### actionrestart
+        ###------------------------
+        if package['reboot']:
+            sequence .append({ "action": "actionrestart",
+                               "actionlabel": "REBOOT",
+                               "step": 1})
+        ###------------------------
+        ### actionsuccescompletedend
+        ###------------------------
+        dsuccess = { "action": "actionsuccescompletedend",
+                     "actionlabel": "END_SUCCESS",
+                     "clear": "True",
+                     "inventory" : "True",
+                     "step": success}
+        #if str(package['associateinventory']) != "0":
+            #dsuccess['inventory'] = "True"
+        #else:
+            #dsuccess['inventory'] = "False"
+        sequence .append(dsuccess)
+        ###------------------------
+        ### actionerrorcompletedend
+        ###------------------------
+        sequence .append({"step": error,
+                          "action": "actionerrorcompletedend",
+                          "actionlabel": "END_ERROR"})
+        ###------------------------
+        ### info
+        ###------------------------
+        data = {
+            "info": { "Dependency": [],
+                      "description": package['description'],
+                      "metagenerator": "standard",
+                      "methodetransfert": "pullcurl",
+                      "name": str(package['label'] + ' ' +
+                                  package['version'] + ' (' +
+                                  package['id']+')'),
+                      "software": package['label'],
+                      "transferfile": True,
+                      "version": package['version']
+            }
+        }
+
+        data['metaparameter'] = metaparameter
+        data[package['targetos']]={}
+        data[package['targetos']]['sequence'] = sequence
+
+        return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+
+def putPackageDetail( package, need_assign = True):
+    if package['id'] == "" :
+        # create uuid
+        #package['id'] = str( uuid.uuid1())
+        package['id'] = _create_uuid_sympa(package['label'])
+    if len(package['id']) != 36:
+        return False
+    packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
+    packages_id_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages", package['id'] )
+
+    if packages_input_dir == packages_id_input_dir:
+        return False
+    # si le dossier n existe pas alors le creéer
+    if not os.path.isdir(packages_id_input_dir):
+        os.mkdir(packages_id_input_dir, 0755)
+    confjson={
+        "sub_packages" : [],
+        "description" : package['description'],
+        "entity_id" : "0",
+        "id" : package['id'],
+        "commands" :{
+            "postCommandSuccess" : {"command" : "", "name" : ""},
+            "installInit" : {"command" : "", "name" : ""},
+            "postCommandFailure" : {"command" : "", "name" : ""},
+            "command" : {
+                "command" : package['command']['command'],
+                "name" : ""},
+            "preCommand": {"command" : "", "name" : ""}
+        },
+        "name" : package['label'],
+        "targetos" : package['targetos'],
+        "reboot" : package['reboot'],
+        "version" : package['version'],
+        "metagenerator" : package['metagenerator'],
+        "inventory" : {
+            "associateinventory" : str(package['associateinventory']),
+            "licenses": package['licenses'],
+            "queries": {
+                "Qversion": package['Qversion'],
+                "Qvendor": package['Qvendor'],
+                "boolcnd": package['boolcnd'],
+                "Qsoftware": package['Qsoftware']
+            }
+        }
+    }
+    # writte file to xmpp deploy
+    xmppdeployfile = to_json_xmppdeploy(package)
+    fichier = open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" )
+    fichier.write(xmppdeployfile)
+    fichier.close()
+    # Add the package into the database
+    pkgmanage().add_package(confjson)
+
+    # write file to package directory
+    with open( os.path.join(packages_id_input_dir,"conf.json"), "w" ) as outfile:
+        json.dump(confjson, outfile, indent = 4)
+
+    result = package
+    package['postCommandSuccess'] = {"command" : "", "name" : ""}
+    package['installInit'] = {"command" : "", "name" : ""},
+    package['postCommandFailure'] = {"command" : "", "name" : ""}
+    package['preCommand'] =  {"command" : "", "name" : ""}
+    result = [True, package['id'], packages_id_input_dir, package]
+    return result
+
+def pkgs_getTemporaryFiles():
+    logging.getLogger().debug("getTemporaryFiles")
+    ret = []
+    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
+    if os.path.exists(tmp_input_dir):
+        for f in os.listdir(tmp_input_dir):
+            ret.append([f, os.path.isdir(os.path.join(tmp_input_dir, f))])
+    return ret
+
+def getTemporaryFileSuggestedCommand1(tempdir):
+    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
+    ret = {
+            "version": '0.1',
+            "commandcmd": [],
+        }
+    suggestedCommand = []
+    if not isinstance(tempdir, list):
+        if os.path.exists(tmp_input_dir):
+            for f in os.listdir(os.path.join(tmp_input_dir, tempdir)):
+                fileadd = os.path.join(tmp_input_dir, tempdir, f)
+                if os.path.isfile(fileadd):
+                    rules = PkgsDatabase().list_all_extensions()
+                    filename = fileadd.split("/")[-1]
+                    filebasename = filename.split(".")[0]
+                    fileextension = filename.split(".")[-1]
+
+                    for rule in rules:
+                        proposition = ''
+                        test_proposition = True
+                        proposition = rule['proposition']
+                        proposition = proposition.replace("\\", "")
+
+                        if 'name' in rule and rule['name'] != "":
+                            rule['name'] = rule['name'].replace('\\', '')
+                            if not re.search(rule['name'], filebasename, re.IGNORECASE):
+                                test_proposition = False
+
+                        if 'extension' in rule and rule['extension'] != "":
+                            rule['extension'] = rule['extension'].replace("\\", "")
+                            if not re.search(rule['extension'], fileextension, re.IGNORECASE):
+                                test_proposition = False
+
+                        if 'magic_command' in rule and rule['magic_command'] != "":
+                            rule['magic_command'] = rule['magic_command'].replace('\\', '')
+                            pass
+
+                        if 'bang' in rule and rule['bang'] != "":
+                            rule['bang'] = rule['bang'].replace('\\', '')
+                            line = ""
+                            with open(fileadd) as file:
+                                # Read the first line of the file
+                                line = file.readline()
+                                file.close()
+
+                            if re.search(rule['bang'], line, re.IGNORECASE) == None:
+                                test_proposition = False
+
+                        if 'file' in rule and rule['file'] != "":
+                            rule['file'] = rule['file'].replace('\\', '')
+                            result = simplecommand("file %s"%fileadd.replace(" ", "\ "))
+                            if result['code'] == 0:
+                                result = result['result'][0]
+                                if re.search(rule['file'], result, re.IGNORECASE) is None:
+                                    test_proposition = False
+                            else:
+                                test_proposition = False
+
+                        if 'strings' in rule and rule['strings'] != "":
+                            rule['strings'] = rule['strings'].replace('\\', '')
+                            result = simplecommand("strings %s |grep %s"%(fileadd.replace(" ", "\ "), rule['strings']))
+                            if result['code'] == 0:
+                                if len(result['result']) == 0:
+                                    test_proposition = False
+                            else:
+                                test_proposition = False
+
+                        # If all the criterion's rule are validate, no need to test an another rule
+                        # This one is corresponding with the
+                        if test_proposition is True:
+                            logging.getLogger().debug("Rule # %s found the proposition :%s ",str(rule['id']), proposition%filename)
+                            ret['commandcmd'] = proposition%filename
+                            return ret
+
+                    logging.getLogger().info("No command found with rules.")
+                    c = getCommand(fileadd)
+                    command = c.getCommand()
+                    if command is not None:
+                        suggestedCommand.append(command)
+                    else:
+                        logging.getLogger().debug("No command found")
+    ret['commandcmd'] = '\n'.join(suggestedCommand)
+    return ret
+
+
+def pushPackage(random_dir, files, local_files):
+    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
+    logging.getLogger().info("pushing package from a local mmc-agent")
+    if not os.path.exists(tmp_input_dir):
+        os.makedirs(tmp_input_dir)
+    filepath = os.path.join(tmp_input_dir, random_dir)
+    if not os.path.exists(filepath):
+        os.mkdir(filepath)
+    for file in files:
+        logging.getLogger().debug("Move file : %s to %s "%( os.path.join(file['tmp_dir'],
+                                                            random_dir, file['filename']),os.path.join(filepath, file['filename'])))
+        try:
+            shutil.move(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
+                            os.path.join(filepath, file['filename']))
+            os.chmod(os.path.join(filepath, file['filename']), 0660)
+        except (shutil.Error, OSError, IOError):
+            logging.getLogger().error("%s"%(traceback.format_exc()))
+            return False
+    return True
+
+def removeFilesFromPackage( pid, files):
+    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
+    ret = []
+    success=[]
+    error=[]
+    if pid != '' and len(files) > 0:
+        for filedelete in files:
+            filepath = os.path.join(tmp_input_dir, pid, filedelete)
+            if os.path.isfile(filepath):
+                try:
+                    os.remove(filepath)
+                    success.append(filedelete)
+                except OSError as e:
+                    error.append("%s : %s"%(filedelete, str(e)))
+    else:
+        error.append("error file missing for deleted : %s"%(files))
+    ret.append(success)
+    ret.append(error)
+    return ret
 
 def activate():
     logger = logging.getLogger()
@@ -68,6 +498,9 @@ def activate():
     #TaskManager().addTask("pkgs.updateAppstreamPackages",
     #                    (updateAppstreamPackages,),
     #                    cron_expression='23 10 * * *')
+    if not PkgsDatabase().activate(config):
+        logger.warning("Plugin Pkgs: an error occurred during the database initialization")
+        return False
     return True
 
 class ContextMaker(ContextMakerI):
@@ -130,173 +563,175 @@ class RpcProxy(RpcProxyI):
         return d
 
     # PackagePutA
-    def ppa_getPackageDetail(self, pp_api_id, pid):
-        def _ppa_getPackageDetail(result, pp_api_id = pp_api_id, pid = pid):
-            for upa in result:
-                if upa['uuid'] == pp_api_id:
-                    return PackageGetA(upa).getPackageDetail(pid)
-            return False
-        d = self.upaa_getUserPackageApi()
-        d.addCallback(_ppa_getPackageDetail)
-        return d
+    #def ppa_getPackageDetail(self, pp_api_id, pid):
+        #def _ppa_getPackageDetail(result, pp_api_id = pp_api_id, pid = pid):
+            #for upa in result:
+                #if upa['uuid'] == pp_api_id:
+                    #return PackageGetA(upa).getPackageDetail(pid)
+            #return False
+        #d = self.upaa_getUserPackageApi()
+        #d.addCallback(_ppa_getPackageDetail)
+        #return d
 
-    def ppa_pushPackage(self, pp_api_id, random_dir, files, local_mmc):
-        def _ppa_pushPackage(result, pp_api_id = pp_api_id, random_dir = random_dir, files = files, local_mmc = local_mmc):
-            def _encodeFiles(random_dir, files):
-                encoded_files = []
-                for file in files:
-                    logging.getLogger().debug("Encoding file %s" % file['filename'])
-                    tmp_dir = file['tmp_dir']
-                    f = open(os.path.join(tmp_dir, random_dir, file['filename']), 'r')
-                    encoded_files.append({
-                        'filename': file['filename'],
-                        'filebinary': b64encode(f.read()),
-                    })
-                    f.close()
-                return encoded_files
+    #def ppa_pushPackage(self, pp_api_id, random_dir, files, local_mmc):
+        #def _ppa_pushPackage(result, pp_api_id = pp_api_id, random_dir = random_dir, files = files, local_mmc = local_mmc):
+            #def _encodeFiles(random_dir, files):
+                #encoded_files = []
+                #for file in files:
+                    #logging.getLogger().debug("Encoding file %s" % file['filename'])
+                    #tmp_dir = file['tmp_dir']
+                    #f = open(os.path.join(tmp_dir, random_dir, file['filename']), 'r')
+                    #encoded_files.append({
+                        #'filename': file['filename'],
+                        #'filebinary': b64encode(f.read()),
+                    #})
+                    #f.close()
+                #return encoded_files
 
-            def _decodeFiles(random_dir, files):
-                pkgs_tmp_dir = self.getPServerTmpDir()
-                if not os.path.exists(os.path.join(pkgs_tmp_dir, random_dir)):
-                    os.makedirs(os.path.join(pkgs_tmp_dir, random_dir))
-                filepath = os.path.join(pkgs_tmp_dir, random_dir)
-                for file in files:
-                    logging.getLogger().debug("Decoding file %s" % file['filename'])
-                    f = open(os.path.join(filepath, file['filename']), 'w')
-                    f.write(b64decode(file['filebinary']))
-                    f.close()
-                    file['filebinary'] = False
-                    file['tmp_dir'] = pkgs_tmp_dir
-                return files
+            #def _decodeFiles(random_dir, files):
+                #pkgs_tmp_dir = self.getPServerTmpDir()
+                #if not os.path.exists(os.path.join(pkgs_tmp_dir, random_dir)):
+                    #os.makedirs(os.path.join(pkgs_tmp_dir, random_dir))
+                #filepath = os.path.join(pkgs_tmp_dir, random_dir)
+                #for file in files:
+                    #logging.getLogger().debug("Decoding file %s" % file['filename'])
+                    #f = open(os.path.join(filepath, file['filename']), 'w')
+                    #f.write(b64decode(file['filebinary']))
+                    #f.close()
+                    #file['filebinary'] = False
+                    #file['tmp_dir'] = pkgs_tmp_dir
+                #return files
 
-            for upa in result:
-                if upa['uuid'] == pp_api_id:
-                    local_pserver = self.getPServerIP() in ['localhost', '127.0.0.1'] and True or False
-                    if local_mmc:
-                        logging.getLogger().info("Push package from local mmc-agent...")
-                        if local_pserver:
-                            logging.getLogger().info("... to local package server")
-                            return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
-                        else:
-                            logging.getLogger().info("... to external package server")
-                            # Encode files (base64) and send them with XMLRPC
-                            encoded_files = _encodeFiles(random_dir, files)
-                            return PackagePutA(upa).pushPackage(random_dir, encoded_files, local_pserver)
-                    else:
-                        logging.getLogger().info("Push package from external mmc-agent...")
-                        if local_pserver:
-                            logging.getLogger().info("... to local package server")
-                            # decode files
-                            decoded_files = _decodeFiles(random_dir, files)
-                            return PackagePutA(upa).pushPackage(random_dir, decoded_files, local_pserver)
-                        else:
-                            logging.getLogger().info("... to external package server")
-                            return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
-            logging.getLogger().warn("Failed to push package on %s"%(pp_api_id))
-            return False
-        d = self.upaa_getUserPackageApi()
-        d.addCallback(_ppa_pushPackage)
-        return d
+            #for upa in result:
+                #if upa['uuid'] == pp_api_id:
+                    #local_pserver = self.getPServerIP() in ['localhost', '127.0.0.1'] and True or False
+                    #if local_mmc:
+                        #logging.getLogger().info("Push package from local mmc-agent...")
+                        #if local_pserver:
+                            #logging.getLogger().info("... to local package server")
+                            #return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
+                        #else:
+                            #logging.getLogger().info("... to external package server")
+                            ## Encode files (base64) and send them with XMLRPC
+                            #encoded_files = _encodeFiles(random_dir, files)
+                            #return PackagePutA(upa).pushPackage(random_dir, encoded_files, local_pserver)
+                    #else:
+                        #logging.getLogger().info("Push package from external mmc-agent...")
+                        #if local_pserver:
+                            #logging.getLogger().info("... to local package server")
+                            ## decode files
+                            #decoded_files = _decodeFiles(random_dir, files)
+                            #return PackagePutA(upa).pushPackage(random_dir, decoded_files, local_pserver)
+                        #else:
+                            #logging.getLogger().info("... to external package server")
+                            #return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
+            #logging.getLogger().warn("Failed to push package on %s"%(pp_api_id))
+            #return False
+        #d = self.upaa_getUserPackageApi()
+        #d.addCallback(_ppa_pushPackage)
+        #return d
 
-    def ppa_putPackageDetail(self, pp_api_id, package, need_assign = True):
-        # Patching package with entity_id
-        ctx = self.currentContext
-        locations = ComputerLocationManager().getUserLocations(ctx.userid)
-        # Get root location for the user
-        root_location_id = locations[0]['uuid'].replace('UUID', '')
-        package['entity_id'] = root_location_id
-        logging.getLogger().fatal(locations)
-        def _ppa_putPackageDetail(result, pp_api_id = pp_api_id, package = package, need_assign = need_assign):
-            for upa in result:
-                if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).putPackageDetail(package, need_assign)
-            logging.getLogger().warn("Failed to put package details on %s"%(pp_api_id))
-            return False
-        d = self.upaa_getUserPackageApi()
-        d.addCallback(_ppa_putPackageDetail)
-        return d
+    #def ppa_putPackageDetail(self, pp_api_id, package, need_assign = True):
+        #print json.dumps(package, indent=4)
+        ## Patching package with entity_id
+        #ctx = self.currentContext
+        #locations = ComputerLocationManager().getUserLocations(ctx.userid)
+        ## Get root location for the user
+        #root_location_id = locations[0]['uuid'].replace('UUID', '')
+        #package['entity_id'] = root_location_id
+        #logging.getLogger().fatal(locations)
+        #def _ppa_putPackageDetail(result, pp_api_id = pp_api_id, package = package, need_assign = need_assign):
+            #for upa in result:
+                #if upa['uuid'] == pp_api_id:
+                    #return PackagePutA(upa).putPackageDetail(package, need_assign)
+            #logging.getLogger().warn("Failed to put package details on %s"%(pp_api_id))
+            #return False
+        #d = self.upaa_getUserPackageApi()
+        #d.addCallback(_ppa_putPackageDetail)
+        #return d
 
-    def ppa_dropPackage(self, pp_api_id, pid):
-        logging.getLogger().info('I will drop package %s/%s' % (pp_api_id, pid))
-        def _ppa_dropPackage(result, pp_api_id = pp_api_id, pid = pid):
-            for upa in result:
-                if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).dropPackage(pid)
-            return False
-        d = self.upaa_getUserPackageApi()
-        d.addCallback(_ppa_dropPackage)
-        return d
+    #def ppa_dropPackage(self, pp_api_id, pid):
+        #logging.getLogger().info('I will drop package %s/%s' % (pp_api_id, pid))
+        #def _ppa_dropPackage(result, pp_api_id = pp_api_id, pid = pid):
+            #for upa in result:
+                #if upa['uuid'] == pp_api_id:
+                    #return PackagePutA(upa).dropPackage(pid)
+            #return False
+        #d = self.upaa_getUserPackageApi()
+        #d.addCallback(_ppa_dropPackage)
+        #return d
 
-    def ppa_getTemporaryFiles(self, pp_api_id):
-        def _ppa_getTemporaryFiles(result, pp_api_id = pp_api_id):
-            for upa in result:
-                if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).getTemporaryFiles()
-            return []
-        d = self.upaa_getUserPackageApi()
-        d.addCallback(_ppa_getTemporaryFiles)
-        return d
+    #def ppa_getTemporaryFiles(self, pp_api_id):
+        #def _ppa_getTemporaryFiles(result, pp_api_id = pp_api_id):
+            #for upa in result:
+                #if upa['uuid'] == pp_api_id:
+                    #return PackagePutA(upa).getTemporaryFiles()
+            #return []
+        #d = self.upaa_getUserPackageApi()
+        #d.addCallback(_ppa_getTemporaryFiles)
+        #return d
 
-    def ppa_getTemporaryFileSuggestedCommand(self, pp_api_id, tempdir):
-        def _ppa_getTemporaryFilesSuggestedCommand(result, pp_api_id = pp_api_id, tempdir = tempdir):
-            for upa in result:
-                if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).getTemporaryFilesSuggestedCommand(tempdir)
-            return []
-        d = self.upaa_getUserPackageApi()
-        d.addCallback(_ppa_getTemporaryFilesSuggestedCommand)
-        return d
+    #def ppa_getTemporaryFileSuggestedCommand(self, pp_api_id, tempdir):
+        #def _ppa_getTemporaryFilesSuggestedCommand(result, pp_api_id = pp_api_id, tempdir = tempdir):
+            #for upa in result:
+                #if upa['uuid'] == pp_api_id:
+                    #return PackagePutA(upa).getTemporaryFilesSuggestedCommand(tempdir)
+            #return []
+        #d = self.upaa_getUserPackageApi()
+        #d.addCallback(_ppa_getTemporaryFilesSuggestedCommand)
+        #return d
 
-    def ppa_associatePackages(self, pp_api_id, pid, files, level = 0):
-        def _ppa_associatePackages(result, pp_api_id = pp_api_id, pid = pid, files = files, level = level):
-            for upa in result:
-                if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).associatePackages(pid, files, level)
-            return []
-        d = self.upaa_getUserPackageApi()
-        d.addCallback(_ppa_associatePackages)
-        return d
+    #def ppa_associatePackages(self, pp_api_id, pid, files, level = 0):
+        #def _ppa_associatePackages(result, pp_api_id = pp_api_id, pid = pid, files = files, level = level):
+            #for upa in result:
+                #if upa['uuid'] == pp_api_id:
+                    #return PackagePutA(upa).associatePackages(pid, files, level)
+            #return []
+        #d = self.upaa_getUserPackageApi()
+        #d.addCallback(_ppa_associatePackages)
+        #return d
 
 
-    def ppa_removeFilesFromPackage(self, pp_api_id, pid, files):
-        def _ppa_removeFilesFromPackage(result, pp_api_id = pp_api_id, pid = pid, files = files):
-            for upa in result:
-                if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).removeFilesFromPackage(pid, files)
-            return []
-        d = self.upaa_getUserPackageApi()
-        d.addCallback(_ppa_removeFilesFromPackage)
-        return d
+    #def ppa_removeFilesFromPackage(self, pp_api_id, pid, files):
+        #def _ppa_removeFilesFromPackage(result, pp_api_id = pp_api_id, pid = pid, files = files):
+            #for upa in result:
+                #if upa['uuid'] == pp_api_id:
+                    #return PackagePutA(upa).removeFilesFromPackage(pid, files)
+            #return []
+        #d = self.upaa_getUserPackageApi()
+        #d.addCallback(_ppa_removeFilesFromPackage)
+        #return d
 
-    def ppa_getRsyncStatus(self, pp_api_id, pid):
-        def _ppa_getRsyncStatus(result, pp_api_id = pp_api_id, pid = pid):
-            for upa in result:
-                if upa['uuid'] == pp_api_id:
-                    return PackagePutA(upa).getRsyncStatus(pid)
-            return []
-        d = self.upaa_getUserPackageApi()
-        d.addCallback(_ppa_getRsyncStatus)
-        return d
+    #def ppa_getRsyncStatus(self, pp_api_id, pid):
+        #def _ppa_getRsyncStatus(result, pp_api_id = pp_api_id, pid = pid):
+            #for upa in result:
+                #if upa['uuid'] == pp_api_id:
+                    #return PackagePutA(upa).getRsyncStatus(pid)
+            #return []
+        #d = self.upaa_getUserPackageApi()
+        #d.addCallback(_ppa_getRsyncStatus)
+        #return d
 
     # UserPackageApiApi
     def upaa_getUserPackageApi(self):
+        # cf class UserPackageApi package_server/user_package_api/__init__.py
         ctx = self.currentContext
         return UserPackageApiApi().getUserPackageApi(ctx.userid)
 
-    def getMMCIP(self):
-        config = ConfigReader()
+    #def getMMCIP(self):
+        #config = ConfigReader()
 
-        self.agent_config = config.agent_config
+        #self.agent_config = config.agent_config
 
-        return self.agent_config.get("main", "host")
+        #return self.agent_config.get("main", "host")
 
-    def getPServerIP(self):
-        config = PkgsConfig("pkgs")
-        return config.upaa_server
+    #def getPServerIP(self):
+        #config = PkgsConfig("pkgs")
+        #return config.upaa_server
 
-    def getPServerTmpDir(self):
-        config = PkgsConfig("pkgs")
-        return config.tmp_dir
+    #def getPServerTmpDir(self):
+        #config = PkgsConfig("pkgs")
+        #return config.tmp_dir
 
 
 class DownloadAppstreamPackageList(object):
@@ -665,6 +1100,10 @@ def save_xmpp_json(folder, json_content):
                     stepseq['error'] = valerror
     json_content= json.dumps(structpackage)
     _save_xmpp_json(folder, json_content)
+    # Refresh the dependencies list
+    uuid = folder.split('/')[-1]
+    dependencies_list = structpackage['info']['Dependency']
+    pkgmanage().refresh_dependencies(uuid, dependencies_list)
 
 def _aliasforstep(step, dictstepseq):
     for t in dictstepseq:
@@ -744,6 +1183,8 @@ def remove_xmpp_package(package_uuid):
     pathpackagename = os.path.join(_path_package(), package_uuid)
     if os.path.exists(pathpackagename):
         shutil.rmtree(pathpackagename)
+        # Delete the package from the bdd
+        pkgmanage().remove_package(package_uuid)
         return True
     else :
         return False
@@ -829,3 +1270,205 @@ def package_exists(uuid):
         return True
     else:
         return False
+
+class getCommand(object):
+    def __init__(self, file):
+        self.file = file
+        self.logger =logging.getLogger()
+
+    def getStringsData(self):
+        """
+        Get strings command output as XML string if <?xml is found
+        else return all strings datas
+        """
+        strings_command = 'strings "%s"' % self.file
+        filestrings_data = os.popen(strings_command)
+        strings_data = filestrings_data.read()
+        filestrings_data.close()
+
+        xml_pos = strings_data.find('<?xml')
+        if xml_pos != -1:
+            strings_data = strings_data[xml_pos:]
+            end_pos = strings_data.find('</assembly>') + 11
+            return strings_data[:end_pos]
+        else:
+            self.logger.debug('getStringsData: <?xml tag not found :-(, return all strings_data')
+            return strings_data
+
+    def getFileData(self):
+        """
+        return file command output as dictionary
+        """
+        file_command = 'file "%s"' % self.file
+        file_data = os.popen(file_command).read()
+        l = file_data.split(': ')
+        n = len(l)
+        d = {}
+
+        # this awful piece of code convert file output to a dictionnary
+        for i in range(n-1, 0, -1):
+            lcount = len(l[i].split(', '))
+            if lcount == 1: lcount = 2 # lcount is at least equal to 2 to prevent empty values
+            d[l[i-1].split(', ').pop()] = " ".join(l[i].split(', ')[:lcount-1]).replace('\n', '')
+
+        return d
+
+    def getAdobeCommand(self):
+        return '"%s" /sAll' % basename(self.file)
+
+    def getInnoCommand(self):
+        return '"%s" /SP /VERYSILENT /NORESTART' % basename(self.file)
+
+    def getNSISCommand(self):
+        return '"%s" /S' % basename(self.file)
+
+    def getNSISUpdateCommand(self):
+        return '"%s" /S /UPDATE' % basename(self.file)
+
+    def getMozillaCommand(self):
+        return '"%s" -ms' % basename(self.file)
+
+    def get7ZipCommand(self):
+        return '"%s" /S' % basename(self.file)
+
+    def getMSICommand(self):
+        return """msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
+
+if errorlevel 1 (
+  type install.log
+  echo "MSI INSTALLER FAILED WITH CODE %%errorlevel%%. SEE LOG ABOVE."
+  exit /b %%errorlevel%%
+) else (
+  del /F install.log
+  exit 0
+)""" % basename(self.file)
+
+    def getMSIUpdateCommand(self):
+        """
+        Command for *.msp files (MSI update packages)
+        """
+        return 'msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
+
+    def getRegCommand(self):
+        return 'regedit /s "%s"' % basename(self.file)
+
+    def getDpkgCommand(self):
+        return """export DEBIAN_FRONTEND=noninteractive
+export UCF_FORCE_CONFFOLD=yes
+dpkg -i --force-confdef --force-confold "%s" """ % basename(self.file)
+
+    def getRpmCommand(self):
+        return """if [ ! -e /etc/os-release ]; then
+  echo "We are not able to find your linux distibution"
+  exit 1
+else
+  . /etc/os-release
+fi
+
+case "$ID" in
+  mageia)
+    urpmi --auto "%s"
+    ;;
+  redhat|fedora)
+    dnf -y install "%s"
+    ;;
+  *)
+    echo "Your distribution is not supported yet or is not rpm based"
+    exit 1
+    ;;
+esac""" %(basename(self.file), basename(self.file))
+
+    def getAptCommand(self):
+        return 'apt -q -y install "%s" --reinstall' % basename(self.file)
+
+    def getBatCommand(self):
+        return 'cmd.exe /c "%s"' % basename(self.file)
+
+    def getShCommand(self):
+        return './"%s"' % basename(self.file)
+
+    def getCommand(self):
+        self.logger.debug("Parsing %s:" % self.file)
+
+        strings_data = self.getStringsData()
+        file_data = self.getFileData()
+        self.logger.debug("File data: %s" % file_data)
+
+        if "PE32 executable" in file_data[self.file]:
+            # Not an MSI file, maybe InnoSetup or NSIS
+            self.logger.debug("%s is a PE32 executable" % self.file)
+            installer = None
+
+            # If strings_data startswith <?xml, it is propably
+            # standard InnoSetup or NSIS installer
+            # else, we check for another custom installer
+            # (Adobe, ....)
+
+            if strings_data.startswith('<?xml'):
+                xmldoc = minidom.parseString(strings_data)
+                identity = xmldoc.getElementsByTagName('assemblyidentity')
+
+                if len(identity) == 0:
+                    # if assemblyIdentity don't exists, try assemblyIdentity
+                    identity = xmldoc.getElementsByTagName('assemblyIdentity')
+
+                if identity > 0:
+                    if identity[0].hasAttribute('name'):
+                        installer = identity[0].getAttribute('name')
+                        self.logger.debug("Installer: %s" % installer)
+            elif 'AdobeSelfExtractorApp' in strings_data:
+                self.logger.debug('Adobe application detected')
+                return self.getAdobeCommand()
+
+            if installer == "JR.Inno.Setup":
+                self.logger.debug("InnoSetup detected")
+                return self.getInnoCommand()
+            elif installer == "Nullsoft.NSIS.exehead":
+                self.logger.debug("NSIS detected")
+                if re.match('^pulse2-secure-agent-.*\.exe$', basename(self.file)) and not re.search('plugin', basename(self.file)):
+                    self.logger.debug("Pulse Secure Agent detected, add /UPDATE flag")
+                    return self.getNSISUpdateCommand()
+                return self.getNSISCommand()
+            elif installer == "7zS.sfx.exe":
+                self.logger.debug("7zS.sfx detected (Mozilla app inside ?)")
+                if not os.system("grep Mozilla '%s' > /dev/null" % self.file): # return code is 0 if file match
+                    self.logger.debug("Mozilla App detected")
+                    return self.getMozillaCommand()
+                else:
+                    return self.logger.info("I can't get a command for %s" % self.file)
+            elif installer == "7-Zip.7-Zip.7zipInstall":
+                self.logger.debug("7-Zip detected")
+                return self.get7ZipCommand()
+            else:
+                return self.logger.info("I can't get a command for %s" % self.file)
+
+        elif "Name of Creating Application" in file_data:
+            # MSI files are created with Windows Installer, but some apps like Flash Plugin, No
+            if "Windows Installer" in file_data['Name of Creating Application'] or "Document Little Endian" in file_data[self.file]:
+                # MSI files
+                if re.match('(x64|Intel);[0-9]+', file_data['Template']):
+                    if self.file.endswith('.msp'):
+                        self.logger.debug("%s is a MSI Update file" % self.file)
+                        return self.getMSIUpdateCommand()
+                    else:
+                        self.logger.debug("%s is a MSI file" % self.file)
+                        return self.getMSICommand()
+                else:
+                    return self.logger.info("No Template Key for %s" % self.file)
+        elif "Debian binary package" in file_data[self.file] or self.file.endswith(".deb"):
+            self.logger.debug("Debian package detected")
+            return self.getDpkgCommand()
+        elif self.file.endswith(".reg"):
+            self.logger.debug("Reg file detected")
+            return self.getRegCommand()
+        elif self.file.endswith(".bat"):
+            self.logger.debug("MS-DOS Batch file detected")
+            return self.getBatCommand()
+        elif self.file.endswith(".sh"):
+            self.logger.debug("sh file detected")
+            return self.getShCommand()
+        elif self.file.endswith(".rpm"):
+            self.logger.debug("rpm file detected")
+            return self.getRpmCommand()
+        else:
+            return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))

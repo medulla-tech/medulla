@@ -150,6 +150,9 @@ def getLicensesCount(vendor, software, version, valcount=1):
 def getLastMachineInventoryFull(uuid):
     return xmlrpcCleanup(Glpi().getLastMachineInventoryFull(uuid))
 
+def getdbreadonly():
+    config = GlpiConfig("glpi")
+    return xmlrpcCleanup(config.dbreadonly)
 
 def inventoryExists(uuid):
     return xmlrpcCleanup(Glpi().inventoryExists(uuid))
@@ -208,6 +211,9 @@ def getInventoryEM(part):
 
 def getGlpiMachineUri():
     return Glpi().config.glpi_computer_uri
+
+def glpi_version():
+    return Glpi().glpi_version
 
 def getMachineUUIDByMacAddress(mac):
     return xmlrpcCleanup(Glpi().getMachineUUIDByMacAddress(mac))
@@ -295,3 +301,9 @@ def getMachinesMac(uuid):
         return xmlrpcCleanup(Glpi().getMachinesMac(uuid))
     else:
         return ""
+
+def get_machine_for_hostname(strlisthostnale, filter="", start=0, end=0):
+    return xmlrpcCleanup(Glpi().get_machine_for_hostname(strlisthostnale, filter, start, end))
+
+def get_machine_for_id(strlistuuid, filter="", start=0, end=0):
+    return xmlrpcCleanup(Glpi().get_machine_for_id(strlistuuid, filter, start, end))

@@ -875,10 +875,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return True
 
     @DatabaseHelper._session
-    def get_deploy_group_id(self, session, gid, papi, package_id):
+    def get_deploy_group_id(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:
@@ -916,11 +915,10 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return True
 
     @DatabaseHelper._session
-    def edit_convergence_datas(self, session, gid, papi, package_id, datas):
+    def edit_convergence_datas(self, session, gid, package_id, datas):
         datas['cmdPhases'] = cPickle.dumps(datas['cmdPhases'])
         return session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         ).update(datas)
 
@@ -964,16 +962,10 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return ret
 
     @DatabaseHelper._session
-    def get_active_convergence_commands(self, session, mountpoint, package_id):
-        if mountpoint.startswith('UUID/'):
-            # mountpoint param is normally package API UUID
-            # package API UUID = UUID/mountpoint
-            # So remove this silly UUID/
-            mountpoint = mountpoint[5:]
+    def get_active_convergence_commands(self, session, package_id):
         ret = []
         query = session.query(Convergence)
         query = query.filter(and_(
-                    Convergence.papi.like('%' + mountpoint + '%'),
                     Convergence.packageUUID == package_id,
                     Convergence.active == 1,
                 ))
@@ -995,16 +987,15 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             'pid': x[2]} for x in query]
 
     @DatabaseHelper._session
-    def get_convergence_groups_to_update(self, session, mountpoint, package_id):
-        if mountpoint.startswith('UUID/'):
-            # mountpoint param is normally package API UUID
-            # package API UUID = UUID/mountpoint
-            # So remove this silly UUID/
-            mountpoint = mountpoint[5:]
+    def get_convergence_groups_to_update(self, session, package_id):
+        #if mountpoint.startswith('UUID/'):
+            ## mountpoint param is normally package API UUID
+            ## package API UUID = UUID/mountpoint
+            ## So remove this silly UUID/
+            #mountpoint = mountpoint[5:]
         ret = []
         query = session.query(Convergence)
-        query = query.filter(and_(
-                    Convergence.papi.like('%' + mountpoint + '%'),
+        query = query.filter(and_(#Convergence.papi.like('%' + mountpoint + '%'),
                     Convergence.packageUUID == package_id,
                 ))
         for line in query:
@@ -1012,10 +1003,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return ret
 
     @DatabaseHelper._session
-    def get_convergence_command_id(self, session, gid, papi, package_id):
+    def get_convergence_command_id(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:
@@ -1026,10 +1016,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return None
 
     @DatabaseHelper._session
-    def get_convergence_phases(self, session, gid, papi, package_id):
+    def get_convergence_phases(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:
@@ -1043,10 +1032,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return False
 
     @DatabaseHelper._session
-    def is_convergence_active(self, session, gid, papi, package_id):
+    def is_convergence_active(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:

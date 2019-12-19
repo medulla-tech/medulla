@@ -25,40 +25,14 @@
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
-
+require_once("modules/pkgs/includes/xmlrpc.php");
 $p = new PageGenerator(_T("Pending packages list", 'pkgs'));
 $p->setSideMenu($sidemenu);
 $p->display();
-
-
-require_once("modules/pkgs/includes/xmlrpc.php");
-
-$ajax = new AjaxFilterLocation(urlStrRedirect("pkgs/pkgs/ajaxPendingPackageList"));
-
-$res = getUserPackageApi();
-$list = array();
-if (!isset($_SESSION['PACKAGEAPI'])) { $_SESSION['PACKAGEAPI'] = array(); }
-foreach ($res as $mirror) {
-    $list_val[$mirror['uuid']] = base64_encode($mirror['uuid']);
-    $list[$mirror['uuid']] = $mirror['mountpoint'];
-    $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
-}
-if (isset($_GET['location'])) {
-    $ajax->setSelected($list_val[base64_decode($_GET['location'])]);
-}
-elseif (isset($_SESSION['pkgs_selected'])) {
-    $ajax->setSelected($list_val[$_SESSION['pkgs_selected']]);
-}
-$ajax->setElements($list);
-$ajax->setElementsVal($list_val);
+$ajax = new AjaxFilter(urlStrRedirect("pkgs/pkgs/ajaxPendingPackageList"));
 $ajax->display();
-
-
 $ajax->displayDivToUpdate();
-
-
 ?>
-
 <style>
     .noborder { border:0px solid blue; }
 </style>

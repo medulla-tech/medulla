@@ -158,6 +158,13 @@ esac""" %(basename(self.file), basename(self.file))
     def getShCommand(self):
         return './"%s"' % basename(self.file)
 
+    def getMSUCommand(self):
+        """
+        Command for *.msu files (Microsoft Update packages)
+        """
+        return 'wusa.exe "%s" /quiet /norestart' % basename(self.file)
+
+
     def getCommand(self):
         self.logger.debug("Parsing %s:" % self.file)
 
@@ -241,6 +248,9 @@ esac""" %(basename(self.file), basename(self.file))
         elif self.file.endswith(".rpm"):
             self.logger.debug("rpm file detected")
             return self.getRpmCommand()
+        elif self.file.endswith(".msu"):
+            self.logger.debug("Windows Update file detected")
+            return self.getMSUCommand()
         else:
             return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))
 

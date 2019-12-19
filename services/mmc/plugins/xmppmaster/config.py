@@ -28,6 +28,7 @@ from mmc.plugins.xmppmaster.master.lib.utils import ipfromdns
 import os
 import ConfigParser
 
+logger = logging.getLogger()
 
 class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
@@ -95,6 +96,44 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.chatserver = self.get('chat', 'domain')
         # plus petite mac adress
         self.jidagent = "%s@%s/%s" % (utils.name_jid(), self.get('chat', 'domain'), platform.node())
+
+        try:
+            # Interval for installing new plugins on clients (in seconds)
+            self.remote_update_plugin_interval = self.getint('global', 'remote_update_plugin_interval')
+        except Exception:
+            self.remote_update_plugin_interval = 60
+        # Enable memory leaks checks and define interval (in seconds)
+        try:
+            self.memory_leak_check = self.getboolean('global', 'memory_leak_check')
+        except Exception:
+            self.memory_leak_check = False
+        try:
+            self.memory_leak_interval = self.getint('global', 'memory_leak_interval')
+        except Exception:
+            self.memory_leak_interval = 15
+
+        try:
+            self.reload_plugins_base_interval = self.getint('global', 'reload_plugins_base_interval')
+        except Exception:
+            self.reload_plugins_base_interval = 900
+        try:
+            # Interval between two scans for checking for new deployments (in seconds)
+            self.deployment_scan_interval = self.getint('global', 'deployment_scan_interval')
+        except Exception:
+            self.deployment_scan_interval = 30
+        try:
+            self.deployment_end_timeout = self.getint('global', 'deployment_end_timeout')
+        except Exception:
+            self.deployment_end_timeout = 300
+        try:
+            self.session_check_interval = self.getint('global', 'session_check_interval')
+        except Exception:
+            self.session_check_interval = 15
+
+        try:
+            self.wol_interval = self.getint('global', 'wol_interval')
+        except Exception:
+            self.wol_interval = 60
         try:
             self.jidagentsiveo = "%s@%s" % (
                 self.get('global', 'allow_order'), self.get('chat', 'domain'))
@@ -103,6 +142,22 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.ordreallagent = self.getboolean('global', 'inter_agent')
         self.showinfomaster = self.getboolean('master', 'showinfo')
         self.showplugins = self.getboolean('master', 'showplugins')
+        self.blacklisted_mac_addresses= []
+        if self.has_option("master", "blacklisted_mac_addresses"):
+            blacklisted_mac_addresses = self.get('master', 'blacklisted_mac_addresses')
+        else:
+            blacklisted_mac_addresses = "00:00:00:00:00:00"
+        blacklisted_mac_addresses = blacklisted_mac_addresses.lower().replace(":","").replace(" ","")
+        blacklisted_mac_addresses_list = [x.strip() for x in blacklisted_mac_addresses.split(',')]
+        for t in blacklisted_mac_addresses_list:
+            if len(t) == 12:
+                macadrs = t[0:2]+":"+t[2:4]+":"+t[4:6]+":"+t[6:8]+":"+t[8:10]+":"+t[10:12]
+                self.blacklisted_mac_addresses.append(macadrs)
+            else:
+                logger.warning("the mac address in blacklisted_mac_addresses parameter is bad format for value %s"%t )
+        if "00:00:00:00:00:00" not in self.blacklisted_mac_addresses:
+            self.blacklisted_mac_addresses.insert(0,"00:00:00:00:00:00")
+        self.blacklisted_mac_addresses=list(set(self.blacklisted_mac_addresses))
         ###################time execcution plugin ####################
         # write execution time in fichier /tmp/Execution_time_plugin.txt
         #
@@ -169,6 +224,10 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
                         setattr(self, keyparameter, valueparameter)
                 else:
                     logging.getLogger().error("Parameter File Plugin %s : missing" % namefile)
+        if self.has_option("syncthing", "announce_server"):
+            self.announce_server = self.get('syncthing', 'announce_server')
+        else:
+            self.announce_server = "default"
 
     def check(self):
         """

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:46+0100\n"
+"POT-Creation-Date: 2019-11-29 09:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,54 +46,58 @@ msgid "Product Updates installation (ajax)"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:59
-#: modules/pulse2/includes/menu_action.php:57
+#: modules/pulse2/includes/menu_action.php:58
 msgid "Inventory"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:61
-#: modules/pulse2/includes/menu_action.php:59
+#: modules/pulse2/includes/menu_action.php:60
 msgid "Backup status"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:62
-#: modules/pulse2/includes/menu_group_action.php:78
 #: modules/pulse2/includes/menu_action.php:61
+#: modules/pulse2/includes/menu_group_action.php:76
 msgid "Imaging management"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:63
-#: modules/pulse2/includes/menu_action.php:74
+#: modules/pulse2/includes/menu_action.php:73
 msgid "Quick action"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:66
 #: modules/pulse2/includes/menu_actionaudit.php:71
-#: modules/pulse2/includes/menu_action.php:81
-#: modules/pulse2/includes/menu_action.php:85
-#: modules/pulse2/includes/menu_action.php:95
+#: modules/pulse2/includes/menu_action.php:77
+#: modules/pulse2/includes/menu_action.php:80
+#: modules/pulse2/includes/menu_action.php:89
 msgid "Software deployment"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:70
-#: modules/pulse2/includes/menu_action.php:65
-#: modules/pulse2/includes/menu_action.php:68
+#: modules/pulse2/includes/menu_action.php:64
+#: modules/pulse2/includes/menu_action.php:67
 msgid "Remote control"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:73
-#: modules/pulse2/includes/menu_action.php:73
+#: modules/pulse2/includes/menu_action.php:72
 msgid "xmppconsole"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:74
 #: modules/pulse2/includes/menu_actionaudit.php:77
-#: modules/pulse2/includes/menu_action.php:87
-#: modules/pulse2/includes/menu_action.php:89
+#: modules/pulse2/includes/menu_action.php:82
+#: modules/pulse2/includes/menu_action.php:84
 msgid "files browsing"
 msgstr ""
 
 #: modules/pulse2/includes/menu_actionaudit.php:75
 msgid "Edit config files"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:59
+msgid "extTicket issue"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:47
@@ -117,59 +121,51 @@ msgid "Share this group"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:56
-#: modules/pulse2/includes/menu_group_action.php:73
-#: modules/pulse2/includes/menu_action.php:80
-#: modules/pulse2/includes/menu_action.php:84
-#: modules/pulse2/includes/menu_action.php:94
-msgid "Read log"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:57
 msgid "Software deployment on this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:60
+#: modules/pulse2/includes/menu_group_action.php:59
 msgid "Update on this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:64
+#: modules/pulse2/includes/menu_group_action.php:63
 msgid "Inventory on this profile"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:68
+#: modules/pulse2/includes/menu_group_action.php:67
 msgid "Display this imaging group's content"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:70
+#: modules/pulse2/includes/menu_group_action.php:69
 msgid "Edit this imaging group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:71
+#: modules/pulse2/includes/menu_group_action.php:70
 msgid "Share this imaging group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:74
+#: modules/pulse2/includes/menu_group_action.php:72
 msgid "Software deployment on this imaging group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:84
+#: modules/pulse2/includes/menu_group_action.php:82
 msgid "Group Quick action"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:97
+#: modules/pulse2/includes/menu_group_action.php:95
 msgid "Csv export"
-msgstr ""
-
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
 msgstr ""
 
 #: modules/pulse2/includes/utilities.php:86
 msgid "All my entities"
 msgstr ""
 
-#: modules/pulse2/includes/menu_action.php:58
-msgid "extTicket issue"
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr ""
+
+#: modules/pulse2/update/installProductUpdates.php:41
+msgid "Installing updates ..."
 msgstr ""
 
 #: modules/pulse2/update/viewProductUpdates.php:25
@@ -179,8 +175,4 @@ msgstr ""
 
 #: modules/pulse2/update/viewProductUpdates.php:38
 msgid "Update"
-msgstr ""
-
-#: modules/pulse2/update/installProductUpdates.php:41
-msgid "Installing updates ..."
 msgstr ""

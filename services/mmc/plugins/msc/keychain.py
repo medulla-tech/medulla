@@ -26,17 +26,17 @@ import re
 
 from mmc.support.mmctools import shLaunch
 
-def get_keychain():
-    proc = shLaunch('uname -n')
-    p1 = re.compile('\n')
-    out = p1.split(proc.out)
+#def get_keychain():
+    #proc = shLaunch('uname -n')
+    #p1 = re.compile('\n')
+    #out = p1.split(proc.out)
 
-    if os.path.exists('/root/.keychain/'+out[0]+'-sh'):
-        f=open('/root/.keychain/'+out[0]+'-sh', 'r')
-        file = f.read()
-        lines = p1.split(file)
+    #if os.path.exists('/root/.keychain/'+out[0]+'-sh'):
+        #f=open('/root/.keychain/'+out[0]+'-sh', 'r')
+        #file = f.read()
+        #lines = p1.split(file)
 
-        proc = shLaunch('env '+lines[0])
-        return proc.out
+        #proc = shLaunch('env '+lines[0])
+        #return proc.out
 
-    return ''
+    #return ''

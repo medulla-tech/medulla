@@ -79,6 +79,85 @@ class UserLog(Base, XmppMasterDBObj):
     type =  Column(String(10), nullable=False,default = "info")
 
 ################################
+class Syncthingsync(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'syncthingsync'
+    # ====== Fields =============================
+    # Here we define columns for the table syncthingsync.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    uuidpackage = Column(String(40), nullable=False)
+    typesynchro =  Column(String(10), nullable=False, default = "create")
+    relayserver_jid = Column(String(255))
+    watching =  Column(String(3), nullable=False, default = "yes")
+    date = Column(DateTime, default=datetime.datetime.utcnow)
+
+##########DEPLOY PAR SYNCTHING######################
+class Syncthing_deploy_group(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'syncthing_deploy_group'
+    # ====== Fields =============================
+    # Here we define columns for the table syncthing_deploy_group.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    namepartage = Column(String(80), nullable=False)
+    directory_tmp = Column(String(80), nullable=False)
+    dateend = Column(DateTime, default=datetime.datetime.now)
+    package= Column(String(90), nullable=False)
+    status = Column(String(6), nullable=False)
+    grp_parent = Column(Integer, nullable=False)
+    cmd = Column(Integer, nullable=False)
+    nbtransfert = Column(Integer, nullable=False, default = 0)
+
+class Syncthing_ars_cluster(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'syncthing_ars_cluster'
+    # ====== Fields =============================
+    # Here we define columns for the table syncthing_ars_cluster.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    numcluster = Column(Integer, nullable=False)
+    namecluster       = Column(String(45))
+    liststrcluster    = Column(Text , nullable=False)
+    arsmastercluster       = Column(String(255), nullable=False)
+    devivesyncthing       = Column(String(512), nullable=False)
+    keypartage = Column(String(255))
+    type_partage = Column(String(45))
+    # ====== ForeignKey =============================
+    #machines_id = Column(Integer, nullable=False)
+    fk_deploy = Column(Integer, ForeignKey('syncthing_deploy_group.id'), nullable=False)
+    syncthing_deploy_group = relationship(Syncthing_deploy_group)
+
+class Syncthing_machine(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'syncthing_machine'
+    # ====== Fields =============================
+    # Here we define columns for the table syncthing_machine.
+    # Notice that each column is also a normal Python instance attribute.
+    # id = Column(Integer, primary_key=True)
+    jidmachine      = Column(String(255), nullable=False)
+    inventoryuuid   = Column(String(45), nullable=False)
+    title           = Column(String(255))
+    jid_relay       = Column(String(255), nullable=False)
+    cluster         = Column(String(1024), nullable=False)
+    pathpackage     = Column(String(100), nullable=False)
+    state           = Column(String(45), nullable=False)
+    sessionid       = Column(String(45), nullable=False)
+    start           = Column(DateTime, nullable=False)
+    startcmd        = Column(DateTime, nullable=False)
+    endcmd          = Column(DateTime, nullable=False)
+    user            = Column(String(45), nullable=False)
+    command         = Column(Integer, nullable=False)
+    group_uuid      = Column(Integer, nullable=False)
+    login           = Column(String(45))
+    macadress       = Column(String(255))
+    syncthing       = Column(Integer, nullable=False)
+    result          = Column(Text , nullable=False)
+    comment         = Column(String(255))
+    progress        = Column(Integer, nullable=False, default = 0)
+    fk_arscluster   = Column(Integer, ForeignKey('syncthing_ars_cluster.id'), nullable=False)
+    syncthing_ars_cluster = relationship(Syncthing_ars_cluster)
+
 class Machines(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'machines'
@@ -105,7 +184,7 @@ class Machines(Base, XmppMasterDBObj):
     ad_ou_user = Column(Text)
     kiosk_presence = Column(Enum('False', 'True'))
     lastuser = Column(String(45))
-
+    keysyncthing = Column(String(70), default="")
 
 class Network(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -147,6 +226,7 @@ class RelayServer(Base, XmppMasterDBObj):
     enabled=  Column(Boolean, unique=False)
     classutil = Column(String(10))
     moderelayserver = Column(String(7))
+    keysyncthing = Column(String(70), default="")
 
 class Regles(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -244,11 +324,12 @@ class Deploy(Base, XmppMasterDBObj):
     startcmd = Column(DateTime, default=None)
     endcmd = Column(DateTime, default=None)
     result = Column(Text )
-    host = Column(String(45), nullable=False)
+    host = Column(String(255), nullable=False)
     user = Column(String(45), nullable=False, default = "")
     login = Column(String(45), nullable=False)
     command = Column(Integer)
     macadress=Column(String(255))
+    syncthing = Column(Integer)
 
 class Cluster_resources(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -322,6 +403,7 @@ class Has_login_command(Base, XmppMasterDBObj):
     rebootrequired = Column(Boolean, default=False)
     shutdownrequired = Column(Boolean, default=False)
     bandwidth = Column(Integer, default = 0)
+    syncthing = Column(Integer, default = 0)
     params_json = Column(Text, default=None)
 
 class Organization(Base, XmppMasterDBObj):

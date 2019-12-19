@@ -8,8 +8,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           4.5.2
-%define mmc_version            4.5.2
+%define real_version           4.6.1
+%define mmc_version            4.6.1
 
 Summary:	Management Console
 Name:		pulse2
@@ -332,6 +332,7 @@ Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
 Requires:   python-pulse2-common-database-inventory = %version-%release
 Requires:   python-magic
+Requires:   python-inotify
 
 Provides:   pulse-python-mmc-computers-inventory-backend = %version-%release
 
@@ -371,6 +372,7 @@ Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 Requires:   python2-requests
+Requires:   python2-unidecode
 
 %description -n python-mmc-pkgs
 This package contains the pkgs plugin for the MMC agent.
@@ -378,6 +380,7 @@ This package contains the pkgs plugin for the MMC agent.
 %files -n python-mmc-pkgs
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/pkgs.ini
 %python2_sitelib/mmc/plugins/pkgs
+%python2_sitelib/pulse2/database/pkgs
 
 #--------------------------------------------------------------------
 
@@ -827,6 +830,14 @@ mkdir -p %buildroot%_sysconfdir/httpd/conf.d/
 cp -fv %buildroot%_datadir/mmc/conf/apache/pulse.conf %buildroot%_sysconfdir/httpd/conf.d/
 
 mkdir -p %buildroot%_var/lib/pulse2/file-transfer
+
+cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/mmc/contrib/
+
+rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
+mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
+
+rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
+mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete

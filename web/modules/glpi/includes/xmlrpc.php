@@ -30,6 +30,10 @@ function getLastMachineGlpiFull($uuid) {
     return xmlCall("glpi.getLastMachineInventoryFull", array($uuid));
 }
 
+function getdbreadonly() {
+    return xmlCall("glpi.getdbreadonly", array());
+}
+
 function getGlpiEM($part) {
     return xmlCall("glpi.getInventoryEM", array($part));
 }
@@ -191,4 +195,17 @@ function get_computer_count_for_dashboard() {
 function getMachinesMac($uuid){
   return xmlCall("glpi.getMachinesMac", [$uuid]);
 }
+
+function glpi_version(){
+  return xmlCall("glpi.glpi_version", []);
+}
+
+function  xmlrpc_get_machine_for_hostname($str_list_hostname, $filter="", $start=0, $end=0){
+  return xmlCall("glpi.get_machine_for_hostname", [$str_list_hostname, $filter, $start, $end]);
+}
+function  xmlrpc_get_machine_for_id($str_list_uuid, $filter, $start, $end){
+  return xmlCall("glpi.get_machine_for_id", [$str_list_uuid, $filter, $start, $end]);
+}
+
+
 ?>

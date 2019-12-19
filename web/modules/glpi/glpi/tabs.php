@@ -74,17 +74,24 @@ $p->addTop(sprintf(_T("%s's inventory %s", "glpi"), $hostname, $glpi_link), "mod
 $i = 0;
 // TODO get the list with trads from agent (conf file...)
 
+$version = glpi_version();
+
 $tabList = array(
     'Summary' => _T('Summary', "glpi"),
     'Hardware' => _T('Hardware', "glpi"),
+    'Connections' => _t("Connections", "glpi"),
     'Storage' => _T('Storage', "glpi"),
     'Network' => _T('Network', "glpi"),
     'Softwares' => _T('Software', "glpi"),
     'Administrative' => _T('Administrative', "glpi"),
     'History' => _T('History', "glpi"),
     'Antivirus' => _T('Antivirus', "glpi"),
-    'Registry' => _T('Registry', "glpi"),
 );
+
+// Compatibility for glpi 8.4
+if (!preg_match('/^0\.84(.+)/', $version))
+    $tabList['Registry'] = _T('Registry', "glpi");
+
 
 foreach ($tabList as $tab => $str) {
     $p->addTab("tab$i", $str, "", "modules/glpi/glpi/view_part.php", array('hostname'=>$hostname, 'uuid'=>$uuid, 'part' => $tab));

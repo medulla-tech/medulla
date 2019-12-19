@@ -492,6 +492,32 @@ class Glpi92(DyngroupDatabaseHelper):
             autoload = True)
         mapper(RegContents, self.regcontents)
 
+        # items contents
+        self.computersitems = Table("glpi_computers_items", self.metadata,
+            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+            autoload = True)
+        mapper(Computersitems, self.computersitems)
+
+        # Monitors items
+        self.monitors = Table("glpi_monitors", self.metadata,
+            autoload = True)
+        mapper(Monitors, self.monitors)
+
+        # Phones items
+        self.phones = Table("glpi_phones", self.metadata,
+            autoload = True)
+        mapper(Phones, self.phones)
+
+        # Printers items
+        self.printers = Table("glpi_printers", self.metadata,
+            autoload = True)
+        mapper(Printers, self.printers)
+
+        # Peripherals items
+        self.peripherals = Table("glpi_peripherals", self.metadata,
+            autoload = True)
+        mapper(Peripherals, self.peripherals)
+
     ##################### internal query generators
     def __filter_on(self, query):
         """
@@ -2682,6 +2708,45 @@ class Glpi92(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getLastMachineConnectionsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
+        session = create_session()
+        # knokno
+        uuid = int(uuid.replace('UUID', ''))
+        query = session.query(distinct(Computersitems.itemtype)).filter(Computersitems.computers_id == uuid)
+        query = self.__filter_on(query)
+        ret = session.execute(query)
+
+        connectionslist = []
+
+        for element in ret:
+            itemtype = element[0]
+            _itemtype = itemtype.lower()+"s"
+            if hasattr(self, _itemtype):
+                connection = eval("self.%s"%_itemtype)
+                query = session.query(Computersitems.items_id,Computersitems.itemtype, connection.c.name, connection.c.serial).\
+                        join(connection, connection.c.id == Computersitems.items_id).\
+                        filter(Computersitems.computers_id == uuid, Computersitems.itemtype == itemtype)
+                query = self.__filter_on(query).all()
+
+            connectionslist += query
+        session.close()
+
+        table = []
+        for row in connectionslist:
+            tmprow = []
+
+            tmprow.append(['type', row[1]])
+            tmprow.append(['name', row[2]])
+            tmprow.append(['serial', row[3]])
+            table.append(tmprow)
+
+        if count:
+            return len(table)
+
+        return table
+
     def getSearchOptionValue(self, log):
         try:
             return self.searchOptions['en_US'][str(log.id_search_option)]
@@ -4836,48 +4901,139 @@ ORDER BY
         return final_list
 
     @DatabaseHelper._sessionm
-    def get_machines_with_os_and_version(self, session, oslocal, version = ''):
-        """This function returns a list of id of selected OS for dashboard
-        Params:
-            os: string which contains the searched OS
-            version: string which contains the searched version
-        Returns:
-            list of all the machines with specified OS and specified version
-        """
-
-        criterion = ''
-
-        if version == "":
-            criterion = self.config.dbname+'.glpi_operatingsystemversions.name IS NULL'
-        else:
-            criterion = self.config.dbname+'.glpi_operatingsystemversions.name like "%%%s%%"' % version
-
-        sql="""SELECT
-    %s.glpi_computers_pulse.id,
-    %s.glpi_computers_pulse.name
-FROM
-    %s.glpi_computers_pulse
-INNER JOIN
-    %s.glpi_operatingsystems
-ON
-    operatingsystems_id = %s.glpi_operatingsystems.id
-left JOIN
-    %s.glpi_operatingsystemversions
-ON
-    operatingsystemversions_id = %s.glpi_operatingsystemversions.id
-WHERE
-  %s.glpi_operatingsystems.name LIKE "%%%s%%"
-AND
-  %s
-;""" % (self.config.dbname, self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        self.config.dbname,self.config.dbname,
-        oslocal, criterion)
-
-        res = session.execute(sql)
-        result = [{'id':a, 'hostname':b} for a,b in res]
+    def get_machine_for_hostname(self, session, strlisthostname, filter, start, end):
+        sqlrequest ="""
+            SELECT
+                `glpi_computers`.`id` AS `id`,
+                `glpi_computers`.`name` AS `name`,
+                `glpi_computers`.`comment` AS `description`,
+                `glpi_operatingsystems`.name AS `os`,
+                `glpi_computertypes`.`name` AS `type`,
+                `glpi_computers`.`contact` AS `contact`,
+                `glpi_entities`.`name` as `entity`
+            FROM
+                `glpi`.`glpi_computers`
+                JOIN `glpi_items_operatingsystems` ON glpi.glpi_computers.`id` = `glpi_items_operatingsystems`.`items_id`
+                JOIN `glpi_operatingsystems` ON `glpi_operatingsystems`.`id` = `glpi_items_operatingsystems`.`operatingsystems_id`
+                JOIN glpi.glpi_computertypes ON glpi.glpi_computers.`computertypes_id` = `glpi_computertypes`.`id`
+                JOIN glpi.glpi_entities ON glpi.glpi_computers.`entities_id` = glpi.glpi_entities.id
+                where `glpi_computers`.`is_template` = 0 and `glpi_computers`.`is_deleted` = 0
+                    and  `glpi_computers`.`name` in (%s);"""%(strlisthostname)
+        id=[]
+        name=[]
+        description=[]
+        os=[]
+        typemache=[]
+        contact=[]
+        entity=[]
+        result = []
+        res = self.db.execute(sqlrequest)
+        for element in res:
+            id.append( element.id )
+            name.append( element.name )
+            description.append( element.description )
+            os.append( element.os )
+            typemache.append( element.type )
+            contact.append( element.contact )
+            entity.append( element.entity )
+        result.append(id)
+        result.append(name)
+        result.append(description)
+        result.append(os)
+        result.append(typemache)
+        result.append(contact)
+        result.append(entity)
         return result
+
+    @DatabaseHelper._sessionm
+    def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
+        start = int(start)
+        limit = int(limit)
+        criteria = ''
+        if filter != "":
+            criteria = 'AND (glpi_computers.name Like "%%%s%%"\
+            OR glpi_computers.comment Like "%%%s%%"\
+            OR glpi_operatingsystems.name Like "%%%s%%"\
+            OR glpi_computertypes.name Like "%%%s%%"\
+            OR glpi_computers.contact Like "%%%s%%"\
+            OR glpi_entities.name Like "%%%s%%"\
+            )'%(filter, filter, filter, filter, filter, filter)
+
+        sqlrequest ="""
+        SELECT
+            count(*) as nb
+        FROM
+            `glpi`.`glpi_computers`
+            JOIN `glpi_items_operatingsystems` ON glpi.glpi_computers.`id` = `glpi_items_operatingsystems`.`items_id`
+            JOIN `glpi_operatingsystems` ON `glpi_operatingsystems`.`id` = `glpi_items_operatingsystems`.`operatingsystems_id`
+            JOIN glpi.glpi_computertypes ON glpi.glpi_computers.`computertypes_id` = `glpi_computertypes`.`id`
+            JOIN glpi.glpi_entities ON glpi.glpi_computers.`entities_id` = glpi.glpi_entities.id
+            where `glpi_computers`.`is_template` = 0 and `glpi_computers`.`is_deleted` = 0
+                and  `glpi_computers`.`id` in (%s) %s;"""%(strlistuuid, criteria)
+        print sqlrequest
+        res = session.execute(sqlrequest)
+        session.commit()
+        session.flush()
+        nb=0
+        for element in res:
+            nb = element[0]
+
+        sqlrequest ="""
+        SELECT
+            `glpi_computers`.`id` AS `id`,
+            `glpi_computers`.`name` AS `name`,
+            `glpi_computers`.`comment` AS `description`,
+            `glpi_operatingsystems`.name AS `os`,
+            `glpi_computertypes`.`name` AS `type`,
+            `glpi_computers`.`contact` AS `contact`,
+            `glpi_entities`.`name` as `entity`
+        FROM
+            `glpi`.`glpi_computers`
+            JOIN `glpi_items_operatingsystems` ON glpi.glpi_computers.`id` = `glpi_items_operatingsystems`.`items_id`
+            JOIN `glpi_operatingsystems` ON `glpi_operatingsystems`.`id` = `glpi_items_operatingsystems`.`operatingsystems_id`
+            JOIN glpi.glpi_computertypes ON glpi.glpi_computers.`computertypes_id` = `glpi_computertypes`.`id`
+            JOIN glpi.glpi_entities ON glpi.glpi_computers.`entities_id` = glpi.glpi_entities.id
+            where `glpi_computers`.`is_template` = 0 and `glpi_computers`.`is_deleted` = 0
+                and  `glpi_computers`.`id` in (%s) %s
+                LIMIT %s, %s;"""%(strlistuuid,
+                                  criteria,
+                                  start,
+                                  limit)
+
+        id=[]
+        name=[]
+        description=[]
+        os=[]
+        typemache=[]
+        contact=[]
+        entity=[]
+        result = []
+        res = session.execute(sqlrequest)
+        session.commit()
+        session.flush()
+
+        #res = self.db.execute(sqlrequest)
+        if res is not None:
+            for element in res:
+                id.append( element.id )
+                name.append( element.name )
+                description.append( element.description )
+                os.append( element.os )
+                typemache.append( element.type )
+                contact.append( element.contact )
+                entity.append( element.entity )
+            result.append(id)
+            result.append(name)
+            result.append(description)
+            result.append(os)
+            result.append(typemache)
+            result.append(contact)
+            result.append(entity)
+
+        result1={"total" : nb,
+                 "listelet" : result}
+
+        return result1
 
 
 
@@ -5097,4 +5253,19 @@ class RuleAction(DbTOA):
     pass
 
 class OsVersion(DbTOA):
+    pass
+
+class Computersitems(DbTOA):
+    pass
+
+class Monitors(DbTOA):
+    pass
+
+class Phones(DbTOA):
+    pass
+
+class Printers(DbTOA):
+    pass
+
+class Peripherals(DbTOA):
     pass

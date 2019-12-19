@@ -33,6 +33,8 @@ class GlpiConfig(PluginConfig):
     check_db_enable = False
     check_db_interval = 300
 
+    dbreadonly = False
+
     filter_on = None
 
     # state section
@@ -60,6 +62,9 @@ class GlpiConfig(PluginConfig):
         self.dbname = self.get("main", "dbname")
         self.dbuser = self.get("main", "dbuser")
         self.dbpasswd = self.getpassword("main", "dbpasswd")
+
+        if self.has_option("main", "dbreadonly"):
+            GlpiConfig.dbreadonly = self.getboolean("main", "dbreadonly")
 
         if self.has_option("main", "dbsslenable"):
             self.dbsslenable = self.getboolean("main", "dbsslenable")

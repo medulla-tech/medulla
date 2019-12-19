@@ -1,10 +1,11 @@
 <?php
+require_once("../../../../includes/i18n.inc.php");
 extract($_POST);
 $lab = "END_SUCCESS";
 // $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1>End Success</h1>
+    <h1><?php echo _T("End Success", "pkgs"); ?></h1>
 </div>
 
 <div class="content">
@@ -18,7 +19,7 @@ $lab = "END_SUCCESS";
         echo'
         <table id="tableToggleSuccess">
             <tr class="toggleable">
-                <th width="16%">Step label : </th>
+                <th width="16%">'._T('Step label :','pkgs').'</th>
                 <th width="25%">'.$lab.'
                 <th></th>
                 <th></th>
@@ -38,7 +39,7 @@ $lab = "END_SUCCESS";
                              }
                              else{
                                  jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                             }" />Delete package
+			     }" />'._T("Delete package","pkgs").'
              </td>';
 
 
@@ -80,7 +81,7 @@ $lab = "END_SUCCESS";
                              }
                              else{
                                  jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                             }" />Inventory
+                             }" />'._T("Inventory","pkgs").'
              </td>';
 
              if(isset($inventory) && $inventory == "True")
@@ -106,7 +107,7 @@ $lab = "END_SUCCESS";
         </table>';
         ?>
     </div>
-    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleSuccess tr.toggleable").toggle();' type="button" value="Options" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleSuccess tr.toggleable").toggle();' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function(){

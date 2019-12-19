@@ -2,6 +2,7 @@
 require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");
+require_once("../../../../includes/i18n.inc.php");
 /*
     creation action actionprocessscriptfile
                 "step": intnb,
@@ -31,7 +32,7 @@ extract($_POST);
         }
 ?>
 <div class="header">
-    <h1>Execute script</h1>
+    <h1><?php echo _T('Execute script', 'pkgs'); ?></h1>
 </div>
 <div class="content">
     <div>
@@ -50,22 +51,22 @@ extract($_POST);
         $boolselected = false;
         $selectedbyscript = array(
                                     array(
-                                        "label" => 'Native (Windows batch, Linux bash and macOS bash)',
+                                        "label" => _T('Native (Windows batch, Linux bash and macOS bash)','pkgs'),
                                         "value" => "Batch"),
                                     array(
-                                        "label" => 'Python (Windows, Linux and macOS)',
+                                        "label" => _T('Python (Windows, Linux and macOS)','pkgs'),
                                         "value" => "python"),
                                     array(
-                                        "label" => 'Visual Basic Script (Windows)',
+                                        "label" => _T('Visual Basic Script (Windows)','pkgs'),
                                         "value" => "visualbasicscript"),
                                     array(
-                                        "label" => 'Power Shell (Windows)',
+                                        "label" => _T('Power Shell (Windows)','pkgs'),
                                         "value" => "powershell"),
                                     array(
-                                        "label" => 'Korn Shell (Linux & macOS)',
+                                        "label" => _T('Korn Shell (Linux & macOS)','pkgs'),
                                         "value" => "unixKornshell"),
                                     array(
-                                        "label" => 'C Shell (Linux & macOS)',
+                                        "label" => _T('C Shell (Linux & macOS)','pkgs'),
                                             "value" => "unixCshell")
         );
 
@@ -79,10 +80,9 @@ extract($_POST);
                 $options .= "<option value='".$val['value']."'>".$val['label']."</option>";
         }
 
-
-                echo '<th width="16%">
-                    Script language
-                </th>
+                echo '<th width="16%">'
+                    ._T("Script language","pkgs").
+                '</th>
                 <th width="25%">
                     <select name="typescript">'.$options.'</select>
                 </th>';
@@ -90,9 +90,18 @@ extract($_POST);
     ?>
 
         <tr>
-            <th>Script</th>
+            <h1><?php echo _T('Script', 'pkgs'); ?></h1>
             <th>
-              <?php $script = (base64_decode($script, true) != false) ? $script = base64_decode($script) : $script; ?>
+            <?php
+                if (isset($script)){
+                    if( base64_decode($script, true) != false){
+                        $script = base64_decode($script);
+                    }
+                }
+                else{
+                    $script = '';
+                }
+            ?>
               <textarea name="script" cols="5" rows="5"><?php echo $script ;?></textarea>
             </th>
         </tr>
@@ -122,7 +131,7 @@ extract($_POST);
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Alternate package
+                                }" />'._T("Alternate package", "pkgs").'
                     </td>
                     <td width="25%">
                         <select disabled name="packageuuid">'.$optionspackage.'</select>
@@ -146,12 +155,12 @@ extract($_POST);
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Force suffix
+                    }" />'._T("Force suffix", "pkgs").'
                 </td>
                 <td>
                     <input  type="text"
-                           title=\'The "Script language" property above applies a suffix to the script by default.
-However, if the "Force suffix" property is set, the imposed suffix will be this one\'
+                           title=\''._T('The "Script language" property above applies a suffix to the script by default.
+However, if the "Force suffix" property is set, the imposed suffix will be this one\'', 'pkgs').'
                             value="'.$suffix.'"
                             name="suffix"  />
                 </td><td></td><td></td>';
@@ -165,12 +174,12 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Force suffix
+                    }" />'._T('Force suffix','pkgs').'
                 </td>
                 <td>
                     <input  type="text"
-                            title=\'The "Script language" property above applies a suffix to the script by default.
- However, if the "Force suffix" property is set, the imposed suffix will be this one\'
+                            title=\''._T('The "Script language" property above applies a suffix to the script by default.
+ However, if the "Force suffix" property is set, the imposed suffix will be this one\'', 'pkgs').'
                             value="" disabled
                             name="suffix"  />
                 </td><td></td><td></td>';
@@ -199,8 +208,8 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                 </td>
                 <td>
                     <input  type="text"
-                            title=\'The "Script language" property above applies a hash-bang to the script by default.
- However, if the "Force hash-bang" property is set, the imposed hash-bang will be this one\'
+                            title=\''._T('The "Script language" property above applies a hash-bang to the script by default.
+ However, if the "Force hash-bang" property is set, the imposed hash-bang will be this one\'','pkgs').'
                             value="'.$bang.'"
                             name="bang"  />
                 </td><td></td><td></td>';
@@ -214,12 +223,12 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Force hash-bang
+                    }" />'._T("Force hash-bang", "pkgs").'
                 </td>
                 <td>
                     <input  type="text"
-                            title=\'The "Script language" property above applies a hash-bang to the script by default.
- However, if the "Force hash-bang" property is set, the imposed hash-bang will be this one\'
+                            title=\''._T('The "Script language" property above applies a hash-bang to the script by default.
+ However, if the "Force hash-bang" property is set, the imposed hash-bang will be this one\'','pkgs').'
                             value="" disabled
                             name="bang"  />
                 </td><td></td><td></td>';
@@ -259,7 +268,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Set timeout
+                    }" />'._T("Set timeout", "pkgs").'
                 </td>
                 <td>
                     <input type="number" min="0" value="10" disabled name="timeout"  />
@@ -271,15 +280,15 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
     <tr>
     <?php
         $resultlist = array(
-                            array('label' => '10 first lines of result','value' => "10@firstlines"),
-                            array('label' => '20 first lines of result','value' => "20@firstlines"),
-                            array('label' => '30 first lines of result','value' => "30@firstlines"),
-                            array('label' => 'Complete results','value' => "@resultcommand"),
-                            array('label' => '10 last lines of result','value' => "10@lastlines"),
-                            array('label' => '20 last lines of result','value' => "20@lastlines"),
-                            array('label' => '30 last lines of result','value' => "30@lastlines"),
-                            array('label' => '20 last lines of result','value' => "2@lastlines"),
-                            array('label' => 'The last line of result','value' => "1@lastlines"),
+                            array('label' => _T('10 first lines of result','pkgs'),'value' => "10@firstlines"),
+                            array('label' => _T('20 first lines of result','pkgs'),'value' => "20@firstlines"),
+                            array('label' => _T('30 first lines of result','pkgs'),'value' => "30@firstlines"),
+                            array('label' => _T('Complete results','pkgs'),'value' => "@resultcommand"),
+                            array('label' => _T('10 last lines of result','pkgs'),'value' => "10@lastlines"),
+                            array('label' => _T('20 last lines of result','pkgs'),'value' => "20@lastlines"),
+                            array('label' => _T('30 last lines of result','pkgs'),'value' => "30@lastlines"),
+                            array('label' => _T('20 last lines of result','pkgs'),'value' => "2@lastlines"),
+                            array('label' => _T('The last line of result','pkgs'),'value' => "1@lastlines"),
         );
         $posibleresultname = array(
                                     "10@firstlines",
@@ -306,7 +315,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             $selectresult = "1@lastlines";
         }
 
-        foreach($resultlist as $selectedbyscript)
+       foreach($resultlist as $selectedbyscript)
         {
             if(isset($selectresult) && $selectedbyscript['value'] == $selectresult)
             {
@@ -325,7 +334,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                                                         }
                                                         else{
                                                             jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                        }" />Return result
+                                                        }" />'._T("Return result","pkgs").'
             </td>
             <td>
                 <select  onchange="jQuery(this).attr(\'name\',jQuery(this).val());" name="'.$selectresult.'">'.$options.'</select>
@@ -340,7 +349,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                                                 }
                                                 else{
                                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                }" />Return result
+                                                }" />'._T("Return result","pkgs").'
             </td>
             <td>
             <select disabled onchange="jQuery(this).attr(\'name\',jQuery(this).val());"
@@ -362,7 +371,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$success.'" name="success"  />
@@ -377,7 +386,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_SUCCESS" disabled name="success"  />
@@ -397,7 +406,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$error.'" name="error"  />
@@ -412,7 +421,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_ERROR" enabled name="error"  />
@@ -424,8 +433,8 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
         <!-- Option timeout -->
     </div>
 
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete","pkgs");?>" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 
 <script type="text/javascript">

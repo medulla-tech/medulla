@@ -2,6 +2,7 @@
 require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");
+require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
 /*
@@ -49,7 +50,7 @@ $toggleable =  "toggleable".uniqid();
 $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
-    <h1>Unzip File</h1>
+    <h1><?php echo _T('Unzip File', 'pkgs'); ?></h1>
 </div>
 <div class="content">
     <div>
@@ -58,7 +59,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <input type="hidden" name="codereturn" value=""/>
     <table id="tableToggle">
         <tr class="toggleable">
-            <th width="16%">Step label:</th>
+            <th width="16%"><?php echo _T('Step label:', 'pkgs'); ?></th>
             <th width="25%">
                 <input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/>
             </th>
@@ -67,7 +68,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         </tr>
 
         <tr>
-            <th width="16%">Zip file:</th>
+            <th width="16%"><?php echo _T('Zip file:', 'pkgs'); ?></th>
             <th width="25%">
                 <input type="text" name="filename" value="<?php echo (isset($filename))? $filename : ""; ?>"/>
             </th>
@@ -86,7 +87,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                                   }
                                   else{
                                       jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                  }" />Alternate package
+                                  }" />'._T("Alternate package","pkgs").'
                   </td>
                   <td width="25%">
                       <select name="packageuuid">'.$optionspackage.'</select>
@@ -100,7 +101,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                                   }
                                   else{
                                       jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                  }" />Alternate package
+                                  }" />'._T("Alternate package","pkgs").'
                       </td>
                       <td width="25%">
                           <select disabled name="packageuuid">'.$optionspackage.'</select>
@@ -115,15 +116,15 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
          <tr class="toggleable">
             <?php
         $resultlist = array(
-                            array('label' => '10 first lines of result','value' => "10@firstlines"),
-                            array('label' => '20 first lines of result','value' => "20@firstlines"),
-                            array('label' => '30 first lines of result','value' => "30@firstlines"),
-                            array('label' => 'Complete results','value' => "@resultcommand"),
-                            array('label' => '10 last lines of result','value' => "10@lastlines"),
-                            array('label' => '20 last lines of result','value' => "20@lastlines"),
-                            array('label' => '30 last lines of result','value' => "30@lastlines"),
-                            array('label' => '20 last lines of result','value' => "2@lastlines"),
-                            array('label' => 'The last line of result','value' => "1@lastlines"),
+                            array('label' => _T('10 first lines of result','pkgs'),'value' => "10@firstlines"),
+                            array('label' => _T('20 first lines of result','pkgs'),'value' => "20@firstlines"),
+                            array('label' => _T('30 first lines of result','pkgs'),'value' => "30@firstlines"),
+                            array('label' => _T('Complete results','pkgs'),'value' => "@resultcommand"),
+                            array('label' => _T('10 last lines of result','pkgs'),'value' => "10@lastlines"),
+                            array('label' => _T('20 last lines of result','pkgs'),'value' => "20@lastlines"),
+                            array('label' => _T('30 last lines of result','pkgs'),'value' => "30@lastlines"),
+                            array('label' => _T('20 last lines of result','pkgs'),'value' => "2@lastlines"),
+                            array('label' => _T('The last line of result','pkgs'),'value' => "1@lastlines"),
         );
         $posibleresultname = array(
                                     "10@firstlines",
@@ -169,7 +170,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                                                         }
                                                         else{
                                                             jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                        }" />Return result
+                                                        }" />'._T("Return result","pkgs").'
             </td>
             <td>
                 <select  onchange="jQuery(this).attr(\'name\',jQuery(this).val());" name="'.$selectresult.'">'.$options.'</select>
@@ -210,7 +211,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Unzip to specified folder
+                    }" />'._T("Unzip to specified folder","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$pathdirectorytounzip.'" name="pathdirectorytounzip"  />
@@ -225,7 +226,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Unzip to specified folder
+                    }" />'._T("Unzip to specified folder","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="" disabled name="pathdirectorytounzip"  />
@@ -244,7 +245,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                                }" />Go to step
+                                }" />'._T("Go to step","pkgs").'
                 </td>
                 <td width="25%">
                     <input type="text"  value="'.$goto.'" name="goto"  />
@@ -258,7 +259,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                                }" />Go to step
+                                }" />'._T("Go to step","pkgs").'
                     </td>
                     <td width="25%">
                          <input type="text" disabled value="" name="goto"  />
@@ -281,7 +282,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$success.'" name="success"  />
@@ -296,7 +297,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_SUCCESS" disabled name="success"  />
@@ -316,7 +317,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$error.'" name="error"  />
@@ -331,7 +332,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_ERROR" enabled name="error"  />
@@ -342,8 +343,8 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
     </table>
         <!-- Option timeout -->
     </div>
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 
 <script type="text/javascript">

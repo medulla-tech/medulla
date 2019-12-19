@@ -1,4 +1,6 @@
 <?php
+require_once("../../../../includes/i18n.inc.php");
+
 extract($_POST);
 /*
 echo "<pre>";
@@ -6,7 +8,7 @@ echo "<pre>";
 echo "</pre>";*/
 ?>
 <div class="header">
-    <h1>Run Command in shell</h1>
+    <h1><?php echo _T('Run Command in shell', 'pkgs') ?></h1>
 </div>
 <div class="content">
 
@@ -16,11 +18,11 @@ echo "</pre>";*/
         <input type="hidden" name="codereturn" value=""/>
     <table>
         <tr>
-            <th>Step label:</th>
+            <th><?php echo _T('Step label :', 'pkgs') ?></th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/></th>
         </tr>
         <tr>
-            <th>Command</th>
+            <th><?php echo _T('Command', 'pkgs') ?></th>
             <th>
               <textarea name="command" cols="5" rows="5"><?php echo (isset($command)) ? $command : "" ;?></textarea>
             </th>
@@ -37,8 +39,8 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Set timeout
-                </td>
+                    }" />'._T("Set timeout", "pkgs").
+                '</td>
                 <td>
                     <input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
                 </td>';
@@ -52,7 +54,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Set timeout
+                    }" />'._T("Set timeout","pkgs").'
                 </td>
                 <td>
                     <input type="number" min="0" value="10" disabled name="timeout"  />
@@ -63,15 +65,15 @@ echo "</pre>";*/
         <tr>
             <?php
         $resultlist = array(
-                            array('label' => '10 first lines of result','value' => "10@firstlines"),
-                            array('label' => '20 first lines of result','value' => "20@firstlines"),
-                            array('label' => '30 first lines of result','value' => "30@firstlines"),
-                            array('label' => 'Complete results','value' => "@resultcommand"),
-                            array('label' => '10 last lines of result','value' => "10@lastlines"),
-                            array('label' => '20 last lines of result','value' => "20@lastlines"),
-                            array('label' => '30 last lines of result','value' => "30@lastlines"),
-                            array('label' => '20 last lines of result','value' => "2@lastlines"),
-                            array('label' => 'The last line of result','value' => "1@lastlines"),
+                            array('label' => _T('10 first lines of result','pkgs'),'value' => "10@firstlines"),
+                            array('label' => _T('20 first lines of result','pkgs'),'value' => "20@firstlines"),
+                            array('label' => _T('30 first lines of result','pkgs'),'value' => "30@firstlines"),
+                            array('label' => _T('Complete results','pkgs'),'value' => "@resultcommand"),
+                            array('label' => _T('10 last lines of result','pkgs'),'value' => "10@lastlines"),
+                            array('label' => _T('20 last lines of result','pkgs'),'value' => "20@lastlines"),
+                            array('label' => _T('30 last lines of result','pkgs'),'value' => "30@lastlines"),
+                            array('label' => _T('20 last lines of result','pkgs'),'value' => "2@lastlines"),
+                            array('label' => _T('The last line of result','pkgs'),'value' => "1@lastlines"),
         );
         $posibleresultname = array(
                                     "10@firstlines",
@@ -117,7 +119,7 @@ echo "</pre>";*/
                                                         }
                                                         else{
                                                             jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                        }" />Return result
+                                                        }" />'._T("Return result","pkgs").'
             </td>
             <td>
                 <select  onchange="jQuery(this).attr(\'name\',jQuery(this).val());" name="'.$selectresult.'">'.$options.'</select>
@@ -132,7 +134,7 @@ echo "</pre>";*/
                                                 }
                                                 else{
                                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                }" />Return result
+                                                }" />'._T("Return result","pkgs").'
             </td>
             <td>
             <select disabled onchange="jQuery(this).attr(\'name\',jQuery(this).val());"
@@ -153,7 +155,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$success.'" name="success"  />
@@ -168,7 +170,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On success go to step
+                    }" />'._T("On success go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_SUCCESS" disabled name="success"  />
@@ -188,7 +190,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input " type="text"  value="'.$error.'" name="error"  />
@@ -203,7 +205,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />On error go to step
+                    }" />'._T("On error go to step","pkgs").'
                 </td>
                 <td>
                     <input type="text" value="END_ERROR" enabled name="error"  />
@@ -215,5 +217,5 @@ echo "</pre>";*/
         <!-- Option timeout -->
     </div>
 
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
 </div>

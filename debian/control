@@ -213,7 +213,7 @@ Description: Pulse 2 dyngroup plugin for MMC agent
 Package: python-mmc-pkgs
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-msc (= ${binary:Version}), python-requests (>= 0.12.1)
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-msc (= ${binary:Version}), python-requests (>= 0.12.1), python-unidecode
 Description: Pulse 2 pkgs plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.

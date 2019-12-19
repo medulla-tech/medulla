@@ -10,29 +10,54 @@ session_start();
 require_once("../../../../includes/xmlrpc.inc.php"); // For isXMLRPCError() function
 require_once("../../../../modules/pkgs/includes/xmlrpc.php");
 require_once("../../../../modules/pkgs/includes/functions.php");
+include_once("../../../../modules/base/includes/users-xmlrpc.inc.php");
 
+$protocol = 'http://';
+if(isset($_SESSION['login']))
+{
+  $hasright = false;
+  if($_SESSION['login'] != "root")
+  {
+    $aclString = getAcl($_SESSION['login']);
+    $hasright = preg_match('#(pkgs\#){2}(add|edit)#', $aclString);
+  }
+  else
+    $hasright = true;
 
-// list of valid extensions, ex. array("jpeg", "xml", "bmp")
-$allowedExtensions = array();
-// max file size in bytes
-$sizeLimit = get_php_max_upload_size() * 1024 * 1024;
+  if($hasright)
+  {
+    if(isset($_GET['qqfile']))
+      $_GET['qqfile'] = str_replace('../', '', $_GET['qqfile']);
 
-//require('valums-file-uploader/server/php.php');
-$uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+    // list of valid extensions, ex. array("jpeg", "xml", "bmp")
+    $allowedExtensions = array();
+    // max file size in bytes
+    $sizeLimit = get_php_max_upload_size() * 1024 * 1024;
 
-// Call handleUpload() with the name of the folder, relative to PHP's getcwd()
+    //require('valums-file-uploader/server/php.php');
+    $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
 
-// Put uploaded file in PHP upload_tmp_dir / random_dir
-// FIXME: With IE, can't use $_GET values ?? So I use $_SESSION values
-$random_dir = (isset($_GET['random_dir'])) ? $_GET['random_dir'] : $_SESSION['random_dir'];
-$p_api_id = (isset($_GET['selectedPapi'])) ? $_GET['selectedPapi'] : $_SESSION['p_api_id'];
-$upload_tmp_dir = sys_get_temp_dir();
-mkdir($upload_tmp_dir . '/' . $random_dir);
+    // Call handleUpload() with the name of the folder, relative to PHP's getcwd()
 
-$result = $uploader->handleUpload($upload_tmp_dir, $random_dir, $p_api_id);
+    // Put uploaded file in PHP upload_tmp_dir / random_dir
+    // FIXME: With IE, can't use $_GET values ?? So I use $_SESSION values
+    $random_dir = (isset($_GET['random_dir'])) ? $_GET['random_dir'] : $_SESSION['random_dir'];
+    $random_dir = str_replace('../', '', $random_dir);
+    // $p_api_id = (isset($_GET['selectedPapi'])) ? $_GET['selectedPapi'] : $_SESSION['p_api_id'];
+    $upload_tmp_dir = sys_get_temp_dir();
+    mkdir($upload_tmp_dir . '/' . $random_dir);
 
-// to pass data through iframe you will need to encode all html tags
-echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+    $result = $uploader->handleUpload($upload_tmp_dir, $random_dir, $p_api_id);
+
+    // to pass data through iframe you will need to encode all html tags
+    echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+  }
+  else
+    header("location: ".$protocol.$_SERVER['HTTP_HOST']);
+
+}
+else
+  header("location: ".$protocol.$_SERVER['HTTP_HOST']);
 
 /**
  * Handle file uploads via XMLHttpRequest
@@ -148,7 +173,7 @@ class qqFileUploader {
     /**
      * Returns array('success'=>true) or array('error'=>'error message')
      */
-    function handleUpload($uploadDirectory, $random_dir, $p_api_id, $replaceOldFile = FALSE){
+    function handleUpload($uploadDirectory, $random_dir, $replaceOldFile = FALSE){
         $uploadDirectory .= '/' . $random_dir . '/';
         if (!is_writable($uploadDirectory)){
             return array('error' => "Server error. Upload directory isn't writable.");
@@ -187,7 +212,7 @@ class qqFileUploader {
             }
         }
 
-	$this->uploadName = $filename . $ext;
+        $this->uploadName = $filename . $ext;
 
         if ($this->file->save($uploadDirectory . $filename . $ext)){
             // If file pushed to temp directory, push it to MMC agent
@@ -198,27 +223,18 @@ class qqFileUploader {
             // If mmc-agent is not on the same machine than apache server
             // send binary files with XMLRPC (base64 encoded)
             // else mmc-agent will directly get it from tmp directory
-            $mmc_ip = xmlrpc_getMMCIP();
-            $local_mmc = (in_array($mmc_ip, array('127.0.0.1', 'localhost', $_SERVER['SERVER_ADDR']))) ? True : False;
-
+            $local_mmc = True;
             $filebinary = False;
-            if (!$local_mmc) {
-                $file = $upload_tmp_dir . '/' . $random_dir . '/' . $filename;
-                // Read and put content of $file to $filebinary
-                $filebinary = fread(fopen($file, "r"), filesize($file));
-            }
-
             $files[] = array(
                 "filename" => $filename,
-                "filebinary" => ($local_mmc) ? False : base64_encode($filebinary),
-                "tmp_dir" => ($local_mmc) ? $upload_tmp_dir : False,
+                "filebinary" =>  False ,
+                "tmp_dir" => $upload_tmp_dir,
             );
-
-            $push_package_result = pushPackage($p_api_id, $random_dir, $files, $local_mmc);
+            $push_package_result = pushPackage1( $random_dir, $files, $local_mmc);
             // Delete package from PHP /tmp dir
             delete_directory($upload_tmp_dir . '/' . $random_dir);
 
-            if (!isXMLRPCError() and $push_package_result) {
+            if ($push_package_result) {
                 return array(
                     'success' => true,
                 );

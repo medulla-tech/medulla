@@ -4,16 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2019-11-29 09:55+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,184 +24,534 @@ msgstr ""
 
 #: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
 msgid "Packages"
-msgstr ""
+msgstr "Pakker"
 
-#: modules/pkgs/infoPackage.inc.php:44
-msgid "Show all packages"
-msgstr ""
+#: modules/pkgs/infoPackage.inc.php:45 modules/pkgs/pkgs/rulesList.php:29
+#: modules/pkgs/pkgs/localSidebar.php:30
+msgid "Rules list"
+msgstr "Regelliste"
 
-#: modules/pkgs/infoPackage.inc.php:47
-msgid "Show all bundles"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:50 modules/pkgs/pkgs/localSidebar.php:28
-msgid "Add a package"
-msgstr ""
+#: modules/pkgs/infoPackage.inc.php:49 modules/pkgs/pkgs/localSidebar.php:31
+msgid "Add a rule"
+msgstr "Legg til en regel"
 
 #: modules/pkgs/infoPackage.inc.php:53
-#: modules/pkgs/pkgs/ajaxPackageList.php:94 modules/pkgs/pkgs/edit.php:291
+msgid "Edit a rule"
+msgstr "Rediger en regel"
+
+#: modules/pkgs/infoPackage.inc.php:57
+msgid "Delete a rule"
+msgstr "Slett en regel"
+
+#: modules/pkgs/infoPackage.inc.php:62
+msgid "Show all packages"
+msgstr "Viss alle pakker"
+
+#: modules/pkgs/infoPackage.inc.php:68 modules/pkgs/pkgs/localSidebar.php:28
+msgid "Add a package"
+msgstr "Legg til en pakke"
+
+#: modules/pkgs/infoPackage.inc.php:71
+#: modules/pkgs/pkgs/ajaxPackageList.php:82 modules/pkgs/pkgs/edit.php:193
 msgid "Edit a package"
-msgstr ""
+msgstr "Rediger en pakke"
 
-#: modules/pkgs/infoPackage.inc.php:56
-msgid "Add a bundle"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:59
-msgid "Edit a bundle"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:66
+#: modules/pkgs/infoPackage.inc.php:84
 msgid "Create licence static group"
-msgstr ""
+msgstr "Opprett statisk gruppe for lisenser"
 
-#: modules/pkgs/infoPackage.inc.php:72
+#: modules/pkgs/infoPackage.inc.php:90
 msgid "See pending packages"
-msgstr ""
+msgstr "Se ventende pakker"
 
-#: modules/pkgs/infoPackage.inc.php:74
+#: modules/pkgs/infoPackage.inc.php:92
 #: modules/pkgs/pkgs/appstreamSettings.php:34
 msgid "Appstream settings"
-msgstr ""
+msgstr "Appstrøm innstillinger"
 
-#: modules/pkgs/infoPackage.inc.php:89
+#: modules/pkgs/infoPackage.inc.php:111
 msgid "Show mirror status"
-msgstr ""
+msgstr "Vis speilstatus"
 
-#: modules/pkgs/infoPackage.inc.php:93
-#: modules/pkgs/pkgs/ajaxPackageList.php:98
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: modules/pkgs/infoPackage.inc.php:115
+#: modules/pkgs/pkgs/ajaxPackageList.php:86
 msgid "Delete a package"
-msgstr ""
+msgstr "Slett en pakke"
 
-#: modules/pkgs/infoPackage.inc.php:97
+#: modules/pkgs/infoPackage.inc.php:119
 msgid "Delete a bundle"
-msgstr ""
+msgstr "Slett en bunt"
 
-#: modules/pkgs/infoPackage.inc.php:101
+#: modules/pkgs/infoPackage.inc.php:123
 msgid "Activate Appstream Stream"
-msgstr ""
+msgstr "Aktiver Appstrøm strømmer"
 
-#: modules/pkgs/infoPackage.inc.php:140
+#: modules/pkgs/infoPackage.inc.php:162
 msgid "Appstream Updates list"
-msgstr ""
+msgstr "Appstrøm oppdateringsliste"
 
 #: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
 msgid "Pending packages list"
-msgstr ""
+msgstr "Liste over ventende pakker"
+
+#: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
+msgid "Appstream updates"
+msgstr "Appstrøm oppdateringer"
+
+#: modules/pkgs/pkgs/viewAppstreamUpdates.php:38
+msgid "Appstream update"
+msgstr "Appstrøm oppdatering"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:83
+msgid "Please switch to Expert mode to edit this package"
+msgstr "Bytt til ekspertmodus for å redigere denne pakken"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:191
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
+msgid "Package name"
+msgstr "Pakkenavn"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:193 modules/pkgs/pkgs/addRule.php:60
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/edit.php:240 modules/pkgs/pkgs/editRule.php:65
+#: modules/pkgs/pkgs/add.php:198
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:194
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: modules/pkgs/pkgs/add.php:197 modules/pkgs/includes/query.php:88
+msgid "Version"
+msgstr "Versjon"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:195
+msgid "Licenses"
+msgstr "Lisenser"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:196
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:71
+msgid "Os"
+msgstr "OS"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:197
+msgid "Package size"
+msgstr "Pakkestørrelse"
+
+#: modules/pkgs/pkgs/addXMPP.php:40
+msgid "Available Actions"
+msgstr "Tilgjengelige Handlinger"
+
+#: modules/pkgs/pkgs/addXMPP.php:43
+msgid "Deployment Workflow"
+msgstr "Arbeidsflyt for utrulling"
+
+#: modules/pkgs/pkgs/deletePackage.php:38
+msgid "Delete this rule"
+msgstr "Slett denne regelen"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:39
 #, php-format
 msgid "Please access the %s to manage your Appstream subscriptions."
-msgstr ""
+msgstr "Gå inn på %s for å administrere Appstream-abonnementene dine."
 
 #: modules/pkgs/pkgs/appstreamSettings.php:54
 msgid "Invalid My Credentials, please verify your username/password."
-msgstr ""
+msgstr "Ugyldige informasjion, bekreft brukernavnet / passordet ditt."
 
 #: modules/pkgs/pkgs/appstreamSettings.php:70
 msgid "Your My credentials have been set successfully."
-msgstr ""
+msgstr "Din brukerinfo har blitt lagret vellykket."
 
 #: modules/pkgs/pkgs/appstreamSettings.php:86
 msgid "Cannot set My Credentials."
-msgstr ""
+msgstr "Kan ikke lagre din brukerinfo"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:114
 msgid "Your Account credentials are active"
-msgstr ""
+msgstr "Din konto er aktiv"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:115
 msgid "Modify Account credentials"
-msgstr ""
+msgstr "Rediger din kontoinfo"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:122
 msgid "My Account credentials:"
-msgstr ""
+msgstr "Min kontoinformasjon"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:130
 msgid "Username"
-msgstr ""
+msgstr "Brukernavn"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:135
 msgid "Password"
 msgstr "Passord"
 
-#: modules/pkgs/pkgs/add.php:33
-msgid "Add package"
-msgstr ""
+#: modules/pkgs/pkgs/rsync.php:74
+msgid "Relay servers already synchronized : "
+msgstr "Relé-serverne er allerede synkronisert:"
 
-#: modules/pkgs/pkgs/add.php:106 modules/pkgs/pkgs/associate_files.php:65
+#: modules/pkgs/pkgs/rsync.php:93
+msgid "Relay servers not yet synchronized : "
+msgstr "Relé-serverne er ikke synkronisert enda:"
+
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
+msgid "Waiting..."
+msgstr "Venter..."
+
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:51
+msgid "Downloading"
+msgstr "Laster ned"
+
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:55
+msgid "Ready to use"
+msgstr "Klar til bruk"
+
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:66
+msgid "Expiration date"
+msgstr "Utløpsdato"
+
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
+msgid "Packages list"
+msgstr "Pakkeliste"
+
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:101
+msgid "Package API temporary directory is empty"
+msgstr "Midlertidige katalog for Pakke-API- er tom"
+
+#: modules/pkgs/pkgs/addRule.php:29
+msgid "Add a Rule"
+msgstr "Legg til en regel"
+
+#: modules/pkgs/pkgs/addRule.php:41
 #, php-format
-msgid "Files successfully associated with package <b>%s (%s)</b>%s"
-msgstr ""
+msgid "The rule %s has been created"
+msgstr "Regelen %s har blitt laget"
 
-#: modules/pkgs/pkgs/add.php:126 modules/pkgs/pkgs/associate_files.php:85
-#: modules/pkgs/pkgs/edit.php:167
+#: modules/pkgs/pkgs/addRule.php:59 modules/pkgs/pkgs/rulesList.php:69
+#: modules/pkgs/pkgs/editRule.php:64
+msgid "Rule Name"
+msgstr "Regelnavn"
+
+#: modules/pkgs/pkgs/addRule.php:61 modules/pkgs/pkgs/editRule.php:66
+msgid "Search in Name"
+msgstr "Søk i navn"
+
+#: modules/pkgs/pkgs/addRule.php:61 modules/pkgs/pkgs/editRule.php:66
+msgid "File Name"
+msgstr "Filnavn"
+
+#: modules/pkgs/pkgs/addRule.php:62 modules/pkgs/pkgs/editRule.php:67
+msgid "Search in Extension"
+msgstr "Søk i utvidelser"
+
+#: modules/pkgs/pkgs/addRule.php:62 modules/pkgs/pkgs/editRule.php:67
+msgid "File Extension"
+msgstr "Filutvidelse"
+
+#: modules/pkgs/pkgs/addRule.php:63 modules/pkgs/pkgs/editRule.php:68
+msgid "Search in Bang"
+msgstr "Søk i Bang"
+
+#: modules/pkgs/pkgs/addRule.php:63 modules/pkgs/pkgs/editRule.php:68
+msgid "Element in Bang"
+msgstr "Elementer i Bang"
+
+#: modules/pkgs/pkgs/addRule.php:64 modules/pkgs/pkgs/editRule.php:69
+msgid "Search into File command"
+msgstr "Søk i Filkommando"
+
+#: modules/pkgs/pkgs/addRule.php:64 modules/pkgs/pkgs/editRule.php:69
+msgid "Element in File Result"
+msgstr "Elementer i Filresultat"
+
+#: modules/pkgs/pkgs/addRule.php:65 modules/pkgs/pkgs/editRule.php:70
+msgid "Search into Strings command"
+msgstr "Søk i Strengkommando"
+
+#: modules/pkgs/pkgs/addRule.php:65 modules/pkgs/pkgs/editRule.php:70
+msgid "Element in Strings Result"
+msgstr "Elementer i Strengresulatat"
+
+#: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
+#: modules/pkgs/pkgs/add.php:342
+msgid "Add"
+msgstr "Legg til"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
+msgid "Associate package"
+msgstr "Tilknyttet pakke"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
+msgid "Show mirrors"
+msgstr "Vis speil"
+
+#: modules/pkgs/pkgs/remove.php:40
+msgid "The package has been deleted."
+msgstr "Pakken har blitt slettet"
+
+#: modules/pkgs/pkgs/remove.php:54
+msgid "The package failed to delete"
+msgstr "Pakken kunne ikke slettes"
+
+#: modules/pkgs/pkgs/remove.php:67
+msgid "Delete this package"
+msgstr "Slett denne pakken"
+
+#: modules/pkgs/pkgs/activateAppstreamFlow.php:37
+msgid ""
+"The stream has been added successfully. You will receive the latest updates "
+"of this stream directly in your package list."
+msgstr ""
+"Strømmen er lagt til. Du vil motta de siste oppdateringene av denne strømmen"
+" direkte i pakkelisten din."
+
+#: modules/pkgs/pkgs/activateAppstreamFlow.php:51
+msgid "Unable to add stream."
+msgstr "Kan ikke legge til strøm"
+
+#: modules/pkgs/pkgs/activateAppstreamFlow.php:61
+msgid "Activate this Appstream stream?"
+msgstr "Aktiver denne Appstream strømmen"
+
+#: modules/pkgs/pkgs/edit.php:38
+msgid "Edit package"
+msgstr "Rediger pakker"
+
+#: modules/pkgs/pkgs/edit.php:99
+#, php-format
+msgid "Package successfully added in %s"
+msgstr "Pakken ble lagt til i %s"
+
+#: modules/pkgs/pkgs/edit.php:106
+msgid "Package successfully edited"
+msgstr "Pakken er redigert"
+
+#: modules/pkgs/pkgs/edit.php:120
+#, php-format
+msgid "Files successfully added to the package <b>%s (%s)</b>"
+msgstr "Filer er lagt til pakken <b>%s (%s) </b>"
+
+#: modules/pkgs/pkgs/edit.php:129 modules/pkgs/pkgs/add.php:136
+#: modules/pkgs/pkgs/associate_files.php:85
 #, php-format
 msgid "Failed to associate files%s"
-msgstr ""
+msgstr "Kunne ikke tilknytte filer %s"
 
-#: modules/pkgs/pkgs/add.php:143 modules/pkgs/pkgs/associate_files.php:88
-#: modules/pkgs/pkgs/edit.php:182
+#: modules/pkgs/pkgs/edit.php:133 modules/pkgs/pkgs/add.php:142
+#: modules/pkgs/pkgs/associate_files.php:88
 msgid "Failed to associate files"
+msgstr "Kunne ikke tilknytte filer"
+
+#: modules/pkgs/pkgs/edit.php:142
+msgid "Package failed to save"
+msgstr "Pakken kunne ikke lagres"
+
+#: modules/pkgs/pkgs/edit.php:170
+#, php-format
+msgid "Failed to delete files%s"
+msgstr "Kunne ikke slette filer %s"
+
+#: modules/pkgs/pkgs/edit.php:172 modules/pkgs/pkgs/edit.php:177
+#, php-format
+msgid "<br/>File successfully deleted. %s"
+msgstr "<br/>Filen ble slettet. %s"
+
+#: modules/pkgs/pkgs/edit.php:182
+msgid "Failed to delete files"
+msgstr "Kunne ikke slette filer"
+
+#: modules/pkgs/pkgs/edit.php:238
+msgid "Package label"
+msgstr "Pakke-etikett"
+
+#: modules/pkgs/pkgs/edit.php:239
+msgid "Package version"
+msgstr "Pakkeversjon"
+
+#: modules/pkgs/pkgs/edit.php:248 modules/pkgs/pkgs/add.php:213
+msgid "Command's name : "
+msgstr "Kommando navn:"
+
+#: modules/pkgs/pkgs/edit.php:248
+msgid "Command : "
+msgstr "Kommando"
+
+#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:217
+msgid "Need a reboot ?"
+msgstr "Trens en omstart?"
+
+#: modules/pkgs/pkgs/edit.php:259 modules/pkgs/pkgs/add.php:222
+msgid "Windows"
+msgstr "Windows"
+
+#: modules/pkgs/pkgs/edit.php:259 modules/pkgs/pkgs/add.php:222
+msgid "Linux"
+msgstr "Linux"
+
+#: modules/pkgs/pkgs/edit.php:259 modules/pkgs/pkgs/add.php:222
+msgid "Mac OS"
+msgstr "Mac OS"
+
+#: modules/pkgs/pkgs/edit.php:279 modules/pkgs/pkgs/add.php:241
+msgid "Operating System"
+msgstr "Operativsystem"
+
+#: modules/pkgs/pkgs/edit.php:309 modules/pkgs/pkgs/add.php:261
+msgid "Transfer method"
+msgstr "Overføringsmetode"
+
+#: modules/pkgs/pkgs/edit.php:322 modules/pkgs/pkgs/add.php:267
+msgid "bandwidth throttling (ko)"
+msgstr "båndbredde struping (ko)"
+
+#: modules/pkgs/pkgs/edit.php:322 modules/pkgs/pkgs/add.php:267
+msgid "<in ko>"
+msgstr "<in ko>"
+
+#: modules/pkgs/pkgs/edit.php:334 modules/pkgs/pkgs/add.php:271
+msgid "high priority"
+msgstr "høy prioritet"
+
+#: modules/pkgs/pkgs/edit.php:334 modules/pkgs/pkgs/add.php:271
+msgid "ordinary priority"
+msgstr "ordinær prioritet"
+
+#: modules/pkgs/pkgs/edit.php:337 modules/pkgs/pkgs/add.php:274
+msgid "Spooling"
+msgstr "Spooling"
+
+#: modules/pkgs/pkgs/edit.php:369 modules/pkgs/pkgs/add.php:281
+msgid "Dependencies"
+msgstr "Avhengigheter"
+
+#: modules/pkgs/pkgs/edit.php:379 modules/pkgs/pkgs/add.php:291
+msgid "Added dependencies"
+msgstr "Avhengigheter som er lagt til"
+
+#: modules/pkgs/pkgs/edit.php:394 modules/pkgs/pkgs/add.php:306
+msgid "Available dependencies"
+msgstr "Tilgjengelige avhengigheter"
+
+#: modules/pkgs/pkgs/edit.php:443
+msgid "File"
+msgstr "Fil"
+
+#: modules/pkgs/pkgs/edit.php:452
+msgid "Delete file"
+msgstr "Slett Fil"
+
+#: modules/pkgs/pkgs/edit.php:452
+msgid "Are you sure you want to delete this file?"
+msgstr "Er du sikker på at du vil slette denne filen?"
+
+#: modules/pkgs/pkgs/edit.php:468
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
+#: modules/pkgs/includes/html.inc.php:59
+msgid "Click here to select files"
+msgstr "Klikk her for å velge filer"
+
+#: modules/pkgs/pkgs/edit.php:469
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
+#: modules/pkgs/includes/html.inc.php:42
+msgid "Upload Queued Files"
+msgstr "Last opp køede filer"
+
+#: modules/pkgs/pkgs/rulesList.php:35
+#, php-format
+msgid "The rule %s has been removed"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:163
+#: modules/pkgs/pkgs/rulesList.php:71
+msgid "Rules Order"
+msgstr "Rekkefølge for reglene"
+
+#: modules/pkgs/pkgs/rulesList.php:72
+msgid "Rule Description"
+msgstr "Regelbeskrivelse"
+
+#: modules/pkgs/pkgs/rulesList.php:74
+msgid "Raise order priority"
+msgstr "Øk prioritet"
+
+#: modules/pkgs/pkgs/rulesList.php:75
+msgid "Lower order priority"
+msgstr "Senk prioritet"
+
+#: modules/pkgs/pkgs/rulesList.php:76
+msgid "Edit rule"
+msgstr "Rediger regel"
+
+#: modules/pkgs/pkgs/rulesList.php:77
+msgid "Delete rule"
+msgstr "Slett regel"
+
+#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:55
+msgid "Validity (months)"
+msgstr "Gyldighet (måneder)"
+
+#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:62
+msgid "Activate this Appstream stream"
+msgstr "Aktiver denne Appstream strømmen"
+
+#: modules/pkgs/pkgs/editRule.php:29
+msgid "Edit a Rule"
+msgstr "Rediger en regel"
+
+#: modules/pkgs/pkgs/editRule.php:41
+#, php-format
+msgid "The rule %s has been modified"
+msgstr "Regel %s har blitt endret"
+
+#: modules/pkgs/pkgs/add.php:35
+msgid "Add package"
+msgstr "Legg til pakke"
+
+#: modules/pkgs/pkgs/add.php:124 modules/pkgs/pkgs/associate_files.php:65
+#, php-format
+msgid "Files successfully associated with package <b>%s (%s)</b>%s"
+msgstr "Filer assosiert med pakken <b>%s (%s)</b>%s"
+
+#: modules/pkgs/pkgs/add.php:162
 msgid "Choose package source"
-msgstr ""
+msgstr "Velk kilde for pakken"
 
-#: modules/pkgs/pkgs/add.php:178
+#: modules/pkgs/pkgs/add.php:177
 msgid "Already uploaded on the server"
-msgstr ""
+msgstr "Allerede lastet opp til serveren"
 
-#: modules/pkgs/pkgs/add.php:178
+#: modules/pkgs/pkgs/add.php:177
 msgid "Upload from this web page"
-msgstr ""
+msgstr "Last opp fra denne websiden"
 
-#: modules/pkgs/pkgs/add.php:178
+#: modules/pkgs/pkgs/add.php:177
 msgid "Make an empty package"
-msgstr ""
+msgstr "Skap en tom pakke"
 
-#: modules/pkgs/pkgs/add.php:184 modules/pkgs/pkgs/edit.php:322
-msgid "Package API"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:187
+#: modules/pkgs/pkgs/add.php:186
 msgid "Package source"
-msgstr ""
+msgstr "Pakkekilde"
 
-#: modules/pkgs/pkgs/add.php:188 modules/pkgs/pkgs/add.php:434
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:435
 msgid "Files directory"
-msgstr ""
+msgstr "Filkatalog"
 
-#: modules/pkgs/pkgs/add.php:191
+#: modules/pkgs/pkgs/add.php:190
 msgid "Package Creation"
-msgstr ""
+msgstr "Skape pakker"
 
-#: modules/pkgs/pkgs/add.php:197
+#: modules/pkgs/pkgs/add.php:196
 msgid "Name"
-msgstr "Etternavn"
+msgstr "Navn"
 
-#: modules/pkgs/pkgs/add.php:197
+#: modules/pkgs/pkgs/add.php:196
 msgid "<fill_package_name>"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:198 modules/pkgs/pkgs/ajaxPackageList.php:188
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-#: modules/pkgs/includes/query.php:88
-msgid "Version"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:199 modules/pkgs/pkgs/ajaxPackageList.php:187
-#: modules/pkgs/pkgs/edit.php:342
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-msgid "Description"
-msgstr "Beskrivelse"
+msgstr "<fill_package_name>"
 
 #: modules/pkgs/pkgs/add.php:205
 msgid "Command:"
-msgstr ""
+msgstr "Kommando:"
 
 #: modules/pkgs/pkgs/add.php:206
 msgid ""
@@ -210,250 +561,412 @@ msgid ""
 "        You may also ask Google for the silent installation switches. If you're feeling lucky, here is a Google search that may help:\\n\\n\n"
 "        <a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
 msgstr ""
+"Puls vil prøve å finne ut hvordan du vil installere de opplastede filene. \\N\\n\n"
+"Hvis deteksjonen mislykkes, betyr det ikke at applikasjonen ikke kan installeres ved hjelp av Pulse, men at du må finne ut riktig kommando. \\N\\n\n"
+"Mange leverandører (Acrobat, Flash, Skype) har en MSI-versjon av applikasjonene sine som kan behandles automatisk av Pulse. \\N\n"
+"Du kan også be Google om lydløs installasjonsbrytere. Hvis du føler deg heldig, er dette et Google-søk som kan hjelpe: \\n\\n\n"
+"<a href=\"@@GOOGLE_SEARCH_URL@@\">Google søk</a>"
 
-#: modules/pkgs/pkgs/add.php:213 modules/pkgs/pkgs/edit.php:348
-msgid "Command's name : "
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:217 modules/pkgs/pkgs/edit.php:356
-msgid "Need a reboot ?"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:222 modules/pkgs/pkgs/edit.php:362
-msgid "Windows"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:222 modules/pkgs/pkgs/edit.php:362
-msgid "Linux"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:222 modules/pkgs/pkgs/edit.php:362
-msgid "Mac OS"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:241 modules/pkgs/pkgs/edit.php:382
-msgid "Operating System"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:260 modules/pkgs/pkgs/edit.php:411
-msgid "Transfer method"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:266 modules/pkgs/pkgs/edit.php:424
-msgid "bandwidth throttling (ko)"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:266 modules/pkgs/pkgs/edit.php:424
-msgid "<in ko>"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:270 modules/pkgs/pkgs/edit.php:436
-msgid "high priority"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:270 modules/pkgs/pkgs/edit.php:436
-msgid "ordinary priority"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:273 modules/pkgs/pkgs/edit.php:439
-msgid "Spooling"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:341
-msgid "Add"
-msgstr "Legg til"
-
-#: modules/pkgs/pkgs/add.php:456
+#: modules/pkgs/pkgs/add.php:457
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
-msgstr ""
+msgstr "Filopplastning (<b><u title='%s'>%s M maks</u></b>)"
 
-#: modules/pkgs/pkgs/add.php:456
+#: modules/pkgs/pkgs/add.php:457
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
 msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:95
-msgid "Please switch to Expert mode to edit this package"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:110 modules/pkgs/pkgs/index.php:45
-#, php-format
-msgid "MMC failed to contact package server %s."
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:181 modules/pkgs/pkgs/index.php:53
-msgid "Please contact your administrator."
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:185
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
-#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
-msgid "Package name"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:189
-msgid "Licenses"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:190
-msgid "Package size"
-msgstr ""
-
-#: modules/pkgs/pkgs/remove.php:43 modules/pkgs/pkgs/removeBundle.php:36
-msgid "The package has been deleted."
-msgstr ""
-
-#: modules/pkgs/pkgs/remove.php:57 modules/pkgs/pkgs/removeBundle.php:52
-msgid "The package failed to delete"
-msgstr ""
-
-#: modules/pkgs/pkgs/remove.php:69 modules/pkgs/pkgs/removeBundle.php:74
-msgid "Delete this package"
-msgstr ""
-
-#: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
-msgid "Appstream updates"
-msgstr ""
-
-#: modules/pkgs/pkgs/viewAppstreamUpdates.php:38
-msgid "Appstream update"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
-#: modules/pkgs/pkgs/edit.php:579 modules/pkgs/includes/html.inc.php:59
-msgid "Click here to select files"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
-#: modules/pkgs/pkgs/edit.php:580 modules/pkgs/includes/html.inc.php:42
-msgid "Upload Queued Files"
-msgstr ""
-
-#: modules/pkgs/pkgs/localSidebar.php:27 modules/pkgs/pkgs/index.php:29
-msgid "Packages list"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
-msgid "Waiting..."
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:51
-msgid "Downloading"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:55
-msgid "Ready to use"
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:66
-msgid "Expiration date"
-msgstr ""
+"Endre post_max_size- og upload_max_filesize-direktiver i php.ini-filen for å"
+" øke opplastningsstørrelsen."
 
 #: modules/pkgs/pkgs/createGroupLicence.php:64
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "Datamaskinlisten er avkortet ved %d datamaskiner"
 
-#: modules/pkgs/pkgs/edit.php:39
-msgid "Edit package"
-msgstr ""
+#: modules/pkgs/includes/actions/action_section_update.php:17
+msgid "Update Section"
+msgstr "Oppdater seksjon"
 
-#: modules/pkgs/pkgs/edit.php:98
-#, php-format
-msgid "Package successfully added in %s"
-msgstr ""
+#: modules/pkgs/includes/actions/action_section_update.php:25
+#: modules/pkgs/includes/actions/action_pwd_package.php:84
+#: modules/pkgs/includes/actions/action_comment.php:73
+#: modules/pkgs/includes/actions/action_unzip_file.php:346
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:220
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:436
+#: modules/pkgs/includes/actions/actionrestart.php:72
+#: modules/pkgs/includes/actions/actioncleaning.php:37
+#: modules/pkgs/includes/actions/action_section_uninstall.php:26
+#: modules/pkgs/includes/actions/action_section_install.php:26
+#: modules/pkgs/includes/actions/action_set_environ.php:56
+#: modules/pkgs/includes/actions/actionprocessscript.php:273
+#: modules/pkgs/includes/actions/action_set_config_file.php:60
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:87
+msgid "Delete"
+msgstr "Slett"
 
-#: modules/pkgs/pkgs/edit.php:116
-msgid "Package successfully edited"
-msgstr ""
+#: modules/pkgs/includes/actions/action_pwd_package.php:12
+msgid "Go to package folder"
+msgstr "Gå til pakkemappe"
 
-#: modules/pkgs/pkgs/edit.php:145
-#, php-format
-msgid "Files successfully added to the package <b>%s (%s)</b>"
-msgstr ""
+#: modules/pkgs/includes/actions/action_pwd_package.php:39
+#: modules/pkgs/includes/actions/action_comment.php:27
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:21
+#: modules/pkgs/includes/actions/actionrestart.php:48
+#: modules/pkgs/includes/actions/actioncleaning.php:23
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:22
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
+#: modules/pkgs/includes/actions/action_set_config_file.php:29
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:30
+msgid "Step label :"
+msgstr "Trinnetikett:"
 
-#: modules/pkgs/pkgs/edit.php:213
-msgid "Package failed to save"
-msgstr ""
+#: modules/pkgs/includes/actions/action_pwd_package.php:56
+#: modules/pkgs/includes/actions/action_pwd_package.php:70
+#: modules/pkgs/includes/actions/action_unzip_file.php:90
+#: modules/pkgs/includes/actions/action_unzip_file.php:104
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:134
+#: modules/pkgs/includes/actions/actionprocessscript.php:57
+#: modules/pkgs/includes/actions/actionprocessscript.php:71
+msgid "Alternate package"
+msgstr "Alternativ pakke"
 
-#: modules/pkgs/pkgs/edit.php:241
-msgid "File successfully deleted."
-msgstr ""
+#: modules/pkgs/includes/actions/action_pwd_package.php:85
+#: modules/pkgs/includes/actions/action_comment.php:74
+#: modules/pkgs/includes/actions/action_unzip_file.php:347
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:437
+#: modules/pkgs/includes/actions/actionrestart.php:73
+#: modules/pkgs/includes/actions/actioncleaning.php:38
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:34
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:110
+#: modules/pkgs/includes/actions/action_set_environ.php:57
+#: modules/pkgs/includes/actions/actionprocessscript.php:274
+#: modules/pkgs/includes/actions/action_set_config_file.php:65
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:88
+msgid "Options"
+msgstr "Alternativer"
 
-#: modules/pkgs/pkgs/edit.php:259
-#, php-format
-msgid "Failed to delete files%s"
-msgstr ""
+#: modules/pkgs/includes/actions/action_comment.php:12
+msgid "Add info in deployment log"
+msgstr "Legg til info i utrullingsloggen"
 
-#: modules/pkgs/pkgs/edit.php:274
-msgid "Failed to delete files"
-msgstr ""
+#: modules/pkgs/includes/actions/action_comment.php:36
+msgid "Information"
+msgstr "Informasjon"
 
-#: modules/pkgs/pkgs/edit.php:340
-msgid "Package label"
-msgstr ""
+#: modules/pkgs/includes/actions/action_comment.php:41
+msgid "Your log comments !"
+msgstr "Dine loggkommentarer !"
 
-#: modules/pkgs/pkgs/edit.php:341
-msgid "Package version"
-msgstr ""
+#: modules/pkgs/includes/actions/action_unzip_file.php:53
+msgid "Unzip File"
+msgstr "Pakk ut filen"
 
-#: modules/pkgs/pkgs/edit.php:348
-msgid "Command : "
-msgstr ""
+#: modules/pkgs/includes/actions/action_unzip_file.php:62
+msgid "Step label:"
+msgstr "Trinnetikett:"
 
-#: modules/pkgs/pkgs/edit.php:554
-msgid "File"
-msgstr ""
+#: modules/pkgs/includes/actions/action_unzip_file.php:71
+msgid "Zip file:"
+msgstr "Zip fil:"
 
-#: modules/pkgs/pkgs/edit.php:563
-msgid "Delete file"
-msgstr ""
+#: modules/pkgs/includes/actions/action_unzip_file.php:119
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:68
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:283
+#: modules/pkgs/includes/actions/actionprocessscript.php:121
+msgid "10 first lines of result"
+msgstr "10 første resultatlinjer"
 
-#: modules/pkgs/pkgs/edit.php:563
-msgid "Are you sure you want to delete this file?"
-msgstr ""
+#: modules/pkgs/includes/actions/action_unzip_file.php:120
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:69
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:284
+#: modules/pkgs/includes/actions/actionprocessscript.php:122
+msgid "20 first lines of result"
+msgstr "20 første resultatlinjer"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
-msgid "Associate package"
-msgstr ""
+#: modules/pkgs/includes/actions/action_unzip_file.php:121
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:70
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:285
+#: modules/pkgs/includes/actions/actionprocessscript.php:123
+msgid "30 first lines of result"
+msgstr "30 første resultatlinjer"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
-msgid "Show mirrors"
-msgstr ""
+#: modules/pkgs/includes/actions/action_unzip_file.php:122
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:71
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:286
+#: modules/pkgs/includes/actions/actionprocessscript.php:124
+msgid "Complete results"
+msgstr "Komplette resultater"
 
-#: modules/pkgs/pkgs/activateAppstreamFlow.php:37
+#: modules/pkgs/includes/actions/action_unzip_file.php:123
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:72
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:287
+#: modules/pkgs/includes/actions/actionprocessscript.php:125
+msgid "10 last lines of result"
+msgstr "10 siste resultatlinjer"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:124
+#: modules/pkgs/includes/actions/action_unzip_file.php:126
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:73
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:75
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:288
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:290
+#: modules/pkgs/includes/actions/actionprocessscript.php:126
+#: modules/pkgs/includes/actions/actionprocessscript.php:128
+msgid "20 last lines of result"
+msgstr "20 siste resultatlinjer"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:125
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:74
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:289
+#: modules/pkgs/includes/actions/actionprocessscript.php:127
+msgid "30 last lines of result"
+msgstr "30 siste resultatlinjer"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:127
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:76
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:291
+#: modules/pkgs/includes/actions/actionprocessscript.php:129
+msgid "The last line of result"
+msgstr "Den siste resultatlinjen"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:173
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:122
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:137
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:337
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:352
+#: modules/pkgs/includes/actions/actionprocessscript.php:175
+#: modules/pkgs/includes/actions/actionprocessscript.php:190
+msgid "Return result"
+msgstr "Returnert resultat"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:214
+#: modules/pkgs/includes/actions/action_unzip_file.php:229
+msgid "Unzip to specified folder"
+msgstr "Pakk ut til angitt mappe"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:248
+#: modules/pkgs/includes/actions/action_unzip_file.php:262
+msgid "Go to step"
+msgstr "Gå til trinn"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:285
+#: modules/pkgs/includes/actions/action_unzip_file.php:300
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:158
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:173
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:374
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:389
+#: modules/pkgs/includes/actions/actionprocessscript.php:211
+#: modules/pkgs/includes/actions/actionprocessscript.php:226
+msgid "On success go to step"
+msgstr "Ved suksess gå til trinn"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:320
+#: modules/pkgs/includes/actions/action_unzip_file.php:335
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:193
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:208
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:409
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:424
+#: modules/pkgs/includes/actions/actionprocessscript.php:246
+#: modules/pkgs/includes/actions/actionprocessscript.php:261
+msgid "On error go to step"
+msgstr "Ved feil gå til trinn"
+
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:11
+msgid "Run Command in shell"
+msgstr "Kjør kommando i skall"
+
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:25
+#: modules/pkgs/includes/actions/actionprocessscript.php:40
+msgid "Command"
+msgstr "Kommando"
+
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:42
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:57
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:271
+#: modules/pkgs/includes/actions/actionprocessscript.php:95
+#: modules/pkgs/includes/actions/actionprocessscript.php:110
+msgid "Set timeout"
+msgstr "Sett timeout"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
+msgid "Execute script"
+msgstr "Kjør skript"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:54
+msgid "Native (Windows batch, Linux bash and macOS bash)"
+msgstr "Orginal (Windows batch, Linux bash og macOS bash)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:57
+msgid "Python (Windows, Linux and macOS)"
+msgstr "Python (Windows, Linux og macOS)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:60
+msgid "Visual Basic Script (Windows)"
+msgstr "Visual Basic Skript (Windows)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:63
+msgid "Power Shell (Windows)"
+msgstr "Power Shell (Windows)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:66
+msgid "Korn Shell (Linux & macOS)"
+msgstr "Korn Shell (Linux & macOS)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:69
+msgid "C Shell (Linux & macOS)"
+msgstr "C Shell (Linux & macOS)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:84
+msgid "Script language"
+msgstr "Skriptspråk"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
+msgid "Script"
+msgstr "Skript"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:158
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:177
+msgid "Force suffix"
+msgstr "Tving suffiks"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:162
 msgid ""
-"The stream has been added successfully. You will receive the latest updates "
-"of this stream directly in your package list."
+"The \"Script language\" property above applies a suffix to the script by default.\n"
+"However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
 msgstr ""
+"Egenskapen \"Skriptspråk\" ovenfor, bruker som standard et suffiks på skriptet.\n"
+"Imidlertid, hvis egenskapen \"Tving suffiks\" er satt, vil det pålagte suffikset være dette\""
 
-#: modules/pkgs/pkgs/activateAppstreamFlow.php:51
-msgid "Unable to add stream."
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:181
+msgid ""
+"The \"Script language\" property above applies a suffix to the script by default.\n"
+" However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
 msgstr ""
+"Egenskapen \"Skriptspråk\" ovenfor, bruker som standard et suffiks på skriptet.\n"
+"Imidlertid, hvis egenskapen \"Tving suffiks\" er satt, vil det pålagte suffikset være dette \""
 
-#: modules/pkgs/pkgs/activateAppstreamFlow.php:61
-msgid "Activate this Appstream stream?"
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:211
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:230
+msgid ""
+"The \"Script language\" property above applies a hash-bang to the script by default.\n"
+" However, if the \"Force hash-bang\" property is set, the imposed hash-bang will be this one'"
 msgstr ""
+"Egenskapen \"Skriptspråk\" ovenfor, bruker et hash-bang på skriptet som standard.\n"
+"Imidlertid, hvis \"Tving hash-bang\" -egenskapen er satt, vil den pålagte hash-bang være dette\""
 
-#: modules/pkgs/pkgs/rsync.php:32
-#, php-format
-msgid "The package %s (%s) is not associated"
-msgstr ""
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:226
+msgid "Force hash-bang"
+msgstr "Tving hash-bang"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:101
-msgid "Package API temporary directory is empty"
-msgstr ""
+#: modules/pkgs/includes/actions/actionrestart.php:17
+msgid "Restart Machine"
+msgstr "Start maskinen på nytt"
 
-#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:55
-msgid "Validity (months)"
-msgstr ""
+#: modules/pkgs/includes/actions/actionrestart.php:19
+msgid "Restart Agent Machine"
+msgstr "Start agentmaskinen på nytt"
 
-#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:62
-msgid "Activate this Appstream stream"
-msgstr ""
+#: modules/pkgs/includes/actions/actionrestart.php:36
+msgid "Restart"
+msgstr "Omstart"
+
+#: modules/pkgs/includes/actions/actionrestart.php:59
+msgid "Target Restart"
+msgstr "Omstart av målet"
+
+#: modules/pkgs/includes/actions/actioncleaning.php:12
+msgid "Remove uploaded files"
+msgstr "Fjern opplastede filer"
+
+#: modules/pkgs/includes/actions/action_section_uninstall.php:18
+msgid "Uninstall Section"
+msgstr "Avinstaller seksjonen"
+
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:7
+msgid "End Error"
+msgstr "Slutt feil"
+
+#: modules/pkgs/includes/actions/action_section_install.php:18
+msgid "Install Section"
+msgstr "Installer seksjon"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:8
+msgid "End Success"
+msgstr "Slutt suksess"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:42
+msgid "Delete package"
+msgstr "Slett pakke"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
+msgid "Inventory"
+msgstr "Inventar"
+
+#: modules/pkgs/includes/actions/action_set_environ.php:28
+msgid "Set Environment variables"
+msgstr "Angi miljøvariabler"
+
+#: modules/pkgs/includes/actions/action_set_environ.php:36
+msgid "Step label : "
+msgstr "Trinnetikett:"
+
+#: modules/pkgs/includes/actions/action_set_environ.php:44
+msgid "Environment variable"
+msgstr "Miljøvariabel"
+
+#: modules/pkgs/includes/actions/actionprocessscript.php:26
+msgid "Run command"
+msgstr "Kjør kommando"
+
+#: modules/pkgs/includes/actions/actionprocessscript.php:36
+msgid "Step label: "
+msgstr "Trinnetikett:"
+
+#: modules/pkgs/includes/actions/action_set_config_file.php:12
+msgid "Set config file parameter"
+msgstr "Angi konfigurasjonsfilparameter"
+
+#: modules/pkgs/includes/actions/action_set_config_file.php:38
+msgid "Config action description"
+msgstr "Konfigurer handlingsbeskrivelse"
+
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:21
+msgid "Wait and go to step"
+msgstr "Vent og gå til trinn"
+
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:41
+msgid "Wait for (seconds)"
+msgstr "Vent i (sekunder)"
+
+#: modules/pkgs/includes/html.inc.php:60
+#: modules/pkgs/includes/html.inc.php:151
+#: modules/pkgs/includes/html.inc.php:242
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: modules/pkgs/includes/html.inc.php:150
+#: modules/pkgs/includes/html.inc.php:241
+msgid "Add files"
+msgstr "Legg til filer"
+
+#: modules/pkgs/includes/html.inc.php:188
+#: modules/pkgs/includes/html.inc.php:282
+msgid "Upload selected files"
+msgstr "Last opp valgte filer"
+
+#: modules/pkgs/includes/panels/appstream.inc.php:30
+msgid "Appstream"
+msgstr "Appstream"
+
+#: modules/pkgs/includes/panels/appstream.inc.php:38
+msgid "_X_ AppStream(s) available for subscription"
+msgstr "_X_ AppStream (er) tilgjengelig for abonnering"
+
+#: modules/pkgs/includes/panels/appstream.inc.php:39
+msgid "No featured appstream found."
+msgstr "Ingen appstream funnet."
 
 #: modules/pkgs/includes/query.php:38
 msgid ""
@@ -461,52 +974,30 @@ msgid ""
 "            Wildcard is '%', %text% matches any string containing 'text'.<br>\n"
 "            If unsure, leave Vendor and Version fields blank."
 msgstr ""
+"Skriv inn 3 tegn for forslag.<br>\n"
+"Jokertegn er '%', %te xt% stemmer med alle strenger som inneholder 'tekst'. <br>\n"
+"Hvis du er usikker, må du la feltene for leverandør og versjon være tomme."
 
 #: modules/pkgs/includes/query.php:67
 msgid "Query"
-msgstr ""
+msgstr "Spørring"
 
 #: modules/pkgs/includes/query.php:78
 msgid "Associate inventory"
-msgstr ""
+msgstr "Tilknyttet inventar"
 
 #: modules/pkgs/includes/query.php:85
 msgid "Vendor"
-msgstr ""
+msgstr "Leverandør"
 
 #: modules/pkgs/includes/query.php:86
 msgid "Software"
-msgstr ""
+msgstr "Programvare"
 
 #: modules/pkgs/includes/query.php:91
 msgid "Bool"
-msgstr ""
+msgstr "Bool"
 
-#: modules/pkgs/includes/query.php:97
+#: modules/pkgs/includes/query.php:99
 msgid "Number of licenses"
-msgstr ""
-
-#: modules/pkgs/includes/html.inc.php:60
-#: modules/pkgs/includes/html.inc.php:151
-msgid "Cancel"
-msgstr "Avbryt"
-
-#: modules/pkgs/includes/html.inc.php:150
-msgid "Add files"
-msgstr ""
-
-#: modules/pkgs/includes/html.inc.php:188
-msgid "Upload selected files"
-msgstr ""
-
-#: modules/pkgs/includes/panels/appstream.inc.php:30
-msgid "Appstream"
-msgstr ""
-
-#: modules/pkgs/includes/panels/appstream.inc.php:38
-msgid "_X_ AppStream(s) available for subscription"
-msgstr ""
-
-#: modules/pkgs/includes/panels/appstream.inc.php:39
-msgid "No featured appstream found."
-msgstr ""
+msgstr "Antall lisenser"

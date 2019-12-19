@@ -1,7 +1,8 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2019 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -18,23 +19,25 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 require_once("modules/pkgs/includes/xmlrpc.php");
+//require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 
-$papiid = $_GET['papiid'];
 
-if (!isset($_GET['tempdir'])) {
-    // No tempdir defined, get default value
-    $tempdir = getTemporaryFiles($papiid);
-    if (count($tempdir) > 0) $tempdir = $tempdir[0][0];
+if(isset($_POST['bconfirm']))
+{
+  $id = (int)$_GET['id'];
+
+  $result = delete_extension($id);
+
+  header("Location: " . urlStrRedirect("pkgs/pkgs/rulesList", array('success' => true)));;
 }
-else {
-    $tempdir = $_GET['tempdir'];
-}
+    $f = new PopupForm(_T("Delete this rule"));
+    $f->addValidateButton("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();
 
-$datas = getTemporaryFileSuggestedCommand($papiid, $tempdir);
-header('Content-type: application/json');
-print(json_encode($datas));
 ?>

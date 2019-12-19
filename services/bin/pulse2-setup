@@ -703,7 +703,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update', 'kiosk']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update', 'kiosk', 'pkgs']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -808,6 +808,7 @@ class SetupApp(object):
         self.defaults['glpidbpassword'] = self.options["glpi_dbpassword"] or ""
         self.defaults['glpidbname'] = self.options["glpi_dbname"] or "glpi"
         self.defaults['glpidbhost'] = self.options["glpi_dbhost"] or "127.0.0.1"
+        self.defaults['glpidbport'] = self.options["glpi_dbport"] or "3306"
         self.defaults['glpi_purge_machines'] = self.options["glpi_purge_machines"]
         self.defaults['glpi_webservices_user'] = self.options["glpi_webservices_user"]
         self.defaults['glpi_webservices_passwd'] = self.options["glpi_webservices_passwd"]
@@ -1083,6 +1084,11 @@ class SetupApp(object):
         self.confs['plugins/kiosk.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/kiosk.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
+        # pkgs db
+        self.confs['plugins/pkgs.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/pkgs.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/pkgs.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
     def init_glpi(self):
         """GLPI coupling"""
 
@@ -1112,6 +1118,8 @@ class SetupApp(object):
         glpi_conf.set("main", "dbpasswd", db_password)
         db_host = self.read_opt("GLPI database host", self.defaults["glpidbhost"])
         glpi_conf.set("main", "dbhost", db_host)
+        db_port = self.read_opt("GLPI database port", self.defaults["glpidbport"])
+        glpi_conf.set("main", "dbport", db_port)
         db_name = self.read_opt("GLPI database name", self.defaults["glpidbname"])
         glpi_conf.set("main", "dbname", db_name)
         glpi_purge_machines = self.read_opt("Purge machines from GLPI dustbin", self.defaults['glpi_purge_machines'])
@@ -1163,6 +1171,9 @@ class SetupApp(object):
 
         #Enable Kiosk module
         self.confs['plugins/kiosk.ini'].set('main', 'disable', 0)
+
+        #Enable pkgs module
+        self.confs['plugins/pkgs.ini'].set('main', 'disable', 0)
 
         # Ensure various dirs are created
         for path in [self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
@@ -1374,6 +1385,8 @@ if __name__ == '__main__':
                       help="GLPI url")
     parser.add_option("--glpi-dbhost", dest="glpidbhost",
                       help="MySQL server hostname")
+    parser.add_option("--glpi-dbport", dest="glpidbport",
+                      help="MySQL server port number")
     parser.add_option("--glpi-dbname", dest="glpidbname",
                       help="MySQL server database name")
     parser.add_option("--glpi-dbuser", dest="glpidbuser",
@@ -1425,6 +1438,7 @@ if __name__ == '__main__':
         'glpi_dbpassword': options.glpidbpasswd,
         'glpi_dbname': options.glpidbname,
         'glpi_dbhost': options.glpidbhost,
+        'glpi_dbport': options.glpidbport,
         'ipexternal': options.ipexternal,
         'backuppc_ip': options.backuppc_ip,
         'backuppc_entity': options.backuppc_entity,

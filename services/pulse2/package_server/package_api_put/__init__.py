@@ -54,7 +54,6 @@ class PackageApiPut(PackageApiGet):
         return ret
 
     def xmlrpc_getTemporaryFilesSuggestedCommand(self, tempdir):
-        self.logger.debug("Try to suggest command for tempdir %s" % tempdir)
         ret = {
             "version": '0.1',
             "commandcmd": [],
@@ -93,6 +92,7 @@ class PackageApiPut(PackageApiGet):
                 logging.getLogger().debug("Move file %s" % file['filename'])
                 move(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
                              os.path.join(filepath, file['filename']))
+                os.chmod(os.path.join(filepath, file['filename']), 0660)
             else:
                 logging.getLogger().debug("Decode file %s" % file['filename'])
                 f = open(os.path.join(filepath, file['filename']), 'w')

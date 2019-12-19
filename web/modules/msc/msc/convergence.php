@@ -81,9 +81,9 @@ $params["papi"] = $papi;
 if ($_GET['editConvergence']) {
     $ServerAPI = new ServerAPI();
     $ServerAPI->fromURI($papi);
-    $cmd_id = xmlrpc_get_convergence_command_id($gid, $ServerAPI, $pid);
+    $cmd_id = xmlrpc_get_convergence_command_id($gid, $pid);
     $command_details = command_detail($cmd_id);
-    $command_phases = xmlrpc_get_convergence_phases($gid, $ServerAPI, $pid);
+    $command_phases = xmlrpc_get_convergence_phases($gid, $pid);
 
     $params["ltitle"] = $command_details['title'];
     $params["maxbw"] = $command_details['maxbw'] / 1024;
@@ -91,7 +91,7 @@ if ($_GET['editConvergence']) {
     $params["deployment_intervals"] = $command_details['deployment_intervals'];
     $params["parameters"] = $command_details['parameters'];
     $params["editConvergence"] = True;
-    $params["active"] = (xmlrpc_is_convergence_active($gid, $ServerAPI, $pid)) ? 'on' : '';
+    $params["active"] = (xmlrpc_is_convergence_active($gid, $pid)) ? 'on' : '';
 
     // phases
     foreach(array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'do_inventory', 'do_halt') as $key) {
@@ -117,7 +117,7 @@ else {
     $params["ltitle"] = _T('Convergence on ') . $name;
     $params["start_script"] = 'on';
     $params["clean_on_success"] = 'on';
-    $params["do_reboot"] = (getPackageHasToReboot($p_api, $_GET["pid"]) == 1 || web_def_reboot() == 1) ? 'on': '';
+    $params["do_reboot"] = '';
     $params["do_wol"] = web_def_awake() == 1 ? 'on' : '';
     $params["do_inventory"] = web_def_inventory() == 1 ? 'on' : '';
     $params["maxbw"] = web_def_maxbw();

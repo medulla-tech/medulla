@@ -76,7 +76,7 @@ $params["ltitle"] = get_def_package_label($name, $version);
 $params["create_directory"] = 'on';
 $params["start_script"] = 'on';
 $params["clean_on_success"] = 'on';
-$params["do_reboot"] = (getPackageHasToReboot($p_api, $_GET["pid"]) == 1 || web_def_reboot() == 1) ? 'on' : '';
+$params["do_reboot"] = '';
 $params["do_wol"] = web_def_awake() == 1 ? 'on' : '';
 $params["do_inventory"] = web_def_inventory() == 1 ? 'on' : '';
 $params["next_connection_delay"] = web_def_delay();
@@ -112,7 +112,7 @@ $cible = array($uuid);
 
 // TODO: activate this  : msc_command_set_pause($cmd_id);
 
-$id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
+$id_command = add_command_api($pid, $cible, $params, $mode, $gid);
 
 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     xmlrpc_addlogincommand($_SESSION['login'], $id_command);

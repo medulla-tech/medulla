@@ -20,16 +20,24 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-# file pluginsmaster/plugin_resultmsginfoerror.py
+# file : /plugin_resultmsginfoerror.py
 
 import logging
+logger = logging.getLogger()
 
 DEBUGPULSEPLUGIN = 25
-plugin = {"VERSION": "1.0", "NAME": "resultmsginfoerror", "TYPE": "master"}
+plugin = {"VERSION": "1.21", "NAME": "resultmsginfoerror", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
     if 'msg' in data:
-        logging.getLogger().error("Error plugin : %s" % data['msg'])
-    pass
+        if ret >= 50 and ret <= 80:
+            logging.getLogger().warning("msg [%s] : %s" %(message['from'],
+                                                          data['msg']))
+        elif ret == 0:
+            logging.getLogger().info("msg [%s] : %s" %(message['from'],
+                                                          data['msg']))
+        else:
+            logging.getLogger().error("msg [%s] : %s" %(message['from'],
+                                                          data['msg']))

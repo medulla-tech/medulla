@@ -1,7 +1,20 @@
-Pulse 2 4.5.3 UNRELEASED
+Pulse 2 4.6.1
 ========================
 * [FEATURE] Add glpi 9.4 support
 * [BUGFIX]  Fix status of convergences ( available, used, etc.)
+
+Pulse 2 4.6.0
+=============
+* [FEATURE] Improve translations
+* [FEATURE] Add glpi 9.4 support
+* [FEATURE] Add the pulldirect tranfer method into the page edit package
+* [FEATURE] Create packages in push mode. If the package cannot be deployed in push mode, pull mode will be used
+* [FEATURE] Reboot is managed by xmpp and no longer package server
+* [FEATURE] Machine table is now static
+* [BUGFIX]  Fix generating pxelinux menus for restoring.
+* [BUGFIX]  The machine list was not visible in the static group creation page
+* [BUGFIX]  Modify the sql request for topology functions
+* [BUGFIX]  Modify the default value when a new machine is added to xmppmaster.machines
 
 Pulse 2 4.5.2
 =============

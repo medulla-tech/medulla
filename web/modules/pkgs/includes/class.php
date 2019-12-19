@@ -558,7 +558,7 @@ class TextareaTplArray extends AbstractTpl{
   }
 
   // The function called when the page is displayed
-  public function display() {
+  public function display($arrParam = array()) {
       $stringToDisplay = '<textarea ';
       foreach($this->params as $opt=>$value)
       {

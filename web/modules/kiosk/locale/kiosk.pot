@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:46+0100\n"
+"POT-Creation-Date: 2019-11-29 09:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,13 +17,74 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: modules/kiosk/kiosk/add.php:43
-msgid "Add New Profile"
+#: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
+msgid "kiosk"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:63 modules/kiosk/kiosk/index.php:54
+#: modules/kiosk/infoPackage.inc.php:43
+msgid "Profile List"
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:47
+msgid "Add Profile"
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:66 modules/kiosk/kiosk/editProfile.php:43
+msgid "Edit Profile"
+msgstr ""
+
+#: modules/kiosk/infoPackage.inc.php:70
+msgid "Delete profile"
+msgstr ""
+
+#: modules/kiosk/kiosk/ajaxEditProfile.php:43
+#, php-format
+msgid "The profile %s has been updated"
+msgstr ""
+
+#: modules/kiosk/kiosk/ajaxEditProfile.php:46
+#, php-format
+msgid "Unable to update the profile %s"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:37
+msgid "List of profils"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
+#: modules/kiosk/kiosk/editProfile.php:73
+msgid "Active"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
+#: modules/kiosk/kiosk/editProfile.php:73
+msgid "Inactive"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:54 modules/kiosk/kiosk/add.php:63
 #: modules/kiosk/kiosk/editProfile.php:65
 msgid "Profile Name"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:56 modules/kiosk/kiosk/add.php:74
+#: modules/kiosk/kiosk/editProfile.php:76
+msgid "Profile Status"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:65
+msgid "Associate Packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:66
+msgid "Edit Profil"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:67
+msgid "Delete Profil"
+msgstr ""
+
+#: modules/kiosk/kiosk/add.php:43
+msgid "Add New Profile"
 msgstr ""
 
 #: modules/kiosk/kiosk/add.php:64 modules/kiosk/kiosk/editProfile.php:66
@@ -32,21 +93,6 @@ msgstr ""
 
 #: modules/kiosk/kiosk/add.php:70 modules/kiosk/kiosk/editProfile.php:72
 msgid "Set the profile to active / inactive state"
-msgstr ""
-
-#: modules/kiosk/kiosk/add.php:71 modules/kiosk/kiosk/index.php:51
-#: modules/kiosk/kiosk/editProfile.php:73
-msgid "Active"
-msgstr ""
-
-#: modules/kiosk/kiosk/add.php:71 modules/kiosk/kiosk/index.php:51
-#: modules/kiosk/kiosk/editProfile.php:73
-msgid "Inactive"
-msgstr ""
-
-#: modules/kiosk/kiosk/add.php:74 modules/kiosk/kiosk/index.php:56
-#: modules/kiosk/kiosk/editProfile.php:76
-msgid "Profile Status"
 msgstr ""
 
 #: modules/kiosk/kiosk/add.php:82 modules/kiosk/kiosk/editProfile.php:86
@@ -81,52 +127,6 @@ msgstr ""
 msgid "The LDAP is not configured correctly. Please check your configuration."
 msgstr ""
 
-#: modules/kiosk/kiosk/localSidebar.php:24
-msgid "Profils List"
-msgstr ""
-
-#: modules/kiosk/kiosk/localSidebar.php:25
-msgid "Add Profil"
-msgstr ""
-
-#: modules/kiosk/kiosk/index.php:37
-msgid "List of profils"
-msgstr ""
-
-#: modules/kiosk/kiosk/index.php:65
-msgid "Associate Packages"
-msgstr ""
-
-#: modules/kiosk/kiosk/index.php:66
-msgid "Edit Profil"
-msgstr ""
-
-#: modules/kiosk/kiosk/index.php:67
-msgid "Delete Profil"
-msgstr ""
-
-#: modules/kiosk/kiosk/editProfile.php:43 modules/kiosk/infoPackage.inc.php:66
-msgid "Edit Profile"
-msgstr ""
-
-#: modules/kiosk/kiosk/editProfile.php:177
-msgid "modify"
-msgstr ""
-
-#: modules/kiosk/kiosk/editProfile.php:177
-msgid "Modify the profile"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxEditProfile.php:43
-#, php-format
-msgid "The profile %s has been updated"
-msgstr ""
-
-#: modules/kiosk/kiosk/ajaxEditProfile.php:46
-#, php-format
-msgid "Unable to update the profile %s"
-msgstr ""
-
 #: modules/kiosk/kiosk/ajaxAddProfile.php:44
 #, php-format
 msgid "Profile %s successfully added"
@@ -137,18 +137,18 @@ msgstr ""
 msgid "Unable to create the profile %s"
 msgstr ""
 
-#: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
-msgid "kiosk"
+#: modules/kiosk/kiosk/editProfile.php:177
+msgid "modify"
 msgstr ""
 
-#: modules/kiosk/infoPackage.inc.php:43
-msgid "Profile List"
+#: modules/kiosk/kiosk/editProfile.php:177
+msgid "Modify the profile"
 msgstr ""
 
-#: modules/kiosk/infoPackage.inc.php:47
-msgid "Add Profile"
+#: modules/kiosk/kiosk/localSidebar.php:24
+msgid "Profils List"
 msgstr ""
 
-#: modules/kiosk/infoPackage.inc.php:70
-msgid "Delete profile"
+#: modules/kiosk/kiosk/localSidebar.php:25
+msgid "Add Profil"
 msgstr ""

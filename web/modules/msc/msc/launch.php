@@ -132,12 +132,13 @@ function start_a_command($proxy = array(), $activate = true) {
                     'ltitle',
                     'parameters',
                     'papi',
-                    'maxbw', 
+                    'maxbw',
                     'deployment_intervals',
                     'max_clients_per_proxy',
                     'launchAction',
-                    'spooling') as $param) {
-                        if ( $param != "spooling"){ 
+                    'spooling',
+                    'syncthing') as $param) {
+                        if ( $param != "spooling"){
                             $params[$param] = $post[$param];
                         }
                         else
@@ -183,7 +184,7 @@ function start_a_command($proxy = array(), $activate = true) {
         $tab = 'tablogs';
         /* record new command */
 
-        $id = add_command_api($pid, $target, $params, $p_api, $mode, NULL);
+        $id = add_command_api($pid, $target, $params, $mode, NULL);
         if(in_array("xmppmaster", $_SESSION["modulesList"])) {
             $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
             $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
@@ -196,14 +197,15 @@ function start_a_command($proxy = array(), $activate = true) {
             }
             xmlrpc_addlogincommand( $_SESSION['login'],
                                     $id,
-                                    '', 
-                                    '', 
-                                    '', 
-                                    $exec_date, 
-                                    $parameterspacquage, 
-                                    $rebootrequired, 
-                                    $shutdownrequired, 
-                                    $limit_rate_ko, 
+                                    '',
+                                    '',
+                                    '',
+                                    $exec_date,
+                                    $parameterspacquage,
+                                    $rebootrequired,
+                                    $shutdownrequired,
+                                    $limit_rate_ko,
+                                    0, // Syncthing param set to 0 because it is a single machine
                                     $params);
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
@@ -254,17 +256,18 @@ function start_a_command($proxy = array(), $activate = true) {
             $cmd_type = 2; // Convergence command type
             if (quick_get('editConvergence')) {
                 /* Stop command */
-                $cmd_id = xmlrpc_get_convergence_command_id($gid, $p_api, $pid);
+                $cmd_id = xmlrpc_get_convergence_command_id($gid, $pid);
                 stop_command($cmd_id);
                 /* Set end date of this command to now(), don't touch to start date */
                 $start_date = _get_command_start_date($cmd_id);
                 extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
                 /* Create new command */
-                $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $p_api, $pid);
-                $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+                $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $pid);
+                $command_id = add_command_api($pid, NULL, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
-                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0, 0);
+                    $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0, 0, $syncthing);
                 }
 
                 if (!$active) {
@@ -278,21 +281,21 @@ function start_a_command($proxy = array(), $activate = true) {
                     'commandId' => intval($command_id),
                     'cmdPhases' => $params,
                 );
-                xmlrpc_edit_convergence_datas($gid, $p_api, $pid, $updated_datas);
+                xmlrpc_edit_convergence_datas($gid, $pid, $updated_datas);
             }
             else {
                 /* Create convergence */
                 // create sub-groups
                 $group = new Group($gid, True);
-                $package = to_package(getPackageDetails($p_api, $pid));
-
+                //$package = to_package(getPackageDetails($p_api, $pid));
+                $package = to_package(xmpp_getPackageDetail($pid));
                 $convergence_groups = $group->createConvergenceGroups($package);
 
                 $deploy_group_id = $convergence_groups['deploy_group_id'];
                 $done_group_id = $convergence_groups['done_group_id'];
 
                 // Add command on sub-group
-                $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+                $command_id = add_command_api($pid, NULL, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
                     xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id, $countmachine );
@@ -313,8 +316,9 @@ function start_a_command($proxy = array(), $activate = true) {
         }
         else {
             // deploy on group
-            $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
+            $id = add_command_api($pid, NULL, $params, $mode, $gid, $ordered_proxies);
             if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+                $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
                 $countmachine = getRestrictedComputersListLen( array('gid' => $gid));
                 $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
                 $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
@@ -335,7 +339,8 @@ function start_a_command($proxy = array(), $activate = true) {
                                         $parameterspacquage,
                                         $rebootrequired,
                                         $shutdownrequired,
-                                        $limit_rate_ko);
+                                        $limit_rate_ko,
+                                        $syncthing);
 
                 header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                     'uuid' => $uuid,
@@ -721,7 +726,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             $f->add(
                 new TrFormElement(
                     _T('Delay install', 'msc'), new CheckboxTpl('Delay_install')
-                ), array("value" => quick_get('Delay_install', True) == 'on' ? 'checked' : '')
+                ), array("value" => quick_get('Delay_install', True) == 'on' ? 'checked' : ''), array('trid' => "tr_delay_install")
             );
             if( isset($gid)){
                 $rb = new RadioTpl("choix_methode_exec");
@@ -754,7 +759,8 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         // parameter avanced spooling priority
         $f->add(
                 new TrFormElement(
-                    _T('Spooling priority', 'msc'), new CheckboxTpl('Spoolingselect')
+                    _T('Spooling priority', 'msc'), new CheckboxTpl('Spoolingselect'),
+                    array('trid' => 'tr_spooling')
                 ), array("value" => quick_get('Spoolingselect', True) == 'on' ? 'checked' : '')
             );
 
@@ -767,6 +773,13 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                     _T('Install Spooling', 'msc'), $rb,array("trid"=>"choixspooling")
                 )
             );
+            // parameter syncthing deployment for groups ONLY
+            if($_GET['action'] == 'groupmsctabs')
+              $f->add(
+                      new TrFormElement(
+                          _T('Syncthing deployment', 'msc'), new CheckboxTpl('syncthing')
+                      ), array("value" => quick_get('syncthing', True) == 'on' ? 'checked' : '')
+                  );
         if (isExpertMode()){
             if( isset($gid)){
                 $nbmachineforexec = array(
@@ -791,7 +804,8 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
             $f->add(
                 new TrFormElement(
-                    _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw')
+                    _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw'),
+                    array('trid' => 'tr_bandwidth')
                 ), array("value" => $max_bw, "required" => true)
             );
         }
@@ -817,9 +831,9 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $f->pop();
     if (quick_get('actionconvergenceint') == 1){
         $f->addButton("bconfirm", _T("Reconfigure", "msc"));
-        $f->addButton("bpdesactiver", _T("Deactivate Convergence", "msc"));
+        $f->addButton("bpdesactiver", _T("Disable", "msc"));
     }else{
-        $f->addValidateButton("bconfirm");
+        $f->addValidateButton("bconfirm", _T("Enable", "msc"));
     }
     $f->addCancelButton("bback");
     $f->display();
@@ -897,6 +911,44 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
     }
 ?>
 
+jQuery("#syncthing").on("click", updateSyncthing);
+
+function updateSyncthing(){
+  if(jQuery("#syncthing").is(":checked"))
+  {
+    // Desactivate the spooling option
+    jQuery("#Spoolingselect").attr("disabled", true)
+    jQuery("#Spoolingselect").prop("checked", false)
+    jQuery("#tr_spooling").hide()
+    jQuery("#spooling").attr("disabled", true)
+    jQuery("#Spooling").hide()
+
+    //desactivate the bandwidth option
+    jQuery("#limit_rate_ko").attr("disabled", true)
+    jQuery("#tr_bandwidth").hide()
+
+    // Desactivate delay install option
+    jQuery("#Delay_install").attr("disabled", true)
+    jQuery("#Delay_install").prop("checked", false)
+    jQuery("#idexecdate").hide()
+    jQuery("#tr_delay_install").hide()
+
+    // Desactivate spooling option
+    jQuery("#choixmethod").hide()
+    jQuery("#choixspooling").hide()
+    jQuery("#spooling").attr("disabled", true)
+
+  }
+  else{
+    jQuery("#tr_spooling").show()
+    jQuery("#tr_bandwidth").show()
+    jQuery("#tr_delay_install").show()
+    jQuery("#Spoolingselect").attr("disabled", false)
+    jQuery("#limit_rate_ko").attr("disabled", false)
+    jQuery("#Delay_install").attr("disabled", false)
+    jQuery("#spooling").attr("disabled", false)
+  }
+}
 
     function toTimestamp(strDate){
         var datum = Date.parse(strDate);
