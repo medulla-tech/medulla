@@ -323,6 +323,25 @@ class RpcProxy(RpcProxyI):
         return True
 
     def extend_command(self, cmd_id, start_date, end_date):
+        """
+        Custom command re-scheduling.
+
+        @param cmd_id: Commands id
+        @type cmd_id: int
+
+        @param start_date: new start date of command
+        @type start_date: str
+
+        @param end_date: new end date of command
+        @type end_date: str
+        """
+        d = defer.maybeDeferred(MscDatabase().extend_command,
+            cmd_id,
+            start_date,
+            end_date)
+        return d
+
+    def extend_command(self, cmd_id, start_date, end_date):
         MscDatabase().extend_command(cmd_id, start_date, end_date)
 
     def delete_command(self, cmd_id):

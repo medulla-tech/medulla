@@ -4901,6 +4901,29 @@ ORDER BY
         return final_list
 
     @DatabaseHelper._sessionm
+    def get_machines_with_os_and_version(self, session, oslocal, version = ''):
+        """This function returns a list of id of selected OS for dashboard
+        Params:
+            os: string which contains the searched OS
+            version: string which contains the searched version
+        Returns:
+            list of all the machines with specified OS and specified version
+        """
+
+        sql = session.query(Machine.id, Machine.name)\
+        .join(OS, OS.id == Machine.operatingsystems_id)\
+        .outerjoin(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
+        .filter(and_(OS.name.like('%'+oslocal+'%')), OsVersion.name.like('%'+version+'%'))
+
+        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
+        sql = self.__filter_on(sql)
+        res = session.execute(sql)
+
+        result = [{'id':a, 'hostname':b} for a,b in res]
+
+        return result
+
+    @DatabaseHelper._sessionm
     def get_machine_for_hostname(self, session, strlisthostname, filter, start, end):
         sqlrequest ="""
             SELECT
