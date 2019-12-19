@@ -437,3 +437,16 @@ class Organization_ad(Base):
     oumachine = Column(String(120), nullable=False)
     hostname = Column(String(100), nullable=False)
     username = Column(String(60), nullable=False)
+
+class Substituteconf(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'substituteconf'
+    # ====== Fields =============================
+    # Here we define columns for the table substituteconf.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    type = Column(String(45), nullable=False)
+    jidsubtitute = Column(String(255), nullable=False)
+    countsub =  Column(Integer, nullable=False, default = 0)
+    relayserver_id   = Column(Integer, ForeignKey('relayserver.id'), nullable=False)
+    relayserver = relationship(RelayServer)

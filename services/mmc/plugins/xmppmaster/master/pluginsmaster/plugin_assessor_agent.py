@@ -344,6 +344,12 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                     'syncthing' : objectxmpp.config.announce_server,
                     'ret': 0
                     }
+        if "substitute" in data and \
+            "conflist" in data["substitute"] and \
+                len(data["substitute"]["conflist"]) > 0:
+            reponse["substitute"] =  XmppMasterDatabase().\
+                                    substituteinfo(data["substitute"],
+                                                   z1[0][2])
         objectxmpp.send_message(mto=msg['from'],
                             mbody=json.dumps(reponse),
                             mtype='chat')
