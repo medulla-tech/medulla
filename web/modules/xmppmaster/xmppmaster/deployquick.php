@@ -195,8 +195,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 if ($pos1 !== false) {
 //                     echo '<td id="winservices" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 }
-//                 echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
-//                 echo '<td id="disk_usage" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
+                echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/navbar/process.png" height="45" width="45"> </td>';
+                 echo '<td id="disk_usage" align="center"><img src="modules/base/graph/navbar/diskusage.png" height="45" width="45"> </td>';
 //                 echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="mmemory" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="ifconfig" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
@@ -213,8 +213,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 if ($pos1 !== false) {
 //                     echo '<td id="winservices0" align="center">win services </td>';
 //                 }
-//                 echo '<td id="clone_ps_aux0" align="center">process</td>';
-//                 echo '<td id="disk_usage0" align="center">disk usage </td>';
+                   echo '<td id="clone_ps_aux0" align="center">show process list</td>';
+                  echo '<td id="disk_usage0" align="center">disk usage </td>';
 //                 echo '<td id="sensors_fans0" align="center">sensors_fans</td>';
 //                 echo '<td id="mmemory0" align="center">memory</td>';
 //                 echo '<td id="ifconfig0" align="center">if config</td>';

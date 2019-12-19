@@ -27,6 +27,9 @@ $p = new PageGenerator(_T("Deployment [machine ", 'xmppmaster')." ".$hostname."]
 $p->setSideMenu($sidemenu);
 $p->display();
 
+$hideText = _T("Hide", "xmppmaster");
+$showText = _T("Show", "xmppmaster");
+
 ?>
 <style>
 .shadow
@@ -207,7 +210,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
 //     }
    if ($datawol['len'] != 0){
         echo "<br>";
-            echo "<h2 class='replytab' id='wol'>Hide Wan on Lan</h2>";
+            echo '<h2 class="replytab" id="wol">'.$hideText.' '._T("Wake on Lan","xmppmaster").'</h2>';
             echo "<div id='titlewol'>";
             echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
                 echo "<thead>";
@@ -303,20 +306,20 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         $end_date_plan_msc = date("Y-m-d H:i:s", $end_date_plan_msc);
 
             echo "<br>";
-            echo "<h2 class='replytab' id='detailmach'>Hide Machine Details</h2>";
+            echo '<h2 class="replytab" id="detailmach">'.$hideText.' '._T("Machine Details","xmppmaster"). '</h2>';
             echo "<div id='titledetailmach'>";
                 echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
                     echo "<thead>";
                         echo "<tr>";
                             echo '<td style="width: 210px;">';
-                                echo '<span style=" padding-left: 32px;">Machine</span>';
+                                echo '<span style="padding-left: 32px;">'._T("Machine","xmppmaster").'</span>';
                             echo '</td>';
 
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">Ip Machine</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Ip Machine","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">Mac Addr</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Mac Address","xmppmaster").'</span>';
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
@@ -338,22 +341,22 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                 echo "</div>";
                 echo '<br>';
                 echo "<br>";
-            echo "<h2 class='replytab' id='detailpack'>Hide Package Details</h2>";
+            echo '<h2 class="replytab" id="detailpack">'.$hideText.' '._T("Package Details","xmppmaster").'</h2>';
             echo "<div id='titledetailpack'>";
                 echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
                     echo "<thead>";
                         echo "<tr>";
                             echo '<td style="width:250 ;">';
-                                echo '<span style=" padding-left: 32px;">Creator</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Creator","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">Name</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Name","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">Folder</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Folder","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: 300px;">';
-                                echo '<span style=" padding-left: 32px;">Creation Date</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Creation Date","xmppmaster").'</span>';
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
@@ -376,19 +379,19 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                 echo "</table>";
                 echo "</div>";
             echo '<br>';
-            echo "<h2 class='replytab' id='deployplan'>Hide Deployment plan</h2>";
+            echo '<h2 class="replytab" id="deployplan">'.$hideText.' '._T("Deployment plan", "xmppmaster").'</h2>';
             echo "<div id='titledeployplan'>";
                 echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
                     echo "<thead>";
                         echo "<tr>";
                             echo '<td style="width:250 ;">';
-                                echo '<span style=" padding-left: 32px;">User</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("User","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">Start Date</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Start Date","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">Stop Date</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Stop Date","xmppmaster").'</span>';
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
@@ -412,7 +415,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
 
     if ( $info['len'] != 0)
     {
-        if(isset($info['objectdeploy'][0]['state']) && 
+        if(isset($info['objectdeploy'][0]['state']) &&
             (   strpos($info['objectdeploy'][0]['state'], "DEPLOYMENT START")!==false ||
                 $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
             if ( !$boolterminate && !isset($_POST['bStop'])){
@@ -433,32 +436,32 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         $scalardate = get_object_vars($info['objectdeploy'][0]['start'])['scalar'];
         $formateddate = substr($scalardate, 0,4).'-'.substr($scalardate, 4,2).'-'.substr($scalardate, 6,2).' '.substr($scalardate, 9);
         echo "<div>";
-            echo '<H2 style="align=center;">Start deployment : '.$formateddate."</H2>";
+            echo '<H2 style="align=center;">'._T("Start deployment : ","xmppmaster").$formateddate.'</H2>';
         echo "</div>";
         if (isset($infoslist)){
             if ( $info['len'] != 0){
         $jidmachine = $info['objectdeploy'][0]['jidmachine'];
         $jid_relay = $info['objectdeploy'][0]['jid_relay'];
             echo "<br>";
-            echo "<h2 class='replytab'id='xmppinfo'>Hide xmpp information</h2>";
+            echo '<h2 class="replytab" id="xmppinfo">'.$hideText.' '._T("xmpp information", "xmppmaster").'</h2>';
             echo "<div id='titlexmppinfo'>";
             echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
                 echo "<tr>";
                     echo '<td  style="width : 120px;">';
-                        echo '<span style=" padding-left: 32px;">jid machine</span>';
+                        echo '<span style=" padding-left: 32px;">'._T("jid machine","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td>';
-                        echo '<span style=" padding-left:0px;">jid Relay server</span>';
+                        echo '<span style=" padding-left:0px;">'._T("jid Relay server","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">ip machine</span>';
+                    echo '<span style=" padding-left: 32px;">'._T("ip machine","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">ip relayserver</span>';
+                        echo '<span style=" padding-left: 32px;">'._T("ip relayserver","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">ip master</span>';
+                        echo '<span style=" padding-left: 32px;">'._T("ip master","xmppmaster").'</span>';
                     echo '</td>';
                 echo "</tr>";
             echo "</thead>";
@@ -492,22 +495,22 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         echo "</div>";
     }
             echo "<br>";
-            echo "<h2 class='replytab'  id='dependency'>Hide Package and Dependency</h2>";
+            echo '<h2 class="replytab"  id="dependency">'.$hideText.' '._T("Package and Dependency", "xmppmaster").'</h2>';
             echo "<div id='titledependency'>";
                 echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
                     echo "<thead>";
                         echo "<tr>";
                             echo '<td style="width: 210px;">';
-                                echo '<span style=" padding-left: 32px;">Name</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Name","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">Software</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Software","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">Version</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Version","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">Description</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("Description","xmppmaster").'</span>';
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
@@ -535,29 +538,32 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
             echo '<br>';
         }
         echo "<br>";
-        echo "<h2 class='replytab id='phase'>Hide Deployment phases</h2>";
+        echo '<h2 class="replytab" id="phase">'.$hideText.' '._T("Deployment phases", "xmppmaster").'</h2>';
         echo "<div id='titlephase'>";
         echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
                 echo "<tr>";
                     echo '<td  style="width : 120px;">';
-                        echo '<span style=" padding-left: 32px;">START</span>';
+                        echo '<span style=" padding-left: 32px;">'._T("START","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td>';
-                        echo '<span style=" padding-left:0px;">STEP</span>';
+                        echo '<span style=" padding-left:0px;">'._T("STEP","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">DESCRIPTION</span>';
+                        echo '<span style=" padding-left: 32px;">'._T("DESCRIPTION","xmppmaster").'</span>';
                     echo '</td>';
                 echo "</tr>";
             echo "</thead>";
                 echo "<tbody>";
         foreach($infodeploy['log'] as $line){
+            $scalardate = get_object_vars($info['objectdeploy'][0]['start'])['scalar'];
+            $formateddate = substr($scalardate, 0,4).'-'.substr($scalardate, 4,2).'-'.substr($scalardate, 6,2).' '.substr($scalardate, 9);
             $startsteparray= get_object_vars( $line['date']);
             $datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);
             echo '<tr class="alternate">';
                 echo "<td>";
                     echo $datestartstep;
+                    //echo $formateddate;
                 echo "</td>";
                 echo "<td>";
                 echo '<span  style="padding-left:10px;">';
@@ -588,8 +594,8 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         );
     if (isset($descriptorslist)){
         echo "<br>";
-        echo "<h2 class='replytab' id='result'>Hide Deployment result</h2>
-        <div id='titleresult'>";
+        echo '<h2 class="replytab" id="result">'.$hideText." "._T("Deployment result", "xmppmaster").'</h2>
+        <div id="titleresult">';
         echo "<pre style='  box-shadow: 6px 6px 0px black;
                             border-radius: 20px / 10px;
                             border-left: 2px solid black;
@@ -599,7 +605,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         foreach (range( 0, count($descriptorslist)-1) as $index1){
             $arraylist= $descriptorslist[$index1];
             echo "<div>";
-            echo "<span class='replytab' style='color : blue; font: italic bold 12px/30px Georgia, serif;'>Hide Result " . $infoslist[$index1]->name."</span>";
+            echo "<span class='replytab' style='color : blue; font: italic bold 12px/30px Georgia, serif;'>" . _T('Hide Result', 'xmppmaster') . $infoslist[$index1]->name."</span>";
             echo "<div>";
             foreach (range( 0, count($arraylist)-1) as $index){
                 $step=$arraylist[$index];
@@ -679,16 +685,16 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
             $res = str_replace ( "C:\\", "C:\\\\" ,$res);
             $res = explode ( "' , '" , $res);
             echo "<br>";
-            echo "<h2 class='replytab' id='titleenv' >Hide Environment</h2>";
+            echo '<h2 class="replytab" id="titleenv" >'.$hideText.' '._T("Environment","xmppmaster").'</h2>';
             echo "<div id='env'>";
             echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
                 echo "<tr>";
                     echo '<td  style="width : 120px;">';
-                        echo '<span style=" padding-left: 32px;">key</span>';
+                        echo '<span style=" padding-left: 32px;">'._T("key","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td>';
-                        echo '<span style=" padding-left:0px;">value</span>';
+                        echo '<span style=" padding-left:0px;">'._T("value","xmppmaster").'</span>';
                     echo '</td>';
                 echo "</tr>";
             echo "</thead>";
@@ -728,15 +734,17 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
     <input type="hidden" name="login" value ="<? echo $login; ?>" >
     <input type="hidden" name="mach" value ="1" >
 </form>
+
+
 <script type="text/javascript">
     function hideid(id){
         jQuery("#"+ id).hide();
         a = jQuery("#"+"title"+id).text();
-        if (a.search( 'Show' ) != -1){
-            a = a.replace("Show ", "Hide ");
+        if (a.search( '<?php echo $showText;?>' ) != -1){
+            a = a.replace("<?php echo $showText;?> ", "<?php echo $hideText;?> ");
         }
         else{
-            a = a.replace("Hide ", "Show ");
+            a = a.replace("<?php echo $hideText;?> ", "<?php echo $showText;?> ");
         }
         jQuery("#"+"title"+id).text(a);
     }
@@ -756,11 +764,11 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         });
         jQuery( ".replytab" ).click(function() {
             a = jQuery(this).text();
-            if (a.search( 'Show' ) != -1){
-                a = a.replace("Show ", "Hide ");
+            if (a.search( "<?php echo $showText;?>" ) != -1){
+                a = a.replace( "<?php echo $showText;?> ",  "<?php echo $hideText;?> ");
             }
             else{
-                a = a.replace("Hide ", "Show ");
+                a = a.replace("<?php echo $hideText;?> ",  "<?php echo $showText;?> ");
             }
             jQuery(this).text(a);
             jQuery(this).next('div').toggle();

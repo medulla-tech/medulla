@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:41+0100\n"
+"POT-Creation-Date: 2019-10-07 16:37+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
@@ -21,47 +21,6 @@ msgstr ""
 "Language: pl_PL\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: modules/report/report/localSidebar.php:27
-#: modules/report/report/index.php:44 modules/report/infoPackage.inc.php:41
-msgid "Report creation"
-msgstr ""
-
-#: modules/report/report/index.php:62
-msgid "Period"
-msgstr ""
-
-#: modules/report/report/index.php:63
-msgid "from"
-msgstr ""
-
-#: modules/report/report/index.php:63
-msgid "to"
-msgstr "do"
-
-#: modules/report/report/index.php:76
-msgid "Entities"
-msgstr ""
-
-#: modules/report/report/index.php:90
-msgid "Generate Report"
-msgstr ""
-
-#: modules/report/report/index.php:132
-msgid "Select some data to include in the report."
-msgstr ""
-
-#: modules/report/report/index.php:194
-msgid "Download image"
-msgstr ""
-
-#: modules/report/report/index.php:234
-msgid "Get XLS Report"
-msgstr ""
-
-#: modules/report/report/index.php:236
-msgid "Get PDF Report"
-msgstr ""
-
 #: modules/report/infoPackage.inc.php:32
 msgid "Reporting"
 msgstr ""
@@ -70,8 +29,23 @@ msgstr ""
 msgid "Report"
 msgstr ""
 
+#: modules/report/infoPackage.inc.php:41 modules/report/report/index.php:44
+#: modules/report/report/localSidebar.php:27
+msgid "Report creation"
+msgstr ""
+
 #: modules/report/infoPackage.inc.php:44
 msgid "Download a file from report module (report or PNG)"
+msgstr ""
+
+#: modules/report/includes/report.inc.php:36
+#: modules/report/includes/report.inc.php:80
+msgid "Less detail"
+msgstr ""
+
+#: modules/report/includes/report.inc.php:39
+#: modules/report/includes/report.inc.php:197
+msgid "More detail"
 msgstr ""
 
 #: modules/report/includes/html.inc.php:100
@@ -255,12 +229,38 @@ msgstr ""
 msgid "Wk"
 msgstr ""
 
-#: modules/report/includes/report.inc.php:36
-#: modules/report/includes/report.inc.php:80
-msgid "Less detail"
+#: modules/report/report/index.php:62
+msgid "Period"
 msgstr ""
 
-#: modules/report/includes/report.inc.php:39
-#: modules/report/includes/report.inc.php:197
-msgid "More detail"
+#: modules/report/report/index.php:63
+msgid "from"
+msgstr ""
+
+#: modules/report/report/index.php:63
+msgid "to"
+msgstr "do"
+
+#: modules/report/report/index.php:76
+msgid "Entities"
+msgstr ""
+
+#: modules/report/report/index.php:90
+msgid "Generate Report"
+msgstr ""
+
+#: modules/report/report/index.php:132
+msgid "Select some data to include in the report."
+msgstr ""
+
+#: modules/report/report/index.php:194
+msgid "Download image"
+msgstr ""
+
+#: modules/report/report/index.php:234
+msgid "Get XLS Report"
+msgstr ""
+
+#: modules/report/report/index.php:236
+msgid "Get PDF Report"
 msgstr ""

@@ -103,6 +103,10 @@ function xmlrpc_updateName_Qa_custom_command($login, $os, $namecmd, $customcmd, 
     return xmlCall("xmppmaster.updateName_Qa_custom_command", array($login, $os, $namecmd, $customcmd, $description));
 }
 
+function xmlrpc_syncthingmachineless($grp, $cmd){
+    return xmlCall("xmppmaster.syncthingmachineless", array($grp, $cmd));
+}
+
 function xmlrpc_getLogxmpp($start_date="", $end_date="", $type="" , $action="", $module="", $user="", $how="",$who="", $why="", $headercolumn=""){
     return xmlCall("xmppmaster.getLogxmpp", array($start_date, $end_date, $type, $action, $module, $user, $how, $who, $why, $headercolumn));
 }
@@ -161,6 +165,7 @@ function xmlrpc_addlogincommand($login,
                                 $rebootrequired = 0,
                                 $shutdownrequired = 0,
                                 $limit_rate_ko = 0,
+                                $syncthing = 0,
                                 $params = array()
                                 ) {
 
@@ -185,6 +190,7 @@ function xmlrpc_addlogincommand($login,
                                                         $rebootrequired,
                                                         $shutdownrequired,
                                                         $limit_rate_ko,
+                                                        $syncthing,
                                                         $params));
 }
 
@@ -194,6 +200,11 @@ function xmlrpc_loginbycommand($commandid){
 
 function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE") {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
+}
+
+function xmlrpc_stat_syncthing_transfert($group_id, $command_id ){
+    return xmlCall("xmppmaster.stat_syncthing_transfert",
+                                                array($group_id, $command_id));
 }
 
 function xmlrpc_getstatdeployfromcommandidstartdate($command_id, $date) {
@@ -410,7 +421,7 @@ function xmlrpc_getCountOnlineMachine() {
 //######################################
 // descriptor agent base
 //######################################
-//##jfkjfk
+
 function xmlrpc_get_agent_descriptor_base(){
     return xmlCall("xmppmaster.get_agent_descriptor_base", array());
 }
@@ -423,7 +434,40 @@ function xmlrpc_get_plugin_lists(){
    return xmlCall("xmppmaster.get_plugin_lists", array());
 }
 
+//######################################
+// package et syncthing
+//######################################
+
+
+// function xmlrpc_xmpp_regiter_synchro_package($packageid, $typesynchro = "create") {
+//     return xmlCall("xmppmaster.xmpp_regiter_synchro_package", array($packageid, $typesynchro));
+// }
+
+// function xmlrpc_xmpp_delete_synchro_package($packageid) {
+//     return xmlCall("xmppmaster.xmpp_delete_synchro_package", array($packageid));
+// }
+
+function xmlrpc_xmpp_get_info_synchro_packageid($pid_ppackage){
+    return xmlCall("xmppmaster.xmpp_get_info_synchro_packageid", array($pid_ppackage));
+}
+
+//######################################
+// package
+//######################################
+
+function xmlrpc_xmppGetAllPackages($filter, $start, $end) {
+    return xmlCall("xmppmaster.xmppGetAllPackages", array($filter, $start, $end));
+}
+
+function xmpp_getPackageDetail($pid){
+    return xmlCall("xmppmaster.xmpp_getPackageDetail", array($pid));
+}
+
 function xmlrpc_get_list_of_users_for_shared_qa($namecmd){
   return xmlCall("xmppmaster.get_list_of_users_for_shared_qa", array($namecmd));
+}
+
+function xmppmaster_delcomputer($uuid){
+  return xmlCall("xmppmaster.delcomputer", array($uuid));
 }
 ?>

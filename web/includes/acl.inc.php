@@ -98,6 +98,22 @@ function hasCorrectModuleAcl($module, $checkRedir=true) {
   return false;
 }
 
+function hasCorrectDashboardAcl($module, $page) {
+  //Function use to check if the user has right for the specified widget page
+  global $redirArray;
+  $page .= "_dashboard";
+  /* if you are root */
+  if ($_SESSION["login"]=="root") {return true;}
+  /* if you have an ACL set for this module */
+  $submodules = array_keys($_SESSION["acl"][$module]);
+
+  foreach($submodules as $submodule){
+    if (isset($_SESSION["acl"][$module][$submodule][$page])) {return true;}
+  }
+
+  return false;
+}
+
 function getDefaultPage() {
     if ($_SESSION["login"] == "root") {
         $url = urlStrRedirect("base/main/default");

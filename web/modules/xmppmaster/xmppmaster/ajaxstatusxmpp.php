@@ -112,9 +112,10 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $error = True;
         $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
     }
-
+        $tmpdate = (array)$arraydeploy['tabdeploy']['startcmd'][$index];
+        $tmpdate = substr($tmpdate['scalar'], 0, 4).'-'.substr($tmpdate['scalar'], 4, 2).'-'.substr($tmpdate['scalar'], 6, 2).' '.substr($tmpdate['scalar'], 9);
         $result = xmlrpc_getstatdeployfromcommandidstartdate($arraydeploy['tabdeploy']['command'][$index],
-                                                             $lastcommandid[$index]['startdate']);
+                                                             $tmpdate);
 
         $total_machine_from_deploy     = $result['totalmachinedeploy'];
         $machine_error_from_deploy     = $result['machineerrordeploy'];

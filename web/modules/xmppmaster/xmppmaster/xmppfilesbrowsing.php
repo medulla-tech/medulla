@@ -153,6 +153,7 @@ ul.leftfile, ul.rightfile {
 .Localdestination:hover {
         Font-Weight : Bold ;
         font-size : 15px;
+        cursor:pointer;
 }
 .delete{
         padding: 3px 0px 5px 20px;
@@ -169,6 +170,7 @@ ul.leftfile, ul.rightfile {
 .delete:hover{
         Font-Weight : Bold ;
         font-size : 15px;
+        cursor:pointer;
 }
 .pop{
         padding: 3px 0px 5px 20px;
@@ -185,6 +187,7 @@ ul.leftfile, ul.rightfile {
 .pop:hover{
         Font-Weight : Bold ;
         font-size : 15px;
+        cursor:pointer;
 }
 .ombremultiple {
         /*width:100%;*/
@@ -450,7 +453,7 @@ printf ('
 </div>
 
 
-<div id="dialog-confirm-download-directory" title="Transfer Folder">
+<div id="dialog-confirm-download-directory" title="<?php echo sprintf(_T('Summary download', 'xmppmaster')); ?>">
   <div>
     <span style="float:left; margin:12px 12px 20px 0;">
         <span id="dialogmsg">
@@ -459,7 +462,7 @@ printf ('
   </div>
 </div>
 
-<div id="dialog-confirm-download-file" title="Transfer File">
+<div id="dialog-confirm-download-file" title="<?php echo sprintf(_T('Summary download', 'xmppmaster')); ?>">
   <div>
     <span style="float:left; margin:12px 12px 20px 0;">
         <span id="dialogmsg1">
@@ -842,7 +845,7 @@ printf ('
                         },
                         {
                             id: "my-buttoncancel",
-                            text: "Cancel",
+                            text: "<?php echo sprintf(_T('Cancel', 'xmppmaster')); ?>",
                             'class':'btnPrimary',
                             style:"color:#FFFFFF;background-color: #000000;",
                             click:function() {

@@ -31,7 +31,7 @@ $base = &$MMCApp->getModule('base');
 $main = &$base->getSubmod('main');
 
 $mod = new Module("dashboard");
-$mod->setVersion("4.5.2");
+$mod->setVersion("4.6.1");
 $mod->setRevision('');
 $mod->setDescription(_T("Dashboard", "dashboard"));
 $mod->setAPIVersion("0:0:0");
@@ -50,6 +50,26 @@ $main->addPage($page);
 
 $page = new Page("ajaxPanels", _T("Panels", "dashboard"));
 $page->setOptions(array("visible" => False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxSessionPanels", _T("Session Panels", "dashboard"));
+$page->setFile("modules/dashboard/main/ajaxSessionPanels.php");
+$page->setOptions(array("visible" => False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("computersOnline_dashboard", _T("Computers Online Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("space_dashboard", _T("Space Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("general_dashboard", _T("General Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("backup_dashboard", _T("Backup Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("product_updates_dashboard", _T("Update Panel", "dashboard"));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);

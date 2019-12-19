@@ -24,7 +24,7 @@
 %define debug_package          %{nil}
 %define use_git                1
 %define git                    SHA
-%define version                4.5.2
+%define version                4.6.1
 
 Summary:	Management Console
 Name:		mmc-core
@@ -69,6 +69,8 @@ Requires(pre): python-mmc-base
 Requires:   python-mmc-base
 Requires:   ajax-php-file-manager
 Requires:   python-memory-profiler
+Requires:   python-dateutil
+
 %description -n mmc-agent
 XMLRPC server of the Console API.
 This is the underlying service used by the MMC web interface.
@@ -295,6 +297,7 @@ Requires:       php
 Requires:       php-xmlrpc
 Requires:       php-iconv
 Requires:   	mmc-web-dashboard >= %{version}
+Requires:       node-d3
 
 %description -n mmc-web-base
 Console web interface designed by Linbox.

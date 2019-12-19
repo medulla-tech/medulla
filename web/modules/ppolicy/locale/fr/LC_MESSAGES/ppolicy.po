@@ -5,15 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# tekmans <yvan.manon@siveo.net>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:41+0100\n"
+"POT-Creation-Date: 2019-10-07 16:37+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: tekmans <yvan.manon@siveo.net>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,130 +22,21 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Liste des politiques de mot de passe"
-
-#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
-#: modules/ppolicy/includes/localSidebar.php:28
-msgid "Add a password policy"
-msgstr "Ajout d'une politique des mots de passe"
-
-#: modules/ppolicy/default/edit.php:48
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
-msgid "Edit password policy"
-msgstr "Éditer la politique des mots de passe"
-
-#: modules/ppolicy/default/edit.php:62
-msgid "\"Maximum age\" must be greater than \"Minimum age\"."
-msgstr "\"Durée maximale\" doit être plus grande que \"Durée minimale\"."
-
-#: modules/ppolicy/default/edit.php:95
-msgid "Attributes updated"
-msgstr "Attributs mis à jours"
-
-#: modules/ppolicy/default/edit.php:126
-msgid "Name"
-msgstr "Nom"
-
-#: modules/ppolicy/default/edit.php:132
-#: modules/ppolicy/includes/ppolicy.inc.php:48
-msgid "Description"
-msgstr "Description"
-
-#: modules/ppolicy/default/edit.php:138
-#: modules/ppolicy/includes/ppolicy.inc.php:37
-msgid "Minimum length"
-msgstr "Taille minimum"
-
-#: modules/ppolicy/default/edit.php:145
-msgid "Password quality check"
-msgstr "Test de qualité des mots de passe"
-
-#: modules/ppolicy/default/edit.php:152
-msgid "Minimum age (seconds)"
-msgstr "Durée de vie minimale (secondes)"
-
-#: modules/ppolicy/default/edit.php:159
-msgid "Maximum age (seconds)"
-msgstr "Durée de vie maximale du mot de passe (secondes)"
-
-#: modules/ppolicy/default/edit.php:166
-#: modules/ppolicy/includes/ppolicy.inc.php:45
-msgid "Number of grace authentications"
-msgstr "Nombre d'authentifications autorisées en période de grâce"
-
-#: modules/ppolicy/default/edit.php:180
-msgid "Force users to change their passwords on the first connection ?"
-msgstr ""
-"Forcer les utilisateurs à changer leur mot de passe à la première connexion "
-"?"
-
-#: modules/ppolicy/default/edit.php:187
-msgid "Password history"
-msgstr "Historique des mots de passe"
-
-#: modules/ppolicy/default/edit.php:201
-msgid "Preventive user lockout ?"
-msgstr "Blocage préventif de l'utilisateur ?"
-
-#: modules/ppolicy/default/edit.php:215
-msgid "Password maximum failure"
-msgstr "Nombre d'échec maximum"
-
-#: modules/ppolicy/default/edit.php:222
-msgid "Lockout duration (seconds)"
-msgstr "Période de blocage (secondes)"
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
-msgid "Delete password policy"
-msgstr "Supprimer la politique des mots de passe"
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
-#: modules/ppolicy/infoPackage.inc.php:46
-#: modules/ppolicy/includes/localSidebar.php:27
-msgid "Password policies"
-msgstr "Politique des mots de passe"
-
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning: you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning: your password has been reset by an administrator. Your LDAP account"
-" is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-
-#: modules/ppolicy/default/delete.php:29
-msgid "The password policy has been deleted."
-msgstr "La politique des mots de passe a été supprimée"
-
-#: modules/ppolicy/default/delete.php:41
-#, php-format
-msgid ""
-"You will delete the password policy <strong>%s</strong>. Default password "
-"policy will be applied to users that use this password policy."
-msgstr ""
-"Vous allez supprimer la politique <strong>%s</strong>. La politique par "
-"défaut sera appliquée aux utilisateurs qui utilisent cette politique."
-
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
-msgstr "Supprimer"
-
-#: modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr "Annuler"
-
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
 msgstr "Politique des mots de passe"
+
+#: modules/ppolicy/infoPackage.inc.php:46
+#: modules/ppolicy/includes/localSidebar.php:27
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
+msgid "Password policies"
+msgstr "Politique des mots de passe"
+
+#: modules/ppolicy/infoPackage.inc.php:52
+#: modules/ppolicy/includes/localSidebar.php:28
+#: modules/ppolicy/default/edit.php:44
+msgid "Add a password policy"
+msgstr "Ajout d'une politique des mots de passe"
 
 #: modules/ppolicy/infoPackage.inc.php:58
 msgid "Edit a password policy"
@@ -275,6 +167,11 @@ msgid "Apply a password policy for all group users"
 msgstr ""
 "Appliquer une politique des mots de passe à tous les membres du groupe"
 
+#: modules/ppolicy/includes/ppolicy.inc.php:37
+#: modules/ppolicy/default/edit.php:138
+msgid "Minimum length"
+msgstr "Taille minimum"
+
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Minimum age"
 msgstr "Durée de vie minimale"
@@ -303,6 +200,11 @@ msgstr "Blocage préventif de l'utilisateur"
 msgid "Password hash history"
 msgstr "Hash de l'historique des mots de passe"
 
+#: modules/ppolicy/includes/ppolicy.inc.php:45
+#: modules/ppolicy/default/edit.php:166
+msgid "Number of grace authentications"
+msgstr "Nombre d'authentifications autorisées en période de grâce"
+
 #: modules/ppolicy/includes/ppolicy.inc.php:46
 msgid "Reset the password"
 msgstr "Remise à zéro du mot de passe"
@@ -310,6 +212,11 @@ msgstr "Remise à zéro du mot de passe"
 #: modules/ppolicy/includes/ppolicy.inc.php:47
 msgid "Password policy quality check"
 msgstr "Test de qualité des mots de passe"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:48
+#: modules/ppolicy/default/edit.php:132
+msgid "Description"
+msgstr "Description"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:54
 msgid ""
@@ -435,3 +342,104 @@ msgstr ""
 "vérifier il sera tout de même accepté. Une valeur de '2' signifie que le "
 "serveur vérifiera sa qualité, et si le serveur ne peut pas le vérifier, il "
 "renverra une erreur et refusera le mot de passe."
+
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Attention: vous avez été connecté avec un mot de passe expiré. Veuillez "
+"modifier votre mot de passe dès que possible à l'aide de la page de "
+"modification du mot de passe, sinon votre compte sera verrouillé."
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Attention: votre mot de passe a été réinitialisé par un administrateur. "
+"Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que"
+" possible en utilisant la page de changement de mot de passe."
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Liste des politiques de mot de passe"
+
+#: modules/ppolicy/default/delete.php:29
+msgid "The password policy has been deleted."
+msgstr "La politique des mots de passe a été supprimée"
+
+#: modules/ppolicy/default/delete.php:41
+#, php-format
+msgid ""
+"You will delete the password policy <strong>%s</strong>. Default password "
+"policy will be applied to users that use this password policy."
+msgstr ""
+"Vous allez supprimer la politique <strong>%s</strong>. La politique par "
+"défaut sera appliquée aux utilisateurs qui utilisent cette politique."
+
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "Supprimer"
+
+#: modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Annuler"
+
+#: modules/ppolicy/default/edit.php:48
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
+msgid "Edit password policy"
+msgstr "Éditer la politique des mots de passe"
+
+#: modules/ppolicy/default/edit.php:62
+msgid "\"Maximum age\" must be greater than \"Minimum age\"."
+msgstr "\"Durée maximale\" doit être plus grande que \"Durée minimale\"."
+
+#: modules/ppolicy/default/edit.php:95
+msgid "Attributes updated"
+msgstr "Attributs mis à jours"
+
+#: modules/ppolicy/default/edit.php:126
+msgid "Name"
+msgstr "Nom"
+
+#: modules/ppolicy/default/edit.php:145
+msgid "Password quality check"
+msgstr "Test de qualité des mots de passe"
+
+#: modules/ppolicy/default/edit.php:152
+msgid "Minimum age (seconds)"
+msgstr "Durée de vie minimale (secondes)"
+
+#: modules/ppolicy/default/edit.php:159
+msgid "Maximum age (seconds)"
+msgstr "Durée de vie maximale du mot de passe (secondes)"
+
+#: modules/ppolicy/default/edit.php:180
+msgid "Force users to change their passwords on the first connection ?"
+msgstr ""
+"Forcer les utilisateurs à changer leur mot de passe à la première connexion "
+"?"
+
+#: modules/ppolicy/default/edit.php:187
+msgid "Password history"
+msgstr "Historique des mots de passe"
+
+#: modules/ppolicy/default/edit.php:201
+msgid "Preventive user lockout ?"
+msgstr "Blocage préventif de l'utilisateur ?"
+
+#: modules/ppolicy/default/edit.php:215
+msgid "Password maximum failure"
+msgstr "Nombre d'échec maximum"
+
+#: modules/ppolicy/default/edit.php:222
+msgid "Lockout duration (seconds)"
+msgstr "Période de blocage (secondes)"
+
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
+msgid "Delete password policy"
+msgstr "Supprimer la politique des mots de passe"

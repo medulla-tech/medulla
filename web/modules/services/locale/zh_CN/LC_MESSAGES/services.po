@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:41+0100\n"
+"POT-Creation-Date: 2019-10-07 16:37+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -32,8 +32,8 @@ msgstr ""
 
 #: modules/services/infoPackage.inc.php:42
 #: modules/services/infoPackage.inc.php:45
-#: modules/services/control/localSidebar.php:25
 #: modules/services/control/index.php:26
+#: modules/services/control/localSidebar.php:25
 msgid "Core services"
 msgstr ""
 
@@ -41,9 +41,8 @@ msgstr ""
 msgid "Others services"
 msgstr ""
 
-#: modules/services/infoPackage.inc.php:76
+#: modules/services/infoPackage.inc.php:76 modules/services/control/log.php:38
 #: modules/services/control/localSidebar.php:31
-#: modules/services/control/log.php:38
 msgid "Services log"
 msgstr ""
 
@@ -62,44 +61,44 @@ msgstr ""
 msgid "Other services"
 msgstr ""
 
-#: modules/services/control/ajaxOthersServicesFilter.php:28
 #: modules/services/control/ajaxServicesFilter.php:28
+#: modules/services/control/ajaxOthersServicesFilter.php:28
 msgid "Start service"
 msgstr ""
 
-#: modules/services/control/ajaxOthersServicesFilter.php:29
 #: modules/services/control/ajaxServicesFilter.php:29
+#: modules/services/control/ajaxOthersServicesFilter.php:29
 msgid "Stop service"
 msgstr ""
 
-#: modules/services/control/ajaxOthersServicesFilter.php:30
 #: modules/services/control/ajaxServicesFilter.php:30
+#: modules/services/control/ajaxOthersServicesFilter.php:30
 msgid "Reload service"
 msgstr ""
 
-#: modules/services/control/ajaxOthersServicesFilter.php:31
 #: modules/services/control/ajaxServicesFilter.php:31
+#: modules/services/control/ajaxOthersServicesFilter.php:31
 msgid "Restart service"
 msgstr ""
 
-#: modules/services/control/ajaxOthersServicesFilter.php:32
 #: modules/services/control/ajaxServicesFilter.php:32
+#: modules/services/control/ajaxOthersServicesFilter.php:32
 msgid "View log"
 msgstr ""
 
-#: modules/services/control/ajaxOthersServicesFilter.php:49
 #: modules/services/control/ajaxServicesFilter.php:76
+#: modules/services/control/ajaxOthersServicesFilter.php:49
 #: modules/services/control/ajaxLogFilter.php:57
 msgid "Service"
 msgstr ""
 
-#: modules/services/control/ajaxOthersServicesFilter.php:52
 #: modules/services/control/ajaxServicesFilter.php:79
+#: modules/services/control/ajaxOthersServicesFilter.php:52
 msgid "Description"
 msgstr "说明"
 
-#: modules/services/control/ajaxOthersServicesFilter.php:53
 #: modules/services/control/ajaxServicesFilter.php:80
+#: modules/services/control/ajaxOthersServicesFilter.php:53
 msgid "Status"
 msgstr "状态"
 
@@ -128,16 +127,6 @@ msgstr "讯息"
 msgid "%s service log"
 msgstr ""
 
-#: modules/services/includes/panels/services.inc.php:44
-#, php-format
-msgid "%d inactive service"
-msgid_plural "%d inactive services"
-msgstr[0] ""
-
-#: modules/services/includes/panels/services.inc.php:50
-msgid "All services are up"
-msgstr ""
-
 #: modules/services/includes/panels/system.inc.php:29
 msgid "System"
 msgstr "系统"
@@ -148,4 +137,14 @@ msgstr ""
 
 #: modules/services/includes/panels/system.inc.php:43
 msgid "The server will be poweroff. Are you sure ?"
+msgstr ""
+
+#: modules/services/includes/panels/services.inc.php:44
+#, php-format
+msgid "%d inactive service"
+msgid_plural "%d inactive services"
+msgstr[0] ""
+
+#: modules/services/includes/panels/services.inc.php:50
+msgid "All services are up"
 msgstr ""

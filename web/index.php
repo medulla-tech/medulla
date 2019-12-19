@@ -88,10 +88,10 @@ if (isset($_GET["agentsessionexpired"])) {
         <link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="icon" href="img/common/favicon.ico" />
-        <script src="jsframework/lib/jquery-1.10.2.min.js" type="text/javascript"></script>
-        <script src="jsframework/lib/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+        <script src="jsframework/lib/jquery-3.2.1.min.js" type="text/javascript"></script>
+        <script src="jsframework/lib/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
 </head>
-<body onload="$('#username').focus()">
+<body onload="jQuery('#username').focus()">
 
 <div id="loginBox">
         <div id="header">

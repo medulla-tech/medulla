@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
-# Yuri Chornoivan <yurchor@ukr.net>, 2018
+# Yuri Chornoivan <yurchor@ukr.net>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:41+0100\n"
+"POT-Creation-Date: 2019-10-07 16:37+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,330 +22,20 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: forgotpassword.php:24
-msgid "A password reset link has been sent."
-msgstr "Надіслано посилання для скидання пароля."
-
-#: forgotpassword.php:26
-msgid "Can't reset your password. Please contact your administrator."
-msgstr ""
-"Не вдалося скинути ваш пароль. Будь ласка, зв'яжіться із адміністратором "
-"системи."
-
-#: forgotpassword.php:74 forgotpassword.php:80
-msgid "Password reset"
-msgstr "Скидання паролю"
-
-#: forgotpassword.php:76
-msgid "Login or mail"
-msgstr "Вхід або пошта"
-
-#: forgotpassword.php:81
-msgid "Back"
-msgstr "Назад"
-
-#: graph/header.inc.php:213 graph/header.inc.php:249
-msgid "Yes"
-msgstr "Так"
-
-#: graph/header.inc.php:216 graph/header.inc.php:218
-msgid "No"
-msgstr "Ні"
-
-#: graph/header.inc.php:251 includes/PageGenerator.php:2258
-#: includes/FormGenerator.php:643
-msgid "Close"
-msgstr "Закрити"
-
-#: graph/header.inc.php:315
-msgid "Form cannot be submit. Input errors are highlighted in red."
-msgstr ""
-"Форму не можна надсилати. Помилки у введених даних позначено червоним "
-"кольором."
-
-#: graph/navbar.inc.php:73
-msgid "standard mode"
-msgstr "стандартний режим"
-
-#: graph/navbar.inc.php:75
-msgid "expert mode"
-msgstr "режим експерта"
-
-#: graph/navbar.inc.php:80
-msgid "Click to switch to"
-msgstr "Натисніть, щоб перемкнутися на"
-
-#: graph/navbar.inc.php:81
-msgid "logout"
-msgstr "вихід"
-
-#: graph/navbar.inc.php:83 logout/index.php:48 logout/index.php:55
-msgid "Logout"
-msgstr "Вийти"
-
-#: graph/navbar.inc.php:106 modules/base/main/default.php:89
-#: modules/base/infoPackage.inc.php:44
-msgid "Home"
-msgstr "Домівка"
-
-#: graph/navbar.inc.php:127
-msgid ""
-"If this phrase does not change, your browser is not supported by the MMC "
-"application"
-msgstr ""
-"Якщо ця фраза не змінилася, у програмі MMC не передбачено підтримки вашої "
-"програми для перегляду інтернету"
-
-#: modules/base/logview/logskiosk.php:136
-#: modules/base/logview/logsquickaction.php:140
-msgid "Quick Actions Logs"
-msgstr "Журнал швидких дій"
-
-#: modules/base/logview/logskiosk.php:283
-#: modules/base/logview/logsbackuppc.php:306
-#: modules/base/logview/index.php:425
-#: modules/base/logview/logspackaging.php:303
-#: modules/base/logview/logsquickaction.php:295
-#: modules/base/logview/logsremotedesktop.php:275
-#: modules/base/logview/logsinventory.php:304
-#: modules/base/logview/logsdownload.php:280
-#: modules/base/logview/logsimaging.php:359
-msgid "date"
-msgstr "дата"
-
-#: modules/base/logview/logskiosk.php:284
-#: modules/base/logview/logsbackuppc.php:307
-#: modules/base/logview/index.php:426
-#: modules/base/logview/logspackaging.php:304
-#: modules/base/logview/logsquickaction.php:296
-#: modules/base/logview/logsremotedesktop.php:276
-#: modules/base/logview/logsinventory.php:305
-#: modules/base/logview/logsdownload.php:281
-#: modules/base/logview/logsimaging.php:360
-msgid "user"
-msgstr "користувач"
-
-#: modules/base/logview/logskiosk.php:285
-#: modules/base/logview/logsbackuppc.php:308
-#: modules/base/logview/index.php:427
-#: modules/base/logview/logspackaging.php:305
-#: modules/base/logview/logsquickaction.php:297
-#: modules/base/logview/logsremotedesktop.php:277
-#: modules/base/logview/logsinventory.php:306
-#: modules/base/logview/logsdownload.php:282
-#: modules/base/logview/logsimaging.php:361
-msgid "who"
-msgstr "хто"
-
-#: modules/base/logview/logskiosk.php:286
-#: modules/base/logview/logsbackuppc.php:309
-#: modules/base/logview/index.php:428
-#: modules/base/logview/logspackaging.php:306
-#: modules/base/logview/logsquickaction.php:298
-#: modules/base/logview/logsremotedesktop.php:278
-#: modules/base/logview/logsinventory.php:307
-#: modules/base/logview/logsdownload.php:283
-#: modules/base/logview/logsimaging.php:362
-msgid "text"
-msgstr "текст"
-
-#: modules/base/logview/ajax_showlog.php:68
-#: modules/base/logview/logsdeployment.php:297
-#: modules/base/audit/ajaxLogFilter.php:114 modules/base/audit/logview.php:58
-msgid "Date"
-msgstr "Дата"
-
-#: modules/base/logview/ajax_showlog.php:69
-msgid "Connection"
-msgstr "З'єднання"
-
-#: modules/base/logview/ajax_showlog.php:70
-msgid "Operation"
-msgstr "Дія"
-
-#: modules/base/logview/ajax_showlog.php:71
-msgid "Actions"
-msgstr "Дії"
-
-#: modules/base/logview/ajax_showlog.php:72
-msgid "Extra information"
-msgstr "Додаткова інформація"
-
-#: modules/base/logview/logspackaging.php:141
-msgid "Packaging Logs"
-msgstr "Журнал пакування"
-
-#: modules/base/logview/logsdeployment.php:136
-msgid "Deployment Logs"
-msgstr "Журнал розгортання"
-
-#: modules/base/logview/logsdeployment.php:298
-#: modules/base/audit/indexbase.php:30
-#: modules/base/audit/ajaxLogFilter.php:121 modules/base/audit/indexall.php:30
-#: modules/base/includes/auditCodes.php:45
-msgid "User"
-msgstr "Користувач"
-
-#: modules/base/logview/logsdeployment.php:299
-msgid "Who"
-msgstr "Хто"
-
-#: modules/base/logview/logsdeployment.php:300
-msgid "Session name"
-msgstr "Назва сеансу"
-
-#: modules/base/logview/logsdeployment.php:302
-msgid "message"
-msgstr "повідомлення"
-
-#: modules/base/logview/logsremotedesktop.php:140
-msgid "Remote Desktop Logs"
-msgstr "Журнал віддаленої стільниці"
-
-#: modules/base/logview/logsinventory.php:145
-msgid "Inventory Logs"
-msgstr "Журнал обліку"
-
-#: modules/base/logview/logsdownload.php:133
-msgid "Transfert File Logs"
-msgstr "Журнали передавання файлів"
-
-#: modules/base/logview/logsimaging.php:158
-msgid "Imaging Logs"
-msgstr "Журнал образів"
-
-#: modules/base/main/favorites.php:4
-msgid "Root user cannot have favorites"
-msgstr "У користувача root не може бути вибраних записів"
-
-#: modules/base/main/favorites.php:149
-msgid "Add this page to your favorites"
-msgstr "Додати цю сторінку до вибраних"
-
-#: modules/base/groups/localSidebar.php:28
-msgid "List"
-msgstr "Список"
-
-#: modules/base/groups/localSidebar.php:29 includes/FormGenerator.php:718
-msgid "Add"
-msgstr "Додати"
-
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:286
-msgid "Group list"
-msgstr "Список груп"
-
-#: modules/base/groups/members.php:109
-msgid "Group successfully modified"
-msgstr "Групу успішно змінено"
-
-#: modules/base/groups/members.php:125
-msgid ""
-"Some users can't be removed from this group because this group is their "
-"primary group."
-msgstr ""
-"Деяких користувачів не можна вилучити з цієї групи, оскільки це їхня основна"
-" група."
-
-#: modules/base/groups/members.php:128
+#: token.php:56 index.php:63
 #, php-format
-msgid "Group members %s"
-msgstr "Учасники групи %s"
+msgid "The server %s does not exist"
+msgstr "Сервера %s не існує"
 
-#: modules/base/groups/members.php:141
-msgid "All users"
-msgstr "Всі користувачі"
+#: token.php:68
+msgid "Token not valid"
+msgstr "Ключ не є чинним"
 
-#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:302
-msgid "Group members"
-msgstr "Члени групи"
-
-#: modules/base/groups/members.php:188 modules/base/groups/edit.php:117
-#: includes/PageGenerator.php:2636 includes/PageGenerator.php:2705
-#: includes/PageGenerator.php:2731
-msgid "Confirm"
-msgstr "Підтвердити"
-
-#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
-#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
-#: includes/PageGenerator.php:2640 includes/PageGenerator.php:2709
-msgid "Cancel"
-msgstr "Скасувати"
-
-#: modules/base/groups/edit.php:35
-#, php-format
-msgid "Group %s successfully added"
-msgstr "Групу %s успішно додано"
-
-#: modules/base/groups/edit.php:52
-#, php-format
-msgid "Group %s successfully modified"
-msgstr "Групу %s успішно змінено"
-
-#: modules/base/groups/edit.php:58 modules/base/includes/auditCodes.php:32
-msgid "Add group"
-msgstr "Додати групу"
-
-#: modules/base/groups/edit.php:63 modules/base/groups/ajaxFilter.php:47
-msgid "Edit group"
-msgstr "Редагувати групу"
-
-#: modules/base/groups/edit.php:82
-msgid ""
-"The group name can only contain letters and numeric, and must begin with a "
-"letter"
+#: token.php:70
+msgid "Error while validating your token. Please contact your administrator."
 msgstr ""
-"Назва групи може складатися лише з літер і цифр і має починатися з літери"
-
-#: modules/base/groups/edit.php:99
-msgid "Group name"
-msgstr "Назва групи"
-
-#: modules/base/groups/edit.php:102 modules/base/computers/edit.php:89
-msgid "Description"
-msgstr "Опис"
-
-#: modules/base/groups/edit.php:114
-msgid "Create"
-msgstr "Створити"
-
-#: modules/base/groups/delete.php:54 modules/base/groups/delete.php:65
-msgid "Delete group"
-msgstr "Вилучити групу"
-
-#: modules/base/groups/delete.php:57
-msgid "You will delete group"
-msgstr "Ви вилучите групу"
-
-#: modules/base/groups/delete.php:60
-msgid "This group will be deleted even though it is not empty"
-msgstr "Цю групу буде вилучено, незважаючи на те, що вона не є порожньою"
-
-#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:281
-msgid "Groups"
-msgstr "Групи"
-
-#: modules/base/groups/ajaxFilter.php:43
-msgid "Comments"
-msgstr "Коментарі"
-
-#: modules/base/groups/ajaxFilter.php:46
-msgid "Edit members"
-msgstr "Редагування учасників"
-
-#: modules/base/groups/ajaxFilter.php:48 modules/base/views/index.tpl.php:92
-#: modules/base/users/ajaxFilter.php:88 modules/ppolicy/default/delete.php:45
-#: includes/FormGenerator.php:1158
-msgid "Delete"
-msgstr "Вилучити"
-
-#: modules/base/groups/ajaxFilter.php:49
-msgid "Groups management"
-msgstr "Керування групами"
-
-#: modules/base/audit/indexnetwork.php:31
-#: modules/base/audit/localSidebar.php:46
-msgid "Network"
-msgstr "Мережа"
+"Помилка під час спроби перевірити чинність вашого ключа. Будь ласка, "
+"зв'яжіться із вашим системним адміністратором."
 
 #: modules/base/audit/indexbase.php:29 modules/base/audit/logview.php:75
 #: modules/base/audit/indexall.php:29
@@ -361,76 +51,44 @@ msgstr "Тип"
 msgid "Action"
 msgstr "Дія"
 
+#: modules/base/audit/indexbase.php:30
+#: modules/base/audit/ajaxLogFilter.php:121 modules/base/audit/indexall.php:30
+#: modules/base/includes/auditCodes.php:45
+#: modules/base/logview/logsdeployment.php:298
+msgid "User"
+msgstr "Користувач"
+
 #: modules/base/audit/indexbase.php:32
 msgid "User and group"
 msgstr "Користувач і група"
 
-#: modules/base/audit/localSidebar.php:28 modules/base/audit/indexall.php:33
-msgid "All modules"
-msgstr "Усі модулі"
-
-#: modules/base/audit/localSidebar.php:30
-msgid "Users and Groups"
-msgstr "Користувачі і групи"
-
-#: modules/base/audit/localSidebar.php:34 modules/base/audit/indexsamba.php:31
-msgid "Samba"
-msgstr "Samba"
-
-#: modules/base/audit/localSidebar.php:38 modules/base/audit/indexmail.php:31
+#: modules/base/audit/indexmail.php:31 modules/base/audit/localSidebar.php:38
 #: modules/base/users/ajaxFilter.php:80
 msgid "Mail"
 msgstr "Пошта"
 
-#: modules/base/audit/localSidebar.php:42
-msgid "Proxy"
-msgstr "Проксі"
-
-#: modules/base/audit/ajaxLogFilter.php:49
-#: modules/base/includes/AjaxFilterLog.inc.php:325
-msgid "Begin date"
-msgstr "Дата початку"
-
-#: modules/base/audit/ajaxLogFilter.php:52
-#: modules/base/includes/AjaxFilterLog.inc.php:326
-msgid "End date"
-msgstr "Дата завершення"
-
-#: modules/base/audit/ajaxLogFilter.php:122 modules/base/audit/logview.php:62
-msgid "Event"
-msgstr "Подія"
-
-#: modules/base/audit/ajaxLogFilter.php:124
-msgid "Object Name"
-msgstr "Назва об'єкта"
-
-#: modules/base/audit/ajaxLogFilter.php:126
-msgid "Module"
-msgstr "Модуль"
-
-#: modules/base/audit/ajaxLogFilter.php:128
-msgid "Result"
-msgstr "Результат"
-
-#: modules/base/audit/ajaxLogFilter.php:132
-msgid "View details"
-msgstr "Перегляд подробиць"
-
-#: modules/base/audit/list.php:30
-msgid "Logged actions"
-msgstr "Записані до журналу дії"
-
-#: modules/base/audit/list.php:39
-msgid "Search action"
-msgstr "Дія з пошуку"
+#: modules/base/audit/indexnetwork.php:31
+#: modules/base/audit/localSidebar.php:46
+msgid "Network"
+msgstr "Мережа"
 
 #: modules/base/audit/logview.php:35
 msgid "Event details"
 msgstr "Параметри події"
 
+#: modules/base/audit/logview.php:58 modules/base/audit/ajaxLogFilter.php:114
+#: modules/base/logview/logsdeployment.php:297
+#: modules/base/logview/ajax_showlog.php:68
+msgid "Date"
+msgstr "Дата"
+
 #: modules/base/audit/logview.php:60
 msgid "User that initiated the event"
 msgstr "Користувач, який ініціював подію"
+
+#: modules/base/audit/logview.php:62 modules/base/audit/ajaxLogFilter.php:122
+msgid "Event"
+msgstr "Подія"
 
 #: modules/base/audit/logview.php:64
 msgid "Plugin"
@@ -460,203 +118,68 @@ msgstr "Значення"
 msgid "SSH public key audit"
 msgstr "Аудит відкритого ключа SSH"
 
+#: modules/base/audit/ajaxLogFilter.php:49
+#: modules/base/includes/AjaxFilterLog.inc.php:325
+msgid "Begin date"
+msgstr "Дата початку"
+
+#: modules/base/audit/ajaxLogFilter.php:52
+#: modules/base/includes/AjaxFilterLog.inc.php:326
+msgid "End date"
+msgstr "Дата завершення"
+
+#: modules/base/audit/ajaxLogFilter.php:124
+msgid "Object Name"
+msgstr "Назва об'єкта"
+
+#: modules/base/audit/ajaxLogFilter.php:126
+msgid "Module"
+msgstr "Модуль"
+
+#: modules/base/audit/ajaxLogFilter.php:128
+msgid "Result"
+msgstr "Результат"
+
+#: modules/base/audit/ajaxLogFilter.php:132
+msgid "View details"
+msgstr "Перегляд подробиць"
+
 #: modules/base/audit/indexproxy.php:31
 msgid "Proxy audit"
 msgstr "Аудит проксі"
 
-#: modules/base/status/index.php:101
-msgid "Uptime: "
-msgstr "Час роботи: "
+#: modules/base/audit/list.php:30
+msgid "Logged actions"
+msgstr "Записані до журналу дії"
 
-#: modules/base/status/index.php:104
-msgid "day"
-msgstr "день"
+#: modules/base/audit/list.php:39
+msgid "Search action"
+msgstr "Дія з пошуку"
 
-#: modules/base/status/index.php:108
-msgid "hour"
-msgstr "година"
+#: modules/base/audit/indexall.php:33 modules/base/audit/localSidebar.php:28
+msgid "All modules"
+msgstr "Усі модулі"
 
-#: modules/base/status/index.php:111
-msgid "minute"
-msgstr "хвилина"
+#: modules/base/audit/indexsamba.php:31 modules/base/audit/localSidebar.php:34
+msgid "Samba"
+msgstr "Samba"
 
-#: modules/base/status/index.php:116
-msgid "Memory"
-msgstr "Пам'ять"
+#: modules/base/audit/localSidebar.php:30
+msgid "Users and Groups"
+msgstr "Користувачі і групи"
 
-#: modules/base/status/index.php:119
-msgid "Swap"
-msgstr "Свопінг"
-
-#: modules/base/status/index.php:199
-msgid "Global view"
-msgstr "Загальний огляд"
-
-#: modules/base/status/index.php:206
-msgid "Server status"
-msgstr "Стан сервера"
-
-#: modules/base/status/index.php:211
-msgid "LDAP Configuration"
-msgstr "Налаштування LDAP"
-
-#: modules/base/status/index.php:218
-msgid "Hard drive partitions"
-msgstr "Розділи жорсткого диска"
-
-#: modules/base/status/index.php:223
-msgid "Background jobs"
-msgstr "Фонові завдання"
-
-#: modules/base/status/support.php:29
-msgid "License and support information"
-msgstr "Дані щодо ліцензування і підтримки"
-
-#: modules/base/status/support.php:34
-#: modules/base/includes/users-xmlrpc.inc.php:60
-msgid " and "
-msgstr " і "
-
-#: modules/base/status/support.php:38
-msgid "WARNING: The number of registered users is exceeding your license."
-msgstr ""
-"УВАГА: кількість зареєстрованих користувачів перевищує ліцензований обсяг."
-
-#: modules/base/status/support.php:41
-msgid "WARNING: The number of registered computers is exceeding your license."
-msgstr ""
-"УВАГА: кількість зареєстрованих комп'ютерів перевищує ліцензований обсяг."
-
-#: modules/base/status/support.php:44
-msgid ""
-"Please contact your administrator for more information. If you are an "
-"administrator, please go to the license status page for more information."
-msgstr ""
-"Будь ласка, зв'яжіться із вашим адміністратором, щоб дізнатися більше. Якщо "
-"ви є адміністратором, будь ласка, зверніться до сторінки стану ліцензування,"
-" щоб дізнатися більше."
-
-#: modules/base/status/support.php:50
-msgid "Product name"
-msgstr "Назва продукту"
-
-#: modules/base/status/support.php:51
-msgid "Product vendor"
-msgstr "Виробник продукту"
-
-#: modules/base/status/support.php:52
-msgid "Product vendor mail"
-msgstr "Пошта виробника продукту"
-
-#: modules/base/status/support.php:53
-msgid "Company name"
-msgstr "Назва фірми"
-
-#: modules/base/status/support.php:54
-msgid "Company administrator mail"
-msgstr "Пошта адміністратора компанії"
-
-#: modules/base/status/support.php:55 modules/base/status/support.php:60
-msgid "Comment"
-msgstr "Коментар"
-
-#: modules/base/status/support.php:56
-msgid "Registered users"
-msgstr "Зареєстровані користувачі"
-
-#: modules/base/status/support.php:57
-msgid "Registered computers"
-msgstr "Зареєстровані комп'ютери"
-
-#: modules/base/status/support.php:58
-msgid "Support mail address"
-msgstr "Поштова адреса служби підтримки"
-
-#: modules/base/status/support.php:59
-msgid "Support phone number"
-msgstr "Номер телефону служби підтримки"
-
-#: modules/base/computers/localSidebar.php:5
-msgid "All computers"
-msgstr "Усі комп'ютери"
-
-#: modules/base/computers/localSidebar.php:8
-#: modules/base/infoPackage.inc.php:323
-msgid "Add computer"
-msgstr "Додати комп'ютер"
-
-#: modules/base/computers/index.php:34 modules/base/infoPackage.inc.php:320
-msgid "Computer list"
-msgstr "Список комп'ютерів"
-
-#: modules/base/computers/edit.php:36
-msgid "Computer successfully added"
-msgstr "Комп'ютер успішно додано"
-
-#: modules/base/computers/edit.php:41
-msgid "The computer name is already taken."
-msgstr "Запис комп'ютера із такою назвою вже існує."
-
-#: modules/base/computers/edit.php:44
-msgid "Invalid computer name."
-msgstr "Некоректна назва комп'ютера."
-
-#: modules/base/computers/edit.php:50
-msgid "Add a computer"
-msgstr "Додати комп'ютер"
-
-#: modules/base/computers/edit.php:52
-msgid "Edit a computer"
-msgstr "Змінити комп'ютер"
-
-#: modules/base/computers/edit.php:84
-msgid "Computer name"
-msgstr "Назва комп'ютера"
-
-#: modules/base/computers/edit.php:123
-msgid "Location"
-msgstr "Адреса"
-
-#: modules/base/computers/trads.php:26
-msgid "Computer Name"
-msgstr "Назва комп'ютера"
-
-#: modules/base/computers/trads.php:27
-msgid "Display Name"
-msgstr "Екранне ім'я"
-
-#: modules/base/computers/delete.php:39
-msgid ""
-"You have to check the box <b>\"I am aware that all related images (non-"
-"master) will be deleted\"</b> if you want to remove this computer."
-msgstr ""
-"Вам слід позначити пункт <b>«Я знаю, що усі пов'язані образи (які не є "
-"основними) буде вилучено»</b>, якщо ви хочете вилучити запис цього "
-"комп'ютера."
-
-#: modules/base/computers/delete.php:71
-msgid "The computer has been deleted."
-msgstr "Запис комп'ютера було вилучено."
-
-#: modules/base/computers/delete.php:77
-msgid "Delete this computer"
-msgstr "Вилучити цей комп'ютер"
-
-#: modules/base/computers/delete.php:80
-msgid "Do you want a backup to be done ?"
-msgstr "Хочете створити резервну копію?"
-
-#: modules/base/computers/delete.php:86
-msgid ""
-"I am aware that <b>all related images (non-master)</b> will be "
-"<b>DELETED</b>.<br />Check this box if it is what you want."
-msgstr ""
-"Я знаю, що <b>усі пов'язані образи (які не є основними)</b> буде "
-"<b>ВИЛУЧЕНО</b>.<br />Позначте цей пункт, якщо ви хочете саме цього."
+#: modules/base/audit/localSidebar.php:42
+msgid "Proxy"
+msgstr "Проксі"
 
 #: modules/base/infoPackage.inc.php:37
 msgid "User, group and computer management"
 msgstr "Користувач, група і керування комп'ютерами"
+
+#: modules/base/infoPackage.inc.php:44 modules/base/main/default.php:89
+#: graph/navbar.inc.php:106
+msgid "Home"
+msgstr "Домівка"
 
 #: modules/base/infoPackage.inc.php:49
 msgid "Shortcuts"
@@ -744,6 +267,14 @@ msgstr "Змінити пароль"
 msgid "Get user photo"
 msgstr "Отримати фото користувача"
 
+#: modules/base/infoPackage.inc.php:281 modules/base/groups/ajaxFilter.php:41
+msgid "Groups"
+msgstr "Групи"
+
+#: modules/base/infoPackage.inc.php:286 modules/base/groups/index.php:31
+msgid "Group list"
+msgstr "Список груп"
+
 #: modules/base/infoPackage.inc.php:289
 msgid "Add a group"
 msgstr "Додати групу"
@@ -752,6 +283,10 @@ msgstr "Додати групу"
 msgid "Delete a group"
 msgstr "Вилучити групу"
 
+#: modules/base/infoPackage.inc.php:302 modules/base/groups/members.php:162
+msgid "Group members"
+msgstr "Члени групи"
+
 #: modules/base/infoPackage.inc.php:306
 msgid "Edit a group"
 msgstr "Змінити групу"
@@ -759,6 +294,15 @@ msgstr "Змінити групу"
 #: modules/base/infoPackage.inc.php:315
 msgid "Computers"
 msgstr "Комп'ютери"
+
+#: modules/base/infoPackage.inc.php:320 modules/base/computers/index.php:34
+msgid "Computer list"
+msgstr "Список комп'ютерів"
+
+#: modules/base/infoPackage.inc.php:323
+#: modules/base/computers/localSidebar.php:8
+msgid "Add computer"
+msgstr "Додати комп'ютер"
 
 #: modules/base/infoPackage.inc.php:329
 msgid "Edit computer"
@@ -855,14 +399,129 @@ msgstr "Бажане ім'я"
 msgid "Password"
 msgstr "Пароль"
 
-#: modules/base/infoPackage.inc.php:404 modules/base/users/passwd.php:68
-#: modules/base/users/resetpasswd.php:53
+#: modules/base/infoPackage.inc.php:404 modules/base/users/resetpasswd.php:53
+#: modules/base/users/passwd.php:68
 msgid "Confirm your password"
 msgstr "Підтвердьте ваш пароль"
 
 #: modules/base/infoPackage.inc.php:405
 msgid "Enable/Disable user account"
 msgstr "Увімкнути або вимкнути обліковий запис користувача"
+
+#: modules/base/views/index.tpl.php:78
+#: modules/base/includes/publicFunc.php:330
+#: modules/base/users/ajaxFilter.php:68 index.php:210
+msgid "Login"
+msgstr "Реєстраційне ім'я"
+
+#: modules/base/views/index.tpl.php:84 modules/base/users/ajaxFilter.php:79
+msgid "Name"
+msgstr "Назва"
+
+#: modules/base/views/index.tpl.php:87
+#: modules/base/includes/publicFunc.php:491
+msgid "Home directory"
+msgstr "Домашній каталог"
+
+#: modules/base/views/index.tpl.php:89 modules/base/users/ajaxFilter.php:83
+msgid "Edit"
+msgstr "Змінити"
+
+#: modules/base/views/index.tpl.php:91 modules/base/users/ajaxFilter.php:87
+msgid "MMC rights"
+msgstr "Права MMC"
+
+#: modules/base/views/index.tpl.php:92 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:88 modules/ppolicy/default/delete.php:45
+#: includes/FormGenerator.php:1158
+msgid "Delete"
+msgstr "Вилучити"
+
+#: modules/base/views/index.tpl.php:93 modules/base/users/ajaxFilter.php:89
+msgid "Backup"
+msgstr "Резервування"
+
+#: modules/base/computers/index.php:48
+#: modules/base/computers/localSidebar.php:5
+msgid "All computers"
+msgstr "Усі комп'ютери"
+
+#: modules/base/computers/index.php:52
+msgid "Online computers"
+msgstr "Комп'ютери у мережі"
+
+#: modules/base/computers/index.php:56
+msgid "Offline computers"
+msgstr "Комп'ютери поза мережею"
+
+#: modules/base/computers/trads.php:26
+msgid "Computer Name"
+msgstr "Назва комп'ютера"
+
+#: modules/base/computers/trads.php:27
+msgid "Display Name"
+msgstr "Екранне ім'я"
+
+#: modules/base/computers/delete.php:43
+msgid ""
+"You have to check the box <b>\"I am aware that all related images (non-"
+"master) will be deleted\"</b> if you want to remove this computer."
+msgstr ""
+"Вам слід позначити пункт <b>«Я знаю, що усі пов'язані образи (які не є "
+"основними) буде вилучено»</b>, якщо ви хочете вилучити запис цього "
+"комп'ютера."
+
+#: modules/base/computers/delete.php:78
+msgid "The computer has been deleted."
+msgstr "Запис комп'ютера було вилучено."
+
+#: modules/base/computers/delete.php:84
+msgid "Delete this computer"
+msgstr "Вилучити цей комп'ютер"
+
+#: modules/base/computers/delete.php:87
+msgid "Do you want a backup to be done ?"
+msgstr "Хочете створити резервну копію?"
+
+#: modules/base/computers/delete.php:93
+msgid ""
+"I am aware that <b>all related images (non-master)</b> will be "
+"<b>DELETED</b>.<br />Check this box if it is what you want."
+msgstr ""
+"Я знаю, що <b>усі пов'язані образи (які не є основними)</b> буде "
+"<b>ВИЛУЧЕНО</b>.<br />Позначте цей пункт, якщо ви хочете саме цього."
+
+#: modules/base/computers/edit.php:36
+msgid "Computer successfully added"
+msgstr "Комп'ютер успішно додано"
+
+#: modules/base/computers/edit.php:41
+msgid "The computer name is already taken."
+msgstr "Запис комп'ютера із такою назвою вже існує."
+
+#: modules/base/computers/edit.php:44
+msgid "Invalid computer name."
+msgstr "Некоректна назва комп'ютера."
+
+#: modules/base/computers/edit.php:50
+msgid "Add a computer"
+msgstr "Додати комп'ютер"
+
+#: modules/base/computers/edit.php:52
+msgid "Edit a computer"
+msgstr "Змінити комп'ютер"
+
+#: modules/base/computers/edit.php:84
+msgid "Computer name"
+msgstr "Назва комп'ютера"
+
+#: modules/base/computers/edit.php:89 modules/base/groups/edit.php:102
+msgid "Description"
+msgstr "Опис"
+
+#: modules/base/computers/edit.php:123
+msgid "Location"
+msgstr "Адреса"
 
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
 msgid "Add user"
@@ -883,6 +542,10 @@ msgstr "Змінити атрибут користувача"
 #: modules/base/includes/auditCodes.php:31
 msgid "Change group attribute"
 msgstr "Змінити атрибут групи"
+
+#: modules/base/includes/auditCodes.php:32 modules/base/groups/edit.php:58
+msgid "Add group"
+msgstr "Додати групу"
 
 #: modules/base/includes/auditCodes.php:33
 msgid "Add user to group"
@@ -951,18 +614,6 @@ msgstr "Відділ організації"
 #: modules/base/includes/auditCodes.php:50
 msgid "base"
 msgstr "основа"
-
-#: modules/base/includes/computers-i18n.php:25
-msgid "Computer's IP address"
-msgstr "IP-адреса комп'ютера"
-
-#: modules/base/includes/computers-i18n.php:26
-msgid "Computer's MAC address"
-msgstr "MAC-адреса комп'ютера"
-
-#: modules/base/includes/computers-i18n.php:27
-msgid "Computer's netmask address"
-msgstr "Маска мережі комп'ютера"
 
 #: modules/base/includes/publicFunc.php:46
 #, php-format
@@ -1067,12 +718,6 @@ msgstr "Оновлено атрибути користувача"
 msgid "User attributes"
 msgstr "Атрибути користувача"
 
-#: modules/base/includes/publicFunc.php:330
-#: modules/base/views/index.tpl.php:78 modules/base/users/ajaxFilter.php:68
-#: index.php:210
-msgid "Login"
-msgstr "Реєстраційне ім'я"
-
 #: modules/base/includes/publicFunc.php:349
 msgid "Confirm password"
 msgstr "Підтвердження пароля"
@@ -1129,11 +774,6 @@ msgstr "Групи користувача"
 msgid "All groups"
 msgstr "Усі групи"
 
-#: modules/base/includes/publicFunc.php:491
-#: modules/base/views/index.tpl.php:87
-msgid "Home directory"
-msgstr "Домашній каталог"
-
 #: modules/base/includes/publicFunc.php:497
 msgid "Create home directory on filesystem"
 msgstr "Створити домашній каталог у файловій системі"
@@ -1168,160 +808,6 @@ msgstr "UID"
 #: modules/base/includes/publicFunc.php:531
 msgid "GID"
 msgstr "GID"
-
-#: modules/base/includes/computers_list.inc.php:100
-msgid "Inventory"
-msgstr "Облік"
-
-#: modules/base/includes/computers_list.inc.php:101
-msgid "GLPI Inventory"
-msgstr "Облік GLPI"
-
-#: modules/base/includes/computers_list.inc.php:102
-#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
-#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:76
-msgid "detaildeploy"
-msgstr "докладне розгортання"
-
-#: modules/base/includes/computers_list.inc.php:103
-#: modules/base/includes/computers_list.inc.php:106
-msgid "Software deployment"
-msgstr "Розгортання програмного забезпечення"
-
-#: modules/base/includes/computers_list.inc.php:105
-msgid "Read log"
-msgstr "Читати журнал"
-
-#: modules/base/includes/computers_list.inc.php:108
-#: modules/base/includes/computers_list.inc.php:109
-msgid "xmppconsole"
-msgstr "xmppconsole"
-
-#: modules/base/includes/computers_list.inc.php:111
-#: modules/base/includes/computers_list.inc.php:112
-#: modules/base/includes/computers_list.inc.php:124
-#: modules/base/includes/computers_list.inc.php:125
-msgid "files browsing"
-msgstr "навігація файлами"
-
-#: modules/base/includes/computers_list.inc.php:118
-#: modules/base/includes/computers_list.inc.php:120
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
-msgid "Edit config files"
-msgstr "Редагувати файли налаштувань"
-
-#: modules/base/includes/computers_list.inc.php:127
-#: modules/base/includes/computers_list.inc.php:129
-#: modules/base/includes/computers_list.inc.php:140
-msgid "Remote control"
-msgstr "Дистанційне керування"
-
-#: modules/base/includes/computers_list.inc.php:131
-msgid "Imaging management"
-msgstr "Керування образами"
-
-#: modules/base/includes/computers_list.inc.php:132
-msgid "Download file"
-msgstr "Отримати файл"
-
-#: modules/base/includes/computers_list.inc.php:133
-#: modules/base/users/ajaxFilter.php:85
-msgid "extTicket issue"
-msgstr "Вада extTicket"
-
-#: modules/base/includes/computers_list.inc.php:135
-msgid "Show Profile"
-msgstr "Показувати профіль"
-
-#: modules/base/includes/computers_list.inc.php:137
-msgid "Quick action"
-msgstr "Швидка дія"
-
-#: modules/base/includes/computers_list.inc.php:345
-msgid "Computers list"
-msgstr "Список комп'ютерів"
-
-#: modules/base/includes/computers_list.inc.php:362
-msgid "Backup status"
-msgstr "Стан резервного копіювання"
-
-#: modules/base/includes/computers_list.inc.php:402
-msgid "Delete computer"
-msgstr "Вилучити комп'ютер"
-
-#: modules/base/includes/computers_list.inc.php:405
-msgid "Remove machine from group"
-msgstr "Вилучити машину з групи"
-
-#: modules/base/includes/users-xmlrpc.inc.php:45
-msgid "Invalid login"
-msgstr "Некоректне реєстраційне ім'я"
-
-#: modules/base/includes/users-xmlrpc.inc.php:54
-msgid "users"
-msgstr "користувачів"
-
-#: modules/base/includes/users-xmlrpc.inc.php:57
-msgid "computers"
-msgstr "комп'ютерів"
-
-#: modules/base/includes/users-xmlrpc.inc.php:60
-#, php-format
-msgid "WARNING: The number of registered %s is exceeding your license."
-msgstr "УВАГА: кількість зареєстрованих %s перевищує ліцензований обсяг."
-
-#: modules/base/includes/users-xmlrpc.inc.php:110
-#, php-format
-msgid ""
-"User %s created but password is not valid regarding your password "
-"policies.<br/><strong>You must change the user password.</strong>"
-msgstr ""
-"Створено запис користувача %s, але пароль до нього є некоректним за "
-"правилами паролів.<br/><strong>Вам слід змінити пароль користувача.</strong>"
-
-#: modules/base/includes/users-xmlrpc.inc.php:114
-msgid "You cannot add more users."
-msgstr "Не можна додавати додаткових користувачів."
-
-#: modules/base/includes/users-xmlrpc.inc.php:120
-#, php-format
-msgid "User %s successfully created"
-msgstr "Запис %s успішно створено"
-
-#: modules/base/includes/groups-xmlrpc.inc.php:85
-#, php-format
-msgid "Group %s already exist"
-msgstr "Група %s вже існує"
-
-#: modules/base/includes/groups-xmlrpc.inc.php:99
-#, php-format
-msgid "Group %s created"
-msgstr "Створено групу %s"
-
-#: modules/base/includes/panels/support.inc.php:29
-msgid "Your product"
-msgstr "Ваш продукт"
-
-#: modules/base/includes/panels/support.inc.php:39
-msgid "Support"
-msgstr "Підтримка"
-
-#: modules/base/includes/panels/support.inc.php:44
-msgid "Phone :"
-msgstr "Телефон:"
-
-#: modules/base/includes/panels/support.inc.php:48
-msgid "Users : "
-msgstr "Користувачі: "
-
-#: modules/base/includes/panels/support.inc.php:49
-msgid "Computers : "
-msgstr "Комп'ютери: "
-
-#: modules/base/includes/panels/support.inc.php:54
-msgid "Upgrade"
-msgstr "Оновити"
 
 #: modules/base/includes/errorHandling.php:28
 msgid "LDAP log file does not exist."
@@ -1439,6 +925,179 @@ msgstr "Пароль має складатися принаймні з %s сим
 msgid "The password is too short."
 msgstr "Пароль є надто коротким."
 
+#: modules/base/includes/computers_list.inc.php:100
+msgid "Inventory"
+msgstr "Облік"
+
+#: modules/base/includes/computers_list.inc.php:101
+msgid "GLPI Inventory"
+msgstr "Облік GLPI"
+
+#: modules/base/includes/computers_list.inc.php:102
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:82
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
+msgid "detaildeploy"
+msgstr "докладне розгортання"
+
+#: modules/base/includes/computers_list.inc.php:103
+#: modules/base/includes/computers_list.inc.php:106
+msgid "Software deployment"
+msgstr "Розгортання програмного забезпечення"
+
+#: modules/base/includes/computers_list.inc.php:105
+msgid "Read log"
+msgstr "Читати журнал"
+
+#: modules/base/includes/computers_list.inc.php:108
+#: modules/base/includes/computers_list.inc.php:109
+msgid "xmppconsole"
+msgstr "xmppconsole"
+
+#: modules/base/includes/computers_list.inc.php:111
+#: modules/base/includes/computers_list.inc.php:112
+#: modules/base/includes/computers_list.inc.php:124
+#: modules/base/includes/computers_list.inc.php:125
+msgid "files browsing"
+msgstr "навігація файлами"
+
+#: modules/base/includes/computers_list.inc.php:118
+#: modules/base/includes/computers_list.inc.php:120
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
+msgid "Edit config files"
+msgstr "Редагувати файли налаштувань"
+
+#: modules/base/includes/computers_list.inc.php:127
+#: modules/base/includes/computers_list.inc.php:129
+#: modules/base/includes/computers_list.inc.php:140
+msgid "Remote control"
+msgstr "Дистанційне керування"
+
+#: modules/base/includes/computers_list.inc.php:131
+msgid "Imaging management"
+msgstr "Керування образами"
+
+#: modules/base/includes/computers_list.inc.php:132
+msgid "Download file"
+msgstr "Отримати файл"
+
+#: modules/base/includes/computers_list.inc.php:133
+#: modules/base/users/ajaxFilter.php:85
+msgid "extTicket issue"
+msgstr "Вада extTicket"
+
+#: modules/base/includes/computers_list.inc.php:135
+msgid "Show Profile"
+msgstr "Показувати профіль"
+
+#: modules/base/includes/computers_list.inc.php:137
+msgid "Quick action"
+msgstr "Швидка дія"
+
+#: modules/base/includes/computers_list.inc.php:345
+msgid "Computers list"
+msgstr "Список комп'ютерів"
+
+#: modules/base/includes/computers_list.inc.php:362
+msgid "Backup status"
+msgstr "Стан резервного копіювання"
+
+#: modules/base/includes/computers_list.inc.php:402
+msgid "Delete computer"
+msgstr "Вилучити комп'ютер"
+
+#: modules/base/includes/computers_list.inc.php:405
+msgid "Remove machine from group"
+msgstr "Вилучити машину з групи"
+
+#: modules/base/includes/groups-xmlrpc.inc.php:85
+#, php-format
+msgid "Group %s already exist"
+msgstr "Група %s вже існує"
+
+#: modules/base/includes/groups-xmlrpc.inc.php:99
+#, php-format
+msgid "Group %s created"
+msgstr "Створено групу %s"
+
+#: modules/base/includes/users-xmlrpc.inc.php:45
+msgid "Invalid login"
+msgstr "Некоректне реєстраційне ім'я"
+
+#: modules/base/includes/users-xmlrpc.inc.php:54
+msgid "users"
+msgstr "користувачів"
+
+#: modules/base/includes/users-xmlrpc.inc.php:57
+msgid "computers"
+msgstr "комп'ютерів"
+
+#: modules/base/includes/users-xmlrpc.inc.php:60
+#, php-format
+msgid "WARNING: The number of registered %s is exceeding your license."
+msgstr "УВАГА: кількість зареєстрованих %s перевищує ліцензований обсяг."
+
+#: modules/base/includes/users-xmlrpc.inc.php:60
+#: modules/base/status/support.php:34
+msgid " and "
+msgstr " і "
+
+#: modules/base/includes/users-xmlrpc.inc.php:110
+#, php-format
+msgid ""
+"User %s created but password is not valid regarding your password "
+"policies.<br/><strong>You must change the user password.</strong>"
+msgstr ""
+"Створено запис користувача %s, але пароль до нього є некоректним за "
+"правилами паролів.<br/><strong>Вам слід змінити пароль користувача.</strong>"
+
+#: modules/base/includes/users-xmlrpc.inc.php:114
+msgid "You cannot add more users."
+msgstr "Не можна додавати додаткових користувачів."
+
+#: modules/base/includes/users-xmlrpc.inc.php:120
+#, php-format
+msgid "User %s successfully created"
+msgstr "Запис %s успішно створено"
+
+#: modules/base/includes/panels/support.inc.php:29
+msgid "Your product"
+msgstr "Ваш продукт"
+
+#: modules/base/includes/panels/support.inc.php:39
+msgid "Support"
+msgstr "Підтримка"
+
+#: modules/base/includes/panels/support.inc.php:44
+msgid "Phone :"
+msgstr "Телефон:"
+
+#: modules/base/includes/panels/support.inc.php:48
+msgid "Users : "
+msgstr "Користувачі: "
+
+#: modules/base/includes/panels/support.inc.php:49
+msgid "Computers : "
+msgstr "Комп'ютери: "
+
+#: modules/base/includes/panels/support.inc.php:54
+msgid "Upgrade"
+msgstr "Оновити"
+
+#: modules/base/includes/computers-i18n.php:25
+msgid "Computer's IP address"
+msgstr "IP-адреса комп'ютера"
+
+#: modules/base/includes/computers-i18n.php:26
+msgid "Computer's MAC address"
+msgstr "MAC-адреса комп'ютера"
+
+#: modules/base/includes/computers-i18n.php:27
+msgid "Computer's netmask address"
+msgstr "Маска мережі комп'ютера"
+
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100 includes/ajaxTools.php:63
 #: includes/ajaxTools.php:69 includes/PageGenerator.php:881
@@ -1473,21 +1132,481 @@ msgstr "value=\"never\";'>ніколи</a>"
 msgid "Refresh"
 msgstr "Оновити"
 
-#: modules/base/views/index.tpl.php:84 modules/base/users/ajaxFilter.php:79
-msgid "Name"
-msgstr "Назва"
+#: modules/base/logview/logskiosk.php:136
+#: modules/base/logview/logsquickaction.php:140
+msgid "Quick Actions Logs"
+msgstr "Журнал швидких дій"
 
-#: modules/base/views/index.tpl.php:89 modules/base/users/ajaxFilter.php:83
-msgid "Edit"
-msgstr "Змінити"
+#: modules/base/logview/logskiosk.php:283
+#: modules/base/logview/logsremotedesktop.php:275
+#: modules/base/logview/logsdownload.php:280
+#: modules/base/logview/index.php:419
+#: modules/base/logview/logsbackuppc.php:306
+#: modules/base/logview/logsquickaction.php:295
+#: modules/base/logview/logsinventory.php:304
+#: modules/base/logview/logsimaging.php:359
+#: modules/base/logview/logspackaging.php:303
+msgid "date"
+msgstr "дата"
 
-#: modules/base/views/index.tpl.php:91 modules/base/users/ajaxFilter.php:87
-msgid "MMC rights"
-msgstr "Права MMC"
+#: modules/base/logview/logskiosk.php:284
+#: modules/base/logview/logsremotedesktop.php:276
+#: modules/base/logview/logsdownload.php:281
+#: modules/base/logview/index.php:420
+#: modules/base/logview/logsbackuppc.php:307
+#: modules/base/logview/logsquickaction.php:296
+#: modules/base/logview/logsinventory.php:305
+#: modules/base/logview/logsimaging.php:360
+#: modules/base/logview/logspackaging.php:304
+msgid "user"
+msgstr "користувач"
 
-#: modules/base/views/index.tpl.php:93 modules/base/users/ajaxFilter.php:89
-msgid "Backup"
-msgstr "Резервування"
+#: modules/base/logview/logskiosk.php:285
+#: modules/base/logview/logsremotedesktop.php:277
+#: modules/base/logview/logsdownload.php:282
+#: modules/base/logview/index.php:421
+#: modules/base/logview/logsbackuppc.php:308
+#: modules/base/logview/logsquickaction.php:297
+#: modules/base/logview/logsinventory.php:306
+#: modules/base/logview/logsimaging.php:361
+#: modules/base/logview/logspackaging.php:305
+msgid "who"
+msgstr "хто"
+
+#: modules/base/logview/logskiosk.php:286
+#: modules/base/logview/logsremotedesktop.php:278
+#: modules/base/logview/logsdownload.php:283
+#: modules/base/logview/index.php:422
+#: modules/base/logview/logsbackuppc.php:309
+#: modules/base/logview/logsquickaction.php:298
+#: modules/base/logview/logsinventory.php:307
+#: modules/base/logview/logsimaging.php:362
+#: modules/base/logview/logspackaging.php:306
+msgid "text"
+msgstr "текст"
+
+#: modules/base/logview/logsremotedesktop.php:140
+msgid "Remote Desktop Logs"
+msgstr "Журнал віддаленої стільниці"
+
+#: modules/base/logview/logsdownload.php:133
+msgid "Transfert File Logs"
+msgstr "Журнали передавання файлів"
+
+#: modules/base/logview/logsdeployment.php:136
+msgid "Deployment Logs"
+msgstr "Журнал розгортання"
+
+#: modules/base/logview/logsdeployment.php:299
+msgid "Who"
+msgstr "Хто"
+
+#: modules/base/logview/logsdeployment.php:300
+msgid "Session name"
+msgstr "Назва сеансу"
+
+#: modules/base/logview/logsdeployment.php:302
+msgid "message"
+msgstr "повідомлення"
+
+#: modules/base/logview/logsinventory.php:145
+msgid "Inventory Logs"
+msgstr "Журнал обліку"
+
+#: modules/base/logview/logsimaging.php:158
+msgid "Imaging Logs"
+msgstr "Журнал образів"
+
+#: modules/base/logview/logspackaging.php:141
+msgid "Packaging Logs"
+msgstr "Журнал пакування"
+
+#: modules/base/logview/ajax_showlog.php:69
+msgid "Connection"
+msgstr "З'єднання"
+
+#: modules/base/logview/ajax_showlog.php:70
+msgid "Operation"
+msgstr "Дія"
+
+#: modules/base/logview/ajax_showlog.php:71
+msgid "Actions"
+msgstr "Дії"
+
+#: modules/base/logview/ajax_showlog.php:72
+msgid "Extra information"
+msgstr "Додаткова інформація"
+
+#: modules/base/main/favorites.php:4
+msgid "Root user cannot have favorites"
+msgstr "У користувача root не може бути вибраних записів"
+
+#: modules/base/main/favorites.php:149
+msgid "Add this page to your favorites"
+msgstr "Додати цю сторінку до вибраних"
+
+#: modules/base/groups/members.php:109
+msgid "Group successfully modified"
+msgstr "Групу успішно змінено"
+
+#: modules/base/groups/members.php:125
+msgid ""
+"Some users can't be removed from this group because this group is their "
+"primary group."
+msgstr ""
+"Деяких користувачів не можна вилучити з цієї групи, оскільки це їхня основна"
+" група."
+
+#: modules/base/groups/members.php:128
+#, php-format
+msgid "Group members %s"
+msgstr "Учасники групи %s"
+
+#: modules/base/groups/members.php:141
+msgid "All users"
+msgstr "Всі користувачі"
+
+#: modules/base/groups/members.php:188 modules/base/groups/edit.php:117
+#: includes/PageGenerator.php:2636 includes/PageGenerator.php:2705
+#: includes/PageGenerator.php:2731
+msgid "Confirm"
+msgstr "Підтвердити"
+
+#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
+#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
+#: includes/PageGenerator.php:2640 includes/PageGenerator.php:2709
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: modules/base/groups/ajaxFilter.php:43
+msgid "Comments"
+msgstr "Коментарі"
+
+#: modules/base/groups/ajaxFilter.php:46
+msgid "Edit members"
+msgstr "Редагування учасників"
+
+#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:63
+msgid "Edit group"
+msgstr "Редагувати групу"
+
+#: modules/base/groups/ajaxFilter.php:49
+msgid "Groups management"
+msgstr "Керування групами"
+
+#: modules/base/groups/delete.php:54 modules/base/groups/delete.php:65
+msgid "Delete group"
+msgstr "Вилучити групу"
+
+#: modules/base/groups/delete.php:57
+msgid "You will delete group"
+msgstr "Ви вилучите групу"
+
+#: modules/base/groups/delete.php:60
+msgid "This group will be deleted even though it is not empty"
+msgstr "Цю групу буде вилучено, незважаючи на те, що вона не є порожньою"
+
+#: modules/base/groups/edit.php:35
+#, php-format
+msgid "Group %s successfully added"
+msgstr "Групу %s успішно додано"
+
+#: modules/base/groups/edit.php:52
+#, php-format
+msgid "Group %s successfully modified"
+msgstr "Групу %s успішно змінено"
+
+#: modules/base/groups/edit.php:82
+msgid ""
+"The group name can only contain letters and numeric, and must begin with a "
+"letter"
+msgstr ""
+"Назва групи може складатися лише з літер і цифр і має починатися з літери"
+
+#: modules/base/groups/edit.php:99
+msgid "Group name"
+msgstr "Назва групи"
+
+#: modules/base/groups/edit.php:114
+msgid "Create"
+msgstr "Створити"
+
+#: modules/base/groups/localSidebar.php:28
+msgid "List"
+msgstr "Список"
+
+#: modules/base/groups/localSidebar.php:29 includes/FormGenerator.php:718
+msgid "Add"
+msgstr "Додати"
+
+#: modules/base/status/index.php:101
+msgid "Uptime: "
+msgstr "Час роботи: "
+
+#: modules/base/status/index.php:104
+msgid "day"
+msgstr "день"
+
+#: modules/base/status/index.php:108
+msgid "hour"
+msgstr "година"
+
+#: modules/base/status/index.php:111
+msgid "minute"
+msgstr "хвилина"
+
+#: modules/base/status/index.php:116
+msgid "Memory"
+msgstr "Пам'ять"
+
+#: modules/base/status/index.php:119
+msgid "Swap"
+msgstr "Свопінг"
+
+#: modules/base/status/index.php:199
+msgid "Global view"
+msgstr "Загальний огляд"
+
+#: modules/base/status/index.php:206
+msgid "Server status"
+msgstr "Стан сервера"
+
+#: modules/base/status/index.php:211
+msgid "LDAP Configuration"
+msgstr "Налаштування LDAP"
+
+#: modules/base/status/index.php:218
+msgid "Hard drive partitions"
+msgstr "Розділи жорсткого диска"
+
+#: modules/base/status/index.php:223
+msgid "Background jobs"
+msgstr "Фонові завдання"
+
+#: modules/base/status/support.php:29
+msgid "License and support information"
+msgstr "Дані щодо ліцензування і підтримки"
+
+#: modules/base/status/support.php:38
+msgid "WARNING: The number of registered users is exceeding your license."
+msgstr ""
+"УВАГА: кількість зареєстрованих користувачів перевищує ліцензований обсяг."
+
+#: modules/base/status/support.php:41
+msgid "WARNING: The number of registered computers is exceeding your license."
+msgstr ""
+"УВАГА: кількість зареєстрованих комп'ютерів перевищує ліцензований обсяг."
+
+#: modules/base/status/support.php:44
+msgid ""
+"Please contact your administrator for more information. If you are an "
+"administrator, please go to the license status page for more information."
+msgstr ""
+"Будь ласка, зв'яжіться із вашим адміністратором, щоб дізнатися більше. Якщо "
+"ви є адміністратором, будь ласка, зверніться до сторінки стану ліцензування,"
+" щоб дізнатися більше."
+
+#: modules/base/status/support.php:50
+msgid "Product name"
+msgstr "Назва продукту"
+
+#: modules/base/status/support.php:51
+msgid "Product vendor"
+msgstr "Виробник продукту"
+
+#: modules/base/status/support.php:52
+msgid "Product vendor mail"
+msgstr "Пошта виробника продукту"
+
+#: modules/base/status/support.php:53
+msgid "Company name"
+msgstr "Назва фірми"
+
+#: modules/base/status/support.php:54
+msgid "Company administrator mail"
+msgstr "Пошта адміністратора компанії"
+
+#: modules/base/status/support.php:55 modules/base/status/support.php:60
+msgid "Comment"
+msgstr "Коментар"
+
+#: modules/base/status/support.php:56
+msgid "Registered users"
+msgstr "Зареєстровані користувачі"
+
+#: modules/base/status/support.php:57
+msgid "Registered computers"
+msgstr "Зареєстровані комп'ютери"
+
+#: modules/base/status/support.php:58
+msgid "Support mail address"
+msgstr "Поштова адреса служби підтримки"
+
+#: modules/base/status/support.php:59
+msgid "Support phone number"
+msgstr "Номер телефону служби підтримки"
+
+#: modules/base/users/ajaxFilter.php:81
+msgid "Telephone"
+msgstr "Телефон"
+
+#: modules/base/users/ajaxFilter.php:91
+msgid "Logged Actions"
+msgstr "Дії з журналу"
+
+#: modules/base/users/resetpasswd.php:33
+msgid "Reset your password"
+msgstr "Скинути ваш пароль."
+
+#: modules/base/users/resetpasswd.php:40 modules/base/users/passwd.php:43
+msgid "Your password has been changed."
+msgstr "Ваш пароль змінено."
+
+#: modules/base/users/resetpasswd.php:48 modules/base/users/passwd.php:60
+msgid "You are going to change your password"
+msgstr "Ви маєте намір змінити свій пароль"
+
+#: modules/base/users/resetpasswd.php:51 modules/base/users/passwd.php:66
+msgid "New password"
+msgstr "Новий пароль"
+
+#: modules/base/users/resetpasswd.php:58 modules/base/users/passwd.php:36
+#: modules/base/users/passwd.php:73
+msgid "Change your password"
+msgstr "Змінити ваш пароль"
+
+#: modules/base/users/resetpasswd.php:59 modules/base/users/passwd.php:74
+msgid "Return"
+msgstr "Повернутися"
+
+#: modules/base/users/resetpasswd.php:62 modules/base/users/passwd.php:81
+msgid "Passwords are mismatching. Please retry."
+msgstr "Паролі не збігаються. Будь ласка, повторіть спробу."
+
+#: modules/base/users/editacl.php:155
+msgid "User ACLs successfully modified."
+msgstr "ACL користувача успішно змінено."
+
+#: modules/base/users/editacl.php:179
+msgid "Set value for all radio buttons:&nbsp;&nbsp;"
+msgstr "Встановити значення для усіх пунктів варіантів:&nbsp;&nbsp;"
+
+#: modules/base/users/editacl.php:180 modules/base/users/editacl.php:185
+msgid "read only"
+msgstr "лише для читання"
+
+#: modules/base/users/editacl.php:181 modules/base/users/editacl.php:185
+msgid "read/write"
+msgstr "читання-запис"
+
+#: modules/base/users/editacl.php:182 modules/base/users/editacl.php:185
+msgid "hide"
+msgstr "сховати"
+
+#: modules/base/users/editacl.php:185
+msgid "Attribute description"
+msgstr "Опис атрибута"
+
+#: modules/base/users/editacl.php:213
+#, php-format
+msgid " (%s module)"
+msgstr " (модуль %s)"
+
+#: modules/base/users/editacl.php:223
+msgid "Web page description"
+msgstr "Опис вебсторінки"
+
+#: modules/base/users/editacl.php:223
+msgid "Authorization"
+msgstr "Уповноваження"
+
+#: modules/base/users/editacl.php:232
+msgid "Warning: no desc found in infoPackage.inc.php :"
+msgstr "Попередження: не знайдено опису у infoPackage.inc.php :"
+
+#: modules/base/users/editacl.php:255
+#, php-format
+msgid "Edit ACL of user %s"
+msgstr "Змінити ACL користувача %s"
+
+#: modules/base/users/editacl.php:275
+msgid "Download ACL string"
+msgstr "Рядок отримання ACL"
+
+#: modules/base/users/delete.php:33
+#, php-format
+msgid "User %s has been successfully deleted"
+msgstr "Запис користувача %s успішно вилучено"
+
+#: modules/base/users/delete.php:38
+msgid "Delete user"
+msgstr "Вилучити користувача"
+
+#: modules/base/users/delete.php:39
+#, php-format
+msgid "You will delete user <b>%s</b>."
+msgstr "Ви вилучите запис користувача <b>%s</b>."
+
+#: modules/base/users/delete.php:40
+msgid "Delete all user's files"
+msgstr "Вилучити усі файли користувача"
+
+#: modules/base/users/edit.php:59
+msgid "Edit user"
+msgstr "Змінити дані користувача"
+
+#: modules/base/users/edit.php:88
+#, php-format
+msgid "Failed to change primary group in %s plugin"
+msgstr "Не вдалося змінити основну групу у додатку %s"
+
+#: modules/base/users/edit.php:112
+msgid "Password not updated"
+msgstr "Пароль не оновлено"
+
+#: modules/base/users/edit.php:115
+msgid "Password updated"
+msgstr "Пароль оновлено"
+
+#: modules/base/users/edit.php:124
+#, php-format
+msgid "Failed to disable user in %s plugin"
+msgstr "Не вдалося вимкнути користувача у додатку %s"
+
+#: modules/base/users/edit.php:127
+#, php-format
+msgid "User %s disabled."
+msgstr "Користувача %s вимкнено."
+
+#: modules/base/users/edit.php:133
+#, php-format
+msgid "Failed to enable user in %s plugin"
+msgstr "Не вдалося увімкнути користувача у додатку %s"
+
+#: modules/base/users/edit.php:136
+#, php-format
+msgid "User %s enabled"
+msgstr "Користувача %s увімкнено"
+
+#: modules/base/users/edit.php:182
+msgid "Enable account"
+msgstr "Увімкнути обліковий запис"
+
+#: modules/base/users/edit.php:183
+msgid "Disable account"
+msgstr "Вимкнути обліковий запис"
+
+#: modules/base/users/passwd.php:50
+msgid "Change your user's password"
+msgstr "Змінити ваш пароль користувача"
+
+#: modules/base/users/passwd.php:64
+msgid "Current password"
+msgstr "Поточний пароль"
+
+#: modules/base/users/passwd.php:79
+msgid "Invalid current password. Please retry."
+msgstr "Некоректний поточний пароль. Будь ласка, повторіть спробу."
 
 #: modules/base/users/backup.php:38
 msgid "Backup a user's folder"
@@ -1547,175 +1666,9 @@ msgstr "Розмір носія"
 msgid "Launch backup"
 msgstr "Запустити резервне копіювання"
 
-#: modules/base/users/edit.php:59
-msgid "Edit user"
-msgstr "Змінити дані користувача"
-
-#: modules/base/users/edit.php:88
-#, php-format
-msgid "Failed to change primary group in %s plugin"
-msgstr "Не вдалося змінити основну групу у додатку %s"
-
-#: modules/base/users/edit.php:112
-msgid "Password not updated"
-msgstr "Пароль не оновлено"
-
-#: modules/base/users/edit.php:115
-msgid "Password updated"
-msgstr "Пароль оновлено"
-
-#: modules/base/users/edit.php:124
-#, php-format
-msgid "Failed to disable user in %s plugin"
-msgstr "Не вдалося вимкнути користувача у додатку %s"
-
-#: modules/base/users/edit.php:127
-#, php-format
-msgid "User %s disabled."
-msgstr "Користувача %s вимкнено."
-
-#: modules/base/users/edit.php:133
-#, php-format
-msgid "Failed to enable user in %s plugin"
-msgstr "Не вдалося увімкнути користувача у додатку %s"
-
-#: modules/base/users/edit.php:136
-#, php-format
-msgid "User %s enabled"
-msgstr "Користувача %s увімкнено"
-
-#: modules/base/users/edit.php:182
-msgid "Enable account"
-msgstr "Увімкнути обліковий запис"
-
-#: modules/base/users/edit.php:183
-msgid "Disable account"
-msgstr "Вимкнути обліковий запис"
-
-#: modules/base/users/passwd.php:36 modules/base/users/passwd.php:73
-#: modules/base/users/resetpasswd.php:58
-msgid "Change your password"
-msgstr "Змінити ваш пароль"
-
-#: modules/base/users/passwd.php:43 modules/base/users/resetpasswd.php:40
-msgid "Your password has been changed."
-msgstr "Ваш пароль змінено."
-
-#: modules/base/users/passwd.php:50
-msgid "Change your user's password"
-msgstr "Змінити ваш пароль користувача"
-
-#: modules/base/users/passwd.php:60 modules/base/users/resetpasswd.php:48
-msgid "You are going to change your password"
-msgstr "Ви маєте намір змінити свій пароль"
-
-#: modules/base/users/passwd.php:64
-msgid "Current password"
-msgstr "Поточний пароль"
-
-#: modules/base/users/passwd.php:66 modules/base/users/resetpasswd.php:51
-msgid "New password"
-msgstr "Новий пароль"
-
-#: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:59
-msgid "Return"
-msgstr "Повернутися"
-
-#: modules/base/users/passwd.php:79
-msgid "Invalid current password. Please retry."
-msgstr "Некоректний поточний пароль. Будь ласка, повторіть спробу."
-
-#: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:62
-msgid "Passwords are mismatching. Please retry."
-msgstr "Паролі не збігаються. Будь ласка, повторіть спробу."
-
-#: modules/base/users/resetpasswd.php:33
-msgid "Reset your password"
-msgstr "Скинути ваш пароль."
-
-#: modules/base/users/delete.php:33
-#, php-format
-msgid "User %s has been successfully deleted"
-msgstr "Запис користувача %s успішно вилучено"
-
-#: modules/base/users/delete.php:38
-msgid "Delete user"
-msgstr "Вилучити користувача"
-
-#: modules/base/users/delete.php:39
-#, php-format
-msgid "You will delete user <b>%s</b>."
-msgstr "Ви вилучите запис користувача <b>%s</b>."
-
-#: modules/base/users/delete.php:40
-msgid "Delete all user's files"
-msgstr "Вилучити усі файли користувача"
-
 #: modules/base/users/loguser.php:39
 msgid "User log"
 msgstr "Журнал користування"
-
-#: modules/base/users/ajaxFilter.php:81
-msgid "Telephone"
-msgstr "Телефон"
-
-#: modules/base/users/ajaxFilter.php:91
-msgid "Logged Actions"
-msgstr "Дії з журналу"
-
-#: modules/base/users/editacl.php:155
-msgid "User ACLs successfully modified."
-msgstr "ACL користувача успішно змінено."
-
-#: modules/base/users/editacl.php:179
-msgid "Set value for all radio buttons:&nbsp;&nbsp;"
-msgstr "Встановити значення для усіх пунктів варіантів:&nbsp;&nbsp;"
-
-#: modules/base/users/editacl.php:180 modules/base/users/editacl.php:185
-msgid "read only"
-msgstr "лише для читання"
-
-#: modules/base/users/editacl.php:181 modules/base/users/editacl.php:185
-msgid "read/write"
-msgstr "читання-запис"
-
-#: modules/base/users/editacl.php:182 modules/base/users/editacl.php:185
-msgid "hide"
-msgstr "сховати"
-
-#: modules/base/users/editacl.php:185
-msgid "Attribute description"
-msgstr "Опис атрибута"
-
-#: modules/base/users/editacl.php:213
-#, php-format
-msgid " (%s module)"
-msgstr " (модуль %s)"
-
-#: modules/base/users/editacl.php:223
-msgid "Web page description"
-msgstr "Опис вебсторінки"
-
-#: modules/base/users/editacl.php:223
-msgid "Authorization"
-msgstr "Уповноваження"
-
-#: modules/base/users/editacl.php:232
-msgid "Warning: no desc found in infoPackage.inc.php :"
-msgstr "Попередження: не знайдено опису у infoPackage.inc.php :"
-
-#: modules/base/users/editacl.php:255
-#, php-format
-msgid "Edit ACL of user %s"
-msgstr "Змінити ACL користувача %s"
-
-#: modules/base/users/editacl.php:275
-msgid "Download ACL string"
-msgstr "Рядок отримання ACL"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
-msgid "Delete deploy"
-msgstr "Вилучити розгорнуте"
 
 #: modules/services/includes/panels/services.inc.php:44
 #, php-format
@@ -1726,6 +1679,46 @@ msgstr[1] "%d неактивних служби"
 msgstr[2] "%d неактивних служб"
 msgstr[3] "%d неактивних служб"
 
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:175
+msgid "cluster list"
+msgstr "список кластерів"
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:176
+msgid "cluster nb ars"
+msgstr "к-ть стовпчиків кл."
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:177
+msgid "machine"
+msgstr "комп'ютер"
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
+msgid "progress"
+msgstr "поступ"
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:179
+msgid "start"
+msgstr "початок"
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:180
+msgid "end"
+msgstr "кінець"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
+msgid "Delete deploy"
+msgstr "Вилучити розгорнуте"
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:30
+msgid "Clients Update"
+msgstr "Оновлення клієнтів"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:30
+msgid "Pulse Updates"
+msgstr "Оновлення Pulse"
+
+#: modules/dashboard/includes/panels/general.inc.php:40
+msgid "Uptime"
+msgstr "Час роботи"
+
 #: modules/admin/includes/configure.inc.php:50
 msgid " configuration"
 msgstr ", налаштування"
@@ -1734,64 +1727,152 @@ msgstr ", налаштування"
 msgid " configuration page"
 msgstr ", сторінка налаштовування"
 
-#: modules/dashboard/includes/panels/clients_updates.inc.php:30
-msgid "Clients Update"
-msgstr "Оновлення клієнтів"
+#: version.php:35
+msgid "MMC components version"
+msgstr "Версія компонентів MMC"
 
-#: modules/dashboard/includes/panels/general.inc.php:40
-msgid "Uptime"
-msgstr "Час роботи"
+#: version.php:36
+msgid "MMC agent: version"
+msgstr "Агент MMC: версія"
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:30
-msgid "Pulse Updates"
-msgstr "Оновлення Pulse"
+#: version.php:40
+msgid "agent: version"
+msgstr "агент: версія"
 
-#: index.php:63 token.php:56
-#, php-format
-msgid "The server %s does not exist"
-msgstr "Сервера %s не існує"
+#: version.php:42
+msgid "web: version"
+msgstr "веб-клієнт: версія"
 
-#: index.php:73
-msgid "Login failed"
-msgstr "Невдала спроба увійти"
+#: version.php:44
+msgid "web: plugin is not installed"
+msgstr "веб-клієнт: додаток не встановлено"
 
-#: index.php:79
+#: includes/acl.inc.php:132
+msgid "You do not have required rights"
+msgstr "У вас немає достатніх прав"
+
+#: includes/bgps_view.php:64
+msgid "No job."
+msgstr "Немає завдання."
+
+#: includes/auditCodesManager.php:33
+msgid "Daemon start"
+msgstr "Запуск фонової служби"
+
+#: includes/auditCodesManager.php:34
+msgid "Daemon stop"
+msgstr "Зупинка фонової служби"
+
+#: includes/auditCodesManager.php:35
+msgid "MMC agent"
+msgstr "Агент MMC"
+
+#: includes/commonErrorHandling.php:30
+msgid "This item already exists in your LDAP directory"
+msgstr "Цей запис вже є у вашому каталозі LDAP"
+
+#: includes/commonErrorHandling.php:31
 msgid ""
-"You have been logged out because the session between the MMC web interface "
-"and the MMC agent expired."
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>change this entry name</li>\n"
+"                            <li>delete this entry before recreate it</li>\n"
+"                        </ul>"
 msgstr ""
-"Ваш сеанс роботи завершено через перевищення граничної тривалості сеансу між"
-" вебінтерфейсом MMC та агентом MMC."
+"Усунути проблему можна у один з таких способів:\n"
+"                        <ul>\n"
+"                            <li>змініть назву цього запису</li>\n"
+"                            <li>вилучіть цей запис, а потім знову його створіть</li>\n"
+"                        </ul>"
 
-#: index.php:186
-msgid "Forgot password ?"
-msgstr "Забули пароль?"
+#: includes/commonErrorHandling.php:43
+msgid "MMC Agent can't contact your LDAP server"
+msgstr "Агент MMC не може встановити зв'язок із вашим сервером LDAP"
 
-#: index.php:197
-msgid "Server"
-msgstr "Сервер"
-
-#: index.php:204
-msgid "Language"
-msgstr "Мова"
-
-#: index.php:229
-msgid "Connect"
-msgstr "З'єднатися"
-
-#: logout/index.php:51
-msgid "Your session will be closed"
-msgstr "Ваш сеанс буде закрито"
-
-#: token.php:68
-msgid "Token not valid"
-msgstr "Ключ не є чинним"
-
-#: token.php:70
-msgid "Error while validating your token. Please contact your administrator."
+#: includes/commonErrorHandling.php:44
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verify your LDAP server is up</li>\n"
+"                        </ul>"
 msgstr ""
-"Помилка під час проби перевірити чинність вашого ключа. Будь ласка, "
-"зв'яжіться із вашим системним адміністратором."
+"Можливі шляхи усування проблеми:\n"
+"                        <ul>\n"
+"                            <li>перевірити, чи правильно налаштовано сервер LDAP у /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>перевірити, чи працює сервер LDAP</li>\n"
+"                        </ul>"
+
+#: includes/commonErrorHandling.php:53
+msgid "Error during authentication process"
+msgstr "Помилка під час процесу розпізнавання"
+
+#: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
+msgid "Please contact your administrator."
+msgstr "Будь ласка, зверніться до адміністратора."
+
+#: includes/commonErrorHandling.php:58
+msgid "Error while provisioning your account"
+msgstr "Помилка під час забезпечення вашого облікового запису"
+
+#: includes/commonErrorHandling.php:64
+msgid "This item do not seems to be in the index"
+msgstr "Здається, цього запису немає у покажчику"
+
+#: includes/commonErrorHandling.php:65
+msgid ""
+"This problem can appear if:\n"
+"                        <ul>\n"
+"                            <li>This item no longer exists.</li>\n"
+"                            <li>You misspelled it.</li>\n"
+"                        </ul>"
+msgstr ""
+"У цієї проблеми можуть бути такі причини:\n"
+"                        <ul>\n"
+"                            <li>Цього запису вже не існує.</li>\n"
+"                            <li>Ви помилилися, коли його вводили.</li>\n"
+"                        </ul>"
+
+#: includes/commonErrorHandling.php:77
+msgid "smbpasswd failed to change your password entry"
+msgstr "smbpasswd не вдалося змінити ваш запис пароля"
+
+#: includes/commonErrorHandling.php:78
+msgid ""
+"Verify that your smbpasswd is correctly configured:\n"
+"                        <ul>\n"
+"                            <li> Your Ldap server can be down</li>\n"
+"                            <li> Your Samba server is not properly configured</li>\n"
+"                        </ul>"
+msgstr ""
+"Перевірте, чи правильно налаштовано smbpasswd:\n"
+"                        <ul>\n"
+"                            <li>ваш сервер LDAP може бути вимкнено</li>\n"
+"                            <li>ваш сервер Samba може бути некоректно налаштовано</li>\n"
+"                        </ul>"
+
+#: includes/modules.inc.php:410
+#, php-format
+msgid "%s service restarting..."
+msgstr "Перезапуск служби %s…"
+
+#: includes/modules.inc.php:411
+#, php-format
+msgid "%s service restarted successfully."
+msgstr "Службу %s успішно перезапущено."
+
+#: includes/modules.inc.php:412
+#, php-format
+msgid "%s service failed to restart."
+msgstr "Не вдалося перезапустити службу %s."
+
+#: includes/modules.inc.php:417
+msgid "Restart the service ?"
+msgid_plural "Restart the services ?"
+msgstr[0] "Перезапустити службу?"
+msgstr[1] "Перезапустити служби?"
+msgstr[2] "Перезапустити служби?"
+msgstr[3] "Перезапустити служби?"
 
 #: includes/PageGenerator.php:568 includes/PageGenerator.php:800
 msgid "to"
@@ -1822,6 +1903,11 @@ msgstr "Немає записів"
 msgid "Select entity"
 msgstr "Виберіть запис"
 
+#: includes/PageGenerator.php:2258 includes/FormGenerator.php:643
+#: graph/header.inc.php:251
+msgid "Close"
+msgstr "Закрити"
+
 #: includes/PageGenerator.php:2883
 msgid "Select all"
 msgstr "Позначити все"
@@ -1830,48 +1916,86 @@ msgstr "Позначити все"
 msgid "Unselect all"
 msgstr "Зняти позначення з усього"
 
-#: includes/modules.inc.php:410
-#, php-format
-msgid "%s service restarting..."
-msgstr "Перезапуск служби %s…"
+#: includes/ErrorHandling.php:78
+msgid "Copied"
+msgstr "Скопійовано"
 
-#: includes/modules.inc.php:411
-#, php-format
-msgid "%s service restarted successfully."
-msgstr "Службу %s успішно перезапущено."
+#: includes/ErrorHandling.php:87
+msgid "Show complete trackback"
+msgstr "Показати зворотне трасування повністю"
 
-#: includes/modules.inc.php:412
-#, php-format
-msgid "%s service failed to restart."
-msgstr "Не вдалося перезапустити службу %s."
+#: includes/ErrorHandling.php:88
+msgid "Copy to clipboard"
+msgstr "Скопіювати до буфера"
 
-#: includes/modules.inc.php:417
-msgid "Restart the service ?"
-msgid_plural "Restart the services ?"
-msgstr[0] "Перезапустити службу?"
-msgstr[1] "Перезапустити служби?"
-msgstr[2] "Перезапустити служби?"
-msgstr[3] "Перезапустити служби?"
+#: includes/ErrorHandling.php:89
+msgid "Complete Traceback"
+msgstr "Повне зворотне трасування"
 
-#: includes/auditCodesManager.php:33
-msgid "Daemon start"
-msgstr "Запуск фонової служби"
+#: includes/xmlrpc.inc.php:161
+msgid "Can't connect to MMC agent"
+msgstr "Не вдалося встановити зв'язок із агентом MMC"
 
-#: includes/auditCodesManager.php:34
-msgid "Daemon stop"
-msgstr "Зупинка фонової служби"
+#: includes/xmlrpc.inc.php:162
+msgid "MMC agent seems to be down or not correctly configured."
+msgstr "Здається, агент MMC не працює або агент неправильно налаштовано."
 
-#: includes/auditCodesManager.php:35
-msgid "MMC agent"
-msgstr "Агент MMC"
+#: includes/xmlrpc.inc.php:174
+msgid "Can't send XML-RPC request to MMC agent"
+msgstr "Не вдалося надіслати запит XML-RPC до агента MMC"
 
-#: includes/acl.inc.php:132
-msgid "You do not have required rights"
-msgstr "У вас немає достатніх прав"
+#: includes/xmlrpc.inc.php:175
+msgid "MMC agent seems to be not correctly configured."
+msgstr "Здається, агент MMC неправильно налаштовано."
 
-#: includes/bgps_view.php:64
-msgid "No job."
-msgstr "Немає завдання."
+#: includes/xmlrpc.inc.php:191 includes/xmlrpc.inc.php:216
+#: includes/xmlrpc.inc.php:239
+msgid "MMC agent communication problem"
+msgstr "Проблема у обміні даними з агентом MMC"
+
+#: includes/xmlrpc.inc.php:192
+msgid ""
+"Timeout when reading data from the MMC agent. Please check network "
+"connectivity and server load."
+msgstr ""
+"Перевищення часу очікування під час читання даних від агента MMC. Будь "
+"ласка, перевірте працездатність мережі і навантаження на сервер."
+
+#: includes/xmlrpc.inc.php:201
+msgid "Error while reading MMC agent XML-RPC response."
+msgstr "Помилка під час спроби прочитати відповідь XML-RPC агента MMC."
+
+#: includes/xmlrpc.inc.php:202
+msgid "Please check network connectivity."
+msgstr "Будь ласка, перевірте працездатність мережі."
+
+#: includes/xmlrpc.inc.php:217
+msgid ""
+"Can't communicate with MMC agent. Please check you're using the right TCP "
+"port and the right protocol."
+msgstr ""
+"Не вдалося обмінятися даними з агентом MMC. Будь ласка, перевірте, чи "
+"використовується належний порт і протокол TCP."
+
+#: includes/xmlrpc.inc.php:240
+msgid ""
+"The MMC agent didn't give us a session number. Please check the MMC agent "
+"version."
+msgstr ""
+"Агент MMC не повідомив номер сеансу. Будь ласка, перевірте, чи встановлено "
+"належну версію агента MMC."
+
+#: includes/xmlrpc.inc.php:350
+msgid "unknown error"
+msgstr "невідома помилка"
+
+#: includes/xmlrpc.inc.php:351
+msgid ""
+"This exception is unknown. Please contact us to add an error handling on "
+"this error."
+msgstr ""
+"Це невідоме виключення. Будь ласка, зв'яжіться із розробниками, щоб вони "
+"могли додати код для обробки цієї помилки."
 
 #: includes/FormGenerator.php:72 includes/FormGenerator.php:294
 #: includes/FormGenerator.php:752 includes/FormGenerator.php:882
@@ -1998,190 +2122,41 @@ msgstr "Зараз"
 msgid "Toggle selection"
 msgstr "Перемкнути стан позначення"
 
-#: includes/commonErrorHandling.php:30
-msgid "This item already exists in your LDAP directory"
-msgstr "Цей запис вже є у вашому каталозі LDAP"
+#: logout/index.php:48 logout/index.php:55 graph/navbar.inc.php:83
+msgid "Logout"
+msgstr "Вийти"
 
-#: includes/commonErrorHandling.php:31
+#: logout/index.php:51
+msgid "Your session will be closed"
+msgstr "Ваш сеанс буде закрито"
+
+#: index.php:73
+msgid "Login failed"
+msgstr "Невдала спроба увійти"
+
+#: index.php:79
 msgid ""
-"Solve the problem by:\n"
-"                        <ul>\n"
-"                            <li>change this entry name</li>\n"
-"                            <li>delete this entry before recreate it</li>\n"
-"                        </ul>"
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
 msgstr ""
-"Усунути проблему можна у один з таких способів:\n"
-"                        <ul>\n"
-"                            <li>змініть назву цього запису</li>\n"
-"                            <li>вилучіть цей запис, а потім знову його створіть</li>\n"
-"                        </ul>"
+"Ваш сеанс роботи завершено через перевищення граничної тривалості сеансу між"
+" вебінтерфейсом MMC та агентом MMC."
 
-#: includes/commonErrorHandling.php:43
-msgid "MMC Agent can't contact your LDAP server"
-msgstr "Агент MMC не може встановити зв'язок із вашим сервером LDAP"
+#: index.php:186
+msgid "Forgot password ?"
+msgstr "Забули пароль?"
 
-#: includes/commonErrorHandling.php:44
-msgid ""
-"Solve the problem by:\n"
-"                        <ul>\n"
-"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
-"                            <li>Verify your LDAP server is up</li>\n"
-"                        </ul>"
-msgstr ""
-"Можливі шляхи усування проблеми:\n"
-"                        <ul>\n"
-"                            <li>перевірити, чи правильно налаштовано сервер LDAP у /etc/mmc/plugins/base/ini </li>\n"
-"                            <li>перевірити, чи працює сервер LDAP</li>\n"
-"                        </ul>"
+#: index.php:197
+msgid "Server"
+msgstr "Сервер"
 
-#: includes/commonErrorHandling.php:53
-msgid "Error during authentication process"
-msgstr "Помилка під час процесу розпізнавання"
+#: index.php:204
+msgid "Language"
+msgstr "Мова"
 
-#: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
-msgid "Please contact your administrator."
-msgstr "Будь ласка, зверніться до адміністратора."
-
-#: includes/commonErrorHandling.php:58
-msgid "Error while provisioning your account"
-msgstr "Помилка під час забезпечення вашого облікового запису"
-
-#: includes/commonErrorHandling.php:64
-msgid "This item do not seems to be in the index"
-msgstr "Здається, цього запису немає у покажчику"
-
-#: includes/commonErrorHandling.php:65
-msgid ""
-"This problem can appear if:\n"
-"                        <ul>\n"
-"                            <li>This item no longer exists.</li>\n"
-"                            <li>You misspelled it.</li>\n"
-"                        </ul>"
-msgstr ""
-"У цієї проблеми можуть бути такі причини:\n"
-"                        <ul>\n"
-"                            <li>Цього запису вже не існує.</li>\n"
-"                            <li>Ви помилилися, коли його вводили.</li>\n"
-"                        </ul>"
-
-#: includes/commonErrorHandling.php:77
-msgid "smbpasswd failed to change your password entry"
-msgstr "smbpasswd не вдалося змінити ваш запис пароля"
-
-#: includes/commonErrorHandling.php:78
-msgid ""
-"Verify that your smbpasswd is correctly configured:\n"
-"                        <ul>\n"
-"                            <li> Your Ldap server can be down</li>\n"
-"                            <li> Your Samba server is not properly configured</li>\n"
-"                        </ul>"
-msgstr ""
-"Перевірте, чи правильно налаштовано smbpasswd:\n"
-"                        <ul>\n"
-"                            <li>ваш сервер LDAP може бути вимкнено</li>\n"
-"                            <li>ваш сервер Samba може бути некоректно налаштовано</li>\n"
-"                        </ul>"
-
-#: includes/ErrorHandling.php:78
-msgid "Copied"
-msgstr "Скопійовано"
-
-#: includes/ErrorHandling.php:87
-msgid "Show complete trackback"
-msgstr "Показати зворотне трасування повністю"
-
-#: includes/ErrorHandling.php:88
-msgid "Copy to clipboard"
-msgstr "Скопіювати до буфера"
-
-#: includes/ErrorHandling.php:89
-msgid "Complete Traceback"
-msgstr "Повне зворотне трасування"
-
-#: includes/xmlrpc.inc.php:160
-msgid "Can't connect to MMC agent"
-msgstr "Не вдалося встановити зв'язок із агентом MMC"
-
-#: includes/xmlrpc.inc.php:161
-msgid "MMC agent seems to be down or not correctly configured."
-msgstr "Здається, агент MMC не працює або агент неправильно налаштовано."
-
-#: includes/xmlrpc.inc.php:173
-msgid "Can't send XML-RPC request to MMC agent"
-msgstr "Не вдалося надіслати запит XML-RPC до агента MMC"
-
-#: includes/xmlrpc.inc.php:174
-msgid "MMC agent seems to be not correctly configured."
-msgstr "Здається, агент MMC неправильно налаштовано."
-
-#: includes/xmlrpc.inc.php:190 includes/xmlrpc.inc.php:215
-#: includes/xmlrpc.inc.php:238
-msgid "MMC agent communication problem"
-msgstr "Проблема у обміні даними з агентом MMC"
-
-#: includes/xmlrpc.inc.php:191
-msgid ""
-"Timeout when reading data from the MMC agent. Please check network "
-"connectivity and server load."
-msgstr ""
-"Перевищення часу очікування під час читання даних від агента MMC. Будь "
-"ласка, перевірте працездатність мережі і навантаження на сервер."
-
-#: includes/xmlrpc.inc.php:200
-msgid "Error while reading MMC agent XML-RPC response."
-msgstr "Помилка під час спроби прочитати відповідь XML-RPC агента MMC."
-
-#: includes/xmlrpc.inc.php:201
-msgid "Please check network connectivity."
-msgstr "Будь ласка, перевірте працездатність мережі."
-
-#: includes/xmlrpc.inc.php:216
-msgid ""
-"Can't communicate with MMC agent. Please check you're using the right TCP "
-"port and the right protocol."
-msgstr ""
-"Не вдалося обмінятися даними з агентом MMC. Будь ласка, перевірте, чи "
-"використовується належний порт і протокол TCP."
-
-#: includes/xmlrpc.inc.php:239
-msgid ""
-"The MMC agent didn't give us a session number. Please check the MMC agent "
-"version."
-msgstr ""
-"Агент MMC не повідомив номер сеансу. Будь ласка, перевірте, чи встановлено "
-"належну версію агента MMC."
-
-#: includes/xmlrpc.inc.php:349
-msgid "unknown error"
-msgstr "невідома помилка"
-
-#: includes/xmlrpc.inc.php:350
-msgid ""
-"This exception is unknown. Please contact us to add an error handling on "
-"this error."
-msgstr ""
-"Це невідоме виключення. Будь ласка, зв'яжіться із розробниками, щоб вони "
-"могли додати код для обробки цієї помилки."
-
-#: version.php:35
-msgid "MMC components version"
-msgstr "Версія компонентів MMC"
-
-#: version.php:36
-msgid "MMC agent: version"
-msgstr "Агент MMC: версія"
-
-#: version.php:40
-msgid "agent: version"
-msgstr "агент: версія"
-
-#: version.php:42
-msgid "web: version"
-msgstr "веб-клієнт: версія"
-
-#: version.php:44
-msgid "web: plugin is not installed"
-msgstr "веб-клієнт: додаток не встановлено"
+#: index.php:229
+msgid "Connect"
+msgstr "З'єднатися"
 
 #: license.php:27
 msgid ""
@@ -2212,3 +2187,63 @@ msgid ""
 msgstr ""
 "Натисніть тут, щоб дізнатися більше про наші умови передплати підтримки та "
 "супроводу."
+
+#: graph/header.inc.php:213 graph/header.inc.php:249
+msgid "Yes"
+msgstr "Так"
+
+#: graph/header.inc.php:216 graph/header.inc.php:218
+msgid "No"
+msgstr "Ні"
+
+#: graph/header.inc.php:315
+msgid "Form cannot be submit. Input errors are highlighted in red."
+msgstr ""
+"Форму не можна надсилати. Помилки у введених даних позначено червоним "
+"кольором."
+
+#: graph/navbar.inc.php:73
+msgid "standard mode"
+msgstr "стандартний режим"
+
+#: graph/navbar.inc.php:75
+msgid "expert mode"
+msgstr "режим експерта"
+
+#: graph/navbar.inc.php:80
+msgid "Click to switch to"
+msgstr "Натисніть, щоб перемкнутися на"
+
+#: graph/navbar.inc.php:81
+msgid "logout"
+msgstr "вихід"
+
+#: graph/navbar.inc.php:127
+msgid ""
+"If this phrase does not change, your browser is not supported by the MMC "
+"application"
+msgstr ""
+"Якщо ця фраза не змінилася, у програмі MMC не передбачено підтримки вашої "
+"програми для перегляду інтернету"
+
+#: forgotpassword.php:24
+msgid "A password reset link has been sent."
+msgstr "Надіслано посилання для скидання пароля."
+
+#: forgotpassword.php:26
+msgid "Can't reset your password. Please contact your administrator."
+msgstr ""
+"Не вдалося скинути ваш пароль. Будь ласка, зв'яжіться із адміністратором "
+"системи."
+
+#: forgotpassword.php:74 forgotpassword.php:80
+msgid "Password reset"
+msgstr "Скидання паролю"
+
+#: forgotpassword.php:76
+msgid "Login or mail"
+msgstr "Вхід або пошта"
+
+#: forgotpassword.php:81
+msgid "Back"
+msgstr "Назад"

@@ -257,9 +257,14 @@ $page->setFile("modules/xmppmaster/xmppmaster/logs/logbymachine.php");
 $page->setOptions(array("visible" => True, "noHeader" => True));
 $submod->addPage($page);
 
-$page = new Page("logbygrpmachine", _T('XMPP log', 'xmppmaster'));
+$page = new Page("loglistgrpmachine", _T('XMPP group logs', 'xmppmaster'));
+$page->setFile("modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php");
+$page->setOptions(array("visible" => True, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("logbygrpmachine", _T('XMPP group logs', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/logbygrpmachine");
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => False, 'AJAX'=>True));
 $submod->addPage($page);
 
 $page = new Page("ajaxstatusxmpp",_T("List all groups of computers","xmppmaster"));
@@ -289,6 +294,11 @@ $submod->addPage($page);
 
 $page = new Page("ajaxstatusnotlaunched",_T("List of not launched deployments","xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxsyncthingmachineless",_T("Transfert syncthing list no transfered","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxsyncthingmachineless.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 

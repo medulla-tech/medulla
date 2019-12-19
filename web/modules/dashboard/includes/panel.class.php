@@ -30,8 +30,27 @@ class Panel {
         $this->data = getPanelInfos($id);
 
         //$toggled is used to show/hide the widget content
-        // Not effective for now 
-        $this->toggled = $toggled;
+        if (isset($_SESSION['user']['widgets'][$this->id]))
+        {
+          if($_SESSION['user']['widgets'][$this->id] == true || $_SESSION['user']['widgets'][$this->id] == 1)
+            $this->toggled = 'checked';
+          else
+            $this->toggled = '';
+        }
+        else
+        {
+          if($toggled)
+          {
+            $this->toggled = 'checked';
+            $_SESSION['user']['widgets'][$this->id] = $toggled;
+          }
+
+          else
+          {
+            $_SESSION['user']['widgets'][$this->id] = 0;
+            $this->toggled = '';
+          }
+        }
     }
 
     function display() {
@@ -97,18 +116,50 @@ input:checked + .slider:before {
 }
 </style>
 ';
+        //echo '<h3 class="handle">' . $this->title . '</h3>';
         echo '<div class="portlet-header"><div class="header-title" style="display:inline">' . $this->title . '</div><div class="header-switch" style="display:inline;float:right;">
         <label class="switch" onchange="changeSwitch(jQuery(this))">
-          <input type="checkbox" checked>
+          <input type="checkbox" '.$this->toggled.'>
           <span class="slider round"></span>
         </label>
         </div></div>';
         echo '<div class="portlet-content" style="clear:both;">';
 echo <<< JSSCRIPT
 <script>
+
+// At initialization
+jQuery(function(){
+  var selector = "#$this->id .switch input"
+  if(jQuery(selector).is(":checked"))
+  {
+    jQuery(selector).closest('.portlet').find('.portlet-content').show();
+  }
+  else {
+    jQuery(selector).closest('.portlet').find('.portlet-content').hide();
+  }
+})
+
 function changeSwitch(selector)
 {
-  jQuery(selector).closest('.portlet').find('.portlet-content').toggle()
+    jQuery(selector).closest('.portlet').find('.portlet-content').toggle();
+    var id = jQuery(selector).parent().parent().parent().attr("id")
+    if(jQuery(selector).children("input").is(":checked"))
+      {
+        jQuery.ajax({
+          url: "main.php?module=dashboard&submod=main&action=ajaxSessionPanels",
+          type:'get',
+          data: {"widget":id, "toggled": 1}
+        });
+      }
+
+    else
+    {
+      jQuery.ajax({
+        url: "main.php?module=dashboard&submod=main&action=ajaxSessionPanels",
+        type: "GET",
+        data: {"widget":id, "toggled": 0}
+      });
+    }
 }
 </script>
 JSSCRIPT;

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-10 20:41+0100\n"
+"POT-Creation-Date: 2019-10-07 16:37+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/es_ES/)\n"
@@ -21,130 +21,21 @@ msgstr ""
 "Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Lista de política de contraseñas"
-
-#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
-#: modules/ppolicy/includes/localSidebar.php:28
-msgid "Add a password policy"
-msgstr "Añadir una política de contraseñas"
-
-#: modules/ppolicy/default/edit.php:48
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
-msgid "Edit password policy"
-msgstr "Cambiar la política de contraseñas"
-
-#: modules/ppolicy/default/edit.php:62
-msgid "\"Maximum age\" must be greater than \"Minimum age\"."
-msgstr "\"Duración máxima\" debe ser mayor que \"Duración mínima\"."
-
-#: modules/ppolicy/default/edit.php:95
-msgid "Attributes updated"
-msgstr "Atributos modificados"
-
-#: modules/ppolicy/default/edit.php:126
-msgid "Name"
-msgstr "Nombre"
-
-#: modules/ppolicy/default/edit.php:132
-#: modules/ppolicy/includes/ppolicy.inc.php:48
-msgid "Description"
-msgstr "Descripción "
-
-#: modules/ppolicy/default/edit.php:138
-#: modules/ppolicy/includes/ppolicy.inc.php:37
-msgid "Minimum length"
-msgstr "Logitus mínima"
-
-#: modules/ppolicy/default/edit.php:145
-msgid "Password quality check"
-msgstr "Comprobación de calidad de las contraseñas"
-
-#: modules/ppolicy/default/edit.php:152
-msgid "Minimum age (seconds)"
-msgstr "Duración mínima (segundos)"
-
-#: modules/ppolicy/default/edit.php:159
-msgid "Maximum age (seconds)"
-msgstr "Duración máxima (segundos)"
-
-#: modules/ppolicy/default/edit.php:166
-#: modules/ppolicy/includes/ppolicy.inc.php:45
-msgid "Number of grace authentications"
-msgstr "Número de autenticaciones de gracia"
-
-#: modules/ppolicy/default/edit.php:180
-msgid "Force users to change their passwords on the first connection ?"
-msgstr ""
-"Forzar a los usuarios a cambiar la contraseña en la primera conexión ?"
-
-#: modules/ppolicy/default/edit.php:187
-msgid "Password history"
-msgstr "Historial de contraseñas"
-
-#: modules/ppolicy/default/edit.php:201
-msgid "Preventive user lockout ?"
-msgstr "Bloque preventivo de usuario ?"
-
-#: modules/ppolicy/default/edit.php:215
-msgid "Password maximum failure"
-msgstr "Máximo número de fallos en la contraseña"
-
-#: modules/ppolicy/default/edit.php:222
-msgid "Lockout duration (seconds)"
-msgstr "Duración del bloqueo (segundos)"
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
-msgid "Delete password policy"
-msgstr "Eliminar la política de contraseñas"
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
-#: modules/ppolicy/infoPackage.inc.php:46
-#: modules/ppolicy/includes/localSidebar.php:27
-msgid "Password policies"
-msgstr "Política de contraseña"
-
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning: you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning: your password has been reset by an administrator. Your LDAP account"
-" is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-
-#: modules/ppolicy/default/delete.php:29
-msgid "The password policy has been deleted."
-msgstr "Política de contraseñas ha sido eliminado."
-
-#: modules/ppolicy/default/delete.php:41
-#, php-format
-msgid ""
-"You will delete the password policy <strong>%s</strong>. Default password "
-"policy will be applied to users that use this password policy."
-msgstr ""
-"Va a eliminar la directiva de contraseñas <strong>%s</strong>. Política de "
-"contraseñas por defecto se aplicará a los usuarios que utilizan esta "
-"política de contraseñas."
-
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
-msgstr "Borrar"
-
-#: modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr "Cancelar"
-
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
 msgstr "Política de contraseñas"
+
+#: modules/ppolicy/infoPackage.inc.php:46
+#: modules/ppolicy/includes/localSidebar.php:27
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
+msgid "Password policies"
+msgstr "Política de contraseña"
+
+#: modules/ppolicy/infoPackage.inc.php:52
+#: modules/ppolicy/includes/localSidebar.php:28
+#: modules/ppolicy/default/edit.php:44
+msgid "Add a password policy"
+msgstr "Añadir una política de contraseñas"
 
 #: modules/ppolicy/infoPackage.inc.php:58
 msgid "Edit a password policy"
@@ -275,6 +166,11 @@ msgstr "Atributos de contraseña actualizados"
 msgid "Apply a password policy for all group users"
 msgstr "Aplicar una política de contraseñas para todos los usuarios del grupo"
 
+#: modules/ppolicy/includes/ppolicy.inc.php:37
+#: modules/ppolicy/default/edit.php:138
+msgid "Minimum length"
+msgstr "Logitus mínima"
+
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Minimum age"
 msgstr "Duración mínima"
@@ -303,6 +199,11 @@ msgstr "Bloque preventivo de usuario"
 msgid "Password hash history"
 msgstr "Historial de contraseñas cifradas"
 
+#: modules/ppolicy/includes/ppolicy.inc.php:45
+#: modules/ppolicy/default/edit.php:166
+msgid "Number of grace authentications"
+msgstr "Número de autenticaciones de gracia"
+
 #: modules/ppolicy/includes/ppolicy.inc.php:46
 msgid "Reset the password"
 msgstr "Resetear la contraseña"
@@ -310,6 +211,11 @@ msgstr "Resetear la contraseña"
 #: modules/ppolicy/includes/ppolicy.inc.php:47
 msgid "Password policy quality check"
 msgstr "Política de comprobación de calidad de las contraseñas"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:48
+#: modules/ppolicy/default/edit.php:132
+msgid "Description"
+msgstr "Descripción "
 
 #: modules/ppolicy/includes/ppolicy.inc.php:54
 msgid ""
@@ -439,3 +345,98 @@ msgstr ""
 "razón) esta será aceptada. El valor '2' indica al servidor de debe comprobar"
 " la calidad, y si el servidor no es capaz de comprobarla este devolverá un "
 "error rehusando la contraseña."
+
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Lista de política de contraseñas"
+
+#: modules/ppolicy/default/delete.php:29
+msgid "The password policy has been deleted."
+msgstr "Política de contraseñas ha sido eliminado."
+
+#: modules/ppolicy/default/delete.php:41
+#, php-format
+msgid ""
+"You will delete the password policy <strong>%s</strong>. Default password "
+"policy will be applied to users that use this password policy."
+msgstr ""
+"Va a eliminar la directiva de contraseñas <strong>%s</strong>. Política de "
+"contraseñas por defecto se aplicará a los usuarios que utilizan esta "
+"política de contraseñas."
+
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "Borrar"
+
+#: modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: modules/ppolicy/default/edit.php:48
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
+msgid "Edit password policy"
+msgstr "Cambiar la política de contraseñas"
+
+#: modules/ppolicy/default/edit.php:62
+msgid "\"Maximum age\" must be greater than \"Minimum age\"."
+msgstr "\"Duración máxima\" debe ser mayor que \"Duración mínima\"."
+
+#: modules/ppolicy/default/edit.php:95
+msgid "Attributes updated"
+msgstr "Atributos modificados"
+
+#: modules/ppolicy/default/edit.php:126
+msgid "Name"
+msgstr "Nombre"
+
+#: modules/ppolicy/default/edit.php:145
+msgid "Password quality check"
+msgstr "Comprobación de calidad de las contraseñas"
+
+#: modules/ppolicy/default/edit.php:152
+msgid "Minimum age (seconds)"
+msgstr "Duración mínima (segundos)"
+
+#: modules/ppolicy/default/edit.php:159
+msgid "Maximum age (seconds)"
+msgstr "Duración máxima (segundos)"
+
+#: modules/ppolicy/default/edit.php:180
+msgid "Force users to change their passwords on the first connection ?"
+msgstr ""
+"Forzar a los usuarios a cambiar la contraseña en la primera conexión ?"
+
+#: modules/ppolicy/default/edit.php:187
+msgid "Password history"
+msgstr "Historial de contraseñas"
+
+#: modules/ppolicy/default/edit.php:201
+msgid "Preventive user lockout ?"
+msgstr "Bloque preventivo de usuario ?"
+
+#: modules/ppolicy/default/edit.php:215
+msgid "Password maximum failure"
+msgstr "Máximo número de fallos en la contraseña"
+
+#: modules/ppolicy/default/edit.php:222
+msgid "Lockout duration (seconds)"
+msgstr "Duración del bloqueo (segundos)"
+
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
+msgid "Delete password policy"
+msgstr "Eliminar la política de contraseñas"
