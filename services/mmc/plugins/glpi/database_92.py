@@ -597,6 +597,104 @@ class Glpi92(DyngroupDatabaseHelper):
                     ret[q[2]] = [q[1], q[2], q[3], listid]
         return ret
 
+    @DatabaseHelper._sessionm
+    def get_machines_list(self, session, start, end, ctx):
+        location = ""
+        criterion = ""
+
+        if ctx[0] != "":
+            location = ctx[0].replace("UUID", "")
+
+        if ctx[1] != "":
+            criterion = ctx[1]
+
+        start = int(start)
+        end = int(end)
+
+        query = session.query(Machine.id)\
+        .add_column(Machine.name)\
+        .add_column(Machine.comment)\
+        .add_column(self.os.c.name)\
+        .add_column(self.glpi_computertypes.c.name)\
+        .add_column(Entities.name)\
+        .join(self.glpi_computertypes)\
+        .join(self.os)\
+        .join(Entities)
+        if location != "":
+            query = query.filter(Entities.id == location)
+        query = query.filter(Machine.is_deleted==0)\
+        .filter(Machine.is_template==0)
+
+        if criterion != "":
+            query = query.filter(or_(
+                Machine.name.contains(criterion),
+                Machine.comment.contains(criterion),
+                self.os.c.name.contains(criterion),
+                self.glpi_computertypes.c.name.contains(criterion),
+                Machine.contact.contains(criterion),
+                Entities.name.contains(criterion)
+            ))
+        query = self.__filter_on(query)
+        count = query.count()
+
+        query = session.query(Machine.id)\
+        .add_column(Machine.name)\
+        .add_column(Machine.comment)\
+        .add_column(self.os.c.name)\
+        .add_column(self.glpi_computertypes.c.name)\
+        .add_column(Machine.contact)\
+        .add_column(Entities.name)\
+        .join(self.glpi_computertypes)\
+        .join(self.os)\
+        .join(Entities)\
+        .filter(Machine.is_deleted==0)\
+        .filter(Machine.is_template==0)
+        if location != "":
+            query = query.filter(Entities.id == location)
+        if filter != "":
+            query = query.filter(or_(
+                Machine.name.contains(criterion),
+                Machine.comment.contains(criterion),
+                self.os.c.name.contains(criterion),
+                self.glpi_computertypes.c.name.contains(criterion),
+                Machine.contact.contains(criterion),
+                Entities.name.contains(criterion)
+            ))
+        query = self.__filter_on(query)
+        #query = query.order_by(asc(self.machine.c.id))
+        query = query.offset(start).limit(end)
+
+        query = query.all()
+
+        result = {"count" : count, "data":{}}
+        ids = []
+        names = []
+        descriptions = []
+        types = []
+        os = []
+        lasts_users = []
+        entities = []
+
+        for machine in query:
+            ids.append(toUUID(machine[0]))
+            names.append(machine[1])
+            descriptions.append(machine[2])
+            os.append(machine[3])
+            types.append(machine[4])
+            lasts_users.append(machine[5])
+            entities.append(machine[6])
+
+
+        result['count'] = count
+        result['data']["uuid"] = ids
+        result['data']["name"] = names
+        result['data']['description'] = descriptions
+        result['data']['type'] = types
+        result['data']['os'] = os
+        result['data']['lastUser'] = lasts_users
+        result['data']['entity'] = entities
+        return result
+
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
         Get the sqlalchemy query to get a list of computers with some filters
