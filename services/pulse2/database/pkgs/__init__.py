@@ -413,15 +413,16 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def pkgs_unregister_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
-        if typesynchro != None:
-            session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
-                                                    Syncthingsync.relayserver_jid == jid_relayserver,
-                                                    Syncthingsync.typesynchro == typesynchro)).delete()
-        else:
-            session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
-                                                    Syncthingsync.relayserver_jid == jid_relayserver)).delete()
-        session.commit()
-        session.flush()
+        listdata=jid_relayserver.split("@")
+        if len(listdata)> 0:
+            datadata = "%s%%"%listdata[0]
+            sql ="""DELETE FROM `pkgs`.`syncthingsync`
+                WHERE
+                `syncthingsync`.`uuidpackage` like '%s' AND
+                `syncthingsync`.`relayserver_jid`  like "%s" ;"""%(uuidpackage, datadata)
+            session.execute(sql)
+            session.commit()
+            session.flush()
 
     @DatabaseHelper._sessionm
     def pkgs_delete_synchro_package(self, session, uuidpackage):
