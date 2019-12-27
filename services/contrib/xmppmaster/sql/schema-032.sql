@@ -22,23 +22,39 @@
 
 START TRANSACTION;
 
--- -----------------------------------------------------
--- Table `xmppmaster`.`substituteconf`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `xmppmaster`.`substituteconf` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(45) NOT NULL DEFAULT 'master',
-  `jidsubtitute` varchar(255) NOT NULL,
-  `countsub` int(11) NOT NULL DEFAULT '0',
-  `relayserver_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_substituteconf_relayserver_idx` (`relayserver_id`),
-  CONSTRAINT `fk_substituteconf_relayserver_idx` FOREIGN KEY (`relayserver_id`) REFERENCES `relayserver` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `xmppmaster`.`substituteconf` ;
 
--- ----------------------------------------------------------------------
--- Database version
--- ----------------------------------------------------------------------
+--
+-- Table substituteconf
+--
+
+CREATE TABLE IF NOT EXISTS `xmppmaster`.`substituteconf` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NOT NULL DEFAULT 'master',
+  `jidsubtitute` VARCHAR(255) NOT NULL,
+  `countsub` INT(11) NOT NULL DEFAULT '0',
+  `relayserver_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_substituteconf_relayserver_idx` (`relayserver_id` ASC),
+  CONSTRAINT `fk_substituteconf_relayserver_idx`
+    FOREIGN KEY (`relayserver_id`)
+    REFERENCES `xmppmaster`.`relayserver` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 UPDATE version SET Number = 32;
+
+
+LOCK TABLES `substituteconf` WRITE;
+
+INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('registration', 'master@pulse', '1');
+INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('subscription', 'master@pulse', '1');
+INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('inventory', 'master@pulse', '1');
+INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('assessor', 'master@pulse', '1');
+UNLOCK TABLES;
+
+LOCK TABLES `substituteconf` WRITE;
 
 COMMIT;
