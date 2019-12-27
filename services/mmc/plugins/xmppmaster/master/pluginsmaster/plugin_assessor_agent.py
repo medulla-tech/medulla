@@ -57,6 +57,23 @@ def action(objectxmpp, action, sessionid, data, msg, ret, dataobj):
         sendErrorConnectionConf(objectxmpp, sessionid, msg)
         logger.error("\n%s"%(traceback.format_exc()))
 
+
+def testsignaturecodechaine(objectxmpp, data, sessionid, msg):
+    codechaine="%s"%(msg['from'])
+    result = False
+    for t in objectxmpp.keyAES32:
+        cipher = AESCipher(t)
+        decrypted = cipher.decrypt(data['codechaine'])
+        if str(decrypted) == str(codechaine):
+            result = True
+            break
+    if not result:
+        logger.warning("authentification False %s"%(codechaine))
+
+        sendErrorConnectionConf(objectxmpp, sessionid, msg)
+    return result
+
+
 def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, ret, dataobj):
     logger.debug("MessagesAgentFromChatroomConfig")
     codechaine="%s"%(msg['from'])
@@ -84,12 +101,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         sendErrorConnectionConf(objectxmpp, sessionid, msg)
         return
 
-    cipher = AESCipher(objectxmpp.config.keyAES32)
-
-    decrypted = cipher.decrypt(data['codechaine'])
-    if decrypted != codechaine:
-        logger.debug("authentification False %s"%(codechaine))
-        sendErrorConnectionConf(objectxmpp, sessionid, msg)
+    if not testsignaturecodechaine(objectxmpp, data, sessionid, msg):
         return
 
     if data['ippublic'] is not None and data['ippublic'] != "":
