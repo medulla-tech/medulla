@@ -599,17 +599,25 @@ class Glpi92(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machines_list(self, session, start, end, ctx):
+
         location = ""
         criterion = ""
 
-        if ctx[0] != "":
-            location = ctx[0].replace("UUID", "")
+        if "location" in ctx and ctx['location'] != "":
+            location = ctx['location'].replace("UUID", "")
 
-        if ctx[1] != "":
-            criterion = ctx[1]
+        if "filter" in ctx and ctx["filter"] != "":
+            criterion = ctx["filter"]
 
         start = int(start)
         end = int(end)
+
+        # All computers
+        online_machines = []
+        online_machines = XmppMasterDatabase().getlistPresenceMachineid()
+        online_machines = [int(id.replace("UUID","")) for id in online_machines]
+
+        ret = self.__xmppmasterfilter(ctx)
 
         query = session.query(Machine.id)\
         .add_column(Machine.name)\
@@ -634,6 +642,13 @@ class Glpi92(DyngroupDatabaseHelper):
                 Machine.contact.contains(criterion),
                 Entities.name.contains(criterion)
             ))
+
+        if "computerpresence" not in ret:
+            pass
+        elif ret["computerpresence"][2] == "no_presence":
+            query = query.filter(Machine.id.notin_(ret["computerpresence"][3]))
+        else:
+            query = query.filter(Machine.id.in_(ret["computerpresence"][3]))
         query = self.__filter_on(query)
         count = query.count()
 
@@ -660,6 +675,14 @@ class Glpi92(DyngroupDatabaseHelper):
                 Machine.contact.contains(criterion),
                 Entities.name.contains(criterion)
             ))
+        # All computers
+        if "computerpresence" not in ret:
+            # Do nothing more
+            pass
+        elif ret["computerpresence"][2] == "no_presence":
+            query = query.filter(Machine.id.notin_(ret["computerpresence"][3]))
+        else:
+            query = query.filter(Machine.id.in_(ret["computerpresence"][3]))
         query = self.__filter_on(query)
         #query = query.order_by(asc(self.machine.c.id))
         query = query.offset(start).limit(end)
@@ -674,6 +697,7 @@ class Glpi92(DyngroupDatabaseHelper):
         os = []
         lasts_users = []
         entities = []
+        presences = []
 
         for machine in query:
             ids.append(toUUID(machine[0]))
@@ -683,7 +707,10 @@ class Glpi92(DyngroupDatabaseHelper):
             types.append(machine[4])
             lasts_users.append(machine[5])
             entities.append(machine[6])
-
+            if int(machine[0]) in online_machines:
+                presences.append(1)
+            else:
+                presences.append(0)
 
         result['count'] = count
         result['data']["uuid"] = ids
@@ -693,6 +720,8 @@ class Glpi92(DyngroupDatabaseHelper):
         result['data']['os'] = os
         result['data']['lastUser'] = lasts_users
         result['data']['entity'] = entities
+        result['data']['presence'] = presences
+
         return result
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):

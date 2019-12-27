@@ -30,21 +30,26 @@ global $config;
 
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
-$ctx = [];
-$ctx[] = $location;
-$ctx[] = $filter;
 
 $start = (isset($_GET['start'])) ? $_GET['start'] : 0;
 $maxperpage = (isset($_GET['maxperpage'])) ? $_GET['maxperpage'] : $config['maxperpage'];
 $end = (isset($_GET['end'])) ? $_GET['end'] : $maxperpage - 1;
 
+$ctx = [];
+$ctx['location'] = $location;
+$ctx['filter'] = $filter;
+$ctx['start'] = $start;
+$ctx['end'] = $end;
+$ctx['maxperpage'] = $maxperpage;
+if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
+    $ctx['computerpresence'] = $_SESSION['computerpresence'];
+
 $machines = xmlrpc_get_machines_list($start, $maxperpage, $ctx);
 
 $count = $machines["count"];
 $datas = $machines["data"];
-$datas["presences"] = [];
 
-$presences = xmlrpc_getPresenceuuids($datas["uuid"]);
+//$presences = xmlrpc_getPresenceuuids($datas["uuid"]);
 $presencesClass = [];
 $params = [];
 
@@ -101,7 +106,7 @@ $actionxmppbrowsingne = array();
 $raw = 0;
 foreach($datas['uuid'] as $uuid)
 {
-	$datas['presences'][] = ($presences[$uuid]) ? "machineNamepresente" : "machineName";
+	$presencesClass[] = ($datas['presence'][$raw] == 1) ? "machineNamepresente" : "machineName";
 
 	if (in_array("inventory", $_SESSION["supportModList"])) {
 		$actionInventory[] = $inventAction;
@@ -114,7 +119,7 @@ foreach($datas['uuid'] as $uuid)
 			$actionxmppquickdeoloy[]=$DeployQuickxmpp;
 			$action_deploy_msc[] = $mscAction;
 			$action_logs_msc[]   = $logAction;
-			if ( $presences[$uuid] ){
+			if ( $datas['presence'][$raw] ){
 				if (isExpertMode()){
 					$actionConsole[] = $inventconsole;
 					$actionxmppbrowsing[] = $inventxmppbrowsing;
@@ -162,22 +167,18 @@ foreach($datas['uuid'] as $uuid)
 		$actionVncClient[] = $vncClientAction;
 	}
 
-	$raw++;
-}
-
-
-for($i = 0; $i< sizeof($datas['name']); $i++)
-{
 	$params[] = [
-		'objectUUID'=>$datas['uuid'][$i],
-		'UUID'=>$datas['uuid'][$i],
-		'cn'=>$datas['name'][$i],
-		'os'=>$datas['os'][$i],
-		'type'=>$datas['type'][$i],
-		'presencemachinexmpp'=>$presences[$datas['uuid'][$i]],
-		'entity' => $datas['entity'][$i],
-		'user' => $datas['lastUser'][$i],
+		'objectUUID'=>$datas['uuid'][$raw],
+		'UUID'=>$datas['uuid'][$raw],
+		'cn'=>$datas['name'][$raw],
+		'os'=>$datas['os'][$raw],
+		'type'=>$datas['type'][$raw],
+		'presencemachinexmpp'=>$datas['presence'][$raw],
+		'entity' => $datas['entity'][$raw],
+		'user' => $datas['lastUser'][$raw],
 	];
+
+	$raw++;
 }
 
 $n = new OptimizedListInfos($datas["name"], _T("Computer Name", "glpi"));
@@ -237,7 +238,7 @@ if(canDelComputer()){
 }
 
 
-$n->setMainActionClasses($datas['presences']);
+$n->setMainActionClasses($presencesClass);
 $n->setItemCount($count);
 
 $n->setNavBar(new AjaxNavBar($count, $location));
