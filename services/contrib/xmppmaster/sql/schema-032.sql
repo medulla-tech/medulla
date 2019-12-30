@@ -44,17 +44,13 @@ CREATE TABLE IF NOT EXISTS `xmppmaster`.`substituteconf` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-UPDATE version SET Number = 32;
-
-
 LOCK TABLES `substituteconf` WRITE;
-
 INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('registration', 'master@pulse', '1');
 INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('subscription', 'master@pulse', '1');
 INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('inventory', 'master@pulse', '1');
 INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('assessor', 'master@pulse', '1');
 UNLOCK TABLES;
 
-LOCK TABLES `substituteconf` WRITE;
+UPDATE version SET Number = 32;
 
 COMMIT;
