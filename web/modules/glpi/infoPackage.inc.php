@@ -67,6 +67,15 @@ $base = &$MMCApp->getModule('base');
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
 
+$page = new Page("machinesList", _T("Get the whole machines list", "glpi"));
+$page->setFile("modules/glpi/glpi/machinesList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxMachinesList", _T("Machines List", "glpi"));
+$page->setFile("modules/glpi/glpi/ajaxMachinesList.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("createStaticGroup", _T("Create static group from dashboard widgets (GLPI)", "glpi"));
 $page->setFile("modules/glpi/glpi/createStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));

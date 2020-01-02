@@ -597,6 +597,133 @@ class Glpi92(DyngroupDatabaseHelper):
                     ret[q[2]] = [q[1], q[2], q[3], listid]
         return ret
 
+    @DatabaseHelper._sessionm
+    def get_machines_list(self, session, start, end, ctx):
+
+        location = ""
+        criterion = ""
+
+        if "location" in ctx and ctx['location'] != "":
+            location = ctx['location'].replace("UUID", "")
+
+        if "filter" in ctx and ctx["filter"] != "":
+            criterion = ctx["filter"]
+
+        start = int(start)
+        end = int(end)
+
+        # All computers
+        online_machines = []
+        online_machines = XmppMasterDatabase().getlistPresenceMachineid()
+        online_machines = [int(id.replace("UUID","")) for id in online_machines]
+
+        ret = self.__xmppmasterfilter(ctx)
+
+        query = session.query(Machine.id)\
+        .add_column(Machine.name)\
+        .add_column(Machine.comment)\
+        .add_column(self.os.c.name)\
+        .add_column(self.glpi_computertypes.c.name)\
+        .add_column(Entities.name)\
+        .join(self.glpi_computertypes)\
+        .join(self.os)\
+        .join(Entities)
+        if location != "":
+            query = query.filter(Entities.id == location)
+        query = query.filter(Machine.is_deleted==0)\
+        .filter(Machine.is_template==0)
+
+        if criterion != "":
+            query = query.filter(or_(
+                Machine.name.contains(criterion),
+                Machine.comment.contains(criterion),
+                self.os.c.name.contains(criterion),
+                self.glpi_computertypes.c.name.contains(criterion),
+                Machine.contact.contains(criterion),
+                Entities.name.contains(criterion)
+            ))
+
+        if "computerpresence" not in ret:
+            pass
+        elif ret["computerpresence"][2] == "no_presence":
+            query = query.filter(Machine.id.notin_(ret["computerpresence"][3]))
+        else:
+            query = query.filter(Machine.id.in_(ret["computerpresence"][3]))
+        query = self.__filter_on(query)
+        count = query.count()
+
+        query = session.query(Machine.id)\
+        .add_column(Machine.name)\
+        .add_column(Machine.comment)\
+        .add_column(self.os.c.name)\
+        .add_column(self.glpi_computertypes.c.name)\
+        .add_column(Machine.contact)\
+        .add_column(Entities.name)\
+        .join(self.glpi_computertypes)\
+        .join(self.os)\
+        .join(Entities)\
+        .filter(Machine.is_deleted==0)\
+        .filter(Machine.is_template==0)
+        if location != "":
+            query = query.filter(Entities.id == location)
+        if filter != "":
+            query = query.filter(or_(
+                Machine.name.contains(criterion),
+                Machine.comment.contains(criterion),
+                self.os.c.name.contains(criterion),
+                self.glpi_computertypes.c.name.contains(criterion),
+                Machine.contact.contains(criterion),
+                Entities.name.contains(criterion)
+            ))
+        # All computers
+        if "computerpresence" not in ret:
+            # Do nothing more
+            pass
+        elif ret["computerpresence"][2] == "no_presence":
+            query = query.filter(Machine.id.notin_(ret["computerpresence"][3]))
+        else:
+            query = query.filter(Machine.id.in_(ret["computerpresence"][3]))
+        query = self.__filter_on(query)
+        #query = query.order_by(asc(self.machine.c.id))
+        query = query.offset(start).limit(end)
+
+        query = query.all()
+
+        result = {"count" : count, "data":{}}
+        ids = []
+        names = []
+        descriptions = []
+        types = []
+        os = []
+        lasts_users = []
+        entities = []
+        presences = []
+
+        for machine in query:
+            ids.append(toUUID(machine[0]))
+            names.append(machine[1])
+            descriptions.append(machine[2])
+            os.append(machine[3])
+            types.append(machine[4])
+            lasts_users.append(machine[5])
+            entities.append(machine[6])
+            if int(machine[0]) in online_machines:
+                presences.append(1)
+            else:
+                presences.append(0)
+
+        result['count'] = count
+        result['data']["uuid"] = ids
+        result['data']["name"] = names
+        result['data']['description'] = descriptions
+        result['data']['type'] = types
+        result['data']['os'] = os
+        result['data']['lastUser'] = lasts_users
+        result['data']['entity'] = entities
+        result['data']['presence'] = presences
+
+        return result
+
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
         Get the sqlalchemy query to get a list of computers with some filters
