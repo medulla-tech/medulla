@@ -83,7 +83,7 @@ if (isset($_POST["bconfirm"])) {
                     new NotifyWidgetFailure(_("The computer has not been deleted."));
                 }
         }
-        header("Location: " . urlStrRedirect("base/computers/index"));
+        header("Location: " . urlStrRedirect("base/computers/machinesList"));
         exit;
     }
 } else {
