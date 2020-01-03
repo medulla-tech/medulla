@@ -4853,11 +4853,11 @@ class Glpi084(DyngroupDatabaseHelper):
                 `glpi_computers`.`contact` AS `contact`,
                 `glpi_entities`.`name` as `entity`
             FROM
-                `glpi`.`glpi_computers`
-                JOIN `glpi_items_operatingsystems` ON glpi.glpi_computers.`id` = `glpi_items_operatingsystems`.`items_id`
+                `glpi_computers`
+                JOIN `glpi_items_operatingsystems` ON glpi_computers.`id` = `glpi_items_operatingsystems`.`items_id`
                 JOIN `glpi_operatingsystems` ON `glpi_operatingsystems`.`id` = `glpi_items_operatingsystems`.`operatingsystems_id`
-                JOIN glpi.glpi_computertypes ON glpi.glpi_computers.`computertypes_id` = `glpi_computertypes`.`id`
-                JOIN glpi.glpi_entities ON glpi.glpi_computers.`entities_id` = glpi.glpi_entities.id
+                JOIN glpi_computertypes ON glpi_computers.`computertypes_id` = `glpi_computertypes`.`id`
+                JOIN glpi_entities ON glpi_computers.`entities_id` = glpi_entities.id
                 where `glpi_computers`.`is_template` = 0 and `glpi_computers`.`is_deleted` = 0
                     and  `glpi_computers`.`name` in (%s);"""%(strlisthostname)
         id=[]
@@ -4904,13 +4904,13 @@ class Glpi084(DyngroupDatabaseHelper):
 SELECT
     count(*) as nb
 FROM
-    `glpi`.`glpi_computers`
+    `glpi_computers`
 LEFT JOIN
-    `glpi_operatingsystems` ON `glpi`.`glpi_computers`.`operatingsystems_id` = `glpi_operatingsystems`.`id`
+    `glpi_operatingsystems` ON `glpi_computers`.`operatingsystems_id` = `glpi_operatingsystems`.`id`
 LEFT JOIN
-    `glpi`.`glpi_computertypes` ON `glpi`.`glpi_computers`.`computertypes_id` = `glpi_computertypes`.`id`
+    `glpi_computertypes` ON `glpi_computers`.`computertypes_id` = `glpi_computertypes`.`id`
 LEFT JOIN
-    `glpi`.`glpi_entities` ON `glpi`.`glpi_computers`.`entities_id` = `glpi`.`glpi_entities`.`id`
+    `glpi_entities` ON `glpi_computers`.`entities_id` = `glpi_entities`.`id`
 WHERE
     `glpi_computers`.`is_template` = 0
 AND `glpi_computers`.`is_deleted` = 0
@@ -4934,13 +4934,13 @@ SELECT
     `glpi_computers`.`contact` AS `contact`,
     `glpi_entities`.`name` AS `entity`
 FROM
-    `glpi`.`glpi_computers`
+    `glpi_computers`
 LEFT JOIN
-    `glpi_operatingsystems` ON `glpi`.`glpi_computers`.`operatingsystems_id` = `glpi_operatingsystems`.`id`
+    `glpi_operatingsystems` ON `glpi_computers`.`operatingsystems_id` = `glpi_operatingsystems`.`id`
 LEFT JOIN
-    `glpi`.`glpi_computertypes` ON `glpi`.`glpi_computers`.`computertypes_id` = `glpi_computertypes`.`id`
+    `glpi_computertypes` ON `glpi_computers`.`computertypes_id` = `glpi_computertypes`.`id`
 LEFT JOIN
-    `glpi`.`glpi_entities` ON `glpi`.`glpi_computers`.`entities_id` = `glpi`.`glpi_entities`.`id`
+    `glpi_entities` ON `glpi_computers`.`entities_id` = `glpi_entities`.`id`
 WHERE
     `glpi_computers`.`is_template` = 0
 AND `glpi_computers`.`is_deleted` = 0
