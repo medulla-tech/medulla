@@ -597,6 +597,169 @@ class Glpi92(DyngroupDatabaseHelper):
                     ret[q[2]] = [q[1], q[2], q[3], listid]
         return ret
 
+    @DatabaseHelper._sessionm
+    def get_machines_list(self, session, start, end, ctx):
+        # start and end are used to set the limit parameter in the query
+        start = int(start)
+        end = int(end)
+
+        location = ""
+        criterion = ""
+
+        master_config = xmppMasterConfig()
+        reg_columns = []
+        r=re.compile(r'reg_key_.*')
+        regs=filter(r.search, self.config.summary)
+        for regkey in regs:
+            regkeyconf = getattr( master_config, regkey).split("|")[0].split("\\")[-1]
+            #logging.getLogger().error(regkeyconf)
+            reg_columns.append(regkeyconf)
+
+        # location filter is corresponding to the entity selection in the interface
+        if "location" in ctx and ctx['location'] != "":
+            location = ctx['location'].replace("UUID", "")
+
+        # "filter" filter is corresponding to the string the user wants to find
+        if "filter" in ctx and ctx["filter"] != "":
+            criterion = ctx["filter"]
+
+
+        # Get the list of online computers
+        online_machines = []
+        online_machines = XmppMasterDatabase().getlistPresenceMachineid()
+        online_machines = [int(id.replace("UUID","")) for id in online_machines]
+
+        query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
+        .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
+        .outerjoin(self.user, Machine.users_id == self.user.c.id)\
+        .join(Entities, Entities.id == Machine.entities_id)\
+        .outerjoin(self.locations, Machine.locations_id == self.locations.c.id)\
+        .outerjoin(self.manufacturers, Machine.manufacturers_id == self.manufacturers.c.id)\
+        .join(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)\
+        .outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
+
+        if 'cn' in self.config.summary:
+            query = query.add_column(Machine.name.label("cn"))
+
+        if 'os' in self.config.summary:
+            query = query.add_column(self.os.c.name.label("os")).join(self.os)
+
+        if 'description' in self.config.summary:
+            query = query.add_column(Machine.comment.label("description"))
+
+        if 'type' in self.config.summary:
+            query = query.add_column(self.glpi_computertypes.c.name.label("type"))
+
+        if 'owner_firstname' in self.config.summary:
+            query = query.add_column(self.user.c.firstname.label("owner_firstname"))
+
+        if 'owner_realname' in self.config.summary:
+            query = query.add_column(self.user.c.realname.label("owner_realname"))
+
+        if 'owner' in self.config.summary:
+            query = query.add_column(self.user.c.name.label("owner"))
+
+        if 'user' in self.config.summary:
+            query = query.add_column(Machine.contact.label("user"))
+
+        if 'entity' in self.config.summary:
+            query = query.add_column(Entities.name.label("entity"))
+
+        if 'location' in self.config.summary:
+            query = query.add_column(self.locations.c.name.label("location"))
+
+        if 'model' in self.config.summary:
+            query = query.add_column(self.model.c.name.label("model"))
+
+        if 'manufacturer' in self.config.summary:
+            query = query.add_column(self.manufacturers.c.name.label("manufacturer"))
+
+        # Don't select deleted or template machines
+        query = query.filter(Machine.is_deleted==0)\
+        .filter(Machine.is_template==0)
+
+        # Select machines from the specified entity
+        if location != "":
+            query = query.filter(Entities.id == location)
+
+        # Add all the like clauses to find machines containing the criterion
+        if filter != "":
+            query = query.filter()
+            query = query.filter(or_(
+                Machine.name.contains(criterion),
+                Machine.comment.contains(criterion),
+                self.os.c.name.contains(criterion),
+                self.glpi_computertypes.c.name.contains(criterion),
+                Machine.contact.contains(criterion),
+                Entities.name.contains(criterion),
+                self.user.c.firstname.contains(criterion),
+                self.user.c.realname.contains(criterion),
+                self.user.c.name.contains(criterion),
+                self.locations.c.name.contains(criterion),
+                self.manufacturers.c.name.contains(criterion),
+                self.model.c.name.contains(criterion),
+                self.regcontents.c.value.contains(criterion)
+            ))
+
+        # All computers
+        if "computerpresence" not in ctx:
+            # Do nothing more
+            pass
+        elif ctx["computerpresence"] == "no_presence":
+            query = query.filter(Machine.id.notin_(online_machines))
+        else:
+            query = query.filter(Machine.id.in_(online_machines))
+        query = self.__filter_on(query)
+
+        # From now we can have the count of machines
+        count = query.count()
+
+        # Then continue with others criterions and filters
+        query = query.offset(start).limit(end)
+
+        columns_name = [column['name'] for column in query.column_descriptions]
+        machines = query.all()
+
+        result = {"count" : count, "data":{index : [] for index in columns_name}}
+        result['data']['presence'] = []
+
+        nb_columns = len(columns_name)
+
+        regs = {reg_column :[] for reg_column in reg_columns}
+        result['data']['reg'] = regs
+
+        for machine in machines:
+            _count = 0
+            #knokno
+            while _count < nb_columns:
+                result['data'][columns_name[_count]].append(machine[_count])
+                _count += 1
+
+            if int(machine[0]) in online_machines:
+                result['data']['presence'].append(1)
+            else:
+                result['data']['presence'].append(0)
+
+            for column in reg_columns:
+                result['data']['reg'][column].append(None)
+
+        regquery = session.query(
+            self.regcontents.c.computers_id,
+            self.regcontents.c.key,
+            self.regcontents.c.value)\
+        .filter(
+            and_(
+                self.regcontents.c.key.in_(reg_columns),
+                self.regcontents.c.computers_id.in_(result['data']['uuid'])
+            )
+        ).all()
+        for reg in regquery:
+            index = result['data']['uuid'].index(reg[0])
+            result['data']['reg'][reg[1]][index] = reg[2]
+
+        result['count'] = count
+        return result
+
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
         Get the sqlalchemy query to get a list of computers with some filters

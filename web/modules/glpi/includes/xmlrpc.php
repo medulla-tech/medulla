@@ -22,6 +22,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+ function xmlrpc_get_machines_list($start, $end, $ctx){
+     return xmlCall("glpi.get_machines_list", [$start, $end, $ctx]);
+ }
+
 function glpiExists($uuid) {
     return xmlCall("glpi.inventoryExists", array($uuid));
 }
