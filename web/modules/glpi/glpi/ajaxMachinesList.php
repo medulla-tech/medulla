@@ -170,24 +170,49 @@ foreach($datas['uuid'] as $uuid)
 	$params[] = [
 		'objectUUID'=>$datas['uuid'][$raw],
 		'UUID'=>$datas['uuid'][$raw],
-		'cn'=>$datas['name'][$raw],
+		'cn'=>$datas['cn'][$raw],
 		'os'=>$datas['os'][$raw],
 		'type'=>$datas['type'][$raw],
 		'presencemachinexmpp'=>$datas['presence'][$raw],
 		'entity' => $datas['entity'][$raw],
-		'user' => $datas['lastUser'][$raw],
+		'user' => $datas['user'][$raw],
 	];
 
 	$raw++;
 }
 
-$n = new OptimizedListInfos($datas["name"], _T("Computer Name", "glpi"));
+$n = new OptimizedListInfos($datas["cn"], _T("Computer Name", "glpi"));
 $n->setParamInfo($params); // [params]
-$n->addExtraInfo($datas["description"], _T("Description", "glpi"));
-$n->addExtraInfo($datas["os"], _T("Operating System", "glpi"));
-$n->addExtraInfo($datas["type"], _T("Computer Type", "glpi")); // []
-$n->addExtraInfo($datas["lastUser"], _T("Last Logged User", "glpi")); // [last login]
-$n->addExtraInfo($datas["entity"], _T("Entity", "glpi")); //[entities]
+if(array_key_exists("description", $datas))
+  $n->addExtraInfo($datas["description"], _T("Description", "glpi"));
+if(array_key_exists("os", $datas))
+  $n->addExtraInfo($datas["os"], _T("Operating System", "glpi"));
+if(array_key_exists("type", $datas))
+  $n->addExtraInfo($datas["type"], _T("Computer Type", "glpi"));
+if(array_key_exists('user', $datas))
+  $n->addExtraInfo($datas["user"], _T("Last Logged User", "glpi"));
+if(array_key_exists('owner', $datas))
+  $n->addExtraInfo($datas["owner"], _T("Owner", "glpi"));
+if(array_key_exists("entity", $datas))
+  $n->addExtraInfo($datas["entity"], _T("Entity", "glpi")); //[entities]
+if(array_key_exists("location", $datas))
+  $n->addExtraInfo($datas["location"], _T("Localization", "glpi"));
+if(array_key_exists("owner_firstname", $datas))
+  $n->addExtraInfo($datas["owner_firstname"], _T("Owner Firstname", "glpi"));
+if(array_key_exists("owner_realname", $datas))
+  $n->addExtraInfo($datas["owner_realname"], _T("Owner Real Name", "glpi"));
+if(array_key_exists("model", $datas))
+  $n->addExtraInfo($datas["model"], _T("Model", "glpi"));
+if(array_key_exists("manufacturer", $datas))
+  $n->addExtraInfo($datas["manufacturer"], _T("Manufacturer", "glpi"));
+if(array_key_exists("reg", $datas))
+{
+  foreach($datas['reg'] as $key => $value)
+  {
+    $n->addExtraInfo($datas["reg"][$key], _T($key, "glpi"));
+  }
+}
+
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])){
   $n->addActionItemArray($actionInventory);
