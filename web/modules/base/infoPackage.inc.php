@@ -314,7 +314,7 @@ $mod->addSubmod($submod);
 if (hasComputerManagerWorking()) {
     $submod = new SubModule("computers", _("Computers"));
     $submod->setImg('modules/base/graph/navbar/computer');
-    $submod->setDefaultPage("base/computers/index");
+    $submod->setDefaultPage("base/computers/machinesList");
     $submod->setPriority(3);
 
     $page = new Page("index", _("Computer list"));
