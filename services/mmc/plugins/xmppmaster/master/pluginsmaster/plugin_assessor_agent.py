@@ -137,7 +137,6 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
     ordre = XmppMasterDatabase().Orderrules()
     odr = [x[0] for x in ordre]
     logger.debug("Rule order : %s " % odr)
-    indetermine = []
     result = []
     for x in ordre:
         # User Rule : 1
@@ -200,8 +199,13 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                                     "%s user %s \nPossible relay servers" \
                                     " : id list %s " % (nbserver, data['information']['info']['hostname'],
                                                         data['information']['users'][0], listeserver))
-                        logger.warn("Continues for the other rules. Random choice only if no other is found.")
-                        indetermine = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(listeserver[index])
+                        logger.warn("ARS Random choice : %s"%listeserver[index])
+                        result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(listeserver[index])
+                        msg_log("The Geoposition",
+                                data['information']['info']['hostname'],
+                                data['information']['users'][0],
+                                result)
+                        break
                     else:
                         if relayserver != -1:
                             result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(relayserver)
@@ -210,16 +214,9 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                                     data['information']['users'][0],
                                     result)
                             break
-                if len(result) != 0:
-                    result = [objectxmpp.config.defaultrelayserverip,
-                              objectxmpp.config.defaultrelayserverport,
-                              result2[0],
-                              objectxmpp.config.defaultrelayserverbaseurlguacamole]
-                    msg_log("use default relay server",
-                            data['information']['info']['hostname'],
-                            data['information']['users'][0],
-                            result)
-                    break
+                        else:
+                            logger.warn("algo rule 3 inderterminat")
+                            continue
             except KeyError:
                 logger.error("Error algo rule 3")
                 logger.error("\n%s"%(traceback.format_exc()))
