@@ -156,7 +156,7 @@ foreach($datas['uuid'] as $uuid)
 	}
 
 	if (in_array("guacamole", $_SESSION["supportModList"]) && in_array("xmppmaster", $_SESSION["supportModList"])) {
-		if ($presences[$uuid]){
+		if ($datas['presence'][$raw]){
 			$actionVncClient[] = $vncClientAction;
 		}else
 		{//show icone vnc griser
@@ -176,6 +176,7 @@ foreach($datas['uuid'] as $uuid)
 		'presencemachinexmpp'=>$datas['presence'][$raw],
 		'entity' => $datas['entity'][$raw],
 		'user' => $datas['user'][$raw],
+    'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
 	];
 
 	$raw++;
