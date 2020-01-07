@@ -24,10 +24,8 @@
 
 import base64
 import json
-import os
-import utils
 import pprint
-from utils import AESCipher
+from utils import AESCipher, subnetnetwork
 import logging
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
@@ -35,6 +33,7 @@ from random import randint
 from localisation import Localisation
 import operator
 import netaddr
+from manageADorganization import manage_fqdn_window_activedirectory
 
 logger = logging.getLogger()
 
@@ -96,7 +95,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         objectxmpp.sendErrorConnectionConf(objectxmpp, sessionid, msg)
         return
 
-    if not 'codechaine' in data:
+    if 'codechaine' not in data:
         logger.debug("missing authentification from %s"%(codechaine))
         sendErrorConnectionConf(objectxmpp, sessionid, msg)
         return
@@ -347,10 +346,10 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                                                                          "static")
         z = [listars[x] for x in listars]
         z1 = sorted(z, key=operator.itemgetter(4))
-        arsjid = XmppMasterDatabase().getRelayServerfromjid("rspulse@pulse")
+        # arsjid = XmppMasterDatabase().getRelayServerfromjid("rspulse@pulse")
         # Start relay server agent configuration
         # we order the ARS from the least used to the most used.
-        reponse = {'action': 'resultconnectionconf',
+        response = {'action': 'resultconnectionconf',
                     'sessionid': data['sessionid'],
                     'data': z1,
                     'syncthing' : objectxmpp.config.announce_server,
@@ -359,11 +358,11 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         if "substitute" in data and \
             "conflist" in data["substitute"] and \
                 len(data["substitute"]["conflist"]) > 0:
-            reponse["substitute"] =  XmppMasterDatabase().\
+            response["substitute"] =  XmppMasterDatabase().\
                                     substituteinfo(data["substitute"],
                                                    z1[0][2])
         objectxmpp.send_message(mto=msg['from'],
-                            mbody=json.dumps(reponse),
+                            mbody=json.dumps(response),
                             mtype='chat')
         #add account for delete
         objectxmpp.confaccount.append(msg['from'].user)
@@ -382,12 +381,12 @@ def msg_log(msg_header, hostname, user, result):
     pass
 
 def sendErrorConnectionConf(objectxmpp, session,  msg):
-    reponse = {'action': 'resultconnectionconf',
+    response = {'action': 'resultconnectionconf',
                'sessionid': session,
                'data': [],
                'syncthing' : "",
                'ret': 255}
     objectxmpp.send_message(mto=msg['from'],
-                        mbody=json.dumps(reponse),
+                        mbody=json.dumps(response),
                         mtype='chat')
 

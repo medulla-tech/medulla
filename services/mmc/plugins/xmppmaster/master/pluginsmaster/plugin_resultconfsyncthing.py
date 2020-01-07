@@ -43,6 +43,6 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
         elif 'errorsyncthingconf'  in data:
             logger.error("Remote Error on syncthing agent (setup) %s"%str(msg['from'].resource) )
             logger.error(data['errorsyncthingconf'])
-    except Exception as e:
-        print traceback.format_exc()
+    except Exception:
+        logger.error("\n%s"%(traceback.format_exc()))
         pass
