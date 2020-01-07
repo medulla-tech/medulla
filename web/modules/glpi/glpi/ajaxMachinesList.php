@@ -168,7 +168,7 @@ foreach($datas['uuid'] as $uuid)
 	}
 
 	$params[] = [
-		'objectUUID'=>$datas['uuid'][$raw],
+		'objectUUID'=>'UUID'.$datas['uuid'][$raw],
 		'UUID'=>$datas['uuid'][$raw],
 		'cn'=>$datas['cn'][$raw],
 		'os'=>$datas['os'][$raw],
