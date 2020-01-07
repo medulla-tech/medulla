@@ -20,16 +20,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-# file pluginsmaster/plugin_testmaster.py
+# file pluginsmaster/_plugin_resultwakeonlangroup.py
 
-from utils import pluginmastersessionaction
-import logging
+# plugin run wake on lan on mac adress
+# group mac adress wakeonlan different wakeonlans
+plugin = {"VERSION": "1.0", "NAME": "resultwakeonlangroup", "TYPE": "master"}
 
-plugin = {"VERSION": "1.0", "NAME": "testmaster", "TYPE": "master"}
 
-
-@pluginmastersessionaction("actualise", 20)
-def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
-    logging.getLogger().debug(plugin)
-    xmppobject.session.affiche()
+def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     pass
