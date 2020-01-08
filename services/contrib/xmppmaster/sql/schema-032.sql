@@ -45,10 +45,10 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 LOCK TABLES `substituteconf` WRITE;
-INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('registration', 'master@pulse', '1');
-INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('subscription', 'master@pulse', '1');
-INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('inventory', 'master@pulse', '1');
-INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('assessor', 'master@pulse', '1');
+INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('registration', 'master@pulse', 1);
+INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('subscription', 'master@pulse', 1);
+INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('inventory', 'master@pulse', 1);
+INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('assessor', 'master@pulse', 1);
 UNLOCK TABLES;
 
 UPDATE version SET Number = 32;
