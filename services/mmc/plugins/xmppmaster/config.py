@@ -40,6 +40,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
     def loadparametersplugins(self, namefile):
         Config = ConfigParser.ConfigParser()
+        Config.optionxform = str
         Config.read(namefile)
         return Config.items("parameters")
 
@@ -91,11 +92,6 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.confjidchatroom = "%s@%s" % (
             self.get('configuration_server', 'confmuc_chatroom'), self.get('chatroom', 'server'))
         self.confpasswordmuc = self.get('configuration_server', 'confmuc_password')
-        if self.has_option("configuration_server", "keyAES32"):
-            paramkeyAES32 = self.get('configuration_server', 'keyAES32')
-            self.keyAES32 = [str(x.strip()) for x in paramkeyAES32.split(",") if x.strip() != ""]
-        else:
-            self.keyAES32 = ["abcdefghijklnmopqrstuvwxyz012345"]
         ########chat#############
         # The jidagent must be the smallest value in the list of mac addresses
         self.chatserver = self.get('chat', 'domain')
