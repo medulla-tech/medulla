@@ -55,11 +55,10 @@ def action(objectxmpp, action, sessionid, data, msg, ret, dataobj):
         sendErrorConnectionConf(objectxmpp, sessionid, msg)
         logger.error("\n%s"%(traceback.format_exc()))
 
-
 def testsignaturecodechaine(objectxmpp, data, sessionid, msg):
     codechaine="%s"%(msg['from'])
     result = False
-    for t in objectxmpp.keyAES32:
+    for t in objectxmpp.config.keyAES32:
         cipher = AESCipher(t)
         decrypted = cipher.decrypt(data['codechaine'])
         if str(decrypted) == str(codechaine):
@@ -70,7 +69,6 @@ def testsignaturecodechaine(objectxmpp, data, sessionid, msg):
 
         sendErrorConnectionConf(objectxmpp, sessionid, msg)
     return result
-
 
 def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, ret, dataobj):
     logger.debug("MessagesAgentFromChatroomConfig")
