@@ -355,6 +355,8 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
             response["substitute"] =  XmppMasterDatabase().\
                                     substituteinfo(data["substitute"],
                                                    z1[0][2])
+            response["substitute"]["ars_chooose_for_substitute"] = z1[0][2]
+            logger.debug("substitute resend to agent : %s"%json.dumps(response["substitute"],indent=4))
         objectxmpp.send_message(mto=msg['from'],
                             mbody=json.dumps(response),
                             mtype='chat')
