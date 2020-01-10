@@ -27,7 +27,7 @@ xmppmaster database handler
 """
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct, cast, Date
+from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct, cast, Date, not_
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
 from datetime import date, datetime, timedelta
@@ -45,7 +45,8 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Cluster_resources,\
     Syncthing_ars_cluster,\
     Syncthing_machine,\
-    Syncthing_deploy_group
+    Syncthing_deploy_group,\
+    Substituteconf
 # Imported last
 import logging
 import json
@@ -4295,6 +4296,49 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error("SetPresenceMachine : %s"%str(e))
             return False
+
+    @DatabaseHelper._sessionm
+    def substituteinfo(self, session, listconfsubstitute, arsname):
+        """
+            search  subtitute agent jid for agent machine
+        """
+        try:
+            exclud = 'master@pulse'
+
+            incrementeiscount=[]
+            for t in listconfsubstitute['conflist']:
+                result = session.query(Substituteconf.id.label("id"),
+                                       Substituteconf.jidsubtitute.label("jidsubtitute"),
+                                       Substituteconf.countsub.label("countsub"),
+                                       RelayServer.jid.label("namerelayser")).\
+                    join(RelayServer, Substituteconf.relayserver_id == RelayServer.id).\
+                        filter( and_(not_(Substituteconf.jidsubtitute.like(exclud)),
+                                    Substituteconf.type.like(t),
+                                    RelayServer.jid == arsname)).order_by(Substituteconf.countsub).all()
+                listcommand = []
+                test = False
+                for y in result:
+                    listcommand.append(y.jidsubtitute)
+                    if not test:
+                        test = True
+                        incrementeiscount.append(str(y.id))
+                        #y.countsub = y.countsub + 1
+                #session.commit()
+                #session.flush()
+                listcommand.append(exclud)
+                listconfsubstitute[t] = listcommand
+            #update contsub
+            sql="""UPDATE `xmppmaster`.`substituteconf` 
+                SET 
+                    `countsub` = `countsub` + '1'
+                WHERE
+                    `id` IN (%s);"""%','.join([x for x in incrementeiscount])
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error("substituteinfo : %s"%str(e))
+        return listconfsubstitute
 
     @DatabaseHelper._sessionm
     def GetMachine(self, session, jid):
