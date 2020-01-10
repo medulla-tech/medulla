@@ -44,6 +44,21 @@ $page = new Page('glpi_dashboard', _T('Glpi Dashboard', 'glpi'));
 $submod->addPage($page);
 $mod->addSubmod($submod);
 
+// Set the rights for glpi/includes/panels/antivirus.inc.php
+$page = new Page('antivirus_dashboard', _T('Antivirus Panel', 'glpi'));
+$submod->addPage($page);
+$mod->addSubmod($submod);
+
+// Set the rights for glpi/includes/panels/inventory.inc.php
+$page = new Page('inventory_dashboard', _T('Inventory Panel', 'glpi'));
+$submod->addPage($page);
+$mod->addSubmod($submod);
+
+// Set the rights for glpi/includes/panels/os_repartition.inc.php
+$page = new Page('os_repartition_dashboard', _T('Os Repartition Panel', 'glpi'));
+$submod->addPage($page);
+$mod->addSubmod($submod);
+
 $MMCApp->addModule($mod);
 
 /* Get the base module instance */
@@ -51,6 +66,15 @@ $base = &$MMCApp->getModule('base');
 
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
+
+$page = new Page("machinesList", _T("Get the whole machines list", "glpi"));
+$page->setFile("modules/glpi/glpi/machinesList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxMachinesList", _T("Machines List", "glpi"));
+$page->setFile("modules/glpi/glpi/ajaxMachinesList.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
 
 $page = new Page("createStaticGroup", _T("Create static group from dashboard widgets (GLPI)", "glpi"));
 $page->setFile("modules/glpi/glpi/createStaticGroup.php");

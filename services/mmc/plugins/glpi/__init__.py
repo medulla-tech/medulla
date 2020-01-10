@@ -85,6 +85,9 @@ class ContextMaker(ContextMakerI):
 
 
 class RpcProxy(RpcProxyI):
+    def get_machines_list(self, start, end, ctx):
+        return xmlrpcCleanup(Glpi().get_machines_list(start, end, ctx))
+
     def getMachineNumberByState(self):
         ctx = self.currentContext
         return xmlrpcCleanup(Glpi().getMachineNumberByState(ctx))
