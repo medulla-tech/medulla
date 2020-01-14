@@ -93,8 +93,10 @@ $machine_error_from_deploy     = $resultfromdeploy['machineerrordeploy'];
 $machine_success_from_deploy   = $resultfromdeploy['machinesuccessdeploy'];
 $machine_process_from_deploy   = $resultfromdeploy['machineprocessdeploy'];
 $machine_abort_from_deploy     = $resultfromdeploy['machineabortdeploy'];
-
-
+$machine_wol1_from_deploy      = $resultfromdeploy['machinewol1deploy'];
+$machine_wol2_from_deploy      = $resultfromdeploy['machinewol2deploy'];
+$machine_wol3_from_deploy      = $resultfromdeploy['machinewol3deploy'];
+$machine_waiting_from_deploy   = $resultfromdeploy['waitingmachinesdeploy'];
 
 $machine_wol_from_deploy       = $total_machine_from_deploy-($machine_success_from_deploy + $machine_success_from_deploy + $machine_process_from_deploy + $machine_timeout_from_deploy);
 
@@ -363,16 +365,7 @@ echo "<div>";
         }
 
     }
-    if($terminate == 0){
-            echo'
-                <script type="text/javascript">
-                    setTimeout(refresh, 120000);
-                    function  refresh(){
-                            location.reload()
-                    }
-                </script>
-                ';
-    }
+
 echo "</div>";
 if (isset($countmachine)){
   if ($info['len'] > $countmachine){
@@ -501,13 +494,25 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
             echo 'datas.push({"label":"In progress", "value":'.$machine_process_from_deploy.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
           if ($wol > 0){
-            echo 'datas.push({"label":"Waiting (WOL sent)", "value":'.$wol.', "color": "#DBA901", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+            echo 'datas.push({"label":"Waiting", "value":'.$wol.', "color": "#DBA901", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($machine_wol1_from_deploy > 0){
+            echo 'datas.push({"label":"WOL 1", "value":'.$machine_wol1_from_deploy.', "color": "#db9201", "href":"'.urlredirect_group_for_deploy("machinewol1",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($machine_wol2_from_deploy > 0){
+            echo 'datas.push({"label":"WOL 2", "value":'.$machine_wol2_from_deploy.', "color": "#db6e01", "href":"'.urlredirect_group_for_deploy("machinewol2",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($machine_wol3_from_deploy > 0){
+            echo 'datas.push({"label":"WOL 3", "value":'.$machine_wol3_from_deploy.', "color": "#6e451d", "href":"'.urlredirect_group_for_deploy("machinewol3",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
           if ($machine_timeout_from_deploy > 0){
           echo 'datas.push({"label":"Timed out", "value":'.$machine_timeout_from_deploy.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
           if ($machine_abort_from_deploy > 0){
             echo 'datas.push({"label":"Aborted", "value":'.$machine_abort_from_deploy.', "color": "#ff5050", "href":"'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($machine_waiting_from_deploy > 0){
+            echo 'datas.push({"label":"Waiting for Online ", "value":'.$machine_waiting_from_deploy.', "color": "#8f01db", "href":"'.urlredirect_group_for_deploy("machinewaitingonline",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
           echo'
           chart("holder", datas);
