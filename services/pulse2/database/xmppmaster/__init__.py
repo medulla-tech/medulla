@@ -2456,6 +2456,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     'machineerrordeploy' : 0,
                     'machineprocessdeploy' : 0,
                     'machineabortdeploy' : 0,
+                    'machinewol1deploy' : 0,
+                    'machinewol2deploy' : 0,
+                    'machinewol3deploy' : 0,
+                    'waitingmachinesdeploy' : 0,
                     'autrestatus' : 0}
 
             liststatus = { x[0] : x[1] for x in machinedeploy}
@@ -2470,6 +2474,14 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['machineprocessdeploy'] = liststatus[t]
                 elif t == 'DEPLOYMENT ABORT':
                     ret['machineabortdeploy'] = liststatus[t]
+                elif t == 'WOL 1':
+                    ret['machinewol1deploy'] = liststatus[t]
+                elif t == 'WOL 2':
+                    ret['machinewol2deploy'] = liststatus[t]
+                elif t == 'WOL 3':
+                    ret['machinewol3deploy'] = liststatus[t]
+                elif t == 'WAITING MACHINE ONLINE':
+                    ret['waitingmachinesdeploy'] = liststatus[t]
                 else:
                     ret['autrestatus'] = liststatus[t]
             return ret
