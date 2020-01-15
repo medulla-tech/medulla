@@ -302,7 +302,7 @@ echo "<div>";
 
         echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$MSC_nb_mach_grp_for_deploy;
         echo "<br>"._T("Number of current deployments","xmppmaster")." : ". $deploymachine;
-        echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machine_timeout_from_deploy;
+        echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machineerrortimeout;
         echo "<br>"._T("Deployment summary","xmppmaster").":";
         echo "<table><tr>";
         echo "<td>"._T("Success","xmppmaster")."</td>
@@ -356,9 +356,6 @@ echo "<div>";
                 echo "<tbody>";
                     echo "<tr>";
                         echo "<td>";
-                            echo $resultatdeploy['descriptor']['info']['description'];
-                        echo "</td>";
-                        echo "<td>";
                             echo $resultatdeploy['descriptor']['info']['name'];
                         echo "</td>";
                         echo "<td>";
@@ -366,6 +363,9 @@ echo "<div>";
                         echo "</td>";
                         echo "<td>";
                             echo $resultatdeploy['descriptor']['info']['version'];
+                        echo "</td>";
+                        echo "<td>";
+                            echo $resultatdeploy['descriptor']['info']['description'];
                         echo "</td>";
                     echo "</tr>";
                 echo "</tbody>";
