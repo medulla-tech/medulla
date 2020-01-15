@@ -402,8 +402,10 @@ p {
     /*height: 350px;*/
     /*margin-left: 200px;*/
     padding-top: 10px;
-    width: 99%;
-    overflow-x: scroll;
+}
+
+#container{
+  overflow-x: auto;
 }
 
 #section h1, h2, h3, h4, h5, h6 {
@@ -434,6 +436,10 @@ p.listInfos {
     line-height: 22px;*/
 
 
+}
+
+form .navList:nth-of-type(2){
+  margin-top:20px;
 }
 
 ul.navList {
