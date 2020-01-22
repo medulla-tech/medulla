@@ -3769,6 +3769,11 @@ class XmppMasterDatabase(DatabaseHelper):
             Field "relayserver_id" is used to define the Relayserver to be assigned to the machines matching that rule
             enabled = 1 Only on active relayserver.
             If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
+            subnetmachine CIDR machine. 
+                CIDR matching with suject of table has_relayserverrules
+                -- suject is the expresseion relationel.
+                -- eg : ^55\.171\.[5-6]{1}\.[0-9]{1,3}/24$
+                -- eg : ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/24$ all adress mask 255.255.255.255
         """
         if classutilMachine == "private":
             sql = """select `relayserver`.`id`
@@ -3777,7 +3782,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
             where
                 `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
@@ -3789,7 +3794,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
             where
                 `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
             limit 1;"""%(rule, subnetmachine, enabled)
