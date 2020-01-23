@@ -4267,7 +4267,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except IndexError:
-            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jid)
+            logging.getLogger().warning("Unable to remove the machine from the xmppmaster database, skipping")
             return {}
         except Exception, e:
             logging.getLogger().error(str(e))
