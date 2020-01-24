@@ -1,9 +1,30 @@
+Pulse 2 4.6.1
+=============
+* [FEATURE] Improve translations
+* [FEATURE] Allow to use remote database for msc
+* [FEATURE] Allow to black list MAC Adresses in jid ( when several machines
+			has the same mac adress in a network )
+* [FEATURE] Speed up a lot the Computer page
+* [FEATURE] Add WOL 1, 2, 3 for the graph
+* [FEATURE] Attribute ARS based on net mask addres
+* [BUGFIX]  Fix Wol for deployements in Audit web page
+* [BUGFIX]  Various fixes about inventories
+* [BUGFIX]  Fix the restarting a deployment after a WOL
+* [BUGFIX]  Fix support to glpi when the database is not caller glpi
+* [BUGFIX]  Fix systemd service files to automatically restart the services
+
+Pulse 2 4.6.0
+=============
 * [FEATURE] Improve translations
 * [FEATURE] Add glpi 9.4 support
+* [FEATURE] Add Syncthing support for packages deployment
+* [FEATURE] Machine table is now static
 * [FEATURE] Add the pulldirect tranfer method into the page edit package
 * [FEATURE] Create packages in push mode. If the package cannot be deployed in push mode, pull mode will be used
 * [FEATURE] Reboot is managed by xmpp and no longer package server
-* [FEATURE] Machine table is now static
+* [FEATURE] Add Substitute agents
+* [BUGFIX]  Fix multicast synchronisation menu
+* [BUGFIX]  Accelerates the display of the group audit view
 * [BUGFIX]  Fix generating pxelinux menus for restoring.
 * [BUGFIX]  The machine list was not visible in the static group creation page
 * [BUGFIX]  Modify the sql request for topology functions

@@ -1861,7 +1861,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.debug("Applied Rule : Associate relay server based on network address")
                     result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                     break
-
+            # Network Rule : 10
+            elif x[0] == 10:
+                # Associates relay server based on network address
+                logger.debug("Analysis the 10th rule : Associate relay server based on netmask adress")
+                logger.debug("Net mask adress: %s" % data['xmppmask'])
+                result1 = XmppMasterDatabase().algorulebynetmaskaddress(data['xmppmask'],
+                                                                        data['classutil'])
+                if len(result1) > 0:
+                    logger.debug("Applied Rule : Associate relay server based on net Mask address")
+                    result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
+                    break
         try:
             logger.debug(" user %s and hostname %s [connection ip %s port : %s]" % (
                 data['information']['users'][0], data['information']['info']['hostname'], result[0], result[1]))

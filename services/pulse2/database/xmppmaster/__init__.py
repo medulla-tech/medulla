@@ -3726,10 +3726,10 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algorulebynetworkaddress(self, session, subnetmachine, classutilMachine = "both", rule = 9, enabled=1):
+    def algorulebynetmaskaddress(self, session, netmaskaddress, classutilMachine = "both", rule = 10, enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 9 by network address
-            Field "subject" is used to define the subnet for association
+            Field "netmaskaddress" is used to define the net mask address for association
             Field "relayserver_id" is used to define the Relayserver to be assigned to the machines matching that rule
             enabled = 1 Only on active relayserver.
             If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
@@ -3745,7 +3745,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
-            limit 1;"""%(rule, subnetmachine, enabled, classutilMachine)
+            limit 1;"""%(rule, netmaskaddress, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
             from `relayserver`
@@ -3756,6 +3756,50 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `has_relayserverrules`.`subject` = '%s'
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
+            limit 1;"""%(rule, netmaskaddress, enabled)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._sessionm
+    def algorulebynetworkaddress(self, session, subnetmachine, classutilMachine = "both", rule = 9, enabled=1):
+        """
+            Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 9 by network address
+            Field "subject" is used to define the subnet for association
+            Field "relayserver_id" is used to define the Relayserver to be assigned to the machines matching that rule
+            enabled = 1 Only on active relayserver.
+            If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
+            subnetmachine CIDR machine. 
+                CIDR matching with suject of table has_relayserverrules
+                -- suject is the expresseion relationel.
+                -- eg : ^55\.171\.[5-6]{1}\.[0-9]{1,3}/24$
+                -- eg : ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/24$ all adress mask 255.255.255.255
+        """
+        if classutilMachine == "private":
+            sql = """select `relayserver`.`id`
+            from `relayserver`
+                inner join
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
+            where
+                `has_relayserverrules`.`rules_id` = %d
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
+                    AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
+                    AND `relayserver`.`classutil` = '%s'
+            order by `has_relayserverrules`.`order`
+            limit 1;"""%(rule, subnetmachine, enabled, classutilMachine)
+        else:
+            sql = """select `relayserver`.`id`
+            from `relayserver`
+                inner join
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
+            where
+                `has_relayserverrules`.`rules_id` = %d
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
+                    AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
+            order by `has_relayserverrules`.`order`
             limit 1;"""%(rule, subnetmachine, enabled)
         result = session.execute(sql)
         session.commit()
@@ -4283,7 +4327,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except IndexError:
-            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jid)
+            logging.getLogger().warning("Unable to remove the machine from the xmppmaster database, skipping")
             return {}
         except Exception, e:
             logging.getLogger().error(str(e))
