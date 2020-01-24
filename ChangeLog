@@ -1,9 +1,18 @@
+Pulse 2 4.6.1
+=============
+* [FEATURE] Improve translations
+
+Pulse 2 4.6.0
+=============
 * [FEATURE] Improve translations
 * [FEATURE] Add glpi 9.4 support
+* [FEATURE] Add Syncthing support for packages deployment
+* [FEATURE] Machine table is now static
 * [FEATURE] Add the pulldirect tranfer method into the page edit package
 * [FEATURE] Create packages in push mode. If the package cannot be deployed in push mode, pull mode will be used
 * [FEATURE] Reboot is managed by xmpp and no longer package server
-* [FEATURE] Machine table is now static
+* [BUGFIX]  Fix multicast synchronisation menu
+* [BUGFIX]  Accelerates the display of the group audit view
 * [BUGFIX]  Fix generating pxelinux menus for restoring.
 * [BUGFIX]  The machine list was not visible in the static group creation page
 * [BUGFIX]  Modify the sql request for topology functions
