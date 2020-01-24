@@ -46,9 +46,7 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Syncthing_ars_cluster,\
     Syncthing_machine,\
     Syncthing_deploy_group,\
-    Substituteconf,\
-    Agentsubscription,\
-    Subscription
+    Substituteconf
 # Imported last
 import logging
 import json
@@ -60,6 +58,7 @@ import sys
 import re
 import uuid
 import random
+import copy
 
 def datetime_handler(x):
     if isinstance(x, datetime):
@@ -130,165 +129,6 @@ class XmppMasterDatabase(DatabaseHelper):
     # =====================================================================
     # xmppmaster FUNCTIONS deploy syncthing
     # =====================================================================
-
-    # xmppmaster FUNCTIONS FOR SUBSCRIPTION
-
-    @DatabaseHelper._sessionm
-    def setagentsubscription( self,
-                            session,
-                            name):
-        """
-            this functions addition a log line in table log xmpp.
-        """
-        try:
-            new_agentsubscription = Agentsubscription()
-            new_agentsubscription.name = name
-            session.add(new_agentsubscription)
-            session.commit()
-            session.flush()
-            return new_agentsubscription.id
-        except Exception, e:
-            logging.getLogger().error(str(e))
-            return None
-
-
-    @DatabaseHelper._sessionm
-    def deAgentsubscription( self,
-                            session,
-                            name):
-        """
-            del organization name
-        """
-        session.query(Agentsubscription).filter(Agentsubscription.name == name).delete()
-        session.commit()
-        session.flush()
-
-    @DatabaseHelper._sessionm
-    def setupagentsubscription( self,
-                            session,
-                            name):
-        """
-            this functions addition ou update table in table log xmpp.
-        #"""
-        try:
-            q = session.query(Agentsubscription)
-            q = q.filter(Agentsubscription.name==name)
-            record = q.one_or_none()
-            if record:
-                record.name = name
-                session.commit()
-                session.flush()
-                return record.id
-            else:
-                return self.setagentsubscription(name)
-        except Exception, e:
-            logging.getLogger().error(str(e))
-
-    @DatabaseHelper._sessionm
-    def setSubscription( self,
-                        session,
-                        macadress,
-                        idagentsubscription):
-        """
-            this functions addition a log line in table log xmpp.
-        """
-        try:
-            new_subscription = Subscription()
-            new_subscription.macadress = macadress
-            new_subscription.idagentsubscription = idagentsubscription
-            session.add(new_subscription)
-            session.commit()
-            session.flush()
-            return new_subscription.id
-        except Exception, e:
-            logging.getLogger().error(str(e))
-            return None
-
-    @DatabaseHelper._sessionm
-    def setupSubscription( self,
-                          session,
-                          macadress,
-                          idagentsubscription):
-        """
-            this functions addition a log line in table log xmpp.
-        """
-        try:
-            q = session.query(Subscription)
-            q = q.filter(Subscription.macadress==macadress)
-            record = q.one_or_none()
-            if record:
-                record.macadress = macadress
-                record.idagentsubscription = idagentsubscription
-                session.commit()
-                session.flush()
-                return record.id
-            else:
-                return self.setSubscription(macadress, idagentsubscription)
-        except Exception, e:
-            logging.getLogger().error(str(e))
-
-    @DatabaseHelper._sessionm
-    def setuplistSubscription( self,
-                              session,
-                              listmacadress,
-                              agentsubscription):
-        try:
-            id = self.setupagentsubscription( agentsubscription)
-            if id is not None:
-                for macadress in listmacadress:
-                    self.setupSubscription(macadress, id)
-                return id
-            else:
-                logger.error("setup or create record for agent subscription%s"%agentsubscription)
-                return Nnone
-        except Exception, e:
-            logging.getLogger().error(str(e))
-            return None
-
-
-    @DatabaseHelper._sessionm
-    def delSubscriptionmacadress( self,
-                                session,
-                                macadress):
-        """
-            this functions addition a log line in table log xmpp.
-        """
-        try:
-            q = session.query(Subscription)
-            q = q.filter(Subscription.macadress==macadress).delete()
-            session.commit()
-            session.flush()
-        except Exception, e:
-            logging.getLogger().error(str(e))
-            logging.getLogger().error("\n%s"%(traceback.format_exc()))
-
-    @DatabaseHelper._sessionm
-    def update_enable_for_agent_subscription(self,
-                                            session,
-                                            agentsubtitutename,
-                                            status = '0',
-                                            agenttype = 'machine'
-                                            ):
-        try:
-            sql="""
-            UPDATE `xmppmaster`.`machines`
-                    INNER JOIN
-                `xmppmaster`.`subscription` ON `xmppmaster`.`machines`.`macaddress` = `xmppmaster`.`subscription`.`macadress`
-                    INNER JOIN
-                `xmppmaster`.`agent_subscription` ON `xmppmaster`.`subscription`.`idagentsubscription` = `xmppmaster`.`agent_subscription`.`id`
-            SET
-                `xmppmaster`.`machines`.`enabled` = '%s'
-            WHERE
-                `xmppmaster`.`machines`.agenttype = '%s'
-                    AND `xmppmaster`.`agent_subscription`.`name` = '%s';"""%(status,
-                                                                            agenttype,
-                                                                            agentsubtitutename)
-            machines = session.execute(sql)
-            session.commit()
-            session.flush()
-        except Exception, e:
-            logging.getLogger().error("\n%s"%(traceback.format_exc()))
-
     @DatabaseHelper._sessionm
     def setSyncthing_deploy_group(self,
                                   session,
@@ -1891,7 +1731,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return "pause"
 
     @DatabaseHelper._sessionm
-    def clean_syncthing_deploy(self, session):
+    def clean_syncthing_deploy(self, session, iddeploy, jid_relay):
         """
             analyse table deploy syncthing and search the shared folders which must be terminated.
         """
@@ -1916,12 +1756,11 @@ class XmppMasterDatabase(DatabaseHelper):
                                 xmppmaster.syncthing_machine.inventoryuuid
                 WHERE
                     xmppmaster.syncthing_deploy_group.id=%s """%iddeploy
-        if ars is not None:
+        if jid_relay is not None:
             sql = sql + """
             and
-            xmppmaster.syncthing_machine.jid_relay like '%s'"""%ars
+            xmppmaster.syncthing_machine.jid_relay like '%s'"""%jid_relay
         sql = sql +";"
-
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -2101,11 +1940,11 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._sessionm
-    def change_end_deploy_syncthing(self, session, iddeploy,offsettime=60):
+    def change_end_deploy_syncthing(self, session, iddeploy, offsettime=60):
 
         dateend = datetime.now() + timedelta(minutes=offsettime)
         sql =""" UPDATE `xmppmaster`.`syncthing_deploy_group` SET `dateend`=%s
-                WHERE `id`= "%s";"""%(datenow, iddeploy)
+                WHERE `id`= "%s";"""%(dateend, iddeploy)
 
         session.execute(sql)
         session.commit()
@@ -2508,18 +2347,6 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getstatdeployfromcommandidstartdate(self, session, command_id, datestart):
-
-        """
-        This function is used to return the number of machines of various status
-            ( DEPLOYMENT SUCCESS, DEPLOYMENT ERROR, DEPLOYMENT START, etc.).
-        Args:
-            session: The SQL Alchemy session for the deployment
-            command_id: The id of the deployment
-            datestart: The start date of the deployment ( ex: 2020-01-29 18:54:08 )
-
-        Returns:
-            A array with all the status and the number of machines per status.
-        """
         try:
             machinedeploy =session.query(Deploy.state,
                                          func.count(Deploy.state)).\
@@ -2534,35 +2361,20 @@ class XmppMasterDatabase(DatabaseHelper):
                     'machineerrordeploy' : 0,
                     'machineprocessdeploy' : 0,
                     'machineabortdeploy' : 0,
-                    'machinewol1deploy' : 0,
-                    'machinewol2deploy' : 0,
-                    'machinewol3deploy' : 0,
-                    'waitingmachinesdeploy' : 0,
-                    'machineerrortimeout' : 0,
                     'autrestatus' : 0}
 
             liststatus = { x[0] : x[1] for x in machinedeploy}
             totalmachinedeploy = 0
-            for status in liststatus:
-                ret['totalmachinedeploy'] += liststatus[status]
-                if status == 'DEPLOYMENT SUCCESS':
-                    ret['machinesuccessdeploy'] = liststatus[status]
-                elif status == 'DEPLOYMENT ERROR':
-                    ret['machineerrordeploy'] = liststatus[status]
-                elif status == 'DEPLOYMENT START':
-                    ret['machineprocessdeploy'] = liststatus[status]
-                elif status == 'DEPLOYMENT ABORT':
-                    ret['machineabortdeploy'] = liststatus[status]
-                elif status == 'WOL 1':
-                    ret['machinewol1deploy'] = liststatus[status]
-                elif status == 'WOL 2':
-                    ret['machinewol2deploy'] = liststatus[status]
-                elif status == 'WOL 3':
-                    ret['machinewol3deploy'] = liststatus[status]
-                elif status == 'WAITING MACHINE ONLINE':
-                    ret['waitingmachinesdeploy'] = liststatus[status]
-                elif status == 'DEPLOYMENT ERROR ON TIMEOUT':
-                    ret['machineerrortimeout'] = liststatus[status]
+            for t in liststatus:
+                ret['totalmachinedeploy'] += liststatus[t]
+                if t == 'DEPLOYMENT SUCCESS':
+                    ret['machinesuccessdeploy'] = liststatus[t]
+                elif t == 'DEPLOYMENT ERROR':
+                    ret['machineerrordeploy'] = liststatus[t]
+                elif t == 'DEPLOYMENT START':
+                    ret['machineprocessdeploy'] = liststatus[t]
+                elif t == 'DEPLOYMENT ABORT':
+                    ret['machineabortdeploy'] = liststatus[t]
                 else:
                     ret['autrestatus'] = liststatus[t]
             return ret
@@ -3221,7 +3033,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
+            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
@@ -3420,7 +3232,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
+            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
@@ -3456,7 +3268,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
             ret['tabdeploy']['start'].append(linedeploy.start)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
+            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
         return ret
 
     @DatabaseHelper._sessionm
@@ -3901,7 +3713,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def algorulebynetmaskaddress(self, session, netmaskaddress, classutilMachine = "both", rule = 10, enabled=1):
         """
-            Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 9 by network address
+            Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 10 by network mask
             Field "netmaskaddress" is used to define the net mask address for association
             Field "relayserver_id" is used to define the Relayserver to be assigned to the machines matching that rule
             enabled = 1 Only on active relayserver.
@@ -4500,7 +4312,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except IndexError:
-            logging.getLogger().warning("Unable to remove the machine from the xmppmaster database, skipping")
+            logging.getLogger().warning("Configuration agent machine uuidglpi [%s]. no uuid in base for configuration"%uuidinventory)
             return {}
         except Exception, e:
             logging.getLogger().error(str(e))
@@ -4528,6 +4340,54 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error("SetPresenceMachine : %s"%str(e))
             return False
+
+    @DatabaseHelper._sessionm
+    def updatedeployresultandstate(self, session, sessionid, state, result ):
+            jsonresult = json.loads(result)
+            jsonautre = copy.deepcopy(jsonresult)
+            del (jsonautre['descriptor'])
+            del (jsonautre['packagefile'])
+            #DEPLOYMENT START
+            try:
+                deploysession = session.query(Deploy).filter(Deploy.sessionid == sessionid).one()
+                if deploysession:
+                    if deploysession.result is None or \
+                        ("wol" in jsonresult and \
+                            jsonresult['wol']  == 1 ) or \
+                        ("advanced" in jsonresult and \
+                            'syncthing' in jsonresult['advanced'] and \
+                                jsonresult['advanced']['syncthing'] == 1):
+                        jsonbase = {
+                                    "infoslist": [jsonresult['descriptor']['info']],
+                                    "descriptorslist": [jsonresult['descriptor']['sequence']],
+                                    "otherinfos" : [jsonautre],
+                                    "title" : deploysession.title,
+                                    "session" : deploysession.sessionid,
+                                    "macadress" : deploysession.macadress,
+                                    "user" : deploysession.login
+                        }
+                    else:
+                        jsonbase = json.loads(deploysession.result)
+                        jsonbase['infoslist'].append(jsonresult['descriptor']['info'])
+                        jsonbase['descriptorslist'].append(jsonresult['descriptor']['sequence'])
+                        jsonbase['otherinfos'].append(jsonautre)
+                    deploysession.result = json.dumps(jsonbase, indent=3)
+                    if 'infoslist' in jsonbase and \
+                        'otherinfos' in jsonbase and \
+                        len(jsonbase['otherinfos']) > 0 and \
+                        'plan' in jsonbase['otherinfos'][0] and \
+                            len(jsonbase['infoslist']) != len(jsonbase['otherinfos'][0]['plan']) and \
+                            state == "DEPLOYMENT SUCCESS":
+                        state = "DEPLOYMENT PARTIAL SUCCESS"
+                    deploysession.state = state
+                session.commit()
+                session.flush()
+                session.close()
+                return 1
+            except Exception, e:
+                self.logger.error(str(e))
+                self.logger.error("\n%s"%(traceback.format_exc()))
+                return -1
 
     @DatabaseHelper._sessionm
     def substituteinfo(self, session, listconfsubstitute, arsname):
