@@ -2381,26 +2381,26 @@ class XmppMasterDatabase(DatabaseHelper):
 
             liststatus = { x[0] : x[1] for x in machinedeploy}
             totalmachinedeploy = 0
-            for t in liststatus:
-                ret['totalmachinedeploy'] += liststatus[t]
-                if t == 'DEPLOYMENT SUCCESS':
-                    ret['machinesuccessdeploy'] = liststatus[t]
-                elif t == 'DEPLOYMENT ERROR':
-                    ret['machineerrordeploy'] = liststatus[t]
-                elif t == 'DEPLOYMENT START':
-                    ret['machineprocessdeploy'] = liststatus[t]
-                elif t == 'DEPLOYMENT ABORT':
-                    ret['machineabortdeploy'] = liststatus[t]
-                elif t == 'WOL 1':
-                    ret['machinewol1deploy'] = liststatus[t]
-                elif t == 'WOL 2':
-                    ret['machinewol2deploy'] = liststatus[t]
-                elif t == 'WOL 3':
-                    ret['machinewol3deploy'] = liststatus[t]
-                elif t == 'WAITING MACHINE ONLINE':
-                    ret['waitingmachinesdeploy'] = liststatus[t]
-                elif t== 'DEPLOYMENT ERROR ON TIMEOUT':
-                    ret['machineerrortimeout'] = liststatus[t]
+            for status in liststatus:
+                ret['totalmachinedeploy'] += liststatus[status]
+                if status == 'DEPLOYMENT SUCCESS':
+                    ret['machinesuccessdeploy'] = liststatus[status]
+                elif status == 'DEPLOYMENT ERROR':
+                    ret['machineerrordeploy'] = liststatus[status]
+                elif status == 'DEPLOYMENT START':
+                    ret['machineprocessdeploy'] = liststatus[status]
+                elif status == 'DEPLOYMENT ABORT':
+                    ret['machineabortdeploy'] = liststatus[status]
+                elif status == 'WOL 1':
+                    ret['machinewol1deploy'] = liststatus[status]
+                elif status == 'WOL 2':
+                    ret['machinewol2deploy'] = liststatus[status]
+                elif status == 'WOL 3':
+                    ret['machinewol3deploy'] = liststatus[status]
+                elif status == 'WAITING MACHINE ONLINE':
+                    ret['waitingmachinesdeploy'] = liststatus[status]
+                elif status == 'DEPLOYMENT ERROR ON TIMEOUT':
+                    ret['machineerrortimeout'] = liststatus[status]
                 else:
                     ret['autrestatus'] = liststatus[t]
             return ret
