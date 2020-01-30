@@ -338,27 +338,27 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.xmpppresence = {}
 
         self.CYCLESCHEDULER = 4
-
-        # Interval between two scans for checking for new deployments (in seconds) 30 by default
-        self.schedule('deployment scan interval', conf.deployment_scan_interval, self.scheduledeploy, repeat=True)
-
-        # Interval between two wake on lan for a deployment (in seconds) 60 by default
-        self.schedule('wol interval', conf.wol_interval, self.scheduledeployrecoveryjob, repeat=True)
-
-        # Extra time given to receive the deployment results (in seconds).300 by default
-        # After this time, the deployments will be considered as timeout
-        self.schedule('deployment end timeout', conf.deployment_end_timeout, self.garbagedeploy, repeat=True)
-
+        if self.config.Booltaskdeploy:
+            self.config.Boolsessionwork = True
+            #if agent substitute pour deploy deconecter cette fonction.deploy 
+            # Interval between two scans for checking for new deployments (in seconds) 30 by default
+            self.schedule('deployment scan interval', conf.deployment_scan_interval, self.scheduledeploy, repeat=True)
+            # Interval between two wake on lan for a deployment (in seconds) 60 by default
+            ###self.schedule('wol interval', conf.wol_interval, self.scheduledeployrecoveryjob, repeat=True)
+            self.schedule('wol interval', 15, self.scheduledeployrecoveryjob, repeat=True)
+            # Extra time given to receive the deployment results (in seconds).300 by default
+            # After this time, the deployments will be considered as timeout
+            self.schedule('deployment end timeout', conf.deployment_end_timeout, self.garbagedeploy, repeat=True)
+        if self.config.Boolsessionwork:
+            # Interval between two sessions checks for removing dead sessions (in seconds) 15 by default
+            self.schedule('session check', conf.session_check_interval, self.handlemanagesession, repeat=True)
+        
         self.schedule('schedulerfunction', 60, self.schedulerfunction, repeat=True)
-
         # Enable memory leaks checks and define interval (in seconds)
         self.timecheck = 15
         if conf.memory_leak_check:
             self.timecheck = conf.memory_leak_interval
             self.schedule('event leakmemory',self.timecheck, self.__leakmemory, repeat=True)
-
-        # Interval between two sessions checks for removing dead sessions (in seconds) 15 by default
-        self.schedule('session check', conf.session_check_interval, self.handlemanagesession, repeat=True)
 
         # Interval for reloading plugins base (in seconds) 900 by default
         self.schedule('reload plugins base', conf.reload_plugins_base_interval, self.loadbasepluginagnet, repeat=True)
@@ -800,7 +800,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     wol=deployobject['wol'])
             except Exception:
                 listobjsupp.append(deployuuid)
-            listmacadress = deployobject['mac'].split("||")
             if deployobject['wol'] == 1:
                 listmacadress = [x.strip() for x in deployobject['mac'].split("||")]
                 for macadressdata in listmacadress:
@@ -809,6 +808,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if len(self.wolglobal_set):
             self._sendwolgroup(self.wolglobal_set)
         self.wolglobal_set.clear()
+        for objsupp in listobjsupp:
+            try:
+                del self.machineDeploy[objsupp]
+            except Exception:
+                pass
 
         for objsupp in listobjsupp:
             try:
