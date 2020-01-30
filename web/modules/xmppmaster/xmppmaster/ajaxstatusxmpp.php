@@ -122,12 +122,12 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $machine_success_from_deploy   = $result['machinesuccessdeploy'];
         $machine_process_from_deploy   = $result['machineprocessdeploy'];
         $machine_abort_from_deploy     = $result['machineabortdeploy'];
-        // from msc
-        $machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy($arraydeploy['tabdeploy']['command'][$index], $start_date);
+        $machine_list_status = xmlrpc_getstatdeployfromcommandidstartdate($arraydeploy['tabdeploy']['command'][$index], $tmpdate);
+        $machine_timeout_from_deploy   = $machine_list_status['machineerrortimeout'];
 
         $total_machine_from_msc  =  $statarray['nbmachine'][$arraydeploy['tabdeploy']['command'][$index]];
 
-        $wol = ( $total_machine_from_msc - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
+        $wol = ( $machine_list_status['machinewol1deploy1'] + $machine_list_status['machinewol2deploy'] + $machine_list_status['machinewol3deploy'] );
 
         $processmachr[] = $machine_process_from_deploy;
         $tolmach[] = $total_machine_from_msc;
