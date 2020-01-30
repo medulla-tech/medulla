@@ -2346,6 +2346,18 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getstatdeployfromcommandidstartdate(self, session, command_id, datestart):
+
+        """
+        This function is used to return the number of machines of various status
+            ( DEPLOYMENT SUCCESS, DEPLOYMENT ERROR, DEPLOYMENT START, etc.).
+        Args:
+            session: The SQL Alchemy session for the deployment
+            command_id: The id of the deployment
+            datestart: The start date of the deployment ( ex: 2020-01-29 18:54:08 )
+
+        Returns:
+            A array with all the status and the number of machines per status.
+        """
         try:
             machinedeploy =session.query(Deploy.state,
                                          func.count(Deploy.state)).\
