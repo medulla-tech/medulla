@@ -303,11 +303,11 @@ progress {
   width: 100px;
   height: 9px;
   margin:-5px;
-  background-color: #ffffff;   /* Couleur de fond */
-  border-style: solid;   /* Style de la bordure  */
-  border-width: 1px;   /* Epaisseur de la bordure  */
-  border-color: #dddddd;   /* Couleur de la bordure  */
-  padding: 3px 3px 3px 3px;   /* Espace entre les bords et le contenu : haut droite bas gauche  */
+  background-color: #ffffff; 
+  border-style: solid;
+  border-width: 1px;  
+  border-color: #dddddd; 
+  padding: 3px 3px 3px 3px;
 }
 
 progress::-webkit-progress-bar {
