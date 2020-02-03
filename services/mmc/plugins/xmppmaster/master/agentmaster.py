@@ -52,6 +52,8 @@ from mmc.plugins.base.computers import ComputerManager
 from lib.manage_scheduler import manage_scheduler
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.pkgs import PkgsDatabase
+from mmc.plugins.msc.database import MscDatabase
+from mmc.plugins.glpi.database import Glpi
 import traceback
 import pprint
 import pluginsmaster
@@ -71,7 +73,7 @@ from sleekxmpp.stanza.iq import Iq
 
 from lib.manage_xmppbrowsing import xmppbrowsing
 
-from mmc.plugins.msc.database import MscDatabase
+
 from mmc.plugins.msc import convergence_reschedule
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster"))
@@ -139,19 +141,16 @@ def callremotefile(jidmachine, currentdir="", timeout=40):
         strctfilestr=zlib.decompress(base64.b64decode(strctfilestrcompress))
         return strctfilestr
     except Exception as e:
-        print str(e)
-        traceback.print_exc(file=sys.stdout)
+        logger.error("%s" % (traceback.format_exc()))
     return strctfilestrcompress
 
 def calllistremotefileedit(jidmachine):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action": "listremotefileedit",
                                                  "data": ""}, 10)
 
-
 def callremotefileeditaction(jidmachine, data, timeout=10):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotefileeditaction",
                                                  "data": data}, timeout)
-
 
 def callremotecommandshell(jidmachine, command="", timeout=20):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotecommandshell",
@@ -164,7 +163,6 @@ def callremoteXmppMonitoring(jidmachine, suject,  timeout=15):
                                                  "data": suject,
                                                  "timeout": timeout}, timeout)
 
-
 def calllocalfile(currentdir=""):
     return ObjectXmpp().xmppbrowsingpath.listfileindir(currentdir)
 
@@ -172,7 +170,6 @@ def calllocalfile(currentdir=""):
 def callInstallKey(jidAM, jidARS):
     return ObjectXmpp().callInstallKey(jidAM, jidARS)
 # #################################################################
-
 
 class XmppCommandDiffered:
     """
@@ -441,13 +438,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                         return data
                                     except Exception as e:
                                         logging.error("iqsendpulse : %s" % str(e))
-                                        traceback.print_exc(file=sys.stdout)
+                                        logger.error("%s" % (traceback.format_exc()))
                                         return '{"err" : "%s"}' % str(e).replace('"', "'")
                                     return "{}"
             except IqError as e:
                 err_resp = e.iq
                 logging.error("iqsendpulse : Iq error %s" % str(err_resp).replace('"', "'"))
-                traceback.print_exc(file=sys.stdout)
+                logger.error("%s" % (traceback.format_exc()))
                 return '{"err" : "%s"}' % str(err_resp).replace('"', "'")
 
             except IqTimeout:
@@ -455,7 +452,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 return '{"err" : "Timeout Error"}'
         except Exception as e:
             logging.error("iqsendpulse : error %s" % str(e).replace('"', "'"))
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
             return '{"err" : "%s"}' % str(e).replace('"', "'")
         return "{}"
 
@@ -537,6 +534,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def scheduledeployrecoveryjob(self):
         wol_set = set()
         try:
+            # machine ecart temps de deploiement terminer met status a DEPLOYMENT ERROR ON TIMEOUT
             result = XmppMasterDatabase().Timeouterrordeploy()
             for machine in result:
                 hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
@@ -553,6 +551,21 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             date=None,
                             fromuser=machine['login'],
                             touser="")
+            #########################################################################
+            machines_scheduled_deploy = XmppMasterDatabase().search_machines_from_state("DEPLOY TASK SCHEDULED")
+
+            for machine in machines_scheduled_deploy:
+                ##datetime_startcmd = datetime.strptime(machine['startcmd'], '%Y-%m-%d %H:%M:%S')
+                ##datetime_endcmd = datetime.strptime(machine['startcmd'], '%Y-%m-%d %H:%M:%S')
+                UUID = machine['inventoryuuid']
+
+                resultpresence = XmppMasterDatabase().getPresenceExistuuids(UUID)
+                if resultpresence[UUID][0] == 1:
+                    XmppMasterDatabase().update_state_deploy(machine['id'], "WAITING MACHINE ONLINE")
+                else:
+                    XmppMasterDatabase().update_state_deploy(machine['id'], "WOL 3")
+                
+            
             ###########################################################################
             machines_wol3 = XmppMasterDatabase().search_machines_from_state("WOL 3")
             for machine in machines_wol3:
@@ -581,6 +594,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 XmppMasterDatabase().update_state_deploy(machine['id'], "WOL 3")
                 hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
                 self._addsetwol(wol_set, machine['macadress'])
+                #self.sendwol(machine['macadress'], hostnamemachine)
                 self.xmpplog("<span style='color : orange;font-weight: bold;'>THIRD WOL</span>:" \
                                 " wakeonlan machine  [Machine : %s]"%hostnamemachine,
                         type='deploy',
@@ -604,6 +618,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 XmppMasterDatabase().update_state_deploy(machine['id'], "WOL 2")
                 hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
                 self._addsetwol(wol_set, machine['macadress'])
+                #self.sendwol(machine['macadress'], hostnamemachine)
                 self.xmpplog("<span style='color : orange;font-weight: bold;'>SECOND WOL</span>:" \
                                 " wakeonlan machine  [Machine : %s]"%hostnamemachine,
                         type='deploy',
@@ -622,24 +637,31 @@ class MUCBot(sleekxmpp.ClientXMPP):
             machines_waitting_online = XmppMasterDatabase().search_machines_from_state("WAITING MACHINE ONLINE")
             #### on verify si il y a des machines online dans cet ensemble
             for machine in machines_waitting_online:
+                #machine WAITING MACHINE ONLINE presente ?
+                data = json.loads(machine['result'])
                 if XmppMasterDatabase().getPresenceuuid(machine['inventoryuuid']):
                     hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
-                    self.xmpplog("<span style='color : BLUE;font-weight: bold;'>MACHINE ONLINE</span>:" \
-                                " [Machine : %s]"%hostnamemachine,
-                            type='deploy',
-                            sessionname=machine['sessionid'],
-                            priority=-1,
-                            action="xmpplog",
-                            who="",
-                            how="",
-                            why=self.boundjid.bare,
-                            module="Deployment | Start | Creation",
-                            date=None,
-                            fromuser=machine['login'],
-                            touser="")
+                    if data['wol'] == 2:
+                        msg="<span style='color : BLUE;font-weight: bold;'>SLOT DEPLOY SCHEDULED TASK AND MACHINE ONLINE</span>:" \
+                                " [Machine : %s]"%hostnamemachine
+                    else:
+                        msg="<span style='color : BLUE;font-weight: bold;'>MACHINE ONLINE</span>:" \
+                                    " [Machine : %s]"%hostnamemachine
+                    self.xmpplog(msg,
+                                type='deploy',
+                                sessionname=machine['sessionid'],
+                                priority=-1,
+                                action="xmpplog",
+                                who="",
+                                how="",
+                                why=self.boundjid.bare,
+                                module="Deployment | Start | Creation",
+                                date=None,
+                                fromuser=machine['login'],
+                                touser="")
                     XmppMasterDatabase().update_state_deploy(int(machine['id']), "DEPLOYMENT START")
                     #"relance deployement on machine online"
-                    data = json.loads(machine['result'])
+                    
                     # il faut verifier qu'il y ai 1 groupe deja en syncthing.alors seulement on peut decoder de l'incorporer
                     if data['advanced']['grp'] is not None and \
                         'syncthing' in data['advanced'] and \
@@ -664,7 +686,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         XmppMasterDatabase().updatedeploytosyncthing(machine['sessionid'])
                         # call plugin master syncthing
                         ###initialisation deployement syncthing
-                        self.callpluginmasterfrommmc("deploysyncthing",
+                        self.callpluginsubstitute("deploysyncthing",
                                                     data,
                                                     sessionid = machine['sessionid'])
                         self.syncthingdeploy()
@@ -758,6 +780,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     XmppMasterDatabase().refresh_syncthing_deploy_clean(deploydata['id'])
         except Exception:
             pass
+        listobjnoexist = []
         listobjsupp = []
         #search deploy to rumming
         resultdeploymachine = MscDatabase().deployxmpp()
@@ -765,18 +788,61 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for deployobject in resultdeploymachine:
             # creation deployment
             UUID = deployobject['UUID']
-            if XmppMasterDatabase().getPresenceuuid(UUID):
-                # If a machine is present, add deployment in deploy list to manage.
-                deployobject['wol'] = 0
+            resultpresence = XmppMasterDatabase().getPresenceExistuuids(UUID)
+            if resultpresence[UUID][1] == 0:
+                # machine dans GLPI mais pas enregistré sur machine xmpp.
+                listobjnoexist.append(deployobject)
+                machine = Glpi().getMachineByUUID(UUID)
+                #incrition dans deploiement cette machine sans agent
+                sessiondeployementless = name_random(5, "missingagent")
+                XmppMasterDatabase().adddeploy(deployobject['commandid'],
+                                                machine.name,
+                                                machine.name,
+                                                machine.name,
+                                                UUID,
+                                                machine.contact,
+                                                "MISSING AGENT",
+                                                sessiondeployementless,
+                                                user=machine.contact,
+                                                login=machine.contact,
+                                                title=deployobject['title'],
+                                                group_uuid=deployobject['GUID'],
+                                                startcmd=deployobject['start_date'],
+                                                endcmd=deployobject['end_date'],
+                                                macadress=deployobject['mac'],
+                                                result = "",
+                                                syncthing = 0)
+                self.xmpplog("<span style='color : red;font-weight: bold;'>MACHINE %s AGENT MISSING. " \
+                            "IMPOSSIBLE DEPLOYEMENT : GLPI ID is %s</span>"%(machine.name ,UUID),
+                            type='deploy',
+                            sessionname=sessiondeployementless,
+                            priority=-1,
+                            action="xmpplog",
+                            who="",
+                            how="",
+                            why=self.boundjid.bare,
+                            module="Deployment | Start | Creation",
+                            date=None,
+                            fromuser=machine.contact,
+                            touser="")
+                continue
+
+            if datetime.now() < deployobject['start_date']:
+                deployobject['wol'] = 2 #
             else:
-                deployobject['wol'] = 1
+                if resultpresence[UUID][0] == 1:
+                    # If a machine is present, add deployment in deploy list to manage.
+                    deployobject['wol'] = 0
+                else:
+                    deployobject['wol'] = 1
             try:
                 self.machineDeploy[UUID].append(deployobject)
             except:
                 #creation list deployement
                 self.machineDeploy[UUID] = []
                 self.machineDeploy[UUID].append(deployobject)
-
+                
+                
         listobjsupp = []
         nbdeploy=len(self.machineDeploy)
         for deployuuid in self.machineDeploy:
@@ -808,12 +874,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if len(self.wolglobal_set):
             self._sendwolgroup(self.wolglobal_set)
         self.wolglobal_set.clear()
-        for objsupp in listobjsupp:
-            try:
-                del self.machineDeploy[objsupp]
-            except Exception:
-                pass
-
         for objsupp in listobjsupp:
             try:
                 del self.machineDeploy[objsupp]
@@ -857,10 +917,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 call_plugin(plugin, self)
             except TypeError:
                 logging.error("TypeError: executing plugin %s %s" % (plugin, sys.exc_info()[0]))
-                traceback.print_exc(file=sys.stdout)
+                logger.error("%s" % (traceback.format_exc()))
             except Exception as e:
                 logging.error("Executing plugin %s %s" % (plugin, str(e)))
-                traceback.print_exc(file=sys.stdout)
+                logger.error("%s" % (traceback.format_exc()))
 
         # reinitialize of relay server charge
         msg_ars_init_charge = {'action': "cluster",
@@ -1118,7 +1178,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.error("deploy %s error on machine %s" % (name, uuidmachine))
                 return False
         except:
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
             logger.error("deploy %s error on machine %s" % (name, uuidmachine))
             return False
 
@@ -1213,8 +1273,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # res = XmppMasterDatabase().getnumcluster_for_ars(jidrelay)
 
         ###### ici on peut savoir si c'est 1 groupe et si syncthing est demande
-
-        if wol == 1:
+        if wol == 2:
+            state="DEPLOY TASK SCHEDULED"
+            data['wol'] = 2
+            data['mac'] = macadress #use macadress for WOL
+            sessionid = self.createsessionfordeploydiffered(data)
+            result = json.dumps(data, indent = 4)
+            msglog=["<span style='color : orange; font-weight: bold;'>Machine %s WAITING SCHEDULED DEPLOY</span>" % jidmachine,
+                "<span style='color : orange;font-weight: bold;'>WAITING</span> Start deploy Task on machine %s" % jidmachine]
+        elif wol == 1:
             state = "WOL 1"
             data['wol'] = 1
             data['mac'] = macadress #use macadress for WOL
@@ -1254,7 +1321,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
                 data['advanced']['syncthing'] = 0
                 result = None
-
                 sessionid = self.send_session_command(jidrelay,
                                                     "applicationdeploymentjson",
                                                     data,
@@ -1274,7 +1340,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         date=None,
                         fromuser=data['login'],
                         touser="")
-        if wol == 1:
+        if wol >= 1:
             avacedpara = 0
         else:
             avacedpara = data['advanced']['syncthing']
@@ -1306,7 +1372,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                       endcmd = end_date)
         self.syncthingdeploy()
         return sessionid
-
     def pluginaction(self, rep):
         if 'sessionid' in rep.keys():
             sessiondata = self.session.sessionfromsessiondata(rep['sessionid'])
@@ -1526,7 +1591,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             fileplugin.close()
         except:
             logger.error("File read error")
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
             return
         fichierdata['action'] = 'installplugin'
         fichierdata['data'] = {}
@@ -1541,7 +1606,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                               mbody=json.dumps(fichierdata),
                               mtype='chat')
         except:
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
 
     def deployPluginscheduled(self, msg, plugin):
         data = ''
@@ -1558,7 +1623,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             fileplugin.close()
         except:
             logger.error("File read error")
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
             return
         fichierdata['action'] = 'installpluginscheduled'
         fichierdata['data'] = {}
@@ -1622,7 +1687,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                               mbody=json.dumps(body),
                               mtype='chat')
         except:
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
 
     def callinventory(self, to):
         try:
@@ -1633,7 +1698,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                               mbody=json.dumps(body),
                               mtype='chat')
         except:
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
 
     def callInstallConfGuacamole(self, torelayserver, data):
         try:
@@ -1644,7 +1709,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                               mbody=json.dumps(body),
                               mtype='chat')
         except:
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
 
     def sendErrorConnectionConf(self, msg):
         reponse = {
@@ -1679,7 +1744,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return True
         except Exception as e:
             logger.debug("ERROR MessagesAgentFromChatroomlog %s" % (str(e)))
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
             return False
 
     def Showlogmessage(self, msg):
@@ -1821,7 +1886,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 continue
                 except KeyError:
                     logger.error("Error algo rule 3")
-                    traceback.print_exc(file=sys.stdout)
+                    logger.error("%s" % (traceback.format_exc()))
                     continue
 
             # Subnet Rule : 4
@@ -2560,7 +2625,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         except Exception as e:
             logging.getLogger().error("machine info %s" % (str(e)))
             logger.error("%s"%(traceback.format_exc()))
-            traceback.print_exc(file=sys.stdout)
         return False
 
     def timeout(self, data):
@@ -2629,7 +2693,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     return
         except:
             logger.error("Stanza message bad format %s"%msg)
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
             return
         if not 'body' in msgkey:
             logger.error("Stanza message body missing %s"%msg)
@@ -2711,15 +2775,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 except TypeError:
                     logging.error("TypeError: executing plugin %s %s" %
                                   (dataobj['action'], sys.exc_info()[0]))
-                    traceback.print_exc(file=sys.stdout)
+                    logger.error("%s" % (traceback.format_exc()))
 
                 except Exception as e:
                     logging.error("Executing plugin (%s) %s %s" % (msg['from'], dataobj['action'], str(e)))
-                    traceback.print_exc(file=sys.stdout)
+                    logger.error("%s" % (traceback.format_exc()))
 
         except Exception as e:
             logging.error("Message structure %s   %s " % (msg, str(e)))
-            traceback.print_exc(file=sys.stdout)
+            logger.error("%s" % (traceback.format_exc()))
 
     def muc_presenceMaster(self, presence):
         if presence['muc']['nick'] != self.config.NickName:
