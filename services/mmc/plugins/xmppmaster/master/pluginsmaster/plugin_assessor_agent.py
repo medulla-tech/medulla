@@ -350,6 +350,22 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                     'syncthing' : objectxmpp.config.announce_server,
                     'ret': 0
                     }
+        if len(listars) == 0:
+            logger.warning("No configuration sent to machine "\
+                "agent %s. ARS %s is found but it is stopped." % (data['information']['info']['hostname'], result[2]))
+            logger.warning("ACTION: Re-start the ARS on %s, and wait for the agent to run its reconfiguration."%(result[2]))
+            objectxmpp.xmpplog("No configuration sent to machine agent %s. ARS %s is found but it is stopped." % (result[2],
+                                                                                  data['information']['info']['hostname'] ),
+                            type = 'conf',
+                            sessionname =  sessionid,
+                            priority = -1,
+                            action = "xmpplog",
+                            who = data['information']['info']['hostname'],
+                            module = "Configuration | Notify | connectionagent",
+                            date = None,
+                            fromuser = objectxmpp.boundjid.bare)
+            sendErrorConnectionConf(objectxmpp, sessionid, msg)
+            return
         if "substitute" in data and \
             "conflist" in data["substitute"] and \
                 len(data["substitute"]["conflist"]) > 0:
