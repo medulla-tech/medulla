@@ -46,7 +46,9 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Syncthing_ars_cluster,\
     Syncthing_machine,\
     Syncthing_deploy_group,\
-    Substituteconf
+    Substituteconf,\
+    Agentsubcription,\
+    Subcription
 # Imported last
 import logging
 import json
@@ -128,6 +130,165 @@ class XmppMasterDatabase(DatabaseHelper):
     # =====================================================================
     # xmppmaster FUNCTIONS deploy syncthing
     # =====================================================================
+    
+    # xmppmaster FUNCTIONS FOR SUBCRIPTION
+    
+    @DatabaseHelper._sessionm
+    def setagentsubcription( self,
+                            session,
+                            name):
+        """
+            this functions addition a log line in table log xmpp.
+        """
+        try:
+            new_agentsubcription = Agentsubcription()
+            new_agentsubcription.name = name
+            session.add(new_agentsubcription)
+            session.commit()
+            session.flush()
+            return new_agentsubcription.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return None
+
+
+    @DatabaseHelper._sessionm
+    def deAgentsubcription( self,
+                            session,
+                            name):
+        """
+            del organization name
+        """
+        session.query(Agentsubcription).filter(Agentsubcription.name == name).delete()
+        session.commit()
+        session.flush()
+
+    @DatabaseHelper._sessionm
+    def setupagentsubcription( self,
+                            session,
+                            name):
+        """
+            this functions addition ou update table in table log xmpp.
+        #"""
+        try:
+            q = session.query(Agentsubcription)
+            q = q.filter(Agentsubcription.name==name)
+            record = q.one_or_none()
+            if record:
+                record.name = name
+                session.commit()
+                session.flush()
+                return record.id
+            else:
+                return self.setagentsubcription(name)
+        except Exception, e:
+            logging.getLogger().error(str(e))
+
+    @DatabaseHelper._sessionm
+    def setSubcription( self,
+                        session,
+                        macadress,
+                        idagentsubcription):
+        """
+            this functions addition a log line in table log xmpp.
+        """
+        try:
+            new_subcription = Subcription()
+            new_subcription.macadress = macadress
+            new_subcription.idagentsubcription = idagentsubcription
+            session.add(new_subcription)
+            session.commit()
+            session.flush()
+            return new_subcription.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return None
+
+    @DatabaseHelper._sessionm
+    def setupSubcription( self,
+                          session,
+                          macadress,
+                          idagentsubcription):
+        """
+            this functions addition a log line in table log xmpp.
+        """
+        try:
+            q = session.query(Subcription)
+            q = q.filter(Subcription.macadress==macadress)
+            record = q.one_or_none()
+            if record:
+                record.macadress = macadress
+                record.idagentsubcription = idagentsubcription
+                session.commit()
+                session.flush()
+                return record.id
+            else:
+                return self.setSubcription(macadress, idagentsubcription)
+        except Exception, e:
+            logging.getLogger().error(str(e))
+    
+    @DatabaseHelper._sessionm
+    def setuplistSubcription( self,
+                              session,
+                              listmacadress,
+                              agentsubscription):
+        try:
+            id = self.setupagentsubcription( agentsubscription)
+            if id is not None:
+                for macadress in listmacadress:
+                    self.setupSubcription(macadress, id)
+                return id
+            else:
+                logger.error("setup or create record for agent subscription%s"%agentsubscription)
+                return Nnone
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return None
+    
+    
+    @DatabaseHelper._sessionm
+    def delSubcriptionmacadress( self,
+                                session,
+                                macadress):
+        """
+            this functions addition a log line in table log xmpp.
+        """
+        try:
+            q = session.query(Subcription)
+            q = q.filter(Subcription.macadress==macadress).delete()
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            self.logger.error("\n%s"%(traceback.format_exc()))
+
+    @DatabaseHelper._sessionm
+    def update_enable_for_agent_subcription(self,
+                                            session,
+                                            agentsubtitutename,
+                                            status = '0',
+                                            agenttype = 'machine'
+                                            ):
+        try:
+            sql="""
+            UPDATE `xmppmaster`.`machines`
+                    INNER JOIN
+                `xmppmaster`.`subcription` ON `xmppmaster`.`machines`.`macaddress` = `xmppmaster`.`subcription`.`macadress`
+                    INNER JOIN
+                `xmppmaster`.`agent_subcription` ON `xmppmaster`.`subcription`.`idagentsubcription` = `xmppmaster`.`agent_subcription`.`id` 
+            SET 
+                `xmppmaster`.`machines`.`enabled` = '%s'
+            WHERE
+                `xmppmaster`.`machines`.agenttype = '%s'
+                    AND `xmppmaster`.`agent_subcription`.`name` = '%s';"""%(status,
+                                                                            agenttype,
+                                                                            agentsubtitutename)
+            machines = session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            self.logger.error("\n%s"%(traceback.format_exc()))
+    
     @DatabaseHelper._sessionm
     def setSyncthing_deploy_group(self,
                                   session,

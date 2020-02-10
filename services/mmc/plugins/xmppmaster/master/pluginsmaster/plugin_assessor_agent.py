@@ -366,22 +366,34 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                             fromuser = objectxmpp.boundjid.bare)
             sendErrorConnectionConf(objectxmpp, sessionid, msg)
             return
+
+        agentsubscription = "master@pulse"
         if "substitute" in data and \
             "conflist" in data["substitute"] and \
                 len(data["substitute"]["conflist"]) > 0:
-            response["substitute"] =  XmppMasterDatabase().\
+            reponse["substitute"] =  XmppMasterDatabase().\
                                     substituteinfo(data["substitute"],
                                                    z1[0][2])
-            response["substitute"]["ars_chooose_for_substitute"] = z1[0][2]
-            logger.debug("substitute resend to agent : %s"%json.dumps(response["substitute"],indent=4))
+
+            reponse["substitute"]["ars_chooose_for_substitute"] = z1[0][2]
+
+            logger.debug("substitute resend to agent : %s"%json.dumps(reponse["substitute"],indent=4)) 
+
+            if "subscription" in reponse["substitute"]:
+                agentsubscription = reponse["substitute"]['subscription'][0]
+                listmacadress=[]
+                for mac in data['information']['listipinfo']:
+                    listmacadress.append(mac['macaddress'])
+                XmppMasterDatabase().setuplistSubcription(listmacadress, agentsubscription)
         objectxmpp.send_message(mto=msg['from'],
-                            mbody=json.dumps(response),
+                            mbody=json.dumps(reponse),
                             mtype='chat')
         #add account for delete
+        #list des comptes a suprimer
         objectxmpp.confaccount.append(msg['from'].user)
     except Exception:
         sendErrorConnectionConf(objectxmpp,sessionid,msg)
-        logger.error("Unable to configure the relay server : missing")
+        logger.error(""Unable to configure agent for one relay server"")
         logger.error("\n%s"%(traceback.format_exc()))
 
 def msg_log(msg_header, hostname, user, result):
