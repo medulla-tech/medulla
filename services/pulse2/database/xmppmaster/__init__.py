@@ -2073,8 +2073,6 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             start=int(startcmd)
             end=int(endcmd)
-            ##print start
-            #print end
             startcmd = datetime.fromtimestamp(start).strftime("%Y-%m-%d %H:%M:%S")
             endcmd = datetime.fromtimestamp(end).strftime("%Y-%m-%d %H:%M:%S")
         except Exception as e:
@@ -3991,6 +3989,24 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         for linemachine in machinespresente:
             result[linemachine.uuid_inventorymachine] = True
+        return result
+
+    @DatabaseHelper._sessionm
+    def getPresenceExistuuids(self, session, uuids):
+        if isinstance(uuids, basestring):
+            uuids=[uuids]
+        result = { }
+        for uuidmachine in uuids:
+            result[uuidmachine] = [0,0]
+        machinespresente = session.query(Machines.uuid_inventorymachine,Machines.enabled).\
+            filter(Machines.uuid_inventorymachine.in_(uuids)).all()
+        session.commit()
+        session.flush()
+        for linemachine in machinespresente:
+            out = 0;
+            if linemachine.enabled == True: 
+                out = 1
+            result[linemachine.uuid_inventorymachine] = [out, 1 ]
         return result
 
     #topology
