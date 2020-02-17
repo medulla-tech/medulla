@@ -451,24 +451,24 @@ class Substituteconf(Base, XmppMasterDBObj):
     relayserver_id   = Column(Integer, ForeignKey('relayserver.id'), nullable=False)
     relayserver = relationship(RelayServer)
 ################################
-class Agentsubcription(Base, XmppMasterDBObj):
+class Agentsubscription(Base, XmppMasterDBObj):
     # ====== Table name =========================
-    __tablename__ = 'agent_subcription'
+    __tablename__ = 'agent_subscription'
     # ====== Fields =============================
-    # Here we define columns for the table agent_subcription.
+    # Here we define columns for the table agent_subscription.
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False, unique=True)
 
-class Subcription(Base, XmppMasterDBObj):
+class Subscription(Base, XmppMasterDBObj):
     # ====== Table name =========================
-    __tablename__ = 'subcription'
+    __tablename__ = 'subscription'
     # ====== Fields =============================
-    # Here we define columns for the table subcription.
+    # Here we define columns for the table subscription.
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
     macadress = Column(String(15), nullable=False)
     # ====== ForeignKey =============================
-    idagentsubcription   = Column(Integer, ForeignKey('agent_subcription.id'), nullable=False)
-    agent_subcription = relationship(Agentsubcription)
+    idagentsubscription   = Column(Integer, ForeignKey('agent_subscription.id'), nullable=False)
+    agent_subscription = relationship(Agentsubscription)
 ################################

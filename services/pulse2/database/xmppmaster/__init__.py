@@ -47,8 +47,8 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Syncthing_machine,\
     Syncthing_deploy_group,\
     Substituteconf,\
-    Agentsubcription,\
-    Subcription
+    Agentsubscription,\
+    Subscription
 # Imported last
 import logging
 import json
@@ -130,49 +130,49 @@ class XmppMasterDatabase(DatabaseHelper):
     # =====================================================================
     # xmppmaster FUNCTIONS deploy syncthing
     # =====================================================================
-    
-    # xmppmaster FUNCTIONS FOR SUBCRIPTION
-    
+
+    # xmppmaster FUNCTIONS FOR SUBSCRIPTION
+
     @DatabaseHelper._sessionm
-    def setagentsubcription( self,
+    def setagentsubscription( self,
                             session,
                             name):
         """
             this functions addition a log line in table log xmpp.
         """
         try:
-            new_agentsubcription = Agentsubcription()
-            new_agentsubcription.name = name
-            session.add(new_agentsubcription)
+            new_agentsubscription = Agentsubscription()
+            new_agentsubscription.name = name
+            session.add(new_agentsubscription)
             session.commit()
             session.flush()
-            return new_agentsubcription.id
+            return new_agentsubscription.id
         except Exception, e:
             logging.getLogger().error(str(e))
             return None
 
 
     @DatabaseHelper._sessionm
-    def deAgentsubcription( self,
+    def deAgentsubscription( self,
                             session,
                             name):
         """
             del organization name
         """
-        session.query(Agentsubcription).filter(Agentsubcription.name == name).delete()
+        session.query(Agentsubscription).filter(Agentsubscription.name == name).delete()
         session.commit()
         session.flush()
 
     @DatabaseHelper._sessionm
-    def setupagentsubcription( self,
+    def setupagentsubscription( self,
                             session,
                             name):
         """
             this functions addition ou update table in table log xmpp.
         #"""
         try:
-            q = session.query(Agentsubcription)
-            q = q.filter(Agentsubcription.name==name)
+            q = session.query(Agentsubscription)
+            q = q.filter(Agentsubscription.name==name)
             record = q.one_or_none()
             if record:
                 record.name = name
@@ -180,63 +180,63 @@ class XmppMasterDatabase(DatabaseHelper):
                 session.flush()
                 return record.id
             else:
-                return self.setagentsubcription(name)
+                return self.setagentsubscription(name)
         except Exception, e:
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def setSubcription( self,
+    def setSubscription( self,
                         session,
                         macadress,
-                        idagentsubcription):
+                        idagentsubscription):
         """
             this functions addition a log line in table log xmpp.
         """
         try:
-            new_subcription = Subcription()
-            new_subcription.macadress = macadress
-            new_subcription.idagentsubcription = idagentsubcription
-            session.add(new_subcription)
+            new_subscription = Subscription()
+            new_subscription.macadress = macadress
+            new_subscription.idagentsubscription = idagentsubscription
+            session.add(new_subscription)
             session.commit()
             session.flush()
-            return new_subcription.id
+            return new_subscription.id
         except Exception, e:
             logging.getLogger().error(str(e))
             return None
 
     @DatabaseHelper._sessionm
-    def setupSubcription( self,
+    def setupSubscription( self,
                           session,
                           macadress,
-                          idagentsubcription):
+                          idagentsubscription):
         """
             this functions addition a log line in table log xmpp.
         """
         try:
-            q = session.query(Subcription)
-            q = q.filter(Subcription.macadress==macadress)
+            q = session.query(Subscription)
+            q = q.filter(Subscription.macadress==macadress)
             record = q.one_or_none()
             if record:
                 record.macadress = macadress
-                record.idagentsubcription = idagentsubcription
+                record.idagentsubscription = idagentsubscription
                 session.commit()
                 session.flush()
                 return record.id
             else:
-                return self.setSubcription(macadress, idagentsubcription)
+                return self.setSubscription(macadress, idagentsubscription)
         except Exception, e:
             logging.getLogger().error(str(e))
-    
+
     @DatabaseHelper._sessionm
-    def setuplistSubcription( self,
+    def setuplistSubscription( self,
                               session,
                               listmacadress,
                               agentsubscription):
         try:
-            id = self.setupagentsubcription( agentsubscription)
+            id = self.setupagentsubscription( agentsubscription)
             if id is not None:
                 for macadress in listmacadress:
-                    self.setupSubcription(macadress, id)
+                    self.setupSubscription(macadress, id)
                 return id
             else:
                 logger.error("setup or create record for agent subscription%s"%agentsubscription)
@@ -244,18 +244,18 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
             return None
-    
-    
+
+
     @DatabaseHelper._sessionm
-    def delSubcriptionmacadress( self,
+    def delSubscriptionmacadress( self,
                                 session,
                                 macadress):
         """
             this functions addition a log line in table log xmpp.
         """
         try:
-            q = session.query(Subcription)
-            q = q.filter(Subcription.macadress==macadress).delete()
+            q = session.query(Subscription)
+            q = q.filter(Subscription.macadress==macadress).delete()
             session.commit()
             session.flush()
         except Exception, e:
@@ -263,7 +263,7 @@ class XmppMasterDatabase(DatabaseHelper):
             self.logger.error("\n%s"%(traceback.format_exc()))
 
     @DatabaseHelper._sessionm
-    def update_enable_for_agent_subcription(self,
+    def update_enable_for_agent_subscription(self,
                                             session,
                                             agentsubtitutename,
                                             status = '0',
@@ -273,14 +273,14 @@ class XmppMasterDatabase(DatabaseHelper):
             sql="""
             UPDATE `xmppmaster`.`machines`
                     INNER JOIN
-                `xmppmaster`.`subcription` ON `xmppmaster`.`machines`.`macaddress` = `xmppmaster`.`subcription`.`macadress`
+                `xmppmaster`.`subscription` ON `xmppmaster`.`machines`.`macaddress` = `xmppmaster`.`subscription`.`macadress`
                     INNER JOIN
-                `xmppmaster`.`agent_subcription` ON `xmppmaster`.`subcription`.`idagentsubcription` = `xmppmaster`.`agent_subcription`.`id` 
-            SET 
+                `xmppmaster`.`agent_subscription` ON `xmppmaster`.`subscription`.`idagentsubscription` = `xmppmaster`.`agent_subscription`.`id`
+            SET
                 `xmppmaster`.`machines`.`enabled` = '%s'
             WHERE
                 `xmppmaster`.`machines`.agenttype = '%s'
-                    AND `xmppmaster`.`agent_subcription`.`name` = '%s';"""%(status,
+                    AND `xmppmaster`.`agent_subscription`.`name` = '%s';"""%(status,
                                                                             agenttype,
                                                                             agentsubtitutename)
             machines = session.execute(sql)

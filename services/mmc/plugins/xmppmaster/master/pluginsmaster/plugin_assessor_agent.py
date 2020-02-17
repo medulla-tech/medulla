@@ -384,7 +384,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                 listmacadress=[]
                 for mac in data['information']['listipinfo']:
                     listmacadress.append(mac['macaddress'])
-                XmppMasterDatabase().setuplistSubcription(listmacadress, agentsubscription)
+                XmppMasterDatabase().setuplistSubscription(listmacadress, agentsubscription)
         objectxmpp.send_message(mto=msg['from'],
                             mbody=json.dumps(reponse),
                             mtype='chat')
