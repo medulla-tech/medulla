@@ -44,6 +44,32 @@ CREATE TABLE IF NOT EXISTS `xmppmaster`.`substituteconf` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+CREATE TABLE IF NOT EXISTS `xmppmaster`.`subscription` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `macadress` varchar(15) NOT NULL,
+  `idagentsubscription` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `macadress_UNIQUE` (`macadress`),
+  KEY `fk_subscription_agent_subscription_idx` (`idagentsubscription`),
+  CONSTRAINT `fk_subscription_agent_subscription_idx`
+    FOREIGN KEY (`idagentsubscription`)
+    REFERENCES `agent_subscription` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET = utf8
+COMMENT='This table defines which subscription agent is used';
+
+CREATE TABLE IF NOT EXISTS `xmppmaster`.`agent_subscription` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`))
+ENGINE=InnoDB
+DEFAULT CHARACTER SET = utf8
+COMMENT 'Lists subscription agents';
+
 LOCK TABLES `substituteconf` WRITE;
 INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('registration', 'master@pulse', 1);
 INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('subscription', 'master@pulse', 1);
