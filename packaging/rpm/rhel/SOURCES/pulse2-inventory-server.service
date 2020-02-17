@@ -8,8 +8,8 @@ PIDFile=/var/run/pulse2-inventory-server.pid
 #Group=pulse
 Type=simple
 ExecStart=/usr/sbin/pulse2-inventory-server -s
-#Restart=always
-#RestartSec=1
+Restart=always
+RestartSec=1
 
 [Install]
 WantedBy=multi-user.target

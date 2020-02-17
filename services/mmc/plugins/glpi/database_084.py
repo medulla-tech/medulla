@@ -468,25 +468,6 @@ class Glpi084(DyngroupDatabaseHelper):
         self.group = Table("glpi_groups", self.metadata, autoload = True)
         mapper(Group, self.group)
 
-        # collects
-        self.collects = Table("glpi_plugin_fusioninventory_collects", self.metadata,
-            Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
-            autoload = True)
-        mapper(Collects, self.collects)
-
-        # registries
-        self.registries = Table("glpi_plugin_fusioninventory_collects_registries", self.metadata,
-            Column('plugin_fusioninventory_collects_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects.id')),
-            autoload = True)
-        mapper(Registries, self.registries)
-
-        # registries contents
-        self.regcontents = Table("glpi_plugin_fusioninventory_collects_registries_contents", self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
-            Column('plugin_fusioninventory_collects_registries_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects_registries.id')),
-            autoload = True)
-        mapper(RegContents, self.regcontents)
-
     ##################### internal query generators
     def __filter_on(self, query):
         """
@@ -576,13 +557,6 @@ class Glpi084(DyngroupDatabaseHelper):
         criterion = ""
 
         master_config = xmppMasterConfig()
-        reg_columns = []
-        r=re.compile(r'reg_key_.*')
-        regs=filter(r.search, self.config.summary)
-        for regkey in regs:
-            regkeyconf = getattr( master_config, regkey).split("|")[0].split("\\")[-1]
-            #logging.getLogger().error(regkeyconf)
-            reg_columns.append(regkeyconf)
 
         # location filter is corresponding to the entity selection in the interface
         if "location" in ctx and ctx['location'] != "":
@@ -604,8 +578,7 @@ class Glpi084(DyngroupDatabaseHelper):
         .join(Entities, Entities.id == Machine.entities_id)\
         .outerjoin(self.locations, Machine.locations_id == self.locations.c.id)\
         .outerjoin(self.manufacturers, Machine.manufacturers_id == self.manufacturers.c.id)\
-        .join(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)\
-        .outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
+        .join(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)
 
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
@@ -666,7 +639,6 @@ class Glpi084(DyngroupDatabaseHelper):
                 self.locations.c.name.contains(criterion),
                 self.manufacturers.c.name.contains(criterion),
                 self.model.c.name.contains(criterion),
-                self.regcontents.c.value.contains(criterion)
             ))
 
         # All computers
@@ -693,9 +665,6 @@ class Glpi084(DyngroupDatabaseHelper):
 
         nb_columns = len(columns_name)
 
-        regs = {reg_column :[] for reg_column in reg_columns}
-        result['data']['reg'] = regs
-
         for machine in machines:
             _count = 0
             while _count < nb_columns:
@@ -706,24 +675,6 @@ class Glpi084(DyngroupDatabaseHelper):
                 result['data']['presence'].append(1)
             else:
                 result['data']['presence'].append(0)
-
-            for column in reg_columns:
-                result['data']['reg'][column].append(None)
-
-        regquery = session.query(
-            self.regcontents.c.computers_id,
-            self.regcontents.c.key,
-            self.regcontents.c.value)\
-        .filter(
-            and_(
-                self.regcontents.c.key.in_(reg_columns),
-                self.regcontents.c.computers_id.in_(result['data']['uuid'])
-            )
-        ).all()
-        for reg in regquery:
-            print(reg)
-            index = result['data']['uuid'].index(reg[0])
-            result['data']['reg'][reg[1]][index] = reg[2]
 
         result['count'] = count
         return result

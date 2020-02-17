@@ -23,9 +23,7 @@
 # file pluginsmaster/plugin_wakeonlan.py
 
 
-import base64
 import json
-import os
 import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
