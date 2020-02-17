@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `xmppmaster`.`subscription` (
   KEY `fk_subscription_agent_subscription_idx` (`idagentsubscription`),
   CONSTRAINT `fk_subscription_agent_subscription_idx`
     FOREIGN KEY (`idagentsubscription`)
-    REFERENCES `agent_subscription` (`id`)
+    REFERENCES `xmppmaster`.`agent_subscription` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE=InnoDB
