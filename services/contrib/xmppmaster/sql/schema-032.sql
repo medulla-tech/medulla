@@ -75,6 +75,10 @@ INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_
 INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('assessor', 'master@pulse', 1);
 UNLOCK TABLES;
 
+LOCK TABLES `agent_subscription` WRITE;
+INSERT INTO `xmppmaster`.`agent_subscription` (`name`) VALUES ('master@pulse');
+UNLOCK TABLES;
+
 UPDATE version SET Number = 32;
 
 COMMIT;
