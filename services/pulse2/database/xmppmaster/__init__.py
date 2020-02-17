@@ -260,7 +260,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
         except Exception, e:
             logging.getLogger().error(str(e))
-            self.logger.error("\n%s"%(traceback.format_exc()))
+            logging.getLogger().error("\n%s"%(traceback.format_exc()))
 
     @DatabaseHelper._sessionm
     def update_enable_for_agent_subscription(self,
@@ -287,8 +287,8 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except Exception, e:
-            self.logger.error("\n%s"%(traceback.format_exc()))
-    
+            logging.getLogger().error("\n%s"%(traceback.format_exc()))
+
     @DatabaseHelper._sessionm
     def setSyncthing_deploy_group(self,
                                   session,
