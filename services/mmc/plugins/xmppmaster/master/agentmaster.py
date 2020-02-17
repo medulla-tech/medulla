@@ -2176,7 +2176,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 try:
                     # Assignment of the user system, if user absent.
                     if 'users' in data['information'] and len(data['information']['users']) == 0:
-                        data['information']['users'] = "system"
+                        data['information']['users'].append("system")
 
                     if 'users' in data['information'] and len(data['information']['users']) > 0:
                         logger.debug("** addition user %s in base" %

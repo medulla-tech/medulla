@@ -5221,6 +5221,8 @@ ORDER BY
 
         return result1
 
+
+
     @DatabaseHelper._sessionm
     def get_computer_count_for_dashboard(self, session, count=True):
         inventory_filtered_machines = self.__filter_on(session.query(Machine.id).filter(Machine.is_deleted == 0, \
