@@ -912,6 +912,7 @@ td, th {
 td.printerName,
 td.shareName,
 td.groupName,
+td.noMachineName,
 td.machineName,
 td.machineNamepresente,
 td.machinePull,
@@ -922,6 +923,7 @@ td.userName {
 }
 
 td a,
+td.noMachineName a,
 td.machineName a,
 td.machineNamepresente a,
 td.machinePull a,
@@ -931,6 +933,7 @@ td.userName a {
     text-decoration: none;
 }
 td a:link,
+td.noMachineName a:link,
 td.machineName a:link,
 td.machineNamepresente a:link,
 td.machinePull a:link,
@@ -940,6 +943,7 @@ td.userName a:link {
     text-decoration: none;
 }
 td a:visited,
+td.noMachineName a:visited,
 td.machineName a:visited,
 td.machineNamepresente a:visited,
 td.machinePull a:visited,
@@ -1028,6 +1032,13 @@ td.userAction { text-align: right; }
 td.laptopName {
     padding: 0 0 0 37px;
     background-image: url("../img/machines/icn_laptopsList.gif");
+    background-position: 7px center;
+    /*background-position: 7px 7px;*/
+}
+
+td.noMachineName {
+    padding: 0 0 0 37px;
+    background-image: url("../img/machines/icn_noMachinesList.gif");
     background-position: 7px center;
     /*background-position: 7px 7px;*/
 }
