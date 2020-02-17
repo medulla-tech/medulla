@@ -393,7 +393,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         objectxmpp.confaccount.append(msg['from'].user)
     except Exception:
         sendErrorConnectionConf(objectxmpp,sessionid,msg)
-        logger.error(""Unable to configure agent for one relay server"")
+        logger.error("Unable to configure agent for one relay server")
         logger.error("\n%s"%(traceback.format_exc()))
 
 def msg_log(msg_header, hostname, user, result):
