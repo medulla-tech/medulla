@@ -627,8 +627,9 @@ class Glpi92(DyngroupDatabaseHelper):
         # Get the list of online computers
         online_machines = []
         online_machines = XmppMasterDatabase().getlistPresenceMachineid()
-        online_machines = [int(id.replace("UUID","")) for id in online_machines]
 
+        if online_machines is not None:
+            online_machines = [int(id.replace("UUID", "")) for id in online_machines]
         query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
         .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
         .outerjoin(self.user, Machine.users_id == self.user.c.id)\
@@ -730,12 +731,11 @@ class Glpi92(DyngroupDatabaseHelper):
 
         for machine in machines:
             _count = 0
-            #knokno
             while _count < nb_columns:
                 result['data'][columns_name[_count]].append(machine[_count])
                 _count += 1
 
-            if int(machine[0]) in online_machines:
+            if machine[0] in online_machines:
                 result['data']['presence'].append(1)
             else:
                 result['data']['presence'].append(0)
