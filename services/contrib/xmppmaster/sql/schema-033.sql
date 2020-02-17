@@ -22,7 +22,7 @@
 START TRANSACTION;
 
 
-LOCK TABLES `substituteconf` WRITE;
+LOCK TABLES `rules` WRITE;
 INSERT INTO `xmppmaster`.`rules` (`name`, `description`, `level`) VALUES ('netmaskchoose', 'Associate Relay Server based on le netmask', '10');
 UNLOCK TABLES;
 

@@ -22,8 +22,6 @@
 
 START TRANSACTION;
 
-DROP TABLE IF EXISTS `xmppmaster`.`substituteconf` ;
-
 --
 -- Table substituteconf
 --
