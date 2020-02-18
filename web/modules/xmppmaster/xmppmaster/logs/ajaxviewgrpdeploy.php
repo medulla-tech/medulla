@@ -44,11 +44,12 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 <?php
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-$filter = $_GET["filter"];
 
 extract($_GET);
 
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
+$criterion = isset($_GET['criterion'])?$_GET['criterion']:"";
+$filter = ["filter" => $filter, "criterion" => $criterion];
 $start = (isset($_GET['start']))? $_GET['start']: 0;
 $end   = (isset($_GET['end'])?$_GET['end']+$maxperpage:$maxperpage);
 
@@ -65,23 +66,27 @@ $p->display();
 // search nbmachinegroupe in group, and nbdeploydone already deployed from mmc
 $resultfrommsc = xmlrpc_getstatbycmd($cmd_id, $filter, $start, $end);
 
+// The deployment is a convergence
 $bool_convergence_grp_on_package_from_msc = is_commands_convergence_type($cmd_id, $filter, $start, $end);
+
+// Get syncthing stats for this deployment
+$statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
+
 // search from msc table CommandsOnHost
 $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start, $end);
 $start_date =  $lastcommandid['start_dateunixtime'];
 $end_date = $lastcommandid['end_dateunixtime'];
 
-$uuids = xmlrpc_get_msc_listuuid_commandid($cmd_id, $filter, -1, -1);
-$uuids_list = $uuids['list'];
+$getdeployment = xmlrpc_getdeployment($cmd_id, $filter, $start, $maxperpage);
 
-$re = xmlrpc_get_machine_for_id($uuids_list, $filter, $start, $maxperpage);
-$count = $re['total'];
-//FROM XMPPMASTER
+$re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'], $filter, $start, $maxperpage);
+$count = $getdeployment['total'];
+
+// STATS FROM XMPPMASTER DEPLOY
 $resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,  date("Y-m-d H:i:s", $start_date));
 // from msc
 $machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy( $cmd_id, date("Y-m-d H:i:s", $start_date));
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
-$statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
 
 $MSC_nb_mach_grp_for_deploy  = $resultfrommsc['nbmachine'];
 $MSC_nb_mach_grp_done_deploy     = $resultfrommsc['nbdeploydone'];

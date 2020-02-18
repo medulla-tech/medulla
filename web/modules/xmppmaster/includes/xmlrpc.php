@@ -202,6 +202,10 @@ function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE") {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
 }
 
+function xmlrpc_getdeployment($command_id, $filter = "", $start, $limit) {
+    return xmlCall("xmppmaster.getdeployment", array($command_id, $filter, $start, $limit));
+}
+
 function xmlrpc_stat_syncthing_transfert($group_id, $command_id ){
     return xmlCall("xmppmaster.stat_syncthing_transfert",
                                                 array($group_id, $command_id));
