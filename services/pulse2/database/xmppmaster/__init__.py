@@ -2461,6 +2461,12 @@ class XmppMasterDatabase(DatabaseHelper):
                     'machinewol3deploy' : 0,
                     'waitingmachinesdeploy' : 0,
                     'machineerrortimeout' : 0,
+                    'abortmissingagent' : 0,
+                    'abortdeploy' : 0,
+                    'abortarsgroupdeplolymissing' : 0,
+                    'abortarsdeploydown' : 0,
+                    'abortalternatifdown' : 0,
+                    'abortuuidmachine' : 0,
                     'autrestatus' : 0}
 
             liststatus = { x[0] : x[1] for x in machinedeploy}
@@ -2485,6 +2491,18 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['waitingmachinesdeploy'] = liststatus[t]
                 elif t== 'DEPLOYMENT ERROR ON TIMEOUT':
                     ret['machineerrortimeout'] = liststatus[t]
+                elif t == 'ABORT MISSING AGENT':
+                    ret['abortmissingagent'] = liststatus[t]
+                elif t == 'ABORT DEPLOY':
+                    ret['abortdeploy'] = liststatus[t]
+                elif t == 'ABORT ARS GROUP DEPLOY MISSING':
+                    ret['abortarsgroupdeplolymissing'] = liststatus[t]
+                elif t == 'ABORT ARS DEPLOY DOWN':
+                    ret['abortarsdeploydown'] = liststatus[t]
+                elif t == 'ABORT ALTERNATIF DOWN':
+                    ret['abortalternatifdown'] = liststatus[t]
+                elif t == 'ABORT UUID MACHINE':
+                    ret['abortuuidmachine'] = liststatus[t]
                 else:
                     ret['autrestatus'] = liststatus[t]
             return ret
