@@ -2510,6 +2510,50 @@ class XmppMasterDatabase(DatabaseHelper):
             return ret
 
     @DatabaseHelper._sessionm
+    def getdeployment(self, session, command_id, filter="", start=0, limit=-1):
+
+        criterion = filter['criterion']
+        filter = filter['filter']
+
+        start = int(start)
+        limit = int(limit)
+
+        query = session.query(Deploy).filter(Deploy.command == command_id)
+        if filter == "status" and criterion != "":
+            query = query.filter(or_(
+                Deploy.title.contains(criterion),
+                Deploy.state.contains(criterion),
+                Deploy.start.contains(criterion),
+                Deploy.startcmd.contains(criterion),
+                Deploy.endcmd.contains(criterion),
+                Deploy.inventoryuuid.contains(criterion),
+                Deploy.host.contains(criterion),
+                Deploy.user.contains(criterion),
+                Deploy.macadress.contains(criterion),
+            ))
+        count = query.count()
+        if limit != -1:
+            query = query.offset(start).limit(limit)
+        result = query.all()
+        elements = {
+        "id" : [],
+        "uuid" : [],
+        "hostname" : [],
+        "status" : [],
+        "user" : [],
+        "macaddress" : []
+        }
+        for deployment in result:
+            elements['id'].append(deployment.inventoryuuid.replace("UUID", ""))
+            elements['uuid'].append(deployment.inventoryuuid)
+            elements['hostname'].append(deployment.host)
+            elements['status'].append(deployment.state)
+            elements['user'].append(deployment.user)
+            elements['macaddress'].append(deployment.macadress)
+
+        return {"total": count, "datas":elements}
+
+    @DatabaseHelper._sessionm
     def getdeployfromcommandid(self, session, command_id, uuid):
         if (uuid == "UUID_NONE"):
             relayserver = session.query(Deploy).filter(and_(Deploy.command == command_id))
