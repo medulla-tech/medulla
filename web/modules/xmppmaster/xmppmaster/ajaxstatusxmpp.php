@@ -112,22 +112,21 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $error = True;
         $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
     }
-        $tmpdate = (array)$arraydeploy['tabdeploy']['startcmd'][$index];
-        $tmpdate = substr($tmpdate['scalar'], 0, 4).'-'.substr($tmpdate['scalar'], 4, 2).'-'.substr($tmpdate['scalar'], 6, 2).' '.substr($tmpdate['scalar'], 9);
+        $deploydate = (array)$arraydeploy['tabdeploy']['startcmd'][$index];
+        $deploydate = substr($deploydate['scalar'], 0, 4).'-'.substr($deploydate['scalar'], 4, 2).'-'.substr($deploydate['scalar'], 6, 2).' '.substr($deploydate['scalar'], 9);
         $result = xmlrpc_getstatdeployfromcommandidstartdate($arraydeploy['tabdeploy']['command'][$index],
-                                                             $tmpdate);
+                                                             $deploydate);
 
         $total_machine_from_deploy     = $result['totalmachinedeploy'];
         $machine_error_from_deploy     = $result['machineerrordeploy'];
         $machine_success_from_deploy   = $result['machinesuccessdeploy'];
         $machine_process_from_deploy   = $result['machineprocessdeploy'];
         $machine_abort_from_deploy     = $result['machineabortdeploy'];
-        // from msc
-        $machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy($arraydeploy['tabdeploy']['command'][$index], $start_date);
+        $machine_timeout_from_deploy   = $result['machineerrortimeout'];
 
         $total_machine_from_msc  =  $statarray['nbmachine'][$arraydeploy['tabdeploy']['command'][$index]];
 
-        $wol = ( $total_machine_from_msc - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
+        $wol = ( $machine_list_status['machinewol1deploy1'] + $machine_list_status['machinewol2deploy'] + $machine_list_status['machinewol3deploy'] );
 
         $processmachr[] = $machine_process_from_deploy;
         $tolmach[] = $total_machine_from_msc;
@@ -304,11 +303,11 @@ progress {
   width: 100px;
   height: 9px;
   margin:-5px;
-  background-color: #ffffff;   /* Couleur de fond */
-  border-style: solid;   /* Style de la bordure  */
-  border-width: 1px;   /* Epaisseur de la bordure  */
-  border-color: #dddddd;   /* Couleur de la bordure  */
-  padding: 3px 3px 3px 3px;   /* Espace entre les bords et le contenu : haut droite bas gauche  */
+  background-color: #ffffff; 
+  border-style: solid;
+  border-width: 1px;  
+  border-color: #dddddd; 
+  padding: 3px 3px 3px 3px;
 }
 
 progress::-webkit-progress-bar {
