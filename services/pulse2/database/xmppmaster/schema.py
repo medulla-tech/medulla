@@ -437,3 +437,38 @@ class Organization_ad(Base):
     oumachine = Column(String(120), nullable=False)
     hostname = Column(String(100), nullable=False)
     username = Column(String(60), nullable=False)
+
+class Substituteconf(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'substituteconf'
+    # ====== Fields =============================
+    # Here we define columns for the table substituteconf.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    type = Column(String(45), nullable=False)
+    jidsubtitute = Column(String(255), nullable=False)
+    countsub =  Column(Integer, nullable=False, default = 0)
+    relayserver_id   = Column(Integer, ForeignKey('relayserver.id'), nullable=False)
+    relayserver = relationship(RelayServer)
+################################
+class Agentsubscription(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'agent_subscription'
+    # ====== Fields =============================
+    # Here we define columns for the table agent_subscription.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+
+class Subscription(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'subscription'
+    # ====== Fields =============================
+    # Here we define columns for the table subscription.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    macadress = Column(String(15), nullable=False)
+    # ====== ForeignKey =============================
+    idagentsubscription   = Column(Integer, ForeignKey('agent_subscription.id'), nullable=False)
+    agent_subscription = relationship(Agentsubscription)
+################################

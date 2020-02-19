@@ -40,6 +40,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
     def loadparametersplugins(self, namefile):
         Config = ConfigParser.ConfigParser()
+        Config.optionxform = str
         Config.read(namefile)
         return Config.items("parameters")
 

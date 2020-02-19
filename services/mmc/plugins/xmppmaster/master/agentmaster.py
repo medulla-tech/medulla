@@ -327,7 +327,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         # Clear machine table
         #XmppMasterDatabase().clearMachine()
-        XmppMasterDatabase().resetPresenceMachine()
+        #XmppMasterDatabase().resetPresenceMachine()
+        XmppMasterDatabase().update_enable_for_agent_subscription(self.boundjid.bare) # update down machine substitute manage by this agent
         # clears synchros
         PkgsDatabase().clear_old_pending_synchro_package(timeseconde=900)
         self.idm = ""
@@ -1706,7 +1707,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         ordre = XmppMasterDatabase().Orderrules()
         odr = [x[0] for x in ordre]
         logger.debug("Rule order : %s " % odr)
-        indetermine = []
         result = []
         for x in ordre:
             # User Rule : 1
@@ -1764,22 +1764,20 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             logger.warn("Geoposition Rule returned %d relay servers for machine"
                                         "%s user %s \nPossible relay servers : id list %s " % (nbserver, data['information']['info']['hostname'],
                                                                                                data['information']['users'][0], listeserver))
-                            logger.warn(
-                                "Continues for the other rules. Random choice only if no other is found.")
-                            indetermine = XmppMasterDatabase(
-                            ).IpAndPortConnectionFromServerRelay(listeserver[index])
+                            logger.warn("ARS Random choice : %s"%listeserver[index])
+                            result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(listeserver[index])
+                            logger.warn("Geoposition Rule selects the relay server for machine %s user %s \n %s " % (
+                                    data['information']['info']['hostname'], data['information']['users'][0], result))
+                            break
                         else:
                             if relayserver != -1:
                                 result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(relayserver)
                                 logger.debug("Geoposition Rule selects the relay server for machine %s user %s \n %s " % (
                                     data['information']['info']['hostname'], data['information']['users'][0], result))
                                 break
-                    if len(result) != 0:
-                        result = [self.config.defaultrelayserverip, self.config.defaultrelayserverport,
-                                  result2[0], self.config.defaultrelayserverbaseurlguacamole]
-                        logger.debug("Default rule selects the relay server for machine %s user %s \n %s" % (
-                            data['information']['info']['hostname'], data['information']['users'][0], result))
-                        break
+                            else:
+                                logger.warn("algo rule 3 inderterminat")
+                                continue
                 except KeyError:
                     logger.error("Error algo rule 3")
                     traceback.print_exc(file=sys.stdout)
@@ -2178,7 +2176,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 try:
                     # Assignment of the user system, if user absent.
                     if 'users' in data['information'] and len(data['information']['users']) == 0:
-                        data['information']['users'] = "system"
+                        data['information']['users'].append("system")
 
                     if 'users' in data['information'] and len(data['information']['users']) > 0:
                         logger.debug("** addition user %s in base" %
