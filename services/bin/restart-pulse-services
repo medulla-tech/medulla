@@ -33,6 +33,7 @@ SERVICES='mmc-agent \
           pulse-xmpp-master-substitute-assessor \
           pulse-xmpp-master-substitute-deployment \
           pulse-xmpp-master-substitute-subscription \
+          pulse-xmpp-master-substitute-logger \
           pulse-xmpp-master-substitute-all'
 
 for service in ${SERVICES}; do
