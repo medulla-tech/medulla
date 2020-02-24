@@ -29,7 +29,7 @@ import logging
 from twisted.internet import defer
 from sets import Set as set
 import time, ipaddr
-import traceback
+
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
 from mmc.core.tasks import TaskManager
@@ -696,7 +696,7 @@ class ImagingRpcProxy(RpcProxyI):
                     self.synchroProfile(objmenu['group'])
                     return
             except KeyError:
-                logging.getLogger().error("Multicast error monitorsUDPSender\n%s"%(traceback.format_exc()))
+                logger.error("Multicast error monitorsUDPSender\n%s"%(traceback.format_exc()))
                 ImagingRpcProxy.checkThreadData[objmenu['location']]={}
                 ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
         else:
@@ -704,7 +704,7 @@ class ImagingRpcProxy(RpcProxyI):
             self.synchroProfile(objmenu['group'])
 
 
-    def checkDeploymentUDPSender(self, process):
+    def checkDeploymentUDPSender(self,process):
         """
         check whether multicast transfer is in progress
         """
@@ -715,8 +715,8 @@ class ImagingRpcProxy(RpcProxyI):
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
         if i == None:
-            logger.error("couldn't initialize the ImagingApi to %s"%(location))
-            return [False, "couldn't initialize the ImagingApi to %s"%( location)]
+            logger.error("couldn't initialize the ImagingApi to %s"%( my_is.url))
+            return [False, "couldn't initialize the ImagingApi to %s"%( my_is.url)]
 
         def treatResult(results):
             if results:

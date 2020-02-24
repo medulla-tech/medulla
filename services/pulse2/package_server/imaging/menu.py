@@ -1100,6 +1100,6 @@ INITRD ../davos/initrd.img
             return True
         except IOError, e:
             self.logger.error("While writing commande for multicast command"
-                         % (fichier, e))
+                         % (filename, e))
             return False
         return True

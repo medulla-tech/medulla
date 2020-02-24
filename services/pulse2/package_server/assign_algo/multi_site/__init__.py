@@ -31,8 +31,6 @@ from twisted.internet import  defer
 from pulse2.package_server.assign_algo import MMAssignAlgo
 from urlparse import urlparse
 from pulse2.package_server.imaging.api.functions import Imaging
-from pulse2.package_server.types import Machine
-import random
 
 class MMUserAssignAlgo(MMAssignAlgo):
     name = 'multi_site'

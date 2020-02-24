@@ -27,7 +27,7 @@ give a central access to the Managers that can be needed by pulse2 modules
 # SqlAlchemy
 from sqlalchemy.exc import DBAPIError
 import sqlalchemy.orm.query
-import os
+
 import logging
 from mmc.support.config import PluginConfig
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext, xmlrpcCleanup
