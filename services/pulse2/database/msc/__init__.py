@@ -460,17 +460,17 @@ class MscDatabase(DatabaseHelper):
 
     def get_count_timeout_wol_deploy( self, id_command, start_date):
         """
-            this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals
+            This function is scheduled by xmpp.
+            It counts the number of machines out of the deployment intervals
         """
-        #datenow = datetime.datetime.now()
         session = create_session()
-        q = session.query(func.count(CommandsOnHost)).\
+        numberTimedout = session.query(func.count(CommandsOnHost)).\
             filter(and_(CommandsOnHost.fk_commands == id_command,
                         CommandsOnHost.stage == 'ended',
                         CommandsOnHost.current_state == 'over_timed',
                         CommandsOnHost.start_date == start_date)).\
                             scalar()
-        return q
+        return numberTimedout
 
     def deployxmpponmachine(self, command_id):
         result = {}

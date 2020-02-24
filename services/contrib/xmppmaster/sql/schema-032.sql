@@ -68,13 +68,6 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET = utf8
 COMMENT='This table defines which subscription agent is used';
 
-LOCK TABLES `substituteconf` WRITE;
-INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('registration', 'master@pulse', 1);
-INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('subscription', 'master@pulse', 1);
-INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('inventory', 'master@pulse', 1);
-INSERT INTO `xmppmaster`.`substituteconf` (`type`, `jidsubtitute`, `relayserver_id`) VALUES ('assessor', 'master@pulse', 1);
-UNLOCK TABLES;
-
 LOCK TABLES `agent_subscription` WRITE;
 INSERT INTO `xmppmaster`.`agent_subscription` (`name`) VALUES ('master@pulse');
 UNLOCK TABLES;
