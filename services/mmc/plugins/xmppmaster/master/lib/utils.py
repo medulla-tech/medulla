@@ -42,7 +42,7 @@ import urllib
 import uuid
 import time
 from datetime import datetime
-
+import imp
 from Crypto import Random
 from Crypto.Cipher import AES
 import urllib2
@@ -98,20 +98,37 @@ def displayDataJson(jsondata):
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(jsondata)
 
-
-def load_plugin(name):
-    # print "Import plugin_%s" % name
-    mod = __import__("plugin_%s" % name)
-    # print mod
-    return mod
-
+def loadModule(filename):
+    if filename == '':
+        raise RuntimeError, 'Empty filename cannot be loaded'
+    searchPath, file = os.path.split(filename)
+    if not searchPath in sys.path:
+        sys.path.append(searchPath)
+        sys.path.append(os.path.normpath(searchPath+"/../"))
+    moduleName, ext = os.path.splitext(file)
+    fp, pathName, description = imp.find_module(moduleName, [searchPath,])
+    try:
+        module = imp.load_module(moduleName, fp, pathName, description)
+    finally:
+        if fp:
+            fp.close()
+    return module
 
 def call_plugin(name, *args, **kwargs):
+    nameplugin = os.path.join(args[0].modulepath, "plugin_%s"%name)
     objxmpp = args[0]
+    #add compteur appel plugins
+    count = 0
+    try:
+        count = getattr(args[0], "num_call%s"%name)
+    except AttributeError:
+        count = 0
+        setattr(args[0], "num_call%s"%name, count)
     if objxmpp.config.executiontimeplugins:
         tmps1=time.clock()
-        pluginaction = load_plugin(name)
+        pluginaction = loadModule(nameplugin)
         pluginaction.action(*args, **kwargs)
+        setattr(args[0], "num_call%s"%name, count + 1)
         tmps2=time.clock()-tmps1
         logger.info("_xmpp_ %s Execution time: [%s] %s"% (str(datetime.now()), name, tmps2 ) )
         cmd = "cat /proc/%s/status | grep Threads"%os.getpid()
@@ -121,15 +138,14 @@ def call_plugin(name, *args, **kwargs):
                                                                     name,
                                                                     tmps2,
                                                                     obj['result'] ) ,
-                            "a")
+                                                                    "a")
     else:
-        pluginaction = load_plugin(name)
+        pluginaction = loadModule(nameplugin)
         pluginaction.action(*args, **kwargs)
-
+        setattr(args[0], "num_call%s"%name, count + 1)
 
 def pathbase():
     return os.path.abspath(os.getcwd())
-
 
 def pathscript():
     return os.path.abspath(os.path.join(pathbase(), "script"))
@@ -137,7 +153,6 @@ def pathscript():
 
 def pathplugins():
     return os.path.abspath(os.path.join(pathbase(), "plugins"))
-
 
 def pathlib():
     return os.path.abspath(os.path.join(pathbase(), "lib"))

@@ -280,6 +280,11 @@ class XmppSimpleCommand:
 
 class MUCBot(sleekxmpp.ClientXMPP):
     def __init__(self, conf):  # jid, password, room, nick):
+        namelibplugins = "master/pluginsmaster"
+        self.modulepath = os.path.abspath(\
+                os.path.join(os.path.dirname(os.path.realpath(__file__)),"..",
+                             namelibplugins))
+        logger.debug('Module path plugin xmppmaster is %s'%self.modulepath)
         self.config = conf
         self.session = session()
         self.domaindefault = "pulse"
