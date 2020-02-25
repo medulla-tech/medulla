@@ -144,6 +144,36 @@ def call_plugin(name, *args, **kwargs):
         pluginaction.action(*args, **kwargs)
         setattr(args[0], "num_call%s"%name, count + 1)
 
+def utc2local (utc):
+    """
+    utc2local transform a utc datetime object to local object.
+
+    Param:
+        utc datetime which is not naive (the utc timezone must be precised)
+    Returns:
+        datetime in local timezone
+    """
+    epoch = time.mktime(utc.timetuple())
+    offset = datetime.fromtimestamp (epoch) - datetime.utcfromtimestamp (epoch)
+    return utc + offset
+
+
+def getRandomName(nb, pref=""):
+    a = "abcdefghijklnmopqrstuvwxyz0123456789"
+    d = pref
+    for t in range(nb):
+        d = d + a[random.randint(0, 35)]
+    return d
+
+def data_struct_message(action, data = {}, ret=0, base64 = False, sessionid = None):
+    if sessionid == None or sessionid == "" or not isinstance(sessionid, basestring):
+        sessionid = action.strip().replace(" ", "")
+    return { 'action' : action,
+             'data' : data,
+             'ret' : 0,
+             "base64" : False,
+             "sessionid" : getRandomName(4,sessionid)}
+
 def pathbase():
     return os.path.abspath(os.getcwd())
 
