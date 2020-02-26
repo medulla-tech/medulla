@@ -280,6 +280,11 @@ class XmppSimpleCommand:
 
 class MUCBot(sleekxmpp.ClientXMPP):
     def __init__(self, conf):  # jid, password, room, nick):
+        namelibplugins = "master/pluginsmaster"
+        self.modulepath = os.path.abspath(\
+                os.path.join(os.path.dirname(os.path.realpath(__file__)),"..",
+                             namelibplugins))
+        logger.debug('Module path plugin xmppmaster is %s'%self.modulepath)
         self.config = conf
         self.session = session()
         self.domaindefault = "pulse"
@@ -926,6 +931,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         listplugins = [re.sub('plugin_', '', '.'.join(f.split('.')[:-1]))
                        for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster"))
                        if f.startswith("plugin_auto") and f.endswith(".py")]
+        logging.debug("=====================================================")
+        logging.debug("direct load plugin plugin_auto...")
+        logging.debug("=====================================================")
         for plugin in listplugins:
             # Load the plugin and start action
             try:
@@ -937,7 +945,33 @@ class MUCBot(sleekxmpp.ClientXMPP):
             except Exception as e:
                 logging.error("Executing plugin %s %s" % (plugin, str(e)))
                 logger.error("%s" % (traceback.format_exc()))
-
+        #charge plugin start automatiquement
+        #call plugin start
+        logging.debug("================================================================")
+        logging.debug("load plugin start. plugin for loaded plugin from pluginliststart")
+        logging.debug("================================================================")
+        startparameter={
+                        "action": "start",
+                        "sessionid" : name_random(6, "start"),
+                        "ret" : 0,
+                        "base64" : False,
+                        "data" : {}}
+        dataerreur={ "action" : "result" + startparameter["action"],
+                     "data" : { "msg" : "error plugin : " + startparameter["action"]},
+                     'sessionid' : startparameter['sessionid'],
+                     'ret' : 255,
+                     'base64' : False}
+        msg = {'from' : self.boundjid.bare, "to" : self.boundjid.bare, 'type' : 'chat' }
+        if not 'data' in startparameter:
+            startparameter['data'] = {}
+        #module = "%s/plugin_%s.py"%(self.modulepath,  startparameter["action"])
+        call_plugin( "start",
+                     self,
+                     startparameter["action"],
+                     startparameter['sessionid'],
+                     startparameter['data'],
+                     msg,
+                     dataerreur)
         # reinitialize of relay server charge
         msg_ars_init_charge = {'action': "cluster",
                                'sessionid': name_random(5, "clusterchargeinit"),
