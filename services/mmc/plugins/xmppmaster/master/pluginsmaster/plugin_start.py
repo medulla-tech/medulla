@@ -20,14 +20,9 @@
 # MA 02110-1301, USA.
 # file  master/pluginsmaster/plugin_start.py
 
-import base64
-import json
-import sys, os
 import logging
-import platform
-from utils  import file_get_contents, getRandomName, call_plugin, data_struct_message
+from utils import getRandomName, call_plugin, data_struct_message
 import traceback
-from sleekxmpp import jid
 
 logger = logging.getLogger()
 DEBUGPULSEPLUGIN = 25

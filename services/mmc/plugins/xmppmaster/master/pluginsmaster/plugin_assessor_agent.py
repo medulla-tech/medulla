@@ -24,7 +24,6 @@
 
 import base64
 import json
-import pprint
 from utils import AESCipher, \
                   subnetnetwork, \
                   ipfromdns
