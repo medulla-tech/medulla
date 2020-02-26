@@ -569,7 +569,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         "DURING DEPLOYMENT. GLPI UUID %s</span>"%(machine['jidmachine'], UUID))
                     msglog.append("<span style='color : red;font-weight: bold;'>DEPLOY TERMINATE</span>")
                     msglog.append("<span style='color : red;font-weight: bold;'>ABORT DEPLOY</span>")
-                    XmppMasterDatabase().update_state_deploy(machine['id'], "ABORT MACHINE DISAPPERED")
+                    XmppMasterDatabase().update_state_deploy(machine['id'], "ABORT MACHINE DISAPPEARED")
                 elif resultpresence[UUID][0] == 1:
                     XmppMasterDatabase().update_state_deploy(machine['id'], "WAITING MACHINE ONLINE")
                 else:
