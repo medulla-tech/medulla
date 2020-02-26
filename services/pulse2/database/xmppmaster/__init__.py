@@ -3841,6 +3841,10 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def addlistguacamoleidforiventoryid(self, session, idinventory, connection):
         # objet connection: {u'VNC': 60, u'RDP': 58, u'SSH': 59}}
+        if len(connection) == 0:
+            # on ajoute 1 protocole inexistant pour signaler que guacamle est configure.
+            connection['INF'] = 0
+
         sql  = """DELETE FROM `xmppmaster`.`has_guacamole`
                     WHERE
                         `xmppmaster`.`has_guacamole`.`idinventory` = '%s';"""%idinventory
@@ -4805,16 +4809,31 @@ class XmppMasterDatabase(DatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
-    def getGuacamoleidforUuid(self, session, uuid):
-        ret=session.query(Has_guacamole.idguacamole,
-                          Has_guacamole.protocol).\
-                              filter(Has_guacamole.idinventory == uuid.replace('UUID','')).all()
-        session.commit()
-        session.flush()
-        if ret:
-            return [(m[1],m[0]) for m in ret]
+    def getGuacamoleidforUuid(self, session, uuid, existtest = None):
+        """
+            if existtest is None
+             this function return the list of protocole for 1 machine
+             if existtest is not None:
+             this function return True if guacamole is configured
+             or false si guacamole is not configued.
+        """
+        if existtest is None:
+            ret=session.query(Has_guacamole.idguacamole,Has_guacamole.protocol).\
+                filter(and_(Has_guacamole.idinventory == uuid.replace('UUID',''),
+                            Has_guacamole.protocol != "INF")).all()
+            session.commit()
+            session.flush()
+            if ret:
+                return [(m[1],m[0]) for m in ret]
+            else:
+                return []
         else:
-            return []
+            ret=session.query(Has_guacamole.idguacamole).\
+                filter(Has_guacamole.idinventory == uuid.replace('UUID','')).first()
+            if ret:
+                return True
+            return False
+
 
     @DatabaseHelper._sessionm
     def isMachineExistPresentTFN(self, session, jid):
