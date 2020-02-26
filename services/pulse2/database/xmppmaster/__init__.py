@@ -1899,7 +1899,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return cluster
 
     @DatabaseHelper._sessionm
-    def clusterlistars(self, session):
+    def clusterlistars(self, session, enabled = 1):
         sql = """SELECT
             GROUP_CONCAT(`jid`) AS 'listarsincluster',
             cluster_ars.name AS 'namecluster',
@@ -1910,10 +1910,13 @@ class XmppMasterDatabase(DatabaseHelper):
                 INNER JOIN
             xmppmaster.has_cluster_ars ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
                 INNER JOIN
-            xmppmaster.cluster_ars ON xmppmaster.cluster_ars.id = xmppmaster.has_cluster_ars.id_cluster
-        WHERE
-            `relayserver`.`enabled` = 1
-        GROUP BY xmppmaster.has_cluster_ars.id_cluster;"""
+            xmppmaster.cluster_ars ON xmppmaster.cluster_ars.id = xmppmaster.has_cluster_ars.id_cluster"""
+
+        if enabled is not None:
+            sql="""%s WHERE
+            `relayserver`.`enabled` = %s"""%(sql, enabled)
+
+        sql=sql+" GROUP BY xmppmaster.has_cluster_ars.id_cluster;"
         listars = session.execute(sql)
         session.commit()
         session.flush()
@@ -2070,8 +2073,6 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             start=int(startcmd)
             end=int(endcmd)
-            ##print start
-            #print end
             startcmd = datetime.fromtimestamp(start).strftime("%Y-%m-%d %H:%M:%S")
             endcmd = datetime.fromtimestamp(end).strftime("%Y-%m-%d %H:%M:%S")
         except Exception as e:
@@ -3990,6 +3991,24 @@ class XmppMasterDatabase(DatabaseHelper):
             result[linemachine.uuid_inventorymachine] = True
         return result
 
+    @DatabaseHelper._sessionm
+    def getPresenceExistuuids(self, session, uuids):
+        if isinstance(uuids, basestring):
+            uuids=[uuids]
+        result = { }
+        for uuidmachine in uuids:
+            result[uuidmachine] = [0,0]
+        machinespresente = session.query(Machines.uuid_inventorymachine,Machines.enabled).\
+            filter(Machines.uuid_inventorymachine.in_(uuids)).all()
+        session.commit()
+        session.flush()
+        for linemachine in machinespresente:
+            out = 0;
+            if linemachine.enabled == True: 
+                out = 1
+            result[linemachine.uuid_inventorymachine] = [out, 1 ]
+        return result
+
     #topology
     @DatabaseHelper._sessionm
     def listRS(self,session):
@@ -4760,7 +4779,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         "uuid_inventorymachine" : machine.uuid_inventorymachine,
                         "ip_xmpp" : machine.ip_xmpp,
                         "agenttype" : machine.agenttype,
-                        "keysyncthing" :  machine.keysyncthing
+                        "keysyncthing" :  machine.keysyncthing,
+                        "enabled" : machine.enabled
                         }
             for i in result:
                 if result[i] == None:
@@ -4779,7 +4799,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         "uuid_inventorymachine" : "",
                         "ip_xmpp" : "",
                         "agenttype" : "",
-                        "keysyncthing" :  ""
+                        "keysyncthing" :  "",
+                        "enabled" : 0
                     }
         return result
 
