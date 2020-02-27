@@ -46,7 +46,7 @@ def action( objectxmpp, action, sessionid, data, msg, dataerreur):
             #call plugin start
             msgt = {'from' : objectxmpp.boundjid.bare, "to" : objectxmpp.boundjid.bare, 'type' : 'chat' }
             module = "%s/plugin_%s.py"%(objectxmpp.modulepath,  plugindescriptorparameter["action"])
-            logger.debug("call plugin file : "%module) 
+            logger.debug("call plugin file : " + module)
             call_plugin( nameplugin,
                         objectxmpp,
                         plugindescriptorparameter["action"],
