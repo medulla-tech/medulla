@@ -4589,7 +4589,10 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getMachinefromjid(self, session, jid):
         """ information machine"""
-        machine = session.query(Machines).filter(Machines.jid == jid).first()
+        user = str(jid).split("@")[0]
+        machine = session.query(Machines).filter(Machines.jid.like("%s%%"%user) ).first()
+        #machine = session.query(Machines).filter(Machines.jid == jid).first()
+
         session.commit()
         session.flush()
         result = {}
