@@ -732,21 +732,21 @@ def read_conf_remote_registeryagent(xmppobject):
             "\n\t%s missing" \
         "\neg conf:\n[parameters]\n" \
             "pluginlistregistered = loadpluginlistversion, loadpluginschedulerlistversion,"\
-                "loadautoupdate, showregistration\n" \
+                "loadautoupdate, loadshowregistration\n" \
                 "pluginlistunregistered = loadpluginlistversion, loadpluginschedulerlistversion,"\
-                    "loadautoupdate, showregistration"%(plugin['NAME'], pathfileconf))
+                    "loadautoupdate, loadshowregistration"%(plugin['NAME'], pathfileconf))
         logger.warning("default value for pluginlistregistered " \
-            "is loadpluginlistversion, loadpluginschedulerlistversion, loadautoupdate, showregistration"\
+            "is loadpluginlistversion, loadpluginschedulerlistversion, loadautoupdate, loadshowregistration"\
             "\ndefault value for pluginlistunregistered"\
-                "is loadpluginlistversion, loadpluginschedulerlistversion, loadautoupdate, showregistration")
+                "is loadpluginlistversion, loadpluginschedulerlistversion, loadautoupdate, loadshowregistration")
         xmppobject.pluginlistregistered = ["loadpluginlistversion",
                                            "loadpluginschedulerlistversion",
                                            "loadautoupdate",
-                                           "showregistration"]
+                                           "loadshowregistration"]
         xmppobject.pluginlistunregistered = ["loadpluginlistversion",
                                              "loadpluginschedulerlistversion",
                                              "loadautoupdate",
-                                             "showregistration"]
+                                             "loadshowregistration"]
         xmppobject.check_uuidinventory = False
         xmppobject.blacklisted_mac_addresses= ["00:00:00:00:00:00"]
     else:
@@ -767,14 +767,14 @@ def read_conf_remote_registeryagent(xmppobject):
             pluginlistregistered = Config.get('parameters', 'pluginlistregistered')
         else:
             pluginlistregistered = "loadpluginlistversion, loadpluginschedulerlistversion,"\
-                " loadautoupdate, showregistration"
+                " loadautoupdate, loadshowregistration"
         xmppobject.pluginlistregistered = [x.strip() for x in pluginlistregistered.split(',')]
 
         if Config.has_option("parameters", "pluginlistunregistered"):
             pluginlistunregistered = Config.get('parameters', 'pluginlistunregistered')
         else:
             pluginlistunregistered = "loadpluginlistversion, loadpluginschedulerlistversion,"\
-                "loadautoupdate, showregistration"
+                "loadautoupdate, loadshowregistration"
 
         xmppobject.pluginlistunregistered = [x.strip() for x in pluginlistunregistered.split(',')]
         xmppobject.blacklisted_mac_addresses= []

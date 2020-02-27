@@ -66,7 +66,7 @@ def read_conf_showregistration(objectxmpp):
                      "showinfodeploy = False\n" \
                      "showplugins = False\n" \
                      "showinventoryxmpp = False\n" \
-                     "showinfomachine = infra_jfk_deb1, infra_jfk_deb2\n"%(plugin['NAME'],
+                     "showinfomachine = client_machine_1, client_machine_2\n"%(plugin['NAME'],
                                                                            pathfileconf))
         logger.warning("\ndefault value for showinfodeploy is False\n"\
                        "default value for showinfo is False\n"\
