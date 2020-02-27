@@ -285,6 +285,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),"..",
                              namelibplugins))
         logger.debug('Module path plugin xmppmaster is %s'%self.modulepath)
+        self.listmodulemmc = PluginManager().getAvailablePlugins()
         self.config = conf
         self.session = session()
         self.domaindefault = "pulse"
@@ -945,6 +946,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             except Exception as e:
                 logging.error("Executing plugin %s %s" % (plugin, str(e)))
                 logger.error("%s" % (traceback.format_exc()))
+        logging.debug("===========END LOAD plugin type auto=================\n")
         #charge plugin start automatiquement
         #call plugin start
         logging.debug("================================================================")
@@ -972,6 +974,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                      startparameter['data'],
                      msg,
                      dataerreur)
+        logging.debug("====================END PLUGIN START=============================\n")
         # reinitialize of relay server charge
         msg_ars_init_charge = {'action': "cluster",
                                'sessionid': name_random(5, "clusterchargeinit"),
@@ -2550,425 +2553,29 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 return True
             # ------------------------------------------------
             if 'action' in data and data['action'] == 'infomachine':
-                logger.debug(
-                    "** Processing machine %s that sends this information (nini inventory)" % msg['from'].bare)
-                if not 'baseurlguacamole' in data or \
-                    data['baseurlguacamole'] == "" or \
-                    not 'deployment' in data or \
-                        data['deployment'] == "" :
-                    logger.error("machine %s Configuration Missing"% msg['from'].bare)
-                    logger.error("running  agent configurator on machine %s"% msg['from'].bare)
-                    return
-
-                if XmppMasterDatabase().getPresencejid(msg['from'].bare):
-                    logger.debug("Machine %s already exists in base" % msg['from'].bare)
-                    return
-
-                if XmppMasterDatabase().getPresencejiduser(msg['from'].user):
-                    logger.debug("Machine idem jid, domain change %s" % msg['from'].bare)
-                    # The registration of the machine in database must be deleted, so it is updated.
-                    XmppMasterDatabase().delPresenceMachinebyjiduser(msg['from'].user)
-
-                """ Check machine information from agent """
-                logger.debug(
-                    "** Processing and check machine information from agent and the registry into database.")
-                info = json.loads(base64.b64decode(data['completedatamachine']))
-                if data['ippublic'] is not None and data['ippublic'] != "":
-                    data['localisationinfo'] = Localisation().geodataip(data['ippublic'])
-                else:
-                    data['localisationinfo'] = {}
-                data['information'] = info
-
-                if data['adorgbymachine'] is not None and data['adorgbymachine'] != "":
-                    try:
-                        data['adorgbymachine'] = base64.b64decode(data['adorgbymachine'])
-                    except TypeError:
-                        pass
-                if data['adorgbyuser'] is not None and data['adorgbyuser'] != "":
-                    try:
-                        data['adorgbyuser'] = base64.b64decode(data['adorgbyuser'])
-                    except TypeError:
-                        pass
-
-                publickeybase64 = info['publickey']
-                is_masterpublickey = info['is_masterpublickey']
-                del info['publickey']
-                del info['is_masterpublickey']
-                if not is_masterpublickey:
-                    # Send public key if the machine agent does not have one
-                    datasend = {
-                        "action": "installkeymaster",
-                        "keypublicbase64": self.RSA.loadkeypublictobase64(),
-                        'ret': 0,
-                        'sessionid': name_random(5, "publickeymaster"),
-                    }
-                    self.send_message(mto=msg['from'],
-                                      mbody=json.dumps(datasend),
-                                      mtype='chat')
-                # ##################################
-                logger.debug("** display data")
-                if not 'versionagent' in data:
-                    data['versionagent'] = "0.0.0"
-                self.displayData(data)
-                longitude = ""
-                latitude = ""
-                city = ""
-                region_name = ""
-                time_zone = ""
-                longitude = ""
-                latitude = ""
-                postal_code = ""
-                country_code = ""
-                country_name = ""
-                if data['localisationinfo'] is not None and len(data['localisationinfo']) > 0:
-                    longitude = str(data['localisationinfo']['longitude'])
-                    latitude = str(data['localisationinfo']['latitude'])
-                    region_name = str(data['localisationinfo']['region_name'])
-                    time_zone = str(data['localisationinfo']['time_zone'])
-                    postal_code = str(data['localisationinfo']['postal_code'])
-                    country_code = str(data['localisationinfo']['country_code'])
-                    country_name = str(data['localisationinfo']['country_name'])
-                    city = str(data['localisationinfo']['city'])
+                structinfo ={'data' : data,
+                             'action' : "registeryagent",
+                             'sessionid' : name_random(5, "registration"),
+                             'ret' : 0}
                 try:
-                    # Assignment of the user system, if user absent.
-                    if 'users' in data['information'] and len(data['information']['users']) == 0:
-                        data['information']['users'].append("system")
+                    del msg['body']
+                    call_plugin(structinfo['action'],
+                                self,
+                                structinfo['action'],
+                                structinfo['sessionid'],
+                                structinfo['data'],
+                                msg,
+                                structinfo['ret'],
+                                structinfo
+                                )
+                except TypeError:
+                    logging.error("TypeError: executing plugin %s %s" %
+                                  (structinfo['action'], sys.exc_info()[0]))
+                    logger.error("%s" % (traceback.format_exc()))
 
-                    if 'users' in data['information'] and len(data['information']['users']) > 0:
-                        logger.debug("** addition user %s in base" %
-                                     data['information']['users'][0])
-                        logger.info("add user : %s for machine : %s country_name : %s" % (data['information']['users'][0],
-                                                                                          data['information']['info']['hostname'],
-                                                                                          country_name))
-                        useradd = XmppMasterDatabase().adduser(data['information']['users'][0],
-                                                               data['information']['info']['hostname'],
-                                                               city,
-                                                               region_name,
-                                                               time_zone,
-                                                               longitude,
-                                                               latitude,
-                                                               postal_code,
-                                                               country_code,
-                                                               country_name)
-                        try:
-                            useradd = useradd[0]
-                        except TypeError:
-                            pass
-                except Exception:
-                    logger.error("** not user, inscription impossible of %s" % msg['from'].bare)
-                    return
-
-                # Add relayserver or update status in database
-                logger.debug("** Add relayserver or update status in database %s" %
-                             msg['from'].bare)
-                if not 'keysyncthing' in data:
-                    data['keysyncthing'] = ""
-                if data['agenttype'] == "relayserver":
-                    data["adorgbyuser"] = ""
-                    data["adorgbymachine"] = ""
-                    data["kiosk_presence"] = ""
-
-                    if 'moderelayserver' in data:
-                        moderelayserver = data['moderelayserver']
-                    else:
-                        moderelayserver = "static"
-                    XmppMasterDatabase().addServerRelay(data['baseurlguacamole'],
-                                                        data['subnetxmpp'],
-                                                        data['information']['info']['hostname'],
-                                                        data['deployment'],
-                                                        data['xmppip'],
-                                                        data['ipconnection'],
-                                                        data['portconnection'],
-                                                        data['portxmpp'],
-                                                        data['xmppmask'],
-                                                        data['from'],
-                                                        longitude,
-                                                        latitude,
-                                                        True,
-                                                        data['classutil'],
-                                                        data['packageserver']['public_ip'],
-                                                        data['packageserver']['port'],
-                                                        moderelayserver=moderelayserver,
-                                                        keysyncthing=data['keysyncthing']
-                                                        )
-                    # Recover list of cluster ARS
-                    listrelayserver = XmppMasterDatabase(
-                    ).getRelayServerofclusterFromjidars(str(data['from']))
-                    cluster = {'action': "cluster",
-                               'sessionid': name_random(5, "cluster"),
-                               'data': {'subaction': 'initclusterlist',
-                                         'data': listrelayserver
-                                        }
-                               }
-
-                    # All relays server in the cluster are notified.
-                    for ARScluster in listrelayserver:
-                        self.send_message(mto=ARScluster,
-                                          mbody=json.dumps(cluster),
-                                          mtype='chat')
-                logger.debug("** Add machine in database")
-                # Add machine
-                ippublic = None
-                if "ippublic" in data:
-                    ippublic = data['ippublic']
-                if ippublic == None:
-                    ippublic = data['xmppip']
-                kiosk_presence = ""
-                if 'kiosk_presence' in data and data['kiosk_presence'] != "":
-                    kiosk_presence = data['kiosk_presence']
-                else:
-                    kiosk_presence = "False"
-                if not 'lastusersession' in data:
-                    data['lastusersession'] = ""
-                idmachine = XmppMasterDatabase().addPresenceMachine(data['from'],
-                                                                    data['platform'],
-                                                                    data['information']['info']['hostname'],
-                                                                    data['information']['info']['hardtype'],
-                                                                    None,
-                                                                    data['xmppip'],
-                                                                    data['subnetxmpp'],
-                                                                    data['xmppmacaddress'],
-                                                                    data['agenttype'],
-                                                                    classutil=data['classutil'],
-                                                                    urlguacamole=data['baseurlguacamole'],
-                                                                    groupdeploy=data['deployment'],
-                                                                    objkeypublic=publickeybase64,
-                                                                    ippublic=ippublic,
-                                                                    ad_ou_user=data['adorgbyuser'],
-                                                                    ad_ou_machine=data['adorgbymachine'],
-                                                                    kiosk_presence=kiosk_presence,
-                                                                    lastuser=data['lastusersession'],
-                                                                    keysyncthing=data['keysyncthing']
-                                                                    )
-                if idmachine != -1:
-                    if useradd != -1:
-                        XmppMasterDatabase().hasmachineusers(useradd, idmachine)
-                    else:
-                        logger.error("** Not user found for the machine")
-                        return
-                    for i in data['information']["listipinfo"]:
-                        try:
-                            broadcast = i['broadcast']
-                        except:
-                            broadcast = ''
-                        logger.debug("** Add interface %s in database for machine %s" %
-                                     (str(i['macaddress']), msg['from'].bare))
-                        XmppMasterDatabase().addPresenceNetwork(
-                            i['macaddress'], i['ipaddress'], broadcast, i['gateway'], i['mask'], i['macnotshortened'], idmachine)
-                    if data['agenttype'] != "relayserver":
-                        # Update the machine uuid : for consistency with inventory
-                        # call Guacamole config
-                        # or add inventory
-                        logger.debug(
-                            "** Machine type : Update the machine uuid : for consistency with inventory\ncall Guacamole config\nor add inventory")
-                        result = XmppMasterDatabase().listMacAdressforMachine(idmachine)
-                        results = result[0].split(",")
-
-                        logging.getLogger().debug("List mac adress for machine   %s" % results)
-                        uuid = ''
-                        for t in results:
-                            if t in self.config.blacklisted_mac_addresses: continue
-                            computer = ComputerManager().getComputerByMac(t)
-                            if computer != None:
-                                jidrs = str(jid.JID(data['deployment']).user)
-                                jidm = jid.JID(data['from']).domain
-                                jidrs = "%s@%s" % (jidrs, jidm)
-                                uuid = 'UUID' + str(computer.id)
-                                logger.debug("** Update uuid %s for machine %s " %
-                                             (uuid, msg['from'].bare))
-                                XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
-                                if 'countstart' in data and data['countstart'] == 1:
-                                    logger.debug("** Call inventory on PXE machine")
-                                    self.callinventory(data['from'])
-                                    return
-                                osmachine = ComputerManager().getComputersOS(str(computer.id))
-
-                                if len(osmachine) !=0:
-                                    if "Unknown operating system (PXE" in osmachine[0]['OSName']:
-                                        logger.debug("** Call inventory on PXE machine")
-                                        self.callinventory(data['from'])
-                                        return
-                                else:
-                                    logger.warning("information about the operating system is missing for %s" %(msg['from'].bare))
-                                if PluginManager().isEnabled("kiosk"):
-                                    from mmc.plugins.kiosk import handlerkioskpresence
-                                    # send a data message to kiosk when an inventory is registered
-                                    handlerkioskpresence(data['from'],
-                                                         idmachine,
-                                                         data['platform'],
-                                                         data['information']['info']['hostname'],
-                                                         uuid,
-                                                         data['agenttype'],
-                                                         classutil=data['classutil'])
-                                XmppMasterDatabase().setlogxmpp("register inventory in xmpp",
-                                                                "Master",
-                                                                "",
-                                                                0,
-                                                                data['from'],
-                                                                'auto',
-                                                                '',
-                                                                'QuickAction|Inventory|Inventory reception|Auto',
-                                                                '',
-                                                                '',
-                                                                "Master")
-
-                                XmppMasterDatabase().setlogxmpp("Remote Service <b>%s</b> : for [machine : %s][RS : %s]" % (data['remoteservice'],
-                                                                                                                            data['information']['info']['hostname'],
-                                                                                                                            jidrs,),
-                                                                "Master",
-                                                                "",
-                                                                0,
-                                                                data['from'],
-                                                                'auto',
-                                                                '',
-                                                                'Remote_desktop | Guacamole | Service | Auto',
-                                                                '',
-                                                                '',
-                                                                "Master")
-                                self.callInstallConfGuacamole(jidrs, {'hostname': data['information']['info']['hostname'],
-                                                                      'machine_ip': data['xmppip'],
-                                                                      'uuid': str(computer.id),
-                                                                      'remoteservice': data['remoteservice'],
-                                                                      'platform' : data['platform'],
-                                                                      'os' : data['information']['info']['os']})
-                                break
-
-                            else:
-                                logging.getLogger().debug("No computer found")
-                                pass
-                        else:
-                            # Register machine at inventory creation
-                            logger.debug("** Call inventory on %s" % msg['from'].bare)
-                            XmppMasterDatabase().setlogxmpp("Master ask inventory for registration",
-                                                            "Master msg",
-                                                            "",
-                                                            0,
-                                                            data['from'],
-                                                            'auto',
-                                                            '',
-                                                            'QuickAction|Inventory|Inventory requested',
-                                                            '',
-                                                            '',
-                                                            "Master")
-                            self.callinventory(data['from'])
-                            sleep(20)
-                            convergence_reschedule()
-                else:
-                    logger.error("** Database registration error")
-                    return
-
-                # ######################Update remote agent#########################
-                # Manage update remote agent
-                if 'md5agent' in data:
-                    if (data['md5agent'].upper() != "DEV" or data['md5agent'].upper() != "DEBUG") \
-                    and self.Update_Remote_Agentlist.get_fingerprint_agent_base() != data['md5agent']:
-                        if self.config.autoupdate:
-                            #update from master
-                            # send md5 descriptor of the agent for remote update.
-                            self.senddescriptormd5(msg['from'])
-                        elif self.config.autoupdatebyrelay:
-                            #update from ARS
-                            datasend = { "action": "updateagent",
-                                        "data": { "subaction": "ars_update",
-                                                "jidagent": str(msg['from']),
-                                                "descriptoragent" : data['md5agent'],
-                                                "ars_update" : data['deployment']},
-                                        "ret": 0,
-                                        "sessionid" : name_random(5, "updateagent")}
-                            # Send catalog of files.
-                            logger.debug("Send descriptor to ARS %s for update agent [%s]" %
-                                            (data['deployment'], msg['from']))
-                            self.send_message( data['deployment'],
-                                                mbody=json.dumps(datasend),
-                                                mtype='chat')
-                # Show plugins information logs
-                if self.config.showplugins:
-                    logger.info("__________________________________________")
-                    logger.info("LIST PLUGINS INSTALLED AGENT")
-                    logger.info("%s" % json.dumps(data['plugin'], indent=4, sort_keys=True))
-                    logger.info("__________________________________________")
-                    if 'pluginscheduled' in data:
-                        logger.info("__________________________________________")
-                        logger.info("LIST SCHEDULED PLUGINS INSTALLED AGENT")
-                        logger.info("%s" % json.dumps(
-                            data['pluginscheduled'], indent=4, sort_keys=True))
-                        logger.info("__________________________________________")
-                restartAgent = False
-                if self.config.showplugins:
-                    logger.info("_____________Deploy plugin_________________")
-                #search des plugins a mettre a jour
-                for nameplugin, versionplugin in self.plugindata.iteritems():
-                    deploy = False
-                    try:
-                        # Check version
-                        if data['plugin'][nameplugin] != versionplugin :
-                            #version a installer
-                            deploy = True
-                    except:
-                        # si le plugin existe pas on install
-                        deploy = True
-
-                    if data['agenttype'] != "all":
-                        if data['agenttype'] == "relayserver" and self.plugintype[nameplugin] == 'machine':
-                            deploy = False
-                        if data['agenttype'] == "machine" and self.plugintype[nameplugin] == 'relayserver':
-                            deploy = False
-
-                    if deploy:
-                        # verify version agent pour savoir si on doit déploye
-                        if data['versionagent'] != "0.0.0":
-                            # on a la version de l'agent
-                            # si celle ci est egale ou superieur a celle du plugin on install le plugin.
-                            if nameplugin in self.pluginagentmin and \
-                                StrictVersion(self.pluginagentmin[nameplugin]) > StrictVersion(data['versionagent']):
-                                logger.warning("can t install plugin '%s' (%s) on %s ( agent version(%s) < agent version plugin(%s) )" % (nameplugin, versionplugin, msg['from'], data['versionagent'], self.pluginagentmin[nameplugin]))
-                                continue
-                        else:
-                             if self.pluginagentmin[nameplugin] != "0.0.0":
-                                 continue
-
-                        if self.config.showplugins:
-                            logger.info("deploy %s versionplugin %s on %s" % (nameplugin,
-                                                                              versionplugin,
-                                                                              msg['from']))
-                        self.file_deploy_plugin.append(
-                            {'dest': msg['from'], 'plugin': nameplugin, 'type': 'deployPlugin'})
-                if self.config.showplugins:
-                    logger.info("__________________________________________")
-                        #return True
-                if 'pluginscheduled' in data:
-                    if self.config.showplugins:
-                        logger.info("_____________Deploy plugin scheduled_________________")
-                        for k, v in self.plugindatascheduler.iteritems():
-                            if k in data['pluginscheduled']:
-                                if v != data['pluginscheduled'][k]:
-                                    # deploy on version changes
-                                    logger.info("The version is changing")
-                                    logger.info("*******************")
-                                    self.deployPluginscheduled(msg, k)
-                                    self.restartAgent(msg['from'])
-                                    break
-                                else:
-                                    logger.info("No version change")
-                            else:
-                                # The k plugin is not in the agent plugins list
-                                if k in self.plugintypescheduler:
-                                    if self.plugintypescheduler[k] == 'all':
-                                        self.deployPluginscheduled(msg, k)
-                                        self.restartAgent(msg['from'])
-                                        break
-                                    if self.plugintypescheduler[k] == 'relayserver' and data['agenttype'] == "relayserver":
-                                        self.deployPluginscheduled(msg, k)
-                                        self.restartAgent(msg['from'])
-                                        break
-                                    if self.plugintypescheduler[k] == 'machine' and data['agenttype'] == "machine":
-                                        self.deployPluginscheduled(msg, k)
-                                        self.restartAgent(msg['from'])
-                                        break
-                self.showListClient()
-                # indicate that the guacamole configurations must be made
-                # for sub network subnetxmpp
-                self.updateguacamoleconfig[data['subnetxmpp']] = True
+                except Exception as e:
+                    logging.error("Executing plugin (%s) %s %s" % (msg['from'], structinfo['action'], str(e)))
+                    logger.error("%s" % (traceback.format_exc()))
                 return True
             return False
         except Exception as e:

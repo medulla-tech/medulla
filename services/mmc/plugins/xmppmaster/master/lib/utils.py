@@ -174,6 +174,17 @@ def data_struct_message(action, data = {}, ret=0, base64 = False, sessionid = No
              "base64" : False,
              "sessionid" : getRandomName(4,sessionid)}
 
+def add_method(cls):
+    """ decorateur a utiliser pour ajouter une methode a un object """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            return func(*args, **kwargs)
+        setattr(cls, func.__name__, wrapper)
+        # Note we are not binding func, but wrapper which accepts self but does exactly the same as func
+        return func # returning func means func can still be used normally
+    return decorator
+
 def pathbase():
     return os.path.abspath(os.getcwd())
 
