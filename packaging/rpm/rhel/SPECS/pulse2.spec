@@ -415,6 +415,12 @@ This package contains the xmppmaster plugin for the MMC agent.
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/inventoryconf.ini
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/resultinventory.ini
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/assessor_agent.ini
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadautoupdate.ini
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadlogsrotation.ini
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadpluginlistversion.ini
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadpluginschedulerlistversion.ini
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadshowregistration.ini
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/registeryagent.ini
 %python2_sitelib/mmc/plugins/xmppmaster
 %python2_sitelib/pulse2/database/xmppmaster
 
