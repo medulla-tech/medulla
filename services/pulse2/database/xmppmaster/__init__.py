@@ -46,7 +46,9 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Syncthing_ars_cluster,\
     Syncthing_machine,\
     Syncthing_deploy_group,\
-    Substituteconf
+    Substituteconf,\
+    Agentsubscription,\
+    Subscription
 # Imported last
 import logging
 import json
@@ -239,7 +241,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 return id
             else:
                 logger.error("setup or create record for agent subscription%s"%agentsubscription)
-                return Nnone
+                return None
         except Exception, e:
             logging.getLogger().error(str(e))
             return None
