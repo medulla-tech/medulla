@@ -423,9 +423,6 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         objectxmpp.send_message(mto=msg['from'],
                             mbody=json.dumps(response),
                             mtype='chat')
-        #add account for delete
-        #list des comptes a suprimer
-        objectxmpp.confaccount.append(msg['from'].user)
     except Exception:
         sendErrorConnectionConf(objectxmpp,sessionid,msg)
         logger.error("Unable to configure agent for one relay server")
