@@ -362,7 +362,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         try:
             result = XmppMasterDatabase().jidrelayserverforip(objectxmpp.assessor_agent_serverip)
         except Exception:
-            logger.warn("Unable to configure the relay server : missing")
+            logger.warn("Unable to assign the relay server : missing")
             #result = [objectxmpp.assessor_agent_serverip,
                         #objectxmpp.assessor_agent_port,
                         #objectxmpp.domaindefault,
@@ -425,7 +425,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                             mtype='chat')
     except Exception:
         sendErrorConnectionConf(objectxmpp,sessionid,msg)
-        logger.error("Unable to configure agent for one relay server")
+        logger.error("Unable to assign a relay server to an agent")
         logger.error("\n%s"%(traceback.format_exc()))
 
 def msg_log(msg_header, hostname, user, result):
