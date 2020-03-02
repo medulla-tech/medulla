@@ -103,6 +103,16 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
             self.remote_update_plugin_interval = self.getint('global', 'remote_update_plugin_interval')
         except Exception:
             self.remote_update_plugin_interval = 60
+        # deployment support for master
+        try:
+            self.Booltaskdeploy = self.getboolean('global', 'taskdeploy')
+        except Exception:
+            self.Booltaskdeploy = True
+        # manage session
+        try:
+            self.Boolsessionwork = self.getboolean('global', 'sessionwork')
+        except Exception:
+            self.Boolsessionwork = True
         # Enable memory leaks checks and define interval (in seconds)
         try:
             self.memory_leak_check = self.getboolean('global', 'memory_leak_check')
@@ -190,6 +200,10 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
             self.autoupdatebyrelay = self.getboolean('global', 'autoupdatebyrelay')
         else:
             self.autoupdatebyrelay = False
+        self.pluginliststart = ""
+        if self.has_option("plugins", "pluginliststart"):
+            self.pluginliststart = self.get('plugins', 'pluginliststart')
+        self.pluginliststart = [x.strip() for x in self.pluginliststart.split(",") if x.strip() != ""]
         self.dirplugins = self.get('plugins', 'dirplugins')
         self.dirschedulerplugins = self.get('plugins', 'dirschedulerplugins')
         self.information = {}
