@@ -22,17 +22,10 @@
 # file : xmppmaster/master/pluginsmaster/plugin_loadpluginlistversion.py
 import base64
 import json
-import sys, os
+import os
 import logging
-import platform
-from utils import file_get_contents, \
-                      getRandomName, \
-                      data_struct_message, \
-                      add_method
 import traceback
-from sleekxmpp import jid
 import ConfigParser
-from ConfigParser import  NoOptionError, NoSectionError
 import types
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -48,7 +41,7 @@ def action( objectxmpp, action, sessionid, data, msg, dataerreur):
     logger.debug("call %s from %s"%(plugin, msg['from']))
     logger.debug("=====================================================")
     #lit fichiers de configuration pour le plugin si pas charge.
-    
+
     compteurcallplugin = getattr(objectxmpp, "num_call%s"%action)
 
     if compteurcallplugin == 0:
@@ -83,7 +76,7 @@ def read_conf_load_plugin_list_version(objectxmpp):
         objectxmpp.dirpluginlist = "/var/lib/pulse2/xmpp_baseplugin/"
         if Config.has_option("parameters", "dirpluginlist"):
             objectxmpp.dirpluginlist = Config.get('parameters', 'dirpluginlist')
-    # loadPluginList function definie dynamiquement
+    # loadPluginList function defined dynamically
     objectxmpp.file_deploy_plugin = []
     objectxmpp.loadPluginList = types.MethodType(loadPluginList, objectxmpp)
     ##objectxmpp.restartmachineasynchrone = types.MethodType(restartmachineasynchrone, objectxmpp)

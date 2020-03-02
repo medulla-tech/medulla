@@ -22,12 +22,9 @@
 # file : xmppmaster/master/pluginsmaster/plugin_loadpluginschedulerlistversion.py
 import base64
 import json
-import sys, os
+import os
 import logging
-import platform
-from utils import file_get_contents, getRandomName, data_struct_message
 import traceback
-from sleekxmpp import jid
 import types
 import ConfigParser
 logger = logging.getLogger()
@@ -73,7 +70,7 @@ def read_conf_load_plugin_scheduler_list_version(objectxmpp):
         objectxmpp.dirschedulerplugins = "/var/lib/pulse2/xmpp_basepluginscheduler"
         if Config.has_option("parameters", "dirschedulerplugins"):
             objectxmpp.dirschedulerplugins = Config.get('parameters', 'dirschedulerplugins')
-    # function definie dynamiquement
+    # function defined dynamically
     objectxmpp.plugin_loadpluginschedulerlistversion = types.MethodType(plugin_loadpluginschedulerlistversion, objectxmpp)
     objectxmpp.deployPluginscheduled = types.MethodType(deployPluginscheduled, objectxmpp)
     objectxmpp.loadPluginschedulerList = types.MethodType(loadPluginschedulerList, objectxmpp)

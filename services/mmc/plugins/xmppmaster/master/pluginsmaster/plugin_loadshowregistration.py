@@ -22,12 +22,9 @@
 
 import base64
 import json
-import sys, os
+import os
 import logging
-import platform
-from utils import file_get_contents, getRandomName, data_struct_message
 import traceback
-from sleekxmpp import jid
 import types
 import ConfigParser
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -87,7 +84,7 @@ def read_conf_showregistration(objectxmpp):
             objectxmpp.showinfodeploy = Config.getboolean('parameters', 'showinfodeploy')
         else:
             objectxmpp.showinfodeploy = False
-            
+
         if Config.has_option("parameters", "showinfo"):
             objectxmpp.showinfo = Config.getboolean('parameters', 'showinfo')
         else:

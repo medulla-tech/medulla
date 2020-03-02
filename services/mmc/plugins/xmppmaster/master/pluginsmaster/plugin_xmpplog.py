@@ -22,19 +22,10 @@
 #
 # file /pluginsmaster/plugin_xmpplog.py
 
-import base64
 import json
-import pprint
-from utils import AESCipher, \
-                  subnetnetwork
 import logging
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
-from random import randint
-from localisation import Localisation
-import operator
-import netaddr
-from manageADorganization import manage_fqdn_window_activedirectory
 
 logger = logging.getLogger()
 

@@ -22,32 +22,24 @@
 #
 # file /pluginsmaster/plugin_registeryagent.py
 
-import sys
 import time
 from manageRSAsigned import MsgsignedRSA
 from sleekxmpp import jid
 from utils import getRandomName
 import re
-from distutils.version import LooseVersion, StrictVersion
+from distutils.version import LooseVersion
 import ConfigParser
 ## this import will be used later
 ## import types
 import os
 import base64
 import json
-import pprint
-from utils import AESCipher, \
-                  subnetnetwork
 import logging
 from pulse2.database.kiosk import KioskDatabase
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
 import traceback
-from random import randint
 from localisation import Localisation
-import operator
-import netaddr
-from manageADorganization import manage_fqdn_window_activedirectory
 from mmc.agent import PluginManager
 logger = logging.getLogger()
 
@@ -181,21 +173,21 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                             logger.debug("Mac address list for machine %s : %s" %(machine['id'], results))
                             uuid = ''
                             computerid=""
-                            jidrsjidrs=""
+                            jidrs=""
                             btestfindcomputer = False
                             for testinventaireremonte in range(20):
-                                logger.debug("%s determination uuid from GLPI computer id for mac address "%testinventaireremonte)
+                                logger.debug("%s Find uuid from GLPI computer id for mac address "%testinventaireremonte)
                                 for macadress in results:
                                     logger.debug("Get GLPI computer id for mac address %s"%macadress)
-                                    if macadress in xmppobject.blacklisted_mac_addresses: 
-                                        logger.warning("address blacklist %s for %s machine"%( macadress, data['from']))
+                                    if macadress in xmppobject.blacklisted_mac_addresses:
+                                        logger.warning("address blacklisted %s for %s machine"%( macadress, data['from']))
                                         continue
                                     computer = getComputerByMac(macadress)
                                     if computer is not None:
-                                        logger.debug("Computer found : #%s for mac adress %s" %(computer.id, macadress))
+                                        logger.debug("Computer found : #%s for mac address %s" %(computer.id, macadress))
                                         jidrs = str(jid.JID(data['deployment']).user)
                                         jidm = jid.JID(data['from']).domain
-                                        jidrs = "%s@%s" % (jidrs, jidm)                                    
+                                        jidrs = "%s@%s" % (jidrs, jidm)
                                         computerid = str(computer.id)
                                         uuid = 'UUID' + str(computer.id)
                                         logger.debug("** Update uuid %s for machine %s " %
@@ -224,19 +216,19 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                     logger.debug("waiting inventory from %s"%( data['from']))
                                     time.sleep(20)
                                     #il faut de nouveau retester si on a 1 uuid continue dans la boucle
-                            logger.warning("** association UUID GLPI no find for %s" % (msg['from']))
+                            logger.warning("** association UUID GLPI not found for %s" % (msg['from']))
                         return
                     else:
                         # il faut verifier si guacamole est initialisé.
                         #logger.debug("UUID is %s"%uuid_inventorymachine)
-                        logger.debug("Machine %s already exist"%data['from'])
-                        logger.debug("Verify existance jid %s" % msg['from'])
+                        logger.debug("Machine %s already exists"%data['from'])
+                        logger.debug("Verify existence jid %s" % msg['from'])
                         if XmppMasterDatabase().getPresencejid(msg['from']):
                             logger.debug("correct jid %s" % msg['from'])
                             return
                         else:
                             # The registration of the machine in database must be deleted, so it is updated.
-                            logger.debug("jid %s no exist dans base cf domaine chang" % msg['from'])
+                            logger.debug("jid %s does not exist in base cf domaine change" % msg['from'])
                             XmppMasterDatabase().delPresenceMachinebyjiduser(msg['from'].user)
 
             """ Check machine information from agent """
@@ -589,7 +581,7 @@ def callInstallConfGuacamole(xmppobject, torelayserver, data):
         except Exception:
             logger.error("\n%s"%(traceback.format_exc()))
     else:
-        logger.debug("application direct parametrage guacamole in base for uuid %s"%data['uuid'])
+        logger.debug("Apply guacamole parameters in db for uuid %s"%data['uuid'])
         XmppMasterDatabase().addlistguacamoleidforiventoryid(data['uuid'], {})
 
 def callinventory(xmppobject,  to):
