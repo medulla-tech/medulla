@@ -1066,35 +1066,36 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 t['sessionid'],
                                                 t['hostname'],
                                                 t['jidmachine'] ])
-                            logger.debug("*** %s"%t)
-                            XmppMasterDatabase().updatedeploystate(t['sessionid'], "DEPLOYMENT START (REBOOT)")
-                            self.xmpplog("resource recovery on ARS %s for deploy"\
-                                "sessionid %s on machine  (connection loss) %s " % (t['jidrelay'],
-                                                                                    t['sessionid'],
-                                                                                    t['hostname']),
-                                type = 'deploy',
-                                sessionname = t['sessionid'],
-                                priority = -1,
-                                action = "xmpplog",
-                                who = "",
-                                how = "",
-                                why =  t['jidmachine'],
-                                module = "Deployment| Notify | Cluster",
-                                date = None,
-                                fromuser = "",
-                                touser = "")
-                            self.xmpplog('<span style="font-weight: bold;color : Orange;">WAITING REBOOT</span>',
-                                type = 'deploy',
-                                sessionname = t['sessionid'],
-                                priority = -1,
-                                action = "xmpplog",
-                                who =  t['jidmachine'],
-                                how = "",
-                                why = "",
-                                module = "Deployment | Error | Terminate | Notify",
-                                date = None ,
-                                fromuser = "master",
-                                touser = "")
+                            ret = XmppMasterDatabase().updatedeploystate1(t['sessionid'], "DEPLOYMENT START (REBOOT)")
+                            if ret >= 1:
+                                logger.debug("Update deploy Status for Machine OffLine %s"%t['jidmachine'])
+                                self.xmpplog("resource recovery on ARS %s for deploy"\
+                                    "sessionid %s on machine  (connection loss) %s " % (t['jidrelay'],
+                                                                                        t['sessionid'],
+                                                                                        t['hostname']),
+                                    type = 'deploy',
+                                    sessionname = t['sessionid'],
+                                    priority = -1,
+                                    action = "xmpplog",
+                                    who = "",
+                                    how = "",
+                                    why =  t['jidmachine'],
+                                    module = "Deployment| Notify | Cluster",
+                                    date = None,
+                                    fromuser = "",
+                                    touser = "")
+                                self.xmpplog('<span style="font-weight: bold;color : Orange;">WAITING REBOOT</span>',
+                                    type = 'deploy',
+                                    sessionname = t['sessionid'],
+                                    priority = -1,
+                                    action = "xmpplog",
+                                    who =  t['jidmachine'],
+                                    how = "",
+                                    why = "",
+                                    module = "Deployment | Error | Terminate | Notify",
+                                    date = None ,
+                                    fromuser = "master",
+                                    touser = "")
                     #arscluster = list(set(arscluster))
                     if len(arscluster) > 0:
                         #logger.debug("*** START SEND MSG ARS")

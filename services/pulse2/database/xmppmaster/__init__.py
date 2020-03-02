@@ -2628,14 +2628,14 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updatedeploystate1(self, session, sessionid, state):
         try:
-            session.query(Deploy).filter(and_(Deploy.sessionid == sessionid,
+            ret = session.query(Deploy).filter(and_(Deploy.sessionid == sessionid,
                                               Deploy.state != "DEPLOYMENT SUCCESS",
                                               Deploy.state != "DEPLOYMENT ERROR")
                                   ).\
                     update({Deploy.state: state})
             session.commit()
             session.flush()
-            return 1
+            return ret
         except Exception, e:
             logging.getLogger().error(str(e))
             return -1
