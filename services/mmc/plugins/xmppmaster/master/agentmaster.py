@@ -540,11 +540,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
         msglog=[]
         wol_set = set()
         try:
-            # machine ecart temps de deploiement terminer met status a DEPLOYMENT ERROR ON TIMEOUT
+            # machine ecart temps de deploiement terminer met status a ABORT ON TIMEOUT
             result = XmppMasterDatabase().Timeouterrordeploy()
             for machine in result:
                 hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
-                msglog.append("<span style='color : red;font-weight: bold;'>%s [DEPLOYMENT ERROR ON TIMEOUT For deploy]</span>"%hostnamemachine)
+                msglog.append("<span style='color : red;font-weight: bold;'>%s [ABORT ON TIMEOUT For deploy]</span>"%hostnamemachine)
                 msglog.append("<span style='color : red;font-weight: bold;'>Machine down in slot deploy</span>")
                 msglog.append("<span style='color : red;font-weight: bold;'>DEPLOY TERMINATE</span>")
             for logmsg in msglog:
@@ -1066,7 +1066,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 t['sessionid'],
                                                 t['hostname'],
                                                 t['jidmachine'] ])
-                            ret = XmppMasterDatabase().updatedeploystate1(t['sessionid'], "DEPLOYMENT START (REBOOT)")
+                            ret = XmppMasterDatabase().updatedeploystate1(t['sessionid'], "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)")
                             if ret >= 1:
                                 logger.debug("Update deploy Status for Machine OffLine %s"%t['jidmachine'])
                                 self.xmpplog("resource recovery on ARS %s for deploy"\
@@ -1194,7 +1194,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             "error_name_package____",
                                             uuidmachine,
                                             title,
-                                            "ABORT PACKAGE UUID MISSING",
+                                            "ABORT PACKAGE IDENTIFIER MISSING",
                                             sessiondeployementless,
                                             user=login,
                                             login=login,
@@ -1273,7 +1273,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                 name,
                                                                 uuidmachine,
                                                                 title,
-                                                                "ABORT ARS DEPLOY DOWN",
+                                                                "ABORT RELAY DOWN",
                                                                 sessiondeployementless,
                                                                 user=login,
                                                                 login=login,
@@ -1318,7 +1318,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                         name,
                                                         uuidmachine,
                                                         title,
-                                                        "ABORT ALTERNATIF DOWN",
+                                                        "ABORT ALTERNATIVE RELAYS DOWN",
                                                         sessiondeployementless,
                                                         user=login,
                                                         login=login,
@@ -1371,7 +1371,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 name,
                                                 uuidmachine,
                                                 title,
-                                                "ABORT ARS GROUP DEPLOY MISSING",
+                                                "ABORT INFO RELAY MISSING",
                                                 sessiondeployementless,
                                                 user=login,
                                                 login=login,
@@ -1405,7 +1405,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             name,
                                             uuidmachine,
                                             title,
-                                            "ABORT UUID MACHINE",
+                                            "ERROR UNKNOWN ERROR",
                                             sessiondeployementless,
                                             user=login,
                                             login=login,
@@ -1476,7 +1476,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             name,
                                             uuidmachine,
                                             title,
-                                            "ABORT PACKAGE NAME VERSION MISSING",
+                                            "ABORT PACKAGE VERSION MISSING",
                                             sessiondeployementless,
                                             user=login,
                                             login=login,

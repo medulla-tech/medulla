@@ -64,7 +64,7 @@ foreach ($info['objectdeploy'] as  $val){
         case "DEPLOYMENT ERROR":
             $uuiderror[] = $val['inventoryuuid'];
             break;
-        case "DEPLOYMENT START (REBOOT)":
+        case "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)":
         case "DEPLOYMENT START":
         case "DEPLOYMENT DIFFERED":
             $uuidprocess[] = $val['inventoryuuid'];
