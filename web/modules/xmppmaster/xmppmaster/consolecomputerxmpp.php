@@ -149,11 +149,10 @@ li.quickg a {
     $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
     $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
     $command = isset($_POST['command']) ? $_POST['command'] : "";
-    $tab = explode("/",$machine);
     $uiduniq = uniqid ("shellcommande");
     $resultcommand = "";
     $errorcode = "";
-    $p = new PageGenerator(_T("Console", 'xmppmaster')." $tab[1]");
+    $p = new PageGenerator(_T("Console", 'xmppmaster')." $machine");
     $p->setSideMenu($sidemenu);
     $p->display();
 
