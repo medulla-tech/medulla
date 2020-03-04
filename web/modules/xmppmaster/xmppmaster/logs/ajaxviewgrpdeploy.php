@@ -85,7 +85,6 @@ $count = $getdeployment['total'];
 // STATS FROM XMPPMASTER DEPLOY
 $resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,  date("Y-m-d H:i:s", $start_date));
 // from msc
-$machine_timeout_from_deploy   = xmlrpc_get_count_timeout_wol_deploy( $cmd_id, date("Y-m-d H:i:s", $start_date));
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 $MSC_nb_mach_grp_for_deploy  = $resultfrommsc['nbmachine'];
@@ -93,27 +92,37 @@ $MSC_nb_mach_grp_done_deploy     = $resultfrommsc['nbdeploydone'];
 $timestampnow = time();
 $info_from_machines = $re["listelet"];
 
-$total_machine_from_deploy     = $resultfromdeploy['totalmachinedeploy'];
-$machine_error_from_deploy     = $resultfromdeploy['machineerrordeploy'];
-$machine_success_from_deploy   = $resultfromdeploy['machinesuccessdeploy'];
-$machine_process_from_deploy   = $resultfromdeploy['machineprocessdeploy'];
-$machine_abort_from_deploy     = $resultfromdeploy['machineabortdeploy'];
-$machine_wol1_from_deploy      = $resultfromdeploy['machinewol1deploy'];
-$machine_wol2_from_deploy      = $resultfromdeploy['machinewol2deploy'];
-$machine_wol3_from_deploy      = $resultfromdeploy['machinewol3deploy'];
-$machine_waiting_from_deploy   = $resultfromdeploy['waitingmachinesdeploy'];
-$machineerrortimeout           = $resultfromdeploy['machineerrortimeout'];
-
-
-$machine_wol_from_deploy       = $total_machine_from_deploy-($machine_success_from_deploy + $machine_success_from_deploy + $machine_process_from_deploy + $machine_timeout_from_deploy);
+$totalmachinedeploy = $resultfromdeploy['totalmachinedeploy'];
+$deploymentsuccess  = $resultfromdeploy['deploymentsuccess'];
+$deploymenterror    = $resultfromdeploy['deploymenterror'];
+$deploymentabort    = $resultfromdeploy['deploymentabort'];
+$abortontimeout     = $resultfromdeploy['abortontimeout'];
+$abortmissingagent  = $resultfromdeploy['abortmissingagent'];
+$abortmissingagent = $resultfromdeploy['abortrelaydown'];
+$abortalternativerelaysdown = $resultfromdeploy['abortalternativerelaysdown'];
+$abortinforelaymissing = $resultfromdeploy['abortinforelaymissing'];
+$errorunknownerror = $resultfromdeploy['errorunknownerror'];
+$abortpackageidentifiermissing = $resultfromdeploy['abortpackageidentifiermissing'];
+$abortpackagenamemissing = $resultfromdeploy['abortpackagenamemissing'];
+$abortpackageversionmissing = $resultfromdeploy['abortpackageversionmissing'];
+$abortpackageworkflowerror = $resultfromdeploy['abortpackageworkflowerror'];
+$abortdescriptormissing = $resultfromdeploy['abortdescriptormissing'];
+$abortmachinedisappeared = $resultfromdeploy['abortmachinedisappeared'];
+$deploymentstart = $resultfromdeploy['deploymentstart'];
+$wol1 = $resultfromdeploy['wol1'];
+$wol2 = $resultfromdeploy['wol2'];
+$wol3 = $resultfromdeploy['wol3'];
+$waitingmachineonline = $resultfromdeploy['waitingmachineonline'];
+$deploymentpending = $resultfromdeploy['deploymentpending'];
+$autrestatus = $resultfromdeploy['autrestatus'];
 
 $terminate = 0;
 $deployinprogress = 0;
 
-$waiting = $MSC_nb_mach_grp_for_deploy - ($total_machine_from_deploy + $machine_timeout_from_deploy);
+$waiting = $MSC_nb_mach_grp_for_deploy - ($totalmachinedeploy + $abortontimeout);
 
 // $evolution
-if ($waiting == 0 && $machine_process_from_deploy == 0 ){
+if ($waiting == 0 && $deploymentstart == 0 ){
     $terminate = 1;
 }
 
@@ -292,22 +301,18 @@ echo "<div>";
         $f->display();
     }
 
-        $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $MSC_nb_mach_grp_done_deploy;
+        $nb_machine_deployer_avec_timeout_deploy = $abortontimeout + $MSC_nb_mach_grp_done_deploy;
         $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $MSC_nb_mach_grp_for_deploy) * 100,2);
-        $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
+        $deploymachine = $deploymentsuccess + $deploymenterror;
         echo '<div class="bars">';
             echo '<span style="width: 200px;">';
                 echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$MSC_nb_mach_grp_for_deploy.'" value="'.$nb_machine_deployer_avec_timeout_deploy .'" form="form-id"></progress>';
             echo '</span>';
         echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
 
-        $wol = ( $MSC_nb_mach_grp_for_deploy - ( $total_machine_from_deploy + $machine_timeout_from_deploy ));
-
-
-
         echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$MSC_nb_mach_grp_for_deploy;
         echo "<br>"._T("Number of current deployments","xmppmaster")." : ". $deploymachine;
-        echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $machineerrortimeout;
+        echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $abortontimeout;
         echo "<br>"._T("Deployment summary","xmppmaster").":";
         echo "<table><tr>";
         echo "<td>"._T("Success","xmppmaster")."</td>
@@ -320,16 +325,16 @@ echo "<div>";
             <td>"._T("Aborted","xmppmaster")."</td>";
         echo "</tr>
         <tr>";
-
-        $WOL = $machine_wol1_from_deploy+$machine_wol2_from_deploy+$machine_wol3_from_deploy;
-        echo "<td>".$machine_success_from_deploy."</td>
-            <td>".$machine_error_from_deploy."</td>
-            <td>".$machine_process_from_deploy."</td>
+        $inprogress = ( $MSC_nb_mach_grp_for_deploy - ( $totalmachinedeploy + $abortontimeout ));
+        $wol = $wol1+$wol2+$wol3;
+        echo "<td>".$deploymentsuccess."</td>
+            <td>".$deploymenterror."</td>
+            <td>".$deploymentstart."</td>
+            <td>".$inprogress."</td>
             <td>".$wol."</td>
-            <td>".$WOL."</td>
-            <td>".$machine_waiting_from_deploy."</td>
-            <td>".$machineerrortimeout."</td>
-            <td>".$machine_abort_from_deploy."</td>";
+            <td>".$waitingmachineonline."</td>
+            <td>".$abortontimeout."</td>
+            <td>".$deploymentabort."</td>";
         echo "</tr></table>";
 
     echo '</div>';
@@ -499,30 +504,30 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
       var r = "";
       var datas = new Array();';
 
-          if ($machine_success_from_deploy > 0){
-            echo 'datas.push({"label":"Success", "value":'.$machine_success_from_deploy.', "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
+          if ($deploymentsuccess > 0){
+            echo 'datas.push({"label":"Success", "value":'.$deploymentsuccess.', "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
           }
-          if ($machine_error_from_deploy > 0){
-            echo 'datas.push({"label":"Error", "value":'.$machine_error_from_deploy.', "color": "#FE2E64", "href":"'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          if ($deploymenterror > 0){
+            echo 'datas.push({"label":"Error", "value":'.$deploymenterror.', "color": "#FE2E64", "href":"'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
-          if ($machine_process_from_deploy > 0){
-            echo 'datas.push({"label":"In progress", "value":'.$machine_process_from_deploy.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          if ($deploymentstart > 0){
+            echo 'datas.push({"label":"In progress", "value":'.$deploymentstart.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($inprogress > 0){
+            echo 'datas.push({"label":"Waiting", "value":'.$inprogress.', "color": "#DBA901", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
           if ($wol > 0){
-            echo 'datas.push({"label":"Waiting", "value":'.$wol.', "color": "#DBA901", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-          }
-          if ($WOL > 0){
-            echo 'datas.push({"label":"WOL", "value":'.$WOL.', "color": "#db9201", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+            echo 'datas.push({"label":"WOL", "value":'.$wol.', "color": "#db9201", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
 
-          if ($machineerrortimeout > 0){
-          echo 'datas.push({"label":"Timed out", "value":'.$machineerrortimeout.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          if ($abortontimeout > 0){
+          echo 'datas.push({"label":"Timed out", "value":'.$abortontimeout.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
-          if ($machine_abort_from_deploy > 0){
-            echo 'datas.push({"label":"Aborted", "value":'.$machine_abort_from_deploy.', "color": "#ff5050", "href":"'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          if ($deploymentabort > 0){
+            echo 'datas.push({"label":"Aborted", "value":'.$deploymentabort.', "color": "#ff5050", "href":"'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
-          if ($machine_waiting_from_deploy > 0){
-            echo 'datas.push({"label":"Waiting for Online ", "value":'.$machine_waiting_from_deploy.', "color": "#8f01db", "href":"'.urlredirect_group_for_deploy("machinewaitingonline",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          if ($waitingmachineonline > 0){
+            echo 'datas.push({"label":"Waiting for Online ", "value":'.$waitingmachineonline.', "color": "#8f01db", "href":"'.urlredirect_group_for_deploy("machinewaitingonline",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
           echo'
           chart("holder", datas);
