@@ -27,7 +27,7 @@ Provides access to Pkgs database
 """
 # standard modules
 import time
-
+import traceback
 # SqlAlchemy
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
                        Integer, ForeignKey, select, asc, or_, desc, func, not_, distinct
@@ -398,7 +398,7 @@ class PkgsDatabase(DatabaseHelper):
             return result_list
         except Exception, e:
             logging.getLogger().error(str(e))
-            traceback.print_exc(file=sys.stdout)
+            logger.error("\n%s"%(traceback.format_exc()))
             return []
 
     @DatabaseHelper._sessionm

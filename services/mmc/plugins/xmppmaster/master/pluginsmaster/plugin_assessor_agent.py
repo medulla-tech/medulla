@@ -24,7 +24,9 @@
 
 import base64
 import json
-from utils import AESCipher, subnetnetwork
+from utils import AESCipher, \
+                  subnetnetwork, \
+                  ipfromdns
 import logging
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
@@ -32,17 +34,33 @@ from random import randint
 from localisation import Localisation
 import operator
 import netaddr
+import os
+import ConfigParser
+
 from manageADorganization import manage_fqdn_window_activedirectory
 
 logger = logging.getLogger()
 
-plugin = {"VERSION": "1.0", "NAME": "assessor_agent", "TYPE": "master"}
+plugin = {"VERSION": "1.1", "NAME": "assessor_agent", "TYPE": "master"}
 
 
 def action(objectxmpp, action, sessionid, data, msg, ret, dataobj):
     logger.debug("=====================================================")
     logger.debug("call %s from %s"%(plugin, msg['from']))
     logger.debug("=====================================================")
+
+    compteurcallplugin = getattr(objectxmpp, "num_call%s"%action)
+
+    logger.debug("compteur ASSESSOR num_call%s %s"%(action, compteurcallplugin))
+
+    if compteurcallplugin == 0:
+        read_conf_assessor_master(objectxmpp)
+        logger.debug("%s  "%objectxmpp.assessor_agent_showinfomachine)
+
+    if objectxmpp.assessor_agent_errorconf:
+        logger.debug("error configuration no process action %s for machine %s"%(action , msg['from']))
+        return
+
     try:
         MessagesAgentFromChatroomConfig(objectxmpp,
                                         action,
@@ -58,8 +76,7 @@ def action(objectxmpp, action, sessionid, data, msg, ret, dataobj):
 def testsignaturecodechaine(objectxmpp, data, sessionid, msg):
     codechaine="%s"%(msg['from'])
     result = False
-    keyAES32 = [str(x.strip()) for x in objectxmpp.config.keyAES32.split(",") if x.strip() != ""]
-    for t in keyAES32:
+    for t in objectxmpp.assessor_agent_keyAES32:
         cipher = AESCipher(t)
         decrypted = cipher.decrypt(data['codechaine'])
         if str(decrypted) == str(codechaine):
@@ -67,7 +84,6 @@ def testsignaturecodechaine(objectxmpp, data, sessionid, msg):
             break
     if not result:
         logger.warning("authentification False %s"%(codechaine))
-
         sendErrorConnectionConf(objectxmpp, sessionid, msg)
     return result
 
@@ -105,7 +121,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         data['localisationinfo'] = Localisation().geodataip(data['ippublic'])
     else:
         data['localisationinfo'] = {}
-    objectxmpp.displayData(data)
+    displayData(objectxmpp, data)
 
     if not ('information' in data and \
                 'users' in data['information'] and \
@@ -201,9 +217,9 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                         logger.warn("ARS Random choice : %s"%listeserver[index])
                         result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(listeserver[index])
                         msg_log("The Geoposition",
-                                data['information']['info']['hostname'],
-                                data['information']['users'][0],
-                                result)
+                                    data['information']['info']['hostname'],
+                                    data['information']['users'][0],
+                                    result)
                         break
                     else:
                         if relayserver != -1:
@@ -245,8 +261,8 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         # Default Rule : 5
         elif x[0] == 5:
             logger.debug("analysis the 5th rule : use default relay server %s" %
-                            objectxmpp.config.defaultrelayserverip)
-            result = XmppMasterDatabase().jidrelayserverforip(objectxmpp.config.defaultrelayserverip)
+                            objectxmpp.assessor_agent_serverip)
+            result = XmppMasterDatabase().jidrelayserverforip(objectxmpp.assessor_agent_serverip)
             msg_log("use default relay server",
                     data['information']['info']['hostname'],
                     data['information']['users'][0],
@@ -314,6 +330,21 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                         data['information']['users'][0],
                         result)
                 break
+        # Network Rule : 10
+        elif x[0] == 10:
+            # Associates relay server based on network address
+            logger.debug("Analysis the 10th rule : Associate relay server based on netmask address")
+            logger.debug("Net mask address: %s" % data['xmppmask'])
+            result1 = XmppMasterDatabase().algorulebynetmaskaddress(data['xmppmask'],
+                                                                    data['classutil'])
+            if len(result1) > 0:
+                logger.debug("Applied Rule : Associate relay server based on net Mask address")
+                result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
+                msg_log("net mask address",
+                        data['information']['info']['hostname'],
+                        data['information']['users'][0],
+                        result)
+                break
 
     try:
         msg_string ="[user %s hostanme %s] : "\
@@ -329,13 +360,18 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
     except Exception:
         logger.warning("Relay server attributed by default")
         try:
-            result = XmppMasterDatabase().jidrelayserverforip(objectxmpp.config.defaultrelayserverip)
+            result = XmppMasterDatabase().jidrelayserverforip(objectxmpp.assessor_agent_serverip)
         except Exception:
-            logger.warn("Unable to configure the relay server : missing")
-            result = [objectxmpp.config.defaultrelayserverip,
-                        objectxmpp.config.defaultrelayserverport,
-                        objectxmpp.domaindefault,
-                        objectxmpp.config.defaultrelayserverbaseurlguacamole]
+            logger.warn("Unable to assign the relay server : missing")
+            #result = [objectxmpp.assessor_agent_serverip,
+                        #objectxmpp.assessor_agent_port,
+                        #objectxmpp.domaindefault,
+                        #objectxmpp.assessor_agent_guacamole_baseurl]
+            result = XmppMasterDatabase().jidrelayserverforip(objectxmpp.assessor_agent_serverip)
+            msg_log("error use default relay server",
+                    data['information']['info']['hostname'],
+                    data['information']['users'][0],
+                    result)
     try:
         listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2],
                                                                          "static")
@@ -347,7 +383,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         response = {'action': 'resultconnectionconf',
                     'sessionid': data['sessionid'],
                     'data': z1,
-                    'syncthing' : objectxmpp.config.announce_server,
+                    'syncthing' : objectxmpp.assessor_agent_announce_server,
                     'ret': 0
                     }
         if len(listars) == 0:
@@ -366,7 +402,6 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                             fromuser = objectxmpp.boundjid.bare)
             sendErrorConnectionConf(objectxmpp, sessionid, msg)
             return
-
         agentsubscription = "master@pulse"
         if "substitute" in data and \
             "conflist" in data["substitute"] and \
@@ -388,12 +423,9 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
         objectxmpp.send_message(mto=msg['from'],
                             mbody=json.dumps(response),
                             mtype='chat')
-        #add account for delete
-        #list des comptes a suprimer
-        objectxmpp.confaccount.append(msg['from'].user)
     except Exception:
         sendErrorConnectionConf(objectxmpp,sessionid,msg)
-        logger.error("Unable to configure agent for one relay server")
+        logger.error("Unable to assign a relay server to an agent")
         logger.error("\n%s"%(traceback.format_exc()))
 
 def msg_log(msg_header, hostname, user, result):
@@ -414,3 +446,214 @@ def sendErrorConnectionConf(objectxmpp, session,  msg):
     objectxmpp.send_message(mto=msg['from'],
                         mbody=json.dumps(response),
                         mtype='chat')
+
+
+def read_conf_assessor_master(objectxmpp):
+    """
+        lit la configuration du plugin
+    """
+    objectxmpp.assessor_agent_errorconf = False
+    namefichierconf = plugin['NAME'] + ".ini"
+    pathfileconf = os.path.join("/","etc","mmc","plugins", namefichierconf )
+    if not os.path.isfile(pathfileconf):
+        logger.error("plugin Master %s\nConfiguration file  missing\n  %s"%(plugin['NAME'],
+                                                                     pathfileconf))
+        message_config(plugin['NAME'], pathfileconf)
+        objectxmpp.assessor_agent_errorconf = True
+        return False
+    else:
+        objectxmpp.assessor_agent_errorconf = False
+        Config = ConfigParser.ConfigParser()
+        Config.read(pathfileconf)
+        if os.path.exists(pathfileconf + ".local"):
+            Config.read(pathfileconf + ".local")
+        if Config.has_section("parameters"):
+            if Config.has_option("parameters", "showinfomachine"):
+                paramshowinfomachine = Config.get('parameters',
+                                                  'showinfomachine')
+                objectxmpp.assessor_agent_showinfomachine = [str(x.strip()) for x in paramshowinfomachine.split(",") if x.strip() != ""]
+            else:
+                #default configuration
+                objectxmpp.assessor_agent_showinfomachine = []
+                logger.warning("showinfomachine default value is []")
+
+            if Config.has_option("parameters", "keyAES32"):
+
+                paramkeyAES32 = Config.get('parameters', 'keyAES32')
+                objectxmpp.assessor_agent_keyAES32 = [str(x.strip()) for x in paramkeyAES32.split(",") if x.strip() != ""]
+
+                #objectxmpp.keyAES32 = Config.get('parameters', 'keyAES32')
+                if len(objectxmpp.assessor_agent_keyAES32) >0:
+                    for keyAES32items in objectxmpp.assessor_agent_keyAES32:
+                        if len(keyAES32items) != 32:
+                            logger.warning("parameter taille keyAES32 %s"%keyAES32items)
+                            objectxmpp.assessor_agent_errorconf = True
+            else:
+                logger.error("keyAES32 Key AES 32 char [Mandatory parameter keyAES32]")
+                objectxmpp.assessor_agent_errorconf = True
+
+            if Config.has_option("parameters", "announce_server"):
+                objectxmpp.assessor_agent_announce_server = Config.get('parameters', 'announce_server')
+            else:
+                objectxmpp.assessor_agent_announce_server = "default"
+                logger.warning("announce_server for syncthing default value is default")
+
+            ######################## default connection ##########################
+            ### Connection server parameters if no relay server is available ####
+
+            if Config.has_option("parameters", "serverip"):
+                objectxmpp.assessor_agent_serverip = ipfromdns(Config.get('parameters',
+                                                                       'serverip'))
+                if objectxmpp.assessor_agent_serverip == "":
+                    logger.error("see parameter [serverip] in file : %s " \
+                                "if Connection server parameters " \
+                                "if no relay server is available"%pathfileconf)
+                    objectxmpp.assessor_agent_errorconf = True
+                ipdatadown = ["localhost", "127.0.0.1"]
+                for ip in ipdatadown:
+                    if objectxmpp.assessor_agent_serverip == ip:
+                        logger.error("see parameter [serverip] in file : %s " \
+                                "if Connection server parameters " \
+                                "if no relay server is available"%pathfileconf)
+                        logging.getLogger().error('parameter section "parameters" ' \
+                                                  'serverip must not be %s'%ip)
+                        objectxmpp.assessor_agent_errorconf  = True
+            else:
+                logger.error("see parameter [serverip] " \
+                             "missing in file : %s " %pathfileconf)
+                objectxmpp.assessor_agent_errorconf  = True
+
+            if Config.has_option("parameters", "port"):
+                objectxmpp.assessor_agent_port = Config.get('parameters', 'port')
+                if objectxmpp.assessor_agent_port == "":
+                    logger.error("see parameter [port] in file : %s " \
+                                "if Connection server parameters " \
+                                "if no relay server is available"%pathfileconf)
+                    objectxmpp.assessor_agent_errorconf  = True
+            else:
+                logger.error("default value parameter [port] 5222")
+                objectxmpp.assessor_agent_port == "5222"
+
+            if Config.has_option("parameters", "guacamole_baseurl"):
+                objectxmpp.assessor_agent_baseurlguacamole = Config.get('parameters', 'guacamole_baseurl')
+                if objectxmpp.assessor_agent_port == "":
+                    logger.error("see parameter [guacamole_baseurl] in file : %s " \
+                                "if Connection server parameters " \
+                                "if no relay server is available"%pathfileconf)
+                    objectxmpp.assessor_agent_errorconf  = True
+            else:
+                logger.error("see parameter [guacamole_baseurl] " \
+                             "missing in file : %s " %pathfileconf)
+                objectxmpp.assessor_agent_errorconf  = True
+
+        else:
+            logger.error("see SECTION [parameters] mising in file : %s "%pathfileconf)
+            objectxmpp.assessor_agent_errorconf  = True
+        if objectxmpp.assessor_agent_errorconf:
+            message_config(plugin['NAME'], pathfileconf)
+            return False
+    return True
+
+def message_config(nameplugin, pathfileconf):
+    msg ="""=========configuration assessor plugin master==========="
+        check MASTER assessor plugin config file "%s"
+
+        The following parameters must be defined:
+
+        serverip : IP of default ARS (or its FQDN if it can be resolved by the clients)
+        port : Port of default ARS
+        guacamole_baseurl : Guacamole base url of default ARS
+        announce_server : Syncthing announce server url of default ARS
+        showinfomachine : list of names of the machines whose information we want displayed
+        keyAES32 : List of AES keys for checking the agent"""%pathfileconf
+    logger.error("%s"%msg)
+    logger.error("For the [%s] plugin, it is mandatory " \
+                 "to define the following parameters."%(nameplugin))
+    logger.error("in files [%s] and file [%s.local]"%(pathfileconf, pathfileconf))
+    logger.error("# Connection server parameters if no relay server is available")
+    logger.error("[parameters]")
+    logger.error("# XMPP server")
+    logger.error("serverip = 192.168.56.2 #Mandatory parameter")
+    logger.error("# XMPP port")
+    logger.error("port = 5222 #Mandatory parameter")
+    logger.error("# XMPP password")
+    logger.error("password = secret #Mandatory parameter")
+    logger.error("# The location of the guacamole server.")
+    logger.error("guacamole_baseurl = http://192.168.56.2/guacamole/ #Mandatory parameter")
+    logger.error("#for syncthing")
+    logger.error("announce_server = https://192.168.56.2:8443/?id=IGQIW2T"\
+                 "-OHEFK3P-JHSB6KH-OHHYABS-YEWJRVC-M6F4NLZ-D6U55ES-VXIVMA3")
+    logger.error("#for authentification key AES 32 chars")
+    logger.error("keyAES32 = abcdefghijklnmopqrstuvwxyz012345")
+    logger.error("showinfomachine = infra_jfk_deb1, infra_jfk_deb2")
+
+def displayData(objectxmpp, data):
+    if data['machine'].split(".")[0] in objectxmpp.assessor_agent_showinfomachine:
+        logger.info("--------------------------")
+        if 'action' in data and data['action'] == 'assessor_agent':
+            logger.info("** INFORMATION FROM CONFIGURATION AGENT FOR %s" %
+                        data['agenttype'].upper())
+        else:
+            logger.info("** INFORMATION FROM AGENT %s %s" % (data['agenttype'].upper(),
+                                                                data['action']))
+        logger.info("__________________________")
+        logger.info("MACHINE INFORMATION")
+        logger.info("Deployment name : %s" % data['deployment'])
+        logger.info("From : %s" % data['who'])
+        logger.info("Jid from : %s" % data['from'])
+        logger.info("Machine : %s" % data['machine'])
+        logger.info("Platform : %s" % data['platform'])
+        if 'versionagent' in data:
+            logger.info("Version agent : %s" % data['versionagent'])
+        if "win" in data['platform'].lower():
+            logger.info("__________________________")
+            logger.info("ACTIVE DIRECTORY")
+            logger.info("OU Active directory")
+            logger.info("OU by machine : %s" % data['adorgbymachine'])
+            logger.info("OU by user : %s" % data['adorgbyuser'])
+            if 'lastusersession' in data:
+                logger.info("last user session: %s" % data['lastusersession'])
+        logger.info("--------------------------------")
+        logger.info("----MACHINE XMPP INFORMATION----")
+        logger.info("portxmpp : %s" % data['portxmpp'])
+        logger.info("serverxmpp : %s" % data['serverxmpp'])
+        logger.info("xmppip : %s" % data['xmppip'])
+        logger.info("agenttype : %s" % data['agenttype'])
+        if 'moderelayserver' in data:
+            logger.info("mode relay server : %s" % data['moderelayserver'])
+        logger.info("baseurlguacamole : %s" % data['baseurlguacamole'])
+        logger.info("xmppmask : %s" % data['xmppmask'])
+        logger.info("subnetxmpp : %s" % data['subnetxmpp'])
+        logger.info("xmppbroadcast : %s" % data['xmppbroadcast'])
+        logger.info("xmppdhcp : %s" % data['xmppdhcp'])
+        logger.info("xmppdhcpserver : %s" % data['xmppdhcpserver'])
+        logger.info("xmppgateway : %s" % data['xmppgateway'])
+        logger.info("xmppmacaddress : %s" % data['xmppmacaddress'])
+        logger.info("xmppmacnotshortened : %s" % data['xmppmacnotshortened'])
+        if data['agenttype'] == "relayserver":
+            logger.info("package server : %s" % data['packageserver'])
+
+        if 'ipconnection' in data:
+            logger.info("ipconnection : %s" % data['ipconnection'])
+        if 'portconnection' in data:
+            logger.info("portconnection : %s" % data['portconnection'])
+        if 'classutil' in data:
+            logger.info("classutil : %s" % data['classutil'])
+        if 'ippublic' in data:
+            logger.info("ippublic : %s" % data['ippublic'])
+        logger.info("------------LOCALISATION-----------")
+        logger.info("localisationinfo : %s" % data['localisationinfo'])
+        if "win" in data['platform'].lower():
+            if 'adorgbymachine' in data and data['adorgbymachine']:
+                logger.info("AD found for the Machine : %s" % data['adorgbymachine'])
+            else:
+                logger.info("No AD found for the Machine")
+            if 'adorgbyuser' in data and data['adorgbyuser']:
+                logger.info("AD found for the User : %s" % data['adorgbyuser'])
+            else:
+                logger.info("No AD found for the User")
+        logger.info("-----------------------------------")
+
+        logger.info("DETAILED INFORMATION")
+        if 'information' in data:
+            logger.info("%s" % json.dumps(data['information'], indent=4, sort_keys=True))
