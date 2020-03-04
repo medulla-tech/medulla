@@ -2451,58 +2451,81 @@ class XmppMasterDatabase(DatabaseHelper):
                                                         )
                                                 ).group_by(Deploy.state)
             machinedeploy = machinedeploy.all()
-            ret = { 'totalmachinedeploy' : 0,
-                    'machinesuccessdeploy' : 0,
-                    'machineerrordeploy' : 0,
-                    'machineprocessdeploy' : 0,
-                    'machineabortdeploy' : 0,
-                    'machinewol1deploy' : 0,
-                    'machinewol2deploy' : 0,
-                    'machinewol3deploy' : 0,
-                    'waitingmachinesdeploy' : 0,
-                    'machineerrortimeout' : 0,
+            ret = {
+                    'totalmachinedeploy' : 0,
+                    'deploymentsuccess' : 0,
+                    'deploymenterror' : 0,
+                    'deploymentabort' : 0,
+                    'abortontimeout' : 0,
                     'abortmissingagent' : 0,
-                    'abortdeploy' : 0,
-                    'abortarsgroupdeplolymissing' : 0,
-                    'abortarsdeploydown' : 0,
-                    'abortalternatifdown' : 0,
-                    'abortuuidmachine' : 0,
-                    'autrestatus' : 0}
+                    'abortrelaydown' : 0,
+                    'abortalternativerelaysdown' : 0,
+                    'abortinforelaymissing' : 0,
+                    'errorunknownerror' : 0,
+                    'abortpackageidentifiermissing' : 0,
+                    'abortpackagenamemissing' : 0,
+                    'abortpackageversionmissing' : 0,
+                    'abortpackageworkflowerror' : 0,
+                    'abortdescriptormissing' : 0,
+                    'abortmachinedisappeared' : 0,
+                    'deploymentstart' : 0,
+                    'wol1' : 0,
+                    'wol2' : 0,
+                    'wol3' : 0,
+                    'waitingmachineonline' : 0,
+                    'deploymentpending' : 0,
+                    'autrestatus' : 0,
+                    }
 
             liststatus = { x[0] : x[1] for x in machinedeploy}
             totalmachinedeploy = 0
             for t in liststatus:
                 ret['totalmachinedeploy'] += liststatus[t]
+
                 if t == 'DEPLOYMENT SUCCESS':
-                    ret['machinesuccessdeploy'] = liststatus[t]
+                    ret['deploymentsuccess'] = liststatus[t]
                 elif t == 'DEPLOYMENT ERROR':
-                    ret['machineerrordeploy'] = liststatus[t]
-                elif t == 'DEPLOYMENT START':
-                    ret['machineprocessdeploy'] = liststatus[t]
+                    ret['deploymenterror'] = liststatus[t]
                 elif t == 'DEPLOYMENT ABORT':
-                    ret['machineabortdeploy'] = liststatus[t]
-                elif t == 'WOL 1':
-                    ret['machinewol1deploy'] = liststatus[t]
-                elif t == 'WOL 2':
-                    ret['machinewol2deploy'] = liststatus[t]
-                elif t == 'WOL 3':
-                    ret['machinewol3deploy'] = liststatus[t]
-                elif t == 'WAITING MACHINE ONLINE':
-                    ret['waitingmachinesdeploy'] = liststatus[t]
-                elif t== 'DEPLOYMENT ERROR ON TIMEOUT':
-                    ret['machineerrortimeout'] = liststatus[t]
+                    ret['deploymentabort'] = liststatus[t]
+
+                elif t == 'ABORT ON TIMEOUT':
+                    ret['abortontimeout'] = liststatus[t]
                 elif t == 'ABORT MISSING AGENT':
                     ret['abortmissingagent'] = liststatus[t]
-                elif t == 'ABORT DEPLOY':
-                    ret['abortdeploy'] = liststatus[t]
-                elif t == 'ABORT ARS GROUP DEPLOY MISSING':
-                    ret['abortarsgroupdeplolymissing'] = liststatus[t]
-                elif t == 'ABORT ARS DEPLOY DOWN':
-                    ret['abortarsdeploydown'] = liststatus[t]
-                elif t == 'ABORT ALTERNATIF DOWN':
-                    ret['abortalternatifdown'] = liststatus[t]
-                elif t == 'ABORT UUID MACHINE':
-                    ret['abortuuidmachine'] = liststatus[t]
+                elif t == 'ABORT RELAY DOWN':
+                    ret['abortrelaydown'] = liststatus[t]
+                elif t == 'ABORT ALTERNATIVE RELAYS DOWN':
+                    ret['abortalternativerelaysdown'] = liststatus[t]
+                elif t == 'ABORT INFO RELAY MISSING':
+                    ret['abortinforelaymissing'] = liststatus[t]
+                elif t == 'ERROR UNKNOWN ERROR':
+                    ret['errorunknownerror'] = liststatus[t]
+                elif t == 'ABORT PACKAGE IDENTIFIER MISSING':
+                    ret['abortpackageidentifiermissing'] = liststatus[t]
+                elif t == 'ABORT PACKAGE NAME MISSING':
+                    ret['abortpackagenamemissing'] = liststatus[t]
+                elif t == 'ABORT PACKAGE VERSION MISSING':
+                    ret['abortpackageversionmissing'] = liststatus[t]
+                elif t == 'ABORT PACKAGE WORKFLOW ERROR':
+                    ret['abortpackageworkflowerror'] = liststatus[t]
+                elif t == 'ABORT DESCRIPTOR MISSING':
+                    ret['abortdescriptormissing'] = liststatus[t]
+                elif t == 'ABORT MACHINE DISAPPEARED':
+                    ret['abortmachinedisappeared'] = liststatus[t]
+
+                elif t == 'DEPLOYMENT START':
+                    ret['deploymentstart'] = liststatus[t]
+                elif t == 'WOL 1':
+                    ret['wol1'] = liststatus[t]    
+                elif t == 'WOL 2':
+                    ret['wol2'] = liststatus[t]    
+                elif t == 'WOL 3':
+                    ret['wol3'] = liststatus[t]    
+                elif t == 'WAITING MACHINE ONLINE':
+                    ret['waitingmachineonline'] = liststatus[t]    
+                elif t == 'DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)':
+                    ret['deploymentpending'] = liststatus[t]
                 else:
                     ret['autrestatus'] = liststatus[t]
             return ret
