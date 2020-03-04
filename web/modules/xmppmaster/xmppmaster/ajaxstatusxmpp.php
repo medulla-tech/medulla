@@ -118,9 +118,9 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
                                                              $deploydate);
 
         $total_machine_from_deploy     = $result['totalmachinedeploy'];
-        $machine_error_from_deploy     = $result['machineerrordeploy'];
-        $machine_success_from_deploy   = $result['machinesuccessdeploy'];
-        $machine_process_from_deploy   = $result['machineprocessdeploy'];
+        $machine_error_from_deploy     = $result['deploymenterror'];
+        $machine_success_from_deploy   = $result['deploymentsuccess'];
+        $machine_process_from_deploy   = $result['deploymentstart'];
         $machine_abort_from_deploy     = $result['machineabortdeploy'];
         $machine_timeout_from_deploy   = $result['machineerrortimeout'];
 
