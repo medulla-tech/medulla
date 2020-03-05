@@ -98,7 +98,7 @@ $deploymenterror    = $resultfromdeploy['deploymenterror'];
 $deploymentabort    = $resultfromdeploy['deploymentabort'];
 $abortontimeout     = $resultfromdeploy['abortontimeout'];
 $abortmissingagent  = $resultfromdeploy['abortmissingagent'];
-$abortmissingagent = $resultfromdeploy['abortrelaydown'];
+$abortrelaydown = $resultfromdeploy['abortrelaydown'];
 $abortalternativerelaysdown = $resultfromdeploy['abortalternativerelaysdown'];
 $abortinforelaymissing = $resultfromdeploy['abortinforelaymissing'];
 $errorunknownerror = $resultfromdeploy['errorunknownerror'];
@@ -114,7 +114,7 @@ $wol2 = $resultfromdeploy['wol2'];
 $wol3 = $resultfromdeploy['wol3'];
 $waitingmachineonline = $resultfromdeploy['waitingmachineonline'];
 $deploymentpending = $resultfromdeploy['deploymentpending'];
-$autrestatus = $resultfromdeploy['autrestatus'];
+$otherstatus = $resultfromdeploy['otherstatus'];
 
 $terminate = 0;
 $deployinprogress = 0;
@@ -519,9 +519,8 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
           if ($wol > 0){
             echo 'datas.push({"label":"WOL", "value":'.$wol.', "color": "#db9201", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
-
           if ($abortontimeout > 0){
-          echo 'datas.push({"label":"Timed out", "value":'.$abortontimeout.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          echo 'datas.push({"label":"Timed out", "value":'.$abortontimeout.', "color": "#FF4500", "href":"'.urlredirect_group_for_deploy("abortontimeout",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
           if ($deploymentabort > 0){
             echo 'datas.push({"label":"Aborted", "value":'.$deploymentabort.', "color": "#ff5050", "href":"'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
@@ -529,8 +528,52 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
           if ($waitingmachineonline > 0){
             echo 'datas.push({"label":"Waiting for Online ", "value":'.$waitingmachineonline.', "color": "#8f01db", "href":"'.urlredirect_group_for_deploy("machinewaitingonline",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
+          if($abortalternativerelaysdown > 0){
+            echo 'datas.push({"label":"Abort alternative relays down ", "value":'.$abortalternativerelaysdown.', "color": "#db6701", "href":"'.urlredirect_group_for_deploy("abortalternativerelaysdown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($abortrelaydown > 0){
+            echo 'datas.push({"label":"Abort relay down ", "value":'.$abortrelaydown.', "color": "#db6701", "href":"'.urlredirect_group_for_deploy("abortrelaydown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($abortmissingagent > 0){
+            echo 'datas.push({"label":"Abort missing agent ", "value":'.$abortmissingagent.', "color": "#db6701", "href":"'.urlredirect_group_for_deploy("abortmissingagent",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($abortinforelaymissing > 0){
+            echo 'datas.push({"label":"Abort info for relay missing ", "value":'.$abortinforelaymissing.', "color": "#db6701", "href":"'.urlredirect_group_for_deploy("abortinforelaymissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($errorunknownerror > 0){
+            echo 'datas.push({"label":"Error unknown error ", "value":'.$errorunknownerror.', "color": "#db1701", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($abortpackageidentifiermissing > 0){
+            echo 'datas.push({"label":"Abort package identifier missing ", "value":'.$abortpackageidentifiermissing.', "color": "#db6701", "href":"'.urlredirect_group_for_deploy("abortpackageidentifiermissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($abortpackagenamemissing > 0){
+            echo 'datas.push({"label":"Abort package name missing ", "value":'.$abortpackagenamemissing.', "color": "#db6701", "href":"'.urlredirect_group_for_deploy("abortpackagenamemissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($abortpackageversionmissing > 0){
+            echo 'datas.push({"label":"Abort package version missing ", "value":'.$abortpackageversionmissing.', "color": "#db6701", "href":"'.urlredirect_group_for_deploy("abortpackageversionmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($abortpackageworkflowerror > 0){
+            echo 'datas.push({"label":"Abort package workflow error ", "value":'.$abortpackageworkflowerror.', "color": "#db6701", "href":"'.urlredirect_group_for_deploy("abortpackageworkflowerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($abortdescriptormissing > 0){
+            echo 'datas.push({"label":"Abort descriptor missing ", "value":'.$abortdescriptormissing.', "color": "#db6701", "href":"'.urlredirect_group_for_deploy("abortdescriptormissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($abortmachinedisappeared > 0){
+            echo 'datas.push({"label":"Abort machine disappeared ", "value":'.$abortmachinedisappeared.', "color": "#db6701", "href":"'.urlredirect_group_for_deploy("abortmachinedisappeared",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($deploymentpending > 0){
+            echo 'datas.push({"label":"Deployment pending ", "value":'.$deploymentpending.', "color": "#8f01db", "href":"'.urlredirect_group_for_deploy("deploymentpending",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          if ($otherstatus > 0){
+            echo 'datas.push({"label":"Other status ", "value":'.$otherstatus.', "color": "#8f01db", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+          }
+          $otherstatus = $resultfromdeploy['otherstatus'];
+
+
+
           echo'
           chart("holder", datas);
+
   </script>';
 
     }
