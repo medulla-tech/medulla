@@ -2517,17 +2517,17 @@ class XmppMasterDatabase(DatabaseHelper):
                 elif t == 'DEPLOYMENT START':
                     ret['deploymentstart'] = liststatus[t]
                 elif t == 'WOL 1':
-                    ret['wol1'] = liststatus[t]    
+                    ret['wol1'] = liststatus[t]
                 elif t == 'WOL 2':
-                    ret['wol2'] = liststatus[t]    
+                    ret['wol2'] = liststatus[t]
                 elif t == 'WOL 3':
-                    ret['wol3'] = liststatus[t]    
+                    ret['wol3'] = liststatus[t]
                 elif t == 'WAITING MACHINE ONLINE':
-                    ret['waitingmachineonline'] = liststatus[t]    
+                    ret['waitingmachineonline'] = liststatus[t]
                 elif t == 'DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)':
                     ret['deploymentpending'] = liststatus[t]
                 else:
-                    ret['autrestatus'] = liststatus[t]
+                    ret['otherstatus'] = liststatus[t]
             return ret
         except Exception:
             return ret
