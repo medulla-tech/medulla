@@ -53,7 +53,6 @@ from lib.manage_scheduler import manage_scheduler
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.pkgs import PkgsDatabase
 from mmc.plugins.msc.database import MscDatabase
-from mmc.plugins.glpi.database import Glpi
 import traceback
 import pprint
 import pluginsmaster
@@ -280,6 +279,7 @@ class XmppSimpleCommand:
 
 class MUCBot(sleekxmpp.ClientXMPP):
     def __init__(self, conf):  # jid, password, room, nick):
+        self.boolimportglpi = False
         namelibplugins = "master/pluginsmaster"
         self.modulepath = os.path.abspath(\
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),"..",
@@ -473,7 +473,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         from time import strftime
         import gc
         #install  module memory_profiler
-        from memory_profiler import *
+        from memory_profiler import memory_usage
         # schedule deployement
         if not hasattr(self, 'countseconde'):
             self.mesuref = 0.0
@@ -810,6 +810,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if resultpresence[UUID][1] == 0:
                 # machine dans GLPI mais pas enregistré sur tavle machine xmpp.
                 listobjnoexist.append(deployobject)
+                if not self.boolimportglpi:
+                     try:
+                         from mmc.plugins.glpi.database import Glpi
+                         self.boolimportglpi = True
+                     except ImportError:
+                         return
                 machine = Glpi().getMachineByUUID(UUID)
                 #incrition dans deploiement cette machine sans agent
 
