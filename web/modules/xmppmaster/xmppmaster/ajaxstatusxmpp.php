@@ -65,10 +65,8 @@ $params = array();
 $logs   = array();
 $startdeploy = array();
 $tolmach=array();
-$wolmach=array();
 $successmach=array();
 $errormach=array();
-$timeoutmach=array();
 $abortmachuser = array();
 $processmachr = array();
 
@@ -116,25 +114,34 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $deploydate = substr($deploydate['scalar'], 0, 4).'-'.substr($deploydate['scalar'], 4, 2).'-'.substr($deploydate['scalar'], 6, 2).' '.substr($deploydate['scalar'], 9);
         $result = xmlrpc_getstatdeployfromcommandidstartdate($arraydeploy['tabdeploy']['command'][$index],
                                                              $deploydate);
+        $done = 0;
+        $aborted = 0;
+        $inprogress = 0;
 
-        $total_machine_from_deploy     = $result['totalmachinedeploy'];
-        $machine_error_from_deploy     = $result['deploymenterror'];
-        $machine_success_from_deploy   = $result['deploymentsuccess'];
-        $machine_process_from_deploy   = $result['deploymentstart'];
-        $machine_abort_from_deploy     = $result['machineabortdeploy'];
-        $machine_timeout_from_deploy   = $result['machineerrortimeout'];
+        //Calculate globals stats
+        foreach($result as $key => $value){
+            if($key != 'totalmachinedeploy'){
+                if(preg_match('#abort|success|error|status#i', $key)){
+                    $done += $value;
+                }
+                else{
+                    $inprogress += $value;
+                }
 
-        $total_machine_from_msc  =  $statarray['nbmachine'][$arraydeploy['tabdeploy']['command'][$index]];
+                if(preg_match('#^abort#i', $key) && $key != 'totalmachinedeploy'){
+                    $aborted += $value;
+                }
+            }
 
-        $wol = ( $machine_list_status['machinewol1deploy1'] + $machine_list_status['machinewol2deploy'] + $machine_list_status['machinewol3deploy'] );
+        }
 
-        $processmachr[] = $machine_process_from_deploy;
-        $tolmach[] = $total_machine_from_msc;
-        $wolmach[]=$wol;
-        $successmach[]=$machine_success_from_deploy;
-        $errormach[]=$machine_error_from_deploy;
-        $timeoutmach[]=$machine_timeout_from_deploy;
-        $abortmachuser[] = $machine_abort_from_deploy;
+        $totalmachinedeploy = $result['totalmachinedeploy'];
+
+        $processmachr[] = $inprogress;
+        $tolmach[] = $totalmachinedeploy;
+        $successmach[]=$result['deploymentsuccess'];
+        $errormach[]= $result['deploymenterror'] + $result['errorunknownerror'];
+        $abortmachuser[] = $aborted;
 
     if($groupid){
 
@@ -150,57 +157,55 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         }else{
             $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_package.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
         }
-        $nb_machine_deployer_avec_timeout_deploy = $machine_timeout_from_deploy + $total_machine_from_msc;
-        $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $total_machine_from_msc) * 100,2);
 
-
-        if( $result['totalmachinedeploy'] == 0){
-            $sucess = 0;
+        if( $totalmachinedeploy == 0){
+            $success = 0;
         }
         else{
-            $sucess = round(($result['machinesuccessdeploy'] / $total_machine_from_msc) * 100, 2);
+            $success = round(($done / $totalmachinedeploy) * 100, 2);
+            $success = ($success > 100) ? 100 : $success;
         }
 
-            switch(intval($sucess)){
-                case $sucess <= 10:
+            switch(intval($success)){
+                case $success <= 10:
                     $color = "#ff0000";
                     break;
-                case $sucess <= 20:
+                case $success <= 20:
                     $color = "#ff3535";
                     break;
-                case $sucess <= 30:
+                case $success <= 30:
                     $color = "#ff5050";
                     break;
-                case $sucess <= 40:
+                case $success <= 40:
                     $color = "#ff8080";
                     break;
-                case $sucess <  50:
+                case $success <  50:
                     $color = "#ffA0A0";
                     break;
-                case $sucess <=  60:
+                case $success <=  60:
                     $color = "#c8ffc8";
                     break;
-                case $sucess <= 70:
+                case $success <= 70:
                     $color = "#97ff97";
                     break;
-                case $sucess <= 80:
+                case $success <= 80:
                     $color = "#64ff64";
                     break;
-                case $sucess <=  90:
+                case $success <=  90:
                     $color = "#2eff2e";
                     break;
-                case $sucess >90:
+                case $success >90:
                     $color = "#00ff00";
                     break;
             }
-        if ($sucess == 0){
-            $arraystate[] = "<span style='font-weight: bold; color : red;'>".$sucess."%"."</span>" ;
+        if ($success == 0){
+            $arraystate[] = "<span style='font-weight: bold; color : red;'>".$success."%"."</span>" ;
         }else{
-            if ($sucess == 100) {
+            if ($success == 100) {
                 $arraystate[] = "<span style='font-weight: bold; color: green ;'>DEPLOY SUCCESS FULL</span>" ;
             }
             else{
-                $arraystate[] = "<span style='background-color:".$color." ;'>".$sucess."%"."</span>" ;
+                $arraystate[] = "<span style='background-color:".$color." ;'>".$success."%"."</span>" ;
             }
         }
         //'<progress max="'.$stat['nbmachine'].'" value="'.$stat['nbdeploydone'].'" form="form-id"></progress>';
@@ -262,9 +267,6 @@ foreach($arraynotdeploy['elements'] as $id=>$deploy)
     $processmachr[] = 0;
     $successmach[] = 0;
     $errormach[] = 0;
-    $wolmach[] = 0;
-    $wolmach[] = 0;
-    $timeoutmach[] = 0;
     $abortmachuser[] = 0;
     $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
 }
@@ -274,13 +276,11 @@ $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $arrayname, _T("Target", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['start'], _T("Start date", "xmppmaster"));
-$n->addExtraInfo( $arraystate, _T("Status", "xmppmaster"));
+$n->addExtraInfo( $arraystate, _T("Progress / Status", "xmppmaster"));
 $n->addExtraInfo( $tolmach, _T("Total Machines", "xmppmaster"));
 $n->addExtraInfo( $processmachr, _T("In progress", "xmppmaster"));
 $n->addExtraInfo( $successmach, _T("Success", "xmppmaster"));
 $n->addExtraInfo( $errormach, _T("Error", "xmppmaster"));
-$n->addExtraInfo( $wolmach, _T("Waiting Wol", "xmppmaster"));
-$n->addExtraInfo( $timeoutmach, _T("Timed out", "xmppmaster"));
 $n->addExtraInfo( $abortmachuser, _T("Aborted", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['login'],_T("User", "xmppmaster"));
 //$n->setTableHeaderPadding(0);
@@ -303,10 +303,10 @@ progress {
   width: 100px;
   height: 9px;
   margin:-5px;
-  background-color: #ffffff; 
+  background-color: #ffffff;
   border-style: solid;
-  border-width: 1px;  
-  border-color: #dddddd; 
+  border-width: 1px;
+  border-color: #dddddd;
   padding: 3px 3px 3px 3px;
 }
 
