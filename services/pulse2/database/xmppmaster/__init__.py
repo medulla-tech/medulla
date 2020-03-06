@@ -1873,7 +1873,7 @@ class XmppMasterDatabase(DatabaseHelper):
             #we are more in the range of deployments.
             #abandonmentdeploy
             for id in  self.sessionidforidcommand(idcommand):
-                self.updatedeploystate(id,"DEPLOYMENT ERROR")
+                self.updatedeploystate(id,"ERROR UNKNOWN ERROR")
             return 'abandonmentdeploy'
 
         if not (result.start_exec_on_time is None or \
@@ -2129,7 +2129,7 @@ class XmppMasterDatabase(DatabaseHelper):
         for t in result:
             try:
                 sql = """UPDATE `xmppmaster`.`deploy`
-                                SET `state`='DEPLOYMENT ERROR'
+                                SET `state`='ERROR UNKNOWN ERROR'
                                 WHERE `id`='%s';"""%t.id
                 session.execute(sql)
                 session.commit()
@@ -2629,9 +2629,9 @@ class XmppMasterDatabase(DatabaseHelper):
     def updatedeploystate1(self, session, sessionid, state):
         try:
             ret = session.query(Deploy).filter(and_(Deploy.sessionid == sessionid,
-                                              Deploy.state != "DEPLOYMENT SUCCESS",
-                                              Deploy.state != "DEPLOYMENT ERROR")
-                                  ).\
+                                                    Deploy.state != 'DEPLOYMENT SUCCESS',
+                                                    not_(Deploy.state.startswith('ERROR')))
+                                               ).\
                     update({Deploy.state: state})
             session.commit()
             session.flush()
@@ -3264,8 +3264,8 @@ class XmppMasterDatabase(DatabaseHelper):
                                                 Deploy.host.like('%%%s%%'%(filt))))
 
         deploylog = deploylog.filter( or_(  Deploy.state == 'DEPLOYMENT SUCCESS',
-                                            Deploy.state == 'DEPLOYMENT ERROR',
-                                            Deploy.state == 'DEPLOYMENT ABORT'))
+                                            Deploy.state.startswith('ERROR'),
+                                            Deploy.state.startswith('ABORT')))
 
         lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
 
@@ -4768,7 +4768,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                  "'WAITING REBOOT'",
                                  "'DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)'",
                                  "'Offline'"]
-        Stateforterminatesessioninmaster=['DEPLOYMENT SUCCESS', 'DEPLOYMENT ERROR','DEPLOYMENT ABORT']
+
         nowdate = datetime.now()
         set_search =','.join(Stateforupdateontimeout)
 
