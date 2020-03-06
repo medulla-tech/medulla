@@ -141,7 +141,7 @@ def xmpplogdeploy(xmppobject, data):
                                                                                sort_keys=True) )
                 else:
                     XmppMasterDatabase().updatedeployresultandstate(data['sessionid'],
-                                                                    "DEPLOYMENT ERROR", 
+                                                                    "ABORT PACKAGE EXECUTION ERROR", 
                                                                     json.dumps(data,
                                                                                indent=4,
                                                                                sort_keys=True) )
