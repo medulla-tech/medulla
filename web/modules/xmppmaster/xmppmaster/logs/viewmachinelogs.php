@@ -169,7 +169,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                                     $info['objectdeploy'][0]['sessionid'], "deploy",
                                     "-1",
                                     "pulse_mmc" );
-            xmlrpc_updatedeploy_states_start_and_process($info['objectdeploy'][0]['sessionid'], "DEPLOYMENT ABORT");
+            xmlrpc_updatedeploy_states_start_and_process($info['objectdeploy'][0]['sessionid'], "ABORT USER ABORT");
         }
         $sessionxmpp = $info['objectdeploy'][0]['sessionid'];
         $infodeploy = xmlrpc_getlinelogssession($sessionxmpp);
