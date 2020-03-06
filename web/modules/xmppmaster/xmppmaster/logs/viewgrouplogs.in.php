@@ -47,8 +47,8 @@ class AjaxFilterAudit extends AjaxFilter {
         name="filter-type"
         id="filter-type" onchange="pushSearch<?php echo $this->formid ?>(); return false;" >
 
-        <option value="status"><?php _T("Deployment Status", "xmppmaster");?></option>
-        <option value="infos"><?php _T("Machine Inventory", "xmppmaster");?></option>
+        <option value="status"><?php echo _T("Deployment Status", "xmppmaster");?></option>
+        <option value="infos"><?php echo _T("Machine Inventory", "xmppmaster");?></option>
       </select>
 
       <span class="searchfield">
