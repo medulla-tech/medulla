@@ -48,8 +48,7 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Syncthing_deploy_group,\
     Substituteconf,\
     Agentsubscription,\
-    Subscription,\
-    Def_remote_deploy_status
+    Subscription
 # Imported last
 import logging
 import json
@@ -4828,20 +4827,6 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def updatedeploytosessionid(self, session, status, sessionid):
-        try:
-            sql = """UPDATE `xmppmaster`.`deploy`
-                     SET `state`='%s'
-                     WHERE `sessionid`='%s';"""%(status, sessionid)
-            logging.getLogger().error("jfkdede %s "%sql)
-
-            session.execute(sql)
-            session.commit()
-            session.flush()
-        except Exception, e:
-            logging.getLogger().error(str(e))
-
-    @DatabaseHelper._sessionm
     def updatedeploytosyncthing(self, session, sessionid, syncthing = 1 ):
         try:
             sql = """UPDATE `xmppmaster`.`deploy`
@@ -5379,25 +5364,3 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
-
-    @DatabaseHelper._sessionm
-    def get_log_status(self, session):
-        """ 
-            get complete table
-        """
-        resultat = []
-        try:
-            ret = session.query(Def_remote_deploy_status).all()
-            session.commit()
-            session.flush()
-            if ret is None:
-                resultat = []
-            else:
-                resultat = [{'index':id, 
-                            "id" : regle.id,
-                            'regexplog':regle.reg_logmessage, 
-                            'status':regle.status} for id, regle in enumerate(ret)]
-            return resultat     
-        except Exception, e:
-            traceback.print_exc(file=sys.stdout)
-            return resultat
