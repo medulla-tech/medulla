@@ -4933,8 +4933,6 @@ class XmppMasterDatabase(DatabaseHelper):
             sql = """UPDATE `xmppmaster`.`deploy`
                      SET `state`='%s'
                      WHERE `sessionid`='%s';"""%(status, sessionid)
-            logging.getLogger().error("jfkdede %s "%sql)
-
             session.execute(sql)
             session.commit()
             session.flush()
@@ -5495,7 +5493,7 @@ class XmppMasterDatabase(DatabaseHelper):
             else:
                 resultat = [{'index':id, 
                             "id" : regle.id,
-                            'regexplog':regle.reg_logmessage, 
+                            'regexplog':regle.regex_logmessage, 
                             'status':regle.status} for id, regle in enumerate(ret)]
             return resultat     
         except Exception, e:
