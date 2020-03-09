@@ -26,19 +26,40 @@ import json
 import logging
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
+import re
 
 logger = logging.getLogger()
 
-plugin = {"VERSION": "1.0", "NAME": "xmpplog", "TYPE": "master"}
+plugin = {"VERSION": "1.1", "NAME": "xmpplog", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
     logger.debug("=====================================================")
     logger.debug("call %s from %s"%(plugin, msg['from']))
     logger.debug("=====================================================")
+    compteurcallplugin = getattr(xmppobject, "num_call%s"%action)
+    if compteurcallplugin == 0:
+        #load regle of satus
+        xmppobject.reglestatus = []
+        loggerliststatus = XmppMasterDatabase().get_log_status()
+        try:
+            for t in XmppMasterDatabase().get_log_status():
+                t['compile_re'] = re.compile(t['regexplog'])
+                xmppobject.reglestatus.append(t)
+            logger.debug("regle status initialise%s"% xmppobject.reglestatus)
+        except:
+            logger.error("\n%s"%(traceback.format_exc()))
     try :
-        logger.debug("%s : "%data)
+        #logger.debug("%s : "%data)
         dataobj = data
+        if "type" in dataobj and dataobj['type'] == "deploy" and  'text' in dataobj:
+            re_status = searchstatus(xmppobject, dataobj['text'])
+            if re_status['status'] != "":
+                XmppMasterDatabase().updatedeploytosessionid(re_status['status'],
+                                                             dataobj['sessionid'])
+                logging.debug("applique status %s for sessionid %s"%(re_status['status'], dataobj['sessionid']))
+            else:
+                logging.debug("applique pas de status for sessionid %s"%(dataobj['sessionid']))
         if data["action"] == 'xmpplog':
             createlog(xmppobject, data)
         elif data["action"] == 'resultapplicationdeploymentjson':
@@ -148,3 +169,10 @@ def xmpplogdeploy(xmppobject, data):
     except Exception as e:
         logging.error("obj Message deploy error  %s\nerror text : %s" %(data, str(e)))
         logger.error("\n%s"%(traceback.format_exc()))
+
+def searchstatus(xmppobject, chaine):
+    for t in xmppobject.reglestatus:
+        if  t['compile_re'].match(chaine):
+            logger.debug("la chaine \"%s\"  matche pour [%s] et renvoi le status suivant \"%s\""%(chaine,t['regexplog'],t['status']))
+            return { "status" : t['status'] , "logmessage" : chaine}
+    return { "status" : "" , "logmessage" : chaine}
