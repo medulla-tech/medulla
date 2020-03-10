@@ -67,7 +67,7 @@ $p->display();
 $resultfrommsc = xmlrpc_getstatbycmd($cmd_id, $filter, $start, $end);
 
 // The deployment is a convergence
-$bool_convergence_grp_on_package_from_msc = is_commands_convergence_type($cmd_id, $filter, $start, $end);
+$isconvergence = is_commands_convergence_type($cmd_id, $filter, $start, $end);
 
 // Get syncthing stats for this deployment
 $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
@@ -87,8 +87,6 @@ $resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,  date("
 // from msc
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
-$MSC_nb_mach_grp_for_deploy  = $resultfrommsc['nbmachine'];
-$MSC_nb_mach_grp_done_deploy     = $resultfrommsc['nbdeploydone'];
 $timestampnow = time();
 $info_from_machines = $re["listelet"];
 
@@ -116,90 +114,149 @@ $waitingmachineonline = $resultfromdeploy['waitingmachineonline'];
 $deploymentpending = $resultfromdeploy['deploymentpending'];
 $otherstatus = $resultfromdeploy['otherstatus'];
 
-$terminate = 0;
-$deployinprogress = 0;
+$done = 0;
+$aborted = 0;
+$inprogress = 0;
+$terminate = false;
+$errors = 0;
 
-$waiting = $MSC_nb_mach_grp_for_deploy - ($totalmachinedeploy + $abortontimeout);
+//Calculate globals stats
+foreach($resultfromdeploy as $key => $value){
+    if($key != 'totalmachinedeploy'){
+        if(preg_match('#abort|success|error|status#i', $key)){
+            $done += $value;
+            $terminate = ($done >= $totalmachinedeploy) ? true : false;
+        }
+        else{
+            $inprogress += $value;
+        }
 
-// $evolution
-if ($waiting == 0 && $deploymentstart == 0 ){
-    $terminate = 1;
+        if(preg_match('#^abort#i', $key)){
+            $aborted += $value;
+        }
+        if(preg_match('#^error#i', $key)){
+            $errors += $value;
+        }
+    }
 }
 
-$start_deploy = 0;
-$end_deploy   = 0;
+$evolution  = round(($done / $totalmachinedeploy) * 100,2);
+$evolution = ($evolution > 100) ? 100 : $evolution;
+
+/* Deployment status
+    Deployment terminated : $done == $total => $terminate = true
+    Deployment still running : $inprogress > 0
+    Deployment started at current time : $start_deploy = true
+    Deployment finish at current time : $end_deploy = true
+    Deployment evolution (%) : ($done / $total) * 100
+*/
+$start_deploy = false;
+$end_deploy   = false;
+
 if ($timestampnow > $start_date){
-    $start_deploy = 1;
+    $start_deploy = true;
 }
 
-if ($timestampnow > ($end_date)){
-    $end_deploy = 1;
-};
+if ($timestampnow > $end_date){
+    $end_deploy = true;
+}
 
 // This command gets associated group of cmd_id
+$syncthing_enabled = ($statsyncthing['package'] == "") ? false : true;
 
-echo "Deployment schedule: ".date("Y-m-d H:i:s", $start_date)." -> ".date("Y-m-d H:i:s", $end_date)."<br>";
-    if ($statsyncthing['package'] == ""){
-        echo _T("Syncthing sharing done or non-existant");
-    }else{
-echo "<div style='width :100%; color:blue;'>";
-    echo "<table><tr><td>";
-    echo'
-            <table>
-            <tr>
-                <th >'. _T("Syncthing share", "xmppmaster"). '</th>
-                <th >'. _T("Number of machines", "xmppmaster"). '</th>
-                <th >'. _T("transfert", "xmppmaster"). '</th>
-            </tr>
-            <tr>
-                <td rowspan="2">';
-                            echo _T("Share name", "xmppmaster")." : ". $statsyncthing['package'];
-                            echo '<br />';
-                            echo _T("Number of participants", "xmppmaster")." : ".$statsyncthing['nbmachine'];
-                            echo '<br />';
-                            echo _T("Transfer progress", "xmppmaster")." : ".$statsyncthing['progresstransfert'].' %';
-                            echo '<br />';
-                echo '</td>';
+echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
+    echo "<thead>";
+        echo "<tr>";
+            echo '<td>'._T("Start Date", "xmppmaster").'</td>';
+            echo '<td>'._T("End Date", "xmppmaster").'</td>';
+            echo '<td>'._T("User", "xmppmaster").'</td>';
+            if($isconvergence != 0){
+                echo '<td>'._T("Convergence", "xmppmaster").'</td>';
+            }
+            echo '<td>'._T("Syncthing enabled", "xmppmaster").'</td>';
+            echo '<td>'._T("Progress", "xmppmaster").'</td>';
+        echo "</tr>";
+    echo "</thead>";
+    echo "<tbody>";
+        echo "<tr>";
+            echo '<td>'.date("Y-m-d H:i:s", $start_date).'</td>';
+            echo '<td>'.date("Y-m-d H:i:s", $end_date).'</td>';
+            echo '<td>'.$_GET['login'].'</td>';
+            if($isconvergence != 0){
+                echo "<td><img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/></td>";
+            }
 
-                $entete = "";
-                foreach ( $statsyncthing['distibution']['data_dist'] as $arrayval){
-                    echo $entete ."
-                            <td>$arrayval[1]</td>
-                            <td>$arrayval[0]%</td>
-                        </tr>";
-                        if ($entete==""){$entete = "<tr>";}
-                }
 
-                echo '</table>';
-        echo "</td>
-        <td>
-        <input id='buttontransfertsyncthing' class='btn btn-primary' type='button' value='show transfert'></td>
-        </td>
-        </tr>
-        </table>";
+            echo ($syncthing_enabled) ? '<td>'._T("On", "xmppmaster").'</td>' : '<td>'._T("Off", "xmppmaster").'</td>';
+            echo '<td>';
+                echo '<div class="bars">';
+                echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
+                echo '<span style="width: 200px;">';
+                echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$totalmachinedeploy.'" value="'.$done .'" form="form-id"></progress>';
+                echo '</span>';
+            echo '</td>';
+        echo "</tr>";
+    echo "</tbody>";
+echo '</table>';
 
+
+if ($statsyncthing['package'] != ""){
+    echo '<h2>'._T("Syncthing Detail", "xmppmaster").'</h2>';
+    //NEW
+    echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
+        echo "<thead>";
+            echo '<tr>';
+                echo '<td>'. _T("Share name", "xmppmaster"). '</td>';
+                echo '<td>'. _T("Number of participants", "xmppmaster"). '</td>';
+                echo '<td>'. _T("Transfer progress", "xmppmaster"). '</td>';
+                echo '<td>'. _T("Detail", "xmppmaster").'</td>';
+            echo '</tr>';
+        echo '</thead>';
+
+        echo '<tbody>';
+            echo '<tr>';
+                echo '<td>'.$statsyncthing['package'].'</td>';
+                echo '<td>'.$statsyncthing['nbmachine'].'</td>';
+                echo '<td>'.$statsyncthing['progresstransfert'].' %</td>';
+                echo "<td><input id='buttontogglesyncthing' class='btn btn-primary' type='button' value='Toggle transfer'> <input id='buttonrefreshsyncthing' class='btn btn-primary' type='button' value='refresh view'></td>";
+            echo '</tr>';
+
+    foreach ( $statsyncthing['distibution']['data_dist'] as $arrayval){
+        echo "<tr>";
+            echo '<td></td>';
+            echo '<td>'.$arrayval[1].'</td>';
+            echo '<td>'.$arrayval[0].'%</td>';
+            echo '<td></td>';
+        echo "</tr>";
+    }
+        echo '</tbody>';
+    echo '</table>';
+
+
+    //OLD
+    echo "<div style='width :100%;'>";
     echo "<div>";
-        echo "<div id='tablesyncthing'>";
+    echo "<div id='tablesyncthing'>";
 ?>
-        <table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
-                <thead>
-                    <tr>
-                        <th style="width: 12%;"><?php echo _('cluster list'); ?></th>
-                        <th style="width: 7%;"><?php echo _('cluster nb ars'); ?></th>
-                        <th style="width: 7%;"><?php echo _('machine'); ?></th>
-                        <th style="width: 7%;"><?php echo _('progress'); ?></th>
-                        <th style="width: 7%;"><?php echo _('start'); ?></th>
-                        <th style="width: 7%;"><?php echo _('end'); ?></th>
-                    </tr>
-                </thead>
-            </table>
+    <table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
+            <thead>
+                <tr>
+                    <th style="width: 12%;"><?php echo _('cluster list'); ?></th>
+                    <th style="width: 7%;"><?php echo _('cluster nb ars'); ?></th>
+                    <th style="width: 7%;"><?php echo _('machine'); ?></th>
+                    <th style="width: 7%;"><?php echo _('progress'); ?></th>
+                    <th style="width: 7%;"><?php echo _('start'); ?></th>
+                    <th style="width: 7%;"><?php echo _('end'); ?></th>
+                </tr>
+            </thead>
+        </table>
 <?php
-        echo "</div>";
     echo "</div>";
-    echo "<Hr>";
+    echo "</div>";
     echo '</div>';
-}
+}//End syncthing
 ?>
+
 <script type="text/javascript">
     function searchlogs(url){
                             jQuery('#tablelog').DataTable({
@@ -219,39 +276,23 @@ echo "<div style='width :100%; color:blue;'>";
     } );
 
 jQuery( "#tablesyncthing" ).hide();
-var levelshow = 0;
-jQuery( "#buttontransfertsyncthing" ).click(function() {
-    //jQuery( "#tablesyncthing" ).toggle();
+jQuery( "#buttonrefreshsyncthing" ).click(function() {
+    document.location.reload();
+});
 
-    if (levelshow == 0){
-        jQuery( "#tablesyncthing" ).show();
-        levelshow = 1;
-    }else{
-        document.location.reload();
-    }
+jQuery( "#buttontogglesyncthing" ).click(function() {
+    jQuery( "#tablesyncthing" ).toggle();
 });
     </script>
 
 <?php
 if ($info['len'] != 0){
-    $result=$info['objectdeploy'][0]['result'];
-
+    $result=$info['objectdeploy'][1]['result'];
     $resultatdeploy =json_decode($result, true);
-    $host=$info['objectdeploy'][0]['host'];
-    $jidmachine=$info['objectdeploy'][0]['jidmachine'];
-    $jid_relay=$info['objectdeploy'][0]['jid_relay'];
-}
-
-if ($bool_convergence_grp_on_package_from_msc !=0 ){
-    echo "<img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/>";
 }
 
 if (isset($resultatdeploy['infoslist'][0]['packageUuid'])){
     echo "Package : ".$resultatdeploy['infoslist'][0]['name']." [". $resultatdeploy['infoslist'][0]['packageUuid']."]";
-}
-
-if (!isset($_GET['refresh'])){
-    $_GET['refresh'] = 1;
 }
 
 $nbsuccess = 0;
@@ -278,15 +319,15 @@ foreach ($info['objectdeploy'] as $val)
 echo "<div>";
     if ( $start_deploy){
 
-        if ($end_deploy || $terminate == 1){
-            echo "<h2>"._T("Deployment completed","xmppmaster")."</h2>";
-            $terminate = 1;
-            $deployinprogress = 0;
+        if ($end_deploy || $terminate){
+            echo "<h2>"._T("Deployment complete","xmppmaster")."</h2>";
+            $terminate = true;
+
 
         }else{
             echo "<h2>"._T("Deployment in progress","xmppmaster")."</h2>";
             echo _T("Started since","xmppmaster")." <span>".($timestampnow - $start_date)."</span> s";
-            $deployinprogress = 1;
+            $terminate = false;
         }
     }
     else{
@@ -294,57 +335,91 @@ echo "<div>";
     }
 
 
-    if($terminate == 0){
+    if(!$terminate){
         $f = new ValidatingForm();
         $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
         $f->addButton("bStop", _T("Abort Deployment", 'xmppmaster'));
         $f->display();
     }
 
-        $nb_machine_deployer_avec_timeout_deploy = $abortontimeout + $MSC_nb_mach_grp_done_deploy;
-        $evolution  = round(($nb_machine_deployer_avec_timeout_deploy / $MSC_nb_mach_grp_for_deploy) * 100,2);
-        $deploymachine = $deploymentsuccess + $deploymenterror;
-        echo '<div class="bars">';
-            echo '<span style="width: 200px;">';
-                echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$MSC_nb_mach_grp_for_deploy.'" value="'.$nb_machine_deployer_avec_timeout_deploy .'" form="form-id"></progress>';
-            echo '</span>';
-        echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
+    if(!$terminate){
+        echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
+        echo $deploymentsuccess > 0 ? "<td>"._T("Success","xmppmaster")."</td>" : "";
+        echo $deploymenterror > 0 ? "<td>"._T("Error","xmppmaster")."</td>" : "";
+        echo $deploymentabort > 0 ? "<td>"._T("Aborted","xmppmaster")."</td>" : "";
+        echo $abortontimeout > 0 ? "<td>"._T("Abort Timed Out","xmppmaster")."</td>" : "";
+        echo $abortmissingagent > 0 ? "<td>"._T("Abort Missing Agent","xmppmaster")."</td>" : "";
+        echo $abortrelaydown > 0 ? "<td>"._T("Abort Relay Down","xmppmaster")."</td>" : "";
+        echo $abortalternativerelaysdown > 0 ?"<td>"._T("Abort Alternative relay down","xmppmaster")."</td>" : "";
+        echo $abortinforelaymissing > 0 ? "<td>"._T("Abort Info Relay Missing","xmppmaster")."</td>" : "";
+        echo $errorunknownerror > 0 ? "<td>"._T("Error Unknown Error","xmppmaster")."</td>" : "";
+        echo $abortpackageidentifiermissing > 0 ?"<td>"._T("Abort Package Identifier Missing","xmppmaster")."</td>" : "";
+        echo $abortpackagenamemissing > 0 ? "<td>"._T("Abort Package Name Missing","xmppmaster")."</td>" : "";
+        echo $abortpackageversionmissing > 0 ? "<td>"._T("Abort Package Version Missing","xmppmaster")."</td>" : "";
+        echo $abortpackageworkflowerror > 0 ? "<td>"._T("Abort Package Workflow Error","xmppmaster")."</td>" : "";
+        echo $abortdescriptormissing > 0 ? "<td>"._T("Abort Descriptor Missing","xmppmaster")."</td>" : "";
+        echo $abortmachinedisappeared > 0 ? "<td>"._T("Abort Machine Disappeared","xmppmaster")."</td>" : "";
+        echo $deploymentstart > 0 ? "<td>"._T("Deployment start","xmppmaster")."</td>" : "";
+        echo $wol1 > 0 ? "<td>"._T("WOL 1","xmppmaster")."</td>" : "";
+        echo $wol2 > 0 ? "<td>"._T("WOL 2","xmppmaster")."</td>" : "";
+        echo $wol3 > 0 ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
+        echo $waitingmachineonline > 0 ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
+        echo $deploymentpending > 0 ? "<td>"._T("Deployment Pending","xmppmaster")."</td>" : "";
+        echo $otherstatus > 0 ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
+        echo "</tr></thead>";
 
-        echo "<br><br>"._T("Number of machines in the group","xmppmaster")." : ".$MSC_nb_mach_grp_for_deploy;
-        echo "<br>"._T("Number of current deployments","xmppmaster")." : ". $deploymachine;
-        echo "<br>"._T("Number of deployments in timeout","xmppmaster").": ". $abortontimeout;
-        echo "<br>"._T("Deployment summary","xmppmaster").":";
-        echo "<table><tr>";
+        echo "<tbody><tr>";
+        echo $deploymentsuccess > 0 ? "<td>".$deploymentsuccess."</td>" : "";
+        echo $deploymenterror > 0 ? "<td>".$deploymenterror."</td>" : "";
+        echo $deploymentabort > 0 ? "<td>".$deploymentabort."</td>" : "";
+        echo $abortontimeout > 0 ? "<td>".$abortontimeout."</td>" : "";
+        echo $abortmissingagent > 0 ? "<td>".$abortmissingagent."</td>" : "";
+        echo $abortrelaydown > 0 ? "<td>".$abortrelaydown."</td>" : "";
+        echo $abortalternativerelaysdown > 0 ?"<td>".$abortalternativerelaysdown."</td>" : "";
+        echo $abortinforelaymissing > 0 ? "<td>".$abortinforelaymissing."</td>" : "";
+        echo $errorunknownerror > 0 ? "<td>".$errorunknownerror."</td>" : "";
+        echo $abortpackageidentifiermissing > 0 ?"<td>".$abortpackageidentifiermissing."</td>" : "";
+        echo $abortpackagenamemissing > 0 ? "<td>".$abortpackagenamemissing."</td>" : "";
+        echo $abortpackageversionmissing > 0 ? "<td>".$abortpackageversionmissing."</td>" : "";
+        echo $abortpackageworkflowerror > 0 ? "<td>".$abortpackageworkflowerror."</td>" : "";
+        echo $abortdescriptormissing > 0 ? "<td>".$abortdescriptormissing."</td>" : "";
+        echo $abortmachinedisappeared > 0 ? "<td>".$abortmachinedisappeared."</td>" : "";
+        echo $deploymentstart > 0 ? "<td>".$deploymentstart."</td>" : "";
+        echo $wol1 > 0 ? "<td>".$wol1."</td>" : "";
+        echo $wol2 > 0 ? "<td>".$wol2."</td>" : "";
+        echo $wol3 > 0 ? "<td>".$wol3."</td>" : "";
+        echo $waitingmachineonline > 0 ? "<td>".$waitingmachineonline."</td>" : "";
+        echo $deploymentpending > 0 ? "<td>".$deploymentpending."</td>" : "";
+        echo $otherstatus > 0 ? "<td>".$otherstatus."</td>" : "";
+        echo "</tr></tbody></table>";
+
+    }
+
+    else{
+        echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
+        echo '<td>'._T('Graph','xmppmaster').'</td>';
         echo "<td>"._T("Success","xmppmaster")."</td>
             <td>"._T("Error","xmppmaster")."</td>
-            <td>"._T("In progress","xmppmaster")."</td>
-            <td>"._T("Waiting","xmppmaster")."</td>
-            <td>"._T("WOL","xmppmaster")."</td>
-            <td>"._T("Waiting for Online","xmppmaster")."</td>
-            <td>"._T("Timed out","xmppmaster")."</td>
             <td>"._T("Aborted","xmppmaster")."</td>";
-        echo "</tr>
-        <tr>";
-        $inprogress = ( $MSC_nb_mach_grp_for_deploy - ( $totalmachinedeploy + $abortontimeout ));
-        $wol = $wol1+$wol2+$wol3;
+        echo "</tr></thead>
+        <tbody><tr>";
+        echo '<td>';
+        echo'<div  style="float:left;min-height: 120px" id="holder"></div>';
+        echo '</td>';
         echo "<td>".$deploymentsuccess."</td>
-            <td>".$deploymenterror."</td>
-            <td>".$deploymentstart."</td>
-            <td>".$inprogress."</td>
-            <td>".$wol."</td>
-            <td>".$waitingmachineonline."</td>
-            <td>".$abortontimeout."</td>
-            <td>".$deploymentabort."</td>";
-        echo "</tr></table>";
+            <td>".$errors."</td>
+            <td>".$aborted."</td>";
+        echo "</tr></tbody></table>";
+    }
 
     echo '</div>';
-      echo'<div  style="float:left; margin-left:200px;height: 120px" id="holder"></div>';
+
     if ($info['len'] != 0){
         $datestart =  date("Y-m-d H:i:s", $start_date);
         $timestampstart = strtotime($datestart);
         $timestampnow = time();
         $nbsecond = $timestampnow - $timestampstart;
-
+        echo '<h2>'._T("Package Detail", "xmppmaster").'</h2>';
         if (isset($resultatdeploy['descriptor']['info'])){
             echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
                 echo "<thead>";
@@ -380,9 +455,43 @@ echo "<div>";
                     echo "</tr>";
                 echo "</tbody>";
             echo "</table>";
-
         }
-
+        else{
+            echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
+                echo "<thead>";
+                    echo "<tr>";
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">Name</span>';
+                        echo '</td>';
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">Software</span>';
+                        echo '</td>';
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">Version</span>';
+                        echo '</td>';
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">Description</span>';
+                        echo '</td>';
+                    echo "</tr>";
+                echo "</thead>";
+                echo "<tbody>";
+                    echo "<tr>";
+                        echo "<td>";
+                            echo "";
+                        echo "</td>";
+                        echo "<td>";
+                            echo "";
+                        echo "</td>";
+                        echo "<td>";
+                            echo "";
+                        echo "</td>";
+                        echo "<td>";
+                            echo "";
+                        echo "</td>";
+                    echo "</tr>";
+                echo "</tbody>";
+            echo "</table>";
+        }
     }
 
 echo "</div>";
@@ -512,9 +621,6 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
           }
           if ($deploymentstart > 0){
             echo 'datas.push({"label":"In progress", "value":'.$deploymentstart.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-          }
-          if ($inprogress > 0){
-            echo 'datas.push({"label":"Waiting", "value":'.$inprogress.', "color": "#DBA901", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
           }
           if ($wol > 0){
             echo 'datas.push({"label":"WOL", "value":'.$wol.', "color": "#db9201", "href":"'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
