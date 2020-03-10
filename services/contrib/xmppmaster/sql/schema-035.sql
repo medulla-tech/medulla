@@ -36,7 +36,7 @@ COMMENT = 'this table allows you to define the regexp to apply 1 status accordin
 
 
 LOCK TABLES `def_remote_deploy_status` WRITE;
-INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`) VALUES ('.*Terminate.*ERROR transfer.*$', 'ERROR TRANSFER ERROR');
+INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`) VALUES ('.*Terminate.*ERROR transfer.*$', 'ERROR TRANSFER FAILED');
 UNLOCK TABLES;
 
 -- ----------------------------------------------------------------------
