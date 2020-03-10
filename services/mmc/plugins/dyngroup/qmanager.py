@@ -34,7 +34,7 @@ import re
 import imp
 from bool_equations import BoolRequest
 from mmc.plugins.base.computers import ComputerManager
-
+import traceback
 from mmc.support.mmctools import Singleton
 
 class QueryManager(Singleton):
@@ -178,10 +178,13 @@ class QueryManager(Singleton):
                 retType = "date"
             elif isinstance(ret, sqltypes.Integer):
                 retType = "int"
-
+        except KeyError:
+            pass
+            #self.logger.warning("[%s] Not an extended criterion for module %s "%(criterion,
+                                                                                 moduleName))
         except Exception, e:
             self.logger.error(e)
-            self.logger.error("Not an extended criterion")
+            self.logger.error("\n%s"%(traceback.format_exc()))
         return retType
 
     def replyToQuery(self, ctx, query, bool = None, min = 0, max = 10):
