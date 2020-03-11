@@ -30,9 +30,10 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 ?>
 <script src="jsframework/d3/d3.js"></script>
 <style>
-.status{
+.status, .machine-inventory{
     cursor: pointer;
 }
+
 li.groupshare a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
@@ -597,8 +598,6 @@ if ($info['len'] != 0){
   {
       if(isset($status['UUID'.$value]))
         $info_from_machines[7][] = '<span class="status">'.$status['UUID'.$value].'</span>';
-      else
-        $info_from_machines[7][] = '<span style="color:red">'._T('OFFLINE','xmppmaster').'</span>';
       $info_from_machines[8][] = 'UUID'.$value;
       $params[] = [
         'displayName' => $info_from_machines[2][$key],
@@ -614,12 +613,19 @@ if ($info['len'] != 0){
         'gr_cmd_id' => $_GET['cmd_id'],
         'gr_login' => $_GET['login'],
       ];
-  }
 
+  }
   $presencemachinexmpplist = xmlrpc_getPresenceuuids($info_from_machines[8]);
+  $raw = 0;
   foreach($info_from_machines[8] as $key => $value)
   {
+    $info_from_machines[2][$raw] = '<span class="machine-inventory">'.$info_from_machines[2][$raw].'</span>';
+    $info_from_machines[3][$raw] = '<span class="machine-inventory">'.$info_from_machines[3][$raw].'</span>';
+    $info_from_machines[4][$raw] = '<span class="machine-inventory">'.$info_from_machines[4][$raw].'</span>';
+    $info_from_machines[5][$raw] = '<span class="machine-inventory">'.$info_from_machines[5][$raw].'</span>';
+    $info_from_machines[6][$raw] = '<span class="machine-inventory">'.$info_from_machines[6][$raw].'</span>';
     $info_from_machines[9][] = ($presencemachinexmpplist[$value] == "1") ? 'machineNamepresente' : 'machineName';
+    $raw++;
   }
 
 echo '<div style="clear:both"></div>';
@@ -758,12 +764,18 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
 ?>
 
 <script>
-    jQuery(".status").on("click", function(){
-        // Select the status filter
-        jQuery("#filter-type").prop("selectedIndex", 0);
+    jQuery(".status, .machine-inventory").on("click", function(){
+        // Select the status or the machine inventory filter
+        if(jQuery(this).prop("class") == "status")
+        {
+            jQuery("#filter-type").prop("selectedIndex", 0);
+        }
+        else if(jQuery(this).prop("class") == "machine-inventory"){
+            jQuery("#filter-type").prop("selectedIndex", 1);
+        }
         // Put the status value
         jQuery("#param").val(jQuery(this).text());
         // Load the research
         pushSearch();
-    })
+    });
 </script>
