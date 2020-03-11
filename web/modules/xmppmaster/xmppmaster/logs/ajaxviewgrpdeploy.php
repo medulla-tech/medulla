@@ -30,17 +30,63 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 ?>
 <script src="jsframework/d3/d3.js"></script>
 <style>
-    li.groupshare a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/dyngroup/img/share.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-    }
+.status{
+    cursor: pointer;
+}
+li.groupshare a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/dyngroup/img/share.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+li.remove_machine a {
+    background-image: url("img/common/button_cancel.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+progress{
+    border-color: #ffffff;
+    background-color: #009ea9;
+}
+progress.mscdeloy{
+    width: 390px;
+    background-color: #00f3f3;
+}
+
+progress::-webkit-progress-bar {
+    background: #00f3f3 ;
+}
+
+progress::-webkit-progress-value {
+    background: #009ea9;
+}
+progress::-moz-progress-bar {
+  background-color:blue;
+}
+
+
+.bars{
+    width: 400px;
+    float:left;
+}
+.bars1{
+    width:650px;
+    float:left;
+}
+
+#holder ul li a{
+    font-weight : normal;
+}
 </style>
+
 <?php
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -550,7 +596,7 @@ if ($info['len'] != 0){
   foreach($info_from_machines[0] as $key => $value)
   {
       if(isset($status['UUID'.$value]))
-        $info_from_machines[7][] = $status['UUID'.$value];
+        $info_from_machines[7][] = '<span class="status">'.$status['UUID'.$value].'</span>';
       else
         $info_from_machines[7][] = '<span style="color:red">'._T('OFFLINE','xmppmaster').'</span>';
       $info_from_machines[8][] = 'UUID'.$value;
@@ -620,6 +666,7 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
   $n->end = $count;
   $n->display();
 }
+
   echo '
   <script src="modules/xmppmaster/graph/js/chart.js"></script>
   <script>
@@ -710,50 +757,13 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
     }
 ?>
 
-
-<style>
-li.remove_machine a {
-        /*padding: 1px 3px 5px 20px;*/
-       /* margin: 0 0px 0 0px;*/
-        background-image: url("img/common/button_cancel.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-progress{
-    border-color: #ffffff;
-    background-color: #009ea9;
-}
-progress.mscdeloy{
-    width: 390px;
-    background-color: #00f3f3;
-}
-
-progress::-webkit-progress-bar {
-    background: #00f3f3 ;
-}
-
-progress::-webkit-progress-value {
-     Background: #009ea9;
-}
-progress::-moz-progress-bar {
-  background-color:blue;
-}
-
-
-.bars{
-    width: 400px;
-    float:left;
-}
-.bars1{
-    width:650px;
-    float:left;
-}
-
-#holder ul li a{
-    font-weight : normal;
-}
-</style>
+<script>
+    jQuery(".status").on("click", function(){
+        // Select the status filter
+        jQuery("#filter-type").prop("selectedIndex", 0);
+        // Put the status value
+        jQuery("#param").val(jQuery(this).text());
+        // Load the research
+        pushSearch();
+    })
+</script>
