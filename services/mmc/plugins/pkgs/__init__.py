@@ -193,6 +193,7 @@ def associatePackages(pid, fs, level = 0):
                 errortransfert.append(rest['code'])
             #efface repertoire
             simplecommand("rm -rf %s"%source)
+    chown(destination)
     return [ boolsucess, errortransfert ]
 
 def _remove_non_ascii(text):
