@@ -28,6 +28,14 @@ require_once("modules/msc/includes/mscoptions_xmlrpc.php");
 
 global $config;
 
+?>
+<style>
+.selectable{
+	cursor:pointer;
+}
+</style>
+<?php
+
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
 
@@ -179,6 +187,38 @@ foreach($datas['uuid'] as $uuid)
     'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
 	];
 
+	foreach($datas as $field=>$table){
+		/*The reg array is composed of multiple array. This example reproduces the datas structure with the reg key
+			$datas = [
+				'description' => [
+					'description for computer 1',
+					'description for computer 2',
+					'description for computer 3'
+				],
+				'os' => [
+					'os for computer 1',
+					'os for computer 2',
+					'os for computer 3'
+				],
+				'reg' => [
+					'enableLUA' => [
+						'enableLUA value for computer 1',
+						'enableLUA value for computer 2',
+						'enableLUA value for computer 3'
+					],
+					'MyKey2'=> [
+						'MyKey2 value for computer 1',
+						'MyKey2 value for computer 2',
+						'MyKey2 value for computer 3'
+					]
+				]
+			]
+		*/
+		if($field != 'reg' && $field != 'cn' )
+		{ // The selectable class is used to fill the search field;
+			$datas[$field][$raw] = '<span class="selectable">'.$datas[$field][$raw].'</span>';
+		}
+	}
 	$raw++;
 }
 
@@ -195,7 +235,7 @@ if(array_key_exists('user', $datas))
 if(array_key_exists('owner', $datas))
   $n->addExtraInfo($datas["owner"], _T("Owner", "glpi"));
 if(array_key_exists("entity", $datas))
-  $n->addExtraInfo($datas["entity"], _T("Entity", "glpi")); //[entities]
+  $n->addExtraInfo($datas["entity"], _T("Entity", "glpi"));
 if(array_key_exists("location", $datas))
   $n->addExtraInfo($datas["location"], _T("Localization", "glpi"));
 if(array_key_exists("owner_firstname", $datas))
@@ -210,6 +250,10 @@ if(array_key_exists("reg", $datas))
 {
   foreach($datas['reg'] as $key => $value)
   {
+	// Here $value is the table of reg values
+	foreach($datas["reg"][$key] as $id=>$regvalue){
+		$regvalue = '<span class="selectable">'.$regvalue.'</span>';
+	}
     $n->addExtraInfo($datas["reg"][$key], _T($key, "glpi"));
   }
 }
@@ -272,3 +316,10 @@ $n->start = 0;
 $n->end = $count;
 $n->display();
 ?>
+
+<script>
+jQuery(".selectable").on("click", function(){
+	jQuery("#param").val(jQuery(this).text());
+	pushSearch();
+});
+</script>
