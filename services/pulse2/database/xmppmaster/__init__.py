@@ -2455,8 +2455,6 @@ class XmppMasterDatabase(DatabaseHelper):
             ret = {
                     'totalmachinedeploy' : 0,
                     'deploymentsuccess' : 0,
-                    'deploymenterror' : 0,
-                    'deploymentabort' : 0,
                     'abortontimeout' : 0,
                     'abortmissingagent' : 0,
                     'abortrelaydown' : 0,
@@ -2469,13 +2467,18 @@ class XmppMasterDatabase(DatabaseHelper):
                     'abortpackageworkflowerror' : 0,
                     'abortdescriptormissing' : 0,
                     'abortmachinedisappeared' : 0,
+                    'abortuserabort' : 0,
+                    'aborttransferfailed' : 0,
+                    'abortpackageexecutionerror' : 0,
                     'deploymentstart' : 0,
                     'wol1' : 0,
                     'wol2' : 0,
                     'wol3' : 0,
                     'waitingmachineonline' : 0,
                     'deploymentpending' : 0,
-                    'autrestatus' : 0,
+                    'deploymentdiffered' : 0,
+                    'deploymentspooled' : 0,
+                    'otherstatus' : 0,
                     }
 
             liststatus = { x[0] : x[1] for x in machinedeploy}
@@ -2485,11 +2488,6 @@ class XmppMasterDatabase(DatabaseHelper):
 
                 if t == 'DEPLOYMENT SUCCESS':
                     ret['deploymentsuccess'] = liststatus[t]
-                elif t == 'DEPLOYMENT ERROR':
-                    ret['deploymenterror'] = liststatus[t]
-                elif t == 'DEPLOYMENT ABORT':
-                    ret['deploymentabort'] = liststatus[t]
-
                 elif t == 'ABORT ON TIMEOUT':
                     ret['abortontimeout'] = liststatus[t]
                 elif t == 'ABORT MISSING AGENT':
@@ -2514,6 +2512,13 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['abortdescriptormissing'] = liststatus[t]
                 elif t == 'ABORT MACHINE DISAPPEARED':
                     ret['abortmachinedisappeared'] = liststatus[t]
+                elif t == 'ABORT USER ABORT':
+                    ret['abortuserabort'] = liststatus[t]
+                elif t == 'ABORT TRANSFER FAILED':
+                    ret['aborttransferfailed'] = liststatus[t]
+                elif t == 'ABORT PACKAGE EXECUTION ERROR':
+                    ret['abortpackageexecutionerror'] = liststatus[t]
+
 
                 elif t == 'DEPLOYMENT START':
                     ret['deploymentstart'] = liststatus[t]
@@ -2527,6 +2532,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['waitingmachineonline'] = liststatus[t]
                 elif t == 'DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)':
                     ret['deploymentpending'] = liststatus[t]
+                elif t == 'DEPLOYMENT DIFFERED':
+                    ret['deploymentdiffered'] = liststatus[t]
+                elif t == 'DEPLOYMENT SPOOLED':
+                    ret['deploymentspooled'] = liststatus[t]
                 else:
                     ret['otherstatus'] = liststatus[t]
             return ret
