@@ -136,15 +136,15 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         }
 
         $totalmachinedeploy = $result['totalmachinedeploy'];
+        $deploymentsuccess = $result['deploymentsuccess'];
 
         $processmachr[] = $inprogress;
         $tolmach[] = $totalmachinedeploy;
-        $successmach[]=$result['deploymentsuccess'];
+        $successmach[]= $deploymentsuccess;
         $errormach[]= $result['deploymenterror'] + $result['errorunknownerror'];
         $abortmachuser[] = $aborted;
 
     if($groupid){
-
         if (isset($arraydeploy['tabdeploy']['group_uuid'][$index])){
             $namegrp = $groupname[$arraydeploy['tabdeploy']['group_uuid'][$index]]['name'];
         }
@@ -159,59 +159,67 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         }
 
         if( $totalmachinedeploy == 0){
-            $success = 0;
+            $progressrate = 0;
         }
         else{
-            $success = round(($done / $totalmachinedeploy) * 100, 2);
-            $success = ($success > 100) ? 100 : $success;
+            $progressrate = round(($done / $totalmachinedeploy) * 100, 2);
+            $progressrate = ($progressrate > 100) ? 100 : $progressrate;
         }
-
-            switch(intval($success)){
-                case $success <= 10:
-                    $color = "#ff0000";
-                    break;
-                case $success <= 20:
-                    $color = "#ff3535";
-                    break;
-                case $success <= 30:
-                    $color = "#ff5050";
-                    break;
-                case $success <= 40:
-                    $color = "#ff8080";
-                    break;
-                case $success <  50:
-                    $color = "#ffA0A0";
-                    break;
-                case $success <=  60:
-                    $color = "#c8ffc8";
-                    break;
-                case $success <= 70:
-                    $color = "#97ff97";
-                    break;
-                case $success <= 80:
-                    $color = "#64ff64";
-                    break;
-                case $success <=  90:
-                    $color = "#2eff2e";
-                    break;
-                case $success >90:
-                    $color = "#00ff00";
-                    break;
-            }
-        if ($success == 0){
-            $arraystate[] = "<span style='font-weight: bold; color : red;'>".$success."%"."</span>" ;
+        $successrate = round(($deploymentsuccess / $totalmachinedeploy) * 100, 2);
+        switch(intval($progressrate)){
+            case $progressrate <= 10:
+                $color = "#ff0000";
+                break;
+            case $progressrate <= 20:
+                $color = "#ff3535";
+                break;
+            case $progressrate <= 30:
+                $color = "#ff5050";
+                break;
+            case $progressrate <= 40:
+                $color = "#ff8080";
+                break;
+            case $progressrate <  50:
+                $color = "#ffA0A0";
+                break;
+            case $progressrate <=  60:
+                $color = "#c8ffc8";
+                break;
+            case $progressrate <= 70:
+                $color = "#97ff97";
+                break;
+            case $progressrate <= 80:
+                $color = "#64ff64";
+                break;
+            case $progressrate <=  90:
+                $color = "#2eff2e";
+                break;
+            case $progressrate >90:
+                $color = "#00ff00";
+                break;
+        }
+        if ($progressrate == 0){
+            $arraystate[] = "<span style='font-weight: bold; color : red;'>".$progressrate."%"."</span>" ;
         }else{
-            if ($success == 100) {
-                $arraystate[] = "<span style='font-weight: bold; color: green ;'>DEPLOY SUCCESS FULL</span>" ;
+            if ($progressrate == 100) {
+                if($successrate == 0){
+                    $arraystate[] = '<span style="font-weight: bold; color: red ;">'._T('GROUP ERROR', 'xmppmaster').'</span>';
+                }
+                else if($successrate> 0 && $successrate < 100){
+                    $arraystate[] = '<span style="font-weight: bold; color: orange ;">'._T('GROUP PARTIAL SUCCESS', 'xmppmaster').'</span>';
+                }
+                else{
+                    $arraystate[] = '<span style="font-weight: bold; color: green ;">'._T('GROUP FULL SUCCESS', 'xmppmaster').'</span>';
+                }
             }
             else{
-                $arraystate[] = "<span style='background-color:".$color." ;'>".$success."%"."</span>" ;
+                $arraystate[] = "<span style='background-color:".$color." ;'>".$progressrate."%"."</span>" ;
             }
         }
         //'<progress max="'.$stat['nbmachine'].'" value="'.$stat['nbdeploydone'].'" form="form-id"></progress>';
         if (! isset($groupname[$groupid]['name']))
         {
-            $arrayname[] = "This group doesn't exist";
+            $arrayname[] = _T("This group doesn't exist", "xmppmaster");
         }
         else {
             $arrayname[] = "<span style='text-decoration : underline;'><img style='position:relative;top : 5px;'src='img/machines/icn_groupsList.gif'/>" . $groupname[$groupid]['name']."</span>";
