@@ -180,8 +180,6 @@ class QueryManager(Singleton):
                 retType = "int"
         except KeyError:
             pass
-            #self.logger.warning("[%s] Not an extended criterion for module %s "%(criterion,
-                                                                                 #moduleName))
         except Exception, e:
             self.logger.error(e)
             self.logger.error("\n%s"%(traceback.format_exc()))
