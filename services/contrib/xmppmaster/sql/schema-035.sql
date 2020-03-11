@@ -30,18 +30,20 @@ CREATE TABLE IF NOT EXISTS `xmppmaster`.`def_remote_deploy_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `regex_logmessage` varchar(80) NOT NULL,
   `status` varchar(80) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `type` varchar(255),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 COMMENT = 'this table allows you to define the regexp to apply 1 status according to 1 log of type deploy';
 
 
 LOCK TABLES `def_remote_deploy_status` WRITE;
-INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`) VALUES ('.*Terminate.*ERROR transfer.*$', 'ERROR TRANSFER FAILED');
+INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Terminate.*ERROR transfer.*$', 'ERROR TRANSFER FAILED', 'errortransferfailed');
 UNLOCK TABLES;
 
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 36;
+UPDATE version SET Number = 35;
 
 COMMIT;
