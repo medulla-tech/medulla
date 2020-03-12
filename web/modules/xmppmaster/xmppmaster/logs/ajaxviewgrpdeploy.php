@@ -136,36 +136,15 @@ $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 $timestampnow = time();
 $info_from_machines = $re["listelet"];
+$statuslist = xmlrpc_get_log_status();
 
-$totalmachinedeploy = $resultfromdeploy['totalmachinedeploy'];
-$deploymentsuccess  = $resultfromdeploy['deploymentsuccess'];
-$deploymenterror    = $resultfromdeploy['deploymenterror'];
-$deploymentabort    = $resultfromdeploy['deploymentabort'];
-$abortontimeout     = $resultfromdeploy['abortontimeout'];
-$abortmissingagent  = $resultfromdeploy['abortmissingagent'];
-$abortrelaydown = $resultfromdeploy['abortrelaydown'];
-$abortalternativerelaysdown = $resultfromdeploy['abortalternativerelaysdown'];
-$abortinforelaymissing = $resultfromdeploy['abortinforelaymissing'];
-$errorunknownerror = $resultfromdeploy['errorunknownerror'];
-$abortpackageidentifiermissing = $resultfromdeploy['abortpackageidentifiermissing'];
-$abortpackagenamemissing = $resultfromdeploy['abortpackagenamemissing'];
-$abortpackageversionmissing = $resultfromdeploy['abortpackageversionmissing'];
-$abortpackageworkflowerror = $resultfromdeploy['abortpackageworkflowerror'];
-$abortdescriptormissing = $resultfromdeploy['abortdescriptormissing'];
-$abortmachinedisappeared = $resultfromdeploy['abortmachinedisappeared'];
-$abortuserabort = $resultfromdeploy['abortuserabort'];
-$aborttransferfailed = $resultfromdeploy['aborttransferfailed'];
-$abortpackageexecutionerror = $resultfromdeploy['abortpackageexecutionerror'];
-$deploymentstart = $resultfromdeploy['deploymentstart'];
-$wol1 = $resultfromdeploy['wol1'];
-$wol2 = $resultfromdeploy['wol2'];
-$wol3 = $resultfromdeploy['wol3'];
-$waitingmachineonline = $resultfromdeploy['waitingmachineonline'];
-$deploymentpending = $resultfromdeploy['deploymentpending'];
-$deploymentdiffered = $resultfromdeploy['deploymentdiffered'];
-$deploymentspooled = $resultfromdeploy['deploymentspooled'];
-$otherstatus = $resultfromdeploy['otherstatus'];
+$dynamicstatus = [];
 
+foreach($statuslist as $element){
+    $dynamicstatus[$element['label']] = $element['status'];
+}
+
+extract($resultfromdeploy);
 $done = 0;
 $aborted = 0;
 $inprogress = 0;
@@ -191,9 +170,12 @@ foreach($resultfromdeploy as $key => $value){
         }
     }
 }
-
-$evolution  = round(($done / $totalmachinedeploy) * 100,2);
-$evolution = ($evolution > 100) ? 100 : $evolution;
+if($totalmachinedeploy){
+    $evolution  = round(($done / $totalmachinedeploy) * 100,2);
+    $evolution = ($evolution > 100) ? 100 : $evolution;
+}
+else
+    $evolution = 0;
 
 /* Deployment status
     Deployment terminated : $done == $total => $terminate = true
@@ -396,81 +378,63 @@ echo "<div>";
 
     if(!$terminate){
         echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
-        echo $deploymentsuccess > 0 ? "<td>"._T("Deployment Success","xmppmaster")."</td>" : "";
-        echo $deploymenterror > 0 ? "<td>"._T("Deployment Error","xmppmaster")."</td>" : "";
-        echo $abortontimeout > 0 ? "<td>"._T("Abort On Timeout","xmppmaster")."</td>" : "";
-        echo $abortmissingagent > 0 ? "<td>"._T("Abort Missing Agent","xmppmaster")."</td>" : "";
-        echo $abortrelaydown > 0 ? "<td>"._T("Abort Relay Down","xmppmaster")."</td>" : "";
-        echo $abortalternativerelaysdown > 0 ?"<td>"._T("Abort Alternative relay down","xmppmaster")."</td>" : "";
-        echo $abortinforelaymissing > 0 ? "<td>"._T("Abort Info Relay Missing","xmppmaster")."</td>" : "";
-        echo $errorunknownerror > 0 ? "<td>"._T("Error Unknown Error","xmppmaster")."</td>" : "";
-        echo $abortpackageidentifiermissing > 0 ?"<td>"._T("Abort Package Identifier Missing","xmppmaster")."</td>" : "";
-        echo $abortpackagenamemissing > 0 ? "<td>"._T("Abort Package Name Missing","xmppmaster")."</td>" : "";
-        echo $abortpackageversionmissing > 0 ? "<td>"._T("Abort Package Version Missing","xmppmaster")."</td>" : "";
-        echo $abortpackageworkflowerror > 0 ? "<td>"._T("Abort Package Workflow Error","xmppmaster")."</td>" : "";
-        echo $abortdescriptormissing > 0 ? "<td>"._T("Abort Descriptor Missing","xmppmaster")."</td>" : "";
-        echo $abortmachinedisappeared > 0 ? "<td>"._T("Abort Machine Disappeared","xmppmaster")."</td>" : "";
-        echo $abortuserabort > 0 ? "<td>"._T("Abort User Abort","xmppmaster")."</td>" : "";
-        echo $aborttransferfailed > 0 ? "<td>"._T("Abort Transfer Failed","xmppmaster")."</td>" : "";
-        echo $abortpackageexecutionerror > 0 ? "<td>"._T("Abort package Execution Error","xmppmaster")."</td>" : "";
-        echo $deploymentdiffered > 0 ? "<td>"._T("Deployment Differed","xmppmaster")."</td>" : "";
-        echo $deploymentstart > 0 ? "<td>"._T("Deployment start","xmppmaster")."</td>" : "";
-        echo $deploymentpending > 0 ? "<td>"._T("Deployment Pending","xmppmaster")."</td>" : "";
-        echo $deploymentspooled > 0 ? "<td>"._T("Deployment Spooled", "xmppmaster")."</td>" : "";
-        echo $wol1 > 0 ? "<td>"._T("WOL 1","xmppmaster")."</td>" : "";
-        echo $wol2 > 0 ? "<td>"._T("WOL 2","xmppmaster")."</td>" : "";
-        echo $wol3 > 0 ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
-        echo $waitingmachineonline > 0 ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
-        echo $otherstatus > 0 ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
-
+        echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>"._T("Deployment Success","xmppmaster")."</td>" : "";
+        echo (isset($deploymenterror)&&$deploymenterror) ? "<td>"._T("Deployment Error","xmppmaster")."</td>" : "";
+        echo (isset($abortontimeout)&&$abortontimeout) ? "<td>"._T("Abort On Timeout","xmppmaster")."</td>" : "";
+        echo (isset($abortmissingagent)&&$abortmissingagent) ? "<td>"._T("Abort Missing Agent","xmppmaster")."</td>" : "";
+        echo (isset($abortrelaydown)&&$abortrelaydown) ? "<td>"._T("Abort Relay Down","xmppmaster")."</td>" : "";
+        echo (isset($abortalternativerelaysdow)&&$abortalternativerelaysdown) ?"<td>"._T("Abort Alternative relay down","xmppmaster")."</td>" : "";
+        echo (isset($abortinforelaymissing)&&$abortinforelaymissing) ? "<td>"._T("Abort Info Relay Missing","xmppmaster")."</td>" : "";
+        echo (isset($errorunknownerror)&&$errorunknownerror) ? "<td>"._T("Error Unknown Error","xmppmaster")."</td>" : "";
+        echo (isset($abortpackageidentifiermissing)&&$abortpackageidentifiermissing) ?"<td>"._T("Abort Package Identifier Missing","xmppmaster")."</td>" : "";
+        echo (isset($abortpackagenamemissing)&&$abortpackagenamemissing) ? "<td>"._T("Abort Package Name Missing","xmppmaster")."</td>" : "";
+        echo (isset($abortpackageversionmissing)&&$abortpackageversionmissing) ? "<td>"._T("Abort Package Version Missing","xmppmaster")."</td>" : "";
+        echo (isset($abortpackageworkflowerror)&&$abortpackageworkflowerror) ? "<td>"._T("Abort Package Workflow Error","xmppmaster")."</td>" : "";
+        echo (isset($abortdescriptormissing)&&$abortdescriptormissing) ? "<td>"._T("Abort Descriptor Missing","xmppmaster")."</td>" : "";
+        echo (isset($abortmachinedisappeared)&&$abortmachinedisappeared) ? "<td>"._T("Abort Machine Disappeared","xmppmaster")."</td>" : "";
+        echo (isset($abortuserabort)&&$abortuserabort) ? "<td>"._T("Abort User Abort","xmppmaster")."</td>" : "";
+        echo (isset($abortpackageexecutionerror)&&$abortpackageexecutionerror) ? "<td>"._T("Abort package Execution Error","xmppmaster")."</td>" : "";
+        echo (isset($deploymentdiffered)&&$deploymentdiffered) ? "<td>"._T("Deployment Differed","xmppmaster")."</td>" : "";
+        echo (isset($deploymentstart)&&$deploymentstart) ? "<td>"._T("Deployment start","xmppmaster")."</td>" : "";
+        echo (isset($deploymentpending)&&$deploymentpending) ? "<td>"._T("Deployment Pending","xmppmaster")."</td>" : "";
+        echo (isset($wol1)&&$wol1) ? "<td>"._T("WOL 1","xmppmaster")."</td>" : "";
+        echo (isset($wol2)&&$wol2) ? "<td>"._T("WOL 2","xmppmaster")."</td>" : "";
+        echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
+        echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
+        echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
+        foreach($dynamicstatus as $label=>$status){
+            echo (isset($$label)&&$$label) ? "<td>"._T($status,"xmppmaster")."</td>" : "";
+        }
         echo "</tr></thead>";
 
         echo "<tbody><tr>";
-        echo $deploymentsuccess > 0 ? "<td>".$deploymentsuccess."</td>" : "";
-        echo $deploymenterror > 0 ? "<td>".$deploymenterror."</td>" : "";
-        echo $abortontimeout > 0 ? "<td>".$abortontimeout."</td>" : "";
-        echo $abortmissingagent > 0 ? "<td>".$abortmissingagent."</td>" : "";
-        echo $abortrelaydown > 0 ? "<td>".$abortrelaydown."</td>" : "";
-        echo $abortalternativerelaysdown > 0 ?"<td>".$abortalternativerelaysdown."</td>" : "";
-        echo $abortinforelaymissing > 0 ? "<td>".$abortinforelaymissing."</td>" : "";
-        echo $errorunknownerror > 0 ? "<td>".$errorunknownerror."</td>" : "";
-        echo $abortpackageidentifiermissing > 0 ?"<td>".$abortpackageidentifiermissing."</td>" : "";
-        echo $abortpackagenamemissing > 0 ? "<td>".$abortpackagenamemissing."</td>" : "";
-        echo $abortpackageversionmissing > 0 ? "<td>".$abortpackageversionmissing."</td>" : "";
-        echo $abortpackageworkflowerror > 0 ? "<td>".$abortpackageworkflowerror."</td>" : "";
-        echo $abortdescriptormissing > 0 ? "<td>".$abortdescriptormissing."</td>" : "";
-        echo $abortmachinedisappeared > 0 ? "<td>".$abortmachinedisappeared."</td>" : "";
-        echo $abortuserabort > 0 ? "<td>".$abortuserabort."</td>" : "";
-        echo $aborttransferfailed > 0 ? "<td>".$aborttransferfailed."</td>" : "";
-        echo $abortpackageexecutionerror > 0 ? "<td>".$abortpackageexecutionerror."</td>" : "";
-        echo $deploymentdiffered > 0 ? "<td>".$deploymentdiffered."</td>" : "";
-        echo $deploymentstart > 0 ? "<td>".$deploymentstart."</td>" : "";
-        echo $deploymentpending > 0 ? "<td>".$deploymentpending."</td>" : "";
-        echo $deploymentspooled > 0 ? "<td>".$deploymentspooled."</td>" : "";
-        echo $wol1 > 0 ? "<td>".$wol1."</td>" : "";
-        echo $wol2 > 0 ? "<td>".$wol2."</td>" : "";
-        echo $wol3 > 0 ? "<td>".$wol3."</td>" : "";
-        echo $waitingmachineonline > 0 ? "<td>".$waitingmachineonline."</td>" : "";
-        echo $otherstatus > 0 ? "<td>".$otherstatus."</td>" : "";
-
-        echo "</tr></tbody></table>";
-
-    }
-
-    else{
-        echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
-        echo '<td>'._T('Graph','xmppmaster').'</td>';
-        echo "<td>"._T("Success","xmppmaster")."</td>
-            <td>"._T("Error","xmppmaster")."</td>
-            <td>"._T("Aborted","xmppmaster")."</td>";
-        echo "</tr></thead>
-        <tbody><tr>";
-        echo '<td>';
-        echo'<div  style="float:left;min-height: 120px" id="holder"></div>';
-        echo '</td>';
-        echo "<td>".$deploymentsuccess."</td>
-            <td>".$errors."</td>
-            <td>".$aborted."</td>";
+        echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>".$deploymentsuccess."</td>" : "";
+        echo (isset($deploymenterror)&&$deploymenterror) ? "<td>".$deploymenterror."</td>" : "";
+        echo (isset($abortontimeout)&&$abortontimeout) ? "<td>".$abortontimeout."</td>" : "";
+        echo (isset($abortmissingagent)&&$abortmissingagent) ? "<td>".$abortmissingagent."</td>" : "";
+        echo (isset($abortrelaydown)&&$abortrelaydown) ? "<td>".$abortrelaydown."</td>" : "";
+        echo (isset($abortalternativerelaysdow)&&$abortalternativerelaysdown) ?"<td>".$abortalternativerelaysdown."</td>" : "";
+        echo (isset($abortinforelaymissing)&&$abortinforelaymissing) ? "<td>".$abortinforelaymissing."</td>" : "";
+        echo (isset($errorunknownerror)&&$errorunknownerror) ? "<td>".$errorunknownerror."</td>" : "";
+        echo (isset($abortpackageidentifiermissing)&&$abortpackageidentifiermissing) > 0 ?"<td>".$abortpackageidentifiermissing."</td>" : "";
+        echo (isset($abortpackagenamemissing)&&$abortpackagenamemissing) ? "<td>".$abortpackagenamemissing."</td>" : "";
+        echo (isset($abortpackageversionmissing)&&$abortpackageversionmissing) ? "<td>".$abortpackageversionmissing."</td>" : "";
+        echo (isset($abortpackageworkflowerror)&&$abortpackageworkflowerror) ? "<td>".$abortpackageworkflowerror."</td>" : "";
+        echo (isset($abortdescriptormissing)&&$abortdescriptormissing) ? "<td>".$abortdescriptormissing."</td>" : "";
+        echo (isset($abortmachinedisappeared)&&$abortmachinedisappeared) ? "<td>".$abortmachinedisappeared."</td>" : "";
+        echo (isset($abortuserabort)&&$abortuserabort) ? "<td>".$abortuserabort."</td>" : "";
+        echo (isset($abortpackageexecutionerror)&&$abortpackageexecutionerror) ? "<td>".$abortpackageexecutionerror."</td>" : "";
+        echo (isset($deploymentdiffered)&&$deploymentdiffered) ? "<td>".$deploymentdiffered."</td>" : "";
+        echo (isset($deploymentstart)&&$deploymentstart) ? "<td>".$deploymentstart."</td>" : "";
+        echo (isset($deploymentpending)&&$deploymentpending) ? "<td>".$deploymentpending."</td>" : "";
+        echo (isset($wol1)&&$wol1) ? "<td>".$wol1."</td>" : "";
+        echo (isset($wol2)&&$wol2) ? "<td>".$wol2."</td>" : "";
+        echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
+        echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
+        echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
+        foreach($dynamicstatus as $label=>$status){
+            echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
+        }
         echo "</tr></tbody></table>";
     }
 
@@ -702,9 +666,6 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
         if ($deploymentdiffered > 0){
             echo 'datas.push({"label":"Deployment Differed ", "value":'.$deploymentdiffered.', "color": "#7080AF", "href":"'.urlredirect_group_for_deploy("deploymentdiffered",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
-        if ($deploymentspooled > 0){
-            echo 'datas.push({"label":"Deployment Spooled ", "value":'.$deploymentspooled.', "color": "#5668A9", "href":"'.urlredirect_group_for_deploy("deploymentspooled",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-        }
         if ($deploymentstart > 0){
             echo 'datas.push({"label":"Deployment Start", "value":'.$deploymentstart.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("deploymentstart",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
@@ -744,9 +705,6 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
         if ($abortuserabort > 0){
             echo 'datas.push({"label":"Abort User Abort ", "value":'.$abortuserabort.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortuserabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
-        if ($aborttransferfailed > 0){
-            echo 'datas.push({"label":"Abort Transfer Failed ", "value":'.$aborttransferfailed.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("aborttransferfailed",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-        }
         if ($abortpackageexecutionerror > 0){
             echo 'datas.push({"label":"Abort Package Execution Error ", "value":'.$abortpackageexecutionerror.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageexecutionerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
@@ -756,7 +714,23 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
         if ($otherstatus > 0){
             echo 'datas.push({"label":"Other Status ", "value":'.$otherstatus.', "color": "#FFDA00", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
-        echo'
+
+        $bluelistcolor = ["#7080AF", "#665899", "#6F01F3", "#5D01A9", "#2D0151", "#3399CC", "#000099", "#6600FF"];
+        $max = count($bluelistcolor) - 1;
+
+        foreach($dynamicstatus as $label=>$status){
+            if(isset($$label) && $$label){
+                if(preg_match("#^abort#i", $status))
+                    $color = "#FF8600";
+                else if(preg_match("#^error#i", $status))
+                    $color = "#ff0000";
+                else
+                    $color = $bluelistcolor[rand(0, $max)];
+
+                echo 'datas.push({"label":"'.$status.'", "value":"'.$$label.'", "color": "'.$color.'", "href":"'.urlredirect_group_for_deploy($label,$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+            }
+        }
+        echo '
         chart("holder", datas);
     </script>';
 

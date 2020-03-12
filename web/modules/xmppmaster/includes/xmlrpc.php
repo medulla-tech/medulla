@@ -474,4 +474,8 @@ function xmlrpc_get_list_of_users_for_shared_qa($namecmd){
 function xmppmaster_delcomputer($uuid){
   return xmlCall("xmppmaster.delcomputer", array($uuid));
 }
+
+function xmlrpc_get_log_status(){
+    return xmlCall("xmppmaster.get_log_status", array());
+}
 ?>
