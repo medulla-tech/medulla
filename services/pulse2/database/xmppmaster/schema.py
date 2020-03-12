@@ -478,6 +478,8 @@ class Def_remote_deploy_status(Base, XmppMasterDBObj):
     # ====== Fields =============================
     # Here we define columns for the table def_remote_deploy_status.
     # Notice that each column is also a normal Python instance attribute.
+
     # id = Column(Integer, primary_key=True)
-    reg_logmessage = Column(String(80), nullable=False)
+    regex_logmessage = Column(String(80), nullable=False)
     status = Column(String(80), nullable=False)
+    label = Column(String(255), nullable=False)

@@ -2480,6 +2480,14 @@ class XmppMasterDatabase(DatabaseHelper):
                     'deploymentspooled' : 0,
                     'otherstatus' : 0,
                     }
+            dynamic_status_list = self.get_log_status()
+            dynamic_label = []
+            dynamic_status = []
+            if dynamic_status_list != []:
+                for status in dynamic_status_list:
+                    ret[status['label']] = 0
+                    dynamic_label.append(status['label'])
+                    dynamic_status.append(status['status'])
 
             liststatus = { x[0] : x[1] for x in machinedeploy}
             totalmachinedeploy = 0
@@ -2514,11 +2522,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['abortmachinedisappeared'] = liststatus[t]
                 elif t == 'ABORT USER ABORT':
                     ret['abortuserabort'] = liststatus[t]
-                elif t == 'ABORT TRANSFER FAILED':
-                    ret['aborttransferfailed'] = liststatus[t]
                 elif t == 'ABORT PACKAGE EXECUTION ERROR':
                     ret['abortpackageexecutionerror'] = liststatus[t]
-
 
                 elif t == 'DEPLOYMENT START':
                     ret['deploymentstart'] = liststatus[t]
@@ -2534,8 +2539,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['deploymentpending'] = liststatus[t]
                 elif t == 'DEPLOYMENT DIFFERED':
                     ret['deploymentdiffered'] = liststatus[t]
-                elif t == 'DEPLOYMENT SPOOLED':
-                    ret['deploymentspooled'] = liststatus[t]
+
+                elif t in dynamic_status:
+                    index = dynamic_status.index(t)
+                    ret[dynamic_label[index]] = liststatus[t]
                 else:
                     ret['otherstatus'] = liststatus[t]
             return ret
@@ -5496,22 +5503,23 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_log_status(self, session):
-        """ 
+        """
             get complete table
         """
-        resultat = []
+        result = []
         try:
             ret = session.query(Def_remote_deploy_status).all()
             session.commit()
             session.flush()
             if ret is None:
-                resultat = []
+                result = []
             else:
-                resultat = [{'index':id, 
-                            "id" : regle.id,
-                            'regexplog':regle.regex_logmessage, 
-                            'status':regle.status} for id, regle in enumerate(ret)]
-            return resultat     
+                result = [{'index':id,
+                            "id" : rule.id,
+                            'regexplog':rule.regex_logmessage,
+                            'status':rule.status,
+                            'label' : rule.label} for id, rule in enumerate(ret)]
+            return result
         except Exception, e:
             traceback.print_exc(file=sys.stdout)
-            return resultat
+            return result
