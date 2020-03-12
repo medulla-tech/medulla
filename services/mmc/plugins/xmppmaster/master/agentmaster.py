@@ -1577,9 +1577,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
         objdeployadvanced = XmppMasterDatabase().datacmddeploy(idcommand)
 
         if jidmachine != None and jidmachine != "" and jidrelay != None and jidrelay != "":
-            iprelay = XmppMasterDatabase().ipserverARS(jidrelay)[0]
-            ippackageserver =   XmppMasterDatabase().ippackageserver(jidrelay)[0]
-            portpackageserver = XmppMasterDatabase().portpackageserver(jidrelay)[0]
+            userjid=jid.JID(jidrelay).user
+            iprelay = XmppMasterDatabase().ipserverARS(userjid)[0]
+            ippackageserver =   XmppMasterDatabase().ippackageserver(userjid)[0]
+            portpackageserver = XmppMasterDatabase().portpackageserver(userjid)[0]
         else:
             iprelay = ""
             ippackageserver =   ""

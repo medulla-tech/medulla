@@ -3588,6 +3588,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def ipfromjid(self, session, jid, enable = 1):
         """ return ip xmpp for JID """
+        user = str(jid).split("@")[0]
         if enable is None:
             sql = """SELECT
                         ip_xmpp
@@ -3595,7 +3596,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         xmppmaster.machines
                     WHERE
                         jid LIKE ('%s%%')
-                                    LIMIT 1;"""%jid
+                                    LIMIT 1;"""%user
         else:
             sql = """SELECT
                         ip_xmpp
@@ -3604,7 +3605,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     WHERE
                         enabled = '%s' and
                         jid LIKE ('%s%%')
-                                    LIMIT 1;"""%(enable, jid)
+                                    LIMIT 1;"""%(enable, user)
 
         result = session.execute(sql)
         session.commit()
@@ -3618,6 +3619,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def groupdeployfromjid(self, session, jid):
         """ return groupdeploy xmpp for JID """
+        user = str(jid).split("@")[0]
         sql = """SELECT
                     groupdeploy
                 FROM
@@ -3625,7 +3627,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     enabled = '1' and
                     jid LIKE ('%s%%')
-                                LIMIT 1;"""%jid
+                                LIMIT 1;"""%user
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3638,13 +3640,14 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def ippackageserver(self, session, jid):
         """ return ip xmpp for JID """
+        user = str(jid).split("@")[0]
         sql = """SELECT
                     package_server_ip
                 FROM
                     xmppmaster.relayserver
                 WHERE
                     jid LIKE ('%s%%')
-                                LIMIT 1;"""%jid
+                                LIMIT 1;"""%user
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3657,13 +3660,14 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def portpackageserver(self, session, jid):
         """ return ip xmpp for JID """
+        user = str(jid).split("@")[0]
         sql = """SELECT
                     package_server_port
                 FROM
                     xmppmaster.relayserver
                 WHERE
                     jid LIKE ('%s%%')
-                                LIMIT 1;"""%jid
+                                LIMIT 1;"""%user
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3676,13 +3680,14 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def ipserverARS(self, session, jid):
         """ return ip xmpp for JID """
+        user = str(jid).split("@")[0]
         sql = """SELECT
                     ipserver
                 FROM
                     xmppmaster.relayserver
                 WHERE
                     jid LIKE ('%s%%')
-                                LIMIT 1;"""%jid
+                                LIMIT 1;"""%user
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4983,11 +4988,12 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getPresencejiduser(self, session, userjid):
+        user = str(userjid).split("@")[0]
         sql = """SELECT COUNT(jid) AS nb
             FROM
                  xmppmaster.machines
              WHERE
-              jid LIKE ('%s%%');"""%(userjid)
+              jid LIKE ('%s%%');"""%(user)
         presencejid = session.execute(sql)
         session.commit()
         session.flush()
