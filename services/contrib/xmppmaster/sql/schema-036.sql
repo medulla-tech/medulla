@@ -20,20 +20,24 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
--- add FOREIGN KEY in table network on table machines  
+START TRANSACTION;
 
-ALTER TABLE `xmppmaster`.`network` 
+-- add FOREIGN KEY in table network on table machines
+
+ALTER TABLE `xmppmaster`.`network`
 ADD INDEX `fk_network_idx_machine` (`machines_id` ASC);
 
 
-ALTER TABLE `xmppmaster`.`network` 
+ALTER TABLE `xmppmaster`.`network`
 ADD CONSTRAINT `fk_network_idx_machine`
   FOREIGN KEY (`machines_id`)
   REFERENCES `xmppmaster`.`machines` (`id`)
   ON DELETE CASCADE
   ON UPDATE CASCADE;
-  
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
 UPDATE version SET Number = 36;
+
+COMMIT;
