@@ -55,7 +55,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                         type='deploy',
                         sessionname=sessionid,
                         priority=-1,
-                        action="",
+                        action="xmpplog",
                         who="",
                         how="",
                         why=xmppobject.boundjid.bare,
