@@ -276,7 +276,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 //                 echo "<pre>";
 //                     //print_r($descriptor_base);
-//                     // print_r($confxmppmaster); 
+//                     // print_r($confxmppmaster);
 //                     //print_r($re);
 //                     //print_r($lp);
 //                 echo "</pre>";
@@ -284,36 +284,24 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 echo "<table>";
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h1 style=\"font-size: 25px; color:blue; font-weight: bold;\">AGENT BASE</h1>";
+                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">BASE AGENT</h1>";
                         echo "</td><td>";
-                        echo "<h1 style=\"font-size: 25px; color:blue; font-weight: bold;\">AGENT REMOTE</h1>";
+                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">REMOTE AGENT</h1>";
                         echo "</td><td>";
-                        echo "<h1 style=\"font-size: 25px; color:blue; font-weight: bold;\">AGENT REMOTE IMAGE</h1>";
+                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">REMOTE IMAGE</h1>";
                         echo "</td>";
                     echo "</tr>";
                     //----------------------- PLUGIN INFORMATIONS -----------------------
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; color:blue; font-weight: bold;\">PLUGIN INFORMATIONS</h2>";
+                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; font-weight: bold;\">PLUGINS</h2>";
                         echo "</td>";
                     echo "</tr>";
 
                     echo "<tr>";
-                        echo "<td>";
-                            echo "<h2 style=\"color:blue; font-weight: bold;\">PLUGIN BASE</h2>";
-                        echo "</td>";
-                        echo "<td>";
-                            echo "<h2 style=\"color:blue; font-weight: bold;\">LIST PLUGIN AGENT</h2>";
-                        echo "</td>";
-                        echo "<td>";
-                            echo "<h2 style=\"color:blue; font-weight: bold;\"></h2>";
-                        echo "</td>";
-                    echo "</tr>";
-                    
-                    echo "<tr>";
                         // ------------------------------ PLUGIN BASE ----------------------------------------
                         echo "<td>";
-                            echo "<Hn>list plugin base</Hn>";
+                            echo "<Hn>Base plugins</Hn>";
                             echo "<ul>";
                             foreach($lp[0] as $k => $v ){
                                 echo "<li>";
@@ -330,19 +318,19 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                 echo "</li>";
                             }
                             echo "</ul>";
-                            echo "<Hn>list plugin scheduler</Hn>";
+                            echo "<Hn>Base scheduler plugins</Hn>";
                             echo "<ul>";
                                 foreach($lp[1] as $k => $v ){
                                     echo "<li>";
                                         echo $k."=>". $v;
-                                    echo "</li>"; 
+                                    echo "</li>";
                                 }
                             echo "</ul>";
                         echo "</td>";
-                        
+
                         // ------------------------------ LIST PLUGIN AGENT ----------------------------------------
-                        echo "<td>";
-                        echo "<Hn>list pulgin distant</Hn>";
+                        echo "<td valign=\"top\">";
+                        echo "<Hn>Remote plugins</Hn>";
                         echo "<ul>";
                             foreach ($re['plugins']['plu'] as $key=>$val){
                                 echo "<li>";
@@ -350,7 +338,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                 echo "</li>";
                             }
                         echo "</ul>";
-                        echo "<Hn>list pulgin scheduler distant</Hn>";
+                        echo "<Hn>Remote scheduler plugins</Hn>";
                         echo "<ul>";
                             foreach ($re['plugins']['schedule'] as $key=>$val){
                                 echo "<li>";
@@ -358,8 +346,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                 echo "</li>";
                             }
                         echo "</ul>";
-                        
-                        
+
+
                         echo "</td><td>";
                         echo "<h2 style=\"color:blue; font-weight: bold;\"></h2>";
                         echo "</td>";
@@ -367,13 +355,13 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     //----------------------------- UPDATE INFORMATIONS ----------------------------------
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h2  colspan=\"3\" style=\"font-size: 20px;color:blue; font-weight: bold;\">UPDATE INFORMATIONS</h2>";
+                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; font-weight: bold;\">UPDATE DETAILS</h2>";
                         echo "</td>";
                     echo "</tr>";
                     // ------------------------------ PARAMETERS ----------------------------------------
                     echo "<tr>";
                         echo "<td colspan=\"3\">";
-                        echo "<h2  style=\"color:blue; font-weight: bold;\">PARAMETERS</h2>";
+                        echo "<h2  style=\"font-weight: bold;\">Parameters</h2>";
                         echo "</td>";
                     echo "</tr>";
 
@@ -394,7 +382,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     // ------------------------------ PATH AGENT ----------------------------------------
                     echo "<tr>";
                         echo "<td colspan=\"3\">";
-                        echo "<h2  style=\"color:blue; font-weight: bold;\">PATH AGENT</h2>";
+                        echo "<h2  style=\"font-weight: bold;\">Folder Path</h2>";
                         echo "</td>";
                     echo "</tr>";
                     echo "<tr>";
@@ -407,16 +395,16 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                         echo $re['pathimg'];
                         echo "</td>";
                     echo "</tr>";
-                    
-                    
-                    
+
+
+
                     echo "<tr>";
                         // ------------------------------ DESCIPTOR AGANT BASE ----------------------------------------
                         echo "<td>";
                                 foreach($descriptor_base['directory']  as $key => $value)
                                 {
                                     //echo "<p style=\"color:blue;font-weight: bold;\">".$key."</p>";
-                                    echo "<h2 style=\"color:blue; font-weight: bold;\">".$key."</h2>";
+                                    echo "<h2 style=\"font-weight: bold;\">".$key."</h2>";
                                     echo "<ul>";
                                     switch ($key ){
                                         case "program_agent" :
@@ -431,10 +419,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                                 echo "<li>$key1 => $val1</li>";
                                             }
                                             break;
-//                                         case "version_agent" :
-//                                             //echo "<p>$value</p>";
-//                                             echo "<li>$value</li>";
-//                                             break;
                                         case "version" :
                                             //echo "<p>$value</p>";
                                             echo "<li>$value</li>";
@@ -459,7 +443,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                 foreach($json_data  as $key => $value)
                                 {
                                     //echo "<p style=\"color:blue;font-weight: bold;\">".$key."</p>";
-                                    echo "<h2 style=\"color:blue; font-weight: bold;\">".$key."</h2>";
+                                    echo "<h2 style=\"font-weight: bold;\">".$key."</h2>";
                                     echo "<ul>";
                                     switch ($key ){
                                         case "program_agent" :
@@ -474,10 +458,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                                 echo "<li>$key1 => $val1</li>";
                                             }
                                             break;
-//                                         case "version_agent" :
-//                                             //echo "<p>$value</p>";
-//                                             echo "<li>$value</li>";
-//                                             break;
                                         case "version" :
                                             //echo "<p>$value</p>";
                                             echo "<li>$value</li>";
@@ -502,7 +482,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                 foreach($json_data  as $key => $value)
                                 {
                                     //echo "<p style=\"color:blue;font-weight: bold;\">".$key."</p>";
-                                    echo "<h2 style=\"color:blue; font-weight: bold;\">".$key."</h2>";
+                                    echo "<h2 style=\"font-weight: bold;\">".$key."</h2>";
                                     echo "<ul>";
                                     switch ($key ){
                                         case "program_agent" :
@@ -545,7 +525,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                         echo "<td>";
                         echo "</td>";
                         echo "<td colspan=\"2\">";
-                            printf("<h2 style=\"color:blue; font-weight: bold;\">%s</h2>",_T("check img remote agent", "xmppmaster"));
+                            printf("<h2 style=\"font-weight: bold;\">%s</h2>",_T("Remote image verifications", "xmppmaster"));
                             echo $re['testmodule'];
                         echo "</td>";
                     echo "</tr>";
@@ -553,7 +533,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                         echo "<td>";
                         echo "</td>";
                         echo "<td colspan=\"2\">";
-                            printf("<h2 style=\"color:blue; font-weight: bold;\">%s</h2>",_T("diff information", "xmppmaster"));
+                            printf("<h2 style=\"font-weight: bold;\">%s</h2>",_T("Diff information", "xmppmaster"));
                             $re['information'] = str_replace( "imagethe", "image. The",$re['information']);
                             echo "<p>".$re['information']."</p>";
                         echo "</td>";
@@ -562,10 +542,10 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                         echo "<td>";
                         echo "</td>";
                         echo "<td colspan=\"2\">";
-                            printf("<h2 style=\"color:blue; font-weight: bold;\">%s</h2>",_T("Action diff", "xmppmaster"));
+                            printf("<h2 style=\"font-weight: bold;\">%s</h2>",_T("Action", "xmppmaster"));
                             $txtsearch = array( "Replace or add agent files",
                                     "Action for program_agent",
-                                    "Action for lib_agent", 
+                                    "Action for lib_agent",
                                     "Action for script_agent");
                             $se = array();
                             foreach($txtsearch as $tx ){
