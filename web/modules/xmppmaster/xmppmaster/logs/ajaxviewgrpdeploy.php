@@ -356,8 +356,6 @@ echo "<div>";
         if ($end_deploy || $terminate){
             echo "<h2>"._T("Deployment complete","xmppmaster")."</h2>";
             $terminate = true;
-
-
         }else{
             echo "<h2>"._T("Deployment in progress","xmppmaster")."</h2>";
             echo _T("Started since","xmppmaster")." <span>".($timestampnow - $start_date)."</span> s";
@@ -435,6 +433,21 @@ echo "<div>";
         foreach($dynamicstatus as $label=>$status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
         }
+      }
+        else{
+            echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
+            echo '<td>'._T('Graph','xmppmaster').'</td>';
+            echo "<td>"._T("Success","xmppmaster")."</td>
+                <td>"._T("Error","xmppmaster")."</td>
+                <td>"._T("Aborted","xmppmaster")."</td>";
+            echo "</tr></thead>
+            <tbody><tr>";
+            echo '<td>';
+            echo'<div  style="float:left;min-height: 120px" id="holder"></div>';
+            echo '</td>';
+            echo "<td>".$deploymentsuccess."</td>
+                <td>".$errors."</td>
+                <td>".$aborted."</td>";
         echo "</tr></tbody></table>";
     }
 
