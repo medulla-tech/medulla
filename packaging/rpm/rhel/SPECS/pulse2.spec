@@ -9,13 +9,13 @@
 %define use_git                1
 %define git                    SHA
 %define real_version           4.6.0.2
-%define mmc_version            4.6.0.2
+%define mmc_version            4.6.0.1
 
 Summary:	Management Console
 Name:		pulse2
 Version:	%real_version
 %if ! %use_git
-Release:        1%{?dist}
+Release:        2%{?dist}
 %else
 Release:        0.%git.1%{?dist}
 %endif
