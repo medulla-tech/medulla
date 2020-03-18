@@ -522,9 +522,8 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                     return
                                 #if "kiosk" in xmppobject.listmodulemmc and kiosk_presence:
                                 if PluginManager().isEnabled("kiosk"):
-                                    from mmc.plugins.kiosk import handlerkioskpresence
                                     ## send a data message to kiosk when an inventory is registered
-                                    handlerkioskpresence(
+                                    handlerkioskpresence(xmppobject,
                                                         data['from'],
                                                         idmachine,
                                                         data['platform'],
