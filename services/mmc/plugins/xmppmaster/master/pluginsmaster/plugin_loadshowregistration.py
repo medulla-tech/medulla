@@ -40,9 +40,6 @@ def action( objectxmpp, action, sessionid, data, msg, dataerreur):
     logger.debug("=====================================================")
     logger.debug("call %s from %s"%(plugin, msg['from']))
     logger.debug("=====================================================")
-    logger.debug("=============%s ===============%s========================="%(logger.getEffectiveLevel(),logging.DEBUG))
-    #logger.debug("%s"%logging.getLogger().__dict__)
-    #logger.debug("%s"%logging.__dict__)
     try:
         compteurcallplugin = getattr(objectxmpp, "num_call%s"%action)
 

@@ -50,12 +50,16 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                        data['descriptor']['info']['name'],
                                        sessionid)
             logger.error(msg)
-            XmppMasterDatabase().updatedeploystate(sessionid, "ABORT PACKAGE EXECUTION ERROR")
+
+            if  'status' in data and data['status'] != "":
+                XmppMasterDatabase().updatedeploystate(sessionid, data['status'])
+            else:
+                XmppMasterDatabase().updatedeploystate(sessionid, "ABORT PACKAGE EXECUTION ERROR")
             xmppobject.xmpplog(msg,
                         type='deploy',
                         sessionname=sessionid,
                         priority=-1,
-                        action="",
+                        action="xmpplog",
                         who="",
                         how="",
                         why=xmppobject.boundjid.bare,

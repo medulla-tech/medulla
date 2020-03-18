@@ -342,7 +342,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.CYCLESCHEDULER = 4
         if self.config.Booltaskdeploy:
             self.config.Boolsessionwork = True
-            #if agent substitute pour deploy deconecter cette fonction.deploy 
+            #if agent substitute pour deploy deconecter cette fonction.deploy
             # Interval between two scans for checking for new deployments (in seconds) 30 by default
             self.schedule('deployment scan interval', conf.deployment_scan_interval, self.scheduledeploy, repeat=True)
             # Interval between two wake on lan for a deployment (in seconds) 60 by default
@@ -354,7 +354,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if self.config.Boolsessionwork:
             # Interval between two sessions checks for removing dead sessions (in seconds) 15 by default
             self.schedule('session check', conf.session_check_interval, self.handlemanagesession, repeat=True)
-        
+
         self.schedule('schedulerfunction', 60, self.schedulerfunction, repeat=True)
         # Enable memory leaks checks and define interval (in seconds)
         self.timecheck = 15
@@ -609,7 +609,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             date=None,
                             fromuser=machine['login'])
             msglog=[]
-            ########################################################################### 
+            ###########################################################################
             machines_wol2 = XmppMasterDatabase().search_machines_from_state("WOL 2")
             for machine in machines_wol2:
                 if XmppMasterDatabase().getPresenceuuid(machine['inventoryuuid']):
@@ -632,7 +632,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             date=None,
                             fromuser=machine['login'])
             msglog=[]
-            ########################################################################### 
+            ###########################################################################
             machines_wol1 = XmppMasterDatabase().search_machines_from_state("WOL 1")
             for machine in machines_wol1:
                 if XmppMasterDatabase().getPresenceuuid(machine['inventoryuuid']):
@@ -643,7 +643,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
                 self._addsetwol(wol_set, machine['macadress'])
                 #self.sendwol(machine['macadress'], hostnamemachine)
-                
+
                 msglog.append("<span style='color : orange;font-weight: bold;'>SECOND WOL</span>:" \
                                 " wakeonlan machine  [Machine : %s]"%hostnamemachine)
             for logmsg in msglog:
@@ -835,7 +835,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 macadress=deployobject['mac'],
                                                 result = "",
                                                 syncthing = 0)
-                
+
                 msg.append("<span style='color : red;font-weight: bold;'>MACHINE %s AGENT MISSING. " \
                             "IMPOSSIBLE DEPLOYEMENT : GLPI ID is %s</span>"%(machine.name,
                                                                              UUID))
@@ -870,7 +870,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 #creation list deployement
                 self.machineDeploy[UUID] = []
                 self.machineDeploy[UUID].append(deployobject)
-                
+
         listobjsupp = []
         nbdeploy=len(self.machineDeploy)
         for deployuuid in self.machineDeploy:
@@ -1262,7 +1262,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 " Either restart it or rerun the configurator on the machine %s to use another ARS</span>"%(name))
                     msg.append("<span style='color : blue;font-weight: bold;'>Search alternative ARS for deployment</span>")
                     # il faut recherche si on trouve 1 alternative. dans le cluster
-                    # on cherche 1 ars disponible et up dans son cluster. 
+                    # on cherche 1 ars disponible et up dans son cluster.
                     cluster = XmppMasterDatabase().clusterlistars(enabled=None)
                     trouver = False
                     for  i in range(1, len(cluster)+1):
@@ -1577,9 +1577,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
         objdeployadvanced = XmppMasterDatabase().datacmddeploy(idcommand)
 
         if jidmachine != None and jidmachine != "" and jidrelay != None and jidrelay != "":
-            iprelay = XmppMasterDatabase().ipserverARS(jidrelay)[0]
-            ippackageserver =   XmppMasterDatabase().ippackageserver(jidrelay)[0]
-            portpackageserver = XmppMasterDatabase().portpackageserver(jidrelay)[0]
+            userjid=jid.JID(jidrelay).user
+            iprelay = XmppMasterDatabase().ipserverARS(userjid)[0]
+            ippackageserver =   XmppMasterDatabase().ippackageserver(userjid)[0]
+            portpackageserver = XmppMasterDatabase().portpackageserver(userjid)[0]
         else:
             iprelay = ""
             ippackageserver =   ""
@@ -1625,7 +1626,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         # todo rattacher 1 deployement d'un package d'une machine si partage syncthing sur cluster existe deja pour d'autre machines.
         # res = XmppMasterDatabase().getnumcluster_for_ars(jidrelay)
-        
+
         ###### ici on peut savoir si c'est 1 groupe et si syncthing est demande
         if wol == 3:
             state="GROUP DEPLOY MISSING"

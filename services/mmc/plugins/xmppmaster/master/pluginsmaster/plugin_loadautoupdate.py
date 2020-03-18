@@ -27,7 +27,7 @@ from utils import getRandomName
 from update_remote_agent import Update_Remote_Agent
 import types
 import ConfigParser
-
+from sleekxmpp import jid
 logger = logging.getLogger()
 DEBUGPULSEPLUGIN = 25
 
@@ -94,6 +94,10 @@ def read_conf_remote_update(objectxmpp):
             objectxmpp.loadautoupdate = Config.getboolean('parameters', 'autoupdate')
         else:
             objectxmpp.loadautoupdate = True
+        if Config.has_option("parameters", "autoupdatebyrelay"):
+            objectxmpp.autoupdatebyrelay = Config.getboolean('parameters', 'autoupdatebyrelay')
+        else:
+            objectxmpp.autoupdatebyrelay = False
     logger.debug("directory base agent is %s"%objectxmpp.diragentbase)
     logger.debug("autoupdate agent is %s"%objectxmpp.loadautoupdate)
 
@@ -112,6 +116,10 @@ def senddescriptormd5(self, to):
                 'sessionid': getRandomName(5, "updateagent")}
     # Send catalog of files.
     logger.debug("Send descriptor to agent [%s] for update" % to)
+    if self.autoupdatebyrelay:
+        relayjid = XmppMasterDatabase().groupdeployfromjid(to)
+        relayjid = jid.JID(str(relayjid[0])).bare
+        datasend['data']['ars_update'] = relayjid
     self.send_message(to,
                       mbody=json.dumps(datasend),
                       mtype='chat')

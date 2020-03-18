@@ -323,6 +323,9 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid):
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+def getdeployment(command_id, filter="", start=0, limit=-1):
+    return XmppMasterDatabase().getdeployment(command_id, filter, start, limit)
+
 def stat_syncthing_transfert(group_id, command_id):
     return XmppMasterDatabase().stat_syncthing_transfert(group_id, command_id)
 
@@ -716,3 +719,7 @@ def get_list_of_users_for_shared_qa(namecmd):
 def delcomputer(uuid):
     callrestartbot(uuid)
     return XmppMasterDatabase().delMachineXmppPresence(uuid)
+
+
+def get_log_status():
+    return XmppMasterDatabase().get_log_status()
