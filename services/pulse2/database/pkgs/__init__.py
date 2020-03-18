@@ -459,3 +459,27 @@ class PkgsDatabase(DatabaseHelper):
         session.execute(sql)
         session.commit()
         session.flush()
+
+    @DatabaseHelper._sessionm
+    def get_package_summary(self, session, package_id):
+
+        query = session.query(Packages.label,\
+            Packages.version,\
+            Packages.Qsoftware,\
+            Packages.description).filter(Packages.uuid == package_id).first()
+        session.commit()
+        session.flush()
+
+        result = {
+            'name' : '',
+            'version': '',
+            'software' : '',
+            'description' : ''}
+
+        if query is not None:
+            result['name'] = query[0]
+            result['version'] = query[1]
+            result['software'] = query[2]
+            result['description'] = query[3]
+
+        return result
