@@ -26,6 +26,7 @@ require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/includes.php");
+require_once("modules/pkgs/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 ?>
 <script src="jsframework/d3/d3.js"></script>
@@ -110,9 +111,6 @@ $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getNam
 $p->display();
 
 //FROM MSC BASE
-// search nbmachinegroupe in group, and nbdeploydone already deployed from mmc
-$resultfrommsc = xmlrpc_getstatbycmd($cmd_id, $filter, $start, $end);
-
 // The deployment is a convergence
 $isconvergence = is_commands_convergence_type($cmd_id, $filter, $start, $end);
 
@@ -121,17 +119,21 @@ $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] )
 
 // search from msc table CommandsOnHost
 $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start, $end);
+
 $start_date =  $lastcommandid['start_dateunixtime'];
 $end_date = $lastcommandid['end_dateunixtime'];
 
+// Get uuid, hostname and status of the deployed machines from xmppmaster.deploy
 $getdeployment = xmlrpc_getdeployment($cmd_id, $filter, $start, $maxperpage);
 
+// Get the same machines from glpi
 $re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'], $filter, $start, $maxperpage);
 $count = $getdeployment['total'];
 
 // STATS FROM XMPPMASTER DEPLOY
-$resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,  date("Y-m-d H:i:s", $start_date));
-// from msc
+$statsfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,  date("Y-m-d H:i:s", $start_date));
+
+// get some info from msc for this deployment
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 $timestampnow = time();
@@ -144,7 +146,7 @@ foreach($statuslist as $element){
     $dynamicstatus[$element['label']] = $element['status'];
 }
 
-extract($resultfromdeploy);
+extract($statsfromdeploy);
 $done = 0;
 $aborted = 0;
 $inprogress = 0;
@@ -152,7 +154,7 @@ $terminate = false;
 $errors = 0;
 
 //Calculate globals stats
-foreach($resultfromdeploy as $key => $value){
+foreach($statsfromdeploy as $key => $value){
     if($key != 'totalmachinedeploy'){
         if(preg_match('#abort|success|error|status#i', $key)){
             $done += $value;
@@ -320,34 +322,12 @@ jQuery( "#buttontogglesyncthing" ).click(function() {
     </script>
 
 <?php
-if ($info['len'] != 0){
-    $result=$info['objectdeploy'][1]['result'];
-    $resultatdeploy =json_decode($result, true);
-}
 
-if (isset($resultatdeploy['infoslist'][0]['packageUuid'])){
-    echo "Package : ".$resultatdeploy['infoslist'][0]['name']." [". $resultatdeploy['infoslist'][0]['packageUuid']."]";
-}
 
-$nbsuccess = 0;
 $_GET['id']=isset($_GET['id']) ? $_GET['id'] : "";
 $_GET['ses']=isset($_GET['ses']) ? $_GET['ses'] : "";
 $_GET['hos']=isset($_GET['hos']) ? $_GET['hos'] : "";
 $_GET['sta']=isset($_GET['sta']) ? $_GET['sta'] : "";
-
-foreach ($info['objectdeploy'] as $val)
-{
-   $_GET['id']  .= $val['inventoryuuid']."@@";
-   $_GET['ses'] .= $val['sessionid']."@@";
-   $hostlocal = explode("/", $val['host']);
-
-   $hostlocal1 = isset($hostlocal[1]) ? $hostlocal[1] : "";
-
-   $_GET['sta'] .=  $val['state']."@@";
-   if ($val['state'] == "DEPLOYMENT SUCCESS"){
-        $nbsuccess ++;
-   }
-}
 
 //start deployement status
 echo "<div>";
@@ -442,8 +422,8 @@ echo "<div>";
                 <td>"._T("Aborted","xmppmaster")."</td>";
             echo "</tr></thead>
             <tbody><tr>";
-            echo '<td>';
-            echo'<div  style="float:left;min-height: 120px" id="holder"></div>';
+            echo '<td id="holder">';
+            //echo'<div  style="float:left;" id="holder"></div>';
             echo '</td>';
             echo "<td>".$deploymentsuccess."</td>
                 <td>".$errors."</td>
@@ -451,97 +431,71 @@ echo "<div>";
         echo "</tr></tbody></table>";
     }
 
-    echo '</div>';
+echo '</div>';
 
-    if ($info['len'] != 0){
-        $datestart =  date("Y-m-d H:i:s", $start_date);
-        $timestampstart = strtotime($datestart);
-        $timestampnow = time();
-        $nbsecond = $timestampnow - $timestampstart;
-        echo '<h2>'._T("Package Detail", "xmppmaster").'</h2>';
-        if (isset($resultatdeploy['descriptor']['info'])){
-            echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
-                echo "<thead>";
-                    echo "<tr>";
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Name</span>';
-                        echo '</td>';
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Software</span>';
-                        echo '</td>';
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Version</span>';
-                        echo '</td>';
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Description</span>';
-                        echo '</td>';
-                    echo "</tr>";
-                echo "</thead>";
-                echo "<tbody>";
-                    echo "<tr>";
-                        echo "<td>";
-                            echo $resultatdeploy['descriptor']['info']['name'];
-                        echo "</td>";
-                        echo "<td>";
-                            echo $resultatdeploy['descriptor']['info']['software'];
-                        echo "</td>";
-                        echo "<td>";
-                            echo $resultatdeploy['descriptor']['info']['version'];
-                        echo "</td>";
-                        echo "<td>";
-                            echo $resultatdeploy['descriptor']['info']['description'];
-                        echo "</td>";
-                    echo "</tr>";
-                echo "</tbody>";
-            echo "</table>";
-        }
-        else{
-            echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
-                echo "<thead>";
-                    echo "<tr>";
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Name</span>';
-                        echo '</td>';
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Software</span>';
-                        echo '</td>';
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Version</span>';
-                        echo '</td>';
-                        echo '<td style="width: ;">';
-                            echo '<span style=" padding-left: 32px;">Description</span>';
-                        echo '</td>';
-                    echo "</tr>";
-                echo "</thead>";
-                echo "<tbody>";
-                    echo "<tr>";
-                        echo "<td>";
-                            echo "";
-                        echo "</td>";
-                        echo "<td>";
-                            echo "";
-                        echo "</td>";
-                        echo "<td>";
-                            echo "";
-                        echo "</td>";
-                        echo "<td>";
-                            echo "";
-                        echo "</td>";
-                    echo "</tr>";
-                echo "</tbody>";
-            echo "</table>";
-        }
-    }
+echo '<h2>'._T("Package Detail", "xmppmaster").'</h2>';
 
-echo "</div>";
-if (isset($countmachine)){
-  if ($info['len'] > $countmachine){
-    $info['len'] = $countmachine;
+$package_id = (isset($lastcommandid['package_id'])) ? $lastcommandid['package_id'] : "";
+$package = get_package_summary($package_id);
+if($package == null)
+{
+  $resultdeploy =json_decode($info['objectdeploy'][0]['result'], true);
+
+  if(isset($resultdeploy['infoslist'][0]))
+  {
+    $package['name'] = $resultdeploy['infoslist'][0]['name'];
+    $package['software'] = $resultdeploy['infoslist'][0]['software'];
+    $package['version'] = $resultdeploy['infoslist'][0]['version'];
+    $package['description'] = $resultdeploy['infoslist'][0]['description'];
   }
-  if ($nbsuccess > $countmachine){
-    $nbsuccess = $countmachine;
+  else if(isset($resultdeploy['descriptor']['info'])){
+    $package['name'] = $resultdeploy['descriptor']['info']['name'];
+    $package['software'] = $resultdeploy['descriptor']['info']['software'];
+    $package['version'] = $resultdeploy['descriptor']['info']['version'];
+    $package['description'] = $resultdeploy['descriptor']['info']['description'];
+  }
+  else{
+    $package['name'] = "";
+    $package['software'] = "";
+    $package['version'] = "";
+    $package['description'] = "";
   }
 }
+
+echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
+    echo "<thead>";
+        echo "<tr>";
+            echo '<td style="width: ;">';
+                echo '<span style=" padding-left: 32px;">Name</span>';
+            echo '</td>';
+            echo '<td style="width: ;">';
+                echo '<span style=" padding-left: 32px;">Software</span>';
+            echo '</td>';
+            echo '<td style="width: ;">';
+                echo '<span style=" padding-left: 32px;">Version</span>';
+            echo '</td>';
+            echo '<td style="width: ;">';
+                echo '<span style=" padding-left: 32px;">Description</span>';
+            echo '</td>';
+        echo "</tr>";
+    echo "</thead>";
+    echo "<tbody>";
+        echo "<tr>";
+            echo "<td>";
+                echo $package['name'];
+            echo "</td>";
+            echo "<td>";
+                echo $package['software'];
+            echo "</td>";
+            echo "<td>";
+                echo $package['version'];
+            echo "</td>";
+            echo "<td>";
+                echo $package['description'];
+            echo "</td>";
+        echo "</tr>";
+    echo "</tbody>";
+echo "</table>";
 
 if ($info['len'] != 0){
   $uuidsuccess = array();
