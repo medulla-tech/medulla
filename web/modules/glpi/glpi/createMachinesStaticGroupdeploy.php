@@ -27,85 +27,114 @@ require_once("modules/xmppmaster/includes/xmlrpc.php"); // For machines_online
 require_once("modules/dyngroup/includes/xmlrpc.php");
 extract($_GET);
 
- function creategroup($grpname, $arraygrp, $datagr){
-    $tmp = array();
-    $groupname = sprintf (_T("Machines $grpname at %s", "glpi"), date("Y-m-d H:i:s"));
-    foreach($arraygrp as $uuidmachine ){
-        $tmp[$uuidmachine.'##'.$datagr[$uuidmachine][1]["cn"][0]] = ["hostname" => $datagr[$uuidmachine][1]["cn"][0], 'uuid' => $uuidmachine];
-    }
+ function creategroup($filter, $uuids){
+    $groupname = sprintf (_T('Machines '.$filter['criterion']. ' at %s', "glpi"), date("Y-m-d H:i:s"));
+
     $group = new Group();
     $group->create($groupname, False);
-    $group->addMembers($tmp);
+    $group->addMembers($uuids);
     header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
     exit;
   };
 
-$info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
-$gr   = getRestrictedComputersList(0,-1, array('gid' =>$gid));
-// getRestrictedComputersList(0,-1, {'uuid': ['UUID3','UUID1','UUID2']}, False)
-$uuidgr      = array();
-$uuidsuccess = array();
-$uuiderror   = array();
-$uuidprocess = array();
-$uuiddefault = array();
-$uuidall     = array();
-$uuidwol     = array();
-$uuidabort   = array();
-
-foreach ($gr as $key => $val){
-    $uuidgr[] =  $key;
+$statuslist = xmlrpc_get_log_status();
+$criterion = '';
+foreach($statuslist as $status){
+  if($type == $status['label'])
+    $criterion = $status['status'];
 }
 
-foreach ($info['objectdeploy'] as  $val){
-    switch($val['state']){
-        case "DEPLOYMENT SUCCESS":
-            $uuidsuccess[] = $val['inventoryuuid'];
-            break;
-        case "DEPLOYMENT ERROR":
-            $uuiderror[] = $val['inventoryuuid'];
-            break;
-        case "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)":
-        case "DEPLOYMENT START":
-        case "DEPLOYMENT DIFFERED":
-            $uuidprocess[] = $val['inventoryuuid'];
-            break;
-        case "DEPLOYMENT ABORT":
-            $uuidabort[] = $val['inventoryuuid'];
-            break;
-        default:
-            $uuiddefault[] = $val['inventoryuuid'];
-    }
-    $uuidall[] = $val['inventoryuuid'];
+if($criterion == '')
+{
+  switch($type){
+    case 'deploymentsuccess':
+      $criterion = "DEPLOYMENT SUCCESS";
+      break;
+    case 'abortontimeout':
+      $criterion = "ABORT ON TIMEOUT";
+      break;
+    case 'abortmissingagent':
+      $criterion = "ABORT MISSING AGENT";
+      break;
+    case 'abortrelaydown':
+      $criterion = "ABORT RELAY DOWN";
+      break;
+    case 'abortalternativerelaysdown':
+      $criterion = "ABORT ALTERNATIVE RELAYS DOWN";
+      break;
+    case 'abortinforelaymissing':
+      $criterion = "ABORT INFO RELAY MISSING";
+      break;
+    case 'errorunknownerror':
+      $criterion = "ERROR UNKNOWN ERROR";
+      break;
+    case 'abortpackageidentifiermissing':
+      $criterion = "ABORT PACKAGE IDENTIFIER MISSING";
+      break;
+    case 'abortpackagenamemissing':
+      $criterion = "ABORT PACKAGE NAME MISSING";
+      break;
+    case 'abortpackageversionmissing':
+      $criterion = "ABORT PACKAGE VERSION MISSING";
+      break;
+    case 'abortpackageworkflowerror':
+      $criterion = "ABORT PACKAGE WORKFLOW ERROR";
+      break;
+    case 'abortdescriptormissing':
+      $criterion = " DESCRIPTOR MISSING";
+      break;
+    case 'abortmachinedisappeared':
+      $criterion = "ABORT MACHINE DISAPPEARED";
+      break;
+    case 'abortuserabort':
+      $criterion = "ABORT USER ABORT";
+      break;
+    case 'abortuserabort':
+      $criterion = "ABORT PACKAGE EXECUTION ERROR";
+      break;
+    case 'abortpackageexecutionerror':
+      $criterion = "ABORT PACKAGE EXECUTION ERROR";
+      break;
+    case 'deploymentstart':
+      $criterion = "DEPLOYMENT START";
+      break;
+    case 'wol1':
+      $criterion = "WOL 1";
+      break;
+    case 'wol2':
+      $criterion = "WOL 2";
+      break;
+    case 'wol3':
+      $criterion = "WOL 3";
+      break;
+    case 'waitingmachineonline':
+      $criterion = "WAITING MACHINE ONLINE";
+      break;
+
+    case 'deploymentpending':
+      $criterion = "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)";
+      break;
+    case 'deploymentdiffered':
+      $criterion = "DEPLOYMENT DIFFERED";
+      break;
+  }
 }
 
-// recherche wol in group
-foreach ($uuidgr as $val){
-    if (!in_array($val, $uuidall)) {
-        $uuidwol[] = $val;
-    }
+$filter = ['filter'=>'status', 'criterion'=>$criterion];
+$getdeployment = xmlrpc_getdeployment($cmd_id, $filter, 0,-1);
+
+$uuids = $getdeployment['datas']['uuid'];
+$names = $getdeployment['datas']['hostname'];
+$tmp = [];
+
+$raw = 0;
+for($i = 0; $i < count($uuids); $i++){
+  $name =  explode('.' , $names[$raw]);
+  $name = $name[0];
+  $uuid = $uuids[$raw];
+  $tmp[$uuid.'##'.$name] = ["hostname" => $name, 'uuid' => $uuids[$raw]];
+  $raw++;
 }
 
-switch($type){
-    case "machinewol":
-        creategroup("nopresent", $uuidwol, $gr);
-        exit;
-    break;
-    case "machinesucess":
-        creategroup("deployonsucess", $uuidsuccess, $gr);
-        exit;
-    break;
-    case "machineerror":
-        creategroup("deployonerror", $uuiderror, $gr);
-        exit;
-    break;
-    case "machineprocess":
-        creategroup("deployinprocess", $uuidprocess, $gr);
-        exit;
-    break;
-    case "machineabort" :
-        creategroup("deployabort", $uuidabort, $gr);
-        exit;
-    break;
-}
-
+creategroup($filter, $tmp);
 ?>
