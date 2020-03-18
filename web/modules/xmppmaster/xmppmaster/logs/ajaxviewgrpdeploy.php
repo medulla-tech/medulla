@@ -87,6 +87,10 @@ progress::-moz-progress-bar {
 #holder ul li a{
     font-weight : normal;
 }
+
+.deployment td{
+  vertical-align: top;
+}
 </style>
 
 <?php
@@ -355,7 +359,8 @@ echo "<div>";
     }
 
     if(!$terminate){
-        echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
+        echo "<table class='listinfos deployment' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
+        echo '<td>'._T('Graph','xmppmaster').'</td>';
         echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>"._T("Deployment Success","xmppmaster")."</td>" : "";
         echo (isset($deploymenterror)&&$deploymenterror) ? "<td>"._T("Deployment Error","xmppmaster")."</td>" : "";
         echo (isset($abortontimeout)&&$abortontimeout) ? "<td>"._T("Abort On Timeout","xmppmaster")."</td>" : "";
@@ -386,6 +391,7 @@ echo "<div>";
         echo "</tr></thead>";
 
         echo "<tbody><tr>";
+        echo '<td style="width:500px"><div id="holder"></div>';
         echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>".$deploymentsuccess."</td>" : "";
         echo (isset($deploymenterror)&&$deploymenterror) ? "<td>".$deploymenterror."</td>" : "";
         echo (isset($abortontimeout)&&$abortontimeout) ? "<td>".$abortontimeout."</td>" : "";
@@ -415,15 +421,14 @@ echo "<div>";
         }
       }
         else{
-            echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
+            echo "<table class='listinfos deployment' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
             echo '<td>'._T('Graph','xmppmaster').'</td>';
             echo "<td>"._T("Success","xmppmaster")."</td>
                 <td>"._T("Error","xmppmaster")."</td>
                 <td>"._T("Aborted","xmppmaster")."</td>";
             echo "</tr></thead>
             <tbody><tr>";
-            echo '<td id="holder">';
-            //echo'<div  style="float:left;" id="holder"></div>';
+            echo '<td style="width:500px"><div id="holder"></div>';
             echo '</td>';
             echo "<td>".$deploymentsuccess."</td>
                 <td>".$errors."</td>
