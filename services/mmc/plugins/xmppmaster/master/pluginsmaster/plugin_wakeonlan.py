@@ -49,7 +49,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 xmppobject.send_message(mto=serverrelay[0],
                                         mbody=json.dumps(senddataplugin, encoding='latin1'),
                                         mtype='chat')
-                xmppobject.xmpplog("ARS %s : WOL for macadress %s" % (serverrelay[0], data['macadress']),
+                xmppobject.xmpplog("ARS %s : WOL sent to mac address %s" % (serverrelay[0], data['macadress']),
                                    type='deploy',
                                    sessionname=sessionid,
                                    priority=-1,
@@ -73,7 +73,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                     xmppobject.send_message(mto=serverrelay[0],
                                             mbody=json.dumps(senddataplugin, encoding='latin1'),
                                             mtype='chat')
-                    xmppobject.xmpplog("ARS %s : WOL for macadress %s" % (serverrelay[0], macadress),
+                    xmppobject.xmpplog("ARS %s : WOL sent to mac address %s" % (serverrelay[0], macadress),
                                        type='deploy',
                                        sessionname=sessionid,
                                        priority=-1,

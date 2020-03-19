@@ -871,7 +871,7 @@ class MscDatabase(DatabaseHelper):
             resultat = {}
             resultat['gid']         = group
             resultat['pathpackage'] = objdeploy.Commands.package_id
-            resultat['state']       = 'ABORT USER ABORT'
+            resultat['state']       = 'ABORT DEPLOYMENT CANCELLED BY USER'
             resultat['start']       = objdeploy.CommandsOnHost.start_date
             resultat['end']         = objdeploy.CommandsOnHost.end_date
             resultat['inventoryuuid'] = objdeploy.Target.target_uuid
