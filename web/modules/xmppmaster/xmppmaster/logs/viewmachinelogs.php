@@ -32,6 +32,19 @@ $showText = _T("Show", "xmppmaster");
 
 ?>
 <style>
+
+.log_err{
+  color : red;
+}
+
+.log_warn{
+  color : orange;
+}
+
+.log_ok{
+  color : green;
+}
+
 .shadow
 {
   -moz-box-shadow: 4px 4px 10px #888;

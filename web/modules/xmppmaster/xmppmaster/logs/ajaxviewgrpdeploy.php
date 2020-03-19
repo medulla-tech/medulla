@@ -31,6 +31,17 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 ?>
 <script src="jsframework/d3/d3.js"></script>
 <style>
+.log_err{
+  color : red;
+}
+
+.log_warn{
+  color : orange;
+}
+
+.log_ok{
+  color : green;
+}
 .status, .machine-inventory{
     cursor: pointer;
 }
@@ -239,7 +250,6 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
     echo "</tbody>";
 echo '</table>';
 
-
 if ($statsyncthing['package'] != ""){
     echo '<h2>'._T("Syncthing Detail", "xmppmaster").'</h2>';
     //NEW
@@ -253,12 +263,13 @@ if ($statsyncthing['package'] != ""){
             echo '</tr>';
         echo '</thead>';
 
+
         echo '<tbody>';
             echo '<tr>';
                 echo '<td>'.$statsyncthing['package'].'</td>';
                 echo '<td>'.$statsyncthing['nbmachine'].'</td>';
                 echo '<td>'.$statsyncthing['progresstransfert'].' %</td>';
-                echo "<td><input id='buttontogglesyncthing' class='btn btn-primary' type='button' value='Toggle transfer'> <input id='buttonrefreshsyncthing' class='btn btn-primary' type='button' value='refresh view'></td>";
+                echo '<td><input id="buttontogglesyncthing" class="btn btn-primary" type="button" value="'._T('Show Transfer','xmppmaster').'"> <input id="buttonrefreshsyncthing" class="btn btn-primary" type="button" value="'._T('refresh View', 'xmppmaster').'"></td>';
             echo '</tr>';
 
     foreach ( $statsyncthing['distibution']['data_dist'] as $arrayval){
@@ -316,12 +327,20 @@ if ($statsyncthing['package'] != ""){
     } );
 
 jQuery( "#tablesyncthing" ).hide();
+
 jQuery( "#buttonrefreshsyncthing" ).click(function() {
     document.location.reload();
 });
 
 jQuery( "#buttontogglesyncthing" ).click(function() {
     jQuery( "#tablesyncthing" ).toggle();
+
+    if(jQuery('#tablesyncthing').is(':visible')){
+      jQuery( "#buttontogglesyncthing" ).val("Hide Transfer");
+    }
+    else{
+      jQuery( "#buttontogglesyncthing" ).val("Show Transfer");
+    }
 });
     </script>
 

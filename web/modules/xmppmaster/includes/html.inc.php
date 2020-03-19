@@ -86,9 +86,15 @@ class RefreshButton{
     <script type="text/javascript">
     jQuery('document').ready(function() {
         jQuery('#bt').click(function() {
-            var query = document.location.href.replace(document.location.search,"") + "?module=<?php echo $this->module;?>&submod=<?php echo $this->submodule;?>&action=<?php echo $this->target;?>";
+            var query = document.location.href ;
+            var searchParam = query.match("&refreshtime=([0-9]*)");
             var num = jQuery('#nbs').val() * 60000;
-            query = query + "&refreshtime=" + num;
+            if(searchParam){
+              query = query.replace(searchParam[0], "&refreshtime=" + num)
+            }
+            else{
+              query = query + "&refreshtime=" + num;
+            }
             window.location.href = query;
         });
         jQuery('#bt1').click(function() {
