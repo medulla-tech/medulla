@@ -318,7 +318,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.plugintype = {}
         self.plugindata = {}
         self.plugindatascheduler = {}
-        self.loadbasepluginagnet() # update base list plugin and remote agent
+        self.loadbasepluginagent() # update base list plugin and remote agent
         sleekxmpp.ClientXMPP.__init__(self, conf.jidagent, conf.passwordconnection)
 
         self.manage_scheduler = manage_scheduler(self)
@@ -363,7 +363,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             self.schedule('event leakmemory',self.timecheck, self.__leakmemory, repeat=True)
 
         # Interval for reloading plugins base (in seconds) 900 by default
-        self.schedule('reload plugins base', conf.reload_plugins_base_interval, self.loadbasepluginagnet, repeat=True)
+        self.schedule('reload plugins base', conf.reload_plugins_base_interval, self.loadbasepluginagent, repeat=True)
 
         # Interval for installing new plugins on clients (in seconds) 60 by default
         self.schedule('remote update plugin', conf.remote_update_plugin_interval, self.remoteinstallPlugin, repeat=True)
@@ -1786,7 +1786,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def handlemanagesession(self):
         self.session.decrementesessiondatainfo()
 
-    def loadbasepluginagnet(self):
+    def loadbasepluginagent(self):
         self.loadPluginList()
         self.loadPluginschedulerList()
         self.loadfingerprintagentbase()
