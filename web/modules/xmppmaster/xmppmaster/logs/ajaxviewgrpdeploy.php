@@ -396,7 +396,7 @@ echo "<div>";
         echo (isset($abortmachinedisappeared)&&$abortmachinedisappeared) ? "<td>"._T("Abort Machine Disappeared","xmppmaster")."</td>" : "";
         echo (isset($abortuserabort)&&$abortuserabort) ? "<td>"._T("Abort User Abort","xmppmaster")."</td>" : "";
         echo (isset($abortpackageexecutionerror)&&$abortpackageexecutionerror) ? "<td>"._T("Abort package Execution Error","xmppmaster")."</td>" : "";
-        echo (isset($deploymentdiffered)&&$deploymentdiffered) ? "<td>"._T("Deployment Differed","xmppmaster")."</td>" : "";
+        echo (isset($deploymentdelayed)&&$deploymentdelayed) ? "<td>"._T("Deployment Delayed","xmppmaster")."</td>" : "";
         echo (isset($deploymentstart)&&$deploymentstart) ? "<td>"._T("Deployment start","xmppmaster")."</td>" : "";
         echo (isset($deploymentpending)&&$deploymentpending) ? "<td>"._T("Deployment Pending","xmppmaster")."</td>" : "";
         echo (isset($wol1)&&$wol1) ? "<td>"._T("WOL 1","xmppmaster")."</td>" : "";
@@ -427,7 +427,7 @@ echo "<div>";
         echo (isset($abortmachinedisappeared)&&$abortmachinedisappeared) ? "<td>".$abortmachinedisappeared."</td>" : "";
         echo (isset($abortuserabort)&&$abortuserabort) ? "<td>".$abortuserabort."</td>" : "";
         echo (isset($abortpackageexecutionerror)&&$abortpackageexecutionerror) ? "<td>".$abortpackageexecutionerror."</td>" : "";
-        echo (isset($deploymentdiffered)&&$deploymentdiffered) ? "<td>".$deploymentdiffered."</td>" : "";
+        echo (isset($deploymentdelayed)&&$deploymentdelayed) ? "<td>".$deploymentdelayed."</td>" : "";
         echo (isset($deploymentstart)&&$deploymentstart) ? "<td>".$deploymentstart."</td>" : "";
         echo (isset($deploymentpending)&&$deploymentpending) ? "<td>".$deploymentpending."</td>" : "";
         echo (isset($wol1)&&$wol1) ? "<td>".$wol1."</td>" : "";
@@ -541,7 +541,7 @@ if ($info['len'] != 0){
               break;
           case "DEPLOYMENT START":
           case "DEPLOYMENT START (REBOOT)":
-          case "DEPLOYMENT DIFFERED":
+          case "DEPLOYMENT DELAYED":
               $uuidprocess[] = $val['inventoryuuid'];
               break;
           default:
@@ -654,8 +654,8 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
         if ($deploymentpending > 0){
             echo 'datas.push({"label":"Deployment Pending (Reboot/Shutdown/...) ", "value":'.$deploymentpending.', "color": "#665899", "href":"'.urlredirect_group_for_deploy("deploymentpending",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
-        if ($deploymentdiffered > 0){
-            echo 'datas.push({"label":"Deployment Differed ", "value":'.$deploymentdiffered.', "color": "#7080AF", "href":"'.urlredirect_group_for_deploy("deploymentdiffered",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        if ($deploymentdelayed > 0){
+            echo 'datas.push({"label":"Deployment Delayed ", "value":'.$deploymentdelayed.', "color": "#7080AF", "href":"'.urlredirect_group_for_deploy("deploymentdelayed",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
         if ($deploymentstart > 0){
             echo 'datas.push({"label":"Deployment Start", "value":'.$deploymentstart.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("deploymentstart",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
