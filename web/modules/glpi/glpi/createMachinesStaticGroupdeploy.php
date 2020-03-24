@@ -114,8 +114,8 @@ if($criterion == '')
     case 'deploymentpending':
       $criterion = "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)";
       break;
-    case 'deploymentdiffered':
-      $criterion = "DEPLOYMENT DIFFERED";
+    case 'deploymentdelayed':
+      $criterion = "DEPLOYMENT DELAYED";
       break;
   }
 }

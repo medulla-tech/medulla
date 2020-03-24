@@ -2476,7 +2476,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     'wol3' : 0,
                     'waitingmachineonline' : 0,
                     'deploymentpending' : 0,
-                    'deploymentdiffered' : 0,
+                    'deploymentdelayed' : 0,
                     'deploymentspooled' : 0,
                     'otherstatus' : 0,
                     }
@@ -2537,8 +2537,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['waitingmachineonline'] = liststatus[t]
                 elif t == 'DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)':
                     ret['deploymentpending'] = liststatus[t]
-                elif t == 'DEPLOYMENT DIFFERED':
-                    ret['deploymentdiffered'] = liststatus[t]
+                elif t == 'DEPLOYMENT DELAYED':
+                    ret['deploymentdelayed'] = liststatus[t]
 
                 elif t in dynamic_status:
                     index = dynamic_status.index(t)
