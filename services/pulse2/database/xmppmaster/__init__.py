@@ -4530,9 +4530,6 @@ class XmppMasterDatabase(DatabaseHelper):
             sql  = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
-            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers`
-                    WHERE
-                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
             if result[2] == "relayserver":
                 typemachine = "relayserver"
                 sql2 = """UPDATE `xmppmaster`.`relayserver`
@@ -4542,7 +4539,6 @@ class XmppMasterDatabase(DatabaseHelper):
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
                 session.execute(sql2)
             session.execute(sql)
-            session.execute(sql3)
             session.commit()
             session.flush()
         except IndexError:
@@ -4741,9 +4737,6 @@ class XmppMasterDatabase(DatabaseHelper):
             sql  = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
-            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers`
-                    WHERE
-                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
             if result[2] == "relayserver":
                 typemachine = "relayserver"
                 sql2 = """UPDATE `xmppmaster`.`relayserver`
@@ -4753,7 +4746,6 @@ class XmppMasterDatabase(DatabaseHelper):
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
                 session.execute(sql2)
             session.execute(sql)
-            session.execute(sql3)
             session.commit()
             session.flush()
         except IndexError:
@@ -4800,9 +4792,6 @@ class XmppMasterDatabase(DatabaseHelper):
             sql  = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
-            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers`
-                    WHERE
-                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
             if result[2] == "relayserver":
                 typemachine = "relayserver"
                 sql2 = """UPDATE `xmppmaster`.`relayserver`
@@ -4812,7 +4801,6 @@ class XmppMasterDatabase(DatabaseHelper):
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
                 session.execute(sql2)
             session.execute(sql)
-            session.execute(sql3)
             session.commit()
             session.flush()
         except IndexError:
@@ -5010,9 +4998,6 @@ class XmppMasterDatabase(DatabaseHelper):
             sql  = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
-            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers`
-                    WHERE
-                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
             if result[2] == "relayserver":
                 typemachine = "relayserver"
                 sql2 = """UPDATE `xmppmaster`.`relayserver`
@@ -5022,7 +5007,6 @@ class XmppMasterDatabase(DatabaseHelper):
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
                 session.execute(sql2)
             session.execute(sql)
-            session.execute(sql3)
             session.commit()
             session.flush()
         except IndexError:
