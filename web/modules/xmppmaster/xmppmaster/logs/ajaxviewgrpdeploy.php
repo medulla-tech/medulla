@@ -382,7 +382,6 @@ echo "<div>";
         echo '<td>'._T('Graph','xmppmaster').'</td>';
         echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>"._T("Deployment Success","xmppmaster")."</td>" : "";
         echo (isset($deploymenterror)&&$deploymenterror) ? "<td>"._T("Deployment Error","xmppmaster")."</td>" : "";
-        echo (isset($abortontimeout)&&$abortontimeout) ? "<td>"._T("Abort On Timeout","xmppmaster")."</td>" : "";
         echo (isset($abortmissingagent)&&$abortmissingagent) ? "<td>"._T("Abort Missing Agent","xmppmaster")."</td>" : "";
         echo (isset($abortrelaydown)&&$abortrelaydown) ? "<td>"._T("Abort Relay Down","xmppmaster")."</td>" : "";
         echo (isset($abortalternativerelaysdow)&&$abortalternativerelaysdown) ?"<td>"._T("Abort Alternative relay down","xmppmaster")."</td>" : "";
@@ -391,11 +390,9 @@ echo "<div>";
         echo (isset($abortpackageidentifiermissing)&&$abortpackageidentifiermissing) ?"<td>"._T("Abort Package Identifier Missing","xmppmaster")."</td>" : "";
         echo (isset($abortpackagenamemissing)&&$abortpackagenamemissing) ? "<td>"._T("Abort Package Name Missing","xmppmaster")."</td>" : "";
         echo (isset($abortpackageversionmissing)&&$abortpackageversionmissing) ? "<td>"._T("Abort Package Version Missing","xmppmaster")."</td>" : "";
-        echo (isset($abortpackageworkflowerror)&&$abortpackageworkflowerror) ? "<td>"._T("Abort Package Workflow Error","xmppmaster")."</td>" : "";
         echo (isset($abortdescriptormissing)&&$abortdescriptormissing) ? "<td>"._T("Abort Descriptor Missing","xmppmaster")."</td>" : "";
         echo (isset($abortmachinedisappeared)&&$abortmachinedisappeared) ? "<td>"._T("Abort Machine Disappeared","xmppmaster")."</td>" : "";
         echo (isset($abortuserabort)&&$abortuserabort) ? "<td>"._T("Abort User Abort","xmppmaster")."</td>" : "";
-        echo (isset($abortpackageexecutionerror)&&$abortpackageexecutionerror) ? "<td>"._T("Abort package Execution Error","xmppmaster")."</td>" : "";
         echo (isset($deploymentdelayed)&&$deploymentdelayed) ? "<td>"._T("Deployment Delayed","xmppmaster")."</td>" : "";
         echo (isset($deploymentstart)&&$deploymentstart) ? "<td>"._T("Deployment start","xmppmaster")."</td>" : "";
         echo (isset($deploymentpending)&&$deploymentpending) ? "<td>"._T("Deployment Pending","xmppmaster")."</td>" : "";
@@ -660,9 +657,6 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
         if ($deploymentstart > 0){
             echo 'datas.push({"label":"Deployment Start", "value":'.$deploymentstart.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("deploymentstart",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
-        if ($abortontimeout > 0){
-            echo 'datas.push({"label":"Abort On Timeout", "value":'.$abortontimeout.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortontimeout",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-        }
         if($abortalternativerelaysdown > 0){
             echo 'datas.push({"label":"Abort Alternative Relays Down ", "value":'.$abortalternativerelaysdown.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortalternativerelaysdown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
@@ -684,9 +678,6 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
         if ($abortpackageversionmissing > 0){
             echo 'datas.push({"label":"Abort Package Version Missing ", "value":'.$abortpackageversionmissing.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageversionmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
-        if ($abortpackageworkflowerror > 0){
-            echo 'datas.push({"label":"Abort Package Workflow Error ", "value":'.$abortpackageworkflowerror.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageworkflowerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-        }
         if ($abortdescriptormissing > 0){
             echo 'datas.push({"label":"Abort Descriptor Missing ", "value":'.$abortdescriptormissing.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdescriptormissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
@@ -695,9 +686,6 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
         }
         if ($abortuserabort > 0){
             echo 'datas.push({"label":"Abort User Abort ", "value":'.$abortuserabort.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortuserabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
-        }
-        if ($abortpackageexecutionerror > 0){
-            echo 'datas.push({"label":"Abort Package Execution Error ", "value":'.$abortpackageexecutionerror.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageexecutionerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
         if ($errorunknownerror > 0){
             echo 'datas.push({"label":"Error Unknown Error ", "value":'.$errorunknownerror.', "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
