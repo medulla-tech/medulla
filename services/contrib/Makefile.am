@@ -224,6 +224,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	xmppmaster/sql/schema-034.sql \
 	xmppmaster/sql/schema-035.sql \
 	xmppmaster/sql/schema-036.sql \
+	xmppmaster/sql/schema-037.sql \
+	xmppmaster/sql/schema-038.sql \
 	kiosk/sql/schema-001.sql \
 	kiosk/sql/schema-002.sql \
 	kiosk/sql/schema-003.sql \

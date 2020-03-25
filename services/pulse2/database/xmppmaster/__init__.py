@@ -1889,7 +1889,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if result.start_exec_on_nb_deploy <= result.count_deploy_progress:
                 return 'run'
         for id in  self.sessionidforidcommand(idcommand):
-                self.updatedeploystate(id,"DEPLOYMENT DIFFERED")
+                self.updatedeploystate(id,"DEPLOYMENT DELAYED")
         return "pause"
 
     @DatabaseHelper._sessionm
@@ -2467,7 +2467,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     'abortpackageworkflowerror' : 0,
                     'abortdescriptormissing' : 0,
                     'abortmachinedisappeared' : 0,
-                    'abortuserabort' : 0,
+                    'abortdeploymentcancelledbyuser' : 0,
                     'aborttransferfailed' : 0,
                     'abortpackageexecutionerror' : 0,
                     'deploymentstart' : 0,
@@ -2476,7 +2476,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     'wol3' : 0,
                     'waitingmachineonline' : 0,
                     'deploymentpending' : 0,
-                    'deploymentdiffered' : 0,
+                    'deploymentdelayed' : 0,
                     'deploymentspooled' : 0,
                     'otherstatus' : 0,
                     }
@@ -2520,8 +2520,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['abortdescriptormissing'] = liststatus[t]
                 elif t == 'ABORT MACHINE DISAPPEARED':
                     ret['abortmachinedisappeared'] = liststatus[t]
-                elif t == 'ABORT USER ABORT':
-                    ret['abortuserabort'] = liststatus[t]
+                elif t == 'ABORT DEPLOYMENT CANCELLED BY USER':
+                    ret['abortdeploymentcancelledbyuser'] = liststatus[t]
                 elif t == 'ABORT PACKAGE EXECUTION ERROR':
                     ret['abortpackageexecutionerror'] = liststatus[t]
 
@@ -2537,8 +2537,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['waitingmachineonline'] = liststatus[t]
                 elif t == 'DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)':
                     ret['deploymentpending'] = liststatus[t]
-                elif t == 'DEPLOYMENT DIFFERED':
-                    ret['deploymentdiffered'] = liststatus[t]
+                elif t == 'DEPLOYMENT DELAYED':
+                    ret['deploymentdelayed'] = liststatus[t]
 
                 elif t in dynamic_status:
                     index = dynamic_status.index(t)
@@ -4530,14 +4530,6 @@ class XmppMasterDatabase(DatabaseHelper):
             sql  = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
-
-            sql1 = """DELETE FROM `xmppmaster`.`network`
-                    WHERE
-                        `network`.`machines_id` = '%s';"""%result[0]
-
-            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers`
-                    WHERE
-                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
             if result[2] == "relayserver":
                 typemachine = "relayserver"
                 sql2 = """UPDATE `xmppmaster`.`relayserver`
@@ -4547,8 +4539,6 @@ class XmppMasterDatabase(DatabaseHelper):
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
                 session.execute(sql2)
             session.execute(sql)
-            session.execute(sql1)
-            session.execute(sql3)
             session.commit()
             session.flush()
         except IndexError:
@@ -4747,14 +4737,6 @@ class XmppMasterDatabase(DatabaseHelper):
             sql  = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
-
-            sql1 = """DELETE FROM `xmppmaster`.`network`
-                    WHERE
-                        `network`.`machines_id` = '%s';"""%result[0]
-
-            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers`
-                    WHERE
-                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
             if result[2] == "relayserver":
                 typemachine = "relayserver"
                 sql2 = """UPDATE `xmppmaster`.`relayserver`
@@ -4764,8 +4746,6 @@ class XmppMasterDatabase(DatabaseHelper):
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
                 session.execute(sql2)
             session.execute(sql)
-            session.execute(sql1)
-            session.execute(sql3)
             session.commit()
             session.flush()
         except IndexError:
@@ -4812,13 +4792,6 @@ class XmppMasterDatabase(DatabaseHelper):
             sql  = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
-
-            sql1 = """DELETE FROM `xmppmaster`.`network`
-                    WHERE
-                        `network`.`machines_id` = '%s';"""%result[0]
-            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers`
-                    WHERE
-                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
             if result[2] == "relayserver":
                 typemachine = "relayserver"
                 sql2 = """UPDATE `xmppmaster`.`relayserver`
@@ -4828,8 +4801,6 @@ class XmppMasterDatabase(DatabaseHelper):
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
                 session.execute(sql2)
             session.execute(sql)
-            session.execute(sql1)
-            session.execute(sql3)
             session.commit()
             session.flush()
         except IndexError:
@@ -5027,13 +4998,6 @@ class XmppMasterDatabase(DatabaseHelper):
             sql  = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
-
-            sql1 = """DELETE FROM `xmppmaster`.`network`
-                    WHERE
-                        `network`.`machines_id` = '%s';"""%result[0]
-            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers`
-                    WHERE
-                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
             if result[2] == "relayserver":
                 typemachine = "relayserver"
                 sql2 = """UPDATE `xmppmaster`.`relayserver`
@@ -5043,8 +5007,6 @@ class XmppMasterDatabase(DatabaseHelper):
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
                 session.execute(sql2)
             session.execute(sql)
-            session.execute(sql1)
-            session.execute(sql3)
             session.commit()
             session.flush()
         except IndexError:

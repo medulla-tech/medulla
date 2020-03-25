@@ -871,7 +871,7 @@ class MscDatabase(DatabaseHelper):
             resultat = {}
             resultat['gid']         = group
             resultat['pathpackage'] = objdeploy.Commands.package_id
-            resultat['state']       = 'ABORT USER ABORT'
+            resultat['state']       = 'ABORT DEPLOYMENT CANCELLED BY USER'
             resultat['start']       = objdeploy.CommandsOnHost.start_date
             resultat['end']         = objdeploy.CommandsOnHost.end_date
             resultat['inventoryuuid'] = objdeploy.Target.target_uuid
@@ -2312,10 +2312,17 @@ class MscDatabase(DatabaseHelper):
         start_dateunixtime = time.mktime(CommandsOnHostdata.start_date.timetuple())
         end_dateunixtime   = time.mktime(CommandsOnHostdata.end_date.timetuple())
         next_launch_dateunixtime = time.mktime(CommandsOnHostdata.next_launch_date.timetuple())
-        return {"start_dateunixtime" : start_dateunixtime,
-                "end_dateunixtime" : end_dateunixtime,
-                "next_launch_dateunixtime" : next_launch_dateunixtime
-            }
+        if hasattr(CommandsOnHostdata, "package_id"):
+            return {"start_dateunixtime" : start_dateunixtime,
+                    "end_dateunixtime" : end_dateunixtime,
+                    "next_launch_dateunixtime" : next_launch_dateunixtime,
+                    "package_id" : CommandsOnHostdata.package_id
+                }
+        else:
+            return {"start_dateunixtime" : start_dateunixtime,
+                    "end_dateunixtime" : end_dateunixtime,
+                    "next_launch_dateunixtime" : next_launch_dateunixtime
+                }
 
     def _getcommanddata(self, CommandsOnHostdata):
         ret =  {"uploaded" : CommandsOnHostdata.uploaded,
@@ -2358,8 +2365,10 @@ class MscDatabase(DatabaseHelper):
         session = create_session()
         ret = session.query(CommandsOnHost.start_date,
                             CommandsOnHost.end_date,
-                            CommandsOnHost.next_launch_date).\
-            filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
+                            CommandsOnHost.next_launch_date,
+                            Commands.package_id)\
+            .join(Commands)\
+            .filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
         session.close()
         return self._getcommanddatadate(ret)
 

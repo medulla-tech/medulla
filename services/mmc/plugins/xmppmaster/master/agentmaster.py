@@ -318,7 +318,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.plugintype = {}
         self.plugindata = {}
         self.plugindatascheduler = {}
-        self.loadbasepluginagnet() # update base list plugin and remote agent
+        self.loadbasepluginagent() # update base list plugin and remote agent
         sleekxmpp.ClientXMPP.__init__(self, conf.jidagent, conf.passwordconnection)
 
         self.manage_scheduler = manage_scheduler(self)
@@ -363,7 +363,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             self.schedule('event leakmemory',self.timecheck, self.__leakmemory, repeat=True)
 
         # Interval for reloading plugins base (in seconds) 900 by default
-        self.schedule('reload plugins base', conf.reload_plugins_base_interval, self.loadbasepluginagnet, repeat=True)
+        self.schedule('reload plugins base', conf.reload_plugins_base_interval, self.loadbasepluginagent, repeat=True)
 
         # Interval for installing new plugins on clients (in seconds) 60 by default
         self.schedule('remote update plugin', conf.remote_update_plugin_interval, self.remoteinstallPlugin, repeat=True)
@@ -544,9 +544,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
             result = XmppMasterDatabase().Timeouterrordeploy()
             for machine in result:
                 hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
-                msglog.append("<span style='color : red;font-weight: bold;'>%s [ABORT ON TIMEOUT For deploy]</span>"%hostnamemachine)
-                msglog.append("<span style='color : red;font-weight: bold;'>Machine down in slot deploy</span>")
-                msglog.append("<span style='color : red;font-weight: bold;'>DEPLOY TERMINATE</span>")
+                msglog.append("<span class='log_err'>Deployment timed out on machine %s</span>"%hostnamemachine)
+                msglog.append("<span class='log_err'>Machine is no longer available</span>")
             for logmsg in msglog:
                 self.xmpplog(logmsg,
                             type='deploy',
@@ -571,10 +570,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     ### voir le message a afficher.
                     # cas on 1 deployement est cheduler.
                     # et la machine n'existe plus. soit son uuid GLPI a changer, ou elle a ete suprimer. la machine n'existe plus.
-                    msglog.append("<span style='color : red;font-weight: bold;'>ERROR MACHINE %s DISAPPEARED "\
-                        "DURING DEPLOYMENT. GLPI UUID %s</span>"%(machine['jidmachine'], UUID))
-                    msglog.append("<span style='color : red;font-weight: bold;'>DEPLOY TERMINATE</span>")
-                    msglog.append("<span style='color : red;font-weight: bold;'>ABORT DEPLOY</span>")
+                    msglog.append("<span class='log_err'>Machine %s disappeared "\
+                        "during deployment. GLPI ID: %s</span>"%(machine['jidmachine'], UUID))
                     XmppMasterDatabase().update_state_deploy(machine['id'], "ABORT MACHINE DISAPPEARED")
                 elif resultpresence[UUID][0] == 1:
                     XmppMasterDatabase().update_state_deploy(machine['id'], "WAITING MACHINE ONLINE")
@@ -596,8 +593,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             for machine in machines_wol3:
                 XmppMasterDatabase().update_state_deploy(machine['id'], "WAITING MACHINE ONLINE")
                 hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
-                msglog.append("<span style='color : orange;font-weight: bold;'>WAITING FOR MACHINE %s " \
-                                "[OFFLINE TO ONLINE For deploy]</span>"%hostnamemachine)
+                msglog.append("Waiting for machine %s to be online"%hostnamemachine)
             for logmsg in msglog:
                 self.xmpplog(logmsg,
                             type='deploy',
@@ -619,8 +615,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 XmppMasterDatabase().update_state_deploy(machine['id'], "WOL 3")
                 hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
                 self._addsetwol(wol_set, machine['macadress'])
-                msglog.append("<span style='color : orange;font-weight: bold;'>THIRD WOL</span>:" \
-                                " wakeonlan machine  [Machine : %s]"%hostnamemachine)
+                msglog.append("Third WOL sent to machine %s"%hostnamemachine)
             for logmsg in msglog:
                 self.xmpplog(logmsg,
                             type='deploy',
@@ -644,8 +639,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 self._addsetwol(wol_set, machine['macadress'])
                 #self.sendwol(machine['macadress'], hostnamemachine)
 
-                msglog.append("<span style='color : orange;font-weight: bold;'>SECOND WOL</span>:" \
-                                " wakeonlan machine  [Machine : %s]"%hostnamemachine)
+                msglog.append("Second WOL sent to machine %s"%hostnamemachine)
             for logmsg in msglog:
                 self.xmpplog(logmsg,
                             type='deploy',
@@ -666,12 +660,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 data = json.loads(machine['result'])
                 if XmppMasterDatabase().getPresenceuuid(machine['inventoryuuid']):
                     hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
-                    if data['wol'] == 2:
-                        msg="<span style='color : BLUE;font-weight: bold;'>SLOT DEPLOY SCHEDULED TASK AND MACHINE ONLINE</span>:" \
-                                " [Machine : %s]"%hostnamemachine
-                    else:
-                        msg="<span style='color : BLUE;font-weight: bold;'>MACHINE ONLINE</span>:" \
-                                    " [Machine : %s]"%hostnamemachine
+                    msg="Machine %s online. Starting deployment"%hostnamemachine
                     self.xmpplog(msg,
                                 type='deploy',
                                 sessionname=machine['sessionid'],
@@ -689,8 +678,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             data['advanced']['syncthing'] == 1 and \
                                 XmppMasterDatabase().nbsyncthingdeploy(machine['group_uuid'],
                                                                         machine['command']) > 2:
-                        msg =  "<span style='color:green;font-weight: bold;'>" \
-                                    "Start deploy Syncthing</span> on machine %s" % machine['jidmachine']
+                        msg =  "Starting peer deployment on machine %s" % machine['jidmachine']
                         self.xmpplog(msg,
                                     type='deploy',
                                     sessionname=machine['sessionid'],
@@ -709,8 +697,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         self.syncthingdeploy()
                     else:
                         datasession = self.session.sessiongetdata(machine['sessionid'])
-                        msglog.append("<span style='color:green;font-weight: bold;'>" \
-                                "Start deploy</span> on machine %s to ARS %s" %(machine['jidmachine'],
+                        msglog.append("Starting deployment on machine %s from ARS %s" %(machine['jidmachine'],
                                                                                 machine['jid_relay']))
 
                         command = {'action': "applicationdeploymentjson",
@@ -734,8 +721,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         msglog=[]
                         if 'syncthing' in data['advanced'] and \
                             data['advanced']['syncthing'] == 1:
-                            self.xmpplog("<span style='color : orange;font-weight: bold;'>Warning!!!" \
-                                "There is not enough syncthing to deploy in syncthing</span>",
+                            self.xmpplog("<span class='log_warn'>There are not enough machines " \
+                                            "to deploy in peer mode</span>",
                                     type='deploy',
                                     sessionname=machine['sessionid'],
                                     priority=-1,
@@ -836,14 +823,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 result = "",
                                                 syncthing = 0)
 
-                msg.append("<span style='color : red;font-weight: bold;'>MACHINE %s AGENT MISSING. " \
-                            "IMPOSSIBLE DEPLOYEMENT : GLPI ID is %s</span>"%(machine.name,
+                msg.append("<span class='log_err'>Agent missing on machine %s. " \
+                            "Deployment impossible : GLPI ID is %s</span>"%(machine.name,
                                                                              UUID))
-                msg.append("<span style='color : blue;font-weight: bold;'>ACTION : check the correct operation of "\
-                    "the machine agent, or install the agent on the"\
-                        " machine [%s (%s)] if it is missing.</span>"%(machine.name,
+                msg.append("Action : Check that the machine "\
+                    "agent is working, or install the agent on the"\
+                        " machine %s (%s) if it is missing."%(machine.name,
                                                                        UUID))
-                msg.append("<span style='color : red;font-weight: bold;'>ABORT DEPLOY</span>")
                 for logmsg in msg:
                     self.xmpplog(logmsg,
                              type='deploy',
@@ -1075,8 +1061,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             ret = XmppMasterDatabase().updatedeploystate1(t['sessionid'], "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)")
                             if ret >= 1:
                                 logger.debug("Update deploy Status for Machine OffLine %s"%t['jidmachine'])
-                                self.xmpplog("resource recovery on ARS %s for deploy"\
-                                    "sessionid %s on machine  (connection loss) %s " % (t['jidrelay'],
+                                self.xmpplog("Freeing deployment resource on ARS %s"\
+                                    "sessionid %s on machine %s (connection loss)" % (t['jidrelay'],
                                                                                         t['sessionid'],
                                                                                         t['hostname']),
                                     type = 'deploy',
@@ -1090,7 +1076,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     date = None,
                                     fromuser = "",
                                     touser = "")
-                                self.xmpplog('<span style="font-weight: bold;color : Orange;">WAITING REBOOT</span>',
+                                self.xmpplog('Waiting for reboot',
                                     type = 'deploy',
                                     sessionname = t['sessionid'],
                                     priority = -1,
@@ -1211,11 +1197,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             macadress=macadress,
                                             result = "",
                                             syncthing = 0)
-            msg.append("<span style='color : red;font-weight: bold;'>uuid Name "\
-                "package %s misssing"%uuidpackage)
-            msg.append("<span style='color : blue;font-weight: bold;'>ACTION :"\
-                " Check the package uuid [%s].</span>"%(uuidpackage))
-            msg.append("<span style='color : red;font-weight: bold;'>ABORT DEPLOY</span>")
+            msg.append("<span class='log_err'>Package identifier misssing for %s</span>"%uuidpackage)
+            msg.append("Action : Check the package %s"%(uuidpackage))
             for logmsg in msg:
                 self.xmpplog(logmsg,
                              type='deploy',
@@ -1257,10 +1240,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 # on regarde si celui-ci est up dans la table machine
                 ARSsearch = XmppMasterDatabase().getMachinefromjid(jidrelay)
                 if ARSsearch['enabled'] == 0:
-                    msg.append("<span style='color : red;font-weight: bold;'>ARS [%s] for deployment is down.</span>"%jidrelay)
-                    msg.append("<span style='color : blue;font-weight: bold;'>ACTION :"\
-                                " Either restart it or rerun the configurator on the machine %s to use another ARS</span>"%(name))
-                    msg.append("<span style='color : blue;font-weight: bold;'>Search alternative ARS for deployment</span>")
+                    msg.append("<span class='log_err'>ARS %s for deployment is down.</span>"%jidrelay)
+                    msg.append("Action : Either restart it or rerun the configurator "\
+                                "on the machine %s to use another ARS"%(name))
+                    msg.append("Searching alternative ARS for deployment")
                     # il faut recherche si on trouve 1 alternative. dans le cluster
                     # on cherche 1 ars disponible et up dans son cluster.
                     cluster = XmppMasterDatabase().clusterlistars(enabled=None)
@@ -1269,10 +1252,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         nbars = len(cluster[i]['listarscluster'])
                         if jidrelay in cluster[i]['listarscluster']:
                             if nbars < 2:
-                                msg.append("<span style='color : red;font-weight: bold;'>No alternative ARS found</span>")
-                                msg.append("<span style='color : blue;font-weight: bold;'>ACTION :"\
-                                " Either restart it or rerun the configurator on the machine %s to use another ARS</span>"%(name))
-                                msg.append("<span style='color : red;font-weight: bold;'>ABORT DEPLOY</span>")
+                                msg.append("<span class='log_err'>No alternative ARS found</span>")
+                                msg.append("Action : Either restart it or rerun the configurator "\
+                                            "on the machine %s to use another ARS"%(name))
                                 XmppMasterDatabase().adddeploy(idcommand,
                                                                 jidmachine,
                                                                 jidrelay,
@@ -1307,9 +1289,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 nbint = random.randint(0, nbars-1)
                                 arsalternative = cluster[i]['listarscluster'][nbint]
 
-                                msg.append("<span style='color : red;font-weight: bold;'>ars [%s] for deployment is "\
-                                            "down. Use altrnatif ARS for deploy %s. You Must "\
-                                                "restarting ARS %s</span>"%(jidrelay,arsalternative,jidrelay) )
+                                msg.append("<span class='log_err'>ARS %s for deployment is "\
+                                            "down. Use alternative ARS for deployment %s. ARS "\
+                                                " %s must be restarted</span>"%(jidrelay,arsalternative,jidrelay) )
                                 jidrelay = arsalternative
                                 ARSsearch = XmppMasterDatabase().getMachinefromjid(jidrelay)
                                 if ARSsearch['enabled'] == 1:
@@ -1335,9 +1317,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                         macadress=macadress,
                                                         result = "",
                                                         syncthing = 0)
-                        msg.append("<span style='color : red;font-weight: bold;'>Alternatif ARS is Down</span>")
-                        msg.append("<span style='color : blue;font-weight: bold;'>ACTION : check ARS Cluster.")
-                        msg.append("<span style='color : red;font-weight: bold;'>ABORT DEPLOY</span>")
+                        msg.append("<span class='log_err'>Alternative ARS Down</span>")
+                        msg.append("Action : check ARS cluster.")
                         for logmsg in msg:
                             self.xmpplog(logmsg,
                                         type='deploy',
@@ -1388,9 +1369,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 macadress=macadress,
                                                 result = "",
                                                 syncthing = 0)
-                msg.append("<span style='color : red;font-weight: bold;'>ARS for deployment is missing for machine.[%s] </span>"%uuidmachine)
-                msg.append("<span style='color : blue;font-weight: bold;'>ACTION : The configurator must be restarted on the machine.")
-                msg.append("<span style='color : red;font-weight: bold;'>ABORT DEPLOY</span>")
+                msg.append("<span class='log_err'>ARS for deployment is missing for machine %s </span>"%uuidmachine)
+                msg.append("Action : The configurator must be restarted on the machine.")
                 for logmsg in msg:
                     self.xmpplog(logmsg,
                                 type='deploy',
@@ -1422,9 +1402,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             macadress=macadress,
                                             result = "",
                                             syncthing = 0)
-            msg.append("<span style='color : red;font-weight : bold;'>"\
-                " ERROR CREATION DEPLOY ON UUID MACHINE %s "\
-                    "name %s</span>"%(uuidmachine, name))
+            msg.append("<span class='log_err'>Error creating deployment on machine %s "\
+                    "[%s]</span>"%(name, uuidmachine))
             for logmsg in msg:
                 self.xmpplog(logmsg,
                             type='deploy',
@@ -1473,9 +1452,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         sessiondeployementless = name_random(5, "arsdeploy")
         if managepackage.getversionpackagename(name) is None:
             logger.error("deploy %s error package name version missing" % (name))
-            msg.append("<span style='color : red;font-weight: bold;'>deploy %s error package name version missing </span>"%(name))
-            msg.append("<span style='color : blue;font-weight: bold;'>ACTION : check package %s."%name)
-            msg.append("<span style='color : red;font-weight: bold;'>ABORT DEPLOY</span>")
+            msg.append("<span class='log_err'>Package name or version missing for %s</span>"%(name))
+            msg.append("Action : check the package %s"%name)
             XmppMasterDatabase().adddeploy(idcommand,
                                             jidmachine,
                                             jidrelay,
@@ -1506,9 +1484,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # Name the event
         path = managepackage.getpathpackagename(name)
         if path is None:
-            msg.append("<span style='color : red;font-weight: bold;'>Pzrameter Name (%s) missing in package</span>"%(name))
-            msg.append("<span style='color : blue;font-weight: bold;'>ACTION : check name in package</span>")
-            msg.append("<span style='color : red;font-weight: bold;'>ABORT DEPLOY</span>")
+            msg.append("<span class='log_err'>Package name missing in package %s</span>"%(name))
+            msg.append("Action : check the package %s"%(name))
             XmppMasterDatabase().adddeploy(idcommand,
                                             jidmachine,
                                             jidrelay,
@@ -1558,11 +1535,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             macadress=macadress,
                                             result = "",
                                             syncthing = 0)
-            msg.append("<span style='color : red;font-weight: bold;'>deploy %s on %s  error" \
-                       " : xmppdeploy.json missing</span>"%(name, uuidmachine))
-            msg.append("<span style='color : blue;font-weight: bold;'>ACTION : "\
-                "look for the reason for missing this descriptor file [Xmppdeploy.json].</span>")
-            msg.append("<span style='color : red;font-weight: bold;'>ABORT DEPLOY</span>")
+            msg.append("<span class='log_err'>Descriptor xmppdeploy.json " \
+                        "missing for %s [%s]</span>"%(name, uuidmachine))
+            msg.append("Action : Find out why xmppdeploy.json file is missing.")
             for logmsg in msg:
                 self.xmpplog(logmsg,
                             type='deploy',
@@ -1634,25 +1609,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
             data['mac'] = macadress #use macadress for WOL
             sessionid = self.createsessionfordeploydiffered(data)
             result = json.dumps(data, indent = 4)
-            msg.append("<span style='color : orange; font-weight: bold;'>Machine %s WAITING SCHEDULED DEPLOY</span>" % jidmachine)
-            msg.append("<span style='color : orange;font-weight: bold;'>WAITING</span> Start deploy Task on machine %s" % jidmachine)
+            msg.append("Machine %s is ready for deployment" % jidmachine)
         if wol == 2:
             state="DEPLOY TASK SCHEDULED"
             data['wol'] = 2
             data['mac'] = macadress #use macadress for WOL
             sessionid = self.createsessionfordeploydiffered(data)
             result = json.dumps(data, indent = 4)
-            msg.append("<span style='color : orange; font-weight: bold;'>Machine %s WAITING SCHEDULED DEPLOY</span>" % jidmachine)
-            msg.append("<span style='color : orange;font-weight: bold;'>WAITING</span> Start deploy Task on machine %s" % jidmachine)
+            msg.append("Machine %s is ready for deployment" % jidmachine)
         elif wol == 1:
             state = "WOL 1"
             data['wol'] = 1
             data['mac'] = macadress #use macadress for WOL
             sessionid = self.createsessionfordeploydiffered(data)
             result = json.dumps(data, indent = 4)
-            msg.append("<span style='color : orange; font-weight: bold;'>Machine %s ONLINE</span>" % jidmachine)
-            msg.append("<span style='color : orange;font-weight: bold;'>WAITING</span> Start deploy on machine %s" % jidmachine)
-            msg.append("<span style='color : orange;font-weight: bold;'>FIRST WOL</span>: wakeonlan machine  [Machine : %s]" % uuidmachine)
+            msg.append("Machine %s online" % jidmachine)
+            msg.append("First WOL sent to machine %s" % uuidmachine)
         else:
             state = "DEPLOYMENT START"
             data['wol'] = 0
@@ -1673,14 +1645,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                     prefix = "command")
                 #state = "DEPLOYMENT SYNCTHING"
                 result = json.dumps(data, indent = 4)
-                msg.append("<span style='color:green;font-weight: bold;'>" \
-                              "Start deploy Syncthing</span>  on machine %s" % jidmachine)
+                msg.append("Starting peer deployment on machine %s" % jidmachine)
             else:
-                msg.append("<span style='color:green;font-weight: bold;'>" \
-                                "Start deploy</span> on machine %s to ARS %s" % (jidmachine,jidrelay))
+                msg.append("Starting deployment on machine %s from ARS %s" % (jidmachine,jidrelay))
                 if data['advanced']['syncthing'] == 1:
-                    msg.append("<span style='color : orange;font-weight: bold;'>Warning!!!" \
-                        " There is not enough syncthing to deploy in syncthing</span>")
+                    msg.append("<span class='log_warn'>There are not enough machines " \
+                                "to deploy in peer mode</span>")
 
                 data['advanced']['syncthing'] = 0
                 result = None
@@ -1816,7 +1786,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def handlemanagesession(self):
         self.session.decrementesessiondatainfo()
 
-    def loadbasepluginagnet(self):
+    def loadbasepluginagent(self):
         self.loadPluginList()
         self.loadPluginschedulerList()
         self.loadfingerprintagentbase()

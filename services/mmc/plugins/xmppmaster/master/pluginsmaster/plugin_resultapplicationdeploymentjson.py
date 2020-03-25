@@ -45,8 +45,8 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                        sessionid))
             XmppMasterDatabase().delete_resources(sessionid)
         else:
-            msg = "Error deploy on %s Package "\
-                ": %s Session : %s" % (message['from'],
+            msg = "Deployment error on %s [Package "\
+                ": %s / Session : %s]" % (message['from'],
                                        data['descriptor']['info']['name'],
                                        sessionid)
             logger.error(msg)

@@ -22,23 +22,22 @@
 
 START TRANSACTION;
 
--- -----------------------------------------------------
--- Table `xmppmaster`.`def_remote_deploy_status`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `xmppmaster`.`def_remote_deploy_status` ;
-CREATE TABLE IF NOT EXISTS `xmppmaster`.`def_remote_deploy_status` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `regex_logmessage` varchar(80) NOT NULL,
-  `status` varchar(80) NOT NULL,
-  `label` varchar(255) NOT NULL,
-  `type` varchar(255),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
-COMMENT = 'this table allows you to define the regexp to apply 1 status according to 1 log of type deploy';
+-- add FOREIGN KEY in table has_machineusers on table machines
+
+ALTER TABLE `xmppmaster`.`has_machinesusers`
+ADD INDEX `fk_has_machinesusers_idx_machine` (`machines_id` ASC);
+
+
+ALTER TABLE `xmppmaster`.`has_machinesusers`
+ADD CONSTRAINT `fk_has_machinesusers_idx_machine`
+  FOREIGN KEY (`machines_id`)
+  REFERENCES `xmppmaster`.`machines` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
 
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 35;
+UPDATE version SET Number = 38;
 
 COMMIT;
