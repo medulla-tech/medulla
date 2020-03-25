@@ -2467,7 +2467,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     'abortpackageworkflowerror' : 0,
                     'abortdescriptormissing' : 0,
                     'abortmachinedisappeared' : 0,
-                    'abortuserabort' : 0,
+                    'abortdeploymentcancelledbyuser' : 0,
                     'aborttransferfailed' : 0,
                     'abortpackageexecutionerror' : 0,
                     'deploymentstart' : 0,
@@ -2520,8 +2520,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['abortdescriptormissing'] = liststatus[t]
                 elif t == 'ABORT MACHINE DISAPPEARED':
                     ret['abortmachinedisappeared'] = liststatus[t]
-                elif t == 'ABORT USER ABORT':
-                    ret['abortuserabort'] = liststatus[t]
+                elif t == 'ABORT DEPLOYMENT CANCELLED BY USER':
+                    ret['abortdeploymentcancelledbyuser'] = liststatus[t]
                 elif t == 'ABORT PACKAGE EXECUTION ERROR':
                     ret['abortpackageexecutionerror'] = liststatus[t]
 

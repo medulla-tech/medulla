@@ -80,8 +80,8 @@ if($criterion == '')
     case 'abortmachinedisappeared':
       $criterion = "ABORT MACHINE DISAPPEARED";
       break;
-    case 'abortuserabort':
-      $criterion = "ABORT USER ABORT";
+    case 'abortdeploymentcancelledbyuser':
+      $criterion = "ABORT DEPLOYMENT CANCELLED BY USER";
       break;
     case 'deploymentstart':
       $criterion = "DEPLOYMENT START";
