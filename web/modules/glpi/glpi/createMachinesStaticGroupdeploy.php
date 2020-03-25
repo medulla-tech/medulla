@@ -50,9 +50,6 @@ if($criterion == '')
     case 'deploymentsuccess':
       $criterion = "DEPLOYMENT SUCCESS";
       break;
-    case 'abortontimeout':
-      $criterion = "ABORT ON TIMEOUT";
-      break;
     case 'abortmissingagent':
       $criterion = "ABORT MISSING AGENT";
       break;
@@ -77,23 +74,14 @@ if($criterion == '')
     case 'abortpackageversionmissing':
       $criterion = "ABORT PACKAGE VERSION MISSING";
       break;
-    case 'abortpackageworkflowerror':
-      $criterion = "ABORT PACKAGE WORKFLOW ERROR";
-      break;
     case 'abortdescriptormissing':
-      $criterion = " DESCRIPTOR MISSING";
+      $criterion = "ABORT DESCRIPTOR MISSING";
       break;
     case 'abortmachinedisappeared':
       $criterion = "ABORT MACHINE DISAPPEARED";
       break;
     case 'abortuserabort':
       $criterion = "ABORT USER ABORT";
-      break;
-    case 'abortuserabort':
-      $criterion = "ABORT PACKAGE EXECUTION ERROR";
-      break;
-    case 'abortpackageexecutionerror':
-      $criterion = "ABORT PACKAGE EXECUTION ERROR";
       break;
     case 'deploymentstart':
       $criterion = "DEPLOYMENT START";
