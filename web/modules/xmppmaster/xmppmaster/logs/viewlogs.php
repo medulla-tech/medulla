@@ -50,7 +50,7 @@ if ( isset ($_POST['bStop'])) {
                                     $data['host'],
                                     $data['inventoryuuid'],
                                     $data['pathpackage'],
-                                    "ABORT USER ABORT",
+                                    "ABORT DEPLOYMENT CANCELLED BY USER",
                                     aleatoirechaine("abortdeploy",5),
                                     $data['login'],
                                     $data['login'],
