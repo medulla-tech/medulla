@@ -402,7 +402,7 @@ echo "<div>";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
         foreach($dynamicstatus as $label=>$status){
-            echo (isset($$label)&&$$label) ? "<td>"._T($status,"xmppmaster")."</td>" : "";
+            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($status,"xmppmaster")))."</td>" : "";
         }
         echo "</tr></thead>";
 
@@ -410,7 +410,6 @@ echo "<div>";
         echo '<td style="width:500px"><div id="holder"></div>';
         echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>".$deploymentsuccess."</td>" : "";
         echo (isset($deploymenterror)&&$deploymenterror) ? "<td>".$deploymenterror."</td>" : "";
-        echo (isset($abortontimeout)&&$abortontimeout) ? "<td>".$abortontimeout."</td>" : "";
         echo (isset($abortmissingagent)&&$abortmissingagent) ? "<td>".$abortmissingagent."</td>" : "";
         echo (isset($abortrelaydown)&&$abortrelaydown) ? "<td>".$abortrelaydown."</td>" : "";
         echo (isset($abortalternativerelaysdow)&&$abortalternativerelaysdown) ?"<td>".$abortalternativerelaysdown."</td>" : "";
@@ -419,11 +418,9 @@ echo "<div>";
         echo (isset($abortpackageidentifiermissing)&&$abortpackageidentifiermissing) > 0 ?"<td>".$abortpackageidentifiermissing."</td>" : "";
         echo (isset($abortpackagenamemissing)&&$abortpackagenamemissing) ? "<td>".$abortpackagenamemissing."</td>" : "";
         echo (isset($abortpackageversionmissing)&&$abortpackageversionmissing) ? "<td>".$abortpackageversionmissing."</td>" : "";
-        echo (isset($abortpackageworkflowerror)&&$abortpackageworkflowerror) ? "<td>".$abortpackageworkflowerror."</td>" : "";
         echo (isset($abortdescriptormissing)&&$abortdescriptormissing) ? "<td>".$abortdescriptormissing."</td>" : "";
         echo (isset($abortmachinedisappeared)&&$abortmachinedisappeared) ? "<td>".$abortmachinedisappeared."</td>" : "";
         echo (isset($abortuserabort)&&$abortuserabort) ? "<td>".$abortuserabort."</td>" : "";
-        echo (isset($abortpackageexecutionerror)&&$abortpackageexecutionerror) ? "<td>".$abortpackageexecutionerror."</td>" : "";
         echo (isset($deploymentdelayed)&&$deploymentdelayed) ? "<td>".$deploymentdelayed."</td>" : "";
         echo (isset($deploymentstart)&&$deploymentstart) ? "<td>".$deploymentstart."</td>" : "";
         echo (isset($deploymentpending)&&$deploymentpending) ? "<td>".$deploymentpending."</td>" : "";
@@ -706,7 +703,7 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
                 else
                     $color = $bluelistcolor[rand(0, $max)];
 
-                echo 'datas.push({"label":"'.$status.'", "value":"'.$$label.'", "color": "'.$color.'", "href":"'.urlredirect_group_for_deploy($label,$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+                echo 'datas.push({"label":"'.ucfirst(strtolower($status)).'", "value":"'.$$label.'", "color": "'.$color.'", "href":"'.urlredirect_group_for_deploy($label,$_GET['gid'],$_GET['login'],$cmd_id).'"});';
             }
         }
         echo '
