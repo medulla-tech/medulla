@@ -392,7 +392,7 @@ echo "<div>";
         echo (isset($abortpackageversionmissing)&&$abortpackageversionmissing) ? "<td>"._T("Abort Package Version Missing","xmppmaster")."</td>" : "";
         echo (isset($abortdescriptormissing)&&$abortdescriptormissing) ? "<td>"._T("Abort Descriptor Missing","xmppmaster")."</td>" : "";
         echo (isset($abortmachinedisappeared)&&$abortmachinedisappeared) ? "<td>"._T("Abort Machine Disappeared","xmppmaster")."</td>" : "";
-        echo (isset($abortuserabort)&&$abortuserabort) ? "<td>"._T("Abort User Abort","xmppmaster")."</td>" : "";
+        echo (isset($abortdeploymentcancelledbyuser)&&$abortdeploymentcancelledbyuser) ? "<td>"._T("Abort Deployment Cancelled By User","xmppmaster")."</td>" : "";
         echo (isset($deploymentdelayed)&&$deploymentdelayed) ? "<td>"._T("Deployment Delayed","xmppmaster")."</td>" : "";
         echo (isset($deploymentstart)&&$deploymentstart) ? "<td>"._T("Deployment start","xmppmaster")."</td>" : "";
         echo (isset($deploymentpending)&&$deploymentpending) ? "<td>"._T("Deployment Pending","xmppmaster")."</td>" : "";
@@ -420,7 +420,7 @@ echo "<div>";
         echo (isset($abortpackageversionmissing)&&$abortpackageversionmissing) ? "<td>".$abortpackageversionmissing."</td>" : "";
         echo (isset($abortdescriptormissing)&&$abortdescriptormissing) ? "<td>".$abortdescriptormissing."</td>" : "";
         echo (isset($abortmachinedisappeared)&&$abortmachinedisappeared) ? "<td>".$abortmachinedisappeared."</td>" : "";
-        echo (isset($abortuserabort)&&$abortuserabort) ? "<td>".$abortuserabort."</td>" : "";
+        echo (isset($abortdeploymentcancelledbyuser)&&$abortdeploymentcancelledbyuser) ? "<td>".$abortdeploymentcancelledbyuser."</td>" : "";
         echo (isset($deploymentdelayed)&&$deploymentdelayed) ? "<td>".$deploymentdelayed."</td>" : "";
         echo (isset($deploymentstart)&&$deploymentstart) ? "<td>".$deploymentstart."</td>" : "";
         echo (isset($deploymentpending)&&$deploymentpending) ? "<td>".$deploymentpending."</td>" : "";
@@ -681,8 +681,8 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
         if ($abortmachinedisappeared > 0){
             echo 'datas.push({"label":"Abort Machine Disappeared ", "value":'.$abortmachinedisappeared.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmachinedisappeared",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
-        if ($abortuserabort > 0){
-            echo 'datas.push({"label":"Abort User Abort ", "value":'.$abortuserabort.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortuserabort",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        if ($abortdeploymentcancelledbyuser > 0){
+            echo 'datas.push({"label":"ABORT DEPLOYMENT CANCELLED BY USER ", "value":'.$abortdeploymentcancelledbyuser.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdeploymentcancelledbyuser",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
         if ($errorunknownerror > 0){
             echo 'datas.push({"label":"Error Unknown Error ", "value":'.$errorunknownerror.', "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
