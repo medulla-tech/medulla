@@ -2757,14 +2757,17 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updatedeploystate1(self, session, sessionid, state):
         try:
-            ret = session.query(Deploy).filter(and_(Deploy.sessionid == sessionid,
-                                                    Deploy.state != 'DEPLOYMENT SUCCESS',
-                                                    not_(Deploy.state.startswith('ERROR')))
-                                               ).\
-                    update({Deploy.state: state})
+            sql="""UPDATE `xmppmaster`.`deploy`
+                SET
+                    `state` = '%s'
+                WHERE
+                    (deploy.sessionid = '%s'
+                        AND `state` NOT IN ('DEPLOYMENT SUCCESS' , 'ABORT DEPLOYMENT CANCELLED BY USER')
+                        AND `state` REGEXP '^(?!ERROR)');
+                """%(state,sessionid)
+            result = session.execute(sql)
             session.commit()
             session.flush()
-            return ret
         except Exception, e:
             logging.getLogger().error(str(e))
             return -1
@@ -5452,6 +5455,29 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         ret = [{'id': x[0], 'jidmachines': x[1], 'jidrelays': x[2], 'numcluster': x[3],  'directory_tmp': x[4]} for x in result]
         return ret
+
+
+    @DatabaseHelper._sessionm
+    def get_ensemble_ars_idem_cluster(self, session, ars_id):
+        sql ="""SELECT
+                    jid, nameserver, keysyncthing
+                FROM
+                    xmppmaster.has_cluster_ars
+                        INNER JOIN
+                    xmppmaster.relayserver ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
+                WHERE
+                    id_cluster = (SELECT
+                            id_cluster
+                        FROM
+                            xmppmaster.has_cluster_ars
+                        WHERE
+                            id_ars = %s);"""%ars_id
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [{ "jid" : element[0] ,
+                  "name" : element[1],
+                  "keysyncthing" : element[2]} for element in result]
 
     @DatabaseHelper._sessionm
     def get_list_ars_from_cluster(self, session, cluster=0):

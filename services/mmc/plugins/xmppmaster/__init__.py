@@ -360,10 +360,12 @@ def get_group_stop_deploy(grpid, cmdid):
     for machine in result['objectdeploy']:
         msg_stop_deploy['sessionid'] = machine['sessionid']
         updatedeploystate1(machine['sessionid'], 'ABORT DEPLOYMENT CANCELLED BY USER')
-        if 'jid_relay' in machine and machine['jid_relay'] != "fake_jidrelay":
-            send_message_json(machine['jid_relay'], msg_stop_deploy)
         if 'jidmachine' in machine and machine['jidmachine'] != "fake_jidmachine":
             send_message_json(machine['jidmachine'], msg_stop_deploy)
+        if 'jid_relay' in machine and machine['jid_relay'] != "fake_jidrelay":
+            arscluster = XmppMasterDatabase().getRelayServerofclusterFromjidars(machine['jid_relay'])
+            for t in arscluster:
+                send_message_json(t, msg_stop_deploy)
     return True
 
 
