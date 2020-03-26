@@ -2392,40 +2392,47 @@ class XmppMasterDatabase(DatabaseHelper):
         query = query.one()
         session.commit()
         session.flush()
-        obj={}
-        obj['len'] = 0
+        machine={}
+        machine['len'] = 0
         try :
-            obj['len'] = 1
-            obj['pathpackage'] = query.pathpackage
-            obj['jid_relay'] = query.jid_relay
-            obj['inventoryuuid'] = query.inventoryuuid
-            obj['jidmachine'] = query.jidmachine
-            obj['state']= query.state
-            obj['sessionid'] = query.sessionid
-            obj['start'] = query.start
-            obj['host'] = query.host
-            obj['user'] = query.user
-            obj['login'] = str(query.login)
-            obj['command'] = query.command
+            machine['len'] = 1
+            machine['title'] = query.title
+            machine['pathpackage'] = query.pathpackage
+            machine['jid_relay'] = query.jid_relay
+            machine['inventoryuuid'] = query.inventoryuuid
+            machine['jidmachine'] = query.jidmachine
+            machine['state'] = query.state
+            machine['sessionid']=query.sessionid
+            machine['start'] = query.start
+            machine['startcmd'] = query.startcmd
+            machine['endcmd'] = query.endcmd
+            machine['host'] = query.host
+            machine['user'] = query.user
+            machine['login'] = str(query.login)
+            machine['command'] = query.command
+            machine['group_uuid'] = query.group_uuid
+            machine['macadress'] = query.macadress
+            machine['syncthing'] = query.syncthing
         except Exception as e:
             logging.getLogger().error(str(e))
-        return obj
+        return machine
 
     @DatabaseHelper._sessionm
     def get_group_stop_deploy(self, session, grpid, cmdid):
         """
             this function return the machines list for 1 group id and 1 command id
         """
-        relayserver = session.query(Deploy).filter(and_(Deploy.group_uuid == grpid,
+        machine = session.query(Deploy).filter(and_(Deploy.group_uuid == grpid,
                                                         Deploy.command == cmdid))
-        relayserver = relayserver.all()
+        machine = machine.all()
         session.commit()
         session.flush()
         ret={}
-        ret['len']= len(relayserver)
+        ret['len']= len(machine)
         arraylist = []
-        for t in relayserver:
+        for t in machine:
             obj={}
+            obj['title'] = t.title
             obj['pathpackage'] = t.pathpackage
             obj['jid_relay'] = t.jid_relay
             obj['inventoryuuid'] = t.inventoryuuid
@@ -2433,10 +2440,15 @@ class XmppMasterDatabase(DatabaseHelper):
             obj['state'] = t.state
             obj['sessionid']=t.sessionid
             obj['start'] = t.start
+            obj['startcmd'] = t.startcmd
+            obj['endcmd'] = t.endcmd
             obj['host'] = t.host
             obj['user'] = t.user
             obj['login'] = str(t.login)
             obj['command'] = t.command
+            obj['group_uuid'] = t.group_uuid
+            obj['macadress'] = t.macadress
+            obj['syncthing'] = t.syncthing
             arraylist.append(obj)
         ret['objectdeploy'] = arraylist
         return ret
@@ -2745,14 +2757,17 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updatedeploystate1(self, session, sessionid, state):
         try:
-            ret = session.query(Deploy).filter(and_(Deploy.sessionid == sessionid,
-                                                    Deploy.state != 'DEPLOYMENT SUCCESS',
-                                                    not_(Deploy.state.startswith('ERROR')))
-                                               ).\
-                    update({Deploy.state: state})
+            sql="""UPDATE `xmppmaster`.`deploy`
+                SET
+                    `state` = '%s'
+                WHERE
+                    (deploy.sessionid = '%s'
+                        AND `state` NOT IN ('DEPLOYMENT SUCCESS' , 'ABORT DEPLOYMENT CANCELLED BY USER')
+                        AND `state` REGEXP '^(?!ERROR)');
+                """%(state,sessionid)
+            result = session.execute(sql)
             session.commit()
             session.flush()
-            return ret
         except Exception, e:
             logging.getLogger().error(str(e))
             return -1
@@ -5440,6 +5455,29 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         ret = [{'id': x[0], 'jidmachines': x[1], 'jidrelays': x[2], 'numcluster': x[3],  'directory_tmp': x[4]} for x in result]
         return ret
+
+
+    @DatabaseHelper._sessionm
+    def get_ensemble_ars_idem_cluster(self, session, ars_id):
+        sql ="""SELECT
+                    jid, nameserver, keysyncthing
+                FROM
+                    xmppmaster.has_cluster_ars
+                        INNER JOIN
+                    xmppmaster.relayserver ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
+                WHERE
+                    id_cluster = (SELECT
+                            id_cluster
+                        FROM
+                            xmppmaster.has_cluster_ars
+                        WHERE
+                            id_ars = %s);"""%ars_id
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [{ "jid" : element[0] ,
+                  "name" : element[1],
+                  "keysyncthing" : element[2]} for element in result]
 
     @DatabaseHelper._sessionm
     def get_list_ars_from_cluster(self, session, cluster=0):

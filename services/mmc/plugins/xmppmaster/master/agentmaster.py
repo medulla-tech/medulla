@@ -329,8 +329,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.machineDeploy = {}
 
         # Clear machine table
-        #XmppMasterDatabase().clearMachine()
-        XmppMasterDatabase().resetPresenceMachine()
+        XmppMasterDatabase().update_enable_for_agent_subscription(self.boundjid.bare)
         # clears synchros
         PkgsDatabase().clear_old_pending_synchro_package(timeseconde=900)
         self.idm = ""
