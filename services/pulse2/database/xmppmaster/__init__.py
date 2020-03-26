@@ -2464,19 +2464,6 @@ class XmppMasterDatabase(DatabaseHelper):
                                                         )
                                                 ).group_by(Deploy.state)
             machinedeploy = machinedeploy.all()
-<<<<<<< HEAD
-            ret = { 'totalmachinedeploy' : 0,
-                    'machinesuccessdeploy' : 0,
-                    'machineerrordeploy' : 0,
-                    'machineprocessdeploy' : 0,
-                    'machineabortdeploy' : 0,
-                    'machinewol1deploy' : 0,
-                    'machinewol2deploy' : 0,
-                    'machinewol3deploy' : 0,
-                    'waitingmachinesdeploy' : 0,
-                    'machineerrortimeout' : 0,
-                    'autrestatus' : 0}
-=======
             ret = {
                     'totalmachinedeploy' : 0,
                     'deploymentsuccess' : 0,
@@ -2513,7 +2500,6 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret[status['label']] = 0
                     dynamic_label.append(status['label'])
                     dynamic_status.append(status['status'])
->>>>>>> origin/xmppmaster
 
             liststatus = { x[0] : x[1] for x in machinedeploy}
             totalmachinedeploy = 0
