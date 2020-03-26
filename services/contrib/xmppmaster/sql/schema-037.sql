@@ -23,13 +23,13 @@
 START TRANSACTION;
 
 LOCK TABLES `def_remote_deploy_status` WRITE;
-INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Transfer error : curl download.*$', 'ABORT TRANSFER FAILED', 'errortransferfailed');
+INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Transfer error : curl download.*$', 'ABORT TRANSFER FAILED', 'aborttransferfailed');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Package delayed execution error.*$', 'ABORT PACKAGE EXECUTION ERROR', 'abortpackageexecutionerror');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Package delayed execution cancelled.*$', 'ABORT PACKAGE EXECUTION CANCELLED', 'abortpackageexecutioncancelled');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Deployment error : missing dependency.*$', 'ABORT MISSING DEPENDENCY', 'abortmissingdependency');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Package execution error.*$', 'ABORT PACKAGE EXECUTION ERROR', 'abortpackageexecutionerror');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Package error: descriptor for OS .* missing.*$', 'ABORT PACKAGE WORKFLOW ERROR', 'abortpackageworkflowerror');
-INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Transfer error: Package Server does not have this package.*$', 'ABORT TRANSFER FAILED', 'errortransferfailed');
+INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Transfer error: Package Server does not have this package.*$', 'ERROR TRANSFER FAILED', 'errortransferfailed');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Deployment error in fifo : timed out.*$', 'ABORT ON TIMEOUT', 'abortontimeout');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Spooling the deployment in queue.*$', 'DEPLOYMENT SPOOLED', 'deploymentspooled');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Descriptor inconsistency error.*$', 'ABORT PACKAGE WORKFLOW ERROR', 'abortpackageworkflowerror');
