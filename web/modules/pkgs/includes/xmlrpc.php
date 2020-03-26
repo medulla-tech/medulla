@@ -187,6 +187,10 @@ function list_all() {
    return xmlCall("pkgs.list_all");
 }
 
+function get_package_summary($package_id) {
+   return xmlCall("pkgs.get_package_summary", [$package_id]);
+}
+
 // ------- Rules -------
 function list_all_extensions() {
    return xmlCall("pkgs.list_all_extensions");

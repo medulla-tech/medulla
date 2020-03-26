@@ -136,6 +136,9 @@ def dirpackage():
 def list_all():
     return pkgmanage().list_all()
 
+def get_package_summary(package_id):
+    return PkgsDatabase().get_package_summary(package_id)
+
 ############### synchro syncthing package #####################
 def pkgs_register_synchro_package(uuidpackage, typesynchro):
     return pkgmanage().pkgs_register_synchro_package(uuidpackage, typesynchro)
@@ -193,6 +196,7 @@ def associatePackages(pid, fs, level = 0):
                 errortransfert.append(rest['code'])
             #efface repertoire
             simplecommand("rm -rf %s"%source)
+    chown(destination)
     return [ boolsucess, errortransfert ]
 
 def _remove_non_ascii(text):

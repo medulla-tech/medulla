@@ -27,7 +27,7 @@ from utils import getRandomName
 from update_remote_agent import Update_Remote_Agent
 import types
 import ConfigParser
-
+from sleekxmpp import jid
 logger = logging.getLogger()
 DEBUGPULSEPLUGIN = 25
 
@@ -51,7 +51,7 @@ def action( objectxmpp, action, sessionid, data, msg, dataerreur):
         objectxmpp.loadfingerprint = types.MethodType(loadfingerprint,
                                                       objectxmpp)
         objectxmpp.schedule('loadfingerprint',
-                            900,
+                            objectxmpp.generate_baseagent_fingerprint_interval,
                             objectxmpp.loadfingerprint,
                             repeat=True)
 
@@ -79,6 +79,7 @@ def read_conf_remote_update(objectxmpp):
             "\ndefault value for autoupdate is True")
         objectxmpp.diragentbase = "/var/lib/pulse2/xmpp_baseremoteagent/"
         objectxmpp.loadautoupdate = True
+        objectxmpp.generate_baseagent_fingerprint_interval = 900
     else:
         Config = ConfigParser.ConfigParser()
         Config.read(pathfileconf)
@@ -94,9 +95,18 @@ def read_conf_remote_update(objectxmpp):
             objectxmpp.loadautoupdate = Config.getboolean('parameters', 'autoupdate')
         else:
             objectxmpp.loadautoupdate = True
+        if Config.has_option("parameters", "autoupdatebyrelay"):
+            objectxmpp.autoupdatebyrelay = Config.getboolean('parameters', 'autoupdatebyrelay')
+        else:
+            objectxmpp.autoupdatebyrelay = False
+        if Config.has_option("parameters", "generate_baseagent_fingerprint_interval"):
+            objectxmpp.generate_baseagent_fingerprint_interval = Config.getint('parameters', 'generate_baseagent_fingerprint_interval')
+        else:
+            objectxmpp.generate_baseagent_fingerprint_interval = 900
     logger.debug("directory base agent is %s"%objectxmpp.diragentbase)
     logger.debug("autoupdate agent is %s"%objectxmpp.loadautoupdate)
-
+    logger.debug("generate baseagent "\
+        "fingerprint interval agent is %s"%objectxmpp.generate_baseagent_fingerprint_interval)
     objectxmpp.senddescriptormd5 = types.MethodType(senddescriptormd5, objectxmpp)
     objectxmpp.plugin_loadautoupdate = types.MethodType(plugin_loadautoupdate, objectxmpp)
 
@@ -112,6 +122,10 @@ def senddescriptormd5(self, to):
                 'sessionid': getRandomName(5, "updateagent")}
     # Send catalog of files.
     logger.debug("Send descriptor to agent [%s] for update" % to)
+    if self.autoupdatebyrelay:
+        relayjid = XmppMasterDatabase().groupdeployfromjid(to)
+        relayjid = jid.JID(str(relayjid[0])).bare
+        datasend['data']['ars_update'] = relayjid
     self.send_message(to,
                       mbody=json.dumps(datasend),
                       mtype='chat')

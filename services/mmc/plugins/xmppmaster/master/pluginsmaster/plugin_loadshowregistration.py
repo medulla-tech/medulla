@@ -40,9 +40,6 @@ def action( objectxmpp, action, sessionid, data, msg, dataerreur):
     logger.debug("=====================================================")
     logger.debug("call %s from %s"%(plugin, msg['from']))
     logger.debug("=====================================================")
-    logger.debug("=============%s ===============%s========================="%(logger.getEffectiveLevel(),logging.DEBUG))
-    #logger.debug("%s"%logging.getLogger().__dict__)
-    #logger.debug("%s"%logging.__dict__)
     try:
         compteurcallplugin = getattr(objectxmpp, "num_call%s"%action)
 
@@ -62,17 +59,20 @@ def read_conf_showregistration(objectxmpp):
                      "showinfo = False\n" \
                      "showinfodeploy = False\n" \
                      "showplugins = False\n" \
+                     "showscheduledplugins = False\n" \
                      "showinventoryxmpp = False\n" \
                      "showinfomachine = client_machine_1, client_machine_2\n"%(plugin['NAME'],
                                                                            pathfileconf))
         logger.warning("\ndefault value for showinfodeploy is False\n"\
                        "default value for showinfo is False\n"\
                        "default value for showplugins is False\n"\
+                       "default value for showscheduledplugins is False\n"\
                        "default value for showinventoryxmpp is False"\
                        "default value for showinfomachine is no machines list")
         objectxmpp.showinfo = False
         objectxmpp.showinfodeploy = False
         objectxmpp.showplugins = False
+        objectxmpp.showscheduledplugins = False
         objectxmpp.showinventoryxmpp = False
         objectxmpp.showinfomachine=[]
     else:
@@ -94,16 +94,19 @@ def read_conf_showregistration(objectxmpp):
             objectxmpp.showplugins = Config.getboolean('parameters', 'showplugins')
         else:
             objectxmpp.showplugins = False
-
+        if Config.has_option("parameters", "showscheduledplugins"):
+            objectxmpp.showscheduledplugins = Config.getboolean('parameters', 'showscheduledplugins')
+        else:
+            objectxmpp.showscheduledplugins = False
         if Config.has_option("parameters", "showinventoryxmpp"):
             objectxmpp.showinventoryxmpp = Config.getboolean('parameters', 'showinventoryxmpp')
         else:
             objectxmpp.showinventoryxmpp = False
         if Config.has_option("parameters", "showinfomachine"):
             showinfomachinelocal = Config.get('parameters', 'showinfomachine')
-            
-            objectxmpp.showinfomachine = [str(x.strip()) 
-                                          for x in showinfomachinelocal.split(",") 
+
+            objectxmpp.showinfomachine = [str(x.strip())
+                                          for x in showinfomachinelocal.split(",")
                                           if x.strip() != ""]
 
         else:
@@ -111,7 +114,9 @@ def read_conf_showregistration(objectxmpp):
     objectxmpp.plugin_loadshowregistration = types.MethodType(plugin_loadshowregistration, objectxmpp)
 
 def plugin_loadshowregistration(self, msg, data):
-    if data['machine'].split(".")[0] in self.showinfomachine:
+    if "all" in self.showinfomachine or \
+        "ALL" in self.showinfomachine or \
+            data['machine'].split(".")[0] in self.showinfomachine:
         if self.showinfodeploy:
             self.presencedeployment = {}
             listrs = XmppMasterDatabase().listjidRSdeploy()
@@ -138,89 +143,90 @@ def plugin_loadshowregistration(self, msg, data):
                 logger.debug(strchaine)
             else:
                 logger.debug("No Machine Listed")
+        strlistplugin = ""
         if self.showplugins:
-            strlistplugin = ""
             #logger.debug("Machine %s"%msg['from'])
             if 'plugin' in data:
                 strlistplugin += "\nlist plugins on machine %s\n"%msg['from']
                 strlistplugin += "|{0:35}|{1:10}|\n".format("Plugin Name", "Version")
                 for key, value in data['plugin'].iteritems():
                     strlistplugin += "|{0:35}|{1:10}|\n".format(key, value)
-
+        if self.showscheduledplugins:
             if 'pluginscheduled' in data:
                 strlistplugin += "\nlist scheduled plugins on machine %s\n"%msg['from']
                 strlistplugin += "|{0:35}|{1:10}|\n".format("scheduled Plugin Name", "Version")
                 for key, value in data['pluginscheduled'].iteritems():
                     strlistplugin += "|{0:35}|{1:10}|\n".format(key, value)
-            if strlistplugin != "":
-                logger.debug(strlistplugin)
-            if self.showinfo:
-                logger.info("--------------------------")
-                logger.info("** INFORMATION FROM AGENT %s %s" % (data['agenttype'].upper(),
-                                                                 data['from']))
-                logger.info("__________________________")
-                logger.info("MACHINE INFORMATION")
-                logger.info("Deployment name : %s" % data['deployment'])
-                logger.info("From : %s" % data['who'])
-                logger.info("Jid from : %s" % data['from'])
-                logger.info("Machine : %s" % data['machine'])
-                logger.info("Platform : %s" % data['platform'])
-                if 'versionagent' in data:
-                    logger.info("Version agent : %s" % data['versionagent'])
-                if "win" in data['platform'].lower():
-                    logger.info("__________________________")
-                    logger.info("ACTIVE DIRECTORY")
-                    logger.info("OU Active directory")
-                    logger.info("OU by machine : %s" % data['adorgbymachine'])
-                    logger.info("OU by user : %s" % data['adorgbyuser'])
-                    if 'lastusersession' in data:
-                        logger.info("last user session: %s" % data['lastusersession'])
-                logger.info("--------------------------------")
-                logger.info("----MACHINE XMPP INFORMATION----")
-                logger.info("portxmpp : %s" % data['portxmpp'])
-                logger.info("serverxmpp : %s" % data['serverxmpp'])
-                logger.info("xmppip : %s" % data['xmppip'])
-                logger.info("agenttype : %s" % data['agenttype'])
-                if 'moderelayserver' in data:
-                    logger.info("mode relay server : %s" % data['moderelayserver'])
-                logger.info("baseurlguacamole : %s" % data['baseurlguacamole'])
-                logger.info("xmppmask : %s" % data['xmppmask'])
-                logger.info("subnetxmpp : %s" % data['subnetxmpp'])
-                logger.info("xmppbroadcast : %s" % data['xmppbroadcast'])
-                logger.info("xmppdhcp : %s" % data['xmppdhcp'])
-                logger.info("xmppdhcpserver : %s" % data['xmppdhcpserver'])
-                logger.info("xmppgateway : %s" % data['xmppgateway'])
-                logger.info("xmppmacaddress : %s" % data['xmppmacaddress'])
-                logger.info("xmppmacnotshortened : %s" % data['xmppmacnotshortened'])
-                if data['agenttype'] == "relayserver":
-                    logger.info("package server : %s" % data['packageserver'])
-                if 'ipconnection' in data:
-                    logger.info("ipconnection : %s" % data['ipconnection'])
-                if 'portconnection' in data:
-                    logger.info("portconnection : %s" % data['portconnection'])
-                if 'classutil' in data:
-                    logger.info("classutil : %s" % data['classutil'])
-                if 'ippublic' in data:
-                    logger.info("ippublic : %s" % data['ippublic'])
-                if 'localisationinfo' in data:
-                    logger.info("------------LOCALISATION-----------")
-                    logger.info("localisationinfo : %s" % data['localisationinfo'])
-                if "win" in data['platform'].lower():
-                    if 'adorgbymachine' in data and data['adorgbymachine']:
-                        logger.info("AD found for the Machine : %s" % data['adorgbymachine'])
-                    else:
-                        logger.info("No AD found for the Machine")
-                    if 'adorgbyuser' in data and data['adorgbyuser']:
-                        logger.info("AD found for the User : %s" % data['adorgbyuser'])
-                    else:
-                        logger.info("No AD found for the User")
-                logger.info("-----------------------------------")
+        if strlistplugin != "":
+            logger.debug(strlistplugin)
 
-                if self.showinventoryxmpp:
-                    logger.info("DETAILED COMPLETINFORMATION")
-                    if 'completedatamachine' in data:
-                        info = json.loads(base64.b64decode(data['completedatamachine']))
-                        data['information'] = info
-                        del data['completedatamachine']
-                    logger.info("%s" % json.dumps(data, indent=4, sort_keys=True))
-               
+        if self.showinfo:
+            logger.info("--------------------------")
+            logger.info("** INFORMATION FROM AGENT %s %s" % (data['agenttype'].upper(),
+                                                                data['from']))
+            logger.info("__________________________")
+            logger.info("MACHINE INFORMATION")
+            logger.info("Deployment name : %s" % data['deployment'])
+            logger.info("From : %s" % data['who'])
+            logger.info("Jid from : %s" % data['from'])
+            logger.info("Machine : %s" % data['machine'])
+            logger.info("Platform : %s" % data['platform'])
+            if 'versionagent' in data:
+                logger.info("Version agent : %s" % data['versionagent'])
+            if "win" in data['platform'].lower():
+                logger.info("__________________________")
+                logger.info("ACTIVE DIRECTORY")
+                logger.info("OU Active directory")
+                logger.info("OU by machine : %s" % data['adorgbymachine'])
+                logger.info("OU by user : %s" % data['adorgbyuser'])
+                if 'lastusersession' in data:
+                    logger.info("last user session: %s" % data['lastusersession'])
+            logger.info("--------------------------------")
+            logger.info("----MACHINE XMPP INFORMATION----")
+            logger.info("portxmpp : %s" % data['portxmpp'])
+            logger.info("serverxmpp : %s" % data['serverxmpp'])
+            logger.info("xmppip : %s" % data['xmppip'])
+            logger.info("agenttype : %s" % data['agenttype'])
+            if 'moderelayserver' in data:
+                logger.info("mode relay server : %s" % data['moderelayserver'])
+            logger.info("baseurlguacamole : %s" % data['baseurlguacamole'])
+            logger.info("xmppmask : %s" % data['xmppmask'])
+            logger.info("subnetxmpp : %s" % data['subnetxmpp'])
+            logger.info("xmppbroadcast : %s" % data['xmppbroadcast'])
+            logger.info("xmppdhcp : %s" % data['xmppdhcp'])
+            logger.info("xmppdhcpserver : %s" % data['xmppdhcpserver'])
+            logger.info("xmppgateway : %s" % data['xmppgateway'])
+            logger.info("xmppmacaddress : %s" % data['xmppmacaddress'])
+            logger.info("xmppmacnotshortened : %s" % data['xmppmacnotshortened'])
+            if data['agenttype'] == "relayserver":
+                logger.info("package server : %s" % data['packageserver'])
+            if 'ipconnection' in data:
+                logger.info("ipconnection : %s" % data['ipconnection'])
+            if 'portconnection' in data:
+                logger.info("portconnection : %s" % data['portconnection'])
+            if 'classutil' in data:
+                logger.info("classutil : %s" % data['classutil'])
+            if 'ippublic' in data:
+                logger.info("ippublic : %s" % data['ippublic'])
+            if 'localisationinfo' in data:
+                logger.info("------------LOCALISATION-----------")
+                logger.info("localisationinfo : %s" % data['localisationinfo'])
+            if "win" in data['platform'].lower():
+                if 'adorgbymachine' in data and data['adorgbymachine']:
+                    logger.info("AD found for the Machine : %s" % data['adorgbymachine'])
+                else:
+                    logger.info("No AD found for the Machine")
+                if 'adorgbyuser' in data and data['adorgbyuser']:
+                    logger.info("AD found for the User : %s" % data['adorgbyuser'])
+                else:
+                    logger.info("No AD found for the User")
+            logger.info("-----------------------------------")
+
+            if self.showinventoryxmpp:
+                logger.info("DETAILED COMPLETINFORMATION")
+                if 'completedatamachine' in data:
+                    info = json.loads(base64.b64decode(data['completedatamachine']))
+                    data['information'] = info
+                    del data['completedatamachine']
+                logger.info("%s" % json.dumps(data, indent=4, sort_keys=True))
+

@@ -627,8 +627,9 @@ class Glpi92(DyngroupDatabaseHelper):
         # Get the list of online computers
         online_machines = []
         online_machines = XmppMasterDatabase().getlistPresenceMachineid()
-        online_machines = [int(id.replace("UUID","")) for id in online_machines]
 
+        if online_machines is not None:
+            online_machines = [int(id.replace("UUID", "")) for id in online_machines]
         query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
         .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
         .outerjoin(self.user, Machine.users_id == self.user.c.id)\
@@ -730,12 +731,11 @@ class Glpi92(DyngroupDatabaseHelper):
 
         for machine in machines:
             _count = 0
-            #knokno
             while _count < nb_columns:
                 result['data'][columns_name[_count]].append(machine[_count])
                 _count += 1
 
-            if int(machine[0]) in online_machines:
+            if machine[0] in online_machines:
                 result['data']['presence'].append(1)
             else:
                 result['data']['presence'].append(0)
@@ -5133,59 +5133,33 @@ ORDER BY
 
     @DatabaseHelper._sessionm
     def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
-        start = int(start)
-        limit = int(limit)
-        criteria = ''
-        if filter != "":
-            criteria = 'AND (glpi_computers.name Like "%%%s%%"\
-            OR glpi_computers.comment Like "%%%s%%"\
-            OR glpi_operatingsystems.name Like "%%%s%%"\
-            OR glpi_computertypes.name Like "%%%s%%"\
-            OR glpi_computers.contact Like "%%%s%%"\
-            OR glpi_entities.name Like "%%%s%%"\
-            )'%(filter, filter, filter, filter, filter, filter)
+        criterion = filter['criterion']
+        filter = filter['filter']
 
-        sqlrequest ="""
-        SELECT
-            count(*) as nb
-        FROM
-            `glpi_computers`
-            JOIN `glpi_items_operatingsystems` ON glpi_computers.`id` = `glpi_items_operatingsystems`.`items_id`
-            JOIN `glpi_operatingsystems` ON `glpi_operatingsystems`.`id` = `glpi_items_operatingsystems`.`operatingsystems_id`
-            JOIN glpi_computertypes ON glpi_computers.`computertypes_id` = `glpi_computertypes`.`id`
-            JOIN glpi_entities ON glpi_computers.`entities_id` = glpi_entities.id
-            where `glpi_computers`.`is_template` = 0 and `glpi_computers`.`is_deleted` = 0
-                and  `glpi_computers`.`id` in (%s) %s;"""%(strlistuuid, criteria)
-        print sqlrequest
-        res = session.execute(sqlrequest)
-        session.commit()
-        session.flush()
-        nb=0
-        for element in res:
-            nb = element[0]
+        query = session.query(Machine.id)\
+            .add_column(Machine.name)\
+            .add_column(Machine.comment.label('description'))\
+            .add_column(OS.name.label('os'))\
+            .add_column(self.glpi_computertypes.c.name.label('type'))\
+            .add_column(Machine.contact.label("contact"))\
+            .add_column(self.entities.c.name.label('entity'))\
+            .join(self.os)\
+            .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
+            .join(Entities, Entities.id == Machine.entities_id)\
+            .filter(Machine.id.in_(strlistuuid))
 
-        sqlrequest ="""
-        SELECT
-            `glpi_computers`.`id` AS `id`,
-            `glpi_computers`.`name` AS `name`,
-            `glpi_computers`.`comment` AS `description`,
-            `glpi_operatingsystems`.name AS `os`,
-            `glpi_computertypes`.`name` AS `type`,
-            `glpi_computers`.`contact` AS `contact`,
-            `glpi_entities`.`name` as `entity`
-        FROM
-            `glpi_computers`
-            JOIN `glpi_items_operatingsystems` ON glpi_computers.`id` = `glpi_items_operatingsystems`.`items_id`
-            JOIN `glpi_operatingsystems` ON `glpi_operatingsystems`.`id` = `glpi_items_operatingsystems`.`operatingsystems_id`
-            JOIN glpi_computertypes ON glpi_computers.`computertypes_id` = `glpi_computertypes`.`id`
-            JOIN glpi_entities ON glpi_computers.`entities_id` = glpi_entities.id
-            where `glpi_computers`.`is_template` = 0 and `glpi_computers`.`is_deleted` = 0
-                and  `glpi_computers`.`id` in (%s) %s
-                LIMIT %s, %s;"""%(strlistuuid,
-                                  criteria,
-                                  start,
-                                  limit)
 
+        if filter == 'infos' and criterion != "":
+            query = query.filter(or_(
+                Machine.name.contains(criterion),
+                Machine.comment.contains(criterion),
+                OS.name.contains(criterion),
+                self.glpi_computertypes.c.name.contains(criterion),
+                Machine.contact.contains(criterion),
+                self.entities.c.name.contains(criterion)
+            ))
+
+        query = self.__filter_on(query)
         id=[]
         name=[]
         description=[]
@@ -5194,11 +5168,11 @@ ORDER BY
         contact=[]
         entity=[]
         result = []
-        res = session.execute(sqlrequest)
+        nb = query.count()
+        res = query.all()
         session.commit()
         session.flush()
 
-        #res = self.db.execute(sqlrequest)
         if res is not None:
             for element in res:
                 id.append( element.id )

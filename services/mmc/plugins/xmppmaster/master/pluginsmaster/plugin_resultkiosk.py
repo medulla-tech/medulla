@@ -216,7 +216,7 @@ def deploypackage(data, message, xmppobject):
                        type='deploy',
                        sessionname=sessionid,
                        priority=-1,
-                       action="",
+                       action="xmpplog",
                        who=nameuser,
                        how="",
                        why=xmppobject.boundjid.bare,

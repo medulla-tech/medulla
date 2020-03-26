@@ -43,11 +43,11 @@ def action( objectxmpp, action, sessionid, data, msg, dataerreur):
     if compteurcallplugin == 0:
         read_conf_load_plugin_scheduler_list_version(objectxmpp)
         objectxmpp.schedule('updatelistpluginscheduler',
-                            1000,
+                            objectxmpp.reload_schedulerplugins_interval,
                             objectxmpp.loadPluginschedulerList,
                             repeat=True)
         logger.debug("%s"%hasattr(objectxmpp, "loadPluginschedulerList"))
-    objectxmpp.loadPluginschedulerList()
+        objectxmpp.loadPluginschedulerList()
 
 def read_conf_load_plugin_scheduler_list_version(objectxmpp):
     """
@@ -62,6 +62,7 @@ def read_conf_load_plugin_scheduler_list_version(objectxmpp):
             "\n[parameters]\ndirschedulerplugins = /var/lib/pulse2/xmpp_basepluginscheduler/"%(plugin['NAME'], pathfileconf))
         logger.warning("default value for dirplugins is /var/lib/pulse2/xmpp_basepluginscheduler")
         objectxmpp.dirschedulerplugins = "/var/lib/pulse2/xmpp_basepluginscheduler"
+        objectxmpp.reload_schedulerplugins_interval=2000
     else:
         Config = ConfigParser.ConfigParser()
         Config.read(pathfileconf)
@@ -70,6 +71,12 @@ def read_conf_load_plugin_scheduler_list_version(objectxmpp):
         objectxmpp.dirschedulerplugins = "/var/lib/pulse2/xmpp_basepluginscheduler"
         if Config.has_option("parameters", "dirschedulerplugins"):
             objectxmpp.dirschedulerplugins = Config.get('parameters', 'dirschedulerplugins')
+        if Config.has_option("parameters", "reload_schedulerplugins_interval"):
+            objectxmpp.reload_schedulerplugins_interval = Config.getint('parameters', 'reload_schedulerplugins_interval')
+        else:
+            objectxmpp.reload_schedulerplugins_interval = 2000
+    logger.debug("directory base scheduler plugins is %s"% objectxmpp.dirschedulerplugins)
+    logger.debug("reload scheduler plugins interval%s"%objectxmpp.reload_schedulerplugins_interval)
     # function defined dynamically
     objectxmpp.plugin_loadpluginschedulerlistversion = types.MethodType(plugin_loadpluginschedulerlistversion, objectxmpp)
     objectxmpp.deployPluginscheduled = types.MethodType(deployPluginscheduled, objectxmpp)

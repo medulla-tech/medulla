@@ -323,6 +323,9 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid):
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+def getdeployment(command_id, filter="", start=0, limit=-1):
+    return XmppMasterDatabase().getdeployment(command_id, filter, start, limit)
+
 def stat_syncthing_transfert(group_id, command_id):
     return XmppMasterDatabase().stat_syncthing_transfert(group_id, command_id)
 
@@ -338,7 +341,7 @@ def get_machine_stop_deploy(cmdid, uuid):
         "ret": 0,
         'base64': False
     }
-    updatedeploystate(result['sessionid'], 'DEPLOYMENT ABORT')
+    updatedeploystate(result['sessionid'], 'ABORT DEPLOYMENT CANCELLED BY USER')
     if 'jid_relay' in result and result['jid_relay'] != "fake_jidrelay":
         send_message_json(result['jid_relay'], msg_stop_deploy)
     if 'jidmachine' in result and result['jidmachine'] != "fake_jidmachine":
@@ -356,11 +359,13 @@ def get_group_stop_deploy(grpid, cmdid):
         'base64': False}
     for machine in result['objectdeploy']:
         msg_stop_deploy['sessionid'] = machine['sessionid']
-        updatedeploystate1(machine['sessionid'], 'DEPLOYMENT ABORT')
-        if 'jid_relay' in machine and machine['jid_relay'] != "fake_jidrelay":
-            send_message_json(machine['jid_relay'], msg_stop_deploy)
+        updatedeploystate1(machine['sessionid'], 'ABORT DEPLOYMENT CANCELLED BY USER')
         if 'jidmachine' in machine and machine['jidmachine'] != "fake_jidmachine":
             send_message_json(machine['jidmachine'], msg_stop_deploy)
+        if 'jid_relay' in machine and machine['jid_relay'] != "fake_jidrelay":
+            arscluster = XmppMasterDatabase().getRelayServerofclusterFromjidars(machine['jid_relay'])
+            for t in arscluster:
+                send_message_json(t, msg_stop_deploy)
     return True
 
 
@@ -716,3 +721,7 @@ def get_list_of_users_for_shared_qa(namecmd):
 def delcomputer(uuid):
     callrestartbot(uuid)
     return XmppMasterDatabase().delMachineXmppPresence(uuid)
+
+
+def get_log_status():
+    return XmppMasterDatabase().get_log_status()

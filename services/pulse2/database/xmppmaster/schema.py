@@ -472,3 +472,14 @@ class Subscription(Base, XmppMasterDBObj):
     idagentsubscription   = Column(Integer, ForeignKey('agent_subscription.id'), nullable=False)
     agent_subscription = relationship(Agentsubscription)
 ################################
+class Def_remote_deploy_status(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'def_remote_deploy_status'
+    # ====== Fields =============================
+    # Here we define columns for the table def_remote_deploy_status.
+    # Notice that each column is also a normal Python instance attribute.
+
+    # id = Column(Integer, primary_key=True)
+    regex_logmessage = Column(String(80), nullable=False)
+    status = Column(String(80), nullable=False)
+    label = Column(String(255), nullable=False)
