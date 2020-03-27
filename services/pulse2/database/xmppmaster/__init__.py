@@ -3849,52 +3849,55 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def algorulehostname(self, session, hostname, classutilMachine = "both", rule = 2, enabled=1):
         """
-            Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 2 for hostname
+            Field "rule_id" : This information allows you to apply the search
+                              only to the rule designated. rule_id = 2 for hostname
             Field "subject" is used to define the hostname in this rule
-            Field "relayserver_id" is used to define the Relayserver associated to this hostname
             enabled = 1 Only on active relayserver.
-            If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
+            If classutilMachine is private then the choice of relayserver will be
+              in the relayservers reserved for machines where [global].agent_space
+              configuration is set to private.
+            # hostname regex
+                #hostname matches subject of has_relayserverrules table
+                #-- subject is the regex.
+                #-- eg : ^machine_win_.*1$
+                #-- eg : ^machine_win_.*[2-9]{1,3}$
+                Tip: For cheching the regex using Mysql use
+                    select "hostname_for_test" REGEXP "^hostname.*";  => result  1
+                    select "hostname_for_test" REGEXP "^(?!hostname).*"; => result 0
         """
-        sql = """select `has_relayserverrules`.`id`,`has_relayserverrules`.`subject`
-        from `has_relayserverrules`
-        where `has_relayserverrules`.`rules_id` = %d
-        order by `has_relayserverrules`.`order`;"""%(rule)
+        if classutilMachine == "private":
+            sql = """select `relayserver`.`id` , `has_relayserverrules`.`subject`
+            from `relayserver`
+                inner join
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
+            where
+                `has_relayserverrules`.`rules_id` = %d
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
+                    AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
+                    AND `relayserver`.`classutil` = '%s'
+            order by `has_relayserverrules`.`order`
+            limit 1;"""%(rule, hostname, enabled, classutilMachine)
+        else:
+            sql = """select `relayserver`.`id` , `has_relayserverrules`.`subject`
+            from `relayserver`
+                inner join
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
+            where
+                `has_relayserverrules`.`rules_id` = %d
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
+                    AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
+            order by `has_relayserverrules`.`order`
+            limit 1;"""%(rule, hostname, enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
-        listrules = [x for x in result]
-        for relayserverrule in listrules:
-            subject = relayserverrule[1].replace('*','.*')
-            if re.match(subject, hostname, flags=0):
-                has_relayserverrules_id = relayserverrule[0]
-                if classutilMachine == "private":
-                    sql = """select `relayserver`.`id`
-                    from `relayserver`
-                        inner join
-                            `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
-                    where
-                        `has_relayserverrules`.`rules_id` = %d
-                            AND `has_relayserverrules`.`id` = %d
-                            AND `relayserver`.`enabled` = %d
-                            AND `relayserver`.`moderelayserver` = 'static'
-                            AND `relayserver`.`classutil` = '%s'
-                    limit 1;"""%(rule, has_relayserverrules_id, enabled, classutilMachine)
-                else:
-                    sql = """select `relayserver`.`id`
-                    from `relayserver`
-                        inner join
-                            `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
-                    where
-                        `has_relayserverrules`.`rules_id` = %d
-                            AND `has_relayserverrules`.`id` = %d
-                            AND `relayserver`.`enabled` = %d
-                            AND `relayserver`.`moderelayserver` = 'static'
-                    limit 1;"""%(rule, has_relayserverrules_id, enabled)
-                result = session.execute(sql)
-                session.commit()
-                session.flush()
-                return [y for y in result]
-        return ""
+        ret = [y for y in result]
+        if len(ret) > 0:
+            logging.getLogger().debug("Matched hostname rule with "\
+                "hostname \"%s\# by regex \#%s\""%(hostname, ret[0].subject))
+        return ret
 
     @DatabaseHelper._sessionm
     def algoruleloadbalancer(self, session):
