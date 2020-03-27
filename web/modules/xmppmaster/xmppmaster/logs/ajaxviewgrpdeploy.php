@@ -143,8 +143,11 @@ $getdeployment = xmlrpc_getdeployment($cmd_id, $filter, $start, $maxperpage);
 
 // Get the same machines from glpi
 $re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'], $filter, $start, $maxperpage);
-$count = $getdeployment['total'];
 
+if($getdeployment['total'] != 0)
+  $count = $getdeployment['total'];
+else
+  $count = $re['total'];
 // STATS FROM XMPPMASTER DEPLOY
 $statsfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,  date("Y-m-d H:i:s", $start_date));
 

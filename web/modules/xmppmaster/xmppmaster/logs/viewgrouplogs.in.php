@@ -63,6 +63,7 @@ class AjaxFilterAudit extends AjaxFilter {
   <div id="<?php echo $this->divid;?>" style="width:100%"></div>
 
   <script>
+  var arr = {};
   updateSearch<?php echo $this->formid ?> = function(params=null) {
     if(params == null){
       var url = '<?php echo $this->url ?>'+'<?php echo $this->params ?>';
@@ -77,16 +78,13 @@ class AjaxFilterAudit extends AjaxFilter {
 
   pushSearch<?php echo $this->formid ?> = function() {
       // Refresh the state of the hide_win_updates checkbox
-      var arr = {};
       arr['filter'] = document.getElementById("filter-type").value;
       arr['value'] = encodeURIComponent(document.getElementById("param").value);
       updateSearch<?php echo $this->formid ?>(arr);
   }
 
   updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max) {
-    pushSearch<?php echo $this->formid ?>();
 
-    var arr = {};
     arr['filter'] = document.getElementById("filter-type").value;
     arr['value'] = encodeURIComponent(document.getElementById("param").value);
 
@@ -96,7 +94,7 @@ class AjaxFilterAudit extends AjaxFilter {
       maxperpage = <?php echo $conf["global"]["maxperpage"];?>
 
     if(arr['value'])
-      jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+arr['filter']+'&criterion="'+arr['value']+'"&start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?php echo  $this->params ?>');
+      jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+arr['filter']+'&criterion='+arr['value']+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?php echo  $this->params ?>');
     else
       jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?php echo  $this->params ?>');
   }
