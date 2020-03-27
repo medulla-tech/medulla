@@ -5273,7 +5273,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         Machines.enabled == "1")).scalar()
 
     @DatabaseHelper._sessionm
-    def getRelayServerofclusterFromjidars(self, session, jid, moderelayserver = None):
+    def getRelayServerofclusterFromjidars(self, session, jid, moderelayserver = None,enablears = 1):
         #determine ARS id from jid
         relayserver = session.query(RelayServer).filter(RelayServer.jid == jid)
         relayserver = relayserver.first()
@@ -5312,13 +5312,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 ars = session.query(RelayServer).\
                     join(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id).\
                         join(Cluster_ars, Has_cluster_ars.id_cluster == Cluster_ars.id)
+                ars = ars.filter(Has_cluster_ars.id_cluster.in_(listcluster_id))
                 if moderelayserver != None:
-                    ars = ars.filter(and_(Has_cluster_ars.id_cluster.in_(listcluster_id),
-                                          RelayServer.enabled == 1,
-                                          RelayServer.moderelayserver == moderelayserver ) )
-                else:
-                    ars = ars.filter(and_(Has_cluster_ars.id_cluster.in_(listcluster_id),
-                                          RelayServer.enabled == 1 ) )
+                    ars = ars.filter(RelayServer.moderelayserver == moderelayserver)
+                if enablears != None:
+                    ars = ars.filter(RelayServer.enabled == enablears)
                 ars = ars.all()
                 session.commit()
                 session.flush()

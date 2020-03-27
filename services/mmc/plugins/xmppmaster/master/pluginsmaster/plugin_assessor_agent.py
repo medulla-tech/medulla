@@ -375,7 +375,16 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
     try:
         try:
             listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2],
-                                                                            "static")
+                                                                             moderelayserver="static")
+            if len(listars) == 0:
+                listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2],
+                                                                             moderelayserver="static",
+                                                                             enablears = None)
+                logger.warning("agent %s. ARS %s is found but it is "\
+                    "stopped." % (data['information']['info']['hostname'], result[2]))
+                logger.warning("ACTION: Re-start the ARS on %s."%(result[2]))
+                logger.warning("try to apply the configuration on agent "\
+                    "%s of down default ars."%(data['information']['info']['hostname']))
         except (RuntimeError, TypeError, NameError):
             msglog = "Verify configuration assessor file name assessor_agent.ini.local."\
                     "\n\terror parameter serverip "\
