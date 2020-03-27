@@ -373,8 +373,42 @@ def MessagesAgentFromChatroomConfig(objectxmpp, action, sessionid, data, msg, re
                     data['information']['users'][0],
                     result)
     try:
-        listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2],
-                                                                         "static")
+        try:
+            listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2],
+                                                                            "static")
+        except (RuntimeError, TypeError, NameError):
+            msglog = "Verify configuration assessor file name assessor_agent.ini.local."\
+                    "\n\terror parameter serverip "\
+                        "\nsearch ipconnection in table relayserver for default ARS"\
+                            "\nserverip = %s configuration error"%(objectxmpp.assessor_agent_serverip)
+            msglog1 = "ERROR: Unable to assign a relay server "\
+                         "to an agent %s"%data['information']['info']['hostname']
+            logger.error(msglog1)
+            logger.error(msglog)
+            sendErrorConnectionConf(objectxmpp,sessionid,msg)
+            XmppMasterDatabase().setlogxmpp(msglog1,
+                                        "conf",
+                                        sessionid,
+                                        -1,
+                                        data['information']['info']['hostname'],
+                                        '',
+                                        '',
+                                        'Configuration | Notify | Assessor',
+                                        '',
+                                        '',
+                                        objectxmpp.boundjid.bare)
+            XmppMasterDatabase().setlogxmpp(msglog,
+                                        "conf",
+                                        sessionid,
+                                        -1,
+                                        data['information']['info']['hostname'],
+                                        '',
+                                        '',
+                                        'Configuration | Notify | Assessor',
+                                        '',
+                                        '',
+                                        objectxmpp.boundjid.bare)
+            return
         z = [listars[x] for x in listars]
         z1 = sorted(z, key=operator.itemgetter(4))
         # arsjid = XmppMasterDatabase().getRelayServerfromjid("rspulse@pulse")
