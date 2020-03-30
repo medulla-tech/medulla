@@ -2573,35 +2573,24 @@ class XmppMasterDatabase(DatabaseHelper):
         query = session.query(Deploy).filter(Deploy.command == command_id)
         if filter == "status" and criterion != "":
             query = query.filter(or_(
-                Deploy.title.contains(criterion),
                 Deploy.state.contains(criterion),
-                Deploy.start.contains(criterion),
-                Deploy.startcmd.contains(criterion),
-                Deploy.endcmd.contains(criterion),
                 Deploy.inventoryuuid.contains(criterion),
-                Deploy.host.contains(criterion),
-                Deploy.user.contains(criterion),
-                Deploy.macadress.contains(criterion),
             ))
-        count = query.count()
-        if limit != -1:
+        if filter != 'infos':
             query = query.offset(start).limit(limit)
+            count = query.count()
+        else:
+            count = 0
         result = query.all()
         elements = {
         "id" : [],
         "uuid" : [],
-        "hostname" : [],
-        "status" : [],
-        "user" : [],
-        "macaddress" : []
+        "status" : []
         }
         for deployment in result:
             elements['id'].append(deployment.inventoryuuid.replace("UUID", ""))
             elements['uuid'].append(deployment.inventoryuuid)
-            elements['hostname'].append(deployment.host)
             elements['status'].append(deployment.state)
-            elements['user'].append(deployment.user)
-            elements['macaddress'].append(deployment.macadress)
 
         return {"total": count, "datas":elements}
 
