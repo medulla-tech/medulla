@@ -143,8 +143,11 @@ $getdeployment = xmlrpc_getdeployment($cmd_id, $filter, $start, $maxperpage);
 
 // Get the same machines from glpi
 $re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'], $filter, $start, $maxperpage);
-$count = $getdeployment['total'];
 
+if($getdeployment['total'] != 0)
+  $count = $getdeployment['total'];
+else
+  $count = $re['total'];
 // STATS FROM XMPPMASTER DEPLOY
 $statsfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,  date("Y-m-d H:i:s", $start_date));
 
@@ -462,54 +465,86 @@ if($package == null)
   if(isset($resultdeploy['infoslist'][0]))
   {
     $package['name'] = $resultdeploy['infoslist'][0]['name'];
-    $package['software'] = $resultdeploy['infoslist'][0]['software'];
+    $package['Qsoftware'] = $resultdeploy['infoslist'][0]['software'];
+    $package['Qversion'] = '';
+    $package['Qvendor'] = '';
     $package['version'] = $resultdeploy['infoslist'][0]['version'];
     $package['description'] = $resultdeploy['infoslist'][0]['description'];
+    $package['files'] = [];
+    $package['Size'] = "";
   }
   else if(isset($resultdeploy['descriptor']['info'])){
     $package['name'] = $resultdeploy['descriptor']['info']['name'];
-    $package['software'] = $resultdeploy['descriptor']['info']['software'];
+    $package['Qsoftware'] = $resultdeploy['descriptor']['info']['software'];
+    $package['Qversion'] = '';
+    $package['Qvendor'] = '';
     $package['version'] = $resultdeploy['descriptor']['info']['version'];
     $package['description'] = $resultdeploy['descriptor']['info']['description'];
+    $package['files'] = [];
+    $package['Size'] = "";
   }
   else{
     $package['name'] = "";
-    $package['software'] = "";
+    $package['Qsoftware'] = "";
+    $package['Qversion'] = "";
+    $package['Qvendor'] = "";
     $package['version'] = "";
     $package['description'] = "";
+    $package['files'] = [];
+    $package['Size'] = "";
   }
+}
+$associatedInventory = [];
+if ($package['Qsoftware'] != "")
+  $associatedInventory[] = $package['Qsoftware'];
+if($package['Qversion'] != "")
+  $associatedInventory[] = $package['Qversion'];
+if($package['Qvendor'] != "")
+  $associatedInventory[] = $package['Qvendor'];
+
+$files = "";
+
+foreach($package['files'] as $file){
+  $files .= $file.'
+';
 }
 
 echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
     echo "<thead>";
         echo "<tr>";
             echo '<td style="width: ;">';
-                echo '<span style=" padding-left: 32px;">Name</span>';
+                echo '<span style=" padding-left: 32px;">'._T('Name', 'xmppmaster').'</span>';
             echo '</td>';
             echo '<td style="width: ;">';
-                echo '<span style=" padding-left: 32px;">Software</span>';
+                echo '<span style=" padding-left: 32px;">'._T('Associated Inventory', 'xmppmaster').'</span>';
             echo '</td>';
             echo '<td style="width: ;">';
-                echo '<span style=" padding-left: 32px;">Version</span>';
+                echo '<span style=" padding-left: 32px;">'._T('Version', 'xmppmaster').'</span>';
             echo '</td>';
             echo '<td style="width: ;">';
-                echo '<span style=" padding-left: 32px;">Description</span>';
+                echo '<span style=" padding-left: 32px;">'._T('Description', 'xmppmaster').'</span>';
+            echo '</td>';
+            echo '<td style="width: ;">';
+                echo '<span style=" padding-left: 32px;">'._T('Size', 'xmppmaster').'</span>';
             echo '</td>';
         echo "</tr>";
     echo "</thead>";
     echo "<tbody>";
         echo "<tr>";
             echo "<td>";
-                echo $package['name'];
+                echo '<span title="'.$files.'">'.$package['name'].'</span>';
             echo "</td>";
             echo "<td>";
-                echo $package['software'];
+                echo join(' / ', $associatedInventory);
             echo "</td>";
             echo "<td>";
                 echo $package['version'];
             echo "</td>";
             echo "<td>";
                 echo $package['description'];
+            echo "</td>";
+            echo "<td>";
+                echo $package['Size'];
             echo "</td>";
         echo "</tr>";
     echo "</tbody>";
