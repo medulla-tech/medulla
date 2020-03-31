@@ -928,13 +928,14 @@ class MscDatabase(DatabaseHelper):
                     machine_do_deploy[x.target_target_uuid] = x.commands_package_id
                     updatemachine.append(deployobject)
 
-                    session.query(CommandsOnHost).filter(CommandsOnHost.id == x.commands_on_host_id ).\
-                        update({CommandsOnHost.current_state: "done",
-                                CommandsOnHost.stage : "ended"
-                                })
+                    sql ="""UPDATE `msc`.`commands_on_host` SET `current_state`='done', `stage`='ended' WHERE    `commands_on_host`.`id` = %s;"""%x.commands_on_host_id
+                    session.execute(sql)
+                    session.commit()
+
                     session.flush()
-                    session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.commands_on_host_id).\
-                        update({ CommandsOnHostPhase.state : "done" })
+                    sql="""UPDATE `msc`.`phase` SET `phase`.`state`='done' WHERE `phase`.`fk_commands_on_host` =%s;"""%x.commands_on_host_id;
+                    session.execute(sql)
+                    session.commit()
                     session.flush()
 
                 else:
