@@ -43,7 +43,7 @@ from pulse2.database.pkgs.orm.pakages import Packages
 from pulse2.database.pkgs.orm.extensions import Extensions
 from pulse2.database.pkgs.orm.dependencies import Dependencies
 from pulse2.database.pkgs.orm.syncthingsync import Syncthingsync
-from pulse2.database.pkgs.orm.syncthingsync import Package_pending_exclusions
+from pulse2.database.pkgs.orm.package_pending_exclusions import Package_pending_exclusions
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster import XmppMasterDatabase
 # Pulse 2 stuff
