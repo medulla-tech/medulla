@@ -7,6 +7,7 @@ Pulse 2 4.6.1
 * [FEATURE] Speed up a lot the Computer page
 * [FEATURE] Add WOL 1, 2, 3 for the graph
 * [FEATURE] Attribute ARS based on net mask addres
+* [FEATURE] Allow to use an externalised msc database
 * [BUGFIX]  Fix Wol for deployements in Audit web page
 * [BUGFIX]  Various fixes about inventories
 * [BUGFIX]  Fix the restarting a deployment after a WOL
