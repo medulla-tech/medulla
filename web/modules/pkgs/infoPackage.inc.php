@@ -112,6 +112,10 @@ $page = new Page("rsync",_T("Show mirror status", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/rsync.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
+$page = new Page("desynchronization",_T("Pending Package synchronization", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/desynchronization.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
 $page = new Page("delete",_T("Delete a package", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/remove.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);

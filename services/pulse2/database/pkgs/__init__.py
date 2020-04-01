@@ -518,3 +518,14 @@ class PkgsDatabase(DatabaseHelper):
             result['description'] = query.description
 
         return result
+        
+    @DatabaseHelper._sessionm
+    def delete_from_pending(self, session, pid = "", jidrelay = []):
+        query = session.query(Syncthingsync)
+        if pid != "":
+            query = query.filter(Syncthingsync.uuidpackage == pid)
+        if jidrelay != []:
+            query = query.filter(Syncthingsync.relayserver_jid.in_(jidrelay))
+        query = query.delete(synchronize_session='fetch')
+        session.commit()
+        session.flush()
