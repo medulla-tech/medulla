@@ -2944,7 +2944,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
             if linedeploy.group_uuid == None:
                 linedeploy.group_uuid = ""
@@ -3020,7 +3020,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
@@ -3127,7 +3127,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
@@ -3219,7 +3219,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
@@ -3255,7 +3255,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
             ret['tabdeploy']['start'].append(linedeploy.start)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
         return ret
 
     @DatabaseHelper._sessionm
