@@ -23,8 +23,8 @@
 START TRANSACTION;
 
 LOCK TABLES `def_remote_deploy_status` WRITE;
-INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Transfer error:.*reversessh*$', 'ABORT TRANSFER FAILED', 'aborttransferfailed');
-INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Transfer error : ssh_exchange_identification*$', 'ABORT TRANSFER FAILED', 'aborttransferfailed');
+INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Transfer error:.*reversessh.*$', 'ABORT TRANSFER FAILED', 'aborttransferfailed');
+INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Transfer error : ssh_exchange_identification.*$', 'ABORT TRANSFER FAILED', 'aborttransferfailed');
 UNLOCK TABLES;
 
 -- ----------------------------------------------------------------------
