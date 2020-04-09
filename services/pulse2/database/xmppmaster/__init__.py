@@ -2752,7 +2752,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     (deploy.sessionid = '%s'
                         AND `state` NOT IN ('DEPLOYMENT SUCCESS' , 'ABORT DEPLOYMENT CANCELLED BY USER')
-                        AND `state` REGEXP '^(?!ERROR)');
+                        AND `state` REGEXP '^(?!ERROR)^(?!SUCCESS)^(?!ABORT)');
                 """%(state,sessionid)
             result = session.execute(sql)
             session.commit()
@@ -2788,6 +2788,10 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             deploysession = session.query(Deploy).filter(Deploy.sessionid == sessionid).one()
             if deploysession:
+                # les status commençant par error, success, abort ne peuvent plus être modifiés.
+                regexpexlusion = re.compile("^(?!abort)^(?!success)^(?!error)",re.IGNORECASE)
+                if regexpexlusion.match(state) is None:
+                    return
                 if state == "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)":
                     if deploysession.state in ["WOL 1",
                                                "WOL 2",
@@ -4616,7 +4620,9 @@ class XmppMasterDatabase(DatabaseHelper):
                             len(jsonbase['infoslist']) != len(jsonbase['otherinfos'][0]['plan']) and \
                             state == "DEPLOYMENT SUCCESS":
                         state = "DEPLOYMENT PARTIAL SUCCESS"
-                    deploysession.state = state
+                    regexpexlusion = re.compile("^(?!abort)^(?!success)^(?!error)",re.IGNORECASE)
+                    if regexpexlusion.match(state) is not None:
+                        deploysession.state = state
                 session.commit()
                 session.flush()
                 session.close()
