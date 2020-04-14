@@ -59,6 +59,11 @@ class PkgsConfig(PluginConfig):
         else:
             self.dbport = 3306
 
+        self.max_size_stanza_xmpp = 7340032
+        if self.has_option("quick_deploy", "max_size_stanza_xmpp"):
+            self.max_size_stanza_xmpp = self.getint("quick_deploy",
+                                                    "max_size_stanza_xmpp")
+
         self.dbsslenable = False
         if self.has_option("database", "dbsslenable"):
             self.dbsslenable = self.getboolean("database", "dbsslenable")
