@@ -1113,8 +1113,8 @@ def create_msg_xmpp_quick_deploy(folder, create = False):
         make_tarfile("%s.gz"%pathaqpackage, folder, compresstype="gz")
         with open("%s.gz"%pathaqpackage, 'rb') as f:
             dataraw = b64encode(f.read())
-        msgxmpptemplate= """{  "sessionid="@-JFKSPOKNONEOCLUSTGLA@",
-                "action" : "qdeploy"
+        msgxmpptemplate= """{  "sessionid" : "@-JFKSPOKNONEOCLUSTGLA@",
+                "action" : "qdeploy",
                 "data": { "nbpart" : 1,
                           "part"   : 1,
                           "namepackage":"%s",
