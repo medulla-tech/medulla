@@ -349,7 +349,7 @@ This package contains the inventory plugin for the MMC agent
 #--------------------------------------------------------------------
 
 %package -n pulse2-register-pxe
-Summary:    Pulse 2 Register PXE Service
+Summary:    Pulse 2 Register PXE Servic/
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
@@ -421,6 +421,7 @@ This package contains the pkgs plugin for the MMC agent.
 %package -n python-mmc-xmppmaster
 Summary:    Xmppmaster plugin for the MMC agent
 Group:      System/Servers
+
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 Requires:   python-GeoIP
