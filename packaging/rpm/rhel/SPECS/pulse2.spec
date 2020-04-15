@@ -421,7 +421,6 @@ This package contains the pkgs plugin for the MMC agent.
 %package -n python-mmc-xmppmaster
 Summary:    Xmppmaster plugin for the MMC agent
 Group:      System/Servers
-
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 Requires:   python-GeoIP
