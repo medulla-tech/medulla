@@ -425,6 +425,7 @@ Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 Requires:   python-GeoIP
 Requires:   GeoIP-data
+Requires:   python-croniter
 
 %description -n python-mmc-xmppmaster
 This package contains the xmppmaster plugin for the MMC agent.
