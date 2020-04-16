@@ -1170,7 +1170,7 @@ class SetupApp(object):
         self.confs['plugins/backuppc.ini'].set('main', 'disable', 0)
 
         #Enable Kiosk module
-        self.confs['plugins/kiosk.ini'].set('main', 'disable', 0)
+        #self.confs['plugins/kiosk.ini'].set('main', 'disable', 0)
 
         #Enable pkgs module
         self.confs['plugins/pkgs.ini'].set('main', 'disable', 0)
