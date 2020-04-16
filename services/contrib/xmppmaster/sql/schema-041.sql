@@ -1,5 +1,5 @@
 --
--- (c) 2018 Siveo, http://www.siveo.net/
+-- (c) 2020 Siveo, http://www.siveo.net/
 --
 -- $Id$
 --
@@ -22,26 +22,17 @@
 
 START TRANSACTION;
 
--- add FOREIGN KEY in table has_machineusers on table machines
-
-TRUNCATE `xmppmaster`.`has_machinesusers`;
 TRUNCATE `xmppmaster`.`network`;
+TRUNCATE `xmppmaster`.`has_machinesusers`;
 TRUNCATE `xmppmaster`.`machines`;
 
-ALTER TABLE `xmppmaster`.`has_machinesusers`
-ADD INDEX `fk_has_machinesusers_idx_machine` (`machines_id` ASC);
-
-
-ALTER TABLE `xmppmaster`.`has_machinesusers`
-ADD CONSTRAINT `fk_has_machinesusers_idx_machine`
-  FOREIGN KEY (`machines_id`)
-  REFERENCES `xmppmaster`.`machines` (`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE;
+ALTER TABLE `xmppmaster`.`network`
+CHANGE COLUMN `mac` `mac` VARCHAR(45) NOT NULL ,
+ADD UNIQUE INDEX `mac_UNIQUE` (`mac` ASC);
 
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 38;
+UPDATE version SET Number = 41;
 
 COMMIT;
