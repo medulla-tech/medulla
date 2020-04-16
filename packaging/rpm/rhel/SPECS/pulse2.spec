@@ -49,6 +49,8 @@ Requires:       mmc-web-pkgs
 Requires:       python-mmc-pkgs
 Requires:       mmc-web-pulse2
 Requires:       python-mmc-pulse2
+Requires:       mmc-web-kiosk
+Requires:       python-mmc-kiosk
 Requires:       pulse2-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
