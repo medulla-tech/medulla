@@ -1499,6 +1499,37 @@ class XmppMasterDatabase(DatabaseHelper):
         return presence
 
     @DatabaseHelper._sessionm
+    def getMachinefrommacadress(self, session, macaddress):
+        """ information machine"""
+        machine = session.query(Machines).filter(Machines.macaddress.like(macaddress) ).first()
+        session.commit()
+        session.flush()
+        result = {}
+        if machine:
+            result = {  "id" : machine.id,
+                        "jid" : machine.jid,
+                        "platform" : machine.platform,
+                        "archi" : machine.archi,
+                        "hostname" : machine.hostname,
+                        "uuid_inventorymachine" : machine.uuid_inventorymachine,
+                        "ip_xmpp" : machine.ip_xmpp,
+                        "ippublic" : machine.ippublic,
+                        "macaddress" : machine.macaddress,
+                        "subnetxmpp" : machine.subnetxmpp,
+                        "agenttype" : machine.agenttype,
+                        "classutil" : machine.classutil,
+                        "groupdeploy" : machine.groupdeploy,
+                        "urlguacamole" : machine.urlguacamole,
+                        "picklekeypublic" : machine.picklekeypublic,
+                        'ad_ou_user': machine.ad_ou_user,
+                        'ad_ou_machine': machine.ad_ou_machine,
+                        'kiosk_presence': machine.kiosk_presence,
+                        'lastuser': machine.lastuser,
+                        'keysyncthing' : machine.keysyncthing,
+                        'enabled' : machine.enabled}
+        return result
+
+    @DatabaseHelper._sessionm
     def addPresenceMachine(self,
                            session,
                            jid,
@@ -1520,10 +1551,54 @@ class XmppMasterDatabase(DatabaseHelper):
                            kiosk_presence = "False",
                            lastuser = "",
                            keysyncthing = ""):
-        pe = self.getIdMachineFromMacaddress(macaddress)
-        if pe is not None:
+        msg ="Create Machine"
+        pe=-1
+        machineforupdate = self.getMachinefrommacadress(macaddress)
+        if len(machineforupdate) > 0:
+            pe = machineforupdate['id']
+        if pe != -1:
             #update
-            session.query(Machines).filter( Machines.id == pe[0]).\
+            maxlenhostname = max([len(machineforupdate['hostname']), len(hostname)])
+            maxlenjid = max([len(machineforupdate['jid']), len(jid)])
+            maxmacadress = max([len(machineforupdate['macaddress']), len(macaddress)])
+            maxip_xmpp = max([len(machineforupdate['ip_xmpp']), len(ip_xmpp),len("ip_xmpp")])
+            maxsubnetxmpp = max([len(machineforupdate['subnetxmpp']), len(subnetxmpp), len("subnetxmpp")])
+            maxonoff=6
+            uuidold = str(machineforupdate['uuid_inventorymachine'])
+            if uuid_inventorymachine is None:
+                uuidnew = "None"
+            else:
+                uuidnew = str(uuid_inventorymachine)
+            maxuuid=max([len(uuidold), len(uuidnew)])
+            msg ="Update Machine %8s\n" \
+                "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|\n" \
+                "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|\n" \
+                "by\n" \
+                "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|"%(
+                    machineforupdate['id'],
+                    maxlenhostname, "hostname",
+                    maxlenjid, "jid",
+                    maxmacadress, "macaddress",
+                    maxip_xmpp, "ip_xmpp",
+                    maxsubnetxmpp, "subnetxmpp",
+                    maxonoff, "On/OFF",
+                    maxuuid,"UUID",
+                    maxlenhostname, machineforupdate['hostname'],
+                    maxlenjid, machineforupdate['jid'],
+                    maxmacadress, machineforupdate['macaddress'],
+                    maxip_xmpp, machineforupdate['ip_xmpp'],
+                    maxsubnetxmpp, machineforupdate['subnetxmpp'],
+                    maxonoff, machineforupdate['enabled'],
+                    maxuuid, uuidold,
+                    maxlenhostname, hostname,
+                    maxlenjid, jid,
+                    maxmacadress, macaddress,
+                    maxip_xmpp, ip_xmpp,
+                    maxsubnetxmpp, subnetxmpp,
+                    maxonoff, "1",
+                    6,uuidnew)
+            self.logger.warning(msg)
+            session.query(Machines).filter( Machines.id == pe).\
                        update({ Machines.jid: jid,
                                 Machines.platform : platform,
                                 Machines.hostname : hostname,
@@ -1547,7 +1622,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 })
             session.commit()
             session.flush()
-            return pe[0]
+            return pe, msg
         else:
             #create
             try:
@@ -1585,8 +1660,9 @@ class XmppMasterDatabase(DatabaseHelper):
             except Exception, e:
                 #logging.getLogger().error("addPresenceMachine %s" % jid)
                 logging.getLogger().error(str(e))
-                return -1
-            return new_machine.id
+                msg=str(e)
+                return -1, msg
+            return new_machine.id, msg
 
 
     @DatabaseHelper._sessionm
@@ -2811,7 +2887,18 @@ class XmppMasterDatabase(DatabaseHelper):
             session.close()
 
     @DatabaseHelper._sessionm
+    def delNetwork_for_machines_id(self,session, machines_id):
+        sql = """DELETE FROM `xmppmaster`.`network`
+                WHERE
+                    (`machines_id` = '%s');"""%machines_id
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return result
+
+    @DatabaseHelper._sessionm
     def addPresenceNetwork(self, session, macaddress, ipaddress, broadcast, gateway, mask, mac, id_machine):
+        self.delNetwork_for_machines_id(id_machine)
         try:
             new_network = Network()
             new_network.macaddress=macaddress
