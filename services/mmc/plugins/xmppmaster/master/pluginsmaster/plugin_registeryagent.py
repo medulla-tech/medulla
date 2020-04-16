@@ -67,7 +67,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
         for x in listupt:
             if x in str(msg['from']).upper():
                 logger.info("** Detailed information for machine %s"%(str(msg['from'])))
-            showinfobool = True
+                showinfobool = True
                 break
         else:
             showinfobool = False
@@ -96,7 +96,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
 
             machine = XmppMasterDatabase().getMachinefromjid(data['from'])
             if showinfobool:
-            if len(machine) != 0:
+                if len(machine) != 0:
                     logger.info("Machine %s already exists in base" % msg['from'])
                 else:
                     logger.info("Machine %s does not exist in base" % msg['from'])
