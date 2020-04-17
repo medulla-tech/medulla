@@ -545,6 +545,8 @@ Requires:       python-psutil >= 0.6.1
 Requires:       python-netaddr
 Requires:       python-netifaces
 
+Requires:       python-mmc-connection-manager
+
 Provides:       /usr/sbin/pulse2-debug
 
 %description -n pulse2-common
