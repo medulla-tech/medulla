@@ -103,7 +103,8 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
             if len(machine) != 0:
                 # on regarde si coherence avec table network.
                 try:
-                    result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
+                    result = XmppMasterDatabase().listMacAdressforMachine(machine['id'],
+                                                                          infomac=showinfobool)
                     if result[0] is None:
                         raise
                 except Exception:
@@ -120,6 +121,20 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                         logger.warning("*** You must verify coherence for ARS")
 
                 if machine['enabled'] == 1:
+                    logger.info("Machine %s registered with %s" %
+                                                    (msg['from'], machine['id']))
+                    XmppMasterDatabase().setlogxmpp("Machine %s registered with %s" % (msg['from'], machine['id']),
+                                                    "info",
+                                                    sessionid,
+                                                    -1,
+                                                    msg['from'],
+                                                    '',
+                                                    '',
+                                                    'Registration | Notify',
+                                                    '',
+                                                    '',
+                                                    xmppobject.boundjid.bare)
+
                     if showinfobool:
                         logger.info("** machine %s reports online in table machine"%data['from'])
                     pluginfunction=[str("plugin_%s"%x) for x in xmppobject.pluginlistregistered]
@@ -278,6 +293,18 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                     #il faut de nouveau retester si on a 1 uuid continue dans la boucle
                         if showinfobool:
                             logger.warning("** No association found for %s" % (msg['from']))
+
+                        XmppMasterDatabase().setlogxmpp("No association found for %s" % msg['from'],
+                                                        "info",
+                                                        sessionid,
+                                                        -1,
+                                                        msg['from'],
+                                                        '',
+                                                        '',
+                                                        'Registration | Notify | Error | Alert',
+                                                        '',
+                                                        '',
+                                                        xmppobject.boundjid.bare)
                         return
                     else:
                         # il faut verifier si guacamole est initialisé.
@@ -570,6 +597,17 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                         logger.error("List of interfaces on machine %s: %s"%(msg['from'],
                                                                      macmachine))
                         logger.error("Registration incomplete for machine %s"%msg['from'])
+                        XmppMasterDatabase().setlogxmpp("Registration incomplete for machine %s" % msg['from'],
+                                                        "warn",
+                                                        sessionid,
+                                                        -1,
+                                                        msg['from'],
+                                                        '',
+                                                        '',
+                                                        'Registration | Notify | Error | Alert',
+                                                        '',
+                                                        '',
+                                                        xmppobject.boundjid.bare)
                         return
                     uuid = ''
                     btestfindcomputer = False
@@ -688,8 +726,32 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                             break
             else:
                 logger.error("** Creating or updating machine: Database registration error for machine %s"%msg['from'])
+                XmppMasterDatabase().setlogxmpp("Database registration error for machine %s" % msg['from'],
+                                                "info",
+                                                sessionid,
+                                                -1,
+                                                msg['from'],
+                                                '',
+                                                '',
+                                                'Registration | Notify | Error | Alert',
+                                                '',
+                                                '',
+                                                xmppobject.boundjid.bare)
                 return
 
+            logger.info("Machine %s registered with %s" %
+                                            (msg['from'], machine['id']))
+            XmppMasterDatabase().setlogxmpp("Machine %s registered with %s" % (msg['from'], machine['id']),
+                                            "info",
+                                            sessionid,
+                                            -1,
+                                            msg['from'],
+                                            '',
+                                            '',
+                                            'Registration | Notify',
+                                            '',
+                                            '',
+                                            xmppobject.boundjid.bare)
             pluginfunction=[str("plugin_%s"%x) for x in xmppobject.pluginlistunregistered]
             if showinfobool:
                 logger.info("Calling plugin action for machine %s ."%msg['from'])
@@ -705,11 +767,33 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                             logger.warning("Check why plugin %s"\
                                 " does not have function %s"%(function_plugin,
                                                         function_plugin))
-                except Exception:
-                    logger.error("\n%s"%(traceback.format_exc()))
+                except Exception as e:
+                    logger.error("Error on machine %s : %s\n%s"%(msg['from'], str(e), traceback.format_exc()))
+                    XmppMasterDatabase().setlogxmpp("Error on machine %s : %s" % (msg['from'], str(e))),
+                                                    "info",
+                                                    sessionid,
+                                                    -1,
+                                                    msg['from'],
+                                                    '',
+                                                    '',
+                                                    'Registration | Notify | Error | Alert',
+                                                    '',
+                                                    '',
+                                                    xmppobject.boundjid.bare)
 
     except Exception as e:
-        logger.error("machine info %s\n%s" % (str(e),traceback.format_exc()))
+        logger.error("Error on machine %s : %s\n%s" % (msg['from'], str(e), traceback.format_exc()))
+        XmppMasterDatabase().setlogxmpp("Error on machine %s : %s" % (msg['from'], str(e))),
+                                        "info",
+                                        sessionid,
+                                        -1,
+                                        msg['from'],
+                                        '',
+                                        '',
+                                        'Registration | Notify | Error | Alert',
+                                        '',
+                                        '',
+                                        xmppobject.boundjid.bare)
 
 def getComputerByMac( mac, showinfobool=True):
     if showinfobool:
