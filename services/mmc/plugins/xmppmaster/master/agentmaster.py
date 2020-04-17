@@ -2324,7 +2324,20 @@ class MUCBot(sleekxmpp.ClientXMPP):
                           self.domaindefault,
                           self.config.defaultrelayserverbaseurlguacamole]
         try:
-            listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2], "static")
+            try:
+                listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2],
+                                                                                 "static")
+            except (RuntimeError, TypeError, NameError):
+                msglog = "Verify configuration assessor file name assessor_agent.ini.local."\
+                        "\n\terror parameter serverip "\
+                            "\nsearch ipconnection in table relayserver for default ARS"\
+                                "\nserverip = %s "\
+                                    "configuration error"%(self.config.defaultrelayserverip)
+                msglog1 = "ERROR: Unable to assign a relay server "\
+                            "to an agent %s"%data['information']['info']['hostname']
+                logger.error(msglog1)
+                logger.error(msglog)
+                return
             z = [listars[x] for x in listars]
             z1 = sorted(z, key=operator.itemgetter(4))
             arsjid = XmppMasterDatabase().getRelayServerfromjid("rspulse@pulse")

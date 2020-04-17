@@ -43,12 +43,15 @@ from pulse2.database.pkgs.orm.pakages import Packages
 from pulse2.database.pkgs.orm.extensions import Extensions
 from pulse2.database.pkgs.orm.dependencies import Dependencies
 from pulse2.database.pkgs.orm.syncthingsync import Syncthingsync
+from pulse2.database.pkgs.orm.package_pending_exclusions import Package_pending_exclusions
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster import XmppMasterDatabase
 # Pulse 2 stuff
 #from pulse2.managers.location import ComputerLocationManager
 # Imported last
 import logging
+import os
+
 logger = logging.getLogger()
 
 
@@ -122,6 +125,13 @@ class PkgsDatabase(DatabaseHelper):
                 self.metadata,
                 autoload = True
             )
+            #package_pending_exclusions
+            self.package_pending_exclusions = Table(
+                "package_pending_exclusions",
+                self.metadata,
+                autoload = True
+            )
+            
         except NoSuchTableError, e:
             self.logger.error("Cant load the Pkgs database : table '%s' does not exists"%(str(e.args[0])))
             return False
@@ -135,7 +145,7 @@ class PkgsDatabase(DatabaseHelper):
         mapper(Extensions, self.extensions)
         mapper(Dependencies, self.dependencies)
         mapper(Syncthingsync, self.syncthingsync)
-
+        mapper(Package_pending_exclusions, self.package_pending_exclusions)
     ####################################
 
     @DatabaseHelper._sessionm
@@ -463,23 +473,59 @@ class PkgsDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_package_summary(self, session, package_id):
 
+        path = os.path.join("/", "var" , "lib", "pulse2", "packages", package_id)
+        size = 0
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                size += os.path.getsize(os.path.join(root, file))
+
+        diviser = 1000.0
+        units = ['B', 'Kb', 'Mb', 'Gb', 'Tb']
+
+        count = 0
+        next = True
+        while next and count < len(units):
+            if size / (diviser**count) > 1000:
+                count += 1
+            else:
+                next = False
+
         query = session.query(Packages.label,\
             Packages.version,\
             Packages.Qsoftware,\
+            Packages.Qversion,\
+            Packages.Qvendor,\
             Packages.description).filter(Packages.uuid == package_id).first()
         session.commit()
         session.flush()
-
         result = {
             'name' : '',
             'version': '',
-            'software' : '',
-            'description' : ''}
+            'Qsoftware' : '',
+            'Qversion' : '',
+            'Qvendor': '',
+            'description' : '',
+            'files' : files,
+            'size' : size,
+            'Size' : '%s %s'%(round(size/(diviser**count), 2), units[count])}
 
         if query is not None:
-            result['name'] = query[0]
-            result['version'] = query[1]
-            result['software'] = query[2]
-            result['description'] = query[3]
+            result['name'] = query.label
+            result['version'] = query.version
+            result['Qsoftware'] = query.Qsoftware
+            result['Qversion'] = query.Qversion
+            result['Qvendor'] = query.Qvendor
+            result['description'] = query.description
 
         return result
+        
+    @DatabaseHelper._sessionm
+    def delete_from_pending(self, session, pid = "", jidrelay = []):
+        query = session.query(Syncthingsync)
+        if pid != "":
+            query = query.filter(Syncthingsync.uuidpackage == pid)
+        if jidrelay != []:
+            query = query.filter(Syncthingsync.relayserver_jid.in_(jidrelay))
+        query = query.delete(synchronize_session='fetch')
+        session.commit()
+        session.flush()

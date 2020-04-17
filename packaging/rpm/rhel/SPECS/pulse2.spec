@@ -49,6 +49,8 @@ Requires:       mmc-web-pkgs
 Requires:       python-mmc-pkgs
 Requires:       mmc-web-pulse2
 Requires:       python-mmc-pulse2
+Requires:       mmc-web-kiosk
+Requires:       python-mmc-kiosk
 Requires:       pulse2-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
@@ -344,9 +346,28 @@ This package contains the inventory plugin for the MMC agent
 %python2_sitelib/mmc/plugins/inventory
 %_sbindir/pulse2-inventory-clean-database
 %exclude %_sysconfdir/init.d/pulse2-register-pxe
+%_mandir/man1/pulse2-inventory-clean-database.1.*
+
+#--------------------------------------------------------------------
+
+%package -n pulse2-register-pxe
+Summary:    Pulse 2 Register PXE Servic/
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+Requires:   python-mmc-base >= %mmc_version
+Requires:   python-pulse2-common-database-inventory = %version-%release
+Requires:   python-magic
+Requires:   python-inotify
+
+Conflicts:  python-mmc-inventory < 4.6.1
+
+%description -n pulse2-register-pxe
+Pulse 2 Register PXE Service
+
+%files -n pulse2-register-pxe
+%exclude %_sysconfdir/init.d/pulse2-register-pxe
 %_prefix/lib/systemd/system/pulse2-register-pxe.service
 %_sbindir/pulse2-register-pxe.py
-%_mandir/man1/pulse2-inventory-clean-database.1.*
 
 #--------------------------------------------------------------------
 
@@ -406,6 +427,7 @@ Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 Requires:   python-GeoIP
 Requires:   GeoIP-data
+Requires:   python-croniter
 
 %description -n python-mmc-xmppmaster
 This package contains the xmppmaster plugin for the MMC agent.

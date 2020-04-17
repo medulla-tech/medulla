@@ -491,6 +491,33 @@ class Glpi94(DyngroupDatabaseHelper):
             autoload = True)
         mapper(RegContents, self.regcontents)
 
+        # items contents
+        self.computersitems = Table("glpi_computers_items", self.metadata,
+            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+            autoload = True)
+        mapper(Computersitems, self.computersitems)
+
+        # Monitors items
+        self.monitors = Table("glpi_monitors", self.metadata,
+            autoload = True)
+        mapper(Monitors, self.monitors)
+
+        # Phones items
+        self.phones = Table("glpi_phones", self.metadata,
+            autoload = True)
+        mapper(Phones, self.phones)
+
+        # Printers items
+        self.printers = Table("glpi_printers", self.metadata,
+            autoload = True)
+        mapper(Printers, self.printers)
+
+        # Peripherals items
+        self.peripherals = Table("glpi_peripherals", self.metadata,
+            autoload = True)
+        mapper(Peripherals, self.peripherals)
+
+
     ##################### internal query generators
     def __filter_on(self, query):
         """
@@ -569,6 +596,169 @@ class Glpi94(DyngroupDatabaseHelper):
                     listid = XmppMasterDatabase().getxmppmasterfilterforglpi(q)
                     ret[q[2]] = [q[1], q[2], q[3], listid]
         return ret
+
+    @DatabaseHelper._sessionm
+    def get_machines_list(self, session, start, end, ctx):
+        # start and end are used to set the limit parameter in the query
+        start = int(start)
+        end = int(end)
+
+        location = ""
+        criterion = ""
+
+        master_config = xmppMasterConfig()
+        reg_columns = []
+        r=re.compile(r'reg_key_.*')
+        regs=filter(r.search, self.config.summary)
+        for regkey in regs:
+            regkeyconf = getattr( master_config, regkey).split("|")[0].split("\\")[-1]
+            #logging.getLogger().error(regkeyconf)
+            reg_columns.append(regkeyconf)
+
+        # location filter is corresponding to the entity selection in the interface
+        if "location" in ctx and ctx['location'] != "":
+            location = ctx['location'].replace("UUID", "")
+
+        # "filter" filter is corresponding to the string the user wants to find
+        if "filter" in ctx and ctx["filter"] != "":
+            criterion = ctx["filter"]
+
+
+        # Get the list of online computers
+        online_machines = []
+        online_machines = XmppMasterDatabase().getlistPresenceMachineid()
+
+        if online_machines is not None:
+            online_machines = [int(id.replace("UUID", "")) for id in online_machines]
+        query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
+        .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
+        .outerjoin(self.user, Machine.users_id == self.user.c.id)\
+        .join(Entities, Entities.id == Machine.entities_id)\
+        .outerjoin(self.locations, Machine.locations_id == self.locations.c.id)\
+        .outerjoin(self.manufacturers, Machine.manufacturers_id == self.manufacturers.c.id)\
+        .join(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)\
+        .outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
+
+        if 'cn' in self.config.summary:
+            query = query.add_column(Machine.name.label("cn"))
+
+        if 'os' in self.config.summary:
+            query = query.add_column(self.os.c.name.label("os")).join(self.os)
+
+        if 'description' in self.config.summary:
+            query = query.add_column(Machine.comment.label("description"))
+
+        if 'type' in self.config.summary:
+            query = query.add_column(self.glpi_computertypes.c.name.label("type"))
+
+        if 'owner_firstname' in self.config.summary:
+            query = query.add_column(self.user.c.firstname.label("owner_firstname"))
+
+        if 'owner_realname' in self.config.summary:
+            query = query.add_column(self.user.c.realname.label("owner_realname"))
+
+        if 'owner' in self.config.summary:
+            query = query.add_column(self.user.c.name.label("owner"))
+
+        if 'user' in self.config.summary:
+            query = query.add_column(Machine.contact.label("user"))
+
+        if 'entity' in self.config.summary:
+            query = query.add_column(Entities.name.label("entity"))
+
+        if 'location' in self.config.summary:
+            query = query.add_column(self.locations.c.name.label("location"))
+
+        if 'model' in self.config.summary:
+            query = query.add_column(self.model.c.name.label("model"))
+
+        if 'manufacturer' in self.config.summary:
+            query = query.add_column(self.manufacturers.c.name.label("manufacturer"))
+
+        # Don't select deleted or template machines
+        query = query.filter(Machine.is_deleted==0)\
+        .filter(Machine.is_template==0)
+
+        # Select machines from the specified entity
+        if location != "":
+            query = query.filter(Entities.id == location)
+
+        # Add all the like clauses to find machines containing the criterion
+        if filter != "":
+            query = query.filter()
+            query = query.filter(or_(
+                Machine.name.contains(criterion),
+                Machine.comment.contains(criterion),
+                self.os.c.name.contains(criterion),
+                self.glpi_computertypes.c.name.contains(criterion),
+                Machine.contact.contains(criterion),
+                Entities.name.contains(criterion),
+                self.user.c.firstname.contains(criterion),
+                self.user.c.realname.contains(criterion),
+                self.user.c.name.contains(criterion),
+                self.locations.c.name.contains(criterion),
+                self.manufacturers.c.name.contains(criterion),
+                self.model.c.name.contains(criterion),
+                self.regcontents.c.value.contains(criterion)
+            ))
+
+        # All computers
+        if "computerpresence" not in ctx:
+            # Do nothing more
+            pass
+        elif ctx["computerpresence"] == "no_presence":
+            query = query.filter(Machine.id.notin_(online_machines))
+        else:
+            query = query.filter(Machine.id.in_(online_machines))
+        query = self.__filter_on(query)
+
+        # From now we can have the count of machines
+        count = query.count()
+
+        # Then continue with others criterions and filters
+        query = query.offset(start).limit(end)
+
+        columns_name = [column['name'] for column in query.column_descriptions]
+        machines = query.all()
+
+        result = {"count" : count, "data":{index : [] for index in columns_name}}
+        result['data']['presence'] = []
+
+        nb_columns = len(columns_name)
+
+        regs = {reg_column :[] for reg_column in reg_columns}
+        result['data']['reg'] = regs
+
+        for machine in machines:
+            _count = 0
+            while _count < nb_columns:
+                result['data'][columns_name[_count]].append(machine[_count])
+                _count += 1
+
+            if machine[0] in online_machines:
+                result['data']['presence'].append(1)
+            else:
+                result['data']['presence'].append(0)
+
+            for column in reg_columns:
+                result['data']['reg'][column].append(None)
+
+        regquery = session.query(
+            self.regcontents.c.computers_id,
+            self.regcontents.c.key,
+            self.regcontents.c.value)\
+        .filter(
+            and_(
+                self.regcontents.c.key.in_(reg_columns),
+                self.regcontents.c.computers_id.in_(result['data']['uuid'])
+            )
+        ).all()
+        for reg in regquery:
+            index = result['data']['uuid'].index(reg[0])
+            result['data']['reg'][reg[1]][index] = reg[2]
+
+        result['count'] = count
+        return result
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
@@ -4880,25 +5070,36 @@ class Glpi94(DyngroupDatabaseHelper):
         result.append(entity)
         return result
 
+
     @DatabaseHelper._sessionm
-    def get_machine_for_id(self, session, strlistuuid):
-        sqlrequest ="""
-            SELECT
-            `glpi_computers`.`id` AS `id`,
-            `glpi_computers`.`name` AS `name`,
-            `glpi_computers`.`comment` AS `description`,
-            `glpi_operatingsystems`.name AS `os`,
-            `glpi_computertypes`.`name` AS `type`,
-            `glpi_computers`.`contact` AS `contact`,
-            `glpi_entities`.`name` as `entity`
-        FROM
-            `glpi_computers`
-            JOIN `glpi_items_operatingsystems` ON glpi_computers.`id` = `glpi_items_operatingsystems`.`items_id`
-            JOIN `glpi_operatingsystems` ON `glpi_operatingsystems`.`id` = `glpi_items_operatingsystems`.`operatingsystems_id`
-            JOIN glpi_computertypes ON glpi_computers.`computertypes_id` = `glpi_computertypes`.`id`
-            JOIN glpi_entities ON glpi_computers.`entities_id` = glpi_entities.id
-            where `glpi_computers`.`is_template` = 0 and `glpi_computers`.`is_deleted` = 0
-                and  `glpi_computers`.`id` in (%s);"""%(strlistuuid)
+    def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
+        criterion = filter['criterion']
+        filter = filter['filter']
+
+        query = session.query(Machine.id)\
+            .add_column(Machine.name)\
+            .add_column(Machine.comment.label('description'))\
+            .add_column(OS.name.label('os'))\
+            .add_column(self.glpi_computertypes.c.name.label('type'))\
+            .add_column(Machine.contact.label("contact"))\
+            .add_column(self.entities.c.name.label('entity'))\
+            .join(self.os)\
+            .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
+            .join(Entities, Entities.id == Machine.entities_id)\
+            .filter(Machine.id.in_(strlistuuid))
+
+
+        if filter == 'infos' and criterion != "":
+            query = query.filter(or_(
+                Machine.name.contains(criterion),
+                Machine.comment.contains(criterion),
+                OS.name.contains(criterion),
+                self.glpi_computertypes.c.name.contains(criterion),
+                Machine.contact.contains(criterion),
+                self.entities.c.name.contains(criterion)
+            ))
+
+        query = self.__filter_on(query)
         id=[]
         name=[]
         description=[]
@@ -4907,23 +5108,38 @@ class Glpi94(DyngroupDatabaseHelper):
         contact=[]
         entity=[]
         result = []
-        res = self.db.execute(sqlrequest)
-        for element in res:
-            id.append( element.id )
-            name.append( element.name )
-            description.append( element.description )
-            os.append( element.os )
-            typemache.append( element.type )
-            contact.append( element.contact )
-            entity.append( element.entity )
-        result.append(id)
-        result.append(name)
-        result.append(description)
-        result.append(os)
-        result.append(typemache)
-        result.append(contact)
-        result.append(entity)
-        return result
+        if filter == 'infos':
+            nb = query.count()
+            query = query.offset(start).limit(limit)
+        else:
+            nb = 0
+
+        res = query.all()
+        session.commit()
+        session.flush()
+
+        if res is not None:
+            for element in res:
+                id.append( element.id )
+                name.append( element.name )
+                description.append( element.description )
+                os.append( element.os )
+                typemache.append( element.type )
+                contact.append( element.contact )
+                entity.append( element.entity )
+            result.append(id)
+            result.append(name)
+            result.append(description)
+            result.append(os)
+            result.append(typemache)
+            result.append(contact)
+            result.append(entity)
+
+        result1={"total" : nb,
+                 "listelet" : result}
+
+        return result1
+
 
 
     @DatabaseHelper._sessionm
@@ -5141,4 +5357,19 @@ class RuleAction(DbTOA):
     pass
 
 class OsVersion(DbTOA):
+    pass
+
+class Computersitems(DbTOA):
+    pass
+
+class Monitors(DbTOA):
+    pass
+
+class Phones(DbTOA):
+    pass
+
+class Printers(DbTOA):
+    pass
+
+class Peripherals(DbTOA):
     pass

@@ -24,6 +24,9 @@ START TRANSACTION;
 
 -- add FOREIGN KEY in table network on table machines
 
+TRUNCATE `xmppmaster`.`network`;
+TRUNCATE `xmppmaster`.`machines`;
+
 ALTER TABLE `xmppmaster`.`network`
 ADD INDEX `fk_network_idx_machine` (`machines_id` ASC);
 

@@ -22,26 +22,17 @@
 
 START TRANSACTION;
 
--- add FOREIGN KEY in table has_machineusers on table machines
+LOCK TABLES `xmppmaster`.`qa_custom_command` WRITE;
+UPDATE `xmppmaster`.`qa_custom_command` SET `customcmd` = 'net stop "pulseagent" & net start "pulseagent"'
+    WHERE (`user` = 'allusers')
+        AND (`os` = 'windows')
+        AND (`namecmd` = 'Restart Pulse Agent service');
+UNLOCK TABLES;
 
-TRUNCATE `xmppmaster`.`has_machinesusers`;
-TRUNCATE `xmppmaster`.`network`;
-TRUNCATE `xmppmaster`.`machines`;
-
-ALTER TABLE `xmppmaster`.`has_machinesusers`
-ADD INDEX `fk_has_machinesusers_idx_machine` (`machines_id` ASC);
-
-
-ALTER TABLE `xmppmaster`.`has_machinesusers`
-ADD CONSTRAINT `fk_has_machinesusers_idx_machine`
-  FOREIGN KEY (`machines_id`)
-  REFERENCES `xmppmaster`.`machines` (`id`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE;
 
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 38;
+UPDATE version SET Number = 39;
 
 COMMIT;

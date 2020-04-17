@@ -28,6 +28,25 @@ require("localSidebar.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 $p = new PageGenerator(_T("Pending packages list", 'pkgs'));
 $p->setSideMenu($sidemenu);
+
+if(isset($_GET['delete']) && $_GET['delete'] == 'all')
+{
+  xmlrpc_delete_from_pending('', []);
+  header("Location: " . urlStrRedirect("pkgs/pkgs/pending", array('deletependingsuccess' => 'all')));
+}
+
+if(isset($_GET['deletependingsuccess']))
+{
+  if($_GET['deletependingsuccess'] == 'all'){
+    new NotifyWidgetSuccess(_T("All the pendings have been deleted", "pkgs"));
+  }
+  else if($_GET['deletependingsuccess'] == 'package'){
+    new NotifyWidgetSuccess(_T('The package '.$_GET['name'].' has been removed from pending', "pkgs"));
+  }
+  else if($_GET['deletependingsuccess'] == 'jid'){
+    new NotifyWidgetSuccess(_T('The relays <b>'.$_GET['jids'].'</b> have been removed from the package <b>'.$_GET['name'].'</b> pending', "pkgs"));
+  }
+}
 $p->display();
 $ajax = new AjaxFilter(urlStrRedirect("pkgs/pkgs/ajaxPendingPackageList"));
 $ajax->display();

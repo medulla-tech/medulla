@@ -232,4 +232,8 @@ function xmlrpc_pkgs_delete_synchro_package($uuid){
 function xmlrpc_pkgs_get_info_synchro_packageid($pid_ppackage){
     return xmlCall("pkgs.pkgs_get_info_synchro_packageid", array($pid_ppackage));
 }
+
+function xmlrpc_delete_from_pending($pid = "", $jidrelay = []){
+    return xmlCall("pkgs.delete_from_pending", array($pid, $jidrelay));
+}
 ?>

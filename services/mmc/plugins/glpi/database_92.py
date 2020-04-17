@@ -5168,7 +5168,12 @@ ORDER BY
         contact=[]
         entity=[]
         result = []
-        nb = query.count()
+        if filter == 'infos':
+            nb = query.count()
+            query = query.offset(start).limit(limit)
+        else:
+            nb = 0
+
         res = query.all()
         session.commit()
         session.flush()
