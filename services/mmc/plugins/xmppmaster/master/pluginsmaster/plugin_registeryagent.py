@@ -783,7 +783,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
 
     except Exception as e:
         logger.error("Error on machine %s : %s\n%s" % (msg['from'], str(e), traceback.format_exc()))
-        XmppMasterDatabase().setlogxmpp("Error on machine %s : %s" % (msg['from'], str(e))),
+        XmppMasterDatabase().setlogxmpp("Error on machine %s : %s" % (msg['from'], str(e)),
                                         "info",
                                         sessionid,
                                         -1,
