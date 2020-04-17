@@ -739,9 +739,8 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                 xmppobject.boundjid.bare)
                 return
 
-            logger.info("Machine %s registered with %s" %
-                                            (msg['from'], machine['id']))
-            XmppMasterDatabase().setlogxmpp("Machine %s registered with %s" % (msg['from'], machine['id']),
+            logger.info("Machine %s registered" % msg['from'])
+            XmppMasterDatabase().setlogxmpp("Machine %s registered" % msg['from'],
                                             "info",
                                             sessionid,
                                             -1,
