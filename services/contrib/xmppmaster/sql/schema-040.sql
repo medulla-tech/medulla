@@ -22,9 +22,8 @@
 
 START TRANSACTION;
 
-TRUNCATE `xmppmaster`.`def_remote_deploy_status`;
+DELETE FROM `xmppmaster`.`def_remote_deploy_status`;
 
-LOCK TABLES `xmppmaster`.`def_remote_deploy_status` WRITE;
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Transfer error: Package Server does not have this package.*', 'ERROR TRANSFER FAILED', 'errortransferfailed');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Transfer error.*', 'ABORT TRANSFER FAILED', 'aborttransferfailed');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*execution error.*', 'ABORT PACKAGE EXECUTION ERROR', 'abortpackageexecutionerror');
@@ -34,7 +33,6 @@ INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Error initializing grafcet.*', 'ABORT PACKAGE WORKFLOW ERROR', 'abortpackageworkflowerror');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Deployment error in fifo : timed out.*', 'ABORT ON TIMEOUT', 'abortontimeout');
 INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Spooling the deployment in queue.*', 'DEPLOYMENT SPOOLED', 'deploymentspooled');
-UNLOCK TABLES;
 
 -- ----------------------------------------------------------------------
 -- Database version
