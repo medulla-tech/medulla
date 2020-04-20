@@ -26,7 +26,7 @@ START TRANSACTION;
 -- Table machines creation index
 --
 
-CREATE OR REPLACE INDEX ind_jid_machine on machines (jid(12) ASC);
+CREATE INDEX ind_jid_machine on machines (jid(12) ASC);
 
 ALTER TABLE `xmppmaster`.`machines` 
 ADD INDEX `ind_uuid_machine` (`uuid_inventorymachine` ASC);
