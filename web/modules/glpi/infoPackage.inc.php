@@ -76,6 +76,15 @@ $page->setFile("modules/glpi/glpi/ajaxMachinesList.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("xmppMachinesList", _T("Get the xmpp machines list", "glpi"));
+$page->setFile("modules/xmppmaster/xmppmaster/machinesList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxXmppMachinesList", _T("Xmpp Machines List", "glpi"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("createStaticGroup", _T("Create static group from dashboard widgets (GLPI)", "glpi"));
 $page->setFile("modules/glpi/glpi/createStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));

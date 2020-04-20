@@ -725,3 +725,12 @@ def delcomputer(uuid):
 
 def get_log_status():
     return XmppMasterDatabase().get_log_status()
+
+def get_xmppmachines_list(start, limit, filter, presence):
+    return XmppMasterDatabase().get_xmppmachines_list(start, limit, filter, presence)
+
+def get_xmpprelays_list(start, limit, filter, presence):
+    return XmppMasterDatabase().get_xmpprelays_list(start, limit, filter, presence)
+
+def get_clusters_list(start, limit, filter):
+    return XmppMasterDatabase().get_clusters_list(start, limit, filter)
