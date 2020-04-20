@@ -222,10 +222,18 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 
-$uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-$machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
-$ma = xmlrpc_getMachinefromjid($machine);
+if(isset($_GET['jid']))
+{
+  $ma['hostname'] = (isset($_GET['hostname'])) ? $_GET['hostname'] : '';
+  $ma['jid'] = (isset($_GET['jid'])) ? $_GET['jid'] : '';
+  $machine = $ma['hostname'];
+}
 
+else{
+  $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
+  $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
+  $ma = xmlrpc_getMachinefromjid($machine);
+}
 $tab = explode("/",$machine);
 $p = new PageGenerator(_T("Edit config file", 'xmppmaster')." on ". $ma['hostname']);
 $p->setSideMenu($sidemenu);
@@ -363,6 +371,16 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
     });
 
     jQuery( document ).ready(function() {
+        var file = "<?php echo $_GET['name'];?>"
+
+        if(typeof(file) == "undefined"){
+          jQuery("#namefileconf").prop("selectedIndex", 0).attr("selected", "selected");
+          console.log(jQuery("#namefileconf").prop("selectedIndex", 0))
+        }
+        else{
+          jQuery("#namefileconf option:contains('"+file+"')").attr("selected", "selected")
+        }
+
         var md5 = "";
         var modification = false;
         loadconffile(jQuery('#namefileconf option:selected').text());
