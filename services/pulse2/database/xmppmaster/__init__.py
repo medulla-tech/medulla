@@ -3120,6 +3120,11 @@ class XmppMasterDatabase(DatabaseHelper):
         ret['lentotal'] = lentaillerequette#[0]
         ret['total_of_rows'] = lenrequest[0][0]
         for linedeploy in result:
+            macaddress = ''.join(linedeploy.macadress.split(':'))
+            if linedeploy.host.split("/")[-1] == macaddress:
+                hostname = linedeploy.host.split(".")[0]
+            else:
+                hostname = linedeploy.host.split("/")[-1]
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
@@ -3127,7 +3132,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
+            ret['tabdeploy']['host'].append(hostname)
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
@@ -3212,6 +3217,11 @@ class XmppMasterDatabase(DatabaseHelper):
         #ret['lentotal'] = nbfilter
         ret['lentotal'] = count[0][0]
         for linedeploy in result:
+            macaddress = ''.join(linedeploy.macadress.split(':'))
+            if linedeploy.host.split("/")[-1] == macaddress:
+                hostname = linedeploy.host.split(".")[0]
+            else:
+                hostname = linedeploy.host.split("/")[-1]
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
@@ -3219,7 +3229,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
+            ret['tabdeploy']['host'].append(hostname)
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
