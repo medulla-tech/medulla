@@ -88,6 +88,11 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("ajaxlistconffile");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxlistconffile.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page("deleteqa",_T("Delete Custom Quick Action", 'pkgs'));
 $page->setFile("modules/xmppmaster/xmppmaster/removeqa.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
@@ -116,6 +121,9 @@ $page = new Page("remoteeditorconfigurationlist", _T('Remote edit configuration 
 $submod->addPage($page);
 
 $page = new Page("listfichierconf", _T('List config files', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("listconffile", _T('List config files for uninventoried machines', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("ActionQuickconsole", _T('XMPP Console', 'xmppmaster'));

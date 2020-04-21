@@ -31,6 +31,14 @@ if (isExpertMode()){
 }
 
 $sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("List of Relays","xmppmaster"), "base", "computers", "xmppRelaysList")
+);
+
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("List of Uninventoried Machines","xmppmaster"), "base", "computers", "xmppMachinesList")
+);
+
+$sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Custom Quick Actions","xmppmaster"), "xmppmaster", "xmppmaster", "customQA")
 );
 $sidemenu->addSideMenuItem(

@@ -478,4 +478,16 @@ function xmppmaster_delcomputer($uuid){
 function xmlrpc_get_log_status(){
     return xmlCall("xmppmaster.get_log_status", array());
 }
+
+function xmlrpc_get_xmppmachines_list($start=-1, $limit=-1, $filter="", $presence='all'){
+  return xmlCall("xmppmaster.get_xmppmachines_list", [$start, $limit, $filter, $presence]);
+}
+
+function xmlrpc_get_xmpprelays_list($start=-1, $limit=-1, $filter="", $presence='all'){
+  return xmlCall("xmppmaster.get_xmpprelays_list", [$start, $limit, $filter, $presence]);
+}
+
+function xmlrpc_get_clusters_list($start=-1, $limit=-1, $filter=""){
+  return xmlCall("xmppmaster.get_clusters_list", [$start, $limit, $filter]);
+}
 ?>
