@@ -196,7 +196,7 @@ if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
 }
 else{
     $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
-    if ( $presencemachinexmpp )
+    if ( $presencemachinexmpp || isset($_GET['gid']))
         $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
 }
 
