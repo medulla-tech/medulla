@@ -924,7 +924,7 @@ def extract_file(imput_file__gz_bz2, to_directory='.', compresstype="gz"):
     except OSError as e:
         logger.error( "error extract tar.%s %s"%(str(e),compresstype))
         return False
-    except Exception:
+    except Exception as e:
         logger.error( "error extract tar.%s %s"%(str(e),compresstype))
         return False
     finally:
