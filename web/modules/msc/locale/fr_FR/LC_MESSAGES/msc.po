@@ -1331,7 +1331,7 @@ msgstr "Taille du package"
 #: modules/msc/msc/ajaxPackageFilter.php:213
 #: modules/msc/msc/ajaxPackageFilter.php:217
 msgid "Advanced launch"
-msgstr "Lancer l'action (avanc)"
+msgstr "Lancer l'action (avancé)"
 
 #: modules/msc/msc/ajaxPackageFilter.php:214
 #: modules/msc/msc/ajaxPackageFilter.php:219
