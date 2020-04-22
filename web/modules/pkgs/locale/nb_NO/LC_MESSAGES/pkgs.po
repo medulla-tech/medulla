@@ -461,7 +461,7 @@ msgstr "Last opp køede filer"
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
 msgid "The rule %s has been removed"
-msgstr ""
+msgstr "Regelen %shar blitt fjernet"
 
 #: modules/pkgs/pkgs/rulesList.php:71
 msgid "Rules Order"

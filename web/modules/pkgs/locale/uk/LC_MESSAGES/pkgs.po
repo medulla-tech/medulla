@@ -465,7 +465,7 @@ msgstr "Вивантажити файли з черги"
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
 msgid "The rule %s has been removed"
-msgstr ""
+msgstr "Вилучено правило %s"
 
 #: modules/pkgs/pkgs/rulesList.php:71
 msgid "Rules Order"
