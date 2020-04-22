@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 16:37+0200\n"
+"POT-Creation-Date: 2019-11-29 12:11+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -169,35 +169,39 @@ msgid "Audit deployment"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:255
-#: modules/xmppmaster/infoPackage.inc.php:260
 msgid "XMPP log"
 msgstr ""
 
+#: modules/xmppmaster/infoPackage.inc.php:260
 #: modules/xmppmaster/infoPackage.inc.php:265
+msgid "XMPP group logs"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:270
 msgid "List all groups of computers"
 msgstr "Listar todos os grupos de computadores"
 
-#: modules/xmppmaster/infoPackage.inc.php:270
+#: modules/xmppmaster/infoPackage.inc.php:275
 msgid "ajax view grp deploy"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:275
+#: modules/xmppmaster/infoPackage.inc.php:280
 msgid "List computers deploy"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:280
+#: modules/xmppmaster/infoPackage.inc.php:285
 msgid "List computers deploy by group"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:285
+#: modules/xmppmaster/infoPackage.inc.php:290
 msgid "List computer deploy"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:290
+#: modules/xmppmaster/infoPackage.inc.php:295
 msgid "List of not launched deployments"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:296
+#: modules/xmppmaster/infoPackage.inc.php:301
 msgid "Transfert syncthing list no transfered"
 msgstr ""
 
@@ -338,6 +342,7 @@ msgid "Version"
 msgstr "Verso"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:513
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:518
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
 msgid "Description"
 msgstr "Descrição"
@@ -378,129 +383,161 @@ msgstr ""
 msgid "value"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
-msgid "Computer deploy"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:54
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:62
 msgid "Deployment [ group"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:129
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:137
 msgid "Syncthing sharing done or non-existant"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:136
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:144
 msgid "Syncthing share"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:137
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:145
 msgid "Number of machines"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:138
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:146
 msgid "transfert"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:142
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:150
 msgid "Share name"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:144
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:152
 msgid "Number of participants"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:146
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:154
 msgid "Transfer progress"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:175
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:181
 msgid "cluster list"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:176
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:182
 msgid "cluster nb ars"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:177
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:183
 msgid "machine"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:184
 msgid "progress"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:179
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:185
 msgid "start"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:180
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:186
 msgid "end"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:285
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:284
 msgid "Deployment completed"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:290
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:289
 msgid "Deployment in progress"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:291
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:290
 msgid "Started since"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:296
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:295
 msgid "WAITING FOR START "
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:303
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:302
 msgid "Abort Deployment"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:318
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:316
 msgid "Number of machines in the group"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:319
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:317
 msgid "Number of current deployments"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:320
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:318
 msgid "Number of deployments in timeout"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:321
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:319
 msgid "Deployment summary"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:323
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:321
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:281
 msgid "Success"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:324
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:322
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:282
 msgid "Error"
 msgstr "Erro"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:325
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:323
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:280
 msgid "In progress"
 msgstr "Em andamento"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:326
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:324
 msgid "Waiting"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:327
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:325
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:284
 msgid "Timed out"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:328
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:326
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:285
 msgid "Aborted"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:510
+msgid "Deployment Detail"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:516
+msgid "Machine Name"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:519
+#: modules/xmppmaster/xmppmaster/editqa.php:78
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
+msgid "Operating System"
+msgstr "Sistema Operacional"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:520
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:278
+msgid "Status"
+msgstr "Status"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:521
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:92
+msgid "Type"
+msgstr "Tipo"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:522
+msgid "Last User"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:523
+msgid "Entity"
+msgstr "Entidade"
+
+#: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
+msgid "Computer deploy"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:35
@@ -636,10 +673,6 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:49
 msgid "Past tasks (last 3 months)"
 msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:278
-msgid "Status"
-msgstr "Status"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:283
 msgid "Waiting Wol"
@@ -787,11 +820,6 @@ msgstr ""
 msgid "Create a custom quick action"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/editqa.php:78
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
-msgid "Operating System"
-msgstr "Sistema Operacional"
-
 #: modules/xmppmaster/xmppmaster/editqa.php:80
 msgid "Command name"
 msgstr "Nome do comando"
@@ -845,10 +873,6 @@ msgstr "Computador"
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:86
 msgid "Custom Command"
 msgstr ""
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:92
-msgid "Type"
-msgstr "Tipo"
 
 #: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:66
 msgid "Sorry the operating system of the machine is"

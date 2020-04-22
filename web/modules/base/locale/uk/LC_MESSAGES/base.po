@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 16:37+0200\n"
+"POT-Creation-Date: 2019-11-29 12:11+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -471,19 +471,30 @@ msgstr ""
 "основними) буде вилучено»</b>, якщо ви хочете вилучити запис цього "
 "комп'ютера."
 
-#: modules/base/computers/delete.php:78
+#: modules/base/computers/delete.php:77
+msgid ""
+"GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"
+msgstr ""
+"База GLPI придатна лише до читання: запис комп'ютера було вилучено з xmpp, "
+"але не з GLPI"
+
+#: modules/base/computers/delete.php:81
 msgid "The computer has been deleted."
 msgstr "Запис комп'ютера було вилучено."
 
-#: modules/base/computers/delete.php:84
+#: modules/base/computers/delete.php:83
+msgid "The computer has not been deleted."
+msgstr "Запис комп'ютера вилучено."
+
+#: modules/base/computers/delete.php:91
 msgid "Delete this computer"
 msgstr "Вилучити цей комп'ютер"
 
-#: modules/base/computers/delete.php:87
+#: modules/base/computers/delete.php:94
 msgid "Do you want a backup to be done ?"
 msgstr "Хочете створити резервну копію?"
 
-#: modules/base/computers/delete.php:93
+#: modules/base/computers/delete.php:100
 msgid ""
 "I am aware that <b>all related images (non-master)</b> will be "
 "<b>DELETED</b>.<br />Check this box if it is what you want."
@@ -1679,27 +1690,27 @@ msgstr[1] "%d неактивних служби"
 msgstr[2] "%d неактивних служб"
 msgstr[3] "%d неактивних служб"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:175
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:181
 msgid "cluster list"
 msgstr "список кластерів"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:176
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:182
 msgid "cluster nb ars"
 msgstr "к-ть стовпчиків кл."
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:177
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:183
 msgid "machine"
 msgstr "комп'ютер"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:184
 msgid "progress"
 msgstr "поступ"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:179
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:185
 msgid "start"
 msgstr "початок"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:180
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:186
 msgid "end"
 msgstr "кінець"
 

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 16:37+0200\n"
+"POT-Creation-Date: 2019-11-29 12:11+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -170,35 +170,39 @@ msgid "Audit deployment"
 msgstr "Revider utrulling"
 
 #: modules/xmppmaster/infoPackage.inc.php:255
-#: modules/xmppmaster/infoPackage.inc.php:260
 msgid "XMPP log"
 msgstr "XMPP logg"
 
+#: modules/xmppmaster/infoPackage.inc.php:260
 #: modules/xmppmaster/infoPackage.inc.php:265
+msgid "XMPP group logs"
+msgstr "XMPP gruppe logger"
+
+#: modules/xmppmaster/infoPackage.inc.php:270
 msgid "List all groups of computers"
 msgstr "Liste over alle datamaskingrupper"
 
-#: modules/xmppmaster/infoPackage.inc.php:270
+#: modules/xmppmaster/infoPackage.inc.php:275
 msgid "ajax view grp deploy"
 msgstr "ajax visning gruppe utrulling"
 
-#: modules/xmppmaster/infoPackage.inc.php:275
+#: modules/xmppmaster/infoPackage.inc.php:280
 msgid "List computers deploy"
 msgstr "List maskin utrulling"
 
-#: modules/xmppmaster/infoPackage.inc.php:280
+#: modules/xmppmaster/infoPackage.inc.php:285
 msgid "List computers deploy by group"
 msgstr "List maskin utrulling pr gruppe"
 
-#: modules/xmppmaster/infoPackage.inc.php:285
+#: modules/xmppmaster/infoPackage.inc.php:290
 msgid "List computer deploy"
 msgstr "List maskin utrulling"
 
-#: modules/xmppmaster/infoPackage.inc.php:290
+#: modules/xmppmaster/infoPackage.inc.php:295
 msgid "List of not launched deployments"
 msgstr "Liste over ikke gjennomførte utrullinger"
 
-#: modules/xmppmaster/infoPackage.inc.php:296
+#: modules/xmppmaster/infoPackage.inc.php:301
 msgid "Transfert syncthing list no transfered"
 msgstr "Overfør synk liste ikke overførte"
 
@@ -339,6 +343,7 @@ msgid "Version"
 msgstr "Versjon"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:513
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:518
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
 msgid "Description"
 msgstr "Beskrivelse"
@@ -379,130 +384,162 @@ msgstr "nøkkel"
 msgid "value"
 msgstr "verdi"
 
-#: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
-msgid "Computer deploy"
-msgstr "Utrull maskin"
-
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:54
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:62
 msgid "Deployment [ group"
 msgstr "Utrulling [ gruppe"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:129
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:137
 msgid "Syncthing sharing done or non-existant"
 msgstr "Synkronisering av delt område utført eller er ikke eksisterende"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:136
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:144
 msgid "Syncthing share"
 msgstr "Synker delt område"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:137
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:145
 msgid "Number of machines"
 msgstr "Antall maskiner"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:138
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:146
 msgid "transfert"
 msgstr "Overført"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:142
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:150
 msgid "Share name"
 msgstr "Navn på delt område"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:144
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:152
 msgid "Number of participants"
 msgstr "Antall deltagere"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:146
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:154
 msgid "Transfer progress"
 msgstr "Overføringsframdrift"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:175
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:181
 msgid "cluster list"
 msgstr "cluster liste"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:176
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:182
 msgid "cluster nb ars"
 msgstr "cluster nb ars"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:177
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:183
 msgid "machine"
 msgstr "maskin"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:184
 msgid "progress"
 msgstr "framdrift"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:179
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:185
 msgid "start"
 msgstr "start"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:180
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:186
 msgid "end"
 msgstr "slutt"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:285
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:284
 msgid "Deployment completed"
 msgstr "Utrulling ferdig"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:290
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:289
 msgid "Deployment in progress"
 msgstr "Utrulling pågår"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:291
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:290
 msgid "Started since"
 msgstr "Startet siden"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:296
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:295
 msgid "WAITING FOR START "
 msgstr "VENTER FOR Å STARTE"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:303
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:302
 msgid "Abort Deployment"
 msgstr "Avbryt utrulling"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:318
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:316
 msgid "Number of machines in the group"
 msgstr "Antall maskiner i gruppen"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:319
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:317
 msgid "Number of current deployments"
 msgstr "Antall pågående utrullinger"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:320
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:318
 msgid "Number of deployments in timeout"
 msgstr "Antall utrlullinger i timeout"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:321
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:319
 msgid "Deployment summary"
 msgstr "Utrullingssammendrag"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:323
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:321
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:281
 msgid "Success"
 msgstr "Suksess"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:324
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:322
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:282
 msgid "Error"
 msgstr "Feil"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:325
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:323
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:280
 msgid "In progress"
 msgstr "Pågående"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:326
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:324
 msgid "Waiting"
 msgstr "Venter"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:327
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:325
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:284
 msgid "Timed out"
 msgstr "Timed out"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:328
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:326
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:285
 msgid "Aborted"
 msgstr "Avbrutt"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:510
+msgid "Deployment Detail"
+msgstr "Utrullingsdetalj"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:516
+msgid "Machine Name"
+msgstr "Maskinnavn"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:519
+#: modules/xmppmaster/xmppmaster/editqa.php:78
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
+msgid "Operating System"
+msgstr "Operativsystem"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:520
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:278
+msgid "Status"
+msgstr "Status"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:521
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:92
+msgid "Type"
+msgstr "Type"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:522
+msgid "Last User"
+msgstr "Siste Bruker"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:523
+msgid "Entity"
+msgstr "Enhet"
+
+#: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
+msgid "Computer deploy"
+msgstr "Utrull maskin"
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:35
 msgid "Wake On Lan"
@@ -639,10 +676,6 @@ msgstr "Gjeldende oppgaver (siste 24 timer)"
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:49
 msgid "Past tasks (last 3 months)"
 msgstr "Tidligere oppgaver (siste 3 måneder)"
-
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:278
-msgid "Status"
-msgstr "Status"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:283
 msgid "Waiting Wol"
@@ -790,11 +823,6 @@ msgstr "Rediger tilpasset hurtighandling: %s "
 msgid "Create a custom quick action"
 msgstr "Opprett tilpasset hurtighandling"
 
-#: modules/xmppmaster/xmppmaster/editqa.php:78
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
-msgid "Operating System"
-msgstr "Operativsystem"
-
 #: modules/xmppmaster/xmppmaster/editqa.php:80
 msgid "Command name"
 msgstr "Kommandonavn"
@@ -848,10 +876,6 @@ msgstr "Datamaskin"
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:86
 msgid "Custom Command"
 msgstr "Egendefinert kommando"
-
-#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:92
-msgid "Type"
-msgstr "Type"
 
 #: modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php:66
 msgid "Sorry the operating system of the machine is"

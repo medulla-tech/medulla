@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 16:37+0200\n"
+"POT-Creation-Date: 2019-11-29 12:11+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Japanese (Japan) (https://www.transifex.com/siveo/teams/72118/ja_JP/)\n"
@@ -467,19 +467,28 @@ msgstr ""
 "このコンピューターを削除する場合は、<b>\"関連イメージ (マスターでない) が削除されることを認識しています\"</b> "
 "のボックスにチェックする必要があります。"
 
-#: modules/base/computers/delete.php:78
+#: modules/base/computers/delete.php:77
+msgid ""
+"GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"
+msgstr ""
+
+#: modules/base/computers/delete.php:81
 msgid "The computer has been deleted."
 msgstr "コンピューターが削除されました。"
 
-#: modules/base/computers/delete.php:84
+#: modules/base/computers/delete.php:83
+msgid "The computer has not been deleted."
+msgstr ""
+
+#: modules/base/computers/delete.php:91
 msgid "Delete this computer"
 msgstr "このコンピューターの削除"
 
-#: modules/base/computers/delete.php:87
+#: modules/base/computers/delete.php:94
 msgid "Do you want a backup to be done ?"
 msgstr "バックアップを実行しますか？"
 
-#: modules/base/computers/delete.php:93
+#: modules/base/computers/delete.php:100
 msgid ""
 "I am aware that <b>all related images (non-master)</b> will be "
 "<b>DELETED</b>.<br />Check this box if it is what you want."
@@ -1642,27 +1651,27 @@ msgstr[0] ""
 "\n"
 "other: %d 非アクティブサービス"
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:175
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:181
 msgid "cluster list"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:176
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:182
 msgid "cluster nb ars"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:177
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:183
 msgid "machine"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:178
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:184
 msgid "progress"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:179
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:185
 msgid "start"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:180
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:186
 msgid "end"
 msgstr ""
 
