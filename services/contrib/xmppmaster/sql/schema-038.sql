@@ -26,7 +26,7 @@ START TRANSACTION;
 
 TRUNCATE `xmppmaster`.`has_machinesusers`;
 TRUNCATE `xmppmaster`.`network`;
-TRUNCATE `xmppmaster`.`machines`;
+DELETE FROM `xmppmaster`.`machines` WHERE 1;
 
 ALTER TABLE `xmppmaster`.`has_machinesusers`
 ADD INDEX `fk_has_machinesusers_idx_machine` (`machines_id` ASC);
