@@ -39,39 +39,39 @@ msgstr "Tableau de bord GLPI"
 
 #: modules/glpi/infoPackage.inc.php:48
 msgid "Antivirus Panel"
-msgstr ""
+msgstr "Widget Antivirus"
 
 #: modules/glpi/infoPackage.inc.php:53
 msgid "Inventory Panel"
-msgstr ""
+msgstr "Widget Inventaire"
 
 #: modules/glpi/infoPackage.inc.php:58
 msgid "Os Repartition Panel"
-msgstr ""
+msgstr "Widget OS"
 
 #: modules/glpi/infoPackage.inc.php:70
 msgid "Get the whole machines list"
-msgstr ""
+msgstr "Lister toutes les machines"
 
 #: modules/glpi/infoPackage.inc.php:74 modules/glpi/glpi/machinesList.php:28
 msgid "Machines List"
-msgstr ""
+msgstr "Liste de machines"
 
 #: modules/glpi/infoPackage.inc.php:79
 msgid "Get the xmpp machines list"
-msgstr ""
+msgstr "Lister les machines XMPP"
 
 #: modules/glpi/infoPackage.inc.php:83
 msgid "Xmpp Machines List"
-msgstr ""
+msgstr "Liste de machines XMPP"
 
 #: modules/glpi/infoPackage.inc.php:88
 msgid "Get the xmpp relays list"
-msgstr ""
+msgstr "Lister les relais XMPP"
 
 #: modules/glpi/infoPackage.inc.php:92
 msgid "Relays List"
-msgstr ""
+msgstr "Liste de relais XMPP"
 
 #: modules/glpi/infoPackage.inc.php:97
 msgid "Create static group from dashboard widgets (GLPI)"
@@ -409,7 +409,7 @@ msgstr "Dernier Utilisateur"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:236
 msgid "Owner"
-msgstr ""
+msgstr "Propriétaire"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:238
 #: modules/glpi/glpi/ajaxViewPart.php:234
@@ -418,15 +418,15 @@ msgstr "Entité"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:240
 msgid "Localization"
-msgstr ""
+msgstr "Emplacement"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:242
 msgid "Owner Firstname"
-msgstr ""
+msgstr "Prénom du propriétaire"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:244
 msgid "Owner Real Name"
-msgstr ""
+msgstr "Nom du propriétaire"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:246
 #: modules/glpi/glpi/ajaxViewPart.php:241
@@ -452,7 +452,7 @@ msgstr "Toutes les règles"
 
 #: modules/glpi/glpi/createMachinesStaticGroupdeploy.php:31
 msgid "Machines "
-msgstr ""
+msgstr "Machines"
 
 #: modules/glpi/glpi/entityList.php:28
 msgid "Entity list"

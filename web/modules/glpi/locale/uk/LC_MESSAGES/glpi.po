@@ -4,8 +4,8 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2020
 # Nicolas Lécureuil <neoclust@mageia.org>, 2020
+# Yuri Chornoivan <yurchor@ukr.net>, 2020
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-22 11:58+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,39 +38,39 @@ msgstr "Панель приладів GLPI"
 
 #: modules/glpi/infoPackage.inc.php:48
 msgid "Antivirus Panel"
-msgstr ""
+msgstr "Панель антивіруса"
 
 #: modules/glpi/infoPackage.inc.php:53
 msgid "Inventory Panel"
-msgstr ""
+msgstr "Панель обліку"
 
 #: modules/glpi/infoPackage.inc.php:58
 msgid "Os Repartition Panel"
-msgstr ""
+msgstr "Панель відновлення ОС"
 
 #: modules/glpi/infoPackage.inc.php:70
 msgid "Get the whole machines list"
-msgstr ""
+msgstr "Отримати список усіх комп'ютерів"
 
 #: modules/glpi/infoPackage.inc.php:74 modules/glpi/glpi/machinesList.php:28
 msgid "Machines List"
-msgstr ""
+msgstr "Список комп'ютерів"
 
 #: modules/glpi/infoPackage.inc.php:79
 msgid "Get the xmpp machines list"
-msgstr ""
+msgstr "Отримати список комп'ютерів xmpp"
 
 #: modules/glpi/infoPackage.inc.php:83
 msgid "Xmpp Machines List"
-msgstr ""
+msgstr "Список комп'ютерів XMPP"
 
 #: modules/glpi/infoPackage.inc.php:88
 msgid "Get the xmpp relays list"
-msgstr ""
+msgstr "Отримати список змін XMPP"
 
 #: modules/glpi/infoPackage.inc.php:92
 msgid "Relays List"
-msgstr ""
+msgstr "Список змін"
 
 #: modules/glpi/infoPackage.inc.php:97
 msgid "Create static group from dashboard widgets (GLPI)"
@@ -409,7 +409,7 @@ msgstr "Останній користувач системи"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:236
 msgid "Owner"
-msgstr ""
+msgstr "Власник"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:238
 #: modules/glpi/glpi/ajaxViewPart.php:234
@@ -418,15 +418,15 @@ msgstr "Сутність"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:240
 msgid "Localization"
-msgstr ""
+msgstr "Локалізація"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:242
 msgid "Owner Firstname"
-msgstr ""
+msgstr "Ім'я власника"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:244
 msgid "Owner Real Name"
-msgstr ""
+msgstr "Справжнє ім'я власника"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:246
 #: modules/glpi/glpi/ajaxViewPart.php:241
@@ -452,7 +452,7 @@ msgstr "Усі правила"
 
 #: modules/glpi/glpi/createMachinesStaticGroupdeploy.php:31
 msgid "Machines "
-msgstr ""
+msgstr "Комп'ютери"
 
 #: modules/glpi/glpi/entityList.php:28
 msgid "Entity list"
