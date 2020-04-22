@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 09:55+0100\n"
+"POT-Creation-Date: 2020-04-22 11:58+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -74,25 +74,41 @@ msgid "Show mirror status"
 msgstr "Montrer l'état de synchronisation des miroirs"
 
 #: modules/pkgs/infoPackage.inc.php:115
+msgid "Pending Package synchronization"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:119
 #: modules/pkgs/pkgs/ajaxPackageList.php:86
 msgid "Delete a package"
 msgstr "Supprimer un package"
 
-#: modules/pkgs/infoPackage.inc.php:119
+#: modules/pkgs/infoPackage.inc.php:123
 msgid "Delete a bundle"
 msgstr "Supprimer un bundle"
 
-#: modules/pkgs/infoPackage.inc.php:123
+#: modules/pkgs/infoPackage.inc.php:127
 msgid "Activate Appstream Stream"
 msgstr "Activer ce flux Appstream"
 
-#: modules/pkgs/infoPackage.inc.php:162
+#: modules/pkgs/infoPackage.inc.php:166
 msgid "Appstream Updates list"
 msgstr "Liste des mises à jour Appstream"
 
 #: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
 msgid "Pending packages list"
 msgstr "Liste des packages en attente"
+
+#: modules/pkgs/pkgs/pending.php:41
+msgid "All the pendings have been deleted"
+msgstr ""
+
+#: modules/pkgs/pkgs/pending.php:44
+msgid "The package "
+msgstr ""
+
+#: modules/pkgs/pkgs/pending.php:47
+msgid "The relays <b>"
+msgstr ""
 
 #: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
 msgid "Appstream updates"
@@ -150,6 +166,20 @@ msgstr "Flux de déploiement"
 #: modules/pkgs/pkgs/deletePackage.php:38
 msgid "Delete this rule"
 msgstr "Supprimer cette règle"
+
+#: modules/pkgs/pkgs/desynchronization.php:54
+msgid "Delete Pending"
+msgstr ""
+
+#: modules/pkgs/pkgs/desynchronization.php:57
+#: modules/pkgs/pkgs/desynchronization.php:74
+msgid "Remove package "
+msgstr ""
+
+#: modules/pkgs/pkgs/desynchronization.php:57
+#: modules/pkgs/pkgs/desynchronization.php:81
+msgid "Remove specific jids from "
+msgstr ""
 
 #: modules/pkgs/pkgs/appstreamSettings.php:39
 #, php-format
@@ -285,9 +315,17 @@ msgstr "Ajouter"
 msgid "Associate package"
 msgstr "Associer des fichiers à un package"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+msgid "Remove all packages from pending"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:80
 msgid "Show mirrors"
 msgstr "Montrer l'état des miroirs"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:81
+msgid "Remove packages from pending"
+msgstr ""
 
 #: modules/pkgs/pkgs/remove.php:40
 msgid "The package has been deleted."
