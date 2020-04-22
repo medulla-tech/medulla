@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 09:55+0100\n"
+"POT-Creation-Date: 2020-04-22 11:58+0200\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -1912,11 +1912,11 @@ msgstr "Stopp klient"
 
 #: modules/msc/msc/launch.php:648
 msgid "ACTIVE"
-msgstr ""
+msgstr "AKTIV"
 
 #: modules/msc/msc/launch.php:655
 msgid "AVAILABLE"
-msgstr ""
+msgstr "TILGJENGELIG"
 
 #: modules/msc/msc/launch.php:692
 msgid "Example for lunch and night (24h format): 12-14,20-8"
@@ -1984,15 +1984,15 @@ msgstr "Synker utrulling"
 
 #: modules/msc/msc/launch.php:833
 msgid "Reconfigure"
-msgstr ""
+msgstr "Re-konfigurer"
 
 #: modules/msc/msc/launch.php:834
 msgid "Disable"
-msgstr ""
+msgstr "Deaktiver"
 
 #: modules/msc/msc/launch.php:836
 msgid "Enable"
-msgstr ""
+msgstr "Aktiver"
 
 #: modules/msc/msc/launch.php:856
 msgid "Probe status"

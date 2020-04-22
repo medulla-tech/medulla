@@ -3440,6 +3440,11 @@ class XmppMasterDatabase(DatabaseHelper):
         ret['lentotal'] = lentaillerequette#[0]
         ret['total_of_rows'] = lenrequest[0][0]
         for linedeploy in result:
+            macaddress = ''.join(linedeploy.macadress.split(':'))
+            if linedeploy.host.split("/")[-1] == macaddress:
+                hostname = linedeploy.host.split(".")[0]
+            else:
+                hostname = linedeploy.host.split("/")[-1]
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
@@ -3447,7 +3452,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
+            ret['tabdeploy']['host'].append(hostname)
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
@@ -3532,6 +3537,11 @@ class XmppMasterDatabase(DatabaseHelper):
         #ret['lentotal'] = nbfilter
         ret['lentotal'] = count[0][0]
         for linedeploy in result:
+            macaddress = ''.join(linedeploy.macadress.split(':'))
+            if linedeploy.host.split("/")[-1] == macaddress:
+                hostname = linedeploy.host.split(".")[0]
+            else:
+                hostname = linedeploy.host.split("/")[-1]
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
@@ -3539,7 +3549,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['host'].append(hostname)
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
@@ -5621,3 +5631,189 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
         return updatedb
+
+    @DatabaseHelper._sessionm
+    def get_xmppmachines_list(self, session, start, limit, filter, presence):
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        query = session.query(Machines.id,
+                Machines.hostname,
+                Machines.enabled,
+                Machines.jid,
+                Machines.archi,
+                Machines.classutil,
+                Machines.kiosk_presence,
+                Machines.ad_ou_user,
+                Machines.ad_ou_machine,
+                Machines.macaddress,
+                Machines.ip_xmpp)\
+            .add_column(Cluster_ars.name.label('cluster_name'))\
+            .add_column(Cluster_ars.description.label('cluster_description'))\
+            .join(RelayServer, RelayServer.jid == Machines.groupdeploy)\
+            .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)\
+            .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
+            .filter(Machines.agenttype == 'machine', Machines.uuid_inventorymachine == None)
+
+        if presence == 'nopresence':
+            query = query.filter(Machines.enabled != 1)
+        elif presence == 'presence':
+            query = query.filter(Machines.enabled == 1)
+
+        if filter != "":
+            query = query.filter(
+                or_(
+                    Machines.hostname.contains(filter),
+                    Machines.jid.contains(filter),
+                    Machines.archi.contains(filter),
+                    Machines.hostname.contains(filter),
+                    Machines.ip_xmpp.contains(filter),
+                    Machines.macaddress.contains(filter),
+                    Machines.classutil.contains(filter),
+                    Machines.ad_ou_machine.contains(filter),
+                    Machines.ad_ou_user.contains(filter),
+                    Machines.kiosk_presence.contains(filter),
+                    Cluster_ars.name.contains(filter),
+                    Cluster_ars.description.contains(filter)
+                )
+            )
+        count = query.count()
+        if start != -1 and limit != -1:
+            query = query.offset(start).limit(limit)
+
+        query= query.all()
+
+        result = {
+            'id': [],
+            'jid': [],
+            'enabled': [],
+            'enabled_css': [],
+            'archi': [],
+            'hostname': [],
+            'ip_xmpp': [],
+            'macaddress': [],
+            'classutil': [],
+            'ad_ou_machine': [],
+            'ad_ou_user': [],
+            'kiosk_presence': [],
+            'cluster_name': [],
+            'cluster_description' : []
+        }
+        if query is not None:
+            for machine in query:
+                result['id'].append(machine.id)
+                result['jid'].append(machine.jid)
+                if machine.enabled == 1:
+                    result['enabled'].append(True)
+                    result['enabled_css'].append('machineNamepresente')
+                else:
+                    result['enabled'].append(False)
+                    result['enabled_css'].append('machineName')
+                result['archi'].append(machine.archi)
+                result['hostname'].append(machine.hostname)
+                result['ip_xmpp'].append(machine.ip_xmpp)
+                result['macaddress'].append(machine.macaddress)
+                result['classutil'].append(machine.classutil)
+                result['ad_ou_machine'].append(machine.ad_ou_machine)
+                result['ad_ou_user'].append(machine.ad_ou_user)
+                result['kiosk_presence'].append(machine.kiosk_presence)
+                if machine.cluster_name is None:
+                    result['cluster_name'].append("NULL")
+                else:
+                    result['cluster_name'].append(machine.cluster_name)
+                if machine.cluster_description is None:
+                    result['cluster_description'].append("NULL")
+                else:
+                    result['cluster_description'].append(machine.cluster_description)
+        return {'total': count, 'datas': result}
+
+    @DatabaseHelper._sessionm
+    def get_xmpprelays_list(self, session, start, limit, filter, presence):
+        #knokno
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        query = session.query(Machines.id,
+                Machines.jid,
+                Machines.hostname,
+                Machines.enabled,
+                Machines.classutil,
+                Machines.macaddress,
+                Machines.ip_xmpp)\
+            .add_column(Cluster_ars.name.label("cluster_name"))\
+            .add_column(Cluster_ars.description.label("cluster_description"))\
+            .join(RelayServer, RelayServer.jid == Machines.jid)\
+            .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)\
+            .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
+            .filter(Machines.agenttype == 'relayserver')
+        if presence == 'nopresence':
+            query = query.filter(Machines.enabled != 1)
+        elif presence == 'presence':
+            query = query.filter(Machines.enabled == 1)
+
+
+        if filter != "":
+            query = query.filter(
+                or_(
+                    Machines.hostname.contains(filter),
+                    Machines.jid.contains(filter),
+                    Cluster_ars.name.contains(filter),
+                    Cluster_ars.description.contains(filter),
+                    Machines.classutil.contains(filter),
+                    Machines.macaddress.contains(filter),
+                    Machines.ip_xmpp.contains(filter),
+                )
+            )
+        count = query.count()
+        if start != -1 and limit != -1:
+            query = query.offset(start).limit(limit)
+
+        query= query.all()
+
+        result = {
+            'id': [],
+            'hostname': [],
+            'jid': [],
+            'cluster_name': [],
+            'cluster_description' : [],
+            'classutil': [],
+            'macaddress': [],
+            'ip_xmpp': [],
+            'enabled': [],
+            'enabled_css': []
+        }
+        if query is not None:
+            for machine in query:
+                result['id'].append(machine.id)
+                result['jid'].append(machine.jid)
+                if machine.enabled == 1:
+                    result['enabled'].append(True)
+                    result['enabled_css'].append('machineNamepresente')
+                else:
+                    result['enabled'].append(False)
+                    result['enabled_css'].append('machineName')
+                result['hostname'].append(machine.hostname)
+                result['ip_xmpp'].append(machine.ip_xmpp)
+                result['macaddress'].append(machine.macaddress)
+                result['classutil'].append(machine.classutil)
+                if machine.cluster_name is None:
+                    result['cluster_name'].append("NULL")
+                else:
+                    result['cluster_name'].append(machine.cluster_name)
+                if machine.cluster_description is None:
+                    result['cluster_description'].append("NULL")
+                else:
+                    result['cluster_description'].append(machine.cluster_description)
+        return {'total': count, 'datas': result}

@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2019
+# Yuri Chornoivan <yurchor@ukr.net>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 09:55+0100\n"
+"POT-Creation-Date: 2020-04-22 11:58+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,25 +73,41 @@ msgid "Show mirror status"
 msgstr "Показати стан дзеркала"
 
 #: modules/pkgs/infoPackage.inc.php:115
+msgid "Pending Package synchronization"
+msgstr "Черга синхронізації пакунків"
+
+#: modules/pkgs/infoPackage.inc.php:119
 #: modules/pkgs/pkgs/ajaxPackageList.php:86
 msgid "Delete a package"
 msgstr "Вилучити пакунок"
 
-#: modules/pkgs/infoPackage.inc.php:119
+#: modules/pkgs/infoPackage.inc.php:123
 msgid "Delete a bundle"
 msgstr "Вилучити в'язку"
 
-#: modules/pkgs/infoPackage.inc.php:123
+#: modules/pkgs/infoPackage.inc.php:127
 msgid "Activate Appstream Stream"
 msgstr "Активувати потік Appstream"
 
-#: modules/pkgs/infoPackage.inc.php:162
+#: modules/pkgs/infoPackage.inc.php:166
 msgid "Appstream Updates list"
 msgstr "Список оновлень Appstream"
 
 #: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
 msgid "Pending packages list"
 msgstr "Список пакунків у черзі"
+
+#: modules/pkgs/pkgs/pending.php:41
+msgid "All the pendings have been deleted"
+msgstr "Усі заплановані завдання було вилучено"
+
+#: modules/pkgs/pkgs/pending.php:44
+msgid "The package "
+msgstr "Пакунок"
+
+#: modules/pkgs/pkgs/pending.php:47
+msgid "The relays <b>"
+msgstr "Зміни <b>"
 
 #: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
 msgid "Appstream updates"
@@ -151,6 +167,20 @@ msgstr "Процедура розгортання"
 #: modules/pkgs/pkgs/deletePackage.php:38
 msgid "Delete this rule"
 msgstr "Вилучити це правило"
+
+#: modules/pkgs/pkgs/desynchronization.php:54
+msgid "Delete Pending"
+msgstr "Вилучити заплановане"
+
+#: modules/pkgs/pkgs/desynchronization.php:57
+#: modules/pkgs/pkgs/desynchronization.php:74
+msgid "Remove package "
+msgstr "Вилучити пакунок"
+
+#: modules/pkgs/pkgs/desynchronization.php:57
+#: modules/pkgs/pkgs/desynchronization.php:81
+msgid "Remove specific jids from "
+msgstr "Вилучити вказані jid з"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:39
 #, php-format
@@ -287,9 +317,17 @@ msgstr "Додати"
 msgid "Associate package"
 msgstr "Пов'язати пакунок"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+msgid "Remove all packages from pending"
+msgstr "Вилучити усі пакунки зі списку запланованого"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:80
 msgid "Show mirrors"
 msgstr "Показати дзеркала"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:81
+msgid "Remove packages from pending"
+msgstr "Вилучити пакунки зі списку запланованого"
 
 #: modules/pkgs/pkgs/remove.php:40
 msgid "The package has been deleted."
@@ -465,7 +503,7 @@ msgstr "Вивантажити файли з черги"
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
 msgid "The rule %s has been removed"
-msgstr ""
+msgstr "Вилучено правило %s"
 
 #: modules/pkgs/pkgs/rulesList.php:71
 msgid "Rules Order"
