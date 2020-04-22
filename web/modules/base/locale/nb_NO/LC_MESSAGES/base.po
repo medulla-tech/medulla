@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 12:11+0100\n"
+"POT-Creation-Date: 2020-04-22 11:51+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -339,7 +339,7 @@ msgid "User home directory"
 msgstr "Brukers hjemmemappe"
 
 #: modules/base/infoPackage.inc.php:392
-#: modules/base/includes/publicFunc.php:508
+#: modules/base/includes/publicFunc.php:473
 msgid "Login shell"
 msgstr "Login skall"
 
@@ -352,8 +352,8 @@ msgid "Mail address"
 msgstr "E-postadresse"
 
 #: modules/base/infoPackage.inc.php:395
-#: modules/base/includes/publicFunc.php:382
-#: modules/base/includes/publicFunc.php:385
+#: modules/base/includes/publicFunc.php:347
+#: modules/base/includes/publicFunc.php:350
 msgid "Telephone number"
 msgstr "Telefonnummer"
 
@@ -362,38 +362,37 @@ msgid "Mobile phone number"
 msgstr "Mobilnummer"
 
 #: modules/base/infoPackage.inc.php:397
-#: modules/base/includes/publicFunc.php:397
+#: modules/base/includes/publicFunc.php:362
 msgid "Fax number"
 msgstr "Faks nummer"
 
 #: modules/base/infoPackage.inc.php:398
-#: modules/base/includes/publicFunc.php:402
+#: modules/base/includes/publicFunc.php:367
 msgid "Home phone number"
 msgstr "Hjemenummer"
 
 #: modules/base/infoPackage.inc.php:399
-#: modules/base/includes/publicFunc.php:453
+#: modules/base/includes/publicFunc.php:418
 msgid "Primary group"
 msgstr "Hovedgruppe"
 
 #: modules/base/infoPackage.inc.php:400
-#: modules/base/includes/publicFunc.php:482
+#: modules/base/includes/publicFunc.php:447
 msgid "Secondary groups"
 msgstr "Sekundære grupper"
 
 #: modules/base/infoPackage.inc.php:401
-#: modules/base/includes/publicFunc.php:513
+#: modules/base/includes/publicFunc.php:478
 msgid "Common name"
 msgstr "Visningsnavn"
 
 #: modules/base/infoPackage.inc.php:402
-#: modules/base/includes/publicFunc.php:519
+#: modules/base/includes/publicFunc.php:484
 msgid "Preferred name to be used"
 msgstr "Foretrukket brukernavn"
 
 #: modules/base/infoPackage.inc.php:403
-#: modules/base/includes/publicFunc.php:85
-#: modules/base/includes/publicFunc.php:345 index.php:216
+#: modules/base/includes/publicFunc.php:310 index.php:216
 msgid "Password"
 msgstr "Passord"
 
@@ -407,7 +406,7 @@ msgid "Enable/Disable user account"
 msgstr "Aktivere/Deaktivere brukers konto"
 
 #: modules/base/views/index.tpl.php:78
-#: modules/base/includes/publicFunc.php:330
+#: modules/base/includes/publicFunc.php:295
 #: modules/base/users/ajaxFilter.php:68 index.php:210
 msgid "Login"
 msgstr "Brukernavn"
@@ -417,7 +416,7 @@ msgid "Name"
 msgstr "Etternavn"
 
 #: modules/base/views/index.tpl.php:87
-#: modules/base/includes/publicFunc.php:491
+#: modules/base/includes/publicFunc.php:456
 msgid "Home directory"
 msgstr "Hjemmemappe"
 
@@ -633,78 +632,54 @@ msgstr ""
 msgid "Group %s successfully deleted."
 msgstr "Gruppe %s ble slettet"
 
-#: modules/base/includes/publicFunc.php:69
-msgid "Minimum"
-msgstr "Minimum"
-
-#: modules/base/includes/publicFunc.php:69
-msgid "characters for the password"
-msgstr "tegn for passordet"
-
-#: modules/base/includes/publicFunc.php:74
-msgid "very weak"
-msgstr "veldig svakt"
-
-#: modules/base/includes/publicFunc.php:77
-msgid "weak"
-msgstr "svakt"
-
-#: modules/base/includes/publicFunc.php:80
-msgid "medium"
-msgstr "medium"
-
-#: modules/base/includes/publicFunc.php:83
-msgid "good"
-msgstr "bra"
-
-#: modules/base/includes/publicFunc.php:110
+#: modules/base/includes/publicFunc.php:82
 msgid "User's name invalid !"
 msgstr "Brukers navn er ugyldig !"
 
-#: modules/base/includes/publicFunc.php:115
-msgid "Last name is empty."
-msgstr "Etternavn er tomt"
-
-#: modules/base/includes/publicFunc.php:120
-msgid "First name is empty."
-msgstr "Fornavn er tomt"
-
-#: modules/base/includes/publicFunc.php:126
+#: modules/base/includes/publicFunc.php:87
 #, php-format
 msgid "The user %s already exists."
 msgstr "Bruker %s eksisterer allerede"
 
-#: modules/base/includes/publicFunc.php:131
+#: modules/base/includes/publicFunc.php:92
 msgid "Password is empty."
 msgstr "Passordet er tomt."
 
-#: modules/base/includes/publicFunc.php:143
+#: modules/base/includes/publicFunc.php:97
+msgid "Last name is empty."
+msgstr "Etternavn er tomt"
+
+#: modules/base/includes/publicFunc.php:101
+msgid "First name is empty."
+msgstr "Fornavn er tomt"
+
+#: modules/base/includes/publicFunc.php:108
 msgid "The confirmation password does not match the new password."
 msgstr "Passordbekreftelsen er ikke likt det nye passordet."
 
-#: modules/base/includes/publicFunc.php:150
+#: modules/base/includes/publicFunc.php:115
 msgid "The primary group field can't be empty."
 msgstr "Hovedgruppefeltet kan ikke være tomt."
 
-#: modules/base/includes/publicFunc.php:154
+#: modules/base/includes/publicFunc.php:119
 #, php-format
 msgid "The group %s does not exist, and so can't be set as primary group."
 msgstr ""
 "Gruppen %s eksisterer ikke, og kan derfor ikke settes som hovedgruppe."
 
-#: modules/base/includes/publicFunc.php:231
+#: modules/base/includes/publicFunc.php:196
 msgid "User photo deleted"
 msgstr "Brukerens bilde er slettet"
 
-#: modules/base/includes/publicFunc.php:245
+#: modules/base/includes/publicFunc.php:210
 msgid "User disabled"
 msgstr "Brukeren er deaktivert"
 
-#: modules/base/includes/publicFunc.php:249
+#: modules/base/includes/publicFunc.php:214
 msgid "User enabled"
 msgstr "Brukeren er aktivert"
 
-#: modules/base/includes/publicFunc.php:296
+#: modules/base/includes/publicFunc.php:261
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
@@ -713,59 +688,59 @@ msgstr ""
 "Bildet er for stort. Maks størrelse er %s x %s.\n"
 "Installer php gd-utvidelse for automatisk endre størrelsen på bildet "
 
-#: modules/base/includes/publicFunc.php:301
+#: modules/base/includes/publicFunc.php:266
 msgid "The photo is not a JPG file"
 msgstr "Bildet er ikke en JPG-fil"
 
-#: modules/base/includes/publicFunc.php:305
+#: modules/base/includes/publicFunc.php:270
 msgid "User attributes updated"
 msgstr "Brukerattributter er oppdatert"
 
-#: modules/base/includes/publicFunc.php:321
+#: modules/base/includes/publicFunc.php:286
 msgid "User attributes"
 msgstr "Brukerattributter"
 
-#: modules/base/includes/publicFunc.php:349
+#: modules/base/includes/publicFunc.php:314
 msgid "Confirm password"
 msgstr "Bekreft passord"
 
-#: modules/base/includes/publicFunc.php:354
+#: modules/base/includes/publicFunc.php:319
 msgid "Photo"
 msgstr "Bilde"
 
-#: modules/base/includes/publicFunc.php:359
+#: modules/base/includes/publicFunc.php:324
 msgid "Last name"
 msgstr "Etternavn"
 
-#: modules/base/includes/publicFunc.php:364
+#: modules/base/includes/publicFunc.php:329
 msgid "First name"
 msgstr "Fornavn"
 
-#: modules/base/includes/publicFunc.php:369
+#: modules/base/includes/publicFunc.php:334
 msgid "Title"
 msgstr "Tittel"
 
-#: modules/base/includes/publicFunc.php:374
+#: modules/base/includes/publicFunc.php:339
 msgid "Email address"
 msgstr "E-postadresse"
 
-#: modules/base/includes/publicFunc.php:392
+#: modules/base/includes/publicFunc.php:357
 msgid "Mobile number"
 msgstr "Mobil nummer"
 
-#: modules/base/includes/publicFunc.php:407
+#: modules/base/includes/publicFunc.php:372
 msgid "Choose language"
 msgstr "Velg språk"
 
-#: modules/base/includes/publicFunc.php:412
+#: modules/base/includes/publicFunc.php:377
 msgid "Preferred language"
 msgstr "Foretrukket språk"
 
-#: modules/base/includes/publicFunc.php:420
+#: modules/base/includes/publicFunc.php:385
 msgid "Disable user's shell"
 msgstr "Deaktiver brukerens skallvindu"
 
-#: modules/base/includes/publicFunc.php:421
+#: modules/base/includes/publicFunc.php:386
 msgid ""
 "A disabled user can't log in any UNIX services.<br/>\n"
 "                                  His login shell command is replaced by /bin/false"
@@ -773,27 +748,27 @@ msgstr ""
 "En deaktivert bruker kan ikke logge på noen UNIX-tjenester.<br/>\n"
 "Kommandoen for innloggingsskall erstattes av /bin/false"
 
-#: modules/base/includes/publicFunc.php:459
+#: modules/base/includes/publicFunc.php:424
 msgid "User's groups"
 msgstr "Brukerens grupper"
 
-#: modules/base/includes/publicFunc.php:459
+#: modules/base/includes/publicFunc.php:424
 msgid "All groups"
 msgstr "Alle gupper"
 
-#: modules/base/includes/publicFunc.php:497
+#: modules/base/includes/publicFunc.php:462
 msgid "Create home directory on filesystem"
 msgstr "Lag hjemmekataloger på filsystemet"
 
-#: modules/base/includes/publicFunc.php:501
+#: modules/base/includes/publicFunc.php:466
 msgid "Force to use the home directory if it exists"
 msgstr "Tviungen bruk av hjemmekatalog hvis den eksisterer"
 
-#: modules/base/includes/publicFunc.php:502
+#: modules/base/includes/publicFunc.php:467
 msgid "Warning: an existing directory may belong to another user !"
 msgstr "Advarsel: en eksisterende katalog kan tilhøre en annen bruker!"
 
-#: modules/base/includes/publicFunc.php:514
+#: modules/base/includes/publicFunc.php:479
 msgid ""
 "This field is used by some LDAP clients (for example Thunderbird address "
 "book) to display user entries."
@@ -801,17 +776,17 @@ msgstr ""
 "Dette feltet brukes av noen LDAP klienter (for eksempelo Thunderbird "
 "adressebok) for å vise brukeroppføringer."
 
-#: modules/base/includes/publicFunc.php:520
+#: modules/base/includes/publicFunc.php:485
 msgid ""
 "This field is used by SAMBA (and other LDAP clients) to display user name."
 msgstr ""
 "Dette feltet brukes av SAMBA (og andre LDAP klienter) for å vise brukernavn."
 
-#: modules/base/includes/publicFunc.php:526
+#: modules/base/includes/publicFunc.php:491
 msgid "UID"
 msgstr "UID"
 
-#: modules/base/includes/publicFunc.php:531
+#: modules/base/includes/publicFunc.php:496
 msgid "GID"
 msgstr "GID"
 
@@ -939,7 +914,7 @@ msgstr "GLPI Inventar"
 #: modules/base/includes/computers_list.inc.php:102
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:82
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:80
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 msgid "detaildeploy"
@@ -968,6 +943,11 @@ msgstr "Bla igjennom filer"
 
 #: modules/base/includes/computers_list.inc.php:118
 #: modules/base/includes/computers_list.inc.php:120
+#: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:36
+#: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:37
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:47
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:48
+#: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:65
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
 msgid "Edit config files"
 msgstr "Rediger konfigurasjonsfiler"
@@ -1674,27 +1654,27 @@ msgid_plural "%d inactive services"
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:181
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:298
 msgid "cluster list"
 msgstr "cluster liste"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:182
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:299
 msgid "cluster nb ars"
 msgstr "cluster nb ars"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:183
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:300
 msgid "machine"
 msgstr "maskin"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:184
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:301
 msgid "progress"
 msgstr "framdrift"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:185
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:302
 msgid "start"
 msgstr "start"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:186
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:303
 msgid "end"
 msgstr "slutt"
 
@@ -1742,7 +1722,7 @@ msgstr "web: versjon"
 msgid "web: plugin is not installed"
 msgstr "web: plugin er ikke installert"
 
-#: includes/acl.inc.php:132
+#: includes/acl.inc.php:148
 msgid "You do not have required rights"
 msgstr "Du har ikke tilstrekkelig rettigheter"
 
@@ -1846,22 +1826,22 @@ msgstr ""
 "<li>Samba-serveren din er ikke riktig konfigurert</li>\n"
 "</ul>"
 
-#: includes/modules.inc.php:410
+#: includes/modules.inc.php:395
 #, php-format
 msgid "%s service restarting..."
 msgstr "%s tjenesten starter på nytt ..."
 
-#: includes/modules.inc.php:411
+#: includes/modules.inc.php:396
 #, php-format
 msgid "%s service restarted successfully."
 msgstr "%s tjenesten ble startet på nytt."
 
-#: includes/modules.inc.php:412
+#: includes/modules.inc.php:397
 #, php-format
 msgid "%s service failed to restart."
 msgstr "%s tjenesten kunne ikke starte på nytt."
 
-#: includes/modules.inc.php:417
+#: includes/modules.inc.php:402
 msgid "Restart the service ?"
 msgid_plural "Restart the services ?"
 msgstr[0] "Start tjenestene på nytt"

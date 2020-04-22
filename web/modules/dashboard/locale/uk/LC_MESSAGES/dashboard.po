@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2019
+# Yuri Chornoivan <yurchor@ukr.net>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 12:11+0100\n"
+"POT-Creation-Date: 2020-04-22 11:51+0200\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +34,26 @@ msgstr "Панелі"
 #: modules/dashboard/infoPackage.inc.php:55
 msgid "Session Panels"
 msgstr "Панелі сеансів"
+
+#: modules/dashboard/infoPackage.inc.php:60
+msgid "Computers Online Panel"
+msgstr "Панель активних комп'ютерів"
+
+#: modules/dashboard/infoPackage.inc.php:63
+msgid "Space Panel"
+msgstr "Панель простору"
+
+#: modules/dashboard/infoPackage.inc.php:66
+msgid "General Panel"
+msgstr "Загальна панель"
+
+#: modules/dashboard/infoPackage.inc.php:69
+msgid "Backup Panel"
+msgstr "Панель резервного копіювання"
+
+#: modules/dashboard/infoPackage.inc.php:72
+msgid "Update Panel"
+msgstr "Панель оновлень"
 
 #: modules/dashboard/includes/panels/space.inc.php:28
 msgid "Disk usage"

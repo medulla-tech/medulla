@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 12:11+0100\n"
+"POT-Creation-Date: 2020-04-22 11:51+0200\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/siveo/teams/72118/it_IT/)\n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,26 @@ msgstr ""
 
 #: modules/dashboard/infoPackage.inc.php:55
 msgid "Session Panels"
+msgstr ""
+
+#: modules/dashboard/infoPackage.inc.php:60
+msgid "Computers Online Panel"
+msgstr ""
+
+#: modules/dashboard/infoPackage.inc.php:63
+msgid "Space Panel"
+msgstr ""
+
+#: modules/dashboard/infoPackage.inc.php:66
+msgid "General Panel"
+msgstr ""
+
+#: modules/dashboard/infoPackage.inc.php:69
+msgid "Backup Panel"
+msgstr ""
+
+#: modules/dashboard/infoPackage.inc.php:72
+msgid "Update Panel"
 msgstr ""
 
 #: modules/dashboard/includes/panels/space.inc.php:28

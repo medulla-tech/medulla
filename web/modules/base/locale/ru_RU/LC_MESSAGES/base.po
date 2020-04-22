@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 12:11+0100\n"
+"POT-Creation-Date: 2020-04-22 11:51+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -338,7 +338,7 @@ msgid "User home directory"
 msgstr "Домашний каталог пользователя"
 
 #: modules/base/infoPackage.inc.php:392
-#: modules/base/includes/publicFunc.php:508
+#: modules/base/includes/publicFunc.php:473
 msgid "Login shell"
 msgstr "Оболочка входа в систему"
 
@@ -351,8 +351,8 @@ msgid "Mail address"
 msgstr "Почтовый адрес"
 
 #: modules/base/infoPackage.inc.php:395
-#: modules/base/includes/publicFunc.php:382
-#: modules/base/includes/publicFunc.php:385
+#: modules/base/includes/publicFunc.php:347
+#: modules/base/includes/publicFunc.php:350
 msgid "Telephone number"
 msgstr "Телефон"
 
@@ -361,38 +361,37 @@ msgid "Mobile phone number"
 msgstr "Мобильный"
 
 #: modules/base/infoPackage.inc.php:397
-#: modules/base/includes/publicFunc.php:397
+#: modules/base/includes/publicFunc.php:362
 msgid "Fax number"
 msgstr "Факс"
 
 #: modules/base/infoPackage.inc.php:398
-#: modules/base/includes/publicFunc.php:402
+#: modules/base/includes/publicFunc.php:367
 msgid "Home phone number"
 msgstr "номер домашнего телефона"
 
 #: modules/base/infoPackage.inc.php:399
-#: modules/base/includes/publicFunc.php:453
+#: modules/base/includes/publicFunc.php:418
 msgid "Primary group"
 msgstr "Основная группа"
 
 #: modules/base/infoPackage.inc.php:400
-#: modules/base/includes/publicFunc.php:482
+#: modules/base/includes/publicFunc.php:447
 msgid "Secondary groups"
 msgstr ""
 
 #: modules/base/infoPackage.inc.php:401
-#: modules/base/includes/publicFunc.php:513
+#: modules/base/includes/publicFunc.php:478
 msgid "Common name"
 msgstr "Общее имя"
 
 #: modules/base/infoPackage.inc.php:402
-#: modules/base/includes/publicFunc.php:519
+#: modules/base/includes/publicFunc.php:484
 msgid "Preferred name to be used"
 msgstr "Будет использовано предпочтительное имя"
 
 #: modules/base/infoPackage.inc.php:403
-#: modules/base/includes/publicFunc.php:85
-#: modules/base/includes/publicFunc.php:345 index.php:216
+#: modules/base/includes/publicFunc.php:310 index.php:216
 msgid "Password"
 msgstr "Пароль"
 
@@ -406,7 +405,7 @@ msgid "Enable/Disable user account"
 msgstr "Включить/Отключить аккаунт пользователя"
 
 #: modules/base/views/index.tpl.php:78
-#: modules/base/includes/publicFunc.php:330
+#: modules/base/includes/publicFunc.php:295
 #: modules/base/users/ajaxFilter.php:68 index.php:210
 msgid "Login"
 msgstr "Имя пользователя"
@@ -416,7 +415,7 @@ msgid "Name"
 msgstr "Имя"
 
 #: modules/base/views/index.tpl.php:87
-#: modules/base/includes/publicFunc.php:491
+#: modules/base/includes/publicFunc.php:456
 msgid "Home directory"
 msgstr "Домашний каталог"
 
@@ -628,164 +627,140 @@ msgstr ""
 msgid "Group %s successfully deleted."
 msgstr "Группа %s успешно удалена."
 
-#: modules/base/includes/publicFunc.php:69
-msgid "Minimum"
-msgstr ""
-
-#: modules/base/includes/publicFunc.php:69
-msgid "characters for the password"
-msgstr ""
-
-#: modules/base/includes/publicFunc.php:74
-msgid "very weak"
-msgstr ""
-
-#: modules/base/includes/publicFunc.php:77
-msgid "weak"
-msgstr ""
-
-#: modules/base/includes/publicFunc.php:80
-msgid "medium"
-msgstr ""
-
-#: modules/base/includes/publicFunc.php:83
-msgid "good"
-msgstr ""
-
-#: modules/base/includes/publicFunc.php:110
+#: modules/base/includes/publicFunc.php:82
 msgid "User's name invalid !"
 msgstr "Неверное имя пользователя!"
 
-#: modules/base/includes/publicFunc.php:115
-msgid "Last name is empty."
-msgstr ""
-
-#: modules/base/includes/publicFunc.php:120
-msgid "First name is empty."
-msgstr ""
-
-#: modules/base/includes/publicFunc.php:126
+#: modules/base/includes/publicFunc.php:87
 #, php-format
 msgid "The user %s already exists."
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:131
+#: modules/base/includes/publicFunc.php:92
 msgid "Password is empty."
 msgstr "Пустой пароль."
 
-#: modules/base/includes/publicFunc.php:143
+#: modules/base/includes/publicFunc.php:97
+msgid "Last name is empty."
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:101
+msgid "First name is empty."
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:108
 msgid "The confirmation password does not match the new password."
 msgstr "Пароль потверждения не соответствует новому паролю."
 
-#: modules/base/includes/publicFunc.php:150
+#: modules/base/includes/publicFunc.php:115
 msgid "The primary group field can't be empty."
 msgstr "Поле основной группы не может быть пустое."
 
-#: modules/base/includes/publicFunc.php:154
+#: modules/base/includes/publicFunc.php:119
 #, php-format
 msgid "The group %s does not exist, and so can't be set as primary group."
 msgstr ""
 "Группа %s не существует и поэтому не может быть установлена в качестве "
 "основоной."
 
-#: modules/base/includes/publicFunc.php:231
+#: modules/base/includes/publicFunc.php:196
 msgid "User photo deleted"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:245
+#: modules/base/includes/publicFunc.php:210
 msgid "User disabled"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:249
+#: modules/base/includes/publicFunc.php:214
 msgid "User enabled"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:296
+#: modules/base/includes/publicFunc.php:261
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
 "                    Install php gd extension to resize the photo automatically"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:301
+#: modules/base/includes/publicFunc.php:266
 msgid "The photo is not a JPG file"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:305
+#: modules/base/includes/publicFunc.php:270
 msgid "User attributes updated"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:321
+#: modules/base/includes/publicFunc.php:286
 msgid "User attributes"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:349
+#: modules/base/includes/publicFunc.php:314
 msgid "Confirm password"
 msgstr "Подтвердите пароль"
 
-#: modules/base/includes/publicFunc.php:354
+#: modules/base/includes/publicFunc.php:319
 msgid "Photo"
 msgstr "Фотография"
 
-#: modules/base/includes/publicFunc.php:359
+#: modules/base/includes/publicFunc.php:324
 msgid "Last name"
 msgstr "Фамилия"
 
-#: modules/base/includes/publicFunc.php:364
+#: modules/base/includes/publicFunc.php:329
 msgid "First name"
 msgstr "Имя"
 
-#: modules/base/includes/publicFunc.php:369
+#: modules/base/includes/publicFunc.php:334
 msgid "Title"
 msgstr "Обращение"
 
-#: modules/base/includes/publicFunc.php:374
+#: modules/base/includes/publicFunc.php:339
 msgid "Email address"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:392
+#: modules/base/includes/publicFunc.php:357
 msgid "Mobile number"
 msgstr "Мобильный"
 
-#: modules/base/includes/publicFunc.php:407
+#: modules/base/includes/publicFunc.php:372
 msgid "Choose language"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:412
+#: modules/base/includes/publicFunc.php:377
 msgid "Preferred language"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:420
+#: modules/base/includes/publicFunc.php:385
 msgid "Disable user's shell"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:421
+#: modules/base/includes/publicFunc.php:386
 msgid ""
 "A disabled user can't log in any UNIX services.<br/>\n"
 "                                  His login shell command is replaced by /bin/false"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:459
+#: modules/base/includes/publicFunc.php:424
 msgid "User's groups"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:459
+#: modules/base/includes/publicFunc.php:424
 msgid "All groups"
 msgstr "Все группы"
 
-#: modules/base/includes/publicFunc.php:497
+#: modules/base/includes/publicFunc.php:462
 msgid "Create home directory on filesystem"
 msgstr "Создать домашнюю папку"
 
-#: modules/base/includes/publicFunc.php:501
+#: modules/base/includes/publicFunc.php:466
 msgid "Force to use the home directory if it exists"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:502
+#: modules/base/includes/publicFunc.php:467
 msgid "Warning: an existing directory may belong to another user !"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:514
+#: modules/base/includes/publicFunc.php:479
 msgid ""
 "This field is used by some LDAP clients (for example Thunderbird address "
 "book) to display user entries."
@@ -793,18 +768,18 @@ msgstr ""
 "Это поле используется некоторыми клиентами LDAP (к примеру адресная книга "
 "Thunderbird) для показа записей пользователя."
 
-#: modules/base/includes/publicFunc.php:520
+#: modules/base/includes/publicFunc.php:485
 msgid ""
 "This field is used by SAMBA (and other LDAP clients) to display user name."
 msgstr ""
 "Это поле используется SAMBA (и другими LDAP-клиентами) для отображения имени"
 " пользователя."
 
-#: modules/base/includes/publicFunc.php:526
+#: modules/base/includes/publicFunc.php:491
 msgid "UID"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:531
+#: modules/base/includes/publicFunc.php:496
 msgid "GID"
 msgstr ""
 
@@ -923,7 +898,7 @@ msgstr "GLPI Инвентарь"
 #: modules/base/includes/computers_list.inc.php:102
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:82
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:80
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 msgid "detaildeploy"
@@ -952,6 +927,11 @@ msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:118
 #: modules/base/includes/computers_list.inc.php:120
+#: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:36
+#: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:37
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:47
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:48
+#: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:65
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
 msgid "Edit config files"
 msgstr ""
@@ -1665,27 +1645,27 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:181
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:298
 msgid "cluster list"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:182
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:299
 msgid "cluster nb ars"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:183
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:300
 msgid "machine"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:184
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:301
 msgid "progress"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:185
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:302
 msgid "start"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:186
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:303
 msgid "end"
 msgstr ""
 
@@ -1733,7 +1713,7 @@ msgstr ""
 msgid "web: plugin is not installed"
 msgstr ""
 
-#: includes/acl.inc.php:132
+#: includes/acl.inc.php:148
 msgid "You do not have required rights"
 msgstr "У вас нет необходимых прав"
 
@@ -1832,22 +1812,22 @@ msgstr ""
 "                            <li> Ваш Samba-сервер не правильно настроен</li>\n"
 "                        </ul>"
 
-#: includes/modules.inc.php:410
+#: includes/modules.inc.php:395
 #, php-format
 msgid "%s service restarting..."
 msgstr ""
 
-#: includes/modules.inc.php:411
+#: includes/modules.inc.php:396
 #, php-format
 msgid "%s service restarted successfully."
 msgstr ""
 
-#: includes/modules.inc.php:412
+#: includes/modules.inc.php:397
 #, php-format
 msgid "%s service failed to restart."
 msgstr ""
 
-#: includes/modules.inc.php:417
+#: includes/modules.inc.php:402
 msgid "Restart the service ?"
 msgid_plural "Restart the services ?"
 msgstr[0] ""
