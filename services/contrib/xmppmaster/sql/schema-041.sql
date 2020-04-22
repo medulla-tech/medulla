@@ -24,7 +24,7 @@ START TRANSACTION;
 
 TRUNCATE `xmppmaster`.`network`;
 TRUNCATE `xmppmaster`.`has_machinesusers`;
-TRUNCATE `xmppmaster`.`machines`;
+DELETE FROM `xmppmaster`.`machines` WHERE 1;
 
 ALTER TABLE `xmppmaster`.`network`
 CHANGE COLUMN `mac` `mac` VARCHAR(45) NOT NULL ,
