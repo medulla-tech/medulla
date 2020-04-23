@@ -921,6 +921,7 @@ def extract_file(imput_file__gz_bz2, to_directory='.', compresstype="gz"):
         os.chdir(to_directory)
         with tarfile.open(absolutepath, "r:%s"%compresstype) as tar:
             tar.extractall()
+        return True
     except OSError as e:
         logger.error( "error extract tar.%s %s"%(str(e),compresstype))
         return False
