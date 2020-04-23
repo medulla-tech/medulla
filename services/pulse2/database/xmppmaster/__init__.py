@@ -85,7 +85,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return DatabaseHelper.db_check(self)
 
     def activate(self, config):
-
+        self.logger = logging.getLogger()
         if self.is_activated:
             return None
         self.config = config
