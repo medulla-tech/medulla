@@ -29,7 +29,6 @@ extract($_GET);
 
  function creategroup($filter, $uuids){
     $groupname = sprintf (_T('Machines '.$filter['criterion']. ' at %s', "glpi"), date("Y-m-d H:i:s"));
-
     $group = new Group();
     $group->create($groupname, False);
     $group->addMembers($uuids);
@@ -47,6 +46,12 @@ foreach($statuslist as $status){
 if($criterion == '')
 {
   switch($type){
+    case 'abort':
+      $criterion = "ABORT";
+      break;
+    case 'error':
+      $criterion = "ERROR";
+      break;
     case 'deploymentsuccess':
       $criterion = "DEPLOYMENT SUCCESS";
       break;

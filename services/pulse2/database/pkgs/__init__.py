@@ -131,7 +131,7 @@ class PkgsDatabase(DatabaseHelper):
                 self.metadata,
                 autoload = True
             )
-            
+
         except NoSuchTableError, e:
             self.logger.error("Cant load the Pkgs database : table '%s' does not exists"%(str(e.args[0])))
             return False
@@ -475,6 +475,7 @@ class PkgsDatabase(DatabaseHelper):
 
         path = os.path.join("/", "var" , "lib", "pulse2", "packages", package_id)
         size = 0
+        files = []
         for root, dirs, files in os.walk(path):
             for file in files:
                 size += os.path.getsize(os.path.join(root, file))
@@ -518,7 +519,7 @@ class PkgsDatabase(DatabaseHelper):
             result['description'] = query.description
 
         return result
-        
+
     @DatabaseHelper._sessionm
     def delete_from_pending(self, session, pid = "", jidrelay = []):
         query = session.query(Syncthingsync)

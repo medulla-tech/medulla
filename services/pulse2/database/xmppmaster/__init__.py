@@ -2653,7 +2653,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 Deploy.inventoryuuid.contains(criterion),
             ))
         if filter != 'infos':
-            query = query.offset(start).limit(limit)
+            if limit != -1:
+                query = query.offset(start).limit(limit)
             count = query.count()
         else:
             count = 0
