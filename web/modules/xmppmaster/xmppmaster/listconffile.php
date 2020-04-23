@@ -127,7 +127,6 @@ li.quickg a {
 
 </style>
 <?php
-echo 'dede';
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
@@ -144,6 +143,7 @@ echo "<br><br><br>";
     }
 
 
+$agenttype = (isset($_GET['agenttype'])) ? $_GET['agenttype'] : '';
 $param = array(
     "id" => $_GET['id'],
     "jid" => $_GET['jid'],
@@ -151,6 +151,7 @@ $param = array(
     "enabled" => $_GET['enabled'],
     "macaddress" => $_GET['macaddress'],
     "ip_xmpp" => $_GET['ip_xmpp'],
+    "agenttype" => $agenttype
 );
 
     $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxlistconffile"),"container", $param);

@@ -59,6 +59,7 @@ a.info:hover span{
 $jid = (isset($_GET['jid'])) ? $_GET['jid'] : '';
 $machine =(isset($_GET['hostname'])) ? $_GET['hostname'] : "";
 
+$filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
 $result = xmlrpc_remotefileeditaction($jid, array('action' => 'listconfigfile'));
 
 
@@ -75,17 +76,36 @@ $editactions = [];
 $params = [];
 if(isset($result['result'])){
 
+$_result = [];
+$agenttype = (isset($_GET['agenttype'])) ? $_GET['agenttype'] : '';
 foreach($result['result'] as $file){
-  $params[] = ['jid'=> $jid, 'name'=>$file];
-  $editactions[] = $editaction;
+  $params[] = ['jid'=> $jid, 'name'=>$file, 'agenttype'=>$agenttype];
+  if($filter)
+  {
+    if(preg_match('#'.$filter.'#i', $file)){
+      $editactions[] = $editaction;
+      $_result[] =$file;}
+  }
+  else{
+    $editactions[] = $editaction;
+    $_result[] =$file;
+  }
 }
 
-$n = new ListInfos($result['result'], _T("Config file", "xmppmaster"));
+if ($filter == "")
+  $count = count($result['result']);
+else
+  $count = count($_result['result']);
+
+$n = new OptimizedListInfos($_result, _T("Config file", "xmppmaster"));
 $n->first_elt_padding = 1;
 $n->disableFirstColumnActionLink();
 $n->setParamInfo($params);
 $n->addActionItemArray($editactions);
+$n->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParam"));
 $n->display();
+$n->start = 0;
+$n->end = $count;
 }
 
 if (isset($result['err'])){

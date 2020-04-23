@@ -311,7 +311,19 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
                     },
                     function(data) {
                         //jQuery('#resultat').val(data['result']);
-                        document.location.href="main.php?module=base&submod=computers&action=index";
+                        var action = "<?php
+                        if(isset($_GET['agenttype'])){
+                          if($_GET['agenttype'] == 'relayserver')
+                            echo 'xmppRelaysList';
+                          else
+                            echo 'xmppMachinesList';
+                        }
+                        else{
+                          echo 'index';
+                        }
+                        ?>";
+
+                        document.location.href="main.php?module=base&submod=computers&action="+action;
                     });
     }
     function loadconffile(param){

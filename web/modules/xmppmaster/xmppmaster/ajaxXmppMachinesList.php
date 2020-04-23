@@ -29,6 +29,7 @@ foreach($machines['datas']['hostname'] as $key=>$array){
     'cluster_description' => $machines['datas']['cluster_description'][$raw],
     'macaddress'=> $machines['datas']['macaddress'][$raw],
     'ip_xmpp' => $machines['datas']['ip_xmpp'][$raw],
+    'agenttype' => 'machine'
   ];
   $machines['datas']['hostname'][$raw] = '<span class="machine-clickable">'.$machines['datas']['hostname'][$raw].'</span>';
   $machines['datas']['jid'][$raw] = '<span class="machine-clickable">'.$machines['datas']['jid'][$raw].'</span>';

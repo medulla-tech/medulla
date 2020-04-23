@@ -22,7 +22,8 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     'cluster_description' => $relays['datas']['cluster_description'],
     'classutil' => $relays['datas']['classutil'][$raw],
     'macaddress'=> $relays['datas']['macaddress'][$raw],
-    'ip_xmpp' => $relays['datas']['ip_xmpp'][$raw]
+    'ip_xmpp' => $relays['datas']['ip_xmpp'][$raw],
+    'agenttype'=> 'relayserver'
   ];
 
   $relays['datas']['hostname'][$raw] = '<span class="relay-clickable">'.$relays['datas']['hostname'][$raw].'</span>';
@@ -41,8 +42,6 @@ foreach($relays['datas']['hostname'] as $key=>$array){
   else{
     $configActions[] =$editremoteconfigurationempty;
   }
-
-
   $raw++;
 }
 
