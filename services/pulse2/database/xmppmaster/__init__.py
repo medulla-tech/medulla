@@ -85,7 +85,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return DatabaseHelper.db_check(self)
 
     def activate(self, config):
-
+        self.logger = logging.getLogger()
         if self.is_activated:
             return None
         self.config = config
@@ -2653,7 +2653,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 Deploy.inventoryuuid.contains(criterion),
             ))
         if filter != 'infos':
-            query = query.offset(start).limit(limit)
+            if limit != -1:
+                query = query.offset(start).limit(limit)
             count = query.count()
         else:
             count = 0
