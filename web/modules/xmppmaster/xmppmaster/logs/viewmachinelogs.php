@@ -163,9 +163,7 @@ include_once('modules/glpi/includes/xmlrpc.php');
     // Retrieve information deploy. For cmn_id
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
-
 $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
-
 
     if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT ABORT"){
         echo "<H1>DEPLOYMENT ABORT</H1>";
@@ -379,7 +377,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                                 echo $deploymachine['creator'];
                             echo "</td>";
                             echo "<td>";
-                            echo $deploymachine['title'];
+                            echo $info['objectdeploy'][0]['pathpackage'];
                             echo "</td>";
                             echo "<td>";
                                 echo $deploymachine['package_id'];
@@ -401,10 +399,16 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                                 echo '<span style=" padding-left: 32px;">'._T("User","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
+                                echo '<span style=" padding-left: 32px;">'._T("Package Name","xmppmaster").'</span>';
+                            echo '</td>';
+                            echo '<td style="width: ;">';
                                 echo '<span style=" padding-left: 32px;">'._T("Start Date","xmppmaster").'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
                                 echo '<span style=" padding-left: 32px;">'._T("Stop Date","xmppmaster").'</span>';
+                            echo '</td>';
+                            echo '<td style="width: ;">';
+                                echo '<span style=" padding-left: 32px;">'._T("Session Id","xmppmaster").'</span>';
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
@@ -414,10 +418,16 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                                 echo $deploymachine['connect_as'];
                             echo "</td>";
                             echo "<td>";
+                            echo $deploymachine['title'];
+                            echo "</td>";
+                            echo "<td>";
                             echo $start_date_plan_msc;
                             echo "</td>";
                             echo "<td>";
                                 echo $end_date_plan_msc;
+                            echo "</td>";
+                            echo "<td>";
+                                echo $info['objectdeploy'][0]['sessionid'];
                             echo "</td>";
                         echo "</tr>";
                     echo "</tbody>";
@@ -568,14 +578,17 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                 echo "</tr>";
             echo "</thead>";
                 echo "<tbody>";
+
         foreach($infodeploy['log'] as $line){
             $scalardate = get_object_vars($info['objectdeploy'][0]['start'])['scalar'];
             $formateddate = substr($scalardate, 0,4).'-'.substr($scalardate, 4,2).'-'.substr($scalardate, 6,2).' '.substr($scalardate, 9);
-            $startsteparray= get_object_vars( $line['date']);
-            $datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);
+            //$startsteparray= get_object_vars( $line['date']);
+            //$datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);
+            //$datestartstep = date("Y-m-d H:i:s", $info['objectdeploy'][0]['start']->timestamp);
+
             echo '<tr class="alternate">';
                 echo "<td>";
-                    echo $datestartstep;
+                    echo $formateddate;
                     //echo $formateddate;
                 echo "</td>";
                 echo "<td>";

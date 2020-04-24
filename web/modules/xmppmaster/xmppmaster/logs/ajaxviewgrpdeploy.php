@@ -241,7 +241,7 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
             }
 
 
-            echo ($syncthing_enabled) ? '<td>'._T("On", "xmppmaster").'</td>' : '<td>'._T("Off", "xmppmaster").'</td>';
+            echo ($syncthing_enabled) ? '<td>'._T("Yes", "xmppmaster").'</td>' : '<td>'._T("No", "xmppmaster").'</td>';
             echo '<td>';
                 echo '<div class="bars">';
                 echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
