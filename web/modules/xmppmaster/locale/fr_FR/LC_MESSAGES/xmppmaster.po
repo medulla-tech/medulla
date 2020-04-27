@@ -895,11 +895,11 @@ msgstr "En cours"
 #: modules/xmppmaster/xmppmaster/deployxmpp.php:88
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:90
 msgid "Select a machine"
-msgstr "Sélectionné une machine"
+msgstr "Sélectionnez une machine"
 
 #: modules/xmppmaster/xmppmaster/deployxmpp.php:96
 msgid "Select a package"
-msgstr "Sélectionné un package"
+msgstr "Sélectionnez un package"
 
 #: modules/xmppmaster/xmppmaster/index.php:43
 msgid "My Tasks ["
