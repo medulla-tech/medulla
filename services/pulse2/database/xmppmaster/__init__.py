@@ -4468,7 +4468,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
             ARS = {}
             ARS['name'] = i
-            ARS['display_name'] = i.split("/")[1]
+            ARS['display_name'] = i.split("@")[0]
             ARS['type'] = "ARS"
             ARS['parent'] = "Pulse"
             ARS['children'] = []
@@ -4476,7 +4476,7 @@ class XmppMasterDatabase(DatabaseHelper):
             listmachinesstring = []
             for mach in listmachines:
                 ARS['children'].append({ "name" : mach,
-                'display_name': mach.split("/")[1],
+                'display_name': mach.split(".")[0],
                 "type" : "AM", "parent" : i })
             #builddatajson[i] = listmachinesstring
             #ARS['children'] = builddatajson
