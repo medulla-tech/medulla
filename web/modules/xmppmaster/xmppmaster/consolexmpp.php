@@ -87,7 +87,7 @@ textarea {
 
         <tr>
             <td class="label" width="40%" style = "text-align: right;">
-                Select a machine
+                <?php echo _T("Select a machine", "xmppmaster");?>
             </td>
             <td>
                 <select name="Machine" id="Machine">
@@ -101,7 +101,7 @@ textarea {
         </tr>
 
         <tr>
-            <td class="label" width="40%" style = "text-align: right;">Shell command</td>
+            <td class="label" width="40%" style = "text-align: right;"><?php echo _T("Shell command", "xmppmaster");?></td>
             <td>
                 <span id="container_input_command">
                     <input value="<? echo $command; ?>"
@@ -119,11 +119,11 @@ textarea {
 
         <tr>
             <td class="label" width="40%" style = "text-align: right;"><br></td>
-            <td><img id="imagewait" src="graph/ajax_loading.gif" alt="" /><span>Command result : </span><span><? echo $command; ?></span></td>
+            <td><img id="imagewait" src="graph/ajax_loading.gif" alt="" /><span><?php echo _T("Command result : ", "xmppmaster");?></span><span><? echo $command; ?></span></td>
         </tr>
 
         <tr>
-            <td class="label" width="40%" style = "text-align: right;">Error Code :</td>
+            <td class="label" width="40%" style = "text-align: right;"><?php echo _T("Error Code :", "xmppmaster");?></td>
             <td><span id="codereturn"></span></td>
         </tr>
 
