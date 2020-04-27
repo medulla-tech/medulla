@@ -24,6 +24,7 @@ import json
 import subprocess
 import sys
 import os
+import fnmatch
 import platform
 import logging
 import ConfigParser
@@ -46,6 +47,9 @@ import imp
 from Crypto import Random
 from Crypto.Cipher import AES
 import urllib2
+import tarfile
+import zipfile
+
 logger = logging.getLogger()
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "pluginsmaster"))
@@ -78,7 +82,6 @@ def file_get_contents(filename, use_include_path=0, context=None, offset=-1, max
             return ret
         finally:
             fp.close()
-
 
 def file_put_contents(filename,  data):
     """
@@ -894,3 +897,65 @@ class AESCipher:
         cipher = AES.new(self.key, AES.MODE_CBC, iv )
         return unpad(cipher.decrypt( enc[16:] ))
 
+def make_tarfile(output_file_gz_bz2, source_dir, compresstype="gz"):
+    """
+        creation archive tar.gz or tar.bz2
+        compresstype "gz" or "bz2"
+    """
+    try:
+        with tarfile.open(output_file_gz_bz2, "w:%s"%compresstype) as tar:
+            tar.add(source_dir, arcname=os.path.basename(source_dir))
+        return True
+    except Exception:
+        logger.error("Error creating tar.%s archive : %s"%(compresstype, str(e)))
+        return False
+
+def extract_file(imput_file__gz_bz2, to_directory='.', compresstype="gz"):
+    """
+        extract archive tar.gz or tar.bz2
+        compresstype "gz" or "bz2"
+    """
+    cwd = os.getcwd()
+    absolutepath = os.path.abspath(imput_file__gz_bz2)
+    try:
+        os.chdir(to_directory)
+        with tarfile.open(absolutepath, "r:%s"%compresstype) as tar:
+            tar.extractall()
+        return True
+    except OSError as e:
+        logger.error( "Error creating tar.%s archive : %s"%(str(e),compresstype))
+        return False
+    except Exception as e:
+        logger.error( "Error creating tar.%s archive : %s"%(str(e),compresstype))
+        return False
+    finally:
+        os.chdir(cwd)
+    return True
+
+def find_files(directory, pattern):
+    """
+        use f
+    """
+    for root, dirs, files in os.walk(directory):
+        for basename in files:
+            if fnmatch.fnmatch(basename, pattern):
+                filename = str(os.path.join(root, basename))
+                yield filename
+
+def listfile(directory, abspath=True):
+    listfile=[]
+    for root, dirs, files in os.walk(directory):
+        for basename in files:
+            if abspath:
+                listfile.append(os.path.join(root, basename))
+            else:
+                listfile.append(os.path.join(basename))
+    return listfile
+
+def md5folder(directory):
+    hash = hashlib.md5()
+    strmdr=[]
+    for root, dirs, files in os.walk(directory):
+        for basename in files:
+            hash.update(md5(os.path.join(root, basename)))
+    return hash.hexdigest()
