@@ -1049,7 +1049,7 @@ def _path_packagequickaction():
         try:
             os.makedirs(pathqd)
         except OSError as e:
-            logger.error("creation folder for quick deploy"%(str(e)))
+            logger.error("Error creating folder for quick deployment packages : %s"%(str(e)))
     return pathqd
 
 def qdeploy_generate(folder):
@@ -1061,15 +1061,15 @@ def qdeploy_generate(folder):
         #logger.debug("cmd %s"%"du -b %s"%folder)
         taillebytefolder = int(result['result'][0].split()[0])
         if taillebytefolder > max_size_stanza_xmpp:
-            logger.debug("package size too large to prepare quick package.\n%s"\
-                " greater than max_size_stanza_xmpp %s"%(taillebytefolder,
+            logger.debug("Package is too large for quick deployment.\n%s"\
+                " greater than defined max_size_stanza_xmpp %s"%(taillebytefolder,
                                                          max_size_stanza_xmpp))
             #delete quick package if exist.
             if "qpackages" in pathaqpackage:
                 os.system("rm %s.*"%pathaqpackage)
         else:
             ### creation d'un targetos
-            logger.debug("prepare quick deploy package for package %s"%(namepackage))
+            logger.debug("Preparing quick deployment package for package %s"%(namepackage))
             calculemd5 = md5folder(pathaqpackage)
             if os.path.exists("%s.md5"%pathaqpackage):
                 content = file_get_contents("%s.md5"%pathaqpackage)
@@ -1090,7 +1090,7 @@ def get_message_xmpp_quick_deploy(folder, sessionid):
     pathaqpackage = os.path.join(_path_packagequickaction(), namepackage)
     with open("%s.xmpp"%pathaqpackage, 'r') as f:
         data = f.read()
-    return data.replace("@-JFKSPOKNONEOCLUSTGLA@", sessionid, 1)
+    return data.replace("@-TEMPLSESSQUICKDEPLOY@", sessionid, 1)
 
 def get_template_message_xmpp_quick_deploy(folder):
     # read le fichier
@@ -1102,25 +1102,25 @@ def get_template_message_xmpp_quick_deploy(folder):
 
 def get_xmpp_message_with_sessionid(template_message, sessionid):
     # read le fichier
-    return template_message.replace("@-JFKSPOKNONEOCLUSTGLA@", sessionid, 1)
+    return template_message.replace("@-TEMPLSESSQUICKDEPLOY@", sessionid, 1)
 
 def create_msg_xmpp_quick_deploy(folder, create = False):
     namepackage = os.path.basename(folder)
     pathaqpackage = os.path.join(_path_packagequickaction(), namepackage)
     # create compress file folder
     if not os.path.exists("%s.xmpp"%pathaqpackage) or create:
-        logger.debug("create archive compress %s.gz"%pathaqpackage)
+        logger.debug("Creating compressed archive %s.gz"%pathaqpackage)
         make_tarfile("%s.gz"%pathaqpackage, folder, compresstype="gz")
         with open("%s.gz"%pathaqpackage, 'rb') as f:
             dataraw = b64encode(f.read())
-        msgxmpptemplate= """{  "sessionid" : "@-JFKSPOKNONEOCLUSTGLA@",
+        msgxmpptemplate= """{  "sessionid" : "@-TEMPLSESSQUICKDEPLOY@",
                 "action" : "qdeploy",
                 "data": { "nbpart" : 1,
                           "part"   : 1,
                           "namepackage":"%s",
                           "filebase64" : "%s"}}"""%( namepackage, dataraw )
         try:
-            logger.debug("write new Quick pakage %s.xmpp"%pathaqpackage)
+            logger.debug("Writing new quick deployment pakage %s.xmpp"%pathaqpackage)
             with open("%s.xmpp"%pathaqpackage, 'w') as f:
                 f.write(msgxmpptemplate)
             #le fichier compresser est inutile
@@ -1129,7 +1129,7 @@ def create_msg_xmpp_quick_deploy(folder, create = False):
         except Exception:
             logger.error("%s"%(traceback.format_exc()))
     else:
-        logger.debug("Quick pakage %s.xmpp always exist"%pathaqpackage)
+        logger.debug("Quick deployment package %s.xmpp found"%pathaqpackage)
 
 def save_xmpp_json(folder, json_content):
     structpackage = json.loads(json_content)

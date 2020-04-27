@@ -59,7 +59,7 @@ class PkgsConfig(PluginConfig):
         else:
             self.dbport = 3306
 
-        self.max_size_stanza_xmpp = 7340032
+        self.max_size_stanza_xmpp = 1048576
         if self.has_option("quick_deploy", "max_size_stanza_xmpp"):
             self.max_size_stanza_xmpp = self.getint("quick_deploy",
                                                     "max_size_stanza_xmpp")

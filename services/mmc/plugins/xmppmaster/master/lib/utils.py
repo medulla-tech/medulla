@@ -899,7 +899,7 @@ class AESCipher:
 
 def make_tarfile(output_file_gz_bz2, source_dir, compresstype="gz"):
     """
-        creation archive tar.gz or tat.bz2
+        creation archive tar.gz or tar.bz2
         compresstype "gz" or "bz2"
     """
     try:
@@ -907,12 +907,12 @@ def make_tarfile(output_file_gz_bz2, source_dir, compresstype="gz"):
             tar.add(source_dir, arcname=os.path.basename(source_dir))
         return True
     except Exception:
-        logger.error("error create archive tar.%s %s"%(str(e),compresstype))
+        logger.error("Error creating tar.%s archive : %s"%(compresstype, str(e)))
         return False
 
 def extract_file(imput_file__gz_bz2, to_directory='.', compresstype="gz"):
     """
-        extract archive tar.gz or tat.bz2
+        extract archive tar.gz or tar.bz2
         compresstype "gz" or "bz2"
     """
     cwd = os.getcwd()
@@ -923,10 +923,10 @@ def extract_file(imput_file__gz_bz2, to_directory='.', compresstype="gz"):
             tar.extractall()
         return True
     except OSError as e:
-        logger.error( "error extract tar.%s %s"%(str(e),compresstype))
+        logger.error( "Error creating tar.%s archive : %s"%(str(e),compresstype))
         return False
     except Exception as e:
-        logger.error( "error extract tar.%s %s"%(str(e),compresstype))
+        logger.error( "Error creating tar.%s archive : %s"%(str(e),compresstype))
         return False
     finally:
         os.chdir(cwd)
