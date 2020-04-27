@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 11:51+0200\n"
+"POT-Creation-Date: 2020-04-27 15:45+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -943,11 +943,11 @@ msgstr "Bla igjennom filer"
 
 #: modules/base/includes/computers_list.inc.php:118
 #: modules/base/includes/computers_list.inc.php:120
-#: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:36
 #: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:37
-#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:47
+#: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:38
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:48
-#: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:65
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:49
+#: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
 msgid "Edit config files"
 msgstr "Rediger konfigurasjonsfiler"
