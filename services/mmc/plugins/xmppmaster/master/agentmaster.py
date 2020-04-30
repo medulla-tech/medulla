@@ -1108,7 +1108,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.error("%s"%(traceback.format_exc()))
             self.showListClient()
         elif msg_changed_status['type'] == "available":
-            elif msg_changed_status['type'] == "available":
             result = XmppMasterDatabase().initialisePresenceMachine(msg_changed_status['from'],
                                                                     presence=1)
             if result is None or len(result) == 0:
