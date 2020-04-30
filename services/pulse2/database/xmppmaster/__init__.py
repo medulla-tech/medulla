@@ -5745,36 +5745,37 @@ class XmppMasterDatabase(DatabaseHelper):
             limit = int(limit)
         except:
             limit = -1
-
-        query = session.query(Machines.id,
-                Machines.jid,
-                Machines.hostname,
-                Machines.enabled,
-                Machines.classutil,
-                Machines.macaddress,
-                Machines.ip_xmpp)\
+        query = session.query(RelayServer.id,
+                RelayServer.ipserver,
+                RelayServer.nameserver,
+                RelayServer.moderelayserver,
+                RelayServer.jid,
+                RelayServer.classutil,
+                RelayServer.enabled)\
             .add_column(Cluster_ars.name.label("cluster_name"))\
             .add_column(Cluster_ars.description.label("cluster_description"))\
-            .join(RelayServer, RelayServer.jid == Machines.jid)\
+            .add_column(Machines.macaddress.label('macaddress'))\
             .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)\
             .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
-            .filter(Machines.agenttype == 'relayserver')
+            .join(Machines, Machines.jid == RelayServer.jid)\
+            .filter(RelayServer.moderelayserver == 'static')
+
         if presence == 'nopresence':
-            query = query.filter(Machines.enabled != 1)
+            query = query.filter(RelayServer.enabled != 1)
         elif presence == 'presence':
-            query = query.filter(Machines.enabled == 1)
+            query = query.filter(RelayServer.enabled == 1)
 
 
         if filter != "":
             query = query.filter(
                 or_(
-                    Machines.hostname.contains(filter),
-                    Machines.jid.contains(filter),
+                    RelayServer.nameserver.contains(filter),
+                    RelayServer.jid.contains(filter),
                     Cluster_ars.name.contains(filter),
                     Cluster_ars.description.contains(filter),
-                    Machines.classutil.contains(filter),
+                    RelayServer.classutil.contains(filter),
                     Machines.macaddress.contains(filter),
-                    Machines.ip_xmpp.contains(filter),
+                    RelayServer.ipserver.contains(filter),
                 )
             )
         count = query.count()
@@ -5805,8 +5806,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 else:
                     result['enabled'].append(False)
                     result['enabled_css'].append('machineName')
-                result['hostname'].append(machine.hostname)
-                result['ip_xmpp'].append(machine.ip_xmpp)
+                result['hostname'].append(machine.nameserver)
+                result['ip_xmpp'].append(machine.ipserver)
                 result['macaddress'].append(machine.macaddress)
                 result['classutil'].append(machine.classutil)
                 if machine.cluster_name is None:
