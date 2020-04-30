@@ -166,6 +166,7 @@ class Machines(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
     jid = Column(String(255), nullable=False)
+    need_reconf =  Column(Boolean, nullable=False)
     enabled=  Column(Boolean, unique=False)
     platform = Column(String(60))
     hostname = Column(String(45), nullable=False)

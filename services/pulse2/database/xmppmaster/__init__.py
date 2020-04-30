@@ -4782,7 +4782,7 @@ class XmppMasterDatabase(DatabaseHelper):
         user = str(jid).split("@")[0]
         try:
             sql = """SELECT
-                        id, hostname, agenttype
+                        id, hostname, agenttype, need_reconf
                     FROM
                         `xmppmaster`.`machines`
                     WHERE
@@ -4797,6 +4797,26 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error("GetMachine : %s"%str(e))
             return None
+
+    @DatabaseHelper._sessionm
+    def updateMachinereconf(self, session, jid, status=0):
+        """
+            update boolean need_reconf in table machines
+        """
+        user = str(jid).split("@")[0]
+        try:
+            sql = """UPDATE `xmppmaster`.`machines`
+                         SET `need_reconf` = '%s'
+                     WHERE
+                         `xmppmaster`.`machines`.jid like('%s@%%')"""%(status,
+                                                                       user)
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            return True
+        except Exception, e:
+            logging.getLogger().error("updateMachinereconf : %s"%str(e))
+            return False
 
     @DatabaseHelper._sessionm
     def initialisePresenceMachine(self, session, jid, presence=0):
@@ -4820,11 +4840,12 @@ class XmppMasterDatabase(DatabaseHelper):
                 except Exception, e:
                     logging.getLogger().error("initialisePresenceMachine : %s"%str(e))
                 finally:
-                    return "relayserver"
+                    return { "type" : "relayserver", "reconf" : mach[3] }
             else:
-                return "machine"
+                return { "type" : "machine", "reconf" : mach[3] }
         else:
-            return None
+            return {}
+
 
     @DatabaseHelper._sessionm
     def delPresenceMachine(self, session, jid):
