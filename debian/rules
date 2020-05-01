@@ -104,7 +104,8 @@ binary-indep: build install
 	dh_installdocs
 	dh_installinit
 	dh_strip
-	dh_link
+	## TODO: Add back
+	##dh_link
 	dh_compress -X/sql/ -X.pdf
 	dh_installdeb
 	dh_shlibdeps
