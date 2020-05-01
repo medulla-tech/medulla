@@ -30,6 +30,7 @@ DESTDIR=$(CURDIR)/debian/tmp
 CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
 CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
 LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
+export DH_ALWAYS_EXCLUDE=.pyc:.pyo
 
 CPPFLAGS += -Wno-error=unused-result
 
