@@ -92,6 +92,9 @@ install: build
 	rm -fv $(DESTDIR)/usr/share/doc/pulse2-common/contrib/imaging/sql/schema-018.sql
 	# Remove opencliparts files
 	rm -frv $(DESTDIR)/usr/share/mmc/media/images/msc/opencliparts_0.18
+	# Workaround
+	rm -fv $(DESTDIR)/usr/lib/python2.7/dist-packages/mmc/*.py{o,c}
+	rm -fv $(DESTDIR)/usr/lib/python2.7/dist-packages/mmc/plugins/__init__.py{o,c}
 
 binary-indep: build install
 binary-arch: build install
