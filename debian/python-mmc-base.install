@@ -1,7 +1,7 @@
 usr/lib/python2.?/*-packages/mmc/plugins/base
 etc/mmc/plugins/base.ini
 usr/lib/mmc/backup-tools
-##usr/lib/python2.?/*-packages/mmc/plugins/__init__.py
+usr/lib/python2.?/*-packages/mmc/plugins/__init__.py
 usr/lib/python2.?/*-packages/mmc/site.py
 usr/share/doc/mmc/contrib/base
 usr/share/doc/mmc/contrib/scripts/usertoken-example

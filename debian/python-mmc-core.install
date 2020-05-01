@@ -2,5 +2,5 @@ usr/lib/python2.?/*-packages/mmc/client
 usr/lib/python2.?/*-packages/mmc/core
 usr/lib/python2.?/*-packages/mmc/support
 usr/lib/python2.?/*-packages/mmc/ssl.py
-####usr/lib/python2.?/*-packages/mmc/__init__.py
+usr/lib/python2.?/*-packages/mmc/__init__.py
 usr/share/doc/mmc/contrib/audit
