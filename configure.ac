@@ -157,7 +157,6 @@ AM_CONDITIONAL([ENABLE_CONF_BACKUP], [test "$enable_conf_backup" = "yes"])
 
 dnl
 dnl from orginal
-<<<<<<< HEAD
 dnl --with-examples-dir
 dnl   Set path to configuration files examples dir
 dnl   Default to DOCDIR/examples
@@ -168,6 +167,30 @@ AC_ARG_WITH([examples-dir],
             [examplesdir="$withval"],
 	    [examplesdir="${docdir}/examples"])
 AC_SUBST([examplesdir])
+
+dnl --with-initdir
+dnl   Set path to init scripts directory
+dnl   Default to SYSCONFDIR/init.d
+dnl
+AC_ARG_WITH([initdir],
+            [AS_HELP_STRING([--with-initdir],
+                            [path to init scripts directory @<:@default=SYSCONFDIR/init.d@:>@])],
+            [initdir="$withval"],
+        [initdir="${sysconfdir}/init.d"])
+AC_SUBST([initdir])
+
+dnl
+dnl --with-systemddir
+dnl   Set path to systemd services directory
+dnl   Default to /lib/systemd/system
+dnl
+AC_ARG_WITH([systemddir],
+            [AS_HELP_STRING([--with-systemddir],
+                            [path to systemd services directory @<:@default=/lib/systemd/system@:>@])],
+            [systemddir="$withval"],
+        [systemddir="/lib/systemd/system"])
+AC_SUBST([systemddir])
+
 
 dnl files to generate with automake
 AC_CONFIG_FILES([Makefile])
@@ -186,34 +209,6 @@ AC_CONFIG_FILES([web/modules/pulse2/version.php])
 AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([doc/man/Makefile])
 AC_CONFIG_FILES([doc/user/Makefile])
-
-dnl From mmc-core
-
-dnl --with-initdir
-dnl   Set path to init scripts directory
-dnl   Default to SYSCONFDIR/init.d
-dnl
-AC_ARG_WITH([initdir],
-            [AS_HELP_STRING([--with-initdir],
-                            [path to init scripts directory @<:@default=SYSCONFDIR/init.d@:>@])],
-            [initdir="$withval"],
-	    [initdir="${sysconfdir}/init.d"])
-AC_SUBST([initdir])
-
-dnl
-dnl --with-systemddir
-dnl   Set path to systemd services directory
-dnl   Default to /lib/systemd/system
-dnl
-AC_ARG_WITH([systemddir],
-            [AS_HELP_STRING([--with-systemddir],
-                            [path to systemd services directory @<:@default=/lib/systemd/system@:>@])],
-            [systemddir="$withval"],
-	    [systemddir="/lib/systemd/system"])
-AC_SUBST([systemddir])
-
-dnl files to generate with automake
-AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([agent/Makefile])
 AC_CONFIG_FILES([agent/bin/Makefile])
 AC_CONFIG_FILES([agent/mmc/Makefile])
@@ -222,7 +217,6 @@ AC_CONFIG_FILES([agent/init/Makefile])
 AC_CONFIG_FILES([agent/conf/Makefile])
 AC_CONFIG_FILES([agent/contrib/Makefile])
 AC_CONFIG_FILES([agent/man/Makefile])
-AC_CONFIG_FILES([web/Makefile])
 AC_CONFIG_FILES([web/confs/Makefile])
 
 dnl write all stuff
