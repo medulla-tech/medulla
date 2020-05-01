@@ -1,5 +1,0 @@
-<map id="SimpleNavBar" name="SimpleNavBar">
-<area shape="rect" id="node2" href="$classAjaxNavBar.html" title="AjaxNavBar" alt="" coords="12,80,111,107"/>
-<area shape="rect" id="node4" href="$classSimplePaginator.html" title="SimplePaginator" alt="" coords="135,80,263,107"/>
-<area shape="rect" id="node3" href="$classAjaxPaginator.html" title="AjaxPaginator" alt="" coords="5,155,117,181"/>
-</map>
