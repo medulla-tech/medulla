@@ -90,6 +90,8 @@ install: build
 	mkdir -p $(DESTDIR)/var/lib/pulse2/file-transfer
 	#(workaround) Remove schema-018.sql
 	rm -fv $(DESTDIR)/usr/share/doc/pulse2-common/contrib/imaging/sql/schema-018.sql
+	# Remove opencliparts files
+	rm -fv $(DESTDIR)/usr/share/mmc/media/images/msc/opencliparts_0.18
 
 binary-indep: build install
 binary-arch: build install
