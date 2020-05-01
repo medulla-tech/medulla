@@ -35,8 +35,6 @@ datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) \
 		! -name '*.mo' \
 		! -path '*/.svn/*')
 
-mmcdatadir = $(datadir)/mmc
-
 pofiles = $(shell cd $(srcdir) && find -name '*.po')
 mofiles = $(patsubst %.po,%.mo,$(pofiles))
 
