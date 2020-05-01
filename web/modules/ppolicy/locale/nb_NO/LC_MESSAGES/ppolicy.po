@@ -1,0 +1,440 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-04-27 15:45+0200\n"
+"PO-Revision-Date: 2018-02-13 15:15+0000\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
+"Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nb_NO\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/ppolicy/infoPackage.inc.php:36
+msgid "Password Policy"
+msgstr "Passordpolicy"
+
+#: modules/ppolicy/infoPackage.inc.php:46
+#: modules/ppolicy/includes/localSidebar.php:27
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
+msgid "Password policies"
+msgstr "Passordpolicier"
+
+#: modules/ppolicy/infoPackage.inc.php:52
+#: modules/ppolicy/includes/localSidebar.php:28
+#: modules/ppolicy/default/edit.php:44
+msgid "Add a password policy"
+msgstr "Legg til en Passordpolicy"
+
+#: modules/ppolicy/infoPackage.inc.php:58
+msgid "Edit a password policy"
+msgstr "Reddiger en Passordpolicy"
+
+#: modules/ppolicy/infoPackage.inc.php:63
+msgid "Delete a password policy"
+msgstr "Slett en Passordpolicy"
+
+#: modules/ppolicy/infoPackage.inc.php:79
+msgid "Default "
+msgstr "Standard"
+
+#: modules/ppolicy/infoPackage.inc.php:82
+msgid "Enable user specific password policy"
+msgstr "Aktiver brukerspesifikk passordpolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "Endre ppolicy attributt"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "Slett ppolicy attributt"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "Legg til ppolicy for en bruker"
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "Oppdater ppolicy for en bruker"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "Slett ppolicy for en bruker"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "ppolicy"
+
+#: modules/ppolicy/includes/publicFunc.php:37
+#: modules/ppolicy/includes/publicFunc.php:63
+#: modules/ppolicy/includes/publicFunc.php:71
+#: modules/ppolicy/includes/publicFunc.php:78
+#: modules/ppolicy/includes/publicFunc.php:83
+#: modules/ppolicy/includes/publicFunc.php:201
+msgid "Password policy management"
+msgstr "Passordpolicy styring"
+
+#: modules/ppolicy/includes/publicFunc.php:64
+msgid "This account is locked by the LDAP directory."
+msgstr "Denne kontoen er låst av LDAP-katalogen."
+
+#: modules/ppolicy/includes/publicFunc.php:72
+msgid ""
+"The password of this account has expired. The user cannot change his "
+"password."
+msgstr ""
+"Passordet til denne kontoen er utløpt. Brukeren kan ikke endre passordet "
+"sitt."
+
+#: modules/ppolicy/includes/publicFunc.php:79
+#, php-format
+msgid ""
+"The password of this account has expired. The user has %s login(s) left to "
+"change his password."
+msgstr ""
+"Passordet til denne kontoen er utløpt. Brukeren har %sinnlogging (er) igjen "
+"for å endre passordet."
+
+#: modules/ppolicy/includes/publicFunc.php:84
+msgid ""
+"The password of this account has expired. The user can change his password."
+msgstr ""
+"Passordet til denne kontoen er utløpt. Brukeren kan endre passordet sitt."
+
+#: modules/ppolicy/includes/publicFunc.php:88
+msgid "Lock account"
+msgstr "Lås konto"
+
+#: modules/ppolicy/includes/publicFunc.php:89
+msgid "If checked, permanently lock the user account"
+msgstr "Hvis markert, låser du brukerkontoen permanent"
+
+#: modules/ppolicy/includes/publicFunc.php:94
+msgid "Password reset flag"
+msgstr "Flagg for tilbakestilling av passord"
+
+#: modules/ppolicy/includes/publicFunc.php:95
+msgid ""
+"If checked, the user must change her password when she first binds to the "
+"LDAP directory after password is set or reset by a password administrator"
+msgstr ""
+"Hvis avkrysset, må brukeren endre passordet sitt når brukeren først binder "
+"seg til LDAP-katalogen hvis passordet er satt eller tilbakestilt av en "
+"passordadministrator"
+
+#: modules/ppolicy/includes/publicFunc.php:117
+msgid "Enable a specific password policy for this user"
+msgstr "Aktiver en spesifikk passordpolicy for denne brukeren"
+
+#: modules/ppolicy/includes/publicFunc.php:118
+#: modules/ppolicy/includes/publicFunc.php:224
+msgid "If not set the default password policy is enforced."
+msgstr "Hvis ikke angitt, blir standard passordpolicy brukt."
+
+#: modules/ppolicy/includes/publicFunc.php:170
+#, php-format
+msgid "Password policy %s applied."
+msgstr "Passordpolicy %sbrukes."
+
+#: modules/ppolicy/includes/publicFunc.php:174
+#, php-format
+msgid "Password policy %s removed."
+msgstr "Passordpolicy %s fjernet"
+
+#: modules/ppolicy/includes/publicFunc.php:186
+msgid "Password policy attributes updated."
+msgstr "Attributter for passordpolitikken er oppdatert."
+
+#: modules/ppolicy/includes/publicFunc.php:223
+msgid "Apply a password policy for all group users"
+msgstr "Bruk en passordpolicy for alle gruppebrukere"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:37
+#: modules/ppolicy/default/edit.php:138
+msgid "Minimum length"
+msgstr "Minimum lengde"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:38
+msgid "Minimum age"
+msgstr "Minimum alder"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:39
+msgid "Maximum age"
+msgstr "Maksimum alder"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:40
+msgid "Change password on first connection"
+msgstr "Endre passord ved første tilkobling"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:41
+msgid "Lockout duration"
+msgstr "Lockout varighet"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:42
+msgid "Maximum failed"
+msgstr "Maksimum mislyktes"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:43
+msgid "Preventive lockout user"
+msgstr "Forebyggende lockout-bruker"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:44
+msgid "Password hash history"
+msgstr "Hash-passord historikk"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:45
+#: modules/ppolicy/default/edit.php:166
+msgid "Number of grace authentications"
+msgstr "Antall vellykkede autentiseringer"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:46
+msgid "Reset the password"
+msgstr "Tilbakestill passordet"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:47
+msgid "Password policy quality check"
+msgstr "Kvalitetssjekk for Passordpolicy"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:48
+#: modules/ppolicy/default/edit.php:132
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:54
+msgid ""
+"this attribute contains the minimum number of characters that will be "
+"accepted in a password"
+msgstr ""
+"dette attributtet inneholder minimum antall tegn som vil bli akseptert i et "
+"passord"
+
+#: modules/ppolicy/includes/ppolicy.inc.php:55
+msgid ""
+"This attribute holds the number of seconds that must elapse between "
+"modifications to the password. If this attribute is not present, 0 seconds "
+"is assumed (i.e. the password may be modified whenever and however often is "
+"desired)."
+msgstr ""
+"Dette attributtet rommer antall sekunder som må gå mellom endringer av "
+"passord. Hvis dette attributtet ikke er satt, brukes det 0 sekunder (dvs. "
+"passordet kan endres når som helst og hvor ofte det er ønskelig)."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:56
+msgid ""
+"This attribute holds the number of seconds after which a modified password "
+"will expire. If this attribute is not present, or if the value is 0 the "
+"password does not expire."
+msgstr ""
+"Dette attributtet holder antall sekunder som brukes for å mbestemme når et "
+"endret passord utløper. Hvis dette attributtet ikke er satt, eller hvis "
+"verdien er 0, utløper ikke passordet."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:57
+msgid ""
+"This flag specifies whether users must change their passwords when they "
+"first bind to the directory after a password is set or reset by the "
+"administrator."
+msgstr ""
+"Dette flagget angir om brukere må endre passordene sine når de først binder "
+"seg til katalogen etter at et passord er satt eller tilbakestilt av "
+"administratoren."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:58
+msgid ""
+"This attribute is used to specify the maximum number of used passwords. If "
+"the attribute is not present, or if its value is 0, used passwords will not "
+"be stored and thus any previously-used password may be reused."
+msgstr ""
+"Dette attributtet brukes til å spesifisere maksimalt antall brukte passord. "
+"Hvis attributtet ikke er satt, eller hvis verdien er 0, vil ikke passordet "
+"lagres og dermed kan noe tidligere brukte passord brukes på nytt."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:59
+msgid ""
+"This flag indicates, when enabled, that the password may not be used to "
+"authenticate after a specified number of consecutive failed bind attempts. "
+"The maximum number of consecutive failed bind attempts is specified in the "
+"\"Password maximum failure\" field below."
+msgstr ""
+"Dette flagget indikerer, når det er aktivert, at passordet ikke kan brukes "
+"til å autentisere etter et spesifisert antall påfølgende mislykkede "
+"bindingsforsøk. Det maksimale antall påfølgende mislykkede bindingsforsøk er"
+" spesifisert i \"Passord maksimal feil\" -feltet nedenfor."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:60
+msgid ""
+"This attribute specifies the number of consecutive failed bind attempts "
+"after which the password may not be used to authenticate. If this attribute "
+"is not present, or if the value is 0, this policy is not checked, and the "
+"value of \"Preventive user lockout\" will be ignored."
+msgstr ""
+"Dette attributtet spesifiserer antall påfølgende mislykkede bindingsforsøk, "
+"hvoretter passordet ikke kan brukes til autentisering. Hvis dette "
+"attributtet ikke er til stede, eller hvis verdien er 0, blir ikke denne "
+"policyen sjekket, og verdien av \"Forebyggende brukersperre\" blir ignorert."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:61
+msgid ""
+"This attribute holds the number of seconds that the password cannot be used "
+"to authenticate due to too many failed authentication attempts. If this "
+"attribute is empty, or if the value is 0 the password cannot be used to "
+"authenticate until reset by a password administrator."
+msgstr ""
+"Dette attributtet viser antall sekunder passordet ikke kan brukes til å "
+"autentisere på grunn av for mange mislykkede godkjenningsforsøk. Hvis dette "
+"attributtet er tom, eller hvis verdien er 0, kan ikke passordet brukes til å"
+" autentisere før tilbakestilling av en passordadministrator."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:62
+msgid ""
+"This attribute contains the number of times that an expired password may be "
+"used to authenticate a user to the directory. If this attribute is not "
+"present or if its value is zero, users with expired password will not be "
+"allowed to authenticate."
+msgstr ""
+"Dette attributtet inneholder antall ganger et utgått passord kan brukes til "
+"å autentisere en bruker til katalogen. Hvis dette attributtet ikke er satt, "
+"eller hvis verdien er null, vil brukere med utgått passord ikke ha lov til å"
+" autentisere seg."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:63
+msgid ""
+"This flag allows to mark the password as having being reset by an "
+"administrator."
+msgstr ""
+"Dette flagget gjør det mulig å markere passordet som tilbakestilt av en "
+"administrator."
+
+#: modules/ppolicy/includes/ppolicy.inc.php:64
+msgid ""
+"This attribute indicates how the password quality will be verified while "
+"being modified or added. If this attribute is not present, or if the value "
+"is '0', quality checking will not be enforced.  A value of '1' indicates "
+"that the server will check the quality, and if the server is unable to check"
+" it (due to a hashed password or other reasons) it will be accepted. A value"
+" of '2' indicates that the server will check the quality, and if the server "
+"is unable to verify it, it will return an error refusing the password."
+msgstr ""
+"Dette attributtet indikerer hvordan passordkvaliteten vil bli bekreftet mens"
+" den endres eller legges til. Hvis dette attributtet ikke er satt, eller "
+"hvis verdien er '0', vil ikke kvalitetskontrollen bli brukt. En verdi på '1'"
+" indikerer at serveren vil sjekke kvaliteten, og hvis serveren ikke er i "
+"stand til å sjekke den (på grunn av et hashet passord eller av andre "
+"årsaker) vil den bli akseptert. En verdi på '2' indikerer at serveren vil "
+"sjekke kvaliteten, og hvis serveren ikke kan bekrefte den, vil den returnere"
+" en feil ved å nekte passordet."
+
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Advarsel: du er logget inn ved hjelp av en spesiell innloggingsmodus. Endre "
+"passordet ditt så raskt som mulig ved å bruke siden for endring av passord, "
+"ellers blir kontoen din låst."
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Advarsel: passordet ditt er tilbakestilt av en administrator. LDAP-kontoen "
+"din er begrenset. Endre passordet ditt så raskt som mulig ved å bruke siden "
+"for endring av passord."
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Liste over Passordpolicier."
+
+#: modules/ppolicy/default/delete.php:29
+msgid "The password policy has been deleted."
+msgstr "Passordpolicyen er slettet."
+
+#: modules/ppolicy/default/delete.php:41
+#, php-format
+msgid ""
+"You will delete the password policy <strong>%s</strong>. Default password "
+"policy will be applied to users that use this password policy."
+msgstr ""
+"Du vil slette passordpolitikken <strong>%s</strong>.Standard passordpolicy "
+"brukes på brukere som bruker denne passordpolicyen."
+
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "Slett"
+
+#: modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: modules/ppolicy/default/edit.php:48
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
+msgid "Edit password policy"
+msgstr "Rediger passordpolicy"
+
+#: modules/ppolicy/default/edit.php:62
+msgid "\"Maximum age\" must be greater than \"Minimum age\"."
+msgstr "\"Maksimal alder\" må være større enn \"Minimumsalder\"."
+
+#: modules/ppolicy/default/edit.php:95
+msgid "Attributes updated"
+msgstr "Oppdaterte attributter"
+
+#: modules/ppolicy/default/edit.php:126
+msgid "Name"
+msgstr "Navn"
+
+#: modules/ppolicy/default/edit.php:145
+msgid "Password quality check"
+msgstr "Kvalitetssjekk for Passord"
+
+#: modules/ppolicy/default/edit.php:152
+msgid "Minimum age (seconds)"
+msgstr "Minimum alder (sekunder)"
+
+#: modules/ppolicy/default/edit.php:159
+msgid "Maximum age (seconds)"
+msgstr "Maksimal alder (sekunder)"
+
+#: modules/ppolicy/default/edit.php:180
+msgid "Force users to change their passwords on the first connection ?"
+msgstr "Tvinge brukere til å endre passord ved første tilkobling?"
+
+#: modules/ppolicy/default/edit.php:187
+msgid "Password history"
+msgstr "Passordhistorikk"
+
+#: modules/ppolicy/default/edit.php:201
+msgid "Preventive user lockout ?"
+msgstr "Forebyggende brukerlock-out?"
+
+#: modules/ppolicy/default/edit.php:215
+msgid "Password maximum failure"
+msgstr "Maksimal feil for passord"
+
+#: modules/ppolicy/default/edit.php:222
+msgid "Lockout duration (seconds)"
+msgstr "Lock-outvarighet (sekunder)"
+
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
+msgid "Delete password policy"
+msgstr "Slett passordpolicy"

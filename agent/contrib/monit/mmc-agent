@@ -1,0 +1,9 @@
+# monitor the mmc-agent service
+# Contributed by Bertrand Lecervoisier
+
+check process mmc-agent
+   with pidfile "/var/run/mmc-agent.pid"
+   start program = "/etc/init.d/mmc-agent start"
+   stop program  = "/etc/init.d/mmc-agent stop"
+   if failed port 7080 type tcpssl then restart
+   if 5 restarts within 5 cycles then timeout

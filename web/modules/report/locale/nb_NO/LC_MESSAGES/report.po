@@ -1,0 +1,267 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-04-27 15:45+0200\n"
+"PO-Revision-Date: 2018-02-13 15:15+0000\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
+"Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nb_NO\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/report/infoPackage.inc.php:32
+msgid "Reporting"
+msgstr "Rapportering"
+
+#: modules/report/infoPackage.inc.php:36
+msgid "Report"
+msgstr "Rapport"
+
+#: modules/report/infoPackage.inc.php:41 modules/report/report/index.php:44
+#: modules/report/report/localSidebar.php:27
+msgid "Report creation"
+msgstr "Skape rapport"
+
+#: modules/report/infoPackage.inc.php:44
+msgid "Download a file from report module (report or PNG)"
+msgstr "Last ned en fil fra rapportmodulen (rapport eller PNG)"
+
+#: modules/report/includes/report.inc.php:36
+#: modules/report/includes/report.inc.php:80
+msgid "Less detail"
+msgstr "Mindre detaljer"
+
+#: modules/report/includes/report.inc.php:39
+#: modules/report/includes/report.inc.php:197
+msgid "More detail"
+msgstr "Flere detaljer"
+
+#: modules/report/includes/html.inc.php:100
+msgid "January"
+msgstr "Januar"
+
+#: modules/report/includes/html.inc.php:101
+msgid "February"
+msgstr "Februar"
+
+#: modules/report/includes/html.inc.php:102
+msgid "March"
+msgstr "Mars"
+
+#: modules/report/includes/html.inc.php:103
+msgid "April"
+msgstr "April"
+
+#: modules/report/includes/html.inc.php:104
+#: modules/report/includes/html.inc.php:116
+msgid "May"
+msgstr "Mai"
+
+#: modules/report/includes/html.inc.php:105
+msgid "June"
+msgstr "Juni"
+
+#: modules/report/includes/html.inc.php:106
+msgid "July"
+msgstr "Juli"
+
+#: modules/report/includes/html.inc.php:107
+msgid "August"
+msgstr "August"
+
+#: modules/report/includes/html.inc.php:108
+msgid "September"
+msgstr "September"
+
+#: modules/report/includes/html.inc.php:109
+msgid "October"
+msgstr "Oktober"
+
+#: modules/report/includes/html.inc.php:110
+msgid "November"
+msgstr "November"
+
+#: modules/report/includes/html.inc.php:111
+msgid "December"
+msgstr "Desember"
+
+#: modules/report/includes/html.inc.php:112
+msgid "Jan"
+msgstr "Jan"
+
+#: modules/report/includes/html.inc.php:113
+msgid "Feb"
+msgstr "Feb"
+
+#: modules/report/includes/html.inc.php:114
+msgid "Mar"
+msgstr "Mar"
+
+#: modules/report/includes/html.inc.php:115
+msgid "Apr"
+msgstr "Apr"
+
+#: modules/report/includes/html.inc.php:117
+msgid "Jun"
+msgstr "Jun"
+
+#: modules/report/includes/html.inc.php:118
+msgid "Jul"
+msgstr "Jul"
+
+#: modules/report/includes/html.inc.php:119
+msgid "Aug"
+msgstr "Aug"
+
+#: modules/report/includes/html.inc.php:120
+msgid "Sep"
+msgstr "Sep"
+
+#: modules/report/includes/html.inc.php:121
+msgid "Oct"
+msgstr "Okt"
+
+#: modules/report/includes/html.inc.php:122
+msgid "Nov"
+msgstr "Nov"
+
+#: modules/report/includes/html.inc.php:123
+msgid "Dec"
+msgstr "Des"
+
+#: modules/report/includes/html.inc.php:124
+msgid "Sunday"
+msgstr "Søndag"
+
+#: modules/report/includes/html.inc.php:125
+msgid "Monday"
+msgstr "Mandag"
+
+#: modules/report/includes/html.inc.php:126
+msgid "Tuesday"
+msgstr "Tirsdag"
+
+#: modules/report/includes/html.inc.php:127
+msgid "Wednesday"
+msgstr "Onsdag"
+
+#: modules/report/includes/html.inc.php:128
+msgid "Thursday"
+msgstr "Torsdag"
+
+#: modules/report/includes/html.inc.php:129
+msgid "Friday"
+msgstr "Fredag"
+
+#: modules/report/includes/html.inc.php:130
+msgid "Saturday"
+msgstr "Lørdag"
+
+#: modules/report/includes/html.inc.php:131
+msgid "Sun"
+msgstr "Søn"
+
+#: modules/report/includes/html.inc.php:132
+msgid "Mon"
+msgstr "Man"
+
+#: modules/report/includes/html.inc.php:133
+msgid "Tue"
+msgstr "Tir"
+
+#: modules/report/includes/html.inc.php:134
+msgid "Wed"
+msgstr "Ons"
+
+#: modules/report/includes/html.inc.php:135
+msgid "Thu"
+msgstr "Tor"
+
+#: modules/report/includes/html.inc.php:136
+msgid "Fri"
+msgstr "Fre"
+
+#: modules/report/includes/html.inc.php:137
+msgid "Sat"
+msgstr "Lør"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Su"
+msgstr "Søn"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Mo"
+msgstr "Ma"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Tu"
+msgstr "Ti"
+
+#: modules/report/includes/html.inc.php:139
+msgid "We"
+msgstr "On"
+
+#: modules/report/includes/html.inc.php:139
+msgid "Th"
+msgstr "To"
+
+#: modules/report/includes/html.inc.php:139
+msgid "Fr"
+msgstr "Fr"
+
+#: modules/report/includes/html.inc.php:140
+msgid "Sa"
+msgstr "Lø"
+
+#: modules/report/includes/html.inc.php:141
+msgid "Wk"
+msgstr "Uk"
+
+#: modules/report/report/index.php:62
+msgid "Period"
+msgstr "Periode"
+
+#: modules/report/report/index.php:63
+msgid "from"
+msgstr "fra"
+
+#: modules/report/report/index.php:63
+msgid "to"
+msgstr "til"
+
+#: modules/report/report/index.php:76
+msgid "Entities"
+msgstr "Forekomster"
+
+#: modules/report/report/index.php:90
+msgid "Generate Report"
+msgstr "Generer rapport"
+
+#: modules/report/report/index.php:132
+msgid "Select some data to include in the report."
+msgstr "Velg data for rapporten"
+
+#: modules/report/report/index.php:194
+msgid "Download image"
+msgstr "Last ned bilde"
+
+#: modules/report/report/index.php:234
+msgid "Get XLS Report"
+msgstr "Hent XLS Rapport"
+
+#: modules/report/report/index.php:236
+msgid "Get PDF Report"
+msgstr "Hent PDF Rapport"

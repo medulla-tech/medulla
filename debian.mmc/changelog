@@ -1,0 +1,348 @@
+mmc-core (1:3.9.90-10) unstable; urgency=low
+
+ * Rename README.rst to README.md ( ed96c282e348dc11e3302bc9816ca89d13021394 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 24 Apr 2017 15:21:01 +0200
+
+mmc-core (1:3.9.90-7) unstable; urgency=low
+
+ * identation comment ( 5e38ab1b7d279a874e17c07f80cb4492fac728b5 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 24 Apr 2017 15:21:01 +0200
+
+mmc-core (1:3.9.90-6) unstable; urgency=low
+
+ * Fix mmc-agent service ( 24816f677c98c4d4d2d4e768b277744ba2077db7 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 24 Apr 2017 15:21:01 +0200
+
+mmc-core (1:3.9.90-5) unstable; urgency=low
+
+ * fix a typo ( 1d5b3c8330d17ee805ddc063c049507c4bdbe7b3 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Tue, 28 Mar 2017 15:21:01 +0200
+
+mmc-core (1:3.9.90-4) unstable; urgency=low
+
+ * add img download ( 48ccb352f7a3a1c3e40ee1293fbadf8c15d3dbc6 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Tue, 28 Mar 2017 15:21:01 +0200
+
+mmc-core (1:3.9.90-3) unstable; urgency=low
+
+ * add call action direct deploy ( 66b63570e62c879d95c66eda785299230868ea12 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Tue, 28 Mar 2017 15:21:01 +0200
+
+mmc-core (1:3.9.90-2) unstable; urgency=low
+
+ * display none for step unused ( 0b46ced1a87543a1e9a811f17464191e76daee48 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sat, 18 Feb 2017 15:21:01 +0200
+
+mmc-core (1:3.9.90-1) unstable; urgency=low
+
+ * Fix version to match pulse version
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sat, 18 Feb 2017 15:21:01 +0200
+
+mmc-core (1:3.2.0-1) unstable; urgency=low
+
+ * Fixing issue #104 ( f954de1dd463e2ab1bb60dbb6b32f32ec98d35cd )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sat, 18 Feb 2017 15:21:01 +0200
+
+mmc-core (1:3.1.90-30) unstable; urgency=low
+
+ * Replace the legacy GeoLiteCity database by the current GeoIPCityone ( 747f8d01f5799b263149220eeabaed7e99e93148 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sat, 18 Feb 2017 15:21:01 +0200
+
+mmc-core (1:3.1.90-29) unstable; urgency=low
+
+ * Fix systemd support ( 7c8f17cffee49caab326fdc9b5fe7d09ddf329c3 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sat, 18 Feb 2017 15:21:01 +0200
+
+mmc-core (1:3.1.90-28) unstable; urgency=low
+
+ * del icone inventory  result group deploy ( a2e47e6c18c08883035c1a93a64ea7363c581a14 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sat, 18 Feb 2017 15:21:01 +0200
+
+mmc-core (1:3.1.90-27) unstable; urgency=low
+
+ * recording packagename in table deploy xmppmaster ( 637c706cac906e26e8ecd3e56ed90b4e8bffa3b0 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sat, 18 Feb 2017 15:21:01 +0200
+
+mmc-core (1:3.1.90-26) unstable; urgency=low
+
+ * view deploy for group ( 0324409147925cf93816310baf4a3565c236b0d8 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sat, 18 Feb 2017 15:21:01 +0200
+
+mmc-core (1:3.1.90-25) unstable; urgency=low
+
+ * fix infopackage msc ( 220e774fc80b5ebdeb7b4fc65a5a3da8c7f6628a )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sat, 18 Feb 2017 15:21:01 +0200
+
+mmc-core (1:3.1.90-24) unstable; urgency=low
+
+ * xmppmaster page web result deploy ( f95f48f0445f8927cbeb1454223a62752934fb0b )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 28 Dec 2016 15:21:01 +0200
+
+mmc-core (1:3.1.90-23) unstable; urgency=low
+
+ * deploy xmpp gestion logs deploy ( d8e814076dc75d8e1d309455751e93ad632aa0fb )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 28 Dec 2016 15:21:01 +0200
+
+mmc-core (1:3.1.90-22) unstable; urgency=low
+
+ * change wrapper table deploy ( a73183765fbaab278433916f8daeded3c5287e68 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 28 Dec 2016 15:21:01 +0200
+
+mmc-core (1:3.1.90-21) unstable; urgency=low
+
+ * Group php class used in sysprep template ( 2c35865ab67903c50d01298cc32db3a827084e56 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 28 Dec 2016 15:21:01 +0200
+
+mmc-core (1:3.1.90-20) unstable; urgency=low
+
+ * Remove passwords encryption in sysprep  ( 2ff8342aa953f09774a36e586b8e9dd542303e3e )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 28 Dec 2016 15:21:01 +0200
+
+mmc-core (1:3.1.90-19) unstable; urgency=low
+
+ *  del comment et line log ( dce4c13babf79d4d92414db4552ffccef1e441e0 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 21 Dec 2016 15:21:01 +0200
+
+mmc-core (1:3.1.90-18) unstable; urgency=low
+
+ *  Translation fixes ( 563dd6e5bbd5fd0ff948e9132d2976229c916d7b )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-17) unstable; urgency=low
+
+ *  Translation fixes ( 3199d75f1209fb570cdb07af78e5b196c5c082bb )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-16) unstable; urgency=low
+
+ *  Add forgotten changes on sysprep generator ( 983459748c184dedf7a4deaa14c921eb7acafe2f )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-15) unstable; urgency=low
+
+ *  add wakeonlan from xmpp master ( 7e8040ef66732f26f5d12163ee926e523a920c5d )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-14) unstable; urgency=low
+
+ *  Optimization of the computer list query ( 56ff6ac20b5a0e638d6cca428cab8a604a61a967 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-13) unstable; urgency=low
+
+ *  Add sysprep answer file for Windows 10. ( bcf52a2c7db4cba69ff433ad23f5c2f70a0db364 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-12) unstable; urgency=low
+
+ *  add side menu for xmpp console ( 4792e601cf118691b800299631dfe0cc472e9749 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-11) unstable; urgency=low
+
+ *  add traceback message on error ( 3e8fc244999a5676c4484e486cc8ffbc70e608d0 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-10) unstable; urgency=low
+
+ *  add message error command for console xmpp ( 1f9e57f5efdcfc22c47fe8d8e0f684e89d5b5b06 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-9) unstable; urgency=low
+
+ *  add shell xmpp from interface pulse ( bb1c3906fb5f98bd7e5fd477f78b0b13a1ec8ab4 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+
+mmc-core (1:3.1.90-8) unstable; urgency=low
+
+ *  Move xmppmaster into core/ ( ece4b9cfd236df89591bbd166fa520bfa5731268 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-7) unstable; urgency=low
+
+ *  Add xmppmaster branch ( f471d82e286d115106909e1f1f9faaf9fe7d6c9a )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-6) unstable; urgency=low
+
+ *  Revert "Revert "fix function getAllLocation"" ( d92b617aeb598272168be24c29b760dc9273c8d7 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-5) unstable; urgency=low
+
+ *  revert delete menu in all location ( 8b93252129d3de1499dbce1405d3b1ef1683b57f )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+
+mmc-core (1:3.1.90-4) unstable; urgency=low
+
+ *  delete menu in all location ( e698ac0b965737f42df2b46625a3c2197a5d24c5 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-3) unstable; urgency=low
+
+ *  add inherite class ( 81c3353b6dffe8536d74ebf6a0fa9d40e88fdd40 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.90-2) unstable; urgency=low
+
+ *  New snapshot ( 7b3c2aef82bb959d4ebb6fe0d1df8dda2d73fb3e )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.83-5) unstable; urgency=low
+
+  * Increase sqlalchemy minimum authorized version
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.83-4) unstable; urgency=low
+
+  * Fix use of new sqlalchemy
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.83-3) unstable; urgency=low
+
+  * New snapshot
+  * Fix icons
+  * Fix generate-agent.sh urls
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.1-3) unstable; urgency=low
+
+  * Implement reloading in init script.
+  * Install empty /var/lib/mmc directory.
+
+ -- Adam Cécile <acecile@mandriva.com>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.1-1) unstable; urgency=low
+
+  * New python-mmc-database package containing common files to use
+    SQL databases.
+  * New python-mmc-report and mmc-web-report packages.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 18 Feb 2014 09:45:39 +0100
+
+mmc-core (1:3.1.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * New python-gobject dependency on mmc-agent.
+  * New modules:
+    - dashboard: a simple dashboard page withserver health metrics,
+    - services: to handle system services through systemd.
+  * Re-organize documentation paths.
+
+ -- Adam Cécile <acecile@mandriva.com>  Thu, 13 Jun 2013 09:47:22 +0200
+
+mmc-core (3.0.5.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * python-mmc-core: use triggers to restart mmc-agent after a changed file
+    in /usr/share/pyshared/{mmc,pulse2} directories.
+  * python-mmc-base: pre-depends on python-mmc-core to be sure to install
+    triggers before any other package.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 09 Oct 2012 11:45:48 +0200
+
+mmc-core (3.0.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * Add python-mmc-base's postinst script to fix base.ini because of
+    the use of python-configobj in Pulse2.
+  * Add ldap-utils dependency to mmc-agent (for mmc-add-schema helper).
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 07 Sep 2012 11:50:04 +0200
+
+mmc-core (3.0.4-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Wed, 06 Jun 2012 15:20:08 +0200
+
+mmc-core (3.0.3.2-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 02 Apr 2012 15:03:24 +0200
+
+mmc-core (3.0.3.1+git20111215-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Thu, 15 Dec 2011 12:19:18 +0100
+
+mmc-core (3.0.3.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 28 Oct 2011 10:04:04 +0200
+
+mmc-core (3.0.3-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 26 Sep 2011 17:02:48 +0200
+
+mmc-core (3.0.2.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 26 Aug 2011 11:36:00 +0200
+
+mmc-core (3.0.2-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 12 Jul 2011 13:47:52 +0200
+
+mmc-core (3.0.1-1) unstable; urgency=low
+
+  * New release.
+
+ -- Cédric Delfosse <cdelfosse@mandriva.com>  Thu, 02 Sep 2010 10:48:34 +0200
+
+mmc-core (3.0.0-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 19 Apr 2010 09:44:29 +0200

@@ -237,3 +237,402 @@ Pulse 2 3.3.0
  * [FEATURE] Management of multiple entities in Imaging
  * [BUGFIX]  Fix restore of a specific version of a file
  * [FEATURE] Replacement of historic Pulse PXE by PXELINUX
+
+
+
+
+mmc-core 4.6.2
+==============
+* [BUGFIX] Fix the value for the timed out machines in the audit page
+
+mmc-core 4.6.1
+==============
+* [FEATURE] Add a toggle button for each panel. For each panel the user's choice is persistant
+* [FEATURE] Add info of syncthing share
+* [BUGFIX]  Improve translations
+* [BUGFIX]  Update topology for d3 V5
+* [BUGFIX]  Add refresh button for all the audit page
+* [BUGFIX]  Fix the start deployment date
+* [BUGFIX]  Add the refresh object for some page
+* [BUGFIX]  Fix the start deployment date
+* [BUGFIX]  Add some behaviours to the expert file manager
+
+mmc-core 4.6.0
+==============
+* [BUGFIX]  Transform file and dir one-line list to real list in the bucket
+* [BUGFIX]  Add spacing after filter input
+* [BUGFIX]  Modify the cursor when it is hover some action icons
+* [BUGFIX]  Translate the hide / show message when we clic on it
+* [BUGFIX]  Fix the status in audit general pag
+* [BUGFIX]  Fix the state for deployments in groups in audit page
+* [BUGFIX]  Fix syncthing message displayed into audit
+* [BUGFIX]  Fix the start deployment date
+* [BUGFIX]  Add the refresh object for some page
+* [BUGFIX]  Fix the start deployment date
+* [BUGFIX]  Add some behaviours to the expert file manager
+* [BUGFIX]  Transform file and dir one-line list to real list in the bucket
+
+mmc-core 4.5.2
+==============
+* [FEATURE] Switch from RaphaelJS to d3.js
+* [BUGFIX]  Fix dashboard counters
+* [BUGFIX]  Fix the release of resources in case of lost connections
+
+mmc-core 4.5.1
+==============
+* [FEATURE] New history page for file transfers
+* [FEATURE] Expert file download allows download of several files and folders
+* [FEATURE] File download shows a tree view of the remote filesystem
+* [FEATURE] Enable changing of audit refresh time
+* [BUGFIX]  Improve quick actions for Linux clients
+* [BUGFIX]  Improve the detection of the presence of clients in groups
+* [BUGFIX]  Quick actions moved to standard mode
+* [BUGFIX]  Improve refresh of the dashboard and audit view
+* [BUGFIX]  Fix abort of deployments on groups
+
+mmc-core 4.5
+--------------
+* [FEATURE] The Quick Actions can be shared with others users
+* [FEATURE] A "copy to clipboard" button is added to error popups
+* [BUGFIX]  Fix the wrong count of machines in MachineOnline widget
+* [BUGFIX]  Remove PluginPanel dashboard plugin
+* [BUGFIX]  Fix Action list content
+* [BUGFIX]  Fix VNC permissions change via quick action
+* [BUGFIX]  Add cmd icon ( used for windows )
+* [BUGFIX]  Fix editing Quick action
+* [BUGFIX]  Fix command for quick action
+* [BUGFIX]  Fix quick action for groups
+* [BUGFIX]  Add root to share user list
+* [BUGFIX]  Fix sharing Quick Actions
+* [BUGFIX]  Fix Audit page pagination
+* [BUGFIX]  Fix refresh rate in the audit page
+* [BUGFIX]  Add ubuntu detection to quick action
+
+mmc-core 4.4.1
+--------------
+* [BUGFIX] Fix wake on lan problem
+* [BUGFIX] Modify the configuration icon computers action
+
+mmc-core 4.4
+--------------
+* [FEATURE] Ability to use quick actions installed by the sql schemas for all users
+* [FEATURE] Ability to run a custom quick action on a group
+* [BUGFIX] Fix remote console shell for long commands
+
+
+mmc-core 4.3
+--------------
+
+ * [FEATURE] Allow edition of clients config files from Pulse
+ * [FEATURE] Filter computers list on presence status
+ * [BUGFIX] Update translations
+
+
+mmc-core 4.2
+--------------
+
+* [FEATURE] Quick action that installs the public key of the relay server to the machines
+* [FEATURE] Allow a tooltip message on empty actions
+* [FEATURE] Automatically redirect user to /mmc
+* [FEATURE] Allow to call a plugin from a quick action
+* [FEATURE] Add a file browser page for file-transfer folder
+* [FEATURE] Download remote files from machines using XMPP
+* [FEATURE] Add presence info on machines icons
+* [BUGFIX] Fix the service module to work with newer systemd
+* [BUGFIX] Fix the color of quick action alerts
+* [BUGFIX] Fix quote characters in quick actions
+* [BUGFIX] Fix alignment of action icons
+* [BUGFIX] Update translations
+
+mmc-core 4.1
+--------------
+
+* [FEATURE] New history view that captures all operations
+* [FEATURE] Pulse update module widget is now a standalone widget
+* [FEATURE] Create and run custom quick actions
+* [BUGFIX]  Fix authentication to GLPI for user provisioning
+* [BUGFIX]  Fix service module with new systemd
+
+mmc-core 3.1.1
+--------------
+
+ * Feature #2170: Create defaultUserGroup when starting
+ * Bug #2115: Mixup between client.async and client.sync cookies
+ * Bug #2155: Change user password for root doesn't work
+ * Bug #2156: Removed deprecated functions
+ * Bug #2186: Users with "no password expiration" policy still have an expiration
+              date on the samba side
+ * Bug #2256: Allow to change SAMBA password when pwdReset is set
+ * Bug #2257: Port to jQuery
+
+mmc-core 3.1.0
+--------------
+
+ * New dashboard plugin
+ * New services plugin (systemd integration)
+ * Bug #1912: Fix MMC login page on IE9
+ * Bug #1915: Fix UID between users and computers accounts
+
+mmc-core 3.0.5
+--------------
+
+ * Bug #1708: Fix unhandled exception when user atttempt to create a already
+   existing user home directory
+ * Bug #1775: UID/GID should not be shown when adding a user
+ * Bug #1777: Slashes in error messages on the login page
+
+mmc-core 3.0.4
+--------------
+
+ * Feature #1687: Allow users to reset their password with a token based
+   authentication
+ * Password policies enhancements: Password complexity hints, show on the user
+   edit page if the password if expired or if the user is in grace login mode
+ * New MMC contrib scripts : mmc-check-expired-passwords / usertoken-example in
+   /usr/share/doc/python-mmc-base/contrib/scripts
+ * Audit : audit logs can be sent to syslog servers
+ * Bug #1558: Broken user / group lists under IE7
+ * Bug #1691: Bad mmc-agent PID file handling
+ * Bug #1706: Previous - Next listing behavior
+ * Bug #1739: pulse2-package-server-register-imaging on python 2.7
+ * Feature #1594: Use localized languages labels on MMC login page
+ * Feature #1671: Man pages for mmc-agent, mmc-helper and mmc-password-helper
+
+ See http://projects.mandriva.org/versions/166
+
+mmc-core 3.0.3.2
+----------------
+
+ * Bugfix release of 3.0.3.1
+ * Details at http://mds.mandriva.org/milestone/MMC-CORE%203.0.3.2
+
+mmc-core 3.0.3.1
+----------------
+
+ * Bugfix release of 3.0.3
+ * Phone numbers can contain the '+' char
+ * IE6 fixes
+ * Details at http://mds.mandriva.org/milestone/MMC-CORE%203.0.3.1
+
+mmc-core 3.0.3
+--------------
+
+ * Added preferedLanguage field in the user edit page
+ * Option to use an existing home directory for a new user
+ * Filled informations in the user edit page are not lost in case of error
+ * Added a disable button to disable all modules of a user
+ * More details at http://mds.mandriva.org/milestone/MMC-CORE%203.0.3
+
+mmc-core 3.0.2.1
+----------------
+
+ * Bugfix release : http://mds.mandriva.org/milestone/MMC-CORE%203.0.2.1
+   * Fix regexp on mail field in the user edit page
+   * Fix update on empty multiple input fields
+   * Fix agent return code in case of error in plugin activation (#409)
+
+mmc-core 3.0.2
+--------------
+
+ * Merge MMC Agent and MMC web interface versions (web interface ChangeLog
+   in web/Changelog
+ * Migrate to autotools
+ * More details at http://mds.mandriva.org/milestone/MMC-CORE%203.0.2
+
+mmc-core 3.0.1 (MMC agent)
+--------------------------
+
+ * MMC agent session timeout is now configurable.
+ * Add a subscription and support information system
+ * New page that displays subscription and support informations
+ * List widget improvement: configurable pagination, tooltips on column name
+ * Bug fixes
+ * More details at http://mds.mandriva.org/milestone/MMC-CORE%203.0.1
+
+mmc-core 3.0.0 (MMC agent)
+--------------------------
+
+ * Audit framework
+   * New mmc-helper command to manage the audit database
+ * LDAP TLS support
+ * New Password Policy module
+   * New mmc-password-helper to check and generate password
+   * New openldap-check-password password policy module for OpenLDAP
+ * French translation update (Mandriva)
+ * German translation update (Mario Fetka)
+ * Spanish translation update (Francisco Garcia)
+ * Brazilian Portuguese translation update (Sergio Rafael Lemke)
+
+mmc-agent 2.3.2
+---------------
+
+ * Multi-threading support
+ * TLS support with certificate check for incoming XML-RPC connections
+ * base plugin:
+   * Add change password hook for changeUserPasswd in base plugin
+     (Original patch from Jan Gehring)
+   * Default used LDAP user password scheme is now SSHA instead of CRYPT
+ * network plugin:
+   * Add support for NS and MX records edition
+   * Fix issues with 64 bits platform when computing the next free IP address
+     of a zone
+ * samba plugin
+   * SAMBA configuration parser is more robust
+ * provisioning:
+   * Add profile to group mapping capability when provisioning a user from a
+     external LDAP
+   * Network timeout for external LDAP connection
+ * New ACL edit page
+
+mmc-agent 2.3.1
+---------------
+
+ * minor bug fix release
+ * hook scripts for SAMBA remote share and printer management
+ * BASE64 obfuscated password support in /etc/mmc/mmc.ini
+ * Fix bad path in expertMode cookie
+ * New Russian translation by Vitaly Kolomeytsev
+ * Brazilian Portuguese translation update from Wanderlei Antonio Cavassin
+ * Spanish translation update from Juan Asensio Sánchez
+
+mmc-agent 2.3.0
+---------------
+
+ * New "Computers" sub-module for computer management
+ * Save interface mode (standard or expert) between two MMC sessions
+ * User photo auto-resize if too large
+ * Support page with tabs in the widget framework
+ * Lots of code cleanup and bug fixes
+ * external authentication and provisioning support
+ * server-side session security context support
+ * base plugin:
+   * issue an error when the backup directory for user's home doesn't exist
+   * Fix loginShell attribute problem when getting users list (Manuel Zach)
+ * SAMBA plugin:
+   * the path of a new SAMBA share can now be specified instead of using a
+     default location
+   * the OU that stores the SAMBA computer accounts is now read from samba.ini
+ * mail plugin:
+   * the mail LDAP schema features the mailhost attributes
+   * the attribute mailhost is now managed
+
+mmc-agent 2.2.0
+---------------
+
+ * server-side session management with the MMC web interface
+ * a user must now be authenticated before any XML-RPC calls
+ * put back HTTP basic authentication between the agent and the interface
+ * SAMBA plugin:
+   * issue a warning if NSCD is detected
+ * network plugin:
+   * Make "get next free IP address feature" works with Python 2.4
+   * DHCP: authoritative flag management for subnet
+   * DNS: allow to specify a DNS zone reader for BIND zone configuration files (initial patch by Josef Boleininger)
+   * DNS: chrooted bind support
+ * a title can now be set to the MMC login page
+ * browser language auto-detection on the login page
+ * ported a lot of old code to the new MMC framework
+
+mmc-agent 2.1.0
+---------------
+
+ * LMC to MMC rename
+ * new Mandriva graphical theme
+ * configuration files have been relocated
+ * Some new HTML widgets and widget framework improvements
+ * Norwegian translation from Atle Johansen
+ * Code cleanup and bug fixes
+
+lmc-agent 2.0.0
+---------------
+
+ * network plugin
+   * new module for DNS and DHCP management
+ * base plugin
+   * skelDir option bug fix
+ * ox plugin
+   * more provide the Open-Xchange plugin
+
+lmc-agent 1.1.4
+---------------
+
+ * user photo (JPEG format) can now be uploaded
+ * user list now display telephone number and mail address
+ * user "cn", "displayName" and "title" LDAP attribute can now be edited
+ * update scriptaculous AJAX framework to version 1.7.0
+ * destroy user session when login out
+ * code cleanup and bug fixes
+ * Passwords can now contains special characters
+ * UI cleanups
+ * Spanish translation from Alejandro Escobar
+
+lmc-agent 1.1.3
+---------------
+
+ * XML-RPC agent:
+   * allow transfert of binary values in XML-RPC stream
+ * some bug fixes
+
+lmc-agent 1.1.2
+---------------
+
+ * user login shell attributes can now be edited
+ * a group entry can now be edited
+ * code cleanup and XHTML/CSS fixes
+ * base plugin:
+   * simple bug fixes for Fedora Directory Server (FDS) support
+   * do cn="givenName sn" when adding a user
+ * SAMBA plugin
+   * more checks when SAMBA plugin starts
+   * move machines management stuff from base plugin
+ * mail plugin:
+   * mail alias management for group
+   * plugin can now be disabled by configuration
+ * proxy plugin:
+   * plugin can now be disabled by configuration
+ * ox plugin:
+   * plugin can now be disabled by configuration
+
+lmc-agent 1.1.1
+---------------
+
+ * base plugin:
+   * the POSIX primary group of a user can be changed
+   * starting uid and gid numbers can now be configured
+   * extra modifiers are now available when setting default attributes for new
+     users
+ * SAMBA plugin:
+   * SAMBA user primary group can be changed
+   * extra LDAP checks when activating module
+   * joined machines on the domain are now added to the 'Domain Computers'
+     group
+ * mail plugin: virtual mail domain support
+ * when searching a user, the scope is extended to uid, firstname and lastname
+  (instead of uid only)
+ * primary/secondary groups management
+ * the group membership page now works with IE6
+ * user mail address can be configured directly from the user edit page
+ * assorted bug fixes
+
+lmc-agent 1.1.0
+---------------
+
+ * New mail plugin to manage user email delivery with postfix
+ * SAMBA plugin: shares connections and session status are now available
+ * base plugin: All log files can now be accessed
+ * New home page to improve navigation
+ * The old home page has been moved to a new "Status" page
+ * New Log page to show LDAP operations log
+ * The number of users in a group is now displayed in the group list
+ * Telephone number field is now available when editing a user
+ * Internal module management improvement
+
+lmc-agent 1.0.1
+---------------
+
+ * Fix a popup generator bug.
+
+lmc-agent 1.0.0
+---------------
+
+ * Initial release.

@@ -1,0 +1,9 @@
+etc/mmc/mmc.ini
+etc/mmc/apache/mmc.conf
+usr/share/mmc/graph
+usr/share/mmc/img
+usr/share/mmc/includes
+usr/share/mmc/*.php
+usr/share/mmc/jsframework
+usr/share/mmc/logout
+usr/share/mmc/modules/base

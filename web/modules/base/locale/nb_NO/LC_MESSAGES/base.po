@@ -1,0 +1,2218 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-04-27 15:45+0200\n"
+"PO-Revision-Date: 2018-02-13 15:15+0000\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
+"Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nb_NO\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: token.php:56 index.php:63
+#, php-format
+msgid "The server %s does not exist"
+msgstr "Serveren %s eksisterer ikke"
+
+#: token.php:68
+msgid "Token not valid"
+msgstr "Token er ikke gyldig"
+
+#: token.php:70
+msgid "Error while validating your token. Please contact your administrator."
+msgstr "Feil under validering av token. Kontakt administratoren din."
+
+#: modules/base/audit/indexbase.php:29 modules/base/audit/logview.php:75
+#: modules/base/audit/indexall.php:29
+msgid "Object"
+msgstr "Objekt"
+
+#: modules/base/audit/indexbase.php:29
+#: modules/base/audit/ajaxLogFilter.php:123 modules/base/audit/indexall.php:29
+msgid "Type"
+msgstr "Type"
+
+#: modules/base/audit/indexbase.php:30 modules/base/audit/indexall.php:30
+msgid "Action"
+msgstr "Handling"
+
+#: modules/base/audit/indexbase.php:30
+#: modules/base/audit/ajaxLogFilter.php:121 modules/base/audit/indexall.php:30
+#: modules/base/includes/auditCodes.php:45
+#: modules/base/logview/logsdeployment.php:298
+msgid "User"
+msgstr "Bruker"
+
+#: modules/base/audit/indexbase.php:32
+msgid "User and group"
+msgstr "Bruker og gruppe"
+
+#: modules/base/audit/indexmail.php:31 modules/base/audit/localSidebar.php:38
+#: modules/base/users/ajaxFilter.php:80
+msgid "Mail"
+msgstr "E-post"
+
+#: modules/base/audit/indexnetwork.php:31
+#: modules/base/audit/localSidebar.php:46
+msgid "Network"
+msgstr "Nettverk"
+
+#: modules/base/audit/logview.php:35
+msgid "Event details"
+msgstr "Hendelsedetaljer"
+
+#: modules/base/audit/logview.php:58 modules/base/audit/ajaxLogFilter.php:114
+#: modules/base/logview/logsdeployment.php:297
+#: modules/base/logview/ajax_showlog.php:68
+msgid "Date"
+msgstr "Dato"
+
+#: modules/base/audit/logview.php:60
+msgid "User that initiated the event"
+msgstr "Bruker som startet hendelsen"
+
+#: modules/base/audit/logview.php:62 modules/base/audit/ajaxLogFilter.php:122
+msgid "Event"
+msgstr "Hendelse"
+
+#: modules/base/audit/logview.php:64
+msgid "Plugin"
+msgstr "Plugg-inn"
+
+#: modules/base/audit/logview.php:66
+msgid "Client"
+msgstr "Klient"
+
+#: modules/base/audit/logview.php:68
+msgid "Client hostname"
+msgstr "Klientens vertsnavn"
+
+#: modules/base/audit/logview.php:70
+msgid "Agent hostname"
+msgstr "Agentens vertsnavn"
+
+#: modules/base/audit/logview.php:77
+msgid "Object type"
+msgstr "Objekttype"
+
+#: modules/base/audit/logview.php:87
+msgid "Value"
+msgstr "Verdi"
+
+#: modules/base/audit/indexsshlpk.php:31
+msgid "SSH public key audit"
+msgstr "SSH public key revisjon"
+
+#: modules/base/audit/ajaxLogFilter.php:49
+#: modules/base/includes/AjaxFilterLog.inc.php:325
+msgid "Begin date"
+msgstr "Start dato"
+
+#: modules/base/audit/ajaxLogFilter.php:52
+#: modules/base/includes/AjaxFilterLog.inc.php:326
+msgid "End date"
+msgstr "Slutt dato"
+
+#: modules/base/audit/ajaxLogFilter.php:124
+msgid "Object Name"
+msgstr "Objektnavn"
+
+#: modules/base/audit/ajaxLogFilter.php:126
+msgid "Module"
+msgstr "Modul"
+
+#: modules/base/audit/ajaxLogFilter.php:128
+msgid "Result"
+msgstr "Resultat"
+
+#: modules/base/audit/ajaxLogFilter.php:132
+msgid "View details"
+msgstr "Vis detaljer"
+
+#: modules/base/audit/indexproxy.php:31
+msgid "Proxy audit"
+msgstr "Proxyrevisjon"
+
+#: modules/base/audit/list.php:30
+msgid "Logged actions"
+msgstr "Loggede handlinger"
+
+#: modules/base/audit/list.php:39
+msgid "Search action"
+msgstr "Søk handling"
+
+#: modules/base/audit/indexall.php:33 modules/base/audit/localSidebar.php:28
+msgid "All modules"
+msgstr "Alle moduler"
+
+#: modules/base/audit/indexsamba.php:31 modules/base/audit/localSidebar.php:34
+msgid "Samba"
+msgstr "Samba"
+
+#: modules/base/audit/localSidebar.php:30
+msgid "Users and Groups"
+msgstr "Brukere og grupper"
+
+#: modules/base/audit/localSidebar.php:42
+msgid "Proxy"
+msgstr "Proxy"
+
+#: modules/base/infoPackage.inc.php:37
+msgid "User, group and computer management"
+msgstr "Bruker-, gruppe- og maskin administrasjon"
+
+#: modules/base/infoPackage.inc.php:44 modules/base/main/default.php:89
+#: graph/navbar.inc.php:106
+msgid "Home"
+msgstr "Hjem"
+
+#: modules/base/infoPackage.inc.php:49
+msgid "Shortcuts"
+msgstr "Snarveier"
+
+#: modules/base/infoPackage.inc.php:53
+msgid "Favorites page"
+msgstr "Favorittside"
+
+#: modules/base/infoPackage.inc.php:61
+msgid "MMC Logs"
+msgstr "MMC Logger"
+
+#: modules/base/infoPackage.inc.php:112
+msgid "View details of an action"
+msgstr "Vis detaljer om en handling"
+
+#: modules/base/infoPackage.inc.php:123
+msgid "History"
+msgstr "Historikk"
+
+#: modules/base/infoPackage.inc.php:130
+msgid "logs of all the modules"
+msgstr "logger til alle modulene"
+
+#: modules/base/infoPackage.inc.php:177
+msgid "Status"
+msgstr "Status"
+
+#: modules/base/infoPackage.inc.php:183
+msgid "Default status page"
+msgstr "Standard statusside"
+
+#: modules/base/infoPackage.inc.php:188
+msgid "Support page"
+msgstr "Support side"
+
+#: modules/base/infoPackage.inc.php:199 modules/base/views/index.tpl.php:95
+#: modules/base/users/ajaxFilter.php:93
+msgid "Users"
+msgstr "Brukere"
+
+#: modules/base/infoPackage.inc.php:204 modules/base/views/index.tpl.php:43
+#: modules/base/users/index.php:31
+msgid "User list"
+msgstr "Brukerliste"
+
+#: modules/base/infoPackage.inc.php:219
+msgid "Add a user"
+msgstr "Legg til en bruker"
+
+#: modules/base/infoPackage.inc.php:224
+msgid "Edit a user"
+msgstr "Rediger en bruker"
+
+#: modules/base/infoPackage.inc.php:228
+msgid "Edit ACL permissions on a user"
+msgstr "Rediger en brukers ACL rettigheter"
+
+#: modules/base/infoPackage.inc.php:232
+msgid "Logged user actions"
+msgstr "Loggede brukerhandlinger"
+
+#: modules/base/infoPackage.inc.php:237
+msgid "Action details"
+msgstr "Handlingsdetaljer"
+
+#: modules/base/infoPackage.inc.php:247
+msgid "Delete a user"
+msgstr "Slett en bruker"
+
+#: modules/base/infoPackage.inc.php:252
+msgid "Backup user files"
+msgstr "Sikkerhetskopiere en brukers filer"
+
+#: modules/base/infoPackage.inc.php:257
+msgid "Reset user password"
+msgstr "Tilbakestill brukerpassord"
+
+#: modules/base/infoPackage.inc.php:264
+msgid "Change password"
+msgstr "Bytt passord"
+
+#: modules/base/infoPackage.inc.php:271
+msgid "Get user photo"
+msgstr "Hent brukers bilde"
+
+#: modules/base/infoPackage.inc.php:281 modules/base/groups/ajaxFilter.php:41
+msgid "Groups"
+msgstr "Gupper"
+
+#: modules/base/infoPackage.inc.php:286 modules/base/groups/index.php:31
+msgid "Group list"
+msgstr "Gruppeliste"
+
+#: modules/base/infoPackage.inc.php:289
+msgid "Add a group"
+msgstr "Legg til en gruppe"
+
+#: modules/base/infoPackage.inc.php:292
+msgid "Delete a group"
+msgstr "Slett en gruppe"
+
+#: modules/base/infoPackage.inc.php:302 modules/base/groups/members.php:162
+msgid "Group members"
+msgstr "Gruppemedlemmer"
+
+#: modules/base/infoPackage.inc.php:306
+msgid "Edit a group"
+msgstr "Rediger en gruppe"
+
+#: modules/base/infoPackage.inc.php:315
+msgid "Computers"
+msgstr "Datamaskiner"
+
+#: modules/base/infoPackage.inc.php:320 modules/base/computers/index.php:34
+msgid "Computer list"
+msgstr "Liste over maskiner"
+
+#: modules/base/infoPackage.inc.php:323
+#: modules/base/computers/localSidebar.php:8
+msgid "Add computer"
+msgstr "Legg til en maskin"
+
+#: modules/base/infoPackage.inc.php:329
+msgid "Edit computer"
+msgstr "Rediger datamaskin"
+
+#: modules/base/infoPackage.inc.php:333
+msgid "Delete a computer"
+msgstr "Slett en maskin"
+
+#: modules/base/infoPackage.inc.php:338
+msgid "Ajax part of computers list"
+msgstr "Ajax del av maskinliste"
+
+#: modules/base/infoPackage.inc.php:374
+msgid "Download inventory of one machine"
+msgstr "Last ned en maskins inventar"
+
+#: modules/base/infoPackage.inc.php:387
+msgid "User photo"
+msgstr "Brukers bilde"
+
+#: modules/base/infoPackage.inc.php:388
+msgid "User login"
+msgstr "Brukers brukernavn"
+
+#: modules/base/infoPackage.inc.php:389
+msgid "User name"
+msgstr "Brukernavn"
+
+#: modules/base/infoPackage.inc.php:390
+msgid "User firstname"
+msgstr "Brukers fornavn"
+
+#: modules/base/infoPackage.inc.php:391
+msgid "User home directory"
+msgstr "Brukers hjemmemappe"
+
+#: modules/base/infoPackage.inc.php:392
+#: modules/base/includes/publicFunc.php:473
+msgid "Login shell"
+msgstr "Login skall"
+
+#: modules/base/infoPackage.inc.php:393
+msgid "User title"
+msgstr "Brukers tittel"
+
+#: modules/base/infoPackage.inc.php:394
+msgid "Mail address"
+msgstr "E-postadresse"
+
+#: modules/base/infoPackage.inc.php:395
+#: modules/base/includes/publicFunc.php:347
+#: modules/base/includes/publicFunc.php:350
+msgid "Telephone number"
+msgstr "Telefonnummer"
+
+#: modules/base/infoPackage.inc.php:396
+msgid "Mobile phone number"
+msgstr "Mobilnummer"
+
+#: modules/base/infoPackage.inc.php:397
+#: modules/base/includes/publicFunc.php:362
+msgid "Fax number"
+msgstr "Faks nummer"
+
+#: modules/base/infoPackage.inc.php:398
+#: modules/base/includes/publicFunc.php:367
+msgid "Home phone number"
+msgstr "Hjemenummer"
+
+#: modules/base/infoPackage.inc.php:399
+#: modules/base/includes/publicFunc.php:418
+msgid "Primary group"
+msgstr "Hovedgruppe"
+
+#: modules/base/infoPackage.inc.php:400
+#: modules/base/includes/publicFunc.php:447
+msgid "Secondary groups"
+msgstr "Sekundære grupper"
+
+#: modules/base/infoPackage.inc.php:401
+#: modules/base/includes/publicFunc.php:478
+msgid "Common name"
+msgstr "Visningsnavn"
+
+#: modules/base/infoPackage.inc.php:402
+#: modules/base/includes/publicFunc.php:484
+msgid "Preferred name to be used"
+msgstr "Foretrukket brukernavn"
+
+#: modules/base/infoPackage.inc.php:403
+#: modules/base/includes/publicFunc.php:310 index.php:216
+msgid "Password"
+msgstr "Passord"
+
+#: modules/base/infoPackage.inc.php:404 modules/base/users/resetpasswd.php:53
+#: modules/base/users/passwd.php:68
+msgid "Confirm your password"
+msgstr "Bekreft ditt passord"
+
+#: modules/base/infoPackage.inc.php:405
+msgid "Enable/Disable user account"
+msgstr "Aktivere/Deaktivere brukers konto"
+
+#: modules/base/views/index.tpl.php:78
+#: modules/base/includes/publicFunc.php:295
+#: modules/base/users/ajaxFilter.php:68 index.php:210
+msgid "Login"
+msgstr "Brukernavn"
+
+#: modules/base/views/index.tpl.php:84 modules/base/users/ajaxFilter.php:79
+msgid "Name"
+msgstr "Etternavn"
+
+#: modules/base/views/index.tpl.php:87
+#: modules/base/includes/publicFunc.php:456
+msgid "Home directory"
+msgstr "Hjemmemappe"
+
+#: modules/base/views/index.tpl.php:89 modules/base/users/ajaxFilter.php:83
+msgid "Edit"
+msgstr "Rediger"
+
+#: modules/base/views/index.tpl.php:91 modules/base/users/ajaxFilter.php:87
+msgid "MMC rights"
+msgstr "MMC rettigheter"
+
+#: modules/base/views/index.tpl.php:92 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:88 modules/ppolicy/default/delete.php:45
+#: includes/FormGenerator.php:1158
+msgid "Delete"
+msgstr "Slett"
+
+#: modules/base/views/index.tpl.php:93 modules/base/users/ajaxFilter.php:89
+msgid "Backup"
+msgstr "Sikkerhetskopi"
+
+#: modules/base/computers/index.php:48
+#: modules/base/computers/localSidebar.php:5
+msgid "All computers"
+msgstr "Alle datamaskiner"
+
+#: modules/base/computers/index.php:52
+msgid "Online computers"
+msgstr "Online datamaskiner"
+
+#: modules/base/computers/index.php:56
+msgid "Offline computers"
+msgstr "Frakoblede datamaskiner"
+
+#: modules/base/computers/trads.php:26
+msgid "Computer Name"
+msgstr "Maskinnavn"
+
+#: modules/base/computers/trads.php:27
+msgid "Display Name"
+msgstr "Visningsnavn"
+
+#: modules/base/computers/delete.php:43
+msgid ""
+"You have to check the box <b>\"I am aware that all related images (non-"
+"master) will be deleted\"</b> if you want to remove this computer."
+msgstr ""
+"Du må merke av i boksen \"Jeg er klar over at alle relaterte bildefiler "
+"(ikke-master) vil bli slettet\" hvis du vil fjerne denne datamaskinen."
+
+#: modules/base/computers/delete.php:77
+msgid ""
+"GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"
+msgstr ""
+"GLPI-basen er skrivebeskyttet: Datamaskinen er slettet i xmpp, ikke i GLPI"
+
+#: modules/base/computers/delete.php:81
+msgid "The computer has been deleted."
+msgstr "Maskinen har blitt slettet"
+
+#: modules/base/computers/delete.php:83
+msgid "The computer has not been deleted."
+msgstr "Maskinen har ikke blitt slettet"
+
+#: modules/base/computers/delete.php:91
+msgid "Delete this computer"
+msgstr "Slett denne maskinen"
+
+#: modules/base/computers/delete.php:94
+msgid "Do you want a backup to be done ?"
+msgstr "Vil du gjøre en sikkerhetskopi?"
+
+#: modules/base/computers/delete.php:100
+msgid ""
+"I am aware that <b>all related images (non-master)</b> will be "
+"<b>DELETED</b>.<br />Check this box if it is what you want."
+msgstr ""
+"Jeg er klar over at <b>alle relaterte systembildefiler (ikke-master)</b> vil"
+" bli <b>SLETTET</b>. <br />Merk av i denne ruten hvis det er det du vil ha."
+
+#: modules/base/computers/edit.php:36
+msgid "Computer successfully added"
+msgstr "Maskin ble lagt til"
+
+#: modules/base/computers/edit.php:41
+msgid "The computer name is already taken."
+msgstr "Maskinnavnet er allerede i bruk"
+
+#: modules/base/computers/edit.php:44
+msgid "Invalid computer name."
+msgstr "Ugyldig maskinnavn"
+
+#: modules/base/computers/edit.php:50
+msgid "Add a computer"
+msgstr "Legg til en maskin"
+
+#: modules/base/computers/edit.php:52
+msgid "Edit a computer"
+msgstr "Rediger maskin"
+
+#: modules/base/computers/edit.php:84
+msgid "Computer name"
+msgstr "Maskinnavn"
+
+#: modules/base/computers/edit.php:89 modules/base/groups/edit.php:102
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: modules/base/computers/edit.php:123
+msgid "Location"
+msgstr "Plassering"
+
+#: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
+msgid "Add user"
+msgstr "Legg til bruker"
+
+#: modules/base/includes/auditCodes.php:28
+msgid "Enable user"
+msgstr "Aktiver bruker"
+
+#: modules/base/includes/auditCodes.php:29
+msgid "Disable user"
+msgstr "Deaktiver bruker"
+
+#: modules/base/includes/auditCodes.php:30
+msgid "Change user attribute"
+msgstr "Endre brukerattributt"
+
+#: modules/base/includes/auditCodes.php:31
+msgid "Change group attribute"
+msgstr "Endre gruppeattributt"
+
+#: modules/base/includes/auditCodes.php:32 modules/base/groups/edit.php:58
+msgid "Add group"
+msgstr "Legg til gruppe"
+
+#: modules/base/includes/auditCodes.php:33
+msgid "Add user to group"
+msgstr "Legg til bruker i gruppen"
+
+#: modules/base/includes/auditCodes.php:34
+msgid "Del user from group"
+msgstr "Slett bruker fra gruppen"
+
+#: modules/base/includes/auditCodes.php:35
+msgid "Del user from all group"
+msgstr "Slett bruker fra alle grupper"
+
+#: modules/base/includes/auditCodes.php:36
+msgid "Change user primary group"
+msgstr "Endre brukerens primærgruppe"
+
+#: modules/base/includes/auditCodes.php:37
+msgid "Del user"
+msgstr "Slett bruker"
+
+#: modules/base/includes/auditCodes.php:38
+msgid "Del user attribute"
+msgstr "Slett brukerattributt"
+
+#: modules/base/includes/auditCodes.php:39
+msgid "Change user Password"
+msgstr "Endre brukers passord"
+
+#: modules/base/includes/auditCodes.php:40
+msgid "Del group"
+msgstr "Slett gruppe"
+
+#: modules/base/includes/auditCodes.php:41
+msgid "Backup user"
+msgstr "Sikkerhetskopier bruker"
+
+#: modules/base/includes/auditCodes.php:42
+msgid "User authentication"
+msgstr "Brukerautensiering"
+
+#: modules/base/includes/auditCodes.php:43
+msgid "Move user home"
+msgstr "Flytt brukers hjemmekatalog"
+
+#: modules/base/includes/auditCodes.php:44
+msgid "Add organizational unit"
+msgstr "Legg til organisasjonsenhet"
+
+#: modules/base/includes/auditCodes.php:46
+msgid "System user"
+msgstr "System bruker"
+
+#: modules/base/includes/auditCodes.php:47
+msgid "Group"
+msgstr "Gruppe"
+
+#: modules/base/includes/auditCodes.php:48
+msgid "Attribute"
+msgstr "Attributt"
+
+#: modules/base/includes/auditCodes.php:49
+msgid "Organizational unit"
+msgstr "Organisasjonsenhet"
+
+#: modules/base/includes/auditCodes.php:50
+msgid "base"
+msgstr "base"
+
+#: modules/base/includes/publicFunc.php:46
+#, php-format
+msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
+msgstr ""
+"Gruppen %s kan ikke slettes. <br/>%ser den primære gruppen for noen brukere."
+
+#: modules/base/includes/publicFunc.php:49
+#, php-format
+msgid "Group %s successfully deleted."
+msgstr "Gruppe %s ble slettet"
+
+#: modules/base/includes/publicFunc.php:82
+msgid "User's name invalid !"
+msgstr "Brukers navn er ugyldig !"
+
+#: modules/base/includes/publicFunc.php:87
+#, php-format
+msgid "The user %s already exists."
+msgstr "Bruker %s eksisterer allerede"
+
+#: modules/base/includes/publicFunc.php:92
+msgid "Password is empty."
+msgstr "Passordet er tomt."
+
+#: modules/base/includes/publicFunc.php:97
+msgid "Last name is empty."
+msgstr "Etternavn er tomt"
+
+#: modules/base/includes/publicFunc.php:101
+msgid "First name is empty."
+msgstr "Fornavn er tomt"
+
+#: modules/base/includes/publicFunc.php:108
+msgid "The confirmation password does not match the new password."
+msgstr "Passordbekreftelsen er ikke likt det nye passordet."
+
+#: modules/base/includes/publicFunc.php:115
+msgid "The primary group field can't be empty."
+msgstr "Hovedgruppefeltet kan ikke være tomt."
+
+#: modules/base/includes/publicFunc.php:119
+#, php-format
+msgid "The group %s does not exist, and so can't be set as primary group."
+msgstr ""
+"Gruppen %s eksisterer ikke, og kan derfor ikke settes som hovedgruppe."
+
+#: modules/base/includes/publicFunc.php:196
+msgid "User photo deleted"
+msgstr "Brukerens bilde er slettet"
+
+#: modules/base/includes/publicFunc.php:210
+msgid "User disabled"
+msgstr "Brukeren er deaktivert"
+
+#: modules/base/includes/publicFunc.php:214
+msgid "User enabled"
+msgstr "Brukeren er aktivert"
+
+#: modules/base/includes/publicFunc.php:261
+#, php-format
+msgid ""
+"The photo is too big. The max size is %s x %s.\n"
+"                    Install php gd extension to resize the photo automatically"
+msgstr ""
+"Bildet er for stort. Maks størrelse er %s x %s.\n"
+"Installer php gd-utvidelse for automatisk endre størrelsen på bildet "
+
+#: modules/base/includes/publicFunc.php:266
+msgid "The photo is not a JPG file"
+msgstr "Bildet er ikke en JPG-fil"
+
+#: modules/base/includes/publicFunc.php:270
+msgid "User attributes updated"
+msgstr "Brukerattributter er oppdatert"
+
+#: modules/base/includes/publicFunc.php:286
+msgid "User attributes"
+msgstr "Brukerattributter"
+
+#: modules/base/includes/publicFunc.php:314
+msgid "Confirm password"
+msgstr "Bekreft passord"
+
+#: modules/base/includes/publicFunc.php:319
+msgid "Photo"
+msgstr "Bilde"
+
+#: modules/base/includes/publicFunc.php:324
+msgid "Last name"
+msgstr "Etternavn"
+
+#: modules/base/includes/publicFunc.php:329
+msgid "First name"
+msgstr "Fornavn"
+
+#: modules/base/includes/publicFunc.php:334
+msgid "Title"
+msgstr "Tittel"
+
+#: modules/base/includes/publicFunc.php:339
+msgid "Email address"
+msgstr "E-postadresse"
+
+#: modules/base/includes/publicFunc.php:357
+msgid "Mobile number"
+msgstr "Mobil nummer"
+
+#: modules/base/includes/publicFunc.php:372
+msgid "Choose language"
+msgstr "Velg språk"
+
+#: modules/base/includes/publicFunc.php:377
+msgid "Preferred language"
+msgstr "Foretrukket språk"
+
+#: modules/base/includes/publicFunc.php:385
+msgid "Disable user's shell"
+msgstr "Deaktiver brukerens skallvindu"
+
+#: modules/base/includes/publicFunc.php:386
+msgid ""
+"A disabled user can't log in any UNIX services.<br/>\n"
+"                                  His login shell command is replaced by /bin/false"
+msgstr ""
+"En deaktivert bruker kan ikke logge på noen UNIX-tjenester.<br/>\n"
+"Kommandoen for innloggingsskall erstattes av /bin/false"
+
+#: modules/base/includes/publicFunc.php:424
+msgid "User's groups"
+msgstr "Brukerens grupper"
+
+#: modules/base/includes/publicFunc.php:424
+msgid "All groups"
+msgstr "Alle gupper"
+
+#: modules/base/includes/publicFunc.php:462
+msgid "Create home directory on filesystem"
+msgstr "Lag hjemmekataloger på filsystemet"
+
+#: modules/base/includes/publicFunc.php:466
+msgid "Force to use the home directory if it exists"
+msgstr "Tviungen bruk av hjemmekatalog hvis den eksisterer"
+
+#: modules/base/includes/publicFunc.php:467
+msgid "Warning: an existing directory may belong to another user !"
+msgstr "Advarsel: en eksisterende katalog kan tilhøre en annen bruker!"
+
+#: modules/base/includes/publicFunc.php:479
+msgid ""
+"This field is used by some LDAP clients (for example Thunderbird address "
+"book) to display user entries."
+msgstr ""
+"Dette feltet brukes av noen LDAP klienter (for eksempelo Thunderbird "
+"adressebok) for å vise brukeroppføringer."
+
+#: modules/base/includes/publicFunc.php:485
+msgid ""
+"This field is used by SAMBA (and other LDAP clients) to display user name."
+msgstr ""
+"Dette feltet brukes av SAMBA (og andre LDAP klienter) for å vise brukernavn."
+
+#: modules/base/includes/publicFunc.php:491
+msgid "UID"
+msgstr "UID"
+
+#: modules/base/includes/publicFunc.php:496
+msgid "GID"
+msgstr "GID"
+
+#: modules/base/includes/errorHandling.php:28
+msgid "LDAP log file does not exist."
+msgstr "LDAP log filer eksisterer ikke."
+
+#: modules/base/includes/errorHandling.php:29
+msgid ""
+"Please be sure you have:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
+"                        <pre>loglevel        256</pre></p>\n"
+"                        <p>and this line in your /etc/syslog.conf:\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
+"                        </p>\n"
+"                        "
+msgstr ""
+"Vær sikker på at du har:\n"
+"<p>Denne linjen i /etc/ldap/slapd.conf eller /etc/openldap/slapd.conf:\n"
+"<pre>loglevel 256</pre></p><p>\n"
+"og denne linjen i /etc/syslog.conf:\n"
+"<pre>local4. * /var/log/ldap.log (eller /var/log/ldap/ldap.log)</pre>\n"
+"</p>"
+
+#: modules/base/includes/errorHandling.php:41
+msgid "The user directory does not exist and cannot be removed."
+msgstr "brukerkatalogen eksisterer ikke og kan derfor ikke fjernes"
+
+#: modules/base/includes/errorHandling.php:42
+msgid "Please do not remove user's files when deleting the user."
+msgstr "Ikke fjern brukerens filer når du sletter brukeren."
+
+#: modules/base/includes/errorHandling.php:47
+msgid "The user home directory already exists."
+msgstr "Brukerens hjemskatalog eksisterer allerede."
+
+#: modules/base/includes/errorHandling.php:48
+msgid ""
+"Set the home directory in a different location or force the use of the "
+"existing directory (in expert mode)."
+msgstr ""
+"Plasser hjemmekatalogen på et annet sted eller tving bruk av den "
+"eksisterende katalogen (i ekspertmodus)."
+
+#: modules/base/includes/errorHandling.php:53
+msgid "Your password is too young to change."
+msgstr "Passordet ditt er for nytt til å endres."
+
+#: modules/base/includes/errorHandling.php:54
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is too young to change."
+msgstr ""
+"Passordpolitikken lar deg ikke endre passordet ditt, fordi passordet ditt er"
+" for nytt til å endres."
+
+#: modules/base/includes/errorHandling.php:59
+msgid "Password is in history of old passwords"
+msgstr "Passord ligger i historiikken over gamle passord"
+
+#: modules/base/includes/errorHandling.php:60
+#: modules/base/includes/errorHandling.php:66
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because you already had this password previously."
+msgstr ""
+"Passordpolitikken lar deg ikke endre passordet ditt, fordi du allerede har "
+"brukt dette passordet tidligere."
+
+#: modules/base/includes/errorHandling.php:65
+msgid "Password is not being changed from existing value"
+msgstr "Passord endres ikke har samme verdi som tidligere"
+
+#: modules/base/includes/errorHandling.php:71
+msgid "Password fails quality checking policy."
+msgstr "Passord oppfyller ikke retningslinjene for kvalitetskontroll."
+
+#: modules/base/includes/errorHandling.php:72
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is not complex enough or is too short."
+msgstr ""
+"Passordpolicyen lar deg ikke endre passordet ditt, fordi passordet ditt ikke"
+" er komplekst nok eller er for kort."
+
+#: modules/base/includes/errorHandling.php:77
+msgid "The password must contain at least one number"
+msgstr "Passordet må inneholde minst ett nummer"
+
+#: modules/base/includes/errorHandling.php:82
+msgid "The password must contain at least one upper case character"
+msgstr "Passordet må inneholde minst en stor bokstav"
+
+#: modules/base/includes/errorHandling.php:87
+msgid "The password must contain at least one lower case character"
+msgstr "Passordet må inneholde minst en liten bokstav"
+
+#: modules/base/includes/errorHandling.php:93
+msgid ""
+"The password must contain at least one special character: #$%&+./:=?@{}"
+msgstr "Passordet må inneholde minst ett spesialtegn: #$%&+./:=?@{}"
+
+#: modules/base/includes/errorHandling.php:99
+#, php-format
+msgid "The password must not contain the same character %s times"
+msgstr "Passordet må ikke inneholde samme karakter %s ganger"
+
+#: modules/base/includes/errorHandling.php:110
+#, php-format
+msgid "The password length must be %s or longer"
+msgstr "Passordlengden må være %s eller lengre"
+
+#: modules/base/includes/errorHandling.php:115
+msgid "The password is too short."
+msgstr "Passordet er for kort."
+
+#: modules/base/includes/computers_list.inc.php:100
+msgid "Inventory"
+msgstr "Inventar"
+
+#: modules/base/includes/computers_list.inc.php:101
+msgid "GLPI Inventory"
+msgstr "GLPI Inventar"
+
+#: modules/base/includes/computers_list.inc.php:102
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:80
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
+msgid "detaildeploy"
+msgstr "detaljutrulling"
+
+#: modules/base/includes/computers_list.inc.php:103
+#: modules/base/includes/computers_list.inc.php:106
+msgid "Software deployment"
+msgstr "Utrulling av Programvare"
+
+#: modules/base/includes/computers_list.inc.php:105
+msgid "Read log"
+msgstr "Les logg"
+
+#: modules/base/includes/computers_list.inc.php:108
+#: modules/base/includes/computers_list.inc.php:109
+msgid "xmppconsole"
+msgstr "xmppkonsoll"
+
+#: modules/base/includes/computers_list.inc.php:111
+#: modules/base/includes/computers_list.inc.php:112
+#: modules/base/includes/computers_list.inc.php:124
+#: modules/base/includes/computers_list.inc.php:125
+msgid "files browsing"
+msgstr "Bla igjennom filer"
+
+#: modules/base/includes/computers_list.inc.php:118
+#: modules/base/includes/computers_list.inc.php:120
+#: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:37
+#: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:38
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:48
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:49
+#: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
+msgid "Edit config files"
+msgstr "Rediger konfigurasjonsfiler"
+
+#: modules/base/includes/computers_list.inc.php:127
+#: modules/base/includes/computers_list.inc.php:129
+#: modules/base/includes/computers_list.inc.php:140
+msgid "Remote control"
+msgstr "Fjernkontroll"
+
+#: modules/base/includes/computers_list.inc.php:131
+msgid "Imaging management"
+msgstr "Administrering av bildefiler"
+
+#: modules/base/includes/computers_list.inc.php:132
+msgid "Download file"
+msgstr "Last ned fil"
+
+#: modules/base/includes/computers_list.inc.php:133
+#: modules/base/users/ajaxFilter.php:85
+msgid "extTicket issue"
+msgstr "extTicket-problem"
+
+#: modules/base/includes/computers_list.inc.php:135
+msgid "Show Profile"
+msgstr "Vis profil"
+
+#: modules/base/includes/computers_list.inc.php:137
+msgid "Quick action"
+msgstr "Hurtighandling"
+
+#: modules/base/includes/computers_list.inc.php:345
+msgid "Computers list"
+msgstr "Datamaskinliste"
+
+#: modules/base/includes/computers_list.inc.php:362
+msgid "Backup status"
+msgstr "Backup status"
+
+#: modules/base/includes/computers_list.inc.php:402
+msgid "Delete computer"
+msgstr "Slett datamaskin"
+
+#: modules/base/includes/computers_list.inc.php:405
+msgid "Remove machine from group"
+msgstr "Fjern maskin fra gruppe"
+
+#: modules/base/includes/groups-xmlrpc.inc.php:85
+#, php-format
+msgid "Group %s already exist"
+msgstr "Gruppen %s eksisterer allerde"
+
+#: modules/base/includes/groups-xmlrpc.inc.php:99
+#, php-format
+msgid "Group %s created"
+msgstr "Gruppen %s opprettet"
+
+#: modules/base/includes/users-xmlrpc.inc.php:45
+msgid "Invalid login"
+msgstr "Ugyldig innlogging"
+
+#: modules/base/includes/users-xmlrpc.inc.php:54
+msgid "users"
+msgstr "brukere"
+
+#: modules/base/includes/users-xmlrpc.inc.php:57
+msgid "computers"
+msgstr "datamaskiner"
+
+#: modules/base/includes/users-xmlrpc.inc.php:60
+#, php-format
+msgid "WARNING: The number of registered %s is exceeding your license."
+msgstr "ADVARSEL: Antallet registrerte %s overskrider lisensene dine."
+
+#: modules/base/includes/users-xmlrpc.inc.php:60
+#: modules/base/status/support.php:34
+msgid " and "
+msgstr "og"
+
+#: modules/base/includes/users-xmlrpc.inc.php:110
+#, php-format
+msgid ""
+"User %s created but password is not valid regarding your password "
+"policies.<br/><strong>You must change the user password.</strong>"
+msgstr ""
+"Bruker %s opprettet, men passordet er ikke gyldig i henhold til "
+"passordpolicyer.<br/><strong> Du må endre brukerpassordet."
+
+#: modules/base/includes/users-xmlrpc.inc.php:114
+msgid "You cannot add more users."
+msgstr "Du kan ikke legge til flere brukere."
+
+#: modules/base/includes/users-xmlrpc.inc.php:120
+#, php-format
+msgid "User %s successfully created"
+msgstr "Bruker %s opprettet"
+
+#: modules/base/includes/panels/support.inc.php:29
+msgid "Your product"
+msgstr "Ditt produkt"
+
+#: modules/base/includes/panels/support.inc.php:39
+msgid "Support"
+msgstr "Support"
+
+#: modules/base/includes/panels/support.inc.php:44
+msgid "Phone :"
+msgstr "Telefon:"
+
+#: modules/base/includes/panels/support.inc.php:48
+msgid "Users : "
+msgstr "Bruker:"
+
+#: modules/base/includes/panels/support.inc.php:49
+msgid "Computers : "
+msgstr "Datamaskiner:"
+
+#: modules/base/includes/panels/support.inc.php:54
+msgid "Upgrade"
+msgstr "Oppgradering"
+
+#: modules/base/includes/computers-i18n.php:25
+msgid "Computer's IP address"
+msgstr "Datamaskinens IP-adresse"
+
+#: modules/base/includes/computers-i18n.php:26
+msgid "Computer's MAC address"
+msgstr "Datamaskinens MAC-adresse"
+
+#: modules/base/includes/computers-i18n.php:27
+msgid "Computer's netmask address"
+msgstr "Datamaskinens nettmaske-adresse"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:96
+#: modules/base/includes/AjaxFilterLog.inc.php:100 includes/ajaxTools.php:63
+#: includes/ajaxTools.php:69 includes/PageGenerator.php:881
+#: includes/PageGenerator.php:1128 includes/FormGenerator.php:644
+msgid "Previous"
+msgstr "Forrige"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:107
+#: modules/base/includes/AjaxFilterLog.inc.php:111 includes/ajaxTools.php:74
+#: includes/ajaxTools.php:82 includes/PageGenerator.php:895
+#: includes/PageGenerator.php:1138 includes/FormGenerator.php:645
+msgid "Next"
+msgstr "Neste"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:168
+#: modules/base/includes/AjaxFilterLog.inc.php:172
+#: includes/FormGenerator.php:563 includes/FormGenerator.php:569
+msgid "or <a href='#'"
+msgstr "eller<a href='#'"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:170
+#: includes/FormGenerator.php:565
+msgid "value=\"now\";'>now</a>"
+msgstr "verdi=\"nå\";'>nå</a>"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:174
+#: includes/FormGenerator.php:571
+msgid "value=\"never\";'>never</a>"
+msgstr "verdi=\"aldrig\";'>aldrig"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:366
+msgid "Refresh"
+msgstr "Oppdater"
+
+#: modules/base/logview/logskiosk.php:136
+#: modules/base/logview/logsquickaction.php:140
+msgid "Quick Actions Logs"
+msgstr "Hurtighandligslogger"
+
+#: modules/base/logview/logskiosk.php:283
+#: modules/base/logview/logsremotedesktop.php:275
+#: modules/base/logview/logsdownload.php:280
+#: modules/base/logview/index.php:419
+#: modules/base/logview/logsbackuppc.php:306
+#: modules/base/logview/logsquickaction.php:295
+#: modules/base/logview/logsinventory.php:304
+#: modules/base/logview/logsimaging.php:359
+#: modules/base/logview/logspackaging.php:303
+msgid "date"
+msgstr "dato"
+
+#: modules/base/logview/logskiosk.php:284
+#: modules/base/logview/logsremotedesktop.php:276
+#: modules/base/logview/logsdownload.php:281
+#: modules/base/logview/index.php:420
+#: modules/base/logview/logsbackuppc.php:307
+#: modules/base/logview/logsquickaction.php:296
+#: modules/base/logview/logsinventory.php:305
+#: modules/base/logview/logsimaging.php:360
+#: modules/base/logview/logspackaging.php:304
+msgid "user"
+msgstr "bruker"
+
+#: modules/base/logview/logskiosk.php:285
+#: modules/base/logview/logsremotedesktop.php:277
+#: modules/base/logview/logsdownload.php:282
+#: modules/base/logview/index.php:421
+#: modules/base/logview/logsbackuppc.php:308
+#: modules/base/logview/logsquickaction.php:297
+#: modules/base/logview/logsinventory.php:306
+#: modules/base/logview/logsimaging.php:361
+#: modules/base/logview/logspackaging.php:305
+msgid "who"
+msgstr "hvem"
+
+#: modules/base/logview/logskiosk.php:286
+#: modules/base/logview/logsremotedesktop.php:278
+#: modules/base/logview/logsdownload.php:283
+#: modules/base/logview/index.php:422
+#: modules/base/logview/logsbackuppc.php:309
+#: modules/base/logview/logsquickaction.php:298
+#: modules/base/logview/logsinventory.php:307
+#: modules/base/logview/logsimaging.php:362
+#: modules/base/logview/logspackaging.php:306
+msgid "text"
+msgstr "text"
+
+#: modules/base/logview/logsremotedesktop.php:140
+msgid "Remote Desktop Logs"
+msgstr "Logg for eksternt skrivebord"
+
+#: modules/base/logview/logsdownload.php:133
+msgid "Transfert File Logs"
+msgstr "Logg for overførte filer"
+
+#: modules/base/logview/logsdeployment.php:136
+msgid "Deployment Logs"
+msgstr "Utrullingslogger"
+
+#: modules/base/logview/logsdeployment.php:299
+msgid "Who"
+msgstr "Hvem"
+
+#: modules/base/logview/logsdeployment.php:300
+msgid "Session name"
+msgstr "Øktnavn"
+
+#: modules/base/logview/logsdeployment.php:302
+msgid "message"
+msgstr "melding"
+
+#: modules/base/logview/logsinventory.php:145
+msgid "Inventory Logs"
+msgstr "Inventarlogger"
+
+#: modules/base/logview/logsimaging.php:158
+msgid "Imaging Logs"
+msgstr "Speilbildelogger"
+
+#: modules/base/logview/logspackaging.php:141
+msgid "Packaging Logs"
+msgstr "Pakkelogger"
+
+#: modules/base/logview/ajax_showlog.php:69
+msgid "Connection"
+msgstr "Tilkobling"
+
+#: modules/base/logview/ajax_showlog.php:70
+msgid "Operation"
+msgstr "Operasjon"
+
+#: modules/base/logview/ajax_showlog.php:71
+msgid "Actions"
+msgstr "Handlinger"
+
+#: modules/base/logview/ajax_showlog.php:72
+msgid "Extra information"
+msgstr "Ekstra informasjon"
+
+#: modules/base/main/favorites.php:4
+msgid "Root user cannot have favorites"
+msgstr "Root kan ikke ha favoritter"
+
+#: modules/base/main/favorites.php:149
+msgid "Add this page to your favorites"
+msgstr "Legg denne siden til i dine favoritter"
+
+#: modules/base/groups/members.php:109
+msgid "Group successfully modified"
+msgstr "Gruppen ble endret"
+
+#: modules/base/groups/members.php:125
+msgid ""
+"Some users can't be removed from this group because this group is their "
+"primary group."
+msgstr ""
+"Noen brukere kan ikke fjernes fra denne gruppen fordi denne gruppen er deres"
+" hovedgruppe."
+
+#: modules/base/groups/members.php:128
+#, php-format
+msgid "Group members %s"
+msgstr "Gruppemedlemmer %s"
+
+#: modules/base/groups/members.php:141
+msgid "All users"
+msgstr "Alle brukere"
+
+#: modules/base/groups/members.php:188 modules/base/groups/edit.php:117
+#: includes/PageGenerator.php:2636 includes/PageGenerator.php:2705
+#: includes/PageGenerator.php:2731
+msgid "Confirm"
+msgstr "Bekreft"
+
+#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
+#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
+#: includes/PageGenerator.php:2640 includes/PageGenerator.php:2709
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: modules/base/groups/ajaxFilter.php:43
+msgid "Comments"
+msgstr "Kommentarer"
+
+#: modules/base/groups/ajaxFilter.php:46
+msgid "Edit members"
+msgstr "Rediger medlemmer"
+
+#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:63
+msgid "Edit group"
+msgstr "Rediger gruppe"
+
+#: modules/base/groups/ajaxFilter.php:49
+msgid "Groups management"
+msgstr "Gruppeadministrasjon"
+
+#: modules/base/groups/delete.php:54 modules/base/groups/delete.php:65
+msgid "Delete group"
+msgstr "Slett gruppe"
+
+#: modules/base/groups/delete.php:57
+msgid "You will delete group"
+msgstr "Du vil slette gruppen"
+
+#: modules/base/groups/delete.php:60
+msgid "This group will be deleted even though it is not empty"
+msgstr "Denne gruppen vil bli slettes selv om den ikke er tom"
+
+#: modules/base/groups/edit.php:35
+#, php-format
+msgid "Group %s successfully added"
+msgstr "Gruppen %s ble lagt til"
+
+#: modules/base/groups/edit.php:52
+#, php-format
+msgid "Group %s successfully modified"
+msgstr "Gruppen %s ble endret"
+
+#: modules/base/groups/edit.php:82
+msgid ""
+"The group name can only contain letters and numeric, and must begin with a "
+"letter"
+msgstr ""
+"Gruppenavnet kan bare inneholde bokstaver og tall, og må begynne med en "
+"bokstav"
+
+#: modules/base/groups/edit.php:99
+msgid "Group name"
+msgstr "Gruppenavn"
+
+#: modules/base/groups/edit.php:114
+msgid "Create"
+msgstr "Legg til"
+
+#: modules/base/groups/localSidebar.php:28
+msgid "List"
+msgstr "Liste"
+
+#: modules/base/groups/localSidebar.php:29 includes/FormGenerator.php:718
+msgid "Add"
+msgstr "Legg til"
+
+#: modules/base/status/index.php:101
+msgid "Uptime: "
+msgstr "Oppetid: "
+
+#: modules/base/status/index.php:104
+msgid "day"
+msgstr "dag"
+
+#: modules/base/status/index.php:108
+msgid "hour"
+msgstr "time"
+
+#: modules/base/status/index.php:111
+msgid "minute"
+msgstr "minutt"
+
+#: modules/base/status/index.php:116
+msgid "Memory"
+msgstr "Minne"
+
+#: modules/base/status/index.php:119
+msgid "Swap"
+msgstr "Swap"
+
+#: modules/base/status/index.php:199
+msgid "Global view"
+msgstr "Global oversikt"
+
+#: modules/base/status/index.php:206
+msgid "Server status"
+msgstr "Serverstatus"
+
+#: modules/base/status/index.php:211
+msgid "LDAP Configuration"
+msgstr "LDAP konfigurasjon"
+
+#: modules/base/status/index.php:218
+msgid "Hard drive partitions"
+msgstr "Harddisk partisjoner"
+
+#: modules/base/status/index.php:223
+msgid "Background jobs"
+msgstr "Bakgrunnsjobber"
+
+#: modules/base/status/support.php:29
+msgid "License and support information"
+msgstr "Lisens- og supportinformasjon"
+
+#: modules/base/status/support.php:38
+msgid "WARNING: The number of registered users is exceeding your license."
+msgstr "ADVARSEL: Antallet registrerte brukere overskrider lisensen din."
+
+#: modules/base/status/support.php:41
+msgid "WARNING: The number of registered computers is exceeding your license."
+msgstr "ADVARSEL: Antall registrerte datamaskiner overskrider lisensen din."
+
+#: modules/base/status/support.php:44
+msgid ""
+"Please contact your administrator for more information. If you are an "
+"administrator, please go to the license status page for more information."
+msgstr ""
+"Kontakt administratoren din for mer informasjon. Hvis du er administrator, "
+"kan du gå til lisensstatussiden for mer informasjon."
+
+#: modules/base/status/support.php:50
+msgid "Product name"
+msgstr "Produktnavn"
+
+#: modules/base/status/support.php:51
+msgid "Product vendor"
+msgstr "Produktleverandør"
+
+#: modules/base/status/support.php:52
+msgid "Product vendor mail"
+msgstr "Produktleverandørs E-post"
+
+#: modules/base/status/support.php:53
+msgid "Company name"
+msgstr "Selskapsnavn"
+
+#: modules/base/status/support.php:54
+msgid "Company administrator mail"
+msgstr "E-post til Bedriftens administrator"
+
+#: modules/base/status/support.php:55 modules/base/status/support.php:60
+msgid "Comment"
+msgstr "Kommentar"
+
+#: modules/base/status/support.php:56
+msgid "Registered users"
+msgstr "Registrerte brukere"
+
+#: modules/base/status/support.php:57
+msgid "Registered computers"
+msgstr "Registrerte datamaskiner"
+
+#: modules/base/status/support.php:58
+msgid "Support mail address"
+msgstr "Support E-postadresse"
+
+#: modules/base/status/support.php:59
+msgid "Support phone number"
+msgstr "Support telefonnummer"
+
+#: modules/base/users/ajaxFilter.php:81
+msgid "Telephone"
+msgstr "Telefon"
+
+#: modules/base/users/ajaxFilter.php:91
+msgid "Logged Actions"
+msgstr "Loggede handlinger"
+
+#: modules/base/users/resetpasswd.php:33
+msgid "Reset your password"
+msgstr "Tilbakestill passordet ditt"
+
+#: modules/base/users/resetpasswd.php:40 modules/base/users/passwd.php:43
+msgid "Your password has been changed."
+msgstr "Passordet har blitt endret"
+
+#: modules/base/users/resetpasswd.php:48 modules/base/users/passwd.php:60
+msgid "You are going to change your password"
+msgstr "Du er iferd med å endre ditt passord"
+
+#: modules/base/users/resetpasswd.php:51 modules/base/users/passwd.php:66
+msgid "New password"
+msgstr "Nytt passord"
+
+#: modules/base/users/resetpasswd.php:58 modules/base/users/passwd.php:36
+#: modules/base/users/passwd.php:73
+msgid "Change your password"
+msgstr "Endre passord"
+
+#: modules/base/users/resetpasswd.php:59 modules/base/users/passwd.php:74
+msgid "Return"
+msgstr "Tilbake"
+
+#: modules/base/users/resetpasswd.php:62 modules/base/users/passwd.php:81
+msgid "Passwords are mismatching. Please retry."
+msgstr "Passordene er ikke like, Vennligst prøv igjen."
+
+#: modules/base/users/editacl.php:155
+msgid "User ACLs successfully modified."
+msgstr "Brukerens ACL-er ble endret."
+
+#: modules/base/users/editacl.php:179
+msgid "Set value for all radio buttons:&nbsp;&nbsp;"
+msgstr "Angi verdi for alle radioknappene:&nbsp;&nbsp;"
+
+#: modules/base/users/editacl.php:180 modules/base/users/editacl.php:185
+msgid "read only"
+msgstr "kun lesing"
+
+#: modules/base/users/editacl.php:181 modules/base/users/editacl.php:185
+msgid "read/write"
+msgstr "lese/skrive"
+
+#: modules/base/users/editacl.php:182 modules/base/users/editacl.php:185
+msgid "hide"
+msgstr "skjul"
+
+#: modules/base/users/editacl.php:185
+msgid "Attribute description"
+msgstr "Attributt beskrivelse"
+
+#: modules/base/users/editacl.php:213
+#, php-format
+msgid " (%s module)"
+msgstr " (%s modul)"
+
+#: modules/base/users/editacl.php:223
+msgid "Web page description"
+msgstr "Web-side beskrivelse"
+
+#: modules/base/users/editacl.php:223
+msgid "Authorization"
+msgstr "Autorisasjon"
+
+#: modules/base/users/editacl.php:232
+msgid "Warning: no desc found in infoPackage.inc.php :"
+msgstr "Advarsel: ingen beskrivelse funnet i infoPackage.inc.php:"
+
+#: modules/base/users/editacl.php:255
+#, php-format
+msgid "Edit ACL of user %s"
+msgstr "Rediger bruker%s ACL"
+
+#: modules/base/users/editacl.php:275
+msgid "Download ACL string"
+msgstr "Last ned ACL streng"
+
+#: modules/base/users/delete.php:33
+#, php-format
+msgid "User %s has been successfully deleted"
+msgstr "Brukeren %s har blitt slettet"
+
+#: modules/base/users/delete.php:38
+msgid "Delete user"
+msgstr "Slett bruker"
+
+#: modules/base/users/delete.php:39
+#, php-format
+msgid "You will delete user <b>%s</b>."
+msgstr "Du vil slette brukeren <b>%s</b>."
+
+#: modules/base/users/delete.php:40
+msgid "Delete all user's files"
+msgstr "Slett alle filene til brukeren"
+
+#: modules/base/users/edit.php:59
+msgid "Edit user"
+msgstr "Rediger bruker"
+
+#: modules/base/users/edit.php:88
+#, php-format
+msgid "Failed to change primary group in %s plugin"
+msgstr "Kunne ikke endre primærgruppen i %s plugin"
+
+#: modules/base/users/edit.php:112
+msgid "Password not updated"
+msgstr "Passord ikke oppdatert"
+
+#: modules/base/users/edit.php:115
+msgid "Password updated"
+msgstr "Passord oppdatert"
+
+#: modules/base/users/edit.php:124
+#, php-format
+msgid "Failed to disable user in %s plugin"
+msgstr "Kunne ikke deaktivere bruker i %s plugin-modulen"
+
+#: modules/base/users/edit.php:127
+#, php-format
+msgid "User %s disabled."
+msgstr "Bruker %s deaktivert"
+
+#: modules/base/users/edit.php:133
+#, php-format
+msgid "Failed to enable user in %s plugin"
+msgstr "Kunne ikke aktivere bruker i %s plugin-modulen"
+
+#: modules/base/users/edit.php:136
+#, php-format
+msgid "User %s enabled"
+msgstr "Bruker %s aktivert"
+
+#: modules/base/users/edit.php:182
+msgid "Enable account"
+msgstr "Aktiver konto"
+
+#: modules/base/users/edit.php:183
+msgid "Disable account"
+msgstr "Deaktiver konto"
+
+#: modules/base/users/passwd.php:50
+msgid "Change your user's password"
+msgstr "Endre din brukers passord"
+
+#: modules/base/users/passwd.php:64
+msgid "Current password"
+msgstr "Nåværende passord"
+
+#: modules/base/users/passwd.php:79
+msgid "Invalid current password. Please retry."
+msgstr "Ugyldig nåværende passord. Vennligst prøv igjen."
+
+#: modules/base/users/backup.php:38
+msgid "Backup a user's folder"
+msgstr "Sikkerhetskopiere en brukers mappe"
+
+#: modules/base/users/backup.php:52
+msgid "Backup a user's home directory"
+msgstr "Sikkerhetskopier brukerens hjemmekatalog"
+
+#: modules/base/users/backup.php:54
+#, php-format
+msgid "Backup of <b>%s</b> user's folder has been launched in background."
+msgstr "Sikkerhetskopi av <b>%s</b> brukerens mappe er startet i bakgrunnen."
+
+#: modules/base/users/backup.php:56
+#, php-format
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the"
+" backup."
+msgstr ""
+"Filene blir lagret i katalogen %s til serveren på slutten av "
+"sikkerhetskopien."
+
+#: modules/base/users/backup.php:58
+msgid "Please go to the status page to check the backup status."
+msgstr "Gå til statussiden for å sjekke sikkerhetskopiestatusen."
+
+#: modules/base/users/backup.php:60
+msgid "This operation will last according to the amount of data to backup."
+msgstr ""
+"denne operasjonen vil kjøre i henhold til datamengden som skal "
+"sikkerhetskopieres."
+
+#: modules/base/users/backup.php:74
+#, php-format
+msgid "%s home directory will be archived."
+msgstr "%s sin hjemme mappe vil bli arkvert."
+
+#: modules/base/users/backup.php:79
+#, php-format
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr ""
+"Vennligst velg størrelsen på media. Hvis datamengden overstiger "
+"volumstørreslen, vil flere filer på størrelse med valgt medie opprettes."
+
+#: modules/base/users/backup.php:83
+msgid "Media size"
+msgstr "Mediestørrelse"
+
+#: modules/base/users/backup.php:90
+msgid "Launch backup"
+msgstr "Start sikkerhetskopiering"
+
+#: modules/base/users/loguser.php:39
+msgid "User log"
+msgstr "Brukerlogg"
+
+#: modules/services/includes/panels/services.inc.php:44
+#, php-format
+msgid "%d inactive service"
+msgid_plural "%d inactive services"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:298
+msgid "cluster list"
+msgstr "cluster liste"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:299
+msgid "cluster nb ars"
+msgstr "cluster nb ars"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:300
+msgid "machine"
+msgstr "maskin"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:301
+msgid "progress"
+msgstr "framdrift"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:302
+msgid "start"
+msgstr "start"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:303
+msgid "end"
+msgstr "slutt"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
+msgid "Delete deploy"
+msgstr "Slett utrulling"
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:30
+msgid "Clients Update"
+msgstr "Klientoppdatering"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:30
+msgid "Pulse Updates"
+msgstr "Pulse oppdateringer"
+
+#: modules/dashboard/includes/panels/general.inc.php:40
+msgid "Uptime"
+msgstr "Oppetid"
+
+#: modules/admin/includes/configure.inc.php:50
+msgid " configuration"
+msgstr "Konfigurasjon"
+
+#: modules/admin/includes/configure.inc.php:62
+msgid " configuration page"
+msgstr "konfigurasjonsside"
+
+#: version.php:35
+msgid "MMC components version"
+msgstr "MMC-komponentversjon"
+
+#: version.php:36
+msgid "MMC agent: version"
+msgstr "MMC-agent: versjon"
+
+#: version.php:40
+msgid "agent: version"
+msgstr "agent: versjon"
+
+#: version.php:42
+msgid "web: version"
+msgstr "web: versjon"
+
+#: version.php:44
+msgid "web: plugin is not installed"
+msgstr "web: plugin er ikke installert"
+
+#: includes/acl.inc.php:148
+msgid "You do not have required rights"
+msgstr "Du har ikke tilstrekkelig rettigheter"
+
+#: includes/bgps_view.php:64
+msgid "No job."
+msgstr "Ingen jobber"
+
+#: includes/auditCodesManager.php:33
+msgid "Daemon start"
+msgstr "Daemon start"
+
+#: includes/auditCodesManager.php:34
+msgid "Daemon stop"
+msgstr "Daemon stopp"
+
+#: includes/auditCodesManager.php:35
+msgid "MMC agent"
+msgstr "MMC agent"
+
+#: includes/commonErrorHandling.php:30
+msgid "This item already exists in your LDAP directory"
+msgstr "Dette elementet eksisterer allerede i LDAP katalogen"
+
+#: includes/commonErrorHandling.php:31
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>change this entry name</li>\n"
+"                            <li>delete this entry before recreate it</li>\n"
+"                        </ul>"
+msgstr ""
+"Løs problemet ved å:\n"
+"                        <ul>\n"
+"                            <li>endre navnet på oppføringen</li>\n"
+"                            <li>slette oppføringen og opprette den på nytt</li>\n"
+"                        </ul>"
+
+#: includes/commonErrorHandling.php:43
+msgid "MMC Agent can't contact your LDAP server"
+msgstr "MMC Agent kan ikke kontakte LDAP-serveren"
+
+#: includes/commonErrorHandling.php:44
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verify your LDAP server is up</li>\n"
+"                        </ul>"
+msgstr ""
+"Løs problemet ved å:\n"
+"<ul>\n"
+"<li>Kontroller at LDAP-serveren er riktig konfigurert i /etc/mmc/plugins/base ini</li>\n"
+"<li>Kontroller at LDAP-serveren er oppe</li>\n"
+"</ul>"
+
+#: includes/commonErrorHandling.php:53
+msgid "Error during authentication process"
+msgstr "Feil under autoriseringsprosessen"
+
+#: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
+msgid "Please contact your administrator."
+msgstr "Kontakt administratoren din."
+
+#: includes/commonErrorHandling.php:58
+msgid "Error while provisioning your account"
+msgstr "Feil under klargkøring av kontoen din"
+
+#: includes/commonErrorHandling.php:64
+msgid "This item do not seems to be in the index"
+msgstr "Denne artikkelen ser ikke ut til å være i indeksen"
+
+#: includes/commonErrorHandling.php:65
+msgid ""
+"This problem can appear if:\n"
+"                        <ul>\n"
+"                            <li>This item no longer exists.</li>\n"
+"                            <li>You misspelled it.</li>\n"
+"                        </ul>"
+msgstr ""
+"Dette problemet oppstår når:\n"
+"                        <ul>\n"
+"                            <li>Denne oppførgen ikke ekisterer lenger.</li>\n"
+"                            <li>Du har stavet feil.</li>\n"
+"                        </ul>"
+
+#: includes/commonErrorHandling.php:77
+msgid "smbpasswd failed to change your password entry"
+msgstr "smbpasswd klarte ikke å endre passordet"
+
+#: includes/commonErrorHandling.php:78
+msgid ""
+"Verify that your smbpasswd is correctly configured:\n"
+"                        <ul>\n"
+"                            <li> Your Ldap server can be down</li>\n"
+"                            <li> Your Samba server is not properly configured</li>\n"
+"                        </ul>"
+msgstr ""
+"Kontroller at ditt smbpasswd er riktig konfigurert:\n"
+"<ul>\n"
+"<li>Ldap-serveren din kan være nede</li>\n"
+"<li>Samba-serveren din er ikke riktig konfigurert</li>\n"
+"</ul>"
+
+#: includes/modules.inc.php:395
+#, php-format
+msgid "%s service restarting..."
+msgstr "%s tjenesten starter på nytt ..."
+
+#: includes/modules.inc.php:396
+#, php-format
+msgid "%s service restarted successfully."
+msgstr "%s tjenesten ble startet på nytt."
+
+#: includes/modules.inc.php:397
+#, php-format
+msgid "%s service failed to restart."
+msgstr "%s tjenesten kunne ikke starte på nytt."
+
+#: includes/modules.inc.php:402
+msgid "Restart the service ?"
+msgid_plural "Restart the services ?"
+msgstr[0] "Start tjenestene på nytt"
+msgstr[1] "Start tjeneste"
+
+#: includes/PageGenerator.php:568 includes/PageGenerator.php:800
+msgid "to"
+msgstr "til"
+
+#: includes/PageGenerator.php:570 includes/PageGenerator.php:802
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr " - Totalt <b>%s </b>"
+
+#: includes/PageGenerator.php:573 includes/PageGenerator.php:805
+msgid "page"
+msgstr "side"
+
+#: includes/PageGenerator.php:915
+msgid "Pagination"
+msgstr "Paginering"
+
+#: includes/PageGenerator.php:988
+msgid "Go to page"
+msgstr "Gå til side"
+
+#: includes/PageGenerator.php:1419
+msgid "No item available"
+msgstr "Ingen enheter tilgjengelig"
+
+#: includes/PageGenerator.php:1638
+msgid "Select entity"
+msgstr "velg enhet"
+
+#: includes/PageGenerator.php:2258 includes/FormGenerator.php:643
+#: graph/header.inc.php:251
+msgid "Close"
+msgstr "Steng"
+
+#: includes/PageGenerator.php:2883
+msgid "Select all"
+msgstr "Velg alt"
+
+#: includes/PageGenerator.php:2883
+msgid "Unselect all"
+msgstr "Avmarker alt"
+
+#: includes/ErrorHandling.php:78
+msgid "Copied"
+msgstr "Kopiert"
+
+#: includes/ErrorHandling.php:87
+msgid "Show complete trackback"
+msgstr "Vis fullstendig hendelseslogg"
+
+#: includes/ErrorHandling.php:88
+msgid "Copy to clipboard"
+msgstr "Kopiert til uklippstavle"
+
+#: includes/ErrorHandling.php:89
+msgid "Complete Traceback"
+msgstr "Fullstendig hendelseslogg"
+
+#: includes/xmlrpc.inc.php:161
+msgid "Can't connect to MMC agent"
+msgstr "Kan ikke koble til MMC-agent"
+
+#: includes/xmlrpc.inc.php:162
+msgid "MMC agent seems to be down or not correctly configured."
+msgstr "MMC-agent ser ut til å være nede eller er ikke riktig konfigurert."
+
+#: includes/xmlrpc.inc.php:174
+msgid "Can't send XML-RPC request to MMC agent"
+msgstr "Kan ikke sende XML-RPC-forespørsel til MMC-agenten"
+
+#: includes/xmlrpc.inc.php:175
+msgid "MMC agent seems to be not correctly configured."
+msgstr "MMC-agenten ser ut til å ikke være riktig konfigurert."
+
+#: includes/xmlrpc.inc.php:191 includes/xmlrpc.inc.php:216
+#: includes/xmlrpc.inc.php:239
+msgid "MMC agent communication problem"
+msgstr "MMC-agent kommunikasjonsproblem"
+
+#: includes/xmlrpc.inc.php:192
+msgid ""
+"Timeout when reading data from the MMC agent. Please check network "
+"connectivity and server load."
+msgstr ""
+"Timeout når du leser data fra MMC-agenten. Vennligst sjekk "
+"nettverkstilkobling og serverbelastning."
+
+#: includes/xmlrpc.inc.php:201
+msgid "Error while reading MMC agent XML-RPC response."
+msgstr "Feil under lesing av MMC-agent XML-RPC-svar."
+
+#: includes/xmlrpc.inc.php:202
+msgid "Please check network connectivity."
+msgstr "Kontroller nettverkstilkoblingen."
+
+#: includes/xmlrpc.inc.php:217
+msgid ""
+"Can't communicate with MMC agent. Please check you're using the right TCP "
+"port and the right protocol."
+msgstr ""
+"Kan ikke kommunisere med MMC-agenten. Kontroller at du bruker riktig TCP-"
+"port og riktig protokoll."
+
+#: includes/xmlrpc.inc.php:240
+msgid ""
+"The MMC agent didn't give us a session number. Please check the MMC agent "
+"version."
+msgstr ""
+"MMC-agenten ga oss ikke et sesjonsnummer. Vennligst sjekk MMC-"
+"agentversjonen."
+
+#: includes/xmlrpc.inc.php:350
+msgid "unknown error"
+msgstr "ukjent feil"
+
+#: includes/xmlrpc.inc.php:351
+msgid ""
+"This exception is unknown. Please contact us to add an error handling on "
+"this error."
+msgstr ""
+"Dette unntaket er ukjent. Kontakt oss for å legge til  feilhåndtering på "
+"denne feilen."
+
+#: includes/FormGenerator.php:72 includes/FormGenerator.php:294
+#: includes/FormGenerator.php:752 includes/FormGenerator.php:882
+msgid "unavailable"
+msgstr "utilgjengelig"
+
+#: includes/FormGenerator.php:234
+msgid "Delete photo"
+msgstr "Slett bilde"
+
+#: includes/FormGenerator.php:280
+msgid "yes"
+msgstr "ja"
+
+#: includes/FormGenerator.php:283
+msgid "no"
+msgstr "nei"
+
+#: includes/FormGenerator.php:490
+msgid "Year: "
+msgstr "År:"
+
+#: includes/FormGenerator.php:490
+msgid "Month: "
+msgstr "Måned:"
+
+#: includes/FormGenerator.php:490
+msgid "Day: "
+msgstr "Dag:"
+
+#: includes/FormGenerator.php:491
+msgid "Hour: "
+msgstr "Tme:"
+
+#: includes/FormGenerator.php:491
+msgid "Min.: "
+msgstr "Min:"
+
+#: includes/FormGenerator.php:491
+msgid "Sec.: "
+msgstr "Sek:"
+
+#: includes/FormGenerator.php:620
+msgid "January"
+msgstr "Januar"
+
+#: includes/FormGenerator.php:620
+msgid "February"
+msgstr "Februar"
+
+#: includes/FormGenerator.php:620
+msgid "March"
+msgstr "Mars"
+
+#: includes/FormGenerator.php:620
+msgid "April"
+msgstr "April"
+
+#: includes/FormGenerator.php:621
+msgid "May"
+msgstr "Mai"
+
+#: includes/FormGenerator.php:621
+msgid "June"
+msgstr "Juni"
+
+#: includes/FormGenerator.php:621
+msgid "July"
+msgstr "Juli"
+
+#: includes/FormGenerator.php:621
+msgid "August"
+msgstr "August"
+
+#: includes/FormGenerator.php:622
+msgid "September"
+msgstr "September"
+
+#: includes/FormGenerator.php:622
+msgid "October"
+msgstr "Oktober"
+
+#: includes/FormGenerator.php:622
+msgid "November"
+msgstr "November"
+
+#: includes/FormGenerator.php:622
+msgid "December"
+msgstr "Desember"
+
+#: includes/FormGenerator.php:632
+msgid "Sunday"
+msgstr "Søndag"
+
+#: includes/FormGenerator.php:632
+msgid "Monday"
+msgstr "Mandag"
+
+#: includes/FormGenerator.php:632
+msgid "Tuesday"
+msgstr "Tirsdag"
+
+#: includes/FormGenerator.php:632
+msgid "Wednesday"
+msgstr "Onsdag"
+
+#: includes/FormGenerator.php:633
+msgid "Thursday"
+msgstr "Torsdag"
+
+#: includes/FormGenerator.php:633
+msgid "Friday"
+msgstr "Fredag"
+
+#: includes/FormGenerator.php:633
+msgid "Saturday"
+msgstr "Lørdag"
+
+#: includes/FormGenerator.php:646
+msgid "Now"
+msgstr "Nå:"
+
+#: includes/FormGenerator.php:1019
+msgid "Toggle selection"
+msgstr "Veksle valg"
+
+#: logout/index.php:48 logout/index.php:55 graph/navbar.inc.php:83
+msgid "Logout"
+msgstr "Logg ut"
+
+#: logout/index.php:51
+msgid "Your session will be closed"
+msgstr "Sesjonen din vil bli avsluttet"
+
+#: index.php:73
+msgid "Login failed"
+msgstr "Mislykket pålogging"
+
+#: index.php:79
+msgid ""
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
+msgstr ""
+"Du er logget av fordi økten mellom MMC-webgrensesnittet og MMC-agenten "
+"utløp."
+
+#: index.php:186
+msgid "Forgot password ?"
+msgstr "Glemt passord ?"
+
+#: index.php:197
+msgid "Server"
+msgstr "Server"
+
+#: index.php:204
+msgid "Language"
+msgstr "Språk"
+
+#: index.php:229
+msgid "Connect"
+msgstr "Koble til"
+
+#: license.php:27
+msgid ""
+"<p>\n"
+"The community version of this product is distributed in the hope that it\n"
+"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
+"warranty of merchantability or fitness for a particular purpose. See the\n"
+"GNU General Public License for more details.</p>\n"
+"<p>\n"
+"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
+"and without a tested and certified upgrade path from previous versions.\n"
+"</p>"
+msgstr ""
+"<p>\n"
+"Felleskapsversjonen av dette produktet distribueres i håp om at det\n"
+"vil være nyttig, men <strong> uten noen garanti</strong>; uten engang den underforståtte\n"
+"garantien for salgbarhet eller egnethet til et bestemt formål. Se\n"
+"GNU General Public License for mer informasjon.</p>\n"
+"<p>\n"
+"Dessuten er dette produktet en viktig og kritisk komponent i informasjonssystemet ditt. Denne fellesskapsversjonen distribueres uten profesjonell støtte av noe slag,\n"
+"og uten en testet og sertifisert oppgraderingssti fra tidligere versjoner.\n"
+"</p>"
+
+#: license.php:38
+msgid ""
+"Click here to get more information about our support and maintenance "
+"subscription plan."
+msgstr ""
+"Klikk her for å få mer informasjon om vår support- og "
+"vedlikeholdsabonnementsplan."
+
+#: graph/header.inc.php:213 graph/header.inc.php:249
+msgid "Yes"
+msgstr "Ja"
+
+#: graph/header.inc.php:216 graph/header.inc.php:218
+msgid "No"
+msgstr "Nei"
+
+#: graph/header.inc.php:315
+msgid "Form cannot be submit. Input errors are highlighted in red."
+msgstr "Skjemaet kan ikke sendes. Feil er merket med rødt."
+
+#: graph/navbar.inc.php:73
+msgid "standard mode"
+msgstr "standard modus"
+
+#: graph/navbar.inc.php:75
+msgid "expert mode"
+msgstr "ekspert modus"
+
+#: graph/navbar.inc.php:80
+msgid "Click to switch to"
+msgstr "Klikk for å skifte til"
+
+#: graph/navbar.inc.php:81
+msgid "logout"
+msgstr "logg ut"
+
+#: graph/navbar.inc.php:127
+msgid ""
+"If this phrase does not change, your browser is not supported by the MMC "
+"application"
+msgstr ""
+"Hvis denne frasen ikke endres, støttes ikke nettleseren din av MMC-"
+"applikasjonen"
+
+#: forgotpassword.php:24
+msgid "A password reset link has been sent."
+msgstr "En lenke til tilbakestilling av passordet er sendt."
+
+#: forgotpassword.php:26
+msgid "Can't reset your password. Please contact your administrator."
+msgstr "Kan ikke tilbakestille passordet ditt. Kontakt administratoren."
+
+#: forgotpassword.php:74 forgotpassword.php:80
+msgid "Password reset"
+msgstr "Passord tilbakesestilling"
+
+#: forgotpassword.php:76
+msgid "Login or mail"
+msgstr "Innlogging eller e-post"
+
+#: forgotpassword.php:81
+msgid "Back"
+msgstr "Tilbake"

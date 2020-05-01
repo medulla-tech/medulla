@@ -2,7 +2,7 @@
 
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com
+# (c) 2007-2010 Mandriva, http://www.mandriva.com
 #
 # $Id$
 #
@@ -46,19 +46,77 @@ RELEASE=`lsb_release -r -s`
 
 PKGS=
 
+ARCH=
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    if [ `arch` == "x86_64" ]; then
+        ARCH=64
+    fi
+fi
+
 function packages_to_install () {
+    # LDAP stuff
     if [ $DISTRIBUTION == "MandrivaLinux" ]; then
-        # MySQL
-	PKGS="$PKGS mysql mysql-client nfs-utils nfs-utils-clients"
-	if [ $RELEASE == "2010.0" -o $RELEASE == "2009.0" ];
-        then
-            PKGS="$PKGS python-mysql atftp-server dhcp-server rdate cdrkit-genisoimage ocsinventory-agent php-mysql rsync"
-	fi
+        PKGS="$PKGS openldap-servers openldap-mandriva-dit"
     fi
     if [ $DISTRIBUTION == "Debian" ]; then
-	PKGS="mysql-server mysql-client nfs-kernel-server python-mysqldb atftpd atftp uuid-runtime dhcp3-server-ldap mkisofs ocsinventory-agent rsync"
+        echo slapd slapd/domain string mandriva.com | debconf-set-selections
+        echo slapd shared/organization string mandriva | debconf-set-selections
+        echo slapd slapd/password1 string secret | debconf-set-selections
+        echo slapd slapd/password2 string secret | debconf-set-selections
+    	PKGS="$PKGS slapd"
     fi
+
+    # Python
+    PKGS="$PKGS python-twisted-web python-ldap"
+
+    # Apache/PHP
+    if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+        PKGS="$PKGS apache-mpm-prefork apache-mod_php php-gd php-iconv php-xmlrpc gettext"
+    fi
+    if [ $DISTRIBUTION == "Debian" ]; then
+	PKGS="$PKGS apache2 libapache2-mod-php5 php5-gd php5-xmlrpc gettext"
+    fi
+
+    # Development & install
+    PKGS="$PKGS subversion make gcc wget"
+
+    if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+        if [ $RELEASE == "2006.0" ];
+            then
+            PKGS="$PKGS lib${ARCH}python2.4-devel libldap2.3_0-devel"
+        fi
+        if [ $RELEASE == "2009.0" ];
+        then
+        PKGS="$PKGS lib${ARCH}python2.5-devel libldap2.4_2-devel python-setuptools python-sqlalchemy"
+        fi
+        if [ $RELEASE == "2010.0" ];
+            then
+            # The python-sqlalchemy lib must be installed manually because we are
+            # compatible only with version 0.4, and 2010.0 provides version 0.5.
+            PKGS="$PKGS lib${ARCH}python2.6-devel lib${ARCH}crack2-python libldap2.4_2-devel python-setuptools"
+        fi
+    fi
+    if [ $DISTRIBUTION == "Debian" ]; then
+        if [ $RELEASE == "5.0.6" ]; then
+            PKGS="$PKGS python2.5-dev libldap2-dev python-setuptools python-pylibacl python-sqlalchemy"
+        fi
+    fi
+
+    # MySQL
+    if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+        PKGS="$PKGS mysql mysql-client"
+        if [ $RELEASE == "2010.0" -o $RELEASE == "2009.0" ];
+            then
+            PKGS="$PKGS python-mysql"
+        fi
+    fi
+    if [ $DISTRIBUTION == "Debian" ]; then
+        PKGS="$PKGS mysql-server mysql-client python-mysqldb"
+    fi
+
 }
+
+
 
 if [ ! -f "$DISTRIBUTION-$RELEASE" ];
 then
@@ -77,6 +135,7 @@ fi
 
 packages_to_install
 if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    urpmi.update -a
     urpmi --auto --no-suggests $PKGS
     rpm -q $PKGS
 fi
@@ -250,6 +309,146 @@ echo "Launch Pulse 2's services"
 /etc/init.d/pulse2-imaging-server restart
 /etc/init.d/pulse2-inventory-server restart
 
+=======
+if [ $DISTRIBUTION == "Debian" ]; then
+    export NOCHECKPASSWORD=1
+fi
+
+if [ $RELEASE == "2006.0" ];
+    then
+    export NOCHECKPASSWORD=1
+    # Download and setup Python setuptools
+    wget http://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c11.tar.gz#md5=7df2a529a074f613b509fb44feefe74e
+    tar xzf setuptools-0.6c11.tar.gz
+    pushd setuptools-0.6c11
+    python setup.py install
+    popd
+fi
+pushd mmc-core/agent
+make install PREFIX=/usr
+popd
+
+pushd mmc-core/web
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    make install PREFIX=/usr HTTPDUSER=apache
+    cp confs/apache/mmc.conf /etc/httpd/conf/webapps.d/
+fi
+if [ $DISTRIBUTION == "Debian" ]; then
+    make install PREFIX=/usr HTTPDUSER=www-data
+    cp confs/apache/mmc.conf /etc/apache2/conf.d/
+fi
+popd
+
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    if [ $RELEASE == "2010.0" ];
+    then
+        # Download and setup SQLAlchemy 0.4.8
+	wget "http://switch.dl.sourceforge.net/project/sqlalchemy/sqlalchemy/0.4.8/SQLAlchemy-0.4.8.tar.gz"
+	tar xzf SQLAlchemy-0.4.8.tar.gz
+	pushd SQLAlchemy-0.4.8
+	python setup.py install
+	popd
+    fi
+fi
+
+popd
+
+# MySQL setup
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    service mysqld stop
+    sed -i "s/^skip-networking/#skip-networking/" /etc/my.cnf
+    service mysqld start
+fi
+if [ $DISTRIBUTION == "Debian" ]; then
+    invoke-rc.d mysql stop
+    sed -i "s/^skip-networking/#skip-networking/" /etc/mysql/my.cnf
+    invoke-rc.d mysql start
+fi
+# Wait for MySQL to start
+sleep 5
+
+# Setup LDAP
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    rm -f /etc/openldap/schema/*
+    touch /etc/openldap/schema/local.schema
+    cp $TMPCO/mmc-core/agent/contrib/ldap/mmc.schema $TMPCO/mmc-core/agent/contrib/ldap/mail.schema $TMPCO/mmc-core/agent/contrib/ldap/openssh-lpk.schema $TMPCO/mmc-core/agent/contrib/ldap/quota.schema $TMPCO/mmc-core/agent/contrib/ldap/dhcp.schema /etc/openldap/schema/
+    /usr/share/openldap/scripts/mandriva-dit-setup.sh -d mandriva.com -p secret -y
+    sed -i 's/cn=admin/uid=LDAP Admin,ou=System Accounts/' /etc/mmc/plugins/base.ini
+
+    sed -i 's!#include.*/etc/openldap/schema/local.schema!include /etc/openldap/schema/local.schema!g' /etc/openldap/slapd.conf
+    sed -i '/.*kolab.schema/d' /etc/openldap/slapd.conf
+    sed -i '/.*misc.schema/d' /etc/openldap/slapd.conf
+    # Shipped dhcp.schema is too old
+    sed -i '/.*dhcp.schema/d' /etc/openldap/slapd.conf
+    sed -i 's/@inetLocalMailRecipient,//' /etc/openldap/mandriva-dit-access.conf
+
+    echo "include /etc/openldap/schema/mmc.schema" > /etc/openldap/schema/local.schema
+    echo "include /etc/openldap/schema/dhcp.schema" >> /etc/openldap/schema/local.schema
+
+fi
+
+if [ $DISTRIBUTION == "Debian" ]; then
+    touch /etc/ldap/schema/local.schema
+    cp $TMPCO/mmc-core/agent/contrib/ldap/mmc.schema $TMPCO/mmc-core/agent/contrib/ldap/mail.schema $TMPCO/mmc-core/agent/contrib/ldap/openssh-lpk.schema $TMPCO/mmc-core/agent/contrib/ldap/quota.schema $TMPCO/mmc-core/agent/contrib/ldap/samba.schema $TMPCO/mmc-core/agent/contrib/ldap/dhcp.schema $TMPCO/mmc-core/agent/contrib/ldap/dnszone.schema /etc/ldap/schema/
+    grep -q '/etc/ldap/schema/local.schema' /etc/ldap/slapd.conf || sed -i -e '/inetorgperson.schema$/a include /etc/ldap/schema/local.schema' /etc/ldap/slapd.conf
+    echo "include /etc/ldap/schema/mmc.schema" > /etc/ldap/schema/local.schema
+fi
+
+# Setup ppolicy
+if [ $RELEASE == "2010.0" -o $RELEASE == "5.0.4" ];
+    then
+    sed -i "s/disable = 1/disable = 0/" /etc/mmc/plugins/ppolicy.ini
+fi
+
+# Restart LDAP & APACHE
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    service ldap restart
+    service httpd restart
+fi
+if [ $DISTRIBUTION == "Debian" ]; then
+    invoke-rc.d slapd restart
+    invoke-rc.d apache2 restart
+fi
+
+# Recreate log directory
+rm -fr /var/log/mmc; mkdir /var/log/mmc
+
+# Recreate archives directory
+rm -fr /home/archives; mkdir -p /home/archives
+
+# Remove default LDAP password policies because the MMC agent will add one
+if [ $DISTRIBUTION == "MandrivaLinux" ]; then
+    ldapdelete -x -h 127.0.0.1 -D "uid=LDAP Admin,ou=System Accounts,dc=mandriva,dc=com" -w secret "cn=default,ou=Password Policies,dc=mandriva,dc=com"
+fi
+
+# Disable passmod on CS4, because it doesn't work
+if [ $RELEASE == "2006.0" ];
+    then
+    sed -i "s/passwordscheme = passmod/passwordscheme = ssha/" /etc/mmc/plugins/base.ini
+fi
+
+
+# Setup MMC audit framework
+cat >> /etc/mmc/plugins/base.ini << EOF
+
+[audit]
+method = database
+dbhost = localhost
+dbdriver = mysql
+dbport = 3306
+dbuser = audit
+dbpassword = audit
+dbname = audit
+EOF
+
+mmc-helper audit create | mysql
+mmc-helper audit init | mysql
+mmc-helper audit check
+
+# Start MMC agent
+/etc/init.d/mmc-agent start
+
+>>>>>>> old-project/merge_into_pulse
 if [ ! -z $TMPREMOVE ];
     then
     rm -fr $TMPCO

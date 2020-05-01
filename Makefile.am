@@ -23,12 +23,14 @@
 ACLOCAL_AMFLAGS = -I m4
 DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup --disable-python-check
 
-SUBDIRS = web services doc
+SUBDIRS = agent web services doc
+
+EXTRA_DIST = m4
 
 backupext = .$(shell date +%Y-%m-%d+%H:%M:%S)
 
 dist-hook:
-	rm -rf `find $(distdir) -name .svn`
+	rm -rf `find $(distdir) -name .svn -or -name *.po~`
 
 confwarning: sysconfdirwarning localstatedirwarning
 
@@ -48,6 +50,16 @@ localstatedirwarning:
 	  echo '###'; \
 	fi
 
+install-data-hook:
+	@echo '###'
+	@echo '### MMC LDAP schema must be added to your LDAP directory in order for'
+	@echo '### mmc-agent to run.'
+	@echo '### If using dynamic backend (from OpenLDAP 2.3), schema must be converted'
+	@echo '### in LDIF format.'
+	@echo '### You can use "mmc-add-schema" to convert and add the schema.'
+	@echo '### Schema file is available in: $(datadir)/doc/mmc/contrib/base/mmc.schema'
+	@echo '###'
+
 prereqs:
 	if [ -x /usr/bin/apt-get ]; then \
 	  $(MAKE) prereqs-deb; \
@@ -56,13 +68,14 @@ prereqs:
 	fi
 
 prereqs-urpmi:
-	urpmi lsb-release python-sqlalchemy python-twisted php-gd perl-Unix-Syslog openssh-clients \
-	  iputils rsync mysql
+	urpmi lsb-release python-sqlalchemy python-twisted python-mysql php-gd perl-Unix-Syslog openssh-clients \
+	  iputils rsync mysql php-gd perl-Unix-Syslog
 
 prereqs-deb:
 	apt-get update
 	apt-get install python-all lsb-release python-sqlalchemy python-mysqldb \
 	  python-twisted-web perl-modules libsys-syslog-perl openssh-client iputils-ping rsync \
-	  mysql-server php5-gd php5-xmlrpc
+	  mysql-server php5-gd php5-xmlrpc python-ldap python-openssl libapache2-mod-php5 \
+	  php5-xmlrpc php5-gd apache2-mpm-prefork ldap-utils slapd
 
-.PHONY = sysconfdirwarning prereqs prereqs-deb prereqs-urpmi
+.PHONY = confwarning localstatedirwarning sysconfdirwarning prereqs prereqs-deb prereqs-urpmi

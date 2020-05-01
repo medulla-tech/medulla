@@ -1,0 +1,62 @@
+/**
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ *
+ * $Id$
+ *
+ * This file is part of Mandriva Management Console (MMC).
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+#navbar ul li#shares a {
+        border-top: 0px solid #D8D8D7;
+        border-left: 1px solid #B2B2B2;
+        border-right: 1px solid #B2B2B2;
+        color: #EE5010;
+        background-color: #F2F2F2;
+        background: url("img/navbar/share_select.png") no-repeat transparent;
+        background-position: 50% 10px;
+        background-color: #F2F2F2;
+        padding-top: 48px;
+}
+
+#navbar ul li#shares a:hover {
+        color: #999;
+        background: url("img/navbar/share_select.png") no-repeat transparent;
+        background-position: 50% 10px;
+        background-color: #F2F2F2;
+
+}
+
+#content #activeTab {
+        width: 83px;
+        margin-left: 18px;
+}
+
+#sectionContainer {
+        background-image: url(<?php echo $root; ?>img/config/icn_config_large.gif);
+}
+
+#sidebar ul.shares li#globalConfig a {
+        background-color: #FFF;
+        color: #666;
+        border-right: 1px solid #FFF;
+        background-image: url(<?php echo $root; ?>img/config/icn_global_active.gif);
+}
+
+#sidebar ul.shares li#globalConfig a:hover {
+        color: #666;
+        background-image: url(<?php echo $root; ?>img/config/icn_global_active.gif);
+}

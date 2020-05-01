@@ -1,0 +1,55 @@
+[global]
+; RPC backend to use
+backend = xmlrpc
+
+; HTTP basic authentication credentials to use for XMLRPC communication
+login = mmc
+password = s3cr3t
+
+; Root URL where the MMC web pages are installed
+; root= /mmc/ for http://127.0.0.1/mmc/
+root = /mmc/
+
+; Filesystem path where the MMC web modules are installed
+rootfsmodules = @pkgdatadir@/modules/
+
+; Available pagination steps
+pagination = 10 20 50 100
+
+; Number of items to display in lists
+maxperpage = 10
+
+; Declare if this installation is a community version or not
+; community can be yes or no
+community = yes
+
+; Debug section
+[debug]
+; 0 : no information
+; 1 : XMLRPC calls and results are displayed by the web interface
+level = 0
+
+; Login page title
+; UTF-8 strings must be used
+[logintitle]
+; Default page title for English and non-translated languages
+C =
+; French title
+fr_FR =
+; Spanish title
+es_ES =
+
+[server_01]
+description = localhost
+url = https://127.0.0.1:7080
+; Show the "Forgot password" link on the login page for this server
+forgotPassword = no
+; Timeout in seconds for all socket I/O operations
+; Beware that timeout on a SSL socket only works with PHP >= 5.2.1
+; timeout = 300
+; SSL certificate check support
+; verifypeer = 0
+; Path to the file containing the Certificate Authority (PEM format)
+; cacert =
+; Path to the file containing the local key and certificate (PEM format)
+; localcert =

@@ -21,23 +21,46 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 mmcdatadir = $(datadir)/mmc
+SUBDIRS = confs
 
-datapaths = modules/dyngroup modules/msc modules/inventory modules/glpi modules/pkgs \
+dataipaths = graph img includes jsframework logout modules/base  modules/dashboard \
+	modules/dyngroup modules/msc modules/inventory modules/glpi modules/pkgs \
 	modules/pulse2 modules/imaging modules/backuppc modules/update modules/support \
-	modules/kiosk conf/apache
+	modules/kiosk conf/apache modules/ppolicy modules/update modules/services modules/report \
+	modules/xmppmaster index.php main.php version.php license.php forgotpassword.php token.php
 datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) \
 		-type f \
 		! -name '*.po' \
 		! -name '*.mo' \
 		! -path '*/.svn/*')
+
+mmcdatadir = $(datadir)/mmc
+
 pofiles = $(shell cd $(srcdir) && find -name '*.po')
 mofiles = $(patsubst %.po,%.mo,$(pofiles))
 
 nobase_mmcdata_DATA = $(datafiles) $(mofiles)
 
-EXTRA_DIST = $(datafiles) $(pofiles)
-CLEANFILES = $(mofiles)
+nodist_mmcdata_DATA = site.php
+EXTRA_DIST = $(datafiles) $(pofiles) site.php.in
+CLEANFILES = $(mofiles) site.php
 
 %.mo: %.po
 	$(MKDIR_P) $(@D)
 	$(MSGFMT) $< -o $@
+
+edit = sed \
+        -e 's|@bindir[@]|$(bindir)|g' \
+        -e 's|@sbindir[@]|$(sbindir)|g' \
+        -e 's|@pkgdatadir[@]|$(datadir)/mmc|g' \
+        -e 's|@prefix[@]|$(prefix)|g' \
+        -e 's|@localstatedir[@]|$(localstatedir)|g' \
+        -e 's|@sysconfdir[@]|$(sysconfdir)|g'
+
+site.php: Makefile
+	rm -f $@ $@.tmp
+	$(MKDIR_P) $(@D)
+	srcdir=''; \
+	  test -f ./$@.in || srcdir=$(srcdir)/; \
+	  $(edit) $${srcdir}$@.in >$@.tmp
+	mv $@.tmp $@

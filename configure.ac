@@ -23,12 +23,15 @@ AC_PREREQ(2.59)
 dnl autoconf initialization
 define([project], [pulse2])
 AC_INIT(project, [4.6.1], [http://www.siveo.org])
+define([gitversion], esyscmd([sh -c "which git > /dev/null && git describe 2> /dev/null | sed -e 's/]project[-\([^-]\+\)//' | tr -d '\n' || true"]))dnl
+AC_DEFINE(GITVERSION, "gitversion", [Git version])
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE([1.9 tar-ustar -Wno-portability foreign])
+AM_CONFIG_HEADER(config.h)
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES(yes)])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -70,6 +73,24 @@ AC_ARG_ENABLE([packager-mode],
               [],
               [enable_packager_mode="no"])
 AM_CONDITIONAL([ENABLE_PACKAGER_MODE], [test "$enable_packager_mode" = "yes"])
+dnl --enable-systemd
+dnl   Install systemd services instead of init scripts
+dnl
+AC_ARG_ENABLE([systemd],
+              [AS_HELP_STRING([--enable-systemd],
+                              [Install systemd services @<:@default=disable@:>@])])
+AM_CONDITIONAL([ENABLE_SYSTEMD], [test "$enable_systemd" = "yes"])
+
+dnl
+dnl --disable-python
+dnl   Do not install Python files
+dnl
+AC_ARG_ENABLE([python],
+              [AS_HELP_STRING([--disable-python],
+                              [Do not install Python files @<:@default=enable@:>@])],
+              [],
+              [enable_python="yes"])
+AM_CONDITIONAL([ENABLE_PYTHON], [test "$enable_python" = "yes"])
 
 dnl
 dnl --disable-python-check
@@ -84,12 +105,21 @@ if test "x$enable_packager_mode" = "xno"; then
 else
    enable_python_check=no
 fi
+AC_ARG_ENABLE([python-check],
+              [AS_HELP_STRING([--disable-python-check],
+                              [Do not check python modules on configure @<:@default=enable@:>@])],
+              [],
+              [enable_python_check="yes"])
 AM_CONDITIONAL([ENABLE_PYTHON_CHECK], [test "$enable_python_check" = "yes"])
 
 dnl Check for Python modules
 if test "x$enable_python_check" = "xyes"; then
    AX_PYTHON_MODULE([sqlalchemy], [1])
    AX_PYTHON_MODULE([MySQLdb], [1])
+   AX_PYTHON_MODULE([ldap], [1])
+   AX_PYTHON_MODULE([OpenSSL], [1])
+   AX_PYTHON_MODULE([multiprocessing], [1])
+   AX_PYTHON_MODULE([gobject], [1])
    AX_PYTHON_MODULE([twisted.web], [1])
    AX_PYTHON_MODULE([mmc], [1])
 fi
@@ -126,6 +156,8 @@ AC_ARG_ENABLE([conf-backup],
 AM_CONDITIONAL([ENABLE_CONF_BACKUP], [test "$enable_conf_backup" = "yes"])
 
 dnl
+dnl from orginal
+<<<<<<< HEAD
 dnl --with-examples-dir
 dnl   Set path to configuration files examples dir
 dnl   Default to DOCDIR/examples
@@ -154,6 +186,44 @@ AC_CONFIG_FILES([web/modules/pulse2/version.php])
 AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([doc/man/Makefile])
 AC_CONFIG_FILES([doc/user/Makefile])
+
+dnl From mmc-core
+
+dnl --with-initdir
+dnl   Set path to init scripts directory
+dnl   Default to SYSCONFDIR/init.d
+dnl
+AC_ARG_WITH([initdir],
+            [AS_HELP_STRING([--with-initdir],
+                            [path to init scripts directory @<:@default=SYSCONFDIR/init.d@:>@])],
+            [initdir="$withval"],
+	    [initdir="${sysconfdir}/init.d"])
+AC_SUBST([initdir])
+
+dnl
+dnl --with-systemddir
+dnl   Set path to systemd services directory
+dnl   Default to /lib/systemd/system
+dnl
+AC_ARG_WITH([systemddir],
+            [AS_HELP_STRING([--with-systemddir],
+                            [path to systemd services directory @<:@default=/lib/systemd/system@:>@])],
+            [systemddir="$withval"],
+	    [systemddir="/lib/systemd/system"])
+AC_SUBST([systemddir])
+
+dnl files to generate with automake
+AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([agent/Makefile])
+AC_CONFIG_FILES([agent/bin/Makefile])
+AC_CONFIG_FILES([agent/mmc/Makefile])
+AC_CONFIG_FILES([agent/backup-tools/Makefile])
+AC_CONFIG_FILES([agent/init/Makefile])
+AC_CONFIG_FILES([agent/conf/Makefile])
+AC_CONFIG_FILES([agent/contrib/Makefile])
+AC_CONFIG_FILES([agent/man/Makefile])
+AC_CONFIG_FILES([web/Makefile])
+AC_CONFIG_FILES([web/confs/Makefile])
 
 dnl write all stuff
 AC_OUTPUT

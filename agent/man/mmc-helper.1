@@ -1,0 +1,51 @@
+.TH MMC-HELPER 1
+.SH NAME
+mmc-helper \- Manage the internals of the MMC
+.SH SYNOPSIS
+.B mmc-helper
+.RI COMMAND " " [ SUBCOMMAND ]
+.SH DESCRIPTION
+mmc-helper is a tool of the MMC (Mandriva Management Console).
+.TP
+This tool is a basic helper for administrator to manage the internals of the MMC. For now, it only allows to create and initialize the audit database.
+.SH COMMANDS
+.TP
+.B help
+Print the internal help
+.TP
+.B audit
+Perform operation on audit database
+.SS AUDIT SUBCOMMANDS
+.TP
+.B create
+Print the SQL command line to use to create the audit database
+.TP
+.B init
+Initialize the audit database tables
+.TP
+.B check
+Check audit database availability and version
+.TP
+.B droptables
+Drop the audit database tables
+.TP
+.B drop
+Print the string to use to drop the audit database
+.TP
+.B list
+Print all audit records on command line
+.SH EXAMPLES
+mmc-helper audit initdb
+.SH AUTHOR
+mmc-helper was written by Mandriva-Linbox
+.SH COPYRIGHT
+.TP
+(c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+.TP
+(c) 2007-2012 Mandriva, http://www.mandriva.com
+.TP
+MMC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+.SH SEE ALSO
+.BR mmc-agent (1),
+.BR mmc-add-schema (1),
+.BR mmc-stats (1)

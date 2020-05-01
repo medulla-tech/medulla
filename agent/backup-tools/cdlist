@@ -1,0 +1,123 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2009 Mandriva, http://www.mandriva.com
+#
+# $Id$
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+
+from __future__ import generators # needed for Python 2.2
+import sys
+import os.path
+
+
+class MediaObject:
+    def __init__(self,dest,size):
+        self._dest = dest+"/"
+        self._size = size
+        self._volumes = dict()
+        self._volumes[0] = 0
+        self._filehandle = dict()
+        self._filehandle[0] = open(self._dest+'list1','w')
+        self._errorhandle = open(self._dest+'error.log','w')
+
+
+    def addFile(self,filename):
+        try :
+            filesize = os.path.getsize(filename)
+        except:  #if we not have correct right or other problem...
+            self._errorhandle.write("Cannot get filesize for "+filename+"!\n")
+            return
+
+        if (filesize)>self._size: #if file bigger than media size
+            self._errorhandle.write("Discarding "+filename+": file too big for media !")
+            print "Discarding "+filename+": file too big for media !"
+            return
+
+        for number, size in self._volumes.items():
+            if (size+filesize)<self._size:
+                self._volumes[number] += filesize
+                self._filehandle[number].write(str(filesize)+'   '+filename+"\n")
+                #for debug only
+                #print ("Left on media #" +str(number)+": "+str( self._volumes[number]/1024/1024))+" MB"
+                return
+
+
+        hd = open(self._dest+'list'+str(number+2),'w')
+        hd.write(str(filesize)+'   '+filename+"\n")
+
+        self._volumes[number+1] = filesize #add a volume with filesize
+        self._filehandle[number+1]= hd #append filehandle
+
+    def report(self):
+        for number, size in self._volumes.items():
+            print ("Left on media #" +str(number+1)+": "+str( (self._size - self._volumes[number])/1024/1024))+" MB"
+        print "Distributed files on "+str(number+1)+" media"
+        print (number+1)
+        return 0
+
+
+    def __destruct__(self):
+        for handle in self._filehandle:
+            try:
+                handle.close()
+            except:
+                print "cannot close file"
+
+
+def walktree(top = ".", depthfirst = True):
+    """Walk the directory tree, starting from top. Credit to Noah Spurrier and Doug Fort."""
+    import os, stat, types
+    try:
+        names = os.listdir(top)
+    except:
+        names = list()
+    if not depthfirst:
+        yield top, names
+    for name in names:
+        try:
+            st = os.lstat(os.path.join(top, name))
+        except os.error:
+            continue
+        if stat.S_ISDIR(st.st_mode):
+            for (newtop, children) in walktree (os.path.join(top, name), depthfirst):
+                yield newtop, children
+    if depthfirst:
+        yield top, names
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 4:
+        top = os.path.realpath(sys.argv[1])
+        size = int(sys.argv[3])
+        dest = sys.argv[2]
+    else:
+	print "usage "+sys.argv[0]+" <dir_to_backup> <dir_to_put_list> <media_size>"
+	sys.exit(0)
+
+    #define main mediaObject
+
+    mo = MediaObject(dest,size*1024*1024*0.9)
+
+    for top, names in walktree(top):
+        for name in names:
+            filename = top + "/" + str(name)
+            if not os.path.isdir(filename):
+                mo.addFile(filename)
+
+    sys.exit(mo.report())
