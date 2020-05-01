@@ -97,9 +97,24 @@ install: build
 	rm -fv $(DESTDIR)/usr/lib/python2.7/dist-packages/mmc/plugins/__init__.py{o,c}
 
 binary-indep: build install
-binary-arch: build install
 	dh_testdir
 	dh_testroot
+	dh_install --sourcedir=$(DESTDIR) --fail-missing
+	dh_python2
+	dh_fixperms -X/etc/mmc
+	dh_installchangelogs
+	dh_installdocs
+	dh_installinit
+	dh_strip
+	dh_link
+	dh_compress -X/sql/ -X.pdf
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary-arch: build install
 	dh_installdirs
 	# Must be readable by backuppc
 	chmod 0644 $(DESTDIR)/etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini
@@ -118,7 +133,6 @@ binary-arch: build install
 	# This directory must be writable for www-data (first run)
 	chown www-data:root debian/python-mmc-support/etc/mmc/plugins/support
 	chmod 750 debian/python-mmc-support/etc/mmc/plugins/support
-	dh_python2
 	dh_fixperms -Xetc/mmc \
                     -Xusr/share/doc/pulse2-common/contrib/ \
                     -Xvar/lib/pulse2/dlp_packages \
@@ -133,13 +147,6 @@ binary-arch: build install
 		ln -sf pulse2-common debian/$$PKG/usr/share/doc/$$PKG; \
 	done
 	dh_shlibdeps
-	dh_strip
-	dh_link
-	dh_compress -X/sql/ -X.pdf
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install
