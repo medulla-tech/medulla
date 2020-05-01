@@ -76,9 +76,6 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	$(MAKE) install DESTDIR=$(DESTDIR)
-	# Already provided by MMC packages
-	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/__init__.py
-	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/plugins/__init__.py
 	rm -rf $(DESTDIR)/etc/init.d
 	mkdir -p $(DESTDIR)/usr/lib/systemd/system
 	cp $(CURDIR)/services/systemd/*.service $(DESTDIR)/usr/lib/systemd/system
