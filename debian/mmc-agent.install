@@ -5,6 +5,9 @@ usr/sbin/mds-report
 usr/bin/mmc-helper
 usr/bin/mmc-stats
 etc/mmc/agent
-###usr/share/man/man1
+usr/share/man/man1/mmc-add-schema*
+usr/share/man/man1/mmc-agent*
+usr/share/man/man1/mmc-stats*
+usr/share/man/man1/mmc-helper*
 usr/share/doc/mmc/contrib/monit/mmc-agent
 #usr/lib/systemd/system/mmc-agent.service
