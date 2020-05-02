@@ -1,5 +1,5 @@
 usr/lib/python2.?/*-packages/mmc/agent.py
-usr/sbin
+usr/sbin/mmc-agent
 usr/bin/mmc-helper
 usr/bin/mmc-stats
 etc/mmc/agent
