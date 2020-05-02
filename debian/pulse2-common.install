@@ -1,7 +1,23 @@
 usr/share/doc/pulse2/* usr/share/doc/pulse2-common
 usr/share/mmc/conf/apache/pulse.conf
 etc/apache2/conf-available/pulse.conf
-###usr/share/doc/mmc
+usr/share/doc/mmc/contrib/xmppmaster
+usr/share/doc/mmc/contrib/package-server
+usr/share/doc/mmc/contrib/msc
+usr/share/doc/mmc/contrib/test-xmlrpc.php
+usr/share/doc/mmc/contrib/test-xmlrpc.examples
+usr/share/doc/mmc/contrib/test-xmlrpc.py
+usr/share/doc/mmc/contrib/backuppc
+usr/share/doc/mmc/contrib/update
+usr/share/doc/mmc/contrib/imaging-server
+usr/share/doc/mmc/contrib/dyngroup
+usr/share/doc/mmc/contrib/kiosk
+usr/share/doc/mmc/contrib/package-server
+usr/share/doc/mmc/contrib/msc
+usr/share/doc/mmc/contrib/imaging
+usr/share/doc/mmc/contrib/inventory
+usr/share/doc/mmc/contrib/samba
+usr/share/doc/mmc/contrib/pulse2
 usr/sbin/pulse2-setup
 usr/sbin/pulse2-create-group
 usr/sbin/pulse2-load-defaults
