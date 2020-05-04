@@ -1265,5 +1265,8 @@ cp %{buildroot}%{_sysconfdir}/mmc/apache/mmc.conf %{buildroot}%_webappconfdir/mm
 
 #sed -i 's/^community.*$/community = no/' %{buildroot}%{_sysconfdir}/mmc/mmc.ini
 
+mkdir -p %buildroot%_prefix/lib/systemd/system/
+cp services/systemd/mmc-agent.service %buildroot%_prefix/lib/systemd/system/
+
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
