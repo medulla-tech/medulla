@@ -1,7 +1,24 @@
+# RHEL6 compat hacks
+%if %_vendor == "redhat"
+%define configure2_5x %configure
+%define make %{__make}
+%define makeinstall_std %{__make} DESTDIR=%{?buildroot:%{buildroot}} install
+%define mkrel(c:) %{-c: 0.%{-c*}.}%{1}%{?subrel:.%subrel}%{?distsuffix:%distsuffix}%{?!distsuffix:.el6}
+%define py_puresitedir %(python -c 'import distutils.sysconfig; print distutils.sysconfig.get_python_lib()' 2>/dev/null || echo PYTHON-LIBDIR-NOT-FOUND)
+%endif
 # Turn off the brp-python-bytecompile script
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
-
 %define __requires_exclude ^(pear\\(graph.*|pear\\(includes.*|pear\\(modules.*)$
+
+%if %_vendor == "Mageia"
+%define webappsdir /httpd/conf/webapps.d
+%define with_report 1
+%else
+%define webappsdir /httpd/conf.d
+%define _webappconfdir %_sysconfdir/httpd/conf.d
+%define with_report 1
+%endif
+
 
 %define _enable_debug_packages %{nil}
 %define debug_package          %{nil}
