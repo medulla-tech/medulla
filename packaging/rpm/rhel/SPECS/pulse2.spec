@@ -28,6 +28,8 @@ Source1:        pulse2-dlp-server.init
 Source2:        pulse2-inventory-server.service
 Source3:        pulse2-imaging-server.service
 Source4:        pulse2-register-pxe.service
+Source5:        output.py
+Source6:        get_file.php
 
 BuildRequires:	python-devel
 BuildRequires:	gettext
@@ -828,8 +830,360 @@ This package contains Pulse 2 common files.
 
 #--------------------------------------------------------------------
 
+%package -n mmc-agent
+Summary:    Console agent
+Group:      System/Servers
+%if %_vendor == "Mageia"
+Requires:   python-base
+Requires:   python-OpenSSL
+Requires:   python-gobject
+%else
+Requires:   python
+Requires:   pyOpenSSL
+Requires:   pygobject2
+%endif
+Requires:   python-mmc-base
+Requires:   logrotate
+Requires(pre): python-mmc-base
+Requires:   python-mmc-base
+Requires:   ajax-php-file-manager
+Requires:   python-memory-profiler
+Requires:   python-dateutil
+
+%description -n mmc-agent
+XMLRPC server of the Console API.
+This is the underlying service used by the MMC web interface.
+
+%files -n mmc-agent
+%defattr(-,root,root,0755)
+%doc COPYING ChangeLog
+%attr(0755,root,root) %{_unitdir}/mmc-agent.service
+%attr(0755,root,root) %dir %{_sysconfdir}/mmc
+%attr(0755,root,root) %dir %{_sysconfdir}/mmc/agent
+%attr(0755,root,root) %dir %{_sysconfdir}/mmc/agent/keys
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/agent/config.ini
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/agent/keys/cacert.pem
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/agent/keys/privkey.pem
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/logrotate.d/mmc-agent
+%attr(0755,root,root) %{_sbindir}/mmc-agent
+%attr(0755,root,root) %{_sbindir}/mmc-add-schema
+%attr(0755,root,root) %{_bindir}/mmc-helper
+%attr(0755,root,root) %{_bindir}/mmc-stats
+%attr(0750,root,root) %dir /var/log/mmc
+%attr(0750,root,root) %dir /var/lib/mmc
+%doc %{_mandir}/man1/mmc-add-schema.1.*
+%doc %{_mandir}/man1/mmc-agent.1.*
+%doc %{_mandir}/man1/mmc-helper.1.*
+%doc %{_mandir}/man1/mmc-stats.1.*
+%dir %{py_puresitedir}/mmc
+%{py_puresitedir}/mmc/agent.py*
+%{_docdir}/mmc/contrib/monit/mmc-agent
+
+#--------------------------------------------------------------------
+
+%package -n python-mmc-core
+Summary:    Console core
+Group:      System/Servers
+%if %_vendor == "Mageia"
+Requires:   python-base
+%else
+Requires:   python
+%endif
+Requires:   python-twisted-web
+
+%description -n python-mmc-core
+Contains the mmc core python classes used by all other
+modules.
+
+%files -n python-mmc-core
+%defattr(-,root,root,0755)
+%dir %{py_puresitedir}/mmc
+%{py_puresitedir}/mmc/core
+%{py_puresitedir}/mmc/support
+%{py_puresitedir}/mmc/__init__.py*
+%{py_puresitedir}/mmc/site.py*
+%{py_puresitedir}/mmc/ssl.py*
+%{py_puresitedir}/mmc/client
+%dir %{py_puresitedir}/mmc/plugins
+%{py_puresitedir}/mmc/plugins/__init__.py*
+%{_docdir}/mmc/contrib/audit
+
+#--------------------------------------------------------------------
+
+%package -n	    python-mmc-base
+Summary:	    Console base plugin
+Group:      	System/Servers
+%if %_vendor == "Mageia"
+Requires:       python-base
+%else
+Requires:       python
+%endif
+Requires:  	python-ldap
+Requires:   	python-mmc-plugins-tools
+Requires:   	python-mmc-core
+Requires:   	python-mmc-dashboard >= %{version}
+
+%description -n	python-mmc-base
+Contains the base infrastructure for all MMC plugins:
+ * support classes
+ * base LDAP management classes
+
+%post -n python-mmc-base
+sed -i 's!%%(basedn)s!%%(baseDN)s!g' %{_sysconfdir}/mmc/plugins/base.ini
+
+%files -n python-mmc-base
+%defattr(-,root,root,0755)
+%attr(0755,root,root) %dir %{_sysconfdir}/mmc/plugins
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/base.ini
+%attr(0755,root,root) %{_sbindir}/mds-report
+%dir %{py_puresitedir}/mmc
+%dir %{py_puresitedir}/mmc/plugins
+%{py_puresitedir}/mmc/plugins/base
+%{_docdir}/mmc/contrib/base
+%{_docdir}/mmc/contrib/scripts/usertoken-example
+%{_docdir}/mmc/contrib/scripts/mmc-check-users-primary-group
+%exclude %{py_puresitedir}/mmc/plugins/report
+
+#--------------------------------------------------------------------
+
+%package -n python-mmc-ppolicy
+Summary:    Console password policy plugin
+Group:      System/Servers
+%if %_vendor == "Mageia"
+Requires:       python-base
+%else
+Requires:       python
+%endif
+Requires:   python-mmc-core
+
+%description -n python-mmc-ppolicy
+Contains the password policy python classes to handle
+password policies in LDAP.
+
+%files -n python-mmc-ppolicy
+%defattr(-,root,root,0755)
+%attr(0755,root,root) %dir %{_sysconfdir}/mmc/plugins
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/ppolicy.ini
+%dir %{py_puresitedir}/mmc
+%dir %{py_puresitedir}/mmc/plugins
+%{py_puresitedir}/mmc/plugins/ppolicy
+%{_docdir}/mmc/contrib/ppolicy
+%{_docdir}/mmc/contrib/scripts/mmc-check-expired-passwords-example
+
+#--------------------------------------------------------------------
+
+%package -n python-mmc-dashboard
+Summary:    Console dashboard plugin
+Group:      System/Servers
+%if %_vendor == "Mageia"
+Requires:   python-base
+%else
+Requires:   python
+%endif
+Requires:   python-mmc-base >= %{version}
+Requires:   python-psutil >= 0.6.1
+
+%description -n python-mmc-dashboard
+Console dashboard plugin
+
+%files -n python-mmc-dashboard
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/dashboard.ini
+%{py_puresitedir}/mmc/plugins/dashboard
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-dashboard
+Summary:        Dashboard module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-dashboard
+Dashboard module for the MMC web interface
+
+%files -n mmc-web-dashboard
+%{_datadir}/mmc/modules/dashboard
+
+#--------------------------------------------------------------------
+
+%package -n python-mmc-services
+Summary:    Console services plugin
+Group:      System/Servers
+%if %_vendor == "Mageia"
+Requires:   python-base
+%else
+Requires:   python
+%endif
+Requires:   python-mmc-base >= %{version}
+Requires:   python-systemd-dbus
+Requires:   python-dbus
+
+%description -n python-mmc-services
+Console services plugin
+
+%files -n python-mmc-services
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/services.ini
+%{py_puresitedir}/mmc/plugins/services
+
+%post -n python-mmc-services
+%if %_vendor == "Mageia"
+sed -i 's!named,!!' %{_sysconfdir}/mmc/plugins/services.ini
+%endif
+# remove ldap from the services list if present
+sed -i '/base = ldap/d' %{_sysconfdir}/mmc/plugins/services.ini
+# add blacklist option if not present
+grep -q '^blacklist' %{_sysconfdir}/mmc/plugins/services.ini
+[ $? -eq 1 ] && sed -i '/journalctl_path/ ablacklist = ldap,slapd,named' %{_sysconfdir}/mmc/plugins/services.ini || :
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-services
+Summary:        Services module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-services
+Services module for the MMC web interface
+
+%files -n mmc-web-services
+%{_datadir}/mmc/modules/services
+
+#--------------------------------------------------------------------
+
+%package -n	mmc-web-ppolicy
+Summary:	Password policies plugin
+Group:		System/Servers
+Requires:	mmc-web-base
+
+%description -n mmc-web-ppolicy
+Contains the password policy web interface
+
+%files -n mmc-web-ppolicy
+%defattr(-,root,root,0755)
+%{_datadir}/mmc/modules/ppolicy
+
+#--------------------------------------------------------------------
+
+%package -n 	mmc-web-base
+Summary:        MMC web interface to interact with a MMC agent
+Group:          System/Servers
+%if %_vendor == "Mageia"
+Requires:       apache >= 2.0.52
+Requires:       apache-mod_php
+%else
+Requires:       httpd >= 2.0.52
+Requires:       php
+%endif
+Requires:       php-xmlrpc
+Requires:       php-iconv
+Requires:   	mmc-web-dashboard >= %{version}
+Requires:       node-d3
+
+%description -n mmc-web-base
+Console web interface designed by Linbox.
+
+%post -n mmc-web-base
+if [ ! -L "/usr/share/mmc/jsframework/d3" ];
+then
+    ln -s /usr/lib/node_modules/d3 /usr/share/mmc/jsframework/d3
+fi
+
+%files -n mmc-web-base
+%defattr(-,root,root,0755)
+%attr(0755,root,root) %dir %{_sysconfdir}/mmc/apache
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/apache/mmc.conf
+%attr(0640,root,root) %config(noreplace) %_webappconfdir/mmc.conf
+%attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mmc/mmc.ini
+%dir %{_datadir}/mmc
+%{_datadir}/mmc/*
+%exclude %{_datadir}/mmc/modules/ppolicy
+%exclude %{_datadir}/mmc/modules/services
+%exclude %{_datadir}/mmc/modules/dashboard
+
+#--------------------------------------------------------------------
+
+%package -n	python-mmc-plugins-tools
+Summary:	Required tools for some MMC plugins
+Group:		System/Servers
+%if %_vendor == "Mageia"
+Requires:	cdrkit-genisoimage
+%else
+Requires:       genisoimage
+%endif
+%description -n	python-mmc-plugins-tools
+Contains common tools needed by some plugins of mmc-agent package.
+
+%files -n python-mmc-plugins-tools
+%defattr(-,root,root,0755)
+%dir %{_libdir}/mmc
+%dir %{_libdir}/mmc/backup-tools
+%{_libdir}/mmc/backup-tools/cdlist
+%{_libdir}/mmc/backup-tools/backup.sh
+
+#--------------------------------------------------------------------
+
+%if %with_report
+%package -n python-mmc-report
+Summary:    Console report plugin
+Group:      System/Servers
+%if %_vendor == "Mageia"
+Requires:   python-base
+%else
+Requires:   python
+%endif
+Requires:   python-mmc-base >= %{version}
+Requires:   python-psutil >= 0.6.1
+Requires:   python-xlwt
+Requires:   python-weasyprint
+
+%description -n python-mmc-report
+Console report plugin
+
+%files -n python-mmc-report
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/report.ini
+%{_sysconfdir}/mmc/plugins/report
+%{py_puresitedir}/mmc/plugins/report
+%{_docdir}/mmc/contrib/report
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-report
+Summary:        Report module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-report
+Report module for the MMC web interface
+
+%files -n mmc-web-report
+%{_datadir}/mmc/modules/report
+
+#--------------------------------------------------------------------
+
+%package -n     python-mmc-database
+Summary:        Console database common files
+Group:          System/Servers
+Requires:       python-mmc-base = %version-%release
+Requires:       python-sqlalchemy >= 0.6.3
+%if %_vendor == "Mageia"
+Requires:       python-mysql
+%else
+Requires:       MySQL-python
+%endif
+
+%description -n python-mmc-database
+Console database common files
+Allow the use of SQL databases within MMC framework.
+
+%files -n python-mmc-database
+%{py_puresitedir}/mmc/database
+%endif
+
+#--------------------------------------------------------------------
+
 %prep
 %setup -q  -n pulse2-%version
+cp %{SOURCE5}   agent/mmc/plugins/base
+cp %{SOURCE6}   web/modules/base/computers
 
 %build
 
@@ -844,9 +1198,6 @@ mkdir -p %buildroot%{_sbindir}
 
 mkdir -p %buildroot%_var/lib/pulse2/packages
 
-# Already provided by MMC packages
-rm -f %buildroot%python2_sitelib/mmc/__init__.py
-rm -f %buildroot%python2_sitelib/mmc/plugins/__init__.py
 rm -rf %buildroot%{_sysconfdir}/init.d/pulse2-imaging-server
 
 mkdir -p %buildroot%_prefix/lib/systemd/system
@@ -869,6 +1220,32 @@ mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python2_
 
 rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
 mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
+
+# install log rotation stuff
+cat > %{buildroot}%{_sysconfdir}/logrotate.d/mmc-agent << EOF
+/var/log/mmc/mmc-agent.log /var/log/dhcp-ldap-startup.log /var/log/mmc/mmc-fileprefix.log {
+    create 644 root root
+    monthly
+    compress
+    missingok
+    postrotate
+}
+EOF
+
+# create directory for MMC logo
+install -d %{buildroot}%{_datadir}/mmc/img/logo/
+
+# patch privkey.pem
+mv %{buildroot}%{_sysconfdir}/mmc/agent/keys/localcert.pem %{buildroot}%{_sysconfdir}/mmc/agent/keys/privkey.pem
+sed -i 's!localcert.pem!privkey.pem!g' %{buildroot}%{_sysconfdir}/mmc/agent/config.ini
+
+# install apache configuration
+install -d %{buildroot}%_webappconfdir
+# apache 2.4 support
+sed -i '/Order allow/ {N; s/Order allow,deny\n[ ]*allow from all/Require all granted/ }' %{buildroot}%{_sysconfdir}/mmc/apache/mmc.conf
+cp %{buildroot}%{_sysconfdir}/mmc/apache/mmc.conf %{buildroot}%_webappconfdir/mmc.conf
+
+#sed -i 's/^community.*$/community = no/' %{buildroot}%{_sysconfdir}/mmc/mmc.ini
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
