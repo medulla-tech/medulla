@@ -20,7 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-# file pluginsmaster/plugin_asynchromeremoteshell.py
+# file pluginsmaster/plugin_asynchroremoteQA.py
 
 import logging
 import traceback

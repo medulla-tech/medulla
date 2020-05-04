@@ -19,6 +19,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+#file : master/lib/utils.py
+
 import netifaces
 import json
 import subprocess
@@ -160,6 +162,33 @@ def utc2local (utc):
     offset = datetime.fromtimestamp (epoch) - datetime.utcfromtimestamp (epoch)
     return utc + offset
 
+
+def getRandomName(nb, pref=""):
+    a = "abcdefghijklnmopqrstuvwxyz0123456789"
+    d = pref
+    for t in range(nb):
+        d = d + a[random.randint(0, 35)]
+    return d
+
+def data_struct_message(action, data = {}, ret=0, base64 = False, sessionid = None):
+    if sessionid == None or sessionid == "" or not isinstance(sessionid, basestring):
+        sessionid = action.strip().replace(" ", "")
+    return { 'action' : action,
+             'data' : data,
+             'ret' : 0,
+             "base64" : False,
+             "sessionid" : getRandomName(4,sessionid)}
+
+def add_method(cls):
+    """ decorateur a utiliser pour ajouter une methode a un object """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            return func(*args, **kwargs)
+        setattr(cls, func.__name__, wrapper)
+        # Note we are not binding func, but wrapper which accepts self but does exactly the same as func
+        return func # returning func means func can still be used normally
+    return decorator
 
 def getRandomName(nb, pref=""):
     a = "abcdefghijklnmopqrstuvwxyz0123456789"

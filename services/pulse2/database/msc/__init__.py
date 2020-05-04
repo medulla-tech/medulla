@@ -1055,7 +1055,7 @@ class MscDatabase(DatabaseHelper):
                                                                     x.commands_package_id))
                 machine_do_deploy[x.target_target_uuid] = x.commands_package_id
                 updatemachine.append(deployobject)
- 
+
                 sql ="""UPDATE `msc`.`commands_on_host` SET `current_state`='done', `stage`='ended' WHERE    `commands_on_host`.`id` = %s;"""%x.commands_on_host_id
                 session.execute(sql)
                 session.commit()

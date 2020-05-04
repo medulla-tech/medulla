@@ -2121,7 +2121,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 INNER JOIN
                             xmppmaster.cluster_ars ON xmppmaster.cluster_ars.id = xmppmaster.has_cluster_ars.id_cluster
                         WHERE
-                            relayserver.jid like '%s%%' 
+                            relayserver.jid like '%s%%'
                             AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
                             LIMIT 1);"""%jidars
         listars = session.execute(sql)
@@ -4218,14 +4218,6 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x for x in result]
 
-    #@DatabaseHelper._sessionm
-    #def hasmachineusers(self, session, useradd, idmachine):
-        #sql = """INSERT
-                #INTO `xmppmaster`.`has_machinesusers` (`users_id`, `machines_id`)
-                #VALUES ('%s', '%s');"""%(useradd,idmachine)
-        #session.execute(sql)
-        #session.commit()
-        #session.flush()
     @DatabaseHelper._sessionm
     def hasmachineusers(self, session, machines_id, users_id):
         result = session.query(Has_machinesusers.machines_id).\
