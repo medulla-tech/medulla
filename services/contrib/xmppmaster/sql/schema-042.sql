@@ -27,6 +27,16 @@ START TRANSACTION;
 ALTER TABLE `xmppmaster`.`machines` 
     ADD COLUMN `need_reconf` TINYINT(1) 
         NOT NULL DEFAULT 0 AFTER `jid`;
+
+-- ----------------------------------------------------------------------
+-- Database add colunms
+--    - mandatory : mandatory = 0 ARS allows the deactivation of ARS by the "switchonoff" interpreter 
+-- ----------------------------------------------------------------------
+
+ALTER TABLE `xmppmaster`.`relayserver`
+ADD COLUMN `mandatory` TINYINT(1) NOT NULL DEFAULT '1' AFTER `enabled`,
+ADD COLUMN `switchonoff` TINYINT(1) NOT NULL DEFAULT '1' AFTER `mandatory`;
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
