@@ -1239,6 +1239,7 @@ rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
 mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
 
 # install log rotation stuff
+mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
 cat > %{buildroot}%{_sysconfdir}/logrotate.d/mmc-agent << EOF
 /var/log/mmc/mmc-agent.log /var/log/dhcp-ldap-startup.log /var/log/mmc/mmc-fileprefix.log {
     create 644 root root
