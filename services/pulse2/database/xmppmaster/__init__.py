@@ -5859,3 +5859,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 else:
                     result['cluster_description'].append(machine.cluster_description)
         return {'total': count, 'datas': result}
+
+    @DatabaseHelper._sessionm
+    def change_relay_switch(self, session, jid, switch):
+        session.query(RelayServer).filter(RelayServer.jid == jid,\
+            RelayServer.mandatory == 0).update(\
+            {RelayServer.switchonoff: switch})
+        session.commit()
+        session.flush()

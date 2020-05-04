@@ -734,3 +734,6 @@ def get_xmpprelays_list(start, limit, filter, presence):
 
 def get_clusters_list(start, limit, filter):
     return XmppMasterDatabase().get_clusters_list(start, limit, filter)
+
+def change_relay_switch(jid, switch):
+    return XmppMasterDatabase().change_relay_switch(jid, switch)

@@ -490,4 +490,8 @@ function xmlrpc_get_xmpprelays_list($start=-1, $limit=-1, $filter="", $presence=
 function xmlrpc_get_clusters_list($start=-1, $limit=-1, $filter=""){
   return xmlCall("xmppmaster.get_clusters_list", [$start, $limit, $filter]);
 }
+
+function xmlrpc_change_relay_switch($jid, $switch){
+  return xmlCall("xmppmaster.change_relay_switch", [$jid, $switch]);
+}
 ?>

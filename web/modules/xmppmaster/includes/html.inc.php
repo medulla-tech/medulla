@@ -106,4 +106,45 @@ class RefreshButton{
   }
 
 }
+
+class CheckActionItem extends ActionItem{
+  function CheckActionItem($title, $class, $disabled, $value, $paramString, $action, $submod, $module){
+    $this->title = $title;
+    $this->class = $class;
+    $this->disabled = $disabled;
+    $this->value = $value;
+    $this->action = $action;
+    $this->submod = $submod;
+    $this->module = $module;
+    $this->paramString = $paramString;
+  }
+
+  function display($param, $extraParams = []){
+    $disabledstr = ($this->disabled) ? 'disabled' : '';
+    $valuestr = ($this->value == 1) ? 'checked' : '';
+
+    echo '<li style="width:10px;position=relative" class="'.$this->class.'" onclick="switchvalue(this)">';
+    echo '<input type="checkbox" title="'.$this->title.'" '.$disabledstr.' '.$valuestr.'>';
+        echo '<input type="hidden" value="'.$extraParams['jid'].'" '.$disabledstr.' '.$valuestr.'>';
+    echo '</li>';
+
+    ?>
+    <script>
+    function switchvalue(element){
+      datas = {'switch': <?php echo $this->value;?>, 'jid' : ''}
+      if(jQuery(jQuery(element).find('input')[0]).is(":checked")){
+        datas['switch'] = 1;
+        datas['jid'] = jQuery(jQuery(element).find('input')[1]).val()
+      }
+      else{
+        datas['switch'] = 0;
+        datas['jid'] = jQuery(jQuery(element).find('input')[1]).val()
+      }
+      jQuery("#switchresult").load("modules/xmppmaster/xmppmaster/relays/ajaxchangerelay.php", datas);
+
+    }
+
+    </script>
+  <?php }
+}
 ?>
