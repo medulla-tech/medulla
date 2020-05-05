@@ -701,7 +701,6 @@ def get_plugin_lists():
               ObjectXmpp().plugindatascheduler]
     return result
 
-
 def get_conf_master_agent():
     rest={}
     conf =  dict(getXmppConfiguration())
@@ -714,14 +713,12 @@ def get_conf_master_agent():
             rest[t] =  conf[t]
     return  json.dumps(rest, indent = 4)
 
-
 def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)
 
 def delcomputer(uuid):
     callrestartbot(uuid)
     return XmppMasterDatabase().delMachineXmppPresence(uuid)
-
 
 def get_log_status():
     return XmppMasterDatabase().get_log_status()
