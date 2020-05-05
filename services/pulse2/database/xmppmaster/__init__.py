@@ -5866,14 +5866,38 @@ class XmppMasterDatabase(DatabaseHelper):
                 result['switchonoff'].append(machine.switchonoff)
         return {'total': count, 'datas': result}
 
-    @DatabaseHelper._sessionm
-    def change_relay_switch(self, session, jid, switch):
-        session.query(RelayServer).filter(RelayServer.jid == jid,\
-            RelayServer.mandatory == 0).update(\
-            {RelayServer.switchonoff: switch})
-        if switch == '0':
-            session.query(Machines).filter(Machines.agenttype=="machine", \
-            Machines.enabled == 0, Machines.groupdeploy==jid).update(\
-                {Machines.need_reconf:1})
-        session.commit()
-        session.flush()
+        @DatabaseHelper._sessionm
+        def change_relay_switch(self, session, jid, switch):
+            session.query(RelayServer).filter(RelayServer.jid == jid,\
+                RelayServer.mandatory == 0).update(\
+                {RelayServer.switchonoff: switch})
+
+            sql = """update
+        machines
+    set
+        need_reconf = 1
+    where agenttype="machine" and groupdeploy in (
+        select
+            relayserver.jid
+        from relayserver
+        inner join
+            has_cluster_ars
+        on has_cluster_ars.id_ars = relayserver.id
+        where id_cluster = (
+            select
+                has_cluster_ars.id_cluster
+            from
+                has_cluster_ars
+            inner join
+                relayserver
+            on relayserver.id = has_cluster_ars.id_ars
+            where
+              relayserver.jid = "%s"
+        )
+    );"""%jid
+            session.execute(sql)
+            """session.query(Machines).filter(Machines.agenttype=="machine", \
+                Machines.groupdeploy==jid).update(\
+                    {Machines.need_reconf:1})"""
+            session.commit()
+            session.flush()
