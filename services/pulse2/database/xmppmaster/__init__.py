@@ -5871,5 +5871,9 @@ class XmppMasterDatabase(DatabaseHelper):
         session.query(RelayServer).filter(RelayServer.jid == jid,\
             RelayServer.mandatory == 0).update(\
             {RelayServer.switchonoff: switch})
+        if switch == '0':
+            session.query(Machines).filter(Machines.agenttype=="machine", \
+            Machines.enabled == 0, Machines.groupdeploy==jid).update(\
+                {Machines.need_reconf:1})
         session.commit()
         session.flush()
