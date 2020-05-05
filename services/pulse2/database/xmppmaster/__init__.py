@@ -5791,7 +5791,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 RelayServer.moderelayserver,
                 RelayServer.jid,
                 RelayServer.classutil,
-                RelayServer.enabled)\
+                RelayServer.enabled,
+                RelayServer.switchonoff,
+                RelayServer.mandatory)\
             .add_column(Cluster_ars.name.label("cluster_name"))\
             .add_column(Cluster_ars.description.label("cluster_description"))\
             .add_column(Machines.macaddress.label('macaddress'))\
@@ -5834,7 +5836,9 @@ class XmppMasterDatabase(DatabaseHelper):
             'macaddress': [],
             'ip_xmpp': [],
             'enabled': [],
-            'enabled_css': []
+            'enabled_css': [],
+            'mandatory' : [],
+            'switchonoff' : []
         }
         if query is not None:
             for machine in query:
@@ -5858,6 +5862,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     result['cluster_description'].append("NULL")
                 else:
                     result['cluster_description'].append(machine.cluster_description)
+                result['mandatory'].append(machine.mandatory)
+                result['switchonoff'].append(machine.switchonoff)
         return {'total': count, 'datas': result}
 
     @DatabaseHelper._sessionm
