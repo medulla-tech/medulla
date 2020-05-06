@@ -657,6 +657,18 @@ li.stop a {
     color: #FFF;
 }
 
+li.stopg a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/stop.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    opacity: 0.5;
+}
+
 li.start a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
