@@ -5902,3 +5902,18 @@ class XmppMasterDatabase(DatabaseHelper):
                     {Machines.need_reconf:1})
             session.commit()
             session.flush()
+
+        @DatabaseHelper._sessionm
+        def cal_reconfiguration_machine(self, session, limit=None):
+            res = session.query(Machines.jid).filter(and_( Machines.need_reconf == '1',
+                                                        Machines.enabled == '1'))
+            if limit is not None:
+                res = res.limit(int(limit))
+            res= res.all()
+            listjid = []
+            if res is not None:
+                for machine in res:
+                    listjid.append(machine.jid)
+            session.commit()
+            session.flush()
+            return listjid
