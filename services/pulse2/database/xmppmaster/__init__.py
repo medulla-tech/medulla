@@ -5903,30 +5903,57 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
 
-        @DatabaseHelper._sessionm
-        def call_reconfiguration_machine(self, session, limit=None):
-            res = session.query(Machines.id, Machines.jid).filter(and_( Machines.need_reconf == '1',
-                                                        Machines.enabled == '1',
-                                                        Machines.agenttype.like('machine')))
-            if limit is not None:
-                res = res.limit(int(limit))
-            res= res.all()
-            listjid = []
-            if res is not None:
-                for machine in res:
-                    listjid.append( [machine.id,machine.jid]])
+
+    @DatabaseHelper._sessionm
+    def call_reconfiguration_machine(self, session, limit=None):
+        res = session.query(Machines.id, Machines.jid).filter(and_( Machines.need_reconf == '1',
+                                                    Machines.enabled == '1',
+                                                    Machines.agenttype.like('machine')))
+        if limit is not None:
+            res = res.limit(int(limit))
+        res= res.all()
+        listjid = []
+        if res is not None:
+            for machine in res:
+                listjid.append( [machine.id,machine.jid])
+        session.commit()
+        session.flush()
+        return listjid
+
+    @DatabaseHelper._sessionm
+    def call_acknowledged_reconficuration(self, session, listmachine=[]):
+        listjid = []
+        if len(listmachine) == 0:
+            return listjid
+        res = session.query(Machines.id,
+                            Machines.need_reconf).filter(and_(Machines.need_reconf == '0',
+                                                            Machines.id.in_(listmachine))).all()
+        if res is not None:
+            for machine in res:
+                listjid.append(machine.id)
+        session.commit()
+        session.flush()
+        return listjid
+
+    @DatabaseHelper._sessionm
+    def call_set_list_machine(self, session, listmachine=[], valueset=0):
+        """
+            initialise presence on list id machine
+        """
+        if len(listmachine) == 0:
+            return False
+        try:
+            liststr =  ",".join([ "'%s'"%x for x in listmachine])
+
+            sql = """UPDATE `xmppmaster`.`machines`
+                    SET
+                        `enabled` = '%s'
+                    WHERE
+                        `id` IN (%s);"""%(valueset, liststr)
+            session.execute(sql)
             session.commit()
             session.flush()
-            return listjid
-        
-        @DatabaseHelper._sessionm
-        def call_reconfiguration_acquite_machine(self, session, listmachine=[]):
-            res = session.query(Machines.id,
-                                Machines.need_reconf).filter(and_(Machines.need_reconf == '0',
-                                                                Machines.id.in_(listmachine))).all()
-            if res is not None:
-                for machine in res:
-                    listjid.append([machine.id])
-            session.commit()
-            session.flush()
-            return listjid
+            return True
+        except Exception, e:
+            logging.getLogger().error("call_set_list_machine: %s"%str(e))
+            return False
