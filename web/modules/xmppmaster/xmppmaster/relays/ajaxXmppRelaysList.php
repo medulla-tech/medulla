@@ -42,6 +42,10 @@ $quickactionempty = new EmptyActionItem1(_("Quick action"), "deployquick", "quic
 
 $consoleaction = new ActionPopupItem(_("Console Relay"), "consolerelay", "console", "", "xmppmaster", "xmppmaster");
 $consoleactionempty = new EmptyActionItem1(_("Console Relay"), "consolerelay", "consoleg", "", "xmppmaster", "xmppmaster");
+$switchoffaction = new ActionPopupItem(_("Switch"), "switchrelay", 'stop', "", "xmppmaster", "xmppmaster");
+$switchonaction = new ActionPopupItem(_("Switch"), "switchrelay", 'start', "", "xmppmaster", "xmppmaster");
+$switchemptyaction = new EmptyActionItem1(_("Switch"), "switchrelay", 'stopg', "", "xmppmaster", "xmppmaster");
+
 $raw = 0;
 $params = [];
 if($relays['total'] > 0){
@@ -57,7 +61,8 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     'classutil' => $relays['datas']['classutil'][$raw],
     'macaddress'=> $relays['datas']['macaddress'][$raw],
     'ip_xmpp' => $relays['datas']['ip_xmpp'][$raw],
-    'agenttype'=> 'relayserver'
+    'agenttype'=> 'relayserver',
+    'switch'=> $relays['datas']['switchonoff'][$raw]
   ];
 
   $relays['datas']['hostname'][$raw] = '<span class="relay-clickable">'.$relays['datas']['hostname'][$raw].'</span>';
@@ -76,7 +81,19 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $configActions[] =$editremoteconfigurationempty;
     $consoleActions[] = $consoleactionempty;
   }
-  $switchActions[] = new CheckActionItem(_("Switch"), "switch", $relays['datas']['mandatory'][$raw], $relays['datas']['switchonoff'][$raw], "", "switchrelay","xmppmaster", "xmppmaster");
+
+  if($relays['datas']['mandatory'][$raw] == 1){
+    $switchActions[] = $switchemptyaction;
+  }
+  else if($relays['datas']['switchonoff'][$raw] == 1)
+  {
+    $switchActions[] = $switchoffaction;
+  }
+  else if($relays['datas']['switchonoff'][$raw] == 0)
+  {
+    $switchActions[] = $switchonaction;
+  }
+
   $raw++;
 }
 echo '<div id="switchresult"></div>';
@@ -96,6 +113,7 @@ $n->setItemCount($relays['total']);
 $n->setNavBar(new AjaxNavBar($relays['total'], $filter, "updateSearchParamformRunning"));
 $n->addActionItemArray($switchActions);
 $n->addActionItemArray($configActions);
+
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $relays['total'];
