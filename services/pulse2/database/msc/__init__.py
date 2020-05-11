@@ -1036,7 +1036,8 @@ class MscDatabase(DatabaseHelper):
             self.logger.debug("machine %s [%s] presente for deploy package %s"%(x.target_target_name,
                                                                                     x.target_target_uuid,
                                                                                     x.commands_package_id))
-            deployobject = {'pakkageid': str(x.commands_package_id),
+            deployobject = {'name' : str(x.target_target_name)[:-1],
+                            'pakkageid': str(x.commands_package_id),
                             'commandid':  x.commands_id,
                             'mac': str(x.target_target_macaddr),
                             'count': 0,
