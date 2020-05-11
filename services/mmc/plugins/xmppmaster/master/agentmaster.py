@@ -789,10 +789,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         for deployobject in resultdeploymachine:
             # creation deployment
-            sessiondeployementless = name_random(5, "missingagent")
             UUID = deployobject['UUID']
             resultpresence = XmppMasterDatabase().getPresenceExistuuids(UUID)
             if resultpresence[UUID][1] == 0:
+                sessiondeployementless = name_random(5, "missingagent")
                 # machine dans GLPI mais pas enregistré sur tavle machine xmpp.
                 listobjnoexist.append(deployobject)
                 if not self.boolimportglpi:
@@ -805,15 +805,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 #incrition dans deploiement cette machine sans agent
 
                 XmppMasterDatabase().adddeploy(deployobject['commandid'],
-                                                machine.name,
-                                                machine.name,
-                                                machine.name,
+                                                deployobject['name'],
+                                                deployobject['name'],
+                                                deployobject['name'],
                                                 UUID,
-                                                machine.contact,
+                                                deployobject['login'],
                                                 "ABORT MISSING AGENT",
                                                 sessiondeployementless,
-                                                user=machine.contact,
-                                                login=machine.contact,
+                                                user=deployobject['login'],
+                                                login=deployobject['login'],
                                                 title=deployobject['title'],
                                                 group_uuid=deployobject['GUID'],
                                                 startcmd=deployobject['start_date'],
@@ -823,11 +823,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 syncthing = 0)
 
                 msg.append("<span class='log_err'>Agent missing on machine %s. " \
-                            "Deployment impossible : GLPI ID is %s</span>"%(machine.name,
+                            "Deployment impossible : GLPI ID is %s</span>"%(deployobject['name'],
                                                                              UUID))
                 msg.append("Action : Check that the machine "\
                     "agent is working, or install the agent on the"\
-                        " machine %s (%s) if it is missing."%(machine.name,
+                        " machine %s (%s) if it is missing."%(deployobject['name'],
                                                                        UUID))
                 for logmsg in msg:
                     self.xmpplog(logmsg,
@@ -838,7 +838,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                              why=self.boundjid.bare,
                              module="Deployment | Start | Creation",
                              date=None,
-                             fromuser=machine.contact)
+                             fromuser=deployobject['login'])
                 continue
 
             if datetime.now() < deployobject['start_date']:
