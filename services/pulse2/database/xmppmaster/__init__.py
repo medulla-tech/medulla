@@ -5866,42 +5866,42 @@ class XmppMasterDatabase(DatabaseHelper):
                 result['switchonoff'].append(machine.switchonoff)
         return {'total': count, 'datas': result}
 
-        @DatabaseHelper._sessionm
-        def change_relay_switch(self, session, jid, switch):
-            session.query(RelayServer).filter(RelayServer.jid == jid,\
-                RelayServer.mandatory == 0).update(\
-                {RelayServer.switchonoff: switch})
+    @DatabaseHelper._sessionm
+    def change_relay_switch(self, session, jid, switch):
+        session.query(RelayServer).filter(RelayServer.jid == jid,\
+            RelayServer.mandatory == 0).update(\
+            {RelayServer.switchonoff: switch})
 
-            id_cluster = None
-            try:
-                cluster = session.query(Has_cluster_ars.id_cluster)\
-                    .join(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
-                    .filter(RelayServer.jid == jid).one()
-                id_cluster = cluster.id_cluster
-            except:
-                pass
+        id_cluster = None
+        try:
+            cluster = session.query(Has_cluster_ars.id_cluster)\
+                .join(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
+                .filter(RelayServer.jid == jid).one()
+            id_cluster = cluster.id_cluster
+        except:
+            pass
 
-            if id_cluster is not None:
-                sql = """update
-        machines
-    set
-        need_reconf = 1
-    where agenttype="machine" and groupdeploy in (
-        select
-            relayserver.jid
-        from relayserver
-        inner join
-            has_cluster_ars
-        on has_cluster_ars.id_ars = relayserver.id
-        where id_cluster = %s
-    );"""%id_cluster
-                session.execute(sql)
-            else:
-                session.query(Machines).filter(Machines.agenttype=="machine", \
-                Machines.groupdeploy==jid).update(\
-                    {Machines.need_reconf:1})
-            session.commit()
-            session.flush()
+        if id_cluster is not None:
+            sql = """update
+    machines
+set
+    need_reconf = 1
+where agenttype="machine" and groupdeploy in (
+    select
+        relayserver.jid
+    from relayserver
+    inner join
+        has_cluster_ars
+    on has_cluster_ars.id_ars = relayserver.id
+    where id_cluster = %s
+);"""%id_cluster
+            session.execute(sql)
+        else:
+            session.query(Machines).filter(Machines.agenttype=="machine", \
+            Machines.groupdeploy==jid).update(\
+                {Machines.need_reconf:1})
+        session.commit()
+        session.flush()
 
 
     @DatabaseHelper._sessionm
