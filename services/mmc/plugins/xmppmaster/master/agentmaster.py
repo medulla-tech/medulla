@@ -279,7 +279,6 @@ class XmppSimpleCommand:
 
 class MUCBot(sleekxmpp.ClientXMPP):
     def __init__(self, conf):  # jid, password, room, nick):
-        self.boolimportglpi = False
         namelibplugins = "master/pluginsmaster"
         self.modulepath = os.path.abspath(\
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),"..",
@@ -795,14 +794,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if resultpresence[UUID][1] == 0:
                 # machine dans GLPI mais pas enregistré sur tavle machine xmpp.
                 listobjnoexist.append(deployobject)
-                if not self.boolimportglpi:
-                     try:
-                         from mmc.plugins.glpi.database import Glpi
-                         self.boolimportglpi = True
-                     except ImportError:
-                         return
-                machine = Glpi().getMachineByUUID(UUID)
-                #incrition dans deploiement cette machine sans agent
+                # inscription dans deploiement cette machine sans agent
 
                 XmppMasterDatabase().adddeploy(deployobject['commandid'],
                                                 machine.name,
