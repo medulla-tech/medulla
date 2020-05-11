@@ -120,11 +120,11 @@ def read_conf_loadreconf(objectxmpp):
         "\neg conf:\n[parameters]\n" \
         "generate_reconf_interval = 60\n" \
         "concurrentreconf = 240\n" \
-        "timeout_reconf = 30"%( plugin['NAME'],
+        "timeout_reconf = 500"%( plugin['NAME'],
                                 pathfileconf))
-        objectxmpp.generate_reconf_interval = 10
+        objectxmpp.generate_reconf_interval = 60
         objectxmpp.nbconcurrentreconf = 240
-        objectxmpp.timeout_reconf = 30
+        objectxmpp.timeout_reconf = 500
     else:
         Config = ConfigParser.ConfigParser()
         Config.read(pathfileconf)

@@ -311,6 +311,12 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxsyncthingmachineless.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("switchrelay",_T("Switch Relay","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/switchrelay.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

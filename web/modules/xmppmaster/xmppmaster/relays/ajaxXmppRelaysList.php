@@ -1,4 +1,25 @@
 <?php
+/*
+ * (c) 2015-2020 Siveo, http://www.siveo.net
+ *
+ * $Id$
+ *
+ * This file is part of Management Console (MMC).
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 require_once("modules/xmppmaster/includes/html.inc.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -21,6 +42,10 @@ $quickactionempty = new EmptyActionItem1(_("Quick action"), "deployquick", "quic
 
 $consoleaction = new ActionPopupItem(_("Console Relay"), "consolerelay", "console", "", "xmppmaster", "xmppmaster");
 $consoleactionempty = new EmptyActionItem1(_("Console Relay"), "consolerelay", "consoleg", "", "xmppmaster", "xmppmaster");
+$switchoffaction = new ActionPopupItem(_("Switch"), "switchrelay", 'stop', "", "xmppmaster", "xmppmaster");
+$switchonaction = new ActionPopupItem(_("Switch"), "switchrelay", 'start', "", "xmppmaster", "xmppmaster");
+$switchemptyaction = new EmptyActionItem1(_("Switch"), "switchrelay", 'stopg', "", "xmppmaster", "xmppmaster");
+
 $raw = 0;
 $params = [];
 if($relays['total'] > 0){
@@ -36,7 +61,8 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     'classutil' => $relays['datas']['classutil'][$raw],
     'macaddress'=> $relays['datas']['macaddress'][$raw],
     'ip_xmpp' => $relays['datas']['ip_xmpp'][$raw],
-    'agenttype'=> 'relayserver'
+    'agenttype'=> 'relayserver',
+    'switch'=> $relays['datas']['switchonoff'][$raw]
   ];
 
   $relays['datas']['hostname'][$raw] = '<span class="relay-clickable">'.$relays['datas']['hostname'][$raw].'</span>';
@@ -55,7 +81,19 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $configActions[] =$editremoteconfigurationempty;
     $consoleActions[] = $consoleactionempty;
   }
-  $switchActions[] = new CheckActionItem(_("Switch"), "switch", $relays['datas']['mandatory'][$raw], $relays['datas']['switchonoff'][$raw], "", "switchrelay","xmppmaster", "xmppmaster");
+
+  if($relays['datas']['mandatory'][$raw] == 1){
+    $switchActions[] = $switchemptyaction;
+  }
+  else if($relays['datas']['switchonoff'][$raw] == 1)
+  {
+    $switchActions[] = $switchoffaction;
+  }
+  else if($relays['datas']['switchonoff'][$raw] == 0)
+  {
+    $switchActions[] = $switchonaction;
+  }
+
   $raw++;
 }
 echo '<div id="switchresult"></div>';
@@ -75,6 +113,7 @@ $n->setItemCount($relays['total']);
 $n->setNavBar(new AjaxNavBar($relays['total'], $filter, "updateSearchParamformRunning"));
 $n->addActionItemArray($switchActions);
 $n->addActionItemArray($configActions);
+
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $relays['total'];
