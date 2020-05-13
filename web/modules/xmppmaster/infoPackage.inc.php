@@ -316,6 +316,11 @@ $page->setFile("modules/xmppmaster/xmppmaster/relays/switchrelay.php");
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
+$page = new Page("reconfiguremachines",_T("Reconfigure Machines","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
 
 $mod->addSubmod($submod);
 

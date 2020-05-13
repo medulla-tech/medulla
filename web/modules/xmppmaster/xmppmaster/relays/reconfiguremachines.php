@@ -22,21 +22,21 @@
 
 if(isset($_POST['jid'], $_POST['switch'])){
   if (!isset($_POST["switchsecurity"])) {
-      new NotifyWidgetFailure(_("You have to check the box <b>\"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster."));
+      new NotifyWidgetFailure(_("You have to check the box <b>\"I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver."));
       header("Location: " . urlStrRedirect("base/computers/xmppRelaysList"));
       exit;
   }
   else{
-    $result = xmlrpc_change_relay_switch($_POST['jid'], $_POST['switch'], true);
+    $result = xmlrpc_change_relay_switch($_POST['jid'], $_POST['switch'], false);
 
-    new NotifyWidgetSuccess(_('The relay '.htmlentities($_POST['jid']).' has been switched to '.htmlentities($_POST['switch'])));
+    new NotifyWidgetSuccess(_('The machines of the relay '.htmlentities($_POST['jid']).' will be reconfigured'));
     header("Location: " . urlStrRedirect("base/computers/xmppRelaysList"));
     exit;
   }
 }
 if (isset($_GET['switch']))
 {
-  $title = ($_GET['switch'] == 1) ? _T("Switch Off the relay", "xmppmaster") : _T("Switch On the relay", "xmppmaster");
+  $title = _T("Reconfigure all the machines of the relay", "xmppmaster");
 
   $f = new PopupForm($title. ' '.$_GET['jid']);
   $f->push(new Table());
@@ -48,7 +48,7 @@ if (isset($_GET['switch']))
   $switch = ($_GET['switch'] == 1) ? 0 : 1;
   $f->add($hiddenswitch, array("value" => $switch, "hide" => True));
   $f->pop();
-  $tr = new TrFormElement(_("I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster.<br />Check this box if it is what you want."), new CheckBoxTpl("switchsecurity"), array("value" => ''));
+  $tr = new TrFormElement(_("I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver.<br />Check this box if it is what you want."), new CheckBoxTpl("switchsecurity"), array("value" => ''));
   $tr->setFirstColWidth('100%');
   $f->add($tr);
   //new NotifyWidgetFailure(_("You have to check the box <b>\"I am aware that all related images (non-master) will be deleted\"</b> if you want to remove this computer."));
