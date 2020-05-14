@@ -691,7 +691,7 @@ def searchippublic(site=1):
             if is_valid_ipv4(objip['ip']):
                 return objip['ip']
             else:
-                return searchippublic(2)
+                return searchippublic(3)
         except BaseException:
             return searchippublic(2)
     elif site == 2:
