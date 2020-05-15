@@ -46,6 +46,7 @@ import uuid
 import time
 from datetime import datetime
 import imp
+import requests 
 from Crypto import Random
 from Crypto.Cipher import AES
 import urllib2
@@ -1051,3 +1052,137 @@ def md5folder(directory):
         for basename in files:
             hash.update(md5(os.path.join(root, basename)))
     return hash.hexdigest()
+
+class geolocalisation_agent:
+    def __init__(self, 
+                 typeuser = "public", 
+                 geolocalisation=True, 
+                 ip_public=None,
+                 strlistgeoserveur=""):
+        self.determination = False
+        self.geolocalisation = geolocalisation
+        self.ip_public = ip_public
+        self.typeuser = typeuser
+        self.filegeolocalisation = os.path.join(Setdirectorytempinfo(),
+                                          'filegeolocalisation')
+        self.listgeoserver = ["http://%s/json"%x for x in re.split(r'[;,\[\(\]\)\{\}\:\=\+\*\\\?\/\#\+\&\-\$\|\s]',
+                                              strlistgeoserveur)  if x.strip()!=""];
+        self.localisation = None
+        self.getgeolocalisation()
+        if self.localisation is None:
+            self.localisation=self.getdatafilegeolocalisation()
+
+    def getgeolocalisationobject(self):
+        if self.localisation is none:
+            return {}
+        return self.localisation
+
+    def getdatafilegeolocalisation(self):    
+        if self.geoinfoexist():
+            try:
+                with open(self.filegeolocalisation) as json_data:
+                    self.localisation=json.load(json_data)
+                self.determination = False
+                return self.localisation
+            except Exception:
+                pass
+        return None
+
+    def setdatafilegeolocalisation(self):
+        if self.localisation is not None:
+            try:
+                with open(self.filegeolocalisation, 'w') as json_data:
+                    json.dump(self.localisation, json_data, indent=4)
+                self.determination = True
+            except Exception:
+                pass
+
+    def geoinfoexist(self):
+        if os.path.exists(self.filegeolocalisation):
+            return True
+        return False
+
+    def getgeolocalisation(self):
+        if self.geolocalisation:
+            if self.typeuser in ["public", "nomade", "both"] or self.localisation is None:
+                # on recherche a chaque fois les information
+                self.localisation = geolocalisation_agent.searchgeolocalisation(self.listgeoserver)
+                self.determination = True
+                self.setdatafilegeolocalisation()
+                return self.localisation
+            else:
+                if self.localisation is not None:
+                    if not self.geoinfoexist():
+                        self.setdatafilegeolocalisation()
+                        self.determination = False
+                    return self.localisation
+                elif not self.geoinfoexist():
+                    self.localisation = geolocalisation_agent.searchgeolocalisation(self.listgeoserver)
+                    self.setdatafilegeolocalisation()
+                    self.determination = True
+                    return self.localisation
+            return None
+        else:
+            if not self.geoinfoexist():
+                self.localisation = geolocalisation_agent.searchgeolocalisation(self.listgeoserver)
+                self.setdatafilegeolocalisation()
+                self.determination = True
+                return self.localisation
+
+        return self.localisation
+
+    def get_ip_public(self):
+        if self.geolocalisation:
+            if self.localisation is  None:
+                self.getgeolocalisation()
+            if self.localisation is not None and is_valid_ipv4(self.localisation['ip']):
+                if not self.determination:
+                    logger.warning("Determination use file")
+                self.ip_public = self.localisation['ip']
+                return self.localisation['ip']
+            else :
+                return None
+        else:
+            if not self.determination:
+                logger.warning("use old determination ip_public")
+            if self.localisation is  None:
+                if self.geoinfoexist():
+                    logger.warning("coucou")
+                    dd=self.getdatafilegeolocalisation()
+                    logger.warning("%s"%dd)
+                    if  self.localisation is  not None:
+                        return self.localisation['ip']
+            else:
+                return self.localisation['ip']
+        return self.ip_public
+
+    @staticmethod
+    def call_simple_page(url):
+        try:
+            r = requests.get(url)
+            return r.json()
+        except:
+            return None
+    
+    @staticmethod
+    def call_simple_page_urllib(url):
+        try:
+            objip = json.loads(urllib.urlopen(url).read())
+            return objip
+        except:
+            return None
+
+    @staticmethod
+    def searchgeolocalisation(http_url_list_geo_server):
+        """
+            return objet
+        """
+        for url in http_url_list_geo_server:
+            try:
+                objip = geolocalisation_agent.call_simple_page(url)
+                if  objip is None:
+                    raise
+                return objip
+            except BaseException:
+                pass
+        return None
