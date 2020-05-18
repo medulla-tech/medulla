@@ -332,10 +332,10 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
             if showinfobool:
                 logger.info("** Machine %s reports offline in machines table"%data['from'])
                 logger.info("** Registering machine %s with information from agent."%data['from'])
-            if data['ippublic'] is not None and data['ippublic'] != "":
-                data['localisationinfo'] = Localisation().geodataip(data['ippublic'])
-            else:
-                data['localisationinfo'] = {}
+            #if data['ippublic'] is not None and data['ippublic'] != "":
+                #data['localisationinfo'] = Localisation().geodataip(data['ippublic'])
+            #else:
+                #data['localisationinfo'] = {}
             data['information'] = info
 
             if data['adorgbymachine'] is not None and data['adorgbymachine'] != "":
@@ -370,64 +370,13 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                     mbody=json.dumps(datasend),
                                     mtype='chat')
             # ##################################
-            longitude = ""
-            latitude = ""
-            city = ""
-            region_name = ""
-            time_zone = ""
-            longitude = ""
-            latitude = ""
-            postal_code = ""
-            country_code = ""
-            country_name = ""
-            if data['localisationinfo'] is not None and len(data['localisationinfo']) > 0:
-                longitude = str(data['localisationinfo']['longitude'])
-                latitude = str(data['localisationinfo']['latitude'])
-                region_name = str(data['localisationinfo']['region_name'])
-                time_zone = str(data['localisationinfo']['time_zone'])
-                postal_code = str(data['localisationinfo']['postal_code'])
-                country_code = str(data['localisationinfo']['country_code'])
-                country_name = str(data['localisationinfo']['country_name'])
-                city = str(data['localisationinfo']['city'])
-            try:
-                # Assignment of the user system, if user absent.
-                if 'users' in data['information'] and len(data['information']['users']) == 0:
-                    data['information']['users'] = "system"
-
-                if 'users' in data['information'] and len(data['information']['users']) > 0:
-                    if showinfobool:
-                        logger.info("Adding user : %s for machine : %s "\
-                            "country_name : %s" % (data['information']['users'][0],
-                                                data['information']['info']['hostname'],
-                                                country_name))
-                    useradd = XmppMasterDatabase().adduser(data['information']['users'][0],
-                                                            data['information']['info']['hostname'],
-                                                            city,
-                                                            region_name,
-                                                            time_zone,
-                                                            longitude,
-                                                            latitude,
-                                                            postal_code,
-                                                            country_code,
-                                                            country_name)
-                    try:
-                        useradd = useradd[0]
-                    except TypeError:
-                        pass
-            except Exception:
-                logger.error("** Impossible to register machine %s. User missing" % msg['from'])
-                XmppMasterDatabase().setlogxmpp("Machine %s not registered. No user found" % msg['from'],
-                                                "info",
-                                                sessionid,
-                                                -1,
-                                                msg['from'],
-                                                '',
-                                                '',
-                                                'Registration | Notify | Error | Alert',
-                                                '',
-                                                '',
-                                                xmppobject.boundjid.bare)
-                return
+             useradd, listedatageolocalisation = adduserdatageolocalisation(xmppobject,
+                                                                            data,
+                                                                            msg,
+                                                                            sessionid,
+                                                                            showinfobool)
+            #if useradd == -1 or useradd == None:
+                #return
 
             # Add relayserver or update status in database
 
@@ -548,7 +497,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                 if useradd != -1:
                     XmppMasterDatabase().hasmachineusers(useradd, idmachine)
                 else:
-                    logger.error("** No user found for the machine %s"%msg['from'])
+                    logger.warning("** No user found for the machine %s"%msg['from'])
                     XmppMasterDatabase().setlogxmpp("Machine %s not registered. No user found" % msg['from'],
                                                     "info",
                                                     sessionid,
@@ -560,7 +509,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                     '',
                                                     '',
                                                     xmppobject.boundjid.bare)
-                    return
+                    #return
                 for i in data['information']["listipinfo"]:
                     # exclude mac address from table network
                     if i['macnotshortened'].lower() in xmppobject.blacklisted_mac_addresses:
@@ -959,6 +908,73 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
         else:
             structuredatakioskelement['action'].append('Ask')
     return structuredatakioskelement
+
+def adduserdatageolocalisation(xmppobject, data, msg, sessionid, showinfobool):
+    try:
+        tabinformation={"longitude" : "unknown",
+                        "latitude" : "unknown",
+                        "city" : "unknown",
+                        "region_name" : "unknown",
+                        "time_zone" : "unknown",
+                        "longitude" : "unknown",
+                        "latitude" : "unknown",
+                        "zip_code" : "unknown",
+                        "country_iso" : "",
+                        "country" : "unknown"}
+        # Assignment of the user system, if user absent.
+            if 'users' in data['information'] and len(data['information']['users']) == 0:
+                data['information']['users'] = ["system"]
+
+            if 'users' in data['information'] and len(data['information']['users']) > 0:
+                userinfo = ','.join(data['information']['users'])
+                if showinfobool:
+                    logger.info("Adding user : %s for machine : %s "% (userinfo,
+                                            data['information']['info']['hostname']))
+        if "geolocalisation" in data and \
+                data['geolocalisation'] is not None and \
+                    len(data['geolocalisation']) > 0:
+            #initialization parameter geolocalisation
+            for geovariable in tabinformation:
+                try:
+                    tabinformation[geovariable]=str(data['geolocalisation'][geovariable])
+                except  Exception:
+                    pass
+            if showinfobool:
+                logger.info("parameter geolocalisation : %s"%tabinformation)
+        try:
+            useradd = XmppMasterDatabase().adduser( userinfo,
+                                                    data['information']['info']['hostname'],
+                                                    tabinformation["city"],
+                                                    tabinformation["region_name"],
+                                                    tabinformation["time_zone"],
+                                                    tabinformation["longitude"],
+                                                    tabinformation["latitude"],
+                                                    tabinformation["zip_code"],
+                                                    tabinformation["country_iso"],
+                                                    tabinformation["country"])
+            try:
+                useradd = useradd[0]
+            except TypeError:
+                pass
+            return useradd, tabinformation
+        except Exception:
+            logger.error("\n%s"%(traceback.format_exc()))
+            logger.error("** Impossible to register machine %s. User missing" % msg['from'])
+            XmppMasterDatabase().setlogxmpp("Machine %s not registered. No user found" % msg['from'],
+                                            "info",
+                                            sessionid,
+                                            -1,
+                                            msg['from'],
+                                            '',
+                                            '',
+                                            'Registration | Notify | Error | Alert',
+                                            '',
+                                            '',
+                                            xmppobject.boundjid.bare)
+            return -1, tabinformation
+    except Exception:
+        logger.error("\n%s"%(traceback.format_exc()))
+        return -1, {}
 
 def read_conf_remote_registeryagent(xmppobject):
     ### xmppobject.config.pathdirconffile =
