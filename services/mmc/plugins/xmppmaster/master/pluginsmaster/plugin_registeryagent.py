@@ -922,14 +922,14 @@ def adduserdatageolocalisation(xmppobject, data, msg, sessionid, showinfobool):
                         "country_iso" : "",
                         "country" : "unknown"}
         # Assignment of the user system, if user absent.
-            if 'users' in data['information'] and len(data['information']['users']) == 0:
-                data['information']['users'] = ["system"]
+        if 'users' in data['information'] and len(data['information']['users']) == 0:
+            data['information']['users'] = ["system"]
 
-            if 'users' in data['information'] and len(data['information']['users']) > 0:
-                userinfo = ','.join(data['information']['users'])
-                if showinfobool:
-                    logger.info("Adding user : %s for machine : %s "% (userinfo,
-                                            data['information']['info']['hostname']))
+        if 'users' in data['information'] and len(data['information']['users']) > 0:
+            userinfo = ','.join(data['information']['users'])
+            if showinfobool:
+                logger.info("Adding user : %s for machine : %s "% (userinfo,
+                                        data['information']['info']['hostname']))
         if "geolocalisation" in data and \
                 data['geolocalisation'] is not None and \
                     len(data['geolocalisation']) > 0:
