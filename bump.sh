@@ -1,8 +1,6 @@
 #!/bin/bash
 
 version=$1
-<<<<<<< HEAD
-
 if [ ! -z $1 ]; then
 
     sed -i "s/^AC_INIT.*$/AC_INIT\(project, [$version], [http:\/\/www.siveo.net]\)/" configure.ac
@@ -18,7 +16,7 @@ if [ ! -z $1 ]; then
 
 
     git diff
-    git commit -a -m "pulse: bump version to $1"
+#    git commit -a -m "pulse: bump version to $1"
     #git tag -s pulse_$1 -m "pulse_$1"
     #git push
     #git push --tags
