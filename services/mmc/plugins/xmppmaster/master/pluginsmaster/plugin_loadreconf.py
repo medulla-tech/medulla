@@ -23,7 +23,7 @@
 import json
 import os
 import logging
-from lib.utils import getRandomName
+from utils import getRandomName
 import types
 import ConfigParser
 from pulse2.database.xmppmaster import XmppMasterDatabase
