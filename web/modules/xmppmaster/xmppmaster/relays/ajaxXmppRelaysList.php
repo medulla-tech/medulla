@@ -46,8 +46,8 @@ $switchoffaction = new ActionPopupItem(_("Switch"), "switchrelay", 'stop', "", "
 $switchonaction = new ActionPopupItem(_("Switch"), "switchrelay", 'start', "", "xmppmaster", "xmppmaster");
 $switchemptyaction = new EmptyActionItem1(_("Switch"), "switchrelay", 'stopg', "", "xmppmaster", "xmppmaster");
 
-$reconfigureaction = new ActionPopupItem(_("Reonfigure Machines"), "reconfiguremachines", 'restart', "nopropagate", "xmppmaster", "xmppmaster");
-$reconfigureemptyaction = new EmptyActionItem1(_("Reonfigure Machines"), "reconfiguremachines", 'restartg', "nopropagate", "xmppmaster", "xmppmaster");
+$reconfigureaction = new ActionPopupItem(_("Reconfigure Machines"), "reconfiguremachines", 'restart', "nopropagate", "xmppmaster", "xmppmaster");
+$reconfigureemptyaction = new EmptyActionItem1(_("Reconfigure Machines"), "reconfiguremachines", 'restartg', "nopropagate", "xmppmaster", "xmppmaster");
 
 $raw = 0;
 $params = [];
