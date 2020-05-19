@@ -23,14 +23,14 @@
 if(isset($_POST['jid'], $_POST['switch'])){
   if (!isset($_POST["switchsecurity"])) {
       new NotifyWidgetFailure(_("You have to check the box <b>\"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster."));
-      header("Location: " . urlStrRedirect("base/computers/xmppRelaysList"));
+      header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/xmppRelaysList"));
       exit;
   }
   else{
     $result = xmlrpc_change_relay_switch($_POST['jid'], $_POST['switch'], true);
 
     new NotifyWidgetSuccess(_('The relay '.htmlentities($_POST['jid']).' has been switched to '.htmlentities($_POST['switch'])));
-    header("Location: " . urlStrRedirect("base/computers/xmppRelaysList"));
+    header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/xmppRelaysList"));
     exit;
   }
 }
