@@ -55,17 +55,17 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
       }
     }
     else{
-      echo "<h2>Machine : ". $_GET['cn']." ( ".$_GET['os']." )"."</h2>";
+      echo "<h2>"._T('Machine : ', 'xmppmaster'). $_GET['cn']." ( ".$_GET['os']." )"."</h2>";
       $jidmachine = xmlrpc_getjidMachinefromuuid( $_GET['UUID'] );
    }
 switch($_GET['information']){
     case 'battery':
         $re =  xmlrpc_remoteXmppMonitoring("battery", $jidmachine, 100);
             if ($re == ""){
-                $re = "time out command";
+                $re = _T("time out command", "xmppmaster");
             }
     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-    echo "BATTERY\n";
+    echo _T('BATTERY', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
             echo "\n";
@@ -76,11 +76,11 @@ switch($_GET['information']){
     case 'winservices':
         $re =  xmlrpc_remoteXmppMonitoring("winservices", $jidmachine, 240);
             if ($re == ""){
-            $re = "time out command";
+            $re = _T("time out command", "xmppmaster");
             }
 
     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-    echo "WIN SERVICES\n";
+    echo _T('WIN SERVICES', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
             echo "\n";
@@ -91,10 +91,10 @@ switch($_GET['information']){
     case 'clone_ps_aux':
         $re =  xmlrpc_remoteXmppMonitoring("clone_ps_aux", $jidmachine, 100);
             if ($re == ""){
-            $re = "time out command";
+            $re = _T("time out command", "xmppmaster");
             }
     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-    echo "PROCESSUS LIST\n";
+    echo _T('PROCESSUS LIST', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
             echo "\n";
@@ -105,10 +105,10 @@ switch($_GET['information']){
     case 'disk_usage':
         $re =  xmlrpc_remoteXmppMonitoring("disk_usage", $jidmachine, 100);
             if ($re == ""){
-            $re = "time out command";
+            $re = _T("time out command", "xmppmaster");
             }
     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-    echo "DISK USAGE\n";
+    echo _T('DISK USAGE', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
             echo "\n";
@@ -119,10 +119,10 @@ switch($_GET['information']){
     case 'sensors_fans':
         $re =  xmlrpc_remoteXmppMonitoring("sensors_fans", $jidmachine, 100);
             if ($re == ""){
-            $re = "time out command";
+            $re = _T("time out command", "xmppmaster");
             }
-    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-     echo "SENSORS FANS\n";
+     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+     echo _T('SENSORS FANS', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
             echo "\n";
@@ -133,10 +133,10 @@ switch($_GET['information']){
     case 'mmemory':
         $re =  xmlrpc_remoteXmppMonitoring("mmemory", $jidmachine, 100);
             if ($re == ""){
-            $re = "time out command";
+            $re = _T("time out command", "xmppmaster");
             }
     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-    echo "MEMORY USAGE\n";
+    echo _T('MEMORY USAGE', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
             echo "\n";
@@ -147,10 +147,10 @@ switch($_GET['information']){
     case 'ifconfig':
         $re =  xmlrpc_remoteXmppMonitoring("ifconfig", $jidmachine, 100);
             if ($re == ""){
-            $re = "time out command";
+            $re = _T("time out command", "xmppmaster");
             }
     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-    echo "NETWORK INTERFACE\n";
+    echo _T('NETWORK INTERFACE', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
             echo "\n";
@@ -161,10 +161,10 @@ switch($_GET['information']){
     case 'cpu_num':
         $re =  xmlrpc_remoteXmppMonitoring("cpu_num", $jidmachine, 100);
             if ($re == ""){
-            $re = "time out command";
+            $re = _T("time out command", "xmppmaster");
             }
     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-    echo "CPU NUM\n";
+    echo _T('CPU NUM', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
             echo "\n";
@@ -175,20 +175,20 @@ switch($_GET['information']){
     case 'netstat':
         $re =  xmlrpc_remoteXmppMonitoring("netstat", $jidmachine, 50);
             if ($re == ""){
-            $re = "time out command";
+            $re = _T("time out command", "xmppmaster");
             }
         echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-        echo "NETSTAT\n";
+        echo _T('NETSTAT', 'xmppmaster')."\n";
         $entete = array_shift ( $re[result] );
         echo $entete;
         echo "<tr>";
         //Proto Local address@Remote address@Status@PID@Program name
-        echo "<th>Proto</th>
-        <th>Local address</th>
-        <th>Remote address</th>
-        <th>Status</th>
-        <th>PID</th>
-        <th>Program name</th>";
+        echo "<th>"._T("Proto", "xmppmaster")."</th>
+        <th>"._T("Local address", "xmppmaster")."</th>
+        <th>"._T("Remote address", "xmppmaster")."</th>
+        <th>"._T("Status","xmppmaster")."</th>
+        <th>"._T("PID", "xmppmaster")."</th>
+        <th>"._T("Program name", "xmppmaster")."</th>";
         echo "</tr>";
         foreach( $re[result] as $datareseau){
             echo "<tr>";
@@ -213,7 +213,7 @@ switch($_GET['information']){
         echo "</table>";
     break;
     case 'litlog':
-        echo "<h2>AGENT LOG MACHINE</h2>";
+        echo "<h2>"._T("AGENT LOG MACHINE", "xmppmaster")."</h2>";
         $suject = array();
         $suject['subaction'] = 'litlog';
         $r = explode(",", $_GET['args']);
@@ -231,7 +231,7 @@ switch($_GET['information']){
         echo "$description";
     break;
     case 'cputimes':
-        echo "TIMES CPU\n";
+        echo _T('TIMES CPU', 'xmppmaster')."\n";
         //todo mise en forme result
         $suject = array();
         $suject['subaction'] = 'cputimes';
@@ -249,7 +249,7 @@ switch($_GET['information']){
         echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
             echo "<thead><tr>";
             //Proto Local address@Remote address@Status@PID@Program name
-                echo "<th>CPU num</th>";
+                echo "<th>"._T("CPU num", "xmppmaster")."</th>";
                 foreach($keystab as $data){
                             echo "<th>$data</th>";
                         }
@@ -265,7 +265,7 @@ switch($_GET['information']){
                 }
                 echo "<tfoot>
                 <tr>";
-                    echo "<td>Total Times</td>";
+                    echo "<td>"._T("Total Times", "xmppmaster")."</td>";
                     foreach ($tabresult['allcpu'] as $dd => $va){
                         echo "<td>".$va."</td>";
                     }
@@ -281,7 +281,7 @@ switch($_GET['information']){
             #### self.diragentbase
             $re =  xmlrpc_remoteXmppMonitoring("agentinfos", $jidmachine, 15);//search information machine distante.
                 if ($re == ""){
-                    $re = "time out command";
+                    $re = _T("time out command", "xmppmaster");
                 }
                 $re = implode("", $re['result']);
                 $re = json_decode($re, true);
@@ -296,24 +296,24 @@ switch($_GET['information']){
                 echo "<table>";
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">BASE AGENT</h1>";
+                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">"._T("BASE AGENT", "xmppmaster")."</h1>";
                         echo "</td><td>";
-                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">REMOTE AGENT</h1>";
+                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">"._T("REMOTE AGENT", "xmppmaster")."</h1>";
                         echo "</td><td>";
-                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">REMOTE IMAGE</h1>";
+                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">"._T("REMOTE IMAGE", "xmppmaster")."</h1>";
                         echo "</td>";
                     echo "</tr>";
                     //----------------------- PLUGIN INFORMATIONS -----------------------
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; font-weight: bold;\">PLUGINS</h2>";
+                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; font-weight: bold;\">"._T("PLUGINS", "xmppmaster")."</h2>";
                         echo "</td>";
                     echo "</tr>";
 
                     echo "<tr>";
                         // ------------------------------ PLUGIN BASE ----------------------------------------
                         echo "<td>";
-                            echo "<Hn>Base plugins</Hn>";
+                            echo "<Hn>"._T("Base plugins", "xmppmaster")."</Hn>";
                             echo "<ul>";
                             foreach($lp[0] as $k => $v ){
                                 echo "<li>";
@@ -330,7 +330,7 @@ switch($_GET['information']){
                                 echo "</li>";
                             }
                             echo "</ul>";
-                            echo "<Hn>Base scheduler plugins</Hn>";
+                            echo "<Hn>"._T("Base scheduler plugins", "xmppmaster")."</Hn>";
                             echo "<ul>";
                                 foreach($lp[1] as $k => $v ){
                                     echo "<li>";
@@ -342,7 +342,7 @@ switch($_GET['information']){
 
                         // ------------------------------ LIST PLUGIN AGENT ----------------------------------------
                         echo "<td valign=\"top\">";
-                        echo "<Hn>Remote plugins</Hn>";
+                        echo "<Hn>"._T("Remote plugins", "xmppmaster")."</Hn>";
                         echo "<ul>";
                             foreach ($re['plugins']['plu'] as $key=>$val){
                                 echo "<li>";
@@ -350,7 +350,7 @@ switch($_GET['information']){
                                 echo "</li>";
                             }
                         echo "</ul>";
-                        echo "<Hn>Remote scheduler plugins</Hn>";
+                        echo "<Hn>"._T("Remote scheduler plugins", "xmppmaster")."</Hn>";
                         echo "<ul>";
                             foreach ($re['plugins']['schedule'] as $key=>$val){
                                 echo "<li>";
@@ -367,13 +367,13 @@ switch($_GET['information']){
                     //----------------------------- UPDATE INFORMATIONS ----------------------------------
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; font-weight: bold;\">UPDATE DETAILS</h2>";
+                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; font-weight: bold;\">"._T('UPDATE DETAILS', "xmppmaster")."</h2>";
                         echo "</td>";
                     echo "</tr>";
                     // ------------------------------ PARAMETERS ----------------------------------------
                     echo "<tr>";
                         echo "<td colspan=\"3\">";
-                        echo "<h2  style=\"font-weight: bold;\">Parameters</h2>";
+                        echo "<h2  style=\"font-weight: bold;\">"._T("Parameters", "xmppmaster")."</h2>";
                         echo "</td>";
                     echo "</tr>";
 
@@ -394,7 +394,7 @@ switch($_GET['information']){
                     // ------------------------------ PATH AGENT ----------------------------------------
                     echo "<tr>";
                         echo "<td colspan=\"3\">";
-                        echo "<h2  style=\"font-weight: bold;\">Folder Path</h2>";
+                        echo "<h2  style=\"font-weight: bold;\">"._T("Folder Path", "xmppmaster")."</h2>";
                         echo "</td>";
                     echo "</tr>";
                     echo "<tr>";
