@@ -370,7 +370,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                     mbody=json.dumps(datasend),
                                     mtype='chat')
             # ##################################
-             useradd, listedatageolocalisation = adduserdatageolocalisation(xmppobject,
+            useradd, listedatageolocalisation = adduserdatageolocalisation(xmppobject,
                                                                             data,
                                                                             msg,
                                                                             sessionid,
