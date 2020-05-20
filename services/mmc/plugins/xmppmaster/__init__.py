@@ -507,8 +507,11 @@ def callInstallKeyAM(jidAM, jidARS):
         return "jid (AM or ARS) missing"
 
 
-def callrestart(uuid):
-    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+def callrestart(uuid, jid_type=False):
+    if jid_type is False:
+        jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+    else:
+        jid = uuid
     if jid != "":
         callrestartbymaster(jid)
         return jid

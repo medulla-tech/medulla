@@ -37,7 +37,7 @@ $editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile",
 $detailactionempty = new EmptyActionItem1(_("Relay Detail"),"relaystatusdetail", "logfileg","","xmppmaster", "xmppmaster");
 $detailaction = new ActionItem(_("Relay Detail"),"relaystatusdetail", "logfile","","xmppmaster", "xmppmaster");
 
-$quickaction = new ActionPopupItem(_("Detail actions"), "detailactions", "quick", "", "xmppmaster", "xmppmaster", "", "550");
+$quickaction = new ActionPopupItem(_("Detail actions"), "detailactions", "quick", "", "xmppmaster", "xmppmaster", "", "620");
 $quickactionempty = new EmptyActionItem1(_("Detail actions"), "detailactions", "quickg", "", "xmppmaster", "xmppmaster");
 
 $consoleaction = new ActionPopupItem(_("Console Relay"), "consolerelay", "console", "", "xmppmaster", "xmppmaster");

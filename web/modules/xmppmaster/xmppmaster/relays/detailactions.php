@@ -35,7 +35,7 @@ if(isset($_GET['jid']))
     $agenttype= htmlentities($_GET['agenttype']);
   echo '<table>';
   echo '<tr>';
-    //echo '<th>Reboot</th>';
+    echo '<th>Reboot</th>';
     echo '<th>Process</th>';
     echo '<th>Disk Usage</th>';
     echo '<th>Agent Version</th>';
@@ -44,7 +44,7 @@ if(isset($_GET['jid']))
   echo '</tr>';
 
   echo '<tr>';
-  //echo '<td id="reboot" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70"></td>';
+  echo '<td id="reboot" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70"></td>';
   echo '<td id="process" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'clone_ps_aux']).'"><img src="modules/base/graph/navbar/process.png" height="70" width="70"></a></td>';
   echo '<td id="diskusage" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'disk_usage']).'"><img src="modules/base/graph/navbar/diskusage.png" height="70" width="70"></a></td>';
   echo '<td id="agentversion" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="modules/base/graph/navbar/information.png" height="70" width="70"></a></td>';
@@ -55,3 +55,14 @@ if(isset($_GET['jid']))
 }
 
 ?>
+
+<script>
+var datas = <? echo json_encode($_GET); ?>;
+jQuery('#reboot').on('click', function(){
+
+    jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", datas )
+        .done(function( data ) {
+            alert( "reboot : " + datas['jid'] , "" , "alert-info" );
+        })
+})
+</script>

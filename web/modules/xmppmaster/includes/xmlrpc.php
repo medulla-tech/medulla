@@ -345,8 +345,8 @@ function xmlrpc_callInventoryinterface($uuid){
     return xmlCall("xmppmaster.callInventoryinterface", array($uuid));
 }
 
-function xmlrpc_callrestart($uuid){
-    return xmlCall("xmppmaster.callrestart", array($uuid));
+function xmlrpc_callrestart($uuid, $jidType=false){
+    return xmlCall("xmppmaster.callrestart", array($uuid, $jidType));
 }
 
 function xmlrpc_callshutdown($uuid, $time = 0, $msg = ""){
