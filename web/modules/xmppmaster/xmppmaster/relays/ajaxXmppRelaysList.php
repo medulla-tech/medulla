@@ -37,8 +37,8 @@ $editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile",
 $detailactionempty = new EmptyActionItem1(_("Relay Detail"),"relaystatusdetail", "logfileg","","xmppmaster", "xmppmaster");
 $detailaction = new ActionItem(_("Relay Detail"),"relaystatusdetail", "logfile","","xmppmaster", "xmppmaster");
 
-$quickaction = new ActionPopupItem(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
-$quickactionempty = new EmptyActionItem1(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
+$quickaction = new ActionPopupItem(_("Detail actions"), "detailactions", "quick", "", "xmppmaster", "xmppmaster", "", "550");
+$quickactionempty = new EmptyActionItem1(_("Detail actions"), "detailactions", "quickg", "", "xmppmaster", "xmppmaster");
 
 $consoleaction = new ActionPopupItem(_("Console Relay"), "consolerelay", "console", "", "xmppmaster", "xmppmaster");
 $consoleactionempty = new EmptyActionItem1(_("Console Relay"), "consolerelay", "consoleg", "", "xmppmaster", "xmppmaster");
@@ -80,11 +80,13 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $configActions[] =$editremoteconfiguration;
     $consoleActions[] = $consoleaction;
     $reconfigurationActions[] = $reconfigureaction;
+    $quickActions[] = $quickaction;
   }
   else{
     $configActions[] =$editremoteconfigurationempty;
     $consoleActions[] = $consoleactionempty;
     $reconfigurationActions[] = $reconfigureemptyaction;
+    $quickActions[] = $quickactionempty;
   }
 
   if($relays['datas']['mandatory'][$raw] == 1){
@@ -121,7 +123,7 @@ $n->setNavBar(new AjaxNavBar($relays['total'], $filter, "updateSearchParamformRu
 $n->addActionItemArray($reconfigurationActions);
 $n->addActionItemArray($switchActions);
 $n->addActionItemArray($configActions);
-
+$n->addActionItemArray($quickActions);
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $relays['total'];

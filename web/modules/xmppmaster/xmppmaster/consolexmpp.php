@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2016-2018 Siveo, http://www.siveo.net
+ * (c) 2016-2020 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -93,7 +93,10 @@ textarea {
                 <select name="Machine" id="Machine">
                     <?php
                         foreach($resultrelay  as $dd){
-                            printf ('<option value="%s" >%s</option>', $dd['jid'], $dd['name'] );
+                          if(isset($_GET['jid']) && $_GET['jid'] == $dd['jid'])
+                            printf ('<option value="%s" selected>%s</option>', $dd['jid'], $dd['name'] );
+                          else
+                            printf ('<option value="%s">%s</option>', $dd['jid'], $dd['name'] );
                         }
                     ?>
                 </select>
