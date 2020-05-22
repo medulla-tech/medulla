@@ -64,7 +64,7 @@ switch($_GET['information']){
             if ($re == ""){
                 $re = _T("time out command", "xmppmaster");
             }
-    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
     echo _T('BATTERY', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
@@ -79,7 +79,7 @@ switch($_GET['information']){
             $re = _T("time out command", "xmppmaster");
             }
 
-    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
     echo _T('WIN SERVICES', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
@@ -93,8 +93,8 @@ switch($_GET['information']){
             if ($re == ""){
             $re = _T("time out command", "xmppmaster");
             }
-    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-    echo _T('PROCESSUS LIST', 'xmppmaster')."\n";
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+    echo _T('PROCESSES LIST', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
             echo "\n";
@@ -107,7 +107,7 @@ switch($_GET['information']){
             if ($re == ""){
             $re = _T("time out command", "xmppmaster");
             }
-    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
     echo _T('DISK USAGE', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
@@ -121,7 +121,7 @@ switch($_GET['information']){
             if ($re == ""){
             $re = _T("time out command", "xmppmaster");
             }
-     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
      echo _T('SENSORS FANS', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
@@ -135,7 +135,7 @@ switch($_GET['information']){
             if ($re == ""){
             $re = _T("time out command", "xmppmaster");
             }
-    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
     echo _T('MEMORY USAGE', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
@@ -149,7 +149,7 @@ switch($_GET['information']){
             if ($re == ""){
             $re = _T("time out command", "xmppmaster");
             }
-    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
     echo _T('NETWORK INTERFACE', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
@@ -163,7 +163,7 @@ switch($_GET['information']){
             if ($re == ""){
             $re = _T("time out command", "xmppmaster");
             }
-    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
     echo _T('CPU NUM', 'xmppmaster')."\n";
         foreach( $re[result] as $datareseau){
             echo $datareseau;
@@ -177,10 +177,10 @@ switch($_GET['information']){
             if ($re == ""){
             $re = _T("time out command", "xmppmaster");
             }
-        echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+        echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
         echo _T('NETSTAT', 'xmppmaster')."\n";
         $entete = array_shift ( $re[result] );
-        echo $entete;
+        //echo $entete;
         echo "<tr>";
         //Proto Local address@Remote address@Status@PID@Program name
         echo "<th>"._T("Proto", "xmppmaster")."</th>
@@ -246,7 +246,7 @@ switch($_GET['information']){
         $re =  xmlrpc_remoteXmppMonitoring($sujectmonitoring, $jidmachine, 100);
         $tabresult = json_decode($re['result'][0], true);
         $keystab = array_keys ($tabresult['allcpu']);
-        echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
+        echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
             echo "<thead><tr>";
             //Proto Local address@Remote address@Status@PID@Program name
                 echo "<th>"._T("CPU num", "xmppmaster")."</th>";
@@ -306,7 +306,7 @@ switch($_GET['information']){
                     //----------------------- PLUGIN INFORMATIONS -----------------------
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; font-weight: bold;\">"._T("PLUGINS", "xmppmaster")."</h2>";
+                        echo "<h2  colspan=\"3\" style=\"font-size: 12px; font-weight: bold;\">"._T("PLUGINS", "xmppmaster")."</h2>";
                         echo "</td>";
                     echo "</tr>";
 
@@ -367,7 +367,7 @@ switch($_GET['information']){
                     //----------------------------- UPDATE INFORMATIONS ----------------------------------
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; font-weight: bold;\">"._T('UPDATE DETAILS', "xmppmaster")."</h2>";
+                        echo "<h2  colspan=\"3\" style=\"font-size: 12px; font-weight: bold;\">"._T('UPDATE DETAILS', "xmppmaster")."</h2>";
                         echo "</td>";
                     echo "</tr>";
                     // ------------------------------ PARAMETERS ----------------------------------------
