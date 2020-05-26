@@ -341,10 +341,10 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                             echo "</td>";
 
                             echo "<td>";
-                                echo $otherinfos[0]->ipmachine;
+                                echo ($otherinfos[0]->ipmachine != "") ? $otherinfos[0]->ipmachine : $deploymachine['target_ipaddr'];
                             echo "</td>";
                             echo "<td>";
-                                echo $macstr;
+                                echo ($macstr != "") ? $macstr : $deploymachine['target_macaddr'];
                             echo "</td>";
                         echo "</tr>";
                     echo "</tbody>";
