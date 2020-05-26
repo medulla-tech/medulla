@@ -20,16 +20,18 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-if(isset($_GET['objectUUID'])){
-    $dd = xmlrpc_getGuacamoleRelayServerMachineUuid($_GET['objectUUID']);
-}
 $url = array();
-$ee = xmlrpc_getGuacamoleidforUuid($_GET['objectUUID']);
-foreach ($ee as $k){
-    $cux[$k[0]] = $k[1];
-    $cux_id_hex = bin2hex($k[1]).'00'.bin2hex('c').'00'.bin2hex('mysql');
-    $cux_id=base64_encode(hex2bin($cux_id_hex));
-    $url[$k[0]] = str_replace('@@CUX_ID@@',$cux_id,$dd['urlguacamole']);
+if(isset($_GET['cn'])){
+    $zz = xmlrpc_getGuacamoleRelayServerMachineHostnameProto($_GET['cn']);
+    print_r($zz);
+    $dd = $zz['machine'];
+    $ee = $zz['proto'];
+    foreach ($ee as $k){
+        $cux[$k[0]] = $k[1];
+        $cux_id_hex = bin2hex($k[1]).'00'.bin2hex('c').'00'.bin2hex('mysql');
+        $cux_id=base64_encode(hex2bin($cux_id_hex));
+        $url[$k[0]] = str_replace('@@CUX_ID@@',$cux_id,$dd['urlguacamole']);
+    }
 }
  ?>
     <HTML>
