@@ -280,14 +280,10 @@ class Has_relayserverrules(Base, XmppMasterDBObj):
 class Has_guacamole(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'has_guacamole'
-    # ====== Fields =============================
-    # Here we define columns for the table has_guacamole.
-    # Notice that each column is also a normal Python instance attribute.
-    idguacamole = Column(Integer)
-    protocol   = Column(String(10))
     # ====== ForeignKey =============================
-    machine_id = Column(Integer, ForeignKey('machines.id'))
-    machines = relationship(Machines)
+    idguacamole = Column(Integer)
+    idinventory = Column(Integer)
+    protocol   = Column(String(10))
 
 class Has_cluster_ars(Base, XmppMasterDBObj):
     ## ====== Table name =========================

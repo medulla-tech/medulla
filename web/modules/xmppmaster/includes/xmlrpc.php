@@ -123,20 +123,8 @@ function xmlrpc_getGuacamoleRelayServerMachineUuid($uuid) {
     return xmlCall("xmppmaster.getGuacamoleRelayServerMachineUuid", array($uuid));
 }
 
-function xmlrpc_getGuacamoleRelayServerMachineHostname($hostname) {
-    return xmlCall("xmppmaster.getGuacamoleRelayServerMachineHostname", array($hostname));
-}
-
-function xmlrpc_getGuacamoleRelayServerMachineHostnameProto($hostname) {
-    return xmlCall("xmppmaster.getGuacamoleRelayServerMachineHostnameProto", array($hostname));
-}
-
 function xmlrpc_getGuacamoleidforUuid($uuid) {
     return xmlCall("xmppmaster.getGuacamoleidforUuid", array($uuid));
-}
-
-function xmlrpc_getGuacamoleIdForHostname($uuid) {
-    return xmlCall("xmppmaster.getGuacamoleIdForHostname", array($uuid));
 }
 
 function xmlrpc_getListPresenceAgent() {

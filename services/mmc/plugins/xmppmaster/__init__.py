@@ -264,21 +264,8 @@ def getGuacamoleRelayServerMachineUuid(uuid):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
 
 
-def getGuacamoleRelayServerMachineHostnameProto(hostname):
-    result={"machine" : getGuacamoleRelayServerMachineHostname(hostname),
-            "proto" :  getGuacamoleIdForHostname(hostname)}
-    return result
-
-def getGuacamoleRelayServerMachineHostname(hostname):
-    return XmppMasterDatabase().getGuacamoleRelayServerMachineHostname(hostname)
-
-
 def getGuacamoleidforUuid(uuid):
     return XmppMasterDatabase().getGuacamoleidforUuid(uuid)
-
-
-def getGuacamoleIdForHostname(hostname):
-    return XmppMasterDatabase().getGuacamoleIdForHostname(hostname)
 
 
 def getListPresenceAgent():

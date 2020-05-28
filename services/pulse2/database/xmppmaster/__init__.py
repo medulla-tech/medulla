@@ -4235,11 +4235,11 @@ class XmppMasterDatabase(DatabaseHelper):
         return False
 
     @DatabaseHelper._sessionm
-    def addguacamoleidformachineid(self, session, machine_id, idguacamole):
+    def addguacamoleidforiventoryid(self, session, idinventory, idguacamole):
         try:
             hasguacamole = Has_guacamole()
             hasguacamole.idguacamole=idguacamole
-            hasguacamole.machine_id=machine_id
+            hasguacamole.idinventory=idinventory
             session.add(hasguacamole)
             session.commit()
             session.flush()
@@ -4248,7 +4248,7 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def addlistguacamoleidformachineid(self, session, machine_id, connection):
+    def addlistguacamoleidforiventoryid(self, session, idinventory, connection):
         # objet connection: {u'VNC': 60, u'RDP': 58, u'SSH': 59}}
         if len(connection) == 0:
             # on ajoute 1 protocole inexistant pour signaler que guacamle est configure.
@@ -4256,7 +4256,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         sql  = """DELETE FROM `xmppmaster`.`has_guacamole`
                     WHERE
-                        `xmppmaster`.`has_guacamole`.`machine_id` = '%s';"""%machine_id
+                        `xmppmaster`.`has_guacamole`.`idinventory` = '%s';"""%idinventory
         session.execute(sql)
         session.commit()
         session.flush()
@@ -4265,7 +4265,7 @@ class XmppMasterDatabase(DatabaseHelper):
             try:
                 hasguacamole = Has_guacamole()
                 hasguacamole.idguacamole=connection[idguacamole]
-                hasguacamole.machine_id=machine_id
+                hasguacamole.idinventory=idinventory
                 hasguacamole.protocol=idguacamole
                 session.add(hasguacamole)
                 session.commit()
@@ -5168,54 +5168,6 @@ class XmppMasterDatabase(DatabaseHelper):
         return resulttypemachine
 
     @DatabaseHelper._sessionm
-    def getGuacamoleRelayServerMachineHostname(self, session, hostname, enable = 1):
-        querymachine = session.query(Machines)
-        if enable == None:
-            querymachine = querymachine.filter(Machines.hostname == hostname)
-        else:
-            querymachine = querymachine.filter(and_(Machines.hostname == hostname,
-                                                    Machines.enabled == enable))
-        machine = querymachine.one()
-        session.commit()
-        session.flush()
-        try:
-            result = {  "uuid" : machine.uuid_inventorymachine,
-                        "jid" : machine.jid,
-                        "groupdeploy" : machine.groupdeploy,
-                        "urlguacamole" : machine.urlguacamole,
-                        "subnetxmpp" : machine.subnetxmpp,
-                        "hostname" : machine.hostname,
-                        "platform" : machine.platform,
-                        "macaddress" : machine.macaddress,
-                        "archi" : machine.archi,
-                        "uuid_inventorymachine" : machine.uuid_inventorymachine,
-                        "ip_xmpp" : machine.ip_xmpp,
-                        "agenttype" : machine.agenttype,
-                        "keysyncthing" :  machine.keysyncthing,
-                        "enabled" : machine.enabled
-                        }
-            for i in result:
-                if result[i] == None:
-                    result[i] = ""
-        except Exception:
-            result = {  "uuid" : -1,
-                        "jid" : "",
-                        "groupdeploy" : "",
-                        "urlguacamole" : "",
-                        "subnetxmpp" : "",
-                        "hostname" : "",
-                        "platform" : "",
-                        "macaddress" : "",
-                        "archi" : "",
-                        "uuid_inventorymachine" : "",
-                        "ip_xmpp" : "",
-                        "agenttype" : "",
-                        "keysyncthing" :  "",
-                        "enabled" : 0
-                    }
-        return result
-
-    @DatabaseHelper._sessionm
     def getGuacamoleRelayServerMachineUuid(self, session, uuid, enable = 1):
         querymachine = session.query(Machines)
         if enable == None:
@@ -5291,36 +5243,6 @@ class XmppMasterDatabase(DatabaseHelper):
                 return True
             return False
 
-    @DatabaseHelper._sessionm
-    def getGuacamoleIdForHostname(self, session, host, existtest = None):
-        """
-            if existtest is None
-             this function return the list of protocole for 1 machine
-             if existtest is not None:
-             this function return True if guacamole is configured
-             or false si guacamole is not configued.
-        """
-        if existtest is None:
-            protocole = session.query(Has_guacamole.idguacamole,Has_guacamole.protocol).\
-                    join(Machines, Machines.id == Has_guacamole.machine_id)
-            protocole = protocole.filter(and_(Has_guacamole.protocol != "INF",
-                                          Machines.hostname == host))
-            protocole = protocole.all()
-            session.commit()
-            session.flush()
-            if protocole:
-                return [(m[1],m[0]) for m in protocole]
-            else:
-                return []
-        else:
-            protocole = session.query(Has_guacamole.idguacamole).\
-                    join(Machines, Machines.id == Has_guacamole.machine_id)
-            protocole = protocole.filter(Machines.hostname == host)
-
-            protocole = protocole.first()
-            if protocole:
-                return True
-            return False
 
     @DatabaseHelper._sessionm
     def isMachineExistPresentTFN(self, session, jid):
