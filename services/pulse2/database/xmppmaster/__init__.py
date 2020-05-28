@@ -5854,7 +5854,6 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_xmpprelays_list(self, session, start, limit, filter, presence):
-        #knokno
         try:
             start = int(start)
         except:
@@ -5916,10 +5915,57 @@ class XmppMasterDatabase(DatabaseHelper):
             'enabled': [],
             'enabled_css': [],
             'mandatory' : [],
-            'switchonoff' : []
+            'switchonoff' : [],
+            'uninventoried_offline' : [],
+            'uninventoried_online' : [],
+            'inventoried_offline' : [],
+            'inventoried_online' : [],
+            'total_machines' : [],
         }
         if query is not None:
+            sql1 = """select count(id) as nb
+from machines
+where uuid_inventorymachine IS NULL and enabled = 0 and agenttype="machine" """
+            sql2 = """select count(id) as nb
+from machines
+where uuid_inventorymachine IS NULL and enabled = 1 and agenttype="machine"
+"""
+
+            sql3 = """select count(id) as nb
+from machines
+where uuid_inventorymachine IS NOT NULL and enabled = 0 and agenttype="machine"
+"""
+            sql4 = """select count(id) as nb
+from machines
+where uuid_inventorymachine IS NOT NULL and enabled = 1 and agenttype="machine"
+"""
             for machine in query:
+                _sql1 = sql1 + """and groupdeploy = "%s";"""%machine.jid
+                count_uninventoried_offline = session.execute(_sql1)
+                uninventoried_offline = [x for x in count_uninventoried_offline]
+
+                _sql2 = sql2 + """and groupdeploy = "%s";"""%machine.jid
+                count_uninventoried_offline = session.execute(_sql2)
+                uninventoried_online = [x for x in count_uninventoried_offline]
+
+                _sql3 = sql3 + """and groupdeploy = "%s";"""%machine.jid
+                count_uninventoried_offline = session.execute(_sql3)
+                inventoried_offline = [x for x in count_uninventoried_offline]
+
+                _sql4 = sql4 + """and groupdeploy = "%s";"""%machine.jid
+                count_uninventoried_offline = session.execute(_sql4)
+                inventoried_online = [x for x in count_uninventoried_offline]
+
+                total_machines = uninventoried_offline[0][0] + \
+                    uninventoried_online[0][0] + \
+                    inventoried_offline[0][0] + \
+                    inventoried_online[0][0]
+                result['uninventoried_offline'].append(uninventoried_offline[0][0])
+                result['uninventoried_online'].append(uninventoried_online[0][0])
+                result['inventoried_offline'].append(inventoried_offline[0][0])
+                result['inventoried_online'].append(inventoried_online[0][0])
+                result['total_machines'].append(total_machines)
+
                 result['id'].append(machine.id)
                 result['jid'].append(machine.jid)
                 if machine.enabled == 1:
@@ -5945,21 +5991,21 @@ class XmppMasterDatabase(DatabaseHelper):
         return {'total': count, 'datas': result}
 
     @DatabaseHelper._sessionm
-    def change_relay_switch(self, session, jid, switch):
-        session.query(RelayServer).filter(RelayServer.jid == jid,\
-            RelayServer.mandatory == 0).update(\
-            {RelayServer.switchonoff: switch})
-
+    def change_relay_switch(self, session, jid, switch, propagate):
         id_cluster = None
-        try:
-            cluster = session.query(Has_cluster_ars.id_cluster)\
-                .join(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
-                .filter(RelayServer.jid == jid).one()
-            id_cluster = cluster.id_cluster
-        except:
-            pass
+        if propagate is True:
+            session.query(RelayServer).filter(RelayServer.jid == jid,\
+                RelayServer.mandatory == 0).update(\
+                {RelayServer.switchonoff: switch})
+            try:
+                cluster = session.query(Has_cluster_ars.id_cluster)\
+                    .join(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
+                    .filter(RelayServer.jid == jid).one()
+                id_cluster = cluster.id_cluster
+            except:
+                pass
 
-        if id_cluster is not None:
+        if id_cluster is not None and propagate is True:
             sql = """update
     machines
 set
@@ -5974,7 +6020,7 @@ where agenttype="machine" and groupdeploy in (
     where id_cluster = %s
 );"""%id_cluster
             session.execute(sql)
-        else:
+        elif id_cluster is None or propagate is False:
             session.query(Machines).filter(Machines.agenttype=="machine", \
             Machines.groupdeploy==jid).update(\
                 {Machines.need_reconf:1})

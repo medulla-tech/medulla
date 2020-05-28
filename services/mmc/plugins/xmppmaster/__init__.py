@@ -520,8 +520,11 @@ def callInstallKeyAM(jidAM, jidARS):
         return "jid (AM or ARS) missing"
 
 
-def callrestart(uuid):
-    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+def callrestart(uuid, jid_type=False):
+    if jid_type is False:
+        jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+    else:
+        jid = uuid
     if jid != "":
         callrestartbymaster(jid)
         return jid
@@ -745,5 +748,5 @@ def get_xmpprelays_list(start, limit, filter, presence):
 def get_clusters_list(start, limit, filter):
     return XmppMasterDatabase().get_clusters_list(start, limit, filter)
 
-def change_relay_switch(jid, switch):
-    return XmppMasterDatabase().change_relay_switch(jid, switch)
+def change_relay_switch(jid, switch, propagate):
+    return XmppMasterDatabase().change_relay_switch(jid, switch, propagate)

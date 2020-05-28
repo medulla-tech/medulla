@@ -67,6 +67,15 @@ $submod->addPage($page);
 $page = new Page("topology", _T('XMPP topology Machine', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("xmppRelaysList", _T("Get the xmpp relays list", "glpi"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/relaysList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxXmppRelaysList", _T("Relays List", "glpi"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("machine_xmpp_detail", _T('XMPP Machine details', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -316,6 +325,15 @@ $page->setFile("modules/xmppmaster/xmppmaster/relays/switchrelay.php");
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
+$page = new Page("reconfiguremachines",_T("Reconfigure Machines","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("detailactions", _T("Relays Detail Actions", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/detailactions.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
 
 $mod->addSubmod($submod);
 

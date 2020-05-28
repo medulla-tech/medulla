@@ -666,7 +666,10 @@ li.stopg a {
     line-height: 18px;
     text-decoration: none;
     color: #FFF;
-    opacity: 0.5;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
 }
 
 li.start a {
@@ -700,6 +703,21 @@ li.restart a {
     line-height: 18px;
     text-decoration: none;
     color: #FFF;
+}
+
+li.restartg a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/restart.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
 }
 
 li.info a {
@@ -827,6 +845,21 @@ li.quick a {
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
+}
+
+li.quickg a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../modules/base/graph/computers/quick.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
 }
 
 li.guaca a {

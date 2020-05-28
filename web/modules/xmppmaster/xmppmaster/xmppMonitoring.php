@@ -43,224 +43,236 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     $p->setSideMenu($sidemenu);
     $p->display();
 
-    echo "<h2>Machine : ". $_GET['cn']." ( ".$_GET['os']." )"."</h2>";
+    if(isset($_GET['jid'])){
+      $jidmachine = $_GET['jid'];
 
-     $jidmachine = xmlrpc_getjidMachinefromuuid( $_GET['UUID'] );
-     switch($_GET['information']){
-        case 'battery':
-            $re =  xmlrpc_remoteXmppMonitoring("battery", $jidmachine, 100);
-                if ($re == ""){
-                    $re = "time out command";
-                }
-        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-        echo "BATTERY\n";
-            foreach( $re[result] as $datareseau){
-                echo $datareseau;
-                echo "\n";
+      if(isset($_GET['agenttype']) && $_GET['agenttype'] != ''){
+        echo "<h2>".$_GET['agenttype']." : ". $jidmachine."</h2>";
+      }
+
+      else{
+        echo "<h2>".$_GET['agenttype']." : ". $jidmachine."</h2>";
+      }
+    }
+    else{
+      echo "<h2>"._T('Machine : ', 'xmppmaster'). $_GET['cn']." ( ".$_GET['os']." )"."</h2>";
+      $jidmachine = xmlrpc_getjidMachinefromuuid( $_GET['UUID'] );
+   }
+switch($_GET['information']){
+    case 'battery':
+        $re =  xmlrpc_remoteXmppMonitoring("battery", $jidmachine, 100);
+            if ($re == ""){
+                $re = _T("time out command", "xmppmaster");
             }
-        echo "</pre>";
-        break;
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+    echo _T('BATTERY', 'xmppmaster')."\n";
+        foreach( $re[result] as $datareseau){
+            echo $datareseau;
+            echo "\n";
+        }
+    echo "</pre>";
+    break;
 
-        case 'winservices':
-            $re =  xmlrpc_remoteXmppMonitoring("winservices", $jidmachine, 240);
-                if ($re == ""){
-                $re = "time out command";
-                }
-
-        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-        echo "WIN SERVICES\n";
-            foreach( $re[result] as $datareseau){
-                echo $datareseau;
-                echo "\n";
+    case 'winservices':
+        $re =  xmlrpc_remoteXmppMonitoring("winservices", $jidmachine, 240);
+            if ($re == ""){
+            $re = _T("time out command", "xmppmaster");
             }
-        echo "</pre>";
-        break;
 
-        case 'clone_ps_aux':
-            $re =  xmlrpc_remoteXmppMonitoring("clone_ps_aux", $jidmachine, 100);
-                if ($re == ""){
-                $re = "time out command";
-                }
-        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-        echo "PROCESSUS LIST\n";
-            foreach( $re[result] as $datareseau){
-                echo $datareseau;
-                echo "\n";
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+    echo _T('WIN SERVICES', 'xmppmaster')."\n";
+        foreach( $re[result] as $datareseau){
+            echo $datareseau;
+            echo "\n";
+        }
+    echo "</pre>";
+    break;
+
+    case 'clone_ps_aux':
+        $re =  xmlrpc_remoteXmppMonitoring("clone_ps_aux", $jidmachine, 100);
+            if ($re == ""){
+            $re = _T("time out command", "xmppmaster");
             }
-        echo "</pre>";
-        break;
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+    echo _T('PROCESSES LIST', 'xmppmaster')."\n";
+        foreach( $re[result] as $datareseau){
+            echo $datareseau;
+            echo "\n";
+        }
+    echo "</pre>";
+    break;
 
-        case 'disk_usage':
-            $re =  xmlrpc_remoteXmppMonitoring("disk_usage", $jidmachine, 100);
-                if ($re == ""){
-                $re = "time out command";
-                }
-        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-        echo "DISK USAGE\n";
-            foreach( $re[result] as $datareseau){
-                echo $datareseau;
-                echo "\n";
+    case 'disk_usage':
+        $re =  xmlrpc_remoteXmppMonitoring("disk_usage", $jidmachine, 100);
+            if ($re == ""){
+            $re = _T("time out command", "xmppmaster");
             }
-        echo "</pre>";
-        break;
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+    echo _T('DISK USAGE', 'xmppmaster')."\n";
+        foreach( $re[result] as $datareseau){
+            echo $datareseau;
+            echo "\n";
+        }
+    echo "</pre>";
+    break;
 
-        case 'sensors_fans':
-            $re =  xmlrpc_remoteXmppMonitoring("sensors_fans", $jidmachine, 100);
-                if ($re == ""){
-                $re = "time out command";
-                }
-        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-         echo "SENSORS FANS\n";
-            foreach( $re[result] as $datareseau){
-                echo $datareseau;
-                echo "\n";
+    case 'sensors_fans':
+        $re =  xmlrpc_remoteXmppMonitoring("sensors_fans", $jidmachine, 100);
+            if ($re == ""){
+            $re = _T("time out command", "xmppmaster");
             }
-        echo "</pre>";
-        break;
+     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+     echo _T('SENSORS FANS', 'xmppmaster')."\n";
+        foreach( $re[result] as $datareseau){
+            echo $datareseau;
+            echo "\n";
+        }
+    echo "</pre>";
+    break;
 
-        case 'mmemory':
-            $re =  xmlrpc_remoteXmppMonitoring("mmemory", $jidmachine, 100);
-                if ($re == ""){
-                $re = "time out command";
-                }
-        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-        echo "MEMORY USAGE\n";
-            foreach( $re[result] as $datareseau){
-                echo $datareseau;
-                echo "\n";
+    case 'mmemory':
+        $re =  xmlrpc_remoteXmppMonitoring("mmemory", $jidmachine, 100);
+            if ($re == ""){
+            $re = _T("time out command", "xmppmaster");
             }
-        echo "</pre>";
-        break;
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+    echo _T('MEMORY USAGE', 'xmppmaster')."\n";
+        foreach( $re[result] as $datareseau){
+            echo $datareseau;
+            echo "\n";
+        }
+    echo "</pre>";
+    break;
 
-        case 'ifconfig':
-            $re =  xmlrpc_remoteXmppMonitoring("ifconfig", $jidmachine, 100);
-                if ($re == ""){
-                $re = "time out command";
-                }
-        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-        echo "NETWORK INTERFACE\n";
-            foreach( $re[result] as $datareseau){
-                echo $datareseau;
-                echo "\n";
+    case 'ifconfig':
+        $re =  xmlrpc_remoteXmppMonitoring("ifconfig", $jidmachine, 100);
+            if ($re == ""){
+            $re = _T("time out command", "xmppmaster");
             }
-        echo "</pre>";
-        break;
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+    echo _T('NETWORK INTERFACE', 'xmppmaster')."\n";
+        foreach( $re[result] as $datareseau){
+            echo $datareseau;
+            echo "\n";
+        }
+    echo "</pre>";
+    break;
 
-        case 'cpu_num':
-            $re =  xmlrpc_remoteXmppMonitoring("cpu_num", $jidmachine, 100);
-                if ($re == ""){
-                $re = "time out command";
-                }
-        echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-        echo "CPU NUM\n";
-            foreach( $re[result] as $datareseau){
-                echo $datareseau;
-                echo "\n";
+    case 'cpu_num':
+        $re =  xmlrpc_remoteXmppMonitoring("cpu_num", $jidmachine, 100);
+            if ($re == ""){
+            $re = _T("time out command", "xmppmaster");
             }
-        echo "</pre>";
-        break;
+    echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+    echo _T('CPU NUM', 'xmppmaster')."\n";
+        foreach( $re[result] as $datareseau){
+            echo $datareseau;
+            echo "\n";
+        }
+    echo "</pre>";
+    break;
 
-        case 'netstat':
-            $re =  xmlrpc_remoteXmppMonitoring("netstat", $jidmachine, 50);
-                if ($re == ""){
-                $re = "time out command";
-                }
-            echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-            echo "NETSTAT\n";
-            $entete = array_shift ( $re[result] );
-            echo $entete;
+    case 'netstat':
+        $re =  xmlrpc_remoteXmppMonitoring("netstat", $jidmachine, 50);
+            if ($re == ""){
+            $re = _T("time out command", "xmppmaster");
+            }
+        echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+        echo _T('NETSTAT', 'xmppmaster')."\n";
+        $entete = array_shift ( $re[result] );
+        //echo $entete;
+        echo "<tr>";
+        //Proto Local address@Remote address@Status@PID@Program name
+        echo "<th>"._T("Proto", "xmppmaster")."</th>
+        <th>"._T("Local address", "xmppmaster")."</th>
+        <th>"._T("Remote address", "xmppmaster")."</th>
+        <th>"._T("Status","xmppmaster")."</th>
+        <th>"._T("PID", "xmppmaster")."</th>
+        <th>"._T("Program name", "xmppmaster")."</th>";
+        echo "</tr>";
+        foreach( $re[result] as $datareseau){
             echo "<tr>";
-            //Proto Local address@Remote address@Status@PID@Program name
-            echo "<th>Proto</th>
-            <th>Local address</th>
-            <th>Remote address</th>
-            <th>Status</th>
-            <th>PID</th>
-            <th>Program name</th>";
+                $ligne = explode("@", $datareseau);
+                $color = "black";
+                switch($ligne[0]){
+                    case "tcp":
+                        $color = "blue";
+                    break;
+                    case "udp":
+                        $color = "navy";
+                    break;
+                    case "udp6":
+                        $color = "maroon";
+                    break;
+                }
+                foreach($ligne as $data){
+                     echo "<td><span style='color :$color'> $data </span></td>";
+                }
             echo "</tr>";
-            foreach( $re[result] as $datareseau){
-                echo "<tr>";
-                    $ligne = explode("@", $datareseau);
-                    $color = "black";
-                    switch($ligne[0]){
-                        case "tcp":
-                            $color = "blue";
-                        break;
-                        case "udp":
-                            $color = "navy";
-                        break;
-                        case "udp6":
-                            $color = "maroon";
-                        break;
-                    }
-                    foreach($ligne as $data){
-                         echo "<td><span style='color :$color'> $data </span></td>";
-                    }
-                echo "</tr>";
-            }
-            echo "</table>";
-        break;
-        case 'litlog':
-            echo "<h2>AGENT LOG MACHINE</h2>";
-            $suject = array();
-            $suject['subaction'] = 'litlog';
-            $r = explode(",", $_GET['args']);
-            if (count($r) != 0 and $r[0] != ""){
-                $suject['args'] = $r;
-            }else{
-                $suject['args'] = array();
-            }
-            $suject['kwargs'] =  json_decode($_GET['kwargs'], true);
-            $sujectmonitoring = json_encode ($suject);
-            //print_r($sujectmonitoring);
-            $re =  xmlrpc_remoteXmppMonitoring($sujectmonitoring, $jidmachine, 100);
-            //$description = nl2br($re['result'][0]);
-            $description = str_replace(array("\\r\\n","\\r","\\n"),"<br/>", $re['result'][0]);
-            echo "$description";
-        break;
-        case 'cputimes':
-            echo "TIMES CPU\n";
-            //todo mise en forme result
-            $suject = array();
-            $suject['subaction'] = 'cputimes';
-            $r = explode(",", $_GET['args']);
-            if (count($r) != 0 and $r[0] != ""){
-                $suject['args'] = $r;
-            }else{
-                $suject['args'] = array();
-            }
-            $suject['kwargs'] =  json_decode($_GET['kwargs'], true);
-            $sujectmonitoring = json_encode ($suject);
-            $re =  xmlrpc_remoteXmppMonitoring($sujectmonitoring, $jidmachine, 100);
-            $tabresult = json_decode($re['result'][0], true);
-            $keystab = array_keys ($tabresult['allcpu']);
-            echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 20px; '>";
-                echo "<thead><tr>";
-                //Proto Local address@Remote address@Status@PID@Program name
-                    echo "<th>CPU num</th>";
-                    foreach($keystab as $data){
-                                echo "<th>$data</th>";
-                            }
-                    echo "</tr></thead>";
-                    for ($i = 0; $i < $tabresult['nbcpu'];$i++){
-                        echo "<tbody><tr>";
-                            echo "<td>".$i."</td>";
-                        //print_r($tabresult['cpu'.$i] );
-                            foreach ($tabresult['cpu'.$i] as $dd => $va){
-                                echo "<td>".$va."</td>";
-                            }
-                    echo "</tr></tbody>";
-                    }
-                    echo "<tfoot>
-                    <tr>";
-                        echo "<td>Total Times</td>";
-                        foreach ($tabresult['allcpu'] as $dd => $va){
+        }
+        echo "</table>";
+    break;
+    case 'litlog':
+        echo "<h2>"._T("AGENT LOG MACHINE", "xmppmaster")."</h2>";
+        $suject = array();
+        $suject['subaction'] = 'litlog';
+        $r = explode(",", $_GET['args']);
+        if (count($r) != 0 and $r[0] != ""){
+            $suject['args'] = $r;
+        }else{
+            $suject['args'] = array();
+        }
+        $suject['kwargs'] =  json_decode($_GET['kwargs'], true);
+        $sujectmonitoring = json_encode ($suject);
+        //print_r($sujectmonitoring);
+        $re =  xmlrpc_remoteXmppMonitoring($sujectmonitoring, $jidmachine, 100);
+        //$description = nl2br($re['result'][0]);
+        $description = str_replace(array("\\r\\n","\\r","\\n"),"<br/>", $re['result'][0]);
+        echo "$description";
+    break;
+    case 'cputimes':
+        echo _T('TIMES CPU', 'xmppmaster')."\n";
+        //todo mise en forme result
+        $suject = array();
+        $suject['subaction'] = 'cputimes';
+        $r = explode(",", $_GET['args']);
+        if (count($r) != 0 and $r[0] != ""){
+            $suject['args'] = $r;
+        }else{
+            $suject['args'] = array();
+        }
+        $suject['kwargs'] =  json_decode($_GET['kwargs'], true);
+        $sujectmonitoring = json_encode ($suject);
+        $re =  xmlrpc_remoteXmppMonitoring($sujectmonitoring, $jidmachine, 100);
+        $tabresult = json_decode($re['result'][0], true);
+        $keystab = array_keys ($tabresult['allcpu']);
+        echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
+            echo "<thead><tr>";
+            //Proto Local address@Remote address@Status@PID@Program name
+                echo "<th>"._T("CPU num", "xmppmaster")."</th>";
+                foreach($keystab as $data){
+                            echo "<th>$data</th>";
+                        }
+                echo "</tr></thead>";
+                for ($i = 0; $i < $tabresult['nbcpu'];$i++){
+                    echo "<tbody><tr>";
+                        echo "<td>".$i."</td>";
+                    //print_r($tabresult['cpu'.$i] );
+                        foreach ($tabresult['cpu'.$i] as $dd => $va){
                             echo "<td>".$va."</td>";
                         }
-                    echo "</tr>
-                    </tfoot>";
-            echo "</table>";
-        break;
+                echo "</tr></tbody>";
+                }
+                echo "<tfoot>
+                <tr>";
+                    echo "<td>"._T("Total Times", "xmppmaster")."</td>";
+                    foreach ($tabresult['allcpu'] as $dd => $va){
+                        echo "<td>".$va."</td>";
+                    }
+                echo "</tr>
+                </tfoot>";
+        echo "</table>";
+    break;
         case 'agentinfos':
             $lp = xmlrpc_get_plugin_lists();
             $descriptor_base = xmlrpc_get_agent_descriptor_base();// search descriptor agent local
@@ -269,7 +281,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             #### self.diragentbase
             $re =  xmlrpc_remoteXmppMonitoring("agentinfos", $jidmachine, 15);//search information machine distante.
                 if ($re == ""){
-                    $re = "time out command";
+                    $re = _T("time out command", "xmppmaster");
                 }
                 $re = implode("", $re['result']);
                 $re = json_decode($re, true);
@@ -284,24 +296,24 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 echo "<table>";
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">BASE AGENT</h1>";
+                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">"._T("BASE AGENT", "xmppmaster")."</h1>";
                         echo "</td><td>";
-                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">REMOTE AGENT</h1>";
+                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">"._T("REMOTE AGENT", "xmppmaster")."</h1>";
                         echo "</td><td>";
-                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">REMOTE IMAGE</h1>";
+                        echo "<h1 style=\"font-size: 25px; font-weight: bold;\">"._T("REMOTE IMAGE", "xmppmaster")."</h1>";
                         echo "</td>";
                     echo "</tr>";
                     //----------------------- PLUGIN INFORMATIONS -----------------------
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; font-weight: bold;\">PLUGINS</h2>";
+                        echo "<h2  colspan=\"3\" style=\"font-size: 12px; font-weight: bold;\">"._T("PLUGINS", "xmppmaster")."</h2>";
                         echo "</td>";
                     echo "</tr>";
 
                     echo "<tr>";
                         // ------------------------------ PLUGIN BASE ----------------------------------------
                         echo "<td>";
-                            echo "<Hn>Base plugins</Hn>";
+                            echo "<Hn>"._T("Base plugins", "xmppmaster")."</Hn>";
                             echo "<ul>";
                             foreach($lp[0] as $k => $v ){
                                 echo "<li>";
@@ -318,7 +330,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                 echo "</li>";
                             }
                             echo "</ul>";
-                            echo "<Hn>Base scheduler plugins</Hn>";
+                            echo "<Hn>"._T("Base scheduler plugins", "xmppmaster")."</Hn>";
                             echo "<ul>";
                                 foreach($lp[1] as $k => $v ){
                                     echo "<li>";
@@ -330,7 +342,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
                         // ------------------------------ LIST PLUGIN AGENT ----------------------------------------
                         echo "<td valign=\"top\">";
-                        echo "<Hn>Remote plugins</Hn>";
+                        echo "<Hn>"._T("Remote plugins", "xmppmaster")."</Hn>";
                         echo "<ul>";
                             foreach ($re['plugins']['plu'] as $key=>$val){
                                 echo "<li>";
@@ -338,7 +350,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                 echo "</li>";
                             }
                         echo "</ul>";
-                        echo "<Hn>Remote scheduler plugins</Hn>";
+                        echo "<Hn>"._T("Remote scheduler plugins", "xmppmaster")."</Hn>";
                         echo "<ul>";
                             foreach ($re['plugins']['schedule'] as $key=>$val){
                                 echo "<li>";
@@ -355,13 +367,13 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     //----------------------------- UPDATE INFORMATIONS ----------------------------------
                     echo "<tr>";
                         echo "<td>";
-                        echo "<h2  colspan=\"3\" style=\"font-size: 20px; font-weight: bold;\">UPDATE DETAILS</h2>";
+                        echo "<h2  colspan=\"3\" style=\"font-size: 12px; font-weight: bold;\">"._T('UPDATE DETAILS', "xmppmaster")."</h2>";
                         echo "</td>";
                     echo "</tr>";
                     // ------------------------------ PARAMETERS ----------------------------------------
                     echo "<tr>";
                         echo "<td colspan=\"3\">";
-                        echo "<h2  style=\"font-weight: bold;\">Parameters</h2>";
+                        echo "<h2  style=\"font-weight: bold;\">"._T("Parameters", "xmppmaster")."</h2>";
                         echo "</td>";
                     echo "</tr>";
 
@@ -382,7 +394,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                     // ------------------------------ PATH AGENT ----------------------------------------
                     echo "<tr>";
                         echo "<td colspan=\"3\">";
-                        echo "<h2  style=\"font-weight: bold;\">Folder Path</h2>";
+                        echo "<h2  style=\"font-weight: bold;\">"._T("Folder Path", "xmppmaster")."</h2>";
                         echo "</td>";
                     echo "</tr>";
                     echo "<tr>";

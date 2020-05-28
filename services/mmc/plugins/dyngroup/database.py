@@ -36,6 +36,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from mmc.plugins.base import getUserGroups
 import mmc.plugins.dyngroup
 from mmc.database.database_helper import DatabaseHelper
+from mmc.support.mmctools import SecurityContext
 # PULSE2 modules
 import pulse2.database.dyngroup
 from pulse2.database.dyngroup import Groups, Machines, Results, Users, Convergence, ProfilesData, ProfilesResults, ShareGroup
@@ -455,7 +456,12 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         the owner will be the ctx
         a share will be created for the owner (needed to set the visibility)
         """
+        root_context = SecurityContext()
+        root_context.userid = 'root'
+
         user_id = self.__getOrCreateUser(ctx)
+        root_id = self.__getOrCreateUser(root_context)
+
         session = create_session()
         group = Groups()
         group.name = name.encode('utf-8')
@@ -468,6 +474,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
         # we now need to add an entry in ShareGroup for the creator
         self.__createShare(group.id, user_id, visibility, 1)
+
+        # Add also an entry in ShareGroup for the root account
+        self.__createShare(group.id, root_id, visibility, 1)
         return group.id
 
     def setname_group(self, ctx, id, name):

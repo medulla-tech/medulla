@@ -31,7 +31,7 @@ if (isExpertMode()){
 }
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("List of Relays","xmppmaster"), "base", "computers", "xmppRelaysList")
+    new SideMenuItem(_T("List of Relays","xmppmaster"), "xmppmaster", "xmppmaster", "xmppRelaysList")
 );
 
 $sidemenu->addSideMenuItem(

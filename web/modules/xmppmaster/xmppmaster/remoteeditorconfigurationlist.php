@@ -310,7 +310,25 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
                         'content' : jQuery('#resultat').val()
                     },
                     function(data) {
-                        //jQuery('#resultat').val(data['result']);
+                      var module = "<?php
+                      if(isset($_GET['objectUUID'])){
+                          echo 'base';
+                      }
+                      else{
+                        echo 'xmppmaster';
+                      }
+                      ?>";
+
+                      var submod = "<?php
+                      if(isset($_GET['objectUUID'])){
+                        echo 'computers';
+                      }
+                      else{
+                        echo 'xmppmaster';
+                      }
+                      ?>";
+
+
                         var action = "<?php
                         if(isset($_GET['agenttype'])){
                           if($_GET['agenttype'] == 'relayserver')
@@ -323,7 +341,7 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
                         }
                         ?>";
 
-                        document.location.href="main.php?module=base&submod=computers&action="+action;
+                        document.location.href="main.php?module="+module+"&submod="+submod+"&action="+action;
                     });
     }
     function loadconffile(param){
@@ -387,7 +405,6 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
 
         if(typeof(file) == "undefined"){
           jQuery("#namefileconf").prop("selectedIndex", 0).attr("selected", "selected");
-          console.log(jQuery("#namefileconf").prop("selectedIndex", 0))
         }
         else{
           jQuery("#namefileconf option:contains('"+file+"')").attr("selected", "selected")

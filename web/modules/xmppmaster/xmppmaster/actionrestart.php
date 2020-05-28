@@ -35,6 +35,25 @@ require_once('../includes/xmlrpc.php');
 require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
 switch($_GET['action']){
+    case "detailactions":
+        // work for one machine
+        $jid = $_GET['jid'];
+        $hostname = $_GET['hostname'];
+        $type = $_GET['agenttype'];
+
+        xmlrpc_callrestart($jid, true);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a Reboot to [ ".$type." : \"".$_GET['hostname']."\"][jid : \"".$jid."\"]",
+                                        "QA",
+                                        '' ,
+                                        0,
+                                        $_GET['hostname'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'QuickAction | Reboot sent');
+    break;
     case "deployquick":
         // work for one machine
         $jid =  xmlrpc_callrestart($_GET['objectUUID']);

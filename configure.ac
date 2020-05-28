@@ -22,7 +22,7 @@ AC_PREREQ(2.59)
 
 dnl autoconf initialization
 define([project], [pulse2])
-AC_INIT(project, [4.6.1], [http://www.siveo.org])
+AC_INIT(project, [4.6.3], [http://www.siveo.net])
 define([gitversion], esyscmd([sh -c "which git > /dev/null && git describe 2> /dev/null | sed -e 's/]project[-\([^-]\+\)//' | tr -d '\n' || true"]))dnl
 AC_DEFINE(GITVERSION, "gitversion", [Git version])
 
