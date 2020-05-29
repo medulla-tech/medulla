@@ -23,7 +23,6 @@
 $url = array();
 if(isset($_GET['cn'])){
     $zz = xmlrpc_getGuacamoleRelayServerMachineHostnameProto($_GET['cn']);
-    print_r($zz);
     $dd = $zz['machine'];
     $ee = $zz['proto'];
     foreach ($ee as $k){
