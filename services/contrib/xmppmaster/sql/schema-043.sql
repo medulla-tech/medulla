@@ -25,30 +25,51 @@
 -- ----------------------------------------------------------------------
 
 START TRANSACTION;
--- ----------------------------------------------------------------------
--- Database chang colunm
--- ----------------------------------------------------------------------
-ALTER TABLE `xmppmaster`.`has_guacamole` 
-CHANGE COLUMN `idinventory` `machine_id` INT(11) NOT NULL ;
+
+-- deactivation check contrainte
+SET FOREIGN_KEY_CHECKS=0;
+
+CREATE TABLE `xmppmaster`.`nouvelle_table_temporaire` as
+SELECT
+	xmppmaster.has_guacamole.id,
+    xmppmaster.has_guacamole.idguacamole,
+    xmppmaster.has_guacamole.idinventory,
+    xmppmaster.has_guacamole.protocol,
+    xmppmaster.machines.id AS machine_id
+FROM
+    xmppmaster.has_guacamole
+        INNER JOIN
+    xmppmaster.machines ON SUBSTRING(xmppmaster.machines.uuid_inventorymachine,
+        5,
+        LENGTH(xmppmaster.machines.uuid_inventorymachine)) = xmppmaster.has_guacamole.idinventory;
+
+ALTER TABLE `xmppmaster`.`nouvelle_table_temporaire`
+DROP COLUMN `idinventory`;
+
+ALTER TABLE `xmppmaster`.`nouvelle_table_temporaire`
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ,
+CHANGE COLUMN `machine_id` `machine_id` INT(11) NOT NULL ,
+ADD PRIMARY KEY (`id`, `idguacamole`, `protocol`);
 
 -- ----------------------------------------------------------------------
 -- Database add index fk_has_guacamole_machineid_idx for contrainte
 -- ----------------------------------------------------------------------
-ALTER TABLE `xmppmaster`.`has_guacamole` 
+ALTER TABLE `xmppmaster`.`nouvelle_table_temporaire`
 ADD INDEX `fk_has_guacamole_machineid_idx` (`machine_id` ASC) ;
-
 -- ----------------------------------------------------------------------
 -- add contrainte
 -- ----------------------------------------------------------------------
-ALTER TABLE `xmppmaster`.`has_guacamole` 
+ALTER TABLE `xmppmaster`.`nouvelle_table_temporaire`
 ADD CONSTRAINT `fk_has_guacamole_machineid_idx`
   FOREIGN KEY (`machine_id`)
   REFERENCES `xmppmaster`.`machines` (`id`)
   ON DELETE CASCADE
   ON UPDATE CASCADE;
--- ----------------------------------------------------------------------
--- Database version
--- ----------------------------------------------------------------------
+
+DROP TABLE has_guacamole;
+ALTER TABLE xmppmaster.nouvelle_table_temporaire RENAME AS xmppmaster.has_guacamole;
+-- reactivation check contrainte
+SET FOREIGN_KEY_CHECKS=1;
 UPDATE version SET Number = 43;
 
 COMMIT;
