@@ -29,7 +29,7 @@ START TRANSACTION;
 -- deactivation check contrainte
 SET FOREIGN_KEY_CHECKS=0;
 
-CREATE TABLE `xmppmaster`.`nouvelle_table_temporaire` as
+CREATE TABLE `xmppmaster`.`temp_table` as
 SELECT
 	xmppmaster.has_guacamole.id,
     xmppmaster.has_guacamole.idguacamole,
@@ -43,10 +43,10 @@ FROM
         5,
         LENGTH(xmppmaster.machines.uuid_inventorymachine)) = xmppmaster.has_guacamole.idinventory;
 
-ALTER TABLE `xmppmaster`.`nouvelle_table_temporaire`
+ALTER TABLE `xmppmaster`.`temp_table`
 DROP COLUMN `idinventory`;
 
-ALTER TABLE `xmppmaster`.`nouvelle_table_temporaire`
+ALTER TABLE `xmppmaster`.`temp_table`
 CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ,
 CHANGE COLUMN `machine_id` `machine_id` INT(11) NOT NULL ,
 ADD PRIMARY KEY (`id`, `idguacamole`, `protocol`);
@@ -54,12 +54,12 @@ ADD PRIMARY KEY (`id`, `idguacamole`, `protocol`);
 -- ----------------------------------------------------------------------
 -- Database add index fk_has_guacamole_machineid_idx for contrainte
 -- ----------------------------------------------------------------------
-ALTER TABLE `xmppmaster`.`nouvelle_table_temporaire`
+ALTER TABLE `xmppmaster`.`temp_table`
 ADD INDEX `fk_has_guacamole_machineid_idx` (`machine_id` ASC) ;
 -- ----------------------------------------------------------------------
 -- add contrainte
 -- ----------------------------------------------------------------------
-ALTER TABLE `xmppmaster`.`nouvelle_table_temporaire`
+ALTER TABLE `xmppmaster`.`temp_table`
 ADD CONSTRAINT `fk_has_guacamole_machineid_idx`
   FOREIGN KEY (`machine_id`)
   REFERENCES `xmppmaster`.`machines` (`id`)
@@ -67,7 +67,7 @@ ADD CONSTRAINT `fk_has_guacamole_machineid_idx`
   ON UPDATE CASCADE;
 
 DROP TABLE has_guacamole;
-ALTER TABLE xmppmaster.nouvelle_table_temporaire RENAME AS xmppmaster.has_guacamole;
+ALTER TABLE xmppmaster.temp_table RENAME AS xmppmaster.has_guacamole;
 -- reactivation check contrainte
 SET FOREIGN_KEY_CHECKS=1;
 UPDATE version SET Number = 43;
