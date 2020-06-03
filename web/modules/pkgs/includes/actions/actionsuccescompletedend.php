@@ -84,23 +84,29 @@ $lab = "END_SUCCESS";
                              }" />'._T("Inventory","pkgs").'
              </td>';
 
-             if(isset($inventory) && $inventory == "True")
-             {
-               echo '<td width="25%">
-                   <select name="inventory">
-                       <option  value="False">False</option>
-                       <option selected value="True">True</option>
-                   <select>
-               </td>';
-            }
-            else{
-              echo '<td width="25%">
-                  <select name="inventory">
-                      <option selected value="False">False</option>
-                      <option  value="True">True</option>
-                  <select>
-              </td>';
-            }
+            if(!isset($inventory)){ $inventory = "False"; }
+                echo '<td width="25%">
+                  <select name="inventory">';
+                switch($inventory){
+                    case "True":
+                        echo'<option selected value="True">Forced inventory</option>
+                             <option value="False">No inventory</option>
+                             <option value="noforced">Inventory on change</option>';
+                    break;
+                    case "False":
+                        echo'<option value="True">Forced inventory</option>
+                             <option selected value="False">No inventory</option>
+                             <option value="noforced">Inventory on change</option>';
+                    break;
+                    case "noforced":
+                        echo'<option value="True">Forced inventory</option>
+                             <option value="False">No inventory</option>
+                             <option  selected value="noforced">Inventory on change</option>';
+                    break;
+                }
+                echo '<select>
+                        </td>';
+
         echo '
         <td></td><td></td>
             </tr>
