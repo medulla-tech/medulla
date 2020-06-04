@@ -89,19 +89,19 @@ $lab = "END_SUCCESS";
                   <select name="inventory">';
                 switch($inventory){
                     case "True":
-                        echo'<option selected value="True">Forced inventory</option>
-                             <option value="False">No inventory</option>
-                             <option value="noforced">Inventory on change</option>';
+                        echo'<option selected value="True">'._T('Forced inventory','pkgs').'</option>
+                             <option value="False">'._T('No inventory','pkgs').'</option>
+                             <option value="noforced">'._T('Inventory on change','pkgs').'</option>';
                     break;
                     case "False":
-                        echo'<option value="True">Forced inventory</option>
-                             <option selected value="False">No inventory</option>
-                             <option value="noforced">Inventory on change</option>';
+                        echo'<option value="True">'._T('Forced inventory','pkgs').'</option>
+                             <option selected value="False">'._T('No inventory','pkgs').'</option>
+                             <option value="noforced">'._T('Inventory on change','pkgs').'</option>';
                     break;
                     case "noforced":
-                        echo'<option value="True">Forced inventory</option>
-                             <option value="False">No inventory</option>
-                             <option  selected value="noforced">Inventory on change</option>';
+                        echo'<option value="True">'._T('Forced inventory','pkgs').'</option>
+                             <option value="False">'._T('No inventory','pkgs').'</option>
+                             <option  selected value="noforced">'._T('Inventory on change','pkgs').'</option>';
                     break;
                 }
                 echo '<select>
