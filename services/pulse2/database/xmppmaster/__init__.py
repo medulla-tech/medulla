@@ -6035,7 +6035,7 @@ where agenttype="machine" and groupdeploy in (
                 filter(and_( Machines.need_reconf == '1',
                             Machines.enabled == '1',
                             Machines.agenttype.like(typemachine)))
-        elif typemachine is None or typemachine="all":
+        elif typemachine is None or typemachine=="all":
             res = session.query(Machines.id, Machines.jid).\
                 filter(and_( Machines.need_reconf == '1',
                             Machines.enabled == '1'))
