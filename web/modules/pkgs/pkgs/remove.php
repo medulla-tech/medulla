@@ -31,7 +31,6 @@ if (isset($_POST["bconfirm"])) {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];
     $from = $_GET["from"];
-    //jfkjfk
     $uuid =  isset($_GET["packageUuid"]) ? $_GET["packageUuid"] : base64_decode($pid);
     $ret = remove_xmpp_package($uuid);
     xmlrpc_pkgs_delete_synchro_package($uuid);
