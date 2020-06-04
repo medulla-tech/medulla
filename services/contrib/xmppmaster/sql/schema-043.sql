@@ -42,6 +42,7 @@ FROM
     xmppmaster.machines ON SUBSTRING(xmppmaster.machines.uuid_inventorymachine,
         5,
         LENGTH(xmppmaster.machines.uuid_inventorymachine)) = xmppmaster.has_guacamole.idinventory;
+
 ALTER TABLE `xmppmaster`.`temp_table`
 DROP COLUMN `idinventory`;
 
@@ -53,7 +54,6 @@ ADD PRIMARY KEY (`id`, `idguacamole`, `protocol`);
 -- ----------------------------------------------------------------------
 -- Database add index fk_has_guacamole_machineid_idx for contrainte
 -- ----------------------------------------------------------------------
-
 ALTER TABLE `xmppmaster`.`temp_table`
 ADD INDEX `fk_has_guacamole_machineid_idx` (`machine_id` ASC) ;
 -- ----------------------------------------------------------------------
