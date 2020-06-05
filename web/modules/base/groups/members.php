@@ -28,7 +28,6 @@ require("modules/base/includes/users.inc.php");
 ?>
 
 <style type="text/css">
-<!--
 
 #grouplist
 {
@@ -50,7 +49,6 @@ select.list
         width: 250px;
 }
 
--->
 </style>
 
 <?php
@@ -64,10 +62,15 @@ else
     $group = $_POST["group"];
 
 if (isset($_POST)) {
+  if(isset($_POST['lmembers'], $_POST['lusers'])){
     $members = unserialize(base64_decode($_POST["lmembers"]));
     $users = unserialize(base64_decode($_POST["lusers"]));
+  }
+  else{
+    $members = [];
+    $users = [];
+  }
 }
-
 $forbidden = array();
 
 if (isset($_POST["bdeluser_x"])) {
