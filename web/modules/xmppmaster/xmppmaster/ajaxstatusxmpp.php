@@ -137,11 +137,11 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
 
         $totalmachinedeploy = $result['totalmachinedeploy'];
         $deploymentsuccess = $result['deploymentsuccess'];
-
+        $deploymenterror = (isset($result['deploymenterror'])) ? $result['deploymenterror'] : 0;
         $processmachr[] = $inprogress;
         $tolmach[] = $totalmachinedeploy;
         $successmach[]= $deploymentsuccess;
-        $errormach[]= $result['deploymenterror'] + $result['errorunknownerror'];
+        $errormach[]= $deploymenterror + $result['errorunknownerror'];
         $abortmachuser[] = $aborted;
 
     if($groupid){
