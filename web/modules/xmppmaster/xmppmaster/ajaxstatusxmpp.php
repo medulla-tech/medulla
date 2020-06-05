@@ -239,44 +239,47 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $index++;
 }
 
-foreach($arraynotdeploy['elements'] as $id=>$deploy)
+if(isset($arraynotdeploy))
 {
-    $param = [
-    'cmd_id'=>$deploy['cmd_id'],
-    'login'=>$deploy['login'],
-    'gid'=>$deploy['gid'],
-    'uuid'=>$deploy['uuid_inventory']];
-    $logs[] = $logAction;
-    $params[] = $param;
+  foreach($arraynotdeploy['elements'] as $id=>$deploy)
+  {
+      $param = [
+      'cmd_id'=>$deploy['cmd_id'],
+      'login'=>$deploy['login'],
+      'gid'=>$deploy['gid'],
+      'uuid'=>$deploy['uuid_inventory']];
+      $logs[] = $logAction;
+      $params[] = $param;
 
-    $arraytitlename[] = '<img style="position:relative;top : 5px;" src="modules/msc/graph/images/install_package.png" /> '.$deploy['package_name'];
+      $arraytitlename[] = '<img style="position:relative;top : 5px;" src="modules/msc/graph/images/install_package.png" /> '.$deploy['package_name'];
 
-    $name = "";
-    if($deploy['gid'] != "")
-    {
-        $name = getInfosNameGroup($deploy['gid']);
-        $name = $name[$deploy['gid']]['name'];
-        $name = '<img style="position:relative;top : 5px;" src="img/machines/icn_groupsList.gif"/> '.$name;
-        //echo '<a href="main.php?module=xmppmaster&submod=xmppmaster&action=viewlogs&tab=grouptablogs&uuid=&hostname=&gid='.$deploy['gid'].'&cmd_id='.$deploy['cmd_id'].'&login='.$deploy['login'].'">'.$deploy['package_name'].'</a><br />';
+      $name = "";
+      if($deploy['gid'] != "")
+      {
+          $name = getInfosNameGroup($deploy['gid']);
+          $name = $name[$deploy['gid']]['name'];
+          $name = '<img style="position:relative;top : 5px;" src="img/machines/icn_groupsList.gif"/> '.$name;
+          //echo '<a href="main.php?module=xmppmaster&submod=xmppmaster&action=viewlogs&tab=grouptablogs&uuid=&hostname=&gid='.$deploy['gid'].'&cmd_id='.$deploy['cmd_id'].'&login='.$deploy['login'].'">'.$deploy['package_name'].'</a><br />';
+        }
+
+      else
+      {
+          $name = $deploy['machine_name'];
+          $name = '<img style="position:relative;top : 5px;" src="img/machines/icn_machinesList.gif"/> '.$name;
       }
+      $arrayname[] = $name;
 
-    else
-    {
-        $name = $deploy['machine_name'];
-        $name = '<img style="position:relative;top : 5px;" src="img/machines/icn_machinesList.gif"/> '.$name;
-    }
-    $arrayname[] = $name;
-
-    $date = (array)$deploy['date_start'];
-    $arraydeploy['tabdeploy']['start'][] = date("Y-m-d H:i:s",$date['timestamp']);
-    //TODO
-    $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline</span>';
-    $tolmach[] = $deploy['nb_machines'];
-    $processmachr[] = 0;
-    $successmach[] = 0;
-    $errormach[] = 0;
-    $abortmachuser[] = 0;
-    $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
+      $date = (array)$deploy['date_start'];
+      $arraydeploy['tabdeploy']['start'][] = date("Y-m-d H:i:s",$date['timestamp']);
+      //TODO
+      $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline</span>';
+      $tolmach[] = $deploy['nb_machines'];
+      $processmachr[] = 0;
+      $successmach[] = 0;
+      $errormach[] = 0;
+      $abortmachuser[] = 0;
+      $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
+  }
 }
 
 $n = new OptimizedListInfos( $arraytitlename, _T("Deployment", "xmppmaster"));
