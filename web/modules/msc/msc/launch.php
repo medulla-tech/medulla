@@ -210,7 +210,7 @@ function start_a_command($proxy = array(), $activate = true) {
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                 'uuid' => $uuid,
-                                                                                'hostname' => $hostname,
+                                                                                'hostname' => (isset($_GET['hostname'])) ?$_GET['hostname'] : "",
                                                                                 'gid' => $gid,
                                                                                 'cmd_id' => $id,
                                                                                 "login"=>$_SESSION['login'])));
