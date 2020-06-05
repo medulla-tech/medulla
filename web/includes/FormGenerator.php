@@ -343,6 +343,8 @@ class InputTpl extends AbstractTpl {
         if (!isset($arrParam['placeholder'])) {
             $arrParam['placeholder'] = '';
         }
+        if(!isset($arrParam['value']))
+          $arrParam['value'] = "";
         $required_attr = isset($arrParam["required"]) ? ' rel="required"' : '';
         $regexp_attr = isset($this->regexp) ? ' data-regexp="' . $this->regexp . '"' : '';
         $valparm =isset($arrParam["value"]) ? $arrParam["value"] : "";
