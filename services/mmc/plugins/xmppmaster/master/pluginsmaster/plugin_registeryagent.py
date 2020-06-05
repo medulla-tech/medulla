@@ -246,7 +246,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                             for macaddress in results:
                                 if showinfobool:
                                     logger.info("Get GLPI computer id for mac address %s"%macaddress)
-                                if macaddress.lower() in xmppobject.blacklisted_mac_addresses:
+                                if test_mac_adress_black_list(macaddress, xmppobject.blacklisted_mac_addresses):
                                     if showinfobool:
                                         logger.warning("Address %s blacklisted for %s machine"%( macaddress,
                                                                                                 data['from']))
@@ -415,7 +415,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
 
             for i in data['information']["listipinfo"]:
                     # exclude mac address from table network
-                if i['macnotshortened'].lower() in xmppobject.blacklisted_mac_addresses:
+                if test_mac_adress_black_list(i['macnotshortened'], xmppobject.blacklisted_mac_addresses):
                     continue
                 else:
                     data['xmppmacaddress'] = i['macaddress']
@@ -506,7 +506,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                     xmppobject.boundjid.bare)
                 for i in data['information']["listipinfo"]:
                     # exclude mac address from table network
-                    if i['macnotshortened'].lower() in xmppobject.blacklisted_mac_addresses:
+                    if test_mac_adress_black_list(i['macnotshortened'], xmppobject.blacklisted_mac_addresses):
                         if showinfobool:
                             logger.info("Mac address %s blacklisted for machine %s"%(i['macnotshortened'] ,msg['from']))
                         continue
@@ -567,7 +567,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     for t in results:
                         if showinfobool:
                             logger.info("Finding the machine which has the specified mac address : %s"%t)
-                        if t.lower() in xmppobject.blacklisted_mac_addresses:
+                        if test_mac_adress_black_list(t, xmppobject.blacklisted_mac_addresses):
                             if showinfobool:
                                 logger.info("Excluding blacklisted mac address %s for machine %s"%(t,msg['from']))
                             continue
@@ -717,6 +717,12 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                         '',
                                         '',
                                         xmppobject.boundjid.bare)
+
+def test_mac_adress_black_list(macadress, table_reg_for_match):
+    for regexpmatch in table_reg_for_match:
+        if regexpmatch.match(macadress.lower()):
+            return True
+    return False
 
 def getComputerByMac( mac, showinfobool=True):
     if showinfobool:
@@ -976,7 +982,7 @@ def read_conf_remote_registeryagent(xmppobject):
                                              "loadautoupdate",
                                              "loadshowregistration"]
         xmppobject.check_uuidinventory = False
-        xmppobject.blacklisted_mac_addresses= ["00:00:00:00:00:00"]
+        blacklisted_mac_addresses = "00\:00\:00\:00\:00\:00"
         xmppobject.registeryagent_showinfomachine = []
     else:
         Config = ConfigParser.ConfigParser()
@@ -1006,22 +1012,22 @@ def read_conf_remote_registeryagent(xmppobject):
                 "loadautoupdate, loadshowregistration"
 
         xmppobject.pluginlistunregistered = [x.strip() for x in pluginlistunregistered.split(',')]
-        xmppobject.blacklisted_mac_addresses= []
+
         if Config.has_option("parameters", "blacklisted_mac_addresses"):
             blacklisted_mac_addresses = Config.get('parameters', 'blacklisted_mac_addresses')
         else:
-            blacklisted_mac_addresses = "00:00:00:00:00:00"
+            blacklisted_mac_addresses = "00\:00\:00\:00\:00\:00"
+            
+        blacklisted_mac_addresseslist = [x.strip() for x in blacklisted_mac_addresses.split(',')]
+        #unique regexp identique
+        blacklisted_mac_addresseslist = list(set(blacklisted_mac_addresseslist))
 
-        blacklisted_mac_addresses = blacklisted_mac_addresses.lower().replace(":","").replace(" ","")
-        blacklisted_mac_addresses_list = [x.strip() for x in blacklisted_mac_addresses.split(',')]
-        for t in blacklisted_mac_addresses_list:
-            if len(t) == 12:
-                macadrs = t[0:2]+":"+t[2:4]+":"+t[4:6]+":"+t[6:8]+":"+t[8:10]+":"+t[10:12]
-                xmppobject.blacklisted_mac_addresses.append(macadrs)
-            else:
-                logger.warning("The mac addresses %s in blacklisted_mac_addresses parameter is incorrect"%t )
-        if "00:00:00:00:00:00" not in xmppobject.blacklisted_mac_addresses:
-            xmppobject.blacklisted_mac_addresses.insert(0,"00:00:00:00:00:00")
+        for regexpconf in blacklisted_mac_addresseslist:
+            try:
+                logger.info("BUILD REGEXP FOR BLACKLIST MAC ADRESS -> %s"%regexpconf)
+                xmppobject.blacklisted_mac_addresses.append(re.compile(regexpconf))
+            except Exception as e:
+                logger.error("COMPIL REGEXP BLACKLIST MAC ADRESS -> %s <- [IGNORE THIS REGEXP]"%regexpconf)
 
         if Config.has_section("parameters"):
             if Config.has_option("parameters", "showinfomachine"):
@@ -1033,6 +1039,6 @@ def read_conf_remote_registeryagent(xmppobject):
                 xmppobject.registeryagent_showinfomachine = []
                 logger.warning("showinfomachine default value is []")
 
-    xmppobject.blacklisted_mac_addresses=list(set(xmppobject.blacklisted_mac_addresses))
+    
     logger.debug("Plugin list registered is %s"%xmppobject.pluginlistregistered)
     logger.debug("Plugin list unregistered is %s"%xmppobject.pluginlistunregistered)
