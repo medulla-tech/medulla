@@ -437,7 +437,7 @@ class MscQueryManager(MscContainer):
         # let's take a decision about our future
 
         if cohq.coh.getOrderInProxy() == None:  # I'm a client: I MUST use a proxy server ...
-            if best_ready_proxy_server_coh != None:    # ... and a proxy seems ready => PROXY CLIENT MODE
+            if best_ready_proxy_server_coh is not None:    # ... and a proxy seems ready => PROXY CLIENT MODE
                 (current_client_number, max_client_number) = self.get_client_usage_for_proxy(best_ready_proxy_server_coh)
                 if current_client_number < max_client_number:
                     self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s" %
@@ -447,7 +447,7 @@ class MscQueryManager(MscContainer):
                     self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" %
                             (self.config.name, best_ready_proxy_server_coh, cohq.coh.id, current_client_number))
                     return 'waiting'
-            elif potential_proxy_server_coh != None:                        # ... and one may become ready => WAITING
+            elif potential_proxy_server_coh is not None:                        # ... and one may become ready => WAITING
                 self.logger.debug("scheduler %s: coh #%s still waiting for a local proxy to use" %
                         (self.config.name, cohq.coh.id))
                 return 'waiting'
@@ -456,7 +456,7 @@ class MscQueryManager(MscContainer):
                         (self.config.name, cohq.coh.id))
                 return 'dead'
         else:                                                               # I'm a server: I MAY use a proxy ...
-            if best_ready_proxy_server_coh != None:                         # ... and a proxy seems ready => PROXY CLIENT MODE
+            if best_ready_proxy_server_coh is not None:                         # ... and a proxy seems ready => PROXY CLIENT MODE
                 (current_client_number, max_client_number) = self.get_client_usage_for_proxy(best_ready_proxy_server_coh)
                 if current_client_number < max_client_number:
                     self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s" %
