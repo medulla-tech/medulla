@@ -28,11 +28,13 @@ if (isExpertMode()){
     $sidemenu->addSideMenuItem(
         new SideMenuItem(_T("Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
     );
+
+    $sidemenu->addSideMenuItem(
+        new SideMenuItem(_T("List of Relays","xmppmaster"), "xmppmaster", "xmppmaster", "xmppRelaysList")
+    );
 }
 
-$sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("List of Relays","xmppmaster"), "xmppmaster", "xmppmaster", "xmppRelaysList")
-);
+
 
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("List of Uninventoried Machines","xmppmaster"), "base", "computers", "xmppMachinesList")
