@@ -65,7 +65,7 @@ if ( isset ($_POST['bStop'])) {
         $info = xmlrpc_get_machine_stop_deploy( $_MYREQUEST['cmd_id'], $_MYREQUEST['uuid']);
     }
 }
-
+    $mach = false;
     if (isset ($objectUUID)){
         $uuid = $objectUUID;
     }

@@ -375,7 +375,7 @@ echo "<div>";
 
     if(!$terminate){
         $f = new ValidatingForm();
-        $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
+        $f->add(new HiddenTpl("id"), array("value" => $_GET['cmd_id'], "hide" => True));
         $f->addButton("bStop", _T("Abort Deployment", 'xmppmaster'));
         $f->display();
     }
