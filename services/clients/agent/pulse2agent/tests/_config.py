@@ -79,7 +79,7 @@ class Test00_ExtendedConfigParser(TestCase):
             @return: list formatted as string
             @rtype: str
             """
-            return ", ".join([str(v).replace("'","").replace('"','').strip() for v in values])
+            return ", ".join(str(v).replace("'","").replace('"','').strip() for v in values)
 
         body = "[main]\nlist1 = %s\nlist2 = %s"
         content = body % (repr_list(list1), repr_list(list2))

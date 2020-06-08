@@ -264,7 +264,7 @@ class LinuxMinimalInventory(MinimalInventory):
             netmask = ""
 
         macinfo = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
-        mac = ''.join(['%02x:' % ord(char) for char in macinfo[18:24]])[:-1]
+        mac = ''.join('%02x:' % ord(char) for char in macinfo[18:24])[:-1]
 
         return ip, mac, netmask
 
