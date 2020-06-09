@@ -735,10 +735,10 @@ class HasSufficientMemory :
 
         def wrapped (*args, **kwargs) :
             if psutil.virtual_memory().percent < self.mem_limit :
-                 return fnc(*args, **kwargs)
-            else :
-                 logging.getLogger().warn("Not enough memory to run '%s'" % fnc.__name__)
-                 return self.neg_ret_value
+                return fnc(*args, **kwargs)
+            else:
+                logging.getLogger().warn("Not enough memory to run '%s'" % fnc.__name__)
+                return self.neg_ret_value
 
         return wrapped
 
