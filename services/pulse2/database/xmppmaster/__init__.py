@@ -1167,13 +1167,13 @@ class XmppMasterDatabase(DatabaseHelper):
             result = result.all()
 
             list_result = [{"id" : x.id ,
-                            "packageuuid" : x.packageuuid,
-                            "idorganization" : x.idorganization,
-                            "name" :  x.name }  for x in result]
-            return {"nb" : nb, "packageslist" : list_result}
+                            "packageuuid": x.packageuuid,
+                            "idorganization": x.idorganization,
+                            "name":  x.name }  for x in result]
+            return {"nb": nb, "packageslist": list_result}
         except Exception, e:
             logging.getLogger().debug("load packages for organization id : %s is error : %s"%(organization_id,str(e)))
-            return {"nb" : 0, "packageslist" : []}
+            return {"nb": 0, "packageslist": []}
 
     #
     @DatabaseHelper._sessionm
@@ -1748,12 +1748,12 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             session.query(Organization_ad).\
                 filter( Organization_ad.id_inventory ==  self.uuidtoid(id_inventory)).\
-                    update({ Organization_ad.jiduser : jiduser,
-                             Organization_ad.id_inventory : self.uuidtoid(id_inventory),
-                             Organization_ad.ouuser : ouuser,
-                             Organization_ad.oumachine : oumachine,
-                             Organization_ad.hostname : hostname,
-                             Organization_ad.username : username})
+                    update({ Organization_ad.jiduser: jiduser,
+                             Organization_ad.id_inventory: self.uuidtoid(id_inventory),
+                             Organization_ad.ouuser: ouuser,
+                             Organization_ad.oumachine: oumachine,
+                             Organization_ad.hostname: hostname,
+                             Organization_ad.username: username})
             session.commit()
             session.flush()
             return 1
@@ -3058,7 +3058,7 @@ class XmppMasterDatabase(DatabaseHelper):
         result = mach.all()
         session.commit()
         session.flush()
-        ret = {"data" : []}
+        ret = {"data": []}
 
         for linemach in result:
             listchamp = []
@@ -3132,7 +3132,7 @@ class XmppMasterDatabase(DatabaseHelper):
         result = logs.all()
         session.commit()
         session.flush()
-        ret = {"data" : []}
+        ret = {"data": []}
         index = 0
         for linelogs in result:
             listchamp = []
@@ -3206,25 +3206,25 @@ class XmppMasterDatabase(DatabaseHelper):
         result = deploylog.all()
         session.commit()
         session.flush()
-        ret = { 'lentotal' : 0,
-               'lenquery' : 0,
-                'tabdeploy' : { 'len' : [],
-                                'state' : [],
-                                'pathpackage' : [],
-                                'sessionid' : [],
-                                'start' : [],
-                                'inventoryuuid' : [],
-                                'command' : [],
-                                'start' : [],
-                                'login' : [],
-                                'host' : [],
-                                'macadress' : [],
-                                'group_uuid' : [],
-                                'startcmd' : [],
-                                'endcmd' : [],
-                                'jidmachine' : [],
-                                'jid_relay' : [],
-                                'title' : []
+        ret = { 'lentotal': 0,
+               'lenquery': 0,
+                'tabdeploy': { 'len': [],
+                                'state': [],
+                                'pathpackage': [],
+                                'sessionid': [],
+                                'start': [],
+                                'inventoryuuid': [],
+                                'command': [],
+                                'start': [],
+                                'login': [],
+                                'host': [],
+                                'macadress': [],
+                                'group_uuid': [],
+                                'startcmd': [],
+                                'endcmd': [],
+                                'jidmachine': [],
+                                'jid_relay': [],
+                                'title': []
                 }
         }
         ret['lentotal'] = lentaillerequette[0]
@@ -3282,25 +3282,25 @@ class XmppMasterDatabase(DatabaseHelper):
         result = deploylog.all()
         session.commit()
         session.flush()
-        ret = { 'lentotal' : 0,
-               'lenquery' : 0,
-                'tabdeploy' : { 'len' : [],
-                                'state' : [],
-                                'pathpackage' : [],
-                                'sessionid' : [],
-                                'start' : [],
-                                'inventoryuuid' : [],
-                                'command' : [],
-                                'start' : [],
-                                'login' : [],
-                                'host' : [],
-                                'macadress' : [],
-                                'group_uuid' : [],
-                                'startcmd' : [],
-                                'endcmd' : [],
-                                'jidmachine' : [],
-                                'jid_relay' : [],
-                                'title' : []
+        ret = { 'lentotal': 0,
+               'lenquery': 0,
+                'tabdeploy': { 'len': [],
+                                'state': [],
+                                'pathpackage': [],
+                                'sessionid': [],
+                                'start': [],
+                                'inventoryuuid': [],
+                                'command': [],
+                                'start': [],
+                                'login': [],
+                                'host': [],
+                                'macadress': [],
+                                'group_uuid': [],
+                                'startcmd': [],
+                                'endcmd': [],
+                                'jidmachine': [],
+                                'jid_relay': [],
+                                'title': []
                 }
         }
         ret['lentotal'] = lentaillerequette[0]
@@ -3438,7 +3438,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def getdeploybyuserpast(self, session, login , duree, min=None , max=None, filt=None):
+    def getdeploybyuserpast(self, session, login, duree, min=None, max=None, filt=None):
 
         deploylog = session.query(Deploy)
         if login:
@@ -5178,20 +5178,20 @@ class XmppMasterDatabase(DatabaseHelper):
                     result[i] = ""
         except Exception:
             result = {
-                        "uuid" : uuid,
-                        "jid" : "",
-                        "groupdeploy" : "",
-                        "urlguacamole" : "",
-                        "subnetxmpp" : "",
-                        "hostname" : "",
-                        "platform" : "",
-                        "macaddress" : "",
-                        "archi" : "",
-                        "uuid_inventorymachine" : "",
-                        "ip_xmpp" : "",
-                        "agenttype" : "",
-                        "keysyncthing" :  "",
-                        "enabled" : 0
+                        "uuid": uuid,
+                        "jid": "",
+                        "groupdeploy": "",
+                        "urlguacamole": "",
+                        "subnetxmpp": "",
+                        "hostname": "",
+                        "platform": "",
+                        "macaddress": "",
+                        "archi": "",
+                        "uuid_inventorymachine": "",
+                        "ip_xmpp": "",
+                        "agenttype": "",
+                        "keysyncthing":  "",
+                        "enabled": 0
                     }
         return result
 
