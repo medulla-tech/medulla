@@ -602,7 +602,8 @@ class DateTimeTpl extends AbstractTpl {
 
     function display($arrParam = array()) {
         // Display text input
-        print '<input style="width:110px" name="' . $this->name . '" id="' . $this->name . '" type="text" value="' . $arrParam["value"] . '" readonly=1 />';
+        $value = (isset($arrParam['value'])) ? $arrParam["value"] :'';
+        print '<input style="width:110px" name="' . $this->name . '" id="' . $this->name . '" type="text" value="' . $value . '" readonly=1 />';
 
         if (!isset($GLOBALS["__JSDATETIME_SOURCED__"])) { // to avoid double-sourcing
             $GLOBALS["__JSDATETIME_SOURCED__"] = 1;
@@ -942,12 +943,14 @@ class SelectItem extends AbstractTpl {
         }
         $ret = '';
         foreach ($this->elements as $key => $item) {
+          if(isset($this->elementsVal[$key])){
             if ($this->elementsVal[$key] == $this->selected) {
                 $selected = 'selected="selected"';
             } else {
                 $selected = "";
             }
             $ret .= "\t<option value=\"" . $this->elementsVal[$key] . "\" $selected>$item</option>\n";
+          }
         }
         return $ret;
     }
