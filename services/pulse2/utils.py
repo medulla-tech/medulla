@@ -46,7 +46,8 @@ However a Pulse 2 stored MAC Address is always following the IEEE 802.3
 'Unix' convention, with capital letters : 12:34:56:78:90:AB
 
 """
-import socket, struct
+import socket
+import struct
 import fcntl
 
 # to build Pulse2ConfigParser on top of ConfigParser()
