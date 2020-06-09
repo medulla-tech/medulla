@@ -118,9 +118,11 @@ class PhaseProxyMethodContainer(object):
         for name in dir(self) :
             fnc = getattr(self, name)
 
-            if not hasattr(fnc, "is_proxy_fnc"): continue
-            if not callable(fnc) : continue
-            if fnc.is_proxy_fnc :
+            if not hasattr(fnc, "is_proxy_fnc"):
+                continue
+            if not callable(fnc):
+                continue
+            if fnc.is_proxy_fnc:
                 args, vargs, kwds, defaults = inspect.getargspec(fnc)
                 fnc(self, *args)
 
@@ -181,7 +183,7 @@ class PhaseBase (PhaseProxyMethodContainer):
         """
 
         if not isinstance(cohq, CoHQuery):
-           raise TypeError("Not CoHQuery type")
+            raise TypeError("Not CoHQuery type")
 
         self.coh = cohq.coh
         self.cmd = cohq.cmd
