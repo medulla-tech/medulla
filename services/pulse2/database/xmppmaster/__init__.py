@@ -1368,7 +1368,6 @@ class XmppMasterDatabase(DatabaseHelper):
                 result = result.offset(int(min)).limit(int(max)-int(min))
                 ret['limit'] = int(max)-int(min)
 
-
             if min:
                 ret['min'] = min
             if max:

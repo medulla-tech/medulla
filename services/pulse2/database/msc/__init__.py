@@ -2663,10 +2663,10 @@ class MscDatabase(DatabaseHelper):
                     if verbose:
                         ret['stopped']['total'][1].append(coh)
                 elif coh.current_state == 'pause':
-                    if verbose: 
+                    if verbose:
                         ret['paused']['total'][1].append(coh)
                 elif coh.current_state == 'over_timed':  # out of the valid period of execution (= failed)
-                    if verbose: 
+                    if verbose:
                         ret['failure']['total'][1].append(coh)
                     if verbose:
                         ret['failure']['over_timed'][1].append(coh)
