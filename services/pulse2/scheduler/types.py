@@ -118,7 +118,7 @@ class PhaseProxyMethodContainer(object):
         for name in dir(self) :
             fnc = getattr(self, name)
 
-            if not hasattr(fnc, "is_proxy_fnc"): 
+            if not hasattr(fnc, "is_proxy_fnc"):
                 continue
             if not callable(fnc):
                 continue
