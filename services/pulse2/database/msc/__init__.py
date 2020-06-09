@@ -2413,7 +2413,8 @@ class MscDatabase(DatabaseHelper):
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands_on_host.c.host)
         ret = self.__filterOnStatus(ctx, query, state)
         session.close()
-        if max != -1: ret = ret[min:max]
+        if max != -1:
+            ret = ret[min:max]
         return map(lambda coh: {'coh_id': coh.id, 'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
 
     def getCommandOnBundleStatus(self, ctx, fk_bundle):
@@ -2691,18 +2692,24 @@ class MscDatabase(DatabaseHelper):
                             if verbose:
                                 ret['failure']['conn_rm'][1].append(coh)
                 elif coh.attempts_left != 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'):  # fail but can still try again
-                    if verbose: ret['running']['total'][1].append(coh)
+                    if verbose:
+                        ret['running']['total'][1].append(coh)
                     if coh.uploaded == 'FAILED':
-                        if verbose: ret['running']['wait_up'][1].append(coh)
-                        if verbose: ret['running']['sec_up'][1].append(coh)
+                        if verbose:
+                            ret['running']['wait_up'][1].append(coh)
+                        if verbose:
+                            ret['running']['sec_up'][1].append(coh)
                     elif coh.executed == 'FAILED':
-                        if verbose: ret['running']['wait_ex'][1].append(coh)
-                        if verbose: ret['running']['sec_ex'][1].append(coh)
+                        if verbose:
+                            ret['running']['wait_ex'][1].append(coh)
+                        if verbose:
+                            ret['running']['sec_ex'][1].append(coh)
                     elif coh.deleted == 'FAILED':
                         ret['running']['wait_rm'][0] += 1
                         ret['running']['sec_rm'][0] += 1
                 else: # running
-                    if verbose and coh.deleted != 'DONE' and coh.deleted != 'IGNORED': ret['running']['total'][1].append(coh)
+                    if verbose and coh.deleted != 'DONE' and coh.deleted != 'IGNORED':
+                        ret['running']['total'][1].append(coh)
                     if coh.deleted == 'DONE' or coh.deleted == 'IGNORED':  # done
                         if verbose:
                             ret['success']['total'][1].append(coh)
