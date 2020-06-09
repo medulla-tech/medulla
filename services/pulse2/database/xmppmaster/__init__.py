@@ -907,7 +907,7 @@ class XmppMasterDatabase(DatabaseHelper):
             #exclude local package server
             if jid[0].startswith("rspulse@pulse/"):
                 continue
-            self.setSyncthingsync(uuidpackage, jid[0], typesynchro, watching = 'yes')
+            self.setSyncthingsync(uuidpackage, jid[0], typesynchro, watching='yes')
 
     # =====================================================================
     # xmppmaster FUNCTIONS
@@ -918,7 +918,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     session,
                     text,
                     type = "noset",
-                    sessionname = '',
+                    sessionname='',
                     priority = 0,
                     who = '',
                     how = '',
@@ -1028,11 +1028,11 @@ class XmppMasterDatabase(DatabaseHelper):
             result_list.append(command_grp_list)
             result_list.append(command_machine_list)
             result_list.append(command_target_list)
-            return {"nbtotal": nbtotal ,"result": result_list}
+            return {"nbtotal": nbtotal, "result": result_list}
         except Exception, e:
             logging.getLogger().debug("getCommand_action_time error %s->"%str(e))
             traceback.print_exc(file=sys.stdout)
-            return {"nbtotal": 0 ,"result": result_list}
+            return {"nbtotal": 0, "result": result_list}
 
 
     @DatabaseHelper._sessionm
@@ -1060,25 +1060,25 @@ class XmppMasterDatabase(DatabaseHelper):
             command_qa = command_qa.first()
             session.commit()
             session.flush()
-            return { "id":  command_qa.id,
+            return {"id": command_qa.id,
                     "command_name": command_qa.command_name,
                     "command_action": command_qa.command_action,
                     "command_login": command_qa.command_login,
                     "command_os": command_qa.command_os,
                     "command_start": str(command_qa.command_start),
                     "command_grp": command_qa.command_grp,
-                    "command_machine": command_qa.command_machine }
+                    "command_machine": command_qa.command_machine}
         except Exception, e:
             logging.getLogger().error("getCommand_qa_by_cmdid error %s->"%str(e))
             traceback.print_exc(file=sys.stdout)
-            return { "id":  "",
+            return {"id":  "",
                     "command_name": "",
                     "command_action": "",
                     "command_login": "",
                     "command_os": "",
                     "command_start": "",
                     "command_grp": "",
-                    "command_machine": "" }
+                    "command_machine": ""}
 
     @DatabaseHelper._sessionm
     def setCommand_action(self, session, target, command_id, sessionid, command_result="", typemessage="log"):
@@ -1097,7 +1097,7 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def logtext(self, session, text, sessionname='', type = "noset", priority = 0, who = ''):
+    def logtext(self, session, text, sessionname='', type="noset", priority=0, who=''):
         try:
             new_log = Logs()
             new_log.text = text
@@ -1169,7 +1169,7 @@ class XmppMasterDatabase(DatabaseHelper):
             list_result = [{"id" : x.id ,
                             "packageuuid": x.packageuuid,
                             "idorganization": x.idorganization,
-                            "name":  x.name }  for x in result]
+                            "name":  x.name} for x in result]
             return {"nb": nb, "packageslist": list_result}
         except Exception, e:
             logging.getLogger().debug("load packages for organization id : %s is error : %s"%(organization_id,str(e)))
@@ -3206,9 +3206,9 @@ class XmppMasterDatabase(DatabaseHelper):
         result = deploylog.all()
         session.commit()
         session.flush()
-        ret = { 'lentotal': 0,
+        ret = {'lentotal': 0,
                'lenquery': 0,
-                'tabdeploy': { 'len': [],
+                'tabdeploy': {'len': [],
                                 'state': [],
                                 'pathpackage': [],
                                 'sessionid': [],
@@ -3282,25 +3282,25 @@ class XmppMasterDatabase(DatabaseHelper):
         result = deploylog.all()
         session.commit()
         session.flush()
-        ret = { 'lentotal': 0,
+        ret = {'lentotal': 0,
                'lenquery': 0,
-                'tabdeploy': { 'len': [],
-                                'state': [],
-                                'pathpackage': [],
-                                'sessionid': [],
-                                'start': [],
-                                'inventoryuuid': [],
-                                'command': [],
-                                'start': [],
-                                'login': [],
-                                'host': [],
-                                'macadress': [],
-                                'group_uuid': [],
-                                'startcmd': [],
-                                'endcmd': [],
-                                'jidmachine': [],
-                                'jid_relay': [],
-                                'title': []
+                'tabdeploy': {'len': [],
+                              'state': [],
+                              'pathpackage': [],
+                              'sessionid': [],
+                              'start': [],
+                              'inventoryuuid': [],
+                              'command': [],
+                              'start': [],
+                              'login': [],
+                              'host': [],
+                              'macadress': [],
+                              'group_uuid': [],
+                              'startcmd': [],
+                              'endcmd': [],
+                              'jidmachine': [],
+                              'jid_relay': [],
+                              'title': []
                 }
         }
         ret['lentotal'] = lentaillerequette[0]
@@ -4821,9 +4821,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 except Exception, e:
                     logging.getLogger().error("initialisePresenceMachine : %s" % str(e))
                 finally:
-                    return { "type": "relayserver", "reconf": mach[3] }
+                    return {"type": "relayserver", "reconf": mach[3]}
             else:
-                return { "type": "machine", "reconf": mach[3] }
+                return {"type": "machine", "reconf": mach[3]}
         else:
             return {}
 
@@ -4866,7 +4866,7 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
             return {}
-        resulttypemachine={"type": typemachine }
+        resulttypemachine={"type": typemachine}
         return resulttypemachine
 
     @DatabaseHelper._sessionm
@@ -4921,7 +4921,7 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
             return {}
-        resulttypemachine={"type": typemachine }
+        resulttypemachine={"type": typemachine}
         return resulttypemachine
 
     @DatabaseHelper._sessionm
@@ -4934,14 +4934,14 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     state LIKE '%s%%' AND
                     '%s' BETWEEN startcmd AND
-                    endcmd;""" % (state, dateend);
+                    endcmd;""" % (state, dateend)
         machines = session.execute(sql)
         session.commit()
         session.flush()
         result =  [x for x in machines]
         resultlist = []
         for t in result:
-            listresult = {  "id": t[0],
+            listresult = {"id": t[0],
                             "title": t[1],
                             "jidmachine": t[2],
                             "jid_relay": t[3],
@@ -4986,7 +4986,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         xmppmaster.deploy
                     WHERE
                         state in (%s) AND
-                        '%s' > endcmd;""" % (set_search, nowdate);
+                        '%s' > endcmd;""" % (set_search, nowdate)
             machines = session.execute(sql)
             session.commit()
             session.flush()
@@ -4994,7 +4994,7 @@ class XmppMasterDatabase(DatabaseHelper):
             resultlist = []
             for t in result:
                 self.update_state_deploy( t[0], 'ABORT ON TIMEOUT')
-                listresult = {  "id": t[0],
+                listresult = {"id": t[0],
                                 "title": t[1],
                                 "jidmachine": t[2],
                                 "jid_relay": t[3],
@@ -5045,7 +5045,7 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def updatedeploytosyncthing(self, session, sessionid, syncthing = 1):
+    def updatedeploytosyncthing(self, session, sessionid, syncthing=1):
         try:
             sql = """UPDATE `xmppmaster`.`deploy`
                      SET `syncthing`='%s'
@@ -5104,7 +5104,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         try:
-            result = {  "uuid": machine.uuid_inventorymachine,
+            result = {"uuid": machine.uuid_inventorymachine,
                         "jid": machine.jid,
                         "groupdeploy": machine.groupdeploy,
                         "urlguacamole": machine.urlguacamole,
@@ -5123,7 +5123,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 if result[i] == None:
                     result[i] = ""
         except Exception:
-            result = {  "uuid": -1,
+            result = {"uuid": -1,
                         "jid": "",
                         "groupdeploy": "",
                         "urlguacamole": "",
@@ -5276,13 +5276,13 @@ class XmppMasterDatabase(DatabaseHelper):
     def getMachinefromjid(self, session, jid):
         """ information machine"""
         user = str(jid).split("@")[0]
-        machine = session.query(Machines).filter(Machines.jid.like("%s%%" % user) ).first()
+        machine = session.query(Machines).filter(Machines.jid.like("%s%%" % user)).first()
         #machine = session.query(Machines).filter(Machines.jid == jid).first()
         session.commit()
         session.flush()
         result = {}
         if machine:
-            result = {  "id": machine.id,
+            result = {"id": machine.id,
                         "jid": machine.jid,
                         "platform": machine.platform,
                         "archi": machine.archi,
@@ -5313,7 +5313,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         result = {}
         if machine:
-            result = {  "id": machine.id,
+            result = {"id": machine.id,
                         "jid": machine.jid,
                         "platform": machine.platform,
                         "archi": machine.archi,
@@ -5342,7 +5342,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         try:
-            result = {  'id':  relayserver.id,
+            result = {'id':  relayserver.id,
                         'urlguacamole': relayserver.urlguacamole,
                         'subnet': relayserver.subnet,
                         'nameserver': relayserver.nameserver,
@@ -5445,14 +5445,14 @@ class XmppMasterDatabase(DatabaseHelper):
                 if ars:
                     #result1 = [(m.ipconnection,m.port,m.jid,m.urlguacamole)for m in ars]
                     try:
-                        result2 = { m.jid: [m.ipconnection,
+                        result2 = {m.jid: [m.ipconnection,
                                             m.port,
                                             m.jid,
                                             m.urlguacamole,
                                             0 ,
                                             m.keysyncthing] for m in ars}
                     except Exception:
-                        result2 = { m.jid: [m.ipconnection,
+                        result2 = {m.jid: [m.ipconnection,
                                             m.port,
                                             m.jid,
                                             m.urlguacamole,
@@ -5598,7 +5598,7 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [{ "jid": element[0],
+        return [{"jid": element[0],
                   "name": element[1],
                   "keysyncthing": element[2]} for element in result]
 
@@ -5612,7 +5612,7 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [{ "jid": element[0],
+        return [{"jid": element[0],
                   "name": element[1],
                   "keysyncthing": element[2]} for element in result]
 
@@ -5638,7 +5638,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 result = []
             else:
                 result = [{'index':id,
-                            "id": rule.id,
+                           "id": rule.id,
                             'regexplog': rule.regex_logmessage,
                             'status': rule.status,
                             'label': rule.label} for id, rule in enumerate(ret)]
