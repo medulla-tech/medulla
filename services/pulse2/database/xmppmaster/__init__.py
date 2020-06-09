@@ -589,7 +589,7 @@ class XmppMasterDatabase(DatabaseHelper):
                              state ="",
                              user ="",
                              type_partage= "",
-                             title="" ,
+                             title="",
                              inventoryuuid=None,
                              login=None,
                              macadress=None,
@@ -633,7 +633,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                    valuecount= [0,100]):
         setvalues =" "
         if len(valuecount) != 0:
-             setvalues = "AND xmppmaster.syncthing_machine.progress in (%s)"%",".join([str(x) for x in valuecount])
+           setvalues = "AND xmppmaster.syncthing_machine.progress in (%s)" % ",".join([str(x) for x in valuecount])
         sql = """SELECT DISTINCT progress, COUNT(progress)
                     FROM
                         xmppmaster.syncthing_machine
@@ -656,7 +656,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                  idcmd):
 
         ddistribution = self.stat_syncthing_distributon(idgrp, idcmd)
-        distibution = {'nbvalue' : len(ddistribution), "data_dist" : ddistribution}
+        distibution = {'nbvalue': len(ddistribution), "data_dist": ddistribution}
 
         sql = """SELECT
                     pathpackage,
@@ -674,20 +674,20 @@ class XmppMasterDatabase(DatabaseHelper):
         re = [x for x in result]
         re = re[0]
         if re[0] is None:
-            return {'package' : "",
-                    'nbmachine' : 0,
-                    'progresstransfert' : 0,
-                    'distibution' : distibution
+            return {'package': "",
+                    'nbmachine': 0,
+                    'progresstransfert': 0,
+                    'distibution': distibution
                     }
         try:
             progress = int(float(re[2]))
         except :
             progress = 0
 
-        return { 'package' : re[0],
-                 'nbmachine' : re[1],
-                 'progresstransfert' : progress ,
-                 'distibution' : distibution}
+        return { 'package': re[0],
+                 'nbmachine': re[1],
+                 'progresstransfert': progress ,
+                 'distibution': distibution}
 
     @DatabaseHelper._sessionm
     def getnumcluster_for_ars(self,
@@ -703,7 +703,6 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     `relayserver`.`jid` LIKE '%s'
                 LIMIT 1;"""%jidrelay
-        #print "getnumclusterforars", sql
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -849,26 +848,26 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         try:
             for relayserver in relayservers:
-                res = { 'id' : relayserver.id,
+                res = { 'id': relayserver.id,
                         'urlguacamole': relayserver.urlguacamole,
-                        'subnet' : relayserver.subnet,
+                        'subnet': relayserver.subnet,
                         'nameserver' : relayserver.nameserver,
-                        'ipserver' : relayserver.ipserver,
+                        'ipserver': relayserver.ipserver,
                         'ipconnection' : relayserver.ipconnection,
-                        'port' : relayserver.port,
-                        'portconnection' : relayserver.portconnection,
-                        'mask' : relayserver.mask,
-                        'jid' : relayserver.jid,
-                        'longitude' : relayserver.longitude,
-                        'latitude' : relayserver.latitude,
-                        'enabled' : relayserver.enabled,
-                        'switchonoff' : relayserver.switchonoff,
+                        'port': relayserver.port,
+                        'portconnection': relayserver.portconnection,
+                        'mask': relayserver.mask,
+                        'jid': relayserver.jid,
+                        'longitude': relayserver.longitude,
+                        'latitude': relayserver.latitude,
+                        'enabled': relayserver.enabled,
+                        'switchonoff': relayserver.switchonoff,
                         'mandatory': relayserver.mandatory,
-                        'classutil' : relayserver.classutil,
-                        'groupdeploy' : relayserver.groupdeploy,
-                        'package_server_ip' : relayserver.package_server_ip,
-                        'package_server_port' : relayserver.package_server_port,
-                        'moderelayserver' : relayserver.moderelayserver
+                        'classutil': relayserver.classutil,
+                        'groupdeploy': relayserver.groupdeploy,
+                        'package_server_ip': relayserver.package_server_ip,
+                        'package_server_port': relayserver.package_server_port,
+                        'moderelayserver': relayserver.moderelayserver
                     }
                 listrelayserver.append(res)
             return listrelayserver
@@ -908,39 +907,6 @@ class XmppMasterDatabase(DatabaseHelper):
             if jid[0].startswith("rspulse@pulse/"):
                 continue
             self.setSyncthingsync(uuidpackage, jid[0], typesynchro , watching = 'yes')
-
-    #@DatabaseHelper._sessionm
-    #def xmpp_unregiter_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
-        #session.query(Syncthingsync).filter(and_(Syncthingsync.uuidpackage == uuidpackage,
-                                                 #Syncthingsync.relayserver_jid == jid_relayserver,
-                                                 #Syncthingsync.typesynchro == typesynchro)).delete()
-        #session.commit()
-        #session.flush()
-
-    #@DatabaseHelper._sessionm
-    #def xmpp_delete_synchro_package(self, session, uuidpackage):
-        #session.query(Syncthingsync).filter(Syncthingsync.uuidpackage == uuidpackage).delete()
-        #session.commit()
-        #session.flush()
-
-    #@DatabaseHelper._sessionm
-    #def list_pending_synchro_package(self, session):
-        #pendinglist = session.query(distinct(Syncthingsync.uuidpackage).label("uuidpackage")).all()
-        #session.commit()
-        #session.flush()
-        #result_list = []
-        #for packageuid in pendinglist:
-            #result_list.append(packageuid.uuidpackage)
-        #return result_list
-
-    #@DatabaseHelper._sessionm
-    #def clear_old_pending_synchro_package(self, session, timeseconde=35):
-        #sql ="""DELETE FROM `xmppmaster`.`syncthingsync`
-            #WHERE
-                #`syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d SECOND);"""%timeseconde
-        #session.execute(sql)
-        #session.commit()
-        #session.flush()
 
     # =====================================================================
     # xmppmaster FUNCTIONS
@@ -5130,44 +5096,6 @@ class XmppMasterDatabase(DatabaseHelper):
         return True
 
     @DatabaseHelper._sessionm
-    def delPresenceMachinebyjiduser(self, session, jiduser):
-        result = ['-1']
-        typemachine = "machine"
-        try:
-            sql = """SELECT
-                        id, hostname, agenttype
-                    FROM
-                        xmppmaster.machines
-                    WHERE
-                        xmppmaster.machines.jid like('%s@%%');"""%jiduser
-            id = session.execute(sql)
-            session.commit()
-            session.flush()
-            result=[x for x in id][0]
-            sql  = """DELETE FROM `xmppmaster`.`machines`
-                    WHERE
-                        `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
-            if result[2] == "relayserver":
-                typemachine = "relayserver"
-                sql2 = """UPDATE `xmppmaster`.`relayserver`
-                            SET
-                                `enabled` = '0'
-                            WHERE
-                                `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
-                session.execute(sql2)
-            session.execute(sql)
-            session.commit()
-            session.flush()
-        except IndexError:
-            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jiduser)
-            return {}
-        except Exception, e:
-            logging.getLogger().error(str(e))
-            return {}
-        resulttypemachine={"type" : typemachine }
-        return resulttypemachine
-
-    @DatabaseHelper._sessionm
     def getGuacamoleRelayServerMachineHostname(self, session, hostname, enable = 1):
         querymachine = session.query(Machines)
         if enable == None:
@@ -5409,20 +5337,6 @@ class XmppMasterDatabase(DatabaseHelper):
                         'lastuser': machine.lastuser,
                         'enabled' : machine.enabled}
         return result
-
-    @DatabaseHelper._sessionm
-    def get_List_jid_ServerRelay_enable(self, session, enabled=1):
-        """ return list enable server relay id """
-        sql = """SELECT
-                    jid
-                FROM
-                    xmppmaster.relayserver
-                WHERE
-                        `relayserver`.`enabled` = %d;"""%(enabled)
-        result = session.execute(sql)
-        session.commit()
-        session.flush()
-        return [x for x in result]
 
     @DatabaseHelper._sessionm
     def getRelayServerfromjid(self, session, jid):
