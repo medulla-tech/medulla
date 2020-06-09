@@ -67,6 +67,8 @@ else{
     $vncClientAction = new ActionItem(_T("Remote control", "pulse2"), "vnc_client", "vncclient", "computer", "base", "computers");
 }
 
+$inventxmppbrowsing = new EmptyActionItem(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
+
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
 
     $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
