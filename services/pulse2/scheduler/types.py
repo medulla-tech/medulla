@@ -181,7 +181,7 @@ class PhaseBase (PhaseProxyMethodContainer):
         """
 
         if not isinstance(cohq, CoHQuery):
-           raise TypeError("Not CoHQuery type")
+            raise TypeError("Not CoHQuery type")
 
         self.coh = cohq.coh
         self.cmd = cohq.cmd

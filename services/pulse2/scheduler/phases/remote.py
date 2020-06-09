@@ -1088,7 +1088,7 @@ class DonePhase(Phase):
     def run(self): return self.perform()
 
     def perform(self):
-       self.phase.set_done()
-       self.coh.setStateDone()
-       self.dispatcher.bundles.finish(self.coh.id)
-       return self.next()
+        self.phase.set_done()
+        self.coh.setStateDone()
+        self.dispatcher.bundles.finish(self.coh.id)
+        return self.next()
