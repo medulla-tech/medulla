@@ -2333,7 +2333,6 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return self._getarraycommanddatadate(ret)
 
-
     def getCommandOnGroupByState(self, ctx, cmd_id, state, min=0, max=-1):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id).order_by(self.commands_on_host.c.host)
