@@ -55,7 +55,8 @@ import logging
 import json
 import time
 #topology
-import os, pwd
+import os
+import pwd
 import traceback
 import sys
 import re
