@@ -633,7 +633,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                    valuecount= [0,100]):
         setvalues =" "
         if len(valuecount) != 0:
-           setvalues = "AND xmppmaster.syncthing_machine.progress in (%s)"%",".join([str(x) for x in valuecount])
+           setvalues = "AND xmppmaster.syncthing_machine.progress in (%s)" % ",".join([str(x) for x in valuecount])
         sql = """SELECT DISTINCT progress, COUNT(progress)
                     FROM
                         xmppmaster.syncthing_machine
