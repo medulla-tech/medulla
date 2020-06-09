@@ -172,9 +172,16 @@ def is_command_in_valid_time(cmd_id):
     return False
 
 
-class RefreshedCommandsOnHost(Refresh, CommandsOnHost): pass
-class RefreshedCommands(Refresh, Commands): pass
-class RefreshedTarget(Refresh, Target): pass
+class RefreshedCommandsOnHost(Refresh, CommandsOnHost):
+    pass
+
+
+class RefreshedCommands(Refresh, Commands):
+    pass
+
+
+class RefreshedTarget(Refresh, Target):
+    pass
 
 
 class CoHQuery :
