@@ -124,7 +124,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 logging.getLogger().error(e)
             except Exception, e:
                 logging.getLogger().error(e)
-            if ret: break
+            if ret:
+                break
         if not ret:
             raise "Database connection error"
         return ret
@@ -1368,9 +1369,12 @@ class XmppMasterDatabase(DatabaseHelper):
                 ret['limit'] = int(max)-int(min)
 
 
-            if min : ret['min'] = min
-            if max : ret['max'] = max
-            if filt : ret['filt'] = filt
+            if min:
+                ret['min'] = min
+            if max:
+                ret['max'] = max
+            if filt:
+                ret['filt'] = filt
             result = result.all()
             session.commit()
             session.flush()
@@ -3039,7 +3043,6 @@ class XmppMasterDatabase(DatabaseHelper):
     def getdeploybyuserlen(self, session, login = None):
         if login is not None:
             return self.get_count(session.query(Deploy).filter(Deploy.login == login))
-            #lentotal = session.query(func.count(Deploy.id)).filter(Deploy.login == login).scalar()
         else:
             return self.get_count(session.query(Deploy))
 
