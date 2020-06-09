@@ -1747,13 +1747,13 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         try:
             session.query(Organization_ad).\
-                filter( Organization_ad.id_inventory ==  self.uuidtoid(id_inventory)).\
-                    update({Organization_ad.jiduser: jiduser,
-                             Organization_ad.id_inventory: self.uuidtoid(id_inventory),
-                             Organization_ad.ouuser: ouuser,
-                             Organization_ad.oumachine: oumachine,
-                             Organization_ad.hostname: hostname,
-                             Organization_ad.username: username})
+                filter(Organization_ad.id_inventory ==  self.uuidtoid(id_inventory)).\
+                       update({Organization_ad.jiduser: jiduser,
+                              Organization_ad.id_inventory: self.uuidtoid(id_inventory),
+                              Organization_ad.ouuser: ouuser,
+                              Organization_ad.oumachine: oumachine,
+                              Organization_ad.hostname: hostname,
+                              Organization_ad.username: username})
             session.commit()
             session.flush()
             return 1
@@ -4866,7 +4866,7 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
             return {}
-        resulttypemachine={"type": typemachine}
+        resulttypemachine = {"type": typemachine}
         return resulttypemachine
 
     @DatabaseHelper._sessionm
@@ -4921,7 +4921,7 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
             return {}
-        resulttypemachine={"type": typemachine}
+        resulttypemachine = {"type": typemachine}
         return resulttypemachine
 
     @DatabaseHelper._sessionm
@@ -4942,24 +4942,24 @@ class XmppMasterDatabase(DatabaseHelper):
         resultlist = []
         for t in result:
             listresult = {"id": t[0],
-                            "title": t[1],
-                            "jidmachine": t[2],
-                            "jid_relay": t[3],
-                            "pathpackage": t[4],
-                            "state": t[5],
-                            "sessionid": t[6],
-                            "start": str(t[7]),
-                            "startcmd": str(t[8]),
-                            "endcmd": str(t[9]),
-                            "inventoryuuid": t[10],
-                            "host": t[11],
-                            "user": t[12],
-                            "command": t[13],
-                            "group_uuid": t[14],
-                            "login": t[15],
-                            "macadress": t[16],
-                            "syncthing": t[17],
-                            "result": t[18]}
+                          "title": t[1],
+                          "jidmachine": t[2],
+                          "jid_relay": t[3],
+                          "pathpackage": t[4],
+                          "state": t[5],
+                          "sessionid": t[6],
+                          "start": str(t[7]),
+                          "startcmd": str(t[8]),
+                          "endcmd": str(t[9]),
+                          "inventoryuuid": t[10],
+                          "host": t[11],
+                          "user": t[12],
+                          "command": t[13],
+                          "group_uuid": t[14],
+                          "login": t[15],
+                          "macadress": t[16],
+                          "syncthing": t[17],
+                          "result": t[18]}
             resultlist.append(listresult)
         return resultlist
 
@@ -4995,24 +4995,24 @@ class XmppMasterDatabase(DatabaseHelper):
             for t in result:
                 self.update_state_deploy( t[0], 'ABORT ON TIMEOUT')
                 listresult = {"id": t[0],
-                                "title": t[1],
-                                "jidmachine": t[2],
-                                "jid_relay": t[3],
-                                "pathpackage": t[4],
-                                "state": t[5],
-                                "sessionid": t[6],
-                                "start": str(t[7]),
-                                "startcmd": str(t[8]),
-                                "endcmd": str(t[9]),
-                                "inventoryuuid": t[10],
-                                "host": t[11],
-                                "user": t[12],
-                                "command": t[13],
-                                "group_uuid": t[14],
-                                "login": t[15],
-                                "macadress": t[16],
-                                "syncthing": t[17],
-                                "result": t[18]}
+                              "title": t[1],
+                              "jidmachine": t[2],
+                              "jid_relay": t[3],
+                              "pathpackage": t[4],
+                              "state": t[5],
+                              "sessionid": t[6],
+                              "start": str(t[7]),
+                              "startcmd": str(t[8]),
+                              "endcmd": str(t[9]),
+                              "inventoryuuid": t[10],
+                              "host": t[11],
+                              "user": t[12],
+                              "command": t[13],
+                              "group_uuid": t[14],
+                              "login": t[15],
+                              "macadress": t[16],
+                              "syncthing": t[17],
+                              "result": t[18]}
                 resultlist.append(listresult)
             return resultlist
         except Exception, e:
@@ -5105,38 +5105,38 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         try:
             result = {"uuid": machine.uuid_inventorymachine,
-                        "jid": machine.jid,
-                        "groupdeploy": machine.groupdeploy,
-                        "urlguacamole": machine.urlguacamole,
-                        "subnetxmpp": machine.subnetxmpp,
-                        "hostname": machine.hostname,
-                        "platform": machine.platform,
-                        "macaddress": machine.macaddress,
-                        "archi": machine.archi,
-                        "uuid_inventorymachine": machine.uuid_inventorymachine,
-                        "ip_xmpp": machine.ip_xmpp,
-                        "agenttype": machine.agenttype,
-                        "keysyncthing":  machine.keysyncthing,
-                        "enabled": machine.enabled
+                      "jid": machine.jid,
+                      "groupdeploy": machine.groupdeploy,
+                      "urlguacamole": machine.urlguacamole,
+                      "subnetxmpp": machine.subnetxmpp,
+                      "hostname": machine.hostname,
+                      "platform": machine.platform,
+                      "macaddress": machine.macaddress,
+                      "archi": machine.archi,
+                      "uuid_inventorymachine": machine.uuid_inventorymachine,
+                      "ip_xmpp": machine.ip_xmpp,
+                      "agenttype": machine.agenttype,
+                      "keysyncthing":  machine.keysyncthing,
+                      "enabled": machine.enabled
                         }
             for i in result:
                 if result[i] == None:
                     result[i] = ""
         except Exception:
             result = {"uuid": -1,
-                        "jid": "",
-                        "groupdeploy": "",
-                        "urlguacamole": "",
-                        "subnetxmpp": "",
-                        "hostname": "",
-                        "platform": "",
-                        "macaddress": "",
-                        "archi": "",
-                        "uuid_inventorymachine": "",
-                        "ip_xmpp": "",
-                        "agenttype": "",
-                        "keysyncthing":  "",
-                        "enabled": 0
+                      "jid": "",
+                      "groupdeploy": "",
+                      "urlguacamole": "",
+                      "subnetxmpp": "",
+                      "hostname": "",
+                      "platform": "",
+                      "macaddress": "",
+                      "archi": "",
+                      "uuid_inventorymachine": "",
+                      "ip_xmpp": "",
+                      "agenttype": "",
+                      "keysyncthing":  "",
+                      "enabled": 0
                     }
         return result
 
@@ -5283,26 +5283,26 @@ class XmppMasterDatabase(DatabaseHelper):
         result = {}
         if machine:
             result = {"id": machine.id,
-                        "jid": machine.jid,
-                        "platform": machine.platform,
-                        "archi": machine.archi,
-                        "hostname": machine.hostname,
-                        "uuid_inventorymachine": machine.uuid_inventorymachine,
-                        "ip_xmpp": machine.ip_xmpp,
-                        "ippublic": machine.ippublic,
-                        "macaddress": machine.macaddress,
-                        "subnetxmpp": machine.subnetxmpp,
-                        "agenttype": machine.agenttype,
-                        "classutil": machine.classutil,
-                        "groupdeploy": machine.groupdeploy,
-                        "urlguacamole": machine.urlguacamole,
-                        "picklekeypublic": machine.picklekeypublic,
-                        'ad_ou_user': machine.ad_ou_user,
-                        'ad_ou_machine': machine.ad_ou_machine,
-                        'kiosk_presence': machine.kiosk_presence,
-                        'lastuser': machine.lastuser,
-                        'keysyncthing': machine.keysyncthing,
-                        'enabled': machine.enabled}
+                      "jid": machine.jid,
+                      "platform": machine.platform,
+                      "archi": machine.archi,
+                      "hostname": machine.hostname,
+                      "uuid_inventorymachine": machine.uuid_inventorymachine,
+                      "ip_xmpp": machine.ip_xmpp,
+                      "ippublic": machine.ippublic,
+                      "macaddress": machine.macaddress,
+                      "subnetxmpp": machine.subnetxmpp,
+                      "agenttype": machine.agenttype,
+                      "classutil": machine.classutil,
+                      "groupdeploy": machine.groupdeploy,
+                      "urlguacamole": machine.urlguacamole,
+                      "picklekeypublic": machine.picklekeypublic,
+                      'ad_ou_user': machine.ad_ou_user,
+                      'ad_ou_machine': machine.ad_ou_machine,
+                      'kiosk_presence': machine.kiosk_presence,
+                      'lastuser': machine.lastuser,
+                      'keysyncthing': machine.keysyncthing,
+                      'enabled': machine.enabled}
         return result
 
     @DatabaseHelper._sessionm
@@ -5314,25 +5314,25 @@ class XmppMasterDatabase(DatabaseHelper):
         result = {}
         if machine:
             result = {"id": machine.id,
-                        "jid": machine.jid,
-                        "platform": machine.platform,
-                        "archi": machine.archi,
-                        "hostname": machine.hostname,
-                        "uuid_inventorymachine": machine.uuid_inventorymachine,
-                        "ip_xmpp": machine.ip_xmpp,
-                        "ippublic": machine.ippublic,
-                        "macaddress": machine.macaddress,
-                        "subnetxmpp": machine.subnetxmpp,
-                        "agenttype": machine.agenttype,
-                        "classutil": machine.classutil,
-                        "groupdeploy": machine.groupdeploy,
-                        "urlguacamole": machine.urlguacamole,
-                        "picklekeypublic": machine.picklekeypublic,
-                        'ad_ou_user': machine.ad_ou_user,
-                        'ad_ou_machine': machine.ad_ou_machine,
-                        'kiosk_presence': machine.kiosk_presence,
-                        'lastuser': machine.lastuser,
-                        'enabled': machine.enabled}
+                      "jid": machine.jid,
+                      "platform": machine.platform,
+                      "archi": machine.archi,
+                      "hostname": machine.hostname,
+                      "uuid_inventorymachine": machine.uuid_inventorymachine,
+                      "ip_xmpp": machine.ip_xmpp,
+                      "ippublic": machine.ippublic,
+                      "macaddress": machine.macaddress,
+                      "subnetxmpp": machine.subnetxmpp,
+                      "agenttype": machine.agenttype,
+                      "classutil": machine.classutil,
+                      "groupdeploy": machine.groupdeploy,
+                      "urlguacamole": machine.urlguacamole,
+                      "picklekeypublic": machine.picklekeypublic,
+                      'ad_ou_user': machine.ad_ou_user,
+                      'ad_ou_machine': machine.ad_ou_machine,
+                      'kiosk_presence': machine.kiosk_presence,
+                      'lastuser': machine.lastuser,
+                      'enabled': machine.enabled}
         return result
 
     @DatabaseHelper._sessionm
@@ -5343,25 +5343,25 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         try:
             result = {'id':  relayserver.id,
-                        'urlguacamole': relayserver.urlguacamole,
-                        'subnet': relayserver.subnet,
-                        'nameserver': relayserver.nameserver,
-                        'ipserver': relayserver.ipserver,
-                        'ipconnection': relayserver.ipconnection,
-                        'port': relayserver.port,
-                        'portconnection': relayserver.portconnection,
-                        'mask': relayserver.mask,
-                        'jid': relayserver.jid,
-                        'longitude': relayserver.longitude,
-                        'latitude': relayserver.latitude,
-                        'enabled': relayserver.enabled,
-                        'switchonoff': relayserver.switchonoff,
-                        'mandatory': relayserver.mandatory,
-                        'classutil': relayserver.classutil,
-                        'groupdeploy': relayserver.groupdeploy,
-                        'package_server_ip': relayserver.package_server_ip,
-                        'package_server_port': relayserver.package_server_port,
-                        'moderelayserver': relayserver.moderelayserver
+                      'urlguacamole': relayserver.urlguacamole,
+                      'subnet': relayserver.subnet,
+                      'nameserver': relayserver.nameserver,
+                      'ipserver': relayserver.ipserver,
+                      'ipconnection': relayserver.ipconnection,
+                      'port': relayserver.port,
+                      'portconnection': relayserver.portconnection,
+                      'mask': relayserver.mask,
+                      'jid': relayserver.jid,
+                      'longitude': relayserver.longitude,
+                      'latitude': relayserver.latitude,
+                      'enabled': relayserver.enabled,
+                      'switchonoff': relayserver.switchonoff,
+                      'mandatory': relayserver.mandatory,
+                      'classutil': relayserver.classutil,
+                      'groupdeploy': relayserver.groupdeploy,
+                      'package_server_ip': relayserver.package_server_ip,
+                      'package_server_port': relayserver.package_server_port,
+                      'moderelayserver': relayserver.moderelayserver
             }
         except Exception:
             result = {}
@@ -5599,8 +5599,8 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [{"jid": element[0],
-                  "name": element[1],
-                  "keysyncthing": element[2]} for element in result]
+                 "name": element[1],
+                 "keysyncthing": element[2]} for element in result]
 
     @DatabaseHelper._sessionm
     def get_list_ars_from_cluster(self, session, cluster=0):
@@ -5639,9 +5639,9 @@ class XmppMasterDatabase(DatabaseHelper):
             else:
                 result = [{'index':id,
                            "id": rule.id,
-                            'regexplog': rule.regex_logmessage,
-                            'status': rule.status,
-                            'label': rule.label} for id, rule in enumerate(ret)]
+                           'regexplog': rule.regex_logmessage,
+                           'status': rule.status,
+                           'label': rule.label} for id, rule in enumerate(ret)]
             return result
         except Exception, e:
             traceback.print_exc(file=sys.stdout)
