@@ -589,7 +589,7 @@ class XmppMasterDatabase(DatabaseHelper):
                              state ="",
                              user ="",
                              type_partage= "",
-                             title="" ,
+                             title="",
                              inventoryuuid=None,
                              login=None,
                              macadress=None,
@@ -656,7 +656,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                  idcmd):
 
         ddistribution = self.stat_syncthing_distributon(idgrp, idcmd)
-        distibution = {'nbvalue' : len(ddistribution), "data_dist" : ddistribution}
+        distibution = {'nbvalue': len(ddistribution), "data_dist": ddistribution}
 
         sql = """SELECT
                     pathpackage,
@@ -674,20 +674,20 @@ class XmppMasterDatabase(DatabaseHelper):
         re = [x for x in result]
         re = re[0]
         if re[0] is None:
-            return {'package' : "",
-                    'nbmachine' : 0,
-                    'progresstransfert' : 0,
-                    'distibution' : distibution
+            return {'package': "",
+                    'nbmachine': 0,
+                    'progresstransfert': 0,
+                    'distibution': distibution
                     }
         try:
             progress = int(float(re[2]))
         except :
             progress = 0
 
-        return { 'package' : re[0],
-                 'nbmachine' : re[1],
-                 'progresstransfert' : progress ,
-                 'distibution' : distibution}
+        return { 'package': re[0],
+                 'nbmachine': re[1],
+                 'progresstransfert': progress ,
+                 'distibution': distibution}
 
     @DatabaseHelper._sessionm
     def getnumcluster_for_ars(self,
@@ -703,7 +703,6 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     `relayserver`.`jid` LIKE '%s'
                 LIMIT 1;"""%jidrelay
-        #print "getnumclusterforars", sql
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -849,26 +848,26 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         try:
             for relayserver in relayservers:
-                res = { 'id' : relayserver.id,
+                res = { 'id': relayserver.id,
                         'urlguacamole': relayserver.urlguacamole,
-                        'subnet' : relayserver.subnet,
+                        'subnet': relayserver.subnet,
                         'nameserver' : relayserver.nameserver,
-                        'ipserver' : relayserver.ipserver,
+                        'ipserver': relayserver.ipserver,
                         'ipconnection' : relayserver.ipconnection,
-                        'port' : relayserver.port,
-                        'portconnection' : relayserver.portconnection,
-                        'mask' : relayserver.mask,
-                        'jid' : relayserver.jid,
-                        'longitude' : relayserver.longitude,
-                        'latitude' : relayserver.latitude,
-                        'enabled' : relayserver.enabled,
-                        'switchonoff' : relayserver.switchonoff,
+                        'port': relayserver.port,
+                        'portconnection': relayserver.portconnection,
+                        'mask': relayserver.mask,
+                        'jid': relayserver.jid,
+                        'longitude': relayserver.longitude,
+                        'latitude': relayserver.latitude,
+                        'enabled': relayserver.enabled,
+                        'switchonoff': relayserver.switchonoff,
                         'mandatory': relayserver.mandatory,
-                        'classutil' : relayserver.classutil,
-                        'groupdeploy' : relayserver.groupdeploy,
-                        'package_server_ip' : relayserver.package_server_ip,
-                        'package_server_port' : relayserver.package_server_port,
-                        'moderelayserver' : relayserver.moderelayserver
+                        'classutil': relayserver.classutil,
+                        'groupdeploy': relayserver.groupdeploy,
+                        'package_server_ip': relayserver.package_server_ip,
+                        'package_server_port': relayserver.package_server_port,
+                        'moderelayserver': relayserver.moderelayserver
                     }
                 listrelayserver.append(res)
             return listrelayserver
