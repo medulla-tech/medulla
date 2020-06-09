@@ -5613,8 +5613,8 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [{"jid": element[0],
-                  "name": element[1],
-                  "keysyncthing": element[2]} for element in result]
+                 "name": element[1],
+                 "keysyncthing": element[2]} for element in result]
 
 
     @DatabaseHelper._sessionm
