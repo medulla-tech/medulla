@@ -335,13 +335,6 @@ class RpcProxy(RpcProxyI):
         @param end_date: new end date of command
         @type end_date: str
         """
-        d = defer.maybeDeferred(MscDatabase().extend_command,
-            cmd_id,
-            start_date,
-            end_date)
-        return d
-
-    def extend_command(self, cmd_id, start_date, end_date):
         MscDatabase().extend_command(cmd_id, start_date, end_date)
 
     def delete_command(self, cmd_id):
