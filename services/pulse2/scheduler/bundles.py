@@ -235,7 +235,7 @@ class BundleReferences :
         Removes all finished bundles.
         """
         for id in self.all_ids :
-            finished = all([b.finished for b in self.content if b.id==id])
+            finished = all(b.finished for b in self.content if b.id==id)
             if finished :
                 self.logger.debug("Removing the bundle #%d from bundle processing" % id)
                 for b in self.content :

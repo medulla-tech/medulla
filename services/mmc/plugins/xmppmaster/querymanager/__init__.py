@@ -53,7 +53,6 @@ def queryPossibilities():
 
 
 def queryGroups():
-    # jfkjfk
     # Assign criterions to categories
     ret = []
     # Identification cat

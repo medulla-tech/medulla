@@ -451,6 +451,16 @@ Requires:   python-croniter
 %description -n python-mmc-xmppmaster
 This package contains the xmppmaster plugin for the MMC agent.
 
+%pre -n     python-mmc-xmppmaster
+if ! getent passwd | grep -q "^pulsetransfert:"; then
+    echo -n "Adding user pulsetransfert..."
+    adduser --system \
+        -d /var/lib/pulse2/file-transfer \
+        -s /bin/rbash \
+        pulsetransfert
+    echo "..done"
+fi
+
 %files -n python-mmc-xmppmaster
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/xmppmaster.ini
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/inventoryconf.ini

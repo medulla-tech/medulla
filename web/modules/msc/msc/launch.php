@@ -31,6 +31,7 @@ require_once('modules/msc/includes/package_api.php');
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
+
 class TextlabelTpl extends AbstractTpl {
     var $name;
     function TextlabelTpl($name) {
@@ -51,12 +52,13 @@ class TextlabelTpl extends AbstractTpl {
 
 function quick_get($param, $is_checkbox = False) {
     if ($is_checkbox) {
-        return $_GET[$param];
+        return (isset($_GET[$param])) ? $_GET[$param] : '';
     }
-    if (isset($_POST[$param]) && $_POST[$param] != '') {
-        return $_POST[$param];
+    else if (isset($_POST[$param]) && $_POST[$param] != '') {
+        return (isset($_POST[$param])) ? $_POST[$param] : '';
     }
-    return $_GET[$param];
+    else
+      return (isset($_GET[$param])) ? $_GET[$param]: '';
 }
 
 /*
@@ -210,7 +212,7 @@ function start_a_command($proxy = array(), $activate = true) {
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                 'uuid' => $uuid,
-                                                                                'hostname' => $hostname,
+                                                                                'hostname' => (isset($_GET['hostname'])) ?$_GET['hostname'] : "",
                                                                                 'gid' => $gid,
                                                                                 'cmd_id' => $id,
                                                                                 "login"=>$_SESSION['login'])));
@@ -405,6 +407,8 @@ function check_for_real($s, $e) {
     return False;
 }
 
+if(!isset($_GET['actionconvergenceint']))
+  $_GET['actionconvergenceint'] = 0;
 // if ($_GET['actionconvergence'] != 'Active'){
 //     $_GET['active'] = 'off';
 // }

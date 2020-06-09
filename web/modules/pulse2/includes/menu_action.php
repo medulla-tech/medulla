@@ -145,6 +145,7 @@ function modIsActive($action) {
 }
 echo "<ul class='action'>";
 foreach ($actions as $action){
+  if(isset($action->action)){
         if (is_array($paramArray)) {
             $paramArray['mod'] = $action->mod;
             if ($action->action == "vnc_client") {
@@ -214,6 +215,7 @@ foreach ($actions as $action){
             }
         }
         echo "</li>";
+  }
 }
 echo "</ul>";
 ?>

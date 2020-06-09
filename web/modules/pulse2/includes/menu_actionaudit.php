@@ -28,8 +28,12 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     require_once("modules/xmppmaster/includes/xmlrpc.php");
 }
 
+$cn = '';
+if (isset($_GET['cn'])){
+  $cn = $_GET['cn'];
+  $_SESSION['cn'] = $_GET['cn'];
+}
 
-if (isset($_GET['cn'])) $_SESSION['cn'] = $_GET['cn'];
 if (isset($_GET['objectUUID']))
     $_SESSION['objectUUID'] = $_GET['objectUUID'];
 else if (isset($_GET['uuid']))
@@ -54,7 +58,8 @@ if (isset($_GET['action']))
 //             $element="novnc";
 //         }
 //     }
-$paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID'],'vnctype' => $element, "presencemachinexmpp" => $presencemachinexmpp);
+
+$paramArray = array('cn' => (isset($_SESSION['cn'])) ? $_SESSION['cn'] : $cn, 'objectUUID' => $_SESSION['objectUUID'],'vnctype' => $element, "presencemachinexmpp" => $presencemachinexmpp);
 
 $inventAction = new ActionItem(_T("Inventory", "pulse2"),"invtabs","inventory","inventory", "base", "computers");
 //$extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
