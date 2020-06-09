@@ -5130,44 +5130,6 @@ class XmppMasterDatabase(DatabaseHelper):
         return True
 
     @DatabaseHelper._sessionm
-    def delPresenceMachinebyjiduser(self, session, jiduser):
-        result = ['-1']
-        typemachine = "machine"
-        try:
-            sql = """SELECT
-                        id, hostname, agenttype
-                    FROM
-                        xmppmaster.machines
-                    WHERE
-                        xmppmaster.machines.jid like('%s@%%');"""%jiduser
-            id = session.execute(sql)
-            session.commit()
-            session.flush()
-            result=[x for x in id][0]
-            sql  = """DELETE FROM `xmppmaster`.`machines`
-                    WHERE
-                        `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
-            if result[2] == "relayserver":
-                typemachine = "relayserver"
-                sql2 = """UPDATE `xmppmaster`.`relayserver`
-                            SET
-                                `enabled` = '0'
-                            WHERE
-                                `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
-                session.execute(sql2)
-            session.execute(sql)
-            session.commit()
-            session.flush()
-        except IndexError:
-            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jiduser)
-            return {}
-        except Exception, e:
-            logging.getLogger().error(str(e))
-            return {}
-        resulttypemachine={"type" : typemachine }
-        return resulttypemachine
-
-    @DatabaseHelper._sessionm
     def getGuacamoleRelayServerMachineHostname(self, session, hostname, enable = 1):
         querymachine = session.query(Machines)
         if enable == None:
@@ -5409,20 +5371,6 @@ class XmppMasterDatabase(DatabaseHelper):
                         'lastuser': machine.lastuser,
                         'enabled' : machine.enabled}
         return result
-
-    @DatabaseHelper._sessionm
-    def get_List_jid_ServerRelay_enable(self, session, enabled=1):
-        """ return list enable server relay id """
-        sql = """SELECT
-                    jid
-                FROM
-                    xmppmaster.relayserver
-                WHERE
-                        `relayserver`.`enabled` = %d;"""%(enabled)
-        result = session.execute(sql)
-        session.commit()
-        session.flush()
-        return [x for x in result]
 
     @DatabaseHelper._sessionm
     def getRelayServerfromjid(self, session, jid):

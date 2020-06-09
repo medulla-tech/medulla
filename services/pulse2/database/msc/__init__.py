@@ -524,58 +524,6 @@ class MscDatabase(DatabaseHelper):
             result['connect_as'] = x.connect_as
         return result
 
-    def deployxmpponmachine(self, command_id):
-        result = {}
-        sqlselect="""
-            SELECT
-                host,
-                target_name,
-                title,
-                commands.start_date AS startdatec,
-                commands_on_host.start_date AS startdateh,
-                commands.end_date AS enddatec,
-                commands_on_host.end_date AS enddateh,
-                target_ipaddr,
-                target_uuid,
-                target_macaddr,
-                target_bcast,
-                target_network,
-                package_id,
-                creator,
-                connect_as
-            FROM
-                commands_on_host
-                    INNER JOIN
-                commands ON commands.id = commands_on_host.fk_commands
-                    INNER JOIN
-                target ON target.id = commands_on_host.fk_target
-                    INNER JOIN
-                phase ON commands_on_host.id = phase.fk_commands_on_host
-            WHERE
-                commands.id = %s
-                and commands_on_host.id_group IS NULL
-                ORDER BY commands_on_host.id DESC
-                limit 1
-                ;"""%command_id
-        resultsql = self.db.execute(sqlselect)
-        for x in resultsql:
-            result['host'] = x.host
-            result['target_name'] = x.target_name
-            result['title'] = x.title
-            result['startdatec'] = x.startdatec
-            result['startdateh'] = x.startdateh
-            result['enddatec'] = x.enddatec
-            result['enddateh'] = x.enddateh
-            result['target_ipaddr'] = x.target_ipaddr
-            result['target_uuid'] = x.target_uuid
-            result['target_macaddr'] = x.target_macaddr
-            result['target_bcast'] = x.target_bcast
-            result['target_network'] = x.target_network
-            result['package_id'] = x.package_id
-            result['creator'] = x.creator
-            result['connect_as'] = x.connect_as
-        return result
-
     @DatabaseHelper._sessionm
     def get_msc_listuuid_commandid(self, session, command_id, filter, start, limit):
         start = int(start)
