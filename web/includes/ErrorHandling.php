@@ -36,7 +36,7 @@ class ErrorHandlingItem {
     var $_showTraceBack;
 
     function ErrorHandlingItem($regexp) {
-        $this->regexp = $regexp;
+        $this->regexp = '#'.$regexp.'#';
         $this->msgRegExp = false;
         $this->_size = 800; //default notify Widget size
         $this->_level = 4; //default ErrorHandling level
@@ -77,7 +77,7 @@ class ErrorHandlingItem {
 
             $copied_message = _("Copied");
             $selector = "jQuery(this).parent().find('.errorTraceback')";
-            $script .= "var textareaToRemove = jQuery( '<textarea>' );
+            $script = "var textareaToRemove = jQuery( '<textarea>' );
             jQuery( 'body' ).append(textareaToRemove);
             jQuery(textareaToRemove).val(jQuery(this).parent().find('pre').text()).select();
             document.execCommand( 'copy' );
