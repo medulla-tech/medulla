@@ -1046,7 +1046,7 @@ class geolocalisation_agent:
             self.localisation=self.getdatafilegeolocalisation()
 
     def getgeolocalisationobject(self):
-        if self.localisation is none:
+        if self.localisation is None:
             return {}
         return self.localisation
 
