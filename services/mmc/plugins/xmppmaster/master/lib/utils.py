@@ -46,7 +46,7 @@ import uuid
 import time
 from datetime import datetime
 import imp
-import requests 
+import requests
 from Crypto import Random
 from Crypto.Cipher import AES
 import urllib2
@@ -92,7 +92,7 @@ def dump_parameter(para=True, out=True, timeprocess = True):
             start = time.time()
             func_name = decorated_function.__name__
             log = logging.getLogger(func_name)
-            
+
             filepath = os.path.basename(__file__)
             # get function params (args and kwargs)
             if para:
@@ -1026,10 +1026,21 @@ def md5folder(directory):
             hash.update(md5(os.path.join(root, basename)))
     return hash.hexdigest()
 
+
+def Setdirectorytempinfo():
+    """
+    create directory
+    """
+    dirtempinfo = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "INFOSTMP")
+    if not os.path.exists(dirtempinfo):
+        os.makedirs(dirtempinfo, mode=0700)
+    return dirtempinfo
+
+
 class geolocalisation_agent:
-    def __init__(self, 
-                 typeuser = "public", 
-                 geolocalisation=True, 
+    def __init__(self,
+                 typeuser = "public",
+                 geolocalisation=True,
                  ip_public=None,
                  strlistgeoserveur=""):
         self.determination = False
@@ -1046,11 +1057,11 @@ class geolocalisation_agent:
             self.localisation=self.getdatafilegeolocalisation()
 
     def getgeolocalisationobject(self):
-        if self.localisation is none:
+        if self.localisation is None:
             return {}
         return self.localisation
 
-    def getdatafilegeolocalisation(self):    
+    def getdatafilegeolocalisation(self):
         if self.geoinfoexist():
             try:
                 with open(self.filegeolocalisation) as json_data:
@@ -1136,7 +1147,7 @@ class geolocalisation_agent:
             return r.json()
         except:
             return None
-    
+
     @staticmethod
     def call_simple_page_urllib(url):
         try:

@@ -179,7 +179,7 @@ switch($_GET['information']){
             }
         echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
         echo _T('NETSTAT', 'xmppmaster')."\n";
-        $entete = array_shift ( $re[result] );
+        $entete = array_shift ( $re['result'] );
         //echo $entete;
         echo "<tr>";
         //Proto Local address@Remote address@Status@PID@Program name
@@ -190,7 +190,7 @@ switch($_GET['information']){
         <th>"._T("PID", "xmppmaster")."</th>
         <th>"._T("Program name", "xmppmaster")."</th>";
         echo "</tr>";
-        foreach( $re[result] as $datareseau){
+        foreach( $re['result'] as $datareseau){
             echo "<tr>";
                 $ligne = explode("@", $datareseau);
                 $color = "black";
@@ -283,8 +283,10 @@ switch($_GET['information']){
                 if ($re == ""){
                     $re = _T("time out command", "xmppmaster");
                 }
+                if($re != _T("time out command", "xmppmaster")){
                 $re = implode("", $re['result']);
                 $re = json_decode($re, true);
+              }
 
 //                 echo "<pre>";
 //                     //print_r($descriptor_base);
@@ -344,19 +346,23 @@ switch($_GET['information']){
                         echo "<td valign=\"top\">";
                         echo "<Hn>"._T("Remote plugins", "xmppmaster")."</Hn>";
                         echo "<ul>";
+                          if(isset($re['plugins']['plu'])){
                             foreach ($re['plugins']['plu'] as $key=>$val){
                                 echo "<li>";
                                 echo "$key   =>  $val";
                                 echo "</li>";
                             }
+                          }
                         echo "</ul>";
                         echo "<Hn>"._T("Remote scheduler plugins", "xmppmaster")."</Hn>";
                         echo "<ul>";
+                          if(isset($re['plugins']['plu'])){
                             foreach ($re['plugins']['schedule'] as $key=>$val){
                                 echo "<li>";
                                 echo "$key   =>  $val";
                                 echo "</li>";
                             }
+                          }
                         echo "</ul>";
 
 
@@ -380,12 +386,14 @@ switch($_GET['information']){
                     echo "<tr>";
                         echo "<td>";
                               echo "[global]<br>";
-                              echo "autoupdate=".$confxmppmaster['_sections']['global']['autoupdate']."<br>";
+                              $autoupdate = (isset($confxmppmaster['_sections']['global']['autoupdate'])) ? $confxmppmaster['_sections']['global']['autoupdate'] : '';
+                              echo "autoupdate=".$autoupdate."<br>";
                               echo "autoupdatebyrelay=".$confxmppmaster['_sections']['global']['autoupdatebyrelay'];
                         echo "</td>";
                         echo "<td>";
                         echo "[updateagent]<br>";
-                        echo "updating=".$re['conf'];
+                        $updating = (isset($re['conf'])) ? $re['conf'] : '';
+                        echo "updating=".$updating;
                         echo "</td>";
                         echo "<td>";
                             echo "";
@@ -402,9 +410,9 @@ switch($_GET['information']){
                         echo $confxmppmaster['diragentbase'];
                         echo "</td>";
                         echo "<td>";
-                        echo $re['pathagent'];
+                        echo (isset($re['pathagent'])) ?$re['pathagent'] : '';
                         echo "</td><td>";
-                        echo $re['pathimg'];
+                        echo (isset($re['pathimg'])) ?$re['pathimg'] : '';
                         echo "</td>";
                     echo "</tr>";
 
@@ -451,6 +459,7 @@ switch($_GET['information']){
                         echo "</td>";
                         echo "<td>";
                          // ------------------------------ DESCIPTOR AGANT REMOTE ----------------------------------------
+                        if(isset($re['agentdescriptor'])){
                                 $json_data = json_decode($re['agentdescriptor'], true);
                                 foreach($json_data  as $key => $value)
                                 {
@@ -487,9 +496,11 @@ switch($_GET['information']){
                                     }
                                     echo "</ul>";
                                 }
+                              }
                         echo "</td>";
                         echo "<td>";
                             // ------------------------------ DESCIPTOR AGANT REMOTE iMAGE ----------------------------------------
+                            if(isset($re['imgdescriptor'])){
                                 $json_data = json_decode($re['imgdescriptor'], true);
                                 foreach($json_data  as $key => $value)
                                 {
@@ -530,6 +541,7 @@ switch($_GET['information']){
                                     }
                                     echo "</ul>";
                                 }
+                              }
                         echo "</td>";
                     echo "</tr>";
                     // ------------------------------ ACTION POSSIBLE ----------------------------------------
@@ -538,7 +550,7 @@ switch($_GET['information']){
                         echo "</td>";
                         echo "<td colspan=\"2\">";
                             printf("<h2 style=\"font-weight: bold;\">%s</h2>",_T("Remote image verifications", "xmppmaster"));
-                            echo $re['testmodule'];
+                            echo (isset($testmodule)) ? $re['testmodule'] : '';
                         echo "</td>";
                     echo "</tr>";
                     echo "<tr>";
@@ -546,8 +558,10 @@ switch($_GET['information']){
                         echo "</td>";
                         echo "<td colspan=\"2\">";
                             printf("<h2 style=\"font-weight: bold;\">%s</h2>",_T("Diff information", "xmppmaster"));
-                            $re['information'] = str_replace( "imagethe", "image. The",$re['information']);
+                            if(isset($re['information'])){
+                              $re['information'] = str_replace( "imagethe", "image. The",$re['information']);
                             echo "<p>".$re['information']."</p>";
+                          }
                         echo "</td>";
                     echo "</tr>";
                     echo "<tr>";
@@ -562,11 +576,13 @@ switch($_GET['information']){
                             $se = array();
                             foreach($txtsearch as $tx ){
                             if( $tx == "Replace or add agent files") continue;
-                                $pos1 = stripos($re['actiontxt'], $tx);
+                                $actiontxt = (isset($re['actiontxt'])) ? $re['actiontxt']: '';
+                                $pos1 = stripos($actiontxt, $tx);
                                 if ($pos1 !== false) {
                                 $se[] = $tx;
                                 }
                             }
+                          if(isset($re['actiontxt'])){
 
                             $re['actiontxt'] = str_replace( $txtsearch,"", $re['actiontxt']);
                             $re['actiontxt'] = str_replace( "][", "],[", $re['actiontxt']);
@@ -575,7 +591,9 @@ switch($_GET['information']){
                             $re['actiontxt'] = str_replace( ",]", "]", $re['actiontxt']);
 
                             $json_data = json_decode('[' . $re['actiontxt'] . ']', true);
-
+                          }
+                          else
+                            $json_data = [];
                             if (count($se) != count($json_data)){
                                 array_unshift($se,"Action for program_agent");
                             }
