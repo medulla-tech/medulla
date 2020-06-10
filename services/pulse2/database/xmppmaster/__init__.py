@@ -3213,7 +3213,6 @@ class XmppMasterDatabase(DatabaseHelper):
                              'state': [],
                              'pathpackage': [],
                              'sessionid': [],
-                             'start': [],
                              'inventoryuuid': [],
                              'command': [],
                              'start': [],
@@ -3289,7 +3288,6 @@ class XmppMasterDatabase(DatabaseHelper):
                              'state': [],
                              'pathpackage': [],
                              'sessionid': [],
-                             'start': [],
                              'inventoryuuid': [],
                              'command': [],
                              'start': [],
@@ -3491,7 +3489,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         ret ={'lentotal' : 0,
-              'tabdeploy' : {   'len' : [],
+              'tabdeploy' : {   'len': [],
                                 'state' : [],
                                 'pathpackage' : [],
                                 'sessionid' : [],
@@ -3548,7 +3546,7 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = deploylog.all()
         session.commit()
         session.flush()
-        ret ={'len' : len(deploylog),'tabdeploy' : {'state' : [],'pathpackage' : [], 'sessionid' : [],'start' : [], 'inventoryuuid' : [], 'command' : [], 'start' : [], 'login' : [],  'host' : [] }}
+        ret ={'len': len(deploylog),'tabdeploy': {'state': [],'pathpackage': [], 'sessionid': [],'start': [], 'inventoryuuid': [], 'command': [], 'start': [], 'login': [],  'host': [] }}
         for linedeploy in deploylog:
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])

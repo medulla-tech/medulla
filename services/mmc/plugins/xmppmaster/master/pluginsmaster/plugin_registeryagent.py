@@ -886,16 +886,14 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
 
 def adduserdatageolocalisation(xmppobject, data, msg, sessionid, showinfobool):
     try:
-        tabinformation={"longitude" : "unknown",
-                        "latitude" : "unknown",
-                        "city" : "unknown",
-                        "region_name" : "unknown",
-                        "time_zone" : "unknown",
-                        "longitude" : "unknown",
-                        "latitude" : "unknown",
-                        "zip_code" : "unknown",
-                        "country_iso" : "",
-                        "country" : "unknown"}
+        tabinformation={"longitude": "unknown",
+                        "latitude": "unknown",
+                        "city": "unknown",
+                        "region_name": "unknown",
+                        "time_zone": "unknown",
+                        "zip_code": "unknown",
+                        "country_iso": "",
+                        "country": "unknown"}
         # Assignment of the user system, if user absent.
         if 'users' in data['information'] and len(data['information']['users']) == 0:
             data['information']['users'] = ["system"]
