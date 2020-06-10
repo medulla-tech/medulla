@@ -1026,6 +1026,17 @@ def md5folder(directory):
             hash.update(md5(os.path.join(root, basename)))
     return hash.hexdigest()
 
+
+def Setdirectorytempinfo():
+    """
+    create directory
+    """
+    dirtempinfo = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "INFOSTMP")
+    if not os.path.exists(dirtempinfo):
+        os.makedirs(dirtempinfo, mode=0700)
+    return dirtempinfo
+
+
 class geolocalisation_agent:
     def __init__(self,
                  typeuser = "public",
