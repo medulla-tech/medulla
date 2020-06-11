@@ -184,7 +184,7 @@ class MscDatabase(DatabaseHelper):
         if type(query) != list:
             ret = query.id
             #elif query:
-        elif len(query) > 0:
+        elif query:
             ret = []
             for q in query:
                 ret.append(q.id)
@@ -542,7 +542,7 @@ class MscDatabase(DatabaseHelper):
         resultsql = self.db.execute(sqlselect)
         if resultsql is not None:
             dateintervale = [x for x in resultsql]
-            if len(dateintervale) != 0:
+            if dateintervale:
                 datestartstr  = dateintervale[0].dated
                 dateendstr    = dateintervale[0].datef
             else:
@@ -623,7 +623,7 @@ class MscDatabase(DatabaseHelper):
         resultsql = self.db.execute(sqlselect)
         if resultsql is not None:
             dateintervale = [x for x in resultsql]
-            if len(dateintervale) != 0:
+            if dateintervale:
                 datestartstr  = dateintervale[0].dated
                 dateendstr    = dateintervale[0].datef
             else:
@@ -653,7 +653,7 @@ class MscDatabase(DatabaseHelper):
                     commands_on_host.start_date <= '%s' and
                     commands_on_host.end_date >= '%s'
                     ) as listhost;
-                        """% (command_id, datestartstr, dateendstr)
+                        """ % (command_id, datestartstr, dateendstr)
 
         resultsql = self.db.execute(sqlselect)
 
@@ -1255,7 +1255,7 @@ class MscDatabase(DatabaseHelper):
                     continue
                 if name == "wol" and do_wol == "disable" :
                     continue
-                if name == "upload" and len(files) == 0:
+                if name == "upload" and not files:
                     continue
                 if name == "execute" and (start_script == "disable" \
                         or is_quick_action) and do_windows_update == "disable":
