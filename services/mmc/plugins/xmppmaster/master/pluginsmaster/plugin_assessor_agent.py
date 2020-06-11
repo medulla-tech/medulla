@@ -225,16 +225,14 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                 data['geolocalisation'] is not None and \
                     len(data['geolocalisation']) > 0:
                 #initialization parameter geolocalisation
-                tabinformation={"longitude" : "unknown",
-                                "latitude" : "unknown",
-                                "city" : "unknown",
-                                "region_name" : "unknown",
-                                "time_zone" : "unknown",
-                                "longitude" : "unknown",
-                                "latitude" : "unknown",
-                                "zip_code" : "unknown",
-                                "country_iso" : "",
-                                "country" : "unknown"}
+                tabinformation={"longitude": "unknown",
+                                "latitude": "unknown",
+                                "city": "unknown",
+                                "region_name": "unknown",
+                                "time_zone": "unknown",
+                                "zip_code": "unknown",
+                                "country_iso": "",
+                                "country": "unknown"}
                 for geovariable in tabinformation:
                     try:
                         tabinformation[geovariable]=str(data['geolocalisation'][geovariable])
