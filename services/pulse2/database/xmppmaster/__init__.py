@@ -3437,10 +3437,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
-                                                Deploy.pathpackage.like('%%%s%%'%(filt)),
-                                                Deploy.start.like('%%%s%%'%(filt)),
-                                                Deploy.login.like('%%%s%%'%(filt)),
-                                                Deploy.host.like('%%%s%%'%(filt))))
+                                                Deploy.pathpackage.like('%%%s%%' % (filt)),
+                                                Deploy.start.like('%%%s%%' % (filt)),
+                                                Deploy.login.like('%%%s%%' % (filt)),
+                                                Deploy.host.like('%%%s%%' % (filt))))
 
         deploylog = deploylog.filter( or_(  Deploy.state == 'DEPLOYMENT SUCCESS',
                                             Deploy.state.startswith('ERROR'),
@@ -3635,7 +3635,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     machines.enabled = '1' and
                     machines.agenttype = 'machine'
-                        AND machines.groupdeploy = '%s';"""%groupdeploy
+                        AND machines.groupdeploy = '%s';""" % groupdeploy
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3651,7 +3651,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     WHERE
                     machines.enabled = '1' and
                     machines.groupdeploy = '%s'
-                    order BY  `agenttype` DESC;"""%groupdeploy
+                    order BY  `agenttype` DESC;""" % groupdeploy
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3668,7 +3668,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         xmppmaster.machines
                     WHERE
                         jid LIKE ('%s%%')
-                                    LIMIT 1;"""%user
+                                    LIMIT 1;""" % user
         else:
             sql = """SELECT
                         ip_xmpp
@@ -3677,7 +3677,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     WHERE
                         enabled = '%s' and
                         jid LIKE ('%s%%')
-                                    LIMIT 1;"""%(enable, user)
+                                    LIMIT 1;""" % (enable, user)
 
         result = session.execute(sql)
         session.commit()
@@ -3699,7 +3699,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     enabled = '1' and
                     jid LIKE ('%s%%')
-                                LIMIT 1;"""%user
+                                LIMIT 1;""" % user
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3719,7 +3719,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.relayserver
                 WHERE
                     jid LIKE ('%s%%')
-                                LIMIT 1;"""%user
+                                LIMIT 1;""" % user
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3739,7 +3739,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.relayserver
                 WHERE
                     jid LIKE ('%s%%')
-                                LIMIT 1;"""%user
+                                LIMIT 1;""" % user
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3759,7 +3759,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.relayserver
                 WHERE
                     jid LIKE ('%s%%')
-                                LIMIT 1;"""%user
+                                LIMIT 1;""" % user
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3800,7 +3800,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
-            limit 1;"""%(rule, userou, enabled, classutilMachine)
+            limit 1;""" % (rule, userou, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
             from `relayserver`
@@ -3812,7 +3812,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
-            limit 1;"""%(rule, userou, enabled)
+            limit 1;""" % (rule, userou, enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3844,7 +3844,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
-            limit 1;"""%(rule, machineou, enabled, classutilMachine)
+            limit 1;""" % (rule, machineou, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
             from `relayserver`
@@ -3856,7 +3856,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
-            limit 1;"""%(rule, machineou, enabled)
+            limit 1;""" % (rule, machineou, enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3883,7 +3883,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
-            limit 1;"""%(rule, username, enabled, classutilMachine)
+            limit 1;""" % (rule, username, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
             from `relayserver`
@@ -3894,7 +3894,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `has_relayserverrules`.`subject` = '%s'
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
-            limit 1;"""%(rule, username, enabled)
+            limit 1;""" % (rule, username, enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -3932,7 +3932,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`classutil` = '%s'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
             order by `has_relayserverrules`.`order`
-            limit 1;"""%(rule, hostname, enabled, classutilMachine)
+            limit 1;""" % (rule, hostname, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id` , `has_relayserverrules`.`subject`
             from `relayserver`
@@ -3945,14 +3945,14 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
             order by `has_relayserverrules`.`order`
-            limit 1;"""%(rule, hostname, enabled)
+            limit 1;""" % (rule, hostname, enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
         ret = [y for y in result]
         if len(ret) > 0:
             logging.getLogger().debug("Matched hostname rule with "\
-                "hostname \"%s\# by regex \#%s\""%(hostname, ret[0].subject))
+                "hostname \"%s\# by regex \#%s\"" % (hostname, ret[0].subject))
         return ret
 
     @DatabaseHelper._sessionm
@@ -3990,7 +3990,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`classutil` = '%s'
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
-            limit 1;"""%(enabled, subnetmachine, classutilMachine)
+            limit 1;""" % (enabled, subnetmachine, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
             from `relayserver`
@@ -3998,7 +3998,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         `relayserver`.`enabled` = %d
                     AND `relayserver`.`subnet` ='%s'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
-            limit 1;"""%(enabled, subnetmachine)
+            limit 1;""" % (enabled, subnetmachine)
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4025,7 +4025,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
-            limit 1;"""%(rule, netmaskaddress, enabled, classutilMachine)
+            limit 1;""" % (rule, netmaskaddress, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
             from `relayserver`
@@ -4037,7 +4037,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
-            limit 1;"""%(rule, netmaskaddress, enabled)
+            limit 1;""" % (rule, netmaskaddress, enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4074,7 +4074,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`classutil` = '%s'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
             order by `has_relayserverrules`.`order`
-            limit 1;"""%(rule, subnetmachine, enabled, classutilMachine)
+            limit 1;""" % (rule, subnetmachine, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
             from `relayserver`
@@ -4087,7 +4087,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
             order by `has_relayserverrules`.`order`
-            limit 1;"""%(rule, subnetmachine, enabled)
+            limit 1;""" % (rule, subnetmachine, enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4101,7 +4101,7 @@ class XmppMasterDatabase(DatabaseHelper):
                  FROM
                     xmppmaster.relayserver
                  WHERE
-                    id = %s;"""%id;
+                    id = %s;""" % id;
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4115,7 +4115,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 FROM
                     xmppmaster.relayserver
                 WHERE
-                    ipconnection = '%s';"""%ip;
+                    ipconnection = '%s';""" % ip;
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4137,7 +4137,7 @@ class XmppMasterDatabase(DatabaseHelper):
                             `relayserver`.`enabled` = %d
                         AND `relayserver`.`classutil` = '%s'
                     AND `relayserver`.`moderelayserver` = 'static'
-                    AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`);"""%(enabled,
+                    AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`);""" % (enabled,
                                                                                         classutilMachine)
         else:
             sql = """SELECT
@@ -4146,7 +4146,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         xmppmaster.relayserver
                     WHERE
                             `relayserver`.`enabled` = %d
-                            AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`);"""%(enabled)
+                            AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`);""" % (enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4198,7 +4198,6 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except Exception, e:
-            #logging.getLogger().error("addPresenceNetwork : %s " % new_network)
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
@@ -4210,7 +4209,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         sql  = """DELETE FROM `xmppmaster`.`has_guacamole`
                     WHERE
-                        `xmppmaster`.`has_guacamole`.`machine_id` = '%s';"""%machine_id
+                        `xmppmaster`.`has_guacamole`.`machine_id` = '%s';""" % machine_id
         session.execute(sql)
         session.commit()
         session.flush()
@@ -4236,7 +4235,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.relayserver
                 WHERE
                     `xmppmaster`.`relayserver`.`moderelayserver` = '%s'
-                    ;"""%moderelayserver
+                    ;""" % moderelayserver
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4250,7 +4249,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.machines
                 WHERE
                     xmppmaster.machines.enabled = '%s' and
-                    xmppmaster.machines.agenttype="machine";"""%enable
+                    xmppmaster.machines.agenttype="machine";""" % enable
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4273,10 +4272,10 @@ class XmppMasterDatabase(DatabaseHelper):
                         xmppmaster.network
                     WHERE
                         machines_id = '%s'
-                    LIMIT 1;"""%(id_machine)
+                    LIMIT 1;""" % (id_machine)
             if infomac:
                 logging.getLogger().debug("SQL request to get the mac addresses list "\
-                                        "for the presence machine #%s"%id_machine)
+                                        "for the presence machine #%s" % id_machine)
             listMacAdress = session.execute(sql)
             session.commit()
             session.flush()
@@ -4284,7 +4283,7 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
         result=[x for x in listMacAdress][0]
         if infomac:
-            logging.getLogger().debug("Result list MacAdress for Machine : %s"%result[0])
+            logging.getLogger().debug("Result list MacAdress for Machine : %s" % result[0])
         return result
 
     @DatabaseHelper._sessionm
@@ -4297,7 +4296,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     WHERE
                         enabled = '1' and
                         uuid_inventorymachine = '%s'
-                        LIMIT 1;"""%uuid
+                        LIMIT 1;""" % uuid
             jidmachine = session.execute(sql)
             session.commit()
             session.flush()
@@ -4317,14 +4316,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     SET
                         `uuid_inventorymachine` = '%s'
                     WHERE
-                        `id` = '%s';"""%(id_machineinventory,idmachine)
-            #sql = """UPDATE `machines`
-                    #SET
-                        #`uuid_inventorymachine` = '%s'
-                    #WHERE
-                        #`enabled` = '1' and
-                        #`id` = '%s';"""%(id_machineinventory,idmachine)
-            #logging.getLogger().debug("sql %s"%sql)
+                        `id` = '%s';""" % (id_machineinventory,idmachine)
             updatedb = session.execute(sql)
             session.commit()
             session.flush()
@@ -4473,7 +4465,7 @@ class XmppMasterDatabase(DatabaseHelper):
         WHERE
             type = 'deploy'
                 AND sessionname = '%s'
-        ORDER BY id;"""%(sessiondeploy)
+        ORDER BY id;""" % (sessiondeploy)
         step = session.execute(sql)
         session.commit()
         session.flush()
@@ -4586,7 +4578,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         else:
-            logger.warning("xmpp signal changement status on machine no exist %s"%jid )
+            logger.warning("xmpp signal changement status on machine no exist %s" % jid )
 
     @DatabaseHelper._sessionm
     def delMachineXmppPresence(self, session, uuidinventory):
@@ -4608,7 +4600,7 @@ class XmppMasterDatabase(DatabaseHelper):
             result=[x for x in id][0]
             sql  = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
-                        `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
+                        `xmppmaster`.`machines`.`id` = '%s';""" % result[0]
             if result[2] == "relayserver":
                 typemachine = "relayserver"
                 sql2 = """UPDATE `xmppmaster`.`relayserver`
@@ -4697,7 +4689,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 return 1
             except Exception, e:
                 self.logger.error(str(e))
-                self.logger.error("\n%s"%(traceback.format_exc()))
+                self.logger.error("\n%s" % (traceback.format_exc()))
                 return -1
 
     @DatabaseHelper._sessionm
@@ -4733,7 +4725,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     SET
                         `countsub` = `countsub` + '1'
                     WHERE
-                        `id` IN (%s);"""%','.join([x for x in incrementeiscount])
+                        `id` IN (%s);""" % ','.join([x for x in incrementeiscount])
                 result = session.execute(sql)
                 session.commit()
                 session.flush()
@@ -4847,7 +4839,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except IndexError:
-            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jid)
+            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration" % jid)
             return {}
         except Exception, e:
             logging.getLogger().error(str(e))
@@ -4902,7 +4894,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except IndexError:
-            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jiduser)
+            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration" % jiduser)
             return {}
         except Exception, e:
             logging.getLogger().error(str(e))
@@ -5455,7 +5447,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     return result2
             else:
                 # there are no clusters configured for this ARS.
-                logging.getLogger().warning("Cluster ARS [%s] no configured"%relayserver.jid)
+                logging.getLogger().warning("Cluster ARS [%s] no configured" % relayserver.jid)
                 return notconfars
         else:
             logging.getLogger().warning("Relay server no present")
@@ -5594,7 +5586,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 INNER JOIN
                 xmppmaster.relayserver
                     ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
-                WHERE id_cluster = %s;"""%cluster
+                WHERE id_cluster = %s;""" % cluster
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -5605,7 +5597,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def refresh_syncthing_deploy_clean(self, session, iddeploy):
-        sql = """DELETE FROM `xmppmaster`.`syncthing_deploy_group` WHERE  id= %s;"""%iddeploy
+        sql = """DELETE FROM `xmppmaster`.`syncthing_deploy_group` WHERE  id= %s;""" % iddeploy
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -5640,7 +5632,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     SET
                         jid = '%s', urlguacamole = '%s', groupdeploy = '%s'
                     WHERE
-                        id = '%s';"""%(jid, urlguacamole, groupdeploy, idmachine)
+                        id = '%s';""" % (jid, urlguacamole, groupdeploy, idmachine)
             updatedb = session.execute(sql)
             session.commit()
             session.flush()
@@ -5837,19 +5829,19 @@ from machines
 where uuid_inventorymachine IS NOT NULL and enabled = 1 and agenttype="machine"
 """
             for machine in query:
-                _sql1 = sql1 + """and groupdeploy = "%s";"""%machine.jid
+                _sql1 = sql1 + """and groupdeploy = "%s";""" % machine.jid
                 count_uninventoried_offline = session.execute(_sql1)
                 uninventoried_offline = [x for x in count_uninventoried_offline]
 
-                _sql2 = sql2 + """and groupdeploy = "%s";"""%machine.jid
+                _sql2 = sql2 + """and groupdeploy = "%s";""" % machine.jid
                 count_uninventoried_offline = session.execute(_sql2)
                 uninventoried_online = [x for x in count_uninventoried_offline]
 
-                _sql3 = sql3 + """and groupdeploy = "%s";"""%machine.jid
+                _sql3 = sql3 + """and groupdeploy = "%s";""" % machine.jid
                 count_uninventoried_offline = session.execute(_sql3)
                 inventoried_offline = [x for x in count_uninventoried_offline]
 
-                _sql4 = sql4 + """and groupdeploy = "%s";"""%machine.jid
+                _sql4 = sql4 + """and groupdeploy = "%s";""" % machine.jid
                 count_uninventoried_offline = session.execute(_sql4)
                 inventoried_online = [x for x in count_uninventoried_offline]
 
@@ -5915,7 +5907,7 @@ where agenttype="machine" and groupdeploy in (
         has_cluster_ars
     on has_cluster_ars.id_ars = relayserver.id
     where id_cluster = %s
-);"""%id_cluster
+);""" % id_cluster
             session.execute(sql)
         elif id_cluster is None or propagate is False:
             session.query(Machines).filter(Machines.agenttype=="machine", \
@@ -5970,17 +5962,17 @@ where agenttype="machine" and groupdeploy in (
         if len(listmachine) == 0:
             return False
         try:
-            liststr =  ",".join([ "'%s'"%x for x in listmachine])
+            liststr =  ",".join([ "'%s'" % x for x in listmachine])
 
             sql = """UPDATE `xmppmaster`.`machines`
                     SET
                         `enabled` = '%s'
                     WHERE
-                        `id` IN (%s);"""%(valueset, liststr)
+                        `id` IN (%s);""" % (valueset, liststr)
             session.execute(sql)
             session.commit()
             session.flush()
             return True
         except Exception, e:
-            logging.getLogger().error("call_set_list_machine: %s"%str(e))
+            logging.getLogger().error("call_set_list_machine: %s" % str(e))
             return False
