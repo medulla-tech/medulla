@@ -71,7 +71,8 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             a=0
             nb = len(listdirectory)
             for y in range (nb - 1):
-                if y > a : a = y
+                if y > a:
+                    a = y
                 for index in range(a+1, nb):
                     if listdirectory[a] in listdirectory[index]:
                         dd.append( listdirectory[index] )
