@@ -458,7 +458,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.syncthing_ars_cluster
                 where xmppmaster.syncthing_ars_cluster.fk_deploy = %s and
                 xmppmaster.syncthing_ars_cluster.liststrcluster like '%s'
-                LIMIT 1;""" % (idpartage,   ars )
+                LIMIT 1;""" % (idpartage, ars)
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -1172,7 +1172,7 @@ class XmppMasterDatabase(DatabaseHelper):
                             "name":  x.name} for x in result]
             return {"nb": nb, "packageslist": list_result}
         except Exception, e:
-            logging.getLogger().debug("load packages for organization id : %s is error : %s" % (organization_id,str(e)))
+            logging.getLogger().debug("load packages for organization id : %s is error : %s" % (organization_id, str(e)))
             return {"nb": 0, "packageslist": []}
 
     #
@@ -1356,9 +1356,9 @@ class XmppMasterDatabase(DatabaseHelper):
             total =  self.get_count(result)
             #todo filter
             if filt is not None:
-                result = result.filter( or_(  result.namecmd.like('%%%s%%' % (filt)),
-                                              result.os.like('%%%s%%' % (filt)),
-                                              result.description.like('%%%s%%' % (filt))
+                result = result.filter(or_(result.namecmd.like('%%%s%%' % (filt)),
+                                           result.os.like('%%%s%%' % (filt)),
+                                           result.description.like('%%%s%%' % (filt))
                                         )
                         )
 
@@ -2058,8 +2058,8 @@ class XmppMasterDatabase(DatabaseHelper):
                                         inventoryuuid=t.inventoryuuid,
                                         login=t.login,
                                         macadress=t.macadress,
-                                        comment = "%s_%s" % ( t.command,
-                                                             t.group_uuid,))
+                                        comment="%s_%s" % (t.command,
+                                                           t.group_uuid,))
 
         return list(id_deploylist)
 
@@ -2795,7 +2795,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     (deploy.sessionid = '%s'
                         AND `state` NOT IN ('DEPLOYMENT SUCCESS' , 'ABORT DEPLOYMENT CANCELLED BY USER')
                         AND `state` REGEXP '^(?!ERROR)^(?!SUCCESS)^(?!ABORT)');
-                """ % (state,sessionid)
+                """ % (state, sessionid)
             result = session.execute(sql)
             session.commit()
             session.flush()
@@ -3358,7 +3358,7 @@ class XmppMasterDatabase(DatabaseHelper):
               or host LIKE "%%%s%%"
               )
               group by title
-              ) as x;""" % (filt,filt,filt,filt,filt,)
+              ) as x;""" % (filt, filt, filt, filt, filt,)
 
 
         lentaillerequette = self.get_count(deploylog)
@@ -4101,7 +4101,7 @@ class XmppMasterDatabase(DatabaseHelper):
                  FROM
                     xmppmaster.relayserver
                  WHERE
-                    id = %s;""" % id;
+                    id = %s;""" % id
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4115,7 +4115,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 FROM
                     xmppmaster.relayserver
                 WHERE
-                    ipconnection = '%s';""" % ip;
+                    ipconnection = '%s';""" % ip
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -4316,7 +4316,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     SET
                         `uuid_inventorymachine` = '%s'
                     WHERE
-                        `id` = '%s';""" % (id_machineinventory,idmachine)
+                        `id` = '%s';""" % (id_machineinventory, idmachine)
             updatedb = session.execute(sql)
             session.commit()
             session.flush()
@@ -4578,7 +4578,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         else:
-            logger.warning("xmpp signal changement status on machine no exist %s" % jid )
+            logger.warning("xmpp signal changement status on machine no exist %s" % jid)
 
     @DatabaseHelper._sessionm
     def delMachineXmppPresence(self, session, uuidinventory):
@@ -5962,7 +5962,7 @@ where agenttype="machine" and groupdeploy in (
         if len(listmachine) == 0:
             return False
         try:
-            liststr =  ",".join([ "'%s'" % x for x in listmachine])
+            liststr = ",".join(["'%s'" % x for x in listmachine])
 
             sql = """UPDATE `xmppmaster`.`machines`
                     SET
