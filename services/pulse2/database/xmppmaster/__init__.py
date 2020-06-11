@@ -3551,13 +3551,11 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
-            d= linedeploy.start.strftime('%Y-%m-%d %H:%M')
-            dd = str(linedeploy.start.strftime('%Y-%m-%d %H:%M'))
-            ret['tabdeploy']['start'].append(dd)
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
+            starttime_formated = str(linedeploy.start.strftime('%Y-%m-%d %H:%M'))
+            ret['tabdeploy']['start'].append(starttime_formated)
             ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['start'].append(linedeploy.start)
             ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
         return ret
 
