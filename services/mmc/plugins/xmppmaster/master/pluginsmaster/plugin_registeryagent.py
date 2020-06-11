@@ -81,7 +81,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
             if 'completedatamachine' in data:
                 info = json.loads(base64.b64decode(data['completedatamachine']))
                 data['information'] = info
-                
+
                 interfacedata = []
                 interfaceblacklistdata = []
                 for interface in data['information']["listipinfo"]:
@@ -95,20 +95,20 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
 
                 data['information']["listipinfo"] = interfacedata
                 if showinfobool:
-                    logger.info("machine %s"%str(msg['from']))
+                    logger.info("machine %s" % str(msg['from']))
                     if len(data['information']["listipinfo"]):
                         logger.info('Interface Actif')
                         logger.info("|   macadress|      ip adress|")
                         for interface in data['information']["listipinfo"]:                
-                            logger.info("|%s|%15s|"%(interface['macaddress'],
-                                                    interface['ipaddress']))
+                            logger.info("|%s|%15s|" % (interface['macaddress'],
+                                                       interface['ipaddress']))
                     if len(interfaceblacklistdata):
                         logger.warning('Interface blacklisted')
                         for interface in interfaceblacklistdata:
                             logger.warning("|   macadress|      ip adress|")
-                            logger.warning("|%s|%15s|"%(interface['macaddress'],
-                                                    interface['ipaddress']))
-                
+                            logger.warning("|%s|%15s|" % (interface['macaddress'],
+                                                          interface['ipaddress']))
+
                 logger.info("Registering machine %s" % data['from'])
                 XmppMasterDatabase().setlogxmpp("Registering machine %s" % data['from'],
                                                 "info",
@@ -731,16 +731,16 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                         '',
                                         xmppobject.boundjid.bare)
 
-def test_mac_adress_black_list(macadress, table_reg_for_match, showinfobool =True):
+def test_mac_adress_black_list(macadress, table_reg_for_match, showinfobool=True):
     if showinfobool:
-        logger.info('analyse blacklist Mac adress %s'%macadress)
+        logger.info('analyse blacklist Mac adress %s' % macadress)
     for regexpmatch in table_reg_for_match:
         if regexpmatch.match(macadress.lower()):
             if showinfobool:
-                logger.info('Blacklist Mac Adress  %s'%macadress)
+                logger.info('Blacklist Mac Adress  %s' % macadress)
             return True
     if showinfobool:
-        logger.info('No Blacklist Mac Adress  %s'%macadress)
+        logger.info('No Blacklist Mac Adress  %s' % macadress)
     return False
 
 def getComputerByMac( mac, showinfobool=True):
@@ -1027,7 +1027,7 @@ def read_conf_remote_registeryagent(xmppobject):
                 "loadautoupdate, loadshowregistration"
 
         xmppobject.pluginlistunregistered = [x.strip() for x in pluginlistunregistered.split(',')]
-        xmppobject.blacklisted_mac_addresses= []
+        xmppobject.blacklisted_mac_addresses = []
         if Config.has_option("parameters", "blacklisted_mac_addresses"):
             blacklisted_mac_addresses = Config.get('parameters', 'blacklisted_mac_addresses')
         else:
@@ -1035,17 +1035,15 @@ def read_conf_remote_registeryagent(xmppobject):
             
         if Config.has_section("parameters"):
             if Config.has_option("parameters", "showinfomachine"):
-                paramshowinfomachine = Config.get('parameters',
-                                                    'showinfomachine')
+                paramshowinfomachine = Config.get('parameters', 'showinfomachine')
                 xmppobject.registeryagent_showinfomachine = [str(x.strip()) for x in paramshowinfomachine.split(",") if x.strip() != ""]
             else:
-                #default configuration
+                # default configuration
                 xmppobject.registeryagent_showinfomachine = []
                 logger.warning("showinfomachine default value is []")
 
-            
     blacklisted_mac_addresseslist = [x.strip() for x in blacklisted_mac_addresses.split(',')]
-    #unique regexp identique
+    # unique regexp identique
     blacklisted_mac_addresseslist = list(set(blacklisted_mac_addresseslist))
 
     for regexpconf in blacklisted_mac_addresseslist:
@@ -1053,7 +1051,7 @@ def read_conf_remote_registeryagent(xmppobject):
             logger.info("BUILD REGEXP FOR BLACKLIST MAC ADRESS -> %s"%regexpconf)
             xmppobject.blacklisted_mac_addresses.append(re.compile(regexpconf))
         except Exception as e:
-            logger.error("\n%s"%(traceback.format_exc()))
-            logger.error("COMPIL REGEXP BLACKLIST MAC ADRESS -> %s <- [IGNORE THIS REGEXP]"%regexpconf)
-    logger.debug("Plugin list registered is %s"%xmppobject.pluginlistregistered)
-    logger.debug("Plugin list unregistered is %s"%xmppobject.pluginlistunregistered)
+            logger.error("\n%s" % (traceback.format_exc()))
+            logger.error("COMPIL REGEXP BLACKLIST MAC ADRESS -> %s <- [IGNORE THIS REGEXP]" % regexpconf)
+    logger.debug("Plugin list registered is %s" % xmppobject.pluginlistregistered)
+    logger.debug("Plugin list unregistered is %s" % xmppobject.pluginlistunregistered)
