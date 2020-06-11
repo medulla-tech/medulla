@@ -165,22 +165,35 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                 echo "<input id='user' type=hidden name ='user' value =''>";
                 echo "</form>";
             }
+
+$objectUUID = (isset($_GET['objectUUID'])) ? $_GET['objectUUID'] : '';
+$cn = (isset($_GET['cn'])) ? $_GET['cn'] : '';
+$type = (isset($_GET['type'])) ? $_GET['type'] : '';
+$owner_realname = (isset($_GET['owner_realname'])) ? $_GET['owner_realname'] : '';
+$entity = (isset($_GET['entity'])) ? $_GET['entity'] : '';
+$owner = (isset($_GET['owner'])) ? $_GET['owner'] : '';
+$owner_firstname = (isset($_GET['owner_firstname'])) ? $_GET['owner_firstname'] : '';
+$presencemachinexmpp = (isset($_GET['presencemachinexmpp'])) ? $_GET['presencemachinexmpp'] : '';
+$vnctype = (isset($_GET['vnctype'])) ? $_GET['vnctype'] : '';
+$mod = (isset($_GET['mod'])) ? $_GET['mod'] : '';
+$user = (isset($_GET['user'])) ? $_GET['user'] : '';
+
         echo "<form name='formmonitoring' id ='formmonitoring' action='main.php' method='GET' >";
             echo "<input type= 'hidden' name = 'module' value ='xmppmaster'>";
             echo "<input type= 'hidden' name = 'submod' value ='xmppmaster'>";
             echo "<input type= 'hidden' name = 'action' value ='xmppMonitoring'>";
-            echo "<input type= 'hidden' name = 'UUID' value='".$_GET['objectUUID']."'>";
-            echo "<input type= 'hidden' name = 'cn' value='".$_GET['cn']."'>";
-            echo "<input type= 'hidden' name = 'type' value='".$_GET['type']."'>";
-            echo "<input type= 'hidden' name = 'owner_realname' value='".$_GET['owner_realname']."'>";
-            echo "<input type= 'hidden' name = 'entity' value='".$_GET['entity']."'>";
-            echo "<input type= 'hidden' name = 'owner' value='".$_GET['owner']."'>";
+            echo "<input type= 'hidden' name = 'UUID' value='".$objectUUID."'>";
+            echo "<input type= 'hidden' name = 'cn' value='".$cn."'>";
+            echo "<input type= 'hidden' name = 'type' value='".$type."'>";
+            echo "<input type= 'hidden' name = 'owner_realname' value='".$owner_realname ."'>";
+            echo "<input type= 'hidden' name = 'entity' value='".$entity."'>";
+            echo "<input type= 'hidden' name = 'owner' value='".$owner."'>";
             echo "<input type= 'hidden' name = 'user' value='".$_GET['user']."'>";
-            echo "<input type= 'hidden' name = 'owner_firstname' value='".$_GET['owner_firstname']."'>";
+            echo "<input type= 'hidden' name = 'owner_firstname' value='".$owner_firstname."'>";
             echo "<input type= 'hidden' name = 'os' value='".$_GET['os']."'>";
-            echo "<input type= 'hidden' name = 'presencemachinexmpp' value='".$_GET['presencemachinexmpp']."'>";
-            echo "<input type= 'hidden' name = 'vnctype' value='".$_GET['vnctype']."'>";
-            echo "<input type= 'hidden' name = 'mod' value='".$_GET['mod']."'>";
+            echo "<input type= 'hidden' name = 'presencemachinexmpp' value='".$presencemachinexmpp."'>";
+            echo "<input type= 'hidden' name = 'vnctype' value='".$vnctype."'>";
+            echo "<input type= 'hidden' name = 'mod' value='".$mod."'>";
             echo "<input id='informationmonitor' type= 'hidden' name = 'information' value=''>";
             echo "<input id='args' type= 'hidden' name = 'args' value=''>";
             echo "<input id='kwargs' type= 'hidden' name = 'kwargs' value=''>";
@@ -200,9 +213,9 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="mmemory" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="ifconfig" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
-// 
+//
 //                echo '<td id="cpu_num" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
-//  
+//
 //                 echo '<td id="netstat" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="cputimes" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
                 echo '<td id="agentinfo" align="center"><img src="modules/base/graph/navbar/information.png" height="45" width="45"> </td>';
@@ -218,9 +231,9 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 //                 echo '<td id="sensors_fans0" align="center">sensors_fans</td>';
 //                 echo '<td id="mmemory0" align="center">memory</td>';
 //                 echo '<td id="ifconfig0" align="center">if config</td>';
-// 
+//
 //                 echo '<td id="cpu_num0" align="center">cpu_num</td>';
-// 
+//
 //                 echo '<td id="netstat0" align="center">netstat</td>';
 //                 echo '<td id="cputimes0" align="center">cpu times</td>';
                 echo '<td id="agentinfo0" align="center">Agent details</td>';
