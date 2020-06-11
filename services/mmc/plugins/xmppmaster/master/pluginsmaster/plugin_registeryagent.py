@@ -96,13 +96,13 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                 data['information']["listipinfo"] = interfacedata
                 if showinfobool:
                     logger.info("machine %s" % str(msg['from']))
-                    if len(data['information']["listipinfo"]):
+                    if data['information']["listipinfo"]:
                         logger.info('Interface Actif')
                         logger.info("|   macadress|      ip adress|")
                         for interface in data['information']["listipinfo"]:                
                             logger.info("|%s|%15s|" % (interface['macaddress'],
                                                        interface['ipaddress']))
-                    if len(interfaceblacklistdata):
+                    if interfaceblacklistdata:
                         logger.warning('Interface blacklisted')
                         for interface in interfaceblacklistdata:
                             logger.warning("|   macadress|      ip adress|")
@@ -441,7 +441,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     break
             else:
                 # adress mac exclut alert
-                if len(data['information']["listipinfo"]):
+                if data['information']["listipinfo"]:
                     data['xmppmacaddress'] = data['information']["listipinfo"][0]['macaddress']
 
             idmachine, msgret = XmppMasterDatabase().addPresenceMachine(data['from'],
