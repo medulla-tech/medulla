@@ -607,11 +607,14 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                 return
                             osmachine = Glpi().getComputersOS(str(computer.id))
                             #osmachine = ComputerManager().getComputersOS(str(computer.id))
-                            if "Unknown operating system (PXE" in osmachine[0]['OSName']:
-                                if showinfobool:
-                                    logger.info("** Calling inventory on PXE machine")
-                                callinventory(xmppobject, data['from'])
-                                return
+                            if len(osmachine) !=0:
+                                if "Unknown operating system (PXE" in osmachine[0]['OSName']:
+                                    if showinfobool:
+                                        logger.info("** Calling inventory on PXE machine")
+                                    callinventory(xmppobject, data['from'])
+                                    return
+                            else:
+                                logger.warning("information about the operating system is missing for %s" %(msg['from'].bare))
                             #if "kiosk" in xmppobject.listmodulemmc and kiosk_presence:
                             if PluginManager().isEnabled("kiosk"):
                                 ## send a data message to kiosk when an inventory is registered
