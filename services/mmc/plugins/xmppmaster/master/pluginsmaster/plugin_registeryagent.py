@@ -340,6 +340,8 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     data['keysyncthing'] = data['information']['keysyncthing']
                 else:
                     data['keysyncthing'] = ""
+                if data['agenttype'] == "relayserver" and not 'syncthing_port' in data:
+                    data['syncthing_port'] = 23000
             publickeybase64 = info['publickey']
             is_masterpublickey = info['is_masterpublickey']
             del info['publickey']
@@ -395,7 +397,8 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                     data['packageserver']['public_ip'],
                                                     data['packageserver']['port'],
                                                     moderelayserver=moderelayserver,
-                                                    keysyncthing=data['keysyncthing']
+                                                    keysyncthing=data['keysyncthing'],
+                                                    syncthing_port=data['syncthing_port']
                                                     )
                 # Recover list of cluster ARS
                 listrelayserver = XmppMasterDatabase(

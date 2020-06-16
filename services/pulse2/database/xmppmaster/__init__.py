@@ -2900,7 +2900,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         packageserverip ="",
                         packageserverport = "",
                         moderelayserver = "static",
-                        keysyncthing = ""
+                        keysyncthing = "",
+                        syncthing_port=23000
                         ):
         sql = "SELECT count(*) as nb FROM xmppmaster.relayserver where `relayserver`.`nameserver`='%s';" % nameserver
         nb = session.execute(sql)
@@ -2928,6 +2929,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_relayserver.package_server_port = packageserverport
                 new_relayserver.moderelayserver = moderelayserver
                 new_relayserver.keysyncthing = keysyncthing
+                new_relayserver.syncthing_port = syncthing_port
                 session.add(new_relayserver)
                 session.commit()
                 session.flush()
@@ -5379,26 +5381,12 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         if relayserver:
             #object complete
-            #result = [relayserver.id,
-                      #relayserver.urlguacamole,
-                      #relayserver.subnet,
-                      #relayserver.nameserver,
-                      #relayserver.ipserver,
-                      #relayserver.ipconnection,
-                      #relayserver.port,
-                      #relayserver.portconnection,
-                      #relayserver.mask,
-                      #relayserver.jid,
-                      #relayserver.longitude,
-                      #relayserver.latitude,
-                      #relayserver.enabled,
-                      #relayserver.classutil,
-                      #relayserver.groupdeploy,
-                      #relayserver.package_server_ip,
-                      #relayserver.package_server_port
-            #]
-
-            notconfars = { relayserver.jid :[relayserver.ipconnection, relayserver.port, relayserver.jid, relayserver.urlguacamole, 0 ]}
+            notconfars = { relayserver.jid :[relayserver.ipconnection,
+                                             relayserver.port,
+                                             relayserver.jid,
+                                             relayserver.urlguacamole,
+                                             0,
+                                             relayserver.syncthing_port]}
             # search for clusters where ARS is
             clustersid = session.query(Has_cluster_ars).filter(Has_cluster_ars.id_ars == relayserver.id)
             clustersid = clustersid.all()
@@ -5426,14 +5414,16 @@ class XmppMasterDatabase(DatabaseHelper):
                                             m.jid,
                                             m.urlguacamole,
                                             0 ,
-                                            m.keysyncthing] for m in ars}
+                                            m.keysyncthing,
+                                            m.syncthing_port] for m in ars}
                     except Exception:
                         result2 = {m.jid: [m.ipconnection,
                                             m.port,
                                             m.jid,
                                             m.urlguacamole,
                                             0,
-                                            ""] for m in ars}
+                                            "",
+                                            0] for m in ars}
                     countarsclient = self.algoloadbalancerforcluster()
                     if len(countarsclient) != 0:
                         for i in countarsclient:
