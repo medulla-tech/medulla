@@ -590,7 +590,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                 echo "<tbody>";
 
         foreach($infodeploy['log'] as $line){
-            $scalardate = get_object_vars($info['objectdeploy'][0]['start'])['scalar'];
+            $scalardate = get_object_vars($line['date'])['scalar'];
             $formateddate = substr($scalardate, 0,4).'-'.substr($scalardate, 4,2).'-'.substr($scalardate, 6,2).' '.substr($scalardate, 9);
             //$startsteparray= get_object_vars( $line['date']);
             //$datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);
