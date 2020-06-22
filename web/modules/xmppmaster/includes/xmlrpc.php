@@ -506,4 +506,32 @@ function xmlrpc_get_clusters_list($start=-1, $limit=-1, $filter=""){
 function xmlrpc_change_relay_switch($jid, $switch, $propagate=true){
   return xmlCall("xmppmaster.change_relay_switch", [$jid, $switch, $propagate]);
 }
+
+function xmlrpc_is_relay_online($jid){
+  return xmlCall("xmppmaster.is_relay_online", [$jid]);
+}
+
+function xmlrpc_get_qa_for_relays($login=""){
+  return xmlCall("xmppmaster.get_qa_for_relays", [$login]);
+}
+
+function xmlrpc_get_relay_qa($login, $qa_relay_id){
+  return xmlCall("xmppmaster.get_relay_qa", [$login, $qa_relay_id]);
+}
+
+function xmlrpc_get_qa_relay_result($result_id){
+  return xmlCall("xmppmaster.get_qa_relay_result", [$result_id]);
+}
+
+function xmlrpc_add_qa_relay_launched($qa_relay_id, $login, $cluster_id, $jid){
+  return xmlCall("xmppmaster.add_qa_relay_launched", [$qa_relay_id, $login, $cluster_id, $jid]);
+}
+function xmlrpc_add_qa_relay_result($jid, $exec_date, $qa_relay_id, $qa_launched_id, $session){
+  return xmlCall("xmppmaster.add_qa_relay_result", [$jid, $exec_date, $qa_relay_id, $qa_launched_id, $session]);
+}
+
+
+function xmlrpc_get_relay_qa_launched($jid, $login, $start=-1, $maxperpage=-1){
+  return xmlCall("xmppmaster.get_relay_qa_launched", [$jid, $login, $start, $maxperpage]);
+}
 ?>

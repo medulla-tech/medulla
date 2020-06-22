@@ -335,6 +335,21 @@ $page->setFile("modules/xmppmaster/xmppmaster/relays/detailactions.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
+$page = new Page("qalaunched", _T("Qa launched on Relays", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/qalaunched.php");
+//$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("ajaxqalaunched", _T("Qa launched on Relays", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("qaresult", _T("Qa result on Relays", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/qaresult.php");
+//$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

@@ -5974,3 +5974,256 @@ where agenttype="machine" and groupdeploy in (
         except Exception, e:
             logging.getLogger().error("call_set_list_machine: %s" % str(e))
             return False
+
+    @DatabaseHelper._sessionm
+    def is_relay_online(self, session, jid):
+        """Get the enable status for a specified relay
+        @param: jid str
+        @returns: boolean"""
+        try:
+            query = session.query(RelayServer.enabled).filter(RelayServer.jid==jid).one()
+            if query is not None:
+                return query.enabled
+            else:
+                return False
+        except:
+            return False
+    @DatabaseHelper._sessionm
+    def get_qa_for_relays(self, session, login=""):
+        """ Get the list of qa for relays
+        @login : user's login
+        @returns : list of quick actions
+        """
+        if login != "":
+            query = session.query(Qa_relay_command)\
+                .filter(
+                    or_(
+                        Qa_relay_command.user == "allusers",
+                        Qa_relay_command.user == login)).all()
+        else:
+            query = session.query(Qa_relay_command)\
+                .filter(Qa_relay_command.user == "allusers").all()
+
+        result = []
+        tmp = {'id': 0, 'user':"", 'namecmd': "", 'customcmd': "", 'description': ""}
+        if query is not None:
+            for command in query:
+                result.append({'id' : command.id,
+                                'user' : command.user,
+                                'script' : command.script,
+                                'description' : command.description})
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_relay_qa(self, session, login, qa_relay_id):
+        """ Get the qa by its id and its login
+        @returns : the command to be run or None
+        """
+
+        try:
+            query = session.query(Qa_relay_command)\
+                .filter(
+                    and_(
+                        or_(
+                            Qa_relay_command.user == "allusers",
+                            Qa_relay_command.user == login)
+                        ),
+                        Qa_relay_command.id == qa_relay_id).one()
+            return {'id' : query.id,
+                            'user' : query.user,
+                            'name' : query.name,
+                            'script' : query.script,
+                            'description' : query.description}
+        except:
+            return None
+
+
+    @DatabaseHelper._sessionm
+    def get_qa_relay_result(self, session, result_id):
+        result = {
+            'id': 0,
+            'launched_id' : 0,
+            'session_id' : "",
+            'typemessage' : "log",
+            'command_result' : "",
+            'relay' : ""
+        }
+
+        query = session.query(Qa_relay_result).filter(Qa_relay_result.id == result_id).one()
+        if query is not None:
+            result['id'] = query.id
+            result['launched_id'] = query.launched_id
+            result['session_id'] = query.session_id
+            result['typemessage'] = query.typemessage
+            result['command_result'] = query.command_result
+            result['relay'] = query.relay
+
+        if query.command_result == "" or query.command_result == None:
+            if query.session_id != "" and os.path.isfile(os.path.join('/','tmp', query.session_id)):
+                # Try to read the tmp file
+                try:
+                    with open(os.path.join('/','tmp', query.session_id), 'r') as tmp_file:
+                        # If some content : read it
+                        content = tmp_file.read()
+                        if content != "":
+                            # update the result field
+                            query.command_result = content
+                            session.commit()
+                            result['command_result'] = content
+                            os.remove(os.path.join('/','tmp', result["session_id"]))
+                            tmp_file.close()
+
+                    # do nothing if the tmp file is not readable for any reasons
+
+                except Exception as e:
+                    result['command_result'] = ""
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def add_qa_relay_launched(self, session, qa_relay_id, login, cluster_id, jid):
+        format = "%Y-%m-%d %H:%M:%S"
+        execution_date = datetime.now()
+
+        qa_launched = Qa_relay_launched()
+
+        qa_launched.id_command = qa_relay_id
+        qa_launched.user_command = login
+        qa_launched.command_relay = jid
+        qa_launched.command_start = execution_date
+
+        session.add(qa_launched)
+        session.commit()
+        session.flush()
+
+        if qa_launched.id == None:
+            qa_launched.id = 0
+        if qa_launched.id_command == None:
+            qa_launched.id_command = 0
+        if qa_launched.user_command == None:
+            qa_launched.user_command = ""
+        if qa_launched.command_start == None:
+            qa_launched.command_start = ""
+        if qa_launched.command_cluster == None:
+            qa_launched.command_cluster = ""
+        if qa_launched.command_relay == None:
+            qa_launched.command_relay = ""
+
+
+        return {
+            'id' : qa_launched.id,
+            'id_command' : qa_launched.id_command,
+            'user_command' : qa_launched.user_command,
+            'command_start' : qa_launched.command_start.strftime(format),
+            'command_cluster' : qa_launched.command_cluster,
+            'command_relay' : qa_launched.command_relay
+        }
+
+    @DatabaseHelper._sessionm
+    def add_qa_relay_result(self, session, jid, exec_date, qa_relay_id, launched_id, session_id=""):
+        qa_result = Qa_relay_result()
+        qa_result.id_command = qa_relay_id
+        qa_result.launched_id = launched_id
+        qa_result.session_id = session_id # name_random(8,"quick_")
+        qa_result.typemessage = "log"
+        qa_result.command_result = ""
+        qa_result.relay = jid
+
+
+        session.add(qa_result)
+        session.commit()
+        session.flush()
+
+        if qa_result.id == None:
+            qa_result.id = 0
+        if qa_result.id_command == None:
+            qa_result.id_command = ""
+        if qa_result.launched_id == None:
+            qa_result.launched_id = ""
+        if qa_result.session_id == None:
+            qa_result.session_id = ""
+        if qa_result.typemessage == None:
+            qa_result.typemessage = ""
+        if qa_result.command_result == None:
+            qa_result.command_result = ""
+        if qa_result.relay == None:
+            qa_result.relay = ""
+
+        return {
+            'id' : qa_result.id,
+            'id_command' : qa_result.id_command,
+            'launched_id' : qa_result.launched_id,
+            'session_id' : qa_result.session_id,
+            'typemessage' : qa_result.typemessage,
+            'command_result' : qa_result.command_result,
+            'relay' : qa_result.relay
+        }
+
+    @DatabaseHelper._sessionm
+    def get_relay_qa_launched(self, session, jid, login, start=-1, limit=-1):
+        format = "%Y-%m-%d %H:%M:%S"
+        try:
+            start = int(start)
+        except:
+            start = -1
+
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        total = 0
+
+        query = session.query(Qa_relay_launched)\
+            .add_column(Qa_relay_command.name)\
+            .add_column(Qa_relay_command.description)\
+            .add_column(Qa_relay_result.id.label('id_result'))\
+            .filter(Qa_relay_launched.user_command == login)\
+            .filter(Qa_relay_launched.command_relay == jid)\
+            .order_by(desc(Qa_relay_launched.command_start))\
+            .outerjoin(Qa_relay_command, Qa_relay_launched.id_command == Qa_relay_command.id)\
+            .outerjoin(Qa_relay_result, Qa_relay_launched.id == Qa_relay_result.launched_id)
+
+        total = query.count()
+
+        if start != -1:
+            query = query.offset(start)
+
+        if limit != -1:
+            query = query.limit(limit)
+
+        query = query.all()
+
+        result = {
+            'total': total,
+            'datas' : {
+                'id' : [],
+                'id_command' : [],
+                'name' : [],
+                'description' : [],
+                'user_command' : [],
+                'command_start' : [],
+                'command_cluster' : [],
+                'command_relay' : [],
+                'result_id' : []
+            }
+        }
+        if query is not None:
+            for launched, name, description, result_id in query:
+                result['datas']['id'].append(launched.id)
+                result['datas']['id_command'].append(launched.id_command)
+                result['datas']['command_start'].append(launched.command_start.strftime(format))
+                if launched.command_cluster is None:
+                    result['datas']['command_cluster'].append("")
+                else:
+                    result['datas']['command_cluster'].append(launched.command_cluster)
+
+                result['datas']['command_relay'].append(launched.command_relay)
+                result['datas']['user_command'].append(launched.user_command)
+                result['datas']['name'].append(name)
+                result['datas']['description'].append(description)
+                if result_id is None:
+                    result['datas']['result_id'].append('')
+                else:
+                    result['datas']['result_id'].append(result_id)
+        return result

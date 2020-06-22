@@ -490,3 +490,32 @@ class Def_remote_deploy_status(Base, XmppMasterDBObj):
     regex_logmessage = Column(String(80), nullable=False)
     status = Column(String(80), nullable=False)
     label = Column(String(255), nullable=False)
+
+####### QA For Relays #######
+
+# Qa_relay_command describe a qa for relayserver
+class Qa_relay_command(Base, XmppMasterDBObj):
+    __tablename__ = 'qa_relay_command'
+    user = Column(String(45), nullable=False) ## Relay Qa Owner
+    name = Column(String(45), nullable=False) ## Relay Qa Name
+    script = Column(Text, nullable=False) ## Relay Qa Script
+    description = Column(String(45)) ## Relay Qa Description
+
+
+class Qa_relay_launched(Base, XmppMasterDBObj):
+    __tablename__ = 'qa_relay_launched'
+    id_command = Column(Integer, nullable=False) ## Qa Reference
+    user_command = Column(String(45), nullable=False) ## Relay Qa Owner
+    command_start = Column(DateTime, default=datetime.datetime.now) ## Relay Qa launched date
+    command_cluster = Column(String(45)) ## Relay Qa target if the target is a cluster
+    command_relay = Column(String(45)) ## Relay Qa target if the target is a uniq relay
+
+
+class Qa_relay_result(Base, XmppMasterDBObj):
+    __tablename__ = 'qa_relay_result'
+    id_command = Column(Integer, nullable=False) # Quick get a ref to the initial command
+    launched_id = Column(Integer, nullable=False) # Reference to the specialized command (launched command)
+    session_id = Column(String(45), nullable=False) # xmpp session id
+    typemessage = Column(String(20), nullable=False, default='log')
+    command_result = Column(Text)
+    relay = Column(String(45), nullable=False) # If uniq command : relay, if cluster command : jid of the cluster member

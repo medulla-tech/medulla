@@ -52,6 +52,18 @@ if(isset($_GET['jid']))
   echo '<td id="console" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/consolexmpp", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="modules/base/graph/computers/console.jpg" height="70" width="70"></a></td>';
   echo '</tr>';
   echo '</table>';
+  $qalist = xmlrpc_get_qa_for_relays($_SESSION['login']);
+
+  echo '<form action="'.urlStrRedirect("xmppmaster/xmppmaster/qalaunched").'" method="post">';
+  echo '<select name="qa_relay_id">';
+  foreach($qalist as $qa){
+    echo '<option value="'.$qa['id'].'" >'.$qa['description'].'</option>';
+  }
+  echo '</select>';
+  echo '<input type="hidden" name="jid" value="'.$jid.'"/>';
+  echo '<input type="hidden" name="launch_relay_qa" value="'.$jid.'"/>';
+  echo '<input id="buttoncmd" class="btn btn-primary" type="submit" value="Send custom command">';
+  echo '</form>';
 }
 
 ?>

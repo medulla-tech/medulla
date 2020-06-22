@@ -49,6 +49,8 @@ $switchemptyaction = new EmptyActionItem1(_("Switch"), "switchrelay", 'stopg', "
 $reconfigureaction = new ActionPopupItem(_("Reconfigure Machines"), "reconfiguremachines", 'restart', "nopropagate", "xmppmaster", "xmppmaster");
 $reconfigureemptyaction = new EmptyActionItem1(_("Reconfigure Machines"), "reconfiguremachines", 'restartg', "nopropagate", "xmppmaster", "xmppmaster");
 
+$qalisteaction = new ActionItem(_("QA Launched"), "qalaunched", 'inventory', "", "xmppmaster", "xmppmaster");
+
 $raw = 0;
 $params = [];
 if($relays['total'] > 0){
@@ -100,7 +102,7 @@ foreach($relays['datas']['hostname'] as $key=>$array){
   {
     $switchActions[] = $switchonaction;
   }
-
+  $qalistActions[] = $qalisteaction;
   $raw++;
 }
 echo '<div id="switchresult"></div>';
@@ -110,7 +112,7 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $relays['datas']['jid'], _T("Jid", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['cluster_name'], _T("Cluster Name", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['cluster_description'], _T("Cluster Description", "xmppmaster"));
-$n->addExtraInfo( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"), ["title"=>"dede"]);
+$n->addExtraInfo( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['uninventoried_online'], _T("Uninventoried Online", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['classutil'], _T("Class Util", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['macaddress'], _T("Mac Address", "xmppmaster"));
@@ -123,6 +125,7 @@ $n->setNavBar(new AjaxNavBar($relays['total'], $filter, "updateSearchParamformRu
 $n->addActionItemArray($reconfigurationActions);
 $n->addActionItemArray($switchActions);
 $n->addActionItemArray($configActions);
+$n->addActionItemArray($qalistActions);
 $n->addActionItemArray($quickActions);
 $n->setParamInfo($params);
 $n->start = 0;

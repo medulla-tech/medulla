@@ -750,3 +750,39 @@ def get_clusters_list(start, limit, filter):
 
 def change_relay_switch(jid, switch, propagate):
     return XmppMasterDatabase().change_relay_switch(jid, switch, propagate)
+
+def is_relay_online(jid):
+    return XmppMasterDatabase().is_relay_online(jid)
+
+def get_qa_for_relays(login=""):
+    return XmppMasterDatabase().get_qa_for_relays(login)
+
+def get_relay_qa(login, qa_relay_id):
+    return XmppMasterDatabase().get_relay_qa(login, qa_relay_id)
+
+def add_command_relay_qa(qa_relay_id, jid, login):
+    qa = get_relay_qa(login, qa_relay_id)
+    if qa is not None:
+        command_creation = XmppMasterDatabase().add_qa_relay_launched(qa_relay_id, jid, login,\
+            "", [])
+        return {'command' : qa, 'launched' : command_creation}
+    else:
+        return None
+
+
+def get_qa_relay_result(result_id):
+    result = XmppMasterDatabase().get_qa_relay_result(result_id)
+    return result
+
+
+def add_qa_relay_launched(qa_relay_id, login, cluster_id, jid):
+    result = XmppMasterDatabase().add_qa_relay_launched(qa_relay_id, login, cluster_id, jid)
+    return result
+
+def add_qa_relay_result(jid, exec_date, qa_relay_id, launched_id, session_id=""):
+    result = XmppMasterDatabase().add_qa_relay_result(jid, exec_date, qa_relay_id, launched_id, session_id)
+    return result
+
+def get_relay_qa_launched(jid, login, start, maxperpage):
+    result = XmppMasterDatabase().get_relay_qa_launched(jid, login, start, maxperpage)
+    return result
