@@ -103,7 +103,8 @@ echo "### $PKI_PATH/crl.pem generated"
 
 # generate key and sign request
 echo "### Creating the localhost certificate ###"
-echo -e "[alt_names]\nDNS.1 = localhost\nDNS.2 = ${LOCAL_ADDRESS}" >> $PKI_CNF
+crudini --set $PKI_CNF alt_names DNS.1 localhost
+crudini --set $PKI_CNF alt_names DNS.2 ${LOCAL_ADDRESS}
 openssl req -config $PKI_CNF -subj "$PKI_SUBJ/commonName=$LOCAL_ADDRESS" -passout env:PASSPHRASE -batch -extensions server_cert -new -keyout $PKI_KEYS_PATH/$LOCAL_ADDRESS-key.pem -out $PKI_REQS_PATH/$LOCAL_ADDRESS-req.pem
 chmod 400 $PKI_KEYS_PATH/$LOCAL_ADDRESS-key.pem
 # sign cert with PKI
@@ -117,3 +118,5 @@ openssl rsa -passin env:PASSPHRASE -in $PKI_KEYS_PATH/$LOCAL_ADDRESS-key.pem -ou
 cat $PKI_CERTS_PATH/$LOCAL_ADDRESS-cert.pem >> $PKI_PATH/$LOCAL_ADDRESS.pem
 chmod 444 $PKI_PATH/$LOCAL_ADDRESS.pem
 echo "### In $PKI_PATH, for $service: cacert is ca-chain.cert.pem, localcert is $LOCAL_ADDRESS.pem"
+# Delete the alt_names config
+crudini --del $PKI_CNF alt_names
