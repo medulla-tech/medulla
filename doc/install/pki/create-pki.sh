@@ -103,11 +103,11 @@ echo "### $PKI_PATH/crl.pem generated"
 
 # generate key and sign request
 echo "### Creating the localhost certificate ###"
-echo -e "[alt_names]\nDNS.1 = localhost\nDNS.2 = ${LOCAL_ADDRESS}" > /tmp/pulse.cnf
-openssl req -config $PKI_CNF -subj "$PKI_SUBJ/commonName=$LOCAL_ADDRESS" -passout env:PASSPHRASE -batch -extensions server_cert -extfile /tmp/pulse.cnf -new -keyout $PKI_KEYS_PATH/$LOCAL_ADDRESS-key.pem -out $PKI_REQS_PATH/$LOCAL_ADDRESS-req.pem
+echo -e "[alt_names]\nDNS.1 = localhost\nDNS.2 = ${LOCAL_ADDRESS}" >> $PKI_CNF
+openssl req -config $PKI_CNF -subj "$PKI_SUBJ/commonName=$LOCAL_ADDRESS" -passout env:PASSPHRASE -batch -extensions server_cert -new -keyout $PKI_KEYS_PATH/$LOCAL_ADDRESS-key.pem -out $PKI_REQS_PATH/$LOCAL_ADDRESS-req.pem
 chmod 400 $PKI_KEYS_PATH/$LOCAL_ADDRESS-key.pem
 # sign cert with PKI
-openssl ca -config $PKI_CNF -name CA_Intermediate -passin env:PASSPHRASE -batch -extensions server_cert -keyfile $PKI_KEYS_PATH/cakey.pem -out $PKI_CERTS_PATH/$LOCAL_ADDRESS-cert.pem -infiles $PKI_REQS_PATH/$LOCAL_ADDRESS-req.pem
+openssl ca -config $PKI_CNF -name CA_Intermediate -passin env:PASSPHRASE -batch -extensions server_cert -extfile $PKI_CNF -keyfile $PKI_KEYS_PATH/cakey.pem -out $PKI_CERTS_PATH/$LOCAL_ADDRESS-cert.pem -infiles $PKI_REQS_PATH/$LOCAL_ADDRESS-req.pem
 chmod 444 $PKI_CERTS_PATH/$LOCAL_ADDRESS-cert.pem
 # remove sign request
 rm $PKI_REQS_PATH/$LOCAL_ADDRESS-req.pem
