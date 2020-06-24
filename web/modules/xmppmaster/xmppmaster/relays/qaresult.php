@@ -53,7 +53,7 @@ $list->addExtraInfo([$description], 'Relay QA Description');
 $list->display();
 echo '<textarea ';
 echo 'spellcheck="false" style="';
-echo 'height:400px; width:50%; margin-left:25%; background-color:black; color:rgb(230,230,230);font-size:1.2em;';
+echo 'height:500px; width:99%; margin-left:0%; background-color:black; color:rgb(230,230,230);font-size:1.2em;';
 echo 'border-radius:15px; box-shadow: 0.5em 3px #0420263a, -0.75em 0 1em #00688054;';
 echo '">';
 echo $result_str.'</textarea>';

@@ -60,12 +60,7 @@ if(isset($_POST['jid'], $_POST['qa_relay_id']))
       xmlrpc_runXmppCommand("plugin_asynchromeremoteshell", $jid, array($datas));
       $qa_result = xmlrpc_add_qa_relay_result($jid, $qa_launched['command_start'], $qa_relay_id, $qa_launched['id'], $uuid);
 
-      usleep(250000);
-      header('location: '.urlStrRedirect('xmppmaster/xmppmaster/qaresult', ['result_id'=>$qa_result['id'],
-        'execution_date'=>$qa_launched['command_start'],
-        'name'=>$qa_relay['name'],
-        'description'=>$qa_relay['description']
-      ]));
+      header('location: '.urlStrRedirect('xmppmaster/xmppmaster/qalaunched', ['jid'=>$jid]));
     }
   }//fi relay is online
   else{
