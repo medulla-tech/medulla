@@ -108,7 +108,8 @@ function xmlCall($method, $params = null) {
     global $errorStatus;
     global $errorDesc;
     global $conf;
-
+    $date = date('d.m.Y h:i:s');
+    $input = time();
     if (isXMLRPCError()) { // Don't do a XML-RPC call if a previous one failed
         return;
     }
@@ -273,8 +274,8 @@ function xmlCall($method, $params = null) {
 
     /* If debug is on, print the XML-RPC call and result */
     if (isset($conf["debug"]) && $conf["debug"]["level"]!=0) {
-        $str = '<div class="alert alert-info">';
-        $str .= "XML RPC CALL FUNCTION: $method(";
+        $str1 = '<div class="alert alert-info">';
+        $str = "XML RPC CALL FUNCTION: $method(";
         if (!$params) {
             $params = "null";
         } else if (is_array($params)) {
@@ -284,17 +285,39 @@ function xmlCall($method, $params = null) {
         }
         $str .=')';
         if (is_array($xmlResponse)) {
-            $str .= "<pre>";
-            $str .= "result : ";
+            if ($conf["debug"]["level"]==1){
+                $str .= "<pre>";
+            }
+            if ($conf["debug"]["level"]==2){
+                $temp=time() - $input;
+                $str .= "\n---RESULT--- in ".$temp."s\n";
+            }else{
+                $str .= "result : ";
+            }
             $str .= var_export($xmlResponse, True);
-            $str .= "</pre>";
+            if ($conf["debug"]["level"]==1){
+                $str .= "</pre>";
+            }
         } else {
-            $str .= "result : ".$xmlResponse;
+        
+            if ($conf["debug"]["level"]==2){
+                $temp=time() - $input;
+                $str .= "\n---RESULT--- in ".$temp."s\n";
+                $str .= $xmlResponse;
+                }else{
+                    $str .= "result : ".$xmlResponse;
+                }
         }
-        $str .= '</div>';
-        echo $str;
+        $str2= '</div>';
+        if ($conf["debug"]["level"] == 1){
+                echo $str1.$str.$str2;
+            }
+        if ($conf["debug"]["level"] == 2){
+                if ($method != "base.canAddComputer"){
+                    error_log("\n------------------------------\n".$date." ".$str, 3, "/tmp/logxmlrpc.log");
+                }
+            }
     }
-
     /* If the XML-RPC server sent a fault, display an error */
     if ((is_array($xmlResponse) && (isset($xmlResponse["faultCode"])))) {
         if ($xmlResponse["faultCode"] == "8003") {
