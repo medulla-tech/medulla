@@ -5339,7 +5339,9 @@ class XmppMasterDatabase(DatabaseHelper):
                       'groupdeploy': relayserver.groupdeploy,
                       'package_server_ip': relayserver.package_server_ip,
                       'package_server_port': relayserver.package_server_port,
-                      'moderelayserver': relayserver.moderelayserver
+                      'moderelayserver': relayserver.moderelayserver,
+                      'keysyncthing' : relayserver.keysyncthing,
+                      'syncthing_port' : relayserver.syncthing_port
             }
         except Exception:
             result = {}
