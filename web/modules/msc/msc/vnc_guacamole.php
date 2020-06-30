@@ -21,6 +21,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 $url = array();
+if(isset($_GET['uninventoried'])){
+  $_GET['cn'] = $_GET['hostname'];
+}
+
 if(isset($_GET['cn'])){
     $zz = xmlrpc_getGuacamoleRelayServerMachineHostnameProto($_GET['cn']);
     $dd = $zz['machine'];
