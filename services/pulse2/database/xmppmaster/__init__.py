@@ -5704,7 +5704,7 @@ class XmppMasterDatabase(DatabaseHelper):
             'enabled': [],
             'enabled_css': [],
             'archi': [],
-            'platform' : [],
+            'platform': [],
             'hostname': [],
             'ip_xmpp': [],
             'macaddress': [],
@@ -5714,7 +5714,7 @@ class XmppMasterDatabase(DatabaseHelper):
             'ad_ou_user': [],
             'kiosk_presence': [],
             'cluster_name': [],
-            'cluster_description' : []
+            'cluster_description': []
         }
         if query is not None:
             for machine in query:
