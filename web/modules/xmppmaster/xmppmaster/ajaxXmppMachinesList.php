@@ -16,9 +16,12 @@ $editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"lis
 $editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
 $consoleaction   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
 $consoleemptyaction = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
+$vncaction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
+$vncemptyaction = $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
 
 $configActions = [];
 $consoleActions = [];
+$vncActions = [];
 
 foreach($machines['datas']['hostname'] as $key=>$array){
   $params[] = [
@@ -39,6 +42,7 @@ foreach($machines['datas']['hostname'] as $key=>$array){
     'ip_xmpp' => $machines['datas']['ip_xmpp'][$raw],
     'agenttype' => 'machine',
     'platform' => $machines['datas']['platform'][$raw],
+    'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
   ];
   $machines['datas']['hostname'][$raw] = '<span class="machine-clickable">'.$machines['datas']['hostname'][$raw].'</span>';
   $machines['datas']['jid'][$raw] = '<span class="machine-clickable">'.$machines['datas']['jid'][$raw].'</span>';
@@ -57,10 +61,13 @@ foreach($machines['datas']['hostname'] as $key=>$array){
   if ($machines['datas']['enabled'][$raw]){
     $configActions[] =$editremoteconfiguration;
     $consoleActions[] = $consoleaction;
+    $vncActions[] = $vncaction;
   }
   else{
     $configActions[] =$editremoteconfigurationempty;
+    $quickActions[] = $deployQuickxmppempty;
     $consoleActions[] = $consoleemptyaction;
+    $vncActions[] = $vncemptyaction;
   }
   $raw++;
 }
@@ -81,8 +88,9 @@ $n->addExtraInfo( $machines['datas']['ip_xmpp'], _T("Xmpp IP", "xmppmaster"));
 $n->setTableHeaderPadding(0);
 $n->setItemCount($machines['total']);
 $n->setNavBar(new AjaxNavBar($machines['total'], $filter, "updateSearchParamformRunning1"));
-$n->addActionItemArray($configActions);
+$n->addActionItemArray($vncActions);
 $n->addActionItemArray($consoleActions);
+$n->addActionItemArray($configActions);
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $machines['total'];
