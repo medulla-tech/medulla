@@ -12,13 +12,21 @@ $machines = xmlrpc_get_xmppmachines_list($start, $maxperpage, $filter, 'all');
 $raw = 0;
 $params = [];
 
+$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
+$editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
+$consoleaction   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
+$consoleemptyaction = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
+
 $configActions = [];
+$consoleActions = [];
+
 foreach($machines['datas']['hostname'] as $key=>$array){
   $params[] = [
     'id' => $machines['datas']['id'][$raw],
     'hostname' => $machines['datas']['hostname'][$raw],
     'enabled' => $machines['datas']['enabled'][$raw],
     'enabled_css' => $machines['datas']['enabled_css'][$raw],
+    'uninventoried' => true,
     'jid'=> $machines['datas']['jid'][$raw],
     'archi' => $machines['datas']['archi'][$raw],
     'classutil' => $machines['datas']['classutil'][$raw],
@@ -29,7 +37,8 @@ foreach($machines['datas']['hostname'] as $key=>$array){
     'cluster_description' => $machines['datas']['cluster_description'][$raw],
     'macaddress'=> $machines['datas']['macaddress'][$raw],
     'ip_xmpp' => $machines['datas']['ip_xmpp'][$raw],
-    'agenttype' => 'machine'
+    'agenttype' => 'machine',
+    'platform' => $machines['datas']['platform'][$raw],
   ];
   $machines['datas']['hostname'][$raw] = '<span class="machine-clickable">'.$machines['datas']['hostname'][$raw].'</span>';
   $machines['datas']['jid'][$raw] = '<span class="machine-clickable">'.$machines['datas']['jid'][$raw].'</span>';
@@ -45,13 +54,13 @@ foreach($machines['datas']['hostname'] as $key=>$array){
   $machines['datas']['ip_xmpp'][$raw] = '<span class="machine-clickable">'.$machines['datas']['ip_xmpp'][$raw].'</span>';
 
 
-  $editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
-  $editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
   if ($machines['datas']['enabled'][$raw]){
     $configActions[] =$editremoteconfiguration;
+    $consoleActions[] = $consoleaction;
   }
   else{
     $configActions[] =$editremoteconfigurationempty;
+    $consoleActions[] = $consoleemptyaction;
   }
   $raw++;
 }
@@ -73,6 +82,7 @@ $n->setTableHeaderPadding(0);
 $n->setItemCount($machines['total']);
 $n->setNavBar(new AjaxNavBar($machines['total'], $filter, "updateSearchParamformRunning1"));
 $n->addActionItemArray($configActions);
+$n->addActionItemArray($consoleActions);
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $machines['total'];

@@ -5653,8 +5653,10 @@ class XmppMasterDatabase(DatabaseHelper):
                 Machines.hostname,
                 Machines.enabled,
                 Machines.jid,
+                Machines.platform,
                 Machines.archi,
                 Machines.classutil,
+                Machines.urlguacamole,
                 Machines.kiosk_presence,
                 Machines.ad_ou_user,
                 Machines.ad_ou_machine,
@@ -5676,6 +5678,7 @@ class XmppMasterDatabase(DatabaseHelper):
             query = query.filter(
                 or_(
                     Machines.hostname.contains(filter),
+                    Machines.platform.contains(filter),
                     Machines.jid.contains(filter),
                     Machines.archi.contains(filter),
                     Machines.hostname.contains(filter),
@@ -5701,10 +5704,12 @@ class XmppMasterDatabase(DatabaseHelper):
             'enabled': [],
             'enabled_css': [],
             'archi': [],
+            'platform' : [],
             'hostname': [],
             'ip_xmpp': [],
             'macaddress': [],
             'classutil': [],
+            'urlguacamole': [],
             'ad_ou_machine': [],
             'ad_ou_user': [],
             'kiosk_presence': [],
@@ -5722,11 +5727,13 @@ class XmppMasterDatabase(DatabaseHelper):
                     result['enabled'].append(False)
                     result['enabled_css'].append('machineName')
                 result['archi'].append(machine.archi)
+                result['platform'].append(machine.platform)
                 result['hostname'].append(machine.hostname)
                 result['ip_xmpp'].append(machine.ip_xmpp)
                 result['macaddress'].append(machine.macaddress)
                 result['classutil'].append(machine.classutil)
                 result['ad_ou_machine'].append(machine.ad_ou_machine)
+                result['urlguacamole'].append(machine.urlguacamole)
                 result['ad_ou_user'].append(machine.ad_ou_user)
                 result['kiosk_presence'].append(machine.kiosk_presence)
                 if machine.cluster_name is None:
