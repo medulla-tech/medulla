@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 $url = array();
-if(isset($_GET['uninventoried'])){
+if(isset($_GET['agenttype']) && $_GET['agenttype'] == 'relayserver' or isset($_GET['uninventoried'])){
   $_GET['cn'] = $_GET['hostname'];
 }
 
