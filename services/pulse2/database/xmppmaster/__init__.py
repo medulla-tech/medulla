@@ -441,7 +441,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         resultat =  [x for x in result]
-        if len(resultat) == 0:
+        if not resultat:
             return -1
         else:
             return resultat[0][0]
@@ -526,7 +526,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         resultat =  [x for x in result]
-        if len(resultat) != 0:
+        if resultat:
             return True
         else:
             return False
@@ -633,7 +633,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                    idcmd,
                                    valuecount= [0,100]):
         setvalues =" "
-        if len(valuecount) != 0:
+        if valuecount:
             setvalues = "AND xmppmaster.syncthing_machine.progress in (%s)" % ",".join([str(x) for x in valuecount])
         sql = """SELECT DISTINCT progress, COUNT(progress)
                     FROM
@@ -745,7 +745,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                     statusnew=3):
         if isinstance(listidmachine, (int,str)):
             listidmachine = [listidmachine]
-        if len(listidmachine) == 0:
+        if not listidmachine:
             return
         listidmachine = ",".join([ str(x) for x in listidmachine])
 
@@ -1523,12 +1523,12 @@ class XmppMasterDatabase(DatabaseHelper):
                            lastuser = "",
                            keysyncthing = ""):
         msg ="Create Machine"
-        pe=-1
+        pe = -1
         machineforupdate = self.getMachinefrommacadress(macaddress)
-        if len(machineforupdate) > 0:
+        if machineforupdate:
             pe = machineforupdate['id']
         if pe != -1:
-            #update
+            # update
             maxlenhostname = max([len(machineforupdate['hostname']), len(hostname)])
             maxlenjid = max([len(machineforupdate['jid']), len(jid)])
             maxmacadress = max([len(machineforupdate['macaddress']), len(macaddress)])
@@ -1976,15 +1976,15 @@ class XmppMasterDatabase(DatabaseHelper):
         """
             analyse the deploy table and creates the sharing syncthing
         """
-        #### todo: get ARS device
+        # todo: get ARS device
         datenow = datetime.now()
         result = session.query(Deploy).filter( and_( Deploy.startcmd <= datenow,
                                                      Deploy.syncthing == 1)).all()
         id_deploylist=set()
-        ###TODO: search keysyncthing in table machine.
+        # TODO: search keysyncthing in table machine.
         session.commit()
         session.flush()
-        if len(result) == 0:
+        if not result:
             return list(id_deploylist)
         list_id_ars={}
         list_ars = set( )
@@ -3948,7 +3948,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         ret = [y for y in result]
-        if len(ret) > 0:
+        if ret:
             logging.getLogger().debug("Matched hostname rule with "\
                 "hostname \"%s\# by regex \#%s\"" % (hostname, ret[0].subject))
         return ret
@@ -4201,7 +4201,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def addlistguacamoleidformachineid(self, session, machine_id, connection):
         # objet connection: {u'VNC': 60, u'RDP': 58, u'SSH': 59}}
-        if len(connection) == 0:
+        if not connection:
             # on ajoute 1 protocole inexistant pour signaler que guacamle est configure.
             connection['INF'] = 0
 
@@ -4673,7 +4673,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     deploysession.result = json.dumps(jsonbase, indent=3)
                     if 'infoslist' in jsonbase and \
                         'otherinfos' in jsonbase and \
-                        len(jsonbase['otherinfos']) > 0 and \
+                        jsonbase['otherinfos']) and \
                         'plan' in jsonbase['otherinfos'][0] and \
                             len(jsonbase['infoslist']) != len(jsonbase['otherinfos'][0]['plan']) and \
                             state == "DEPLOYMENT SUCCESS":
@@ -4717,8 +4717,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         incrementeiscount.append(str(y.id))
                 listcommand.append(exclud)
                 listconfsubstitute[t] = listcommand
-            if len(incrementeiscount) != 0:
-                #update contsub
+            if incrementeiscount:
+                # update contsub
                 sql="""UPDATE `xmppmaster`.`substituteconf`
                     SET
                         `countsub` = `countsub` + '1'
@@ -5435,7 +5435,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                             0,
                                             ""] for m in ars}
                     countarsclient = self.algoloadbalancerforcluster()
-                    if len(countarsclient) != 0:
+                    if countarsclient):
                         for i in countarsclient:
                             try:
                                 if result2[i[1]]:
@@ -5704,7 +5704,7 @@ class XmppMasterDatabase(DatabaseHelper):
             'enabled': [],
             'enabled_css': [],
             'archi': [],
-            'platform' : [],
+            'platform': [],
             'hostname': [],
             'ip_xmpp': [],
             'macaddress': [],
@@ -5714,7 +5714,7 @@ class XmppMasterDatabase(DatabaseHelper):
             'ad_ou_user': [],
             'kiosk_presence': [],
             'cluster_name': [],
-            'cluster_description' : []
+            'cluster_description': []
         }
         if query is not None:
             for machine in query:
@@ -5947,7 +5947,7 @@ where agenttype="machine" and groupdeploy in (
     @DatabaseHelper._sessionm
     def call_acknowledged_reconficuration(self, session, listmachine=[]):
         listjid = []
-        if len(listmachine) == 0:
+        if not listmachine:
             return listjid
         res = session.query(Machines.id,
                             Machines.need_reconf).filter(and_(Machines.need_reconf == '0',
@@ -5964,7 +5964,7 @@ where agenttype="machine" and groupdeploy in (
         """
             initialise presence on list id machine
         """
-        if len(listmachine) == 0:
+        if not listmachine:
             return False
         try:
             liststr = ",".join(["'%s'" % x for x in listmachine])

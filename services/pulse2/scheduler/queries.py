@@ -318,7 +318,7 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
                      database.commands_on_host.c.scheduler is None)
         ).filter(database.pull_targets.c.target_uuid == None
         ).filter(database.commands.c.ready == True)
-    if len(ids_to_exclude) > 0 :
+    if ids_to_exclude:
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
     commands_query = commands_query.order_by(database.commands.c.order_in_bundle.asc(),
                                              database.commands_on_host.c.current_state.desc())
@@ -468,8 +468,7 @@ def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
                      database.commands_on_host.c.scheduler == scheduler_name,
                      database.commands_on_host.c.scheduler is None))
 
-    #commands_query = commands_query.limit(top)
-    if len(ids_to_exclude) > 0 :
+    if ids_to_exclude:
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
     fls = []
     otd = []
@@ -480,14 +479,13 @@ def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
         else :
             otd.append(q.id)
 
-        #yield q.id
 
     session.close()
 
-    if len(otd) > 0 :
+    if otd:
         logging.getLogger().info("Switching %d circuits to overtimed" % len(otd))
         CoHManager.setCoHsStateOverTimed(otd)
-    if len(fls) > 0 :
+    if fls:
         logging.getLogger().info("Switching %d circuits to failed" % len(fls))
         CoHManager.setCoHsStateFailed(fls)
 
