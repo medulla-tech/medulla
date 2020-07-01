@@ -4673,7 +4673,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     deploysession.result = json.dumps(jsonbase, indent=3)
                     if 'infoslist' in jsonbase and \
                         'otherinfos' in jsonbase and \
-                        jsonbase['otherinfos']) and \
+                        jsonbase['otherinfos'] and \
                         'plan' in jsonbase['otherinfos'][0] and \
                             len(jsonbase['infoslist']) != len(jsonbase['otherinfos'][0]['plan']) and \
                             state == "DEPLOYMENT SUCCESS":
@@ -5435,7 +5435,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                             0,
                                             ""] for m in ars}
                     countarsclient = self.algoloadbalancerforcluster()
-                    if countarsclient):
+                    if countarsclient:
                         for i in countarsclient:
                             try:
                                 if result2[i[1]]:
