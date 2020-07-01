@@ -290,7 +290,7 @@ function xmlCall($method, $params = null) {
             }
             if ($conf["debug"]["level"]==2){
                 $temp=time() - $input;
-                $str .= "\n---RESULT--- in ".$temp."s\n";
+                $str .= "\n---RESULT---".$method." in ".$temp."s\n";
             }else{
                 $str .= "result : ";
             }
@@ -302,7 +302,7 @@ function xmlCall($method, $params = null) {
         
             if ($conf["debug"]["level"]==2){
                 $temp=time() - $input;
-                $str .= "\n---RESULT--- in ".$temp."s\n";
+                $str .= "\n---RESULT---".$method."  in ".$temp."s\n";
                 $str .= $xmlResponse;
                 }else{
                     $str .= "result : ".$xmlResponse;
