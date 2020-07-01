@@ -178,7 +178,7 @@ class InventoryChecker(Component):
         @rtype: generator
         """
 
-        if software_required:
+        if len(software_required) > 1:
             filter_exp = "\|".join(software_required)
         else:
             filter_exp = software_required[0]
