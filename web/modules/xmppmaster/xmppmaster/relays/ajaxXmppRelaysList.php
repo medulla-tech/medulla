@@ -51,6 +51,9 @@ $reconfigureemptyaction = new EmptyActionItem1(_("Reconfigure Machines"), "recon
 
 $qalisteaction = new ActionItem(_("QA Launched"), "qalaunched", 'inventory', "", "xmppmaster", "xmppmaster");
 
+$vncaction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
+$vncemptyaction = $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
+
 $raw = 0;
 $params = [];
 if($relays['total'] > 0){
@@ -67,7 +70,8 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     'macaddress'=> $relays['datas']['macaddress'][$raw],
     'ip_xmpp' => $relays['datas']['ip_xmpp'][$raw],
     'agenttype'=> 'relayserver',
-    'switch'=> $relays['datas']['switchonoff'][$raw]
+    'switch'=> $relays['datas']['switchonoff'][$raw],
+    'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava")
   ];
 
   $relays['datas']['hostname'][$raw] = '<span class="relay-clickable">'.$relays['datas']['hostname'][$raw].'</span>';
@@ -127,6 +131,7 @@ $n->addActionItemArray($switchActions);
 $n->addActionItemArray($configActions);
 $n->addActionItemArray($qalistActions);
 $n->addActionItemArray($quickActions);
+$n->addActionItemArray($vncActions);
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $relays['total'];
