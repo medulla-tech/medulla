@@ -87,12 +87,14 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $consoleActions[] = $consoleaction;
     $reconfigurationActions[] = $reconfigureaction;
     $quickActions[] = $quickaction;
+    $vncActions[] = $vncaction;
   }
   else{
     $configActions[] =$editremoteconfigurationempty;
     $consoleActions[] = $consoleactionempty;
     $reconfigurationActions[] = $reconfigureemptyaction;
     $quickActions[] = $quickactionempty;
+    $vncActions[] = $vncemptyaction;
   }
 
   if($relays['datas']['mandatory'][$raw] == 1){
