@@ -332,7 +332,7 @@ class WindowsMinimalInventory(MinimalInventory):
                         "IPSubnet"]
                        )
         for ifname, enabled, ip, mac, netmask in info:
-            if enabled and len(ip)>0 and len(netmask)>0 :
+            if enabled and ip and netmask:
                 if ip[0].startswith("127."):
                     continue
                 yield ifname, ip[0], mac, netmask[0]

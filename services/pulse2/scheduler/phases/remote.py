@@ -685,7 +685,7 @@ class UploadPhase(RemoteControlPhase):
                 pass
 
         # from here, either file_uris is a dict with a bunch of uris, or it is void in which case we give up
-        if (not file_uris) or (len(file_uris['files']) == 0):
+        if (not file_uris) or not file_uris['files']:
             if useFallback:
                 self.logger.warn("Circuit #%s: can't get files URI from fallback mirror, skipping command" % (self.coh.getId()))
                 #self.updateHistory('upload_failed',
@@ -1003,7 +1003,7 @@ class WUParsePhase(Phase):
             if match :
                 output += line[match.end():]
 
-        if len(output) > 0:
+        if output:
             re_slice = re.findall(self.json_pattern, output, re.DOTALL|re.MULTILINE)
             output = "".join(re_slice)
             self.logger.debug("WU output: %s" % output)

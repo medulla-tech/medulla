@@ -158,7 +158,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
 
     if not ('information' in data and \
                 'users' in data['information'] and \
-                    len(data['information']['users']) > 0):
+                    data['information']['users']):
         data['information']['users'].append("system")
     else:
         XmppMasterDatabase().log("Warning no user determinated for the machine : %s " %
@@ -193,7 +193,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
             if showinfomachine :
                 logger.info("Analysis the 1st rule : select the relay server by User")
             result1 = XmppMasterDatabase().algoruleuser(data['information']['users'][0])
-            if len(result1) > 0:
+            if result1:
                 if showinfomachine :
                     logger.info("Applied : Associate the relay server based on user.")
                 result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
@@ -208,7 +208,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                 logger.info("Analysis the 2nd rule : select the relay server by Hostname")
             result1 = XmppMasterDatabase().algorulehostname(
                 data['information']['info']['hostname'])
-            if len(result1) > 0:
+            if result1:
                 if showinfomachine:
                     logger.info("applied rule Associate relay server based on hostname")
                 result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
@@ -223,8 +223,8 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                 logger.info("Analysis the 3rd rule : select the relay server by Geolocalisation")
             if "geolocalisation" in data and \
                 data['geolocalisation'] is not None and \
-                    len(data['geolocalisation']) > 0:
-                #initialization parameter geolocalisation
+                    data['geolocalisation']:
+                # initialization parameter geolocalisation
                 tabinformation={"longitude": "unknown",
                                 "latitude": "unknown",
                                 "city": "unknown",
@@ -330,7 +330,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                 result1 = XmppMasterDatabase().algorulesubnet(subnetnetwork(z['ipaddress'],
                                                                             z['mask']),
                                                                 data['classutil'])
-                if len(result1) > 0:
+                if result1:
                     if showinfomachine:
                         logger.info("Applied rule : select the relay server in same subnet")
                     subnetexist = True
@@ -361,7 +361,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                 logger.info("Analysis the 6th rule : select the relay on less " \
                             "requested ARS (load balancer)")
             result1 = XmppMasterDatabase().algoruleloadbalancer()
-            if len(result1) > 0:
+            if result1:
                 if showinfomachine:
                     logger.info("Applied : Rule Chooses the less requested ARS.")
                 result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
@@ -379,7 +379,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
             if adorgbymachinebool:
                 result1 = XmppMasterDatabase().algoruleadorganisedbymachines(
                     manage_fqdn_window_activedirectory.getOrganizationADmachineOU(data['adorgbymachine']))
-                if len(result1) > 0:
+                if result1:
                     if showinfomachine:
                         logger.info("Applied rule : AD organized by machines")
                     result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
@@ -397,7 +397,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
             if adorgbyuserbool:
                 result1 = XmppMasterDatabase().algoruleadorganisedbyusers(
                     manage_fqdn_window_activedirectory.getOrganizationADuserOU(data['adorgbyuser']))
-                if len(result1) > 0:
+                if result1:
                     if showinfomachine:
                         logger.info("Applied rule : AD organized by users")
                     result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
@@ -417,7 +417,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                 logger.info("Network address: %s" % networkaddress)
             result1 = XmppMasterDatabase().algorulebynetworkaddress(networkaddress,
                                                                     data['classutil'])
-            if len(result1) > 0:
+            if result1:
                 if showinfomachine:
                     logger.info("Applied Rule : Associate relay server based on network address")
                 result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
@@ -434,7 +434,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                 logger.info("Net mask address: %s" % data['xmppmask'])
             result1 = XmppMasterDatabase().algorulebynetmaskaddress(data['xmppmask'],
                                                                     data['classutil'])
-            if len(result1) > 0:
+            if result1:
                 logger.info("Applied Rule : Associate relay server based on net Mask address")
                 result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                 msg_log("net mask address",
@@ -501,7 +501,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
         try:
             listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2],
                                                                              moderelayserver="static")
-            if len(listars) == 0:
+            if not listars:
                 listars = XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2],
                                                                              moderelayserver="static",
                                                                              enablears = None)
@@ -554,12 +554,12 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                     'syncthing' : objectxmpp.assessor_agent_announce_server,
                     'ret': 0
                     }
-        if len(listars) == 0:
+        if not listars:
             logger.warning("No configuration sent to machine "\
                 "agent %s. ARS %s is found but it is stopped." % (data['information']['info']['hostname'],
                                                                   result[2]))
             logger.warning("ACTION: Re-start the ARS on %s, and wait for" \
-                " the agent to run its reconfiguration."%(result[2]))
+                " the agent to run its reconfiguration." % (result[2]))
             objectxmpp.xmpplog("No configuration sent to machine " \
                 "agent %s. ARS %s is found but it is stopped." % (result[2],
                                                                   data['information']['info']['hostname'] ),
@@ -577,7 +577,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
         agentsubscription = "master@pulse"
         if "substitute" in data and \
             "conflist" in data["substitute"] and \
-                len(data["substitute"]["conflist"]) > 0:
+                data["substitute"]["conflist"]:
             response["substitute"] =  XmppMasterDatabase().\
                                     substituteinfo(data["substitute"],
                                                    z1[0][2])
@@ -682,7 +682,7 @@ def read_conf_assessor_master(objectxmpp):
                 objectxmpp.assessor_agent_keyAES32 = [str(x.strip()) for x in paramkeyAES32.split(",") if x.strip() != ""]
 
                 #objectxmpp.keyAES32 = Config.get('parameters', 'keyAES32')
-                if len(objectxmpp.assessor_agent_keyAES32) >0:
+                if objectxmpp.assessor_agent_keyAES32:
                     for keyAES32items in objectxmpp.assessor_agent_keyAES32:
                         if len(keyAES32items) != 32:
                             logger.warning("parameter taille keyAES32 %s"%keyAES32items)

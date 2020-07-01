@@ -196,7 +196,7 @@ class BundleReferences :
             if len(matches)==1:
                 previous = matches[0]
                 return previous.finished
-            elif len(matches)==0:
+            elif not matches:
                 # previous coh already done and no more present
                 return True
         return False
