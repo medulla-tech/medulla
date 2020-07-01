@@ -144,7 +144,9 @@ li.quickg a {
 
     require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
     require_once("modules/dyngroup/includes/utilities.php");
-    include_once('modules/pulse2/includes/menu_actionaudit.php');
+    if(!$_GET['uninventoried']){
+      include_once('modules/pulse2/includes/menu_actionaudit.php');
+    }
     $timeout = isset($_POST['timeout']) ? $_POST['timeout'] : 10 ;
     $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
     if(!$_GET['uninventoried']){
