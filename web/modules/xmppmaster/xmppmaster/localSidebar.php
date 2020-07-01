@@ -23,9 +23,6 @@
 
 if (isExpertMode()){
     $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("XMPP Console","xmppmaster"), "xmppmaster", "xmppmaster", "consolexmpp")
-    );
-    $sidemenu->addSideMenuItem(
         new SideMenuItem(_T("Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
     );
 
