@@ -95,6 +95,11 @@ class ErrorHandlingItem {
         }
         $str .= '</div>';
 
+        $logstr = "PHP XMLRPC call: ".$xmlResponse["faultString"].' at '.gmdate("d M Y H:i:s")."\r\n\n";
+        $logstr .= "Python Server traceback:\n";
+        $logstr .= htmlentities($xmlResponse["faultTraceback"])."\n";
+        $ret =error_log($logstr);
+
         $n = new NotifyWidget();
         $n->size = $this->_size;
         $n->level = $this->_level;
