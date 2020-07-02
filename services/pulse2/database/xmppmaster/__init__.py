@@ -2798,7 +2798,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     (deploy.sessionid = '%s'
                         AND `state` NOT IN ('DEPLOYMENT SUCCESS' , 'ABORT DEPLOYMENT CANCELLED BY USER')
-                        AND `state` REGEXP '^(?!ERROR)^(?!SUCCESS)^(?!ABORT)');
+                        AND `state` REGEXP '^(\?!ERROR)^(\?!SUCCESS)^(\?!ABORT)');
                 """ % (state, sessionid)
             result = session.execute(sql)
             session.commit()
