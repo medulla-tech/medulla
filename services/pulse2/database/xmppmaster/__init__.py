@@ -2316,7 +2316,11 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception as e:
             #logger.error(str(e))
             pass
-
+        # del doublon macadess
+        if macadress is not None:
+            adressemac = str(macadress).split("||")
+            adressemac = list(set(adressemac))
+            macadress = "||".join(adressemac)
         #recupere login command
         if login == "":
             login = self.loginbycommand(idcommand)[0]
