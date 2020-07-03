@@ -1628,12 +1628,23 @@ class XmppMasterDatabase(DatabaseHelper):
                     session.execute(sql)
                     session.commit()
                     session.flush()
+                self.checknewjid(jid)
             except Exception, e:
                 logging.getLogger().error(str(e))
                 msg=str(e)
                 return -1, msg
             return new_machine.id, msg
 
+    @DatabaseHelper._sessionm
+    def checknewjid(self, session, newjidmachine):
+        try:
+            # on appelle la procedure stocke
+            sql = """call afterinsertmachine('%s');"""%newjidmachine
+            session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error("sql : %s"%traceback.format_exc())
 
     @DatabaseHelper._sessionm
     def is_jiduser_organization_ad(self, session, jiduser):
@@ -2282,7 +2293,11 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception as e:
             #logger.error(str(e))
             pass
-
+        # del doublon macadess
+        if macadress is not None:
+            adressemac = str(macadress).split("||")
+            adressemac = list(set(adressemac))
+            macadress = "||".join(adressemac)
         #recupere login command
         if login == "":
             login = self.loginbycommand(idcommand)[0]
@@ -2793,8 +2808,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     `state` = '%s'
                 WHERE
                     (deploy.sessionid = '%s'
-                        AND `state` NOT IN ('DEPLOYMENT SUCCESS' , 'ABORT DEPLOYMENT CANCELLED BY USER')
-                        AND `state` REGEXP '^(?!ERROR)^(?!SUCCESS)^(?!ABORT)');
+                        AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
+                                              'ABORT DEPLOYMENT CANCELLED BY USER')
+                                OR
+                              `state` REGEXP '^(\?!ERROR)^(\?!SUCCESS)^(\?!ABORT)'));
                 """ % (state, sessionid)
             result = session.execute(sql)
             session.commit()
@@ -4673,7 +4690,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     deploysession.result = json.dumps(jsonbase, indent=3)
                     if 'infoslist' in jsonbase and \
                         'otherinfos' in jsonbase and \
-                        jsonbase['otherinfos']) and \
+                        jsonbase['otherinfos'] and \
                         'plan' in jsonbase['otherinfos'][0] and \
                             len(jsonbase['infoslist']) != len(jsonbase['otherinfos'][0]['plan']) and \
                             state == "DEPLOYMENT SUCCESS":
@@ -5435,7 +5452,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                             0,
                                             ""] for m in ars}
                     countarsclient = self.algoloadbalancerforcluster()
-                    if countarsclient):
+                    if countarsclient:
                         for i in countarsclient:
                             try:
                                 if result2[i[1]]:
