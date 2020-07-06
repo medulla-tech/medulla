@@ -534,4 +534,8 @@ function xmlrpc_add_qa_relay_result($jid, $exec_date, $qa_relay_id, $qa_launched
 function xmlrpc_get_relay_qa_launched($jid, $login, $start=-1, $maxperpage=-1){
   return xmlCall("xmppmaster.get_relay_qa_launched", [$jid, $login, $start, $maxperpage]);
 }
+
+function xmlrpc_get_packages_list($jid, $filter=""){
+  return xmlCall("xmppmaster.get_packages_list", [$jid, $filter]);
+}
 ?>
