@@ -350,6 +350,16 @@ $page->setFile("modules/xmppmaster/xmppmaster/relays/qaresult.php");
 //$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
+$page = new Page("packageslist", _T("Packages List", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/packageslist.php");
+//$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
+$page = new Page("ajaxpackageslist", _T("Packages List", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php");
+$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
