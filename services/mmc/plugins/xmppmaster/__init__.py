@@ -25,6 +25,7 @@ Plugin to manage the interface with xmppmaster
 import logging
 import os
 import sys
+import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
@@ -786,3 +787,72 @@ def add_qa_relay_result(jid, exec_date, qa_relay_id, launched_id, session_id="")
 def get_relay_qa_launched(jid, login, start, maxperpage):
     result = XmppMasterDatabase().get_relay_qa_launched(jid, login, start, maxperpage)
     return result
+
+
+def get_packages_list(jid, filter=""):
+    timeout = 15
+    result = ObjectXmpp().iqsendpulse(jid, {"action": "packageslist", "data": "/var/lib/pulse2/packages"}, timeout)
+
+    _result = {
+        'datas': {
+            'files': [],
+            'description': [],
+            'licenses': [],
+            'name': [],
+            'uuid': [],
+            'os': [],
+            'size': [],
+            'version': [],
+            'methodtransfer': [],
+            'metagenerator': [],
+            'count_files': [],
+        },
+        'total': 0
+    }
+
+    try:
+        packages = json.loads(result)
+        count = 0
+        for package in packages['datas']:
+            if filter != "":
+                if re.search(filter, package['description']) or\
+                    re.search(filter, package['name']) or\
+                    re.search(filter, package['version']) or\
+                    re.search(filter, package['targetos']) or\
+                    re.search(filter, package['methodtransfer']) or\
+                    re.search(filter, package['metagenerator']):
+
+                    _result['datas']['files'].append(package['files'])
+                    _result['datas']['description'].append(package['description'])
+                    _result['datas']['licenses'].append(package['licenses'])
+                    _result['datas']['name'].append(package['name'])
+                    _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
+                    _result['datas']['os'].append(package['targetos'])
+                    _result['datas']['size'].append(package['size'])
+                    _result['datas']['version'].append(package['version'])
+                    _result['datas']['methodtransfer'].append(package['methodtransfer'])
+                    _result['datas']['metagenerator'].append(package['metagenerator'])
+                    _result['datas']['count_files'].append(package['count_files'])
+                    count += 1
+            else:
+                _result['datas']['files'].append(package['files'])
+                _result['datas']['description'].append(package['description'])
+                _result['datas']['licenses'].append(package['licenses'])
+                _result['datas']['name'].append(package['name'])
+                _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
+                _result['datas']['os'].append(package['targetos'])
+                _result['datas']['size'].append(package['size'])
+                _result['datas']['version'].append(package['version'])
+                _result['datas']['methodtransfer'].append(package['methodtransfer'])
+                _result['datas']['metagenerator'].append(package['metagenerator'])
+                _result['datas']['count_files'].append(package['count_files'])
+
+        if filter != "":
+            _result['total'] = count
+        else:
+            _result['total'] = packages['total']
+    except Exception as e:
+        logging.error(e)
+        pass
+
+    return _result

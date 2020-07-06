@@ -54,6 +54,9 @@ $qalisteaction = new ActionItem(_("QA Launched"), "qalaunched", 'inventory', "",
 $vncaction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
 $vncemptyaction = $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
 
+$packageaction = new ActionItem(_("Packages List"), "packageslist", 'package', "", "xmppmaster", "xmppmaster");
+$packageemptyaction = new EmptyActionItem1(_("Packages List"), "packageslist", 'packageg', "", "xmppmaster", "xmppmaster");
+
 $raw = 0;
 $params = [];
 if($relays['total'] > 0){
@@ -88,6 +91,7 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $reconfigurationActions[] = $reconfigureaction;
     $quickActions[] = $quickaction;
     $vncActions[] = $vncaction;
+    $packagesAction[] = $packageaction;
   }
   else{
     $configActions[] =$editremoteconfigurationempty;
@@ -95,6 +99,7 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $reconfigurationActions[] = $reconfigureemptyaction;
     $quickActions[] = $quickactionempty;
     $vncActions[] = $vncemptyaction;
+    $packagesAction[] = $packageemptyaction;
   }
 
   if($relays['datas']['mandatory'][$raw] == 1){
@@ -128,6 +133,7 @@ $n->addExtraInfo( $relays['datas']['ip_xmpp'], _T("Xmpp IP", "xmppmaster"));
 $n->setTableHeaderPadding(0);
 $n->setItemCount($relays['total']);
 $n->setNavBar(new AjaxNavBar($relays['total'], $filter, "updateSearchParamformRunning"));
+$n->addActionItemArray($packagesAction);
 $n->addActionItemArray($reconfigurationActions);
 $n->addActionItemArray($switchActions);
 $n->addActionItemArray($configActions);
