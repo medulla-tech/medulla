@@ -794,19 +794,19 @@ def get_packages_list(jid, filter=""):
 
     _result = {
         'datas':{
-            'files' : [],
-            'description' : [],
-            'licenses' : [],
-            'name' : [],
-            'uuid' : [],
-            'os' : [],
-            'size' : [],
-            'version' : [],
-            'methodtransfer' : [],
-            'metagenerator' : [],
-            'count_files' : [],
+            'files': [],
+            'description': [],
+            'licenses': [],
+            'name': [],
+            'uuid': [],
+            'os': [],
+            'size': [],
+            'version': [],
+            'methodtransfer': [],
+            'metagenerator': [],
+            'count_files': [],
         },
-        'total':0
+        'total': 0
     }
 
     try:
@@ -817,8 +817,8 @@ def get_packages_list(jid, filter=""):
                 if re.search(filter, package['description']) or\
                     re.search(filter, package['name']) or\
                     re.search(filter, package['version']) or\
-                    re.search(filter, package['targetos'])or\
-                    re.search(filter, package['methodtransfer'])or\
+                    re.search(filter, package['targetos']) or\
+                    re.search(filter, package['methodtransfer']) or\
                     re.search(filter, package['metagenerator']):
 
                     _result['datas']['files'].append(package['files'])
