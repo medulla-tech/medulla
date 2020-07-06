@@ -788,12 +788,13 @@ def get_relay_qa_launched(jid, login, start, maxperpage):
     result = XmppMasterDatabase().get_relay_qa_launched(jid, login, start, maxperpage)
     return result
 
+
 def get_packages_list(jid, filter=""):
     timeout = 15
     result = ObjectXmpp().iqsendpulse(jid, {"action": "packageslist", "data": "/var/lib/pulse2/packages"}, timeout)
 
     _result = {
-        'datas':{
+        'datas': {
             'files': [],
             'description': [],
             'licenses': [],
