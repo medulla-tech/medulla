@@ -115,15 +115,15 @@ class Step {
             $this->options['step'] = $step;
     }
 
-    /**
-     * Set the success option in $params
-     *
-     * @deprecated replaced by setOption
-     * @param int $step is the step number used to order the sequence
-     * @return void
-     */
     public function setOptionSuccess($step)
     {
+    """
+     Set the success option in $params
+
+     @deprecated replaced by setOption
+     @param int $step is the step number used to order the sequence
+     @return void
+     """
         if(is_int($step))
             $this->options['succes'] = $step;
     }
