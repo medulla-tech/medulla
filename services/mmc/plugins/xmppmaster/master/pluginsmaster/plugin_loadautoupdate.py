@@ -28,6 +28,8 @@ from update_remote_agent import Update_Remote_Agent
 import types
 import ConfigParser
 from sleekxmpp import jid
+from pulse2.database.xmppmaster import XmppMasterDatabase
+
 logger = logging.getLogger()
 DEBUGPULSEPLUGIN = 25
 
