@@ -3048,11 +3048,11 @@ class XmppMasterDatabase(DatabaseHelper):
         return q.with_entities(func.count()).scalar()
 
     @DatabaseHelper._sessionm
-    def getdeploybyuserlen(self, session, login = None):
+    def getdeploybyuserlen(self, session, login=None):
         if login is not None:
             return self.get_count(session.query(Deploy).filter(Deploy.login == login))
-        else:
-            return self.get_count(session.query(Deploy))
+
+        return self.get_count(session.query(Deploy))
 
     @DatabaseHelper._sessionm
     def syncthingmachineless(self,session, grp, cmd):
