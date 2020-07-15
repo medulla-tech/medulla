@@ -498,6 +498,21 @@ class Glpi92(DyngroupDatabaseHelper):
             autoload = True)
         mapper(Computersitems, self.computersitems)
 
+        #use view glpi_view_computers_items_printer
+        self.view_computers_items_printer = Table("glpi_view_computers_items_printer", self.metadata,
+            Column('id', Integer, primary_key=True),
+            Column('items_id', Integer, ForeignKey('glpi_printers.id')),
+            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+            autoload = True)
+        mapper(Computersviewitemsprinter, self.view_computers_items_printer)
+
+        self.view_computers_items_peripheral = Table("glpi_view_computers_items_peripheral", self.metadata,
+            Column('id', Integer, primary_key=True),
+            Column('items_id', Integer, ForeignKey('glpi_peripherals.id')),
+            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+            autoload = True)
+        mapper(Computersviewitemsperipheral, self.view_computers_items_peripheral)
+
         # Monitors items
         self.monitors = Table("glpi_monitors", self.metadata,
             autoload = True)
@@ -1127,6 +1142,14 @@ class Glpi92(DyngroupDatabaseHelper):
             return base + [self.os_sp]
         elif query[2] == 'Architecture':
             return base + [self.os_arch]
+        elif query[2] == 'Printer name':
+            return base + [  self.view_computers_items_printer, self.printers ]
+        elif query[2] == 'Printer serial':
+            return base + [  self.view_computers_items_printer, self.printers ]
+        elif query[2] == 'Peripheral name':
+            return base + [  self.view_computers_items_peripheral, self.peripherals ]
+        elif query[2] == 'Peripheral serial':
+            return base + [  self.view_computers_items_peripheral, self.peripherals ]
         elif query[2] == 'Group':
             return base + [self.group]
         elif query[2] == 'Network':
@@ -1277,6 +1300,14 @@ class Glpi92(DyngroupDatabaseHelper):
             return [[self.os_sp.c.name, query[3]]]
         elif query[2] == 'Architecture':
             return [[self.os_arch.c.name, query[3]]]
+        elif query[2] == 'Printer name':
+            return [[self.printers.c.name, query[3]]]
+        elif query[2] == 'Printer serial':
+            return [[self.printers.c.serial, query[3]]]
+        elif query[2] == 'Peripheral name':
+            return [[self.peripheral.c.name, query[3]]]
+        elif query[2] == 'Peripheral serial':
+            return [[self.peripheral.c.serial, query[3]]]
         elif query[2] == 'Group': # TODO double join on Entity
             return [[self.group.c.name, query[3]]]
         elif query[2] == 'Network':
@@ -3896,6 +3927,7 @@ class Glpi92(DyngroupDatabaseHelper):
         ret = query.group_by(self.net.c.name).all()
         session.close()
         return ret
+
     def getMachineByNetwork(self, ctx, filt):
         """ @return: all machines that have this contact number """
         session = create_session()
@@ -3972,6 +4004,32 @@ class Glpi92(DyngroupDatabaseHelper):
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.os_arch.c.name == filt)
+        ret = query.all()
+        session.close()
+
+    def getMachineByPrinter(self, ctx, filt):
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.computersitems)).\
+        select_from(self.computersitems.join(self.printers))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.printers.c.name == filt)
+        ret = query.all()
+        session.close()
+
+    def getMachineByPrinterserail(self, ctx, filt):
+        session = create_session()
+        query = session.query(Machine).distinct(Machine.id).\
+            join(Computersitems_printers, Machine.id == Computersitems_printers.computers_id).\
+            outerjoin(Printers, and_(Computersitems_printers.items_id==Printers.id,
+                                          Computersitems_printers.itemtype == 'Printer')).\
+            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
+                                          Computersitems.itemtype == 'Peripheral'))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.printers.c.serial == filt)
         ret = query.all()
         session.close()
 
@@ -4917,6 +4975,26 @@ class Glpi92(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getAllNamePrinters(self, ctx, filt = ''):
+        """ @return: all printer name in the GLPI database """
+        session = create_session()
+        query = session.query(Printers)
+        if filter != '':
+            query = query.filter(Printers.name.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllSerialPrinters(self, ctx, filt = ''):
+        """ @return: all printer serial in the GLPI database """
+        session = create_session()
+        query = session.query(Printers)
+        if filter != '':
+            query = query.filter(Printers.serial.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
     @DatabaseHelper._sessionm
     def addRegistryCollectContent(self, session, computers_id, registry_id, key, value):
         """
@@ -5421,6 +5499,12 @@ class OsVersion(DbTOA):
     pass
 
 class Computersitems(DbTOA):
+    pass
+
+class Computersviewitemsprinter(DbTOA):
+    pass
+
+class Computersviewitemsperipheral(DbTOA):
     pass
 
 class Monitors(DbTOA):
