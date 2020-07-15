@@ -3788,12 +3788,21 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getUuidFromJid(self, session, jid):
-        """ return machine uuid for JID """
+        """ 
+            This function return the UUID based on the jid
+
+            Args:
+                session:    The sqlalchemy session
+                jid:        The jid of the machine we want to determine the UUID
+
+            Returns:
+                It returns the UUID based on the jid, False otherwise
+        """
         uuid_inventorymachine = session.query(Machines).filter_by(jid=jid).first().uuid_inventorymachine
         if uuid_inventorymachine:
             return uuid_inventorymachine.strip('UUID')
-        else:
-            return False
+            
+        return False
 
     @DatabaseHelper._sessionm
     def algoruleadorganisedbyusers(self, session, userou, classutilMachine = "both", rule = 8, enabled=1):
