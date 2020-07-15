@@ -215,8 +215,8 @@ class CoHQuery :
         session.close()
         if isinstance(phase, list):
             return phase[0]
-        else :
-            return phase
+
+        return phase
 
     def get_phases(self):
         database = MscDatabase()
