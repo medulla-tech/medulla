@@ -246,8 +246,8 @@ class CoHQuery :
         for phase in phases.all():
             if phase.state in ("ready","running", "failed"):
                 return phase.name
-        else :
-            return None
+
+        return None
 
 
     @property
@@ -360,8 +360,8 @@ def in_pull_targets(scheduler_name, uuid):
     session.close()
     if query.first() :
         return True
-    else :
-        return False
+
+    return False
 
 
 def __available_downloads_query(scheduler_name, uuid):
@@ -450,8 +450,8 @@ def verify_target(coh_id, hostname, mac):
     session.close()
     if query.first() :
         return True
-    else :
-        return False
+
+    return False
 
 def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
     # Mutable list ids_to_exclude used as default argument to a method or function
@@ -521,10 +521,10 @@ def is_command_finished(scheduler_name, id):
                      database.commands_on_host.c.scheduler is None))
     nbr = query.count()
     session.close()
-    if nbr > 1 :
+    if nbr > 1:
         return False
-    else :
-        return True
+
+    return True
 
 def switch_commands_to_stop(cohs):
     CoHManager.setCoHsStateStopped(cohs)
