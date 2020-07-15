@@ -67,7 +67,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             # la function getCluster_deploy_syncthing renvoi les ARS du cluster
             # la fonction getRelayServerfromjid renvoit les toutes les informations de ars
             # logger.debug("=====================================================")
-            llistclusterobjet = XmppMasterDatabase().getCluster_deploy_syncthing(data['iddeploy'])
+            listclusterobjet = XmppMasterDatabase().getCluster_deploy_syncthing(data['iddeploy'])
 
             deploy_syncthing_information = {}
             deploy_syncthing_information['namedeploy'] = listclusterobjet[0][0]
