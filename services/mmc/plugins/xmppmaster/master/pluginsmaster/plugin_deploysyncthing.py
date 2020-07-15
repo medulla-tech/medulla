@@ -31,7 +31,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
 import traceback
 from utils import name_random, name_randomplus
-
+from sleekxmpp import jid
 
 import logging
 from random import randint
