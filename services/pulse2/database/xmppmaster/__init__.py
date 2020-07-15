@@ -5254,16 +5254,24 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def isMachineExistPresentTFN(self, session, jid):
         """
-            return None if no exist
-            return True if exist and online
-            return False if exist and offline
+            This function is used to determine if a machine exist and is online.
+
+            Args:
+                session:    Sqlalchemy session
+                jid:        Jid of the machine we are testing
+
+            Returns:
+                It returns None if the machine does not exists in pulse machine database
+                It returns True if the machines exists in pulse machine database and is online
+                It returns False if the machines exists in pulse machine database and is offline
         """
         machine = session.query(Machines).filter(and_(Machines.jid == jid)).first()
         if machine:
             if machine.enabled == '0':
                 return False
-            else:
-                return True
+
+            return True
+
         return None
 
     @DatabaseHelper._sessionm
