@@ -81,7 +81,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             clu['arslist'] = {}
             clu['arsip'] = {}
             clu['numcluster'] = clustersdata['numcluster']
-            nb = random.randint(0, clu['numcluster']-1)
+            nb = random.randint(0, clu['numcluster'] - 1)
             for index, value, in enumerate(clustersdata['listarscluster']):
                 val = "%s" % jid.JID(value).bare
                 if index == nb:
