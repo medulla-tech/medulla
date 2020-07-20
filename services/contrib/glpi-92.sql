@@ -37,4 +37,11 @@ CREATE or replace VIEW glpi_view_computers_items_peripheral AS
         glpi.glpi_computers_items
     WHERE
         itemtype = 'Peripheral';
+
+CREATE OR REPLACE VIEW glpi_view_peripherals_manufacturers AS
+   SELECT
+       *
+   FROM
+     glpi.glpi_manufacturers;
+
 COMMIT;
