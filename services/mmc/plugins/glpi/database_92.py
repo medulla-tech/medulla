@@ -750,6 +750,7 @@ class Glpi92(DyngroupDatabaseHelper):
                         query = query.filter(eval("Peripherals.%s"%field).contains(criterion))
                     else:
                         query = query.filter(Peripheralsmanufacturers.name.contains(criterion))
+        query = query.order_by(Machine.name)
         # All computers
         if "computerpresence" not in ctx:
             # Do nothing more

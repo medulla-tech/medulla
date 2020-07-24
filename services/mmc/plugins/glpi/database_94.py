@@ -605,6 +605,8 @@ class Glpi94(DyngroupDatabaseHelper):
 
         location = ""
         criterion = ""
+        field = ""
+        contains = ""
 
         master_config = xmppMasterConfig()
         reg_columns = []
@@ -623,6 +625,11 @@ class Glpi94(DyngroupDatabaseHelper):
         if "filter" in ctx and ctx["filter"] != "":
             criterion = ctx["filter"]
 
+        if "field" in ctx and ctx["field"] != "":
+            field = ctx["field"]
+
+        if "contains" in ctx and ctx["contains"] != "":
+            contains = ctx["contains"]
 
         # Get the list of online computers
         online_machines = []
@@ -639,6 +646,11 @@ class Glpi94(DyngroupDatabaseHelper):
         .join(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)\
         .outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
 
+        if field != "":
+                query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+                if field != "type":
+                    query = query.join(Peripherals, Computersitems.items_id == Peripherals.id)\
+                    .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
 
@@ -684,24 +696,40 @@ class Glpi94(DyngroupDatabaseHelper):
             query = query.filter(Entities.id == location)
 
         # Add all the like clauses to find machines containing the criterion
-        if filter != "":
-            query = query.filter()
-            query = query.filter(or_(
-                Machine.name.contains(criterion),
-                Machine.comment.contains(criterion),
-                self.os.c.name.contains(criterion),
-                self.glpi_computertypes.c.name.contains(criterion),
-                Machine.contact.contains(criterion),
-                Entities.name.contains(criterion),
-                self.user.c.firstname.contains(criterion),
-                self.user.c.realname.contains(criterion),
-                self.user.c.name.contains(criterion),
-                self.locations.c.name.contains(criterion),
-                self.manufacturers.c.name.contains(criterion),
-                self.model.c.name.contains(criterion),
-                self.regcontents.c.value.contains(criterion)
-            ))
+        if criterion != "":
+            if field == "":
+                query = query.filter(or_(
+                    Machine.name.contains(criterion),
+                    Machine.comment.contains(criterion),
+                    self.os.c.name.contains(criterion),
+                    self.glpi_computertypes.c.name.contains(criterion),
+                    Machine.contact.contains(criterion),
+                    Entities.name.contains(criterion),
+                    self.user.c.firstname.contains(criterion),
+                    self.user.c.realname.contains(criterion),
+                    self.user.c.name.contains(criterion),
+                    self.locations.c.name.contains(criterion),
+                    self.manufacturers.c.name.contains(criterion),
+                    self.model.c.name.contains(criterion),
+                    self.regcontents.c.value.contains(criterion)
+                ))
+            else:
+                if contains == "notcontains":
+                    if field == "type":
+                        query = query.filter(not_(Computersitems.itemtype.contains(criterion)))
+                    elif field != "manufacturer":
+                        query = query.filter(not_(eval("Peripherals.%s"%field).contains(criterion)))
+                    else:
+                        query = query.filter(not_(Peripheralsmanufacturers.name.contains(criterion)))
 
+                else:
+                    if field == "type":
+                        query = query.filter(Computersitems.itemtype.contains(criterion))
+                    elif field != "manufacturer":
+                        query = query.filter(eval("Peripherals.%s"%field).contains(criterion))
+                    else:
+                        query = query.filter(Peripheralsmanufacturers.name.contains(criterion))
+        query = query.order_by(Machine.name)
         # All computers
         if "computerpresence" not in ctx:
             # Do nothing more
@@ -711,6 +739,7 @@ class Glpi94(DyngroupDatabaseHelper):
         else:
             query = query.filter(Machine.id.in_(online_machines))
         query = self.__filter_on(query)
+
 
         # From now we can have the count of machines
         count = query.count()
@@ -758,13 +787,6 @@ class Glpi94(DyngroupDatabaseHelper):
             result['data']['reg'][reg[1]][index] = reg[2]
 
         result['count'] = count
-
-        uuids = []
-        for id in result['data']['uuid']:
-            uuids.append('UUID%s'%id)
-
-        result['xmppdata'] = []
-        result['xmppdata'] = XmppMasterDatabase().getmachinesbyuuids(uuids)
         return result
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
