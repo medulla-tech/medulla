@@ -702,6 +702,7 @@ class Glpi92(DyngroupDatabaseHelper):
                 self.regcontents.c.value.contains(criterion)
             ))
 
+        query = query.order_by(Machine.name)
         # All computers
         if "computerpresence" not in ctx:
             # Do nothing more
