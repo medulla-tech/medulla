@@ -1757,37 +1757,37 @@ msgstr "кінець"
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:37
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
 msgid "Relay Detail"
-msgstr ""
+msgstr "Подробиці ретрансляції"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:40
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
 msgid "Detail actions"
-msgstr ""
+msgstr "Докладні дії"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:43
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
 msgid "Console Relay"
-msgstr ""
+msgstr "Консольна ретрансляція"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:46
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
 msgid "Switch"
-msgstr ""
+msgstr "Перемкнути"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
 msgid "Reconfigure Machines"
-msgstr ""
+msgstr "Переналаштувати машини"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:52
 msgid "QA Launched"
-msgstr ""
+msgstr "Запущено перевірку якості"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:57
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
 msgid "Packages List"
-msgstr ""
+msgstr "Список пакунків"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:25
 msgid ""
@@ -1795,10 +1795,13 @@ msgid ""
 "<em><b>reconfiguration of all the machines</b></em> managed by the "
 "relayserver."
 msgstr ""
+"Вам слід позначити пункт <b>«Мені відомо, що ця дія призведе до примусового "
+"<em><b>переналаштовування усіх машин,</b></em> керованих сервером "
+"ретрансляції."
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
 msgid "The machines of the relay "
-msgstr ""
+msgstr "Машини ретрансляції"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
 msgid ""
@@ -1806,10 +1809,13 @@ msgid ""
 "machines</b></em> managed by the relayserver.<br />Check this box if it is "
 "what you want."
 msgstr ""
+"Мені відомо, що ця дія призведе до примусового <em><b>переналаштовування "
+"усіх машин,</b></em> керованих сервером ретрансляції.<br />Позначте цей "
+"пункт, якщо хочете."
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
 msgid "Show Result"
-msgstr ""
+msgstr "Показати результат"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
 msgid ""
@@ -1817,10 +1823,13 @@ msgid ""
 "forcing a <em><b>reconfiguration of all the machines</b></em> managed by the"
 " cluster."
 msgstr ""
+"Вам слід позначити пункт <b>«Мені відомо, що ця дія призведе до вимикання "
+"або вимикання примусового <em><b>переналаштовування усіх машин,</b></em> "
+"керованих кластером."
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
 msgid "The relay "
-msgstr ""
+msgstr "Ретранслятор"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
 msgid ""
@@ -1828,6 +1837,9 @@ msgid ""
 " of all the machines</b></em> managed by the cluster.<br />Check this box if"
 " it is what you want."
 msgstr ""
+"Мені відомо, що ця дія призведе до вимикання або вимикання примусового "
+"<em><b>переналаштовування усіх машин,</b></em> керованих кластером.<br "
+"/>Позначте цей пункт, якщо хочете."
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 msgid "Delete deploy"

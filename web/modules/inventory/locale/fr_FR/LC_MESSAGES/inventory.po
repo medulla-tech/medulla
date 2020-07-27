@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Stephane Pointu <spointu@gmail.com>, 2018
+# SPO <spointu@gmail.com>, 2018
 # Nicolas Lécureuil <neoclust@mageia.org>, 2019
 # 
 #, fuzzy

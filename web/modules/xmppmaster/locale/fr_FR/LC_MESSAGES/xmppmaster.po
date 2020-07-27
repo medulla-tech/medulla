@@ -6,7 +6,7 @@
 # Translators:
 # tekmans <yvan.manon@siveo.net>, 2019
 # Nicolas Lécureuil <neoclust@mageia.org>, 2020
-# Stephane Pointu <spointu@gmail.com>, 2020
+# SPO <spointu@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
-"Last-Translator: Stephane Pointu <spointu@gmail.com>, 2020\n"
+"Last-Translator: SPO <spointu@gmail.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -217,33 +217,33 @@ msgstr "Liste des transfert syncthing non démarrés"
 
 #: modules/xmppmaster/infoPackage.inc.php:323
 msgid "Switch Relay"
-msgstr ""
+msgstr "Switcher le relais"
 
 #: modules/xmppmaster/infoPackage.inc.php:328
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
 msgid "Reconfigure Machines"
-msgstr ""
+msgstr "Reconfigurer les machines"
 
 #: modules/xmppmaster/infoPackage.inc.php:333
 msgid "Relays Detail Actions"
-msgstr ""
+msgstr "Actions des relais"
 
 #: modules/xmppmaster/infoPackage.inc.php:338
 #: modules/xmppmaster/infoPackage.inc.php:343
 msgid "Qa launched on Relays"
-msgstr ""
+msgstr "QA lancées sur les relais"
 
 #: modules/xmppmaster/infoPackage.inc.php:348
 msgid "Qa result on Relays"
-msgstr ""
+msgstr "Résultat de QA des relais"
 
 #: modules/xmppmaster/infoPackage.inc.php:353
 #: modules/xmppmaster/infoPackage.inc.php:358
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:57
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
 msgid "Packages List"
-msgstr ""
+msgstr "Liste de packages"
 
 #: modules/xmppmaster/includes/html.inc.php:82
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:563
@@ -720,7 +720,7 @@ msgstr "Monitoring rapide"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:58
 msgid "Machine : "
-msgstr ""
+msgstr "Machine :"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:65
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:79
@@ -734,55 +734,55 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:284
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:286
 msgid "time out command"
-msgstr ""
+msgstr "commande en timeout"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:68
 msgid "BATTERY"
-msgstr ""
+msgstr "BATTERIE"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:83
 msgid "WIN SERVICES"
-msgstr ""
+msgstr "SERVICES WINDOWS"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:97
 msgid "PROCESSES LIST"
-msgstr ""
+msgstr "LISTE DES PROCESSUS"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:111
 msgid "DISK USAGE"
-msgstr ""
+msgstr "UTILISATION DISQUE"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:125
 msgid "SENSORS FANS"
-msgstr ""
+msgstr "CAPTEURS VENTILATEURS"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:139
 msgid "MEMORY USAGE"
-msgstr ""
+msgstr "UTILISATION MEMOIRE"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:153
 msgid "NETWORK INTERFACE"
-msgstr ""
+msgstr "INTERFACE RESEAU"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:167
 msgid "CPU NUM"
-msgstr ""
+msgstr "NB CPU"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:181
 msgid "NETSTAT"
-msgstr ""
+msgstr "NETSTAT"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:186
 msgid "Proto"
-msgstr ""
+msgstr "Proto"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:187
 msgid "Local address"
-msgstr ""
+msgstr "Adresse locale"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:188
 msgid "Remote address"
-msgstr ""
+msgstr "Addresse distante"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:190
 msgid "PID"
@@ -790,67 +790,67 @@ msgstr "PID"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:191
 msgid "Program name"
-msgstr ""
+msgstr "Nom du programme"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:216
 msgid "AGENT LOG MACHINE"
-msgstr ""
+msgstr "AGENT LOG MACHINE"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:234
 msgid "TIMES CPU"
-msgstr ""
+msgstr "TEMPS CPU"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:252
 msgid "CPU num"
-msgstr ""
+msgstr "Nb CPU"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:268
 msgid "Total Times"
-msgstr ""
+msgstr "Temps total"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:301
 msgid "BASE AGENT"
-msgstr ""
+msgstr "BASE AGENT"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:303
 msgid "REMOTE AGENT"
-msgstr ""
+msgstr "AGENT DISTANT"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:305
 msgid "REMOTE IMAGE"
-msgstr ""
+msgstr "IMAGE DISTANTE"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:311
 msgid "PLUGINS"
-msgstr ""
+msgstr "PLUGINS"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:318
 msgid "Base plugins"
-msgstr ""
+msgstr "Base plugins"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:335
 msgid "Base scheduler plugins"
-msgstr ""
+msgstr "Base plugins schedulés"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:347
 msgid "Remote plugins"
-msgstr ""
+msgstr "Plugins distants"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:357
 msgid "Remote scheduler plugins"
-msgstr ""
+msgstr "Plugins schedulés distants"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:376
 msgid "UPDATE DETAILS"
-msgstr ""
+msgstr "DETAILS DE MISE A JOUR"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:382
 msgid "Parameters"
-msgstr ""
+msgstr "Paramètres"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:405
 msgid "Folder Path"
-msgstr ""
+msgstr "Chemin du dossier"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:552
 msgid "Remote image verifications"
@@ -915,7 +915,7 @@ msgstr "Taille du package"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:84
 msgid "Transfer Method"
-msgstr ""
+msgstr "Méthode de transfert"
 
 #: modules/xmppmaster/xmppmaster/relays/relaysList.php:28
 msgid "XMPP Relays list"
@@ -933,28 +933,28 @@ msgstr "Éditer les fichiers de configuration"
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:37
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
 msgid "Relay Detail"
-msgstr ""
+msgstr "Détails du relais"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:40
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
 msgid "Detail actions"
-msgstr ""
+msgstr "Actions"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:43
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
 msgid "Console Relay"
-msgstr ""
+msgstr "Console XMPP"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:46
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
 msgid "Switch"
-msgstr ""
+msgstr "Switch"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:52
 #: modules/xmppmaster/xmppmaster/relays/qalaunched.php:74
 msgid "QA Launched"
-msgstr ""
+msgstr "QA lancées"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:55
@@ -989,7 +989,7 @@ msgstr "Nb de machines total"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:127
 msgid "Uninventoried Online"
-msgstr ""
+msgstr "Non-inventoriées en ligne"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:128
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:80
@@ -1007,14 +1007,17 @@ msgid ""
 "<em><b>reconfiguration of all the machines</b></em> managed by the "
 "relayserver."
 msgstr ""
+"Veuillez cocher la case <b>\"Je suis conscient que cette action va forcer "
+"une <em><b>reconfiguration de toutes les machines</b></em> gérées pas le "
+"serveur relais."
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
 msgid "The machines of the relay "
-msgstr ""
+msgstr "Les machines du relais"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:39
 msgid "Reconfigure all the machines of the relay"
-msgstr ""
+msgstr "Reconfigurer toutes les machines du relais"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
 msgid ""
@@ -1022,22 +1025,25 @@ msgid ""
 "machines</b></em> managed by the relayserver.<br />Check this box if it is "
 "what you want."
 msgstr ""
+"Je suis conscient que cette action va forcer une <em><b>reconfiguration de "
+"toutes les machines</b></em> gérées pas le serveur relais.<br />Cochez cette"
+" case si c'est bien ce que vous souhaitez."
 
 #: modules/xmppmaster/xmppmaster/relays/qaresult.php:29
 msgid "Relay Quick Result Action"
-msgstr ""
+msgstr "Résultat des actions rapides"
 
 #: modules/xmppmaster/xmppmaster/relays/detailactions.php:28
 msgid "Detail Actions"
-msgstr ""
+msgstr "Actions"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
 msgid "Show Result"
-msgstr ""
+msgstr "Afficher le résultat"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:53
 msgid "Quick Action"
-msgstr ""
+msgstr "Action rapide"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
 msgid ""
@@ -1045,18 +1051,21 @@ msgid ""
 "forcing a <em><b>reconfiguration of all the machines</b></em> managed by the"
 " cluster."
 msgstr ""
+"Veuillez cocher la case <b>\"Je suis conscient que cette "
+"désactivation/activation du relais va forcer une <em><b>reconfiguration de "
+"toutes les machines</b></em> gérées pas le cluster."
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
 msgid "The relay "
-msgstr ""
+msgstr "Le relais"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:39
 msgid "Switch Off the relay"
-msgstr ""
+msgstr "Eteindre le relais"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:39
 msgid "Switch On the relay"
-msgstr ""
+msgstr "Allumer le relais"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
 msgid ""
@@ -1064,10 +1073,13 @@ msgid ""
 " of all the machines</b></em> managed by the cluster.<br />Check this box if"
 " it is what you want."
 msgstr ""
+"Je suis conscient que cette désactivation/activation du relais va forcer une"
+" <em><b>reconfiguration de toutes les machines</b></em> gérées pas le "
+"cluster.<br />Cochez cette case si c'est bien ce que vous souhaitez."
 
 #: modules/xmppmaster/xmppmaster/relays/qalaunched.php:47
 msgid "Relay Quick Leunched Action"
-msgstr ""
+msgstr "Action rapide lancée"
 
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:60
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:113

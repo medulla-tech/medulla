@@ -950,19 +950,19 @@ msgstr "Облік"
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:97
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:102
 msgid "Forced inventory"
-msgstr ""
+msgstr "Примусовий облік"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:93
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:98
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:103
 msgid "No inventory"
-msgstr ""
+msgstr "Без обліку"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:94
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:99
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:104
 msgid "Inventory on change"
-msgstr ""
+msgstr "Облік при зміні"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:28
 msgid "Set Environment variables"

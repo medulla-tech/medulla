@@ -6,8 +6,8 @@
 # Translators:
 # Guillaume <guillaume.lassarre@siveo.net>, 2018
 # tekmans <yvan.manon@siveo.net>, 2019
-# Stephane Pointu <spointu@gmail.com>, 2020
 # Nicolas Lécureuil <neoclust@mageia.org>, 2020
+# SPO <spointu@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
+"Last-Translator: SPO <spointu@gmail.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1768,37 +1768,37 @@ msgstr "fin"
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:37
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
 msgid "Relay Detail"
-msgstr ""
+msgstr "Infos relais"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:40
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
 msgid "Detail actions"
-msgstr ""
+msgstr "Actions"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:43
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
 msgid "Console Relay"
-msgstr ""
+msgstr "Console XMPP"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:46
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
 msgid "Switch"
-msgstr ""
+msgstr "Switch"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
 msgid "Reconfigure Machines"
-msgstr ""
+msgstr "Reconfigurer les machines"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:52
 msgid "QA Launched"
-msgstr ""
+msgstr "QA lancées"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:57
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
 msgid "Packages List"
-msgstr ""
+msgstr "Liste de packages"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:25
 msgid ""
@@ -1806,10 +1806,13 @@ msgid ""
 "<em><b>reconfiguration of all the machines</b></em> managed by the "
 "relayserver."
 msgstr ""
+"Veuillez cocher la case <b>\"Je suis conscient que cette action va forcer "
+"une <em><b>reconfiguration de toutes les machines</b></em> gérées pas le "
+"serveur relais."
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
 msgid "The machines of the relay "
-msgstr ""
+msgstr "Les machines du relais"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
 msgid ""
@@ -1817,10 +1820,13 @@ msgid ""
 "machines</b></em> managed by the relayserver.<br />Check this box if it is "
 "what you want."
 msgstr ""
+"Je suis conscient que cette action va forcer une <em><b>reconfiguration de "
+"toutes les machines</b></em> gérées pas le serveur relais.<br />Cochez cette"
+" case si c'est bien ce que vous souhaitez."
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
 msgid "Show Result"
-msgstr ""
+msgstr "Afficher le résultat"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
 msgid ""
@@ -1828,10 +1834,13 @@ msgid ""
 "forcing a <em><b>reconfiguration of all the machines</b></em> managed by the"
 " cluster."
 msgstr ""
+"Veuillez cocher la case <b>\"Je suis conscient que cette "
+"désactivation/activation du relais va forcer une <em><b>reconfiguration de "
+"toutes les machines</b></em> gérées pas le cluster."
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
 msgid "The relay "
-msgstr ""
+msgstr "Le relais"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
 msgid ""
@@ -1839,6 +1848,9 @@ msgid ""
 " of all the machines</b></em> managed by the cluster.<br />Check this box if"
 " it is what you want."
 msgstr ""
+"Je suis conscient que cette désactivation/activation du relais va forcer une"
+" <em><b>reconfiguration de toutes les machines</b></em> gérées pas le "
+"cluster.<br />Cochez cette case si c'est bien ce que vous souhaitez."
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 msgid "Delete deploy"
