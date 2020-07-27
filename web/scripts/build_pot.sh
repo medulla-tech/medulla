@@ -34,8 +34,7 @@ for module in dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc sup
     fi
     find $fpath -iname "*.php" -exec xgettext -C -j -o ${POT} --language=PHP --keyword=$keyword {} \;
     # Build only the POT file
-#    for name in `find modules/$module/locale -type f -name *.po`; do
-
+done
 [ ! -d modules ] && echo "Run this script from the web directory." && exit 1
 
 for module in base ppolicy services dashboard report xmppmaster; do
