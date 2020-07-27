@@ -6260,33 +6260,3 @@ where agenttype="machine" and groupdeploy in (
                 else:
                     result['datas']['result_id'].append(result_id)
         return result
-
-    @DatabaseHelper._sessionm
-    def getmachinesbyuuids(self, session, uuids):
-        query = session.query(Machines).filter(and_(Machines.uuid_inventorymachine.in_(uuids))).all()
-
-        result = {}
-
-        for machine in query:
-            result[machine.uuid_inventorymachine] = {
-                'jid' : machine.jid,
-                'need_reconf' : machine.need_reconf,
-                'enabled' : machine.enabled,
-                'platform' : machine.platform,
-                'archi' : machine.archi,
-                'hostname' : machine.hostname,
-                'uuid_inventorymachine' : machine.uuid_inventorymachine,
-                'id_inventorymachine' : machine.uuid_inventorymachine.replace('UUID', ''),
-                'ippublic' : machine.ippublic,
-                'ip_xmpp' : machine.ip_xmpp,
-                'macaddress' : machine.macaddress,
-                'subnetxmpp' : machine.subnetxmpp,
-                'classutil' : machine.classutil,
-                'groupdeploy' : machine.groupdeploy,
-                'ad_ou_machine' : machine.ad_ou_machine,
-                'ad_ou_user' : machine.ad_ou_user,
-                'kiosk_presence' : machine.kiosk_presence,
-                'lastuser' : machine.lastuser,
-                'keysyncthing' : machine.keysyncthing,
-            }
-        return result
