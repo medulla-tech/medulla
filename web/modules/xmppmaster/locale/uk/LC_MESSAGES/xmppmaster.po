@@ -301,7 +301,7 @@ msgstr "Користувач"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:402
 msgid "Package Name"
-msgstr ""
+msgstr "Назва пакунка"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:405
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:224
@@ -314,7 +314,7 @@ msgstr "Дата припинення"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:411
 msgid "Session Id"
-msgstr ""
+msgstr "Ід. сеансу"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:462
 msgid "Start deployment : "
@@ -1017,11 +1017,11 @@ msgstr "Натисніть Enter, щоб розпочати вашу коман�
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:122
 msgid "Command result : "
-msgstr ""
+msgstr "Результат команди:"
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:126
 msgid "Error Code :"
-msgstr ""
+msgstr "Код помилки:"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:81
 msgid "Computer Name"
