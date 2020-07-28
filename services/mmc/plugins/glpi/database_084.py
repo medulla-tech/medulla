@@ -677,13 +677,6 @@ class Glpi084(DyngroupDatabaseHelper):
                 result['data']['presence'].append(0)
 
         result['count'] = count
-
-        uuids = []
-        for id in result['data']['uuid']:
-            uuids.append('UUID%s'%id)
-
-        result['xmppdata'] = []
-        result['xmppdata'] = XmppMasterDatabase().getmachinesbyuuids(uuids)
         return result
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):

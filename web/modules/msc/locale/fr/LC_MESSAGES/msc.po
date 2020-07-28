@@ -4,18 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Stephane Pointu <spointu@gmail.com>, 2018
-# Nicolas Lécureuil <neoclust@mageia.org>, 2019
+# SPO <spointu@gmail.com>, 2018
 # tekmans <yvan.manon@siveo.net>, 2019
+# Nicolas Lécureuil <neoclust@mageia.org>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 11:58+0200\n"
+"POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
-"Last-Translator: tekmans <yvan.manon@siveo.net>, 2019\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +71,7 @@ msgstr "Statut"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:136
 #: modules/msc/logs/ajaxConsultLogsFilter.php:142
-#: modules/msc/msc/ajaxPackageFilter.php:196 modules/msc/msc/packages.php:40
+#: modules/msc/msc/ajaxPackageFilter.php:206 modules/msc/msc/packages.php:40
 msgid "Package"
 msgstr "Package"
 
@@ -133,7 +133,7 @@ msgstr "Date de fin"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:226
 #: modules/msc/includes/command_history.php:38
-#: modules/msc/includes/bundle_widgets.php:363 modules/msc/msc/launch.php:702
+#: modules/msc/includes/bundle_widgets.php:363 modules/msc/msc/launch.php:706
 msgid "Deployment interval"
 msgstr "Intervalle de déploiement"
 
@@ -394,8 +394,8 @@ msgstr ""
 "target=\"_blank\">Voir le groupe</a>"
 
 #: modules/msc/includes/command_history.php:34
-#: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:577
-#: modules/msc/msc/launch.php:626
+#: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:581
+#: modules/msc/msc/launch.php:630
 msgid "Command name"
 msgstr "Nom de la commande"
 
@@ -448,7 +448,7 @@ msgstr "Lancer l'exécution du fichier"
 msgid "Start inventory agent"
 msgstr "Démarrer un inventaire"
 
-#: modules/msc/includes/command_history.php:189 modules/msc/msc/launch.php:589
+#: modules/msc/includes/command_history.php:189 modules/msc/msc/launch.php:593
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Lancer un réveil réseau (WOL) si la connexion échoue"
 
@@ -876,7 +876,7 @@ msgid "Set order"
 msgstr "Définir l'ordre"
 
 #: modules/msc/includes/bundle_widgets.php:150
-#: modules/msc/msc/ajaxPackageFilter.php:193
+#: modules/msc/msc/ajaxPackageFilter.php:203
 msgid "Please contact your administrator."
 msgstr "Veuillez contacter votre administrateur."
 
@@ -892,7 +892,7 @@ msgstr "Actions possibles"
 
 #: modules/msc/includes/bundle_widgets.php:170
 #: modules/msc/includes/bundle_widgets.php:199
-#: modules/msc/msc/ajaxPackageFilter.php:145
+#: modules/msc/msc/ajaxPackageFilter.php:148
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "La MMC a échoué à contacter le serveur de package %s."
@@ -929,7 +929,7 @@ msgstr "Réveil réseau (WOL)"
 msgid "Start the script"
 msgstr "Démarrer le script"
 
-#: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:601
+#: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:605
 msgid "Delete files after a successful execution"
 msgstr "Supprimer les fichiers après une commande réussie"
 
@@ -953,23 +953,23 @@ msgstr "Début de validité"
 msgid "End of validity"
 msgstr "Fin de validité"
 
-#: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:807
+#: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:811
 msgid "Max bandwidth (kbits/s)"
 msgstr "Débit maximum (kbits/s)"
 
-#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:820
+#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:824
 msgid "push"
 msgstr "push"
 
-#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:820
+#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:824
 msgid "push / pull"
 msgstr "push / pull"
 
-#: modules/msc/includes/bundle_widgets.php:373 modules/msc/msc/launch.php:823
+#: modules/msc/includes/bundle_widgets.php:373 modules/msc/msc/launch.php:827
 msgid "Copy Mode"
 msgstr "Mode de transfert"
 
-#: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:827
+#: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:831
 msgid "Deploy using a local proxy"
 msgstr "Déploiement par proxy local"
 
@@ -1310,31 +1310,31 @@ msgid "Not available"
 msgstr "Non disponible"
 
 #: modules/msc/msc/ajaxPackageFilter.php:92
-#: modules/msc/msc/ajaxPackageFilter.php:201 modules/msc/msc/launch.php:647
-#: modules/msc/msc/launch.php:654
+#: modules/msc/msc/ajaxPackageFilter.php:211 modules/msc/msc/launch.php:651
+#: modules/msc/msc/launch.php:658
 msgid "Convergence"
 msgstr "Convergence"
 
-#: modules/msc/msc/ajaxPackageFilter.php:197
+#: modules/msc/msc/ajaxPackageFilter.php:207
 msgid "Description"
 msgstr "Description"
 
-#: modules/msc/msc/ajaxPackageFilter.php:198 modules/msc/msc/packages.php:41
+#: modules/msc/msc/ajaxPackageFilter.php:208 modules/msc/msc/packages.php:41
 #: modules/msc/msc/package_detail.php:37
 msgid "Version"
 msgstr "Version"
 
-#: modules/msc/msc/ajaxPackageFilter.php:199
+#: modules/msc/msc/ajaxPackageFilter.php:209
 msgid "Package size"
 msgstr "Taille du package"
 
-#: modules/msc/msc/ajaxPackageFilter.php:213
-#: modules/msc/msc/ajaxPackageFilter.php:217
+#: modules/msc/msc/ajaxPackageFilter.php:225
+#: modules/msc/msc/ajaxPackageFilter.php:229
 msgid "Advanced launch"
 msgstr "Lancer l'action (avancé)"
 
-#: modules/msc/msc/ajaxPackageFilter.php:214
-#: modules/msc/msc/ajaxPackageFilter.php:219
+#: modules/msc/msc/ajaxPackageFilter.php:226
+#: modules/msc/msc/ajaxPackageFilter.php:231
 msgid "Direct launch"
 msgstr "Lancer l'action"
 
@@ -1867,148 +1867,148 @@ msgstr "échec de l'extinction: %percent% (%d packages)"
 msgid "One"
 msgstr "Une"
 
-#: modules/msc/msc/launch.php:102
+#: modules/msc/msc/launch.php:104
 msgid "Your start and end dates are not coherent, please check them.<br/>"
 msgstr ""
 "Vos dates de début et de fin ne sont pas cohérentes, veuillez les "
 "vérifier.<br/>"
 
-#: modules/msc/msc/launch.php:165 modules/msc/msc/launch.php:377
+#: modules/msc/msc/launch.php:167 modules/msc/msc/launch.php:379
 msgid "now"
 msgstr "maintenant"
 
-#: modules/msc/msc/launch.php:167 modules/msc/msc/launch.php:380
+#: modules/msc/msc/launch.php:169 modules/msc/msc/launch.php:382
 msgid "never"
 msgstr "jamais"
 
-#: modules/msc/msc/launch.php:497
+#: modules/msc/msc/launch.php:501
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "Lancement avancé sur poste : action \"%s\" sur \"%s\""
 
-#: modules/msc/msc/launch.php:508
+#: modules/msc/msc/launch.php:512
 #, php-format
 msgid "Software Convergence: action \"%s\" on \"%s\""
 msgstr "Convergence logicielle: commande \"%s\" sur \"%s\""
 
-#: modules/msc/msc/launch.php:511
+#: modules/msc/msc/launch.php:515
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "Lancement avancé sur groupe : action \"%s\" sur \"%s\""
 
-#: modules/msc/msc/launch.php:545 modules/msc/msc/launch.php:669
+#: modules/msc/msc/launch.php:549 modules/msc/msc/launch.php:673
 msgid "The command must start after"
 msgstr "La commande doit commencer après"
 
-#: modules/msc/msc/launch.php:557 modules/msc/msc/launch.php:678
+#: modules/msc/msc/launch.php:561 modules/msc/msc/launch.php:682
 msgid "The command must stop before"
 msgstr "La commande doit s’arrêter avant"
 
-#: modules/msc/msc/launch.php:583
+#: modules/msc/msc/launch.php:587
 msgid "Script parameters"
 msgstr "Paramètres du script"
 
-#: modules/msc/msc/launch.php:595
+#: modules/msc/msc/launch.php:599
 msgid "Start script"
 msgstr "Démarrer le script"
 
-#: modules/msc/msc/launch.php:607
+#: modules/msc/msc/launch.php:611
 msgid "Do an inventory after a successful execution"
 msgstr "Faire un inventaire après une commande réussie"
 
-#: modules/msc/msc/launch.php:613
+#: modules/msc/msc/launch.php:617
 msgid "Reboot client"
 msgstr "Redmarrage du client"
 
-#: modules/msc/msc/launch.php:619
+#: modules/msc/msc/launch.php:623
 msgid "Halt client"
 msgstr "Arrêter le client"
 
-#: modules/msc/msc/launch.php:648
+#: modules/msc/msc/launch.php:652
 msgid "ACTIVE"
 msgstr "Activée"
 
-#: modules/msc/msc/launch.php:655
+#: modules/msc/msc/launch.php:659
 msgid "AVAILABLE"
 msgstr "Disponible"
 
-#: modules/msc/msc/launch.php:692
+#: modules/msc/msc/launch.php:696
 msgid "Example for lunch and night (24h format): 12-14,20-8"
 msgstr "Exemple: pendant le repas et la nuit (12-14,20-8)"
 
-#: modules/msc/msc/launch.php:709
+#: modules/msc/msc/launch.php:713
 msgid "bandwidth throttling (ko)"
 msgstr "Limitation de la bande passante (ko)"
 
-#: modules/msc/msc/launch.php:709
+#: modules/msc/msc/launch.php:713
 msgid "<in ko>"
 msgstr "<in ko>"
 
-#: modules/msc/msc/launch.php:713
+#: modules/msc/msc/launch.php:717
 msgid "Dynamic parameters Packages"
 msgstr "Paramètres dynamiques"
 
-#: modules/msc/msc/launch.php:718
+#: modules/msc/msc/launch.php:722
 msgid "Reboot required"
 msgstr "Redémarrage nécessaire"
 
-#: modules/msc/msc/launch.php:723
+#: modules/msc/msc/launch.php:727
 msgid "Shutdown required"
 msgstr "Arrêt requis"
 
-#: modules/msc/msc/launch.php:728
+#: modules/msc/msc/launch.php:732
 msgid "Delay install"
 msgstr "Retarder l'installation"
 
-#: modules/msc/msc/launch.php:733 modules/msc/msc/launch.php:739
+#: modules/msc/msc/launch.php:737 modules/msc/msc/launch.php:743
 msgid "Time constraint"
 msgstr "Contrainte de temps"
 
-#: modules/msc/msc/launch.php:733
+#: modules/msc/msc/launch.php:737
 msgid "Successful transfer rate"
 msgstr "Taux de succès du transfert"
 
-#: modules/msc/msc/launch.php:745
+#: modules/msc/msc/launch.php:749
 msgid "Install constraint"
 msgstr "Contrainte d'installation"
 
-#: modules/msc/msc/launch.php:752
+#: modules/msc/msc/launch.php:756
 msgid "Run the deployment at the specific time"
 msgstr "Exécuter le déploiement à l'heure spécifiée"
 
-#: modules/msc/msc/launch.php:762
+#: modules/msc/msc/launch.php:766
 msgid "Spooling priority"
 msgstr "Priorité de la file d'attente"
 
-#: modules/msc/msc/launch.php:768
+#: modules/msc/msc/launch.php:772
 msgid "high priority"
 msgstr "Haute priorité"
 
-#: modules/msc/msc/launch.php:768
+#: modules/msc/msc/launch.php:772
 msgid "ordinary priority"
 msgstr "Priorité normale"
 
-#: modules/msc/msc/launch.php:773
+#: modules/msc/msc/launch.php:777
 msgid "Install Spooling"
 msgstr "Création de la file d'attente"
 
-#: modules/msc/msc/launch.php:780
+#: modules/msc/msc/launch.php:784
 msgid "Syncthing deployment"
 msgstr "Déploiement en pair-à-pair"
 
-#: modules/msc/msc/launch.php:833
+#: modules/msc/msc/launch.php:837
 msgid "Reconfigure"
 msgstr "Reconfigurer"
 
-#: modules/msc/msc/launch.php:834
+#: modules/msc/msc/launch.php:838
 msgid "Disable"
 msgstr "Désactiver"
 
-#: modules/msc/msc/launch.php:836
+#: modules/msc/msc/launch.php:840
 msgid "Enable"
 msgstr "Activer"
 
-#: modules/msc/msc/launch.php:856
+#: modules/msc/msc/launch.php:860
 msgid "Probe status"
 msgstr "Vérifier l'état"
 

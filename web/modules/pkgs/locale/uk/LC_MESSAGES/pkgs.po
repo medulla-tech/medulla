@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 11:58+0200\n"
+"POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -329,15 +329,15 @@ msgstr "Показати дзеркала"
 msgid "Remove packages from pending"
 msgstr "Вилучити пакунки зі списку запланованого"
 
-#: modules/pkgs/pkgs/remove.php:40
+#: modules/pkgs/pkgs/remove.php:39
 msgid "The package has been deleted."
 msgstr "Пакунок вилучено."
 
-#: modules/pkgs/pkgs/remove.php:54
+#: modules/pkgs/pkgs/remove.php:53
 msgid "The package failed to delete"
 msgstr "Не вдалося вилучити пакунок"
 
-#: modules/pkgs/pkgs/remove.php:67
+#: modules/pkgs/pkgs/remove.php:66
 msgid "Delete this package"
 msgstr "Вилучити цей пакунок"
 
@@ -681,7 +681,7 @@ msgstr "Альтернативний пакунок"
 #: modules/pkgs/includes/actions/actionrestart.php:73
 #: modules/pkgs/includes/actions/actioncleaning.php:38
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:34
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:110
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:116
 #: modules/pkgs/includes/actions/action_set_environ.php:57
 #: modules/pkgs/includes/actions/actionprocessscript.php:274
 #: modules/pkgs/includes/actions/action_set_config_file.php:65
@@ -945,6 +945,24 @@ msgstr "Вилучити пакунок"
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
 msgid "Inventory"
 msgstr "Облік"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:92
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:97
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:102
+msgid "Forced inventory"
+msgstr "Примусовий облік"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:93
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:98
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:103
+msgid "No inventory"
+msgstr "Без обліку"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:94
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:99
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:104
+msgid "Inventory on change"
+msgstr "Облік при зміні"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:28
 msgid "Set Environment variables"
