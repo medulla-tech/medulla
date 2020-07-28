@@ -1007,7 +1007,7 @@ class Imaging(object):
 
     ## Imaging server configuration
     def imagingServermenuMulticast(self, objmenu):
-        # create menu multicast 
+        # create menu multicast
         m = ImagingMulticastMenuBuilder(objmenu)
         ret = m.make()
         return [ret]
@@ -1057,7 +1057,7 @@ class Imaging(object):
             r.wait()
             r.stdout.close()
             lineinformation = [x.strip(' \t\n\r') for x in line[0].split(' ') if x.strip(' \t\n\r') != ""]
-            if lineinformation[0] != "-1" and len (lineinformation) >= 3: 
+            if lineinformation[0] != "-1" and len (lineinformation) >= 3:
                 result['indexpartition']=int(lineinformation[0])
                 result['bytesend']=long(lineinformation[1])
                 if len(result['partitionlist']) == int(lineinformation[2]):
@@ -1128,7 +1128,7 @@ class Imaging(object):
             return False
 
     def clear_script_multicast(self, objprocess):
-        ## suppression commande multicast 
+        ## suppression commande multicast
         # renvoi le groupe a regenerer bootmenu pour unicast
         if os.path.exists("/tmp/processmulticast"):
             os.remove("/tmp/processmulticast")
@@ -1156,7 +1156,7 @@ class Imaging(object):
 
     def start_process_multicast(self, objprocess):
         # start execution process multicast
-        #efface file 
+        #efface file
         if os.path.exists("/tmp/udp-sender.log"):
             os.remove("/tmp/udp-sender.log")
         if os.path.exists("/tmp/multicastdescription.txt"):
@@ -1173,7 +1173,7 @@ class Imaging(object):
             return [x.strip(' \t\n\r') for x in lignes]
 
     def _sizeTransferReel(self, pathfiles):
-        # return Space in use disk 
+        # return Space in use disk
         if os.path.isfile("%s/clonezilla-img"%pathfiles):
             f = open("%s/clonezilla-img"%pathfiles,'r')
             lignes  = f.readlines()

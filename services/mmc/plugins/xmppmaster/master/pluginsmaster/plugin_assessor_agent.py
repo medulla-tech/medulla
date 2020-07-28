@@ -119,13 +119,13 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
         host = codechaine.split('/')[1]
     except Exception:
         host = msg['from']
-    
-    
-    
+
+
+
     logger.info("CONFIGURATION AGENT MACHINE %s"%host)
     if data['machine'].split(".")[0] in objectxmpp.assessor_agent_showinfomachine:
         showinfomachine = True
-        logger.info("showinfomachine = %s in file /etc/mmc/plugins/assessor_agent.ini(.local)"%(host)) 
+        logger.info("showinfomachine = %s in file /etc/mmc/plugins/assessor_agent.ini(.local)"%(host))
     else:
         showinfomachine = False
         logger.info("gives showinfomachine in /etc/mmc/plugins/assessor_agent.ini(.local)" \
@@ -239,7 +239,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                     except  Exception:
                         logger.error("\n%s"%(traceback.format_exc()))
                         pass
-                    
+
                 if showinfomachine:
                     logger.info("Geoposition of machine %s %s "%(codechaine, tabinformation))
                 if tabinformation['longitude'] != "unknown" \
@@ -252,13 +252,13 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                         logger.info("Geoposition of machine %s [ %s : %s]"%(data['information']['info']['hostname'],
                                                                             tabinformation['latitude'],
                                                                             tabinformation['longitude']))
-                    
+
                     pointmachine = Point(float(tabinformation['latitude']),float( tabinformation['longitude']))
                     distance = 40000000000
                     listeserver = set()
                     relayserver = -1
                     result = []
-                    try:     
+                    try:
                         result1 = XmppMasterDatabase().IdlonglatServerRelay(data['classutil'])
                         for x in result1:
                             # pour tout les relay on clacule la distance a vol oiseau.
@@ -273,7 +273,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                                     logger.info("Geoposition ars id %s: long %s lat %s dist %s km"%( x[0],
                                                                                           x[1],
                                                                                           x[2],
-                                                                                          distancecalculated))    
+                                                                                          distancecalculated))
                                 if distancecalculated < distance:
                                     listeserver = {x[0]}
                                     distance = distancecalculated
@@ -281,7 +281,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                                 if distancecalculated == distance:
                                     # il peut y avoir plusieurs ars a la meme distance.
                                     listeserver.add(x[0])
-                        listeserver = list(listeserver)            
+                        listeserver = list(listeserver)
                         nbserver = len(listeserver)
                         if nbserver > 1:
                             index = randint(0, nbserver-1)
@@ -463,7 +463,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                                         '',
                                         '',
                                         objectxmpp.boundjid.bare)
-    
+
     except Exception:
         logger.warning("Relay server attributed by default")
         XmppMasterDatabase().setlogxmpp("Relay server attributed by default",
@@ -595,7 +595,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
             logger.info("msg['from'] %s"%data['agent_machine_name'])
         XmppMasterDatabase().updateMachinereconf(data['agent_machine_name'])
         if showinfomachine:
-            logger.info("updateMachinereconf %s "%data['agent_machine_name']) 
+            logger.info("updateMachinereconf %s "%data['agent_machine_name'])
         objectxmpp.send_message(mto=msg['from'],
                             mbody=json.dumps(response),
                             mtype='chat')
