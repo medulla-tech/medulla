@@ -133,7 +133,7 @@ class MMCBaseTransport(object):
                 connection.putheader('Cookie', '%s=%s' % (cookie.name, cookie.value))
             return True
         except LoadError :
-            # mmc-cookies file is sometimes on bad format 
+            # mmc-cookies file is sometimes on bad format
             # (probably caused by interrupted twisted sessions)
             log.warn("mmc-cookies: invalid LWP format file, resending the credentials")
             return False
@@ -147,7 +147,7 @@ class MMCBaseTransport(object):
         super(MMCBaseTransport, self).send_host(connection, host)
         if os.path.exists(COOKIES_FILE):
             if not self.send_cookie_auth(connection):
-                self.send_basic_auth(connection) 
+                self.send_basic_auth(connection)
         elif self.credentials != ():
             self.send_basic_auth(connection)
 
