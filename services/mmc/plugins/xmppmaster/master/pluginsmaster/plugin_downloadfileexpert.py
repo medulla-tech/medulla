@@ -53,7 +53,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     if 'dest' in data and 'directory' in data and 'listfile' in data and 'jidmachine' in data:
         jidmachine = data['jidmachine']
         try:
-            #### reduit enregistrement 
+            #### reduit enregistrement
             listdirectory = [ x.strip() for x in data['listdirectory'].split(";") if x.strip() != ""]
             listfile = [ x.strip() for x in data['listfile'].split(";") if x.strip() != ""]
             listdirectory.sort()
@@ -86,7 +86,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
 
 
         Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
-        #dest = 
+        #dest =
         #src = data['src']
         relayserver = XmppMasterDatabase().getMachinefromjid(Machineinfo['groupdeploy'])
         relayserinfo = XmppMasterDatabase().getRelayServerfromjid(Machineinfo['groupdeploy'])

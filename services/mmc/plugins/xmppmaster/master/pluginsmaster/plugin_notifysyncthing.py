@@ -41,10 +41,10 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     if 'suppdir' in data or 'adddir' in data:
         logger.debug("removing package %s %s %s"%( data['packageid'], 'create', str(message['from'])))
         PkgsDatabase().pkgs_unregister_synchro_package( data['packageid'],
-                                                      None, 
+                                                      None,
                                                       str(message['from']))
     elif 'MotifyFile' in data:
         logger.debug("removing package %s %s %s"%( data['packageid'], 'chang', str(message['from'])))
-        PkgsDatabase().pkgs_unregister_synchro_package( data['packageid'], 
-                                                      'chang', 
+        PkgsDatabase().pkgs_unregister_synchro_package( data['packageid'],
+                                                      'chang',
                                                       str(message['from']))
