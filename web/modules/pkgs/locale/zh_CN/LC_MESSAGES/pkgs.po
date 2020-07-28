@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 11:58+0200\n"
+"POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -324,15 +324,15 @@ msgstr "显示镜像"
 msgid "Remove packages from pending"
 msgstr ""
 
-#: modules/pkgs/pkgs/remove.php:40
+#: modules/pkgs/pkgs/remove.php:39
 msgid "The package has been deleted."
 msgstr "已成功删除封装。"
 
-#: modules/pkgs/pkgs/remove.php:54
+#: modules/pkgs/pkgs/remove.php:53
 msgid "The package failed to delete"
 msgstr "无法删除封装"
 
-#: modules/pkgs/pkgs/remove.php:67
+#: modules/pkgs/pkgs/remove.php:66
 msgid "Delete this package"
 msgstr "删除此封装"
 
@@ -667,7 +667,7 @@ msgstr ""
 #: modules/pkgs/includes/actions/actionrestart.php:73
 #: modules/pkgs/includes/actions/actioncleaning.php:38
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:34
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:110
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:116
 #: modules/pkgs/includes/actions/action_set_environ.php:57
 #: modules/pkgs/includes/actions/actionprocessscript.php:274
 #: modules/pkgs/includes/actions/action_set_config_file.php:65
@@ -925,6 +925,24 @@ msgstr ""
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
 msgid "Inventory"
 msgstr "清查"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:92
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:97
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:102
+msgid "Forced inventory"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:93
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:98
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:103
+msgid "No inventory"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:94
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:99
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:104
+msgid "Inventory on change"
+msgstr ""
 
 #: modules/pkgs/includes/actions/action_set_environ.php:28
 msgid "Set Environment variables"

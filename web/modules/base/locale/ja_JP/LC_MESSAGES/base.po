@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Nicolas Lécureuil <neoclust@mageia.org>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 15:45+0200\n"
+"POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
 "Language-Team: Japanese (Japan) (https://www.transifex.com/siveo/teams/72118/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +76,7 @@ msgstr "イベント詳細"
 #: modules/base/audit/logview.php:58 modules/base/audit/ajaxLogFilter.php:114
 #: modules/base/logview/logsdeployment.php:297
 #: modules/base/logview/ajax_showlog.php:68
+#: modules/dyngroup/dyngroup/creator.php:239
 msgid "Date"
 msgstr "日付"
 
@@ -280,7 +281,7 @@ msgstr "グループの追加"
 msgid "Delete a group"
 msgstr "グループの削除"
 
-#: modules/base/infoPackage.inc.php:302 modules/base/groups/members.php:162
+#: modules/base/infoPackage.inc.php:302 modules/base/groups/members.php:165
 msgid "Group members"
 msgstr "グループメンバー"
 
@@ -429,7 +430,7 @@ msgstr "MMC 権限"
 
 #: modules/base/views/index.tpl.php:92 modules/base/groups/ajaxFilter.php:48
 #: modules/base/users/ajaxFilter.php:88 modules/ppolicy/default/delete.php:45
-#: includes/FormGenerator.php:1158
+#: includes/FormGenerator.php:1163
 msgid "Delete"
 msgstr "削除"
 
@@ -439,14 +440,15 @@ msgstr "バックアップ"
 
 #: modules/base/computers/index.php:48
 #: modules/base/computers/localSidebar.php:5
+#: modules/glpi/glpi/machinesList.php:39
 msgid "All computers"
 msgstr "すべてのコンピューター"
 
-#: modules/base/computers/index.php:52
+#: modules/base/computers/index.php:52 modules/glpi/glpi/machinesList.php:43
 msgid "Online computers"
 msgstr ""
 
-#: modules/base/computers/index.php:56
+#: modules/base/computers/index.php:56 modules/glpi/glpi/machinesList.php:47
 msgid "Offline computers"
 msgstr ""
 
@@ -888,14 +890,18 @@ msgid "The password is too short."
 msgstr "パスワードが短すぎます"
 
 #: modules/base/includes/computers_list.inc.php:100
+#: modules/glpi/glpi/ajaxMachinesList.php:70
 msgid "Inventory"
 msgstr "在庫"
 
 #: modules/base/includes/computers_list.inc.php:101
+#: modules/glpi/glpi/ajaxMachinesList.php:67
+#: modules/glpi/glpi/ajaxMachinesList.php:71
 msgid "GLPI Inventory"
 msgstr "GLPI 在庫"
 
 #: modules/base/includes/computers_list.inc.php:102
+#: modules/glpi/glpi/ajaxMachinesList.php:72
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:80
@@ -906,6 +912,9 @@ msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:103
 #: modules/base/includes/computers_list.inc.php:106
+#: modules/glpi/glpi/ajaxMachinesList.php:68
+#: modules/glpi/glpi/ajaxMachinesList.php:73
+#: modules/glpi/glpi/ajaxMachinesList.php:77
 msgid "Software deployment"
 msgstr "ソフトウェアデプロイ"
 
@@ -915,6 +924,12 @@ msgstr "ログの読み込み"
 
 #: modules/base/includes/computers_list.inc.php:108
 #: modules/base/includes/computers_list.inc.php:109
+#: modules/glpi/glpi/ajaxMachinesList.php:79
+#: modules/glpi/glpi/ajaxMachinesList.php:80
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:17
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:18
+#: modules/pulse2/includes/menu_actionaudit.php:78
+#: modules/pulse2/includes/menu_action.php:74
 msgid "xmppconsole"
 msgstr ""
 
@@ -922,27 +937,51 @@ msgstr ""
 #: modules/base/includes/computers_list.inc.php:112
 #: modules/base/includes/computers_list.inc.php:124
 #: modules/base/includes/computers_list.inc.php:125
+#: modules/glpi/glpi/ajaxMachinesList.php:82
+#: modules/glpi/glpi/ajaxMachinesList.php:83
+#: modules/glpi/glpi/ajaxMachinesList.php:84
+#: modules/glpi/glpi/ajaxMachinesList.php:87
+#: modules/pulse2/includes/menu_actionaudit.php:79
+#: modules/pulse2/includes/menu_actionaudit.php:82
+#: modules/pulse2/includes/menu_action.php:70
+#: modules/pulse2/includes/menu_action.php:84
+#: modules/pulse2/includes/menu_action.php:86
 msgid "files browsing"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:118
 #: modules/base/includes/computers_list.inc.php:120
-#: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:37
-#: modules/xmppmaster/xmppmaster/ajaxXmppRelaysList.php:38
-#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:48
-#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:49
+#: modules/glpi/glpi/ajaxMachinesList.php:85
+#: modules/glpi/glpi/ajaxMachinesList.php:86
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:34
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:35
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:15
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:16
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
+#: modules/pulse2/includes/menu_actionaudit.php:80
 msgid "Edit config files"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:127
 #: modules/base/includes/computers_list.inc.php:129
 #: modules/base/includes/computers_list.inc.php:140
+#: modules/glpi/glpi/ajaxMachinesList.php:76
+#: modules/glpi/glpi/ajaxMachinesList.php:89
+#: modules/glpi/glpi/ajaxMachinesList.php:99
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:55
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:19
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:20
+#: modules/pulse2/includes/menu_actionaudit.php:75
+#: modules/pulse2/includes/menu_action.php:64
 msgid "Remote control"
 msgstr "リモートコントロール"
 
 #: modules/base/includes/computers_list.inc.php:131
+#: modules/glpi/glpi/ajaxMachinesList.php:91
+#: modules/pulse2/includes/menu_group_action.php:76
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:156
 msgid "Imaging management"
 msgstr "イメージング管理"
 
@@ -952,14 +991,20 @@ msgstr "ファイルダウンロード"
 
 #: modules/base/includes/computers_list.inc.php:133
 #: modules/base/users/ajaxFilter.php:85
+#: modules/glpi/glpi/ajaxMachinesList.php:92
 msgid "extTicket issue"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:135
+#: modules/glpi/glpi/ajaxMachinesList.php:94
 msgid "Show Profile"
 msgstr "プロファイル表示"
 
 #: modules/base/includes/computers_list.inc.php:137
+#: modules/glpi/glpi/ajaxMachinesList.php:96
+#: modules/pulse2/includes/menu_actionaudit.php:68
+#: modules/pulse2/includes/menu_action.php:75
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:69
 msgid "Quick action"
 msgstr ""
 
@@ -968,10 +1013,13 @@ msgid "Computers list"
 msgstr "コンピューター一覧"
 
 #: modules/base/includes/computers_list.inc.php:362
+#: modules/glpi/glpi/ajaxMachinesList.php:271
+#: modules/pulse2/includes/menu_actionaudit.php:66
 msgid "Backup status"
 msgstr "バックアップステータス"
 
 #: modules/base/includes/computers_list.inc.php:402
+#: modules/glpi/glpi/ajaxMachinesList.php:307
 msgid "Delete computer"
 msgstr "コンピューターの削除"
 
@@ -1068,34 +1116,35 @@ msgstr "コンピューターのネットマスクアドレス"
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100 includes/ajaxTools.php:63
 #: includes/ajaxTools.php:69 includes/PageGenerator.php:881
-#: includes/PageGenerator.php:1128 includes/FormGenerator.php:644
+#: includes/PageGenerator.php:1128 includes/FormGenerator.php:647
 msgid "Previous"
 msgstr "前"
 
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111 includes/ajaxTools.php:74
 #: includes/ajaxTools.php:82 includes/PageGenerator.php:895
-#: includes/PageGenerator.php:1138 includes/FormGenerator.php:645
+#: includes/PageGenerator.php:1138 includes/FormGenerator.php:648
 msgid "Next"
 msgstr "次"
 
 #: modules/base/includes/AjaxFilterLog.inc.php:168
 #: modules/base/includes/AjaxFilterLog.inc.php:172
-#: includes/FormGenerator.php:563 includes/FormGenerator.php:569
+#: includes/FormGenerator.php:565 includes/FormGenerator.php:571
 msgid "or <a href='#'"
 msgstr "あるいは<a href='#'"
 
 #: modules/base/includes/AjaxFilterLog.inc.php:170
-#: includes/FormGenerator.php:565
+#: includes/FormGenerator.php:567
 msgid "value=\"now\";'>now</a>"
 msgstr "value=\"now\";'>今</a>"
 
 #: modules/base/includes/AjaxFilterLog.inc.php:174
-#: includes/FormGenerator.php:571
+#: includes/FormGenerator.php:573
 msgid "value=\"never\";'>never</a>"
 msgstr "value=\"never\";'>しない</a>"
 
 #: modules/base/includes/AjaxFilterLog.inc.php:366
+#: modules/inventory/includes/html.php:117
 msgid "Refresh"
 msgstr "リフレッシュ"
 
@@ -1212,33 +1261,40 @@ msgstr "ルートユーザーはお気に入りを持つことはできません
 msgid "Add this page to your favorites"
 msgstr ""
 
-#: modules/base/groups/members.php:109
+#: modules/base/groups/members.php:112
 msgid "Group successfully modified"
 msgstr "グループが変更されました"
 
-#: modules/base/groups/members.php:125
+#: modules/base/groups/members.php:128
 msgid ""
 "Some users can't be removed from this group because this group is their "
 "primary group."
 msgstr "このグループがプライマリグループであるため、ユーザーの一部はこのグループから削除できません。"
 
-#: modules/base/groups/members.php:128
+#: modules/base/groups/members.php:131
 #, php-format
 msgid "Group members %s"
 msgstr "グループメンバー %s"
 
-#: modules/base/groups/members.php:141
+#: modules/base/groups/members.php:144
 msgid "All users"
 msgstr "すべてのユーザー"
 
-#: modules/base/groups/members.php:188 modules/base/groups/edit.php:117
+#: modules/base/groups/members.php:191 modules/base/groups/edit.php:117
+#: modules/dyngroup/includes/groups.inc.php:85
+#: modules/dyngroup/includes/groups.inc.php:283
 #: includes/PageGenerator.php:2636 includes/PageGenerator.php:2705
 #: includes/PageGenerator.php:2731
 msgid "Confirm"
 msgstr "確認"
 
-#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
+#: modules/base/groups/members.php:192 modules/base/groups/delete.php:66
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
+#: modules/imaging/manage/master_iso.php:109
+#: modules/imaging/imaging/images_iso.php:112
+#: modules/imaging/imaging/multicast.php:390
+#: modules/dyngroup/includes/groups.inc.php:86
+#: modules/dyngroup/includes/groups.inc.php:284
 #: includes/PageGenerator.php:2640 includes/PageGenerator.php:2709
 msgid "Cancel"
 msgstr "キャンセル"
@@ -1299,31 +1355,31 @@ msgstr "作成"
 msgid "List"
 msgstr "一覧"
 
-#: modules/base/groups/localSidebar.php:29 includes/FormGenerator.php:718
+#: modules/base/groups/localSidebar.php:29 includes/FormGenerator.php:721
 msgid "Add"
 msgstr "追加"
 
-#: modules/base/status/index.php:101
+#: modules/base/status/index.php:101 modules/imaging/includes/includes.php:195
 msgid "Uptime: "
 msgstr "アップタイム: "
 
-#: modules/base/status/index.php:104
+#: modules/base/status/index.php:104 modules/imaging/includes/includes.php:197
 msgid "day"
 msgstr "日"
 
-#: modules/base/status/index.php:108
+#: modules/base/status/index.php:108 modules/imaging/includes/includes.php:200
 msgid "hour"
 msgstr "時間"
 
-#: modules/base/status/index.php:111
+#: modules/base/status/index.php:111 modules/imaging/includes/includes.php:202
 msgid "minute"
 msgstr "分"
 
-#: modules/base/status/index.php:116
+#: modules/base/status/index.php:116 modules/imaging/includes/includes.php:206
 msgid "Memory"
 msgstr "メモリ"
 
-#: modules/base/status/index.php:119
+#: modules/base/status/index.php:119 modules/imaging/includes/includes.php:209
 msgid "Swap"
 msgstr "スワップ"
 
@@ -1631,6 +1687,10 @@ msgstr[0] ""
 "\n"
 "other: %d 非アクティブサービス"
 
+#: modules/pkgs/includes/panels/appstream.inc.php:30
+msgid "Appstream"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:298
 msgid "cluster list"
 msgstr ""
@@ -1653,6 +1713,81 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:303
 msgid "end"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:37
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
+msgid "Relay Detail"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:40
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
+msgid "Detail actions"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:43
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
+msgid "Console Relay"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:46
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
+msgid "Switch"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
+msgid "Reconfigure Machines"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:52
+msgid "QA Launched"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:57
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
+msgid "Packages List"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:25
+msgid ""
+"You have to check the box <b>\"I am aware that this action is forcing a "
+"<em><b>reconfiguration of all the machines</b></em> managed by the "
+"relayserver."
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
+msgid "The machines of the relay "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
+msgid ""
+"I am aware that this action is forcing a <em><b>reconfiguration of all the "
+"machines</b></em> managed by the relayserver.<br />Check this box if it is "
+"what you want."
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
+msgid "Show Result"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
+msgid ""
+"You have to check the box <b>\"I am aware that this disable/enable a relay "
+"forcing a <em><b>reconfiguration of all the machines</b></em> managed by the"
+" cluster."
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
+msgid "The relay "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
+msgid ""
+"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration"
+" of all the machines</b></em> managed by the cluster.<br />Check this box if"
+" it is what you want."
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
@@ -1678,6 +1813,14 @@ msgstr " 設定"
 #: modules/admin/includes/configure.inc.php:62
 msgid " configuration page"
 msgstr " 設定ページ"
+
+#: modules/pulse2/includes/menu_group_action.php:82
+msgid "Group Quick action"
+msgstr ""
+
+#: modules/backuppc/backuppc/index.php:58
+msgid "The computer has been removed from the backup system."
+msgstr "コンピューターがバックアップシステムから削除されました。"
 
 #: version.php:35
 msgid "MMC components version"
@@ -1853,7 +1996,7 @@ msgstr "使用できる項目がありません"
 msgid "Select entity"
 msgstr "エンティティ選択"
 
-#: includes/PageGenerator.php:2258 includes/FormGenerator.php:643
+#: includes/PageGenerator.php:2258 includes/FormGenerator.php:646
 #: graph/header.inc.php:251
 msgid "Close"
 msgstr "閉じる"
@@ -1882,65 +2025,65 @@ msgstr ""
 msgid "Complete Traceback"
 msgstr "完了したトレースバック"
 
-#: includes/xmlrpc.inc.php:161
+#: includes/xmlrpc.inc.php:162
 msgid "Can't connect to MMC agent"
 msgstr "MMC エージェントに接続できません"
 
-#: includes/xmlrpc.inc.php:162
+#: includes/xmlrpc.inc.php:163
 msgid "MMC agent seems to be down or not correctly configured."
 msgstr "MMC エージェントがダウンしているか、正しく設定されていないようです。"
 
-#: includes/xmlrpc.inc.php:174
+#: includes/xmlrpc.inc.php:175
 msgid "Can't send XML-RPC request to MMC agent"
 msgstr "XML-RPC リクエストを MMC エージェントに送信できません"
 
-#: includes/xmlrpc.inc.php:175
+#: includes/xmlrpc.inc.php:176
 msgid "MMC agent seems to be not correctly configured."
 msgstr "MMC エージェントが正しく設定されていないようです。"
 
-#: includes/xmlrpc.inc.php:191 includes/xmlrpc.inc.php:216
-#: includes/xmlrpc.inc.php:239
+#: includes/xmlrpc.inc.php:192 includes/xmlrpc.inc.php:217
+#: includes/xmlrpc.inc.php:240
 msgid "MMC agent communication problem"
 msgstr "MMC エージェント通信で問題が発生しました"
 
-#: includes/xmlrpc.inc.php:192
+#: includes/xmlrpc.inc.php:193
 msgid ""
 "Timeout when reading data from the MMC agent. Please check network "
 "connectivity and server load."
 msgstr "MMC エージェントからデータを読み取る時に、タイムアウトしました。ネットワーク接続およびサーバー負荷を確認してください。"
 
-#: includes/xmlrpc.inc.php:201
+#: includes/xmlrpc.inc.php:202
 msgid "Error while reading MMC agent XML-RPC response."
 msgstr "MMC エージェント XML-RPC レスポンス読み取り時にエラーが発生しました。"
 
-#: includes/xmlrpc.inc.php:202
+#: includes/xmlrpc.inc.php:203
 msgid "Please check network connectivity."
 msgstr "ネットワーク接続を確認してください。"
 
-#: includes/xmlrpc.inc.php:217
+#: includes/xmlrpc.inc.php:218
 msgid ""
 "Can't communicate with MMC agent. Please check you're using the right TCP "
 "port and the right protocol."
 msgstr "MMC エージェントと通信できません。正しい TCP ポートとプロトコルを使用していることを確認してください。"
 
-#: includes/xmlrpc.inc.php:240
+#: includes/xmlrpc.inc.php:241
 msgid ""
 "The MMC agent didn't give us a session number. Please check the MMC agent "
 "version."
 msgstr "MMC エージェントがセッション番号を提示しませんでした。MMC エージェントのバージョンを確認してください。"
 
-#: includes/xmlrpc.inc.php:350
+#: includes/xmlrpc.inc.php:373
 msgid "unknown error"
 msgstr "原因不明のエラー"
 
-#: includes/xmlrpc.inc.php:351
+#: includes/xmlrpc.inc.php:374
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
 msgstr "この例外の原因は不明です。当社までご連絡いただき、このエラーに関するエラーハンドリングを追加してください。"
 
 #: includes/FormGenerator.php:72 includes/FormGenerator.php:294
-#: includes/FormGenerator.php:752 includes/FormGenerator.php:882
+#: includes/FormGenerator.php:755 includes/FormGenerator.php:885
 msgid "unavailable"
 msgstr "使用不能"
 
@@ -1956,111 +2099,111 @@ msgstr "はい"
 msgid "no"
 msgstr "いいえ"
 
-#: includes/FormGenerator.php:490
+#: includes/FormGenerator.php:492
 msgid "Year: "
 msgstr "年: "
 
-#: includes/FormGenerator.php:490
+#: includes/FormGenerator.php:492
 msgid "Month: "
 msgstr "月: "
 
-#: includes/FormGenerator.php:490
+#: includes/FormGenerator.php:492
 msgid "Day: "
 msgstr "日: "
 
-#: includes/FormGenerator.php:491
+#: includes/FormGenerator.php:493
 msgid "Hour: "
 msgstr "時間: "
 
-#: includes/FormGenerator.php:491
+#: includes/FormGenerator.php:493
 msgid "Min.: "
 msgstr "分.: "
 
-#: includes/FormGenerator.php:491
+#: includes/FormGenerator.php:493
 msgid "Sec.: "
 msgstr "秒.: "
 
-#: includes/FormGenerator.php:620
+#: includes/FormGenerator.php:623
 msgid "January"
 msgstr "1月"
 
-#: includes/FormGenerator.php:620
+#: includes/FormGenerator.php:623
 msgid "February"
 msgstr "2月"
 
-#: includes/FormGenerator.php:620
+#: includes/FormGenerator.php:623
 msgid "March"
 msgstr "3月"
 
-#: includes/FormGenerator.php:620
+#: includes/FormGenerator.php:623
 msgid "April"
 msgstr "4月"
 
-#: includes/FormGenerator.php:621
+#: includes/FormGenerator.php:624
 msgid "May"
 msgstr "5月"
 
-#: includes/FormGenerator.php:621
+#: includes/FormGenerator.php:624
 msgid "June"
 msgstr "6月"
 
-#: includes/FormGenerator.php:621
+#: includes/FormGenerator.php:624
 msgid "July"
 msgstr "7月"
 
-#: includes/FormGenerator.php:621
+#: includes/FormGenerator.php:624
 msgid "August"
 msgstr "8月"
 
-#: includes/FormGenerator.php:622
+#: includes/FormGenerator.php:625
 msgid "September"
 msgstr "9月"
 
-#: includes/FormGenerator.php:622
+#: includes/FormGenerator.php:625
 msgid "October"
 msgstr "10月"
 
-#: includes/FormGenerator.php:622
+#: includes/FormGenerator.php:625
 msgid "November"
 msgstr "11月"
 
-#: includes/FormGenerator.php:622
+#: includes/FormGenerator.php:625
 msgid "December"
 msgstr "12月"
 
-#: includes/FormGenerator.php:632
+#: includes/FormGenerator.php:635
 msgid "Sunday"
 msgstr "日曜"
 
-#: includes/FormGenerator.php:632
+#: includes/FormGenerator.php:635
 msgid "Monday"
 msgstr "月曜"
 
-#: includes/FormGenerator.php:632
+#: includes/FormGenerator.php:635
 msgid "Tuesday"
 msgstr "火曜"
 
-#: includes/FormGenerator.php:632
+#: includes/FormGenerator.php:635
 msgid "Wednesday"
 msgstr "水曜"
 
-#: includes/FormGenerator.php:633
+#: includes/FormGenerator.php:636
 msgid "Thursday"
 msgstr "木曜"
 
-#: includes/FormGenerator.php:633
+#: includes/FormGenerator.php:636
 msgid "Friday"
 msgstr "金曜"
 
-#: includes/FormGenerator.php:633
+#: includes/FormGenerator.php:636
 msgid "Saturday"
 msgstr "土曜"
 
-#: includes/FormGenerator.php:646
+#: includes/FormGenerator.php:649
 msgid "Now"
 msgstr "今"
 
-#: includes/FormGenerator.php:1019
+#: includes/FormGenerator.php:1024
 msgid "Toggle selection"
 msgstr "トグル選択"
 

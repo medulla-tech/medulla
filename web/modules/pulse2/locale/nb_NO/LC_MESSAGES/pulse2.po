@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 11:58+0200\n"
+"POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -49,54 +49,55 @@ msgstr "Installer Produktoppdateringer"
 msgid "Product Updates installation (ajax)"
 msgstr "Installasjon av produktoppdateringer (ajax)"
 
-#: modules/pulse2/includes/menu_actionaudit.php:59
+#: modules/pulse2/includes/menu_actionaudit.php:64
 #: modules/pulse2/includes/menu_action.php:58
 msgid "Inventory"
 msgstr "Inventar"
 
-#: modules/pulse2/includes/menu_actionaudit.php:61
+#: modules/pulse2/includes/menu_actionaudit.php:66
 #: modules/pulse2/includes/menu_action.php:60
 msgid "Backup status"
 msgstr "Backup status"
 
-#: modules/pulse2/includes/menu_actionaudit.php:62
+#: modules/pulse2/includes/menu_actionaudit.php:67
 #: modules/pulse2/includes/menu_action.php:61
 #: modules/pulse2/includes/menu_group_action.php:76
 msgid "Imaging management"
 msgstr "Administrering av bildefiler"
 
-#: modules/pulse2/includes/menu_actionaudit.php:63
-#: modules/pulse2/includes/menu_action.php:73
+#: modules/pulse2/includes/menu_actionaudit.php:68
+#: modules/pulse2/includes/menu_action.php:75
 msgid "Quick action"
 msgstr "Hurtighandling"
 
-#: modules/pulse2/includes/menu_actionaudit.php:66
 #: modules/pulse2/includes/menu_actionaudit.php:71
-#: modules/pulse2/includes/menu_action.php:77
-#: modules/pulse2/includes/menu_action.php:80
-#: modules/pulse2/includes/menu_action.php:89
+#: modules/pulse2/includes/menu_actionaudit.php:76
+#: modules/pulse2/includes/menu_action.php:79
+#: modules/pulse2/includes/menu_action.php:82
+#: modules/pulse2/includes/menu_action.php:91
 msgid "Software deployment"
 msgstr "Utrulling av Programvare"
 
-#: modules/pulse2/includes/menu_actionaudit.php:70
+#: modules/pulse2/includes/menu_actionaudit.php:75
 #: modules/pulse2/includes/menu_action.php:64
 #: modules/pulse2/includes/menu_action.php:67
 msgid "Remote control"
 msgstr "Fjernkontroll"
 
-#: modules/pulse2/includes/menu_actionaudit.php:73
-#: modules/pulse2/includes/menu_action.php:72
+#: modules/pulse2/includes/menu_actionaudit.php:78
+#: modules/pulse2/includes/menu_action.php:74
 msgid "xmppconsole"
 msgstr "xmppkonsoll"
 
-#: modules/pulse2/includes/menu_actionaudit.php:74
-#: modules/pulse2/includes/menu_actionaudit.php:77
-#: modules/pulse2/includes/menu_action.php:82
+#: modules/pulse2/includes/menu_actionaudit.php:79
+#: modules/pulse2/includes/menu_actionaudit.php:82
+#: modules/pulse2/includes/menu_action.php:70
 #: modules/pulse2/includes/menu_action.php:84
+#: modules/pulse2/includes/menu_action.php:86
 msgid "files browsing"
 msgstr "Bla igjennom filer"
 
-#: modules/pulse2/includes/menu_actionaudit.php:75
+#: modules/pulse2/includes/menu_actionaudit.php:80
 msgid "Edit config files"
 msgstr "Rediger konfigurasjonsfiler"
 

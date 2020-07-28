@@ -702,6 +702,7 @@ class Glpi94(DyngroupDatabaseHelper):
                 self.regcontents.c.value.contains(criterion)
             ))
 
+        query = query.order_by(Machine.name)
         # All computers
         if "computerpresence" not in ctx:
             # Do nothing more
@@ -758,13 +759,6 @@ class Glpi94(DyngroupDatabaseHelper):
             result['data']['reg'][reg[1]][index] = reg[2]
 
         result['count'] = count
-
-        uuids = []
-        for id in result['data']['uuid']:
-            uuids.append('UUID%s'%id)
-
-        result['xmppdata'] = []
-        result['xmppdata'] = XmppMasterDatabase().getmachinesbyuuids(uuids)
         return result
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):

@@ -1,3 +1,22 @@
+Pulse 2 4.6.4
+=============
+* [FEATURE] Add quick actions to relays management
+* [FEATURE] Guacamole operations are now linked to XMPP inventory instead of GLPI
+* [FEATURE] Agents now use ifconfig.co webservice to find location
+* [FEATURE] User can now decide if he wants to force an inventory in packages
+* [FEATURE] File transfer now uses a specific user instead of root
+* [FEATURE] Agents autoupdate by relay servers is now the default method
+* [FEATURE] Add console, guacamole and config file edition for uninventoried machines
+* [BUGFIX]  Fix sharing of groups. All groups are now shared with root user
+* [BUGFIX]  Fix reconfiguration of machines
+* [BUGFIX]  Fix missing hostname in Audit page
+* [BUGFIX]  Eliminate mac addresses that are blacklisted as soon as they are received
+* [BUGFIX]  Fix PKI for generating certificates for multiple addresses
+* [BUGFIX]  Fix display of mac address for deployment
+* [BUGFIX]  Clean old jids from machines table
+* [BUGFIX]  Fix update of deployment statuses
+* [BUGFIX]  Fix order in which machines are displayed
+
 Pulse 2 4.6.3
 =============
 * [FEATURE] Manage relay servers from Pulse console
