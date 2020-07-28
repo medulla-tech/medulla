@@ -26,6 +26,7 @@ import json
 import subprocess
 import sys
 import os
+import fnmatch
 import platform
 import logging
 import ConfigParser
@@ -45,9 +46,14 @@ import uuid
 import time
 from datetime import datetime
 import imp
+import requests
 from Crypto import Random
 from Crypto.Cipher import AES
 import urllib2
+import tarfile
+import zipfile
+from functools import wraps
+
 logger = logging.getLogger()
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "pluginsmaster"))
@@ -59,6 +65,68 @@ if sys.platform.startswith('win'):
     import win32net
     import win32netcon
 
+#### debug decorator #########
+def minimum_runtime(t):
+    """
+        Function decorator constrains the minimum execution time of the function
+    """
+    def decorated(f):
+        def wrapper(*args, **kwargs):
+            start = time.time()
+            result = f(*args, **kwargs)
+            runtime = time.time() - start
+            if runtime < t:
+                time.sleep(t - runtime)
+            return result
+        return wrapper
+    return decorated
+
+def dump_parameter(para=True, out=True, timeprocess = True):
+    """
+        Function decorator logging in and out function.
+    """
+    def decorated(decorated_function):
+        @wraps(decorated_function)
+        def wrapper(*dec_fn_args, **dec_fn_kwargs):
+            # Log function entry
+            start = time.time()
+            func_name = decorated_function.__name__
+            log = logging.getLogger(func_name)
+
+            filepath = os.path.basename(__file__)
+            # get function params (args and kwargs)
+            if para:
+                arg_names = decorated_function.__code__.co_varnames
+                params = dict(
+                    args=dict(zip(arg_names, dec_fn_args)),
+                    kwargs=dec_fn_kwargs)
+                result = ', '.join([
+                        '{}={}'.format(str(k), repr(v)) for k, v in params.items()])
+                log.info('\n@@@ call func : {}({}) file {}'.format(func_name,result, filepath))
+                log.info('\n@@@ call func : {}({}) file {}'.format(func_name,result, filepath))
+            else:
+                log.info('\n@@@ call func : {}() file {}'.format(func_name, filepath))
+            # Execute wrapped (decorated) function:
+            outfunction = decorated_function(*dec_fn_args, **dec_fn_kwargs)
+            timeruntime = time.time() - start
+            if out:
+                if timeprocess:
+                    log.info('\n@@@ out func :{}() in {}s is -->{}'.format(func_name,
+                                                                           timeruntime,
+                                                                           outfunction))
+                else:
+                    log.info('\n@@@ out func :{}() is -->{}'.format(func_name,
+                                                                    outfunction))
+            else:
+                if timeprocess:
+                    log.info('\n@@@ out func :{}() in {}s'.format(func_name,
+                                                                  timeruntime))
+                else:
+                    log.info('\n@@@ out func :{}()'.format(func_name))
+            return outfunction
+        return wrapper
+    return decorated
+###########################################
 
 def file_get_contents(filename, use_include_path=0, context=None, offset=-1, maxlen=-1):
     """
@@ -80,7 +148,6 @@ def file_get_contents(filename, use_include_path=0, context=None, offset=-1, max
             return ret
         finally:
             fp.close()
-
 
 def file_put_contents(filename,  data):
     """
@@ -779,7 +846,7 @@ def searchippublic(site=1):
             if is_valid_ipv4(objip['ip']):
                 return objip['ip']
             else:
-                return searchippublic(2)
+                return searchippublic(3)
         except BaseException:
             return searchippublic(2)
     elif site == 2:
@@ -923,3 +990,209 @@ class AESCipher:
         cipher = AES.new(self.key, AES.MODE_CBC, iv )
         return unpad(cipher.decrypt( enc[16:] ))
 
+def make_tarfile(output_file_gz_bz2, source_dir, compresstype="gz"):
+    """
+        creation archive tar.gz or tar.bz2
+        compresstype "gz" or "bz2"
+    """
+    try:
+        with tarfile.open(output_file_gz_bz2, "w:%s"%compresstype) as tar:
+            tar.add(source_dir, arcname=os.path.basename(source_dir))
+        return True
+    except Exception:
+        logger.error("Error creating tar.%s archive : %s"%(compresstype, str(e)))
+        return False
+
+def extract_file(imput_file__gz_bz2, to_directory='.', compresstype="gz"):
+    """
+        extract archive tar.gz or tar.bz2
+        compresstype "gz" or "bz2"
+    """
+    cwd = os.getcwd()
+    absolutepath = os.path.abspath(imput_file__gz_bz2)
+    try:
+        os.chdir(to_directory)
+        with tarfile.open(absolutepath, "r:%s"%compresstype) as tar:
+            tar.extractall()
+        return True
+    except OSError as e:
+        logger.error( "Error creating tar.%s archive : %s"%(str(e),compresstype))
+        return False
+    except Exception as e:
+        logger.error( "Error creating tar.%s archive : %s"%(str(e),compresstype))
+        return False
+    finally:
+        os.chdir(cwd)
+    return True
+
+def find_files(directory, pattern):
+    """
+        use f
+    """
+    for root, dirs, files in os.walk(directory):
+        for basename in files:
+            if fnmatch.fnmatch(basename, pattern):
+                filename = str(os.path.join(root, basename))
+                yield filename
+
+def listfile(directory, abspath=True):
+    listfile=[]
+    for root, dirs, files in os.walk(directory):
+        for basename in files:
+            if abspath:
+                listfile.append(os.path.join(root, basename))
+            else:
+                listfile.append(os.path.join(basename))
+    return listfile
+
+def md5folder(directory):
+    hash = hashlib.md5()
+    strmdr=[]
+    for root, dirs, files in os.walk(directory):
+        for basename in files:
+            hash.update(md5(os.path.join(root, basename)))
+    return hash.hexdigest()
+
+
+def Setdirectorytempinfo():
+    """
+    create directory
+    """
+    dirtempinfo = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "INFOSTMP")
+    if not os.path.exists(dirtempinfo):
+        os.makedirs(dirtempinfo, mode=0700)
+    return dirtempinfo
+
+
+class geolocalisation_agent:
+    def __init__(self,
+                 typeuser = "public",
+                 geolocalisation=True,
+                 ip_public=None,
+                 strlistgeoserveur=""):
+        self.determination = False
+        self.geolocalisation = geolocalisation
+        self.ip_public = ip_public
+        self.typeuser = typeuser
+        self.filegeolocalisation = os.path.join(Setdirectorytempinfo(),
+                                          'filegeolocalisation')
+        self.listgeoserver = ["http://%s/json"%x for x in re.split(r'[;,\[\(\]\)\{\}\:\=\+\*\\\?\/\#\+\&\-\$\|\s]',
+                                              strlistgeoserveur)  if x.strip()!=""];
+        self.localisation = None
+        self.getgeolocalisation()
+        if self.localisation is None:
+            self.localisation=self.getdatafilegeolocalisation()
+
+    def getgeolocalisationobject(self):
+        if self.localisation is None:
+            return {}
+        return self.localisation
+
+    def getdatafilegeolocalisation(self):
+        if self.geoinfoexist():
+            try:
+                with open(self.filegeolocalisation) as json_data:
+                    self.localisation=json.load(json_data)
+                self.determination = False
+                return self.localisation
+            except Exception:
+                pass
+        return None
+
+    def setdatafilegeolocalisation(self):
+        if self.localisation is not None:
+            try:
+                with open(self.filegeolocalisation, 'w') as json_data:
+                    json.dump(self.localisation, json_data, indent=4)
+                self.determination = True
+            except Exception:
+                pass
+
+    def geoinfoexist(self):
+        if os.path.exists(self.filegeolocalisation):
+            return True
+        return False
+
+    def getgeolocalisation(self):
+        if self.geolocalisation:
+            if self.typeuser in ["public", "nomade", "both"] or self.localisation is None:
+                # on recherche a chaque fois les information
+                self.localisation = geolocalisation_agent.searchgeolocalisation(self.listgeoserver)
+                self.determination = True
+                self.setdatafilegeolocalisation()
+                return self.localisation
+            else:
+                if self.localisation is not None:
+                    if not self.geoinfoexist():
+                        self.setdatafilegeolocalisation()
+                        self.determination = False
+                    return self.localisation
+                elif not self.geoinfoexist():
+                    self.localisation = geolocalisation_agent.searchgeolocalisation(self.listgeoserver)
+                    self.setdatafilegeolocalisation()
+                    self.determination = True
+                    return self.localisation
+            return None
+        else:
+            if not self.geoinfoexist():
+                self.localisation = geolocalisation_agent.searchgeolocalisation(self.listgeoserver)
+                self.setdatafilegeolocalisation()
+                self.determination = True
+                return self.localisation
+
+        return self.localisation
+
+    def get_ip_public(self):
+        if self.geolocalisation:
+            if self.localisation is  None:
+                self.getgeolocalisation()
+            if self.localisation is not None and is_valid_ipv4(self.localisation['ip']):
+                if not self.determination:
+                    logger.warning("Determination use file")
+                self.ip_public = self.localisation['ip']
+                return self.localisation['ip']
+            else :
+                return None
+        else:
+            if not self.determination:
+                logger.warning("use old determination ip_public")
+            if self.localisation is  None:
+                if self.geoinfoexist():
+                    dd=self.getdatafilegeolocalisation()
+                    logger.warning("%s"%dd)
+                    if  self.localisation is  not None:
+                        return self.localisation['ip']
+            else:
+                return self.localisation['ip']
+        return self.ip_public
+
+    @staticmethod
+    def call_simple_page(url):
+        try:
+            r = requests.get(url)
+            return r.json()
+        except:
+            return None
+
+    @staticmethod
+    def call_simple_page_urllib(url):
+        try:
+            objip = json.loads(urllib.urlopen(url).read())
+            return objip
+        except:
+            return None
+
+    @staticmethod
+    def searchgeolocalisation(http_url_list_geo_server):
+        """
+            return objet
+        """
+        for url in http_url_list_geo_server:
+            try:
+                objip = geolocalisation_agent.call_simple_page(url)
+                if  objip is None:
+                    raise
+                return objip
+            except BaseException:
+                pass
+        return None

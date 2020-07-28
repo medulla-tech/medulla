@@ -32,8 +32,8 @@ from pulse2.scheduler import balance
 def get_nbr_steps (nbr_attempts):
     if nbr_attempts % 2 > 0 :
         return nbr_attempts // 2
-    else :
-        return nbr_attempts / 2
+
+    return nbr_attempts / 2
 
 
 

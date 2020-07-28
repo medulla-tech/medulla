@@ -43,7 +43,7 @@ class GlpiProvisionerConfig(ProvisionerConfig):
                 if isfile(value):
                     acls = open(value, 'r').read().split('\n')
                     # Clean empty lines, and join them by :
-                    value = ':' + (':'.join([x for x in acls if x.strip() and x[0] != '#']))
+                    value = ':' + (':'.join(x for x in acls if x.strip() and x[0] != '#'))
                 else:
                     self.profilesAcl[option.replace(PROFILEACL, "")] = value
         self.profilesOrder = self.get(self.section, "profiles_order").split()

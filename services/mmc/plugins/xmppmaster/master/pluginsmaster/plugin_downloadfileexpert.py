@@ -71,7 +71,8 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             a=0
             nb = len(listdirectory)
             for y in range (nb - 1):
-                if y > a : a = y
+                if y > a:
+                    a = y
                 for index in range(a+1, nb):
                     if listdirectory[a] in listdirectory[index]:
                         dd.append( listdirectory[index] )
@@ -112,7 +113,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                  'path_src_machine_dir': listdirstr,
                  'path_src_machine_file': listfile,
                  'path_dest_master': data['dest'],
-                 'jidmachine': jidmachine,
                  # item host is uuid glpi machine
                  'host': Machineinfo['uuid_inventorymachine'],
                  'ipars': relayserver['ip_xmpp'],

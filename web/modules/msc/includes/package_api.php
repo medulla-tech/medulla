@@ -84,6 +84,11 @@ function isAvailable($p_api, $pid, $mirror) {
 }
 
 class ServerAPI {
+  protected $server;
+  protected $port;
+  protected $mountpoint;
+  protected $protocol;
+
     function ServerAPI($h = null) {
         if ($h) {
             $this->server = $h['server'];

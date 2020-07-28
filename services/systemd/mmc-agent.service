@@ -1,0 +1,16 @@
+[Unit]
+Description=Machines Management Console
+After=smbd.service slapd.service
+ConditionPathExists=/etc/mmc/plugins/base.ini.local
+
+[Service]
+PIDFile=/var/run/mmc-agent.pid
+#User=pulse
+#Group=pulse
+Type=forking
+ExecStart=/usr/sbin/mmc-agent
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target

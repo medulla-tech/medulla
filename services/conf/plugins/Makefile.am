@@ -30,4 +30,4 @@ dist_pluginsconf_DATA = msc.ini glpi.ini pkgs.ini dyngroup.ini imaging.ini \
 	support.ini xmppmaster.ini guacamole.ini inventoryconf.ini resultinventory.ini \
 	kiosk.ini assessor_agent.ini loadautoupdate.ini loadlogsrotation.ini \
 	loadpluginlistversion.ini loadpluginschedulerlistversion.ini \
-	loadshowregistration.ini registeryagent.ini
+	loadshowregistration.ini registeryagent.ini loadreconf.ini

@@ -1,0 +1,112 @@
+li.install a {
+        padding: 0px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/install.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.logfile a {
+        padding: 0px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/logfile.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.inventory a {
+    	padding: 0px 0px 5px 23px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/inventory/graph/images/actions/inventory.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.remove_machine a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/msc/graph/images/actions/delete.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.csv a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/csv.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.download a {
+        padding: 0px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/download.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.vncclient a {
+        padding: 0px 0px 5px 25px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/vncclient.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.imaging a {
+	padding: 1px 3px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/imaging.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+.LOG_EMERG {
+  color: red;
+}
+.LOG_ALERT {
+  color: red;
+}
+.LOG_CRIT {
+  color: red;
+}
+.LOG_ERR {
+  color: red;
+}
+.LOG_WARNING {
+  color: orange;
+}
+.LOG_NOTICE {
+  color: navy;
+}
+.LOG_INFO {
+  color: black;
+}
+.LOG_DEBUG {
+  color: gray;
+}

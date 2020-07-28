@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 11:58+0200\n"
+"POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -38,146 +38,138 @@ msgstr "Glpi Dashboard"
 
 #: modules/glpi/infoPackage.inc.php:48
 msgid "Antivirus Panel"
-msgstr ""
+msgstr "Antivirus Panel"
 
 #: modules/glpi/infoPackage.inc.php:53
 msgid "Inventory Panel"
-msgstr ""
+msgstr "Inventarpanel"
 
 #: modules/glpi/infoPackage.inc.php:58
 msgid "Os Repartition Panel"
-msgstr ""
+msgstr "OS Ompartisjoneringspanel"
 
 #: modules/glpi/infoPackage.inc.php:70
 msgid "Get the whole machines list"
-msgstr ""
+msgstr "Hent hele maskinlisten"
 
 #: modules/glpi/infoPackage.inc.php:74 modules/glpi/glpi/machinesList.php:28
 msgid "Machines List"
-msgstr ""
+msgstr "Maskinliste"
 
 #: modules/glpi/infoPackage.inc.php:79
 msgid "Get the xmpp machines list"
-msgstr ""
+msgstr "Hent xmpp maskinliste"
 
 #: modules/glpi/infoPackage.inc.php:83
 msgid "Xmpp Machines List"
-msgstr ""
+msgstr "Xmpp Maskinliste"
 
 #: modules/glpi/infoPackage.inc.php:88
-msgid "Get the xmpp relays list"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:92
-msgid "Relays List"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:97
 msgid "Create static group from dashboard widgets (GLPI)"
 msgstr "Opprett statisk gruppe fra dashbord-widgeter (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:102
+#: modules/glpi/infoPackage.inc.php:93
 msgid "Create static group from antivirus dashboard widget (GLPI)"
 msgstr "Opprett statisk gruppe fra antiviruspanelet (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:107
+#: modules/glpi/infoPackage.inc.php:98
 msgid "Create static group from OS distribution dashboard widget (GLPI)"
 msgstr "Opprett statisk gruppe fra OS-distribusjonsdashbordwidget (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:112 modules/glpi/infoPackage.inc.php:117
+#: modules/glpi/infoPackage.inc.php:103 modules/glpi/infoPackage.inc.php:108
 msgid "Create static group from machines dashboard widget (GLPI)"
 msgstr "Opprett statisk gruppe fra maskinens dashbordwidget (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:122
+#: modules/glpi/infoPackage.inc.php:113
 msgid "Create static group from machines backup widget (GLPI)"
 msgstr "Opprett statisk gruppe fra maskinens sikkerhetskopi widget (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:127
+#: modules/glpi/infoPackage.inc.php:118
 msgid "Entities"
 msgstr "Forekomster"
 
-#: modules/glpi/infoPackage.inc.php:131 modules/glpi/infoPackage.inc.php:144
+#: modules/glpi/infoPackage.inc.php:122 modules/glpi/infoPackage.inc.php:135
 msgid "Entities (ajax)"
 msgstr "Enheter (ajax)"
 
-#: modules/glpi/infoPackage.inc.php:136 modules/glpi/infoPackage.inc.php:149
+#: modules/glpi/infoPackage.inc.php:127 modules/glpi/infoPackage.inc.php:140
 #: modules/glpi/glpi/addEntity.php:43
 msgid "Add entity"
 msgstr "Legg til enhet"
 
-#: modules/glpi/infoPackage.inc.php:140
+#: modules/glpi/infoPackage.inc.php:131
 msgid "Locations"
 msgstr "Steder"
 
-#: modules/glpi/infoPackage.inc.php:153 modules/glpi/glpi/entityRules.php:28
+#: modules/glpi/infoPackage.inc.php:144 modules/glpi/glpi/entityRules.php:28
 msgid "Entity rules"
 msgstr "Enhetsregler"
 
-#: modules/glpi/infoPackage.inc.php:157
+#: modules/glpi/infoPackage.inc.php:148
 msgid "Entity rules (ajax)"
 msgstr "Enhetsregler (ajax)"
 
-#: modules/glpi/infoPackage.inc.php:162 modules/glpi/glpi/addEntityRule.php:59
+#: modules/glpi/infoPackage.inc.php:153 modules/glpi/glpi/addEntityRule.php:59
 msgid "Add entity rule"
 msgstr "Legg til Enhetsregel"
 
-#: modules/glpi/infoPackage.inc.php:166
+#: modules/glpi/infoPackage.inc.php:157
 msgid "Delete entity rule"
 msgstr "Slett Enhetsregel"
 
-#: modules/glpi/infoPackage.inc.php:171
+#: modules/glpi/infoPackage.inc.php:162
 msgid "Change entity rule order (up)"
 msgstr "Endre enhetenregel-ordning (opp)"
 
-#: modules/glpi/infoPackage.inc.php:176
+#: modules/glpi/infoPackage.inc.php:167
 msgid "Change entity rule order (down)"
 msgstr "Endre enhetenregel-ordning (ned)"
 
-#: modules/glpi/infoPackage.inc.php:183
+#: modules/glpi/infoPackage.inc.php:174
 msgid "Display locations"
 msgstr "Vis lokasjoner"
 
-#: modules/glpi/infoPackage.inc.php:199
+#: modules/glpi/infoPackage.inc.php:190
 msgid "Inventory (GLPI) on machine"
 msgstr "Inventar (GLPI) på maskinen"
 
-#: modules/glpi/infoPackage.inc.php:202
+#: modules/glpi/infoPackage.inc.php:193
 msgid "Summary tab (GLPI)"
 msgstr "Sammendragsfanen (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:205
+#: modules/glpi/infoPackage.inc.php:196
 msgid "Hardware tab (GLPI)"
 msgstr "Maskinvarefane (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:208
+#: modules/glpi/infoPackage.inc.php:199
 msgid "Storage tab (GLPI)"
 msgstr "Lagringsfane (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:211
+#: modules/glpi/infoPackage.inc.php:202
 msgid "Network tab (GLPI)"
 msgstr "Nettverksfane (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:214
+#: modules/glpi/infoPackage.inc.php:205
 msgid "Softwares tab (GLPI)"
 msgstr "Programvare-fanen (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:217
+#: modules/glpi/infoPackage.inc.php:208
 msgid "Administrative tab (GLPI)"
 msgstr "Administrativ fane (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:220
+#: modules/glpi/infoPackage.inc.php:211
 msgid "History tab (GLPI)"
 msgstr "Historik-fanen (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:223
+#: modules/glpi/infoPackage.inc.php:214
 msgid "Antivirus tab (GLPI)"
 msgstr "Antivirus fane (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:226
+#: modules/glpi/infoPackage.inc.php:217
 msgid "Registry tab (GLPI)"
 msgstr "Register fane (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:229
+#: modules/glpi/infoPackage.inc.php:220
 msgid "Connections tab (GLPI)"
 msgstr "Tilkoblingsfanen (GLPI)"
 
@@ -404,7 +396,7 @@ msgstr "Sist logget bruker"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:236
 msgid "Owner"
-msgstr ""
+msgstr "Eier"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:238
 #: modules/glpi/glpi/ajaxViewPart.php:234
@@ -413,15 +405,15 @@ msgstr "Enhet"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:240
 msgid "Localization"
-msgstr ""
+msgstr "Lokalisering"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:242
 msgid "Owner Firstname"
-msgstr ""
+msgstr "Eiers Fornavn"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:244
 msgid "Owner Real Name"
-msgstr ""
+msgstr "Eiers Riktige Navn"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:246
 #: modules/glpi/glpi/ajaxViewPart.php:241
@@ -447,7 +439,7 @@ msgstr "Alle regler"
 
 #: modules/glpi/glpi/createMachinesStaticGroupdeploy.php:31
 msgid "Machines "
-msgstr ""
+msgstr "Maskiner"
 
 #: modules/glpi/glpi/entityList.php:28
 msgid "Entity list"
@@ -935,7 +927,7 @@ msgstr "Frakoblede datamaskiner"
 
 #: modules/glpi/glpi/machinesList.php:52
 msgid "All my entities"
-msgstr "Alle mine eheter"
+msgstr "Alle mine enheter"
 
 #: modules/glpi/glpi/createOSStaticGroup.php:40
 #, php-format

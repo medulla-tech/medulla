@@ -1,0 +1,14 @@
+### Add an alias /mmc on www server root
+Alias /mmc @datadir@/mmc
+
+### Allow access to lmc web directory to everyone
+<Directory @datadir@/mmc>
+    AllowOverride None
+    Order allow,deny
+    allow from all
+    php_flag short_open_tag on
+    php_flag magic_quotes_gpc on
+</Directory>
+
+### Redirect / to /mmc
+RedirectMatch ^/$ /mmc/

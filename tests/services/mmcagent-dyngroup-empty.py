@@ -66,16 +66,16 @@ class class01dyngroupInitTest(TestCase):
         self.deleteShare = None
 
     def tearDown(self):
-        if self.deleteUser != None:
+        if self.deleteUser is not None:
             client.base.delUserFromAllGroups(self.deleteUser)
             client.dyngroup.delmembers_to_group(1337, [self.deleteUser])
-        if self.deleteGroup != None:
+        if self.deleteGroup is not None:
             client.dyngroup.delete_group(int(self.deleteGroup))
-        if self.deleteProfile != None:
+        if self.deleteProfile is not None:
             # TODO: Uncomment the following line when it will be implemented in the dyngroup plugin
             # client.dyngroup.delete_profile(int(self.deleteProfile))
             pass
-        if self.deleteShare != None:
+        if self.deleteShare is not None:
             client.dyngroup.del_share(self.deleteShare[0], self.deleteShare[1])
 
     def test201countAllProfiles(self):

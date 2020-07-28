@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 11:58+0200\n"
+"POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,54 +45,55 @@ msgstr ""
 msgid "Product Updates installation (ajax)"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:59
+#: modules/pulse2/includes/menu_actionaudit.php:64
 #: modules/pulse2/includes/menu_action.php:58
 msgid "Inventory"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:61
+#: modules/pulse2/includes/menu_actionaudit.php:66
 #: modules/pulse2/includes/menu_action.php:60
 msgid "Backup status"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:62
+#: modules/pulse2/includes/menu_actionaudit.php:67
 #: modules/pulse2/includes/menu_action.php:61
 #: modules/pulse2/includes/menu_group_action.php:76
 msgid "Imaging management"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:63
-#: modules/pulse2/includes/menu_action.php:73
+#: modules/pulse2/includes/menu_actionaudit.php:68
+#: modules/pulse2/includes/menu_action.php:75
 msgid "Quick action"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:66
 #: modules/pulse2/includes/menu_actionaudit.php:71
-#: modules/pulse2/includes/menu_action.php:77
-#: modules/pulse2/includes/menu_action.php:80
-#: modules/pulse2/includes/menu_action.php:89
+#: modules/pulse2/includes/menu_actionaudit.php:76
+#: modules/pulse2/includes/menu_action.php:79
+#: modules/pulse2/includes/menu_action.php:82
+#: modules/pulse2/includes/menu_action.php:91
 msgid "Software deployment"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:70
+#: modules/pulse2/includes/menu_actionaudit.php:75
 #: modules/pulse2/includes/menu_action.php:64
 #: modules/pulse2/includes/menu_action.php:67
 msgid "Remote control"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:73
-#: modules/pulse2/includes/menu_action.php:72
+#: modules/pulse2/includes/menu_actionaudit.php:78
+#: modules/pulse2/includes/menu_action.php:74
 msgid "xmppconsole"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:74
-#: modules/pulse2/includes/menu_actionaudit.php:77
-#: modules/pulse2/includes/menu_action.php:82
+#: modules/pulse2/includes/menu_actionaudit.php:79
+#: modules/pulse2/includes/menu_actionaudit.php:82
+#: modules/pulse2/includes/menu_action.php:70
 #: modules/pulse2/includes/menu_action.php:84
+#: modules/pulse2/includes/menu_action.php:86
 msgid "files browsing"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:75
+#: modules/pulse2/includes/menu_actionaudit.php:80
 msgid "Edit config files"
 msgstr ""
 

@@ -795,7 +795,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 # machine dans GLPI mais pas enregistré sur tavle machine xmpp.
                 listobjnoexist.append(deployobject)
                 # inscription dans deploiement cette machine sans agent
-
                 XmppMasterDatabase().adddeploy(deployobject['commandid'],
                                                 deployobject['name'],
                                                 deployobject['name'],
@@ -1019,7 +1018,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if msg_changed_status['type'] == 'unavailable':
             try:
                 result = XmppMasterDatabase().initialisePresenceMachine(msg_changed_status['from'])
-                if result is None:
+                if result is None or len(result) == 0:
                     return
                 if "type" in result and result['type'] == "relayserver":
                     # recover list of cluster ARS
@@ -1102,6 +1101,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
         elif msg_changed_status['type'] == "available":
             result = XmppMasterDatabase().initialisePresenceMachine(msg_changed_status['from'],
                                                                     presence=1)
+            if result is None or len(result) == 0:
+                return
+            if "type" in result and result['type'] == "machine":
+                try:
+                    if "reconf" in result and result['reconf'] == 1:
+                        result1 = self.iqsendpulse(msg_changed_status['from'],
+                                                        { "action": "information",
+                                                            "data": { "listinformation" : ["force_reconf"],
+                                                                    "param" : {} }},
+                                                        10)
+                except Exception:
+                    pass
+                XmppMasterDatabase().updateMachinereconf(msg_changed_status['from'])
 
     def showListClient(self):
         if self.config.showinfomaster:

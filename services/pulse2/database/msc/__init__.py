@@ -184,7 +184,7 @@ class MscDatabase(DatabaseHelper):
         if type(query) != list:
             ret = query.id
             #elif query:
-        elif len(query) > 0:
+        elif query:
             ret = []
             for q in query:
                 ret.append(q.id)
@@ -524,58 +524,6 @@ class MscDatabase(DatabaseHelper):
             result['connect_as'] = x.connect_as
         return result
 
-    def deployxmpponmachine(self, command_id):
-        result = {}
-        sqlselect="""
-            SELECT
-                host,
-                target_name,
-                title,
-                commands.start_date AS startdatec,
-                commands_on_host.start_date AS startdateh,
-                commands.end_date AS enddatec,
-                commands_on_host.end_date AS enddateh,
-                target_ipaddr,
-                target_uuid,
-                target_macaddr,
-                target_bcast,
-                target_network,
-                package_id,
-                creator,
-                connect_as
-            FROM
-                commands_on_host
-                    INNER JOIN
-                commands ON commands.id = commands_on_host.fk_commands
-                    INNER JOIN
-                target ON target.id = commands_on_host.fk_target
-                    INNER JOIN
-                phase ON commands_on_host.id = phase.fk_commands_on_host
-            WHERE
-                commands.id = %s
-                and commands_on_host.id_group IS NULL
-                ORDER BY commands_on_host.id DESC
-                limit 1
-                ;"""%command_id
-        resultsql = self.db.execute(sqlselect)
-        for x in resultsql:
-            result['host'] = x.host
-            result['target_name'] = x.target_name
-            result['title'] = x.title
-            result['startdatec'] = x.startdatec
-            result['startdateh'] = x.startdateh
-            result['enddatec'] = x.enddatec
-            result['enddateh'] = x.enddateh
-            result['target_ipaddr'] = x.target_ipaddr
-            result['target_uuid'] = x.target_uuid
-            result['target_macaddr'] = x.target_macaddr
-            result['target_bcast'] = x.target_bcast
-            result['target_network'] = x.target_network
-            result['package_id'] = x.package_id
-            result['creator'] = x.creator
-            result['connect_as'] = x.connect_as
-        return result
-
     @DatabaseHelper._sessionm
     def get_msc_listuuid_commandid(self, session, command_id, filter, start, limit):
         start = int(start)
@@ -594,7 +542,7 @@ class MscDatabase(DatabaseHelper):
         resultsql = self.db.execute(sqlselect)
         if resultsql is not None:
             dateintervale = [x for x in resultsql]
-            if len(dateintervale) != 0:
+            if dateintervale:
                 datestartstr  = dateintervale[0].dated
                 dateendstr    = dateintervale[0].datef
             else:
@@ -675,7 +623,7 @@ class MscDatabase(DatabaseHelper):
         resultsql = self.db.execute(sqlselect)
         if resultsql is not None:
             dateintervale = [x for x in resultsql]
-            if len(dateintervale) != 0:
+            if dateintervale:
                 datestartstr  = dateintervale[0].dated
                 dateendstr    = dateintervale[0].datef
             else:
@@ -705,7 +653,7 @@ class MscDatabase(DatabaseHelper):
                     commands_on_host.start_date <= '%s' and
                     commands_on_host.end_date >= '%s'
                     ) as listhost;
-                        """% (command_id, datestartstr, dateendstr)
+                        """ % (command_id, datestartstr, dateendstr)
 
         resultsql = self.db.execute(sqlselect)
 
@@ -1307,7 +1255,7 @@ class MscDatabase(DatabaseHelper):
                     continue
                 if name == "wol" and do_wol == "disable" :
                     continue
-                if name == "upload" and len(files) == 0:
+                if name == "upload" and not files:
                     continue
                 if name == "execute" and (start_script == "disable" \
                         or is_quick_action) and do_windows_update == "disable":
@@ -2385,16 +2333,16 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return self._getarraycommanddatadate(ret)
 
-
-    def getCommandOnGroupByState(self, ctx, cmd_id, state, min = 0, max = -1):
+    def getCommandOnGroupByState(self, ctx, cmd_id, state, min=0, max=-1):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id).order_by(self.commands_on_host.c.host)
         ret = self.__filterOnStatus(ctx, query, state)
         session.close()
-        if max != -1: ret = ret[min:max]
+        if max != -1:
+            ret = ret[min:max]
         return map(lambda coh: {'coh_id':coh.id, 'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
 
-    def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
+    def getCommandOnGroupStatus(self, ctx, cmd_id):  # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         query = session.query(func.count(self.commands_on_host.c.id), CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == cmd_id)
         ret = self.__getStatus(ctx, query)
@@ -2404,7 +2352,7 @@ class MscDatabase(DatabaseHelper):
     def getMachineNamesOnGroupStatus(self, ctx, cmd_id, state, limit):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id)
-        if state in ['success', 'paused', 'stopped', 'running', 'failure']: # Global statues
+        if state in ['success', 'paused', 'stopped', 'running', 'failure']:  # Global statues
             query = query.filter(self.commands_on_host.c.current_state.in_(self.__getAllStatus()[state]))
         # Treat failed statues
         elif state == "fail_up":
@@ -2465,7 +2413,8 @@ class MscDatabase(DatabaseHelper):
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands_on_host.c.host)
         ret = self.__filterOnStatus(ctx, query, state)
         session.close()
-        if max != -1: ret = ret[min:max]
+        if max != -1:
+            ret = ret[min:max]
         return map(lambda coh: {'coh_id': coh.id, 'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
 
     def getCommandOnBundleStatus(self, ctx, fk_bundle):
@@ -2705,61 +2654,86 @@ class MscDatabase(DatabaseHelper):
             }
         }
 
-        if verbose: # used for CSV generation
+        if verbose:  # used for CSV generation
             for coh in query:
-                if coh.current_state == 'done': # success
-                    if verbose: ret['success']['total'][1].append(coh)
-                elif coh.current_state == 'stop' or coh.current_state == 'stopped': # stopped coh
-                    if verbose: ret['stopped']['total'][1].append(coh)
+                if coh.current_state == 'done':  # success
+                    if verbose:
+                        ret['success']['total'][1].append(coh)
+                elif coh.current_state == 'stop' or coh.current_state == 'stopped':  # stopped coh
+                    if verbose:
+                        ret['stopped']['total'][1].append(coh)
                 elif coh.current_state == 'pause':
-                    if verbose: ret['paused']['total'][1].append(coh)
-                elif coh.current_state == 'over_timed': # out of the valid period of execution (= failed)
-                    if verbose: ret['failure']['total'][1].append(coh)
-                    if verbose: ret['failure']['over_timed'][1].append(coh)
-                elif coh.attempts_left == 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # failure
-                    if verbose: ret['failure']['total'][1].append(coh)
+                    if verbose:
+                        ret['paused']['total'][1].append(coh)
+                elif coh.current_state == 'over_timed':  # out of the valid period of execution (= failed)
+                    if verbose:
+                        ret['failure']['total'][1].append(coh)
+                    if verbose:
+                        ret['failure']['over_timed'][1].append(coh)
+                elif coh.attempts_left == 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'):  # failure
+                    if verbose:
+                        ret['failure']['total'][1].append(coh)
                     if coh.uploaded == 'FAILED':
-                        if verbose: ret['failure']['fail_up'][1].append(coh)
+                        if verbose:
+                            ret['failure']['fail_up'][1].append(coh)
                         if coh.current_state == 'not_reachable':
-                            if verbose: ret['failure']['conn_up'][1].append(coh)
+                            if verbose:
+                                ret['failure']['conn_up'][1].append(coh)
                     elif coh.executed == 'FAILED':
-                        if verbose: ret['failure']['fail_ex'][1].append(coh)
+                        if verbose:
+                            ret['failure']['fail_ex'][1].append(coh)
                         if coh.current_state == 'not_reachable':
-                            if verbose: ret['failure']['conn_ex'][1].append(coh)
+                            if verbose:
+                                ret['failure']['conn_ex'][1].append(coh)
                     elif coh.deleted == 'FAILED':
-                        if verbose: ret['failure']['fail_rm'][1].append(coh)
+                        if verbose:
+                            ret['failure']['fail_rm'][1].append(coh)
                         if coh.current_state == 'not_reachable':
-                            if verbose: ret['failure']['conn_rm'][1].append(coh)
-                elif coh.attempts_left != 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # fail but can still try again
-                    if verbose: ret['running']['total'][1].append(coh)
+                            if verbose:
+                                ret['failure']['conn_rm'][1].append(coh)
+                elif coh.attempts_left != 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'):  # fail but can still try again
+                    if verbose:
+                        ret['running']['total'][1].append(coh)
                     if coh.uploaded == 'FAILED':
-                        if verbose: ret['running']['wait_up'][1].append(coh)
-                        if verbose: ret['running']['sec_up'][1].append(coh)
+                        if verbose:
+                            ret['running']['wait_up'][1].append(coh)
+                        if verbose:
+                            ret['running']['sec_up'][1].append(coh)
                     elif coh.executed == 'FAILED':
-                        if verbose: ret['running']['wait_ex'][1].append(coh)
-                        if verbose: ret['running']['sec_ex'][1].append(coh)
+                        if verbose:
+                            ret['running']['wait_ex'][1].append(coh)
+                        if verbose:
+                            ret['running']['sec_ex'][1].append(coh)
                     elif coh.deleted == 'FAILED':
                         ret['running']['wait_rm'][0] += 1
                         ret['running']['sec_rm'][0] += 1
                 else: # running
-                    if verbose and coh.deleted != 'DONE' and coh.deleted != 'IGNORED': ret['running']['total'][1].append(coh)
-                    if coh.deleted == 'DONE' or coh.deleted == 'IGNORED': # done
-                        if verbose: ret['success']['total'][1].append(coh)
-                    elif coh.executed == 'DONE' or coh.executed == 'IGNORED': # delete running
+                    if verbose and coh.deleted != 'DONE' and coh.deleted != 'IGNORED':
+                        ret['running']['total'][1].append(coh)
+                    if coh.deleted == 'DONE' or coh.deleted == 'IGNORED':  # done
+                        if verbose:
+                            ret['success']['total'][1].append(coh)
+                    elif coh.executed == 'DONE' or coh.executed == 'IGNORED':  # delete running
                         if coh.deleted == 'WORK_IN_PROGRESS':
-                            if verbose: ret['running']['run_rm'][1].append(coh)
+                            if verbose:
+                                ret['running']['run_rm'][1].append(coh)
                         else:
-                            if verbose: ret['running']['wait_rm'][1].append(coh)
-                    elif coh.uploaded == 'DONE' or coh.uploaded == 'IGNORED': # exec running
+                            if verbose:
+                                ret['running']['wait_rm'][1].append(coh)
+                    elif coh.uploaded == 'DONE' or coh.uploaded == 'IGNORED':  # exec running
                         if coh.executed == 'WORK_IN_PROGRESS':
-                            if verbose: ret['running']['run_ex'][1].append(coh)
+                            if verbose:
+                                ret['running']['run_ex'][1].append(coh)
                         else:
-                            if verbose: ret['running']['wait_ex'][1].append(coh)
-                    else: # upload running
+                            if verbose:
+                                ret['running']['wait_ex'][1].append(coh)
+                    else:  # upload running
                         if coh.uploaded == 'WORK_IN_PROGRESS':
-                            if verbose: ret['running']['run_up'][1].append(coh)
+                            if verbose:
+                                ret['running']['run_up'][1].append(coh)
                         else:
-                            if verbose: ret['running']['wait_up'][1].append(coh)
+                            if verbose:
+                                ret['running']['wait_up'][1].append(coh)
 
         return ret
 

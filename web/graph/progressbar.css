@@ -1,0 +1,47 @@
+progress {
+   display: block; /* default: inline-block */
+/*    width: 300px; */
+   margin: 1em auto;
+   padding: 4px;
+   border: 0 none;
+   background: #444;
+   border-radius: 14px;
+   box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5),
+               0px 1px 0px rgba(255,255,255,0.2);
+}
+progress::-moz-progress-bar {
+   background: #888;
+   border-radius: 12px;
+   box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4),
+               0 2px 5px 0px rgba(0,0,0,0.3);
+}
+progress {
+
+        width: 100%;
+        -webkit-appearance: none;
+
+      }
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+   progress {
+      height: 25px; /* légèrement plus fin sur Chrome par défaut */
+   }
+}
+/* on enlève le fond de cet élément supplémentaire */
+progress::-webkit-progress-bar {
+   background: transparent;
+}
+/* on applique les mêmes styles que sur ::-moz-progress-bar */
+progress::-webkit-progress-value {
+   background: #888;
+   border-radius: 12px;
+   box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4),
+               0 2px 5px 0px rgba(0,0,0,0.3);
+}
+
+/* couleur de la barre de progression pour internet explorer 10 et 11 */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+   progress {
+	   color : gray;
+   }
+}

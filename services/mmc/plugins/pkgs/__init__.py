@@ -22,6 +22,8 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# /plugins/pkgs/__init__.py
+
 import logging
 import os
 from os.path import basename
@@ -58,7 +60,13 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 from pulse2.database.pkgs import PkgsDatabase
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
-from mmc.plugins.xmppmaster.master.lib.utils import simplecommand, name_random
+from mmc.plugins.xmppmaster.master.lib.utils import simplecommand,\
+                                                    name_random,\
+                                                    file_put_contents,\
+                                                    file_get_contents,\
+                                                    make_tarfile,\
+                                                    extract_file,\
+                                                    md5folder
 from unidecode import unidecode
 import uuid
 from xml.dom import minidom
@@ -1032,12 +1040,100 @@ def _eb_updateAppstreamPackages(failure):
 def getAppstreamNotifications():
     return notificationManager().getModuleNotification('pkgs')
 
-
 def _path_package():
     return os.path.join("/", "var", "lib", "pulse2", "packages")
 
+def _path_packagequickaction():
+    pathqd = os.path.join("/", "var", "lib", "pulse2", "qpackages")
+    if not os.path.isdir(pathqd):
+        try:
+            os.makedirs(pathqd)
+        except OSError as e:
+            logger.error("Error creating folder for quick deployment packages : %s"%(str(e)))
+    return pathqd
+
+def qdeploy_generate(folder):
+    try:
+        max_size_stanza_xmpp = PkgsConfig("pkgs").max_size_stanza_xmpp
+        namepackage = os.path.basename(folder)
+        pathaqpackage = os.path.join(_path_packagequickaction(), namepackage)
+        result = simplecommand("du -b %s"%folder)
+        #logger.debug("cmd %s"%"du -b %s"%folder)
+        taillebytefolder = int(result['result'][0].split()[0])
+        if taillebytefolder > max_size_stanza_xmpp:
+            logger.debug("Package is too large for quick deployment.\n%s"\
+                " greater than defined max_size_stanza_xmpp %s"%(taillebytefolder,
+                                                         max_size_stanza_xmpp))
+            #delete quick package if exist.
+            if "qpackages" in pathaqpackage:
+                os.system("rm %s.*"%pathaqpackage)
+        else:
+            ### creation d'un targetos
+            logger.debug("Preparing quick deployment package for package %s"%(namepackage))
+            calculemd5 = md5folder(pathaqpackage)
+            if os.path.exists("%s.md5"%pathaqpackage):
+                content = file_get_contents("%s.md5"%pathaqpackage)
+                if content==calculemd5:
+                    #pas de modifications du package
+                    logger.debug("quick package exist")
+                    #creation only si if fille missing
+                    create_msg_xmpp_quick_deploy(folder)
+                    return
+            file_put_contents("%s.md5"%pathaqpackage, calculemd5)
+            create_msg_xmpp_quick_deploy(folder, create = True)
+    except Exception:
+        logger.error("%s"%(traceback.format_exc()))
+
+def get_message_xmpp_quick_deploy(folder, sessionid):
+    # read le fichier
+    namepackage = os.path.basename(folder)
+    pathaqpackage = os.path.join(_path_packagequickaction(), namepackage)
+    with open("%s.xmpp"%pathaqpackage, 'r') as f:
+        data = f.read()
+    return data.replace("@-TEMPLSESSQUICKDEPLOY@", sessionid, 1)
+
+def get_template_message_xmpp_quick_deploy(folder):
+    # read le fichier
+    namepackage = os.path.basename(folder)
+    pathaqpackage = os.path.join(_path_packagequickaction(), namepackage)
+    with open("%s.xmpp"%pathaqpackage, 'r') as f:
+        data = f.read()
+    return data
+
+def get_xmpp_message_with_sessionid(template_message, sessionid):
+    # read le fichier
+    return template_message.replace("@-TEMPLSESSQUICKDEPLOY@", sessionid, 1)
+
+def create_msg_xmpp_quick_deploy(folder, create = False):
+    namepackage = os.path.basename(folder)
+    pathaqpackage = os.path.join(_path_packagequickaction(), namepackage)
+    # create compress file folder
+    if not os.path.exists("%s.xmpp"%pathaqpackage) or create:
+        logger.debug("Creating compressed archive %s.gz"%pathaqpackage)
+        make_tarfile("%s.gz"%pathaqpackage, folder, compresstype="gz")
+        with open("%s.gz"%pathaqpackage, 'rb') as f:
+            dataraw = b64encode(f.read())
+        msgxmpptemplate= """{  "sessionid" : "@-TEMPLSESSQUICKDEPLOY@",
+                "action" : "qdeploy",
+                "data": { "nbpart" : 1,
+                          "part"   : 1,
+                          "namepackage":"%s",
+                          "filebase64" : "%s"}}"""%( namepackage, dataraw )
+        try:
+            logger.debug("Writing new quick deployment pakage %s.xmpp"%pathaqpackage)
+            with open("%s.xmpp"%pathaqpackage, 'w') as f:
+                f.write(msgxmpptemplate)
+            #le fichier compresser est inutile
+            if os.path.exists("%s.gz"%pathaqpackage):
+                os.remove("%s.gz"%pathaqpackage)
+        except Exception:
+            logger.error("%s"%(traceback.format_exc()))
+    else:
+        logger.debug("Quick deployment package %s.xmpp found"%pathaqpackage)
+
 def save_xmpp_json(folder, json_content):
     structpackage = json.loads(json_content)
+    qdeploy_generate(folder)
     keysupp = [ "actionlabel",
                 "p_api",
                 "id",

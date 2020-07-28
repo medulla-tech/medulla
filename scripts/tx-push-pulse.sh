@@ -15,11 +15,16 @@ test -d .tx || tx init --host=https://fr.transifex.com/
 
 args=$@
 
-modules="dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc support guacamole"
+modules="dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc support guacamole base ppolicy services dashboard report xmppmaster"
 
 for mod in $modules
 do
-	cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
-	tx push -r pulse-1.${mod} -s -t
-	#-f --no-interactive
+    if [ "$mod" == "dashboard" ]; then
+        cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
+        tx push -r pulse-1.p${mod} -s -t
+    else
+	    cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
+	    tx push -r pulse-1.${mod} -s -t
+	    #-f --no-interactive
+    fi
 done

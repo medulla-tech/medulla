@@ -1,0 +1,49 @@
+/**
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ *
+ * This file is part of Mandriva Management Console (MMC).
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+/*---
+
+Sirius Technologies // Interface serveur fichiers
+Auteur : Arteca Design inc.
+Derniere revision : 16 Juin 2004
+
+Notes:
+
+Cette page utilise un "High Pass Filter"
+
+Avec ce processus de filtration de la feuille de style importee,
+les styles seront vu que dans les fureteurs suivants :
+
+	- IE5/Mac ou ulterieur
+	- IE6/Windows ou ulterieur
+	- Netscape 6 ou ulterieur
+	- Opera 5 ou ulterieur
+	- Ou tout autre fureteur qui passe la "Section 7.1" du "W3C/CSS1 Test Suite".
+
+Pour plus d'infos visitez : http://tantek.com/CSS/Examples/highpass.html
+
+----------------------------------------------- */
+
+/*@import "null?\"\{"; */
+@import "global.css";
+@import "bootstrap-buttons.css";
+@import "bootstrap-forms.css";
+@import "bootstrap-alerts.css";
+@import "progressbar.css";

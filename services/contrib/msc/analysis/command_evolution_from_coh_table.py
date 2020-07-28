@@ -576,7 +576,7 @@ for id_command in ids_command:
                 print_human('            Package Unavailable ', command['Fatal']['package_unavailable'], len(command['coh']), command['Results']['Infra'])
                 print_human('            Connection Issue ', command['Fatal']['conn_issue'], len(command['coh']), command['Results']['Infra'])
             elif options.format == 'csv':
-                print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
+                print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
                     id_command,
                     command['name'],
                     command['creator'],

@@ -166,6 +166,7 @@ class Machines(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
     jid = Column(String(255), nullable=False)
+    need_reconf =  Column(Boolean, nullable=False, default="0")
     enabled=  Column(Boolean, unique=False)
     platform = Column(String(60))
     hostname = Column(String(45), nullable=False)
@@ -224,9 +225,12 @@ class RelayServer(Base, XmppMasterDBObj):
     longitude = Column(String(45))
     latitude = Column(String(45))
     enabled=  Column(Boolean, unique=False)
+    mandatory =  Column(Boolean, nullable=False, default="1")
+    switchonoff =  Column(Boolean, nullable=False, default="1")
     classutil = Column(String(10))
     moderelayserver = Column(String(7))
     keysyncthing = Column(String(70), default="")
+    syncthing_port = Column(Integer, default=23000)
 
 class Regles(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -277,10 +281,14 @@ class Has_relayserverrules(Base, XmppMasterDBObj):
 class Has_guacamole(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'has_guacamole'
-    # ====== ForeignKey =============================
+    # ====== Fields =============================
+    # Here we define columns for the table has_guacamole.
+    # Notice that each column is also a normal Python instance attribute.
     idguacamole = Column(Integer)
-    idinventory = Column(Integer)
     protocol   = Column(String(10))
+    # ====== ForeignKey =============================
+    machine_id = Column(Integer, ForeignKey('machines.id'))
+    machines = relationship(Machines)
 
 class Has_cluster_ars(Base, XmppMasterDBObj):
     ## ====== Table name =========================
@@ -483,3 +491,32 @@ class Def_remote_deploy_status(Base, XmppMasterDBObj):
     regex_logmessage = Column(String(80), nullable=False)
     status = Column(String(80), nullable=False)
     label = Column(String(255), nullable=False)
+
+####### QA For Relays #######
+
+# Qa_relay_command describe a qa for relayserver
+class Qa_relay_command(Base, XmppMasterDBObj):
+    __tablename__ = 'qa_relay_command'
+    user = Column(String(45), nullable=False) ## Relay Qa Owner
+    name = Column(String(45), nullable=False) ## Relay Qa Name
+    script = Column(Text, nullable=False) ## Relay Qa Script
+    description = Column(String(45)) ## Relay Qa Description
+
+
+class Qa_relay_launched(Base, XmppMasterDBObj):
+    __tablename__ = 'qa_relay_launched'
+    id_command = Column(Integer, nullable=False) ## Qa Reference
+    user_command = Column(String(45), nullable=False) ## Relay Qa Owner
+    command_start = Column(DateTime, default=datetime.datetime.now) ## Relay Qa launched date
+    command_cluster = Column(String(45)) ## Relay Qa target if the target is a cluster
+    command_relay = Column(String(45)) ## Relay Qa target if the target is a uniq relay
+
+
+class Qa_relay_result(Base, XmppMasterDBObj):
+    __tablename__ = 'qa_relay_result'
+    id_command = Column(Integer, nullable=False) # Quick get a ref to the initial command
+    launched_id = Column(Integer, nullable=False) # Reference to the specialized command (launched command)
+    session_id = Column(String(45), nullable=False) # xmpp session id
+    typemessage = Column(String(20), nullable=False, default='log')
+    command_result = Column(Text)
+    relay = Column(String(45), nullable=False) # If uniq command : relay, if cluster command : jid of the cluster member

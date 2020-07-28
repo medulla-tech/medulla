@@ -35,7 +35,7 @@ setup(
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: GPL License',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
@@ -43,7 +43,7 @@ setup(
 
     keywords='pulse2',
     name='pulse2',
-    version='4.6.1',
+    version='4.6.4',
     debian_distro='stretch',
     description = 'pulse2',
     url='https://www.siveo.net/',

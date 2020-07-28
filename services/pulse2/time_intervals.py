@@ -71,7 +71,7 @@ class TimePoint:
     def _valid(self, value):
         """ Checks for value validity """
         if value:
-            return re.compile("^(%s|%s|%s)$" % (RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR)).match(value) != None
+            return re.compile("^(%s|%s|%s)$" % (RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR)).match(value) is not None
         return False
 
     def _normalize(self, value):
@@ -116,7 +116,7 @@ class TimeInterval:
 
     def _merge_r(self, new_segment):
         """ Merges new_segment in self.segments """
-        if new_segment == None:
+        if new_segment is None:
             return self.segments
         if len(self.segments) == 0:  # nothing to be merged to, return seed
             return [new_segment]

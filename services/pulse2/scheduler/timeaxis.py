@@ -128,7 +128,7 @@ class LaunchTimeResolver :
         @return: deployment duration
         @rtype: int
         """
-        return sum([(end-start).seconds for (start, end) in self.get_valid_axe()])
+        return sum((end-start).seconds for (start, end) in self.get_valid_axe())
 
     def get_milestone_stamps(self):
         """

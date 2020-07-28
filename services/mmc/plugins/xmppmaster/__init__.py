@@ -25,6 +25,7 @@ Plugin to manage the interface with xmppmaster
 import logging
 import os
 import sys
+import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
@@ -264,8 +265,21 @@ def getGuacamoleRelayServerMachineUuid(uuid):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
 
 
+def getGuacamoleRelayServerMachineHostnameProto(hostname):
+    result={"machine" : getGuacamoleRelayServerMachineHostname(hostname),
+            "proto" :  getGuacamoleIdForHostname(hostname)}
+    return result
+
+def getGuacamoleRelayServerMachineHostname(hostname):
+    return XmppMasterDatabase().getGuacamoleRelayServerMachineHostname(hostname)
+
+
 def getGuacamoleidforUuid(uuid):
     return XmppMasterDatabase().getGuacamoleidforUuid(uuid)
+
+
+def getGuacamoleIdForHostname(hostname):
+    return XmppMasterDatabase().getGuacamoleIdForHostname(hostname)
 
 
 def getListPresenceAgent():
@@ -507,8 +521,11 @@ def callInstallKeyAM(jidAM, jidARS):
         return "jid (AM or ARS) missing"
 
 
-def callrestart(uuid):
-    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+def callrestart(uuid, jid_type=False):
+    if jid_type is False:
+        jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+    else:
+        jid = uuid
     if jid != "":
         callrestartbymaster(jid)
         return jid
@@ -701,7 +718,6 @@ def get_plugin_lists():
               ObjectXmpp().plugindatascheduler]
     return result
 
-
 def get_conf_master_agent():
     rest={}
     conf =  dict(getXmppConfiguration())
@@ -714,14 +730,12 @@ def get_conf_master_agent():
             rest[t] =  conf[t]
     return  json.dumps(rest, indent = 4)
 
-
 def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)
 
 def delcomputer(uuid):
     callrestartbot(uuid)
     return XmppMasterDatabase().delMachineXmppPresence(uuid)
-
 
 def get_log_status():
     return XmppMasterDatabase().get_log_status()
@@ -734,3 +748,111 @@ def get_xmpprelays_list(start, limit, filter, presence):
 
 def get_clusters_list(start, limit, filter):
     return XmppMasterDatabase().get_clusters_list(start, limit, filter)
+
+def change_relay_switch(jid, switch, propagate):
+    return XmppMasterDatabase().change_relay_switch(jid, switch, propagate)
+
+def is_relay_online(jid):
+    return XmppMasterDatabase().is_relay_online(jid)
+
+def get_qa_for_relays(login=""):
+    return XmppMasterDatabase().get_qa_for_relays(login)
+
+def get_relay_qa(login, qa_relay_id):
+    return XmppMasterDatabase().get_relay_qa(login, qa_relay_id)
+
+def add_command_relay_qa(qa_relay_id, jid, login):
+    qa = get_relay_qa(login, qa_relay_id)
+    if qa is not None:
+        command_creation = XmppMasterDatabase().add_qa_relay_launched(qa_relay_id, jid, login,\
+            "", [])
+        return {'command' : qa, 'launched' : command_creation}
+    else:
+        return None
+
+
+def get_qa_relay_result(result_id):
+    result = XmppMasterDatabase().get_qa_relay_result(result_id)
+    return result
+
+
+def add_qa_relay_launched(qa_relay_id, login, cluster_id, jid):
+    result = XmppMasterDatabase().add_qa_relay_launched(qa_relay_id, login, cluster_id, jid)
+    return result
+
+def add_qa_relay_result(jid, exec_date, qa_relay_id, launched_id, session_id=""):
+    result = XmppMasterDatabase().add_qa_relay_result(jid, exec_date, qa_relay_id, launched_id, session_id)
+    return result
+
+def get_relay_qa_launched(jid, login, start, maxperpage):
+    result = XmppMasterDatabase().get_relay_qa_launched(jid, login, start, maxperpage)
+    return result
+
+
+def get_packages_list(jid, filter=""):
+    timeout = 15
+    result = ObjectXmpp().iqsendpulse(jid, {"action": "packageslist", "data": "/var/lib/pulse2/packages"}, timeout)
+
+    _result = {
+        'datas': {
+            'files': [],
+            'description': [],
+            'licenses': [],
+            'name': [],
+            'uuid': [],
+            'os': [],
+            'size': [],
+            'version': [],
+            'methodtransfer': [],
+            'metagenerator': [],
+            'count_files': [],
+        },
+        'total': 0
+    }
+
+    try:
+        packages = json.loads(result)
+        count = 0
+        for package in packages['datas']:
+            if filter != "":
+                if re.search(filter, package['description']) or\
+                    re.search(filter, package['name']) or\
+                    re.search(filter, package['version']) or\
+                    re.search(filter, package['targetos']) or\
+                    re.search(filter, package['methodtransfer']) or\
+                    re.search(filter, package['metagenerator']):
+
+                    _result['datas']['files'].append(package['files'])
+                    _result['datas']['description'].append(package['description'])
+                    _result['datas']['licenses'].append(package['licenses'])
+                    _result['datas']['name'].append(package['name'])
+                    _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
+                    _result['datas']['os'].append(package['targetos'])
+                    _result['datas']['size'].append(package['size'])
+                    _result['datas']['version'].append(package['version'])
+                    _result['datas']['methodtransfer'].append(package['methodtransfer'])
+                    _result['datas']['metagenerator'].append(package['metagenerator'])
+                    _result['datas']['count_files'].append(package['count_files'])
+                    count += 1
+            else:
+                _result['datas']['files'].append(package['files'])
+                _result['datas']['description'].append(package['description'])
+                _result['datas']['licenses'].append(package['licenses'])
+                _result['datas']['name'].append(package['name'])
+                _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
+                _result['datas']['os'].append(package['targetos'])
+                _result['datas']['size'].append(package['size'])
+                _result['datas']['version'].append(package['version'])
+                _result['datas']['methodtransfer'].append(package['methodtransfer'])
+                _result['datas']['metagenerator'].append(package['metagenerator'])
+                _result['datas']['count_files'].append(package['count_files'])
+
+        if filter != "":
+            _result['total'] = count
+        else:
+            _result['total'] = packages['total']
+    except Exception as e:
+        logging.error(e)
+        pass
+
+    return _result

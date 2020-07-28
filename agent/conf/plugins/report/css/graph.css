@@ -1,0 +1,9 @@
+{{ id }} text {
+    font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif !important;
+}
+
+{{ id }} .axis .major.guide.line,
+{{ id }} .axis .guide.line {
+    stroke-dasharray: 2, 2;
+    stroke-width: 0.4;
+}

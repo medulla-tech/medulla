@@ -16,12 +16,20 @@ test -d .tx || tx init --host=https://www.transifex.com
 [ ! x$1 == x ] && lang="-l $1" && shift 1
 args=$@
 
-modules="dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc support guacamole"
+modules="base ppolicy services dashboard report xmppmaster dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc support guacamole"
 
 for mod in $modules
 do
+    if [ "$mod" == "dashboard" ]; then
+        cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
+        tx pull -a -f -r pulse-1.p${mod} ${lang} ${args}
+        cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES
+        sed -i 's/Language: fr\\n/Language: fr_FR\\n/' $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/$mod.po
+    else
 	cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
 	tx pull -a -f -r pulse-1.${mod} ${lang} ${args}
 	cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES
         sed -i 's/Language: fr\\n/Language: fr_FR\\n/' $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/$mod.po
+    fi
 done
+

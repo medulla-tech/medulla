@@ -38,7 +38,7 @@ PKI_ORGANIZATION=SIVEO
 PKI_SUBJ=/countryName=$PKI_COUNTRY/organizationName=$PKI_ORGANIZATION
 CRL_SERVER_ADDRESS=
 
-PULSE_SERVICES="mmc_agent scheduler launcher inventory_server package_server apache"
+LOCAL_ADDRESS="127.0.0.1"
 
 export PASSPHRASE
 
@@ -101,21 +101,22 @@ openssl ca -config $PKI_CNF -name CA_Intermediate -passin env:PASSPHRASE -gencrl
 echo "### $PKI_PATH/crl.pem generated"
 
 
-# generate the certificates for Pulse services
-echo "### Creating the services certificates ###"
-for service in $PULSE_SERVICES; do
-        # generate key and sign request
-        openssl req -config $PKI_CNF -subj "$PKI_SUBJ/commonName=$service" -passout env:PASSPHRASE -batch -extensions server_cert -new -keyout $PKI_KEYS_PATH/$service-key.pem -out $PKI_REQS_PATH/$service-req.pem
-        chmod 400 $PKI_KEYS_PATH/$service-key.pem
-        # sign cert with PKI
-        openssl ca -config $PKI_CNF -name CA_Intermediate -passin env:PASSPHRASE -batch -extensions server_cert -keyfile $PKI_KEYS_PATH/cakey.pem -out $PKI_CERTS_PATH/$service-cert.pem -infiles $PKI_REQS_PATH/$service-req.pem
-        chmod 444 $PKI_CERTS_PATH/$service-cert.pem
-        # remove sign request
-        rm $PKI_REQS_PATH/$service-req.pem
-        # convert it in the good format
-        openssl rsa -passin env:PASSPHRASE -in $PKI_KEYS_PATH/$service-key.pem -out $PKI_PATH/$service.pem
-        # generate final cert
-        cat $PKI_CERTS_PATH/$service-cert.pem >> $PKI_PATH/$service.pem
-        chmod 444 $PKI_PATH/$service.pem
-        echo "### In $PKI_PATH, for $service: cacert is ca-chain.cert.pem, localcert is $service.pem"
-done
+# generate key and sign request
+echo "### Creating the localhost certificate ###"
+crudini --set $PKI_CNF alt_names DNS.1 localhost
+crudini --set $PKI_CNF alt_names DNS.2 ${LOCAL_ADDRESS}
+openssl req -config $PKI_CNF -subj "$PKI_SUBJ/commonName=$LOCAL_ADDRESS" -passout env:PASSPHRASE -batch -extensions server_cert -new -keyout $PKI_KEYS_PATH/$LOCAL_ADDRESS-key.pem -out $PKI_REQS_PATH/$LOCAL_ADDRESS-req.pem
+chmod 400 $PKI_KEYS_PATH/$LOCAL_ADDRESS-key.pem
+# sign cert with PKI
+openssl ca -config $PKI_CNF -name CA_Intermediate -passin env:PASSPHRASE -batch -extensions server_cert -extfile $PKI_CNF -keyfile $PKI_KEYS_PATH/cakey.pem -out $PKI_CERTS_PATH/$LOCAL_ADDRESS-cert.pem -infiles $PKI_REQS_PATH/$LOCAL_ADDRESS-req.pem
+chmod 444 $PKI_CERTS_PATH/$LOCAL_ADDRESS-cert.pem
+# remove sign request
+rm $PKI_REQS_PATH/$LOCAL_ADDRESS-req.pem
+# convert it in the good format
+openssl rsa -passin env:PASSPHRASE -in $PKI_KEYS_PATH/$LOCAL_ADDRESS-key.pem -out $PKI_PATH/$LOCAL_ADDRESS.pem
+# generate final cert
+cat $PKI_CERTS_PATH/$LOCAL_ADDRESS-cert.pem >> $PKI_PATH/$LOCAL_ADDRESS.pem
+chmod 444 $PKI_PATH/$LOCAL_ADDRESS.pem
+echo "### In $PKI_PATH, for $service: cacert is ca-chain.cert.pem, localcert is $LOCAL_ADDRESS.pem"
+# Delete the alt_names config
+crudini --del $PKI_CNF alt_names
