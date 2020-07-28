@@ -260,3 +260,4 @@ UNLOCK TABLES;
 
 
 GRANT ALL PRIVILEGES ON `xmppmaster`.*  TO 'mmc'@'localhost' ;
+FLUSH PRIVILEGES;
