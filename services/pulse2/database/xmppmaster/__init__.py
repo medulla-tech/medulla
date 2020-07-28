@@ -3788,7 +3788,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getUuidFromJid(self, session, jid):
-        """ 
+        """
             This function return the UUID based on the jid
 
             Args:
@@ -3801,7 +3801,7 @@ class XmppMasterDatabase(DatabaseHelper):
         uuid_inventorymachine = session.query(Machines).filter_by(jid=jid).first().uuid_inventorymachine
         if uuid_inventorymachine:
             return uuid_inventorymachine.strip('UUID')
-            
+
         return False
 
     @DatabaseHelper._sessionm
@@ -5796,7 +5796,7 @@ class XmppMasterDatabase(DatabaseHelper):
             .add_column(Machines.macaddress.label('macaddress'))\
             .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)\
             .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
-            .join(Machines, Machines.jid == RelayServer.jid)\
+            .outerjoin(Machines, Machines.jid == RelayServer.jid)\
             .filter(RelayServer.moderelayserver == 'static')
 
         if presence == 'nopresence':
