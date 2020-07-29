@@ -22,8 +22,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
- require("graph/navbar.inc.php");
- require("modules/base/computers/localSidebar.php");
+require("graph/navbar.inc.php");
+require("modules/glpi/includes/html.php");
+require("modules/base/computers/localSidebar.php");
 
 $p = new PageGenerator(_T("Machines List", 'glpi'));
 $p->setSideMenu($sidemenu);
@@ -46,7 +47,7 @@ if ($computerpresence == "no_presence") echo "checked";
 echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
 echo '<label for="namepresence3" style="display:initial;">'._('Offline computers').'</label>';
 
-$ajax = new AjaxFilterLocation(urlStrRedirect("base/computers/ajaxMachinesList"));
+$ajax = new AjaxFilterParams(urlStrRedirect("base/computers/ajaxMachinesList"));
 list($list, $values) = getEntitiesSelectableElements();
 
 $listWithAll = array_merge([_T("All my entities", "glpi")], $list);

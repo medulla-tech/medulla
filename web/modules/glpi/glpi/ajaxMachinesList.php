@@ -38,6 +38,8 @@ global $config;
 
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
+$field = (isset($_GET['field'])) ? $_GET['field'] : "";
+$contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
 
 $start = (isset($_GET['start'])) ? $_GET['start'] : 0;
 $maxperpage = (isset($_GET['maxperpage'])) ? $_GET['maxperpage'] : $config['maxperpage'];
@@ -46,9 +48,13 @@ $end = (isset($_GET['end'])) ? $_GET['end'] : $maxperpage - 1;
 $ctx = [];
 $ctx['location'] = $location;
 $ctx['filter'] = $filter;
+$ctx['field'] = $field;
+$ctx['contains'] = $contains;
+
 $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
+
 if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
     $ctx['computerpresence'] = $_SESSION['computerpresence'];
 
