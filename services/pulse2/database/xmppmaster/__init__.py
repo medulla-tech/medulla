@@ -5786,17 +5786,18 @@ class XmppMasterDatabase(DatabaseHelper):
                 RelayServer.ipserver,
                 RelayServer.nameserver,
                 RelayServer.moderelayserver,
-                RelayServer.jid,
+                RelayServer.jid.label('jid_from_relayserver'),
                 RelayServer.classutil,
                 RelayServer.enabled,
                 RelayServer.switchonoff,
                 RelayServer.mandatory)\
+            .add_column(Machines.jid)\
             .add_column(Cluster_ars.name.label("cluster_name"))\
             .add_column(Cluster_ars.description.label("cluster_description"))\
             .add_column(Machines.macaddress.label('macaddress'))\
             .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)\
             .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
-            .outerjoin(Machines, Machines.jid == RelayServer.jid)\
+            .outerjoin(Machines, func.substring_index(Machines.jid, '/', 1) == func.substring_index(RelayServer.jid, '/', 1))\
             .filter(RelayServer.moderelayserver == 'static')
 
         if presence == 'nopresence':
@@ -5804,12 +5805,11 @@ class XmppMasterDatabase(DatabaseHelper):
         elif presence == 'presence':
             query = query.filter(RelayServer.enabled == 1)
 
-
         if filter != "":
             query = query.filter(
                 or_(
                     RelayServer.nameserver.contains(filter),
-                    RelayServer.jid.contains(filter),
+                    Machines.jid.contains(filter),
                     Cluster_ars.name.contains(filter),
                     Cluster_ars.description.contains(filter),
                     RelayServer.classutil.contains(filter),
@@ -5827,6 +5827,7 @@ class XmppMasterDatabase(DatabaseHelper):
             'id': [],
             'hostname': [],
             'jid': [],
+            'jid_from_relayserver' : [],
             'cluster_name': [],
             'cluster_description': [],
             'classutil': [],
@@ -5836,6 +5837,7 @@ class XmppMasterDatabase(DatabaseHelper):
             'enabled_css': [],
             'mandatory': [],
             'switchonoff': [],
+            'uninventoried_offline': [],
             'uninventoried_offline': [],
             'uninventoried_online': [],
             'inventoried_offline': [],
@@ -5888,6 +5890,7 @@ where uuid_inventorymachine IS NOT NULL and enabled = 1 and agenttype="machine"
 
                 result['id'].append(machine.id)
                 result['jid'].append(machine.jid)
+                result['jid_from_relayserver'].append(machine.jid_from_relayserver)
                 if machine.enabled == 1:
                     result['enabled'].append(True)
                     result['enabled_css'].append('machineNamepresente')
@@ -5914,13 +5917,14 @@ where uuid_inventorymachine IS NOT NULL and enabled = 1 and agenttype="machine"
     def change_relay_switch(self, session, jid, switch, propagate):
         id_cluster = None
         if propagate is True:
-            session.query(RelayServer).filter(RelayServer.jid == jid,\
+            session.query(RelayServer).filter(func.substring_index(RelayServer.jid, '/', 1) == jid.split('/')[0],\
                 RelayServer.mandatory == 0).update(\
                 {RelayServer.switchonoff: switch})
             try:
                 cluster = session.query(Has_cluster_ars.id_cluster)\
                     .join(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
-                    .filter(RelayServer.jid == jid).one()
+                    .join(Machines, func.substring_index(Machines.jid, '/', 1) == func.substring_index(RelayServer.jid, '/', 1))\
+                    .filter(Machines.jid == jid).one()
                 id_cluster = cluster.id_cluster
             except:
                 pass
@@ -6014,13 +6018,16 @@ where agenttype="machine" and groupdeploy in (
         @param: jid str
         @returns: boolean"""
         try:
-            query = session.query(RelayServer.enabled).filter(RelayServer.jid==jid).one()
+            query = session.query(RelayServer.enabled)\
+            .filter(func.substring_index(RelayServer.jid, '/', 1)==jid.split('/')[0]).one()
+
             if query is not None:
                 return query.enabled
             else:
                 return False
         except:
             return False
+
     @DatabaseHelper._sessionm
     def get_qa_for_relays(self, session, login=""):
         """ Get the list of qa for relays
