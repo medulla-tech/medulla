@@ -40,8 +40,8 @@ def activate():
 
 def queryPossibilities():
     ret = {}
-    ret['Printer name'] = ['list', getAllNamePrinters] ###jfkjfk
-    ret['Printer serial'] = ['list', getAllSerialPrinters] ###jfkjfk
+    ret['Printer name'] = ['list', getAllNamePrinters]
+    ret['Printer serial'] = ['list', getAllSerialPrinters]
     ret['Owner of the machine'] = ['list', getAllOwnerMachine]
     ret['User location'] = ['list', getAllLocations1]
     ret['Last Logged User'] = ['list', getAllContacts]
@@ -206,9 +206,9 @@ def query(ctx, criterion, value):
         machines = [x.name for x in Glpi().getMachineByOsVersion(ctx, value)]
     elif criterion == "Architecture":
         machines = [x.name for x in Glpi().getMachineByArchitecure(ctx, value)]
-    elif criterion == "Printer name":##jfkjfk
+    elif criterion == "Printer name":
         machines = [x.name for x in Glpi().getMachineByPrinter(ctx, value)]
-    elif criterion == "Printer serial":##jfkjfk
+    elif criterion == "Printer serial":
         machines = [x.name for x in Glpi().getMachineByPrinterserail(ctx, value)]
     #elif criterion == '':
     #    machines = map(lambda x: x.name, Glpi().getMachineBy(ctx, value))
@@ -338,8 +338,10 @@ def getAllOsVersions(ctx, value=""):
 def getAllArchitectures(ctx, value=""):
     return unique([element.name for element in Glpi().getAllArchitectures(ctx, filt=value)])
 
+
 def getAllNamePrinters(ctx, value=""):
     return unique([element.name for element in Glpi().getAllNamePrinters(ctx, filt=value)])
+
 
 def getAllSerialPrinters(ctx, value=""):
     return unique([element.name for element in Glpi().getAllSerialPrinters(ctx, filt=value)])
