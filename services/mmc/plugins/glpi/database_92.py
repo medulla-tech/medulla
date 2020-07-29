@@ -498,25 +498,25 @@ class Glpi92(DyngroupDatabaseHelper):
             autoload = True)
         mapper(Computersitems, self.computersitems)
 
-        #use view glpi_view_computers_items_printer
+        # use view glpi_view_computers_items_printer
         self.view_computers_items_printer = Table("glpi_view_computers_items_printer", self.metadata,
-            Column('id', Integer, primary_key=True),
-            Column('items_id', Integer, ForeignKey('glpi_printers.id')),
-            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
-            autoload = True)
+                                                  Column('id', Integer, primary_key=True),
+                                                  Column('items_id', Integer, ForeignKey('glpi_printers.id')),
+                                                  Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                                                  autoload=True)
         mapper(Computersviewitemsprinter, self.view_computers_items_printer)
 
         self.view_computers_items_peripheral = Table("glpi_view_computers_items_peripheral", self.metadata,
-            Column('id', Integer, primary_key=True),
-            Column('items_id', Integer, ForeignKey('glpi_peripherals.id')),
-            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
-            autoload = True)
+                                                     Column('id', Integer, primary_key=True),
+                                                     Column('items_id', Integer, ForeignKey('glpi_peripherals.id')),
+                                                     Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                                                     autoload=True)
         mapper(Computersviewitemsperipheral, self.view_computers_items_peripheral)
 
         self.glpi_view_peripherals_manufacturers = Table("glpi_view_peripherals_manufacturers", self.metadata,
-            Column('id', Integer, primary_key=True),
-            Column('items_id', Integer, ForeignKey('glpi_peripherals.manufacturers_id')),
-            autoload = True)
+                                                         Column('id', Integer, primary_key=True),
+                                                         Column('items_id', Integer, ForeignKey('glpi_peripherals.manufacturers_id')),
+                                                         autoload=True)
         mapper(Peripheralsmanufacturers, self.glpi_view_peripherals_manufacturers)
 
         # Monitors items
@@ -668,9 +668,9 @@ class Glpi92(DyngroupDatabaseHelper):
         .outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
 
         if field != "":
-                query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
-                if field != "type":
-                    query = query.join(Peripherals, Computersitems.items_id == Peripherals.id)\
+            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            if field != "type":
+                query = query.join(Peripherals, Computersitems.items_id == Peripherals.id)\
                     .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
@@ -739,7 +739,7 @@ class Glpi92(DyngroupDatabaseHelper):
                     if field == "type":
                         query = query.filter(not_(Computersitems.itemtype.contains(criterion)))
                     elif field != "manufacturer":
-                        query = query.filter(not_(eval("Peripherals.%s"%field).contains(criterion)))
+                        query = query.filter(not_(eval("Peripherals.%s" % field).contains(criterion)))
                     else:
                         query = query.filter(not_(Peripheralsmanufacturers.name.contains(criterion)))
 
@@ -747,7 +747,7 @@ class Glpi92(DyngroupDatabaseHelper):
                     if field == "type":
                         query = query.filter(Computersitems.itemtype.contains(criterion))
                     elif field != "manufacturer":
-                        query = query.filter(eval("Peripherals.%s"%field).contains(criterion))
+                        query = query.filter(eval("Peripherals.%s" % field).contains(criterion))
                     else:
                         query = query.filter(Peripheralsmanufacturers.name.contains(criterion))
         query = query.order_by(Machine.name)
@@ -1184,13 +1184,13 @@ class Glpi92(DyngroupDatabaseHelper):
         elif query[2] == 'Architecture':
             return base + [self.os_arch]
         elif query[2] == 'Printer name':
-            return base + [  self.view_computers_items_printer, self.printers ]
+            return base + [self.view_computers_items_printer, self.printers]
         elif query[2] == 'Printer serial':
-            return base + [  self.view_computers_items_printer, self.printers ]
+            return base + [self.view_computers_items_printer, self.printers]
         elif query[2] == 'Peripheral name':
-            return base + [  self.view_computers_items_peripheral, self.peripherals ]
+            return base + [self.view_computers_items_peripheral, self.peripherals]
         elif query[2] == 'Peripheral serial':
-            return base + [  self.view_computers_items_peripheral, self.peripherals ]
+            return base + [self.view_computers_items_peripheral, self.peripherals]
         elif query[2] == 'Group':
             return base + [self.group]
         elif query[2] == 'Network':
@@ -1199,12 +1199,12 @@ class Glpi92(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.softwareversions, self.software]
         elif query[2] == 'Installed software (specific version)':
             return base + [self.inst_software, self.softwareversions, self.software]
-        elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
+        elif query[2] == 'Installed software (specific vendor and version)':  # hidden internal dyngroup
             return base + [self.inst_software, self.softwareversions, self.software, self.manufacturers]
         elif query[2] == 'User location':
             return base + [self.user, self.locations]
         elif query[2] == 'Register key':
-            return base + [ self.regcontents]#self.collects, self.registries,
+            return base + [self.regcontents]  # self.collects, self.registries,
         elif query[2] == 'Register key value':
             return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         elif query[2] == 'OS Version':
@@ -4051,7 +4051,7 @@ class Glpi92(DyngroupDatabaseHelper):
     def getMachineByPrinter(self, ctx, filt):
         session = create_session()
         query = session.query(Machine).select_from(self.machine.join(self.computersitems)).\
-        select_from(self.computersitems.join(self.printers))
+            select_from(self.computersitems.join(self.printers))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
@@ -4062,11 +4062,11 @@ class Glpi92(DyngroupDatabaseHelper):
     def getMachineByPrinterserial(self, ctx, filt):
         session = create_session()
         query = session.query(Machine).distinct(Machine.id).\
-            join(Computersitems, Machine.id == Computersitems.computers_id).\
-            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
-                                          Computersitems.itemtype == 'Printer')).\
-            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
-                                          Computersitems.itemtype == 'Peripheral'))
+            join(Computersitems_printers, Machine.id == Computersitems_printers.computers_id).\
+            outerjoin(Printers, and_(Computersitems_printers.items_id == Printers.id,
+                                     Computersitems_printers.itemtype == 'Printer')).\
+            outerjoin(Peripherals,and_(Computersitems.items_id == Peripherals.id,
+                                       Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
@@ -5036,7 +5036,7 @@ class Glpi92(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllArchitectures(self, ctx, filt = ''):
+    def getAllArchitectures(self, ctx, filt=''):
         """ @return: all hostnames defined in the GLPI database """
         session = create_session()
         query = session.query(OsArch)
@@ -5046,22 +5046,22 @@ class Glpi92(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllNamePrinters(self, ctx, filt = ''):
+    def getAllNamePrinters(self, ctx, filt=''):
         """ @return: all printer name in the GLPI database """
         session = create_session()
         query = session.query(Printers)
         if filter != '':
-            query = query.filter(Printers.name.like('%'+filt+'%'))
+            query = query.filter(Printers.name.like('%' + filt + '%'))
         ret = query.all()
         session.close()
         return ret
 
-    def getAllSerialPrinters(self, ctx, filt = ''):
+    def getAllSerialPrinters(self, ctx, filt=''):
         """ @return: all printer serial in the GLPI database """
         session = create_session()
         query = session.query(Printers)
         if filter != '':
-            query = query.filter(Printers.serial.like('%'+filt+'%'))
+            query = query.filter(Printers.serial.like('%' + filt + '%'))
         ret = query.all()
         session.close()
         return ret
@@ -5572,11 +5572,14 @@ class OsVersion(DbTOA):
 class Computersitems(DbTOA):
     pass
 
+
 class Computersviewitemsprinter(DbTOA):
     pass
 
+
 class Computersviewitemsperipheral(DbTOA):
     pass
+
 
 class Peripheralsmanufacturers(DbTOA):
     pass

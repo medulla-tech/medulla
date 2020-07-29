@@ -344,8 +344,10 @@ def getAllOsVersions(ctx, value=""):
 def getAllArchitectures(ctx, value=""):
     return unique([element.name for element in Glpi().getAllArchitectures(ctx, filt=value)])
 
+
 def getAllNamePrinters(ctx, value=""):
     return unique([element.name for element in Glpi().getAllNamePrinters(ctx, filt=value)])
+
 
 def getAllSerialPrinters(ctx, value=""):
     return unique([element.serial for element in Glpi().getAllSerialPrinters(ctx, filt=value)])
