@@ -647,10 +647,11 @@ class Glpi94(DyngroupDatabaseHelper):
         .outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
 
         if field != "":
-                query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
-                if field != "type":
-                    query = query.join(Peripherals, Computersitems.items_id == Peripherals.id)\
-                    .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
+            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            if field != "type":
+                query = query.join(Peripherals, Computersitems.items_id == Peripherals.id)\
+                .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
+
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
 

@@ -4063,7 +4063,7 @@ class Glpi92(DyngroupDatabaseHelper):
         session = create_session()
         query = session.query(Machine).distinct(Machine.id).\
             join(Computersitems, Machine.id == Computersitems.computers_id).\
-            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
+            outerjoin(Printers, and_(Computersitems.items_id == Printers.id,
                                      Computersitems.itemtype == 'Printer')).\
             outerjoin(Peripherals,and_(Computersitems.items_id == Peripherals.id,
                                        Computersitems.itemtype == 'Peripheral'))
@@ -4078,10 +4078,10 @@ class Glpi92(DyngroupDatabaseHelper):
         session = create_session()
         query = session.query(Machine).distinct(Machine.id).\
             join(Computersitems, Machine.id == Computersitems.computers_id).\
-            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
-                                          Computersitems.itemtype == 'Printer')).\
-            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
-                                          Computersitems.itemtype == 'Peripheral'))
+            outerjoin(Printers, and_(Computersitems.items_id == Printers.id,
+                                     Computersitems.itemtype == 'Printer')).\
+            outerjoin(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                        Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
@@ -4093,10 +4093,10 @@ class Glpi92(DyngroupDatabaseHelper):
         session = create_session()
         query = session.query(Machine).distinct(Machine.id).\
             join(Computersitems, Machine.id == Computersitems.computers_id).\
-            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
-                                          Computersitems.itemtype == 'Printer')).\
-            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
-                                          Computersitems.itemtype == 'Peripheral'))
+            outerjoin(Printers, and_(Computersitems.items_id == Printers.id,
+                                     Computersitems.itemtype == 'Printer')).\
+            outerjoin(Peripherals, and_(Computersitems.items_id==Peripherals.id,
+                                        Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
