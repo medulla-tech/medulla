@@ -4047,6 +4047,7 @@ class Glpi92(DyngroupDatabaseHelper):
         query = query.filter(self.os_arch.c.name == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getMachineByPrinter(self, ctx, filt):
         session = create_session()
@@ -4058,6 +4059,7 @@ class Glpi92(DyngroupDatabaseHelper):
         query = query.filter(self.printers.c.name == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getMachineByPrinterserial(self, ctx, filt):
         session = create_session()
@@ -4073,6 +4075,7 @@ class Glpi92(DyngroupDatabaseHelper):
         query = query.filter(self.printers.c.serial == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getMachineByPeripheral(self, ctx, filt):
         session = create_session()
@@ -4088,6 +4091,7 @@ class Glpi92(DyngroupDatabaseHelper):
         query = query.filter(self.peripherals.c.name == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getMachineByPeripheralserial(self, ctx, filt):
         session = create_session()
@@ -4103,6 +4107,7 @@ class Glpi92(DyngroupDatabaseHelper):
         query = query.filter(self.peripherals.c.serial == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getComputersOS(self, uuids):
         if isinstance(uuids, str):
