@@ -739,7 +739,6 @@ class Glpi94(DyngroupDatabaseHelper):
             query = query.filter(Machine.id.in_(online_machines))
         query = self.__filter_on(query)
 
-
         # From now we can have the count of machines
         count = query.count()
 
