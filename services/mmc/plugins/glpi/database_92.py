@@ -4062,9 +4062,9 @@ class Glpi92(DyngroupDatabaseHelper):
     def getMachineByPrinterserial(self, ctx, filt):
         session = create_session()
         query = session.query(Machine).distinct(Machine.id).\
-            join(Computersitems_printers, Machine.id == Computersitems_printers.computers_id).\
-            outerjoin(Printers, and_(Computersitems_printers.items_id == Printers.id,
-                                     Computersitems_printers.itemtype == 'Printer')).\
+            join(Computersitems, Machine.id == Computersitems.computers_id).\
+            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
+                                     Computersitems.itemtype == 'Printer')).\
             outerjoin(Peripherals,and_(Computersitems.items_id == Peripherals.id,
                                        Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)

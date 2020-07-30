@@ -699,26 +699,26 @@ class Glpi94(DyngroupDatabaseHelper):
         if criterion != "":
             if field == "":
                 query = query.filter(or_(
-                    Machine.name.contains(criterion),
-                    Machine.comment.contains(criterion),
-                    self.os.c.name.contains(criterion),
-                    self.glpi_computertypes.c.name.contains(criterion),
-                    Machine.contact.contains(criterion),
-                    Entities.name.contains(criterion),
-                    self.user.c.firstname.contains(criterion),
-                    self.user.c.realname.contains(criterion),
-                    self.user.c.name.contains(criterion),
-                    self.locations.c.name.contains(criterion),
-                    self.manufacturers.c.name.contains(criterion),
-                    self.model.c.name.contains(criterion),
-                    self.regcontents.c.value.contains(criterion)
+                                         Machine.name.contains(criterion),
+                                         Machine.comment.contains(criterion),
+                                         self.os.c.name.contains(criterion),
+                                         self.glpi_computertypes.c.name.contains(criterion),
+                                         Machine.contact.contains(criterion),
+                                         Entities.name.contains(criterion),
+                                         self.user.c.firstname.contains(criterion),
+                                         self.user.c.realname.contains(criterion),
+                                         self.user.c.name.contains(criterion),
+                                         self.locations.c.name.contains(criterion),
+                                         self.manufacturers.c.name.contains(criterion),
+                                         self.model.c.name.contains(criterion),
+                                         self.regcontents.c.value.contains(criterion)
                 ))
             else:
                 if contains == "notcontains":
                     if field == "type":
                         query = query.filter(not_(Computersitems.itemtype.contains(criterion)))
                     elif field != "manufacturer":
-                        query = query.filter(not_(eval("Peripherals.%s"%field).contains(criterion)))
+                        query = query.filter(not_(eval("Peripherals.%s" % field).contains(criterion)))
                     else:
                         query = query.filter(not_(Peripheralsmanufacturers.name.contains(criterion)))
 
@@ -726,7 +726,7 @@ class Glpi94(DyngroupDatabaseHelper):
                     if field == "type":
                         query = query.filter(Computersitems.itemtype.contains(criterion))
                     elif field != "manufacturer":
-                        query = query.filter(eval("Peripherals.%s"%field).contains(criterion))
+                        query = query.filter(eval("Peripherals.%s" % field).contains(criterion))
                     else:
                         query = query.filter(Peripheralsmanufacturers.name.contains(criterion))
         query = query.order_by(Machine.name)
@@ -787,13 +787,6 @@ class Glpi94(DyngroupDatabaseHelper):
             result['data']['reg'][reg[1]][index] = reg[2]
 
         result['count'] = count
-
-        uuids = []
-        for id in result['data']['uuid']:
-            uuids.append('UUID%s'%id)
-
-        result['xmppdata'] = []
-        result['xmppdata'] = XmppMasterDatabase().getmachinesbyuuids(uuids)
         return result
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
