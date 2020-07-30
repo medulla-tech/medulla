@@ -497,6 +497,27 @@ class Glpi94(DyngroupDatabaseHelper):
             autoload = True)
         mapper(Computersitems, self.computersitems)
 
+        # use view glpi_view_computers_items_printer
+        self.view_computers_items_printer = Table("glpi_view_computers_items_printer", self.metadata,
+                                                  Column('id', Integer, primary_key=True),
+                                                  Column('items_id', Integer, ForeignKey('glpi_printers.id')),
+                                                  Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                                                  autoload=True)
+        mapper(Computersviewitemsprinter, self.view_computers_items_printer)
+
+        self.view_computers_items_peripheral = Table("glpi_view_computers_items_peripheral", self.metadata,
+                                                     Column('id', Integer, primary_key=True),
+                                                     Column('items_id', Integer, ForeignKey('glpi_peripherals.id')),
+                                                     Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                                                     autoload=True)
+        mapper(Computersviewitemsperipheral, self.view_computers_items_peripheral)
+
+        self.glpi_view_peripherals_manufacturers = Table("glpi_view_peripherals_manufacturers", self.metadata,
+                                                         Column('id', Integer, primary_key=True),
+                                                         Column('items_id', Integer, ForeignKey('glpi_peripherals.manufacturers_id')),
+                                                         autoload=True)
+        mapper(Peripheralsmanufacturers, self.glpi_view_peripherals_manufacturers)
+
         # Monitors items
         self.monitors = Table("glpi_monitors", self.metadata,
             autoload = True)
@@ -785,6 +806,13 @@ class Glpi94(DyngroupDatabaseHelper):
             result['data']['reg'][reg[1]][index] = reg[2]
 
         result['count'] = count
+
+        uuids = []
+        for id in result['data']['uuid']:
+            uuids.append('UUID%s'%id)
+
+        result['xmppdata'] = []
+        result['xmppdata'] = XmppMasterDatabase().getmachinesbyuuids(uuids)
         return result
 
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
@@ -1154,6 +1182,14 @@ class Glpi94(DyngroupDatabaseHelper):
             return base + [self.os_sp]
         elif query[2] == 'Architecture':
             return base + [self.os_arch]
+        elif query[2] == 'Printer name':
+            return base + [self.view_computers_items_printer, self.printers]
+        elif query[2] == 'Printer serial':
+            return base + [self.view_computers_items_printer, self.printers]
+        elif query[2] == 'Peripheral name':
+            return base + [self.view_computers_items_peripheral, self.peripherals]
+        elif query[2] == 'Peripheral serial':
+            return base + [self.view_computers_items_peripheral, self.peripherals]
         elif query[2] == 'Group':
             return base + [self.group]
         elif query[2] == 'Network':
@@ -5399,4 +5435,15 @@ class Printers(DbTOA):
     pass
 
 class Peripherals(DbTOA):
+    pass
+
+class Computersviewitemsprinter(DbTOA):
+    pass
+
+
+class Computersviewitemsperipheral(DbTOA):
+    pass
+
+
+class Peripheralsmanufacturers(DbTOA):
     pass
