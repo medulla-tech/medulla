@@ -99,7 +99,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     if data['information']["listipinfo"]:
                         logger.info('Interface Actif')
                         logger.info("|   macadress|      ip adress|")
-                        for interface in data['information']["listipinfo"]:                
+                        for interface in data['information']["listipinfo"]:
                             logger.info("|%s|%15s|" % (interface['macaddress'],
                                                        interface['ipaddress']))
                     if interfaceblacklistdata:
@@ -123,18 +123,18 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                 xmppobject.boundjid.bare)
 
             machine = XmppMasterDatabase().getMachinefromjid(data['from'])
-            if len(machine) != 0 and 'regcomplet' in data and data['regcomplet'] == True:
+            if machine and 'regcomplet' in data and data['regcomplet'] == True:
                 if showinfobool:
                     logger.info("Performing a complete re-registration of the machine %s"%msg['from'])
                     logger.info("Deleting machine %s in machines table"%msg['from'])
                 XmppMasterDatabase().delPresenceMachinebyjiduser(msg['from'].user)
                 machine = {}
             if showinfobool:
-                if len(machine) != 0:
+                if machine:
                     logger.info("Machine %s already exists in base" % msg['from'])
                 else:
                     logger.info("Machine %s does not exist in base" % msg['from'])
-            if len(machine) != 0:
+            if machine:
                 # on regarde si coherence avec table network.
                 try:
                     result = XmppMasterDatabase().listMacAdressforMachine(machine['id'],
@@ -340,7 +340,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     data['keysyncthing'] = data['information']['keysyncthing']
                 else:
                     data['keysyncthing'] = ""
-                if data['agenttype'] == "relayserver" and not 'syncthing_port' in data:
+                if data['agenttype'] == "relayserver" and 'syncthing_port' not in data:
                     data['syncthing_port'] = 23000
             publickeybase64 = info['publickey']
             is_masterpublickey = info['is_masterpublickey']
@@ -610,11 +610,14 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                 return
                             osmachine = Glpi().getComputersOS(str(computer.id))
                             #osmachine = ComputerManager().getComputersOS(str(computer.id))
-                            if "Unknown operating system (PXE" in osmachine[0]['OSName']:
-                                if showinfobool:
-                                    logger.info("** Calling inventory on PXE machine")
-                                callinventory(xmppobject, data['from'])
-                                return
+                            if len(osmachine) !=0:
+                                if "Unknown operating system (PXE" in osmachine[0]['OSName']:
+                                    if showinfobool:
+                                        logger.info("** Calling inventory on PXE machine")
+                                    callinventory(xmppobject, data['from'])
+                                    return
+                            else:
+                                logger.warning("information about the operating system is missing for %s" %(msg['from'].bare))
                             #if "kiosk" in xmppobject.listmodulemmc and kiosk_presence:
                             if PluginManager().isEnabled("kiosk"):
                                 ## send a data message to kiosk when an inventory is registered
@@ -751,7 +754,7 @@ def getComputerByMac( mac, showinfobool=True):
         logger.info("Function getComputerByMac asking glpi for machine list for mac %s"%mac)
     ret = Glpi().getMachineByMacAddress('imaging_module', mac)
     if type(ret) == list:
-        if len(ret) != 0:
+        if ret:
             return ret[0]
         else:
             return None
@@ -760,7 +763,7 @@ def getComputerByMac( mac, showinfobool=True):
     return ret
 
 def callInstallConfGuacamole(xmppobject, torelayserver, data, showinfobool=True):
-    if 'remoteservice' in data and len(data['remoteservice']) > 0:
+    if 'remoteservice' in data and data['remoteservice']:
         try:
             body = {'action': 'guacamoleconf',
                     'sessionid': getRandomName(5, "guacamoleconf"),
@@ -898,7 +901,7 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
                                                                      soft_glpi[2],
                                                                      LooseVersion(packageprofile[3])))
             break
-    if len(structuredatakioskelement['action']) == 0:
+    if not structuredatakioskelement['action']:
         # The package defined for this profile is absent from the machine:
         if packageprofile[8] == "allowed":
             structuredatakioskelement['action'].append('Install')
@@ -917,18 +920,18 @@ def adduserdatageolocalisation(xmppobject, data, msg, sessionid, showinfobool):
                         "country_iso": "",
                         "country": "unknown"}
         # Assignment of the user system, if user absent.
-        if 'users' in data['information'] and len(data['information']['users']) == 0:
+        if 'users' in data['information'] and not data['information']['users']:
             data['information']['users'] = ["system"]
 
-        if 'users' in data['information'] and len(data['information']['users']) > 0:
+        if 'users' in data['information'] and data['information']['users']:
             userinfo = ','.join(data['information']['users'])
             if showinfobool:
                 logger.info("Adding user : %s for machine : %s "% (userinfo,
                                         data['information']['info']['hostname']))
         if "geolocalisation" in data and \
                 data['geolocalisation'] is not None and \
-                    len(data['geolocalisation']) > 0:
-            #initialization parameter geolocalisation
+                    data['geolocalisation']:
+            # initialization parameter geolocalisation
             for geovariable in tabinformation:
                 try:
                     tabinformation[geovariable]=str(data['geolocalisation'][geovariable])
@@ -1035,7 +1038,7 @@ def read_conf_remote_registeryagent(xmppobject):
             blacklisted_mac_addresses = Config.get('parameters', 'blacklisted_mac_addresses')
         else:
             blacklisted_mac_addresses = "00\:00\:00\:00\:00\:00"
-            
+
         if Config.has_section("parameters"):
             if Config.has_option("parameters", "showinfomachine"):
                 paramshowinfomachine = Config.get('parameters', 'showinfomachine')

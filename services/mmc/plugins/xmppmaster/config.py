@@ -199,7 +199,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         if self.has_option("global", "autoupdatebyrelay"):
             self.autoupdatebyrelay = self.getboolean('global', 'autoupdatebyrelay')
         else:
-            self.autoupdatebyrelay = False
+            self.autoupdatebyrelay = True
         self.pluginliststart = ""
         if self.has_option("plugins", "pluginliststart"):
             self.pluginliststart = self.get('plugins', 'pluginliststart')

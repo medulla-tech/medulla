@@ -12,13 +12,24 @@ $machines = xmlrpc_get_xmppmachines_list($start, $maxperpage, $filter, 'all');
 $raw = 0;
 $params = [];
 
+$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
+$editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
+$consoleaction   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
+$consoleemptyaction = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
+$vncaction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
+$vncemptyaction = $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
+
 $configActions = [];
+$consoleActions = [];
+$vncActions = [];
+
 foreach($machines['datas']['hostname'] as $key=>$array){
   $params[] = [
     'id' => $machines['datas']['id'][$raw],
     'hostname' => $machines['datas']['hostname'][$raw],
     'enabled' => $machines['datas']['enabled'][$raw],
     'enabled_css' => $machines['datas']['enabled_css'][$raw],
+    'uninventoried' => true,
     'jid'=> $machines['datas']['jid'][$raw],
     'archi' => $machines['datas']['archi'][$raw],
     'classutil' => $machines['datas']['classutil'][$raw],
@@ -29,7 +40,9 @@ foreach($machines['datas']['hostname'] as $key=>$array){
     'cluster_description' => $machines['datas']['cluster_description'][$raw],
     'macaddress'=> $machines['datas']['macaddress'][$raw],
     'ip_xmpp' => $machines['datas']['ip_xmpp'][$raw],
-    'agenttype' => 'machine'
+    'agenttype' => 'machine',
+    'platform' => $machines['datas']['platform'][$raw],
+    'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
   ];
   $machines['datas']['hostname'][$raw] = '<span class="machine-clickable">'.$machines['datas']['hostname'][$raw].'</span>';
   $machines['datas']['jid'][$raw] = '<span class="machine-clickable">'.$machines['datas']['jid'][$raw].'</span>';
@@ -45,13 +58,16 @@ foreach($machines['datas']['hostname'] as $key=>$array){
   $machines['datas']['ip_xmpp'][$raw] = '<span class="machine-clickable">'.$machines['datas']['ip_xmpp'][$raw].'</span>';
 
 
-  $editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
-  $editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
   if ($machines['datas']['enabled'][$raw]){
     $configActions[] =$editremoteconfiguration;
+    $consoleActions[] = $consoleaction;
+    $vncActions[] = $vncaction;
   }
   else{
     $configActions[] =$editremoteconfigurationempty;
+    $quickActions[] = $deployQuickxmppempty;
+    $consoleActions[] = $consoleemptyaction;
+    $vncActions[] = $vncemptyaction;
   }
   $raw++;
 }
@@ -72,6 +88,8 @@ $n->addExtraInfo( $machines['datas']['ip_xmpp'], _T("Xmpp IP", "xmppmaster"));
 $n->setTableHeaderPadding(0);
 $n->setItemCount($machines['total']);
 $n->setNavBar(new AjaxNavBar($machines['total'], $filter, "updateSearchParamformRunning1"));
+$n->addActionItemArray($vncActions);
+$n->addActionItemArray($consoleActions);
 $n->addActionItemArray($configActions);
 $n->setParamInfo($params);
 $n->start = 0;

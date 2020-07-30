@@ -102,7 +102,7 @@ class MscQueryManager(MscContainer):
         @rtype: list
         """
         # Mutable list coh_ids used as default argument to a method or function
-        if len(self.circuits) == 0 :
+        if not self.circuits:
             return []
         circuits = [c for c in self.circuits if c.initialized and c.is_running]
         if len(circuits) == 0 :
@@ -111,7 +111,7 @@ class MscQueryManager(MscContainer):
                        if not (c.qm.coh.isStateStopped() or c.qm.coh.isStatePaused())
                        and c.qm.cmd.in_valid_time()
                    ]
-        if len(coh_ids) >= 1:
+        if coh_ids:
             circuits = [c for c in circuits if c.qm.cmd.id in coh_ids]
             return circuits
         else :
@@ -121,7 +121,7 @@ class MscQueryManager(MscContainer):
     def rn_stats(self): return self._stats(self.circuits, "active")
     def wt_stats(self): return self._stats(self.waiting_circuits, "waiting")
     def _stats(self, circuits, c_name):
-        if len(circuits) == 0 :
+        if not circuits:
             return []
         cics = [c for c in circuits if c.is_running]
 
@@ -290,7 +290,7 @@ class MscQueryManager(MscContainer):
                 else:
                     spotted_priorities[c.qm.coh.order_in_proxy] = 1
 
-        if len(spotted_priorities) == 0:
+        if not spotted_priorities:
             return False
         elif len(spotted_priorities) == 1: # only one priority for all => split mode
             self.logger.debug("scheduler %s: command #%s is in split proxy mode"
@@ -361,8 +361,8 @@ class MscQueryManager(MscContainer):
                 else:
                     temp_dysfunc_proxy.append(c.qm.coh.id)
 
-            if len(available_proxy) == 0: # not proxy seems ready ?
-                if len(temp_dysfunc_proxy) == 0: # and others seems dead
+            if not available_proxy: # not proxy seems ready ?
+                if not temp_dysfunc_proxy: # and others seems dead
                     self.logger.debug("scheduler %s: coh #%s won't likely be able to use a local proxy" % (self.config.name, cohq.coh.id))
                     return 'dead'
                 else:

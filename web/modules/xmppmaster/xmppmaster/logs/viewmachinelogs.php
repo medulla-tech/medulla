@@ -219,12 +219,10 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
     $macList = ($otherinfos) ? getMachinesMac($otherinfos[0]->uuid)[strtoupper($otherinfos[0]->uuid)] : null;
 
     if($macList){
-      foreach($macList as $mac)
-      {
-        $macstr .= $mac;
-        if(sizeof($macList) > 1 && $mac != end($macList))
-          $macstr .= " || ";
-      }
+      // remove empty values
+      // keep only uniq values
+      // then join result with ' || '
+      $macstr = join(" || ", array_values(array_filter(array_unique($macList))));
     }
 //     if ( isset($resultinfo->title)){
 //         echo "User : $resultinfo->user "."PACKAGE ". $resultinfo->title."<br>";
@@ -354,7 +352,12 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                                 echo (isset($otherinfos[0]->ipmachine) && $otherinfos[0]->ipmachine != "") ? $otherinfos[0]->ipmachine : $deploymachine['target_ipaddr'];
                             echo "</td>";
                             echo "<td>";
-                                echo ($macstr != "") ? $macstr : $deploymachine['target_macaddr'];
+                                if($macstr == "" && isset($deploymachine['target_macaddr']))
+                                {
+                                  $macList = explode("||", $deploymachine['target_macaddr']);
+                                  $macstr = join(" || ", array_values(array_filter(array_unique($macList))));
+                                }
+                                  echo $macstr;
                             echo "</td>";
                         echo "</tr>";
                     echo "</tbody>";
@@ -590,7 +593,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                 echo "<tbody>";
 
         foreach($infodeploy['log'] as $line){
-            $scalardate = get_object_vars($info['objectdeploy'][0]['start'])['scalar'];
+            $scalardate = get_object_vars($line['date'])['scalar'];
             $formateddate = substr($scalardate, 0,4).'-'.substr($scalardate, 4,2).'-'.substr($scalardate, 6,2).' '.substr($scalardate, 9);
             //$startsteparray= get_object_vars( $line['date']);
             //$datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);

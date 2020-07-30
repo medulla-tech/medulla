@@ -28,6 +28,8 @@ from update_remote_agent import Update_Remote_Agent
 import types
 import ConfigParser
 from sleekxmpp import jid
+from pulse2.database.xmppmaster import XmppMasterDatabase
+
 logger = logging.getLogger()
 DEBUGPULSEPLUGIN = 25
 
@@ -98,7 +100,7 @@ def read_conf_remote_update(objectxmpp):
         if Config.has_option("parameters", "autoupdatebyrelay"):
             objectxmpp.autoupdatebyrelay = Config.getboolean('parameters', 'autoupdatebyrelay')
         else:
-            objectxmpp.autoupdatebyrelay = False
+            objectxmpp.autoupdatebyrelay = True
         if Config.has_option("parameters", "generate_baseagent_fingerprint_interval"):
             objectxmpp.generate_baseagent_fingerprint_interval = Config.getint('parameters', 'generate_baseagent_fingerprint_interval')
         else:

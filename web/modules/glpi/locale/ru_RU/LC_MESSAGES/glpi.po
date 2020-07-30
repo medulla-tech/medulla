@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 11:58+0200\n"
+"POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -64,119 +64,111 @@ msgid "Xmpp Machines List"
 msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:88
-msgid "Get the xmpp relays list"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:92
-msgid "Relays List"
-msgstr ""
-
-#: modules/glpi/infoPackage.inc.php:97
 msgid "Create static group from dashboard widgets (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:102
+#: modules/glpi/infoPackage.inc.php:93
 msgid "Create static group from antivirus dashboard widget (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:107
+#: modules/glpi/infoPackage.inc.php:98
 msgid "Create static group from OS distribution dashboard widget (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:112 modules/glpi/infoPackage.inc.php:117
+#: modules/glpi/infoPackage.inc.php:103 modules/glpi/infoPackage.inc.php:108
 msgid "Create static group from machines dashboard widget (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:122
+#: modules/glpi/infoPackage.inc.php:113
 msgid "Create static group from machines backup widget (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:127
+#: modules/glpi/infoPackage.inc.php:118
 msgid "Entities"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:131 modules/glpi/infoPackage.inc.php:144
+#: modules/glpi/infoPackage.inc.php:122 modules/glpi/infoPackage.inc.php:135
 msgid "Entities (ajax)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:136 modules/glpi/infoPackage.inc.php:149
+#: modules/glpi/infoPackage.inc.php:127 modules/glpi/infoPackage.inc.php:140
 #: modules/glpi/glpi/addEntity.php:43
 msgid "Add entity"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:140
+#: modules/glpi/infoPackage.inc.php:131
 msgid "Locations"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:153 modules/glpi/glpi/entityRules.php:28
+#: modules/glpi/infoPackage.inc.php:144 modules/glpi/glpi/entityRules.php:28
 msgid "Entity rules"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:157
+#: modules/glpi/infoPackage.inc.php:148
 msgid "Entity rules (ajax)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:162 modules/glpi/glpi/addEntityRule.php:59
+#: modules/glpi/infoPackage.inc.php:153 modules/glpi/glpi/addEntityRule.php:59
 msgid "Add entity rule"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:166
+#: modules/glpi/infoPackage.inc.php:157
 msgid "Delete entity rule"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:171
+#: modules/glpi/infoPackage.inc.php:162
 msgid "Change entity rule order (up)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:176
+#: modules/glpi/infoPackage.inc.php:167
 msgid "Change entity rule order (down)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:183
+#: modules/glpi/infoPackage.inc.php:174
 msgid "Display locations"
 msgstr "Показать расположения"
 
-#: modules/glpi/infoPackage.inc.php:199
+#: modules/glpi/infoPackage.inc.php:190
 msgid "Inventory (GLPI) on machine"
 msgstr " (GLPI)  "
 
-#: modules/glpi/infoPackage.inc.php:202
+#: modules/glpi/infoPackage.inc.php:193
 msgid "Summary tab (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:205
+#: modules/glpi/infoPackage.inc.php:196
 msgid "Hardware tab (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:208
+#: modules/glpi/infoPackage.inc.php:199
 msgid "Storage tab (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:211
+#: modules/glpi/infoPackage.inc.php:202
 msgid "Network tab (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:214
+#: modules/glpi/infoPackage.inc.php:205
 msgid "Softwares tab (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:217
+#: modules/glpi/infoPackage.inc.php:208
 msgid "Administrative tab (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:220
+#: modules/glpi/infoPackage.inc.php:211
 msgid "History tab (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:223
+#: modules/glpi/infoPackage.inc.php:214
 msgid "Antivirus tab (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:226
+#: modules/glpi/infoPackage.inc.php:217
 msgid "Registry tab (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:229
+#: modules/glpi/infoPackage.inc.php:220
 msgid "Connections tab (GLPI)"
 msgstr ""
 

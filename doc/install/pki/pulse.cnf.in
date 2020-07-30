@@ -83,6 +83,7 @@ subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid,issuer:always
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment
 extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
 crlDistributionPoints = URI:http://@@CRL_SERVER_ADDRESS@@/crl.pem
 
 [ crl_ext ]

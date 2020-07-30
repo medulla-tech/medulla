@@ -49,6 +49,14 @@ $switchemptyaction = new EmptyActionItem1(_("Switch"), "switchrelay", 'stopg', "
 $reconfigureaction = new ActionPopupItem(_("Reconfigure Machines"), "reconfiguremachines", 'restart', "nopropagate", "xmppmaster", "xmppmaster");
 $reconfigureemptyaction = new EmptyActionItem1(_("Reconfigure Machines"), "reconfiguremachines", 'restartg', "nopropagate", "xmppmaster", "xmppmaster");
 
+$qalisteaction = new ActionItem(_("QA Launched"), "qalaunched", 'inventory', "", "xmppmaster", "xmppmaster");
+
+$vncaction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
+$vncemptyaction = $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
+
+$packageaction = new ActionItem(_("Packages List"), "packageslist", 'package', "", "xmppmaster", "xmppmaster");
+$packageemptyaction = new EmptyActionItem1(_("Packages List"), "packageslist", 'packageg', "", "xmppmaster", "xmppmaster");
+
 $raw = 0;
 $params = [];
 if($relays['total'] > 0){
@@ -65,7 +73,8 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     'macaddress'=> $relays['datas']['macaddress'][$raw],
     'ip_xmpp' => $relays['datas']['ip_xmpp'][$raw],
     'agenttype'=> 'relayserver',
-    'switch'=> $relays['datas']['switchonoff'][$raw]
+    'switch'=> $relays['datas']['switchonoff'][$raw],
+    'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava")
   ];
 
   $relays['datas']['hostname'][$raw] = '<span class="relay-clickable">'.$relays['datas']['hostname'][$raw].'</span>';
@@ -81,12 +90,16 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $consoleActions[] = $consoleaction;
     $reconfigurationActions[] = $reconfigureaction;
     $quickActions[] = $quickaction;
+    $vncActions[] = $vncaction;
+    $packagesAction[] = $packageaction;
   }
   else{
     $configActions[] =$editremoteconfigurationempty;
     $consoleActions[] = $consoleactionempty;
     $reconfigurationActions[] = $reconfigureemptyaction;
     $quickActions[] = $quickactionempty;
+    $vncActions[] = $vncemptyaction;
+    $packagesAction[] = $packageemptyaction;
   }
 
   if($relays['datas']['mandatory'][$raw] == 1){
@@ -100,7 +113,7 @@ foreach($relays['datas']['hostname'] as $key=>$array){
   {
     $switchActions[] = $switchonaction;
   }
-
+  $qalistActions[] = $qalisteaction;
   $raw++;
 }
 echo '<div id="switchresult"></div>';
@@ -110,7 +123,7 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $relays['datas']['jid'], _T("Jid", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['cluster_name'], _T("Cluster Name", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['cluster_description'], _T("Cluster Description", "xmppmaster"));
-$n->addExtraInfo( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"), ["title"=>"dede"]);
+$n->addExtraInfo( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['uninventoried_online'], _T("Uninventoried Online", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['classutil'], _T("Class Util", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['macaddress'], _T("Mac Address", "xmppmaster"));
@@ -120,10 +133,13 @@ $n->addExtraInfo( $relays['datas']['ip_xmpp'], _T("Xmpp IP", "xmppmaster"));
 $n->setTableHeaderPadding(0);
 $n->setItemCount($relays['total']);
 $n->setNavBar(new AjaxNavBar($relays['total'], $filter, "updateSearchParamformRunning"));
+$n->addActionItemArray($packagesAction);
 $n->addActionItemArray($reconfigurationActions);
 $n->addActionItemArray($switchActions);
 $n->addActionItemArray($configActions);
+$n->addActionItemArray($qalistActions);
 $n->addActionItemArray($quickActions);
+$n->addActionItemArray($vncActions);
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $relays['total'];

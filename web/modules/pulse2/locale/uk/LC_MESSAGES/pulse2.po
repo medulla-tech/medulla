@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-22 11:58+0200\n"
+"POT-Creation-Date: 2020-07-27 18:22+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -50,54 +50,55 @@ msgstr "Встановити оновлення продукту"
 msgid "Product Updates installation (ajax)"
 msgstr "Встановлення оновлень продукту (ajax)"
 
-#: modules/pulse2/includes/menu_actionaudit.php:59
+#: modules/pulse2/includes/menu_actionaudit.php:64
 #: modules/pulse2/includes/menu_action.php:58
 msgid "Inventory"
 msgstr "Облік"
 
-#: modules/pulse2/includes/menu_actionaudit.php:61
+#: modules/pulse2/includes/menu_actionaudit.php:66
 #: modules/pulse2/includes/menu_action.php:60
 msgid "Backup status"
 msgstr "Стан резервного копіювання"
 
-#: modules/pulse2/includes/menu_actionaudit.php:62
+#: modules/pulse2/includes/menu_actionaudit.php:67
 #: modules/pulse2/includes/menu_action.php:61
 #: modules/pulse2/includes/menu_group_action.php:76
 msgid "Imaging management"
 msgstr "Керування образами"
 
-#: modules/pulse2/includes/menu_actionaudit.php:63
-#: modules/pulse2/includes/menu_action.php:73
+#: modules/pulse2/includes/menu_actionaudit.php:68
+#: modules/pulse2/includes/menu_action.php:75
 msgid "Quick action"
 msgstr "Швидка дія"
 
-#: modules/pulse2/includes/menu_actionaudit.php:66
 #: modules/pulse2/includes/menu_actionaudit.php:71
-#: modules/pulse2/includes/menu_action.php:77
-#: modules/pulse2/includes/menu_action.php:80
-#: modules/pulse2/includes/menu_action.php:89
+#: modules/pulse2/includes/menu_actionaudit.php:76
+#: modules/pulse2/includes/menu_action.php:79
+#: modules/pulse2/includes/menu_action.php:82
+#: modules/pulse2/includes/menu_action.php:91
 msgid "Software deployment"
 msgstr "Розгортання програмного забезпечення"
 
-#: modules/pulse2/includes/menu_actionaudit.php:70
+#: modules/pulse2/includes/menu_actionaudit.php:75
 #: modules/pulse2/includes/menu_action.php:64
 #: modules/pulse2/includes/menu_action.php:67
 msgid "Remote control"
 msgstr "Дистанційне керування"
 
-#: modules/pulse2/includes/menu_actionaudit.php:73
-#: modules/pulse2/includes/menu_action.php:72
+#: modules/pulse2/includes/menu_actionaudit.php:78
+#: modules/pulse2/includes/menu_action.php:74
 msgid "xmppconsole"
 msgstr "xmppconsole"
 
-#: modules/pulse2/includes/menu_actionaudit.php:74
-#: modules/pulse2/includes/menu_actionaudit.php:77
-#: modules/pulse2/includes/menu_action.php:82
+#: modules/pulse2/includes/menu_actionaudit.php:79
+#: modules/pulse2/includes/menu_actionaudit.php:82
+#: modules/pulse2/includes/menu_action.php:70
 #: modules/pulse2/includes/menu_action.php:84
+#: modules/pulse2/includes/menu_action.php:86
 msgid "files browsing"
 msgstr "навігація файлами"
 
-#: modules/pulse2/includes/menu_actionaudit.php:75
+#: modules/pulse2/includes/menu_actionaudit.php:80
 msgid "Edit config files"
 msgstr "Редагувати файли налаштувань"
 

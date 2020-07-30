@@ -27,6 +27,7 @@ community = yes
 [debug]
 ; 0 : no information
 ; 1 : XMLRPC calls and results are displayed by the web interface
+; 2 : XMLRPC calls and results are written to /tmp/logxmlrpc.log
 level = 0
 
 ; Login page title

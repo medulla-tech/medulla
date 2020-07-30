@@ -101,7 +101,7 @@ Package: python-pulse2-common-database-backuppc
 Architecture: all
 Section: python
 Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database (= ${binary:Version})
-Description: Pulse 2 / MBS common backuppc database files.
+Description: Pulse 2 common backuppc database files.
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
  .
@@ -234,7 +234,7 @@ Architecture: all
 Section: python
 Pre-Depends: backuppc
 Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-backuppc (= ${binary:Version}), python-pyquery
-Description: Pulse 2 / MBS BackupPC plugin for MMC agent
+Description: Pulse 2 BackupPC plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
  .
@@ -355,7 +355,7 @@ Description: Pulse 2 imaging plugin for MMC web interface
 Package: mmc-web-backuppc
 Architecture: all
 Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
-Description: Pulse 2 / MBS BackupPC plugin for MMC web interface
+Description: Pulse 2 BackupPC plugin for MMC web interface
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
  .
@@ -364,7 +364,7 @@ Description: Pulse 2 / MBS BackupPC plugin for MMC web interface
 Package: mmc-web-monitoring
 Architecture: all
 Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
-Description: Pulse 2 / MBS monitoring plugin for MMC web interface
+Description: Pulse 2 monitoring plugin for MMC web interface
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
  .

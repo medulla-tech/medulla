@@ -215,8 +215,8 @@ class CoHQuery :
         session.close()
         if isinstance(phase, list):
             return phase[0]
-        else :
-            return phase
+
+        return phase
 
     def get_phases(self):
         database = MscDatabase()
@@ -246,8 +246,8 @@ class CoHQuery :
         for phase in phases.all():
             if phase.state in ("ready","running", "failed"):
                 return phase.name
-        else :
-            return None
+
+        return None
 
 
     @property
@@ -318,7 +318,7 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
                      database.commands_on_host.c.scheduler is None)
         ).filter(database.pull_targets.c.target_uuid == None
         ).filter(database.commands.c.ready == True)
-    if len(ids_to_exclude) > 0 :
+    if ids_to_exclude:
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
     commands_query = commands_query.order_by(database.commands.c.order_in_bundle.asc(),
                                              database.commands_on_host.c.current_state.desc())
@@ -360,8 +360,8 @@ def in_pull_targets(scheduler_name, uuid):
     session.close()
     if query.first() :
         return True
-    else :
-        return False
+
+    return False
 
 
 def __available_downloads_query(scheduler_name, uuid):
@@ -450,8 +450,8 @@ def verify_target(coh_id, hostname, mac):
     session.close()
     if query.first() :
         return True
-    else :
-        return False
+
+    return False
 
 def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
     # Mutable list ids_to_exclude used as default argument to a method or function
@@ -468,8 +468,7 @@ def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
                      database.commands_on_host.c.scheduler == scheduler_name,
                      database.commands_on_host.c.scheduler is None))
 
-    #commands_query = commands_query.limit(top)
-    if len(ids_to_exclude) > 0 :
+    if ids_to_exclude:
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
     fls = []
     otd = []
@@ -480,14 +479,13 @@ def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
         else :
             otd.append(q.id)
 
-        #yield q.id
 
     session.close()
 
-    if len(otd) > 0 :
+    if otd:
         logging.getLogger().info("Switching %d circuits to overtimed" % len(otd))
         CoHManager.setCoHsStateOverTimed(otd)
-    if len(fls) > 0 :
+    if fls:
         logging.getLogger().info("Switching %d circuits to failed" % len(fls))
         CoHManager.setCoHsStateFailed(fls)
 
@@ -523,10 +521,10 @@ def is_command_finished(scheduler_name, id):
                      database.commands_on_host.c.scheduler is None))
     nbr = query.count()
     session.close()
-    if nbr > 1 :
+    if nbr > 1:
         return False
-    else :
-        return True
+
+    return True
 
 def switch_commands_to_stop(cohs):
     CoHManager.setCoHsStateStopped(cohs)

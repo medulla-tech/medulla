@@ -1131,7 +1131,6 @@ class geolocalisation_agent:
                 logger.warning("use old determination ip_public")
             if self.localisation is  None:
                 if self.geoinfoexist():
-                    logger.warning("coucou")
                     dd=self.getdatafilegeolocalisation()
                     logger.warning("%s"%dd)
                     if  self.localisation is  not None:

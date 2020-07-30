@@ -53,10 +53,10 @@ class apimanagepackagemsc:
             return listnotpendingfichierconf
 
     @staticmethod
-    def sizedirectory(path): 
-        size = 0 
-        for root, dirs, files in os.walk(path): 
-            for fic in files: 
+    def sizedirectory(path):
+        size = 0
+        for root, dirs, files in os.walk(path):
+            for fic in files:
                 size += os.path.getsize(os.path.join(root, fic))
         return size
 
