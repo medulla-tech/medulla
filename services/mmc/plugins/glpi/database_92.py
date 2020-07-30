@@ -4047,6 +4047,7 @@ class Glpi92(DyngroupDatabaseHelper):
         query = query.filter(self.os_arch.c.name == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getMachineByPrinter(self, ctx, filt):
         session = create_session()
@@ -4058,13 +4059,14 @@ class Glpi92(DyngroupDatabaseHelper):
         query = query.filter(self.printers.c.name == filt)
         ret = query.all()
         session.close()
+        return ret
 
-    def getMachineByPrinterserail(self, ctx, filt):
+    def getMachineByPrinterserial(self, ctx, filt):
         session = create_session()
         query = session.query(Machine).distinct(Machine.id).\
-            join(Computersitems_printers, Machine.id == Computersitems_printers.computers_id).\
-            outerjoin(Printers, and_(Computersitems_printers.items_id == Printers.id,
-                                     Computersitems_printers.itemtype == 'Printer')).\
+            join(Computersitems, Machine.id == Computersitems.computers_id).\
+            outerjoin(Printers, and_(Computersitems.items_id == Printers.id,
+                                     Computersitems.itemtype == 'Printer')).\
             outerjoin(Peripherals,and_(Computersitems.items_id == Peripherals.id,
                                        Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
@@ -4073,6 +4075,39 @@ class Glpi92(DyngroupDatabaseHelper):
         query = query.filter(self.printers.c.serial == filt)
         ret = query.all()
         session.close()
+        return ret
+
+    def getMachineByPeripheral(self, ctx, filt):
+        session = create_session()
+        query = session.query(Machine).distinct(Machine.id).\
+            join(Computersitems, Machine.id == Computersitems.computers_id).\
+            outerjoin(Printers, and_(Computersitems.items_id == Printers.id,
+                                     Computersitems.itemtype == 'Printer')).\
+            outerjoin(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                        Computersitems.itemtype == 'Peripheral'))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.peripherals.c.name == filt)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getMachineByPeripheralserial(self, ctx, filt):
+        session = create_session()
+        query = session.query(Machine).distinct(Machine.id).\
+            join(Computersitems, Machine.id == Computersitems.computers_id).\
+            outerjoin(Printers, and_(Computersitems.items_id == Printers.id,
+                                     Computersitems.itemtype == 'Printer')).\
+            outerjoin(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                        Computersitems.itemtype == 'Peripheral'))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.peripherals.c.serial == filt)
+        ret = query.all()
+        session.close()
+        return ret
 
     def getComputersOS(self, uuids):
         if isinstance(uuids, str):
