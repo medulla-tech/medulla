@@ -5827,7 +5827,7 @@ class XmppMasterDatabase(DatabaseHelper):
             'id': [],
             'hostname': [],
             'jid': [],
-            'jid_from_relayserver' : [],
+            'jid_from_relayserver': [],
             'cluster_name': [],
             'cluster_description': [],
             'classutil': [],

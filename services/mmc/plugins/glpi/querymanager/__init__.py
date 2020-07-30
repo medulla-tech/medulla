@@ -352,8 +352,10 @@ def getAllNamePrinters(ctx, value=""):
 def getAllSerialPrinters(ctx, value=""):
     return unique([element.serial for element in Glpi().getAllSerialPrinters(ctx, filt=value)])
 
+
 def getAllNamePeripherals(ctx, value=""):
     return unique([element.name for element in Glpi().getAllNamePeripherals(ctx, filt=value)])
+
 
 def getAllSerialPeripherals(ctx, value=""):
     return unique([element.serial for element in Glpi().getAllSerialPeripherals(ctx, filt=value)])

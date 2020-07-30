@@ -647,10 +647,11 @@ class Glpi94(DyngroupDatabaseHelper):
         .outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
 
         if field != "":
-                query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
-                if field != "type":
-                    query = query.join(Peripherals, Computersitems.items_id == Peripherals.id)\
+            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            if field != "type":
+                query = query.join(Peripherals, Computersitems.items_id == Peripherals.id)\
                     .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
+
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
 
@@ -698,8 +699,7 @@ class Glpi94(DyngroupDatabaseHelper):
         # Add all the like clauses to find machines containing the criterion
         if criterion != "":
             if field == "":
-                query = query.filter(or_(
-                                         Machine.name.contains(criterion),
+                query = query.filter(or_(Machine.name.contains(criterion),
                                          Machine.comment.contains(criterion),
                                          self.os.c.name.contains(criterion),
                                          self.glpi_computertypes.c.name.contains(criterion),
@@ -711,8 +711,7 @@ class Glpi94(DyngroupDatabaseHelper):
                                          self.locations.c.name.contains(criterion),
                                          self.manufacturers.c.name.contains(criterion),
                                          self.model.c.name.contains(criterion),
-                                         self.regcontents.c.value.contains(criterion)
-                ))
+                                         self.regcontents.c.value.contains(criterion)))
             else:
                 if contains == "notcontains":
                     if field == "type":
@@ -739,7 +738,6 @@ class Glpi94(DyngroupDatabaseHelper):
         else:
             query = query.filter(Machine.id.in_(online_machines))
         query = self.__filter_on(query)
-
 
         # From now we can have the count of machines
         count = query.count()
