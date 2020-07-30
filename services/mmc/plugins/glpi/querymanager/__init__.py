@@ -211,7 +211,7 @@ def query(ctx, criterion, value):
     elif criterion == "Printer name":
         machines = [x.name for x in Glpi().getMachineByPrinter(ctx, value)]
     elif criterion == "Printer serial":
-        machines = [x.name for x in Glpi().getMachineByPrinterserail(ctx, value)]
+        machines = [x.name for x in Glpi().getMachineByPrinterserial(ctx, value)]
     elif criterion == "Peripheral name":
         machines = [x.name for x in Glpi().getMachineByPeripheral(ctx, value)]
     elif criterion == "Peripheral serial":
