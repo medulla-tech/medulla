@@ -98,7 +98,7 @@ binary-indep: build install
 	dh_testdir
 	dh_testroot
 	dh_install --sourcedir=$(DESTDIR) --fail-missing
-	dh_python2
+	dh_python3
 	dh_fixperms -X/etc/mmc
 	dh_installchangelogs
 	dh_installdocs
