@@ -1,4 +1,4 @@
-usr/lib/python2.?/*-packages/mmc/plugins/msc
+usr/lib/python3.?/*-packages/mmc/plugins/msc
 etc/mmc/plugins/msc.ini
 usr/sbin/pulse2-msc-clean-database
 usr/share/man/man1/pulse2-msc-clean-database.1

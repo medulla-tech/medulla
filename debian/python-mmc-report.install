@@ -1,4 +1,4 @@
-usr/lib/python2.?/*-packages/mmc/plugins/report
+usr/lib/python3.?/*-packages/mmc/plugins/report
 etc/mmc/plugins/report.ini
 etc/mmc/plugins/report
 usr/share/doc/mmc/contrib/report/sql

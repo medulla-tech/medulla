@@ -9,5 +9,5 @@ etc/mmc/plugins/loadpluginschedulerlistversion.ini
 etc/mmc/plugins/loadshowregistration.ini
 etc/mmc/plugins/registeryagent.ini
 etc/mmc/plugins/loadreconf.ini
-usr/lib/python2.?/*-packages/mmc/plugins/xmppmaster
-usr/lib/python2.?/*-packages/pulse2/database/xmppmaster
+usr/lib/python3.?/*-packages/mmc/plugins/xmppmaster
+usr/lib/python3.?/*-packages/pulse2/database/xmppmaster
