@@ -670,9 +670,9 @@ class Glpi92(DyngroupDatabaseHelper):
         if field != "":
             query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
             if field != "type":
-                query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id, \
-                    Computersitems.itemtype=="Peripheral"))\
-                .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
+                query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                   Computersitems.itemtype == "Peripheral"))\
+                    .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
 
@@ -744,7 +744,7 @@ class Glpi92(DyngroupDatabaseHelper):
                     elif field == "firmware":
                         query = query.filter(not_(Peripherals.comment.contains(criterion)))
                     else:
-                        query = query.filter(not_(eval("Computersviewitemsperipheral.%s"%field).contains(criterion)))
+                        query = query.filter(not_(eval("Computersviewitemsperipheral.%s" % field).contains(criterion)))
 
                 else:
                     if field == "type":
@@ -754,7 +754,7 @@ class Glpi92(DyngroupDatabaseHelper):
                     elif field == "firmware":
                         query = query.filter(Peripherals.comment.contains(criterion))
                     else:
-                        query = query.filter(eval("Computersviewitemsperipheral.%s"%field).contains(criterion))
+                        query = query.filter(eval("Computersviewitemsperipheral.%s" % field).contains(criterion))
 
         query = query.order_by(Machine.name)
         # All computers
