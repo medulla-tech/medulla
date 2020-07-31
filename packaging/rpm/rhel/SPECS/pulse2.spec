@@ -48,7 +48,7 @@ Source4:        pulse2-register-pxe.service
 Source5:        output.py
 Source6:        get_file.php
 
-BuildRequires:	python-devel
+BuildRequires:	python3-devel
 BuildRequires:	gettext
 BuildRequires:	gettext-devel
 BuildRequires:  libxslt
@@ -102,7 +102,7 @@ software deployment.
 %files -n python-mmc-dyngroup
 %defattr(-,root,root,0755)
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/dyngroup.ini
-%python2_sitelib/mmc/plugins/dyngroup
+%python3_sitelib/mmc/plugins/dyngroup
 
 #--------------------------------------------------------------------
 
@@ -135,8 +135,8 @@ This package contains the backuppc plugin for the MMC agent.
 %files -n python-mmc-backuppc
 %defattr(-,root,root,0755)
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/backuppc.ini
-%python2_sitelib/mmc/plugins/backuppc
-%python2_sitelib/pulse2/database/backuppc
+%python3_sitelib/mmc/plugins/backuppc
+%python3_sitelib/pulse2/database/backuppc
 %_sbindir/pulse2-backup-servers
 %_bindir/pulse2-backup-handler
 %_sbindir/pulse2-connect-machine-backuppc
@@ -157,8 +157,8 @@ This package contains the connection manager plugin for the MMC agent.
 %files -n python-mmc-connection-manager
 %defattr(-,root,root,0755)
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/pulse2/cm
-%python2_sitelib/mmc/plugins/backuppc
-%python2_sitelib/pulse2/cm
+%python3_sitelib/mmc/plugins/backuppc
+%python3_sitelib/pulse2/cm
 %{_sysconfdir}/init.d/pulse2-cm
 %_sbindir/pulse2-cm
 %_sbindir/pulse2-create-group
@@ -221,7 +221,7 @@ inventory plugin for the MMC agent.
 %files -n python-mmc-glpi
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/glpi.ini
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/glpi_search_options.ini
-%python2_sitelib/mmc/plugins/glpi
+%python3_sitelib/mmc/plugins/glpi
 %_sbindir/pulse2-extract-glpi-search-options
 
 #--------------------------------------------------------------------
@@ -259,7 +259,7 @@ process.
 
 %files -n python-mmc-msc
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/msc.ini
-%python2_sitelib/mmc/plugins/msc
+%python3_sitelib/mmc/plugins/msc
 %{_var}/lib/pulse2/qactions
 %_sbindir/pulse2-msc-clean-database
 %_mandir/man1/pulse2-msc-clean-database.1.*
@@ -295,7 +295,7 @@ This package contains the imaging plugin for MMC agent.
 
 %files -n python-mmc-imaging
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/imaging.ini
-%python2_sitelib/mmc/plugins/imaging
+%python3_sitelib/mmc/plugins/imaging
 
 #--------------------------------------------------------------------
 
@@ -327,7 +327,7 @@ This package contains the imaging plugin for MMC agent.
 
 %files -n python-mmc-support
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/support.ini
-%python2_sitelib/mmc/plugins/support
+%python3_sitelib/mmc/plugins/support
 
 #--------------------------------------------------------------------
 
@@ -362,7 +362,7 @@ This package contains the inventory plugin for the MMC agent
 
 %files -n python-mmc-inventory
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/inventory.ini
-%python2_sitelib/mmc/plugins/inventory
+%python3_sitelib/mmc/plugins/inventory
 %_sbindir/pulse2-inventory-clean-database
 %exclude %_sysconfdir/init.d/pulse2-register-pxe
 %_mandir/man1/pulse2-inventory-clean-database.1.*
@@ -411,16 +411,16 @@ Summary:    Pkgs plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
-Requires:   python2-requests
-Requires:   python2-unidecode
+Requires:   python3-requests
+Requires:   python3-unidecode
 
 %description -n python-mmc-pkgs
 This package contains the pkgs plugin for the MMC agent.
 
 %files -n python-mmc-pkgs
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/pkgs.ini
-%python2_sitelib/mmc/plugins/pkgs
-%python2_sitelib/pulse2/database/pkgs
+%python3_sitelib/mmc/plugins/pkgs
+%python3_sitelib/pulse2/database/pkgs
 
 #--------------------------------------------------------------------
 
@@ -434,8 +434,8 @@ This package contains the pkgs plugin for the MMC agent.
 
 %files -n python-mmc-kiosk
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/kiosk.ini
-%python2_sitelib/mmc/plugins/kiosk
-%python2_sitelib/pulse2/database/kiosk
+%python3_sitelib/mmc/plugins/kiosk
+%python3_sitelib/pulse2/database/kiosk
 
 #--------------------------------------------------------------------
 
@@ -473,8 +473,8 @@ fi
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadshowregistration.ini
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/registeryagent.ini
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadreconf.ini
-%python2_sitelib/mmc/plugins/xmppmaster
-%python2_sitelib/pulse2/database/xmppmaster
+%python3_sitelib/mmc/plugins/xmppmaster
+%python3_sitelib/pulse2/database/xmppmaster
 
 #--------------------------------------------------------------------
 
@@ -489,7 +489,7 @@ This package contains the guacamole plugin for the MMC agent.
 
 %files -n python-mmc-guacamole
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/guacamole.ini
-%python2_sitelib/mmc/plugins/guacamole
+%python3_sitelib/mmc/plugins/guacamole
 %_datadir/mmc/modules/guacamole/locale
 
 #--------------------------------------------------------------------
@@ -544,7 +544,7 @@ This package will install all the Pulse 2 MMC agent interface plugins
 
 %files -n python-mmc-pulse2
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/pulse2.ini
-%python2_sitelib/mmc/plugins/pulse2
+%python3_sitelib/mmc/plugins/pulse2
 
 #--------------------------------------------------------------------
 
@@ -599,7 +599,7 @@ This package contains Pulse 2 common files like documentation.
 %exclude %_sysconfdir/mmc/pulse2/atftpd/pcre.conf
 
 # Split later in its own rpm
-%python2_sitelib/pulse2/tests/test_utils.py
+%python3_sitelib/pulse2/tests/test_utils.py
 
 #--------------------------------------------------------------------
 
@@ -631,7 +631,7 @@ service pulse2-inventory-server stop >/dev/null 2>&1 || :
 %{_sysconfdir}/mmc/pulse2/inventory-server/xml-fix/
 %{_sbindir}/pulse2-inventory-server
 %_mandir/man1/pulse2-inventory-server.1*
-%python2_sitelib/pulse2/inventoryserver
+%python3_sitelib/pulse2/inventoryserver
 
 #--------------------------------------------------------------------
 
@@ -667,7 +667,7 @@ service pulse2-package-server start >/dev/null 2>&1 || :
 %{_sbindir}/pulse2-package-server-register-imaging
 %_mandir/man1/pulse2-package-server.1*
 %_mandir/man1/pulse2-package-server-register-imaging.1.*
-%python2_sitelib/pulse2/package_server
+%python3_sitelib/pulse2/package_server
 
 #--------------------------------------------------------------------
 
@@ -704,7 +704,7 @@ service pulse2-scheduler stop >/dev/null 2>&1 || :
 %{_sbindir}/pulse2-scheduler-manager
 %{_sbindir}/pulse2-scheduler-proxy
 %_mandir/man1/pulse2-scheduler*.1*
-%python2_sitelib/pulse2/scheduler
+%python3_sitelib/pulse2/scheduler
 
 #--------------------------------------------------------------------
 
@@ -718,7 +718,7 @@ Requires:       python-pulse2-common-database = %version-%release
 This package contains Pulse 2 common dynamic groups database files.
 
 %files -n python-pulse2-common-database-dyngroup
-%python2_sitelib/pulse2/database/dyngroup
+%python3_sitelib/pulse2/database/dyngroup
 
 #--------------------------------------------------------------------
 
@@ -732,7 +732,7 @@ Requires:       python-pulse2-common-database = %version-%release
 This package contains Pulse 2 common imaging database files
 
 %files -n python-pulse2-common-database-imaging
-%python2_sitelib/pulse2/database/imaging
+%python3_sitelib/pulse2/database/imaging
 
 #--------------------------------------------------------------------
 
@@ -746,7 +746,7 @@ Requires:       python-pulse2-common-database = %version-%release
 This package contains Pulse 2 common inventory database files
 
 %files -n python-pulse2-common-database-inventory
-%python2_sitelib/pulse2/database/inventory
+%python3_sitelib/pulse2/database/inventory
 
 #--------------------------------------------------------------------
 
@@ -760,7 +760,7 @@ Requires:       python-pulse2-common-database = %version-%release
 This package contains Pulse 2 common MSC database files
 
 %files -n python-pulse2-common-database-msc
-%python2_sitelib/pulse2/database/msc
+%python3_sitelib/pulse2/database/msc
 
 #--------------------------------------------------------------------
 
@@ -776,9 +776,9 @@ Requires:       MySQL-python
 This package contains Pulse 2 common database files.
 
 %files -n python-pulse2-common-database
-%python2_sitelib/pulse2/database/__init__.py
-%python2_sitelib/pulse2/database/pulse/__init__.py
-%python2_sitelib/pulse2/database/pulse/config.py
+%python3_sitelib/pulse2/database/__init__.py
+%python3_sitelib/pulse2/database/pulse/__init__.py
+%python3_sitelib/pulse2/database/pulse/config.py
 
 #--------------------------------------------------------------------
 
@@ -818,7 +818,7 @@ service pulse2-dlp-server stop >/dev/null 2>&1 || :
 %attr(0640,root,root) %config(noreplace) %_sysconfdir/mmc/pulse2/dlp-server/dlp-apache.conf
 %attr(0640,root,root) %config(noreplace) %_sysconfdir/mmc/pulse2/dlp-server/dlp-server.ini
 %attr(0640,root,root) %config(noreplace) %_sysconfdir/mmc/pulse2/dlp-server/dlp-wsgi.ini
-%python2_sitelib/pulse2/dlp
+%python3_sitelib/pulse2/dlp
 %_sysconfdir/init.d/pulse2-dlp-server
 
 #--------------------------------------------------------------------
@@ -840,19 +840,19 @@ Obsoletes:      pulse2-common-client-apis = %version-%release
 This package contains Pulse 2 common files.
 
 %files -n python-pulse2-common
-%python2_sitelib/pulse2/apis
-%python2_sitelib/pulse2/imaging
-%python2_sitelib/pulse2/managers
-%python2_sitelib/pulse2/__init__.py
-%python2_sitelib/pulse2/cache.py
-%python2_sitelib/pulse2/consts.py
-%python2_sitelib/pulse2/health.py
-%python2_sitelib/pulse2/site.py
-%python2_sitelib/pulse2/time_intervals.py
-%python2_sitelib/pulse2/utils.py
-%python2_sitelib/pulse2/version.py
-%python2_sitelib/pulse2/xmlrpc.py
-%python2_sitelib/pulse2/network.py
+%python3_sitelib/pulse2/apis
+%python3_sitelib/pulse2/imaging
+%python3_sitelib/pulse2/managers
+%python3_sitelib/pulse2/__init__.py
+%python3_sitelib/pulse2/cache.py
+%python3_sitelib/pulse2/consts.py
+%python3_sitelib/pulse2/health.py
+%python3_sitelib/pulse2/site.py
+%python3_sitelib/pulse2/time_intervals.py
+%python3_sitelib/pulse2/utils.py
+%python3_sitelib/pulse2/version.py
+%python3_sitelib/pulse2/xmlrpc.py
+%python3_sitelib/pulse2/network.py
 
 %doc %_docdir/pulse2
 
@@ -1243,11 +1243,11 @@ mkdir -p %buildroot%_var/lib/pulse2/file-transfer
 
 cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/mmc/contrib/
 
-rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
-mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
+rm -f %buildroot%python3_sitelib/pulse2/apis/clients/mirror.py
+mv %buildroot%python3_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python3_sitelib/pulse2/apis/clients/mirror.py
 
-rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
-mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
+rm -f %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api.py
+mv %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api.py
 
 # install log rotation stuff
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
