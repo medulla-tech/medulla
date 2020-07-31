@@ -670,9 +670,9 @@ class Glpi94(DyngroupDatabaseHelper):
         if field != "":
             query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
             if field != "type":
-                query = query.join(Peripherals, Computersitems.items_id == Peripherals.id)\
+                query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                   Computersitems.itemtype == "Peripheral"))\
                     .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
-
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
 
@@ -720,35 +720,42 @@ class Glpi94(DyngroupDatabaseHelper):
         # Add all the like clauses to find machines containing the criterion
         if criterion != "":
             if field == "":
-                query = query.filter(or_(Machine.name.contains(criterion),
-                                         Machine.comment.contains(criterion),
-                                         self.os.c.name.contains(criterion),
-                                         self.glpi_computertypes.c.name.contains(criterion),
-                                         Machine.contact.contains(criterion),
-                                         Entities.name.contains(criterion),
-                                         self.user.c.firstname.contains(criterion),
-                                         self.user.c.realname.contains(criterion),
-                                         self.user.c.name.contains(criterion),
-                                         self.locations.c.name.contains(criterion),
-                                         self.manufacturers.c.name.contains(criterion),
-                                         self.model.c.name.contains(criterion),
-                                         self.regcontents.c.value.contains(criterion)))
+                query = query.filter(or_(
+                    Machine.name.contains(criterion),
+                    Machine.comment.contains(criterion),
+                    self.os.c.name.contains(criterion),
+                    self.glpi_computertypes.c.name.contains(criterion),
+                    Machine.contact.contains(criterion),
+                    Entities.name.contains(criterion),
+                    self.user.c.firstname.contains(criterion),
+                    self.user.c.realname.contains(criterion),
+                    self.user.c.name.contains(criterion),
+                    self.locations.c.name.contains(criterion),
+                    self.manufacturers.c.name.contains(criterion),
+                    self.model.c.name.contains(criterion),
+                    self.regcontents.c.value.contains(criterion)
+                ))
             else:
                 if contains == "notcontains":
                     if field == "type":
                         query = query.filter(not_(Computersitems.itemtype.contains(criterion)))
-                    elif field != "manufacturer":
-                        query = query.filter(not_(eval("Peripherals.%s" % field).contains(criterion)))
-                    else:
+                    elif field == "manufacturer":
                         query = query.filter(not_(Peripheralsmanufacturers.name.contains(criterion)))
+                    elif field == "firmware":
+                        query = query.filter(not_(Peripherals.comment.contains(criterion)))
+                    else:
+                        query = query.filter(not_(eval("Computersviewitemsperipheral.%s" % field).contains(criterion)))
 
                 else:
                     if field == "type":
                         query = query.filter(Computersitems.itemtype.contains(criterion))
-                    elif field != "manufacturer":
-                        query = query.filter(eval("Peripherals.%s" % field).contains(criterion))
-                    else:
+                    elif field == "manufacturer":
                         query = query.filter(Peripheralsmanufacturers.name.contains(criterion))
+                    elif field == "firmware":
+                        query = query.filter(Peripherals.comment.contains(criterion))
+                    else:
+                        query = query.filter(eval("Computersviewitemsperipheral.%s" % field).contains(criterion))
+
         query = query.order_by(Machine.name)
         # All computers
         if "computerpresence" not in ctx:
