@@ -9,7 +9,7 @@ from optparse import OptionParser
 
 basename = os.path.basename
 
-BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
+BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = list(range(8))
 
 #The background is set with 40 plus the number of the color, and the foreground with 30
 

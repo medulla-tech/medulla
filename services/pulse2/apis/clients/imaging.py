@@ -54,7 +54,7 @@ class Imaging(Pulse2Api):
         @raise : TypeError is MACAddress is not a mac addr
         @rtype : bool
         """
-        if type(computerName) != str and type(computerName) != unicode:
+        if type(computerName) != str and type(computerName) != str:
             raise TypeError('Bad Computer name: %s' % computerName)
         if not isMACAddress(MACAddress):
             raise TypeError('BAD MAC address: %s' % MACAddress)
@@ -434,7 +434,7 @@ class ImagingApi(Imaging):
     def __init__(self, url=None):
         self.logger = logging.getLogger()
         credit = ''
-        if type(url) == unicode:
+        if type(url) == str:
             url = url.encode('utf-8')
         if type(url) == str:
             self.server_addr = url

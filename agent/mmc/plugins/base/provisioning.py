@@ -23,7 +23,7 @@
 
 import logging
 import os
-from ConfigParser import ConfigParser, NoSectionError, NoOptionError
+from configparser import ConfigParser, NoSectionError, NoOptionError
 from twisted.internet import defer
 from mmc.support.mmctools import Singleton
 
@@ -67,7 +67,7 @@ class ProvisioningManager(Singleton):
                 instance = klass()
                 valid = instance.validate()
                 mandatory = instance.config.mandatory
-            except Exception, e:
+            except Exception as e:
                 self.logger.exception(e)
                 valid = False
             if valid:

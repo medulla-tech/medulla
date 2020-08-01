@@ -441,7 +441,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ids = {}
         for i in objs:
             ids[i['fk_target']] = None
-        ids = ids.keys()
+        ids = list(ids.keys())
         targets = self.getTargetsById(ids)
         id_target = {}
         for t in targets:
@@ -758,7 +758,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             mi_ids = mi_ids.offset(int(start)).limit(int(end)-int(start))
         else:
             mi_ids = mi_ids.all()
-        mi_ids = map(lambda x:x[1], mi_ids)
+        mi_ids = [x[1] for x in mi_ids]
 
         if loc_id != None:
             imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
@@ -879,8 +879,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .filter(self.target.c.uuid == target_id)
         elif type == P2IT.PROFILE:
             # Need to get all computers UUID of the profile
-            uuids = map(lambda c: c.uuid,
-                        ComputerProfileManager().getProfileContent(target_id))
+            uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(target_id)]
             q = q.filter(self.target.c.type == P2IT.COMPUTER_IN_PROFILE) \
                 .filter(self.target.c.uuid.in_(uuids))
         else:
@@ -1074,7 +1073,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = q1.offset(int(start)).limit(int(end)-int(start))
         else:
             q1 = q1.all()
-        bs_ids = map(lambda bs:bs[1], q1)
+        bs_ids = [bs[1] for bs in q1]
         q2 = self.__PossibleBootServiceAndMenuItem(session, bs_ids, menu.id)
         profile = ComputerProfileManager().getComputersProfile(target_uuid)
         if profile != None:
@@ -1106,7 +1105,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = q1.offset(int(start)).limit(int(end)-int(start))
         else:
             q1 = q1.all()
-        bs_ids = map(lambda bs:bs[1], q1)
+        bs_ids = [bs[1] for bs in q1]
         q2 = self.__PossibleBootServiceAndMenuItem(session, bs_ids, menu.id)
         session.close()
 
@@ -1155,11 +1154,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __addMenuDefaults(self, session, menu, mi, params):
         is_menu_modified = False
         #if 'default' in params and params['default']:
-        if params.has_key('default') and 'default' in params and params['default']:
+        if 'default' in params and 'default' in params and params['default']:
             is_menu_modified = True
             menu.fk_default_item = mi.id
         #if 'default_WOL' in params and params['default_WOL']:
-        if params.has_key('default_WOL') and 'default_WOL' in params and params['default_WOL']:
+        if 'default_WOL' in params and 'default_WOL' in params and params['default_WOL']:
             is_menu_modified = True
             menu.fk_default_item_WOL = mi.id
         if is_menu_modified:
@@ -1168,7 +1167,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __editMenuDefaults(self, session, menu, mi, params):
         is_menu_modified = False
-        if type(menu) in (long, int):
+        if type(menu) in (int, int):
             menu = session.query(Menu).filter(self.menu.c.id == menu).first()
         if menu.fk_default_item != mi.id and params['default']:
             is_menu_modified = True
@@ -1228,7 +1227,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi.id
 
     def getProfileComputersDefaultMenuItem(self, profile_uuid, session):
-        uuids = map(lambda c:c.uuid, ComputerProfileManager().getProfileContent(profile_uuid))
+        uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(profile_uuid)]
 
         q = session.query(Target).add_entity(Menu)
         q = q.select_from(self.target.join(self.menu, self.target.c.fk_menu == self.menu.c.id))
@@ -1609,10 +1608,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = q1.offset(int(start)).limit(int(end) - int(start))
         else:
             q1 = q1.all()
-        bs_ids = map(lambda bs: bs[1], q1)
+        bs_ids = [bs[1] for bs in q1]
         q2 = self.__PossibleImageAndMenuItem(session, bs_ids, menu.id)
 
-        im_ids = map(lambda im: im[0].id, q1)
+        im_ids = [im[0].id for im in q1]
         q3 = session.query(Target).add_entity(MasteredOn).select_from(self.target.join(self.imaging_log).join(self.mastered_on)).filter(self.mastered_on.c.fk_image.in_(im_ids)).all()
         session.close()
 
@@ -1626,7 +1625,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 q1 = self.__PossibleImages(session, puuid, is_master, filt)
                 q1 = q1.group_by(self.image.c.id)
                 q1 = q1.all()
-                bs_ids = map(lambda bs: bs[1], q1)
+                bs_ids = [bs[1] for bs in q1]
                 q2 = self.__PossibleImageAndMenuItem(session, bs_ids, menu.id)
 
                 in_profile = {}
@@ -1764,7 +1763,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.filter(and_(self.entity.c.uuid == uuidimagingServer,
                           self.target.c.id == self.imaging_log.c.fk_target))
         q = q.order_by(self.image.c.is_master)
-        print q
+        print(q)
         q=q.all()
         q1 =  [[z.Computer, z.ComputerName,z.Nameimage,z.masterimage,z.nameimagingserver,z.uuidentity] for z in q]
         return q1
@@ -1780,7 +1779,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = q1.offset(int(start)).limit(int(end)-int(start))
         else:
             q1 = q1.all()
-        bs_ids = map(lambda bs:bs[1], q1)
+        bs_ids = [bs[1] for bs in q1]
         q2 = self.__PossibleImageAndMenuItem(session, bs_ids, menu.id)
         session.close()
 
@@ -1791,16 +1790,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         ret = {}
         q1 = self.__EntityImages(session, loc_id, '')
-        q1 = q1.filter(self.image.c.id.in_(map(lambda u:uuid2id(u), uuids))).all()
+        q1 = q1.filter(self.image.c.id.in_([uuid2id(u) for u in uuids])).all()
 
         q2 = session.query(PostInstallScript).add_column(self.post_install_script_in_image.c.fk_image).add_column(self.post_install_script_in_image.c.order)
         q2 = q2.select_from(self.post_install_script.join(self.post_install_script_in_image))
-        q2 = q2.filter(self.post_install_script_in_image.c.fk_image.in_(map(lambda u:uuid2id(u), uuids))).all()
+        q2 = q2.filter(self.post_install_script_in_image.c.fk_image.in_([uuid2id(u) for u in uuids])).all()
         session.close()
 
         im_pis = {}
         for pis, im_id, order in q2:
-            if not im_pis.has_key(im_id):
+            if im_id not in im_pis:
             #if not im_id in im_pis:
                 im_pis[im_id] = {}
             pis = pis.toH()
@@ -1809,7 +1808,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         for im_id in im_pis:
             h_pis = im_pis[im_id]
-            orders = h_pis.keys()
+            orders = list(h_pis.keys())
             orders.sort()
             a_pis = []
             for i in orders:
@@ -1852,7 +1851,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if menu == None:
             raise '%s:Please create menu before trying to put an image' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
         #if 'name' in params and not 'default_name' in params:
-        if params.has_key('name') and not params.has_key('default_name'):
+        if 'name' in params and 'default_name' not in params:
             params['default_name'] = params['name']
         mi = self.__createNewMenuItem(session, menu.id, params)
         session.flush()
@@ -1949,10 +1948,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         imaging_log.detail = log['detail']
         imaging_log.fk_imaging_log_level = log['level']
         #if log['state'] in self.r_nomenclatures['ImagingLogState']:
-        if self.r_nomenclatures['ImagingLogState'].has_key(log['state']):
+        if log['state'] in self.r_nomenclatures['ImagingLogState']:
             imaging_log.fk_imaging_log_state = self.r_nomenclatures['ImagingLogState'][log['state']]
             #elif log['state'] in self.nomenclatures['ImagingLogState']:
-        elif self.nomenclatures['ImagingLogState'].has_key(log['state']):
+        elif log['state'] in self.nomenclatures['ImagingLogState']:
             imaging_log.fk_imaging_log_state = log['state']
         else: # this state is unknown!
             self.logger.warn("don't know that imaging log state %s"%(log['state']))
@@ -2134,7 +2133,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             if post_install_scripts[pisid] != 'None':
                 inverted[post_install_scripts[pisid]] = pisid
         i = 0
-        my_keys = inverted.keys()
+        my_keys = list(inverted.keys())
         my_keys.sort()
         for order in my_keys:
             ret[inverted[order]] = i
@@ -2427,7 +2426,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     .join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log) \
                     .join(self.target, self.target.c.id == self.imaging_log.c.fk_target) \
                 ).filter(filt1).all()
-        images_ids = map(lambda r:r[0].id, q1)
+        images_ids = [r[0].id for r in q1]
 
         ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)) \
                 .filter(filt1).first()
@@ -2447,7 +2446,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         h_pis_by_imageid = {}
         for pis in q2:
             #if not pis.image_id in h_pis_by_imageid:
-            if not h_pis_by_imageid.has_key(pis.image_id):
+            if pis.image_id not in h_pis_by_imageid:
                 h_pis_by_imageid[pis.image_id] = []
             h_pis_by_imageid[pis.image_id].append(pis)
 
@@ -3260,7 +3259,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 ret[target.uuid] = (target.is_registered_in_package_server == 1)
             for l_uuid in uuid:
                 #if not l_uuid in ret:
-                if not ret.has_key(l_uuid):
+                if l_uuid not in ret:
                     ret[l_uuid] = False
         else:
             q = session.query(Target).filter(and_(self.target.c.uuid == uuid, filt)).first()
@@ -3291,7 +3290,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 ret[target.uuid] = True
             for l_uuid in uuid:
                 #if not l_uuid in ret:
-                if not ret.has_key(l_uuid):
+                if l_uuid not in ret:
                     ret[l_uuid] = False
         else:
             q = session.query(Target).filter(and_(self.target.c.uuid == uuid, filt)).first()
@@ -3465,7 +3464,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = self.__getSynchroStates(uuids, target_type, session)
         session.close()
         if q:
-            return map(lambda x: x[0], q)
+            return [x[0] for x in q]
         return None
 
     def getTargetsCustomMenuFlag(self, uuids, target_type):
@@ -3564,7 +3563,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.flush()
             session.close()
             return True
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             session.close()
             return False
@@ -3592,7 +3591,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.flush()
             session.close()
             return True
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             session.close()
             return False
@@ -3723,7 +3722,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def delComputersFromProfile(self, profile_UUID, computers):
         # we put the profile's mi before the computer's mi
         session = create_session()
-        computers_UUID = map(lambda c:c['uuid'], computers.values())
+        computers_UUID = [c['uuid'] for c in list(computers.values())]
         # copy the profile part of the menu in their own menu
         pmenu = self.getTargetMenu(profile_UUID, P2IT.PROFILE, session)
         pmis = self.__getAllProfileMenuItem(profile_UUID, session)
@@ -3849,11 +3848,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         registered = self.isTargetRegister(uuids, P2IT.COMPUTER_IN_PROFILE, session)
         for uuid in uuids:
             #if not (uuid in registered and registered[uuid]):
-            if not (registered.has_key(uuid) and registered[uuid]):
+            if not (uuid in registered and registered[uuid]):
                 loc_id = 0
                 location_id = locations[uuid]['uuid']
                 #if not location_id in cache_location_id:
-                if not cache_location_id.has_key(location_id):
+                if location_id not in cache_location_id:
                     loc = session.query(Entity).filter(self.entity.c.uuid == location_id).first()
                     cache_location_id[location_id] = loc.id
                 loc_id = cache_location_id[location_id]
@@ -3879,7 +3878,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         location_id = entity.uuid
         loc = session.query(Entity).filter(self.entity.c.uuid == location_id).first()
 
-        for computer in computers.values():
+        for computer in list(computers.values()):
             m = self.__duplicateMenu(session, menu, location_id, profile_UUID, True)
             self.__createTarget(session, computer['uuid'], computer['hostname'], P2IT.COMPUTER_IN_PROFILE, loc.id, m.id, {})
 
@@ -4288,7 +4287,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.logger.debug("Attribution location %s for computer  %s"%(target.fk_entity,target.name ))
             session.add(target)
             session.commit()
-        except InvalidRequestError, e:
+        except InvalidRequestError as e:
             session.rollback()
             if hasattr(e, 'message'):
                 if e.message == 'No rows returned for one()':
@@ -4372,12 +4371,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         else:
             computers = ComputerProfileManager().getProfileContent(profile_UUID)
             if computers:
-                computers = map(lambda c:c.uuid, computers)
+                computers = [c.uuid for c in computers]
                 targets = targets.filter(and_(self.target.c.type == P2IT.COMPUTER, not self.target.c.uuid.in_(computers)))
             else:
                 targets = targets.filter(self.target.c.type == P2IT.COMPUTER).all()
         session.close()
-        ret = map(lambda t:t.uuid, targets)
+        ret = [t.uuid for t in targets]
         return ret
 
     def areForbiddebComputers(self, computers_UUID):
@@ -4390,7 +4389,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .join(self.menu, self.target.c.fk_menu == self.menu.c.id) \
             ).filter(and_(self.target.c.uuid.in_(computers_UUID), self.target.c.type == P2IT.COMPUTER)).all()
         session.close()
-        ret = map(lambda t:t.uuid, targets)
+        ret = [t.uuid for t in targets]
         return ret
 
     def getImageIDFromImageUUID(self, image_uuid):

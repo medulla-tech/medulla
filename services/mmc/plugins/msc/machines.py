@@ -74,7 +74,7 @@ class Machines(Singleton):
         return all declared machines
         """
         ret = ComputerManager().getComputersList(ctx)
-        return map(lambda m: Machine(ret[m][1]), ret)
+        return [Machine(ret[m][1]) for m in ret]
 
     def getMachines(self, ctx, h_params):
         """
@@ -82,7 +82,7 @@ class Machines(Singleton):
         h_params stuct looks like that : {'hostname':name, 'uuid':uuid}
         """
         ret = ComputerManager().getComputersList(ctx, h_params)
-        return map(lambda m: Machine(ret[m][1]), ret)
+        return [Machine(ret[m][1]) for m in ret]
 
     def getMachine(self, ctx, h_params):
         """

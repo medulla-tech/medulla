@@ -56,7 +56,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
         elif data['subaction'] == 'update':
             deploypackage(data,  message, xmppobject)
         else:
-            print "No subaction found"
+            print("No subaction found")
     else:
         pass
 
@@ -77,10 +77,10 @@ def initialisekiosk(data, message, xmppobject):
             user = ""
         else:
             user = data['userlist'][0]
-        print "call updatemachineAD"
+        print("call updatemachineAD")
         XmppMasterDatabase().updatemachineAD(machine['id'], user, data['oumachine'], data['ouuser'])
 
-    print json.dumps(machine, indent=4)
+    print(json.dumps(machine, indent=4))
     initializationdatakiosk = handlerkioskpresence(message['from'],
                                                    machine['id'],
                                                    machine['platform'],
@@ -102,7 +102,7 @@ def initialisekiosk(data, message, xmppobject):
 
 def deploypackage(data, message, xmppobject):
     machine = XmppMasterDatabase().getMachinefromjid(message['from'])
-    print json.dumps(machine, indent=4)
+    print(json.dumps(machine, indent=4))
 
     nameuser = "(kiosk):%s/%s" % (machine['lastuser'], machine['hostname'])
 

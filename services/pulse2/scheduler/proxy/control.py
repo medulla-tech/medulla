@@ -136,7 +136,7 @@ class App :
                     Site(self.xmlrpc_proxy),
                     interface = self.config.host
                     )
-        except Exception, e:
+        except Exception as e:
             self.logger.error('XMLRPC Proxy of scheduler %s: can\'t bind to %s:%d, reason is %s' %
                     (self.config.name, self.config.host, self.config.port, e))
             return False

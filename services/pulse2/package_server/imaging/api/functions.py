@@ -48,11 +48,10 @@ from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc
 from pulse2.apis import makeURL
 from pulse2.imaging.image import Pulse2Image
 import json
-import ConfigParser
+import configparser
 
 
-class Imaging(object):
-    __metaclass__ = SingletonN
+class Imaging(object, metaclass=SingletonN):
     """ Common imaging function to perform PXE actions and others """
 
     def init1(self, config):
@@ -82,13 +81,13 @@ class Imaging(object):
             if folder != 'base':
                 dirname = os.path.join(basefolder, dirname)
             if not os.path.isdir(dirname):
-                raise ValueError, "Directory '%s' does not exists. Please check option '%s' in your configuration file." % (dirname, optname)
+                raise ValueError("Directory '%s' does not exists. Please check option '%s' in your configuration file." % (dirname, optname))
         for optname in ['diskless_kernel', 'diskless_initrd']:
             fpath = os.path.join(basefolder,
                                  self.config.imaging_api['diskless_folder'],
                                  self.config.imaging_api[optname])
             if not os.path.isfile(fpath):
-                raise ValueError, "File '%s' does not exists. Please check option '%s' in your configuration file." % (fpath, optname)
+                raise ValueError("File '%s' does not exists. Please check option '%s' in your configuration file." % (fpath, optname))
 
     def _init(self):
         """
@@ -106,7 +105,7 @@ class Imaging(object):
                     m = imb.make()
                     m.write()
                     self.logger.info('Default computer boot menu successfully written')
-                except Exception, e:
+                except Exception as e:
                     self.logger.exception('Error while setting default computer menu: %s', e)
 
         def _errDefaultMenu(error):
@@ -153,7 +152,7 @@ class Imaging(object):
                 imenu = imb.make()
                 menu_data = imenu.buildMenu()
 
-            except Exception, e:
+            except Exception as e:
                 self.logger.exception("Error while setting new menu of computer uuid/mac %s", str(e))
                 # if cant generate specific menu, use default menu
                 # or minimal menu genre "Continue usual startup"
@@ -341,7 +340,7 @@ class Imaging(object):
                 if self.computerRegister(computerName, macAddress, imagingData):
                     # Registration succeeded
                     ret.append(imagingData['uuid'])
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Can't register computer %s / %s: %s" % (computerName, macAddress, str(e)))
         return ret
 
@@ -382,7 +381,7 @@ class Imaging(object):
             profile, entity_path, hostname, domain = splitComputerPath(computerName)
             entity_path = entity_path.split('/')
             entity = entity_path.pop()
-        except TypeError, ex:
+        except TypeError as ex:
             self.logger.error('Imaging: Won\'t register %s as %s : %s' % (macAddress, computerName, ex))
             return maybeDeferred(lambda x: x, False)
 
@@ -460,7 +459,7 @@ class Imaging(object):
         try:
             os.mkdir(target_folder)
             self.logger.debug('Imaging: folder %s for client %s was created' % (target_folder, uuid))
-        except Exception, e:
+        except Exception as e:
             self.logger.error('Imaging: I was not able to create folder %s for client %s : %s' % (target_folder, uuid, e))
             return False
         return True
@@ -570,7 +569,7 @@ class Imaging(object):
                 else:
                     self.logger.debug("Imaging: Unable to resolve %s neither from cache nor from database (unknown computer?)" % (MACAddress))
                     return False
-            except Exception, e:
+            except Exception as e:
                 self.logger.error('Imaging: While processing result %s for %s : %s' % (result, MACAddress, e))
 
         if not isMACAddress(MACAddress):
@@ -630,7 +629,7 @@ class Imaging(object):
                                                    hostname,
                                                    menu)
                 imc.write()
-            except Exception, e:
+            except Exception as e:
                 self.logger.exception("Error while setting new menu of computer uuid/mac %s: %s" % (cuuid, e))
                 # FIXME: Rollback to the previous menu
         return ret
@@ -658,7 +657,7 @@ class Imaging(object):
                 imenu = imb.make()
                 imenu.write()
                 ret = True
-            except Exception, e:
+            except Exception as e:
                 self.logger.exception("Error while setting default boot menu of unregistered computers: %s" % e)
                 ret = False
         return ret
@@ -684,7 +683,7 @@ class Imaging(object):
             try:
                 image = Pulse2Image(path, False)
                 ret = image.logs
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Can't get backup logs of image with UUID %s: %s" % (imageUUID, str(e)))
         assert(type(ret) == list)
         return ret
@@ -768,7 +767,7 @@ class Imaging(object):
 
         try:
             os.mkdir(os.path.join(target_folder, image_uuid))
-        except Exception, e:
+        except Exception as e:
             self.logger.warn('Imaging: I was not able to create folder %s for client %s : %s' % (os.path.join(target_folder, image_uuid), mac, e))
             return maybeDeferred(lambda x: x, False)
 
@@ -967,7 +966,7 @@ class Imaging(object):
                 try:
                     shutil.rmtree(path)
                     ret = True
-                except Exception, e:
+                except Exception as e:
                     self.logger.error("Error while removing image with UUID %s: %s" % (imageUUID, e))
                     ret = False
 
@@ -997,7 +996,7 @@ class Imaging(object):
         try:
             iso.prepare()
             iso.create()
-        except Exception, e:
+        except Exception as e:
             self.logger.error('Error while creating ISO image: %s' % e)
             ret = False
         return ret
@@ -1048,7 +1047,7 @@ class Imaging(object):
             result['sizeuser'][x]=self._sizeImgDevice(pathfile, x)
         result['indexpartition']=-1
         result['partionname']=""
-        result['bytesend']=long(0)
+        result['bytesend']=int(0)
         if os.path.exists("/tmp/udp-sender.log"):
             r = subprocess.Popen("cat /tmp/udp-sender.log | awk 'BEGIN{ aa=-1;bb =0;a=\"0\"; } /^[0-9]./{ e=a; a= $NF; } /Starting transfer/{aa+=1;} /Transfer complete/{bb+=1;} END{ee=sprintf(\"%d %s %d\",aa,a,bb);print ee;}'",
                             shell=True,
@@ -1059,7 +1058,7 @@ class Imaging(object):
             lineinformation = [x.strip(' \t\n\r') for x in line[0].split(' ') if x.strip(' \t\n\r') != ""]
             if lineinformation[0] != "-1" and len (lineinformation) >= 3:
                 result['indexpartition']=int(lineinformation[0])
-                result['bytesend']=long(lineinformation[1])
+                result['bytesend']=int(lineinformation[1])
                 if len(result['partitionlist']) == int(lineinformation[2]):
                     result['complete']=True
                 if int(result['indexpartition']) != -1:
@@ -1081,7 +1080,7 @@ class Imaging(object):
 
     def SetMulticastMultiSessionParameters(self, parameters):
         try:
-            Config = ConfigParser.ConfigParser()
+            Config = configparser.ConfigParser()
             cfgfile = open("/tmp/MultiSessionParameters.ini",'w')
             Config.add_section('sessionparameters')
             Config.set('sessionparameters','gid',parameters['gid'])
@@ -1102,7 +1101,7 @@ class Imaging(object):
     def GetMulticastMultiSessionParameters(self, location):
         parameters= {}
         try:
-            Config = ConfigParser.ConfigParser()
+            Config = configparser.ConfigParser()
             Config.read("/tmp/MultiSessionParameters.ini")
             parameters['gid']           = Config.get('sessionparameters', 'gid')
             parameters['from']          = Config.get('sessionparameters', 'from')
@@ -1283,7 +1282,7 @@ class Imaging(object):
         try:
             entry = script_file.pop()
             ImagingBootServiceItem(entry).writeShFile(script_file)
-        except Exception, e:
+        except Exception as e:
             self.logger.error('Error while writing sh file: %s' % e)
             ret = False
 
@@ -1294,7 +1293,7 @@ class Imaging(object):
         try:
             entry = datas.pop()
             ImagingBootServiceItem(entry).unlinkShFile(datas)
-        except Exception, e:
+        except Exception as e:
             self.logger.error('Error while deleting sh file: %s' % e)
             ret = False
 

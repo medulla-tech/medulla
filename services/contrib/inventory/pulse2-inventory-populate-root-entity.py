@@ -27,12 +27,12 @@ import sys
 try:
     from sqlalchemy import create_engine, MetaData, Table, select, and_, __version__
 except ImportError:
-    print "SqlAlchemy was not found, please install it !"
+    print("SqlAlchemy was not found, please install it !")
     sys.exit(1)
 
 def usage(argv):
-    print >> sys.stderr, 'Usage: %s db_conn_string [--id entity_id|--name entity_name]' % argv[0]
-    print >> sys.stderr, 'Where db_conn_string is a SQLAlchemy connection string, e.g. mysql://user:password@host/database'
+    print('Usage: %s db_conn_string [--id entity_id|--name entity_name]' % argv[0], file=sys.stderr)
+    print('Where db_conn_string is a SQLAlchemy connection string, e.g. mysql://user:password@host/database', file=sys.stderr)
     return 1
 
 if __name__ == "__main__":
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         sys.exit(usage(sys.argv))
 
     if not __version__.startswith('0.4'):
-        print "Wrong version of SqlAlchemy found, please install a 0.4 version !"
+        print("Wrong version of SqlAlchemy found, please install a 0.4 version !")
         sys.exit(1)
 
     get_entity = False
@@ -53,7 +53,7 @@ if __name__ == "__main__":
             name_entity = sys.argv[3]
             get_entity = True
         else:
-            print "dont know this option : %s" % sys.argv[2]
+            print("dont know this option : %s" % sys.argv[2])
             sys.exit(1)
 
     mysql_db = create_engine(sys.argv[1])
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         else:
             ent = select([entity.c.id], and_(entity.c.Label == name_entity)).execute().fetchall()
         if ent == None or len(ent) == 0:
-            print "Cant get the required entity"
+            print("Cant get the required entity")
             sys.exit(1)
         entity_id = ent[0][0]
 

@@ -123,9 +123,9 @@ class BoundMethodWeakref(object):
                     try:
                         traceback.print_exc()
                     except AttributeError:
-                        print('Exception during saferef %s cleanup function %s: %s' % (
+                        print(('Exception during saferef %s cleanup function %s: %s' % (
                             self, function, e)
-                        )
+                        ))
         self.deletionMethods = [onDelete]
         self.key = self.calculateKey(target)
         self.weakSelf = weakref.ref(target.__self__, remove)
@@ -159,7 +159,7 @@ class BoundMethodWeakref(object):
         """Whether we are still a valid reference"""
         return self() is not None
 
-    def __nonzero__(self):      # Python 2 compatibility
+    def __bool__(self):      # Python 2 compatibility
         return type(self).__bool__(self)
 
     def __eq__(self, other):

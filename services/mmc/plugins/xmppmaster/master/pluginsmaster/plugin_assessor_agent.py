@@ -35,7 +35,7 @@ from localisation import Localisation, Point
 import operator
 import netaddr
 import os
-import ConfigParser
+import configparser
 
 from manageADorganization import manage_fqdn_window_activedirectory
 
@@ -662,7 +662,7 @@ def read_conf_assessor_master(objectxmpp):
         return False
     else:
         objectxmpp.assessor_agent_errorconf = False
-        Config = ConfigParser.ConfigParser()
+        Config = configparser.ConfigParser()
         Config.read(pathfileconf)
         if os.path.exists(pathfileconf + ".local"):
             Config.read(pathfileconf + ".local")

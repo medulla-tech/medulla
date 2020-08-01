@@ -197,7 +197,7 @@ class Query(object):
         try:
             with open(self.license_tmp_file, "w") as jsonfile:
                 json.dump(data, jsonfile)
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("JSON file dump failed: %s" % str(e))
         return data
 
@@ -227,6 +227,6 @@ class Query(object):
                     self.logger.warn("Skipping the JSON parsing from file")
                     return None
 
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("JSON temp file load failed: %s" % str(e))
             return None

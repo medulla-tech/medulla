@@ -38,7 +38,7 @@ class Sender(Protocol):
     def call_remote(self, pack):
         try :
             self.transport.write(pack)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("\033[31mux call failed: %s\033[0m" % str(e))
 
         self.send_locked = True
@@ -52,7 +52,7 @@ class Sender(Protocol):
         self.send_locked = False
         self.response(data,
                       self.request,
-                      self.func_name,
+                      self.__name__,
                       self.args)
 
 
@@ -105,7 +105,7 @@ class Forwarder:
         self.logger.debug("UX:calling %s" %(func_name))
         try :
             packet = PackUtils.pack([func_name, args])
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("UX call pack method failed: %s" % str(e))
 
 
@@ -121,9 +121,9 @@ class Forwarder:
         else :
             # response immediately
             try :
-                self.protocol.func_name = func_name
+                self.protocol.__name__ = func_name
                 self.protocol.args = args
                 self.protocol.request = request
                 self.protocol.call_remote(packet)
-            except Exception, e:
+            except Exception as e:
                 self.logger.warn("UX: immediate call method failed: %s" % str(e))

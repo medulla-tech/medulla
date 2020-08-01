@@ -57,14 +57,13 @@ def activate():
 
     return True
 
-class LicenseChecker(object):
+class LicenseChecker(object, metaclass=SingletonN):
     """
     Periodical checks to license server.
 
     This checks are triggered by cron and returned and parsed data
     updates the license widget on dashboard.
     """
-    __metaclass__ = SingletonN
 
 
     def get_license_info(self, offline=False):
@@ -195,7 +194,7 @@ class LicenseChecker(object):
         @return: converted data
         @rtype: dict
         """
-        for key, value in data.items():
+        for key, value in list(data.items()):
             if isinstance(value, list):
                 lst = []
                 for sub_data in value:

@@ -23,7 +23,7 @@
 
 from subprocess import Popen, PIPE
 
-from ptypes import Component
+from .ptypes import Component
 
 class Shell(Component):
 

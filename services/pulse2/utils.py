@@ -51,7 +51,7 @@ import struct
 import fcntl
 
 # to build Pulse2ConfigParser on top of ConfigParser()
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 # some imports to convert stuff in xmlrpcCleanup()
 import datetime
@@ -136,7 +136,7 @@ def xmlrpcCleanup(data):
     """
     if type(data) == dict:
         ret = {}
-        for key in data.keys():
+        for key in list(data.keys()):
             # array keys must be string
             ret[str(key)] = xmlrpcCleanup(data[key])
     elif type(data) == list:
@@ -158,8 +158,8 @@ def xmlrpcCleanup(data):
     elif data is None:
         ret = False
     elif type(data) == tuple:
-        ret = map(lambda x: xmlrpcCleanup(x), data)
-    elif type(data) == long:
+        ret = [xmlrpcCleanup(x) for x in data]
+    elif type(data) == int:
         ret = str(data)
     else:
         ret = data
@@ -204,7 +204,7 @@ def unique(s):
         u = None # move on to the next method
 
     if u is not None:
-        return u.keys()
+        return list(u.keys())
     del u
 
     # We can't hash all the elements.  Second fastest is to sort,
@@ -243,9 +243,9 @@ def unique(s):
 
 def same_network(ip1, ip2, netmask):
     try:
-        ip1 = map(lambda x: int(x), ip1.split('.'))
-        ip2 = map(lambda x: int(x), ip2.split('.'))
-        netmask = map(lambda x: int(x), netmask.split('.'))
+        ip1 = [int(x) for x in ip1.split('.')]
+        ip2 = [int(x) for x in ip2.split('.')]
+        netmask = [int(x) for x in netmask.split('.')]
         for i in range(4):
             if ip1[i].__and__(netmask[i]) != ip2[i].__and__(netmask[i]):
                 return False
@@ -275,16 +275,16 @@ def getConfigFile(module, path = mmcconfdir + "/plugins/"):
 
 
 def isdigit(i):
-    if type(i) == int or type(i) == long:
+    if type(i) == int or type(i) == int:
         return True
-    if (type(i) == str or type(i) == unicode) and re.search("^\d*$", i):
+    if (type(i) == str or type(i) == str) and re.search("^\d*$", i):
         return True
     return False
 
 
 def grep(string, list):
     expr = re.compile(string)
-    return filter(expr.search, list)
+    return list(filter(expr.search, list))
 
 
 def grepv(string, list):
@@ -331,7 +331,7 @@ def isCiscoMacAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    if type(mac_addr) not in [str, unicode]:
+    if type(mac_addr) not in [str, str]:
         return False
     regex = '^([0-9a-f]{4}\.[0-9a-f]{4}\.[0-9a-f]{4})$'
     return re.match(regex, mac_addr) is not None
@@ -346,7 +346,7 @@ def isLinuxMacAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    if type(mac_addr) not in [str, unicode]:
+    if type(mac_addr) not in [str, str]:
         return False
     regex = '^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$'
     return re.match(regex, mac_addr) is not None
@@ -361,7 +361,7 @@ def isWinMacAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    if type(mac_addr) not in [str, unicode]:
+    if type(mac_addr) not in [str, str]:
         return False
     regex = '^([0-9a-fA-F][0-9a-fA-F]-){5}([0-9a-fA-F][0-9a-fA-F])$'
     return re.match(regex, mac_addr) is not None
@@ -376,7 +376,7 @@ def isShortMacAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    if type(mac_addr) not in [str, unicode]:
+    if type(mac_addr) not in [str, str]:
         return False
     regex = '^(([0-9a-fA-F]){12})$'
     return re.match(regex, mac_addr) is not None
@@ -411,7 +411,7 @@ def normalizeMACAddress(mac):
     @return: the MAC address normalized (see this module documentation)
     """
     assert isMACAddress(mac)
-    return ':'.join(map(lambda (x, y): x + y, zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]))) # any questions ?
+    return ':'.join([x_y[0] + x_y[1] for x_y in zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2])]) # any questions ?
 
 
 def normalizeMACAddressForPXELINUX(mac):
@@ -419,7 +419,7 @@ def normalizeMACAddressForPXELINUX(mac):
     @return: the MAC address normalized for PXELINUX (uses - as separator)
     """
     assert isMACAddress(mac)
-    macaddress = '-'.join(map(lambda (x, y): x + y, zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]))) # any questions ?
+    macaddress = '-'.join([x_y1[0] + x_y1[1] for x_y1 in zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2])]) # any questions ?
     return '01-' + macaddress.lower()
 
 
@@ -443,7 +443,7 @@ def isUUID(value):
     @return: True if the parameter is a valid UUID
     @rtype: bool
     """
-    if type(value) in [str, unicode] and value.startswith('UUID'):
+    if type(value) in [str, str] and value.startswith('UUID'):
         try:
             value = int(value[4:])
             ret = value > 0
@@ -550,7 +550,7 @@ def humanReadable(num, unit = "B", base = 1024):
     port of my famous "human readable" formating function
     """
 
-    assert type(num) in [float, int, long]
+    assert type(num) in [float, int, int]
     assert type(unit) in [str]
     assert type(base) in [int]
 
@@ -747,8 +747,8 @@ class HasSufficientMemory :
 def subnetForIpMask(ip, netmask):
     resultat=[]
     try:
-        ip = map(lambda x: int(x), ip.split('.'))
-        netmask = map(lambda x: int(x), netmask.split('.'))
+        ip = [int(x) for x in ip.split('.')]
+        netmask = [int(x) for x in netmask.split('.')]
         for i in range(4):
             resultat.append( str(ip[i] & netmask[i]))
         result=".".join(resultat)

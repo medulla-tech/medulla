@@ -21,7 +21,7 @@
 
 import os
 import time
-import Queue
+import queue
 import threading
 
 from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
@@ -145,7 +145,7 @@ class SSLSocketServer(object):
             result = self._receive()
             if result == self.SHUTDOWN:
                 #self.shutdown()
-                print "shutdown !!!!!!!!"
+                print("shutdown !!!!!!!!")
                 break
 
             self.recv_queue.put(result)
@@ -165,7 +165,7 @@ class SSLSocketServer(object):
                    )
             result = ssl_client.read(1024)
 
-            print "result received on SSL server: %s" % result
+            print("result received on SSL server: %s" % result)
             return result
 
 
@@ -173,7 +173,7 @@ class SSLSocketServer(object):
         data = self.send_queue.get()
         if data is not None:
             time.sleep(1)
-            print "sending data: %s" % data
+            print("sending data: %s" % data)
             self.server.send(data)
 
     def shutdown(self):
@@ -224,7 +224,7 @@ class Test00_Connector(TestCase):
         """A simple echo test with SSL authentification"""
 
         # result queue
-        queue = Queue.Queue()
+        queue = queue.Queue()
         # starting the server in a thread
         t = threading.Thread(target=build_ssl_server,
                              args=(queue,
@@ -285,7 +285,7 @@ class Test00_Connector(TestCase):
 
     def test05_unknown_ssl_server_timeout_raise(self):
         # result queue
-        queue = Queue.Queue()
+        queue = queue.Queue()
         # starting the server in a thread
         t = threading.Thread(target=build_ssl_server,
                              args=(queue,
@@ -307,7 +307,7 @@ class Test00_Connector(TestCase):
         client_sock.sendall("something")
         # geting the data received on server
         result = queue.get()
-        print "test5 result: %s" % result
+        print("test5 result: %s" % result)
         self.assertEqual(result, "something")
 
         client_sock.close()
@@ -321,7 +321,7 @@ class Test01_ClientEndpoint(TestCase):
 
     def test01_simply_send_receive_ssl(self):
 
-        queue = Queue.Queue()
+        queue = queue.Queue()
         t = threading.Thread(target=build_ssl_server,
                              args=(queue,
                                    crtfile_server,
@@ -344,8 +344,8 @@ class Test01_ClientEndpoint(TestCase):
 
     def test02_exchange_some_data_ssl(self):
 
-        recv_queue = Queue.Queue()
-        send_queue = Queue.Queue()
+        recv_queue = queue.Queue()
+        send_queue = queue.Queue()
 
         t = threading.Thread(target=build_looped_ssl_server,
                              args=(recv_queue,

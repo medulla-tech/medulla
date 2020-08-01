@@ -173,8 +173,9 @@ class RemoteControlPhase(Phase):
         return self.switch_phase_failed()
 
 
-    def parse_remote_phase_result(self,(exitcode, stdout, stderr)):
+    def parse_remote_phase_result(self, xxx_todo_changeme8):
 
+        (exitcode, stdout, stderr) = xxx_todo_changeme8
         if exitcode == PULSE2_SUCCESS_ERROR: # success
             self.logger.info("Circuit #%s: (%s on %s) %s done (exitcode == 0)" %
                     (self.coh.id,
@@ -186,7 +187,7 @@ class RemoteControlPhase(Phase):
                 return DIRECTIVE.KILLED
 
             if self.phase.switch_to_done():
-                return self.next()
+                return next(self)
             return self.give_up()
 
         elif self.name in self.config.non_fatal_steps:
@@ -197,7 +198,7 @@ class RemoteControlPhase(Phase):
                      self.name))
             self.update_history_failed(exitcode, stdout, stderr)
             self.phase.set_done()
-            return self.next()
+            return next(self)
 
         else: # failure: immediately give up
             self.logger.info("Circuit #%s: (%s on %s) %s failed (exitcode != 0)" %
@@ -229,7 +230,7 @@ class WOLPhase(Phase):
                      self.cmd.title,
                      self.target.target_name))
 
-            return self.next()
+            return next(self)
 
         if not self.target.hasEnoughInfoToWOL() or not self.host:
             # not enough information to perform WOL: ignoring phase but writting this in DB
@@ -238,7 +239,7 @@ class WOLPhase(Phase):
                                " skipped : not enough information in target table")
             if not self.coh.isStateStopped():
                 self.coh.setStateScheduled()
-            return self.next()
+            return next(self)
 
         if not self.last_wol_attempt and self.phase.is_ready():
             self.phase.set_running()
@@ -262,7 +263,7 @@ class WOLPhase(Phase):
                 self.phase.set_done()
                 if not self.coh.isStateStopped():
                     self.coh.setStateScheduled()
-                return self.next()
+                return next(self)
             self.logger.info("Circuit #%s: (%s on %s) do wol (target not up)" %
                     (self.coh.id,
                      self.cmd.title,
@@ -307,7 +308,7 @@ class WOLPhase(Phase):
             self.update_history_done(PULSE2_SUCCESS_ERROR, stdout, stderr)
 
             if self.phase.switch_to_done():
-                return self.next()
+                return next(self)
             else:
                 return self.give_up()
 
@@ -338,7 +339,7 @@ class UploadPhase(RemoteControlPhase):
     def apply_initial_rules(self):
         if not self.cmd.hasSomethingToUpload():
             self.logger.info("Circuit #%s: Nothing to upload" % self.coh.id)
-            return self.next()
+            return next(self)
         ret = self._apply_initial_rules()
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP,
@@ -435,7 +436,7 @@ class UploadPhase(RemoteControlPhase):
                 ma.errorback = self._eb_mirror_check
                 d = ma.isAvailable(self.cmd.package_id)
                 d.addCallback(self._cbRunPushPullPhaseTestMainMirror, mirror, fbmirror, client)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Circuit #%s: exception while gathering information about %s on primary mirror %s : %s" % (self.coh.getId(), self.cmd.package_id, mirror, e))
                 return self._cbRunPushPullPhaseTestMainMirror(False, mirror, fbmirror, client)
 
@@ -494,7 +495,7 @@ class UploadPhase(RemoteControlPhase):
                 d = ma.isAvailable(self.cmd.package_id)
                 d.addCallback(self._cbRunPushPullPhase, mirror, fbmirror, client, True)
                 return d
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Circuit #%s: exception while gathering information about %s on fallback mirror %s : %s" % (self.coh.getId(), self.cmd.package_id, fbmirror, e))
         else:
             # Go to upload phase, but pass False to tell that the package is not
@@ -740,8 +741,9 @@ class UploadPhase(RemoteControlPhase):
         return mydeffered
 
     @launcher_proxymethod("completed_push")
-    def parsePushResult(self, (exitcode, stdout, stderr)):
+    def parsePushResult(self, xxx_todo_changeme):
 
+        (exitcode, stdout, stderr) = xxx_todo_changeme
         if exitcode == PULSE2_SUCCESS_ERROR: # success
             self.logger.info("Circuit #%s: (%s on %s) push done (exitcode == 0)" %
                     (self.coh.id,
@@ -749,7 +751,7 @@ class UploadPhase(RemoteControlPhase):
                      self.target.target_name))
             self.update_history_done(exitcode, stdout, stderr)
             if self.phase.switch_to_done():
-                return self.next()
+                return next(self)
             return self.give_up()
         else: # failure: immediately give up
             self.logger.info("Circuit #%s: (%s on %s) push failed (exitcode != 0)" %
@@ -762,8 +764,9 @@ class UploadPhase(RemoteControlPhase):
 
 
     @launcher_proxymethod("completed_pull")
-    def parsePullResult(self, (exitcode, stdout, stderr), id=None):
+    def parsePullResult(self, xxx_todo_changeme1, id=None):
 
+        (exitcode, stdout, stderr) = xxx_todo_changeme1
         proxy_coh_id = self.coh.getUsedProxy()
         if proxy_coh_id:
             proxy = CoHQuery(proxy_coh_id)
@@ -781,7 +784,7 @@ class UploadPhase(RemoteControlPhase):
                      self.target.target_name))
             self.update_history_done(exitcode, stdout, stderr)
             if self.phase.switch_to_done():
-                return self.next()
+                return next(self)
             return self.give_up()
         else: # failure: immediately give up
             self.logger.info("Circuit #%s: (%s on %s) pull failed (exitcode != 0)" %
@@ -848,7 +851,7 @@ class ExecutionPhase(RemoteControlPhase):
         if not self.cmd.hasSomethingToExecute():
             self.logger.info("Circuit #%s: Nothing to execute" % self.coh.id)
             self.phase.set_done()
-            return self.next()
+            return next(self)
         if self.cmd.hasToUseProxy():
             cohq = CoHQuery(self.coh.id)
             if not self.dispatcher.local_proxy_may_continue(cohq):
@@ -879,11 +882,13 @@ class ExecutionPhase(RemoteControlPhase):
 
 
     @launcher_proxymethod("completed_exec")
-    def parseExecutionResult(self, (exitcode, stdout, stderr)):
+    def parseExecutionResult(self, xxx_todo_changeme2):
+        (exitcode, stdout, stderr) = xxx_todo_changeme2
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
     @launcher_proxymethod("completed_quickaction")
-    def parseQuickActionResult(self, (exitcode, stdout, stderr)):
+    def parseQuickActionResult(self, xxx_todo_changeme3):
+        (exitcode, stdout, stderr) = xxx_todo_changeme3
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
 
@@ -899,7 +904,7 @@ class DeletePhase(RemoteControlPhase):
         if not self.cmd.hasSomethingToDelete():
             self.logger.info("Circuit #%s: Nothing to delete" % self.coh.id)
             self.phase.set_done()
-            return self.next()
+            return next(self)
 
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP,
@@ -920,7 +925,8 @@ class DeletePhase(RemoteControlPhase):
 
 
     @launcher_proxymethod("completed_delete")
-    def parseDeleteResult(self, (exitcode, stdout, stderr)):
+    def parseDeleteResult(self, xxx_todo_changeme4):
+        (exitcode, stdout, stderr) = xxx_todo_changeme4
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
 # --------------------------- INVENTORY --------------------------------
@@ -928,7 +934,8 @@ class InventoryPhase(RemoteControlPhase):
     name = "inventory"
 
     @launcher_proxymethod("completed_inventory")
-    def parseInventoryResult(self, (exitcode, stdout, stderr)):#, id=None):
+    def parseInventoryResult(self, xxx_todo_changeme5):#, id=None):
+        (exitcode, stdout, stderr) = xxx_todo_changeme5
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
 #  -------------------------- REBOOT ----------------------------------
@@ -946,7 +953,7 @@ class RebootPhase(RemoteControlPhase):
             else :
                 return self.give_up()
 
-            return self.next()
+            return next(self)
 
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP,
@@ -958,7 +965,8 @@ class RebootPhase(RemoteControlPhase):
 
 
     @launcher_proxymethod("completed_reboot")
-    def parseRebootResult(self, (exitcode, stdout, stderr)):
+    def parseRebootResult(self, xxx_todo_changeme6):
+        (exitcode, stdout, stderr) = xxx_todo_changeme6
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
 
@@ -972,14 +980,15 @@ class HaltPhase(RemoteControlPhase):
         if self.cmd.isPartOfABundle() and not self.dispatcher.bundles.is_last(self.coh.id):
             # there is still a coh in the same bundle that has to halt, jump to next stage
             self.logger.info("Circuit #%s: another circuit from the same bundle will do the halt" % self.coh.id)
-            return self.next()
+            return next(self)
         if ret == DIRECTIVE.PERFORM :
             return self._switch_on()
         return ret
 
 
     @launcher_proxymethod("completed_halt")
-    def parseHaltResult(self, (exitcode, stdout, stderr)):
+    def parseHaltResult(self, xxx_todo_changeme7):
+        (exitcode, stdout, stderr) = xxx_todo_changeme7
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
 class WUParsePhase(Phase):
@@ -1009,13 +1018,13 @@ class WUParsePhase(Phase):
             self.logger.debug("WU output: %s" % output)
             try:
                 parsed = json.loads(output)
-            except ValueError, e:
+            except ValueError as e:
                 self.logger.warn("Circuit #%s: Cannot parse WU output: %s" % (self.coh.id, str(e)))
                 self.update_history_failed(1, 'Cannot parse WU output', str(e))
                 self.logger.warn("Circuit #%s: WU Parse phase failed and skipped" % (self.coh.id))
                 self.update_history_failed(1, "", str(e))
                 self.switch_phase_failed()
-                return self.next()
+                return next(self)
 
             # Set OS Class id from response JSON
             if "os_class" in parsed:
@@ -1049,15 +1058,15 @@ class WUParsePhase(Phase):
 
                         try:
                             title = title.encode('utf-8', 'ignore')
-                        except Exception, e:
+                        except Exception as e:
                             self.logger.warn("WU Unable to encode title: %s" % str(e))
                         try:
                             kb_number = kb_number.encode('utf-8', 'ignore')
-                        except Exception, e:
+                        except Exception as e:
                             self.logger.warn("WU Unable to encode KB number: %s" % str(e))
                         try:
                             info_url = info_url.encode('utf-8', 'ignore')
-                        except Exception, e:
+                        except Exception as e:
                             self.logger.warn("WU Unable to encode info URL: %s" % str(e))
 
                         wu.inject(self.target.target_uuid.replace('UUID', ''),
@@ -1071,13 +1080,13 @@ class WUParsePhase(Phase):
                                      info_url,
                                      is_installed)
 
-                    except Exception, e:
+                    except Exception as e:
                         self.logger.error("WU Unable to insert update: %s" % str(e))
 
         self.logger.info("Circuit #%s: WU Parse phase successfully processed" % (self.coh.id))
         self.update_history_done(stdout="successfully processed")
         self.phase.set_done()
-        return self.next()
+        return next(self)
 
 
 
@@ -1091,4 +1100,4 @@ class DonePhase(Phase):
         self.phase.set_done()
         self.coh.setStateDone()
         self.dispatcher.bundles.finish(self.coh.id)
-        return self.next()
+        return next(self)

@@ -129,10 +129,10 @@ def ipconfig():
     conf=popen("/sbin/ifconfig eth0")
     server=conf.read()
     server=server.split()
-    print  server
+    print(server)
     ipserver=server[6][5:]
     if ipserver == "":
-        print "The computer doesn't have an IP address on the eth0 interface"
+        print("The computer doesn't have an IP address on the eth0 interface")
         sys.exit(1)
     return ipserver
 
@@ -292,7 +292,7 @@ def SupEspLi (li):
 def SupEspDi (di):
     """Delete spaces in dict"""
     # Verify if the values associated at the key k is a string or recall SupEsp
-    for k in di.keys():
+    for k in list(di.keys()):
         if type (di[k]) == type (""):
             di[k]=di[k].strip()
         else:

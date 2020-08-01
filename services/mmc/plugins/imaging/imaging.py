@@ -44,7 +44,7 @@ class ComputerImagingImaging(ComputerImagingI):
         get all the imaging server that this user can access
         """
         locations = ComputerLocationManager().getUserLocations(user_id)
-        locations = map(lambda l:l['uuid'], locations)
+        locations = [l['uuid'] for l in locations]
         r = ImagingDatabase().getEntitiesImagingServer(locations, is_associated)
         ret = {}
         for ims, loc_uuid in r:

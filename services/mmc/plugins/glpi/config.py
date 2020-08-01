@@ -21,7 +21,7 @@
 
 from mmc.support.config import PluginConfig
 
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 import logging
 
 class GlpiConfig(PluginConfig):
@@ -166,7 +166,7 @@ class GlpiConfig(PluginConfig):
             logging.getLogger().debug("will filter machines on %s" % (str(filters)))
             return filters
 
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().warn("Parsing on filter_on failed: %s" % str(e))
             return None
 

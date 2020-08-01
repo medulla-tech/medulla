@@ -84,15 +84,15 @@ class DefaultsFiller(object):
                             name, value = [s.strip() for s in line.split(self.DELIMITER)]
                             pattern[name] = value
                         else:
-                            print "WARNING: Unknown format  (file: %s:%d)" % (self.defaults_file, num)
-                            print "  --> %s" % line
-                            print "INFO: Ignoring"
+                            print("WARNING: Unknown format  (file: %s:%d)" % (self.defaults_file, num))
+                            print("  --> %s" % line)
+                            print("INFO: Ignoring")
                     else:
-                        print "WARNING: Unknown format  (file: %s:%d)" % (self.defaults_file, num)
-                        print "  --> %s" % line
-                        print "INFO: Ignoring"
+                        print("WARNING: Unknown format  (file: %s:%d)" % (self.defaults_file, num))
+                        print("  --> %s" % line)
+                        print("INFO: Ignoring")
         else:
-            print "WARNING: File with defaults (%s) not exists!" % (self.defaults_file)
+            print("WARNING: File with defaults (%s) not exists!" % (self.defaults_file))
 
         return pattern
 
@@ -124,7 +124,7 @@ class DefaultsFiller(object):
         """
         replaced_items = 0
         for line in fileinput.input(self.config_file, inplace=1):
-            for (old, new) in pattern.iteritems():
+            for (old, new) in pattern.items():
                 search_exp = "@@%s@@" % old
                 if search_exp in line:
                     line = line.replace(search_exp, new)
@@ -150,7 +150,7 @@ class PostInstallPosixHandler(object):
     def __init__(self, current_directory):
         self.current_directory = current_directory
 
-        print "Running selected handler: %s" % self.__class__.__name__
+        print("Running selected handler: %s" % self.__class__.__name__)
 
     def run(self):
         for method in (self.copy_files,
@@ -160,7 +160,7 @@ class PostInstallPosixHandler(object):
                        ):
             succeed = method()
             if not succeed:
-                print "ERROR: An error occurred during execute %s" % method.__name__
+                print("ERROR: An error occurred during execute %s" % method.__name__)
                 return False
         return True
 
@@ -171,7 +171,7 @@ class PostInstallPosixHandler(object):
 
             result = copy_file(source, destination)
             if result[1] != 1:
-                print "WARNING: copy of file %s -> %s failed" % (source, destination)
+                print("WARNING: copy of file %s -> %s failed" % (source, destination))
                 return False
         return True
 
@@ -186,15 +186,15 @@ class PostInstallPosixHandler(object):
         if df.exists :
             all_replaced = df.fill()
             if all_replaced:
-                print "INFO: Config file correctly updated"
+                print("INFO: Config file correctly updated")
                 return True
             else:
-                print "WARNING: Some occurrences weren't correctly updated"
-                print "WARNING: Fix please your config file"
-                print "WARNING: Start of service omitted"
+                print("WARNING: Some occurrences weren't correctly updated")
+                print("WARNING: Fix please your config file")
+                print("WARNING: Start of service omitted")
         else:
-            print "WARNING: File of defaults not exists"
-            print "WARNING: Start of service omitted"
+            print("WARNING: File of defaults not exists")
+            print("WARNING: Start of service omitted")
 
         return False
 
@@ -209,7 +209,7 @@ class PostInstallPosixHandler(object):
         if self.insert_service_cmd is None:
             return True
 
-        print "Install service %s ..." % self.SCRIPT_NAME
+        print("Install service %s ..." % self.SCRIPT_NAME)
         result = call(self.insert_service_cmd, shell=True)
         return result == 0
 
@@ -224,7 +224,7 @@ class PostInstallPosixHandler(object):
         if self.start_service_cmd is None:
             return True
 
-        print "Starting service %s ..." % self.SCRIPT_NAME
+        print("Starting service %s ..." % self.SCRIPT_NAME)
         result = call(self.start_service_cmd, shell=True)
         return result == 0
 
@@ -312,7 +312,7 @@ class SystemManagementResolver(object):
         @return: handler
         @rtype: PostInstallPosixHandler
         """
-        for path, handler in self.handlers.iteritems():
+        for path, handler in self.handlers.items():
             if os.path.exists(path):
                 return handler
 

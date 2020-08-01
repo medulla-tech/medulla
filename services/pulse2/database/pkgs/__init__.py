@@ -132,7 +132,7 @@ class PkgsDatabase(DatabaseHelper):
                 autoload = True
             )
 
-        except NoSuchTableError, e:
+        except NoSuchTableError as e:
             self.logger.error("Cant load the Pkgs database : table '%s' does not exists"%(str(e.args[0])))
             return False
         return True
@@ -386,7 +386,7 @@ class PkgsDatabase(DatabaseHelper):
             session.add(new_Syncthingsync)
             session.commit()
             session.flush()
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
@@ -406,7 +406,7 @@ class PkgsDatabase(DatabaseHelper):
                 res['date'] = relayserver.date
                 result_list.append(res)
             return result_list
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             logger.error("\n%s"%(traceback.format_exc()))
             return []

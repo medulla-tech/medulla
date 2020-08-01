@@ -54,7 +54,7 @@ class Test00_LoopingStart(unittest.TestCase):
 			      {"_circuits": []}
 			       )
 	self.circuits = []
-	for id in xrange(10):
+	for id in range(10):
 	    self.circuits.append(Circuit(id))
 
 	self.starter = LoopingStarter(self.dispatcher,

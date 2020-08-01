@@ -32,7 +32,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug("=====================================================")
     logging.getLogger().debug(plugin)
     logging.getLogger().debug("=====================================================")
-    print json.dumps(data, indent=4)
+    print(json.dumps(data, indent=4))
     if data['subaction'] == 'send_message_to_jid':
         if not 'jid' in data:
             logging.getLogger().error("jid missing in kiosk send_message_to_jid sub action")

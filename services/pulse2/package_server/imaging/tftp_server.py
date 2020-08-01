@@ -85,7 +85,7 @@ class ImagingTFTPServer(object):
                         # Serving a computer bootmenu
                         x = path.split('bootmenus/')[1]
                         # Get computer mac from path
-                        mac = ':'.join([x[2*i]+x[2*i+1] for i in xrange(6)])
+                        mac = ':'.join([x[2*i]+x[2*i+1] for i in range(6)])
 
                         data = Imaging().getBuiltMenu(mac)
                     self.file_cache[path] = [int(time()), data]
@@ -112,7 +112,7 @@ class ImagingTFTPServer(object):
                     )
             # Add a signal catcher for SIGTERM
             twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', self.signal_handler)
-        except Exception, e:
+        except Exception as e:
             self.logger.error(str(e))
 
 
@@ -120,13 +120,13 @@ class ImagingTFTPServer(object):
         try:
             if self.running:
                 self.server.server.shutdown()
-        except Exception, e:
-            print str(e)
+        except Exception as e:
+            print(str(e))
 
     def listen(self):
         try:
             deferToThread(self.server.serve_forever)
             self.running = True
-        except TFTPServerConfigurationError, e:
+        except TFTPServerConfigurationError as e:
             self.logger.error('TFTP server configuration error: %s!' %
                           e.message)

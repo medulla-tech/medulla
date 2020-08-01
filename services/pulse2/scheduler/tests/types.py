@@ -37,15 +37,13 @@ from pulse2.scheduler.utils import launcher_proxymethod
 from pulse2.scheduler.tests.tools import TableFactory
 
 
-class CoHQueryFrame(object):
+class CoHQueryFrame(object, metaclass=TableFactory):
     """
     Simulates a CoHQuery instance.
 
     TableFactory ensures the mapping of all needed attributes
     and can be controlled by the methods inherited from ORM classes.
     """
-
-    __metaclass__ = TableFactory
 
     def get_phase(self, name):
         return self.phase
@@ -168,7 +166,7 @@ class TestCircuit(unittest.TestCase):
         d.addCallback(check)
         @d.addErrback
         def eb(failure):
-            print "Test circuit setup failed: %s" % failure
+            print("Test circuit setup failed: %s" % failure)
 
     def test02_circuit_to_last_phase(self):
         """Circuit running with a simply workflow"""
@@ -184,7 +182,7 @@ class TestCircuit(unittest.TestCase):
         d.addCallback(check)
         @d.addErrback
         def eb(failure):
-            print "Test circuit setup failed: %s" % failure
+            print("Test circuit setup failed: %s" % failure)
 
 
 

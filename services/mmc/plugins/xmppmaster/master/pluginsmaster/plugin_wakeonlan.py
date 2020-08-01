@@ -89,5 +89,5 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             raise
 
     except:
-        print "error plugin plugin_wakeonlan %s" % data
+        print("error plugin plugin_wakeonlan %s" % data)
         traceback.print_exc(file=sys.stdout)

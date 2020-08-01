@@ -26,7 +26,7 @@ import logging
 from utils import getRandomName
 from update_remote_agent import Update_Remote_Agent
 import types
-import ConfigParser
+import configparser
 from sleekxmpp import jid
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
@@ -83,7 +83,7 @@ def read_conf_remote_update(objectxmpp):
         objectxmpp.loadautoupdate = True
         objectxmpp.generate_baseagent_fingerprint_interval = 900
     else:
-        Config = ConfigParser.ConfigParser()
+        Config = configparser.ConfigParser()
         Config.read(pathfileconf)
         logger.debug("read file %s"%pathfileconf)
         if os.path.exists(pathfileconf + ".local"):

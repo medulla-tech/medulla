@@ -46,12 +46,12 @@ import os
 import stat
 import logging
 
-import xmlrpclib
-import httplib
-from urlparse import urlparse
+import xmlrpc.client
+import http.client
+from urllib.parse import urlparse
 from base64 import encodestring
-from cookielib import LWPCookieJar, LoadError
-from urllib2 import Request as CookieRequest
+from http.cookiejar import LWPCookieJar, LoadError
+from urllib.request import Request as CookieRequest
 
 log = logging.getLogger()
 
@@ -113,7 +113,7 @@ class MMCBaseTransport(object):
         # directly into self.make_connection if necessary.
         # Returns an HTTPSConnection like Python 2.7 does.
         host, self._extra_headers, x509 = self.get_host_info(host)
-        return httplib.HTTPSConnection(host)
+        return http.client.HTTPSConnection(host)
 
     def send_basic_auth(self, connection):
         """ Include HTTPS Basic Authentication data in a header
@@ -179,7 +179,7 @@ class MMCBaseTransport(object):
                 os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
 
         if errcode != 200:
-            raise xmlrpclib.ProtocolError(
+            raise xmlrpc.client.ProtocolError(
                 host + handler,
                 errcode, errmsg,
                 headers
@@ -203,7 +203,7 @@ class MMCBaseTransport(object):
             if not data:
                 break
             if self.verbose:
-                print "body:", repr(data)
+                print("body:", repr(data))
             p.feed(data)
 
         if stream is not response:
@@ -213,15 +213,15 @@ class MMCBaseTransport(object):
         return u.close()
 
 
-class MMCTransport(MMCBaseTransport, xmlrpclib.Transport):
+class MMCTransport(MMCBaseTransport, xmlrpc.client.Transport):
     pass
 
 
-class MMCSafeTransport(MMCBaseTransport, xmlrpclib.SafeTransport):
+class MMCSafeTransport(MMCBaseTransport, xmlrpc.client.SafeTransport):
     pass
 
 
-class Proxy(xmlrpclib.ServerProxy, object):
+class Proxy(xmlrpc.client.ServerProxy, object):
     """ This subclass ServerProxy to handle login and specific MMC
     cookies mechanism.
     Can authenticate automatically if username and passwd are provided.
@@ -233,9 +233,9 @@ class Proxy(xmlrpclib.ServerProxy, object):
     def __init__(self, uri, username=None, passwd=None, verbose=False):
         url = urlparse(uri)
         if url.scheme not in self.available_transports:
-            raise IOError, "unsupported XML-RPC protocol"
+            raise IOError("unsupported XML-RPC protocol")
         mmcTransport = self.available_transports[url.scheme](url.username, url.password)
-        xmlrpclib.ServerProxy.__init__(self, uri, transport=mmcTransport)
+        xmlrpc.client.ServerProxy.__init__(self, uri, transport=mmcTransport)
         self.username = username
         self.passwd = passwd
         self.authenticating = False

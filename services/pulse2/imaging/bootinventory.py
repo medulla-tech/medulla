@@ -572,7 +572,7 @@ class BootInventory:
 
             mo = re.match(FEATCPU_RE, line)
             if mo :
-                self.featcpu_info = map(lambda x: int(x, 16), mo.group(1).split(','))
+                self.featcpu_info = [int(x, 16) for x in mo.group(1).split(',')]
                 continue
 
             mo = re.match(FREQCPU_RE, line)
@@ -894,7 +894,7 @@ class BootInventory:
 
 	#### STORAGE SECTION ###################################
 
-	for k,v in self.disk_info_i.iteritems():
+	for k,v in self.disk_info_i.items():
 		STORAGES = ET.SubElement(CONTENT,'STORAGES')
 
 		NAME = ET.SubElement(STORAGES,'NAME')
@@ -909,8 +909,8 @@ class BootInventory:
 
 	# DRIVES SECTION #####################################
 
-	for diskid in self.disk_info_i.keys():
-		for partid,partinfo in self.disk_info_i[diskid]['parts'].iteritems():
+	for diskid in list(self.disk_info_i.keys()):
+		for partid,partinfo in self.disk_info_i[diskid]['parts'].items():
 			DRIVES = ET.SubElement(CONTENT,'DRIVES')
 
 			FILESYSTEM = ET.SubElement(DRIVES,'FILESYSTEM')

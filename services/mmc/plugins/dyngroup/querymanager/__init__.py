@@ -56,8 +56,8 @@ def query(ctx, criterion, value):
     logging.getLogger().info(value)
     machines = []
     if criterion == 'groupname':
-        machines = map(lambda x: x.name, DyngroupDatabase().getMachines(ctx, {'gname':value}))
+        machines = [x.name for x in DyngroupDatabase().getMachines(ctx, {'gname':value})]
     return [machines, True]
 
 def getAllGroupName(ctx, value = ''):
-    return map(lambda x:x.name, DyngroupDatabase().getallgroups(ctx, {'filter':value}))
+    return [x.name for x in DyngroupDatabase().getallgroups(ctx, {'filter':value})]

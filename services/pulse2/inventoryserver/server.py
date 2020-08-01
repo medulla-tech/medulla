@@ -25,7 +25,7 @@
 Inventory server http server part.
 """
 
-import BaseHTTPServer
+import http.server
 from zlib import decompressobj, compress
 from time import strftime
 import logging
@@ -36,9 +36,9 @@ import os
 import sys
 import imp
 import traceback
-import cPickle
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from SocketServer import ThreadingMixIn, ForkingMixIn
+import pickle
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from socketserver import ThreadingMixIn, ForkingMixIn
 from threading import Thread, Semaphore
 import threading
 
@@ -92,7 +92,7 @@ class InventoryServer:
                 if decomp.unused_data:
                     self.logger.warn("The content of the request from %s seems to be bad."%(from_ip))
                     self.logger.debug("The remaining bytes are : %s"%(decomp.unused_data))
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Failed while decompressing the request from %s."%(from_ip))
                 self.logger.error(str(e))
 
@@ -101,13 +101,13 @@ class InventoryServer:
         # Let's figure out a few things about this incoming XML...
         try:
             query = re.search(r'<QUERY>([\w-]+)</QUERY>', content).group(1)
-        except AttributeError, e:
+        except AttributeError as e:
             self.logger.warn("Could not get any QUERY section in inventory from %s" % from_ip)
             query = 'FAILS'
         try:
             if query != 'UPDATE':
                 deviceid = re.search(r'<DEVICEID>([\w.-]+)</DEVICEID>', content.decode('utf8'), re.UNICODE).group(1)
-        except AttributeError, e:
+        except AttributeError as e:
             self.logger.warn("Could not get any DEVICEID section in inventory from %s"%(from_ip))
             self.logger.debug("no DEVICEID in %s"%(content))
             query = 'FAILS'
@@ -176,7 +176,7 @@ class InventoryServer:
                     self.logger.info("<GlpiProxy> Trying to associate to an existing machine using MAC %s" % macaddr)
                     try:
                         glpi_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
-                    except Exception, e:
+                    except Exception as e:
                         self.logger.error("<GlpiProxy> Unable to resolve incoming inventory UUID (check mmc-agent connectivity): error was: %s" % str(e))
                     if glpi_uuid :
                         self.logger.debug("<GlpiProxy> Match found using %s! UUID: %s" % (macaddr, str(glpi_uuid)))
@@ -243,7 +243,7 @@ class InventoryServer:
                 for msg in glpi_proxy.result :
                     self.logger.debug("<GlpiProxy> %s" % msg)
 
-        except Exception, e :
+        except Exception as e :
             self.logger.error("<GlpiProxy> %s" % str(e))
 
 
@@ -277,7 +277,7 @@ class InventoryFix :
                   except ImportError :
                       self.logger.warn("Cannot load fixing script '%s'" % filename)
                       continue
-                  except Exception, e :
+                  except Exception as e :
                       self.logger.warn("Unable to run %s script: %s" % (filename, e))
                       continue
 
@@ -325,13 +325,13 @@ class InventoryFix :
         return self._inventory
 
 
-class HttpInventoryServer(BaseHTTPServer.BaseHTTPRequestHandler, InventoryServer):
+class HttpInventoryServer(http.server.BaseHTTPRequestHandler, InventoryServer):
     def __init__(self, *args):
         self.logger = logging.getLogger()
         cfgfile = os.path.join(mmcconfdir,"pulse2","inventory-server","inventory-server.ini")
         self.config = Pulse2OcsserverConfigParser()
         self.config.setup(cfgfile)
-        BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
+        http.server.BaseHTTPRequestHandler.__init__(self, *args)
     def log_message(self, format, *args):
         self.logger.debug(format % args)
 
@@ -392,7 +392,7 @@ class TreatInv(Thread):
                         break
                 else:
                     self.logger.info("LightPull: Unable to resolve %s from GLPI using MAC %s, new machine?" % (deviceid, ', '.join(macaddresses)))
-            except Exception, exc :
+            except Exception as exc :
                 self.logger.error("LightPull: An error occurred when trying to resolve UUID from GLPI: %s" % str(exc))
 
         if self.config.enable_forward and not self.config.enable_forward_ocsserver:
@@ -417,25 +417,25 @@ class TreatInv(Thread):
             self.logger.debug("Thread %s : starting process : %s " % (threadname, time.time()))
             try:
                 inv_data = re.compile(r'<CONTENT>(.+)</CONTENT>', re.DOTALL).search(content).group(1)
-            except AttributeError, e:
+            except AttributeError as e:
                 # we can not work without it!
                 self.logger.warn("Could not get any CONTENT section in inventory from %s"%(from_ip))
                 return False
 
             try:
                 encoding = re.search(r' encoding=["\']([^"\']+)["\']', content).group(1)
-            except AttributeError, e:
+            except AttributeError as e:
                 self.logger.warn("Could not get any encoding in inventory from %s"%(from_ip))
 
             try:
                 date = re.compile(r'<LOGDATE>(.+)</LOGDATE>', re.DOTALL).search(inv_data).group(1)
-            except AttributeError, e:
+            except AttributeError as e:
                 # we can work without it
                 self.logger.warn("Could not get any LOGDATE section in inventory from %s"%(from_ip))
 
             try:
                 current_entity = re.compile(r'<TAG>(.+)</TAG>', re.DOTALL).search(content).group(1)
-            except AttributeError, e:
+            except AttributeError as e:
                 # we can work without it
                 self.logger.debug("Could not get any TAG section in inventory from %s" % from_ip)
 
@@ -472,7 +472,7 @@ class TreatInv(Thread):
                 else:
                     hostname = inventory[path[0]][0][path[1]]
                     self.logger.debug("Thread %s : Final hostname, 2 components path: %s" % (threadname, hostname))
-            except Exception, e:
+            except Exception as e:
                 self.logger.exception(e)
                 self.logger.error("inventory = %s" % inventory)
 
@@ -511,11 +511,11 @@ class TreatInv(Thread):
                 self.logger.error("no inventory created!")
                 return False
 
-        except IOError, e:
+        except IOError as e:
             self.logger.exception(e)
             if hasattr(e, 'message') and e.message != '':
                 self.logger.error(e.mesage)
-        except Exception, e:
+        except Exception as e:
             self.logger.exception(e)
 
         return True
@@ -563,7 +563,7 @@ class InventoryGetService(Singleton):
         self.config = config
         try:
             OcsMapping().initialize(self.xmlmapping)
-        except IOError, e:
+        except IOError as e:
             self.logger.error(e)
             return False
         if self.config.enable_forward and not self.config.enable_forward_ocsserver:
@@ -572,7 +572,7 @@ class InventoryGetService(Singleton):
         try:
             if not InventoryCreator().activate(config): # does the db_check
                 return False
-        except Exception, e : # TODO improve to get the "not the good version" message
+        except Exception as e : # TODO improve to get the "not the good version" message
             self.logger.error(e)
             return False
 
@@ -587,7 +587,7 @@ class InventoryGetService(Singleton):
             self.logger.warning("Creating entity '%s' in database" % self.config.default_entity)
             try:
                 InventoryCreator().createEntity(self.config.default_entity)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Can't create entity '%s'" % self.config.default_entity)
                 self.logger.error(e)
                 return False
@@ -596,7 +596,7 @@ class InventoryGetService(Singleton):
         if self.config.entities_rules_file:
             try:
                 InventoryCreator().rules = EntitiesRules(self.config.entities_rules_file)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error(e)
                 return False
         else:
@@ -649,7 +649,7 @@ class InventoryGetService(Singleton):
 def my_handle_one_request(self):
     try:
         return self.__handle_one_request()
-    except Exception, e:
+    except Exception as e:
         if e.args[0] == 104 and e.args[1] == 'Connection reset by peer': # most probably is a nmap request
             logging.getLogger().info("nmap detected")
             return

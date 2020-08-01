@@ -4,7 +4,7 @@ import base64
 import traceback
 import os
 import sys
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import time
 import json
 import logging
@@ -28,7 +28,7 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
         if not 'inventoryslot' in xmppobject.config.__dict__:
             xmppobject.config.__dict__['inventoryslot'] = False
         else:
-            if isinstance(xmppobject.config.__dict__['inventoryslot'], basestring):
+            if isinstance(xmppobject.config.__dict__['inventoryslot'], str):
                 if xmppobject.config.__dict__['inventoryslot'].lower() == "true" or\
                     xmppobject.config.__dict__['inventoryslot'].lower() == "1" or\
                         xmppobject.config.__dict__['inventoryslot'].lower() == "yes":
@@ -39,7 +39,7 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
         # Directory inventaire.
         RecvInventory = os.path.abspath(  os.path.join( os.path.dirname( __file__), "..", "RecvInventory"))
         if not os.path.exists(RecvInventory):
-            os.makedirs( RecvInventory, 0755 )
+            os.makedirs( RecvInventory, 0o755 )
 
         try:
             url = xmppobject.config.inventory_url
@@ -54,8 +54,8 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
 
             file_put_contents(namefile,  inventory)
         else:
-            request = urllib2.Request(url, inventory, HEADER)
-            response = urllib2.urlopen(request)
+            request = urllib.request.Request(url, inventory, HEADER)
+            response = urllib.request.urlopen(request)
             nbsize = len(inventory)
             XmppMasterDatabase().setlogxmpp("inject inventory to Glpi",
                                             "Master",
@@ -154,12 +154,12 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
                                                     '',
                                                     "Master")
                     Glpi().addRegistryCollectContent(computers_id, registry_id, key_name, reg_key_value)
-                except Exception, e:
+                except Exception as e:
                     logging.getLogger().debug("Error getting key: %s" % reg_key)
                     pass
         time.sleep(25)
         # restart agent
         # xmppobject.restartAgent(message['from'])
-    except Exception, e:
-        print str(e)
+    except Exception as e:
+        print(str(e))
         traceback.print_exc(file=sys.stdout)

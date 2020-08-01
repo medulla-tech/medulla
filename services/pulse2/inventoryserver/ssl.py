@@ -25,12 +25,12 @@
 
 import socket
 import logging
-from SocketServer import BaseServer
-from BaseHTTPServer import HTTPServer
-from SimpleHTTPServer import SimpleHTTPRequestHandler
+from socketserver import BaseServer
+from http.server import HTTPServer
+from http.server import SimpleHTTPRequestHandler
 from OpenSSL import SSL
 from twisted.internet import ssl
-from SocketServer import ThreadingMixIn
+from socketserver import ThreadingMixIn
 
 
 def makeSSLContext(verifypeer, cacert, localcert, cb, log = True):

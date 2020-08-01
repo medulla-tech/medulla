@@ -29,7 +29,7 @@ class ServicesPanel(Panel):
 
     def serialize(self):
         data = {}
-        for plugin, services in ServiceManager().list_plugins_services().items():
+        for plugin, services in list(ServiceManager().list_plugins_services().items()):
             for service in services:
                 if service['active_state'] not in ("active", "unavailable"):
                     if not plugin in data:

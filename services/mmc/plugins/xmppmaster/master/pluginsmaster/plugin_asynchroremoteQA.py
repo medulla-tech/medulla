@@ -34,7 +34,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug("=====================================================")
     logging.getLogger().debug(plugin)
     logging.getLogger().debug("=====================================================")
-    print json.dumps(data, indent=4)
+    print(json.dumps(data, indent=4))
     datasend = {
         "action": action,
         "sessionid": sessionid,

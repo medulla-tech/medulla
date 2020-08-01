@@ -27,6 +27,7 @@
 import re
 import sqlalchemy
 import logging
+from functools import reduce
 
 re_file_prot = re.compile('^file://')
 re_http_prot = re.compile('^http://')
@@ -77,8 +78,8 @@ class Target(object):
         # - at least one MAC address
         # - at least one IP network broadcast
         # FIXME: ATM the test is rather simple : count items len
-        mac_len = reduce(lambda x,y: x+y, map(lambda x: len(x), self.getMacs()))
-        bcast_len = reduce(lambda x,y: x+y, map(lambda x: len(x), self.getBCast()))
+        mac_len = reduce(lambda x,y: x+y, [len(x) for x in self.getMacs()])
+        bcast_len = reduce(lambda x,y: x+y, [len(x) for x in self.getBCast()])
         result = (mac_len > 0 ) and (bcast_len > 0)
         logging.getLogger().debug("hasEnoughInfoToWOL(#%s): %s" % (self.id, result))
         return result
@@ -88,7 +89,7 @@ class Target(object):
         # - either at least one hostname
         # - or at least one IP address
         # FIXME: ATM the test is rather simple : count items len
-        ips_len = reduce(lambda x,y: x+y, map(lambda x: len(x), self.getIps()))
+        ips_len = reduce(lambda x,y: x+y, [len(x) for x in self.getIps()])
         names_len = len(self.getFQDN())
         result = (ips_len > 0 ) or (names_len > 0)
         logging.getLogger().debug("hasEnoughInfoToConnect(#%s): %s" % (self.id, result))

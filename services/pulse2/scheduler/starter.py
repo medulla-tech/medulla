@@ -116,7 +116,7 @@ class LoopingStarter(object):
 
 	    return d
 
-        except Exception, e :
+        except Exception as e :
             self.logger.error("Circuits start failed: %s" % str(e))
             return False
 

@@ -55,7 +55,7 @@ def action(xmppobject):
                 if not Glpi().getRegistryCollect(registry_key):
                     Glpi().addRegistryCollect(registry_key, registry_key_name)
         pass
-    except Exception, e:
+    except Exception as e:
         logging.getLogger().error("Error loading plugin: %s" % str(e))
         traceback.print_exc(file=sys.stdout)
         pass

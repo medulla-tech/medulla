@@ -23,11 +23,11 @@
 # MA 02110-1301, USA.
 
 from twisted.web import server, xmlrpc
-import xmlrpclib
+import xmlrpc.client
 import time
 from twisted.internet import defer
 
-Fault = xmlrpclib.Fault
+Fault = xmlrpc.client.Fault
 
 class MyXmlrpc(xmlrpc.XMLRPC):
     def __init__(self):
@@ -43,7 +43,7 @@ class MyXmlrpc(xmlrpc.XMLRPC):
 
         @return: interpreted request
         """
-        args, functionPath = xmlrpclib.loads(request.content.read())
+        args, functionPath = xmlrpc.client.loads(request.content.read())
 
         function = getattr(self, "xmlrpc_%s"%(functionPath))
         request.setHeader("content-type", "text/xml")
@@ -63,10 +63,10 @@ class MyXmlrpc(xmlrpc.XMLRPC):
                 result = (result,)
             try:
                 self.logger.debug('Result for ' + str(functionPath) + ": " + str(result))
-                s = xmlrpclib.dumps(result, methodresponse=1)
-            except Exception, e:
+                s = xmlrpc.client.dumps(result, methodresponse=1)
+            except Exception as e:
                 f = Fault(self.FAILURE, "can't serialize output: " + str(e))
-                s = xmlrpclib.dumps(f, methodresponse=1)
+                s = xmlrpc.client.dumps(f, methodresponse=1)
             request.setHeader("content-length", str(len(s)))
             request.write(s)
             request.finish()

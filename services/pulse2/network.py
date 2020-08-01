@@ -364,7 +364,7 @@ class ResolvingCallable :
 
         self.networks = networks
 
-        for attr, value in kwargs.items():
+        for attr, value in list(kwargs.items()):
             setattr(self, attr, value)
 
     def validate(self):
@@ -395,7 +395,7 @@ class ResolvingCallable :
                               stderr=subprocess.PIPE)
         try :
             out, err = ps.communicate()
-        except Exception, e :
+        except Exception as e :
             log.error("While executing command: %s / Raised exception: %s" % (cmd, str(e)))
 
         if err :
@@ -646,7 +646,7 @@ class IPResolversContainer :
         return: list of resolvers
         rtype: list
         """
-        return [r for r in globals().values() if cls.is_resolver(r)]
+        return [r for r in list(globals().values()) if cls.is_resolver(r)]
 
     def register_resolvers (self, resolve_order, resolvers=None, **kwargs) :
         """
@@ -728,7 +728,7 @@ class IPResolve (IPResolversContainer) :
             return False
 
         for iface in ifaces :
-            for key, value in iface.items():
+            for key, value in list(iface.items()):
                 if not isinstance(value, str) :
                     log.warn("Invalid interface format, section '%s' (hostname='%s')" % (key, hostname))
                     return False

@@ -100,7 +100,7 @@ class Status:
             f = file('/proc/uptime')
             data = f.read()
             f.close()
-        except Exception, e:
+        except Exception as e:
             self.logging.error(e)
             data = -1
         self.ret['uptime'] = data

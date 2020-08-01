@@ -19,9 +19,9 @@
 import os
 import logging
 import inspect
-from ConfigParser import ConfigParser, NoOptionError, NoSectionError
+from configparser import ConfigParser, NoOptionError, NoSectionError
 
-from utils import Singleton
+from .utils import Singleton
 
 
 logger = logging.getLogger(__name__)

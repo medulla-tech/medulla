@@ -32,7 +32,7 @@ import glob
 import os
 import re
 import imp
-from bool_equations import BoolRequest
+from .bool_equations import BoolRequest
 from mmc.plugins.base.computers import ComputerManager
 import traceback
 from mmc.support.mmctools import Singleton
@@ -85,7 +85,7 @@ class QueryManager(Singleton):
                     else:
                         self.logger.info('QueryManager plugin '+ plugin+ ' is disabled by configuration.')
 
-                except Exception,e:
+                except Exception as e:
                     self.logger.exception(e)
                     self.logger.error('QueryManager plugin '+ plugin+ " raise an exception.\n"+ plugin+ " not loaded.")
                     continue
@@ -120,7 +120,7 @@ class QueryManager(Singleton):
         return self.extendedPossibilities
 
     def getPossiblesModules(self, ctx):
-        return self.queryPossibilities.keys()
+        return list(self.queryPossibilities.keys())
 
     def getQueryGroupsForModule(self, ctx, moduleName):
         try:
@@ -131,7 +131,7 @@ class QueryManager(Singleton):
 
     def getPossiblesCriterionsInModule(self, ctx, moduleName):
         try:
-            return self.queryPossibilities[moduleName].keys()
+            return list(self.queryPossibilities[moduleName].keys())
         except:
             self.logger.error("Dyngroup module %s don't exists"%(moduleName))
             return []
@@ -180,7 +180,7 @@ class QueryManager(Singleton):
                 retType = "int"
         except KeyError:
             pass
-        except Exception, e:
+        except Exception as e:
             self.logger.error(e)
             self.logger.error("\n%s"%(traceback.format_exc()))
         return retType
@@ -226,29 +226,29 @@ class QueryManager(Singleton):
 
         br = BoolRequest()
         if bool == None or bool == '' or bool == 0 or bool == '0':
-            bool = 'AND('+','.join(map(lambda a:a[0][0], values))+')'
+            bool = 'AND('+','.join([a[0][0] for a in values])+')'
 
 
         all = ComputerManager().getComputersList(ctx)
         #all = ComputerManager().getRestrictedComputersList(ctx, 0, 50)
         # for the moment everything is based on names... should be changed into uuids
         #all = map(lambda a: a[1]['cn'][0], all.values())
-        all = all.keys()
+        all = list(all.keys())
         values['A'] = [all, True]
 
         bool = 'AND(A, '+bool+')'
 
         br.parse(bool)
         if bool == None or not br.isValid(): # no bool specified = only AND
-            if len(values.keys()) > 0:
+            if len(list(values.keys())) > 0:
                 retour = values.pop()
                 for val in values:
                     neg = val[1]
                     val = val[0]
                     if neg:
-                        retour = filter(lambda a,val=val:a in val, retour)
+                        retour = list(filter(lambda a,val=val:a in val, retour))
                     else:
-                        retour = filter(lambda a,val=val:a not in val, retour)
+                        retour = list(filter(lambda a,val=val:a not in val, retour))
 
                 return retour
             else:
@@ -277,26 +277,26 @@ class QueryManager(Singleton):
 
         br = BoolRequest()
         if bool == None or bool == '':
-            bool = "<AND><p>"+('</p><p>'.join(map(lambda a:a[0][0], values)))+"</p></AND>"
+            bool = "<AND><p>"+('</p><p>'.join([a[0][0] for a in values]))+"</p></AND>"
 
         all = ComputerManager().getComputersList(ctx)
         # for the moment everything is based on names... should be changed into uuids
-        all = map(lambda a: a[1]['cn'][0], all)
+        all = [a[1]['cn'][0] for a in all]
         values['A'] = [all, True]
 
         bool = '<AND><p>A</p><p>'+bool+'</p></AND>'
 
         br.parseXML(bool)
         if bool == None or not br.isValid(): # no bool specified = only AND
-            if len(values.keys()) > 0:
+            if len(list(values.keys())) > 0:
                 retour = values.pop()
                 for val in values:
                     neg = val[1]
                     val = val[0]
                     if neg:
-                        retour = filter(lambda a,val=val:a in val, retour)
+                        retour = list(filter(lambda a,val=val:a in val, retour))
                     else:
-                        retour = filter(lambda a,val=val:a not in val, retour)
+                        retour = list(filter(lambda a,val=val:a not in val, retour))
 
                 return retour
             else:
@@ -316,11 +316,11 @@ class QueryManager(Singleton):
 
         br = BoolRequest()
         if bool == None or bool == '' or bool == 0 or bool == '0': # no bool specified = only AND
-            bool = 'AND('+','.join(map(lambda a:a, values))+')'
+            bool = 'AND('+','.join([a for a in values])+')'
 
         br.parse(bool)
         if not br.isValid(): # invalid bool specified = only AND
-            bool = 'AND('+','.join(map(lambda a:a, values))+')'
+            bool = 'AND('+','.join([a for a in values])+')'
             br.parse(bool)
 
         try:

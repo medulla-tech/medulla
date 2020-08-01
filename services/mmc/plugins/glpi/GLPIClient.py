@@ -21,7 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import logging
-import xmlrpclib
+import xmlrpc.client
 
 class XMLRPCClient(object):
     """
@@ -31,7 +31,7 @@ class XMLRPCClient(object):
         self.baseurl = baseurl
         self.serviceurl = self.baseurl + '/plugins/webservices/xmlrpc.php'
         self.session = None
-        self.server = xmlrpclib.ServerProxy(self.serviceurl)
+        self.server = xmlrpc.client.ServerProxy(self.serviceurl)
         self.logger = logging.getLogger()
 
     def connect(self, login_name=None, login_password=None):
@@ -56,7 +56,7 @@ class XMLRPCClient(object):
             if self.session:
                 params['session'] = self.session
 
-            params = dict(params.items() + kwargs.items())
+            params = dict(list(params.items()) + list(kwargs.items()))
 
             called_module = getattr(self.server, module)
             return getattr(called_module, attr)(params)

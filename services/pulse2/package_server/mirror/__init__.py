@@ -40,10 +40,10 @@ class Mirror(MyXmlrpc):
             e = "(%s) %s : can't initialise at %s correctly"%(self.type, self.name, self.mp)
             self.logger.error(e)
             raise Exception(e)
-        self.logger.info("(%s) %s : initialised with packages : %s"%(self.type, self.name, str(Common().getPackages(self.mp).keys())))
+        self.logger.info("(%s) %s : initialised with packages : %s"%(self.type, self.name, str(list(Common().getPackages(self.mp).keys()))))
 
     def xmlrpc_getServerDetails(self):
-        return map(lambda x: Common().package(x).toH(), Common().getPackages(self.mp))
+        return [Common().package(x).toH() for x in Common().getPackages(self.mp)]
 
     def xmlrpc_isAvailable(self, pid):
         return pid in Common().getPackages(self.mp)

@@ -31,7 +31,7 @@ class Test01_Tracker(unittest.TestCase):
 
 
     def test_01_in(self):
-	numbers = [int(1000*random.random()) for i in xrange(1000)]
+	numbers = [int(1000*random.random()) for i in range(1000)]
         tracker = Tracker()
 	tracker.add(numbers)
 
@@ -39,7 +39,7 @@ class Test01_Tracker(unittest.TestCase):
 	self.assertIn(number, tracker)
 
     def test_02_not_in(self):
-	numbers = [int(1000*random.random()) for i in xrange(1000)]
+	numbers = [int(1000*random.random()) for i in range(1000)]
         tracker = Tracker()
 	tracker.add(numbers)
 
@@ -51,7 +51,7 @@ class Test01_Tracker(unittest.TestCase):
 class Test02_TimedTracker(unittest.TestCase):
 
     def test_01_in(self):
-	numbers = [int(1000*random.random()) for i in xrange(1000)]
+	numbers = [int(1000*random.random()) for i in range(1000)]
         tracker = TimedTracker(5)
 	tracker.add(numbers)
 
@@ -59,7 +59,7 @@ class Test02_TimedTracker(unittest.TestCase):
 	self.assertIn(number, tracker)
 
     def test_02_not_in(self):
-	numbers = [int(1000*random.random()) for i in xrange(1000)]
+	numbers = [int(1000*random.random()) for i in range(1000)]
         tracker = TimedTracker(5)
 	tracker.add(numbers)
 
@@ -69,10 +69,10 @@ class Test02_TimedTracker(unittest.TestCase):
 	self.assertNotIn(number, tracker)
 
     def test_03_timeout(self):
-	numbers = [int(1000*random.random()) for i in xrange(1000)]
+	numbers = [int(1000*random.random()) for i in range(1000)]
 
         not_expired= []
-	for i in xrange(10):
+	for i in range(10):
             not_expired.append(random.choice(numbers))
 
         tracker = TimedTracker(5)

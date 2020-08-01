@@ -149,56 +149,64 @@ class SchedulerGateway(UnixProtocol):
 
 
 
-    def completed_quickaction(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_quickaction(self, launcher, xxx_todo_changeme, id, from_dlp=False):
+        (exitcode, stdout, stderr) = xxx_todo_changeme
         return MscDispatcher().run_proxymethod(launcher,
                                               id,
                                               "completed_quickaction",
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
-    def completed_push(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_push(self, launcher, xxx_todo_changeme1, id, from_dlp=False):
+        (exitcode, stdout, stderr) = xxx_todo_changeme1
         return MscDispatcher().run_proxymethod(launcher,
                                               id,
                                               "completed_push",
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
-    def completed_pull(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_pull(self, launcher, xxx_todo_changeme2, id, from_dlp=False):
+        (exitcode, stdout, stderr) = xxx_todo_changeme2
         return MscDispatcher().run_proxymethod(launcher,
                                               id,
                                               "completed_pull",
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
-    def completed_exec(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_exec(self, launcher, xxx_todo_changeme3, id, from_dlp=False):
+        (exitcode, stdout, stderr) = xxx_todo_changeme3
         return MscDispatcher().run_proxymethod(launcher,
                                               id,
                                               "completed_exec",
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
-    def completed_delete(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_delete(self, launcher, xxx_todo_changeme4, id, from_dlp=False):
+        (exitcode, stdout, stderr) = xxx_todo_changeme4
         return MscDispatcher().run_proxymethod(launcher,
                                               id,
                                               "completed_delete",
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
-    def completed_inventory(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_inventory(self, launcher, xxx_todo_changeme5, id, from_dlp=False):
+        (exitcode, stdout, stderr) = xxx_todo_changeme5
         return MscDispatcher().run_proxymethod(launcher,
                                               id,
                                               "completed_inventory",
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
-    def completed_reboot(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_reboot(self, launcher, xxx_todo_changeme6, id, from_dlp=False):
+        (exitcode, stdout, stderr) = xxx_todo_changeme6
         return MscDispatcher().run_proxymethod(launcher,
                                               id,
                                               "completed_reboot",
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
-    def completed_halt(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_halt(self, launcher, xxx_todo_changeme7, id, from_dlp=False):
+        (exitcode, stdout, stderr) = xxx_todo_changeme7
         return MscDispatcher().run_proxymethod(launcher,
                                               id,
                                               "completed_halt",

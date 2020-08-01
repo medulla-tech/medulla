@@ -139,8 +139,8 @@ if mode == "debug":
     nb=nb+test.testsRun
 
     if False in success:
-        print "One or more test are failed or have an unexpected error"
+        print("One or more test are failed or have an unexpected error")
     else:
-        print "All function work"
+        print("All function work")
 else:
     unittest.main()

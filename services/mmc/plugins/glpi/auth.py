@@ -21,8 +21,8 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import urlparse
-import urllib
+import urllib.parse
+import urllib.request, urllib.parse, urllib.error
 import re
 
 from twisted.internet import reactor, defer
@@ -69,13 +69,13 @@ class GlpiAuthenticator(AuthenticatorI):
         self.logger.debug("GlpiAuthenticator: on index page")
         phpsessid = value.response_headers["set-cookie"][0].split("=")
         params = { "method" : "POST", "cookies" : { phpsessid[0] : phpsessid[1]},
-                   "headers": {"Content-Type": "application/x-www-form-urlencoded", "Referer" : urlparse.urljoin(self.config.baseurl, self.config.loginpage)},
-                   "postdata" : urllib.urlencode({value.login_namename : self.user, value.login_passwordname : self.password, "_glpi_csrf_token" : value.glpi_csrf_token})}
+                   "headers": {"Content-Type": "application/x-www-form-urlencoded", "Referer" : urllib.parse.urljoin(self.config.baseurl, self.config.loginpage)},
+                   "postdata" : urllib.parse.urlencode({value.login_namename : self.user, value.login_passwordname : self.password, "_glpi_csrf_token" : value.glpi_csrf_token})}
         return params
 
     def _cbLoginPost(self, params):
         self.logger.debug("GlpiAuthenticator: posting on login page")
-        d = getPage(urlparse.urljoin(self.config.baseurl, self.config.loginpost), None, **params)
+        d = getPage(urllib.parse.urljoin(self.config.baseurl, self.config.loginpost), None, **params)
         d.addCallback(self._cbCheckOutput)
         return d
 
@@ -91,7 +91,7 @@ class GlpiAuthenticator(AuthenticatorI):
             return defer.succeed(True)
         self.user = user
         self.password = password
-        d = getPageWithHeader(urlparse.urljoin(self.config.baseurl, self.config.loginpage)).addCallback(self._cbIndexPage)
+        d = getPageWithHeader(urllib.parse.urljoin(self.config.baseurl, self.config.loginpage)).addCallback(self._cbIndexPage)
         d.addCallback(self._cbLoginPost)
         return d
 

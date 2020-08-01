@@ -25,7 +25,7 @@ Unit tests for the imaging API of the Pulse 2 Package Server
 
 import os
 import unittest
-import xmlrpclib
+import xmlrpc.client
 import copy
 
 from time import sleep
@@ -35,40 +35,40 @@ from testutils import ipconfig
 
 IPSERVER = ipconfig()
 PROTOCOL = 'https' # protocol's SERVER
-SERVER = xmlrpclib.ServerProxy('%s://%s:9990/imaging_api'
+SERVER = xmlrpc.client.ServerProxy('%s://%s:9990/imaging_api'
                                % (PROTOCOL, IPSERVER))
-MMCAGENT = xmlrpclib.ServerProxy('%s://mmc:s3cr3t@%s:7080'
+MMCAGENT = xmlrpc.client.ServerProxy('%s://mmc:s3cr3t@%s:7080'
                                  % (PROTOCOL, '127.0.0.1'))
 
 MENU = { 'timeout' : 20,
-         'background_uri' : u'/##PULSE2_F_DISKLESS##/##PULSE2_F_BOOTSPLASH##',
-         'name' : u'Default Boot Menu',
-         'message' : u'-- Warning! Your PC is being backed up or restored. Do not reboot !',
+         'background_uri' : '/##PULSE2_F_DISKLESS##/##PULSE2_F_BOOTSPLASH##',
+         'name' : 'Default Boot Menu',
+         'message' : '-- Warning! Your PC is being backed up or restored. Do not reboot !',
          'default_item' : 1,
          'default_item_WOL' : 1,
-         'bootservices' : { '1': { 'name' : u'Continue Normal Startup',
-                                 'desc' : u'Start as usual',
-                                 'value' : u'root (hd0)\nchainloader +1',
+         'bootservices' : { '1': { 'name' : 'Continue Normal Startup',
+                                 'desc' : 'Start as usual',
+                                 'value' : 'root (hd0)\nchainloader +1',
                                  'hidden' : 0,
                                  'hidden_WOL' : 0 },
-                           '2': { 'name' : u'Register a Pulse 2 Client',
-                                'desc' : u'Record this computer in Pulse 2 Server',
-                                'value' : u'identify L=##PULSE2_LANG## P=none\nreboot' }
+                           '2': { 'name' : 'Register a Pulse 2 Client',
+                                'desc' : 'Record this computer in Pulse 2 Server',
+                                'value' : 'identify L=##PULSE2_LANG## P=none\nreboot' }
                             },
-         'images' : { '5' : { 'uuid': u'302c19d2-212b-4b9a-b04e-4fced0b83466',
-                            'name' : u'Image computer.example.net',
-                            'desc' : u'(Thu Dec  3 15:20:02 2009)',
+         'images' : { '5' : { 'uuid': '302c19d2-212b-4b9a-b04e-4fced0b83466',
+                            'name' : 'Image computer.example.net',
+                            'desc' : '(Thu Dec  3 15:20:02 2009)',
                             'post_install_script_dis' : { 'id' : 2,
-                                                      'name' : u'...',
-                                                      'desc' : u'...',
+                                                      'name' : '...',
+                                                      'desc' : '...',
                                                       'value' : '...'
                                                     }
                             }
                     },
-         'target' : { 'name' : u'...',
-                      'kernel_parameters' : u'...',
-                      'image_parameters' : u'....',
-                      'exclude_parameters' : u'',
+         'target' : { 'name' : '...',
+                      'kernel_parameters' : '...',
+                      'image_parameters' : '....',
+                      'exclude_parameters' : '',
                     },
          'bootcli' : False,
          'disklesscli' : False,

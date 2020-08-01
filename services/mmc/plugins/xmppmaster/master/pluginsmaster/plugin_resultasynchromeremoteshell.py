@@ -40,10 +40,10 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug("=====================================================")
     try:
         pathresult = os.path.join("/", "tmp", sessionid)
-        print pathresult
+        print(pathresult)
         file_put_content(pathresult, json.dumps(data, indent=4), mode="w")
-        print json.dumps(data, indent=4)
-    except Exception, e:
+        print(json.dumps(data, indent=4))
+    except Exception as e:
         logging.getLogger().error("Error loading plugin: %s" % str(e))
         traceback.print_exc(file=sys.stdout)
         pass

@@ -21,10 +21,10 @@
 
 import logging, re
 try :
-    import cPickle as pickle
+    import pickle as pickle
 except ImportError :
     import pickle # pyflakes.ignore
-from StringIO import StringIO
+from io import StringIO
 
 import MySQLdb
 
@@ -42,10 +42,10 @@ def sqladdslashes(s):
 
 def stripbrokenchars(s):
     bad_map = {
-        u"\u2019":  u"'",
-        u"\u2013":  u"-",
+        "\u2019":  "'",
+        "\u2013":  "-",
     }
-    utf_map = dict([(ord(k), ord(v)) for k,v in bad_map.items()])
+    utf_map = dict([(ord(k), ord(v)) for k,v in list(bad_map.items())])
     return s.translate(utf_map)
 
 class PackUtils :
@@ -58,10 +58,10 @@ class PackUtils :
         try :
             ret = pickle.loads(packet)
             return ret
-        except EOFError, e:
+        except EOFError as e:
             logging.getLogger().debug("EOF: Losing a packet from scheduler-proxy: %s" % str(e))
             return None
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().warn("Losing a packet from scheduler-proxy: %s" % str(e))
             return None
 
@@ -110,7 +110,7 @@ class UnixProtocol (object, LineReceiver):
         except pickle.UnpicklingError:
             logging.getLogger().debug("Unpickle:completing the packet len=%d" % len(self.__data.getvalue()))
             return
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().debug("Another:completing the packet len=%d" % len(self.__data.getvalue()))
             logging.getLogger().debug("Another exception when completing packet %s"  % str(e))
             return
@@ -137,7 +137,7 @@ class UnixProtocol (object, LineReceiver):
         try:
             packet = PackUtils.pack(response)
             self.sendLine(packet)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("UX response sending failed: %s"  % str(e))
 
 
@@ -146,7 +146,7 @@ class UnixProtocol (object, LineReceiver):
 
     def _lookup_procedure(self, name):
         this_class_dict = self.__class__.__mro__[0].__dict__
-        method_matches = [f for (k, f) in this_class_dict.items()
+        method_matches = [f for (k, f) in list(this_class_dict.items())
                                       if k == name and callable(f)]
         if len(method_matches)==1 :
             return method_matches[0]
@@ -201,7 +201,7 @@ def launcher_proxymethod(*options):
             return wrap(fn, name)
         else :
             return wrap
-    except Exception, e :
+    except Exception as e :
         logging.getLogger().error("launcher_proxymethod: %s"  % str(e))
 
 
@@ -256,7 +256,7 @@ class WUInjectDB :
                                         host=self.config.dbhost,
                                         port=self.config.dbport,
                                         db="update")
-        except Exception, exc:
+        except Exception as exc:
             self.logger.error("Can't connect to the database: %s" % str(exc))
             return False
 
@@ -270,7 +270,7 @@ class WUInjectDB :
         """
         try:
             return self.conn.cursor()
-        except Exception, exc:
+        except Exception as exc:
             self.logger.error("Error while creating cursor: %s" % str(exc))
 
 
@@ -319,7 +319,7 @@ class WUInjectDB :
             c = self.cursor
             c.execute(stat)
             self.conn.commit()
-        except Exception, exc:
+        except Exception as exc:
             self.conn.rollback()
             self.logger.error("Error while inserting target into 'update' db: %s" % str(exc))
 
@@ -337,7 +337,7 @@ class WUInjectDB :
             c = self.cursor
             c.execute(stat)
             self.conn.commit()
-        except Exception, exc:
+        except Exception as exc:
             self.conn.rollback()
             self.logger.error("Error while updating target into 'update' db: %s" % str(exc))
 
@@ -365,7 +365,7 @@ class WUInjectDB :
                 nb_updates_removed = 0
             self.conn.commit()
             self.logger.info("Updates: Unlinking %s updates for machine %s" % (str(nb_updates_removed), str(uuid)))
-        except Exception, exc:
+        except Exception as exc:
             self.conn.rollback()
             self.logger.error("Error while cleaning target into 'update' db: %s" % str(exc))
 
@@ -387,15 +387,15 @@ class WUInjectDB :
 
         try:
             title = sqladdslashes(stripbrokenchars(title.decode('utf-8', 'ignore')))
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("WU Unable to decode title: %s" % str(e))
         try:
             kb_number = sqladdslashes(stripbrokenchars(kb_number.decode('utf-8', 'ignore')))
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("WU Unable to decode KB number: %s" % str(e))
         try:
             info_url = sqladdslashes(stripbrokenchars(info_url.decode('utf-8', 'ignore')))
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("WU Unable to decode info URL: %s" % str(e))
 
         try:
@@ -407,7 +407,7 @@ class WUInjectDB :
                        need_reboot,
                        request_user_input,
                        info_url)
-        except Exception, e:
+        except Exception as e:
             import sys
             self.logger.error('Unable to parse WU item, traceback was: '+str(sys.exc_info()))
 
@@ -418,7 +418,7 @@ class WUInjectDB :
             c = self.cursor
             c.execute(stat)
             self.conn.commit()
-        except Exception, exc:
+        except Exception as exc:
             self.conn.rollback()
             self.logger.error("Error while insert an update record into 'update' db: %s" % str(exc))
 

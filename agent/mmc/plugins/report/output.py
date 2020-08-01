@@ -72,13 +72,13 @@ class XLSGenerator(object):
         column = 0
         # Write headers
         headers = datas['headers']
-        for x in xrange(len(headers)):
+        for x in range(len(headers)):
             sheet.write(line, column + x, headers[x])
         line += 1
 
         datas = datas['values']
-        for x in xrange(len(datas)):
-            for y in xrange(len(datas[x])):
+        for x in range(len(datas)):
+            for y in range(len(datas[x])):
                 sheet.write(line, column + y, datas[x][y])
             line += 1
         return self.wbk
@@ -94,21 +94,21 @@ class XLSGenerator(object):
         column = 0
 
         sheet.write(line, column, '')
-        for i in xrange(len(titles)):
+        for i in range(len(titles)):
             line += 1
             sheet.write(line, column, datas['titles'][i])
-        for i in xrange(len(dates)):
+        for i in range(len(dates)):
             column += 1
             line = 0
             sheet.write(line, column, dates[i])
-            for j in xrange(len(values[i])):
+            for j in range(len(values[i])):
                 line += 1
                 sheet.write(line, column, values[i][j])
         return self.wbk
 
     def save(self):
         self.wbk.save(self.path)
-        chmod(self.path, 0644)
+        chmod(self.path, 0o644)
         return self.path
 
 
@@ -155,7 +155,7 @@ class PDFGenerator(object):
             f = open(os.path.join(reportconfdir, 'css', self.config.reportCSS))
             string = f.read()
             f.close()
-        except IOError, e:
+        except IOError as e:
             logging.getLogger().warning(e)
         return string
 
@@ -300,7 +300,7 @@ class PDFGenerator(object):
         self.content += '</thead>'
         self.content += '<tbody>'
 
-        for x in xrange(len(titles)):
+        for x in range(len(titles)):
             self.content += '<tr>'
 
             self.content += '<td class="title">'
@@ -388,7 +388,7 @@ class PDFGenerator(object):
         # ...And combine these pages into a single report Document
         pdf_report[0].copy(all_pages).write_pdf(self.path)
 
-        chmod(self.path, 0644)
+        chmod(self.path, 0o644)
         return self.path
 
 
@@ -463,9 +463,9 @@ class SVGGenerator(object):
         """
         Remove items where all values are 0 or None for all periods
         """
-        values_idx = range(0, len(datas['titles']))
+        values_idx = list(range(0, len(datas['titles'])))
         values_idx.reverse()
-        periods_idx = range(0, len(datas['dates']))
+        periods_idx = list(range(0, len(datas['dates'])))
         periods_idx.reverse()
         for value_idx in values_idx:
             remove = True
@@ -488,12 +488,12 @@ class SVGGenerator(object):
             titles = datas['titles']
             values = datas['values']
             self.chart.x_labels = datas['dates']
-            for i in xrange(len(titles)):
+            for i in range(len(titles)):
                 self.chart.add(titles[i], [x[i] for x in values])
         elif type == 'key_value':   # Pie Chart
             titles = datas['headers']
             values = datas['values']
-            for x in xrange(len(values)):
+            for x in range(len(values)):
                 self.chart.add(values[x][0], values[x][1])
         return True
 
@@ -533,7 +533,7 @@ class SVGGenerator(object):
         self.chart.config.print_values = False
 
         self.chart.render_to_png(self.path + '.png')
-        chmod(self.path + '.png', 0644)
+        chmod(self.path + '.png', 0o644)
         return True
 
     def save(self):
@@ -543,5 +543,5 @@ class SVGGenerator(object):
         f = open(self.path + '.svg', 'w')
         f.write(self.toXML().encode('utf8'))
         f.close()
-        chmod(self.path + '.svg', 0644)
+        chmod(self.path + '.svg', 0o644)
         return True

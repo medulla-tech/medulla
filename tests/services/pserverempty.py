@@ -22,7 +22,7 @@
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import xmlrpclib
+import xmlrpc.client
 import unittest
 from os import system
 
@@ -51,10 +51,10 @@ del(sys.argv[1:])
 # Remove if exist the package test
 system("rm -rf /var/lib/pulse2/packages/test")
 
-serverM =xmlrpclib.ServerProxy('%s://%s:9990/mirror1' %(protocol,ipserver))
-serverMA = xmlrpclib.ServerProxy('%s://%s:9990/rpc' %(protocol,ipserver))
-serverP = xmlrpclib.ServerProxy('%s://%s:9990/package_api_get1' %(protocol,ipserver))
-serverS = xmlrpclib.ServerProxy('%s://%s:9990/scheduler_api' %(protocol,ipserver))
+serverM =xmlrpc.client.ServerProxy('%s://%s:9990/mirror1' %(protocol,ipserver))
+serverMA = xmlrpc.client.ServerProxy('%s://%s:9990/rpc' %(protocol,ipserver))
+serverP = xmlrpc.client.ServerProxy('%s://%s:9990/package_api_get1' %(protocol,ipserver))
+serverS = xmlrpc.client.ServerProxy('%s://%s:9990/scheduler_api' %(protocol,ipserver))
 
 class class01testMirror (unittest.TestCase):
     """
@@ -237,11 +237,11 @@ if mode=="debug":
 
 
     if False in success:
-        print "One or more test are failed or have an unexpected error"
+        print("One or more test are failed or have an unexpected error")
     else:
-        print "All function work"
+        print("All function work")
 
-    print "PserverEmpty\'s test has run %s test" %(nb)
+    print("PserverEmpty\'s test has run %s test" %(nb))
 else:
 
     unittest.main()

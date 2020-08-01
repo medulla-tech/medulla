@@ -29,7 +29,7 @@ import os
 import fnmatch
 import platform
 import logging
-import ConfigParser
+import configparser
 import random
 import re
 import traceback
@@ -41,7 +41,7 @@ import base64
 from importlib import import_module
 import threading
 import socket
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import uuid
 import time
 from datetime import datetime
@@ -49,7 +49,7 @@ import imp
 import requests
 from Crypto import Random
 from Crypto.Cipher import AES
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import tarfile
 import zipfile
 from functools import wraps
@@ -61,7 +61,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", 
 if sys.platform.startswith('win'):
     import wmi
     import pythoncom
-    import _winreg as wr
+    import winreg as wr
     import win32net
     import win32netcon
 
@@ -98,10 +98,10 @@ def dump_parameter(para=True, out=True, timeprocess = True):
             if para:
                 arg_names = decorated_function.__code__.co_varnames
                 params = dict(
-                    args=dict(zip(arg_names, dec_fn_args)),
+                    args=dict(list(zip(arg_names, dec_fn_args))),
                     kwargs=dec_fn_kwargs)
                 result = ', '.join([
-                        '{}={}'.format(str(k), repr(v)) for k, v in params.items()])
+                        '{}={}'.format(str(k), repr(v)) for k, v in list(params.items())])
                 log.info('\n@@@ call func : {}({}) file {}'.format(func_name,result, filepath))
                 log.info('\n@@@ call func : {}({}) file {}'.format(func_name,result, filepath))
             else:
@@ -133,7 +133,7 @@ def file_get_contents(filename, use_include_path=0, context=None, offset=-1, max
         load content file or simple url
     """
     if (filename.find('://') > 0):
-        ret = urllib2.urlopen(filename).read()
+        ret = urllib.request.urlopen(filename).read()
         if (offset > 0):
             ret = ret[offset:]
         if (maxlen > 0):
@@ -169,7 +169,7 @@ def displayDataJson(jsondata):
 
 def loadModule(filename):
     if filename == '':
-        raise RuntimeError, 'Empty filename cannot be loaded'
+        raise RuntimeError('Empty filename cannot be loaded')
     searchPath, file = os.path.split(filename)
     if not searchPath in sys.path:
         sys.path.append(searchPath)
@@ -235,7 +235,7 @@ def getRandomName(nb, pref=""):
     return d
 
 def data_struct_message(action, data = {}, ret=0, base64 = False, sessionid = None):
-    if sessionid == None or sessionid == "" or not isinstance(sessionid, basestring):
+    if sessionid == None or sessionid == "" or not isinstance(sessionid, str):
         sessionid = action.strip().replace(" ", "")
     return { 'action' : action,
              'data' : data,
@@ -363,7 +363,7 @@ def isWinUserAdmin():
         # Check for root on Posix
         return os.getuid() == 0
     else:
-        raise RuntimeError, "Unsupported operating system for this module: %s" % (os.name,)
+        raise RuntimeError("Unsupported operating system for this module: %s" % (os.name,))
 
 # mac OS
 
@@ -417,7 +417,7 @@ def getShortenedIpList():
 
 def name_jid():
     dd = getShortenedIpList()
-    cc = dd.keys()
+    cc = list(dd.keys())
     cc.sort()
     return dd[cc[0]]
 
@@ -642,7 +642,7 @@ def service(name, action):  # start | stop | restart | reload
         finally:
             pythoncom.CoUninitialize()
         for dev in wmi_out:
-            print dev.Caption
+            print(dev.Caption)
         pass
     elif sys.platform.startswith('darwin'):
         pass
@@ -661,8 +661,8 @@ def listservice():
     finally:
         pythoncom.CoUninitialize()
     for dev in wmi_out:
-        print dev.Caption
-        print dev.DisplayName
+        print(dev.Caption)
+        print(dev.DisplayName)
 
 
 def joint_compteAD(domain, password, login, group):
@@ -672,8 +672,8 @@ def joint_compteAD(domain, password, login, group):
         c = wmi.WMI()
         for computer in c.Win32_ComputerSystem():
             if computer.PartOfDomain:
-                print computer.Domain  # DOMCD
-                print computer.SystemStartupOptions
+                print(computer.Domain)  # DOMCD
+                print(computer.SystemStartupOptions)
                 computer.JoinDomainOrWorkGroup(domain, password, login, group, 3)
     finally:
         pythoncom.CoUninitialize()
@@ -684,17 +684,17 @@ def windowsservice(name, action):
     try:
         wmi_obj = wmi.WMI()
         wmi_sql = "select * from Win32_Service Where Name ='%s'" % name
-        print wmi_sql
+        print(wmi_sql)
         wmi_out = wmi_obj.query(wmi_sql)
     finally:
         pythoncom.CoUninitialize()
-    print len(wmi_out)
+    print(len(wmi_out))
     for dev in wmi_out:
-        print dev.caption
+        print(dev.caption)
         if action.lower() == "start":
             dev.StartService()
         elif action.lower() == "stop":
-            print dev.Name
+            print(dev.Name)
             dev.StopService()
         elif action.lower() == "restart":
             dev.StopService()
@@ -712,7 +712,7 @@ def methodservice():
     try:
         c = wmi.WMI()
         for method in c.Win32_Service._methods:
-            print method
+            print(method)
     finally:
         pythoncom.CoUninitialize()
 
@@ -814,7 +814,7 @@ def pluginmastersessionaction(sessionaction, timeminute=10):
 def searchippublic(site=1):
     if site == 1:
         try:
-            page = urllib.urlopen("http://ifconfig.co/json").read()
+            page = urllib.request.urlopen("http://ifconfig.co/json").read()
             objip = json.loads(page)
             if is_valid_ipv4(objip['ip']):
                 return objip['ip']
@@ -824,7 +824,7 @@ def searchippublic(site=1):
             return searchippublic(2)
     elif site == 2:
         try:
-            page = urllib.urlopen("http://www.monip.org/").read()
+            page = urllib.request.urlopen("http://www.monip.org/").read()
             ip = page.split("IP : ")[1].split("<br>")[0]
             if is_valid_ipv4(ip):
                 return ip
@@ -834,7 +834,7 @@ def searchippublic(site=1):
             return searchippublic(3)
     elif site == 3:
         try:
-            ip = urllib.urlopen("http://ip.42.pl/raw").read()
+            ip = urllib.request.urlopen("http://ip.42.pl/raw").read()
             if is_valid_ipv4(ip):
                 return ip
             else:
@@ -891,8 +891,8 @@ class shellcommandtimeout(object):
 
         thread.join(self.obj['timeout'])
         if thread.is_alive():
-            print 'Terminating process'
-            print "timeout %s" % self.obj['timeout']
+            print('Terminating process')
+            print("timeout %s" % self.obj['timeout'])
             #self.codereturn = -255
             #self.result = "error tineour"
             self.process.terminate()
@@ -1033,7 +1033,7 @@ def Setdirectorytempinfo():
     """
     dirtempinfo = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "INFOSTMP")
     if not os.path.exists(dirtempinfo):
-        os.makedirs(dirtempinfo, mode=0700)
+        os.makedirs(dirtempinfo, mode=0o700)
     return dirtempinfo
 
 
@@ -1150,7 +1150,7 @@ class geolocalisation_agent:
     @staticmethod
     def call_simple_page_urllib(url):
         try:
-            objip = json.loads(urllib.urlopen(url).read())
+            objip = json.loads(urllib.request.urlopen(url).read())
             return objip
         except:
             return None

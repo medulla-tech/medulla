@@ -146,7 +146,7 @@ class TableFactory(type):
 
     def __new__(cls, name, bases, attrs):
         # all table names to generate
-        tables = [t.replace('_cols','') for t in cls.__dict__.keys() if t.endswith ('_cols')]
+        tables = [t.replace('_cols','') for t in list(cls.__dict__.keys()) if t.endswith ('_cols')]
 
         for attr_name in tables:
             # gets the ORM class

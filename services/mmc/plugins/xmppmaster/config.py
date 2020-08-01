@@ -26,7 +26,7 @@ from mmc.plugins.xmppmaster.master.lib import utils
 import logging
 from mmc.plugins.xmppmaster.master.lib.utils import ipfromdns
 import os
-import ConfigParser
+import configparser
 
 logger = logging.getLogger()
 
@@ -39,7 +39,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
             self.initdone = True
 
     def loadparametersplugins(self, namefile):
-        Config = ConfigParser.ConfigParser()
+        Config = configparser.ConfigParser()
         Config.optionxform = str
         Config.read(namefile)
         return Config.items("parameters")

@@ -38,7 +38,7 @@ class PackageGetA(Pulse2Api):
             d = self.callRemote("getAllPackages", mirror)
             d.addErrback(self.onError, "getAllPackages", mirror, [{'label':'A', 'version':'0', 'ERR':'PULSE2ERROR_GETALLPACKAGE', 'mirror':self.server_addr.replace(self.credentials, '')}])
             return d
-        except Exception, e:
+        except Exception as e:
             self.logger.error("getAllPackages %s"%(str(e)))
             return [{'label':'A', 'version':'0', 'ERR':'PULSE2ERROR_GETALLPACKAGE', 'mirror':self.server_addr.replace(self.credentials, '')}]
 
@@ -47,7 +47,7 @@ class PackageGetA(Pulse2Api):
             d = self.callRemote("getAllPendingPackages", mirror)
             d.addErrback(self.onError, "getAllPendingPackages", mirror)
             return d
-        except Exception, e:
+        except Exception as e:
             self.logger.error("getAllPendingPackages %s"%(str(e)))
             return []
 
@@ -63,9 +63,9 @@ class PackageGetA(Pulse2Api):
         if pkg:
             try:
                 do_reboot = pkg['reboot']
-                if do_reboot == '' or do_reboot == '0' or do_reboot == 0 or do_reboot == u'0' or do_reboot == 'false' or do_reboot == u'false' or do_reboot == False or do_reboot == 'disable' or do_reboot == u'disable' or do_reboot == 'off' or do_reboot == u'off':
+                if do_reboot == '' or do_reboot == '0' or do_reboot == 0 or do_reboot == '0' or do_reboot == 'false' or do_reboot == 'false' or do_reboot == False or do_reboot == 'disable' or do_reboot == 'disable' or do_reboot == 'off' or do_reboot == 'off':
                     pkg['do_reboot'] = 'disable'
-                elif do_reboot == '1' or do_reboot == 1 or do_reboot == u'1' or do_reboot == 'true' or do_reboot == u'true' or do_reboot == True or do_reboot == 'enable' or do_reboot == u'enable' or do_reboot == 'on' or do_reboot == u'on':
+                elif do_reboot == '1' or do_reboot == 1 or do_reboot == '1' or do_reboot == 'true' or do_reboot == 'true' or do_reboot == True or do_reboot == 'enable' or do_reboot == 'enable' or do_reboot == 'on' or do_reboot == 'on':
                     pkg['do_reboot'] = 'enable'
                 else:
                     self.logger.warning("Dont know option '%s' for do_reboot, will use 'disable'"%(do_reboot))

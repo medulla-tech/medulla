@@ -81,7 +81,7 @@ class DBEngine(object):
                                     host=myhost,
                                     port=DBEngine.myport,
                                     db=mydb)
-        except Exception, exc:
+        except Exception as exc:
             DBEngine.mylog.error("Can't connect to the database: %s" % str(exc))
             return None
         instance = super(DBEngine, cls).__new__(cls, myuser,
@@ -128,7 +128,7 @@ class DBEngine(object):
         """
         try:
             return self.conn.cursor()
-        except Exception, exc:
+        except Exception as exc:
             self.log.error("Error while creating cursor: %s" % str(exc))
 
     def __del__(self):
@@ -181,7 +181,7 @@ class DBScriptLaunchInterface:
                 self.log.error("Error while execute script '%s': %s" % (filename, err))
                 return None
             return ret
-        except Exception, exc:
+        except Exception as exc:
             self.log.error("Error while execute script '%s': %s" % (filename, str(exc)))
             return None
 
@@ -399,7 +399,7 @@ class DBControl:
         @rtype: string
         """
 
-        version_slice = range(version_in_db + 1, version_to_install + 1)
+        version_slice = list(range(version_in_db + 1, version_to_install + 1))
 
         for script in self.ddl_manager.get_scripts(self.module, fullpath=True):
             script_number = self.ddl_manager.get_script_number(script)

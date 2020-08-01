@@ -23,7 +23,7 @@ Utilities functions for the dlp application
 
 import os
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import zipfile
 import cherrypy
 import logging
@@ -42,7 +42,7 @@ def log(message, severity=logging.DEBUG, traceback=False):
 
 def download_file(url, dest, retries):
     try:
-        res = urllib2.urlopen(url)
+        res = urllib.request.urlopen(url)
         path, filename = url.rsplit('/', 1)
         blocksize = 8192
         with open(os.path.join(dest, filename), 'wb') as f:

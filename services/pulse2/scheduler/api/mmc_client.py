@@ -25,7 +25,7 @@ import os
 import logging
 
 from mmc.site import mmcconfdir
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 from mmc.client.async import Proxy
 
 log = logging.getLogger()
@@ -107,7 +107,7 @@ class MMCProxy(object):
         try:
             return Proxy(self._url, self._username, self._password)
 
-        except Exception, err:
+        except Exception as err:
             log.error("Error while connecting to mmc-agent : %s" % err)
             return False
 

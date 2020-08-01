@@ -26,7 +26,7 @@ import logging
 import re
 
 from pulse2.proxyssl.utilities import Singleton
-import ConfigParser
+import configparser
 import sys
 
 
@@ -60,7 +60,7 @@ class Pulse2InventoryProxyConfig(Singleton):
 
     def setup(self, config_file = 'conf/p2ipc.ini'):
         # Load configuration file
-        self.cp = ConfigParser.ConfigParser()
+        self.cp = configparser.ConfigParser()
         self.cp.read(config_file)
         self.cp.read(config_file + '.local')
         self.logger = logging.getLogger()

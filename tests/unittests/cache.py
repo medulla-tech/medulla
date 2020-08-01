@@ -41,7 +41,7 @@ class CacheTest(unittest.TestCase):
     def testDiffName(self):
         cache1 = getCache('test1')
         cache2 = getCache('test1')
-        self.assertTrue(cache1<>cache2)
+        self.assertTrue(cache1!=cache2)
 
     def testTimeout(self):
         cache = getCache('test', 5)

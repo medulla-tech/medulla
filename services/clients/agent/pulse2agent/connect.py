@@ -25,8 +25,8 @@ import socket
 import ssl
 import logging
 
-from parse import Parser
-from pexceptions import ConnectionError
+from .parse import Parser
+from .pexceptions import ConnectionError
 
 class ConnectorException(Exception):
     """A general exception wrapper for client-side errors"""
@@ -114,12 +114,14 @@ class Connector(object):
                 sock.settimeout(self.timeout)
                 return sock
 
-        except socket.gaierror, (code, message):
+        except socket.gaierror as xxx_todo_changeme:
+            (code, message) = xxx_todo_changeme.args
             if code == -2:
                 raise UnknownService(self.host, self.port)
 
 
-        except socket.error, (code, message):
+        except socket.error as xxx_todo_changeme1:
+            (code, message) = xxx_todo_changeme1.args
             if code == 111:
                 raise ConnectionRefused(self.host, self.port)
 
@@ -128,7 +130,7 @@ class Connector(object):
 
 
 
-        except Exception, e:
+        except Exception as e:
             self.logger.debug("Client connection failed: %s" % str(e))
             import traceback
             self.logger.debug("\033[31m%s\033[0m" % str(traceback.format_exc()))
@@ -160,13 +162,13 @@ class ClientEndpoint(object):
         try:
             self.socket.sendall(pack)
             response = self.socket.read(1024)
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("Request failed: %s" % str(e))
             raise ConnectionError(self.connector.host)
 
         try:
             return self.parser.decode(response)
-        except ValueError, e:
+        except ValueError as e:
             self.logger.warn("Decoding of request failed: %s" % str(e))
             raise ConnectionError(self.connector.host)
 
@@ -177,7 +179,7 @@ class ClientEndpoint(object):
             try:
                 chunk = self.socket.recv(n - len(data))
                 #chunk = self.socket.read(n - len(data))
-            except Exception, e:
+            except Exception as e:
                 self.logger.debug("SSL read failed: %s" % str(e))
 
             if len(chunk) == 0:

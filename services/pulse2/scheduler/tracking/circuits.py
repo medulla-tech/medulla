@@ -118,7 +118,7 @@ class TimedTracker(_Tracker):
 
         now = time.time()
 
-	return [id for (id, tp) in self.ids.items() if tp + self.life_time < now]
+	return [id for (id, tp) in list(self.ids.items()) if tp + self.life_time < now]
 
 class StoppedTracker(Tracker):
     """Controls the stopped circuits """

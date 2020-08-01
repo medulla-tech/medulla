@@ -66,7 +66,7 @@ class ThreadPackageDetect(ThreadPackageHelper):
                 Common().moveCorrectPackages()
             Common().detectNewPackages()
             logging.getLogger().debug("###############< ThreadPackageDetect end\n")
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error('an Exception happened when trying to detect packages:' + str(e))
         self.working = False
 
@@ -145,7 +145,7 @@ class ThreadPackageGlobalMirror(ThreadPackageHelper):
     def runSub(self):
         try:
             self._runSub()
-        except Exception, e:
+        except Exception as e:
             self.logger.error("ThreadPackageGlobalMirror: " + str(e))
             self.working = False
 
@@ -193,7 +193,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
                     args.append("%s:%s" % (target, os.path.dirname(pkg.root)))
                     self.logger.debug("ThreadPackageMirror execute mirror level0 : %s %s" % (exe, str(args)))
                     return createDeferred(exe, args, pid, target, False)
-                except Exception, e:
+                except Exception as e:
                     self.logger.error("ThreadPackageMirror mirror level0 failed for package %s : %s" % (pid, str(e)))
             else:
                 self.logger.debug("ThreadPackageMirror failed %s" % (str(result)))
@@ -243,7 +243,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
                     args.append("%s:%s" % (target, os.path.dirname(pkg.root)))
                     self.logger.debug("ThreadPackageMirror execute : %s %s" % (exe, str(args)))
                     dlist.append(createDeferred(exe, args, pid, target, is_deletion))
-                except Exception, e:
+                except Exception as e:
                     self.logger.error("ThreadPackageMirror failed to mirror %s : %s" % (pid, str(e)))
 
         dl = defer.DeferredList(dlist)
@@ -253,7 +253,7 @@ class ThreadPackageMirror(ThreadPackageHelper):
     def runSub(self):
         try:
             self._runSub()
-        except Exception, e:
+        except Exception as e:
             self.logger.error("ThreadPackageMirror: " + str(e))
             self.working = False
 

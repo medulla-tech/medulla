@@ -44,7 +44,7 @@ class ImagingRpcPhase(Phase):
             d.addErrback(self.parse_imaging_rpc_error)
 
             return d
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Circuit #%s: imaging phase failed: %s" % (self.coh.id, str(e)))
 
     def parse_imaging_rpc_result(self, result):
@@ -53,7 +53,7 @@ class ImagingRpcPhase(Phase):
             self.update_history_done()
             if self.phase.switch_to_done():
                 self.coh.setStateScheduled()
-                return self.next()
+                return next(self)
         else :
             self.logger.info("Circuit #%s: %s phase failed (exitcode != 0)" % (self.coh.id, self.name))
             self.update_history_failed()

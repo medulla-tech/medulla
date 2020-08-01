@@ -57,7 +57,7 @@ class DbTOA(object):
         ret = []
         for i in a:
             j = getattr(self, i)
-            if type(j) in (str, int, unicode):
+            if type(j) in (str, int, str):
                 ret.append([i, j])
         return ret
 

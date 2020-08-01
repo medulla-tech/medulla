@@ -138,7 +138,7 @@ class BaseCache(object):
         # This is a separate method, rather than just a copy of has_key(),
         # so that it always has the same functionality as has_key(), even
         # if a subclass overrides it.
-        return self.has_key(key)
+        return key in self
 
     def set_many(self, data, timeout=None):
         """
@@ -149,7 +149,7 @@ class BaseCache(object):
         If timeout is given, that timeout will be used for the key; otherwise
         the default cache timeout will be used.
         """
-        for key, value in data.items():
+        for key, value in list(data.items()):
             self.set(key, value, timeout=timeout)
 
     def delete_many(self, keys):
@@ -284,9 +284,9 @@ class LocMemCache(BaseCache):
 def genericHashFunc(*args, **kwargs):
     def freeze(o):
         if isinstance(o, list) or isinstance(o, tuple):
-            return tuple(map(lambda x: freeze(x), o))
+            return tuple([freeze(x) for x in o])
         elif isinstance(o, dict):
-            return freeze(o.items())
+            return freeze(list(o.items()))
         else:
             return o
 
@@ -314,7 +314,7 @@ class CacheableObject(object):
         if key is None:
             raise ValueError("Invalid cache key: None")
 
-        if self.cache.has_key(key):
+        if key in self.cache:
             ret = self.cache.get(key)
             log.debug("%s(%s, %s): key=%s, value=%s" % (method.__name__,
                                                         args, kwargs,
@@ -338,7 +338,7 @@ class _DeferredCache(object):
     """
     def __init__(self, op, hashFunc=None):
         self.op = op
-        self.cache = LocMemCache(op.func_name)
+        self.cache = LocMemCache(op.__name__)
         if hashFunc is None:
             self.hashFunc = genericHashFunc
         else:
@@ -356,14 +356,14 @@ class _DeferredCache(object):
         # Currently not in progress - start it
         key = self.hashFunc(*args, **kwargs)
         if key is None:
-            log.debug("DeferredCache(%s) not hashable: not caching. " % self.op.func_name)
+            log.debug("DeferredCache(%s) not hashable: not caching. " % self.op.__name__)
             return self.op(*args, **kwargs)
 
-        if self.cache.has_key(key):
-            log.debug("DeferredCache(%s): using cache" % self.op.func_name)
+        if key in self.cache:
+            log.debug("DeferredCache(%s): using cache" % self.op.__name__)
             opDeferred = self.cache.get(key)
         else:
-            log.debug("DeferredCache(%s): caching" % self.op.func_name)
+            log.debug("DeferredCache(%s): caching" % self.op.__name__)
             opDeferred = self.op(*args, **kwargs)
             self.cache.set(key, opDeferred)
 

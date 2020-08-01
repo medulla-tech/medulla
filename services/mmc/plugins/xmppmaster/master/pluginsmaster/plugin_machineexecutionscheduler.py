@@ -77,7 +77,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                 mbody=json.dumps(datasend),
                                 mtype='chat')
     except Exception as e:
-        print "Error in plugin %s" % str(e)
+        print("Error in plugin %s" % str(e))
         traceback.print_exc(file=sys.stdout)
         advanced['actionscheduler'] = "error"  # abandonmentdeploy, run or pause
         datasend = {

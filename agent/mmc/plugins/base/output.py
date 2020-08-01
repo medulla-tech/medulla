@@ -88,10 +88,10 @@ class XLSGenerator(object):
             for row in section:
                 for cell in row:
                     try:
-                        if isinstance (cell, basestring):
+                        if isinstance (cell, str):
                             sheet.write(line,column,self._T(cell))
                         else:
-                            if isinstance (cell[2], basestring):
+                            if isinstance (cell[2], str):
                                 sheet.write(line, column,cell[2])
                     except Exception:
                         pass
@@ -103,7 +103,7 @@ class XLSGenerator(object):
 
     def save(self):
         self.wbk.save(self.path)
-        chmod(self.path, 0644)
+        chmod(self.path, 0o644)
         return self.path
 
     def create_simple_table(self, sheet, line, column, table_name, datas):
@@ -115,7 +115,7 @@ class XLSGenerator(object):
         for section in datas:
             for elements in section :
                 try:
-                    if isinstance (elements[0], basestring):
+                    if isinstance (elements[0], str):
                         if elements[0] not in headers:
                             headers.append(elements[0])
                             sheet.write(line,column,self._T(elements[0]))
@@ -127,7 +127,7 @@ class XLSGenerator(object):
         for section in datas:
             for elements in section :
                 try:
-                    if isinstance (elements[0], basestring) and isinstance (elements[1], basestring):
+                    if isinstance (elements[0], str) and isinstance (elements[1], str):
                         sheet.write(line, headers.index(elements[0]), elements[1])
                 except Exception:
                     pass

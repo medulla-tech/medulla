@@ -63,13 +63,13 @@ class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
                     if not kind in self.type2url[type]:
                         self.type2url[type][kind] = {}
                     self.type2url[type][kind][index] = url
-        if len(self.type2url.keys()) == 0:
+        if len(list(self.type2url.keys())) == 0:
             raise Exception("Please put some associations in your config file")
 
         for type in self.type2url:
             for kind in self.type2url[type]:
                 sorted = []
-                keys = self.type2url[type][kind].keys()
+                keys = list(self.type2url[type][kind].keys())
                 keys.sort()
                 for index in keys:
                     sorted.append(self.type2url[type][kind][index])

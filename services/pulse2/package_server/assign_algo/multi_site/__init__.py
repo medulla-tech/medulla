@@ -29,7 +29,7 @@
 import logging
 from twisted.internet import  defer
 from pulse2.package_server.assign_algo import MMAssignAlgo
-from urlparse import urlparse
+from urllib.parse import urlparse
 from pulse2.package_server.imaging.api.functions import Imaging
 from pulse2.package_server.types import Machine
 import random
@@ -65,8 +65,8 @@ class MMUserAssignAlgo(MMAssignAlgo):
             #ip server corresponding to the imaging server of this machine
             # Get the package apis and replace the server value
             self.assign[machine.uuid]['getMachinePackageApi'] = []
-            self.assign[machine.uuid]['getMachinePackageApi'] += map(lambda papi: papi.toH(), self.package_apis)
-            for api in xrange(len(self.assign[machine.uuid]['getMachinePackageApi'])):
+            self.assign[machine.uuid]['getMachinePackageApi'] += [papi.toH() for papi in self.package_apis]
+            for api in range(len(self.assign[machine.uuid]['getMachinePackageApi'])):
                 if 'server'  in m and m['server'] != "":
                     self.assign[machine.uuid]['getMachinePackageApi'][api]['server'] = m['server']
             if  'servernane' and 'entity_uuid' and 'uuid' and 'Entity_Name' in m:

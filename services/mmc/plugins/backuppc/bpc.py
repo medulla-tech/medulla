@@ -24,7 +24,7 @@
 import os.path
 import os
 from pyquery import PyQuery as pq
-import urllib,urllib2
+import urllib.request, urllib.parse, urllib.error,urllib.request,urllib.error,urllib.parse
 import re,string
 import logging
 import tempfile
@@ -89,7 +89,7 @@ def getBackupServerByUUID(uuid):
 
 def dictToURL(params):
     s = ''
-    for k in params.keys():
+    for k in list(params.keys()):
         if type(params[k]) == type([]):
             for val in params[k]:
 		if val is None:
@@ -97,7 +97,7 @@ def dictToURL(params):
 		else:
                     s+= '&%s=%s' % (k,val)
             del params[k]
-    return urllib.urlencode(params)+s
+    return urllib.parse.urlencode(params)+s
 
 def send_request(params,url=''):
     """Send a request to BackupPC web interface.
@@ -115,8 +115,8 @@ def send_request(params,url=''):
     params_str = dictToURL(params)
     # Sending a POST request
     try:
-        response = urllib2.urlopen(url,params_str)
-        return unicode(response.read(),'utf8').encode('ascii', 'xmlcharrefreplace')
+        response = urllib.request.urlopen(url,params_str)
+        return str(response.read(),'utf8').encode('ascii', 'xmlcharrefreplace')
     except:
         logger.error("Unable to connect to BackupPC server : %s" % url)
         return ''
@@ -131,7 +131,7 @@ def getTableByTitle(html,title):
     # Searching for the right title
     titles = d('div.h2')
     div = []
-    for i in xrange(len(title)):
+    for i in range(len(title)):
         if titles.eq(i).text() == title:
             div = titles.eq(i)
             break
@@ -143,7 +143,7 @@ def getTableByTitle(html,title):
 def getTableHeader(table):
     header = table.find('.tableheader').find('td')
     hd = []
-    for i in xrange(len(header)):
+    for i in range(len(header)):
         hd += [header.eq(i).text()]
     return hd
 
@@ -151,12 +151,12 @@ def getTableContent(table):
     count = len(table.find('tr'))
     # Init filecount var and files dictionnary
     lines = []
-    for i in xrange(count):
+    for i in range(count):
         if table.find('tr').eq(i).attr('class')=='tableheader':
             continue
         cols = table.find('tr').eq(i).find('td')
         line = []
-        for i in xrange(len(cols)):
+        for i in range(len(cols)):
             line += [cols.eq(i).text()]
         lines += [line]
     return [list(i) for i in zip(*lines)]
@@ -172,7 +172,7 @@ def getHTMLerr(html):
     else:
 	if len(d('.editError')):
 	    errors = []
-	    for i in xrange(len(d('.editError'))):
+	    for i in range(len(d('.editError'))):
 		errors.append(d('.editError').eq(i).text())
 	    error_text = '\n'.join(errors)
 	    logger.warning(error_text)
@@ -195,7 +195,7 @@ def get_host_list(pattern=""):
     options=d('select:first').find('option')
     if not options:
         return _FORMAT_ERROR
-    for i in xrange(len(options)):
+    for i in range(len(options)):
         if options.eq(i).attr('value') != '#' and pattern in options.eq(i).text():
             hosts += [options.eq(i).text()]
     return {'err':0,'data':hosts}
@@ -240,7 +240,7 @@ def get_share_names(host,backup_num):
     lines = sharestable.find('tr')
     #init share names array
     share_names = []
-    for i in xrange(len(lines)):
+    for i in range(len(lines)):
             if lines.eq(i).text()[0]=='/':
                     share_names = share_names + [lines.eq(i).text()]
     return {'err':0,'data':share_names}
@@ -266,12 +266,12 @@ def list_files(host,backup_num,share_name,dir,filter,recursive=0):
     # Init filecount var and files dictionnary
     linecount = len(filetable.find('tr'))
     result = [[],[],[],[],[],[],[]]
-    for i in xrange(1,linecount):
+    for i in range(1,linecount):
         cols = filetable.find('tr').eq(i).find('td')
         if len(cols) == 6:
             if filter in cols.eq(0).text():
                 # Attributes
-                result[0] += [cols.eq(0).text().replace(u'\xa0',' ')] #filename
+                result[0] += [cols.eq(0).text().replace('\xa0',' ')] #filename
                 result[1] += [cols.eq(0).find('input').val()] #filepath
                 result[2] += [cols.eq(3).text()] # type (int)
                 result[3] += [cols.eq(1).text()] # type (str)
@@ -280,10 +280,10 @@ def list_files(host,backup_num,share_name,dir,filter,recursive=0):
                 result[6] += [cols.eq(5).text()] # last modification
             # if recursive is on, we add directories to dirs array to browse them
             if recursive and cols.eq(1).text()=='dir':
-                subdir = urllib.unquote(cols.eq(0).find('input').val())
+                subdir = urllib.parse.unquote(cols.eq(0).find('input').val())
                 sub = list_files(host,backup_num,share_name,subdir,filter,2)
                 if not sub['err']:
-                    for i in xrange(len(sub['data'])):
+                    for i in range(len(sub['data'])):
                         result[i]+=sub['data'][i]
     return {'err':0,'data':result}
 
@@ -301,12 +301,12 @@ def get_file_versions(host,share_name,filepath):
     filename = os.path.basename(filepath)
     dir = os.path.dirname(filepath)
     # Testing if file is available in that restore point
-    for i in xrange(len(restore_points['data'][0])):
+    for i in range(len(restore_points['data'][0])):
         point = restore_points['data'][0][i]
         datetime = restore_points['data'][4][i]
         age = restore_points['data'][6][i]
         list = list_files(host,point,share_name,dir,filename)
-        if 'data' in list.keys() and filename in list['data'][0]:
+        if 'data' in list(list.keys()) and filename in list['data'][0]:
             backup_nums+= [point]
             datetimes+= [datetime]
             ages+= [age]
@@ -324,12 +324,12 @@ def download_file(filepath,params):
     if 'host' in params: params['host'] = params['host'].lower()
     # Converting params dict to an http get string
     try:
-        params_str = urllib.urlencode(params)
+        params_str = urllib.parse.urlencode(params)
     except:
         return _ENCODING_ERROR
     #
     try:
-        response = urllib.urlretrieve(url,filepath,None,params_str)
+        response = urllib.request.urlretrieve(url,filepath,None,params_str)
         #Testing HTTP headers and checking for errors
         regex= 'attachment; filename="(.+)"'
         if 'content-disposition' in response[1].dict and re.match(regex,response[1].dict['content-disposition']):
@@ -376,7 +376,7 @@ def download_file(filepath,params):
 def get_download_status():
     global download_status
     # Purge the downloads that are older than 24 hours
-    for k in download_status.keys():
+    for k in list(download_status.keys()):
         if download_status[k]['time'] == 1 and  int(time.time())-download_status[k]['time'] > 24*60*60:
             del download_status[k]
             # Delete files (if not a direct restore)
@@ -434,8 +434,8 @@ def restore_file(host,backup_num,share_name,files):
         params.update({'share':share_name,'relative':'1','compressLevel':'5'})
         # Files list
         params['fcbMax']=len(files)+1
-        for i in xrange(len(files)):
-                params['fcb'+str(i)] = urllib.unquote(files[i])
+        for i in range(len(files)):
+                params['fcb'+str(i)] = urllib.parse.unquote(files[i])
     else:
         destination = os.path.join(tempfiledir,os.path.basename(files))
         # Setting params
@@ -461,7 +461,7 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
     params['pathHdr'] = pathHdr.encode('utf8','ignore')
     # Files list
     params['fcbMax']=len(files)+1
-    for i in xrange(len(files)):
+    for i in range(len(files)):
             params['fcb'+str(i)] = files[i].encode('utf8','ignore')
     # Converting params dict to an http get string
     html = send_request(params)
@@ -482,11 +482,11 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
 def get_host_config(host,backupserver=''):
     # Function to convert _zZ_ to dict
     def underscores_to_dict(cfg):
-        for key in cfg.keys():
+        for key in list(cfg.keys()):
             if '_zZ_' in key:
                 keys = string.split(key,'_zZ_')
                 root = cfg
-                for i in xrange(len(keys)-1):
+                for i in range(len(keys)-1):
                     nkey = keys[i]
                     if not nkey in root:
                         root[nkey]={}
@@ -508,7 +508,7 @@ def get_host_config(host,backupserver=''):
     inputs=d('form[name=editForm]').find('input')
     if not inputs:
         return _FORMAT_ERROR
-    for i in xrange(len(inputs)):
+    for i in range(len(inputs)):
         key = inputs.eq(i).attr('name')
         value = inputs.eq(i).val()
 	if value is None:
@@ -532,15 +532,15 @@ def get_host_config(host,backupserver=''):
 def set_host_config(host,config,globalconfig=0,backupserver=''):
     # Function used to format params
     def dict_to_underscores(cfg):
-        for z in cfg.keys():
+        for z in list(cfg.keys()):
             if type(cfg[z])==type({}):
-                for h in cfg[z].keys():
+                for h in list(cfg[z].keys()):
                     cfg[z+'_zZ_'+h] = cfg[z][h]
                 del cfg[z]
                 dict_to_underscores(cfg)
                 break
             if type(cfg[z])==type([]):
-                for h in xrange(len(cfg[z])):
+                for h in range(len(cfg[z])):
                     cfg[z+'_zZ_'+str(h)] = cfg[z][h]
                 del cfg[z]
                 dict_to_underscores(cfg)
@@ -553,7 +553,7 @@ def set_host_config(host,config,globalconfig=0,backupserver=''):
     _config = config.copy()
     __config = config.copy()
     # Setting overrides
-    for p in __config.keys():
+    for p in list(__config.keys()):
         params['override_'+p] = '1'
     # Formatting config dict
     dict_to_underscores(__config)
@@ -582,9 +582,9 @@ def set_host_backup_profile(uuid,newprofile):
         config['RsyncShareName'] = profile['sharenames'].split('\n')
         config['ClientCharset'] = profile['encoding']
         excludes = profile['excludes'].split('||')
-        for i in xrange(len(excludes)):
+        for i in range(len(excludes)):
             excludes[i] = excludes[i].split('\n')
-        config['BackupFilesExclude'] = dict(zip(config['RsyncShareName'],excludes))
+        config['BackupFilesExclude'] = dict(list(zip(config['RsyncShareName'],excludes)))
         # Setting new host config
         set_host_config(uuid,config)
 
@@ -676,7 +676,7 @@ def set_backup_for_host(uuid):
     config['XferMethod'] = 'rsync'
     config['RsyncRestoreArgs'] = "--numeric-ids --perms --owner --group -D --links --hard-links --times --block-size=2048 --relative --ignore-times --recursive --super".split(' ')
     config['PingCmd'] = '/bin/true'
-    print "***",config,"****"
+    print("***",config,"****")
     set_host_config(uuid,config)
     # Adding host to the DB
     try:
@@ -695,7 +695,7 @@ def unset_backup_for_host(uuid):
     # Removing entry from hosts
     config = get_host_config('',server_url)['general_config']
     try:
-        for i in config['Hosts'].keys():
+        for i in list(config['Hosts'].keys()):
             if config['Hosts'][i]['host'].lower() == uuid.lower():
                 del config['Hosts'][i]
                 set_host_config('', config, 1, server_url)
@@ -852,7 +852,7 @@ def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize
         for sharename in file_index[host][backupnum]:
             # If there is a sharename filter, we apply it
             if sharename_0 and not sharename in sharename_0: continue
-            for i in xrange(len(file_index[host][backupnum][sharename]['paths'])):
+            for i in range(len(file_index[host][backupnum][sharename]['paths'])):
                 # ========== TYPE FILTERING =============================
                 _type = file_index[host][backupnum][sharename]['types'][i]
                 # if symlink, we pass
@@ -887,9 +887,9 @@ def apply_backup_profile(profileid):
     config['RsyncShareName'] = profile['sharenames'].split('\n')
     config['ClientCharset'] = profile['encoding']
     excludes = profile['excludes'].split('||')
-    for i in xrange(len(excludes)):
+    for i in range(len(excludes)):
         excludes[i] = excludes[i].split('\n')
-    config['BackupFilesExclude'] = dict(zip(config['RsyncShareName'],excludes))
+    config['BackupFilesExclude'] = dict(list(zip(config['RsyncShareName'],excludes)))
     for host in hosts:
         set_host_config(host,config)
     # TODO : Error treatment
@@ -1044,10 +1044,10 @@ def get_global_status(entity_uuid):
             return result
         tb_good = getTableContent(tb_good)
         if not tb_good:
-            tb_good = [[] for i in xrange(12)]
+            tb_good = [[] for i in range(12)]
         tb_none = getTableContent(tb_none)
         if not tb_none:
-            tb_none = [[] for i in xrange(12)]
+            tb_none = [[] for i in range(12)]
         #
         result['data'] = { \
             'hosts':tb_good[0]+tb_none[0], \

@@ -70,7 +70,7 @@ class Pulse2Image:
             try:
                 self._readGRUB()
                 self._readSize()
-            except Exception, e:
+            except Exception as e:
                 if raises:
                     raise e
             self._readLog()
@@ -79,7 +79,7 @@ class Pulse2Image:
             # Davos image
             try:
                 self._readDavosJSON()
-            except Exception, e:
+            except Exception as e:
                 if raises:
                     raise e
 
@@ -109,7 +109,7 @@ class Pulse2Image:
         # All below this is shit
         try:
             fd_grub_file = file(os.path.join(self.directory, PULSE2_IMAGING_GRUB_FNAME))
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_grub_file, e))
             raise e
 
@@ -173,7 +173,7 @@ class Pulse2Image:
         # open size file
         try:
             fd_size_file = open(os.path.join(self.directory, PULSE2_IMAGING_SIZE_FNAME))
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_size_file, e))
             raise e
 

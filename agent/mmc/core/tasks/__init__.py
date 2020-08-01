@@ -86,9 +86,7 @@ class TaskDoesNotExists(Exception):
     pass
 
 
-class TaskManager(object):
-    __metaclass__ = SingletonN
-
+class TaskManager(object, metaclass=SingletonN):
     tasks = {}
 
     def addTask(self, label, task=None, interval=None, cron_expression=None, delay=0):
@@ -323,9 +321,9 @@ class ScheduledCall:
 
     def __repr__(self):
         if hasattr(self.f, 'func_name'):
-            func = self.f.func_name
+            func = self.f.__name__
             if hasattr(self.f, 'im_class'):
-                func = self.f.im_class.__name__ + '.' + func
+                func = self.f.__self__.__class__.__name__ + '.' + func
         else:
             func = reflect.safe_repr(self.f)
 
@@ -338,25 +336,25 @@ if __name__ == "__main__":
     from datetime import datetime
 
     def hello(x, who=None):
-        print "Hello %s !" % who
-        print datetime.now()
+        print("Hello %s !" % who)
+        print(datetime.now())
         # throws an error
         y = 10 / x
         return y
 
     def err(failure):
-        print "err"
-        print datetime.now()
+        print("err")
+        print(datetime.now())
         failure.raiseException()
 
     def finish_delayed(call):
-        print "finish_delayed"
-        print datetime.now()
-        print call
-        print call.result
-        print "End!"
+        print("finish_delayed")
+        print(datetime.now())
+        print(call)
+        print(call.result)
+        print("End!")
 
-    print datetime.now()
+    print(datetime.now())
     TaskManager().addTask("my-task", [hello, [0], {"who": "world"}], interval=2).addErrback(err)
     TaskManager().addTask("my-task2", [hello, [2]], delay=4).addCallback(finish_delayed)
 

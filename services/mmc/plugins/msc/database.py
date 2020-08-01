@@ -66,7 +66,7 @@ class MscDatabase(msc.MscDatabase):
         if not target: # We can have this case with a convergence command without targets
             return SchedulerApi().getDefaultScheduler()
         elif type(target[0]) == list: # target = [[uuid, hostname], [uuid, target]]
-            return SchedulerApi().getSchedulers(map(lambda t: t[0], target))
+            return SchedulerApi().getSchedulers([t[0] for t in target])
         else: # target = [uuid, hostname]
             return SchedulerApi().getScheduler(target[0])
 
@@ -79,10 +79,10 @@ class MscDatabase(msc.MscDatabase):
         a_network = [0,0,0,0]
         for i in range(0,4):
             a_network[i] = int(a_ip[i]) & int(a_netmask[i])
-        a_notnetmask = map(lambda i: int(i) ^ 255, netmask.split('.'))
+        a_notnetmask = [int(i) ^ 255 for i in netmask.split('.')]
         for i in range(0,4):
             a_ip[i] = int(a_network[i]) | int(a_notnetmask[i])
-        return '.'.join(map(lambda x: str(x), a_ip))
+        return '.'.join([str(x) for x in a_ip])
 
 
     def prepareTarget(self, computer, group_id):
@@ -102,7 +102,7 @@ class MscDatabase(msc.MscDatabase):
         for i in range(len(computer[1]['macAddress'])):
             try:
                 bcastAddress = self.getBCast(ipAddresses[i], netmask[i])
-            except Exception, e:
+            except Exception as e:
                 self.logger.debug("Can't compute broadcast address for %s: %s" % (str(computer), str(e)))
                 bcastAddress = "255.255.255.255"
                 self.logger.debug("Using default broadcast address %s" % bcastAddress)
@@ -516,7 +516,7 @@ class MscDatabase(msc.MscDatabase):
                 order_in_proxy = None
                 max_clients_per_proxy = 0
                 try:
-                    candidates = filter(lambda(x): x['uuid'] == atarget["target_uuid"], proxies)
+                    candidates = [x for x in proxies if x['uuid'] == atarget["target_uuid"]]
                     if len(candidates) == 1:
                         max_clients_per_proxy = candidates[0]['max_clients']
                         order_in_proxy = candidates[0]['priority']
@@ -680,7 +680,7 @@ class MscDatabase(msc.MscDatabase):
         files = []
 
         cmd, patternActions = self.applyCmdPatterns(cmd)
-        is_quick_action = any([True for a in patternActions.values() if a=="enable"])
+        is_quick_action = any([True for a in list(patternActions.values()) if a=="enable"])
 
         # run a built-in script
         p1 = re.compile('^\/scripts\/')

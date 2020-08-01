@@ -123,13 +123,13 @@ def initialize(config):
                 logger.error("PXE Proxy: Adress already in use: old LRS imaging-server still installed and not yet stopped")
                 logger.error("PXE proxy: Please verify your configuration and restart the service")
 
-            except Exception, e:
+            except Exception as e:
                 logger.exception("Imaging error: %s" % e)
                 logger.error("PXE imaging service initialization failed, exiting.")
             else :
                 logger.info("Package Server initialized with PXE imaging API")
 
-        except Exception, e:
+        except Exception as e:
             logger.exception("Imaging error: %s" % e)
             logger.error("Error while initializing the imaging API")
             logger.error("Package Server will run WITHOUT the imaging API")
@@ -155,7 +155,7 @@ def initialize(config):
                 interface = config.bind
                 )
         logger.info('package server listening on %s:%d' % (config.bind, port))
-    except Exception, e:
+    except Exception as e:
         logger.error('can\'t bind to %s:%d' % (config.bind, port))
         logger.error(e)
         ret = False

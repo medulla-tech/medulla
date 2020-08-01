@@ -54,7 +54,7 @@ class RPCStore(Singleton):
         self.filename = PackageServerConfig().imaging_api['rpc_replay_file']
         try:
             self._initStateFile()
-        except Exception, e:
+        except Exception as e:
             self.logger.error('Can\'t initialize the RPC store file: %s. If the file looks corrupted, just delete it and restart the service.' % self.filename)
             raise e
 
@@ -119,7 +119,7 @@ class RPCStore(Singleton):
             self.logger.debug('Taking at most %d items from the RPC replay file' % count)
             data = self.get()
             if data:
-                timestamps = data.keys()
+                timestamps = list(data.keys())
                 timestamps.sort()
                 found = 0
                 i = 0
@@ -142,7 +142,7 @@ class RPCStore(Singleton):
                 self.logger.debug('Done, found %d items' % len(items))
             else:
                 self.logger.debug('RPC replay file is empty')
-        except Exception, e:
+        except Exception as e:
             self.logger.exception(e)
         return items
 
@@ -159,7 +159,7 @@ class RPCStore(Singleton):
                     del data[timestamp]
                 self._updateStateFile(data)
                 self.logger.debug('Removal done')
-            except Exception, e:
+            except Exception as e:
                 self.logger.error(e)
 
     def check(self):
@@ -169,7 +169,7 @@ class RPCStore(Singleton):
         try:
             self.get()
             ret = True
-        except Exception, e:
+        except Exception as e:
             self.logger.error('Invalid RPC replay file %s: %s'
                               % (self.filename, e))
             ret = False
@@ -286,7 +286,7 @@ class RPCReplay(Singleton):
                     deferreds.append(d)
                 dl = defer.DeferredList(deferreds)
                 dl.addCallback(_rpcReplayCb)
-            except Exception, e:
+            except Exception as e:
                 self.logger.exception('Error during RPC replay: %s', e)
             self.logger.debug('End scheduling of RPCs to replay')
         self.startLoop()

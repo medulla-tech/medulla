@@ -22,7 +22,7 @@
 import os
 import logging
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except ImportError :
     import pickle # pyflakes.ignore
 from functools import wraps
@@ -57,9 +57,7 @@ def initialized(method):
 
 
 
-class SendingBuffer(object):
-    __metaclass__ = SingletonN
-
+class SendingBuffer(object, metaclass=SingletonN):
     """
     Provides a LIFO buffer processing the responses from launchers.
     """
@@ -124,7 +122,7 @@ class SendingBuffer(object):
                 with open(self.config.scheduler_proxy_buffer_tmp, "rb") as fp :
                     try:
                         content = pickle.load(fp)
-                    except Exception, e:
+                    except Exception as e:
                         self.logger.warn("XMLRPC Proxy: An error occured when restoring the buffer: %s" % str(e))
                     if isinstance(content, list):
                         self.packets.extend(content)
@@ -133,5 +131,5 @@ class SendingBuffer(object):
 
                     os.unlink(self.config.scheduler_proxy_buffer_tmp)
                     self.logger.info("XMLRPC Proxy: restore buffer with %d responses" % len(SendingBuffer().packets))
-        except Exception, exc:
+        except Exception as exc:
             self.logger.error("XMLRPC Proxy: buffer restore failed: %s"  % str(exc))

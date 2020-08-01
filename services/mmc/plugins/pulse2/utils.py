@@ -48,7 +48,7 @@ class notificationManager(Singleton):
         return [n for n in self.notifications if n['module'] == module]
 
     def setAsSeen(self, notification_uuid):
-        for i in xrange(len(self.notifications)):
+        for i in range(len(self.notifications)):
             if self.notifications[i]['uuid'] == notification_uuid:
                 self.notifications[i]['seen'] = True
                 return self.notifications[i]

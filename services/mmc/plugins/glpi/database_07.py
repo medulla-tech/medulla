@@ -57,7 +57,7 @@ import re
 from sets import Set
 import datetime
 import calendar
-from xmlrpclib import ProtocolError
+from xmlrpc.client import ProtocolError
 
 class Glpi07(DyngroupDatabaseHelper):
     """
@@ -86,7 +86,7 @@ class Glpi07(DyngroupDatabaseHelper):
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
             logging.getLogger().debug('Trying to detect if GLPI version is 7')
-            self.db.execute('SELECT version FROM glpi_config').fetchone().values()[0].replace(' ', '')
+            list(self.db.execute('SELECT version FROM glpi_config').fetchone().values())[0].replace(' ', '')
         except Exception:
             logging.getLogger().debug('GLPI version 7 was not detected')
             return False
@@ -106,14 +106,14 @@ class Glpi07(DyngroupDatabaseHelper):
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
-            self.db.execute(u'SELECT "\xe9"')
+            self.db.execute('SELECT "\xe9"')
             setattr(Glpi07, "decode", decode_utf8)
             setattr(Glpi07, "encode", encode_utf8)
         except:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
             setattr(Glpi07, "decode", decode_latin1)
             setattr(Glpi07, "encode", encode_latin1)
-        self._glpi_version = self.db.execute('SELECT version FROM glpi_config').fetchone().values()[0].replace(' ', '')
+        self._glpi_version = list(self.db.execute('SELECT version FROM glpi_config').fetchone().values())[0].replace(' ', '')
         if not self.glpi_version_new():
             self.logger.warn("Your glpi database is still in version '%s', this version is deprecated in Pulse2, please update your glpi to version '0.72.*'." % (self._glpi_version))
         self.metadata = MetaData(self.db)
@@ -129,7 +129,7 @@ class Glpi07(DyngroupDatabaseHelper):
         return True
 
     def getTableName(self, name):
-        return ''.join(map(lambda x:x.capitalize(), name.split('_')))
+        return ''.join([x.capitalize() for x in name.split('_')])
     def initMappers(self):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
@@ -145,7 +145,7 @@ class Glpi07(DyngroupDatabaseHelper):
                   'glpi_device_processor', 'glpi_device_sndcard', 'glpi_config'):
             setattr(self, i, Table(i, self.metadata, autoload = True))
             j = self.getTableName(i) #''.join(map(lambda x:x.capitalize(), i.split('_')))
-            exec "class %s(DbTOA): pass" % j
+            exec("class %s(DbTOA): pass" % j)
             mapper(eval(j), getattr(self, i))
             self.klass[i] = eval(j)
 
@@ -350,7 +350,7 @@ class Glpi07(DyngroupDatabaseHelper):
     def __filter_on_filter(self, query):
         if self.config.filter_on != None:
             a_filter_on = []
-            for filter_key, filter_values in self.config.filter_on.items():
+            for filter_key, filter_values in list(self.config.filter_on.items()):
                 if filter_key == 'state':
                     self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
                     a_filter_on.append(self.machine.c.state.in_(filter_values))
@@ -426,7 +426,7 @@ class Glpi07(DyngroupDatabaseHelper):
             # filtering on locations
             if 'location' in filt:
                 location = filt['location']
-                if location == '' or location == u'' or not self.displayLocalisationBar:
+                if location == '' or location == '' or not self.displayLocalisationBar:
                     location = None
             else:
                 location = None
@@ -534,9 +534,9 @@ class Glpi07(DyngroupDatabaseHelper):
                 gid = filt['gid']
                 machines = []
                 if ComputerGroupManager().isrequest_group(ctx, gid):
-                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
+                    machines = [fromUUID(m) for m in ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, '')]
                 else:
-                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
+                    machines = [fromUUID(m) for m in ComputerGroupManager().result_group(ctx, gid, 0, -1, '')]
                 query = query.filter(self.machine.c.ID.in_(machines))
             if 'request' in filt:
                 request = filt['request']
@@ -544,7 +544,7 @@ class Glpi07(DyngroupDatabaseHelper):
                     bool = None
                     if 'equ_bool' in filt:
                         bool = filt['equ_bool']
-                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+                    machines = [fromUUID(m) for m in ComputerGroupManager().request(ctx, request, bool, 0, -1, '')]
                     query = query.filter(self.machine.c.ID.in_(machines))
 
             if 'date' in filt:
@@ -565,14 +565,14 @@ class Glpi07(DyngroupDatabaseHelper):
     def __getId(self, obj):
         if type(obj) == dict:
             return obj['uuid']
-        if type(obj) != str and type(obj) != unicode:
+        if type(obj) != str and type(obj) != str:
             return obj.ID
         return obj
 
     def __getName(self, obj):
         if type(obj) == dict:
             return obj['name']
-        if type(obj) != str and type(obj) != unicode:
+        if type(obj) != str and type(obj) != str:
             return obj.name
         if type(obj) == str and re.match('UUID', obj):
             l = self.getLocation(obj)
@@ -591,9 +591,9 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def computersMapping(self, computers, invert = False):
         if not invert:
-            return Machine.ID.in_(map(lambda x:fromUUID(x), computers))
+            return Machine.ID.in_([fromUUID(x) for x in computers])
         else:
-            return Machine.ID.not_(ColumnOperators.in_(map(lambda x:fromUUID(x), computers)))
+            return Machine.ID.not_(ColumnOperators.in_([fromUUID(x) for x in computers]))
 
     def mappingTable(self, ctx, query):
         """
@@ -802,7 +802,7 @@ class Glpi07(DyngroupDatabaseHelper):
             if len(ret) > 0:
                 raise Exception("NOPERM##%s" % (ret[0][1]['fullname']))
             return False
-        return ret.values()[0]
+        return list(ret.values())[0]
 
     def getRestrictedComputersListStatesLen(self, ctx, filt, orange, red):
         """
@@ -902,9 +902,9 @@ class Glpi07(DyngroupDatabaseHelper):
             query = query.limit(max)
 
         if justId:
-            ret = map(lambda m: self.getMachineUUID(m), query.all())
+            ret = [self.getMachineUUID(m) for m in query.all()]
         elif toH:
-            ret = map(lambda m: m.toH(), query.all())
+            ret = [m.toH() for m in query.all()]
         else:
             if filt is not None and 'get' in filt:
                 ret = self.__formatMachines(query.all(), advanced, filt['get'], empty_macs)
@@ -1183,7 +1183,7 @@ class Glpi07(DyngroupDatabaseHelper):
             if len(ret) == 0:
                 ret = []
             session.close()
-        ret = map(lambda l:setUUID(l), ret)
+        ret = [setUUID(l) for l in ret]
         return ret
 
     def __get_all_locations(self):
@@ -1250,7 +1250,7 @@ class Glpi07(DyngroupDatabaseHelper):
 
     def getMachinesLocations(self, machine_uuids):
         session = create_session()
-        q = session.query(Location).add_column(self.machine.c.ID).select_from(self.location.join(self.machine)).filter(self.machine.c.ID.in_(map(fromUUID, machine_uuids))).all()
+        q = session.query(Location).add_column(self.machine.c.ID).select_from(self.location.join(self.machine)).filter(self.machine.c.ID.in_(list(map(fromUUID, machine_uuids)))).all()
         session.close()
         ret = {}
         for loc, mid in q:
@@ -1273,7 +1273,7 @@ class Glpi07(DyngroupDatabaseHelper):
             q = session.query(User).select_from(self.user.join(self.userprofile).join(self.location)).filter(self.location.c.name.in_(inloc)).filter(self.user.c.name != userid).distinct().all()
             session.close()
             # Only returns the user names
-            ret = map(lambda u: u.name, q)
+            ret = [u.name for u in q]
         # Always append the given userid
         ret.append(userid)
         return ret
@@ -1342,7 +1342,7 @@ class Glpi07(DyngroupDatabaseHelper):
         if ctx.userid == "root":
             query = self.filterOnUUID(query, a_machine_uuid)
         else:
-            a_locations = map(lambda loc:loc.name, ctx.locations)
+            a_locations = [loc.name for loc in ctx.locations]
             query = query.select_from(self.machine.join(self.location))
             query = query.filter(self.location.c.name.in_(a_locations))
             query = self.filterOnUUID(query, a_machine_uuid)
@@ -1351,7 +1351,7 @@ class Glpi07(DyngroupDatabaseHelper):
         machines_uuid_size = len(a_machine_uuid)
         all_computers = session.query(Machine)
         all_computers = self.filterOnUUID(all_computers, a_machine_uuid).all()
-        all_computers = Set(map(lambda m:toUUID(str(m.ID)), all_computers))
+        all_computers = Set([toUUID(str(m.ID)) for m in all_computers])
         if len(all_computers) != machines_uuid_size:
             self.logger.info("some machines have been deleted since that list was generated (%s)"%(str(Set(a_machine_uuid) - all_computers)))
             machines_uuid_size = len(all_computers)
@@ -1364,7 +1364,7 @@ class Glpi07(DyngroupDatabaseHelper):
             return True
         elif (not all) and len(ret) > 0:
             return True
-        ret = Set(map(lambda m:toUUID(str(m.ID)), ret))
+        ret = Set([toUUID(str(m.ID)) for m in ret])
         self.logger.info("dont have permissions on %s"%(str(Set(a_machine_uuid) - ret)))
         return False
 
@@ -1401,7 +1401,7 @@ class Glpi07(DyngroupDatabaseHelper):
             ma1 = m[0].to_a()
             ma2 = []
             for x,y in ma1:
-                if x in ind.keys():
+                if x in list(ind.keys()):
                     ma2.append([x,m[ind[x]]])
                 else:
                     ma2.append([x,y])
@@ -1479,7 +1479,7 @@ class Glpi07(DyngroupDatabaseHelper):
                 raise Exception("Type %s is unkown" % type)
 
     def getManufacturerWarranty(self, manufacturer, serial):
-        for manufacturer_key, manufacturer_infos in self.config.manufacturerWarranty.items():
+        for manufacturer_key, manufacturer_infos in list(self.config.manufacturerWarranty.items()):
             if manufacturer in manufacturer_infos['names']:
                 manufacturer_info = manufacturer_infos.copy()
                 manufacturer_info['url'] = manufacturer_info['url'].replace('@@SERIAL@@', serial)
@@ -1496,7 +1496,7 @@ class Glpi07(DyngroupDatabaseHelper):
 
         ids = []
         dict = self.searchOptions[lang]
-        for key, value in dict.iteritems():
+        for key, value in dict.items():
             if filter.lower() in value.lower():
                 ids.append(key)
 
@@ -1508,7 +1508,7 @@ class Glpi07(DyngroupDatabaseHelper):
         """
         ids = []
         dict = self.getLinkedActions()
-        for key, value in dict.iteritems():
+        for key, value in dict.items():
             if filter.lower() in value.lower():
                 ids.append(key)
 
@@ -1699,7 +1699,7 @@ class Glpi07(DyngroupDatabaseHelper):
             session.query(table).filter_by(ID=fromUUID(uuid)).update({field: value})
             session.close()
             return True
-        except Exception, e:
+        except Exception as e:
             self.logger.error(e)
             return False
 
@@ -2299,7 +2299,7 @@ class Glpi07(DyngroupDatabaseHelper):
         """
         @return: all machines that have this os using LIKE
         """
-        if isinstance(osnames, basestring):
+        if isinstance(osnames, str):
             osnames = [osnames]
 
         if int(count) == 1:
@@ -2806,7 +2806,7 @@ class Glpi07(DyngroupDatabaseHelper):
     @DatabaseHelper._session
     def getMachineByType(self, session, ctx, types, count=0):
         """ @return: all machines that have this model """
-        if isinstance(types, basestring):
+        if isinstance(types, str):
             types = [types]
 
         if int(count) == 1:
@@ -3089,7 +3089,7 @@ class Glpi07(DyngroupDatabaseHelper):
         session = create_session()
         query = session.query(Network).select_from(self.machine.join(self.network))
         query = self.filterOnUUID(query.filter(self.network.c.device_type == 1), uuid)
-        ret = unique(map(lambda m: m.toH(), query.all()))
+        ret = unique([m.toH() for m in query.all()])
         session.close()
         return ret
 
@@ -3118,7 +3118,7 @@ class Glpi07(DyngroupDatabaseHelper):
         session = create_session()
         query = session.query(Network).select_from(self.machine.join(self.network))
         query = self.filterOnUUID(query.filter(self.network.c.device_type == 1), uuid)
-        ret = unique(map(lambda m: m.ifmac, query.all()))
+        ret = unique([m.ifmac for m in query.all()])
         session.close()
         return ret
 
@@ -3320,7 +3320,7 @@ class Glpi07(DyngroupDatabaseHelper):
             delete_result = False
             try:
                 delete_result = result['Computer'][0]
-            except KeyError, e:
+            except KeyError as e:
                 self.logger.error('Failed to delete machine ID %s: %s' % (id, e))
             return delete_result
 
@@ -3348,9 +3348,9 @@ class Glpi07(DyngroupDatabaseHelper):
             webservice_ok = True
             try:
                 self._get_webservices_client()
-            except ProtocolError, e:
+            except ProtocolError as e:
                 webservice_ok = False
-            except Exception, e:
+            except Exception as e:
                 webservice_ok = False
 
             if self.config.webservices['purge_machine']:
@@ -3363,7 +3363,7 @@ class Glpi07(DyngroupDatabaseHelper):
             trans = connection.begin()
             try:
                 machine.deleted = True
-            except Exception, e :
+            except Exception as e :
                 self.logger.warn("Unable to delete machine (uuid=%s): %s" % (uuid, str(e)))
                 session.flush()
                 session.close()

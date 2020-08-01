@@ -99,10 +99,10 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
 
     i = 0
     # Draw a line for each columns
-    for title, data_y in alldata_y.iteritems():
+    for title, data_y in alldata_y.items():
         plot = line_plot.T(
             label = title,
-            data = zip(data_x, data_y),
+            data = list(zip(data_x, data_y)),
             line_style = line_style.T(
                 color = colors[i],
                 width = 1))
@@ -131,10 +131,10 @@ def read_logs(logfiles, start_date, stop_date):
         try:
             fh = open(logfile)
         except IOError:
-            print "can't read %s " % logfile
+            print("can't read %s " % logfile)
             continue
 
-        print "parsing %s ... " % logfile
+        print("parsing %s ... " % logfile)
         for line in fh:  # Parse each line in the log file
             # Add the "BALANCE" test to avoid computing regexp if the line doesn't match
             res = re.search(HEALTH_REGEX, line)
@@ -202,12 +202,12 @@ if __name__ == "__main__":
 
     if memory:
         sched_memory = {}
-        scheduler_list = memory.keys()
-        y_max = (max(map(lambda x: max(x.values()), memory.values())) / 1 + 1) * 1
+        scheduler_list = list(memory.keys())
+        y_max = (max([max(x.values()) for x in list(memory.values())]) / 1 + 1) * 1
 
         # Get all sched hours
         for sched in scheduler_list:
-            sched_hours += memory[sched].keys()
+            sched_hours += list(memory[sched].keys())
             # deduplicate list
             sched_hours = list(set(sched_hours))
             sched_hours.sort()
@@ -226,12 +226,12 @@ if __name__ == "__main__":
 
     if loads:
         sched_loads = {}
-        scheduler_list = loads.keys()
-        y_max = (max(map(lambda x: max(x.values()), loads.values())) / 1 + 1) * 1
+        scheduler_list = list(loads.keys())
+        y_max = (max([max(x.values()) for x in list(loads.values())]) / 1 + 1) * 1
 
         # Get all sched hours
         for sched in scheduler_list:
-            sched_hours += loads[sched].keys()
+            sched_hours += list(loads[sched].keys())
             # deduplicate list
             sched_hours = list(set(sched_hours))
             sched_hours.sort()
@@ -250,12 +250,12 @@ if __name__ == "__main__":
 
     if fds:
         sched_fds = {}
-        scheduler_list = fds.keys()
-        y_max = (max(map(lambda x: max(x.values()), fds.values())) / 1 + 1) * 1
+        scheduler_list = list(fds.keys())
+        y_max = (max([max(x.values()) for x in list(fds.values())]) / 1 + 1) * 1
 
         # Get all sched hours
         for sched in scheduler_list:
-            sched_hours += fds[sched].keys()
+            sched_hours += list(fds[sched].keys())
             # deduplicate list
             sched_hours = list(set(sched_hours))
             sched_hours.sort()
@@ -274,12 +274,12 @@ if __name__ == "__main__":
 
     if db:
         sched_db = {}
-        scheduler_list = db.keys()
-        y_max = (max(map(lambda x: max(x.values()), db.values())) / 1 + 1) * 1
+        scheduler_list = list(db.keys())
+        y_max = (max([max(x.values()) for x in list(db.values())]) / 1 + 1) * 1
 
         # Get all sched hours
         for sched in scheduler_list:
-            sched_hours += db[sched].keys()
+            sched_hours += list(db[sched].keys())
             # deduplicate list
             sched_hours = list(set(sched_hours))
             sched_hours.sort()

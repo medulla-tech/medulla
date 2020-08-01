@@ -86,7 +86,7 @@ class ContextMaker(ContextMakerI):
         s = SecurityContext()
         s.userid = self.userid
         s.locations = Inventory().getUserLocations(s.userid)
-        s.locationsid = map(lambda e: e.id, s.locations)
+        s.locationsid = [e.id for e in s.locations]
         return s
 
 class RpcProxy(RpcProxyI):
@@ -199,11 +199,11 @@ class RpcProxy(RpcProxyI):
 
     def getMachinesBy(self, table, field, value):
         ctx = self.currentContext
-        return xmlrpcCleanup(map(lambda m: ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0]), Inventory().getMachinesBy(ctx, table, field, value)))
+        return xmlrpcCleanup([ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0]) for m in Inventory().getMachinesBy(ctx, table, field, value)])
 
     def getMachinesByDict(self, table, params):
         ctx = self.currentContext
-        return xmlrpcCleanup(map(lambda m: ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0]), Inventory().getMachinesByDict(ctx, table, params)))
+        return xmlrpcCleanup([ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0]) for m in Inventory().getMachinesByDict(ctx, table, params)])
 
     def getValues(self, table, field):
         return Inventory().getValues(table, field)

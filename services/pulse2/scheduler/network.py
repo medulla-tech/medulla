@@ -28,7 +28,7 @@ from pulse2.network import IPResolve
 
 def u_decode(text):
     """Normalize the text to str"""
-    if isinstance(text, unicode):
+    if isinstance(text, str):
         return text.encode("ascii", "ignore")
     else:
         return text

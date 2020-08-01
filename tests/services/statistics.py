@@ -134,11 +134,11 @@ for function_source in list_functions_source:
 all = len(list_functions_source)
 tested = len(list_functions_tested)
 percent = (float(tested) / float(all) ) * 100
-print "%f %% functions are tested (%d / %d)" % (percent, tested, all)
+print("%f %% functions are tested (%d / %d)" % (percent, tested, all))
 
 # Write in alphabetics' order the function(s) witch are not in the test's
 # module
 if list_functions:
     list_functions.sort()
     for function in list_functions:
-        print "%s is not tested" % function
+        print("%s is not tested" % function)

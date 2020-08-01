@@ -39,13 +39,13 @@ class Parser(object):
 
         elif backend == "pickle":
             try:
-                import cPickle
+                import pickle
                 self._backend = cPickle
             except ImportError:
                 import pickle
                 self._backend = pickle
         else:
-            raise TypeError, "Unknown parser type: %s" % backend
+            raise TypeError("Unknown parser type: %s" % backend)
 
     def encode(self, value):
         return self._backend.dumps(value)

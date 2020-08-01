@@ -9,7 +9,7 @@ from xml.sax import ContentHandler, make_parser
 def coroutine(func):
     def start(*args, **kwargs):
         cr = func(*args, **kwargs)
-        cr.next()
+        next(cr)
         return cr
     return start
 
@@ -24,7 +24,7 @@ class StringExtractor(ContentHandler):
         self.target = target
 
     def startelement(self, name, attrs):
-        for attr in attrs.keys():
+        for attr in list(attrs.keys()):
             if attr in self.valid_attrs:
                 self.target.send((self._locator.getLineNumber(),
                                   None, attrs[attr], ""))
@@ -34,7 +34,7 @@ class StringExtractor(ContentHandler):
             self._current_ch_line = self._locator.getLineNumber()
 
     def characters(self, ch):
-        if isinstance(self._current_ch, basestring):
+        if isinstance(self._current_ch, str):
             self._current_ch += ch
 
     def endelement(self, name):

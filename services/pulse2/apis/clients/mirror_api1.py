@@ -41,7 +41,7 @@ class MirrorApi(Pulse2Api):
     def getMirrors(self, machines):
         if self.initialized_failed:
             return []
-        machines = map(lambda m: self.convertMachineIntoH(m), machines)
+        machines = [self.convertMachineIntoH(m) for m in machines]
         d = self.callRemote("getMirrors", machines)
         d.addErrback(self.onError, "MirrorApi:getMirrors", machines)
         return d
@@ -57,7 +57,7 @@ class MirrorApi(Pulse2Api):
     def getFallbackMirrors(self, machines):
         if self.initialized_failed:
             return []
-        machines = map(lambda m: self.convertMachineIntoH(m), machines)
+        machines = [self.convertMachineIntoH(m) for m in machines]
         d = self.callRemote("getFallbackMirrors", machines)
         d.addErrback(self.onError, "MirrorApi:getFallbackMirrors", machines)
         return d
@@ -74,7 +74,7 @@ class MirrorApi(Pulse2Api):
     def getApiPackages(self, machines):
         if self.initialized_failed:
             return []
-        machines = map(lambda m: self.convertMachineIntoH(m), machines)
+        machines = [self.convertMachineIntoH(m) for m in machines]
         d = self.callRemote("getApiPackages", machines)
         d.addErrback(self.onError, "MirrorApi:getApiPackages", machines)
         return d

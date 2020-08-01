@@ -92,7 +92,7 @@ class Common(pulse2.utils.Singleton):
             self.logger.info("Common : finish loading %d packages" % (len(self.packages)))
             self.working = False
             self.Boolchange = False
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Common : failed to finish loading packages")
             self.working = False
             self.Boolchange = False
@@ -162,7 +162,7 @@ class Common(pulse2.utils.Singleton):
                         new,
                         runid
                     )
-                except Exception, e:
+                except Exception as e:
                     mp = mirror_params['mount_point']
                     if mp in self.mp2src:
                         del self.mp2src[mp]
@@ -178,7 +178,7 @@ class Common(pulse2.utils.Singleton):
                     ))
                     self.mp2src[mirror_params['mount_point']] = mirror_params['src']
                     self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
-                except Exception, e:
+                except Exception as e:
                     mp = mirror_params['mount_point']
                     if mp in self.mp2src:
                         del self.mp2src[mp]
@@ -194,7 +194,7 @@ class Common(pulse2.utils.Singleton):
                     ))
                     self.mp2src[mirror_params['mount_point']] = mirror_params['src']
                     self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
-                except Exception, e:
+                except Exception as e:
                     mp = mirror_params['mount_point']
                     if mp in self.mp2src: del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for package api put")
@@ -223,7 +223,7 @@ class Common(pulse2.utils.Singleton):
                     todelete.append(pid)
                     if conf_file in self.already_declared:
                         del self.already_declared[conf_file]
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Common._detectRemovedAndEditedPackages : an exception happened")
                 self.logger.debug(type(e))
                 self.logger.info(e)
@@ -244,9 +244,9 @@ class Common(pulse2.utils.Singleton):
             try:
                 # WARN if self.reverse[pkg.label] dont exists!
                 del self.reverse[pkg.label][pkg.version]
-                if len(self.reverse[pkg.label].keys()) == 0:
+                if len(list(self.reverse[pkg.label].keys())) == 0:
                     del self.reverse[pkg.label]
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Common.suppressFromInternal : an exception happened")
                 self.logger.debug(type(e))
                 self.logger.info(e)
@@ -282,7 +282,7 @@ class Common(pulse2.utils.Singleton):
                 for mirror_params in self.config.package_api_put:
                     if os.path.exists(mirror_params['tmp_input_dir']):
                         self._moveNewPackage(mirror_params)
-        except Exception, e:
+        except Exception as e:
             self.logger.error("moveCorrectPackages: " + str(e))
         self.working = False
 
@@ -311,11 +311,11 @@ class Common(pulse2.utils.Singleton):
             self.logger.debug1("Common.detectNewPackages : done")
             self.working = False
             return True
-        except TypeError, e:
+        except TypeError as e:
             self.working = False
             self.logger.error("Common.detectNewPackages : a type error happened")
             self.logger.info(e)
-        except Exception, e:
+        except Exception as e:
             self.working = False
             self.logger.error("Common.detectNewPackages : an exception happened")
             self.logger.debug(type(e))
@@ -370,7 +370,7 @@ class Common(pulse2.utils.Singleton):
         for m in self.desc:
             if 'src' in m and not m['src'] in ret:
                 ret[m['src']] = None
-        return ret.keys()
+        return list(ret.keys())
 
     def rsyncPackageOnMirrors(self, pid = None):
         if pid == None:
@@ -445,7 +445,7 @@ class Common(pulse2.utils.Singleton):
             if not pa.label in self.reverse:
                 self.reverse[pa.label] = {}
             self.reverse[pa.label][pa.version] = pid
-        except Exception, e:
+        except Exception as e:
             self.logger.error("addPackage failed")
             self.logger.error(e)
             raise e
@@ -456,7 +456,7 @@ class Common(pulse2.utils.Singleton):
             old = self.packages[pid]
             try:
                 self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Common.reloadPackage : an exception happened")
                 self.logger.debug(type(e))
                 self.logger.info(e)
@@ -468,7 +468,7 @@ class Common(pulse2.utils.Singleton):
             if not pack.label in self.reverse:
                 self.reverse[pack.label] = {}
             self.reverse[pack.label][pack.version] = pid
-        except Exception, e:
+        except Exception as e:
             self.logger.error("reloadPackage failed")
             self.logger.error(e)
             raise e
@@ -480,7 +480,7 @@ class Common(pulse2.utils.Singleton):
                 old = self.packages[pid]
                 try:
                     self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
-                except Exception, e:
+                except Exception as e:
                     self.logger.error("Common.editPackage : an exception happened")
                     self.logger.debug(type(e))
                     self.logger.info(e)
@@ -496,7 +496,7 @@ class Common(pulse2.utils.Singleton):
             if not pack.label in self.reverse:
                 self.reverse[pack.label] = {}
             self.reverse[pack.label][pack.version] = pid
-        except Exception, e:
+        except Exception as e:
             self.logger.error("editPackage failed")
             self.logger.error(e)
             raise e
@@ -608,7 +608,7 @@ class Common(pulse2.utils.Singleton):
             f = open(conf_filetmp, 'w+')
             f.write(new_conf_data)
             f.close()
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Error while writing new conf.json file")
             self.logger.error(e)
             if os.path.exists(conf_filetmp):
@@ -645,7 +645,7 @@ class Common(pulse2.utils.Singleton):
                 self.writePackageTo(_pid, mp)
                 del self.inEdition[_pid]
             # Scheduling the bundle regeneration
-            for _pid, pkg in self.packages.iteritems():
+            for _pid, pkg in self.packages.items():
                 if pid in [x['pid'] for x in pkg.sub_packages]:
                     self.inEdition[_pid] = True
                     task.deferLater(reactor, 30, __regenerateBundle, _pid)
@@ -804,7 +804,7 @@ class Common(pulse2.utils.Singleton):
                     if p != None:
                         ordered.append(p)
                 return ordered
-        except Exception, e:
+        except Exception as e:
             self.logger.error("getPackages failed")
             self.logger.error(e)
             return None
@@ -820,9 +820,9 @@ class Common(pulse2.utils.Singleton):
 
     def getRsyncStatus(self, pid, mp):
         if self.isPackageAccessible(pid):
-            return map(lambda h: [h, 'OK'], self.config.package_mirror_target)
+            return [[h, 'OK'] for h in self.config.package_mirror_target]
         if not pid in self.dontgivepkgs:
-            return map(lambda h: [h, 'NOK'], self.config.package_mirror_target)
+            return [[h, 'NOK'] for h in self.config.package_mirror_target]
         ret = []
         nok = self.dontgivepkgs[pid]
         for h in self.config.package_mirror_target:
@@ -838,7 +838,7 @@ class Common(pulse2.utils.Singleton):
             for k in self.reverse:
                 if k in self.mp2p:
                     ret.append(k)
-        except Exception, e:
+        except Exception as e:
             self.logger.error("reverse failed")
             self.logger.error(e)
             raise e
@@ -902,7 +902,7 @@ class Common(pulse2.utils.Singleton):
                             f = file(filepath, "rb")
                             md5sums.append([filepath[len(dirname)+1:], hashlib.md5(f.read()).hexdigest()])
                             f.close()
-                        except IOError, e:
+                        except IOError as e:
                             self.logger.warn("Error while reading %s: %s" % (filepath, e))
             fmd5 = file(fmd5name, "w+b")
             md5sums.sort(lambda x, y: cmp(x[0], y[0]))
@@ -923,7 +923,7 @@ class Common(pulse2.utils.Singleton):
         # check that the last modification date is old enough
         if self.config.SMART_DETECT_LAST in self.config.package_detect_smart_method:
             #if pid in self.temp_check_changes['LAST']:
-            if self.temp_check_changes['LAST'].has_key(pid):
+            if pid in self.temp_check_changes['LAST']:
                 self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = False
             else:
                 self.temp_check_changes['LAST'][pid] = { '###HASCHANGED_LAST###':False }
@@ -940,7 +940,7 @@ class Common(pulse2.utils.Singleton):
 
         # check that the package size has not change between two detect loop (detected one loop after the package is here for real)
         if self.config.SMART_DETECT_SIZE in self.config.package_detect_smart_method:
-            if not self.temp_check_changes['SIZE'].has_key(pid):
+            if pid not in self.temp_check_changes['SIZE']:
                 #if not pid in self.temp_check_changes['SIZE']:
                 self.temp_check_changes['SIZE'][pid] = [0, 0]
             previous, previous_t = self.temp_check_changes['SIZE'][pid]
@@ -954,13 +954,13 @@ class Common(pulse2.utils.Singleton):
                     self.logger.debug("package '%s' was modified, '%s' bytes added"%(str(pid), str(size-previous)))
                     failure = True
             #if failure and (pid in self.newAssociation or pid in self.inEdition):
-            if failure and (self.newAssociation.has_key(pid) or self.inEdition.has_key(pid)):
+            if failure and (pid in self.newAssociation or pid in self.inEdition):
                 failure = False
             known_action = True
 
         if self.config.SMART_DETECT_LOOP in self.config.package_detect_smart_method and False: # TOBEDONE
             #if not pid in self.temp_check_changes['LOOP']:
-            if not self.temp_check_changes['LOOP'].has_key(pid):
+            if pid not in self.temp_check_changes['LOOP']:
                 self.temp_check_changes['LOOP'][pid] = {}
             self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = False
             Find().find(dir, self.__subHasChangedLoop, [pid,time.time(),runid])
@@ -990,7 +990,7 @@ class Common(pulse2.utils.Singleton):
     def __subHasChangedGetSize(self, file, pid):
         try:
             self.temp_check_changes['SIZE'][pid][0] += os.path.getsize(file)
-        except Exception, e:
+        except Exception as e:
             self.logger.debug("__subHasChangedGetSize except %s"%(str(e)))
             raise e
 
@@ -1178,7 +1178,7 @@ class Common(pulse2.utils.Singleton):
 
                 if new:
                     self.desassociatePackage2mp(pid, mp)
-        except Exception, err:
+        except Exception as err:
             if hasattr(err, 'message') and err.message == 'MISSINGFILE':
                 self.logger.error("__treatDir failed (missing file)")
                 self.logger.error(err)
@@ -1232,13 +1232,13 @@ class Common(pulse2.utils.Singleton):
         return files
 
     def _buildReverse(self):
-        for package in self.working_pkgs.values():
+        for package in list(self.working_pkgs.values()):
             if not package.label in self.reverse:
                 self.reverse[package.label] = {}
             self.reverse[package.label][package.version] = package.id
 
     def _buildFileList(self):
-        for package in self.working_pkgs.values():
+        for package in list(self.working_pkgs.values()):
             self.logger.debug("Building file list for package %s" % package.id)
             for file in package.files.internals: # TODO dont access to internals !
                 self.logger.debug("file id %s => %s" % (file.id, file.toURI()))

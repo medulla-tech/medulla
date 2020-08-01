@@ -42,8 +42,8 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                                "".join(data['result']['result']),
                                                typemessage="result")
 
-        print json.dumps(data, indent=4)
-    except Exception, e:
+        print(json.dumps(data, indent=4))
+    except Exception as e:
         logging.getLogger().error("Error loading plugin: %s" % str(e))
         traceback.print_exc(file=sys.stdout)
         pass

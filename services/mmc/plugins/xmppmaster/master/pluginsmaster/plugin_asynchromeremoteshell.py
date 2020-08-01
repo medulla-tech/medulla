@@ -35,8 +35,8 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
     logging.getLogger().debug("=====================================================")
     try:
-        print data['data'][1][0]
-        print json.dumps(data, indent=4)
+        print(data['data'][1][0])
+        print(json.dumps(data, indent=4))
         machine = data['data'][0]
         command = data['data'][1][0]['command']
         uidunique = data['data'][1][0]['uidunique']
@@ -47,13 +47,13 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                      'command': command
                      }
         }
-        print datasend['sessionid']
+        print(datasend['sessionid'])
         # call plugin asynchromeremoteshell to machine or relay
         xmppobject.send_message(mto=data['data'][0],
                                 mbody=json.dumps(datasend),
                                 mtype='chat')
 
-    except Exception, e:
+    except Exception as e:
         logging.getLogger().error("Error loading plugin: %s" % str(e))
         traceback.print_exc(file=sys.stdout)
         pass

@@ -136,7 +136,7 @@ class BundleReferences :
         """
 
         content = self.content
-        for key, value in kwargs.items():
+        for key, value in list(kwargs.items()):
             content = [b for b in content if getattr(b, key)==value]
 
         return content

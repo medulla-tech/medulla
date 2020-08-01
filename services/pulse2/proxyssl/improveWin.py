@@ -28,7 +28,7 @@ for the Windows platforms
 '''
 
 import wmi
-import _winreg
+import winreg
 import os
 import xml.dom.minidom
 
@@ -39,7 +39,7 @@ if Pulse2InventoryProxyConfig().addicon:
     import win32gui
     import win32con
     import win32api
-    import cStringIO
+    import io
     import Image    # need install PIL package http://www.pythonware.com/products/pil/
     import base64
     import tempfile
@@ -64,7 +64,7 @@ Get the icon of file
 def windowsIconGetter(path, nIcon = 0 , exeOrDll = True):  #It's can be exe, dll, or already ico
 
     if os.path.isfile(path):
-        dst = cStringIO.StringIO()
+        dst = io.StringIO()
         if exeOrDll:
             large, small = win32gui.ExtractIconEx(path,nIcon)
             win32gui.DestroyIcon(small[0])
@@ -306,23 +306,23 @@ def xmlUpdate(xmlString, lastInformation):
     refnode.appendChild(xmlFile.createTextNode("\n"))
 
     # Who is Burner ?
-    key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER,"Software\Microsoft\Windows\CurrentVersion\Explorer\CD Burning\Drives")
-    deviceKey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,"System\MountedDevices\\")
+    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,"Software\Microsoft\Windows\CurrentVersion\Explorer\CD Burning\Drives")
+    deviceKey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,"System\MountedDevices\\")
     #Search the tag of all burner
     burner = []
     try:
         i = 0
         while True:
-            keyname = _winreg.EnumKey(key,i)
-            subkey = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER,"Software\Microsoft\Windows\CurrentVersion\Explorer\CD Burning\Drives\\"+keyname)
-            if not ( _winreg.QueryValueEx(subkey,"Drive Type")[0] == 3 ):
-                burner.append( _winreg.QueryValueEx(deviceKey,"\\??\\"+keyname)[0] )
+            keyname = winreg.EnumKey(key,i)
+            subkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER,"Software\Microsoft\Windows\CurrentVersion\Explorer\CD Burning\Drives\\"+keyname)
+            if not ( winreg.QueryValueEx(subkey,"Drive Type")[0] == 3 ):
+                burner.append( winreg.QueryValueEx(deviceKey,"\\??\\"+keyname)[0] )
 
-            _winreg.CloseKey(subkey)
+            winreg.CloseKey(subkey)
             i = i + 1
     except WindowsError: # pyflakes.ignore
         pass
-    _winreg.CloseKey(key)
+    winreg.CloseKey(key)
 
     #Add if the drive is burner
     for device in xmlFile.getElementsByTagName("DRIVES"):
@@ -332,7 +332,7 @@ def xmlUpdate(xmlString, lastInformation):
             i = 0
             while i < len(burner) and not isBurner :
                 #Compare the tag with the tag of DosDevices to found the letter device of the burner
-                isBurner = ( _winreg.QueryValueEx(deviceKey,"\\DosDevices\\"+ device.getElementsByTagName("LETTER")[0].firstChild.nodeValue[0]+":")[0] == burner[i] )
+                isBurner = ( winreg.QueryValueEx(deviceKey,"\\DosDevices\\"+ device.getElementsByTagName("LETTER")[0].firstChild.nodeValue[0]+":")[0] == burner[i] )
                 if isBurner :
                     del burner[i]
                 i += 1
@@ -346,24 +346,24 @@ def xmlUpdate(xmlString, lastInformation):
             device.appendChild(newnode)
             device.appendChild(xmlFile.createTextNode("\n"))
 
-    _winreg.CloseKey(deviceKey)
+    winreg.CloseKey(deviceKey)
 
     # Initializing Variable
     listSoftXML = xmlFile.getElementsByTagName("SOFTWARES")
     listSoftXMLDefault = xmlFile.getElementsByTagName("SOFTWARES")
     OSNAME = xmlFile.getElementsByTagName("OSNAME")[0].firstChild.nodeValue
     defaultNode = listSoftXMLDefault[0].cloneNode(1)
-    key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall")
+    key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,"SOFTWARE\Microsoft\Windows\CurrentVersion\\Uninstall")
     updateDetection = Pulse2InventoryProxyConfig().updatedetection
 
     try:
         i = 0
         while True:         #For every software in Uninstall Registry
-            keyname = _winreg.EnumKey(key,i)
-            subkey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\\"+keyname)
+            keyname = winreg.EnumKey(key,i)
+            subkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,"SOFTWARE\Microsoft\Windows\CurrentVersion\\Uninstall\\"+keyname)
 
             try:
-                displayName = _winreg.QueryValueEx(subkey,"DisplayName")[0]
+                displayName = winreg.QueryValueEx(subkey,"DisplayName")[0]
                 nodeId = foundNodeInList(listSoftXML,"NAME",displayName)
 
                 if nodeId != -1:
@@ -382,7 +382,7 @@ def xmlUpdate(xmlString, lastInformation):
 
                     #Software installation Date
                     try:
-                        installDate = _winreg.QueryValueEx(subkey,"InstallDate")[0]
+                        installDate = winreg.QueryValueEx(subkey,"InstallDate")[0]
                         installDate = windowsDateConversion(installDate,False)
                     except WindowsError: # pyflakes.ignore
                         installDate = "N/A"
@@ -399,14 +399,14 @@ def xmlUpdate(xmlString, lastInformation):
                     try:
                         refnode = selectnode.getElementsByTagName("VERSION")[0].firstChild
                         if refnode.nodeValue == "N/A":
-                            displayversion = _winreg.QueryValueEx(subkey,"DisplayVersion")[0]
+                            displayversion = winreg.QueryValueEx(subkey,"DisplayVersion")[0]
                             refnode.nodeValue = displayversion
                     except WindowsError: # pyflakes.ignore
                         pass
 
                     # Software size calculated on hardDisk
                     try:
-                        folder = _winreg.QueryValueEx(subkey,"InstallLocation")[0]
+                        folder = winreg.QueryValueEx(subkey,"InstallLocation")[0]
                         if len(folder) > 0 :
                             foldersize = sizeFolder(folder)
                             if not (foldersize > 0):
@@ -436,7 +436,7 @@ def xmlUpdate(xmlString, lastInformation):
 
                     # Software Size estimated by Operating System
                     try:
-                        estimatedSize = _winreg.QueryValueEx(subkey,"EstimatedSize")[0]
+                        estimatedSize = winreg.QueryValueEx(subkey,"EstimatedSize")[0]
                         if not (estimatedSize > 0):
                             estimatedSize = "N/A"
                     except WindowsError: # pyflakes.ignore
@@ -446,7 +446,7 @@ def xmlUpdate(xmlString, lastInformation):
 
                     #Uninstall command
                     try:
-                        uninstallCommand = _winreg.QueryValueEx(subkey,"UninstallString")[0]
+                        uninstallCommand = winreg.QueryValueEx(subkey,"UninstallString")[0]
                     except WindowsError: # pyflakes.ignore
                         uninstallCommand = "N/A"
 
@@ -464,7 +464,7 @@ def xmlUpdate(xmlString, lastInformation):
                     isUpdate = False
                     if updateDetection:
                         try:
-                            parentKey = _winreg.QueryValueEx(subkey,"ParentKeyName")[0]
+                            parentKey = winreg.QueryValueEx(subkey,"ParentKeyName")[0]
                             isUpdate = True
                             nodeParentId = -1
                             if len(parentKey)>0:
@@ -473,12 +473,12 @@ def xmlUpdate(xmlString, lastInformation):
                                     parentName = OSNAME
                                 else :
                                     try:
-                                        parentRegisterKey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\\"+parentKey)
-                                        parentName = _winreg.QueryValueEx(parentRegisterKey,"DisplayName")[0]
-                                        _winreg.CloseKey(parentRegisterKey)
+                                        parentRegisterKey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,"SOFTWARE\Microsoft\Windows\CurrentVersion\\Uninstall\\"+parentKey)
+                                        parentName = winreg.QueryValueEx(parentRegisterKey,"DisplayName")[0]
+                                        winreg.CloseKey(parentRegisterKey)
                                         nodeParentId = foundNodeInList(listSoftXMLDefault,"NAME",parentName)
                                     except WindowsError:    # if parent doesn't exist # pyflakes.ignore
-                                        parentName = _winreg.QueryValueEx(subkey,"ParentDisplayName")[0]
+                                        parentName = winreg.QueryValueEx(subkey,"ParentDisplayName")[0]
                                         if len(parentName)>0:   # search parent with his name
                                             nodeParentId = foundNodeInList(listSoftXMLDefault,"NAME",parentName)
                                             if nodeParentId == -1:  # create the simulated parent
@@ -514,9 +514,9 @@ def xmlUpdate(xmlString, lastInformation):
                     #log-on frequency    Only for WinXP et 2K (On Vista, it's doesn't exist)
                     if not updateDetection or ( updateDetection and not isUpdate ):
                         try:
-                            arpKey = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,"SOFTWARE\Microsoft\Windows\CurrentVersion\App Management\ARPCache\\"+keyname)
+                            arpKey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,"SOFTWARE\Microsoft\Windows\CurrentVersion\App Management\ARPCache\\"+keyname)
                             try:
-                                rateOfUse = _winreg.QueryValueEx(arpKey,"SlowInfoCache")[0]
+                                rateOfUse = winreg.QueryValueEx(arpKey,"SlowInfoCache")[0]
                                 valueRateOfUse = ord(rateOfUse[24])
                                 if valueRateOfUse == 255:
                                     valueRateOfUse = "N/A"
@@ -524,7 +524,7 @@ def xmlUpdate(xmlString, lastInformation):
                             except WindowsError: # pyflakes.ignore
                                 valueRateOfUse = "N/A"
 
-                            _winreg.CloseKey(arpKey)
+                            winreg.CloseKey(arpKey)
                         except WindowsError: # pyflakes.ignore
                             valueRateOfUse = "N/A"
 
@@ -546,7 +546,7 @@ def xmlUpdate(xmlString, lastInformation):
 
                         if Pulse2InventoryProxyConfig().addicon:
                             try:
-                                iconpath = _winreg.QueryValueEx(subkey,"DisplayIcon")[0]
+                                iconpath = winreg.QueryValueEx(subkey,"DisplayIcon")[0]
                                 if iconpath[0] == '"':
                                     iconpath = iconpath[1:len(iconpath)-1]
 
@@ -583,7 +583,7 @@ def xmlUpdate(xmlString, lastInformation):
             except WindowsError: # pyflakes.ignore
                 pass
 
-            _winreg.CloseKey(subkey)
+            winreg.CloseKey(subkey)
             i += 1
 
     except WindowsError: # pyflakes.ignore
@@ -593,7 +593,7 @@ def xmlUpdate(xmlString, lastInformation):
         # Do NOT FORGET !
         os.remove(dirTmpFile)
 
-    _winreg.CloseKey(key)
+    winreg.CloseKey(key)
     xmlString = xmlFile.toxml("utf-8")
     return xmlString
 

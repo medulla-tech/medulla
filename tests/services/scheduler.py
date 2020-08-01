@@ -26,7 +26,7 @@ Test module for the Pulse 2 scheduler
 """
 
 import sys
-import xmlrpclib
+import xmlrpc.client
 import unittest
 
 from tempfile import mkdtemp
@@ -51,7 +51,7 @@ else:
 
 del(sys.argv[1:])
 
-server = xmlrpclib.ServerProxy('%s://username:password@%s:8000/' % (protocol, ipserver))
+server = xmlrpc.client.ServerProxy('%s://username:password@%s:8000/' % (protocol, ipserver))
 
 connectionC=generation_Commands(dbdriver,dbhost,dbport)
 
@@ -190,10 +190,10 @@ if mode=="debug":
 
 
     if False in success:
-        print "One or more test are failed or have an unexpected error"
+        print("One or more test are failed or have an unexpected error")
     else:
-        print "All function work"
+        print("All function work")
 
-    print "Pserver\'s test has run %s test" %(nb)
+    print("Pserver\'s test has run %s test" %(nb))
 else:
     unittest.main()

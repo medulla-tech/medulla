@@ -21,8 +21,8 @@ import logging
 import logging.config
 import threading
 
-from poller import Poller
-from config import PullClientConfig
+from .poller import Poller
+from .config import PullClientConfig
 
 
 class Handler(object):

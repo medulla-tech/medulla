@@ -129,7 +129,7 @@ def randomListByBalance (balances, limit):
     if len(balances) > 0 :
         if len(balances) <= limit :
             # no necesity to choice the most important CoHs
-            return balances.keys()
+            return list(balances.keys())
         while True :
 
             # sort by balance

@@ -72,10 +72,10 @@ def xml_fix(xml):
                 children.text = 'Microsoft Corporation'
 
               # French to english
-              if re.search(u'Mise à jour de sécurité pour',subelem3.text):
-                subelem3.text = re.sub(u'Mise à jour de sécurité pour','Security Update for',subelem3.text)
-              if re.search(u'Mise à jour pour',subelem3.text):
-                subelem3.text = re.sub(u'Mise à jour pour','Update for',subelem3.text)
+              if re.search('Mise à jour de sécurité pour',subelem3.text):
+                subelem3.text = re.sub('Mise à jour de sécurité pour','Security Update for',subelem3.text)
+              if re.search('Mise à jour pour',subelem3.text):
+                subelem3.text = re.sub('Mise à jour pour','Update for',subelem3.text)
               if re.search('Correctif pour',subelem3.text):
                 subelem3.text = re.sub('Correctif pour','Update for',subelem3.text)
               if re.search('Lecteur Windows Media',subelem3.text):

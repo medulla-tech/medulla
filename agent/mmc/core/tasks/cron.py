@@ -378,7 +378,7 @@ def parseCronEntry(entry,min,max):
             if begin == end and begin % step != 0:
                 raise InvalidCronEntry('Invalid range or step specified: %s-%s/%s' % (begin,end,step))
 
-            total.update(range(begin,end,step))
+            total.update(list(range(begin,end,step)))
         elif not begin is None:
             raise InvalidCronEntry('Invalid range or step specified: %s-%s/%s' % (begin,end,step))
 

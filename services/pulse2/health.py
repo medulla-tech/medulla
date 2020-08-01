@@ -87,7 +87,7 @@ def getFDSummary():
 def getLoadAvg():
     try:
         f = open("/proc/loadavg")
-    except IOError, e:
+    except IOError as e:
         logging.getLogger().error('error opening /proc/loadavg: %d (%s)' % (e.errno, e.strerror))
         ret = {
             '1min': 0,
@@ -113,7 +113,7 @@ def getMem():
     swap_free = 0
     try:
         meminfo = open("/proc/meminfo")
-    except IOError, e:
+    except IOError as e:
         logging.getLogger().error('error opening /proc/meminfo: %d (%s)' % (e.errno, e.strerror))
         ret = {
             'total': 0,

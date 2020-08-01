@@ -53,99 +53,99 @@ if not options.started_before :
     options.started_before = options.created_before
 
 if options.docs :
-    print "Fields signification"
-    print " - Name : The name of the command"
-    print " - Creator : The creator of the command"
-    print " - Created : The date of creation"
-    print " - Domains : The domains found in that command"
-    print " - Hosts : Hosts involved in this command, splitted as follow"
-    print "   + Scheduled : Hosts which have not yet been touched"
-    print "This is neither a success or a failure, they have not been"
-    print "processeed."
-    print "   + Rescheduled : Hosts which have known at least one"
-    print "failure"
-    print "This is neither a success or a failure, but are not being"
-    print "processed ATM : as failure may be temporary or definitive,"
-    print "keep an eye on them : previous failure may be due to"
-    print "anything."
-    print "   + In Progress : Hosts which are currently working"
-    print "It those hosts seems to work since a long time (more than"
-    print "24 hours), you should stop them using the interface.."
-    print "   + Stopped : Hosts which have been stopped BY THE USER"
-    print "Those copmmands can still be a success or a failure, if the"
-    print "user start them again"
-    print "   + Neutralized : Hosts which have been stopped BY THE SCHEDULER"
-    print "Thoses commands were obviously misbehaving - which should"
-    print "not arrive - you can consider thoses as a failure"
-    print "  + Over Timed : Hosts running out of time"
-    print "They were simply running out of time"
-    print "  + Success : Hosts which have been successfully deployed"
-    print "Nothing more to add : deployment went as expected"
-    print "  + Failure : Hosts which have consummed all attempts, but"
-    print "don't blame Pulse 2 yet, details are following"
-    print "     --> Not Enough Info : The system had not enought information to deploy"
-    print "This is generally caused by an out-ot-sync inventory"
-    print "datase, or a resolv mechanism (DNS) issue."
-    print "     --> Broken Bundle : This commands depends on a failed one"
-    print "You should seek out why the dependency do fail."
-    print "     --> Package Unavailable : The required package is not on your server anymore"
-    print "This is generally because the package was removed from"
-    print "the server before the host can get it. This may also"
-    print "be due to network issues."
-    print "     --> Package Modified : The required package has been modified on your server"
-    print "This is generally because the package was modified on"
-    print "the server before the host can get it. This may also"
-    print "be due to network issues."
-    print "     --> Timeout : The script was killed has it took too much time."
-    print "Your script is probably broken, and waiting for event"
-    print "(keypress for example) which won't occur in silent mode"
-    print "     --> Target broken : The target is probably broken."
-    print "It may be already crashed."
-    print "     --> Mac Mismatch : Issue when controlling the target MAC address."
-    print "Also related to an out-of-sync inventory database"
-    print "     --> Unreachable : Issue when attempting to contact the host."
-    print "The host can be down. Or be firewalled. Or without the agent installed."
-    print "     --> Connection issue : Issue while talking to the host."
-    print "Issue cause is unknown. Network issue ? Scheduler dying ?"
-    print "     --> Delete : Delete failed."
-    print "The deletion raised an error, this generaly occurs when"
-    print "the install script screw the temporary folder. Script is"
-    print "probably broken."
-    print "     --> Inventory : Inventory failed."
-    print "The inventory command do failed. Please check those hosts;"
-    print "the inventory may be misconfigured."
-    print "     --> Halt : Halt failed."
-    print "The halt command do failed. Please check those hosts;"
-    print "it is possible that something prevent the computer to be"
-    print "shut down."
-    print "     --> Script : Script failed."
-    print "The script raised an error you told it to raise (in other"
-    print "words : you expected this error; based on this code, you"
-    print "should now know what to do with those clients."
-    print "     --> Execution : Execution failed."
-    print "The script raised an INTERNAL error; you should have a"
-    print "look to see why it failed"
-    print "     --> Precheck : The precheck failed, no idea why."
-    print "The target is probably crached."
-    print " - Results : the amounts, categorized; for default ventilation :"
-    print "  + To Do : deployments still to be done; contains 'Scheduled', 'Rescheduled'"
-    print "  + Doing : deployments in progress; contains 'In Progress'"
-    print "  + Delayed : deployments postponed by user or scheduler action, contains 'Stopped', 'Neutralized'"
-    print "  + Done : deployments finished on success, contains 'Success'"
-    print "  + Failed : deployments finished on error, contains the following field"
-    print "    + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution', 'Precheck'"
-    print "    + Plan : deployment which have failed since the deployment plan lacked information, contains 'Over Timed', 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'"
-    print "    + Infra : deployment which have failed because of some flaws in the infrastructure, contains 'Package Unavailable', 'Connection issue'"
-    print " - And for the 'ot' ventilation :"
-    print "  + Doing : deployments in progress; contains 'In Progress'"
-    print "  + Done : deployments finished on success, contains 'Success'"
-    print "  + Stopped : deployments finished on success, contains 'Stopped', 'Neutralized'"
-    print "  + Scheduled : deployments still to be done; contains 'Scheduled', 'Rescheduled'"
-    print "  + Over Timed : deployments out of their time window; contains 'Over Timed'"
-    print "  + Failed : deployments finished on error, contains the following field"
-    print "    + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution', 'Precheck'"
-    print "    + Plan : deployment which have failed since the deployment plan lacked information, contains 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'"
-    print "    + Infra : deployment which have failed because of some flaws in the infrastructure, contains 'Package Unavailable', 'Connection issue'"
+    print("Fields signification")
+    print(" - Name : The name of the command")
+    print(" - Creator : The creator of the command")
+    print(" - Created : The date of creation")
+    print(" - Domains : The domains found in that command")
+    print(" - Hosts : Hosts involved in this command, splitted as follow")
+    print("   + Scheduled : Hosts which have not yet been touched")
+    print("This is neither a success or a failure, they have not been")
+    print("processeed.")
+    print("   + Rescheduled : Hosts which have known at least one")
+    print("failure")
+    print("This is neither a success or a failure, but are not being")
+    print("processed ATM : as failure may be temporary or definitive,")
+    print("keep an eye on them : previous failure may be due to")
+    print("anything.")
+    print("   + In Progress : Hosts which are currently working")
+    print("It those hosts seems to work since a long time (more than")
+    print("24 hours), you should stop them using the interface..")
+    print("   + Stopped : Hosts which have been stopped BY THE USER")
+    print("Those copmmands can still be a success or a failure, if the")
+    print("user start them again")
+    print("   + Neutralized : Hosts which have been stopped BY THE SCHEDULER")
+    print("Thoses commands were obviously misbehaving - which should")
+    print("not arrive - you can consider thoses as a failure")
+    print("  + Over Timed : Hosts running out of time")
+    print("They were simply running out of time")
+    print("  + Success : Hosts which have been successfully deployed")
+    print("Nothing more to add : deployment went as expected")
+    print("  + Failure : Hosts which have consummed all attempts, but")
+    print("don't blame Pulse 2 yet, details are following")
+    print("     --> Not Enough Info : The system had not enought information to deploy")
+    print("This is generally caused by an out-ot-sync inventory")
+    print("datase, or a resolv mechanism (DNS) issue.")
+    print("     --> Broken Bundle : This commands depends on a failed one")
+    print("You should seek out why the dependency do fail.")
+    print("     --> Package Unavailable : The required package is not on your server anymore")
+    print("This is generally because the package was removed from")
+    print("the server before the host can get it. This may also")
+    print("be due to network issues.")
+    print("     --> Package Modified : The required package has been modified on your server")
+    print("This is generally because the package was modified on")
+    print("the server before the host can get it. This may also")
+    print("be due to network issues.")
+    print("     --> Timeout : The script was killed has it took too much time.")
+    print("Your script is probably broken, and waiting for event")
+    print("(keypress for example) which won't occur in silent mode")
+    print("     --> Target broken : The target is probably broken.")
+    print("It may be already crashed.")
+    print("     --> Mac Mismatch : Issue when controlling the target MAC address.")
+    print("Also related to an out-of-sync inventory database")
+    print("     --> Unreachable : Issue when attempting to contact the host.")
+    print("The host can be down. Or be firewalled. Or without the agent installed.")
+    print("     --> Connection issue : Issue while talking to the host.")
+    print("Issue cause is unknown. Network issue ? Scheduler dying ?")
+    print("     --> Delete : Delete failed.")
+    print("The deletion raised an error, this generaly occurs when")
+    print("the install script screw the temporary folder. Script is")
+    print("probably broken.")
+    print("     --> Inventory : Inventory failed.")
+    print("The inventory command do failed. Please check those hosts;")
+    print("the inventory may be misconfigured.")
+    print("     --> Halt : Halt failed.")
+    print("The halt command do failed. Please check those hosts;")
+    print("it is possible that something prevent the computer to be")
+    print("shut down.")
+    print("     --> Script : Script failed.")
+    print("The script raised an error you told it to raise (in other")
+    print("words : you expected this error; based on this code, you")
+    print("should now know what to do with those clients.")
+    print("     --> Execution : Execution failed.")
+    print("The script raised an INTERNAL error; you should have a")
+    print("look to see why it failed")
+    print("     --> Precheck : The precheck failed, no idea why.")
+    print("The target is probably crached.")
+    print(" - Results : the amounts, categorized; for default ventilation :")
+    print("  + To Do : deployments still to be done; contains 'Scheduled', 'Rescheduled'")
+    print("  + Doing : deployments in progress; contains 'In Progress'")
+    print("  + Delayed : deployments postponed by user or scheduler action, contains 'Stopped', 'Neutralized'")
+    print("  + Done : deployments finished on success, contains 'Success'")
+    print("  + Failed : deployments finished on error, contains the following field")
+    print("    + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution', 'Precheck'")
+    print("    + Plan : deployment which have failed since the deployment plan lacked information, contains 'Over Timed', 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'")
+    print("    + Infra : deployment which have failed because of some flaws in the infrastructure, contains 'Package Unavailable', 'Connection issue'")
+    print(" - And for the 'ot' ventilation :")
+    print("  + Doing : deployments in progress; contains 'In Progress'")
+    print("  + Done : deployments finished on success, contains 'Success'")
+    print("  + Stopped : deployments finished on success, contains 'Stopped', 'Neutralized'")
+    print("  + Scheduled : deployments still to be done; contains 'Scheduled', 'Rescheduled'")
+    print("  + Over Timed : deployments out of their time window; contains 'Over Timed'")
+    print("  + Failed : deployments finished on error, contains the following field")
+    print("    + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution', 'Precheck'")
+    print("    + Plan : deployment which have failed since the deployment plan lacked information, contains 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'")
+    print("    + Infra : deployment which have failed because of some flaws in the infrastructure, contains 'Package Unavailable', 'Connection issue'")
     sys.exit(0)
 
 # create connection
@@ -440,7 +440,7 @@ for command in commandData:
 
 if options.vent == 'default':
     if options.format == 'csv' :
-        print ';'.join((
+        print(';'.join((
             'ID',
             'Name',
             'Creator',
@@ -480,10 +480,10 @@ if options.vent == 'default':
             "Infra",
             'Package Unavailable',
             'Connexion issue'
-        ))
+        )))
 elif options.vent == 'ot':
     if options.format == 'csv' :
-        print ';'.join((
+        print(';'.join((
             'ID',
             'Name',
             'Creator',
@@ -517,32 +517,32 @@ elif options.vent == 'ot':
             "Infra",
             'Package Unavailable',
             'Connexion issue'
-        ))
+        )))
 
 def print_human(label, value, total, subtotal):
     fmt = "{0:.<35} : {1:4d} (abs.: {2:3d} %, rel: {4:3d} %)"
     if value == 0:
         return
     if subtotal !=0 and total != 0:
-        print fmt.format(label, value, 100 * value / total, total, 100 * value / subtotal, subtotal)
+        print(fmt.format(label, value, 100 * value / total, total, 100 * value / subtotal, subtotal))
     else:
-        print fmt.format(label, value, 0, total, 0, subtotal)
+        print(fmt.format(label, value, 0, total, 0, subtotal))
 
-ids_command = data.keys()
+ids_command = list(data.keys())
 ids_command.sort()
 for id_command in ids_command:
     command = data[id_command]
     if len(command['coh']) > options.min:
         if options.vent == 'default':
             if options.format == 'human':
-                print "================== [%s] ==================" % id_command
-                print "%s : %s" % ('Name    ', command['name'])
-                print "%s : %s" % ('Creator ', command['creator'])
-                print "%s : %s" % ('Created ', command['creation_date'])
-                print "%s : %s" % ('Start   ', command['start_date'])
-                print "%s : %s" % ('End     ', command['end_date'])
-                print "%s : %s" % ('Domains ', command['Domains'])
-                print "------------------ Results ------------------"
+                print("================== [%s] ==================" % id_command)
+                print("%s : %s" % ('Name    ', command['name']))
+                print("%s : %s" % ('Creator ', command['creator']))
+                print("%s : %s" % ('Created ', command['creation_date']))
+                print("%s : %s" % ('Start   ', command['start_date']))
+                print("%s : %s" % ('End     ', command['end_date']))
+                print("%s : %s" % ('Domains ', command['Domains']))
+                print("------------------ Results ------------------")
                 print_human('Total', len(command['coh']), len(command['coh']), len(command['coh']))
                 print_human('    To Do ', command['Results']['To Do'], len(command['coh']), len(command['coh']))
                 print_human('        Scheduled ', command['Scheduled'], len(command['coh']), command['Results']['To Do'])
@@ -576,7 +576,7 @@ for id_command in ids_command:
                 print_human('            Package Unavailable ', command['Fatal']['package_unavailable'], len(command['coh']), command['Results']['Infra'])
                 print_human('            Connection Issue ', command['Fatal']['conn_issue'], len(command['coh']), command['Results']['Infra'])
             elif options.format == 'csv':
-                print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
+                print("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
                     id_command,
                     command['name'],
                     command['creator'],
@@ -616,18 +616,18 @@ for id_command in ids_command:
                     command['Results']['Infra'],
                     command['Fatal']['package_unavailable'],
                     command['Fatal']['conn_issue']
-                )
+                ))
         elif options.vent == 'ot':
             command['Results']['Plan'] -= command['Over Timed'] # over time treated as special case for this ventilation
             if options.format == 'human':
-                print "================== [%s] ==================" % id_command
-                print "%s : %s" % ('Name    ', command['name'])
-                print "%s : %s" % ('Creator ', command['creator'])
-                print "%s : %s" % ('Created ', command['creation_date'])
-                print "%s : %s" % ('Start   ', command['start_date'])
-                print "%s : %s" % ('End     ', command['end_date'])
-                print "%s : %s" % ('Domains ', command['Domains'])
-                print "------------------ Results ------------------"
+                print("================== [%s] ==================" % id_command)
+                print("%s : %s" % ('Name    ', command['name']))
+                print("%s : %s" % ('Creator ', command['creator']))
+                print("%s : %s" % ('Created ', command['creation_date']))
+                print("%s : %s" % ('Start   ', command['start_date']))
+                print("%s : %s" % ('End     ', command['end_date']))
+                print("%s : %s" % ('Domains ', command['Domains']))
+                print("------------------ Results ------------------")
                 print_human('Total', len(command['coh']), len(command['coh']), len(command['coh']))
                 print_human('    Doing ', command['Results']['Doing'], len(command['coh']), len(command['coh']))
                 print_human('    Done ', command['Results']['Done'], len(command['coh']), len(command['coh']))
@@ -655,7 +655,7 @@ for id_command in ids_command:
                 print_human('            Package Unavailable ', command['Fatal']['package_unavailable'], len(command['coh']), command['Results']['Infra'])
                 print_human('            Connection Issue ', command['Fatal']['conn_issue'], len(command['coh']), command['Results']['Infra'])
             elif options.format == 'csv':
-                print "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
+                print("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
                     id_command,
                     command['name'],
                     command['creator'],
@@ -689,4 +689,4 @@ for id_command in ids_command:
                     command['Results']['Infra'],
                     command['Fatal']['package_unavailable'],
                     command['Fatal']['conn_issue']
-                )
+                ))

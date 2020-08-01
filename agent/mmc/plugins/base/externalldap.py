@@ -24,8 +24,8 @@
 import os
 import imp
 import ldap
-import xmlrpclib
-from ConfigParser import NoOptionError
+import xmlrpc.client
+from configparser import NoOptionError
 
 from mmc.site import mmcconfdir
 from mmc.plugins.base.ldapconnect import LDAPConnectionConfig, LDAPConnection
@@ -91,7 +91,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
                     ret = True
                 except ldap.INVALID_CREDENTIALS:
                     self.logger.debug("Invalid credentials")
-        except Exception, e:
+        except Exception as e:
             self.logger.exception(e)
             ret = False
         return AuthenticationToken(ret, user, password, (userdn, userentry))
@@ -116,7 +116,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
                 else:
                     l.simple_bind_s()
                 connected = True
-            except ldap.LDAPError, e:
+            except ldap.LDAPError as e:
                 self.logger.info("Can't connect to LDAP server %s %s" % (ldapurl, e))
             if connected:
                 # Exit loop, because we found a LDAP server to connect to
@@ -143,7 +143,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
         return ret
 
     def ldapBind(self, l, userdn, password):
-        if isinstance(password, xmlrpclib.Binary):
+        if isinstance(password, xmlrpc.client.Binary):
             password = str(password)
         self.logger.debug("Binding with dn: %s %s" % (userdn, password))
         l.simple_bind_s(userdn, password)
@@ -250,7 +250,7 @@ class ExternalLdapProvisioner(ProvisionerI):
                             tmp.extend(found)
                         except ImportError:
                             self.logger.error("The plugin '%s' can't be imported" % plugin)
-                        except Exception, e:
+                        except Exception as e:
                             self.logger.error("Error while using the plugin '%s'" % plugin)
                             self.logger.exception(e)
 

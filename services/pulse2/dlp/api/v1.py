@@ -28,7 +28,7 @@ import logging
 import tempfile
 import shutil
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from base64 import b64decode
 
 from pulse2.utils import isMACAddress
@@ -51,7 +51,7 @@ class Auth(object):
             log("Failed to authenticate computer %s, authkey missmatch." % hostname, severity=logging.ERROR)
             raise cherrypy.HTTPError(401, "Not authorized")
 
-        if isinstance(mac_list, basestring):
+        if isinstance(mac_list, str):
             mac_list = [mac_list]
 
         # Validate input values
@@ -236,19 +236,19 @@ class Inventory(object):
         inventory_uri = cherrypy.config.get("inventory.uri")
         data = b64decode(inventory)
         try:
-            request = urllib2.Request(inventory_uri,
+            request = urllib.request.Request(inventory_uri,
                                       data,
                                       headers={'User-Agent': 'DLP service',
                                                'Content-Type': 'application/x-www-form-urlencoded',
                                                'Content-Length': len(data)})
-            opener = urllib2.build_opener()
-            urllib2.install_opener(opener)
+            opener = urllib.request.build_opener()
+            urllib.request.install_opener(opener)
             response = opener.open(request)
             if response.code == 200:
                 cherrypy.response.status = 201
             else:
                 raise cherrypy.HTTPError(response.code, "Inventory server returned an error.")
-        except (urllib2.URLError, urllib2.HTTPError):
+        except (urllib.error.URLError, urllib.error.HTTPError):
             log("Failed to send the inventory to the inventory server", logging.ERROR, True)
             raise cherrypy.HTTPError(503, "Service Unavailable")
 

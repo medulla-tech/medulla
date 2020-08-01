@@ -108,7 +108,7 @@ class InventoryProvisioner(ProvisionerI):
                             tmp.extend(found)
                         except ImportError:
                             self.logger.error("The plugin '%s' can't be imported" % plugin)
-                        except Exception, e:
+                        except Exception as e:
                             self.logger.error("Error while using the plugin '%s'" % plugin)
                             self.logger.exception(e)
                     else:

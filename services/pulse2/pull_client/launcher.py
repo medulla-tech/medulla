@@ -4,10 +4,10 @@ from base64 import b64encode
 from threading import Thread, Event
 from subprocess import Popen, PIPE
 from tempfile import NamedTemporaryFile
-import Queue
+import queue
 import logging
 
-from utils import get_launcher_env
+from .utils import get_launcher_env
 
 
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ def launcher(start_file, params, workdir):
     """
     Function for running commands in cygwin
     """
-    output_queue = Queue.Queue()
+    output_queue = queue.Queue()
     output = ""
     stf = NamedTemporaryFile(mode="w", delete=False)
     cmd_bash = "%s %s" % (start_file, params)

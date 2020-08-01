@@ -84,18 +84,18 @@ class Archiver:
         """
         try:
             self.archivedir = self._prepareArchiveDirectory()
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Can't create archive directory '%s': %s"
                               % (self.archivedir, e))
             return False
         try:
             self._prepareComputerDirectories()
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Can't prepare directories to archive: %s" % e)
             return False
         try:
             self._removeComputerFromCache()
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Can't remove computer from UUID cache:" % e)
             return False
         return True

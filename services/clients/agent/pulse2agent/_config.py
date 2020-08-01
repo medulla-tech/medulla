@@ -23,7 +23,7 @@
 """ Declaration of config defaults """
 
 import inspect
-from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 
 
 class ConfigError(Exception):
@@ -163,7 +163,7 @@ class ConfigReader(type):
         @param attrs: dictionnary of attributtes
         @type attrs: dict
         """
-        att_dict = dict((k, v) for (k, v) in cls.__dict__.items()
+        att_dict = dict((k, v) for (k, v) in list(cls.__dict__.items())
                 if not k.startswith("__"))
 
         attrs.update(att_dict)
@@ -207,7 +207,7 @@ class ConfigReader(type):
         @return: all options found in section
         @rtype: generator
         """
-        for name, value in section.__dict__.items():
+        for name, value in list(section.__dict__.items()):
             if not name.startswith("_"):
 
                 yield name, value
@@ -228,7 +228,7 @@ class ConfigReader(type):
                              (int, parser.getint),
                              (float, parser.getfloat),
                              (str, parser.get),
-                             (unicode, parser.get),
+                             (str, parser.get),
                              (list, parser.getlist),
                              ]:
             yield base, method
@@ -257,8 +257,8 @@ class ConfigReader(type):
                         elif value is None:
                             new_value = config_file.get(section.__name__, name)
                             setattr(section, name, new_value)
-                    except TypeError, e:
-                        print e
+                    except TypeError as e:
+                        print(e)
                 else:
                     # defalt value stays unchanged
                     pass

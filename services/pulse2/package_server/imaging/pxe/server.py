@@ -124,7 +124,7 @@ class ProcessPacket :
                     logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s" %
                             (fnc.__name__, str(data)))
 
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().warn("PXE Proxy: send response error: %s" % (str(e)))
 
         return result

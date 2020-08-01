@@ -61,11 +61,11 @@ import tempfile
 from sets import Set
 import logging
 import shutil
-import xmlrpclib
+import xmlrpc.client
 from subprocess import Popen, PIPE
 
 from time import mktime, strptime, strftime, localtime
-from ConfigParser import NoSectionError, NoOptionError
+from configparser import NoSectionError, NoOptionError
 from twisted.internet import defer
 
 import hashlib
@@ -556,51 +556,51 @@ def _fill_reptable():
      not call, execute on startup
     """
     _corresp = [
-        (u"A",  [0x00C0,0x00C1,0x00C2,0x00C3,0x00C4,0x00C5,0x0100,0x0102,0x0104]),
-        (u"AE", [0x00C6]),
-        (u"a",  [0x00E0,0x00E1,0x00E2,0x00E3,0x00E4,0x00E5,0x0101,0x0103,0x0105]),
-        (u"ae", [0x00E6]),
-        (u"C",  [0x00C7,0x0106,0x0108,0x010A,0x010C]),
-        (u"c",  [0x00E7,0x0107,0x0109,0x010B,0x010D]),
-        (u"D",  [0x00D0,0x010E,0x0110]),
-        (u"d",  [0x00F0,0x010F,0x0111]),
-        (u"E",  [0x00C8,0x00C9,0x00CA,0x00CB,0x0112,0x0114,0x0116,0x0118,0x011A]),
-        (u"e",  [0x00E8,0x00E9,0x00EA,0x00EB,0x0113,0x0115,0x0117,0x0119,0x011B]),
-        (u"G",  [0x011C,0x011E,0x0120,0x0122]),
-        (u"g",  [0x011D,0x011F,0x0121,0x0123]),
-        (u"H",  [0x0124,0x0126]),
-        (u"h",  [0x0125,0x0127]),
-        (u"I",  [0x00CC,0x00CD,0x00CE,0x00CF,0x0128,0x012A,0x012C,0x012E,0x0130]),
-        (u"i",  [0x00EC,0x00ED,0x00EE,0x00EF,0x0129,0x012B,0x012D,0x012F,0x0131]),
-        (u"IJ", [0x0132]),
-        (u"ij", [0x0133]),
-        (u"J",  [0x0134]),
-        (u"j",  [0x0135]),
-        (u"K",  [0x0136]),
-        (u"k",  [0x0137,0x0138]),
-        (u"L",  [0x0139,0x013B,0x013D,0x013F,0x0141]),
-        (u"l",  [0x013A,0x013C,0x013E,0x0140,0x0142]),
-        (u"N",  [0x00D1,0x0143,0x0145,0x0147,0x014A]),
-        (u"n",  [0x00F1,0x0144,0x0146,0x0148,0x0149,0x014B]),
-        (u"O",  [0x00D2,0x00D3,0x00D4,0x00D5,0x00D6,0x00D8,0x014C,0x014E,0x0150]),
-        (u"o",  [0x00F2,0x00F3,0x00F4,0x00F5,0x00F6,0x00F8,0x014D,0x014F,0x0151]),
-        (u"OE", [0x0152]),
-        (u"oe", [0x0153]),
-        (u"R",  [0x0154,0x0156,0x0158]),
-        (u"r",  [0x0155,0x0157,0x0159]),
-        (u"S",  [0x015A,0x015C,0x015E,0x0160]),
-        (u"s",  [0x015B,0x015D,0x015F,0x01610,0x017F]),
-        (u"ss", [0x00DF]),
-        (u"T",  [0x0162,0x0164,0x0166]),
-        (u"t",  [0x0163,0x0165,0x0167]),
-        (u"U",  [0x00D9,0x00DA,0x00DB,0x00DC,0x0168,0x016A,0x016C,0x016E,0x0170,0x172]),
-        (u"u",  [0x00F9,0x00FA,0x00FB,0x00FC,0x0169,0x016B,0x016D,0x016F,0x0171]),
-        (u"W",  [0x0174]),
-        (u"w",  [0x0175]),
-        (u"Y",  [0x00DD,0x0176,0x0178]),
-        (u"y",  [0x00FD,0x00FF,0x0177]),
-        (u"Z",  [0x0179,0x017B,0x017D]),
-        (u"z",  [0x017A,0x017C,0x017E])
+        ("A",  [0x00C0,0x00C1,0x00C2,0x00C3,0x00C4,0x00C5,0x0100,0x0102,0x0104]),
+        ("AE", [0x00C6]),
+        ("a",  [0x00E0,0x00E1,0x00E2,0x00E3,0x00E4,0x00E5,0x0101,0x0103,0x0105]),
+        ("ae", [0x00E6]),
+        ("C",  [0x00C7,0x0106,0x0108,0x010A,0x010C]),
+        ("c",  [0x00E7,0x0107,0x0109,0x010B,0x010D]),
+        ("D",  [0x00D0,0x010E,0x0110]),
+        ("d",  [0x00F0,0x010F,0x0111]),
+        ("E",  [0x00C8,0x00C9,0x00CA,0x00CB,0x0112,0x0114,0x0116,0x0118,0x011A]),
+        ("e",  [0x00E8,0x00E9,0x00EA,0x00EB,0x0113,0x0115,0x0117,0x0119,0x011B]),
+        ("G",  [0x011C,0x011E,0x0120,0x0122]),
+        ("g",  [0x011D,0x011F,0x0121,0x0123]),
+        ("H",  [0x0124,0x0126]),
+        ("h",  [0x0125,0x0127]),
+        ("I",  [0x00CC,0x00CD,0x00CE,0x00CF,0x0128,0x012A,0x012C,0x012E,0x0130]),
+        ("i",  [0x00EC,0x00ED,0x00EE,0x00EF,0x0129,0x012B,0x012D,0x012F,0x0131]),
+        ("IJ", [0x0132]),
+        ("ij", [0x0133]),
+        ("J",  [0x0134]),
+        ("j",  [0x0135]),
+        ("K",  [0x0136]),
+        ("k",  [0x0137,0x0138]),
+        ("L",  [0x0139,0x013B,0x013D,0x013F,0x0141]),
+        ("l",  [0x013A,0x013C,0x013E,0x0140,0x0142]),
+        ("N",  [0x00D1,0x0143,0x0145,0x0147,0x014A]),
+        ("n",  [0x00F1,0x0144,0x0146,0x0148,0x0149,0x014B]),
+        ("O",  [0x00D2,0x00D3,0x00D4,0x00D5,0x00D6,0x00D8,0x014C,0x014E,0x0150]),
+        ("o",  [0x00F2,0x00F3,0x00F4,0x00F5,0x00F6,0x00F8,0x014D,0x014F,0x0151]),
+        ("OE", [0x0152]),
+        ("oe", [0x0153]),
+        ("R",  [0x0154,0x0156,0x0158]),
+        ("r",  [0x0155,0x0157,0x0159]),
+        ("S",  [0x015A,0x015C,0x015E,0x0160]),
+        ("s",  [0x015B,0x015D,0x015F,0x01610,0x017F]),
+        ("ss", [0x00DF]),
+        ("T",  [0x0162,0x0164,0x0166]),
+        ("t",  [0x0163,0x0165,0x0167]),
+        ("U",  [0x00D9,0x00DA,0x00DB,0x00DC,0x0168,0x016A,0x016C,0x016E,0x0170,0x172]),
+        ("u",  [0x00F9,0x00FA,0x00FB,0x00FC,0x0169,0x016B,0x016D,0x016F,0x0171]),
+        ("W",  [0x0174]),
+        ("w",  [0x0175]),
+        ("Y",  [0x00DD,0x0176,0x0178]),
+        ("y",  [0x00FD,0x00FF,0x0177]),
+        ("Z",  [0x0179,0x017B,0x017D]),
+        ("z",  [0x017A,0x017C,0x017E])
         ]
     global _reptable
     for repchar,codes in _corresp :
@@ -619,11 +619,11 @@ def delete_diacritics(s) :
     @rtype: unicode
     """
     if isinstance(s, str):
-        s = unicode(s, "utf8", "replace")
+        s = str(s, "utf8", "replace")
     ret = []
     for c in s:
         ret.append(_reptable.get(ord(c) ,c))
-    return u"".join(ret)
+    return "".join(ret)
 
 
 # FIXME: Change this class name
@@ -674,7 +674,7 @@ class LdapUserGroupControl:
         if not scheme:
             scheme = self.config.passwordscheme
         # If the passwd has been encoded in the XML-RPC stream, decode it
-        if isinstance(password, xmlrpclib.Binary):
+        if isinstance(password, xmlrpc.client.Binary):
             password = str(password)
         salt = self._getSalt(scheme)
         if scheme == "crypt":
@@ -762,7 +762,7 @@ class LdapUserGroupControl:
         """
         Run a hook.
         """
-        if self.hooks.has_key(hookName):
+        if hookName in self.hooks:
             self.logger.info("Hook " + hookName + " called.")
             if uid:
                 # Make a temporary ldif file with user entry if an uid is specified
@@ -772,7 +772,7 @@ class LdapUserGroupControl:
                     dn = self.searchUserDN(uid)
                     entry = self.getUserEntry(uid)
                     if password:
-                        if isinstance(password, xmlrpclib.Binary):
+                        if isinstance(password, xmlrpc.client.Binary):
                             password = str(password)
                         # Put user password in clear text in ldif
                         entry["userPassword"] = [password]
@@ -849,7 +849,7 @@ class LdapUserGroupControl:
         @rtype: dict
         """
         entry = copy.deepcopy(entry)
-        for attribute, value in default.items():
+        for attribute, value in list(default.items()):
             # Search if modifiers have been specified
             s = re.search("^\[(.*)\]", value)
             if s:
@@ -859,7 +859,7 @@ class LdapUserGroupControl:
             else: modifiers = ""
             # Interpolate value
             if "%" in value:
-                for a, v in entry.items():
+                for a, v in list(entry.items()):
                     if type(v) == list:
                         v = v[0]
                     if type(v) == str:
@@ -868,18 +868,18 @@ class LdapUserGroupControl:
                         if "|" in modifiers: v = v.upper()
                         value = value.replace("%" + a + "%", v)
             if value == "DELETE":
-                for key in entry.keys():
+                for key in list(entry.keys()):
                     if key.lower() == attribute:
                         del entry[key]
                         break
             elif value.startswith("+"):
-                for key in entry.keys():
+                for key in list(entry.keys()):
                     if key.lower() == attribute:
                         entry[key] = entry[key] + value[1:].split(",")
                         break
             else:
                 found = False
-                for key in entry.keys():
+                for key in list(entry.keys()):
                     if key.lower() == attribute:
                         entry[key] = value
                         found = True
@@ -983,14 +983,14 @@ class LdapUserGroupControl:
 
         # Search Python unicode string and encode them to UTF-8
         attributes = []
-        for k,v in user_info.items():
+        for k,v in list(user_info.items()):
             fields = []
             if type(v) == list:
                 for item in v:
-                    if type(item) == unicode: item = item.encode("utf-8")
+                    if type(item) == str: item = item.encode("utf-8")
                     fields.append(item)
                 attributes.append((k, fields))
-            elif type(v) == unicode:
+            elif type(v) == str:
                 attributes.append((k, v.encode("utf-8")))
             else:
                 attributes.append((k, v))
@@ -1007,7 +1007,7 @@ class LdapUserGroupControl:
                 pwd_change = False
             # Add user to her/his group primary group
             self.addUserToGroup(primaryGroup, uid)
-        except ldap.LDAPError, error:
+        except ldap.LDAPError as error:
             # if we have a problem, we delete the group
             if not self.defaultUserGroup:
                 self.delGroup(uid)
@@ -1104,7 +1104,7 @@ class LdapUserGroupControl:
                         'objectclass':('posixGroup','top'),
                          }
 
-        attributes = [ (k,v) for k,v in group_info.items() ]
+        attributes = [ (k,v) for k,v in list(group_info.items()) ]
         self.l.add_s(entry, attributes)
 
         r.commit()
@@ -1307,9 +1307,9 @@ class LdapUserGroupControl:
         if attrVal:
             if log:
                 r = AF().log(PLUGIN_NAME, AA.BASE_MOD_USER_ATTR, [(userdn, AT.USER), (attr,AT.ATTRIBUTE)], attrValue)
-            if type(attrVal) == unicode:
+            if type(attrVal) == str:
                 attrVal = attrVal.encode("utf-8")
-            elif isinstance(attrVal, xmlrpclib.Binary):
+            elif isinstance(attrVal, xmlrpc.client.Binary):
                 # Needed for binary string coming from XMLRPC
                 attrVal = str(attrVal)
             self.l.modify_s(userdn, [(ldap.MOD_REPLACE,attr,attrVal)])
@@ -1382,7 +1382,7 @@ class LdapUserGroupControl:
         if self.config.passwordscheme == "passmod":
             try:
                 ldapConn.passwd_s(userdn, None, str(passwd))
-            except ldap.CONSTRAINT_VIOLATION, e:
+            except ldap.CONSTRAINT_VIOLATION as e:
                 if not 'info' in e.message or \
                    ('info' in e.message and e.message['info'] == 'Password fails quality checking policy'):
                     # if the quality test pass, the password was rejected by
@@ -1442,7 +1442,7 @@ class LdapUserGroupControl:
 
         try:
             self.l.delete_s(path)
-        except ldap.LDAPError, e:
+        except ldap.LDAPError as e:
             errObj = errorMessage('ldapUserGroupControl::delRecursiveEntry()')
             errObj.addMessage("error: deleting "+path)
             errObj.addMessage('ldap.LDAPError:')
@@ -1472,8 +1472,8 @@ class LdapUserGroupControl:
                     if result_type == ldap.RES_SEARCH_ENTRY:
                         result_set.append(result_data)
 
-        except ldap.LDAPError, e:
-            print e
+        except ldap.LDAPError as e:
+            print(e)
 
         #prepare array for processing
         resArr=[]
@@ -1666,8 +1666,8 @@ class LdapUserGroupControl:
                     if result_type == ldap.RES_SEARCH_ENTRY:
                         result_set.append(result_data)
 
-        except ldap.LDAPError, e:
-            print e
+        except ldap.LDAPError as e:
+            print(e)
 
         # prepare array for processing
         resArr=[]
@@ -1942,7 +1942,7 @@ class LdapUserGroupControl:
 
         # For all element we can try to delete
         for entry in self.getAttrToDelete(userdn, className):
-            for k in newattrs.keys():
+            for k in list(newattrs.keys()):
                 if k.lower()==entry.lower():
                     del newattrs[k] #delete it
 
@@ -1968,7 +1968,7 @@ class LdapUserGroupControl:
 
         # For all element we can try to delete
         for entry in self.getAttrToDelete(cn, className):
-            for k in newattrs.keys():
+            for k in list(newattrs.keys()):
                 if k.lower()==entry.lower():
                     del newattrs[k] #delete it
 
@@ -2080,7 +2080,7 @@ class LdapUserGroupControl:
         addrdn = 'ou=' + ouname + ', ' + ldappath
         addr_info = {'ou':ouname,
                     'objectClass':('organizationalUnit','top')}
-        attributes=[ (k,v) for k,v in addr_info.items() ]
+        attributes=[ (k,v) for k,v in list(addr_info.items()) ]
 
         try:
             self.l.add_s(addrdn, attributes)
@@ -2203,7 +2203,7 @@ class ldapAuthen:
         self.userdn = username
 
         # If the passwd has been encoded in the XML-RPC stream, decode it
-        if isinstance(password, xmlrpclib.Binary):
+        if isinstance(password, xmlrpc.client.Binary):
             password = str(password)
 
         self.result = False
@@ -2293,7 +2293,7 @@ class GpoManager:
         for aclname in ACLs:
             group_info["ACL"].append(aclname + ":" + ACLs[aclname])
         entry = 'cn=' + gpoName + ',' + self._getDN()
-        attributes = [ (k,v) for k,v in group_info.items() ]
+        attributes = [ (k,v) for k,v in list(group_info.items()) ]
         self.l.l.add_s(entry, attributes)
 
     def delete(self, gpoName):
@@ -2656,7 +2656,7 @@ class RpcProxy(RpcProxyI):
     def getRestrictedComputersName(self, min = 0, max = -1, filt = None):
         ctx = self.currentContext
         ret = ComputerManager().getRestrictedComputersList(ctx, min, max, filt)
-        ret = map(lambda x:ret[x][1]['cn'][0], ret)
+        ret = [ret[x][1]['cn'][0] for x in ret]
         ret.sort(lambda x, y: cmp(x.lower(), y.lower()))
         return xmlrpcCleanup(ret)
 
@@ -2748,7 +2748,7 @@ class LogView:
 
     def parseLine(self, line):
         ret = None
-        patternKeys = self.pattern.keys()
+        patternKeys = list(self.pattern.keys())
         patternKeys.sort()
         # We try each pattern until we found one that works
         for pattern in patternKeys:
@@ -2757,7 +2757,7 @@ class LogView:
                 res = sre.groupdict()
                 if res:
                     # Use current year if not set
-                    if not res.has_key("Y"):
+                    if "Y" not in res:
                         res["Y"] = str(localtime()[0])
                     timed = strptime("%s %s %s %s %s %s" % (res["b"], res["d"], res["Y"], res["H"], res["M"], res["S"]), "%b %d %Y %H %M %S")
                     res["time"] = mktime(timed)

@@ -26,11 +26,9 @@
 from pulse2.cm._config import ConfigReader
 
 
-class Config(object):
-    __metaclass__ = ConfigReader
-
+class Config(object, metaclass=ConfigReader):
     class daemon(object):
-        umask = 0077
+        umask = 0o077
         user = 0
         group = 0
         pidfile = "/var/run/pulse2-cm.pid"

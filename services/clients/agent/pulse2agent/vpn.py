@@ -22,8 +22,8 @@
 
 from subprocess import Popen, PIPE
 
-from ptypes import CC, Component
-from connect import probe
+from .ptypes import CC, Component
+from .connect import probe
 
 
 

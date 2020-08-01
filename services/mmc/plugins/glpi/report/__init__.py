@@ -85,7 +85,7 @@ class exportedReport(object):
 
         @return: count of machines by entity
         """
-        if isinstance(os_names, basestring):
+        if isinstance(os_names, str):
             os_names = [os_names]
 
         os_names = [os_name.replace('*', '%') for os_name in os_names]
@@ -116,7 +116,7 @@ class exportedReport(object):
 
         @return: count of machines by entity
         """
-        if isinstance(types, basestring):
+        if isinstance(types, str):
             types = [types]
         types = [type.replace("*", "%") for type in types]
 
@@ -144,7 +144,7 @@ class exportedReport(object):
             (name, version, vendor)
         """
         name = version = vendor = None
-        if soft and isinstance(soft, basestring):
+        if soft and isinstance(soft, str):
             name = soft.replace('*', '%')
         elif type(soft) == dict:
             name = soft.get('name', None)

@@ -6,7 +6,7 @@ import sys, os
 import os.path
 import json
 import logging
-from utils import md5, simplecommand
+from .utils import md5, simplecommand
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.pkgs import PkgsDatabase
 logger = logging.getLogger()
@@ -207,7 +207,7 @@ class managepackage:
     @staticmethod
     def getversionpackagename(packagename):
         for package in managepackage.listpackages():
-            print os.path.join(package, "xmppdeploy.json")
+            print(os.path.join(package, "xmppdeploy.json"))
             try:
                 jr = managepackage.loadjsonfile(os.path.join(package, "xmppdeploy.json"))
                 if 'info' in jr \

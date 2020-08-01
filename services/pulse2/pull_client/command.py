@@ -20,14 +20,14 @@ import os
 import logging
 import time
 from datetime import datetime
-import Queue
+import queue
 import shutil
 import traceback
-from StringIO import StringIO
+from io import StringIO
 import subprocess
 
-from launcher import launcher
-from utils import get_packages_dir, get_launcher_env
+from .launcher import launcher
+from .utils import get_packages_dir, get_launcher_env
 
 
 logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ class Command(object):
         self.command = command
         self.created = time.time()
         self.parallel_queue, self.simple_queue = queues
-        self.to_do = Queue.Queue()
+        self.to_do = queue.Queue()
         self.steps = []
         self.done = False
         self.failed = False
@@ -99,7 +99,7 @@ class Command(object):
     def next_step(self):
         try:
             step = self.to_do.get(False)
-        except Queue.Empty:
+        except queue.Empty:
             self.done = True
             logger.info("%s finished." % self)
         else:

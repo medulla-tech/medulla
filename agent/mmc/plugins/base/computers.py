@@ -29,9 +29,7 @@ import logging
 from mmc.support.mmctools import Singleton, SingletonN
 
 
-class ComputerI:
-    __metaclass__ = SingletonN
-
+class ComputerI(metaclass=SingletonN):
     def canAddComputer(self):
         """
         Does this module handle addition of computers

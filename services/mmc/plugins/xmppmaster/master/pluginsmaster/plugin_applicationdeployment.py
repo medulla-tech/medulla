@@ -38,7 +38,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     try:
         if 'Dtypequery' in data:
             if data['Dtypequery'] == 'TED':
-                print "Delete session %s" % sessionid
+                print("Delete session %s" % sessionid)
                 # Set deployment to done in database
                 xmppobject.session.clear(sessionid)
 

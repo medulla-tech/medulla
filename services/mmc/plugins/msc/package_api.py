@@ -52,7 +52,7 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
             proto = server['protocol']
             bind = server['server']
             #if 'username' in server and 'password' in server and server['username'] != '':
-            if server.has_key('username') and server.has_key('password') and server['username'] != '':
+            if 'username' in server and 'password' in server and server['username'] != '':
                 login = "%s:%s@" % (server['username'], server['password'])
                 credentials = "%s:%s" % (server['username'], server['password'])
 
@@ -277,7 +277,7 @@ def prepareCommand(pinfos, params):
         )
 
     if pinfos['files'] != None:
-        ret['files'] = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], pinfos['files'])
+        ret['files'] = [hm['id']+'##'+hm['path']+'/'+hm['name'] for hm in pinfos['files']]
     else:
         ret['files'] = ''
     return ret

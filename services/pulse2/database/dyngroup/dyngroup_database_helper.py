@@ -47,14 +47,14 @@ class DyngroupDatabaseHelper(DatabaseHelper):
 
         try:
             #if not 'query' in filt:
-            if not filt.has_key('query'):
+            if 'query' not in filt:
                 return (join_query, query_filter)
             query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
             for table in join_tables:
                 join_query = join_query.join(table)
-        except KeyError, e:
+        except KeyError as e:
             self.logger.error(e)
-        except TypeError, e:
+        except TypeError as e:
             self.logger.error(e)
 
         return (join_query, query_filter)
@@ -102,7 +102,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 if ctx.userid in self.filters:
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
-                res = map(lambda x: x[1], q)
+                res = [x[1] for x in q]
                 self.logger.debug(">>>> or : %s %s"%(str(lq), str(len(res))))
                 filter_on.append(grpby.in_(res))
             else:
@@ -139,7 +139,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 if ctx.userid in self.filters:
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
-                res = map(lambda x: x[1], q)
+                res = [x[1] for x in q]
                 self.logger.debug(">>> and : %s %s"%(str(lq), str(len(res))))
                 if result_set != None:
                     result_set.intersection_update(Set(res))
@@ -182,7 +182,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 if ctx.userid in self.filters:
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
-                res = map(lambda x: x[1], q)
+                res = [x[1] for x in q]
                 self.logger.debug(">>> not : %s %s"%(str(lq), str(len(res))))
                 filter_on.append(grpby.in_(res))
             else:

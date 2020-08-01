@@ -31,10 +31,10 @@ import shutil
 import requests
 import json
 import tempfile
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import re
 from contextlib import closing
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 from base64 import b64encode, b64decode
 from time import time
 from json import loads as parse_json
@@ -211,7 +211,7 @@ def associatePackages(pid, fs, level = 0):
     return [ boolsucess, errortransfert ]
 
 def _remove_non_ascii(text):
-    return unidecode(unicode(text, encoding = "utf-8"))
+    return unidecode(str(text, encoding = "utf-8"))
 
 def _create_uuid_sympa(label):
     data = _remove_non_ascii((str(uuid.uuid1())[:9] + label+"_").replace(' ', '_'))
@@ -315,7 +315,7 @@ def putPackageDetail( package, need_assign = True):
         return False
     # si le dossier n existe pas alors le creéer
     if not os.path.isdir(packages_id_input_dir):
-        os.mkdir(packages_id_input_dir, 0755)
+        os.mkdir(packages_id_input_dir, 0o755)
     confjson={
         "sub_packages" : [],
         "description" : package['description'],
@@ -474,7 +474,7 @@ def pushPackage(random_dir, files, local_files):
         try:
             shutil.move(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
                             os.path.join(filepath, file['filename']))
-            os.chmod(os.path.join(filepath, file['filename']), 0660)
+            os.chmod(os.path.join(filepath, file['filename']), 0o660)
         except (shutil.Error, OSError, IOError):
             logging.getLogger().error("%s"%(traceback.format_exc()))
             return False
@@ -817,7 +817,7 @@ class DownloadAppstreamPackageList(object):
         appstream_url = PkgsConfig("pkgs").appstream_url
 
         #add non downloaded package to download package list
-        for pkg, details in getActivatedAppstreamPackages().iteritems():
+        for pkg, details in getActivatedAppstreamPackages().items():
 
             try:
                 # Creating requests session
@@ -839,12 +839,12 @@ class DownloadAppstreamPackageList(object):
                 #add package to download package list
                 self._add_appstream(pkg)
 
-            except Exception, e:
+            except Exception as e:
                 logger.error('Appstream: Error while fetching package %s' % pkg)
                 logger.error(str(e))
 
         #Download packages (copy dictionnary to be able to delete entry while iterate)
-        for pkg,state in self.getDownloadAppstreamPackages().copy().iteritems():
+        for pkg,state in self.getDownloadAppstreamPackages().copy().items():
             # download only wait package
             if state != "wait":
                 continue
@@ -877,7 +877,7 @@ class DownloadAppstreamPackageList(object):
                     # Downloading file
                     # thanks to http://stackoverflow.com/questions/11768214/python-download-a-file-over-an-ftp-server
                     logger.debug('Downloading %s from %s' % (filename, url))
-                    with closing(urllib2.urlopen(url)) as r:
+                    with closing(urllib.request.urlopen(url)) as r:
                         with open(package_dir+filename, 'wb') as f:
                             shutil.copyfileobj(r, f)
                     # TODO: if md5 is not null, do an md5 checksum of downloaded file
@@ -910,13 +910,13 @@ class DownloadAppstreamPackageList(object):
                 n_title = details['label'] + ' has been updated to version ' + info['version']
                 notificationManager().add('pkgs', n_title, '')
                 self._finish_appstream(pkg);
-            except Exception, e:
+            except Exception as e:
                 logger.error('Appstream: Error while fetching package to be downloaded %s' % pkg)
                 logger.error(str(e))
                # Removing package dir (if exists)
                 try:
                     shutil.rmtree(package_dir)
-                except Exception, e:
+                except Exception as e:
                     logger.error(str(e))
 
         self.update = False
@@ -957,7 +957,7 @@ def setAppstreamJSON(data):
         f.write(json.dumps(data))
         f.close()
         return True
-    except Exception, e:
+    except Exception as e:
         logging.getLogger().error('Cannot write appstream JSON')
         logging.getLogger().error(str(e))
         return False
@@ -1215,9 +1215,9 @@ def _aliasforstep(step, dictstepseq):
     return None
 
 def _stepforalias(alias, dictstepseq):
-    print "alias",alias
+    print("alias",alias)
     for t in dictstepseq:
-        print t
+        print(t)
         if t == alias:
             return dictstepseq[t]
     return None
@@ -1240,7 +1240,7 @@ def _save_xmpp_json(folder, json_content):
         return False
 
     if not os.path.exists(folder):
-        os.mkdir(folder, 0755)
+        os.mkdir(folder, 0o755)
 
     xmppdeploy = open(os.path.join(folder,'xmppdeploy.json' ),'w')
     json.dump(content,xmppdeploy,indent=4)
@@ -1316,7 +1316,7 @@ def get_xmpp_package(package_uuid):
                 for stepseq in structpackage[os_seq]['sequence']:
                     if "success" in stepseq:
                         valalias = _aliasforstep(stepseq['success'], vv)
-                        print valalias
+                        print(valalias)
                         if valalias != None:
                             stepseq['success'] = valalias
                     if "error" in stepseq:

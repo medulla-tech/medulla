@@ -19,13 +19,13 @@
 import os
 import time
 import logging
-import Queue
+import queue
 from threading import Thread
 
 from datetime import datetime
 
-from command import CommandFailed
-from launcher import launcher
+from .command import CommandFailed
+from .launcher import launcher
 
 
 logger = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ class ResultWorker(Thread):
                 else:
                     queue = self.result_queue
                 result = queue.get(False)
-            except Queue.Empty:
+            except queue.Empty:
                 # When results queues are empty
                 # we want to poll the DLP
                 self.start_polling.set()
@@ -88,7 +88,7 @@ class StepWorker(Thread):
         while not self.stop.is_set():
             try:
                 step = self.step_queue.get(False)
-            except Queue.Empty:
+            except queue.Empty:
                 # Waiting for new step...
                 self.stop.wait(10)
             else:
@@ -139,7 +139,7 @@ class WatchdogWorker(Thread):
             try:
                 # gets the timestamp of  expiration
                 self.scheduled_to = self.queue.get(False)
-            except Queue.Empty:
+            except queue.Empty:
                 # waiting for next run
                 self.stop.wait(10)
             else:

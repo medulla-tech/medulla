@@ -240,7 +240,7 @@ class AuditReaderDB:
 
     def __str__(self):
         for i in self.logresult:
-            print i
+            print(i)
 
     def getActionType(self,action,type):
         """

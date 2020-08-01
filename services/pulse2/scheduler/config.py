@@ -59,7 +59,7 @@ class SchedulerDatabaseConfig(MscDatabaseConfig):
             try:
                 log.info("Trying to read configuration file (database config): %s" % conffile)
                 MscDatabaseConfig.setup(self, conffile)
-            except Exception, e:
+            except Exception as e:
                 log.warn("Configuration file: %s does not contain any database config : %s" % (conffile, e))
                 self.__setup_fallback(mscconffile)
             if not self.cp.has_section("database"):
@@ -70,8 +70,7 @@ class SchedulerDatabaseConfig(MscDatabaseConfig):
         else:
             raise Exception("can find any config file")
 
-class SchedulerConfig(object):
-    __metaclass__ = SingletonN
+class SchedulerConfig(object, metaclass=SingletonN):
     """
     Singleton Class to hold configuration directives
 
@@ -118,7 +117,7 @@ class SchedulerConfig(object):
     # [daemon] section
     daemon_group = 0
     pid_path = "/var/run/pulse2"
-    umask = 0077
+    umask = 0o077
     daemon_user = 0
     setrlimit = ''
 

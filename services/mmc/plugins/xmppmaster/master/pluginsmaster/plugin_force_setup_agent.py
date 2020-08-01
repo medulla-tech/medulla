@@ -34,7 +34,7 @@ import logging
 import traceback
 
 import datetime
-import ConfigParser
+import configparser
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
@@ -43,11 +43,11 @@ plugin = {"VERSION": "1.4", "NAME": "force_setup_agent", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    print "_________________________"
+    print("_________________________")
     logging.getLogger().debug(plugin)
     # print json.dumps(data, indent = 4)
-    print data['data'][0]
-    print "_________________________"
+    print(data['data'][0])
+    print("_________________________")
 
     command = {'action': 'force_setup_agent',
                'base64': False,

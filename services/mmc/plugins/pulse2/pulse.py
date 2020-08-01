@@ -39,7 +39,7 @@ class Pulse2Pulse2Manager(Pulse2I):
     def getPackageServerEntityByEntities(self, e_uuids):
         ret = Pulse2Database().getPackageServerEntityByEntities(e_uuids)
         for uuid in ret:
-            ret[uuid] = map(lambda x:x.toH(), ret[uuid])
+            ret[uuid] = [x.toH() for x in ret[uuid]]
         return ret
 
     def getPackageServerEntity(self, ps_uuid, e_uuid):
@@ -47,7 +47,7 @@ class Pulse2Pulse2Manager(Pulse2I):
         return ret.toH()
 
     def putPackageServerEntity(self, ps_uuid, e_uuid):
-        print "pulse2 > putPackageServerEntity"
+        print("pulse2 > putPackageServerEntity")
         ret = Pulse2Database().putPackageServerEntity(ps_uuid, e_uuid)
         return ret.toH()
 

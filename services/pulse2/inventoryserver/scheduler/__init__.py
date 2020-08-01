@@ -79,7 +79,7 @@ class AttemptToScheduler(object):
         """
         try:
             tasks = self.proxy.msc.checkLightPullCommands(self.uuid)
-        except Exception, e:
+        except Exception as e:
             logger.exception("<Inventory2Scheduler> Unable to start Light Pull, error was: %s" % str(e))
             return False
 
@@ -116,7 +116,7 @@ class AttemptToScheduler(object):
         for id in tasks:
             try:
                 self.proxy.msc.start_command_on_host(id)
-            except Exception, e:
+            except Exception as e:
                 logger.exception("<Inventory2Scheduler> Light Pull: Unable to start command %d on host %s, error was: %s" % (id, self.uuid, str(e)))
                 return False
 

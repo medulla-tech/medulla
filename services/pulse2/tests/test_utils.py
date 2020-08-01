@@ -28,7 +28,7 @@ Tests for pulse2.utils
 import pulse2.utils
 from datetime import datetime, date
 import pytest
-import ConfigParser
+import configparser
 
 #Imports for unitest
 import unittest
@@ -58,9 +58,8 @@ def test_singleton_n():
     """Tests the SingletonN object in pulse2/utils.py
 Test 2"""
 
-    class UniqueSingletonN(object):
+    class UniqueSingletonN(object, metaclass=pulse2.utils.SingletonN):
         """Object for simulate SingletonN"""
-        __metaclass__ = pulse2.utils.SingletonN
 
         def __init__(self, value):
             self.attribute = value
@@ -86,7 +85,7 @@ class TestPulse2ConfigParser(object):
         """Test the method getpassword with conf file loaded and wrong parameters
         Test 4"""
         self.a.read("config.ini")
-        with pytest.raises(ConfigParser.NoSectionError):
+        with pytest.raises(configparser.NoSectionError):
             # the result is an error
             self.a.getpassword("AAA","bbb")
 
@@ -94,7 +93,7 @@ class TestPulse2ConfigParser(object):
         """Test the method getpassword with conf file loaded and partial wrong parameters
         Test 5"""
         self.a.read("config.ini")
-        with pytest.raises(ConfigParser.NoOptionError):
+        with pytest.raises(configparser.NoOptionError):
             # the result is an error
             self.a.getpassword("SECTION_A","bbb")
 
@@ -123,13 +122,13 @@ class TestXmlrpcCleanup(object):
     def test_with_date(self):
         """Test xmlrpcCleanup with date
         Test 8"""
-        the_date = date(2018,02,05)
+        the_date = date(2018,0o2,0o5)
         assert pulse2.utils.xmlrpcCleanup(the_date) == tuple(the_date.timetuple())
 
     def test_with_datetime(self):
         """Test xmlrpcCleanup with datetime
         Test 9"""
-        the_date = datetime(2018,02,3)
+        the_date = datetime(2018,0o2,3)
         assert pulse2.utils.xmlrpcCleanup(the_date) == tuple(the_date.timetuple())
 
     def test_with_string(self):
@@ -156,20 +155,20 @@ class TestXmlrpcCleanup(object):
     def test_with_long(self):
         """Test xmlrpcCleanup with long
         Test 14"""
-        assert pulse2.utils.xmlrpcCleanup(long(3)) == "3"
+        assert pulse2.utils.xmlrpcCleanup(int(3)) == "3"
 
     # Composed datas type
     def test_with_tuple(self):
         """Test xmlrpcCleanup with tuple
         Test 15"""
-        the_date = datetime(2018,02,3)
-        assert pulse2.utils.xmlrpcCleanup((1,long(2),"3",the_date, None)) == [1,"2","3",tuple(the_date.timetuple()), False]
+        the_date = datetime(2018,0o2,3)
+        assert pulse2.utils.xmlrpcCleanup((1,int(2),"3",the_date, None)) == [1,"2","3",tuple(the_date.timetuple()), False]
 
     def test_with_list(self):
         """Test xmlrpcCleanup with list
         Test 16"""
-        the_date = datetime(2018,02,3)
-        assert pulse2.utils.xmlrpcCleanup([1,long(2),"3",[the_date, None]]) == [1,"2","3",[tuple(the_date.timetuple()), False]]
+        the_date = datetime(2018,0o2,3)
+        assert pulse2.utils.xmlrpcCleanup([1,int(2),"3",[the_date, None]]) == [1,"2","3",[tuple(the_date.timetuple()), False]]
 
     def test_with_dict(self):
         """Test xmlrpcCleanup with dict
@@ -387,7 +386,7 @@ class TestIsdigit(object):
     def test_with_long(self):
         """Test the function isdigit with int parameter
         Test 47"""
-        assert pulse2.utils.isdigit(long(-3543)) == True
+        assert pulse2.utils.isdigit(int(-3543)) == True
 
     def test_with_float(self):
         """Test the function isdigit with float parameter
@@ -480,7 +479,7 @@ class InputTests(unittest.TestCase):
 
     def test_MACValid(self):
         self.assertTrue(isMACAddress('00:11:aa:BB:22:33'))
-        self.assertTrue(isMACAddress(u'00:11:aa:BB:22:33'))
+        self.assertTrue(isMACAddress('00:11:aa:BB:22:33'))
 
     def test_MACNotValid(self):
         self.assertFalse(isMACAddress('00:11:aa:BB:22:zz'))
@@ -488,7 +487,7 @@ class InputTests(unittest.TestCase):
 
     def test_UUIDValid(self):
         self.assertTrue(isUUID('UUID1'))
-        self.assertTrue(isUUID(u'UUID1'))
+        self.assertTrue(isUUID('UUID1'))
         self.assertTrue(isUUID('1a10b1f4-bb6e-4798-b39e-bb8d090dd8b6'))
 
     def test_UUIDNotValid(self):
@@ -500,7 +499,7 @@ class InputTests(unittest.TestCase):
 
     def test_computerPathValid(self):
         self.assertEqual(splitComputerPath('hostname'), ('', '', 'hostname', ''))
-        self.assertEqual(splitComputerPath(u'123456'), ('', '', '123456', ''))
+        self.assertEqual(splitComputerPath('123456'), ('', '', '123456', ''))
         self.assertEqual(splitComputerPath('hostname.domain-example.net'), ('', '', 'hostname', 'domain-example.net'))
         self.assertEqual(splitComputerPath('profile:hostname'), ('profile', '', 'hostname', ''))
         self.assertEqual(splitComputerPath('profile:/hostname'), ('profile', '', 'hostname', ''))

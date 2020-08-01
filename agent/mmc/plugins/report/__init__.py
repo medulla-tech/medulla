@@ -101,7 +101,7 @@ def import_indicators():
 
 
 def translate_attrs(attrs):
-    for key, value in attrs.items():
+    for key, value in list(attrs.items()):
         if key in TRANSLATE_ATTRS:
             attrs[key] = _T(value)
     return attrs
@@ -180,7 +180,7 @@ class RpcProxy(RpcProxyI):
         def decorator(f):
             @wraps(f)
             def wrapper(*args, **kwargs):
-                g = f.func_globals
+                g = f.__globals__
                 g['temp_path'] = temp_path
                 g['report_path'] = report_path
                 g['pdf_path'] = pdf_path
@@ -267,13 +267,13 @@ class RpcProxy(RpcProxyI):
                     """ % _replace_pdf_vars(logo)
                     try:
                         setattr(pdf, '_'.join([tag.tag, entry.tag, 'background']), background_css)
-                    except Exception, e:
+                    except Exception as e:
                         logging.getLogger().warn("Something were wrong where setting background for %s: tag is %s", entry.tag, tag.tag)
                         logging.getLogger().warn("Exception: %s", e)
                 if entry.text is not None:
                     try:
                         setattr(pdf, '_'.join([tag.tag, entry.tag]), _hf_format(entry.text))
-                    except Exception, e:
+                    except Exception as e:
                         logging.getLogger().warn("Something were wrong where feeding %s: tag is %s", entry.tag, tag.tag)
                         logging.getLogger().warn("Exception: %s", e)
 
@@ -445,13 +445,13 @@ class RpcProxy(RpcProxyI):
                     """ % _replace_pdf_vars(logo)
                     try:
                         setattr(pdf, '_'.join([tag.tag, entry.tag, 'background']), background_css)
-                    except Exception, e:
+                    except Exception as e:
                         logging.getLogger().warn("Something were wrong where setting background for %s: tag is %s", entry.tag, tag.tag)
                         logging.getLogger().warn("Exception: %s", e)
                 if entry.text is not None:
                     try:
                         setattr(pdf, '_'.join([tag.tag, entry.tag]), _hf_format(entry.text))
-                    except Exception, e:
+                    except Exception as e:
                         logging.getLogger().warn("Something were wrong where feeding %s: tag is %s", entry.tag, tag.tag)
                         logging.getLogger().warn("Exception: %s", e)
 
@@ -524,7 +524,7 @@ class RpcProxy(RpcProxyI):
                         indicator_selected = 1
                     # temp list to do arithmetic operations
                     values = []
-                    for i in xrange(len(period)):
+                    for i in range(len(period)):
                         date = period[i]
                         # Creating a timestamp range for the specified date
                         ts_min = int(time.mktime(datetime.strptime(date, "%Y-%m-%d").timetuple()))
@@ -553,7 +553,7 @@ class RpcProxy(RpcProxyI):
                                                    ' %s (%s)' %
                                                    (_T(item.attrib['title']),
                                                     locale['STR_OTHER']))
-                        for i in xrange(len(period)):
+                        for i in range(len(period)):
                             child_sum = _sum_None([l[i] for l in childGValues])
                             if child_sum is not None and values[i] is not None:
                                 other_value = values[i] - child_sum
@@ -612,7 +612,7 @@ class RpcProxy(RpcProxyI):
         def _period_None_to_empty_str(data):
             from copy import deepcopy
             datas = deepcopy(data)
-            for i in xrange(len(datas['titles'])):
+            for i in range(len(datas['titles'])):
                 for v in datas['values']:
                     if v[i] is None:
                         v[i] = ''

@@ -23,7 +23,7 @@
 
 from pulse2.apis.clients import Pulse2Api
 from pulse2.database.imaging import ImagingDatabase
-from urlparse import urlparse
+from urllib.parse import urlparse
 import logging
 from pulse2.managers.location import ComputerLocationManager
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
@@ -74,7 +74,7 @@ class MirrorApi(Pulse2Api):
     def getMirrors(self, machines):
         if self.initialized_failed:
             return []
-        machines = map(lambda m: self.convertMachineIntoH(m), machines)
+        machines = [self.convertMachineIntoH(m) for m in machines]
         d = self.callRemote("getMirrors", machines)
         d.addErrback(self.onError, "MirrorApi:getMirrors", machines)
         return d
@@ -90,7 +90,7 @@ class MirrorApi(Pulse2Api):
     def getFallbackMirrors(self, machines):
         if self.initialized_failed:
             return []
-        machines = map(lambda m: self.convertMachineIntoH(m), machines)
+        machines = [self.convertMachineIntoH(m) for m in machines]
         d = self.callRemote("getFallbackMirrors", machines)
         d.addErrback(self.onError, "MirrorApi:getFallbackMirrors", machines)
         return d
@@ -128,7 +128,7 @@ class MirrorApi(Pulse2Api):
     def getApiPackages(self, machines):
         if self.initialized_failed:
             return []
-        machines = map(lambda m: self.convertMachineIntoH(m), machines)
+        machines = [self.convertMachineIntoH(m) for m in machines]
         d = self.callRemote("getApiPackages", machines)
         d.addErrback(self.onError, "MirrorApi:getApiPackages", machines)
         return d

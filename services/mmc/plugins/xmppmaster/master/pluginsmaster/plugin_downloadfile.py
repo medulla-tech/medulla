@@ -34,7 +34,7 @@ import logging
 import traceback
 
 import datetime
-import ConfigParser
+import configparser
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
@@ -99,13 +99,13 @@ def createnamefile(user, prefixe="", suffixe=""):
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
     try:
-        print json.dumps(data[0], indent=4)
+        print(json.dumps(data[0], indent=4))
         transpxmpp = True
         if 'taillefile' in data[0]:
             # determine si fichier est transportable dans un message xmppmaster
             if "Mo" in data[0]['taillefile']:
                 transpxmpp = False
-                print "Mo"
+                print("Mo")
             else:
                 if "ko" in data[0]['taillefile']:
                     data[0]['taillefile'] = float(data[0]['taillefile'][:-2]) * 1024
@@ -133,7 +133,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             dest = data[0]['dest']
             src = data[0]['src']
         except KeyError:
-            print json.dumps(data, indent=4)
+            print(json.dumps(data, indent=4))
             jidmachine = data['data'][0]
             Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
             params = data['data'][2]
@@ -170,7 +170,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     relayserver = XmppMasterDatabase().getMachinefromjid(Machineinfo['groupdeploy'])
     relayserinfo = XmppMasterDatabase().getRelayServerfromjid(Machineinfo['groupdeploy'])
 
-    print json.dumps(relayserinfo, indent=4)
+    print(json.dumps(relayserinfo, indent=4))
     datasend = {
         'session_id': sessionid,
         'action': "downloadfile",
@@ -198,7 +198,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
         if datasend['data']['ipars'] != str(xmppobject.config.Server):
             cmd = scpfile("root@%s:/root/.ssh/id_rsa.pub" %
                           (datasend['data']['ipars']), "/tmp/id_rsa.pub")
-            print cmd
+            print(cmd)
             z = simplecommand(cmd)
             # print z['result']
             # print z['code']
@@ -212,7 +212,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 if not dede in authorized_key:
                     logging.getLogger().debug("Add key %s" % datasend['data']['jidmachine'])
                     file_put_content("/root/.ssh/authorized_keysold", "\n" + dede, mode="a")
-                    print authorized_key
+                    print(authorized_key)
 
         # send message to relayserver for get file on machine
         # to ARS

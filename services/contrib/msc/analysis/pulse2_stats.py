@@ -71,7 +71,7 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
     left = WIDTH / 2  - font.text_width(newtitle)/2
     can.show(left, HEIGHT + DELTA, newtitle)
 
-    zip(data_x)
+    list(zip(data_x))
     int_to_date = lambda x: '/a60{}' + time.strftime("%H:%M", time.localtime(x))
 
     xaxis = axis.X(
@@ -101,10 +101,10 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
 
     i = 0
     # Draw a line for each columns
-    for title, data_y in alldata_y.iteritems():
+    for title, data_y in alldata_y.items():
         plot = line_plot.T(
             label = title,
-            data = zip(data_x,data_y),
+            data = list(zip(data_x,data_y)),
             line_style = line_style.T(
                 color = colors[i],
                 width = 1
@@ -134,7 +134,7 @@ def read_logs(log_dir, start_date, stop_date):
         # TODO : better test
         if ".log" in file:
 
-            print "reading %s"%file
+            print("reading %s"%file)
             fh = open(os.path.join(log_dir,file))
 
             # Parse each line in the log file
@@ -167,7 +167,7 @@ def read_logs(log_dir, start_date, stop_date):
                         if 'by_group' in dump:
 
                             # For each group available
-                            for group in dump['by_group'].keys():
+                            for group in list(dump['by_group'].keys()):
                                 if not group in groups:
                                     groups[group] = {}
                                 # If this group as already an entry for this time (from an other launcher), we add the new one
@@ -200,11 +200,11 @@ if __name__ == "__main__":
     (groups, launchers) = read_logs( log_dir, start, stop)
 
     if groups:
-        group_list = groups.keys()
+        group_list = list(groups.keys())
 
         # Get all group hours
         for group in group_list:
-            group_hours += groups[group].keys()
+            group_hours += list(groups[group].keys())
             # deduplicate list
             group_hours = list(set(group_hours))
             group_hours.sort()
@@ -225,11 +225,11 @@ if __name__ == "__main__":
 
 
     if launchers:
-        launcher_list = launchers.keys()
+        launcher_list = list(launchers.keys())
 
         # Get all launch hours
         for launch in launcher_list:
-            launch_hours += launchers[launch].keys()
+            launch_hours += list(launchers[launch].keys())
             # deduplicate list
             launch_hours = list(set(launch_hours))
             launch_hours.sort()

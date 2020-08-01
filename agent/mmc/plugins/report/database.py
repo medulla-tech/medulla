@@ -94,7 +94,7 @@ class ReportDatabase(DatabaseHelper):
             query.update({'active':0, 'keep_history':0}, synchronize_session=False)
             session.commit()
             return True
-        except Exception, e:
+        except Exception as e:
             logger.error('DB Error: %s', str(e))
 
     @DatabaseHelper._session

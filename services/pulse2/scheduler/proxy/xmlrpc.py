@@ -20,7 +20,7 @@
 # MA 02110-1301, USA.
 
 import logging
-import xmlrpclib
+import xmlrpc.client
 
 from twisted.internet.defer import maybeDeferred
 from twisted.web.xmlrpc import XMLRPC, Fault
@@ -47,9 +47,9 @@ class ForwardingProxy(XMLRPC):
 
     def _ebRender(self, failure, request):
         self.logger.error("XMLRPC Proxy : %s" % str(failure))
-        if isinstance(failure.value, xmlrpclib.Fault):
+        if isinstance(failure.value, xmlrpc.client.Fault):
             return failure.value
-        return xmlrpclib.Fault(self.FAILURE, "Internal Error")
+        return xmlrpc.client.Fault(self.FAILURE, "Internal Error")
 
     def client_response(self, result, request, func, args):
 
@@ -61,21 +61,21 @@ class ForwardingProxy(XMLRPC):
     def _cbRender(self, result, request, func, args):
         if isinstance(result, ForwardingProxy):
             result = xmlrpcCleanup(result.result)
-        if not isinstance(result, xmlrpclib.Fault):
+        if not isinstance(result, xmlrpc.client.Fault):
             result = (result,)
         self.logger.debug('xmlrpc: %s%s => %s' % (func, (args), (result)))
 
         try:
-            s = xmlrpclib.dumps(result, methodresponse=1)
+            s = xmlrpc.client.dumps(result, methodresponse=1)
         except:
-            f = xmlrpclib.Fault(self.FAILURE, "can't serialize output")
-            s = xmlrpclib.dumps(f, methodresponse=1)
+            f = xmlrpc.client.Fault(self.FAILURE, "can't serialize output")
+            s = xmlrpc.client.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
         try:
             request.write(s)
             if not request.finished :
                 request.finish()
-        except Exception, e :
+        except Exception as e :
             self.logger.debug("XMLRPC Proxy : request finish: %s" % str(e))
 
 
@@ -83,8 +83,8 @@ class ForwardingProxy(XMLRPC):
     def render(self, request):
         """ override method of xmlrpc python twisted framework """
         try :
-            args, func_name = xmlrpclib.loads(request.content.read())
-        except Exception, e:
+            args, func_name = xmlrpc.client.loads(request.content.read())
+        except Exception as e:
             self.logger.error("xmlrpc render failed: %s"% str(e))
 
             return NOT_DONE_YET

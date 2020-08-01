@@ -23,7 +23,7 @@
 
 import logging
 import os
-from ConfigParser import ConfigParser, NoSectionError, NoOptionError
+from configparser import ConfigParser, NoSectionError, NoOptionError
 from mmc.support.mmctools import Singleton
 from mmc.support.config import MMCConfigParser
 
@@ -57,7 +57,7 @@ class AuthenticationManager(Singleton):
                 instance = klass()
                 mandatory = instance.config.mandatory
                 valid = instance.validate()
-            except Exception, e:
+            except Exception as e:
                 self.logger.exception(e)
                 valid = False
             if valid:
@@ -104,7 +104,7 @@ class AuthenticationManager(Singleton):
                     self.logger.debug("User %s is in the exclude list of this authenticator, so we skip it" % user)
             try:
                 token = instance.authenticate(user, password)
-            except Exception, e:
+            except Exception as e:
                 self.logger.exception(e)
                 raise AuthenticationError
             self.logger.debug("Authentication result: " + str(token.authenticated) + str(token.infos))

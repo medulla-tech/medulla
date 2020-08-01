@@ -40,10 +40,10 @@ class GlpiLocation(ComputerLocationI):
         return Glpi().getUserProfile(userid)
 
     def getUserParentLocations(self, userid):
-        return map(lambda l: l.toH(), Glpi().getUserParentLocations(userid))
+        return [l.toH() for l in Glpi().getUserParentLocations(userid)]
 
     def getUserLocations(self, userid):
-        return map(lambda l: l.toH(), Glpi().getUserLocations(userid))
+        return [l.toH() for l in Glpi().getUserLocations(userid)]
 
     def doesUserHaveAccessToMachine(self, ctx, machine_uuid):
         if not hasattr(ctx, 'locations'):

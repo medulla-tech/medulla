@@ -25,7 +25,7 @@ import json
 import os
 import logging
 import traceback
-import ConfigParser
+import configparser
 import types
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -70,7 +70,7 @@ def read_conf_load_plugin_list_version(objectxmpp):
         objectxmpp.dirpluginlist = "/var/lib/pulse2/xmpp_baseplugin/"
         objectxmpp.reload_plugins_interval=1000
     else:
-        Config = ConfigParser.ConfigParser()
+        Config = configparser.ConfigParser()
         Config.read(pathfileconf)
         if os.path.exists(pathfileconf + ".local"):
             Config.read(pathfileconf + ".local")
@@ -178,7 +178,7 @@ def plugin_loadpluginlistversion(self, msg, data):
     #cette function est definie dans l'instance mucbot, si on veut quel soit utiliser dans un autre plugin.
     # Show plugins information logs
     restartAgent = False
-    for k, v in self.plugindata.iteritems():
+    for k, v in self.plugindata.items():
         deploy = False
         try:
             # Check version

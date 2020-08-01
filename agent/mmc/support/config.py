@@ -25,12 +25,12 @@
 Contains classes to read MMC agent plugin configuration files.
 """
 
-import mmctools
+from . import mmctools
 
 import ldap
 import re
 from os.path import isfile
-from ConfigParser import ConfigParser, NoOptionError, NoSectionError, InterpolationError
+from configparser import ConfigParser, NoOptionError, NoSectionError, InterpolationError
 
 
 class ConfigException(Exception):

@@ -144,12 +144,12 @@ class AuditWriterDB(Singleton, AuditWriterI):
         self.connect()
         if op == 'drop':
             if self.config.auditdbdriver == 'mysql':
-                print '-- Execute the following lines into the MySQL client'
-                print 'DROP DATABASE IF EXISTS %s;' % self.config.auditdbname
-                print "DROP USER '%s'@localhost;" % self.config.auditdbuser
+                print('-- Execute the following lines into the MySQL client')
+                print('DROP DATABASE IF EXISTS %s;' % self.config.auditdbname)
+                print("DROP USER '%s'@localhost;" % self.config.auditdbuser)
             elif self.config.auditdbdriver == 'postgres':
                 # FIXME: Do it for PostgreSQL too
-                print 'Not yet implemented'
+                print('Not yet implemented')
             else:
                 self.logger.error("SQL driver '%s' is not supported" % self.config.auditdbdriver)
                 return False
@@ -165,13 +165,13 @@ class AuditWriterDB(Singleton, AuditWriterI):
             self.logger.info('Done')
         elif op == 'create':
             if self.config.auditdbdriver == 'mysql':
-                print '-- Execute the following lines into the MySQL client'
-                print 'CREATE DATABASE %s DEFAULT CHARSET utf8;' % self.config.auditdbname
-                print "GRANT ALL PRIVILEGES ON %s.* TO '%s'@localhost IDENTIFIED BY '%s';" % (self.config.auditdbname, self.config.auditdbuser, self.config.auditdbpassword)
-                print 'FLUSH PRIVILEGES;'
+                print('-- Execute the following lines into the MySQL client')
+                print('CREATE DATABASE %s DEFAULT CHARSET utf8;' % self.config.auditdbname)
+                print("GRANT ALL PRIVILEGES ON %s.* TO '%s'@localhost IDENTIFIED BY '%s';" % (self.config.auditdbname, self.config.auditdbuser, self.config.auditdbpassword))
+                print('FLUSH PRIVILEGES;')
             elif self.config.auditdbdriver == 'postgres':
                 # FIXME: Do it for PostgreSQL too
-                print 'Not yet implemented'
+                print('Not yet implemented')
             else:
                 self.logger.error("SQL driver '%s' is not supported" % self.config.auditdbdriver)
                 return False
@@ -207,9 +207,9 @@ class AuditWriterDB(Singleton, AuditWriterI):
             [nb, records] = self.getLog(0, 0, 0, 0, 0, 0, 0, 0, 0)
             if nb > 0:
                 self.logger.info('List all audit records.')
-                print "Date".ljust(19)+"\t"+"User".ljust(50)+"\t"+"Event".ljust(25)+"\t"+"Plugin".ljust(15)+"\t"+"Result"
+                print("Date".ljust(19)+"\t"+"User".ljust(50)+"\t"+"Event".ljust(25)+"\t"+"Plugin".ljust(15)+"\t"+"Result")
                 for record in records:
-                    print record["date"]+"\t"+record["user"].ljust(50)+"\t"+record["action"].ljust(25)+"\t"+record["plugin"].ljust(15)+"\t"+str(record["commit"])
+                    print(record["date"]+"\t"+record["user"].ljust(50)+"\t"+record["action"].ljust(25)+"\t"+record["plugin"].ljust(15)+"\t"+str(record["commit"]))
             else:
                 self.logger.info('No audit record in the database.')
             return True

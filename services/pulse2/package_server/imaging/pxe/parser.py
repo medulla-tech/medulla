@@ -244,7 +244,7 @@ class ArgumentContainer :
             if ";" in self.packet and self.packet.count(";") == 2:
                 idx = self.packet.index(";") + 1
                 return ord(self.packet[idx])
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
 
@@ -263,7 +263,7 @@ class ArgumentContainer :
                     return int(value)
                 except ValueError :
                     return None
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
 
@@ -282,7 +282,7 @@ class ArgumentContainer :
                     return int(value)
                 except ValueError :
                     return None
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
 
@@ -342,11 +342,11 @@ class PXEMethodParser :
         marker = ord(packet[0])
 
         if not marker in self.methods :
-            raise (KeyError, "Unrecognized method")
+            raise KeyError
 
         method = self.methods[marker]
         if not (inspect.ismethod(method) or inspect.isfunction(method)):
-            raise (TypeError, "Returned object isn't a method")
+            raise TypeError
 
         arg_container = ArgumentContainer(packet)
         args = []

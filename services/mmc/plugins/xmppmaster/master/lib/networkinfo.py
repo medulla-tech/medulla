@@ -24,7 +24,7 @@ import netifaces
 import subprocess
 import sys
 import platform
-import utils
+from . import utils
 import socket
 import psutil
 
@@ -45,7 +45,7 @@ class networkagentinfo:
         if len(param) != 0 and len(self.messagejson['listipinfo']) != 0:
             # Filter result
             dd = []
-            param1 = map(self.reduction_mac, param)
+            param1 = list(map(self.reduction_mac, param))
             for d in self.messagejson['listipinfo']:
                 e = [s for s in param1 if d['macaddress'] == s]
                 if len(e) != 0:

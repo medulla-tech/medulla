@@ -48,7 +48,7 @@ class Pulse2ProxySsl(win32serviceutil.ServiceFramework):
         self.inifile = os.path.join(curdir, "p2ipc.ini")
         os.chdir(curdir)
         if not os.path.exists(self.inifile):
-            print "File '%s' does not exist." % self.inifile
+            print("File '%s' does not exist." % self.inifile)
             sys.exit(3)
         servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STARTING,(self._svc_display_name_, ''))
 

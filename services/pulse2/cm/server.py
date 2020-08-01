@@ -49,14 +49,14 @@ class GatheringServer(Protocol):
         if hasattr(value, "queue_and_process"):
             cls._handler = value
         else:
-            raise AttributeError, "Handler instance must have 'queue_and_process' attribute"
+            raise AttributeError("Handler instance must have 'queue_and_process' attribute")
 
     @classmethod
     def set_trigger(cls, value):
         if hasattr(value, "fire"):
             cls._trigger = value
         else:
-            raise AttributeError, "Handler instance must have 'fire' attribute"
+            raise AttributeError("Handler instance must have 'fire' attribute")
 
 
 
@@ -84,8 +84,8 @@ class GatheringServer(Protocol):
             tr_result = self._trigger.fire()
             @tr_result.addCallback
             def res(result):
-                print "trigger result: %s" % (str(result))
-        except Exception, e:
+                print("trigger result: %s" % (str(result)))
+        except Exception as e:
             logging.getLogger().warn("trigger firing fail: %s" % str(e))
 
 

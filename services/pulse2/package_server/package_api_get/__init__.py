@@ -41,13 +41,13 @@ class PackageApiGet(MyXmlrpc):
             e = "(%s) %s : can't initialise at %s correctly"%(self.type, self.name, self.mp)
             self.logger.error(e)
             raise e
-        self.logger.info("(%s) %s : initialised with packages : %s"%(self.type, self.name, str(Common().getPackages(self.mp).keys())))
+        self.logger.info("(%s) %s : initialised with packages : %s"%(self.type, self.name, str(list(Common().getPackages(self.mp).keys()))))
 
     def xmlrpc_getServerDetails(self):
-        return map(lambda x: Common().package(x).toH(), Common().getPackages(self.mp))
+        return [Common().package(x).toH() for x in Common().getPackages(self.mp)]
 
     def xmlrpc_getAllPackages(self, mirror = None):
-        return map(lambda x: Common().package(x).toH(), Common().getPackages(self.mp))
+        return [Common().package(x).toH() for x in Common().getPackages(self.mp)]
 
     def xmlrpc_getAllPendingPackages(self, mirror = None):
         ret = Common().getPendingPackages(self.mp)
@@ -62,7 +62,7 @@ class PackageApiGet(MyXmlrpc):
         return r
 
     def xmlrpc_getPackagesDetail(self, pidlist):
-        return map(lambda p: p.toH(), Common().packagelist(pidlist, self.mp))
+        return [p.toH() for p in Common().packagelist(pidlist, self.mp)]
 
     def xmlrpc_getPackageDetail(self, pid):
         try:
@@ -70,14 +70,14 @@ class PackageApiGet(MyXmlrpc):
         except KeyError:
             # We don't own this package
             ret = {}
-        except Exception, e:
+        except Exception as e:
             # Another unknown error
             self.logger.exception(e)
             ret = {}
         return ret
 
     def xmlrpc_getLocalPackagesPath(self, pidlist):
-        return map(lambda p: os.path.dirname(p.root), Common().packagelist(pidlist))
+        return [os.path.dirname(p.root) for p in Common().packagelist(pidlist)]
 
     def xmlrpc_getLocalPackagePath(self, pid):
         try:
@@ -85,7 +85,7 @@ class PackageApiGet(MyXmlrpc):
         except KeyError:
             # We don't own this package
             ret = {}
-        except Exception, e:
+        except Exception as e:
             # Another unknown error
             self.logger.exception(e)
             ret = {}
@@ -137,7 +137,7 @@ class PackageApiGet(MyXmlrpc):
         return Common().package(pid, self.mp).boolcnd
 
     def xmlrpc_getPackageFiles(self, pid): # TODO remove the internals
-        return map(lambda x: x.toH(), Common().package(pid, self.mp).files.internals)
+        return [x.toH() for x in Common().package(pid, self.mp).files.internals]
 
     def xmlrpc_getFileChecksum(self, file):
         return None

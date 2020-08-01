@@ -61,10 +61,10 @@ class AuditRecord:
         """
         # module string
         self.module = module
-        assert(type(self.module) == unicode)
+        assert(type(self.module) == str)
         # action string
         self.event = event
-        assert(type(self.event) == unicode)
+        assert(type(self.event) == str)
         # String
         self.user=user
         assert(type(self.user) == tuple)
@@ -277,7 +277,7 @@ class AuditRecordDB(AuditRecord):
         if self.currentattribute:
             # convert self.log to type <str>
             self.log = str(self.log)
-            if isinstance(self.currentattribute, basestring):
+            if isinstance(self.currentattribute, str):
                 value = self.currentattribute.encode('utf-8')
             else:
                 value = str(self.currentattribute)

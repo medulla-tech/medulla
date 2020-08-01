@@ -62,7 +62,7 @@ def unique(s):
     except TypeError:
         pass  # move on to the next method
     else:
-        return u.keys()
+        return list(u.keys())
 
     # We can't hash all the elements.  Second fastest is to sort,
     # which brings the equal elements together; then duplicates are
@@ -109,7 +109,7 @@ def create_method(m):
             old_m = getattr(self, '_old_%s' % m)
             ret = old_m() # success, will send the result back
             return ret # send the result back
-        except DBAPIError, e: # failure, catch libmysql client error
+        except DBAPIError as e: # failure, catch libmysql client error
             if already_in_loop : # just raise the exception, they will take care of it
                 raise e
 
@@ -138,7 +138,7 @@ def create_method(m):
                     new_m = getattr(self, m)
                     ret = new_m(True)
                     return ret
-                except Exception, e:
+                except Exception as e:
                     pass
 
             # the loop was unsuccessful, finally raise the original exception
@@ -160,7 +160,7 @@ def handle_deconnect():
 
 def toH(w):
     ret = {}
-    for i in filter(lambda f: not f.startswith('__'), dir(w)):
+    for i in [f for f in dir(w) if not f.startswith('__')]:
         ret[i] = getattr(w, i)
     return ret
 
@@ -173,9 +173,9 @@ def fromUUID(uuid):
 class DbObject(object):
     def toH(self):
         ret = {}
-        for i in filter(lambda f: not f.startswith('_'), dir(self)):
+        for i in [f for f in dir(self) if not f.startswith('_')]:
             t = type(getattr(self, i))
-            if t == str or t == dict or t == unicode or t == tuple or t == int or t == long:
+            if t == str or t == dict or t == str or t == tuple or t == int or t == int:
                 ret[i] = getattr(self, i)
         ret['uuid'] = toUUID(getattr(self, 'id'))
         return ret

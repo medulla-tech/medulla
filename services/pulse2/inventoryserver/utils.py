@@ -56,7 +56,7 @@ class ConfigReader :
             logging.getLogger().warn("Error while reading the config file:")
             logging.getLogger().warn("Not found.")
 
-            raise IOError, "Config file '%s' not found" % inifile
+            raise IOError("Config file '%s' not found" % inifile)
 
         return ConfigObj(inifile)
 
@@ -130,7 +130,7 @@ class MMCProxy :
         try :
             self._proxy = sync.Proxy(self._url)
 
-        except Exception, err :
+        except Exception as err :
             logging.getLogger().error("Error while connecting to mmc-agent : %s" % err)
             self._failure = True
 

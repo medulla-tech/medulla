@@ -24,9 +24,7 @@
 
 from pulse2agent._config import ConfigReader
 
-class Config(object):
-    __metaclass__ = ConfigReader
-
+class Config(object, metaclass=ConfigReader):
     class main(object):
         serializer = "json"
         check_period = 60

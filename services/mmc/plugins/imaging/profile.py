@@ -39,7 +39,7 @@ class ImagingProfile(ComputerProfileI):
             ret2 = ImagingDatabase().changeTargetsSynchroState([profile_UUID], P2IT.PROFILE, P2ISS.TODO)
             ret3 = ImagingDatabase().changeTargetsSynchroState(computers, P2IT.COMPUTER, P2ISS.TODO)
 
-            computers_UUID = map(lambda c:c['uuid'], computers.values())
+            computers_UUID = [c['uuid'] for c in list(computers.values())]
 
             def treatResult(result, ret): return result and ret
             d = synchroComputers(ctx, computers_UUID, P2IT.COMPUTER_IN_PROFILE)
@@ -61,7 +61,7 @@ class ImagingProfile(ComputerProfileI):
     def delProfile(self, profile_UUID):
         if ImagingDatabase().isTargetRegister(profile_UUID, P2IT.PROFILE):
             # TODO : put all the computers on their own menu
-            computers_UUID = map(lambda c:c.uuid, ComputerProfileManager().getProfileContent(profile_UUID))
+            computers_UUID = [c.uuid for c in ComputerProfileManager().getProfileContent(profile_UUID)]
             computers = {}
             for uuid in computers_UUID:
                 computers[uuid] = {'uuid':uuid}

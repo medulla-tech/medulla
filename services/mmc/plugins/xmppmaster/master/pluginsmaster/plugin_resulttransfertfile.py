@@ -94,6 +94,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj, objsessio
                                 mbody=json.dumps(command),
                                 mtype='chat')
     except Exception as e:
-        print "erreur %s" % str(e)
+        print("erreur %s" % str(e))
         xmppobject.event("pluginaction", {'action': 'transferfile', 'sessionid': sessionid, 'status': 'error', 'msgerror': str(
             e), 'size': sessiondata.getdatasession()['pointeur'], 'to': message['from'], 'form': message['to'], 'file': sessiondata.getdatasession()['qui']})

@@ -88,9 +88,9 @@ class BackuppcDatabase(DatabaseHelper):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except DBAPIError, e:
+            except DBAPIError as e:
                 self.logger.error(e)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error(e)
             if ret: break
         if not ret:
@@ -269,7 +269,7 @@ class BackuppcDatabase(DatabaseHelper):
                 session.delete(ret)
                 session.flush()
             return True
-        except Exception, e:
+        except Exception as e:
             logger.error("Can't remove host where uuid=%s" % uuid)
             logger.error(str(e))
 
@@ -278,7 +278,7 @@ class BackuppcDatabase(DatabaseHelper):
         try:
             ret = session.query(Hosts).filter_by(uuid = uuid.upper()).all()
             return len(ret) == 1
-        except Exception, e:
+        except Exception as e:
             logger.error("Database error: %s " % str(e))
 
 

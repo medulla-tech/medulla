@@ -99,9 +99,7 @@ class Test00_ExtendedConfigParser(TestCase):
 class Test01_ConfigReader(TestCase):
 
     def setUp(self):
-        class MyTestConfig(object):
-            __metaclass__ = ConfigReader
-
+        class MyTestConfig(object, metaclass=ConfigReader):
             class main(object):
                 option_str = "a string value"
                 option_int = 215

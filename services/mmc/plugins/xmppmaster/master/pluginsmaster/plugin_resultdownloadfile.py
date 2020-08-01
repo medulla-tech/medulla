@@ -42,15 +42,15 @@ def writefileappend(name, data):
         file.close()
         return pointeur
     except Exception as e:
-        print str(e)
+        print(str(e))
 
 
 def delfile(name):
     try:
-        print "renove %s" % name
+        print("renove %s" % name)
         os.remove(name)
     except Exception as e:
-        print "renove %s  : %s" % (name, str(e))
+        print("renove %s  : %s" % (name, str(e)))
 
 
 @pluginmastersessionaction("actualise", 20)

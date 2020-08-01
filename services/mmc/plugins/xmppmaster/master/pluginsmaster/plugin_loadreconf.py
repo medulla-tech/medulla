@@ -25,7 +25,7 @@ import os
 import logging
 from utils import getRandomName
 import types
-import ConfigParser
+import configparser
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from sleekxmpp import jid
 import time
@@ -126,7 +126,7 @@ def read_conf_loadreconf(objectxmpp):
         objectxmpp.nbconcurrentreconf = 240
         objectxmpp.timeout_reconf = 500
     else:
-        Config = ConfigParser.ConfigParser()
+        Config = configparser.ConfigParser()
         Config.read(pathfileconf)
         logger.debug("read file %s"%pathfileconf)
         if os.path.exists(pathfileconf + ".local"):

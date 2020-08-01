@@ -38,7 +38,7 @@ class LaunchTimeResolver :
     def __init__(self, **kwargs):
 
         #self.logger = logging.getLogger()
-        for name, value in kwargs.items():
+        for name, value in list(kwargs.items()):
             if name not in dir(self) :
                 raise AttributeError("Inexisting attribute: %s" % name)
             else :

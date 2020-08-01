@@ -57,11 +57,11 @@ class Options(twisted.python.usage.Options):
         ]
 
 def _cb(result): # server do answer us
-    print "RESULT : %s" % result
+    print("RESULT : %s" % result)
     twisted.internet.reactor.callLater(0, _end)
 
 def _eb(reason): # can't contact scheduler
-    print "ERROR : %s" % reason
+    print("ERROR : %s" % reason)
     twisted.internet.reactor.callLater(0, _end)
 
 def _start():
@@ -122,9 +122,9 @@ def parseCliArgs(config):
 config = Options()
 try:
     config.parseOptions()
-except twisted.python.usage.UsageError, errortext:
-    print '%s: %s' % (sys.argv[0], errortext)
-    print '%s: Try --help for usage details.' % (sys.argv[0])
+except twisted.python.usage.UsageError as errortext:
+    print('%s: %s' % (sys.argv[0], errortext))
+    print('%s: Try --help for usage details.' % (sys.argv[0]))
     sys.exit(1)
 
 twisted.internet.reactor.callWhenRunning(_start)

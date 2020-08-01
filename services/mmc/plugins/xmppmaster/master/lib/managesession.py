@@ -126,7 +126,7 @@ class session:
                 os.path.realpath(__file__)), "..", "sessions")
 
         if not os.path.exists(self.dirsavesession):
-            os.makedirs(self.dirsavesession, mode=0007)
+            os.makedirs(self.dirsavesession, mode=0o007)
         logger.debug( "SESSION %s " % self.dirsavesession)
         self.loadsessions()
 
@@ -191,7 +191,7 @@ class session:
         x.decrementation()
 
     def decrementesessiondatainfo(self):
-        filter(self.__decr__, self.sessiondata)
+        list(filter(self.__decr__, self.sessiondata))
         self.__suppsessiondatainfo__()
 
     def __suppsessiondatainfo__(self):
@@ -210,7 +210,7 @@ class session:
         return len(self.sessiondata)
 
     def affiche(self):
-        map(self.__aff__, self.sessiondata)
+        list(map(self.__aff__, self.sessiondata))
 
     def sessionfromsessiondata(self, sessionid):
         for i in self.sessiondata:

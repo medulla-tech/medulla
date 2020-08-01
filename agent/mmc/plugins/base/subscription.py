@@ -102,9 +102,7 @@ class SubscriptionConfig:
         self.getValueMacro(section, "support_comment")
 
 
-class SubscriptionManager(object):
-    __metaclass__ = SingletonN
-
+class SubscriptionManager(object, metaclass=SingletonN):
     def init(self, config):
         self.config = config
         self.config.readSubscriptionConf()

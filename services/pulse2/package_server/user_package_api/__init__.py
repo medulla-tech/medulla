@@ -49,7 +49,7 @@ class UserPackageApi(MyXmlrpc):
                         service['server'] = 'localhost'
                     package_api_put.append(Mirror(service['proto'], service['server'], service['port'], service['mp']))
             self.logger.debug("(%s) %s api user/packageApi server initialised"%(self.type, self.name))
-        except Exception, e:
+        except Exception as e:
             self.logger.error("(%s) %s api user/packageApi server can't initialize correctly"%(self.type, self.name))
             raise e
 
@@ -57,7 +57,7 @@ class UserPackageApi(MyXmlrpc):
         self.assign_algo.init(package_api_put)
 
     def xmlrpc_getServerDetails(self):
-        return map(lambda m: m.toH(), self.package_api_put)
+        return [m.toH() for m in self.package_api_put]
 
     def xmlrpc_getUserPackageApi(self, u):
         return self.assign_algo.getUserPackageApi(u)

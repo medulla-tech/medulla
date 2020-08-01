@@ -48,10 +48,10 @@ from mmc.core.log import ColoredFormatter
 import imp
 import logging
 import logging.config
-import xmlrpclib
+import xmlrpc.client
 import os
 import sys
-import ConfigParser
+import configparser
 import glob
 import time
 import pwd
@@ -64,7 +64,7 @@ logger = logging.getLogger()
 
 sys.path.append("plugins")
 
-Fault = xmlrpclib.Fault
+Fault = xmlrpc.client.Fault
 ctx = None
 VERSION = "4.6.4"
 
@@ -305,7 +305,7 @@ class MmcServer(xmlrpc.XMLRPC, object):
         request.setHeader("Access-Control-Expose-Headers", "content-type,cookie")
         request.setHeader("Access-Control-Max-Age", "1728000")
 
-        args, functionPath = xmlrpclib.loads(request.content.read())
+        args, functionPath = xmlrpc.client.loads(request.content.read())
 
         s = request.getSession()
         try:
@@ -347,14 +347,14 @@ class MmcServer(xmlrpc.XMLRPC, object):
                     s.userid = 'root'
                     try:
                         self._associateContext(request, s, s.userid)
-                    except Exception, e:
+                    except Exception as e:
                         s.loggedin = False
                         logger.exception(e)
                         f = Fault(8004, "MMC agent can't provide a security context")
                         self._cbRender(f, request)
                         return server.NOT_DONE_YET
                 function = self._getFunction(functionPath, request)
-        except Fault, f:
+        except Fault as f:
             self._cbRender(f, request)
         else:
             if self.config.multithreading:
@@ -427,7 +427,7 @@ class MmcServer(xmlrpc.XMLRPC, object):
                 s.userid = args[0]
                 try:
                     self._associateContext(request, s, s.userid)
-                except Exception, e:
+                except Exception as e:
                     s.loggedin = False
                     logger.exception(e)
                     f = Fault(8004, "MMC agent can't provide a security context for this account")
@@ -444,7 +444,7 @@ class MmcServer(xmlrpc.XMLRPC, object):
                 # FIXME
                 # Evil hack ! We need this to transport some data as binary instead of string
                 if "jpegPhoto" in result[0]:
-                    result[0]["jpegPhoto"] = [xmlrpclib.Binary(result[0]["jpegPhoto"][0])]
+                    result[0]["jpegPhoto"] = [xmlrpc.client.Binary(result[0]["jpegPhoto"][0])]
         except IndexError:
             pass
         try:
@@ -452,10 +452,10 @@ class MmcServer(xmlrpc.XMLRPC, object):
                 logger.debug('Result for ' + s.userid + ", " + str(functionPath) + ": " + str(result))
             else:
                 logger.debug('Result for unauthenticated user, ' + str(functionPath) + ": " + str(result))
-            s = xmlrpclib.dumps(result, methodresponse=1)
-        except Exception, e:
+            s = xmlrpc.client.dumps(result, methodresponse=1)
+        except Exception as e:
             f = Fault(self.FAILURE, "can't serialize output: " + str(e))
-            s = xmlrpclib.dumps(f, methodresponse=1)
+            s = xmlrpc.client.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
         request.setHeader("content-type", "application/xml")
         request.write(s)
@@ -513,7 +513,7 @@ class MmcServer(xmlrpc.XMLRPC, object):
                         obj.readfp(fid, obj.conffile + '.local')
                     # Refresh config attributes
                     obj.readConf()
-                except Exception, e:
+                except Exception as e:
                     logger.error('Error while reloading configuration file %s', obj.conffile)
                     logger.error(str(e))
                     return 'Failed'
@@ -663,7 +663,7 @@ class MMCApp(object):
     def daemonize(self):
         # Test if mmcagent has been already launched in daemon mode
         if os.path.isfile(self.config.pidfile):
-            print  "%s already exist. Maybe mmc-agent is already running\n" % self.config.pidfile
+            print("%s already exist. Maybe mmc-agent is already running\n" % self.config.pidfile)
             sys.exit(0)
 
         # do the UNIX double-fork magic, see Stevens' "Advanced
@@ -675,8 +675,8 @@ class MMCApp(object):
                 self.lock.acquire()
                 # exit first parent and return
                 sys.exit(self.state)
-        except OSError, e:
-            print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
+        except OSError as e:
+            print("fork #1 failed: %d (%s)" % (e.errno, e.strerror), file=sys.stderr)
             sys.exit(1)
 
         # decouple from parent environment
@@ -689,7 +689,7 @@ class MMCApp(object):
             if pid > 0:
                 # exit from second parent
                 sys.exit(0)
-        except OSError, e:
+        except OSError as e:
             self.state = 1
             self.lock.release()
             sys.exit(1)
@@ -723,13 +723,13 @@ class MMCApp(object):
     def kill(self):
         pid = self.readPid()
         if pid is None:
-            print "Can not find a running mmc-agent."
+            print("Can not find a running mmc-agent.")
             return 1
 
         try:
             os.kill(pid, signal.SIGTERM)
-        except Exception, e:
-            print "Can not terminate running mmc-agent: %s" % e
+        except Exception as e:
+            print("Can not terminate running mmc-agent: %s" % e)
             return 1
 
         return 0
@@ -740,7 +740,7 @@ class MMCApp(object):
         else:
             protocol = 'http'
 
-        client = xmlrpclib.ServerProxy(
+        client = xmlrpc.client.ServerProxy(
             "%s://%s:%s@%s:%s/" % (protocol,
                                    self.config.login,
                                    self.config.password,
@@ -751,8 +751,8 @@ class MMCApp(object):
         try:
             client.system.reloadModulesConfiguration()
             return 0
-        except Exception, e:
-            print "Unable to reload configuration: %s" % str(e)
+        except Exception as e:
+            print("Unable to reload configuration: %s" % str(e))
             return 1
 
     def readPid(self):
@@ -822,7 +822,9 @@ class MMCApp(object):
         # Create log dir if it doesn't exist
         try:
             os.mkdir(localstatedir + "/log/mmc")
-        except OSError, (errno, strerror):
+        except OSError as xxx_todo_changeme:
+            # Raise exception if error is not "File exists"
+            (errno, strerror) = xxx_todo_changeme.args
             # Raise exception if error is not "File exists"
             if errno != 17:
                 raise
@@ -847,7 +849,7 @@ class MMCApp(object):
         os.environ["MMC_AGENT"] = VERSION
 
         # Start audit system
-        l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_START')
+        l = AuditFactory().log('MMC-AGENT', 'MMC_AGENT_SERVICE_START')
 
         # Ask PluginManager to load MMC plugins
         pm = PluginManager()
@@ -857,7 +859,7 @@ class MMCApp(object):
 
         try:
             self.startService(pm.plugins)
-        except Exception, e:
+        except Exception as e:
             # This is a catch all for all the exception that can happened
             logger.exception("Program exception: " + str(e))
             return 1
@@ -902,7 +904,7 @@ class MMCApp(object):
                 logger.info('mmc-agent xmppmaster stop...')
                 self.modulexmppmaster.stop()
         logger.info('mmc-agent shutting down, cleaning up...')
-        l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_STOP')
+        l = AuditFactory().log('MMC-AGENT', 'MMC_AGENT_SERVICE_STOP')
         l.commit()
 
         self.cleanPid()
@@ -942,7 +944,7 @@ def readConfig(config):
     try:
         config.host = config.get("main", "host")
         config.port = config.getint("main", "port")
-    except Exception, e:
+    except Exception as e:
         logger.error(e)
         return 1
 
@@ -953,7 +955,7 @@ def readConfig(config):
     else:
         config.euid = 0
         config.egid = 0
-        config.umask = 0077
+        config.umask = 0o077
 
     # HTTP authentication login/password
     config.login = config.get("main", "login")
@@ -962,34 +964,34 @@ def readConfig(config):
     # RPC session timeout
     try:
         config.sessiontimeout = config.getint("main", "sessiontimeout")
-    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+    except (configparser.NoSectionError, configparser.NoOptionError):
         # Use default session timeout
         config.sessiontimeout = server.Session.sessionTimeout
 
     # SSL stuff
     try:
         config.enablessl = config.getboolean("main", "enablessl")
-    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+    except (configparser.NoSectionError, configparser.NoOptionError):
         config.enablessl = False
     try:
         config.verifypeer = config.getboolean("main", "verifypeer")
-    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+    except (configparser.NoSectionError, configparser.NoOptionError):
         config.verifypeer = False
 
     if config.enablessl:
         # For old version compatibility, we try to get the old options name
         try:
             config.localcert = config.get("main", "localcert")
-        except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        except (configparser.NoSectionError, configparser.NoOptionError):
             config.localcert = config.get("main", "privkey")
         try:
             config.cacert = config.get("main", "cacert")
-        except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        except (configparser.NoSectionError, configparser.NoOptionError):
             config.cacert = config.get("main", "certfile")
 
     try:
         config.pidfile = config.get("daemon", "pidfile")
-    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+    except (configparser.NoSectionError, configparser.NoOptionError):
         # For compatibility with old version
         config.pidfile = config.get("log", "pidfile")
 
@@ -999,7 +1001,7 @@ def readConfig(config):
     try:
         config.multithreading = config.getboolean("main", "multithreading")
         config.maxthreads = config.getint("main", "maxthreads")
-    except ConfigParser.NoOptionError:
+    except configparser.NoOptionError:
         pass
 
     return config
@@ -1039,7 +1041,7 @@ class PluginManager(Singleton):
         @rtype: list
         @return: the names of the enabled plugins
         """
-        return self.getEnabledPlugins().keys()
+        return list(self.getEnabledPlugins().keys())
 
     def getAvailablePlugins(self):
         """
@@ -1072,7 +1074,7 @@ class PluginManager(Singleton):
             logger.debug("Trying to load module %s" % name)
             plugin = imp.load_module(name, f, p, d)
             logger.debug("Module %s loaded" % name)
-        except Exception, e:
+        except Exception as e:
             logger.exception(e)
             logger.error('Module ' + name + " raise an exception.\n" + name + " not loaded.")
             return 0
@@ -1102,7 +1104,7 @@ class PluginManager(Singleton):
                 # If we can't activate it
                 logger.warning('Plugin %s not loaded.' % name)
                 plugin = None
-        except Exception, e:
+        except Exception as e:
             logger.error('Error while trying to load plugin ' + name)
             logger.exception(e)
             plugin = None
@@ -1133,7 +1135,7 @@ class PluginManager(Singleton):
             return 0
         elif res is not None and not isinstance(res, int):
             self.plugins[name] = res
-            getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
+            getattr(self.plugins["base"], "setModList")([name for name in list(self.plugins.keys())])
         elif res == 4:
             return 4
         return res
@@ -1192,7 +1194,7 @@ class PluginManager(Singleton):
                         return 4
 
         # Set module list
-        getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
+        getattr(self.plugins["base"], "setModList")([name for name in list(self.plugins.keys())])
         return 0
 
     def stopPlugin(self, name):
@@ -1213,5 +1215,5 @@ class PluginManager(Singleton):
             logger.info('Deactivating plugin %s' % (name,))
             deactivate()
         del self.plugins[name]
-        getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
+        getattr(self.plugins["base"], "setModList")([name for name in list(self.plugins.keys())])
         return True

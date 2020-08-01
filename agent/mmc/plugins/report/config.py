@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-from ConfigParser import NoOptionError, NoSectionError
+from configparser import NoOptionError, NoSectionError
 
 import os
 from mmc.support.config import PluginConfig

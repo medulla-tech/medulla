@@ -693,4 +693,4 @@ def isPasswordExpired(uid):
 
 if __name__ == "__main__":
     #print ldapUserGroupControl().getDetailedUserIntAttr("user1")
-    print isPasswordExpired("testpass")
+    print(isPasswordExpired("testpass"))

@@ -66,7 +66,7 @@ class manage_scheduler:
         # creation repertoire si non exist
         if not os.path.exists(self.directoryschedule):
             logging.getLogger().debug("create directory scheduler %s" % self.directoryschedule)
-            os.makedirs(self.directoryschedule, 0700)
+            os.makedirs(self.directoryschedule, 0o700)
 
         for x in os.listdir(self.directoryschedule):
             if x.endswith(".pyc") or not x.startswith("scheduling"):

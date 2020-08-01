@@ -25,9 +25,9 @@
 Test module for the Pulse 2 package server: Mirror's module, Mirror_API's module, Package_API's module and Scheduler's module
 """
 
-import xmlrpclib
+import xmlrpc.client
 import unittest
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import sys
 import string
 from os import system, getcwd, chdir, popen
@@ -57,10 +57,10 @@ directory=getcwd()
 
 ipserver=ipconfig()
 
-serverM=xmlrpclib.ServerProxy('%s://%s:9990/mirror1' %(protocol,ipserver))
-serverMA = xmlrpclib.ServerProxy('%s://%s:9990/rpc' %(protocol,ipserver))
-serverP = xmlrpclib.ServerProxy('%s://%s:9990/package_api_get1' %(protocol,ipserver))
-serverS = xmlrpclib.ServerProxy('%s://%s:9990/scheduler_api' %(protocol,ipserver))
+serverM=xmlrpc.client.ServerProxy('%s://%s:9990/mirror1' %(protocol,ipserver))
+serverMA = xmlrpc.client.ServerProxy('%s://%s:9990/rpc' %(protocol,ipserver))
+serverP = xmlrpc.client.ServerProxy('%s://%s:9990/package_api_get1' %(protocol,ipserver))
+serverS = xmlrpc.client.ServerProxy('%s://%s:9990/scheduler_api' %(protocol,ipserver))
 
 class class01testMirror (unittest.TestCase):
     """
@@ -251,7 +251,7 @@ class class05valid_urlTest(unittest.TestCase):
         for package in serverM.getFilesURI(["7885517b39317add6a1d362968b01774","5d3ff03e396aa072f5cae2b2ddcd88b9"]):
             package1=string.split(package)
             cpackage=string.joinfields(package1,"%20")
-            urllib2.urlopen(cpackage)
+            urllib.request.urlopen(cpackage)
 
 class class06removedirTest(unittest.TestCase):
     """
@@ -293,11 +293,11 @@ if mode=="debug":
 
 
     if False in success:
-        print "One or more test are failed or have an unexpected error"
+        print("One or more test are failed or have an unexpected error")
     else:
-        print "All function work"
+        print("All function work")
 
-    print "Pserver\'s test has run %s test" %(nb)
+    print("Pserver\'s test has run %s test" %(nb))
 else:
 
     unittest.main()

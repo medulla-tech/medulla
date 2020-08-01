@@ -33,11 +33,11 @@ SYSTEM = platform.system().upper()
 
 if SYSTEM == "WINDOWS":
 
-    from _winreg import ConnectRegistry             #pyflakes.ignore
-    from _winreg import OpenKey, CloseKey, EnumKey  #pyflakes.ignore
-    from _winreg import HKEY_LOCAL_MACHINE          #pyflakes.ignore
-    from _winreg import KEY_READ                    #pyflakes.ignore
-    from _winreg import KEY_WOW64_32KEY             #pyflakes.ignore
+    from winreg import ConnectRegistry             #pyflakes.ignore
+    from winreg import OpenKey, CloseKey, EnumKey  #pyflakes.ignore
+    from winreg import HKEY_LOCAL_MACHINE          #pyflakes.ignore
+    from winreg import KEY_READ                    #pyflakes.ignore
+    from winreg import KEY_WOW64_32KEY             #pyflakes.ignore
 
     from win32com.client import Dispatch            #pyflakes.ignore
 
@@ -46,8 +46,8 @@ else:
 
 from subprocess import Popen, PIPE
 
-from pexceptions import SoftwareCheckError
-from ptypes import Component
+from .pexceptions import SoftwareCheckError
+from .ptypes import Component
 
 
 

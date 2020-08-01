@@ -35,7 +35,7 @@ import datetime
 from pulse2.package_server.config import P2PServerCP
 from mmc.site import mmcconfdir
 import sys
-import ConfigParser
+import configparser
 import logging
 import getopt
 import xml.etree.cElementTree as ET
@@ -56,8 +56,8 @@ logging.basicConfig(level=logging.DEBUG,
 def subnetForIpMask(ip, netmask):
     result=[]
     try:
-        ip = map(lambda x: int(x), ip.split('.'))
-        netmask = map(lambda x: int(x), netmask.split('.'))
+        ip = [int(x) for x in ip.split('.')]
+        netmask = [int(x) for x in netmask.split('.')]
         for i in range(4):
             result.append( str(ip[i] & netmask[i]))
         result=".".join(result)
@@ -485,16 +485,16 @@ def mac_adressexml(file_content):
 
 class MyEventHandler(pyinotify.ProcessEvent):
     def process_IN_ACCESS(self, event):
-        print "ACCESS event:", event.pathname
+        print("ACCESS event:", event.pathname)
 
     def process_IN_ATTRIB(self, event):
-        print "ATTRIB event:", event.pathname
+        print("ATTRIB event:", event.pathname)
 
     def process_IN_CLOSE_NOWRITE(self, event):
-        print "CLOSE_NOWRITE event:", event.pathname
+        print("CLOSE_NOWRITE event:", event.pathname)
 
     def process_IN_CLOSE_WRITE(self, event):
-        print "CLOSE_WRITE event:", event.pathname
+        print("CLOSE_WRITE event:", event.pathname)
 
     def process_IN_CREATE(self, event):
         logging.getLogger().debug("CREATE event:%s"% event.pathname)
@@ -502,7 +502,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
         self.traitement(event.pathname)
 
     def process_IN_DELETE(self, event):
-        print "DELETE event:", event.pathname
+        print("DELETE event:", event.pathname)
 
     def process_IN_MODIFY(self, event):
         logging.getLogger().debug("MODIFY event: %s"% event.pathname)
@@ -510,7 +510,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
         self.traitement(event.pathname)
 
     def process_IN_OPEN(self, event):
-        print "OPEN event:"
+        print("OPEN event:")
 
     def traitement(self, name):
 
@@ -590,17 +590,17 @@ if __name__ == '__main__':
             ch.setFormatter(formatter)
             logging.getLogger().addHandler(ch)
             logging.getLogger().setLevel(logging.DEBUG)
-            print "pid file: %d\n"%os.getpid()
-            print "kill -9 %s"%os.getpid()
+            print("pid file: %d\n"%os.getpid())
+            print("kill -9 %s"%os.getpid())
         elif option == "-h":
-            print "Configure in file '%s' \n[imaging_api]\npxe_port=???\n "%inifile
-            print "\t<launch program> [option]\n"
-            print "\t[-f <file configuration>]\n\t[-d] debug mode no daemonized"
+            print("Configure in file '%s' \n[imaging_api]\npxe_port=???\n "%inifile)
+            print("\t<launch program> [option]\n")
+            print("\t[-f <file configuration>]\n\t[-d] debug mode no daemonized")
             sys.exit(0)
     if not os.path.exists(inifile):
-        print "File '%s' does not exist." % inifile
+        print("File '%s' does not exist." % inifile)
         sys.exit(3)
-    cp = ConfigParser.ConfigParser()
+    cp = configparser.ConfigParser()
     cp.read(inifile)
     cp.read(inifile + '.local')
 
@@ -646,7 +646,7 @@ if __name__ == '__main__':
     else:
         conf['pxe_tftp_ip'] = public_ip
         logging.getLogger().info("pxe_tftp_ip option is not defined and has been set to public_ip. If incorrect, please configure pxe_tftp_ip in imaging_api section of [%s].local"%inifile)
-        print "pxe_tftp_ip option is not defined and has been set to public_ip. If incorrect, please configure pxe_tftp_ip in imaging_api section of [%s].local"%inifile
+        print("pxe_tftp_ip option is not defined and has been set to public_ip. If incorrect, please configure pxe_tftp_ip in imaging_api section of [%s].local"%inifile)
     if not daemonize:
         if  cp.has_option('imaging_api', 'pxe_debug'):
             if cp.getboolean("imaging_api", 'pxe_debug'):
@@ -673,8 +673,8 @@ if __name__ == '__main__':
             if pid > 0:
                 # exit first parent
                 sys.exit(0)
-        except OSError, e:
-            print >>sys.stderr, "Fork #1 failed: %d (%s)" % (e.errno, e.strerror)
+        except OSError as e:
+            print("Fork #1 failed: %d (%s)" % (e.errno, e.strerror), file=sys.stderr)
             sys.exit(1)
         # dissociate from parent environment
         os.close(sys.stdin.fileno())
@@ -687,8 +687,8 @@ if __name__ == '__main__':
             pid = os.fork()
             if pid > 0:
                 # exit from second parent, print eventual PID before
-                print "Daemon PID %d" % pid
-                print "kill -9 $(cat %s"%pidfile
+                print("Daemon PID %d" % pid)
+                print("kill -9 $(cat %s"%pidfile)
                 logging.getLogger().info("Daemon PID %d" % pid)
                 os.seteuid(0)
                 os.setegid(0)
@@ -696,8 +696,8 @@ if __name__ == '__main__':
                 logging.getLogger().info("kill -9 $(cat %s)"%pidfile)
                 os.system("echo " + str(pid) + " > " + pidfile)
                 sys.exit(0)
-        except OSError, e:
-            print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
+        except OSError as e:
+            print("fork #2 failed: %d (%s)" % (e.errno, e.strerror), file=sys.stderr)
             sys.exit(1)
     try:
         a = watchInventory()

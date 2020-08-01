@@ -459,7 +459,7 @@ config = { 'path_destination':'/', 'explorer':0 } # FIXME: to put in msc.ini
 
 WINDOWS_SEPARATOR = "\\"
 LINUX_SEPARATOR = "/"
-S_IFDIR = 040000
+S_IFDIR = 0o40000
 MIME_UNKNOWN = "Unknown"
 MIME_UNKNOWN_ICON = "unknown.png"
 MIME_DIR = "Directory"

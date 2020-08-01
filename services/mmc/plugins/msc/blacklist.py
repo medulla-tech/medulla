@@ -28,12 +28,12 @@ def dottedQuadToNum(ip):
     """Convert decimal dotted quad string to long integer"""
     bytes = ip.split('.')
     if len(bytes) > 4:
-        raise ValueError, "IPv4 Address with more than 4 bytes"
+        raise ValueError("IPv4 Address with more than 4 bytes")
     bytes += ['0'] * (4 - len(bytes))
-    bytes = [long(x) for x in bytes]
+    bytes = [int(x) for x in bytes]
     for x in bytes:
         if x > 255 or x < 0:
-            raise ValueError, "%r: single byte must be 0 <= byte < 256" % (ip)
+            raise ValueError("%r: single byte must be 0 <= byte < 256" % (ip))
     return ((bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3])
 
 def ipInRange(ipAddress, beginRange, endRange):

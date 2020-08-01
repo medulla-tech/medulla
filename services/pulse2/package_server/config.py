@@ -29,7 +29,7 @@ it's API modules.
 from mmc.site import mmcconfdir
 
 # Misc
-import ConfigParser
+import configparser
 import re
 import sys
 import pulse2.utils
@@ -85,7 +85,7 @@ class P2PServerCP(pulse2.utils.Singleton):
     detectSmartMethod = ['none', 'last', 'loop', 'size']
 
     def packageDetectSmartMethod(self):
-        return ', '.join(map(lambda x: self.detectSmartMethod[x], self.package_detect_smart_method))
+        return ', '.join([self.detectSmartMethod[x] for x in self.package_detect_smart_method])
 
     package_detect_smart = False
     package_detect_smart_method = []
@@ -132,7 +132,7 @@ class P2PServerCP(pulse2.utils.Singleton):
         if sys.platform != "win32":
             self.cp = Pulse2ConfigParser()
         else:
-            self.cp = ConfigParser.ConfigParser()
+            self.cp = configparser.ConfigParser()
         self.cp.read(config_file)
         self.cp.read(config_file + '.local')
 
@@ -147,7 +147,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             if sys.platform != "win32":
                 self.cp = Pulse2ConfigParser()
             else:
-                self.cp = ConfigParser.ConfigParser()
+                self.cp = configparser.ConfigParser()
             self.cp.read(config_file)
             self.cp.read(config_file + '.local')
 
@@ -583,10 +583,10 @@ class P2PServerCP(pulse2.utils.Singleton):
 def config_addons(conf):
     if len(conf.mirrors) > 0:
 #        for mirror_params in conf.mirrors:
-            map(lambda x: add_access(x, conf), conf.mirrors)
+            list(map(lambda x: add_access(x, conf), conf.mirrors))
     if len(conf.package_api_get) > 0:
 #        for mirror_params in conf.package_api_get:
-            map(lambda x: add_server(x, conf), conf.package_api_get)
+            list(map(lambda x: add_server(x, conf), conf.package_api_get))
     return conf
 
 

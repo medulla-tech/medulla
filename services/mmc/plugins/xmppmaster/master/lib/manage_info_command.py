@@ -29,7 +29,7 @@ import os.path
 import json
 from multiprocessing import Process, Queue, TimeoutError
 import threading
-from utils import getRandomName, call_plugin
+from .utils import getRandomName, call_plugin
 from sleekxmpp import jid
 import traceback
 import logging

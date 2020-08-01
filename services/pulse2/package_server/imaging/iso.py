@@ -99,7 +99,8 @@ class ISOImage:
             fid.writelines(buf)
             fid.close()
             self.logger.info("boot CD menu %s successfuly created" % (menufile))
-        except OSError, (errno, strerror):
+        except OSError as xxx_todo_changeme:
+            (errno, strerror) = xxx_todo_changeme.args
             self.logger.error("failed to create boot CD menu %s (c=%s: %s)" % (menufile, errno, strerror))
             raise
 

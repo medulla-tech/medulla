@@ -547,7 +547,7 @@ class PXEImagingApi (PXEMethodParser):
 
             return d
 
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("PXE Proxy: Unable to forward PXE inventory to inventory server at %s: %s" % (url, str(e)))
             # This method must return a Deferred
             return Deferred()

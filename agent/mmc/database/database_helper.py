@@ -162,7 +162,7 @@ class DatabaseHelper(Singleton):
     def initMappersCatchException(self):
         try:
             self.initMappers()
-        except NoSuchTableError, e:
+        except NoSuchTableError as e:
             logger.warn('The table %s does not exists.' % str(e))
             return False
         except:
@@ -225,13 +225,13 @@ class DatabaseHelper(Singleton):
             # Exact filters
             if 'filters' in params and params['filters']:
                 clauses = [_entity_descriptor(query._mapper_zero(), key) == value
-                    for key, value in params['filters'].iteritems()]
+                    for key, value in params['filters'].items()]
                 if clauses:
                     query = query.filter(*clauses)
             # Like filters
             if 'like_filters' in params and params['like_filters']:
                 clauses = [_entity_descriptor(query._mapper_zero(), key).like('%' + value + '%')
-                    for key, value in params['like_filters'].iteritems()]
+                    for key, value in params['like_filters'].items()]
                 if clauses:
                     query = query.filter(*clauses)
 
@@ -256,7 +256,7 @@ class DatabaseHelper(Singleton):
                 elif isinstance(line, tuple):
                     # Fetching all tuple items
                     line_ = {}
-                    for i in xrange(len(line)):
+                    for i in range(len(line)):
                         item = line[i]
                         if isinstance(item, DBObj):
                             line_.update(item.toDict())
@@ -378,7 +378,7 @@ class DBObj(object):
     def toDict(self, relations=True):
         d = self.__dict__
         # Convert relations to dict, if 'relations'
-        for k in d.keys():
+        for k in list(d.keys()):
             if isinstance(d[k], DBObj):
                 if relations:
                     d[k] = d[k].toDict()
@@ -394,7 +394,7 @@ class DBObj(object):
         if '_sa_instance_state' in d:
             del d['_sa_instance_state']
         # Actually we don't support relations
-        for key, value in d.iteritems():
+        for key, value in d.items():
             if key and type(value) not in [type({}), type([])]:
                 setattr(self, key, value)
 

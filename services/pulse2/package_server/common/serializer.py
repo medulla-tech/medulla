@@ -40,7 +40,7 @@ class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
             file = open(self.filename, 'w')
             pickle.dump(self.common.dontgivepkgs, file)
             file.close()
-        except IOError, e:
+        except IOError as e:
             if e.errno == 13:
                 self.logger.warn("Package synchro state serialization, serialize failed permission denied while accessing file %s"%(self.filename))
                 return False
@@ -49,7 +49,7 @@ class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
                 return False
             self.logger.warn("Package synchro state serialization, serialize failed accessing file: %s"%(str(e)))
             return False
-        except Exception, e:
+        except Exception as e:
             self.logger.debug("Package synchro state serialization, serialize failed: %s"%(str(e)))
             return False
         self.logger.debug("Package synchro state serialization, serialize succeed")
@@ -70,7 +70,7 @@ class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
                 return True
             self.logger.debug("Package synchro state serialization, unserialize failed")
             return False
-        except IOError, e:
+        except IOError as e:
             if e.errno == 13:
                 self.logger.warn("Package synchro state serialization, unserialize failed permission denied while accessing file %s"%(self.filename))
                 return False
@@ -79,6 +79,6 @@ class PkgsRsyncStateSerializer(pulse2.utils.Singleton):
                 return False
             self.logger.warn("Package synchro state serialization, unserialize failed accessing file: %s"%(str(e)))
             return False
-        except Exception, e:
+        except Exception as e:
             self.logger.debug("Package synchro state serialization, unserialize failed: %s"%(str(e)))
             return False

@@ -47,11 +47,11 @@ class SchedulerApi(Pulse2Api): # Singleton
                 (scheduler, credentials) = makeURL(scheduler)
             elif "mountpoint" in scheduler and scheduler["mountpoint"]:
                 ret = scheduler["mountpoint"]
-        elif type(scheduler) in (str, unicode):
+        elif type(scheduler) in (str, str):
             ret = scheduler
         if not ret:
             #if type(scheduler) in (str, unicode) and scheduler in self.config.scheduler_url2id:
-            if type(scheduler) in (str, unicode) and self.config.scheduler_url2id.has_key(scheduler):
+            if type(scheduler) in (str, str) and scheduler in self.config.scheduler_url2id:
                 self.logger.debug("Found scheduler id from MSC config file using this key %s" % scheduler)
                 ret = self.config.scheduler_url2id[scheduler]
         if not ret:
@@ -62,7 +62,7 @@ class SchedulerApi(Pulse2Api): # Singleton
 
     def cb_convert2id(self, result):
         if type(result) == list:
-            return map(lambda s: self.convert2id(s), result)
+            return [self.convert2id(s) for s in result]
         else:
             return self.convert2id(result)
 
@@ -81,13 +81,13 @@ class SchedulerApi(Pulse2Api): # Singleton
 
     def getSchedulers(self, machines):
         if self.config.sa_enable:
-            machines = map(lambda m: self.convertMachineIntoH(m), machines)
+            machines = [self.convertMachineIntoH(m) for m in machines]
             d = self.callRemote("getSchedulers", machines)
             d.addErrback(self.onError, "SchedulerApi:getSchedulers", machines)
             d.addCallback(self.cb_convert2id)
             return d
         else:
-            return defer.succeed(map(lambda m: self.default_scheduler, machines))
+            return defer.succeed([self.default_scheduler for m in machines])
 
     def convertMachineIntoH(self, machine):
         if type(machine) != dict:

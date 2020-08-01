@@ -21,9 +21,9 @@ A simple HTTP client for communicating with the DLP webservice
 """
 
 import json
-import cookielib
-import urllib
-import urllib2
+import http.cookiejar
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import logging
 import contextlib
 
@@ -31,7 +31,7 @@ import contextlib
 logger = logging.getLogger(__name__)
 
 
-class HTTPErrorHandler(urllib2.HTTPDefaultErrorHandler):
+class HTTPErrorHandler(urllib.request.HTTPDefaultErrorHandler):
 
     def http_error_default(self, req, res, code, msg, hdrs):
         return res
@@ -44,19 +44,19 @@ class CookieSessionExpired(Exception):
 class HTTPClient(object):
 
     def __init__(self, base_url, identity=None):
-        self.cookie_jar = cookielib.CookieJar()
-        handlers = [urllib2.HTTPCookieProcessor(self.cookie_jar)]
+        self.cookie_jar = http.cookiejar.CookieJar()
+        handlers = [urllib.request.HTTPCookieProcessor(self.cookie_jar)]
         if self.config.Proxy.http:
-            proxy_handler = urllib2.ProxyHandler({'http': self.config.Proxy.http})
+            proxy_handler = urllib.request.ProxyHandler({'http': self.config.Proxy.http})
         else:
-            proxy_handler = urllib2.ProxyHandler()
+            proxy_handler = urllib.request.ProxyHandler()
         handlers.append(proxy_handler)
         handlers.append(HTTPErrorHandler)
-        self.opener = urllib2.build_opener(*handlers)
+        self.opener = urllib.request.build_opener(*handlers)
 
         if identity:
             self.opener.addheaders = [('User-agent', identity)]
-        urllib2.install_opener(self.opener)
+        urllib.request.install_opener(self.opener)
         self.base_url = base_url
         if not self.base_url.endswith("/"):
             self.base_url += "/"
@@ -68,7 +68,7 @@ class HTTPClient(object):
         """
         # Mutable dict headers used as default argument to a method or function
         url = self.base_url + url
-        request = urllib2.Request(url, headers=headers)
+        request = urllib.request.Request(url, headers=headers)
         return self.execute_request(request)
 
     def post(self, url, data=None, headers={}):
@@ -83,8 +83,8 @@ class HTTPClient(object):
         if data is None:
             postdata = None
         else:
-            postdata = urllib.urlencode(data, True)
-        request = urllib2.Request(url, postdata, headers)
+            postdata = urllib.parse.urlencode(data, True)
+        request = urllib.request.Request(url, postdata, headers)
         return self.execute_request(request)
 
     def execute_request(self, request):

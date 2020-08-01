@@ -58,7 +58,7 @@ class MirrorApi(MyXmlrpc):
                 if 'url' in service:
                     self.url2mirrors[type][service['url']] = self.mirrors[type][-1]
             self.logger.debug("(%s) %s api machine/mirror server initialised"%(self.type, self.name))
-        except Exception, e:
+        except Exception as e:
             self.logger.error("(%s)%s api machine/mirror server can't initialize correctly"%(self.type, self.name))
             raise e
 
@@ -87,9 +87,9 @@ class MirrorApi(MyXmlrpc):
     def xmlrpc_getServerDetails(self):
         ret = {}
         if 'package_api' in self.mirrors:
-            ret['package_api'] = map(lambda x: x.toH(), self.mirrors['package_api'])
+            ret['package_api'] = [x.toH() for x in self.mirrors['package_api']]
         if 'mirror' in self.mirrors:
-            ret['mirror'] = map(lambda x: x.toH(), self.mirrors['mirror'])
+            ret['mirror'] = [x.toH() for x in self.mirrors['mirror']]
         return ret
 
     def xmlrpc_getMirror(self, m):

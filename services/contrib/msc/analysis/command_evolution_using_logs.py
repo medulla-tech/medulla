@@ -150,10 +150,10 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
 
     i = 0
     # Draw a line for each columns
-    for title, data_y in alldata_y.iteritems():
+    for title, data_y in alldata_y.items():
         plot = line_plot.T(
             label = title,
-            data = zip(data_x, data_y),
+            data = list(zip(data_x, data_y)),
             line_style = line_style.T(
                 color = colors[i],
                 width = 1))
@@ -183,10 +183,10 @@ def read_logs(logfiles, start_date, stop_date):
         try:
             fh = open(file)
         except IOError:
-            print "can't read %s " % file
+            print("can't read %s " % file)
             continue
 
-        print "parsing %s ... " % file
+        print("parsing %s ... " % file)
         for line in fh:  # Parse each line in the log file
             # Add the "BALANCE" test to avoid computing regexp if the line doesn't match
             res = re.search(BALANCE_REGEX, line)
@@ -241,7 +241,7 @@ def read_logs(logfiles, start_date, stop_date):
                     del dump['by_group'][None]
 
                 # For each group available
-                for group in dump['by_group'].keys():
+                for group in list(dump['by_group'].keys()):
                     if not group in groups:
                         groups[group] = {}
                     # If this group as already an entry for this time (from an other launcher), we add the new one
@@ -275,12 +275,12 @@ if __name__ == "__main__":
         if '' in groups:
             groups['unknown'] = groups.pop('')
 
-        group_list = groups.keys()
-        y_max = (max(map(lambda x: max(x.values()), groups.values())) / 50 + 1) * 50
+        group_list = list(groups.keys())
+        y_max = (max([max(x.values()) for x in list(groups.values())]) / 50 + 1) * 50
 
         # Get all group hours
         for group in group_list:
-            group_hours += groups[group].keys()
+            group_hours += list(groups[group].keys())
             # deduplicate list
             group_hours = list(set(group_hours))
             group_hours.sort()
@@ -301,12 +301,12 @@ if __name__ == "__main__":
 
     if runnings:
         launch_actions = {}
-        launcher_list = runnings.keys()
-        y_max = (max(map(lambda x: max(x.values()), runnings.values())) / 50 + 1) * 50
+        launcher_list = list(runnings.keys())
+        y_max = (max([max(x.values()) for x in list(runnings.values())]) / 50 + 1) * 50
 
         # Get all launch hours
         for launch in launcher_list:
-            launch_hours += runnings[launch].keys()
+            launch_hours += list(runnings[launch].keys())
             # deduplicate list
             launch_hours = list(set(launch_hours))
             launch_hours.sort()
@@ -325,12 +325,12 @@ if __name__ == "__main__":
 
     if zombies:
         launch_zombies = {}
-        launcher_list = zombies.keys()
-        y_max = (max(map(lambda x: max(x.values()), zombies.values())) / 50 + 1) * 50
+        launcher_list = list(zombies.keys())
+        y_max = (max([max(x.values()) for x in list(zombies.values())]) / 50 + 1) * 50
 
         # Get all launch hours
         for launch in launcher_list:
-            launch_hours += zombies[launch].keys()
+            launch_hours += list(zombies[launch].keys())
             # deduplicate list
             launch_hours = list(set(launch_hours))
             launch_hours.sort()
@@ -349,12 +349,12 @@ if __name__ == "__main__":
 
     if loads:
         launch_loads = {}
-        launcher_list = loads.keys()
-        y_max = (max(map(lambda x: max(x.values()), loads.values())) / 1 + 1) * 1
+        launcher_list = list(loads.keys())
+        y_max = (max([max(x.values()) for x in list(loads.values())]) / 1 + 1) * 1
 
         # Get all launch hours
         for launch in launcher_list:
-            launch_hours += loads[launch].keys()
+            launch_hours += list(loads[launch].keys())
             # deduplicate list
             launch_hours = list(set(launch_hours))
             launch_hours.sort()

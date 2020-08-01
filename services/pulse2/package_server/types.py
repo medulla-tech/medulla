@@ -28,7 +28,7 @@
 
 from pulse2.package_server.utilities import md5sum
 import pulse2.package_server.common
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import locale
 
 class Mirror:
@@ -259,14 +259,14 @@ class AFiles:
         return (len(self.internals) == 0)
 
     def toH(self):
-        return map(lambda x: x.toH(), self.internals)
+        return [x.toH() for x in self.internals]
 
     def to_h(self):
         return self.toH()
 
     def toURI(self, mp = None):
         if mp == None:
-            return map(lambda x: x.toURI(), self.internals)
+            return [x.toURI() for x in self.internals]
         else:
             d = pulse2.package_server.common.Common().h_desc(mp)
             if "mirror_url" in d and d['mirror_url'] != '':
@@ -275,7 +275,7 @@ class AFiles:
                 where = "%s_files"%(d['url'])
             else:
                 where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
-            return map(lambda x: x.toURI(mp, where), self.internals)
+            return [x.toURI(mp, where) for x in self.internals]
 
 class File:
     def __init__(self, name = None, path = '/', checksum = None, size = 0, access = None, id = None):
@@ -315,7 +315,7 @@ class File:
                     where = "%s://%s:%s%s" % (d['proto'], d['server'], str(d['port']), d['mirror_mp'])
                 else:
                     where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
-            ret = where + urllib.quote("%s/%s" % (self.path.replace('\\', '/'), self.name))
+            ret = where + urllib.parse.quote("%s/%s" % (self.path.replace('\\', '/'), self.name))
             return (ret)
 
     def toS(self):
@@ -359,7 +359,7 @@ class Machine:
             self.name = ''
         try:
             self.uuid = h['uuid']
-        except Exception, e:
+        except Exception as e:
             raise Exception("machine must have an uuid: " + str(e))
         return self
 
@@ -381,7 +381,7 @@ class User:
             self.name = ''
         try:
             self.uuid = h['uuid']
-        except Exception, e:
+        except Exception as e:
             raise Exception("user must have an uuid: " + str(e))
         return self
 

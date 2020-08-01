@@ -35,7 +35,7 @@ class Runner(object):
                        ssl_version=ssl.PROTOCOL_TLSv1
                        )
             result = ssl_client.read()
-            print result
+            print(result)
             ssl_client.write(result)
             time.sleep(1)
             #ssl_client.shutdown(SHUT_RDWR)

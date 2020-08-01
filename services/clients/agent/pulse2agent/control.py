@@ -27,20 +27,20 @@ import time
 import logging
 import logging.config
 import platform
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import fileinput
 
 from distutils import file_util
 
-from ptypes import CC
-from ptypes import  Component, DispatcherFrame
-from connect import ClientEndpoint
-from connect import ConnectionTimeout, ConnectionRefused
-from inventory import InventoryChecker, get_minimal_inventory
-from vpn import VPNLaunchControl
-from shell import Shell
-from pexceptions import SoftwareCheckError, ConnectionError
-from pexceptions import SoftwareInstallError, PackageDownloadError
+from .ptypes import CC
+from .ptypes import  Component, DispatcherFrame
+from .connect import ClientEndpoint
+from .connect import ConnectionTimeout, ConnectionRefused
+from .inventory import InventoryChecker, get_minimal_inventory
+from .vpn import VPNLaunchControl
+from .shell import Shell
+from .pexceptions import SoftwareCheckError, ConnectionError
+from .pexceptions import SoftwareInstallError, PackageDownloadError
 
 
 
@@ -98,7 +98,7 @@ class VPNSetter(Component):
                         return self.install()
 
                     return True
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("VPN install failed: %s" % str(e))
 
         return False
@@ -145,7 +145,7 @@ class VPNSetter(Component):
         """
         replaced_items = 0
         for line in fileinput.input(in_script, inplace=1):
-            for (old, new) in pattern.iteritems():
+            for (old, new) in pattern.items():
                 search_exp = "@@%s@@" % old
                 if search_exp in line:
                     line = line.replace(search_exp, new)
@@ -264,8 +264,8 @@ class InitialInstalls(Component):
     def download(self, url):
         filename = url.split('/')[-1]
         try:
-            u = urllib2.urlopen(url)
-        except urllib2.URLError:
+            u = urllib.request.urlopen(url)
+        except urllib.error.URLError:
             self.logger.error("Unable to open URL: %s" % url)
             raise PackageDownloadError(url)
         self.logger.debug("start download from url: %s" % url)
@@ -332,7 +332,7 @@ class FirstRunEtap(Component):
             self.logger.warn("Unable to continue, exit from first run step")
             return False
 
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("Unable to continue, another reason: %s" % str(e))
             return False
 
@@ -375,7 +375,7 @@ class FirstRunEtap(Component):
         except PackageDownloadError:
             self.logger.warn("Initial install phase failed")
             return False
-        except SoftwareInstallError, e:
+        except SoftwareInstallError as e:
             self.logger.warn("Install of %s failed (probably machine not exist yet in inventory" % str(e))
             return False
         return True
@@ -430,15 +430,15 @@ class Dispatcher(DispatcherFrame):
                 self.logger.info("Client successfully connected to server")
                 return True
 
-        except ConnectionRefused, exc:
+        except ConnectionRefused as exc:
             self.logger.error("Agent connection failed: %s" % repr(exc))
             return False
 
-        except ConnectionTimeout, exc:
+        except ConnectionTimeout as exc:
             self.logger.error("Agent connection failed: %s" % repr(exc))
             return False
 
-        except Exception, exc:
+        except Exception as exc:
             self.logger.error("Agent connection failed: %s" % repr(exc))
             return False
 
@@ -501,7 +501,7 @@ class Dispatcher(DispatcherFrame):
 
 
 def start():
-    from config import Config
+    from .config import Config
 
     cfgfile = os.path.join("/", "etc", "pulse2agent.ini")
     config = Config()

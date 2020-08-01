@@ -69,7 +69,7 @@ class StatisticsProcessing :
                 # during previous awake presented, so now expired
                 self.watchdog_schedule(cmd_id)
 
-        self.previous = self.stats.keys()
+        self.previous = list(self.stats.keys())
 
 
 
@@ -117,7 +117,7 @@ class StatisticsProcessing :
             del self.wdogs[cmd_id]
             self.logger.info("Final statistics updated for command: %s" % cmd_id)
 
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("Statistics update failed: %s" % str(e))
 
     def watchdog_schedule(self, cmd_id):

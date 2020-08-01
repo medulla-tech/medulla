@@ -16,14 +16,14 @@ class manage_fqdn_window_activedirectory:
     def basedirmachineAD():
         bd = os.path.join("/", "var", "lib", "pulse2", "organizationADmachines")
         if not os.path.isdir(bd):
-            os.makedirs(bd, mode=0700)
+            os.makedirs(bd, mode=0o700)
         return bd
 
     @staticmethod
     def basediruserAD():
         bd = os.path.join("/", "var", "lib", "pulse2", "organizationADusers")
         if not os.path.isdir(bd):
-            os.makedirs(bd, mode=0700)
+            os.makedirs(bd, mode=0o700)
         return bd
 
     @staticmethod
@@ -34,7 +34,7 @@ class manage_fqdn_window_activedirectory:
         contenuefile = list_cn_ou_dc[2]
         pathfile = os.path.join(bd, list_cn_ou_dc[1])
         if not os.path.isdir(pathfile):
-            os.makedirs(pathfile, mode=0700)
+            os.makedirs(pathfile, mode=0o700)
         namefile = os.path.join(pathfile, list_cn_ou_dc[0])
         f = open(namefile, 'w')
         f.write(contenuefile)
@@ -47,7 +47,7 @@ class manage_fqdn_window_activedirectory:
         contenuefile = list_cn_ou_dc[2]
         pathfile = os.path.join(bd, list_cn_ou_dc[1])
         if not os.path.isdir(pathfile):
-            os.makedirs(pathfile, mode=0700)
+            os.makedirs(pathfile, mode=0o700)
         namefile = os.path.join(pathfile, list_cn_ou_dc[0])
         f = open(namefile, 'w')
         f.write(contenuefile)

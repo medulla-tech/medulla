@@ -32,7 +32,7 @@ import os
 import os.path
 import shutil
 import logging
-import ConfigParser
+import configparser
 import re
 from new import instancemethod
 from time import time, struct_time
@@ -136,14 +136,14 @@ def copytree(src, dst, symlinks=False):
             else:
                 shutil.copy2(srcname, dstname)
             # XXX What about devices, sockets etc.?
-        except (IOError, os.error), why:
+        except (IOError, os.error) as why:
             errors.append((srcname, dstname, str(why)))
         # catch the Exception from the recursive copytree so that we can
         # continue with other files
-        except Exception, err:
+        except Exception as err:
             errors.extend(err.args[0])
     if errors:
-        raise Exception, errors
+        raise Exception(errors)
 
 def xmlrpcCleanup(data):
     """
@@ -153,7 +153,7 @@ def xmlrpcCleanup(data):
     """
     if type(data) == dict:
         ret = {}
-        for key in data.keys():
+        for key in list(data.keys()):
             # array keys must be string
             ret[str(key)] = xmlrpcCleanup(data[key])
     elif type(data) == list:
@@ -175,8 +175,8 @@ def xmlrpcCleanup(data):
     elif data == None:
         ret = False
     elif type(data) == tuple:
-        ret = map(lambda x: xmlrpcCleanup(x), data)
-    elif type(data) == long:
+        ret = [xmlrpcCleanup(x) for x in data]
+    elif type(data) == int:
         ret = str(data)
     else:
         ret = data
@@ -216,7 +216,7 @@ def localifs():
 
     namestr = names.tostring()
     return [(namestr[i:i+var1].split('\0', 1)[0], socket.inet_ntoa(namestr[i+20:i+24])) \
-            for i in xrange(0, outbytes, var2)]
+            for i in range(0, outbytes, var2)]
 
 class Singleton(object):
 
@@ -355,15 +355,15 @@ class shDebugProcessProtocol(shProcessProtocol):
         shProcessProtocol.__init__(self,cmd)
 
     def outReceived(self, data):
-        print "OUT: "+data
+        print("OUT: "+data)
         shProcessProtocol.outReceived(self,data)
 
     def write(self,data):
-        print "IN: "+data
+        print("IN: "+data)
         shProcessProtocol.write(self,data)
 
     def errReceived(self, data):
-        print "ERR: "+data
+        print("ERR: "+data)
         shProcessProtocol.errReceived(self,data)
 
 
@@ -404,10 +404,10 @@ def shlaunch(cmd):
     stdout = []
     stderr = []
 
-    if isinstance(shProcess.out, basestring):
+    if isinstance(shProcess.out, str):
         stdout = shProcess.out.split("\n")
         if len(stdout) > 1: stdout.pop()
-    if isinstance(shProcess.error, basestring):
+    if isinstance(shProcess.error, str):
         stderr = shProcess.error.split("\n")
         if len(stderr) > 1: stderr.pop()
 
@@ -472,7 +472,7 @@ def generateBackgroundProcess(cmd):
 
 def getConfigParser(module, path = mmcconfdir + "/plugins/"):
     """return a configParser for a plugins"""
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     inifile = os.path.join(path, module) + ".ini"
     fp = file(inifile, "r")
     config.readfp(fp, inifile)

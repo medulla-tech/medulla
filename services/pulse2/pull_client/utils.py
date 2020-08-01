@@ -49,11 +49,11 @@ def get_registry_value(key, subkey, value):
     """
     Utility function to retrieve values from the windows registery
     """
-    import _winreg
+    import winreg
     try:
         key = getattr(_winreg, key)
-        handle = _winreg.OpenKey(key, subkey, 0, _winreg.KEY_READ | _winreg.KEY_WOW64_32KEY)
-        (value, type) = _winreg.QueryValueEx(handle, value)
+        handle = winreg.OpenKey(key, subkey, 0, winreg.KEY_READ | winreg.KEY_WOW64_32KEY)
+        (value, type) = winreg.QueryValueEx(handle, value)
         return value
     except WindowsError:  # pyflakes.ignore
         return None
@@ -80,7 +80,7 @@ def get_launcher_env():
 
         # FusionInventory 2.3.X
         fusion_registry = get_registry_value("HKEY_LOCAL_MACHINE",
-                                             "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\FusionInventory-Agent",
+                                             "SOFTWARE\Microsoft\Windows\CurrentVersion\\Uninstall\FusionInventory-Agent",
                                              "InstallLocation")
         if fusion_registry:
             if os.path.exists(fusion_registry):

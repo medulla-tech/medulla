@@ -105,7 +105,7 @@ class TimeInterval:
     segments = []
 
     def __str__(self):
-        return ','.join(map(lambda a: a.__str__(), self.segments))
+        return ','.join([a.__str__() for a in self.segments])
 
     def add(self, segment):
         if segment.start <= segment.end:
@@ -176,7 +176,7 @@ def string2timeinterval(string):
     for segment in string.split(','):
         split = segment.split('-')
         if len(split) == 2:
-            (start, end) = map(TimePoint, split)
+            (start, end) = list(map(TimePoint, split))
             if not (start.valid and end.valid):
                 return None
             tp.add(TimeSegment(start, end))

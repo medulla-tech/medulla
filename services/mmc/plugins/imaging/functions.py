@@ -134,7 +134,7 @@ class ImagingRpcProxy(RpcProxyI):
     ###########################################################
     def get_all_known_languages(self):
         """ get all the languages defined in the database """
-        return xmlrpcCleanup(map(lambda p: p.toH(), ImagingDatabase().getAllKnownLanguages()))
+        return xmlrpcCleanup([p.toH() for p in ImagingDatabase().getAllKnownLanguages()])
 
     ###########################################################
     ###### BOOT MENU (image+boot service on the target)
@@ -152,7 +152,7 @@ class ImagingRpcProxy(RpcProxyI):
 
     def __getTargetBootMenu(self, target_id, type, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
-        menu = map(lambda l: l.toH(), db.getBootMenu(target_id, type, start, end, filter))
+        menu = [l.toH() for l in db.getBootMenu(target_id, type, start, end, filter)]
         count = db.countBootMenu(target_id, type, filter)
         return [count, xmlrpcCleanup(menu)]
 
@@ -291,9 +291,9 @@ class ImagingRpcProxy(RpcProxyI):
                 for uuid in self.getTargetsByCustomMenuInEntity(loc_uuid, 0):
                     try:
                         self.resetComputerBootMenu(uuid)
-                    except Exception, e:
+                    except Exception as e:
                         logging.getLogger().error(str(e))
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().error('Unable to apply location default bootmenu')
                 logging.getLogger().error(e)
 
@@ -309,7 +309,7 @@ class ImagingRpcProxy(RpcProxyI):
             for computer in computers:
                 self.synchroComputer(computer)
             return True
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             return False
 
@@ -337,7 +337,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         # Entities are names Location in the php part, here we convert them from Location to Entity
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getEntityBootMenu(loc_id, start, end, filter))
+        ret = [l.toH() for l in db.getEntityBootMenu(loc_id, start, end, filter)]
         count = db.countEntityBootMenu(loc_id, filter)
         return [count, xmlrpcCleanup(ret)]
 
@@ -647,7 +647,7 @@ class ImagingRpcProxy(RpcProxyI):
         if len(objetclone['server_imaging']) == 0:
             #if objetclone['server_imaging'] == False:
             return
-        for k,v in objetclone['server_imaging'].iteritems():
+        for k,v in objetclone['server_imaging'].items():
             logger.debug("/usr/bin/pulse2-synch-masters %s %s %s\n"%(fromUUID(objetclone['location']),fromUUID(k),objetclone['masteruuid']))
             args = ["nohup", "/bin/bash", "/usr/bin/pulse2-synch-masters", str(fromUUID(objetclone['location'])),str(fromUUID(k)),str(objetclone['masteruuid'])]
             logger.debug("objname == %s "%(args))
@@ -806,16 +806,16 @@ class ImagingRpcProxy(RpcProxyI):
             target_type = self.__convertType(target_type, uuid)
             image = db.getTargetImage(uuid, target_type, image_uuid)
             return [True, xmlrpcCleanup(image.toH())]
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def __getTargetImages(self, id, target_type, start = 0, end = -1, filter = ''):
         # be careful the end is used for each list (image and master)
         db = ImagingDatabase()
-        reti = map(lambda l: l.toH(), db.getPossibleImages(id, target_type, start, end, filter))
+        reti = [l.toH() for l in db.getPossibleImages(id, target_type, start, end, filter)]
         counti = db.countPossibleImages(id, filter)
 
-        retm = map(lambda l: l.toH(), db.getPossibleMasters(id, target_type, start, end, filter))
+        retm = [l.toH() for l in db.getPossibleMasters(id, target_type, start, end, filter)]
         countm = db.countPossibleMasters(id, filter)
 
         return {
@@ -899,7 +899,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         # Entities are names Location in the php part, here we convert them from Location to Entity
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getEntityMasters(loc_id, start, end, filter))
+        ret = [l.toH() for l in db.getEntityMasters(loc_id, start, end, filter)]
         count = db.countEntityMasters(loc_id, filter)
         return [count, xmlrpcCleanup(ret)]
 
@@ -964,7 +964,7 @@ class ImagingRpcProxy(RpcProxyI):
             if target_type == P2IT.COMPUTER:
                 self.setComputerCustomMenuFlag(target_uuid,1)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def editImageToTarget(self, item_uuid, target_uuid, params, target_type):
@@ -1004,7 +1004,7 @@ class ImagingRpcProxy(RpcProxyI):
             if target_type == P2IT.COMPUTER:
                 self.setComputerCustomMenuFlag(target_uuid,1)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def editImage(self, item_uuid, target_uuid, params, target_type):
@@ -1042,7 +1042,7 @@ class ImagingRpcProxy(RpcProxyI):
                 db.changeTargetsSynchroState([target_uuid], target_type, P2ISS.TODO)
             ret = db.editImage(item_uuid, params)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def editImageLocation(self, item_uuid, loc_id, params):
@@ -1054,7 +1054,7 @@ class ImagingRpcProxy(RpcProxyI):
                 return [False, "cant modify a master if it's used by other targets"]
             ret = db.editImage(item_uuid, params)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def delImageToTarget(self, item_uuid, target_uuid, target_type):
@@ -1086,7 +1086,7 @@ class ImagingRpcProxy(RpcProxyI):
             if target_type == P2IT.COMPUTER:
                 self.setComputerCustomMenuFlag(target_uuid,1)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def imageGetLogs(self, itemUUID):
@@ -1182,7 +1182,7 @@ class ImagingRpcProxy(RpcProxyI):
                     # remove all the remaining from the database
                     ret = db.imagingServerImageDelete(image_uuid)
                     return xmlrpcCleanup([True, ret])
-                except Exception, e:
+                except Exception as e:
                     return xmlrpcCleanup([False, e])
 
             d = i.imagingServerImageDelete(im.uuid)
@@ -1200,7 +1200,7 @@ class ImagingRpcProxy(RpcProxyI):
             return xmlrpcCleanup([True, ret])
             # Applying this menu on all machines that have no custom_menu
             self.applyLocationDefaultBootMenu(loc_id)
-        except Exception, e:
+        except Exception as e:
             raise e
             return xmlrpcCleanup([False, e])
 
@@ -1213,7 +1213,7 @@ class ImagingRpcProxy(RpcProxyI):
             # Applying this menu on all machines that have no custom_menu
             self.applyLocationDefaultBootMenu(loc_id)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def delImageToLocation(self, menu_item_id, loc_id):
@@ -1225,13 +1225,13 @@ class ImagingRpcProxy(RpcProxyI):
             # Applying this menu on all machines that have no custom_menu
             self.applyLocationDefaultBootMenu(loc_id)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     ###### BOOT SERVICES
     def __getTargetBootServices(self, id, target_type, start = 0, end = -1, filter = ''):
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getBootServicesOnTargetById(id, start, end, filter))
+        ret = [l.toH() for l in db.getBootServicesOnTargetById(id, start, end, filter)]
         count = db.countBootServicesOnTargetById(id, filter)
         return [count, xmlrpcCleanup(ret)]
 
@@ -1303,7 +1303,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getPossibleBootServices(target_uuid, start, end, filter))
+        ret = [l.toH() for l in db.getPossibleBootServices(target_uuid, start, end, filter)]
         count = db.countPossibleBootServices(target_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
 
@@ -1330,7 +1330,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         # Entities are names Location in the php part, here we convert them from Location to Entity
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getEntityBootServices(loc_id, start, end, filter))
+        ret = [l.toH() for l in db.getEntityBootServices(loc_id, start, end, filter)]
         count = db.countEntityBootServices(loc_id, filter)
         return [count, xmlrpcCleanup(ret)]
 
@@ -1372,7 +1372,7 @@ class ImagingRpcProxy(RpcProxyI):
             if target_type == P2IT.COMPUTER:
                 self.setComputerCustomMenuFlag(target_uuid,1)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def delServiceToTarget(self, bs_uuid, target_uuid, target_type):
@@ -1404,7 +1404,7 @@ class ImagingRpcProxy(RpcProxyI):
             if target_type == P2IT.COMPUTER:
                 self.setComputerCustomMenuFlag(target_uuid,1)
             return xmlrpcCleanup(ret)
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def editServiceToTarget(self, bs_uuid, target_uuid, params, target_type):
@@ -1448,7 +1448,7 @@ class ImagingRpcProxy(RpcProxyI):
             if target_type == P2IT.COMPUTER:
                 self.setComputerCustomMenuFlag(target_uuid,1)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             raise e
             return xmlrpcCleanup([False, e])
 
@@ -1461,7 +1461,7 @@ class ImagingRpcProxy(RpcProxyI):
             # Applying this menu on all machines that have no custom_menu
             self.applyLocationDefaultBootMenu(location_id)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def delServiceToLocation(self, bs_uuid, location_id):
@@ -1473,7 +1473,7 @@ class ImagingRpcProxy(RpcProxyI):
             # Applying this menu on all machines that have no custom_menu
             self.applyLocationDefaultBootMenu(location_id)
             return xmlrpcCleanup(ret)
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def editServiceToLocation(self, mi_uuid, location_id, params):
@@ -1485,7 +1485,7 @@ class ImagingRpcProxy(RpcProxyI):
             # Applying this menu on all machines that have no custom_menu
             self.applyLocationDefaultBootMenu(location_id)
             return xmlrpcCleanup([True, ret])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def removeService(self, bs_uuid, location_id, params):
@@ -1503,7 +1503,7 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 raise Exception("Error while removing boot service")
             return xmlrpcCleanup([True, None])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     ###### MENU ITEMS
@@ -1528,7 +1528,7 @@ class ImagingRpcProxy(RpcProxyI):
         ret = []
         count = 0
         for tt in target_types:
-            ret += map(lambda l: l.toH(), db.getImagingLogsOnTargetByIdAndType(id, tt, start, end, filter))
+            ret += [l.toH() for l in db.getImagingLogsOnTargetByIdAndType(id, tt, start, end, filter)]
             count += db.countImagingLogsOnTargetByIdAndType(id, tt, filter)
         return [count, xmlrpcCleanup(ret)]
 
@@ -1602,7 +1602,7 @@ class ImagingRpcProxy(RpcProxyI):
         if location_uuid == False:
             return [0, []]
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getImagingLogs4Location(location_uuid, start, end, filter))
+        ret = [l.toH() for l in db.getImagingLogs4Location(location_uuid, start, end, filter)]
         count = db.countImagingLogs4Location(location_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
 
@@ -1650,7 +1650,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getAllNonLinkedImagingServer(start, end, filter))
+        ret = [l.toH() for l in db.getAllNonLinkedImagingServer(start, end, filter)]
         count = db.countAllNonLinkedImagingServer(filter)
         return [count, xmlrpcCleanup(ret)]
 
@@ -1680,7 +1680,7 @@ class ImagingRpcProxy(RpcProxyI):
             logging.getLogger().debug("getImagingServerByUUID : is_uuid %s " % (is_uuid))
             Pulse2Manager().putPackageServerEntity(my_is.packageserver_uuid, loc_id)
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().warn("Imaging.linkImagingServerToEntity : %s" % e)
             return [False, "Failed to link Imaging Server to Entity : %s" % e]
 
@@ -1707,7 +1707,7 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             success1 = db.unlinkImagingServerToEntity(is_uuid)
             success2 = Pulse2Manager().delPackageServerEntity(loc_id)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().warn("Imaging.unlinkImagingServerToEntity : %s" % e)
 
         if not success1 :
@@ -1779,7 +1779,7 @@ class ImagingRpcProxy(RpcProxyI):
             # Regenerate bootmenus
             self.SynchroAllLocationComputers(location)
             return xmlrpcCleanup([db.modifyMenu(menu['imaging_uuid'], config)])
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def doesLocationHasImagingServer(self, loc_id):
@@ -1924,7 +1924,7 @@ class ImagingRpcProxy(RpcProxyI):
         #if uuids:
         if len(uuids):
             h_macaddresses = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids':uuids}))
-            macaddresses = h_macaddresses.values()
+            macaddresses = list(h_macaddresses.values())
             if '' in macaddresses:
                 # Some computers don't have a MAC address
                 logger.info("Some computers don't have any MAC address in the profile %s" % profileUUID)
@@ -1936,7 +1936,7 @@ class ImagingRpcProxy(RpcProxyI):
             elif len(uuids) > len(macaddresses):
                 # Some computers don't have a MAC address
                 list_of_fail = uuids
-                for uuid in h_macaddresses.keys():
+                for uuid in list(h_macaddresses.keys()):
                     if uuid in list_of_fail:
                         list_of_fail.remove(uuid)
                 logger.info("Some computers don't have any MAC address in the profile %s (%s)" % (profileUUID, str(list_of_fail)))
@@ -1945,7 +1945,7 @@ class ImagingRpcProxy(RpcProxyI):
                 ret = 0
                 # Check all MAC addresses
                 i = 0
-                for uuid, mac in h_macaddresses.iteritems():
+                for uuid, mac in h_macaddresses.items():
                     if not pulse2.utils.isLinuxMacAddress(mac):
                         logger.info("The computer %s don't have a valid MAC address" % uuid)
                         ret = 4
@@ -1991,7 +1991,7 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             ret = db.changeTargetsSynchroState([uuid], target_type, P2ISS.TODO)
             return ret
-        except Exception, e:
+        except Exception as e:
             self.logger.warn("Error while resetSynchroState %s"%(uuid))
             self.logger.warn(e)
         return False
@@ -2111,7 +2111,7 @@ class ImagingRpcProxy(RpcProxyI):
         menu_items = db.getMenuContent(menu.id, P2IM.ALL, 0, -1, '', None, location.uuid)
         menu = menu.toH()
         menu, menu_items, h_pis = generateMenusContent(menu, menu_items, None)
-        ims = h_pis.keys()
+        ims = list(h_pis.keys())
         a_pis = db.getImagesPostInstallScript(ims, None, location.uuid)
         for pis, im, name_i18n, desc_i18n, pis_order in a_pis:
             name = pis.default_name
@@ -2131,7 +2131,7 @@ class ImagingRpcProxy(RpcProxyI):
             for loc_uuid, t_uuid, order in a_targets:
                 # loc_uuid = None
                 # t_uuid = None
-                if not menu['images'][order].has_key('post_install_script'):
+                if 'post_install_script' not in menu['images'][order]:
                 #if not 'post_install_script' in menu['images'][order]:
                     menu['images'][order]['post_install_script'] = []
                 menu['images'][order]['post_install_script'].append(pis)
@@ -2144,7 +2144,7 @@ class ImagingRpcProxy(RpcProxyI):
         menu_items = db.getMenuContent(menu.id, P2IM.ALL, 0, -1, '', None, loc_uuid)
         menu = menu.toH()
         menu, menu_items, h_pis = generateMenusContent(menu, menu_items, loc_uuid)
-        ims = h_pis.keys()
+        ims = list(h_pis.keys())
         a_pis = db.getImagesPostInstallScript(ims, None, loc_uuid)
         for pis, im, name_i18n, desc_i18n, pis_order in a_pis:
             pis = {
@@ -2156,7 +2156,7 @@ class ImagingRpcProxy(RpcProxyI):
             }
             a_targets = h_pis[im.id]
             for loc_uuid, t_uuid, order in a_targets:
-                if not menu['images'][order].has_key('post_install_script'):
+                if 'post_install_script' not in menu['images'][order]:
                 #if not 'post_install_script' in menu['images'][order]:
                     menu['images'][order]['post_install_script'] = []
                 menu['images'][order]['post_install_script'].append(pis)
@@ -2191,7 +2191,7 @@ class ImagingRpcProxy(RpcProxyI):
             d = i.imagingServerDefaultMenuSet(menu)
             d.addCallback(treatFailures).addErrback(cb_fail)
             return d
-        except Exception, e:
+        except Exception as e:
             logger.error("Error trying to set default menu (location: %s): %s" % \
                              (loc_uuid, e))
             db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
@@ -2260,7 +2260,7 @@ class ImagingRpcProxy(RpcProxyI):
 
         # get computers in location that need synchro
         uuids = db.getComputersThatNeedSynchroInEntity(uuid)
-        uuids = map(__getUUID, uuids)
+        uuids = list(map(__getUUID, uuids))
 
         def treatComputers(results):
             logger.debug("treatComputers>>>>>>")
@@ -2274,7 +2274,7 @@ class ImagingRpcProxy(RpcProxyI):
 
         # get profiles in location that need synchro
         pids = db.getProfilesThatNeedSynchroInEntity(uuid)
-        pids = map(__getUUID, pids)
+        pids = list(map(__getUUID, pids))
 
         def treatProfiles(results):
             logger.debug("treatProfiles>>>>>>")
@@ -2291,7 +2291,7 @@ class ImagingRpcProxy(RpcProxyI):
 
         # get computers in profiles in location that need synchro
         pids = db.getComputersInProfileThatNeedSynchroInEntity(uuid)
-        pids = map(__getUUID, pids)
+        pids = list(map(__getUUID, pids))
 
         def treatComputersInProfile(results):
             logger.debug("treatComputersInProfile>>>>>>")
@@ -2414,7 +2414,7 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             ret, target = db.setMyMenuTarget(uuid, params, target_type)
             db.changeTargetsSynchroState([uuid], target_type, P2ISS.TODO)
-        except Exception, e:
+        except Exception as e:
             return [False, "setMyMenuTarget : %s" % str(e)]
 
         if not isRegistered:
@@ -2424,7 +2424,7 @@ class ImagingRpcProxy(RpcProxyI):
 
             if target_type == P2IT.PROFILE:
                 pid = uuid
-                uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(pid))
+                uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(pid)]
             else:
                 uuids = [uuid]
 
@@ -2475,7 +2475,7 @@ class ImagingRpcProxy(RpcProxyI):
                 defer_list = []
                 uuids = []
                 for loc_uuid in distinct_loc:
-                    uuids.extend(distinct_loc[loc_uuid][1].keys())
+                    uuids.extend(list(distinct_loc[loc_uuid][1].keys()))
                 ctx = self.currentContext
                 hostnames = ComputerManager().getMachineHostname(ctx, {'uuids':uuids})
                 h_hostnames = {}
@@ -2495,7 +2495,7 @@ class ImagingRpcProxy(RpcProxyI):
                     keys = networks['networkUuids']
                     values = networks['macAddress']
                     # [Memo] uuidMacDict = {'NIC_UUID': 'Mac_adress', etc.}
-                    uuidMacDict = dict(zip(keys, values))
+                    uuidMacDict = dict(list(zip(keys, values)))
 
                     for uuid in uuids:
                         if uuid in params['choose_network_profile']:
@@ -2513,7 +2513,7 @@ class ImagingRpcProxy(RpcProxyI):
                 try:
                     params['target_name'] = '' # put the real name!
                     db.setProfileMenuTarget(uuids, pid, params)
-                except Exception, e:
+                except Exception as e:
                     logger.error("failed to setProfileMenuTarget for computers in profile %s"%(pid))
                     db.changeTargetsSynchroState(uuids, P2IT.COMPUTER_IN_PROFILE, P2ISS.TODO)
                     return [False, "setProfileMenuTarget : %s" % (str(e))]
@@ -2545,7 +2545,7 @@ class ImagingRpcProxy(RpcProxyI):
                         defer_list.append(d)
                     else:
                         logger.error("couldn't initialize the ImagingApi to %s"%(url))
-                        db.changeTargetsSynchroState(menus.keys(), P2IT.COMPUTER_IN_PROFILE, P2ISS.TODO)
+                        db.changeTargetsSynchroState(list(menus.keys()), P2IT.COMPUTER_IN_PROFILE, P2ISS.TODO)
                         return [False, ""]
 
                 def sendResult(results, pid = pid, db = db):
@@ -2581,7 +2581,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         filexml="/var/lib/pulse2/imaging/postinst/sysprep/"
         if not path.exists(filexml):
-            makedirs(filexml, 0722)
+            makedirs(filexml, 0o722)
         files = []
         osfile = []
         descriptionfile = []
@@ -2592,7 +2592,7 @@ class ImagingRpcProxy(RpcProxyI):
                 fichier = open(absolufile,"r")
                 for ligne in fichier:
                     if ligne.startswith("OS"):
-                        print ligne
+                        print(ligne)
                         osfile.append(ligne)
                         break
                 else:
@@ -2603,7 +2603,7 @@ class ImagingRpcProxy(RpcProxyI):
                 fichier = open(absolufile,"r")
                 for ligne in fichier:
                     if ligne.startswith("Notes:"):
-                        print ligne
+                        print(ligne)
                         descriptionfile.append(ligne[7:-1])
                         break
                 else:
@@ -2625,14 +2625,14 @@ class ImagingRpcProxy(RpcProxyI):
         filetmp="/tmp/"
 
         if not path.exists(filexml):
-            makedirs(filexml, 0722)
+            makedirs(filexml, 0o722)
 
         #test if file already exists
         if path.isfile(filexml+title) :
             try :
                 f = open(filetmp+title, 'w')
                 f.write(xmlWAFG)
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().exception(e)
                 return False
             else:
@@ -2660,7 +2660,7 @@ class ImagingRpcProxy(RpcProxyI):
             try:
                 f = open(filexml, 'w')
                 f.write(xmlWAFG)
-            except  Exception, e:
+            except  Exception as e:
                 logging.getLogger().exception(e)
                 return False
             else:
@@ -2675,7 +2675,7 @@ class ImagingRpcProxy(RpcProxyI):
             try :
                 f = open(filexml+title, 'w')
                 f.write(xmlWAFG)
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().exception(e)
                 return False
             else:
@@ -2716,7 +2716,7 @@ class ImagingRpcProxy(RpcProxyI):
             parameters = json.loads(parameters)
             parameters["Os"] = os
             parameters['Notes'] = description
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().exception(e)
             return False
 
@@ -2757,7 +2757,7 @@ class ImagingRpcProxy(RpcProxyI):
                     else :
                         content2.append(line)
 
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().exception(e)
                 return False
             else :
@@ -2805,7 +2805,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getAllTargetPostInstallScript(target_uuid, start, end, filter))
+        ret = [l.toH() for l in db.getAllTargetPostInstallScript(target_uuid, start, end, filter)]
         count = db.countAllTargetPostInstallScript(target_uuid, filter)
         return [count, xmlrpcCleanup(ret)]
 
@@ -2831,7 +2831,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
-        ret = map(lambda l: l.toH(), db.getAllPostInstallScripts(location, start, end, filter))
+        ret = [l.toH() for l in db.getAllPostInstallScripts(location, start, end, filter)]
         count = db.countAllPostInstallScripts(location, filter)
         return [count, xmlrpcCleanup(ret)]
 
@@ -2867,7 +2867,7 @@ class ImagingRpcProxy(RpcProxyI):
         # TODO should be sync
         try:
             return xmlrpcCleanup(ImagingDatabase().delPostInstallScript(pis_uuid))
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def getComputersWithThisPostInstallScript(self, pis_uuid):
@@ -2906,7 +2906,7 @@ class ImagingRpcProxy(RpcProxyI):
                 return self.__synchroTargets(computer_uuids, P2IT.COMPUTER)
 
             return xmlrpcCleanup(res_db)
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def addPostInstallScript(self, loc_id, params):
@@ -2927,7 +2927,7 @@ class ImagingRpcProxy(RpcProxyI):
         # TODO should be sync
         try:
             return xmlrpcCleanup(ImagingDatabase().addPostInstallScript(loc_id, params))
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def createBootServiceFromPostInstall(self, script_id, loc_id):
@@ -2956,7 +2956,7 @@ class ImagingRpcProxy(RpcProxyI):
             i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
 
             return xmlrpcCleanup(i.createBootServiceFromPostInstall(script_file))
-        except Exception, e:
+        except Exception as e:
             return xmlrpcCleanup([False, e])
 
     def __inventory_check(self, MACAddress, waitToBeInventoried, timeout=20):
@@ -3174,7 +3174,7 @@ class ImagingRpcProxy(RpcProxyI):
             # Set the computer menu
             try:
                 db.setMyMenuTarget(uuid, params, target_type) # FIXME : are not we supposed to deal with the return value ?
-            except Exception, e:
+            except Exception as e:
                 return xmlrpcCleanup([False, str(e)])
             # Tell the MMC agent to synchronize the menu
             # As it in some way returns a deferred object, it is run in
@@ -3243,7 +3243,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: boolean
         """
         db = ImagingDatabase()
-        return db.countImagingServerByPackageServerUUID(uuid)<>0
+        return db.countImagingServerByPackageServerUUID(uuid)!=0
 
     def getComputerByMac(self, mac):
         """
@@ -3367,7 +3367,7 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             ret = db.logClientAction(imaging_server_uuid, computer_uuid, log)
             ret = [ret, '']
-        except Exception, e:
+        except Exception as e:
             logger.exception(e)
             ret = [False, str(e)]
         return ret
@@ -3416,7 +3416,7 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             ret = db.registerImage(imaging_server_uuid, computer_uuid, image)
             ret = [ret, '']
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().exception(e)
             ret = [False, str(e)]
         return ret
@@ -3463,7 +3463,7 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             ret = db.editImage(item_uuid, image)
             ret = [ret, '']
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().exception(e)
             ret = [False, str(e)]
         return ret
@@ -3475,7 +3475,7 @@ class ImagingRpcProxy(RpcProxyI):
         db = ImagingDatabase()
         try:
             ret = db.injectInventory(imaging_server_uuid, computer_uuid, inventory)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().exception(e)
             ret = [False, str(e)]
         return ret
@@ -3584,7 +3584,7 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 self.__synchroTargets([computer_uuid], P2IT.COMPUTER)
 
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().exception(e)
             return [False, str(e)]
         return [True, True]
@@ -3681,7 +3681,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
     # Load up l_uuids with the required info (computer within profile OR given computers)
     if target_type == P2IT.PROFILE:
         pid = uuids[0]
-        l_uuids = map(lambda c: c.uuid, ComputerProfileManager().getProfileContent(pid))
+        l_uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(pid)]
     else:
         pid = None
         l_uuids = uuids
@@ -3716,12 +3716,12 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
 
         # drop location processing if there is no menu to register
         #if to_register.keys() == False:
-        if len(to_register.keys()) == 0:
+        if len(list(to_register.keys())) == 0:
             continue
 
         # store into h_hostnames hostnames of computers to register
         h_hostnames = {}
-        hostnames = ComputerManager().getMachineHostname(ctx, {'uuids' : to_register.keys()})
+        hostnames = ComputerManager().getMachineHostname(ctx, {'uuids' : list(to_register.keys())})
         if type(hostnames) == list:
             for computer in hostnames:
                 h_hostnames[computer['uuid']] = computer['hostname']
@@ -3732,7 +3732,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
         if macs:
             h_macaddress = macs
         else:
-            h_macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : to_register.keys()}))
+            h_macaddress = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : list(to_register.keys())}))
 
         # then try to build a list of computer with menus, hostname, mac addr and so on
         computers = []
@@ -3760,12 +3760,12 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
 
     # if there are some new computers in the profile, register them
     #if h_computers.keys():
-    if len(h_computers.keys()) != 0:
+    if len(list(h_computers.keys())) != 0:
         for url in h_computers:
             computers = h_computers[url]
             i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
             if i != None:
-                def treatRegister(results, uuids = to_register.keys(), logger = logger, url = url):
+                def treatRegister(results, uuids = list(to_register.keys()), logger = logger, url = url):
                     if type(results) == list and len(results) > 0 and  results[0] == 'PULSE2_ERR':
                         logger.warn("couldn't connect to the ImagingApi %s"%(url))
                         return uuids
@@ -3786,14 +3786,14 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
     #if defer_list == False:
     if len(defer_list) == 0:
         distinct_locs = distinct_loc
-        keyvaleur = distinct_loc.keys()
+        keyvaleur = list(distinct_loc.keys())
         return synchroTargetsSecondPart(ctx, distinct_locs, target_type, pid, macs = macs)
     else:
         def sendResult(results, distinct_loc = distinct_loc, target_type = target_type, pid = pid, db = db):
             for result, uuids in results:
                 db.delProfileMenuTarget(uuids)
             distinct_locs = distinct_loc
-            keyvaleur = distinct_loc.keys()
+            keyvaleur = list(distinct_loc.keys())
             return synchroTargetsSecondPart(ctx, distinct_locs, target_type, pid, macs = macs)
         defer_list = defer.DeferredList(defer_list)
         defer_list.addCallback(sendResult)
@@ -3837,9 +3837,9 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
             logger.error("couldn't initialize the ImagingApi to %s"%(url))
 
         l_menus = distinct_loc[location_uuid][1]
-        macaddresses = macs and macs or getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : l_menus.keys()}))
+        macaddresses = macs and macs or getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids' : list(l_menus.keys())}))
 
-        for uuid in l_menus.keys():
+        for uuid in list(l_menus.keys()):
             l_menus[uuid]['target']['macaddress'] = macaddresses[uuid]
 
         d = i.computersMenuSet(l_menus)
@@ -3900,10 +3900,10 @@ def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis =
             }
             menu['bootservices'][str(mi['order'])] = bs
     # when no default mi has been defined we take the first element of the menu
-    if not menu.has_key('default_item') or menu['default_item'] == None:
+    if 'default_item' not in menu or menu['default_item'] == None:
     #if not 'default_item' in menu or menu['default_item'] == None:
         menu['default_item'] = 0
-    if not menu.has_key('default_item_WOL') or menu['default_item_WOL'] == None:
+    if 'default_item_WOL' not in menu or menu['default_item_WOL'] == None:
     #if not 'default_item_WOL' in menu or menu['default_item_WOL'] == None:
         menu['default_item_WOL'] = 0
     return (menu, menu_items, h_pis)
@@ -3916,7 +3916,7 @@ def generateMenus(logger, db, uuids, unique=False):
     distinct_loc = {}
 
     locations = ComputerLocationManager().getMachinesLocations(uuids)
-    if len(locations.keys()) != len(uuids):
+    if len(list(locations.keys())) != len(uuids):
         # do fail
         logger.error("couldn't get the target entity for %s"%(str(uuids)))
     h_pis = {}
@@ -3949,7 +3949,7 @@ def generateMenus(logger, db, uuids, unique=False):
             url = chooseImagingApiUrl(loc_uuid)
             distinct_loc[loc_uuid] = [url, {m_uuid:menu}]
 
-    ims = h_pis.keys()
+    ims = list(h_pis.keys())
     for loc_uuid in distinct_loc:
         a_pis = db.getImagesPostInstallScript(ims, None, loc_uuid)
         for pis, im, name_i18n, desc_i18n, pis_order in a_pis:
@@ -3969,12 +3969,12 @@ def generateMenus(logger, db, uuids, unique=False):
             }
             a_targets = h_pis[im.id]
             for loc_uuid, t_uuid, order in a_targets:
-                if not distinct_loc[loc_uuid][1][t_uuid]['images'][order].has_key('post_install_script'):
+                if 'post_install_script' not in distinct_loc[loc_uuid][1][t_uuid]['images'][order]:
                 #if not 'post_install_script' in distinct_loc[loc_uuid][1][t_uuid]['images'][order]:
                     distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = []
                 distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'].append(pis)
     if unique:
-        return distinct_loc.values()[0][1].values()[0]
+        return list(distinct_loc.values())[0][1].values()[0]
     else:
         return distinct_loc
 
@@ -4012,7 +4012,7 @@ def computersUnregister(computers_UUID, backup):
     for en, target in location:
         en_uuid = en.uuid
         #if not en_uuid in h_location:
-        if not h_location.has_key(en_uuid):
+        if en_uuid not in h_location:
             h_location[en_uuid] = [en, []]
         h_location[en_uuid][1].append(target)
 
@@ -4070,14 +4070,14 @@ def getComputersNetwork_filtered(ctx, params):
             del interfacelist[1]['macAddress'][indexlist]
             del interfacelist[1]['domain'][indexlist]
             del interfacelist[1]['subnetMask'][indexlist]
-    for m in xrange(len(network_data)):
+    for m in range(len(network_data)):
         cpt_data = network_data[m][1]
         ipHostNumber = []
         macAddress = []
         networkUuids = []
         subnetMask = []
         domainlist = []
-        for i in xrange(len(cpt_data['ipHostNumber'])):
+        for i in range(len(cpt_data['ipHostNumber'])):
             ip = cpt_data['ipHostNumber'][i]
             mac = cpt_data['macAddress'][i]
             uuid = cpt_data['networkUuids'][i]
@@ -4098,7 +4098,7 @@ def getComputersNetwork_filtered(ctx, params):
         # If there is more than one address, apply preferred netowrk algo
         preferred_network = ImagingConfig().preferred_network
         if len(macAddress) > 1 and preferred_network:
-           for i in xrange(len(macAddress)):
+           for i in range(len(macAddress)):
                ip = ipHostNumber[i]
                if ipaddr.IPAddress(ip) in ipaddr.IPNetwork(preferred_network):
                    ipHostNumber = [ip]

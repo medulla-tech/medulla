@@ -26,9 +26,7 @@ from mmc.plugins.dashboard.config import DashboardConfig
 logger = logging.getLogger()
 
 
-class DashboardManager(object):
-    __metaclass__ = SingletonN
-
+class DashboardManager(object, metaclass=SingletonN):
     def __init__(self):
         self.config = DashboardConfig("dashboard")
         self.panel = {}
@@ -41,7 +39,7 @@ class DashboardManager(object):
             logger.info("Panel %s disabled by configuration" % panel)
 
     def get_panels(self):
-        return [ name for name, panel in self.panel.items() ]
+        return [ name for name, panel in list(self.panel.items()) ]
 
     def get_panel_infos(self, panel):
         if panel in self.panel:
@@ -51,6 +49,6 @@ class DashboardManager(object):
 
     def get_panels_infos(self):
         infos = {}
-        for name, panel in self.panel.items():
+        for name, panel in list(self.panel.items()):
             infos[name] = panel.serialize()
         return infos

@@ -21,7 +21,7 @@
 import logging
 logging.basicConfig()
 
-import Queue
+import queue
 import threading
 import tempfile
 from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
@@ -97,7 +97,7 @@ class Test00_VPNLaunchControl(TestCase):
         - create a simple script with active stdout and stderr
         - launch it and catch its output
         """
-        queue = Queue.Queue()
+        queue = queue.Queue()
 
         with ProcessSimulator() as script:
 
@@ -126,7 +126,7 @@ class Test00_VPNLaunchControl(TestCase):
     def test01_return_code_succeed(self):
         """Launched script returns 0"""
 
-        queue = Queue.Queue()
+        queue = queue.Queue()
 
         with ProcessSucceed() as script:
 
@@ -145,7 +145,7 @@ class Test00_VPNLaunchControl(TestCase):
     def test02_return_code_failed(self):
         """Launched script returns 1"""
 
-        queue = Queue.Queue()
+        queue = queue.Queue()
 
         with ProcessFailed() as script:
 
@@ -165,7 +165,7 @@ class Test00_VPNLaunchControl(TestCase):
     def test03_probe_failed(self):
         """ Unreachable server """
         config = ConfigHelper()
-        queue = Queue.Queue()
+        queue = queue.Queue()
 
         launch_vpn = VPNLaunchControl(config, queue)
 
@@ -199,7 +199,7 @@ class Test00_VPNLaunchControl(TestCase):
                                  )
             t.start()
 
-            queue = Queue.Queue()
+            queue = queue.Queue()
 
             launch_vpn = VPNLaunchControl(config, queue)
             ret = launch_vpn.start()

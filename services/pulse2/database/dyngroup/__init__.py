@@ -154,9 +154,9 @@ class DyngroupDatabase(DatabaseHelper):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except DBAPIError, e:
+            except DBAPIError as e:
                 self.logger.error(e)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error(e)
             if ret: break
         if not ret:
@@ -324,7 +324,7 @@ class DyngroupDatabase(DatabaseHelper):
             session.query(Results).filter_by(FK_machines=mid).delete()
             session.query(ProfilesResults).filter_by(FK_machines=mid).delete()
             session.query(Machines).filter_by(id = mid).delete()
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error('Cannot delete machine %s from associated groups.' % uuid)
             logging.getLogger().error(str(e))
             return False
@@ -572,7 +572,7 @@ class DyngroupDatabase(DatabaseHelper):
         session = create_session()
         ret = session.query(ShareGroup).filter(self.shareGroup.c.FK_groups == id).all()
         session.close()
-        return map(lambda x: x.toH(), ret)
+        return [x.toH() for x in ret]
 
     def can_edit(self, ctx, id):
         """
@@ -684,7 +684,7 @@ class DyngroupDatabase(DatabaseHelper):
         comp_dict = dict([(c["uuid"], c["hostname"]) for c in computers])
         # existing machines
         existing = session.query(Machines).filter(
-                           self.machines.c.uuid.in_(comp_dict.keys())
+                           self.machines.c.uuid.in_(list(comp_dict.keys()))
                            ).all()
         results_ids = []
 
@@ -698,7 +698,7 @@ class DyngroupDatabase(DatabaseHelper):
 
         existing_uuids = [q.uuid for q in existing]
         # inserting non-existing computers
-        for uuid, name in comp_dict.items() :
+        for uuid, name in list(comp_dict.items()) :
             if uuid not in existing_uuids :
                 id = self.__getOrCreateMachine(uuid, name, session)
                 results_ids.append(id)

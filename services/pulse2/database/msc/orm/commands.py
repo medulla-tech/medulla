@@ -297,7 +297,7 @@ def stop_commands_on_host(cohs):
     groups = CoHManager.setCoHsStateStopped(cohs)
     session = sqlalchemy.orm.create_session()
 
-    for cmd_id, count in groups.items():
+    for cmd_id, count in list(groups.items()):
         cmd = session.query(Commands).get(cmd_id)
         # update stats
         cmd.sum_running -= count

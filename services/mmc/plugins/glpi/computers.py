@@ -53,7 +53,7 @@ class GlpiComputers(ComputerI):
 
         try:
             return self.glpi.getComputer(ctx, filt, empty_macs)
-        except Exception, e:
+        except Exception as e:
             if len(e.args) > 0 and e.args[0].startswith('NOPERM##'):
                 machine = e.args[0].replace('NOPERM##', '')
                 self.logger.warn("User %s does not have good permissions to access machine '%s'" % (ctx.userid, machine))
@@ -62,10 +62,10 @@ class GlpiComputers(ComputerI):
 
     def getComputersNetwork(self, ctx, params):
         if 'uuids' in params:
-            return self.glpi.getComputersList(ctx, {'uuid' : params['uuids'] }).values()
+            return list(self.glpi.getComputersList(ctx, {'uuid' : params['uuids'] }).values())
         elif 'uuid' in params:
-            return self.glpi.getComputersList(ctx, {'uuid' : params['uuid'] }).values()
-        return self.glpi.getComputersList(ctx, {}).values()
+            return list(self.glpi.getComputersList(ctx, {'uuid' : params['uuid'] }).values())
+        return list(self.glpi.getComputersList(ctx, {}).values())
 
     def getMachineMac(self, ctx, params):
         # format : { 'uuid' : ['mac1' ...], ... }
@@ -80,7 +80,7 @@ class GlpiComputers(ComputerI):
     def getMachineHostname(self, ctx, filt = None):
         machines = self.glpi.getRestrictedComputersList(ctx, 0, -1, filt)
         ret = []
-        for x, m in machines.values():
+        for x, m in list(machines.values()):
             if 'hostname' not in m:
                 if type(m['cn']) == list:
                     m['hostname'] = m['cn'][0]
@@ -187,7 +187,7 @@ class GlpiComputers(ComputerI):
             computersList = self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
             # display only "imaging compliant" computers
             uuids = []
-            networks = self.getComputersNetwork(ctx, {'uuids': computersList.keys()})
+            networks = self.getComputersNetwork(ctx, {'uuids': list(computersList.keys())})
             for network in networks:
                 network = network[1]
                 # Check if computer has macAddress and ipHostNumber
@@ -290,7 +290,7 @@ class GlpiComputers(ComputerI):
         master_config = xmppMasterConfig()
         regvalue = []
         r=re.compile(r'reg_key_.*')
-        regs=filter(r.search, self.config.summary)
+        regs=list(filter(r.search, self.config.summary))
         for regkey in regs:
             regkeyconf = getattr( master_config, regkey).split("|")[-1]
             if regkeyconf.startswith('HKEY'):

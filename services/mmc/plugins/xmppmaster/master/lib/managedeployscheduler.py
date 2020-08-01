@@ -40,7 +40,7 @@ class manageschedulerdeploy:
         path_bd = self.bddir()
         if path_bd is not None:
             if not os.path.exists(path_bd):
-                os.makedirs(path_bd, mode=0700)
+                os.makedirs(path_bd, mode=0o700)
             self.name_basesession = os.path.join(path_bd, name_basesession)
             self.name_basecmd = os.path.join(path_bd, name_basecmd)
 
@@ -73,7 +73,7 @@ class manageschedulerdeploy:
         sessionid = str(sessionid)
         data = ""
         self.openbase()
-        if self.dbsessionscheduler.has_key(str(sessionid)):
+        if str(sessionid) in self.dbsessionscheduler:
             data = self.dbsessionscheduler[sessionid]
         self.closebase()
         return data
@@ -81,7 +81,7 @@ class manageschedulerdeploy:
     def del_sesionscheduler(self, sessionid):
         sessionid = str(sessionid)
         self.openbase()
-        if self.dbsessionscheduler.has_key(sessionid):
+        if sessionid in self.dbsessionscheduler:
             del self.dbsessionscheduler[sessionid]
             self.dbsessionscheduler.sync()
         self.closebase()

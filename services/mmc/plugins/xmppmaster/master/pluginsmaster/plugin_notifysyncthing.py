@@ -37,7 +37,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("=====================================================")
     logger.debug(plugin)
     logger.debug("=====================================================")
-    print json.dumps(data, indent = 4)
+    print(json.dumps(data, indent = 4))
     if 'suppdir' in data or 'adddir' in data:
         logger.debug("removing package %s %s %s"%( data['packageid'], 'create', str(message['from'])))
         PkgsDatabase().pkgs_unregister_synchro_package( data['packageid'],

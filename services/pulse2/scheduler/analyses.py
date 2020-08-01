@@ -25,6 +25,7 @@ from twisted.internet.defer import DeferredList
 
 from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
 from pulse2.scheduler.types import MscContainer
+from functools import reduce
 
 
 class MscQueryManager(MscContainer):
@@ -296,7 +297,7 @@ class MscQueryManager(MscContainer):
             self.logger.debug("scheduler %s: command #%s is in split proxy mode"
                     % (self.config.name, cmd_id))
             return 'split'
-        elif len(spotted_priorities) == reduce(lambda x, y: x+y, spotted_priorities.values()): # one priority per proxy => queue mode
+        elif len(spotted_priorities) == reduce(lambda x, y: x+y, list(spotted_priorities.values())): # one priority per proxy => queue mode
             self.logger.debug("scheduler %s: command #%s is in queue proxy mode"
                     % (self.config.name, cmd_id))
             return 'queue'
@@ -318,7 +319,7 @@ class MscQueryManager(MscContainer):
 
             # map if to go from {uuid1: (coh1, max1), uuid2: (coh2, max2)} to ((uuid1, max1), (uuid2, max2))
             # ret val is an uuid
-            final_uuid = LocalProxiesUsageTracking().take_one(alive_proxies.keys(), cohq.cmd.id)
+            final_uuid = LocalProxiesUsageTracking().take_one(list(alive_proxies.keys()), cohq.cmd.id)
             if not final_uuid: # not free proxy, wait
                 self.logger.debug("scheduler %s: coh #%s wait for a local proxy for to be usable" % (self.config.name, cohq.coh.id))
                 return 'waiting'

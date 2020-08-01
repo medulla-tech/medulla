@@ -25,7 +25,7 @@ Caching related functions / objects
 """
 
 import logging
-import ConfigParser
+import configparser
 import os.path
 import time
 
@@ -45,7 +45,7 @@ class UUIDCache(pulse2.utils.Singleton):
     """
 
     log = logging.getLogger('imaging')
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
 
     def __init__(self):
         pulse2.utils.Singleton.__init__(self)
@@ -59,7 +59,7 @@ class UUIDCache(pulse2.utils.Singleton):
                 fp = open(self.cachePath, 'wb')
                 self.config.write(fp)
                 fp.close()
-            except Exception, e:
+            except Exception as e:
                 self.log.warn("Can't create my UUID Cache File %s : %s" % (self.cachePath, e))
                 return None
         if not self._fetch():
@@ -74,7 +74,7 @@ class UUIDCache(pulse2.utils.Singleton):
             fp = open(self.cachePath, 'wb')
             self.config.write(fp)
             fp.close()
-        except Exception, e:
+        except Exception as e:
             self.log.warn("Can't write my UUID Cache File %s : %s" % (self.cachePath, e))
             return False
         return True
@@ -88,7 +88,7 @@ class UUIDCache(pulse2.utils.Singleton):
             fp = open(self.cachePath, 'rb')
             self.config.readfp(fp)
             fp.close()
-        except Exception, e:
+        except Exception as e:
             self.log.warn("Can't read my UUID Cache File %s : %s" % (self.cachePath, e))
             return False
         return True
@@ -309,7 +309,7 @@ class UUIDCache(pulse2.utils.Singleton):
                 self.config.remove_section(uuid)
                 self._flush()
                 ret = True
-            except Exception, e:
+            except Exception as e:
                 self.log.error("Can't delete computer UUID %s from the cache: %s" % e)
                 ret = False
         return ret

@@ -42,8 +42,8 @@ class Point:
         self.lon = radians(lon1)
 
     def afficher(self):
-        print "lat=%f" % degrees(self.lat)
-        print "long=%f" % degrees(self.lon)
+        print("lat=%f" % degrees(self.lat))
+        print("long=%f" % degrees(self.lon))
 
 
 class Localisation:

@@ -57,7 +57,7 @@ class KioskDatabase(DatabaseHelper):
             return None
         self.config = config
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        print self.makeConnectionPath()
+        print(self.makeConnectionPath())
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
@@ -84,9 +84,9 @@ class KioskDatabase(DatabaseHelper):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except DBAPIError, e:
+            except DBAPIError as e:
                 logging.getLogger().error(e)
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().error(e)
             if ret: break
         if not ret:
@@ -154,7 +154,7 @@ class KioskDatabase(DatabaseHelper):
             session.flush()
             l = [x for x in result]
             return l
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("get_profile_list_for_OUList")
             logging.getLogger().error(str(e))
             return ""
@@ -240,7 +240,7 @@ class KioskDatabase(DatabaseHelper):
         # The profile is now created, but the packages are not linked to it nor added into database.
         # If the package list is not empty, then firstly we get the status and the uuid for each packages
         if len(packages) > 0 :
-            for status in packages.keys():
+            for status in list(packages.keys()):
                 for uuid in packages[status]:
 
                     # get the package id and link it with the profile
@@ -295,7 +295,7 @@ class KioskDatabase(DatabaseHelper):
 
             # Create a Package object to interact with the database
             package = get_xmpp_package(ref_pkg['uuid'])
-            os = json.loads(package).keys()[1]
+            os = list(json.loads(package).keys())[1]
 
             # Prepare a package object for the transaction with the database
             pkg = Packages()
@@ -356,7 +356,7 @@ class KioskDatabase(DatabaseHelper):
             session.flush()
             return True
 
-        except Exception, e:
+        except Exception as e:
             return False
 
     @DatabaseHelper._sessionm
@@ -504,7 +504,7 @@ class KioskDatabase(DatabaseHelper):
         # The profile is now created, but the packages are not linked to it nor added into database.
         # If the package list is not empty, then firstly we get the status and the uuid for each packages
         if len(packages) > 0:
-            for status in packages.keys():
+            for status in list(packages.keys()):
                 for uuid in packages[status]:
 
                     # get the package id and link it with the profile

@@ -27,25 +27,25 @@ import json
 import unittest
 from subprocess import Popen
 import time
-import cookielib
-import urllib
-import urllib2
+import http.cookiejar
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 
 
 def run_agent():
-    print "### RUNNING DLP"
+    print("### RUNNING DLP")
     process = Popen(['pulse2-dlp-server', '-d', '-c', os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')])
     time.sleep(2)
     return process
 
 
 def stop_agent(process):
-    print "### STOPPING DLP"
+    print("### STOPPING DLP")
     process.terminate()
 
 
 def run_tests(test_case, process):
-    print "### RUNNING TESTS"
+    print("### RUNNING TESTS")
     try:
         suite = unittest.TestLoader().loadTestsFromTestCase(test_case)
         unittest.TextTestRunner(verbosity=2).run(suite)
@@ -62,9 +62,9 @@ def clean_packages():
 class HTTPClient(object):
 
     def __init__(self, base_url):
-        self.cookie_jar = cookielib.CookieJar()
-        self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookie_jar))
-        urllib2.install_opener(self.opener)
+        self.cookie_jar = http.cookiejar.CookieJar()
+        self.opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.cookie_jar))
+        urllib.request.install_opener(self.opener)
         self.base_url = base_url
 
     def get(self, url, headers={}):
@@ -74,7 +74,7 @@ class HTTPClient(object):
         headers should be a dictionary
         """
         url = self.base_url + url
-        request = urllib2.Request(url, headers=headers)
+        request = urllib.request.Request(url, headers=headers)
         return self.execute_request(request)
 
     def post(self, url, data=None, headers={}):
@@ -88,8 +88,8 @@ class HTTPClient(object):
         if data is None:
             postdata = None
         else:
-            postdata = urllib.urlencode(data, True)
-        request = urllib2.Request(url, postdata, headers)
+            postdata = urllib.parse.urlencode(data, True)
+        request = urllib.request.Request(url, postdata, headers)
         return self.execute_request(request)
 
     def execute_request(self, request):

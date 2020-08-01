@@ -3,13 +3,13 @@ import stat
 import shutil
 import zipfile
 import logging
-import httplib
-import urllib2
+import http.client
+import urllib.request, urllib.error, urllib.parse
 from base64 import b64encode
 
-from config import PullClientConfig
-from utils import get_hostname, get_mac_addresses
-from http import HTTPClient, CookieSessionExpired
+from .config import PullClientConfig
+from .utils import get_hostname, get_mac_addresses
+from .http import HTTPClient, CookieSessionExpired
 
 
 logger = logging.getLogger(__name__)
@@ -35,11 +35,11 @@ class DlpClient(HTTPClient):
             res = self.post('auth', {'authkey': self.config.Dlp.authkey,
                                      'hostname': self.hostname,
                                      'mac_list': self.mac_list})
-        except urllib2.URLError:
+        except urllib.error.URLError:
             logger.error("Failed to contact the DLP.")
         except CookieSessionExpired:
             logger.error("Can't establish the session cookie with the DLP. Check your time settings.")
-        except httplib.InvalidURL as error:
+        except http.client.InvalidURL as error:
             logger.error("DLP URL is invalid: %s" % error.message)
         else:
             if res.code == 200:
@@ -60,9 +60,9 @@ class DlpClient(HTTPClient):
         try:
             logger.debug("Get commands from DLP")
             res = self.get('commands')
-        except urllib2.URLError:
+        except urllib.error.URLError:
             logger.error("Failed to contact the DLP.")
-        except httplib.InvalidURL as error:
+        except http.client.InvalidURL as error:
             logger.error("DLP URL is invalid: %s" % error.message)
         else:
             if res.code == 200:
@@ -98,9 +98,9 @@ class DlpClient(HTTPClient):
         try:
             logger.debug("Downloading package %s" % file)
             res = self.get('file/%s' % file)
-        except urllib2.URLError:
+        except urllib.error.URLError:
             logger.error("Failed to contact the DLP.")
-        except httplib.InvalidURL as error:
+        except http.client.InvalidURL as error:
             logger.error("DLP URL is invalid: %s" % error.message)
         else:
             if res.code == 200:
@@ -134,9 +134,9 @@ class DlpClient(HTTPClient):
         try:
             logger.debug("Sending result %s to DLP" % result)
             res = self.post('step/%s/%s' % (result.command_id, result.step_name), data=data)
-        except urllib2.URLError:
+        except urllib.error.URLError:
             logger.error("Failed to contact the DLP.")
-        except httplib.InvalidURL as error:
+        except http.client.InvalidURL as error:
             logger.error("DLP URL is invalid: %s" % error.message)
         else:
             if res.code == 201:
@@ -158,9 +158,9 @@ class DlpClient(HTTPClient):
         try:
             logger.debug("Sending inventory to DLP")
             res = self.post('inventory', data=data)
-        except urllib2.URLError:
+        except urllib.error.URLError:
             logger.error("Failed to contact the DLP.")
-        except httplib.InvalidURL as error:
+        except http.client.InvalidURL as error:
             logger.error("DLP URL is invalid: %s" % error.message)
         else:
             if res.code == 201:

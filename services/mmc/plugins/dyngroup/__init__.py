@@ -141,7 +141,7 @@ class RpcProxy(RpcProxyI):
     def getallprofiles(self, params): #NEW
         ctx = self.currentContext
         groups = DyngroupDatabase().getallgroups(ctx, params, 1)
-        return xmlrpcCleanup(map(lambda g:g.toH(), groups))
+        return xmlrpcCleanup([g.toH() for g in groups])
 
     def getmachinesprofiles(self, ids): #NEW
         ret = []
@@ -157,7 +157,7 @@ class RpcProxy(RpcProxyI):
     def getallgroups(self, params):
         ctx = self.currentContext
         groups = DyngroupDatabase().getallgroups(ctx, params)
-        return xmlrpcCleanup(map(lambda g:g.toH(), groups))
+        return xmlrpcCleanup([g.toH() for g in groups])
 
     def profile_name_exists(self, name, gid=None):
         ctx = self.currentContext
@@ -247,7 +247,7 @@ class RpcProxy(RpcProxyI):
 
     def result_group(self, id, start, end, filter):
         ctx = self.currentContext
-        return xmlrpcCleanup(map(lambda g:g.toH(), DyngroupDatabase().result_group(ctx, id, start, end, filter, False)))
+        return xmlrpcCleanup([g.toH() for g in DyngroupDatabase().result_group(ctx, id, start, end, filter, False)])
 
     def countresult_group(self, id, filter):
         ctx = self.currentContext
@@ -339,7 +339,7 @@ class RpcProxy(RpcProxyI):
         # put in the wanted format
         uuids = {}
         if type(machines) == dict:
-            machines = machines.values()
+            machines = list(machines.values())
         for m in machines:
             uuid = m[1]['objectUUID'][0]
             hostname = m[1]['cn'][0]
@@ -450,7 +450,7 @@ class RpcProxy(RpcProxyI):
         b = BoolRequest()
         try:
             b.parse(bool)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().debug('checkBoolean failed : ')
             logging.getLogger().debug(e)
             return [False, -1]
@@ -461,7 +461,7 @@ class RpcProxy(RpcProxyI):
         dyndatabase = DyngroupDatabase()
 
         cache = dyndatabase.getAllMachinesUuid()
-        machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, {'uuids':cache.keys()}, False, False, True)
+        machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, {'uuids':list(cache.keys())}, False, False, True)
 
         need_update = {}
         for m in machines:
@@ -590,7 +590,7 @@ def __addCtxFilters(ctx, filt = None):
             location = ctx.locations
             if type(location) != list:
                 location = [location]
-            filt['ctxlocation'] = map(lambda l: l.toH(), location)
+            filt['ctxlocation'] = [l.toH() for l in location]
     except exceptions.AttributeError:
         pass
     return filt

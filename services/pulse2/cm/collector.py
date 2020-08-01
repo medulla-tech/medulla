@@ -165,7 +165,7 @@ class Sessions(object):
             exp.cancel()
             del self.expirators[uid]
         else:
-            raise SessionNotFound, uid
+            raise SessionNotFound(uid)
 
 
     def get(self, uid):
@@ -185,7 +185,7 @@ class Sessions(object):
             timestamp, deferred = self.content[uid]
             return deferred
         else:
-            raise SessionNotFound, uid
+            raise SessionNotFound(uid)
 
     def pop(self, uid):
         """
@@ -227,7 +227,7 @@ class Sessions(object):
             pass
             # expirator successfully cancelled
         else:
-            print "expirator failed: %s" % str(failure)
+            print("expirator failed: %s" % str(failure))
             return failure
 
 

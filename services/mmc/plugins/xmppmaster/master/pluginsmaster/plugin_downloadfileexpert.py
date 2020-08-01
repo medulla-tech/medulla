@@ -34,7 +34,7 @@ import logging
 import traceback
 
 import datetime
-import ConfigParser
+import configparser
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
@@ -48,7 +48,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug("=====================================================")
 
     data=data[0]
-    print json.dumps(data, indent=4)
+    print(json.dumps(data, indent=4))
 
     if 'dest' in data and 'directory' in data and 'listfile' in data and 'jidmachine' in data:
         jidmachine = data['jidmachine']
@@ -90,10 +90,10 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
         #src = data['src']
         relayserver = XmppMasterDatabase().getMachinefromjid(Machineinfo['groupdeploy'])
         relayserinfo = XmppMasterDatabase().getRelayServerfromjid(Machineinfo['groupdeploy'])
-        print "relayserver"
-        print json.dumps(relayserver, indent = 4 )
-        print "relayserinfo"
-        print json.dumps(relayserinfo, indent = 4 )
+        print("relayserver")
+        print(json.dumps(relayserver, indent = 4 ))
+        print("relayserinfo")
+        print(json.dumps(relayserinfo, indent = 4 ))
 
         if str(Machineinfo['platform']).startswith('Linux') or str(Machineinfo['platform']).startswith('darwin'):
             separator = "/"

@@ -22,7 +22,7 @@
 import threading
 import time
 import logging
-from master.agentmaster import MUCBot
+from .master.agentmaster import MUCBot
 
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from mmc.agent import PluginManager

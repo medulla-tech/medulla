@@ -27,7 +27,7 @@ import os
 import sys
 import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
-from master.lib.managepackage import apimanagepackagemsc
+from .master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 import json
@@ -38,8 +38,8 @@ from pulse2.database.pkgs import PkgsDatabase
 
 import zlib
 import base64
-from master.lib.utils import name_random, simplecommand, file_get_contents
-from xmppmaster import *
+from .master.lib.utils import name_random, simplecommand, file_get_contents
+from .xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
     callXmppFunction, ObjectXmpp, callXmppPlugin,\
     callInventory, callrestartbymaster, callrestartbotbymaster,\
@@ -476,9 +476,9 @@ def getQAforMachine(cmd_id, uuidmachine):
 
 def runXmppApplicationDeployment(*args, **kwargs):
     for count, thing in enumerate(args):
-        print '{0}. {1}'.format(count, thing)
-    for name, value in kwargs.items():
-        print '{0} = {1}'.format(name, value)
+        print('{0}. {1}'.format(count, thing))
+    for name, value in list(kwargs.items()):
+        print('{0} = {1}'.format(name, value))
     return callXmppFunction(*args, **kwargs)
 
 
@@ -564,13 +564,13 @@ def remotefile(currentdir, jidmachine):
 def listremotefileedit(jidmachine):
     aa = calllistremotefileedit(jidmachine)
     objout = json.loads(aa)
-    print objout['data']['result']
+    print(objout['data']['result'])
     return objout['data']['result']
 
 
 def remotefileeditaction(jidmachine, data):
     resultjsonstr = callremotefileeditaction(jidmachine, data)
-    if not isinstance(resultjsonstr, basestring):
+    if not isinstance(resultjsonstr, str):
         return resultjsonstr
     objout = json.loads(resultjsonstr)
     if 'data' in objout:
@@ -651,7 +651,7 @@ def runXmppCommand(cmd, machine, information=""):
             "base64": False
         }
         callXmppPlugin(action, data)
-        return {u'action': u'resultshellcommand', u'sessionid': u'mcc_221n4h6h', u'base64': False, u'data': {'result': 'call plugin : %s to machine : %s' % (action, machine)}, u'ret': 0}
+        return {'action': 'resultshellcommand', 'sessionid': 'mcc_221n4h6h', 'base64': False, 'data': {'result': 'call plugin : %s to machine : %s' % (action, machine)}, 'ret': 0}
     else:
         data = {
             "action": "shellcommand",
@@ -661,7 +661,7 @@ def runXmppCommand(cmd, machine, information=""):
         }
         a = XmppSimpleCommand(machine, data, 70)
         d = a.t2.join()
-        print type(a.result)
+        print(type(a.result))
     return a.result
 
 
@@ -726,7 +726,7 @@ def get_conf_master_agent():
                  'dbpasswd',
                  'confpasswordmuc' ]:
             continue
-        if isinstance(conf[t], (dict, list, tuple, int, basestring)):
+        if isinstance(conf[t], (dict, list, tuple, int, str)):
             rest[t] =  conf[t]
     return  json.dumps(rest, indent = 4)
 

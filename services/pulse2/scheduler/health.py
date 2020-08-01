@@ -59,7 +59,7 @@ def getHealth():
                          'overflow' : str(pool.overflow()),
                          'checkedoutconns': str(pool.checkedout()),
                          'recycle' : str(pool._recycle) }
-    except Exception, e:
+    except Exception as e:
         logging.getLogger().warn('scheduler %s: HEALTH: got the following error : %s' % (SchedulerConfig().name, e))
     return health
 
@@ -72,7 +72,7 @@ def checkPool():
             pool.dispose()
             pool = pool.recreate()
             ret = False
-    except Exception, e:
+    except Exception as e:
         logging.getLogger().warn('scheduler %s: CHECK: NOK: got the following error : %s' % (SchedulerConfig().name, e))
         ret = False
     return ret
@@ -92,7 +92,7 @@ def checkLoops():
         if logLoopTS.delta() > SchedulerConfig().awake_time: # sounds the alarm if no log was done in awake-time interval
             logging.getLogger().warn('scheduler %s: CHECK: NOK: seems the HEALTH loop is running into trouble; this may be due to load issue; please check your scheduler settings !' % (SchedulerConfig().name))
             ret = False
-    except Exception, e:
+    except Exception as e:
         logging.getLogger().warn('scheduler %s: CHECK: NOK: got the following error : %s' % (SchedulerConfig().name, e))
         ret = False
     return ret

@@ -37,10 +37,10 @@ class Test00_SessionsTestCase(TestCase):
 
     def test01_all_elements_are_deferred(self):
         """ To be sure if all elements are deferred instances"""
-        for i in xrange(20):
+        for i in range(20):
             uid, d = self.sessions.make()
 
-        result = all(isinstance(d[1], Deferred) for d in self.sessions.content.values())
+        result = all(isinstance(d[1], Deferred) for d in list(self.sessions.content.values()))
         self.assertTrue(result)
 
 
@@ -98,7 +98,7 @@ class Test00_SessionsTestCase(TestCase):
         sessions = Sessions("I'm an expired request", 10, self.clock)
         uids = []
 
-        for i in xrange(10):
+        for i in range(10):
             uid, d = sessions.make()
             @d.addCallback
             def cb(reason):
@@ -132,7 +132,7 @@ class Test00_SessionsTestCase(TestCase):
 
 
         def add_elements(expire):
-            print
+            print()
             for i in range(10):
                 uid, d = sessions.make()
                 if expire:
@@ -188,7 +188,7 @@ class Test01_CollectorTestCase(TestCase):
 
         my_deferred = collector.queue_and_process("192.168.45.12", any_data)
 
-        for i in xrange(10):
+        for i in range(10):
 
             collector.queue_and_process("192.168.127.22",
                                         "%s_%d" % (any_data, i))
@@ -226,13 +226,13 @@ class Test01_CollectorTestCase(TestCase):
         collector = Collector(sessions)
 
         dl = []
-        for i in xrange(10):
+        for i in range(10):
             d = collector.queue_and_process("192.168.45.12", "expired")
             dl.append(d)
 
         clock.advance(15)
 
-        for i in xrange(10):
+        for i in range(10):
             d = collector.queue_and_process("192.168.45.12", "valid")
             dl.append(d)
 
@@ -241,6 +241,6 @@ class Test01_CollectorTestCase(TestCase):
         @dfl.addCallback
         def get_result(ignored):
 
-            for i in xrange(10):
+            for i in range(10):
                 uid, ip, request = collector.get()
                 self.assertEqual(request, "valid")

@@ -25,7 +25,7 @@ from Crypto.Util import randpool
 import pickle
 import os
 import base64
-from utils import file_get_contents
+from .utils import file_get_contents
 
 
 class MsgsignedRSA:
@@ -184,7 +184,7 @@ class MsgsignedRSA:
         """
         dirtempinfo = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "INFOSTMP")
         if not os.path.exists(dirtempinfo):
-            os.makedirs(dirtempinfo, mode=0700)
+            os.makedirs(dirtempinfo, mode=0o700)
         return dirtempinfo
 
     def signedmsg(self, msg):
@@ -197,5 +197,5 @@ class MsgsignedRSA:
         """
         Function verify message with footprint
         """
-        signature = long(signed_message)
+        signature = int(signed_message)
         return keypublic.verify(msg, (signature, ))

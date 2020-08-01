@@ -26,7 +26,7 @@ import os
 import logging
 import traceback
 import types
-import ConfigParser
+import configparser
 logger = logging.getLogger()
 DEBUGPULSEPLUGIN = 25
 
@@ -64,7 +64,7 @@ def read_conf_load_plugin_scheduler_list_version(objectxmpp):
         objectxmpp.dirschedulerplugins = "/var/lib/pulse2/xmpp_basepluginscheduler"
         objectxmpp.reload_schedulerplugins_interval=2000
     else:
-        Config = ConfigParser.ConfigParser()
+        Config = configparser.ConfigParser()
         Config.read(pathfileconf)
         if os.path.exists(pathfileconf + ".local"):
             Config.read(pathfileconf + ".local")
@@ -84,7 +84,7 @@ def read_conf_load_plugin_scheduler_list_version(objectxmpp):
 
 def plugin_loadpluginschedulerlistversion(self, msg, data):
     if 'pluginscheduled' in data:
-        for k, v in self.plugindatascheduler.iteritems():
+        for k, v in self.plugindatascheduler.items():
             if k in data['pluginscheduled']:
                 if v != data['pluginscheduled'][k]:
                     # deploy on version changes

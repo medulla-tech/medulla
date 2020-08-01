@@ -26,7 +26,7 @@ import sys
 import os
 import re
 
-import ConfigParser
+import configparser
 import operator
 import zlib
 import sleekxmpp
@@ -38,25 +38,25 @@ import base64
 import json
 from optparse import OptionParser
 import copy
-import lib
-from lib.networkinfo import networkagentinfo
-from lib.managesession import sessiondatainfo, session
-from lib.utils import *
-from lib.managepackage import managepackage
-from lib.manageADorganization import manage_fqdn_window_activedirectory
-from lib.manageRSAsigned import MsgsignedRSA
-from lib.localisation import Localisation
+from . import lib
+from .lib.networkinfo import networkagentinfo
+from .lib.managesession import sessiondatainfo, session
+from .lib.utils import *
+from .lib.managepackage import managepackage
+from .lib.manageADorganization import manage_fqdn_window_activedirectory
+from .lib.manageRSAsigned import MsgsignedRSA
+from .lib.localisation import Localisation
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from mmc.plugins.base import getModList
 from mmc.plugins.base.computers import ComputerManager
-from lib.manage_scheduler import manage_scheduler
+from .lib.manage_scheduler import manage_scheduler
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.pkgs import PkgsDatabase
 from mmc.plugins.msc.database import MscDatabase
 import traceback
 import pprint
-import pluginsmaster
-import cPickle
+from . import pluginsmaster
+import pickle
 import logging
 import threading
 import netaddr
@@ -64,13 +64,13 @@ from time import mktime, sleep
 from datetime import datetime
 from multiprocessing import Process, Queue, TimeoutError
 from mmc.agent import PluginManager
-from lib.update_remote_agent import Update_Remote_Agent
+from .lib.update_remote_agent import Update_Remote_Agent
 from distutils.version import LooseVersion, StrictVersion
 from sleekxmpp.exceptions import IqError, IqTimeout
 from sleekxmpp.xmlstream.stanzabase import ElementBase, ET, JID
 from sleekxmpp.stanza.iq import Iq
 
-from lib.manage_xmppbrowsing import xmppbrowsing
+from .lib.manage_xmppbrowsing import xmppbrowsing
 
 from mmc.plugins.msc import convergence_reschedule
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
@@ -267,11 +267,11 @@ class XmppSimpleCommand:
             if event_is_set:
                 self.result = self.session.datasession
             else:
-                self.result = {u'action': u'resultshellcommand',
-                               u'sessionid': self.sessionid,
-                               u'base64': False,
-                               u'data': {u'msg': "ERROR command\n timeout %s" % self.t},
-                               u'ret': 125}
+                self.result = {'action': 'resultshellcommand',
+                               'sessionid': self.sessionid,
+                               'base64': False,
+                               'data': {'msg': "ERROR command\n timeout %s" % self.t},
+                               'ret': 125}
                 break
         self.xmpp.session.clearnoevent(self.sessionid)
         return self.result
@@ -407,7 +407,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             except Exception as e:
                 logging.error("iqsendpulse : encode json : %s" % str(e))
                 return '{"err" : "%s"}' % str(e).replace('"', "'")
-        elif type(datain) == unicode:
+        elif type(datain) == str:
             data = str(datain)
         else:
             data = datain
@@ -483,7 +483,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         mem_usage = memory_usage(-1, interval=1, timeout=1)
         mesure = str(mem_usage[0]).replace(".",",")
         if mesure != self.mesure:
-            print "__________leak memory_________"
+            print("__________leak memory_________")
             taillepris = (mem_usage[0] - self.mesuref)
             self.mesuref = mem_usage[0]
             fichier = open(self.name_file_log_leak_memory, "a")
@@ -498,10 +498,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                                                     round((taillepris *1024 * 1024)/self.countseconde,2))
             fichier.write(stem)
             self.countseconde = 0
-            print stem
+            print(stem)
             fichier.close()
             self.mesure = mesure
-            print "______________________________"
+            print("______________________________")
     def sendwol(self, macadress, hostnamemachine = ""):
         listmacadress = macadress.split("||")
         for macadressdata in listmacadress:
@@ -1706,9 +1706,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         return sessionid
 
     def pluginaction(self, rep):
-        if 'sessionid' in rep.keys():
+        if 'sessionid' in list(rep.keys()):
             sessiondata = self.session.sessionfromsessiondata(rep['sessionid'])
-            if 'shell' in sessiondata.getdatasession().keys() and \
+            if 'shell' in list(sessiondata.getdatasession().keys()) and \
                 sessiondata.getdatasession()['shell']:
                 self.send_message(mto=jid.JID("commandrelay@localhost"),
                                   mbody=json.dumps(rep),
@@ -2599,8 +2599,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     messagestanza+="%s : %s\n"%(t, e)
         if 'error' in msgkey:
             messagestanza+="Error information\n"
-            msgkeyerror = msg['error'].keys()
-            for t in msg['error'].keys():
+            msgkeyerror = list(msg['error'].keys())
+            for t in list(msg['error'].keys()):
                 if t != "lang":
                     e = str(msg['error'][t])
                     if e != "":
@@ -2613,7 +2613,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             ref stanza eg: https://xmpp.org/rfcs/rfc3921.html#stanzas
         """
         try:
-            msgkey = msg.keys()
+            msgkey = list(msg.keys())
             msgfrom = ""
             if not 'from' in msgkey:
                 logger.error("Stanza message bad format %s"%msg)
@@ -2698,14 +2698,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def callpluginmaster(self, msg):
         try:
             dataobj = json.loads(msg['body'])
-            if dataobj.has_key('action') and dataobj['action'] != "" and dataobj.has_key('data'):
-                if dataobj.has_key('base64') and \
+            if 'action' in dataobj and dataobj['action'] != "" and 'data' in dataobj:
+                if 'base64' in dataobj and \
                     ((isinstance(dataobj['base64'], bool) and dataobj['base64'] == True) or
                      (isinstance(dataobj['base64'], str) and dataobj['base64'].lower() == 'true')):
                     mydata = json.loads(base64.b64decode(dataobj['data']))
                 else:
                     mydata = dataobj['data']
-                if not dataobj.has_key('sessionid'):
+                if 'sessionid' not in dataobj:
                     dataobj['sessionid'] = "absent"
                 if not 'ret' in dataobj:
                     dataobj['ret'] = 0

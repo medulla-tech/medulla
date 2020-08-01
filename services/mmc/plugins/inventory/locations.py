@@ -37,7 +37,7 @@ class InventoryLocation(ComputerLocationI):
         return Inventory().getUserProfile(userid)
 
     def getUserLocations(self, userid):
-        return map(lambda l: convertLocations(l), Inventory().getUserLocations(userid, with_level = True))
+        return [convertLocations(l) for l in Inventory().getUserLocations(userid, with_level = True)]
 
     def doesUserHaveAccessToMachine(self, userid, machine_uuid):
         return Inventory().doesUserHaveAccessToMachine(userid, machine_uuid)

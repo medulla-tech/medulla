@@ -22,7 +22,7 @@
 Inventory proxy Pulse -> GLPI using Fusion Inventory plugin.
 """
 
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import logging
 from xml.dom.minidom import parseString
 from pulse2.inventoryserver.utils import MMCProxy
@@ -72,7 +72,7 @@ class FusionErrorHandler(_ErrorHandler):
                 if node.nodeType == node.ELEMENT_NODE:
                     self._message.append('An error occurred while talking with GLPI (details follow)')
                     self._message.append("Error was: %s" % str(node.firstChild.nodeValue))
-        except Exception, exc:
+        except Exception as exc:
             self._message.append('An error occurred while talking with GLPI (details follow)')
             self._message.append('Raw error was: %s' % str(response))
             self._message.append('With exception: %s' % str(exc))
@@ -109,10 +109,10 @@ class GlpiProxy:
         @type content: string
         """
         try:
-            request = urllib2.Request(self.url, content, self.HEADER)
-            response = urllib2.urlopen(request)
+            request = urllib.request.Request(self.url, content, self.HEADER)
+            response = urllib.request.urlopen(request)
 
-        except Exception, exc:
+        except Exception as exc:
             self._result.append("Unable to send inventory to GLPI")
             self._result.append('Response was: %s' % str(exc))
 
@@ -149,7 +149,7 @@ def resolveGlpiMachineUUIDByMAC (mac):
         proxy = mmc.proxy
         try:
             uuid = proxy.glpi.getMachineUUIDByMacAddress(mac)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("Unable to resolve machine UUID for mac %s using %s, error was: %s" % (str(mac), str(mmc._url), str(e)))
         return uuid
     return None

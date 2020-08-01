@@ -22,12 +22,12 @@ import logging
 import pickle
 import importlib
 from threading import Thread, Event
-from Queue import Queue
+from queue import Queue
 
-from command import Command
-from workers import WatchdogWorker, ResultWorker, StepWorker
-from config import PullClientConfig
-from launcher import launcher
+from .command import Command
+from .workers import WatchdogWorker, ResultWorker, StepWorker
+from .config import PullClientConfig
+from .launcher import launcher
 
 
 logger = logging.getLogger(__name__)
@@ -133,7 +133,7 @@ class Poller(Thread):
 
                 try:
                     output, exitcode = launcher('triggers/update.sh', '', base_path)
-                except Exception, e:
+                except Exception as e:
                     logger.error("Script error: %s" % e)
                 logger.debug("Script output: %s" % output)
 
@@ -219,7 +219,7 @@ class Poller(Thread):
         logger.info("Script path: %s" % path)
         try:
             output, exitcode = launcher(path, '', base_path)
-        except Exception, e:
+        except Exception as e:
             logger.error("Script error: %s" % e)
         logger.debug("Script output: %s" % output)
         if exitcode == 0:
@@ -251,7 +251,7 @@ if __name__ == "__main__":
         while p.is_alive():
             p.join(500)
     except KeyboardInterrupt:
-        print "Exiting."
+        print("Exiting.")
         stop.set()
         p.join()
-        print "Bye bye!"
+        print("Bye bye!")

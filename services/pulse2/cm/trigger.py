@@ -98,7 +98,7 @@ class Trigger(object):
             return d
 
         else:
-            print "not unlocked yet"
+            print("not unlocked yet")
             return succeed(False)
 
 
@@ -114,17 +114,17 @@ if __name__ == "__main__":
     d = t.fire()
     @d.addCallback
     def aa(reason):
-        print 'aa reason: %s' % str(reason)
+        print('aa reason: %s' % str(reason))
 
-    print "after 1st"
+    print("after 1st")
 
     d = t.fire()
     @d.addCallback
     def bb(reason):
-        print 'bb reason: %s' % str(reason)
+        print('bb reason: %s' % str(reason))
 
 
-    print "after 2nd"
+    print("after 2nd")
 
     reactor.run()
 

@@ -36,7 +36,7 @@ def checkPool():
             pool.dispose()
             pool = pool.recreate()
             ret = False
-    except Exception, e:
+    except Exception as e:
         logging.getLogger().warn('glpi plugin: CHECK: NOK: got the following error : %s' % (e))
         ret = False
     else:

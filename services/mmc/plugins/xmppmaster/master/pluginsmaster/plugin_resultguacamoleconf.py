@@ -36,7 +36,7 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
     logger.debug("#################################################")
     try:
         XmppMasterDatabase().addlistguacamoleidformachineid(data['machine_id'], data['connection'])
-    except Exception, e:
+    except Exception as e:
         logger.error("plugin resultguacamoleconf Error: %s" % str(e))
         #logger.error("\n%s"%(traceback.format_exc()))
         pass

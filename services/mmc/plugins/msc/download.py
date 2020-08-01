@@ -27,7 +27,7 @@ import glob
 import datetime
 import logging
 import time
-import xmlrpclib
+import xmlrpc.client
 
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.scheduler_api import SchedulerApi

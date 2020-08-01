@@ -55,7 +55,7 @@ class Stats :
         @param stats: statistics of checked launcher
         @type stats: dict
         """
-        for cont_attr_name, values in stats.items():
+        for cont_attr_name, values in list(stats.items()):
             cont_attr = type('Statistics', (object,), values)
             setattr(self, cont_attr_name, cont_attr)
 
@@ -111,7 +111,7 @@ class LauncherCallingProvider(type):
         @param attrs: dictionnary of attributtes
         @type attrs: dict
         """
-        my_dict = dict((k, v) for (k, v) in cls.__dict__.items()
+        my_dict = dict((k, v) for (k, v) in list(cls.__dict__.items())
                 if not k.startswith("__"))
         attrs.update(my_dict)
         return type.__new__(cls,name, bases, attrs)
@@ -263,7 +263,7 @@ class LauncherCallingProvider(type):
         @rtype: DeferredList
         """
         dl = []
-        for launcher in self.launchers.keys() :
+        for launcher in list(self.launchers.keys()) :
             d = self.get_stats(launcher)
             dl.append(d)
 
@@ -435,7 +435,7 @@ def same_call(method):
 
 
 
-class RemoteCallProxy :
+class RemoteCallProxy(metaclass=LauncherCallingProvider) :
     """
     Provides the remote calls to launchers.
 
@@ -448,8 +448,6 @@ class RemoteCallProxy :
     Instance of this class can be created on start of scheduler
     and reused for all calls.
     """
-    # implements the remote calls with a optimal choice of launcher
-    __metaclass__ = LauncherCallingProvider
 
     def __init__(self, launchers, slots, default_launcher):
         """

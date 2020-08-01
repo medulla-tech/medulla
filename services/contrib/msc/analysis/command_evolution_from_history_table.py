@@ -40,7 +40,7 @@ import time
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey, select
 
 if len(sys.argv) != 3:
-    print "usage: %s <mysql-uri> <command-id-comma-separated>" % sys.argv[0]
+    print("usage: %s <mysql-uri> <command-id-comma-separated>" % sys.argv[0])
     exit(1)
 
 # create connection
@@ -115,14 +115,14 @@ class deployStats:
         return len(self.__internal_data[where])
 
     def getcounts(self):
-        return map(lambda x: str(len(self.__internal_data[x])), self.getkeys())
+        return [str(len(self.__internal_data[x])) for x in self.getkeys()]
 
 
 deploy_stats = deployStats()
 lastepoch = 0
 laststates = dict()
 
-print "date;%s;" % ';'.join(deploy_stats.getkeys())
+print("date;%s;" % ';'.join(deploy_stats.getkeys()))
 
 for d in hist_data:
     # d is like this: (6445L, '1223597787.8313', 'upload_done', 0)
@@ -131,7 +131,7 @@ for d in hist_data:
     truncated_epoch = int(float(epoch)/60)*60
     #truncated_epoch = int(float(epoch)/1)*1
 
-    if not fk in laststates.keys():
+    if not fk in list(laststates.keys()):
         laststates[fk] = None
 
     if operation == 'upload_in_progress' and error_code in [4508, 4509]: # mirror probe, ignore
@@ -144,7 +144,7 @@ for d in hist_data:
         operation = 'mirror_failed'
 
     if laststates[fk] == operation:
-        print "ANOMALY: %s for %s " % (operation, fk)
+        print("ANOMALY: %s for %s " % (operation, fk))
         continue
     else:
         if operation == 'upload_in_progress':
@@ -197,10 +197,10 @@ for d in hist_data:
             deploy_stats.add('mirror_error', fk)
 
         if truncated_epoch != lastepoch:
-            print "%s;%s;" % (
+            print("%s;%s;" % (
                 time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(truncated_epoch))),
                 ';'.join(deploy_stats.getcounts())
-            )
+            ))
 
     laststates[fk] = operation
     lastepoch = truncated_epoch

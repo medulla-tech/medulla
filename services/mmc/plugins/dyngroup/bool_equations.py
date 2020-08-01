@@ -111,39 +111,39 @@ class BoolOperator(object): # abstract
 
 class BoolOperatorAnd(BoolOperator):
     def toH(self, list):
-        return ["AND", map(to_h, list.values())]
+        return ["AND", list(map(to_h, list(list.values())))]
     def toS(self, list):
-        return "AND ("+(', '.join(map(to_s, list.values())))+")"
+        return "AND ("+(', '.join(map(to_s, list(list.values()))))+")"
     def toXML(self, list):
-        return "<b t='AND'><p>"+('</p><p>'.join(map(to_xml, list.values())))+"</p></b>"
+        return "<b t='AND'><p>"+('</p><p>'.join(map(to_xml, list(list.values()))))+"</p></b>"
     def merge(self, lists):
         retour = []
         # lists = [[[entrees, 2, 3], NEG], [[entrees, 2, 3], NEG], ...]
         if len(lists) > 0:
-            pos = map(lambda a:a[0], filter(lambda a:a[1], lists))
-            neg = map(lambda a:a[0], filter(lambda a:not a[1], lists))
+            pos = [a[0] for a in [a for a in lists if a[1]]]
+            neg = [a[0] for a in [a for a in lists if not a[1]]]
 
             retour = pos.pop() # TODO : pb if pos is empty ...
             for list in pos:
-                retour = filter(lambda a,l=list:a in l, retour)
+                retour = list(filter(lambda a,l=list:a in l, retour))
             for list in neg:
-                retour = filter(lambda a,l=list:a not in l, retour)
+                retour = list(filter(lambda a,l=list:a not in l, retour))
         return [retour, True]
     def getTree(self, lists):
         return ['AND', lists]
 
 class BoolOperatorOr(BoolOperator):
     def toH(self, list):
-        return ["OR", map(to_h, list.values())]
+        return ["OR", list(map(to_h, list(list.values())))]
     def toS(self, list):
-        return "OR ("+(', '.join(map(to_s, list.values())))+")"
+        return "OR ("+(', '.join(map(to_s, list(list.values()))))+")"
     def toXML(self, list):
-        return "<b t='OR'><p>"+('</p><p>'.join(map(to_xml, list.values())))+"</p></b>"
+        return "<b t='OR'><p>"+('</p><p>'.join(map(to_xml, list(list.values()))))+"</p></b>"
     def merge(self, lists):
         retour = []
         if len(lists) > 0:
-            pos = map(lambda a:a[0], filter(lambda a:a[1], lists))
-            neg = map(lambda a:a[0], filter(lambda a:not a[1], lists))
+            pos = [a[0] for a in [a for a in lists if a[1]]]
+            neg = [a[0] for a in [a for a in lists if not a[1]]]
             retour = pos.pop()
 
             for list in pos:
@@ -160,11 +160,11 @@ class BoolOperatorOr(BoolOperator):
 
 class BoolOperatorNot(BoolOperator):
     def toH(self, list):
-        return ["NOT", map(to_h, list.values())]
+        return ["NOT", list(map(to_h, list(list.values())))]
     def toS(self, list):
-        return "NOT ("+(', '.join(map(to_s, list.values())))+")"
+        return "NOT ("+(', '.join(map(to_s, list(list.values()))))+")"
     def toXML(self, list):
-        return "<b t='NOT'><p>"+('</p><p>'.join(map(to_xml, list.values())))+"</p></b>"
+        return "<b t='NOT'><p>"+('</p><p>'.join(map(to_xml, list(list.values()))))+"</p></b>"
     def merge(self, lists):
         list = lists[0]
         list[1] = not list[1]
@@ -208,7 +208,7 @@ class BoolEquation(BoolElement):
 
     def check(self): # ids are always in a range from 1 to count
         try:
-            return Set(map(lambda x:int(x), self.getVals())) == Set(range(1,1+self.count()))
+            return Set([int(x) for x in self.getVals()]) == Set(list(range(1,1+self.count())))
         except:
             return False
 

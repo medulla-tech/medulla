@@ -92,7 +92,7 @@ class OcsMapping(Singleton):
                 self.logger.info('String successfully parsed')
                 # Exit for loop if success
                 break
-            except expat.ExpatError, e:
+            except expat.ExpatError as e:
                 self.logger.error('Parsing failed')
                 if expat.errors.XML_ERROR_INVALID_TOKEN in str(e):
                     pass
@@ -112,7 +112,7 @@ class OcsMapping(Singleton):
         xml = None
         try:
             xml = parseString(xmltext)
-        except expat.ExpatError, e:
+        except expat.ExpatError as e:
             self.logger.error("Can't parse inventory XML string")
             if expat.errors.XML_ERROR_INVALID_TOKEN in str(e):
                 self.logger.error('The XML string may use a wrong encoding')
@@ -124,7 +124,7 @@ class OcsMapping(Singleton):
             xml = self.parseSafe(xmltext)
         inventory = {}
         for tablename in self.tables:
-            in_network = tablename == u'NETWORKS'
+            in_network = tablename == 'NETWORKS'
             try:
                 dbtablename = self.tables[tablename][0]
                 inventory[dbtablename] = []
@@ -162,5 +162,5 @@ class OcsMapping(Singleton):
                     registerkey=EntryRegister[EntryRegister1]
                 else:
                     registerval[registerkey]=EntryRegister[EntryRegister1]
-        inventory[u'RegistryInfos']=[registerval]
+        inventory['RegistryInfos']=[registerval]
         return inventory

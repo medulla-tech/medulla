@@ -42,7 +42,7 @@ class class01BalanceTest(unittest.TestCase):
     Test to get parabolic balanced list of coefficients
     """
     def setUp (self):
-        self.NBR_ATTEMPTS = random.choice(range(2,100))
+        self.NBR_ATTEMPTS = random.choice(list(range(2,100)))
         #print "Number of attempts : %d" % self.NBR_ATTEMPTS
 
     def test01get_list(self):
@@ -94,11 +94,11 @@ class class02BalanceTest(unittest.TestCase):
         start = datetime.datetime.now()
 
         self.coh_struct_set = []
-        self.limit = random.choice(range(1,100))
+        self.limit = random.choice(list(range(1,100)))
         for i in range(100) :
-            id = random.choice(range(500))
-            hours = random.choice(range(1,100))
-            attempts_failed = random.choice(range(100))
+            id = random.choice(list(range(500)))
+            hours = random.choice(list(range(1,100)))
+            attempts_failed = random.choice(list(range(100)))
             end = start + datetime.timedelta(hours=hours)
 
             self.coh_struct_set.append((id, start, end, attempts_failed))

@@ -53,7 +53,7 @@ class MMAssignAlgo(pulse2.utils.Singleton):
 class UPAssignAlgo(pulse2.utils.Singleton):
     def init(self, package_api_put):
         self.logger = logging.getLogger()
-        self.package_api_put = map(lambda x: x.toH(), package_api_put)
+        self.package_api_put = [x.toH() for x in package_api_put]
 
     def getUserPackageApi(self, user):
         raise Exception("getUserPackageApi not defined")
@@ -88,7 +88,7 @@ class IntAssignAlgoManager(pulse2.utils.Singleton):
             f, p, d = imp.find_module(assign_algo, [searchpath])
             mod = imp.load_module('MyAssignAlgo', f, p, d)
             ret = self.getClassInModule(mod)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().debug(e)
             if assign_algo != 'default':
                 assign_algo = 'default'
