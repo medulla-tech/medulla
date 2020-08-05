@@ -6,8 +6,6 @@ Alias /mmc @datadir@/mmc
     AllowOverride None
     Order allow,deny
     allow from all
-    php_flag short_open_tag on
-    php_flag magic_quotes_gpc on
 </Directory>
 
 ### Redirect / to /mmc
