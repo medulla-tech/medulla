@@ -748,14 +748,31 @@ class Glpi92(DyngroupDatabaseHelper):
 
                 else:
                     if field == "type":
-                        query = query.filter(Computersitems.itemtype.contains(criterion))
+                        query = query.filter(or_(
+                                                Computersitems.itemtype.contains(criterion),
+                                                Peripherals.name.contains(criterion)
+                                                ))
                     elif field == "manufacturer":
-                        query = query.filter(Peripheralsmanufacturers.name.contains(criterion))
+                        query = query.filter(or_(
+                                                Peripheralsmanufacturers.name.contains(criterion),
+                                                Peripherals.name.contains(criterion)
+                                                ))
                     elif field == "firmware":
-                        query = query.filter(Peripherals.comment.contains(criterion))
+                        query = query.filter(or_(
+                                                Peripherals.comment.contains(criterion),
+                                                Peripherals.name.contains(criterion)
+                                                ))
+                    elif field == "serial":
+                        query = query.filter(or_(
+                                                Peripherals.serial.contains(criterion),
+                                                Peripherals.name.contains(criterion)
+                                                ))
                     else:
-                        query = query.filter(eval("Computersviewitemsperipheral.%s" % field).contains(criterion))
-
+                        query = query.filter(or_(
+                                                eval("Peripherals.%s" % field).contains(criterion),
+                                                Peripherals.name.contains(criterion)
+                                                ))
+                                                
         query = query.order_by(Machine.name)
         # All computers
         if "computerpresence" not in ctx:
