@@ -5065,6 +5065,27 @@ class Glpi92(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getAllNamePeripherals(self, ctx, filt=''):
+        """ @return: all peripheral name in the GLPI database """
+        session = create_session()
+        query = session.query(Peripherals)
+        if filter != '':
+            query = query.filter(Peripherals.name.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllSerialPeripherals(self, ctx, filt=''):
+        """ @return: all peripheral serials in the GLPI database """
+        session = create_session()
+        query = session.query(Peripherals)
+        if filter != '':
+            query = query.filter(or_(Peripherals.serial.like('%' + filt + '%'),
+                                     Peripherals.name.like('%' + filt + '%')))
+        ret = query.all()
+        session.close()
+        return ret
+
     @DatabaseHelper._sessionm
     def addRegistryCollectContent(self, session, computers_id, registry_id, key, value):
         """
