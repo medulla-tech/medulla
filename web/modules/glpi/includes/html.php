@@ -245,14 +245,10 @@ if ($this->refresh) {
                    ?>
                </span>
                <span class="searchfield" onchange="pushSearch(); return false;">
-                   <select id="field">
-                       <option value="">All fields</option>
-                       <option value="type">Type</option>
-                       <option value="name">Terminal Name</option>
-                       <option value="serial">Serial</option>
-                       <option value="manufacturer">Manufacturer</option>
-                       <option value="firmware">Firmware</option>
-                   </select>
+                 <select id="field">
+                     <option value="">Displayed fields</option>
+                     <option value="peripherals">Peripheral Details</option>
+                 </select>
                </span>
                <!--<span class="searchfield" onchange="pushSearch(); return false;">
                    <select id="contains">

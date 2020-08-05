@@ -736,42 +736,13 @@ class Glpi94(DyngroupDatabaseHelper):
                     self.regcontents.c.value.contains(criterion)
                 ))
             else:
-                if contains == "notcontains":
-                    if field == "type":
-                        query = query.filter(not_(Computersitems.itemtype.contains(criterion)))
-                    elif field == "manufacturer":
-                        query = query.filter(not_(Peripheralsmanufacturers.name.contains(criterion)))
-                    elif field == "firmware":
-                        query = query.filter(not_(Peripherals.comment.contains(criterion)))
+                if field == "peripherals":
+                    if contains == "notcontains":
+                        query = query.filter(not_(Peripherals.name.contains(criterion)))
                     else:
-                        query = query.filter(not_(eval("Computersviewitemsperipheral.%s" % field).contains(criterion)))
-
+                        query = query.filter(Peripherals.name.contains(criterion))
                 else:
-                    if field == "type":
-                        query = query.filter(or_(
-                                                Computersitems.itemtype.contains(criterion),
-                                                Peripherals.name.contains(criterion)
-                                                ))
-                    elif field == "manufacturer":
-                        query = query.filter(or_(
-                                                Peripheralsmanufacturers.name.contains(criterion),
-                                                Peripherals.name.contains(criterion)
-                                                ))
-                    elif field == "firmware":
-                        query = query.filter(or_(
-                                                Peripherals.comment.contains(criterion),
-                                                Peripherals.name.contains(criterion)
-                                                ))
-                    elif field == "serial":
-                        query = query.filter(or_(
-                                                Peripherals.serial.contains(criterion),
-                                                Peripherals.name.contains(criterion)
-                                                ))
-                    else:
-                        query = query.filter(or_(
-                                                eval("Peripherals.%s" % field).contains(criterion),
-                                                Peripherals.name.contains(criterion)
-                                                ))
+                    pass
 
         query = query.order_by(Machine.name)
         # All computers
