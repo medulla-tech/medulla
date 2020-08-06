@@ -4103,32 +4103,6 @@ class Glpi92(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineByPrinter(self, ctx, filt):
-        session = create_session()
-        query = session.query(Machine).select_from(self.machine.join(self.computersitems)).\
-        select_from(self.computersitems.join(self.printers))
-        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
-        query = self.__filter_on(query)
-        query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.printers.c.name == filt)
-        ret = query.all()
-        session.close()
-
-    def getMachineByPrinterserail(self, ctx, filt):
-        session = create_session()
-        query = session.query(Machine).distinct(Machine.id).\
-            join(Computersitems_printers, Machine.id == Computersitems_printers.computers_id).\
-            outerjoin(Printers, and_(Computersitems_printers.items_id==Printers.id,
-                                          Computersitems_printers.itemtype == 'Printer')).\
-            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
-                                          Computersitems.itemtype == 'Peripheral'))
-        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
-        query = self.__filter_on(query)
-        query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.printers.c.serial == filt)
-        ret = query.all()
-        session.close()
-
     def getComputersOS(self, uuids):
         if isinstance(uuids, str):
             uuids = [uuids]
