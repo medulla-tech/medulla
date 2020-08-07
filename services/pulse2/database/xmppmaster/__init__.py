@@ -49,7 +49,8 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Substituteconf,\
     Agentsubscription,\
     Subscription,\
-    Def_remote_deploy_status
+    Def_remote_deploy_status,\
+    Uptime_machine
 # Imported last
 import logging
 import json
@@ -1232,8 +1233,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
 
-
-    #################Custom Command Quick Action################################
+    # Custom Command Quick Action################################
     @DatabaseHelper._sessionm
     def create_Qa_custom_command( self,
                                   session,
@@ -6295,3 +6295,57 @@ where agenttype="machine" and groupdeploy in (
                 'keysyncthing' : machine.keysyncthing,
             }
         return result
+
+    # SUBSTITUTE UPDATE TIME ##############################
+    @DatabaseHelper._sessionm
+    def setUptime_machine(self,
+                          session,
+                          hostname,
+                          jid,
+                          status=0,
+                          uptime=0,
+                          date=None):
+        try:
+            new_Uptime_machine = Uptime_machine()
+            new_Uptime_machine.hostname = hostname
+            new_Uptime_machine.jid = jid
+            new_Uptime_machine.status = status
+            new_Uptime_machine.uptime = uptime
+            if date is not None:
+                new_Uptime_machine.date = date
+            session.add(new_Uptime_machine)
+            session.commit()
+            session.flush()
+            return new_Uptime_machine.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def last_event_presence_xmpp(self,
+                                 session,
+                                 jid,
+                                 nb=1):
+        try:
+            sql = """SELECT
+                    *,
+                    UNIX_TIMESTAMP(date)
+                FROM
+                    xmppmaster.uptime_machine
+                WHERE
+                    jid LIKE '%s'
+                ORDER BY id DESC
+                LIMIT %s;""" % (jid, nb)
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            return [{"id": element[0],
+                     "hostname": element[1],
+                     "jid": element[2],
+                     "status": element[3],
+                     "uptime": element[4],
+                     "date": element[5].strftime("%Y/%m/%d/ %H:%M:%S"),
+                     "time": element[6]} for element in result]
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return []

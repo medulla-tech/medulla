@@ -520,3 +520,17 @@ class Qa_relay_result(Base, XmppMasterDBObj):
     typemessage = Column(String(20), nullable=False, default='log')
     command_result = Column(Text)
     relay = Column(String(45), nullable=False) # If uniq command : relay, if cluster command : jid of the cluster member
+
+
+class Uptime_machine(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'uptime_machine'
+    # ====== Fields =============================
+    # Here we define columns for the table uptime_machine.
+    # Notice that each column is also a normal Python instance attribute.
+    # id = Column(Integer, primary_key=True)
+    hostname = Column(String(100), nullable=False)
+    jid = Column(String(255), nullable=False)
+    status = Column(Boolean, unique=False)
+    uptime = Column(Integer, nullable=False, default=0)
+    date = Column(DateTime, default=datetime.datetime.now)
