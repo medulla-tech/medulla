@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS  `uptime_machine` (
   `hostname` varchar(45) NOT NULL,
   `jid` varchar(255) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
-  `uptime` int(11) DEFAULT NULL,
+  `updowntime` int(11) DEFAULT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `ind_jiddata` (`jid`(12) DESC)
