@@ -27,7 +27,7 @@ DROP procedure IF EXISTS `afterinsertmachine`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `afterinsertmachine`(IN newjid VARCHAR(255))
+CREATE PROCEDURE `afterinsertmachine`(IN newjid VARCHAR(255))
 BEGIN
 set @userjid =  SUBSTRING_INDEX(SUBSTRING_INDEX(newjid, '@', 1),'.',1);
 set @tmpval = SUBSTRING_INDEX(newjid, '@', -1);
