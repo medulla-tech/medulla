@@ -811,41 +811,6 @@ def pluginmastersessionaction(sessionaction, timeminute=10):
     return decorator
 
 
-def searchippublic(site=1):
-    if site == 1:
-        try:
-            page = urllib.urlopen("http://ifconfig.co/json").read()
-            objip = json.loads(page)
-            if is_valid_ipv4(objip['ip']):
-                return objip['ip']
-            else:
-                return searchippublic(3)
-        except BaseException:
-            return searchippublic(2)
-    elif site == 2:
-        try:
-            page = urllib.urlopen("http://www.monip.org/").read()
-            ip = page.split("IP : ")[1].split("<br>")[0]
-            if is_valid_ipv4(ip):
-                return ip
-            else:
-                return searchippublic(3)
-        except Exception:
-            return searchippublic(3)
-    elif site == 3:
-        try:
-            ip = urllib.urlopen("http://ip.42.pl/raw").read()
-            if is_valid_ipv4(ip):
-                return ip
-            else:
-                return searchippublic(4)
-        except Exception:
-            searchippublic(4)
-    elif site == 4:
-        return find_ip()
-    return None
-
-
 def find_ip():
     candidates = []
     for test_ip in ['192.0.2.0', "192.51.100.0", "203.0.113.0"]:

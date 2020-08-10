@@ -99,7 +99,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     if data['information']["listipinfo"]:
                         logger.info('Interface Actif')
                         logger.info("|   macadress|      ip adress|")
-                        for interface in data['information']["listipinfo"]:                
+                        for interface in data['information']["listipinfo"]:
                             logger.info("|%s|%15s|" % (interface['macaddress'],
                                                        interface['ipaddress']))
                     if interfaceblacklistdata:
@@ -1038,7 +1038,7 @@ def read_conf_remote_registeryagent(xmppobject):
             blacklisted_mac_addresses = Config.get('parameters', 'blacklisted_mac_addresses')
         else:
             blacklisted_mac_addresses = "00\:00\:00\:00\:00\:00"
-            
+
         if Config.has_section("parameters"):
             if Config.has_option("parameters", "showinfomachine"):
                 paramshowinfomachine = Config.get('parameters', 'showinfomachine')

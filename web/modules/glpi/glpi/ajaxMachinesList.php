@@ -38,6 +38,8 @@ global $config;
 
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
+$field = (isset($_GET['field'])) ? $_GET['field'] : "";
+$contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
 
 $start = (isset($_GET['start'])) ? $_GET['start'] : 0;
 $maxperpage = (isset($_GET['maxperpage'])) ? $_GET['maxperpage'] : $config['maxperpage'];
@@ -46,9 +48,13 @@ $end = (isset($_GET['end'])) ? $_GET['end'] : $maxperpage - 1;
 $ctx = [];
 $ctx['location'] = $location;
 $ctx['filter'] = $filter;
+$ctx['field'] = $field;
+$ctx['contains'] = $contains;
+
 $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
+
 if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
     $ctx['computerpresence'] = $_SESSION['computerpresence'];
 
@@ -56,8 +62,8 @@ $machines = xmlrpc_get_machines_list($start, $maxperpage, $ctx);
 
 $count = $machines["count"];
 $datas = $machines["data"];
+$xmppdatas = $machines['xmppdata'];
 
-//$presences = xmlrpc_getPresenceuuids($datas["uuid"]);
 $presencesClass = [];
 $params = [];
 
@@ -112,8 +118,32 @@ $actionxmppbrowsing = array();
 $actionxmppbrowsingne = array();
 
 $raw = 0;
+// Do not modify directly $datas['cn'] it is reused later for $params
+// And tabs in detail page will be broken
+$cn = [];
+
 foreach($datas['uuid'] as $uuid)
 {
+	if(isset($xmppdatas['UUID'.$uuid])){
+		$cnstr = '<span ';
+		$cnstr .= 'title="';
+		$cnstr .= "jid : \t ". $xmppdatas['UUID'.$uuid]['jid']."\n";
+		$cnstr .= "classutil : \t ". $xmppdatas['UUID'.$uuid]['classutil']."\n";
+		$cnstr .= "ad_ou_user : \t ". $xmppdatas['UUID'.$uuid]['ad_ou_user']."\n";
+		$cnstr .= "ad_ou_machine : \t ". $xmppdatas['UUID'.$uuid]['ad_ou_machine']."\n";
+		$cnstr .= "need_reconf : \t ". $xmppdatas['UUID'.$uuid]['need_reconf']."\n";
+		$cnstr .= "keysyncthing : \t ". $xmppdatas['UUID'.$uuid]['keysyncthing']."\n";
+		$cnstr .= "groupdeploy : \t ". $xmppdatas['UUID'.$uuid]['groupdeploy']."\n";
+		$cnstr .= "subnetxmpp : \t ". $xmppdatas['UUID'.$uuid]['subnetxmpp']."\n";
+		$cnstr .= "ip_xmpp : \t ". $xmppdatas['UUID'.$uuid]['ip_xmpp']."\n";
+		$cnstr .= "ippublic : \t ". $xmppdatas['UUID'.$uuid]['ippublic']."\n";
+		$cnstr .= "kiosk_presence : \t ". $xmppdatas['UUID'.$uuid]['kiosk_presence']."\n";
+		$cnstr .= '"';
+		$cnstr .= '>'.$datas['cn'][$raw].'</span>';
+		$cn[] = $cnstr;
+	}
+	else
+		$cn[] = $datas['cn'][$raw];
 	$presencesClass[] = ($datas['presence'][$raw] == 1) ? "machineNamepresente" : "machineName";
 
 	if (in_array("inventory", $_SESSION["supportModList"])) {
@@ -222,7 +252,7 @@ foreach($datas['uuid'] as $uuid)
 	$raw++;
 }
 
-$n = new OptimizedListInfos($datas["cn"], _T("Computer Name", "glpi"));
+$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
 $n->setParamInfo($params); // [params]
 if(array_key_exists("description", $datas))
   $n->addExtraInfo($datas["description"], _T("Description", "glpi"));
