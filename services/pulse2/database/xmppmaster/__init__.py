@@ -6390,22 +6390,22 @@ where agenttype="machine" and groupdeploy in (
                                       session,
                                       jid,
                                       day=1):
-    """
-    This function is used to know how long a machine is online/offline.
-    It allow to know the number of start of this machine too.
+        """
+        This function is used to know how long a machine is online/offline.
+        It allow to know the number of start of this machine too.
 
-    Args:
-        session: The Sqlalchemy session
-        jid: The jid of the machine
-        day: The number of days for the count
-    Returns:
-        It returns a dictonary with :
+        Args:
+            session: The Sqlalchemy session
             jid: The jid of the machine
-            downtime: The time the machine has been down
-            uptime: The time the machine has been running the agent
-            nbstart: The number of start of the agent
-            totaltime: The interval (in seconds) on which we count
-    """
+            day: The number of days for the count
+        Returns:
+            It returns a dictonary with :
+                jid: The jid of the machine
+                downtime: The time the machine has been down
+                uptime: The time the machine has been running the agent
+                nbstart: The number of start of the agent
+                totaltime: The interval (in seconds) on which we count
+        """
 
         statdict = {}
         statdict['machine'] = jid
