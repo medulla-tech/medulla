@@ -6378,12 +6378,12 @@ where agenttype="machine" and groupdeploy in (
                                       session,
                                       jid,
                                       day=1):
-        statdict={}
+        statdict = {}
         statdict['machine'] = jid
         statdict['downtime'] = 0
         statdict['uptime'] = 0
         statdict['nbstart'] = 0
-        statdict['totaltime'] = day*86400
+        statdict['totaltime'] = day * 86400
         try:
             sql = """SELECT
                     id, status, updowntime, date
@@ -6396,10 +6396,10 @@ where agenttype="machine" and groupdeploy in (
             result = session.execute(sql)
             session.commit()
             session.flush()
-            nb=False
+            nb = False
             if result:
                 for el in result:
-                    if  el.status == 0:
+                    if el.status == 0:
                         if statdict['nbstart'] > 0:
                             if nb:
                                 statdict['uptime'] = statdict['uptime'] + el[2]
