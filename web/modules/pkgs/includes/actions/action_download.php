@@ -39,7 +39,7 @@ PARAMS :
   step - Incremental execution order
   label - used to map a "goto" action on it
   url - Url to download.
-  fullpath - Used to specifiy the final name of the downloaded file (optional).
+  fullpath - Used to specify the final name of the downloaded file (optional).
              If fullpath is not specified, the file will have the url as name
 */
 
