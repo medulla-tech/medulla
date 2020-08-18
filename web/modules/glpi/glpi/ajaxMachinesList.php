@@ -79,7 +79,8 @@ $logAction = new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "
 $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-	$vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
+  $graphafana = new ActionItem(_("Graphfana"),"monitoringview","consoleg","computers", "xmppmaster", "xmppmaster");
+  $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
   $mscNoAction = new EmptyActionItem1(_("Software deployment"),"msctabs","installg","computer", "base", "computers");
 
   $inventconsole   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
@@ -104,6 +105,7 @@ $DeployQuickxmpp->setWidth(600);
 // with check presence xmpp
 $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
 
+$actionGraph = array();
 $actionInventory = array();
 $action_logs_msc = array();
 $action_deploy_msc = array();
@@ -157,6 +159,7 @@ foreach($datas['uuid'] as $uuid)
 			$actionxmppquickdeoloy[]=$DeployQuickxmpp;
 			$action_deploy_msc[] = $mscAction;
 			$action_logs_msc[]   = $logAction;
+			$actionGraph[] = $graphafana;
 			if ( $datas['presence'][$raw] ){
 				if (isExpertMode()){
 					$actionConsole[] = $inventconsole;
@@ -291,6 +294,7 @@ if(array_key_exists("reg", $datas))
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])){
   $n->addActionItemArray($actionInventory);
+  $n->addActionItemArray($actionGraph);
 }
 
 if (in_array("extticket", $_SESSION["supportModList"])) {

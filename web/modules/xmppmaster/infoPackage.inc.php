@@ -119,6 +119,9 @@ $submod->addPage($page);
 $page = new Page("consolecomputerxmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("monitoringview", _T('XMPP Monitoring view', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("xmppfilesbrowsing", _T('File Browser', 'xmppmaster'));
 $submod->addPage($page);
 
