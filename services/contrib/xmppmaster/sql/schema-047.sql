@@ -23,26 +23,21 @@
 START TRANSACTION;
 
 USE `xmppmaster`;
-DROP procedure IF EXISTS `afterinsertmachine`;
 
-DELIMITER $$
-USE `xmppmaster`$$
-CREATE PROCEDURE `afterinsertmachine`(IN newjid VARCHAR(255))
-BEGIN
-set @userjid =  SUBSTRING_INDEX(SUBSTRING_INDEX(newjid, '@', 1),'.',1);
-set @tmpval = SUBSTRING_INDEX(newjid, '@', -1);
-set @domain = SUBSTRING_INDEX(@tmpval, '/', 1);
-set @resource = SUBSTRING_INDEX(@tmpval, '/', -1);
--- SELECT @userjid, @domain, @resource;
-DELETE FROM `xmppmaster`.`machines`
+CREATE TABLE IF NOT EXISTS  `uptime_machine` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hostname` varchar(45) NOT NULL,
+  `jid` varchar(255) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `updowntime` int(11) DEFAULT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `ind_jiddata` (`jid`(12) DESC)
+) 
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8
+COMMENT 'this table count uptime xmppagent ON OFF';
 
-WHERE
-    jid LIKE CONCAT(@resource, '%');
-END$$
-
-DELIMITER ;
-
-
-UPDATE version SET Number = 46;
+UPDATE version SET Number = 47;
 
 COMMIT;
