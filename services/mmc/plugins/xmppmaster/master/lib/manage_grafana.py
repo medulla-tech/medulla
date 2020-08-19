@@ -115,10 +115,10 @@ class manage_grafana:
     def grafanaGetDashboardIdForHostname(self):
         try:
             logger.info("Getting dashboard id for hostname %s" % self.hostname)
-            json = self.grafanaGetDashboardForHostname()
+            db_json = self.grafanaGetDashboardForHostname()
             logger.info("dashboard id for hostname %s: %s"
-                        % (self.hostname, json['dashboard']['id']))
-            return json['dashboard']['id']
+                        % (self.hostname, db_json['dashboard']['id']))
+            return db_json['dashboard']['id']
         except Exception as e:
             logger.error("Error getting dashboard id for hostname%s: %s"
                          % (self.hostname, str(e)))
