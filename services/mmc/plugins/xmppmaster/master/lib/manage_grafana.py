@@ -68,7 +68,7 @@ class manage_grafana:
         else:
             logger.error("API Key is not defined. "
                          "Please define it in xmppmaster.ini.local")
-            return None
+            return
         if config.has_option('grafana_api', 'url'):
             self.api_config['url'] = config.get('grafana_api', 'url')
         else:
@@ -80,6 +80,7 @@ class manage_grafana:
             self.api_config['render_url'] = 'http://%s/grafana/render/d-solo' % socket.getfqdn()
 
         logger.debug("API configuration: %s" % self.api_config)
+        return
 
     def grafanaGetDashboardForHostname(self):
         """Returns a JSON containing the dashboard for a hostname"""
