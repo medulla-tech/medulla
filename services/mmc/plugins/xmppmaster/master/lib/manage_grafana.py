@@ -77,8 +77,7 @@ class manage_grafana:
             self.api_config['render_url'] = config.get('grafana_api',
                                                        'render_url')
         else:
-            self.api_config['render_url'] = 'http://%s/grafana/render/d-solo'
-            % socket.getfqdn()
+            self.api_config['render_url'] = 'http://%s/grafana/render/d-solo' % socket.getfqdn()
 
         logger.debug("API configuration: %s" % self.api_config)
 
