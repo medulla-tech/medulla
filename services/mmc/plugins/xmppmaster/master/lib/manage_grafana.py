@@ -318,10 +318,10 @@ class manage_grafana:
                     % (panel_title, self.hostname))
         panel_id = self.grafanaGetPanelIdFromTitle(panel_title)
         if panel_id:
-            img = "%s/%s/%s?panelId=%s&width=800&height=400" % (self.render_url,
-                                                                 self.hostname,
-                                                                 self.hostname,
-                                                                 panel_id)
+            img = "%s/%s/%s?panelId=%s&width=800&height=400" % (self.api_config['render_url'],
+                                                                self.hostname,
+                                                                self.hostname,
+                                                                panel_id)
             logger.info("Image url for panel %s for hostname %s: %s"
                         % (panel_title, self.hostname, img))
             return img
