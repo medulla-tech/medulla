@@ -670,7 +670,8 @@ class Glpi92(DyngroupDatabaseHelper):
         if field != "":
             query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
             if field != "type":
-                query = query.join(Peripherals, Computersitems.items_id == Peripherals.id)\
+                query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                   Computersitems.itemtype == "Peripheral"))\
                     .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
@@ -735,21 +736,14 @@ class Glpi92(DyngroupDatabaseHelper):
                     self.regcontents.c.value.contains(criterion)
                 ))
             else:
-                if contains == "notcontains":
-                    if field == "type":
-                        query = query.filter(not_(Computersitems.itemtype.contains(criterion)))
-                    elif field != "manufacturer":
-                        query = query.filter(not_(eval("Peripherals.%s" % field).contains(criterion)))
+                if field == "peripherals":
+                    if contains == "notcontains":
+                        query = query.filter(not_(Peripherals.name.contains(criterion)))
                     else:
-                        query = query.filter(not_(Peripheralsmanufacturers.name.contains(criterion)))
-
+                        query = query.filter(Peripherals.name.contains(criterion))
                 else:
-                    if field == "type":
-                        query = query.filter(Computersitems.itemtype.contains(criterion))
-                    elif field != "manufacturer":
-                        query = query.filter(eval("Peripherals.%s" % field).contains(criterion))
-                    else:
-                        query = query.filter(Peripheralsmanufacturers.name.contains(criterion))
+                    pass
+
         query = query.order_by(Machine.name)
         # All computers
         if "computerpresence" not in ctx:
@@ -1346,9 +1340,9 @@ class Glpi92(DyngroupDatabaseHelper):
         elif query[2] == 'Printer serial':
             return [[self.printers.c.serial, query[3]]]
         elif query[2] == 'Peripheral name':
-            return [[self.peripheral.c.name, query[3]]]
+            return [[self.peripherals.c.name, query[3]]]
         elif query[2] == 'Peripheral serial':
-            return [[self.peripheral.c.serial, query[3]]]
+            return [[self.peripherals.c.serial, query[3]]]
         elif query[2] == 'Group': # TODO double join on Entity
             return [[self.group.c.name, query[3]]]
         elif query[2] == 'Network':
@@ -5067,6 +5061,27 @@ class Glpi92(DyngroupDatabaseHelper):
         query = session.query(Printers)
         if filter != '':
             query = query.filter(Printers.serial.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllNamePeripherals(self, ctx, filt=''):
+        """ @return: all peripheral name in the GLPI database """
+        session = create_session()
+        query = session.query(Peripherals)
+        if filter != '':
+            query = query.filter(Peripherals.name.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllSerialPeripherals(self, ctx, filt=''):
+        """ @return: all peripheral serials in the GLPI database """
+        session = create_session()
+        query = session.query(Peripherals)
+        if filter != '':
+            query = query.filter(or_(Peripherals.serial.like('%' + filt + '%'),
+                                     Peripherals.name.like('%' + filt + '%')))
         ret = query.all()
         session.close()
         return ret

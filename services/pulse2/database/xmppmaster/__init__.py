@@ -49,7 +49,8 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Substituteconf,\
     Agentsubscription,\
     Subscription,\
-    Def_remote_deploy_status
+    Def_remote_deploy_status,\
+    Uptime_machine
 # Imported last
 import logging
 import json
@@ -1232,8 +1233,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
 
-
-    #################Custom Command Quick Action################################
+    # Custom Command Quick Action################################
     @DatabaseHelper._sessionm
     def create_Qa_custom_command( self,
                                   session,
@@ -6295,3 +6295,155 @@ where agenttype="machine" and groupdeploy in (
                 'keysyncthing' : machine.keysyncthing,
             }
         return result
+
+    # SUBSTITUTE UPDATE TIME
+    @DatabaseHelper._sessionm
+    def setUptime_machine(self,
+                          session,
+                          hostname,
+                          jid,
+                          status=0,
+                          uptime=0,
+                          date=None):
+        """
+        This function allow to know the uptime of a machine
+        Args:
+            session: The sqlalchemy session
+            hostname: The hostname of the machine
+            jid: The jid of the machine
+            status: The current status of the machine
+                    Can be 1 or 0
+                    0: The machine is offline
+                    1: The machine is online
+            uptime: The current uptime of the machine
+        Returns:
+            It returns the id of the machine
+        """
+        try:
+            new_Uptime_machine = Uptime_machine()
+            new_Uptime_machine.hostname = hostname
+            new_Uptime_machine.jid = jid
+            new_Uptime_machine.status = status
+            new_Uptime_machine.uptime = uptime
+            if date is not None:
+                new_Uptime_machine.date = date
+            session.add(new_Uptime_machine)
+            session.commit()
+            session.flush()
+            return new_Uptime_machine.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def last_event_presence_xmpp(self,
+                                 session,
+                                 jid,
+                                 nb=1):
+        """
+        This function allow to obtain the last presence.
+            Args:
+                session: The sqlalchemy session
+                jid: The jid of the machine
+                nb: Number of evenements we look at
+
+            Returns:
+                It returns a dictionnary with:
+                    id: The id of the machine
+                    hostname: The hostname of the machine
+                    status: The current status of the machine
+                        Can be 1 or 0:
+                            0: The machine is offline
+                            1: The machine is online
+                    updowntime:
+                            The uptime if status is set to 0
+                            The downtime if status is set to 1
+                    date: The date we checked the informations
+                    time: Unix time
+        """
+        try:
+            sql = """SELECT
+                    *,
+                    UNIX_TIMESTAMP(date)
+                FROM
+                    xmppmaster.uptime_machine
+                WHERE
+                    jid LIKE '%s'
+                ORDER BY id DESC
+                LIMIT %s;""" % (jid, nb)
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            return [{"id": element[0],
+                     "hostname": element[1],
+                     "jid": element[2],
+                     "status": element[3],
+                     "uptime": element[4],
+                     "date": element[5].strftime("%Y/%m/%d/ %H:%M:%S"),
+                     "time": element[6]} for element in result]
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return []
+
+    @DatabaseHelper._sessionm
+    def stat_up_down_time_by_last_day(self,
+                                      session,
+                                      jid,
+                                      day=1):
+        """
+        This function is used to know how long a machine is online/offline.
+        It allow to know the number of start of this machine too.
+
+        Args:
+            session: The Sqlalchemy session
+            jid: The jid of the machine
+            day: The number of days for the count
+        Returns:
+            It returns a dictonary with :
+                jid: The jid of the machine
+                downtime: The time the machine has been down
+                uptime: The time the machine has been running the agent
+                nbstart: The number of start of the agent
+                totaltime: The interval (in seconds) on which we count
+        """
+
+        statdict = {}
+        statdict['machine'] = jid
+        statdict['downtime'] = 0
+        statdict['uptime'] = 0
+        statdict['nbstart'] = 0
+        statdict['totaltime'] = day * 86400
+        try:
+            sql = """SELECT
+                    id, status, updowntime, date
+                FROM
+                    xmppmaster.uptime_machine
+                WHERE
+                        jid LIKE '%s'
+                    AND
+                        date > CURDATE() - INTERVAL %s DAY;""" % (jid, day)
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            # We set nb to false to not use the last informations
+            # This would lead to errors.
+            nb = False
+            if result:
+                for el in result:
+                    if el.status == 0:
+                        if statdict['nbstart'] > 0:
+                            if nb:
+                                statdict['uptime'] = statdict['uptime'] + el[2]
+                            else:
+                                nb = True
+                    else:
+                        statdict['nbstart'] = statdict['nbstart'] + 1
+                        if nb:
+                            statdict['downtime'] = statdict['downtime'] + el[2]
+                        else:
+                            nb = True
+            return statdict
+        except Exception, e:
+            self.logger.error("\n%s" % (traceback.format_exc()))
+            logging.getLogger().error(str(e))
+            return statdict
