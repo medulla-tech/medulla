@@ -86,6 +86,16 @@ li.consoleg a {
         -moz-filter: grayscale(50%);
         opacity:0.5;
 }
+li.monit a {
+        padding: 3px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/process.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
 li.quick a {
         padding: 0px 0px  5px 22px;
         margin: 0 0px 0 0px;
@@ -159,7 +169,7 @@ li.quickg a {
     $uiduniq = uniqid ("shellcommande");
     $resultcommand = "";
     $errorcode = "";
-    $p = new PageGenerator(_T("Monitoring view ici", 'xmppmaster')." $machine");
+    $p = new PageGenerator(_T("Monitoring for", 'xmppmaster')." $machine");
     $p->setSideMenu($sidemenu);
     $p->display(); 
     echo "<h1>ICI BOUTON MONITORING VUE GENERAL</h1>";
