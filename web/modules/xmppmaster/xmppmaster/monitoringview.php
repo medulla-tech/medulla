@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2016-2018 Siveo, http://www.siveo.net
+ * (c) 2016-2020 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -157,7 +157,6 @@ li.quickg a {
     if(!$_GET['uninventoried']){
       include_once('modules/pulse2/includes/menu_actionaudit.php');
     }
-    
     $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
     if(!$_GET['uninventoried']){
       $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
@@ -165,24 +164,60 @@ li.quickg a {
     else{
       $machine =$_GET['jid'];
     }
-    $command = isset($_POST['command']) ? $_POST['command'] : "";
-    $uiduniq = uniqid ("shellcommande");
-    $resultcommand = "";
-    $errorcode = "";
-    $p = new PageGenerator(_T("Monitoring for", 'xmppmaster')." $machine");
+
+    $hostname = $_GET['cn'];
+
+    $p = new PageGenerator(_T("Monitoring for", 'xmppmaster')." $hostname");
+
     $p->setSideMenu($sidemenu);
-    $p->display(); 
-    echo "<h1>ICI BOUTON MONITORING VUE GENERAL</h1>";
-    echo "<pre>";
-    echo "GET CGI A DISPOSITION";
-    print_r($_GET);
-    echo "<pre>";
-    echo "<pre>";
-    echo "POST CGI A DISPOSITION";
-    print_r($_POST);
-    echo "<pre>";
+    $p->display();
+
+    $panels_list = xmlrpc_getPanelsForMachine($hostname);
+    echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
+        echo "<thead>";
+            echo "<tr>";
+                echo '<td>'._T("Monitoring item", "xmppmaster").'</td>';
+                echo '<td>'._T("Last value", "xmppmaster").'</td>';
+                echo '<td>'._T("History", "xmppmaster").'</td>';
+            echo "</tr>";
+        echo "</thead>";
+        echo "<tbody>";
+            for($i = 0; $i < count($panels_list); ++$i) {
+                echo "<tr>";
+                    echo '<td>'.$panels_list[0]['title'].'</td>';
+                    echo '<td>';
+                        if ($panels_list[0]['title'] == 'Online-Offline Status') {
+                            $last_val = xmlrpc_getLastOnlineStatus($machine);
+                        }
+                        echo $last_val;
+                    echo '</td>';
+                    echo "<td>";
+                        $from = time() - (24 * 60 * 60);
+                        $to = time();
+                        $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
+                        echo "<a href='".$url."'>1 day</a>";
+                        echo " | ";
+                        $from = time() - (7 * 24 * 60 * 60);
+                        $to = time();
+                        $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
+                        echo "<a href='".$url."'>1 week</a>";
+                        echo " | ";
+                        $from = time() - (31 * 24 * 60 * 60);
+                        $to = time();
+                        $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
+                        echo "<a href='".$url."'>1 month</a>";
+                        echo " | ";
+                        $from = time() - (3 * 31 * 24 * 60 * 60);
+                        $to = time();
+                        $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
+                        echo "<a href='".$url."'>3 months</a>";
+                    echo "</td>";
+                echo "</tr>";
+            }
+        echo "</tbody>";
+    echo '</table>';
   ?>
-    
+
 <script type="text/javascript">
        jQuery( document ).ready(function() {
            //si besoin action jquery
