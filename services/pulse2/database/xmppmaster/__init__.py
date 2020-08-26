@@ -27,15 +27,20 @@ xmppmaster database handler
 """
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct, cast, Date, not_
-from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
+from sqlalchemy import create_engine, MetaData, func, and_, desc, or_,\
+                        distinct, not_  # cast, Date, select,
+from sqlalchemy.orm import sessionmaker
+
 from sqlalchemy.exc import DBAPIError
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta  # date,
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,\
-    Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs, ParametersDeploy, \
-    Organization, Packages_list, Qa_custom_command, Qa_relay_command, Qa_relay_launched, Qa_relay_result,\
+from pulse2.database.xmppmaster.schema import Network, Machines,\
+    RelayServer, Users, Has_machinesusers, \
+    Has_relayserverrules, Has_guacamole, UserLog, Deploy,\
+    Has_login_command, Logs, \
+    Organization, Packages_list, Qa_custom_command, Qa_relay_command,\
+    Qa_relay_launched, Qa_relay_result,\
     Cluster_ars,\
     Has_cluster_ars,\
     Command_action,\
@@ -50,12 +55,14 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
     Agentsubscription,\
     Subscription,\
     Def_remote_deploy_status,\
-    Uptime_machine
+    Uptime_machine, \
+    Mon_machine, \
+    Mon_devices  # Regles, Base, ParametersDeploy,
 # Imported last
 import logging
 import json
 import time
-#topology
+# topology
 import os
 import pwd
 import traceback
@@ -65,13 +72,40 @@ import uuid
 import random
 import copy
 
+Session = sessionmaker()
+
+logger = logging.getLogger()
+
+
+class Error(Exception):
+    """Base class for exceptions in this module."""
+    pass
+
+
+class DomaineTypeDeviceError(Error):
+    """
+        type is not in domaine 'thermalprinter', 'nfcReader', 'opticalReader',\
+        'cpu', 'memory', 'storage', 'network'
+    """
+
+    def __str__(self):
+        return "{0} {1}".format(self.__doc__, Exception.__str__(self))
+
+
+class DomainestatusDeviceError(Error):
+    """
+        status is not in domaine 'ready', 'busy', 'warning', 'error'
+    """
+
+    def __str__(self):
+        return "{0} {1}".format(self.__doc__, Exception.__str__(self))
+
+
 def datetime_handler(x):
     if isinstance(x, datetime):
         return x.strftime('%Y-%m-%d %H:%M:%S')
     raise TypeError("Unknown type")
 
-
-logger = logging.getLogger()
 
 class XmppMasterDatabase(DatabaseHelper):
     """
@@ -92,9 +126,9 @@ class XmppMasterDatabase(DatabaseHelper):
             return None
         self.config = config
         self.db = create_engine(self.makeConnectionPath(),
-                                pool_recycle = self.config.dbpoolrecycle,
-                                pool_size = self.config.dbpoolsize,
-                                pool_timeout = self.config.dbpooltimeout)
+                                pool_recycle=self.config.dbpoolrecycle,
+                                pool_size=self.config.dbpoolsize,
+                                pool_timeout=self.config.dbpooltimeout)
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
@@ -106,7 +140,6 @@ class XmppMasterDatabase(DatabaseHelper):
         result = self.db.execute("SELECT * FROM xmppmaster.version limit 1;")
         re = [x.Number for x in result]
         return True
-
 
     def initMappers(self):
         """
@@ -121,9 +154,9 @@ class XmppMasterDatabase(DatabaseHelper):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except DBAPIError, e:
+            except DBAPIError as e:
                 logging.getLogger().error(e)
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().error(e)
             if ret:
                 break
@@ -138,9 +171,9 @@ class XmppMasterDatabase(DatabaseHelper):
     # xmppmaster FUNCTIONS FOR SUBSCRIPTION
 
     @DatabaseHelper._sessionm
-    def setagentsubscription( self,
-                            session,
-                            name):
+    def setagentsubscription(self,
+                             session,
+                             name):
         """
             this functions addition a log line in table log xmpp.
         """
@@ -151,32 +184,32 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
             return new_agentsubscription.id
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             return None
 
-
     @DatabaseHelper._sessionm
-    def deAgentsubscription( self,
+    def deAgentsubscription(self,
                             session,
                             name):
         """
             del organization name
         """
-        session.query(Agentsubscription).filter(Agentsubscription.name == name).delete()
+        session.query(Agentsubscription).\
+            filter(Agentsubscription.name == name).delete()
         session.commit()
         session.flush()
 
     @DatabaseHelper._sessionm
-    def setupagentsubscription( self,
-                            session,
-                            name):
+    def setupagentsubscription(self,
+                               session,
+                               name):
         """
             this functions addition ou update table in table log xmpp.
-        #"""
+        """
         try:
             q = session.query(Agentsubscription)
-            q = q.filter(Agentsubscription.name==name)
+            q = q.filter(Agentsubscription.name == name)
             record = q.one_or_none()
             if record:
                 record.name = name
@@ -185,11 +218,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 return record.id
             else:
                 return self.setagentsubscription(name)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def setSubscription( self,
+    def setSubscription(self,
                         session,
                         macadress,
                         idagentsubscription):
@@ -204,12 +237,12 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
             return new_subscription.id
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             return None
 
     @DatabaseHelper._sessionm
-    def setupSubscription( self,
+    def setupSubscription(self,
                           session,
                           macadress,
                           idagentsubscription):
@@ -218,7 +251,7 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         try:
             q = session.query(Subscription)
-            q = q.filter(Subscription.macadress==macadress)
+            q = q.filter(Subscription.macadress == macadress)
             record = q.one_or_none()
             if record:
                 record.macadress = macadress
@@ -228,53 +261,52 @@ class XmppMasterDatabase(DatabaseHelper):
                 return record.id
             else:
                 return self.setSubscription(macadress, idagentsubscription)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def setuplistSubscription( self,
+    def setuplistSubscription(self,
                               session,
                               listmacadress,
                               agentsubscription):
         try:
-            id = self.setupagentsubscription( agentsubscription)
+            id = self.setupagentsubscription(agentsubscription)
             if id is not None:
                 for macadress in listmacadress:
                     self.setupSubscription(macadress, id)
                 return id
             else:
-                logger.error("setup or create record for agent subscription%s" % agentsubscription)
+                logger.error("setup or create record for"
+                             " agent subscription %s" % agentsubscription)
                 return None
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             return None
 
-
     @DatabaseHelper._sessionm
-    def delSubscriptionmacadress( self,
-                                session,
-                                macadress):
+    def delSubscriptionmacadress(self,
+                                 session,
+                                 macadress):
         """
             this functions addition a log line in table log xmpp.
         """
         try:
             q = session.query(Subscription)
-            q = q.filter(Subscription.macadress==macadress).delete()
+            q = q.filter(Subscription.macadress == macadress).delete()
             session.commit()
             session.flush()
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             self.logger.error("\n%s" % (traceback.format_exc()))
 
     @DatabaseHelper._sessionm
     def update_enable_for_agent_subscription(self,
-                                            session,
-                                            agentsubtitutename,
-                                            status = '0',
-                                            agenttype = 'machine'
-                                            ):
+                                             session,
+                                             agentsubtitutename,
+                                             status='0',
+                                             agenttype='machine'):
         try:
-            sql="""
+            sql = """
             UPDATE `xmppmaster`.`machines`
                     INNER JOIN
                 `xmppmaster`.`subscription` ON `xmppmaster`.`machines`.`macaddress` = `xmppmaster`.`subscription`.`macadress`
@@ -284,13 +316,12 @@ class XmppMasterDatabase(DatabaseHelper):
                 `xmppmaster`.`machines`.`enabled` = '%s'
             WHERE
                 `xmppmaster`.`machines`.agenttype = '%s'
-                    AND `xmppmaster`.`agent_subscription`.`name` = '%s';""" % (status,
-                                                                            agenttype,
-                                                                            agentsubtitutename)
-            machines = session.execute(sql)
+                    AND `xmppmaster`.`agent_subscription`.`name` = '%s';""" \
+                        % (status, agenttype, agentsubtitutename)
+            session.execute(sql)
             session.commit()
             session.flush()
-        except Exception, e:
+        except Exception:
             self.logger.error("\n%s" % (traceback.format_exc()))
 
     @DatabaseHelper._sessionm
@@ -301,21 +332,21 @@ class XmppMasterDatabase(DatabaseHelper):
                                   packagename,
                                   cmd,
                                   grp_parent,
-                                  status = "C",
-                                  dateend= None,
+                                  status="C",
+                                  dateend=None,
                                   deltatime=60):
         try:
-            idpartage =  self.search_partage_for_package(packagename)
+            idpartage = self.search_partage_for_package(packagename)
             if idpartage == -1:
                 #print "add partage"
                 #il faut cree le partage.
                 new_Syncthing_deploy_group = Syncthing_deploy_group()
                 new_Syncthing_deploy_group.namepartage = namepartage
-                new_Syncthing_deploy_group.directory_tmp =  directory_tmp
+                new_Syncthing_deploy_group.directory_tmp = directory_tmp
                 new_Syncthing_deploy_group.cmd = cmd
                 new_Syncthing_deploy_group.status = status
-                new_Syncthing_deploy_group.package =  packagename
-                new_Syncthing_deploy_group.grp_parent =  grp_parent
+                new_Syncthing_deploy_group.package = packagename
+                new_Syncthing_deploy_group.grp_parent = grp_parent
                 if dateend is None:
                     dateend = datetime.now() + timedelta(minutes=deltatime)
                 else:
@@ -6447,3 +6478,332 @@ where agenttype="machine" and groupdeploy in (
             self.logger.error("\n%s" % (traceback.format_exc()))
             logging.getLogger().error(str(e))
             return statdict
+
+
+    @DatabaseHelper._sessionm
+    def setMonitoring_machine(self,
+                              session,
+                              machines_id,
+                              hostname,
+                              statusmsg = "",
+                              date=None):
+        try:
+            new_Monitoring_machine = Mon_machine()
+            new_Monitoring_machine.machines_id = machines_id
+            if date is not None:
+                date = date.replace("T"," ").replace("Z","")[:19]
+                new_Monitoring_machine.date = date
+            new_Monitoring_machine.hostname = hostname
+            new_Monitoring_machine.statusmsg = statusmsg
+            session.add(new_Monitoring_machine)
+            session.commit()
+            session.flush()
+            return new_Monitoring_machine.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def setMonitoring_device(self,
+                             session,
+                             hostname,
+                             mon_machine_id,
+                             device_type,
+                             serial,
+                             firmware,
+                             status,
+                             alarm_msg,
+                             doc):
+        try:
+            logging.getLogger().debug("==================================\n"\
+                                      "device_type [%s]"%device_type)
+            if device_type not in ['thermalPrinter',
+                                    'nfcReader',
+                                    'opticalReader',
+                                    'cpu',
+                                    'memory',
+                                    'storage',
+                                    'network',
+                                    'system']:
+                raise DomaineTypeDeviceError()
+            if status not in ['ready', 'busy', 'warning', 'error', 'disable']:
+                raise DomainestatusDeviceError()
+            new_Monitoring_device = Mon_devices()
+            new_Monitoring_device.mon_machine_id = mon_machine_id
+            new_Monitoring_device.device_type =  device_type
+            new_Monitoring_device.serial = serial
+            new_Monitoring_device.firmware = firmware
+            new_Monitoring_device.status = status
+            new_Monitoring_device.alarm_msg = alarm_msg
+            new_Monitoring_device.doc = doc
+            session.add(new_Monitoring_device)
+            session.commit()
+            session.flush()
+            logging.getLogger().debug("==================================")
+            return new_Monitoring_device.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            self.logger.error("\n%s" % (traceback.format_exc()))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def setMonitoring_device_reg(self,
+                             session,
+                             hostname,
+                             mon_machine_id,
+                             device_type,
+                             serial,
+                             firmware,
+                             status,
+                             alarm_msg,
+                             doc):
+        try:
+            #logging.getLogger().debug("==================================\n"\
+                                      #"device_type [%s]"%device_type)
+            ##logging.getLogger().error("status %s"%status)
+            ##logging.getLogger().error("serial %s"%serial)
+            ##logging.getLogger().error("firmware %s"%firmware)
+            ##logging.getLogger().error("alarm_msg %s"%alarm_msg)
+            ##logging.getLogger().error("doc %s"%doc)
+            #if device_type not in ['thermalPrinter',
+                                    #'nfcReader',
+                                    #'opticalReader',
+                                    #'cpu',
+                                    #'memory',
+                                    #'storage',
+                                    #'network',
+                                    #'system']:
+                #raise DomaineTypeDeviceError()
+            #if status not in ['ready', 'busy', 'warning', 'error', 'disable']:
+                #raise DomainestatusDeviceError()
+            #new_Monitoring_device = Mon_devices()
+            #new_Monitoring_device.mon_machine_id = mon_machine_id
+            #new_Monitoring_device.device_type =  device_type
+            #new_Monitoring_device.serial = serial
+            #new_Monitoring_device.firmware = firmware
+            #new_Monitoring_device.status = status
+            #new_Monitoring_device.alarm_msg = alarm_msg
+            #new_Monitoring_device.doc = doc
+            #session.add(new_Monitoring_device)
+            #session.commit()
+            #session.flush()
+
+
+            id_device_reg = self.setMonitoring_device(hostname,
+                             mon_machine_id,
+                             device_type,
+                             serial,
+                             firmware,
+                             status,
+                             alarm_msg,
+                             doc)
+
+
+            #creation event on rule
+            objectlist_local_rule = self._rule_monitoring( hostname,
+                                                            mon_machine_id,
+                                                            device_type,
+                                                            serial,
+                                                            firmware,
+                                                            status,
+                                                            alarm_msg,
+                                                            doc,
+                                                            localrule= True)
+            if objectlist_local_rule:
+                # 1 regle est definie pour ce device, sur cette machine
+                self._action_new_event(objectlist_local_rule,
+                                        mon_machine_id,
+                                        id_device_reg,
+                                        doc,
+                                        status_event=1)
+            else:
+                # on regarde si il y a 1 regle general pour ce device
+                objectlist_local_rule = self._rule_monitoring( hostname,
+                                                            mon_machine_id,
+                                                            device_type,
+                                                            serial,
+                                                            firmware,
+                                                            status,
+                                                            alarm_msg,
+                                                            doc,
+                                                            localrule= False)
+                if objectlist_local_rule:
+                    self._action_new_event(objectlist_local_rule,
+                                            mon_machine_id,
+                                            id_device_reg,
+                                            doc,
+                                            status_event=1)
+            logging.getLogger().debug("==================================")
+            return id_device_reg
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            self.logger.error("\n%s" % (traceback.format_exc()))
+            return -1
+
+    @DatabaseHelper._sessionm
+    def setMonitoring_event(self,
+                              session,
+                              machines_id,
+                              id_device,
+                              id_rule,
+                              cmd,
+                              type_event="log",
+                              status_event=1):
+        try:
+            new_Monitoring_event = Mon_event()
+            new_Monitoring_event.machines_id = machines_id
+            new_Monitoring_event.id_rule = id_rule
+            new_Monitoring_event.id_device =id_device
+            new_Monitoring_event.type_event = type_event
+            new_Monitoring_event.cmd = cmd
+            session.add(new_Monitoring_event)
+            session.commit()
+            session.flush()
+            return new_Monitoring_event.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
+
+    def _action_new_event( self,
+                            objectlist_local_rule,
+                            id_machine,
+                            id_device,
+                            doc,
+                            status_event=1):
+
+        if objectlist_local_rule:
+            #  on applique le binding pour savoir si 1 alerte ou et 1evenement est programmer
+            for z in objectlist_local_rule:
+                logging.getLogger().debug("ZZZZZZ %s"%z)
+                result = self.__binding_application(doc, z['binding'],z['device_type'])
+                if isinstance(result, basestring):
+                    # cas exception
+                    #if action associe a exception error creation evenement
+                    if z['error_on_binding'] is None:
+                        return False
+                    bindingcmd = z['error_on_binding']
+                elif result:
+                    # alert True
+                    #if action associe a true creation evenement
+                    if z['succes_binding_cmd'] is None:
+                        return False
+                    bindingcmd = z['succes_binding_cmd']
+                else:
+                    #if action associe a false creation evenement
+                    if z['no_success_binding_cmd'] is None:
+                        return False
+                    bindingcmd = z['no_success_binding_cmd']
+
+
+                logging.getLogger().debug("id_machine %s"%id_machine)
+                logging.getLogger().debug("id_device %s"%id_device)
+                logging.getLogger().debug("z['id'] %s"%z['id'])
+                logging.getLogger().debug("bindingcmd %s"%bindingcmd)
+                logging.getLogger().debug("z['type_event'] %s"%z['type_event'])
+                logging.getLogger().debug("status_event %s"%status_event)
+                self.setMonitoring_event(id_machine,
+                                                id_device,
+                                                z['id'],
+                                                bindingcmd,
+                                                type_event=z['type_event'],
+                                                status_event = 1)
+
+
+
+    def __binding_application(self, datastring, bindingstring, device_type):
+        resultbinding = None
+        try:
+            data=json.loads(datastring)
+        except Exception as e:
+            return "[binding error device rule %s] : data from message" \
+                " monitoring format json error %s"%(device_type,
+                                                    str(e))
+
+        try:
+            code = compile(bindingstring, '<string>', 'exec')
+            exec(code)
+        except KeyError as e:
+            resultbinding = "[binding error device rule %s] : key %s in binding:\n%s\nis missing,verify "\
+                "your binding on data\n%s"%(device_type,
+                                            str(e),
+                                            bindingstring,
+                                            json.dumps(data,indent=4))
+        except Exception as e:
+            resultbinding = "[binding device rule %s error %s] in binding:\n%s\ "\
+                "on data\n%s"%(device_type,
+                               str(e),
+                               bindingstring,
+                               json.dumps(data,indent=4))
+        return resultbinding
+
+    @DatabaseHelper._sessionm
+    def getlistMonitoring_devices_type(self,
+                              session,
+                              enable = 1):
+        sql=''' SELECT DISTINCT
+                    device_type
+                FROM
+                    xmppmaster.mon_device_service
+                WHERE
+                    enable = 1;'''
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [ i[0].lower() for i in result ]
+
+    @DatabaseHelper._sessionm
+    def _rule_monitoring(self,
+                    session,
+                    hostname,
+                    mon_machine_id,
+                    device_type,
+                    serial,
+                    firmware,
+                    status,
+                    alarm_msg,
+                    doc,
+                    localrule= True):
+        if localrule:
+            sql=''' SELECT
+                        *
+                    FROM
+                        xmppmaster.mon_rules
+                    WHERE
+                        hostname LIKE '%s'
+                            AND device_type LIKE '%s';'''%(hostname,
+                                                        device_type)
+        else:
+            sql=''' SELECT
+                        *
+                    FROM
+                        xmppmaster.mon_rules
+                    WHERE
+                        device_type LIKE '%s';'''%(device_type)
+        #logging.getLogger().debug("sql %s"%sql)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [ {'id' : i[0],
+                  'hostname' : i[1],
+                  'device_type' : i[2],
+                  "binding" : i[3],
+                  "succes_binding_cmd" : i[4],
+                  "no_success_binding_cmd" : i[5],
+                  "error_on_binding" : i[6],
+                  "type_event" : i[7],
+                  "user" : i[8],
+                  "comment" : i[9]} for i in result ]
+
+    @DatabaseHelper._sessionm
+    def analyse_mon_rules(self,
+                          session,
+                          mon_machine_id,
+                             device_type,
+                             serial,
+                             firmware,
+                             status,
+                             alarm_msg,
+                             doc
+                          ):
+        # search regle for device et machine
+        pass
