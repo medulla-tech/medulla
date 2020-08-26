@@ -862,10 +862,12 @@ def get_packages_list(jid, filter=""):
 def getPanelsForMachine(hostname):
     return manage_grafana(hostname).grafanaGetPanels()
 
+
 def getPanelImage(hostname, panel_title, from_timestamp, to_timestamp):
     return manage_grafana(hostname).grafanaGetPanelImage(panel_title,
                                                          from_timestamp,
                                                          to_timestamp)
+
 
 def getLastOnlineStatus(jid):
     result = XmppMasterDatabase().last_event_presence_xmpp(jid)
