@@ -195,22 +195,22 @@ li.quickg a {
                         $from = time() - (24 * 60 * 60);
                         $to = time();
                         $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
-                        echo "<a href='".$url."'>1 day</a>";
+                        echo "<a title='Graph for one day' href='".$url."'>1 day</a>";
                         echo " | ";
                         $from = time() - (7 * 24 * 60 * 60);
                         $to = time();
                         $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
-                        echo "<a href='".$url."'>1 week</a>";
+                        echo "<a title='Graph for one week' href='".$url."'>1 week</a>";
                         echo " | ";
                         $from = time() - (31 * 24 * 60 * 60);
                         $to = time();
                         $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
-                        echo "<a href='".$url."'>1 month</a>";
+                        echo "<a title='Graph for one month' href='".$url."'>1 month</a>";
                         echo " | ";
                         $from = time() - (3 * 31 * 24 * 60 * 60);
                         $to = time();
                         $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
-                        echo "<a href='".$url."'>3 months</a>";
+                        echo "<a title='Graph for three months' href='".$url."'>3 months</a>";
                     echo "</td>";
                 echo "</tr>";
             }
