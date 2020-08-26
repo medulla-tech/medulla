@@ -21,19 +21,130 @@
 # MA 02110-1301, USA.
 #
 # file pluginsmaster pluginsmaster/plugin_vectormonitoringagent.py
-
-import base64
+import sys
 import json
-import os
-import logging
-import zlib
-from time import sleep
-from utils import name_random, file_put_contents, file_get_contents
-import traceback
 
+import logging
+
+
+import traceback
+from pulse2.database.xmppmaster import XmppMasterDatabase
 logger = logging.getLogger()
 
 plugin = {"VERSION": "1.0", "NAME": "vectormonitoringagent", "TYPE": "master"}
+
+
+def traitement_system(functionname,
+                      data,
+                      id_machine,
+                      hostname,
+                      id_mon_machine):
+    type = functionname[11:]
+    logger.debug("Device %s" % type)
+    serial, status, firmware, alarm_msg = ["", "ready", "", []]
+    if "serial" in data:
+        serial = data['serial']
+        del data['serial']
+    if "status" in data and data['status'] != "":
+        status = data['status']
+        del data['status']
+    if "firmware" in data:
+        firmware = data['firmware']
+        del data['firmware']
+    if 'alarms' in data:
+        if isinstance(data['alarms'], basestring):
+            alarm_msg = [data['alarms']]
+        elif isinstance(data['alarms'], list):
+            alarm_msg = data['alarms']
+        del data['alarms']
+    XmppMasterDatabase().setMonitoring_device_reg(hostname,
+                                                  id_mon_machine,
+                                                  type,
+                                                  serial,
+                                                  firmware,
+                                                  status,
+                                                  json.dumps(alarm_msg),
+                                                  json.dumps(data['metriques']))
+
+
+def traitement_nfcReader(functionname,
+                         data,
+                         id_machine,
+                         hostname,
+                         id_mon_machine):
+    type = functionname[11:]
+    logger.debug("===========================================================")
+    logger.debug("Device %s" % type)
+    serial, status, firmware, alarm_msg = ["", "ready", "", []]
+    if "serial" in data:
+        serial = data['serial']
+        del data['serial']
+    if "status" in data and data['status'] != "":
+        status = data['status']
+        del data['status']
+    if "firmware" in data:
+        firmware = data['firmware']
+        del data['firmware']
+    if 'message' in data:
+        if isinstance(data['message'], basestring):
+            alarm_msg = [data['message']]
+        elif isinstance(data['message'], list):
+            alarm_msg = data['message']
+        del data['message']
+    XmppMasterDatabase().setMonitoring_device_reg(hostname,
+                                                  id_mon_machine,
+                                                  type,
+                                                  serial,
+                                                  firmware,
+                                                  status,
+                                                  json.dumps(alarm_msg),
+                                                  json.dumps(data['metriques']))
+
+
+def traitement_generic(functionname,
+                       data,
+                       id_machine,
+                       hostname,
+                       id_mon_machine):
+    type = functionname[11:]
+    logger.debug("Device %s" % type)
+    serial, status, firmware, alarm_msg = ["", "ready", "", []]
+    if "serial" in data:
+        serial = data['serial']
+        del data['serial']
+    if "status" in data and data['status'] != "":
+        status = data['status']
+        del data['status']
+    if "firmware" in data:
+        firmware = data['firmware']
+        del data['firmware']
+    if 'message' in data:
+        if isinstance(data['message'], basestring):
+            alarm_msg = [data['message']]
+        elif isinstance(data['message'], list):
+            alarm_msg = data['message']
+        del data['message']
+    XmppMasterDatabase().setMonitoring_device_reg(hostname,
+                                                  id_mon_machine,
+                                                  type,
+                                                  serial,
+                                                  firmware,
+                                                  status,
+                                                  json.dumps(alarm_msg),
+                                                  json.dumps(data['metriques']))
+
+
+def callFunction(functionname, *args, **kwargs):
+    functionname = "traitement_%s" % functionname
+    logger.debug("**call function %s %s %s" % (functionname, args, kwargs))
+    thismodule = sys.modules[__name__]
+    try:
+        return getattr(thismodule,
+                       functionname)(functionname, *args, **kwargs)
+    except AttributeError:
+        traitement_generic(functionname, *args, **kwargs)
+    except Exception:
+        logger.error("\n%s" % (traceback.format_exc()))
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
@@ -41,10 +152,40 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug(plugin)
     logger.debug(json.dumps(data, indent=4))
     logger.debug("#################################################")
+
+    compteurcallplugin = getattr(xmppobject, "num_call%s" % action)
+    logger.debug("compteur num_call pluging %s %s" % (action,
+                                                      compteurcallplugin))
+
+    if compteurcallplugin == 0:
+        xmppobject.typelistMonitoring_device = \
+            XmppMasterDatabase().getlistMonitoring_devices_type()
+        logger.debug("list device %s" % (xmppobject.typelistMonitoring_device))
+
+    machine = XmppMasterDatabase().getMachinefromjid(message['from'])
+    logger.debug("Machine %s %s" % (machine['id'], machine['hostname']))
     if "subaction" in data:
         if data['subaction'] == "terminalInformations":
             # load version agent agentversion
-            pass
+            statusmsg = ""
+            if 'status' in data:
+                statusmsg = json.dumps(data['status'])
+            id_mom_machine = XmppMasterDatabase().setMonitoring_machine(
+                                 machine['id'],
+                                 machine['hostname'],
+                                 date=data['date'],
+                                 statusmsg=statusmsg)
+            if 'device_service' in data:
+                for element in data['device_service']:
+                    for devicename in element:
+                        # on appelle les functions de traitement
+                        # qui sont definie
+                        if devicename.lower() in xmppobject.typelistMonitoring_device:
+                            # globals()["traitement_%s"%element](data['opticalReader'])
+                            callFunction(devicename,
+                                         element[devicename],
+                                         machine['id'],
+                                         machine['hostname'],
+                                         id_mom_machine)
         elif data['subaction'] == "terminalAlert":
             pass
-           
