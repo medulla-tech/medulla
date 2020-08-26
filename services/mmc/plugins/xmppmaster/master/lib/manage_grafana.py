@@ -203,7 +203,7 @@ class manage_grafana:
                                 % (panel_title, panel['id'], index))
                     return panel['id']
             logger.debug("Panel %s not found for hostname %s"
-                           % (panel_title, self.hostname))
+                         % (panel_title, self.hostname))
             return None
         except Exception as e:
             logger.error("Error while getting panel %s for hostname %s: %s"
@@ -334,7 +334,7 @@ class manage_grafana:
                 from_timestamp*1000,
                 to_timestamp*1000)
             logger.debug("Image url for panel %s for hostname %s: %s"
-                        % (panel_title, self.hostname, img))
+                         % (panel_title, self.hostname, img))
             return img
         # No panel found
         return None
