@@ -200,7 +200,7 @@ class manage_grafana:
             for index, panel in enumerate(current_panels):
                 if panel_title == panel['title']:
                     logger.info("Panel %s has id %s and index %s"
-                                 % (panel_title, panel['id'], index))
+                                % (panel_title, panel['id'], index))
                     return panel['id']
             logger.warning("Panel %s not found for hostname %s"
                            % (panel_title, self.hostname))
