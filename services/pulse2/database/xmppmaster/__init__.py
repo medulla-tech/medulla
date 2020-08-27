@@ -57,7 +57,10 @@ from pulse2.database.xmppmaster.schema import Network, Machines,\
     Def_remote_deploy_status,\
     Uptime_machine, \
     Mon_machine, \
-    Mon_devices  # Regles, Base, ParametersDeploy,
+    Mon_devices, \
+    Mon_device_service, \
+    Mon_rules, \
+    Mon_event # Regles, Base, ParametersDeploy,
 # Imported last
 import logging
 import json
@@ -6558,37 +6561,6 @@ where agenttype="machine" and groupdeploy in (
                              alarm_msg,
                              doc):
         try:
-            #logging.getLogger().debug("==================================\n"\
-                                      #"device_type [%s]"%device_type)
-            ##logging.getLogger().error("status %s"%status)
-            ##logging.getLogger().error("serial %s"%serial)
-            ##logging.getLogger().error("firmware %s"%firmware)
-            ##logging.getLogger().error("alarm_msg %s"%alarm_msg)
-            ##logging.getLogger().error("doc %s"%doc)
-            #if device_type not in ['thermalPrinter',
-                                    #'nfcReader',
-                                    #'opticalReader',
-                                    #'cpu',
-                                    #'memory',
-                                    #'storage',
-                                    #'network',
-                                    #'system']:
-                #raise DomaineTypeDeviceError()
-            #if status not in ['ready', 'busy', 'warning', 'error', 'disable']:
-                #raise DomainestatusDeviceError()
-            #new_Monitoring_device = Mon_devices()
-            #new_Monitoring_device.mon_machine_id = mon_machine_id
-            #new_Monitoring_device.device_type =  device_type
-            #new_Monitoring_device.serial = serial
-            #new_Monitoring_device.firmware = firmware
-            #new_Monitoring_device.status = status
-            #new_Monitoring_device.alarm_msg = alarm_msg
-            #new_Monitoring_device.doc = doc
-            #session.add(new_Monitoring_device)
-            #session.commit()
-            #session.flush()
-
-
             id_device_reg = self.setMonitoring_device(hostname,
                              mon_machine_id,
                              device_type,
@@ -6597,7 +6569,6 @@ where agenttype="machine" and groupdeploy in (
                              status,
                              alarm_msg,
                              doc)
-
 
             #creation event on rule
             objectlist_local_rule = self._rule_monitoring( hostname,
@@ -6674,7 +6645,6 @@ where agenttype="machine" and groupdeploy in (
         if objectlist_local_rule:
             #  on applique le binding pour savoir si 1 alerte ou et 1evenement est programmer
             for z in objectlist_local_rule:
-                logging.getLogger().debug("ZZZZZZ %s"%z)
                 result = self.__binding_application(doc, z['binding'],z['device_type'])
                 if isinstance(result, basestring):
                     # cas exception
@@ -6693,14 +6663,6 @@ where agenttype="machine" and groupdeploy in (
                     if z['no_success_binding_cmd'] is None:
                         return False
                     bindingcmd = z['no_success_binding_cmd']
-
-
-                logging.getLogger().debug("id_machine %s"%id_machine)
-                logging.getLogger().debug("id_device %s"%id_device)
-                logging.getLogger().debug("z['id'] %s"%z['id'])
-                logging.getLogger().debug("bindingcmd %s"%bindingcmd)
-                logging.getLogger().debug("z['type_event'] %s"%z['type_event'])
-                logging.getLogger().debug("status_event %s"%status_event)
                 self.setMonitoring_event(id_machine,
                                                 id_device,
                                                 z['id'],
