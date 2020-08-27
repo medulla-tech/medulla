@@ -22,131 +22,6 @@
  * file : xmppmaster/xmppmaster/monitoringview.php
  */
 ?>
-<style type='text/css'>
-textarea {
-    width:50% ;
-    height:150px;
-    margin:auto;   /* example for centering */
-    display:block; /* the actual centering ! */
-}
-.shadow
-{
-  -moz-box-shadow: 4px 4px 10px #888;
-  -webkit-box-shadow: 4px 4px 10px #888;
-  box-shadow:4px 4px 6px #888;
-}
-
- li.folder a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/folder.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.folderg a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/folder.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.console a {
-        padding: 3px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/console.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.consoleg a {
-        padding: 3px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/console.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.monit a {
-        padding: 3px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/process.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-li.quick a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/quick.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.guaca a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/guaca.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.guacag a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/guaca.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.quickg a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/quick.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-</style>
 <?
     require("modules/base/computers/localSidebar.php");
     require("graph/navbar.inc.php");
@@ -154,16 +29,18 @@ li.quickg a {
 
     require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
     require_once("modules/dyngroup/includes/utilities.php");
-    if(!$_GET['uninventoried']){
-      include_once('modules/pulse2/includes/menu_actionaudit.php');
+
+    global $conf;
+    $maxperpage = $conf["global"]["maxperpage"];
+    $filter= isset($_GET["filter"]) ? $_GET["filter"] : "";
+    if (isset($_GET["start"])) {
+        $start = $_GET["start"];
+    } else {
+        $start = 0;
     }
+
     $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-    if(!$_GET['uninventoried']){
-      $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
-    }
-    else{
-      $machine =$_GET['jid'];
-    }
+    $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 
     $hostname = $_GET['cn'];
 
@@ -172,54 +49,123 @@ li.quickg a {
     $p->setSideMenu($sidemenu);
     $p->display();
 
+    ## il faut refaire la fonction xmlrpc_getPanelsForMachine pour permettre la navigation ($hostname, $filter, $start, $start + $maxperpage);
+    // la function doit renvoyer [count le nbelement,$panels_list]
     $panels_list = xmlrpc_getPanelsForMachine($hostname);
-    echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
-        echo "<thead>";
-            echo "<tr>";
-                echo '<td>'._T("Monitoring item", "xmppmaster").'</td>';
-                echo '<td>'._T("Last value", "xmppmaster").'</td>';
-                echo '<td>'._T("History", "xmppmaster").'</td>';
-            echo "</tr>";
-        echo "</thead>";
-        echo "<tbody>";
-            for($i = 0; $i < count($panels_list); ++$i) {
-                echo "<tr>";
-                    echo '<td>'.$panels_list[0]['title'].'</td>';
-                    echo '<td>';
-                        if ($panels_list[0]['title'] == 'Online-Offline Status') {
-                            $last_val = xmlrpc_getLastOnlineStatus($machine);
-                        }
-                        echo $last_val;
-                    echo '</td>';
-                    echo "<td>";
-                        $from = time() - (24 * 60 * 60);
-                        $to = time();
-                        $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
-                        echo "<a title='Graph for one day' href='".$url."'>1 day</a>";
-                        echo " | ";
-                        $from = time() - (7 * 24 * 60 * 60);
-                        $to = time();
-                        $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
-                        echo "<a title='Graph for one week' href='".$url."'>1 week</a>";
-                        echo " | ";
-                        $from = time() - (31 * 24 * 60 * 60);
-                        $to = time();
-                        $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
-                        echo "<a title='Graph for one month' href='".$url."'>1 month</a>";
-                        echo " | ";
-                        $from = time() - (3 * 31 * 24 * 60 * 60);
-                        $to = time();
-                        $url = xmlrpc_getPanelImage($hostname, $panels_list[0]['title'], $from, $to);
-                        echo "<a title='Graph for three months' href='".$url."'>3 months</a>";
-                    echo "</td>";
-                echo "</tr>";
-            }
-        echo "</tbody>";
-    echo '</table>';
+
+    $count = count($panels_list); // nombre total de d'element
+
+    /*
+    $debut_de_la_journee = mktime(0, 0, 0, date("m"),date("j"), date("Y"));
+    $debut_du_mois = mktime(0, 0, 0, date("m"), 1, date("Y"));
+    $debut_le_debut_3_mois = mktime(0, 0, 0, date("m")-3, 1 , date("Y"));
+    // timestamp debut de la semaine
+    $jour_actuel = date('d'); // On récupère le numéro du jour
+    $numero_jour = date('w'); // On récupère le numéro du jour de la semaine (0 = dimanche)
+    $date_lundi = $jour_actuel - $numero_jour + 1; // On fait le calcul
+    // Lundi est égale à la date du jour - son numéro de jour + 1
+    $debut_de_la_semaine = mktime(0,0,0,date('m'),$date_lundi,date('Y'));
+    $array_timefrom=[ $debut_de_la_journee,
+                      $debut_de_la_semaine,
+                      $debut_du_mois,
+                      $debut_le_debut_3_mois];
+    */
+
+    $array_timefrom=[ 24 * 60 * 60,          // day 24h
+                      7 * 24 * 60 * 60,      // week 7 jour
+                      31 * 24 * 60 * 60,     // mois considere 31 jour.
+                      3 * 31 * 24 * 60 * 60]; // considere 63 jour
+
+
+
+    $params= array();
+    $array_col_Monitoring_item = array();
+    $array_col_lastvalue = array();
+    $array_col_historyaction = array();
+    $arraytitle=[array(_T("Graph for one day",      "xmppmaster"),_T("1 day",    "xmppmaster")),
+                 array(_T("Graph for one week",     "xmppmaster"),_T("1 week",   "xmppmaster")),
+                 array(_T("Graph for one month",    "xmppmaster"),_T("1 month",  "xmppmaster")),
+                 array(_T("Graph for three months", "xmppmaster"),_T("3 months", "xmppmaster"))];
+    $to = time();
+
+    foreach($panels_list as $val){
+        $array_col_Monitoring_item[]= $val['title'];
+
+        switch($val['title']) {
+                case 'Online-Offline Status':
+                    $array_col_lastvalue[]  = (xmlrpc_getLastOnlineStatus($machine) == 1 ) ? "Online" : "Offline";
+                    break;
+                default:
+                    $array_col_lastvalue[]  = "not defined";
+        }
+
+        $arrayurl = array();
+        foreach($array_timefrom as $index => $from){
+            $url = xmlrpc_getPanelImage($hostname, $val['title'], $from, $to);
+            $arrayurl[]="<a class='showgraph' title='".
+                        $arraytitle[$index][0].
+                        "' href='".$url."'>".
+                        $arraytitle[$index][1].
+                        "</a>";
+        }
+        $array_col_historyaction[] = implode(" | ", $arrayurl);
+    }
+    echo '<div id="dialog"></div>';
+    // Display the list
+    $n = new OptimizedListInfos($array_col_Monitoring_item, _T("Monitoring item", "xmppmaster"));
+    $n->disableFirstColumnActionLink();
+    $n->addExtraInfo($array_col_lastvalue, _T("Last value", "xmppmaster"));
+    $n->addExtraInfo($array_col_historyaction, _T("History", "xmppmaster"));
+
+    //navigation et filter
+    $n->setItemCount($count);
+    $n->setNavBar(new AjaxNavBar($count, $filter));
+    //addition parameters general les parametre pour les action. pas actions ici.
+    //$n->setParamInfo($params);
+    $n->start = 0;
+    $n->end = $count;
+
+    print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
+    $n->display();
+
   ?>
 
 <script type="text/javascript">
-       jQuery( document ).ready(function() {
-           //si besoin action jquery
+jQuery( document ).ready(function() {
+
+    jQuery(function(){
+        //modal window start
+        jQuery(".showgraph").unbind('click');
+        jQuery(".showgraph").bind('click',function(){
+                showDialog();
+                var titletext=jQuery(this).attr("title");
+                var openpage=jQuery(this).attr("href");
+                jQuery("#dialog").dialog( "option", "title", titletext );
+                jQuery("#dialog").dialog( "option", "resizable", false );
+        //  add bouton
+        //         jQuery("#dialog").dialog( "option", "buttons", {
+        //             "Close": function() {
+        //                 jQuery(this).dialog("close");
+        //                // jQuery(this).dialog("destroy");
+        //             }
+        //         });
+                //jQuery("#dialog").load(openpage);
+                jQuery("#dialog").html(jQuery("<img>").attr("src", openpage));
+                return false;
+            });
+    });
+    //modal window end
+
+    //Modal Window Initiation start
+    function showDialog(){
+        jQuery("#dialog").dialog({
+            autoOpen: false,
+            height: 450,
+            width: 835,
+            modal: true
         });
+        jQuery("#dialog").dialog("open");
+    }
+});
+
 </script>
