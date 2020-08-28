@@ -32,7 +32,7 @@ plugin = {"VERSION": "1.0", "NAME": "forcepluginloading", "TYPE": "master"}
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("###################################################")
-    logger.debug("# call %s from %s" % (plugin,message['from']))
+    logger.debug("# call %s from %s" % (plugin, message['from']))
     logger.debug("# Data: %s" % data)
     logger.debug("# JID machine: %s" % data['data'][0])
     logger.debug("# Params: %s" % data['data'][2])
@@ -43,10 +43,14 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     # eg: QA: plugin_forcepluginloading@_@updatefusion
     #   data['data'][2][0] will contain updatefusion
 
-    if len(data['data'][2]) > 0:
+    jidmachine = data['data'][0]
+    try:
         # plugin to be loaded passed as first parameter
         loadplugin = data['data'][2][0]
-    jidmachine = data['data'][0]
+    except (KeyError, IndexError) as e:
+        logger.error("Error getting plugin to be loaded on machine %s: %s"
+                     % (jidmachine, str(e)))
+        return
     logger.info("Forcing loading of plugin %s on machine %s"
                 % (loadplugin, jidmachine))
     command = {'action': loadplugin,
