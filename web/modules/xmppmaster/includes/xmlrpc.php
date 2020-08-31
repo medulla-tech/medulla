@@ -538,4 +538,16 @@ function xmlrpc_get_relay_qa_launched($jid, $login, $start=-1, $maxperpage=-1){
 function xmlrpc_get_packages_list($jid, $filter=""){
   return xmlCall("xmppmaster.get_packages_list", [$jid, $filter]);
 }
+
+function xmlrpc_getPanelsForMachine($hostname){
+  return xmlCall("xmppmaster.getPanelsForMachine", [$hostname]);
+}
+
+function xmlrpc_getPanelImage($hostname, $panel_title, $from, $to){
+  return xmlCall("xmppmaster.getPanelImage", [$hostname, $panel_title, $from, $to]);
+}
+
+function xmlrpc_getLastOnlineStatus($jid){
+  return xmlCall("xmppmaster.getLastOnlineStatus", [$jid]);
+}
 ?>
