@@ -6582,7 +6582,7 @@ where agenttype="machine" and groupdeploy in (
                                                             doc,
                                                             localrule= True)
             if objectlist_local_rule:
-                # 1 regle est definie pour ce device, sur cette machine
+                # A rule is defined for this device on this machine
                 self._action_new_event(objectlist_local_rule,
                                         mon_machine_id,
                                         id_device_reg,
