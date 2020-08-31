@@ -34,13 +34,13 @@ logger = logging.getLogger()
 plugin = {"VERSION": "1.0", "NAME": "vectormonitoringagent", "TYPE": "master"}
 
 
-def traitement_system(functionname,
-                      data,
-                      id_machine,
-                      hostname,
-                      id_mon_machine):
-    type = functionname[11:]
-    logger.debug("Device %s" % type)
+def process_system(functionname,
+                   data,
+                   id_machine,
+                   hostname,
+                   id_mon_machine):
+    device_type = functionname[11:]
+    logger.debug("Device %s" % device_type)
     serial, status, firmware, alarm_msg = ["", "ready", "", []]
     if "serial" in data:
         serial = data['serial']
@@ -59,7 +59,7 @@ def traitement_system(functionname,
         del data['alarms']
     XmppMasterDatabase().setMonitoring_device_reg(hostname,
                                                   id_mon_machine,
-                                                  type,
+                                                  device_type,
                                                   serial,
                                                   firmware,
                                                   status,
@@ -67,14 +67,14 @@ def traitement_system(functionname,
                                                   json.dumps(data['metriques']))
 
 
-def traitement_nfcReader(functionname,
-                         data,
-                         id_machine,
-                         hostname,
-                         id_mon_machine):
-    type = functionname[11:]
+def process_nfcReader(functionname,
+                      data,
+                      id_machine,
+                      hostname,
+                      id_mon_machine):
+    device_type = functionname[11:]
     logger.debug("===========================================================")
-    logger.debug("Device %s" % type)
+    logger.debug("Device %s" % device_type)
     serial, status, firmware, alarm_msg = ["", "ready", "", []]
     if "serial" in data:
         serial = data['serial']
@@ -93,7 +93,7 @@ def traitement_nfcReader(functionname,
         del data['message']
     XmppMasterDatabase().setMonitoring_device_reg(hostname,
                                                   id_mon_machine,
-                                                  type,
+                                                  device_type,
                                                   serial,
                                                   firmware,
                                                   status,
@@ -101,13 +101,13 @@ def traitement_nfcReader(functionname,
                                                   json.dumps(data['metriques']))
 
 
-def traitement_generic(functionname,
-                       data,
-                       id_machine,
-                       hostname,
-                       id_mon_machine):
-    type = functionname[11:]
-    logger.debug("Device %s" % type)
+def process_generic(functionname,
+                    data,
+                    id_machine,
+                    hostname,
+                    id_mon_machine):
+    device_type = functionname[11:]
+    logger.debug("Device %s" % device_type)
     serial, status, firmware, alarm_msg = ["", "ready", "", []]
     if "serial" in data:
         serial = data['serial']
@@ -126,7 +126,7 @@ def traitement_generic(functionname,
         del data['message']
     XmppMasterDatabase().setMonitoring_device_reg(hostname,
                                                   id_mon_machine,
-                                                  type,
+                                                  device_type,
                                                   serial,
                                                   firmware,
                                                   status,
@@ -135,14 +135,14 @@ def traitement_generic(functionname,
 
 
 def callFunction(functionname, *args, **kwargs):
-    functionname = "traitement_%s" % functionname
+    functionname = "process_%s" % functionname
     logger.debug("**call function %s %s %s" % (functionname, args, kwargs))
     thismodule = sys.modules[__name__]
     try:
         return getattr(thismodule,
                        functionname)(functionname, *args, **kwargs)
     except AttributeError:
-        traitement_generic(functionname, *args, **kwargs)
+        process_generic(functionname, *args, **kwargs)
     except Exception:
         logger.error("\n%s" % (traceback.format_exc()))
 
@@ -178,10 +178,9 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             if 'device_service' in data:
                 for element in data['device_service']:
                     for devicename in element:
-                        # on appelle les functions de traitement
-                        # qui sont definie
+                        # call process functions defined
                         if devicename.lower() in xmppobject.typelistMonitoring_device:
-                            # globals()["traitement_%s"%element](data['opticalReader'])
+                            # globals()["process_%s"%element](data['opticalReader'])
                             callFunction(devicename,
                                          element[devicename],
                                          machine['id'],
