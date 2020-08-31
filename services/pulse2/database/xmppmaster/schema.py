@@ -683,3 +683,17 @@ class Mon_event(Base, XmppMasterDBObj):
     machines_id = Column(Integer, nullable=False)
     id_rule = Column(Integer, nullable=False)
     id_device = Column(Integer, nullable=False)
+
+
+class Mon_panels_template(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'mon_panels_template'
+    # ====== Fields =============================
+    # Here we define columns for the table mon_panels_template.
+    # Notice that each column is also a normal Python instance attribute.
+    name_graphe = Column(String(255), nullable=False)
+    template_json = Column(Text, nullable=False)
+    type_graphe = Column(String(255), nullable=False)
+    parameters = Column(String(1024), default="{}")
+    status = Column(Boolean, default=True)
+    comment = Column(String(1024), default="")

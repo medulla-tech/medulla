@@ -112,6 +112,23 @@ CREATE TABLE `mon_rules` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
+--
+-- Table structure for table `mon_panels_template`
+--
+
+
+DROP TABLE IF EXISTS `mon_panels_template`;
+CREATE TABLE `mon_panels_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name_graphe` varchar(255) NOT NULL,
+  `template_json` text NOT NULL,
+  `type_graphe` varchar(255) NOT NULL,
+  `parameters` varchar(1024) DEFAULT NULL COMMENT 'json to define optional parameters',
+  `status` int(11) NOT NULL DEFAULT '1',
+  `comment` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 UPDATE version SET Number = 48;
 
