@@ -6338,7 +6338,7 @@ where agenttype="machine" and groupdeploy in (
                           hostname,
                           jid,
                           status=0,
-                          uptime=0,
+                          updowntime=0,
                           date=None):
         """
         This function allow to know the uptime of a machine
@@ -6359,7 +6359,7 @@ where agenttype="machine" and groupdeploy in (
             new_Uptime_machine.hostname = hostname
             new_Uptime_machine.jid = jid
             new_Uptime_machine.status = status
-            new_Uptime_machine.uptime = uptime
+            new_Uptime_machine.updowntime = updowntime
             if date is not None:
                 new_Uptime_machine.date = date
             session.add(new_Uptime_machine)
@@ -6413,7 +6413,7 @@ where agenttype="machine" and groupdeploy in (
                      "hostname": element[1],
                      "jid": element[2],
                      "status": element[3],
-                     "uptime": element[4],
+                     "updowntime": element[4],
                      "date": element[5].strftime("%Y/%m/%d/ %H:%M:%S"),
                      "time": element[6]} for element in result]
         except Exception, e:

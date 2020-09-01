@@ -580,7 +580,7 @@ class Uptime_machine(Base, XmppMasterDBObj):
     hostname = Column(String(100), nullable=False)
     jid = Column(String(255), nullable=False)
     status = Column(Boolean, unique=False)
-    uptime = Column(Integer, nullable=False, default=0)
+    updowntime = Column(Integer, nullable=False, default=0)
     date = Column(DateTime, default=datetime.datetime.now)
 
 
