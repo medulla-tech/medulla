@@ -6782,7 +6782,7 @@ where agenttype="machine" and groupdeploy in (
                                       template_json,
                                       type_graphe,
                                       parameters="{}",
-                                      enable=True,
+                                      status=True,
                                       comment=""):
         """
         This function allows to record panel graph template
@@ -6792,7 +6792,7 @@ where agenttype="machine" and groupdeploy in (
             template_json: The panel template in json format
             type_graphe: The type of graph
             parameters: The optional parameters json string  { "key":"value",...}
-            enable: Can be True, False or None
+            status: Can be True, False or None
             comment:
         Returns:
             It returns the id of the machine
@@ -6803,7 +6803,7 @@ where agenttype="machine" and groupdeploy in (
             new_Monitoring_panels_template.template_json = template_json
             new_Monitoring_panels_template.type_graphe = type_graphe
             new_Monitoring_panels_template.parameters = parameters
-            new_Monitoring_panels_template.enable = enable
+            new_Monitoring_panels_template.status = status
             new_Monitoring_panels_template.comment = comment
             session.add(new_Monitoring_panels_template)
             session.commit()
