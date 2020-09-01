@@ -586,7 +586,7 @@ class Uptime_machine(Base, XmppMasterDBObj):
 
 class MyTypeenum(enum.Enum):
     """
-        cette class defini domaine device type
+        This class defines the device type domain
     """
     thermalprinter = 'thermalprinter'
     nfcReader = 'nfcReader'
@@ -599,7 +599,7 @@ class MyTypeenum(enum.Enum):
 
 class Mystatusenum(enum.Enum):
     """
-        cette class defini domaine status
+        This class defines the status domain
     """
     ready = 'ready'
     busy = 'busy'
