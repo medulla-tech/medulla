@@ -580,13 +580,13 @@ class Uptime_machine(Base, XmppMasterDBObj):
     hostname = Column(String(100), nullable=False)
     jid = Column(String(255), nullable=False)
     status = Column(Boolean, unique=False)
-    uptime = Column(Integer, nullable=False, default=0)
+    updowntime = Column(Integer, nullable=False, default=0)
     date = Column(DateTime, default=datetime.datetime.now)
 
 
 class MyTypeenum(enum.Enum):
     """
-        cette class defini domaine device type
+        This class defines the device type domain
     """
     thermalprinter = 'thermalprinter'
     nfcReader = 'nfcReader'
@@ -599,7 +599,7 @@ class MyTypeenum(enum.Enum):
 
 class Mystatusenum(enum.Enum):
     """
-        cette class defini domaine status
+        This class defines the status domain
     """
     ready = 'ready'
     busy = 'busy'
