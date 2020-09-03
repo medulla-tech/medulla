@@ -71,10 +71,10 @@
                       $debut_le_debut_3_mois];
     */
 
-    $array_timefrom=[ 24 * 60 * 60,          // day 24h
-                      7 * 24 * 60 * 60,      // week 7 jour
-                      31 * 24 * 60 * 60,     // mois considere 31 jour.
-                      3 * 31 * 24 * 60 * 60]; // considere 63 jour
+    $array_timefrom=[ time() - (24 * 60 * 60),          // day 24h
+                      time() - (7 * 24 * 60 * 60),      // week 7 jour
+                      time() - (31 * 24 * 60 * 60),     // mois considere 31 jour.
+                      time() - (3 * 31 * 24 * 60 * 60)]; // considere 63 jour
 
 
 
