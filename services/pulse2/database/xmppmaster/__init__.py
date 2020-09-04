@@ -60,7 +60,7 @@ from pulse2.database.xmppmaster.schema import Network, Machines,\
     Mon_devices, \
     Mon_device_service, \
     Mon_rules, \
-    Mon_event , \ # Regles, Base, ParametersDeploy,
+    Mon_event , \
     Mon_panels_template
 # Imported last
 import logging
