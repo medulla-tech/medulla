@@ -18,7 +18,6 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-
 # file pluginsmaster/loadmonitoringconfig.py
 
 import base64
@@ -28,8 +27,8 @@ import logging
 import traceback
 import types
 import ConfigParser
-from utils import file_get_contents, file_put_contents, name_random
 import hashlib
+from utils import file_get_contents, name_random
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from manage_grafana import manage_grafana
 
@@ -46,16 +45,17 @@ def action(objectxmpp, action, sessionid, data, msg, dataerreur):
     logger.debug("call %s from %s"%(plugin, msg['from']))
     logger.debug("=====================================================")
 
-    compteurcallplugin = getattr(objectxmpp, "num_call%s"%action)
-    if compteurcallplugin == 0:
+    callcounter = getattr(objectxmpp, "num_call%s"%action)
+    if callcounter == 0:
         read_conf_load_plugin_monitoring_version_config(objectxmpp)
+
 
 def read_conf_load_plugin_monitoring_version_config(objectxmpp):
     """
         reads the plugin config
     """
-    namefichierconf = plugin['NAME'] + ".ini"
-    pathfileconf = os.path.join( objectxmpp.config.pathdirconffile, namefichierconf )
+    conffilename = plugin['NAME'] + ".ini"
+    pathfileconf = os.path.join(objectxmpp.config.pathdirconffile, conffilename)
 
     defautconf = "/var/lib/pulse2/xmpp_monitoring/confagent/monitoring_config.ini"
     if not os.path.isfile(pathfileconf):
