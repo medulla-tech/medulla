@@ -62,31 +62,31 @@ class apimanagepackagemsc:
 
     @staticmethod
     def getPackageDetail(pid):
-        result={}
+        result = {}
         package = os.path.join("/", "var" , "lib", "pulse2", "packages", pid, "conf.json")
-        datapacquage = apimanagepackagemsc.readjsonfile(package)
-        result['postCommandSuccess'] = datapacquage['commands']['postCommandSuccess']
-        result['preCommand'] = datapacquage['commands']['preCommand']
-        result['installInit'] = datapacquage['commands']['installInit']
-        result['postCommandFailure'] = datapacquage['commands']['postCommandFailure']
-        result['command'] = datapacquage['commands']['command']
+        datapackage = apimanagepackagemsc.readjsonfile(package)
+        result['postCommandSuccess'] = datapackage['commands']['postCommandSuccess']
+        result['preCommand'] = datapackage['commands']['preCommand']
+        result['installInit'] = datapackage['commands']['installInit']
+        result['postCommandFailure'] = datapackage['commands']['postCommandFailure']
+        result['command'] = datapackage['commands']['command']
 
-        result['entity_id'] = datapacquage['entity_id']
+        result['entity_id'] = datapackage['entity_id']
         result['basepath'] = os.path.dirname(package)
-        result['associateinventory'] =datapacquage['inventory']['associateinventory']
-        result['licenses'] =datapacquage['inventory']['licenses']
-        result['id'] = datapacquage['id']
-        result['version'] = datapacquage['version']
-        result['label'] = datapacquage['name']
-        result['metagenerator'] = datapacquage['metagenerator']
-        result['sub_packages'] = datapacquage['sub_packages']
-        result['description'] = datapacquage['description']
-        result['targetos'] =  datapacquage['targetos']
+        result['associateinventory'] =datapackage['inventory']['associateinventory']
+        result['licenses'] =datapackage['inventory']['licenses']
+        result['id'] = datapackage['id']
+        result['version'] = datapackage['version']
+        result['label'] = datapackage['name']
+        result['metagenerator'] = datapackage['metagenerator']
+        result['sub_packages'] = datapackage['sub_packages']
+        result['description'] = datapackage['description']
+        result['targetos'] =  datapackage['targetos']
         result['size'] = apimanagepackagemsc.sizedirectory(result['basepath'])
-        result['Qversion'] = datapacquage['inventory']['queries']['Qversion']
-        result['boolcnd'] = datapacquage['inventory']['queries']['boolcnd']
-        result['Qsoftware'] = datapacquage['inventory']['queries']['Qsoftware']
-        result['Qvendor'] = datapacquage['inventory']['queries']['Qvendor']
+        result['Qversion'] = datapackage['inventory']['queries']['Qversion']
+        result['boolcnd'] = datapackage['inventory']['queries']['boolcnd']
+        result['Qsoftware'] = datapackage['inventory']['queries']['Qsoftware']
+        result['Qvendor'] = datapackage['inventory']['queries']['Qvendor']
         result['do_reboot'] = 'disable'
         result['files'] = []
         for fich in apimanagepackagemsc.listfilepackage(result['basepath'] ):
