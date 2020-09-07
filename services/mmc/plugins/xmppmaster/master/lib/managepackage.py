@@ -78,7 +78,10 @@ class apimanagepackagemsc:
         result['id'] = datapackage['id']
         result['version'] = datapackage['version']
         result['label'] = datapackage['name']
-        result['metagenerator'] = datapackage['metagenerator']
+        try:
+                result['metagenerator'] = datapackage['metagenerator']
+        except KeyError:
+                result['metagenerator'] = "expert"
         result['sub_packages'] = datapackage['sub_packages']
         result['description'] = datapackage['description']
         result['targetos'] =  datapackage['targetos']
