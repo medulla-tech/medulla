@@ -73,18 +73,18 @@ class apimanagepackagemsc:
 
         result['entity_id'] = datapackage['entity_id']
         result['basepath'] = os.path.dirname(package)
-        result['associateinventory'] =datapackage['inventory']['associateinventory']
-        result['licenses'] =datapackage['inventory']['licenses']
+        result['associateinventory'] = datapackage['inventory']['associateinventory']
+        result['licenses'] = datapackage['inventory']['licenses']
         result['id'] = datapackage['id']
         result['version'] = datapackage['version']
         result['label'] = datapackage['name']
         try:
-                result['metagenerator'] = datapackage['metagenerator']
+            result['metagenerator'] = datapackage['metagenerator']
         except KeyError:
-                result['metagenerator'] = "expert"
+            result['metagenerator'] = "expert"
         result['sub_packages'] = datapackage['sub_packages']
         result['description'] = datapackage['description']
-        result['targetos'] =  datapackage['targetos']
+        result['targetos'] = datapackage['targetos']
         result['size'] = apimanagepackagemsc.sizedirectory(result['basepath'])
         result['Qversion'] = datapackage['inventory']['queries']['Qversion']
         result['boolcnd'] = datapackage['inventory']['queries']['boolcnd']
