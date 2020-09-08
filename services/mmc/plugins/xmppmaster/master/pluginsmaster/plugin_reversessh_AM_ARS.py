@@ -27,7 +27,7 @@ import base64
 import json
 import os
 import sys
-from utils import simplecommand, file_get_content, file_put_content
+from utils import simplecommand, file_get_content, file_put_content, name_random
 import pprint
 import logging
 
@@ -97,7 +97,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             else:
                 proxyportars = proxyport
             structreverse={ "action": "reversesshqa",
-                            "sessionid" : "jkjhjkj16156",
+                            "sessionid" :  name_random(5, "plug_rev"),,
                             "from" : xmppobject.boundjid.bare,
                             "data" : {"ipARS" : ipARS,
                                       "jidARS" : jidARS,
