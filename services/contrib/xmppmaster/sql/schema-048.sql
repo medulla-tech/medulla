@@ -61,10 +61,10 @@ CREATE TABLE `mon_devices` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='this table defines the parameters for a device. eg.\n\n "serial" : "IMA3C08298",\n            "firmware"  : "2.45",\n            "status" : "error"      \n            "message"   : "HOOD_OPEN",\n            "counters"  : {\n                "receipts"      : "nnn",\n                "noPaper"       : "nnn",\n                "hoodOpen"      : "nnn",\n                "initErrors"    : "nnn",\n                "printErrors"   : "nnn",\n                "cutErrors"     : "nnn",\n                "loadingFaults" : "nnn",\n                "comErrors"     : "nnn"\n\n';
 
 --
--- Table structure for table `mom_event`
+-- Table structure for table `mon_event`
 --
 
-DROP TABLE IF EXISTS `mom_event`;
+DROP TABLE IF EXISTS `mon_event`;
  CREATE TABLE `mon_event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `status_event` int(11) DEFAULT '1',
@@ -143,8 +143,9 @@ WHERE
 	hostname = param_hostname
 ORDER BY date;
 END$$
-
 DELIMITER ;
+
+INSERT INTO mon_panels_template(name_graphe, type_graphe, template_json, parameters) VALUES ('Online-Offline Status', 'graph', '{"id":1,"datasource":"xmppmaster","type":"@_type_graphe_@","legend":{"show":true,"current":true,"values":true},"lines":true,"steppedLine":true,"fill":1,"title":"@_name_graphe_@","xaxis":{"mode":"time","show":true},"yaxes":[{"show":false},{"show":true}],"targets":[{"format":"time_series","group":[],"metricColumn":"none","rawQuery":true,"rawSql":"call `mon-onlineoffline`(\'@_hostname_@\');"}]}', '{}');
 
 UPDATE version SET Number = 48;
 
