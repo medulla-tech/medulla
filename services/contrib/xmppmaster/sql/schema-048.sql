@@ -129,6 +129,22 @@ CREATE TABLE `mon_panels_template` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP procedure IF EXISTS `mon-onlineoffline`;
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE PROCEDURE `mon-onlineoffline` (IN param_hostname VARCHAR(45))
+BEGIN
+  SELECT
+    date AS 'time',
+    status
+FROM
+    uptime_machine
+WHERE
+	hostname = param_hostname
+ORDER BY date;
+END$$
+
+DELIMITER ;
 
 UPDATE version SET Number = 48;
 
