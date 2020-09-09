@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
 #
-# (c) 2016-2018 siveo, http://www.siveo.net
+# (c) 2020 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -23,21 +23,11 @@
 # file pluginsmaster/plugin_reversessh_AM_ARS.py
 # this plugin can be called from quick action
 # eg : plugin_reversessh_AM_ARS@_@{ "proxyport" : 5225", "remoteport" : 9091 }
-import base64
 import json
-import os
-import sys
-from utils import simplecommand, file_get_content, file_put_content, name_random
-import pprint
+from utils import name_random
 import logging
 
-import traceback
-
-import datetime
-import ConfigParser
-
 from pulse2.database.xmppmaster import XmppMasterDatabase
-from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 logger = logging.getLogger()
 plugin = {"VERSION": "1.0", "NAME": "reversessh_AM_ARS", "TYPE": "master"}
@@ -84,13 +74,13 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                              "data": {"listinformation": ["get_ars_key_id_rsa_pub",
                                                                           "get_ars_key_id_rsa",
                                                                           "get_free_tcp_port"],
-                                                      "param" : {}
+                                                      "param": {}
                                                       }
                                              },
                                             5)
             res = json.loads(result)
             if res['numerror'] != 0:
-                logger.error("iq information error to %s on get_ars_key_id_rsa_pub,get_ars_key_id_rsa,get_free_tcp_port"%jidARS)
+                logger.error("iq information error to %s on get_ars_key_id_rsa_pub,get_ars_key_id_rsa,get_free_tcp_port" % jidARS)
                 return
             resultatinformation = res['result']['informationresult']
             logger.debug("parameter %s" % data['data'][-1])
@@ -99,28 +89,28 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             else:
                 proxyportars = proxyport
             timeout = 20
-            result = ObjectXmpp().iqsendpulse(jidARS,
+            result = xmppobject.iqsendpulse(jidARS,
                                               {"action": "information",
                                                "data": {"listinformation": ["add_proxy_port_reverse"],
                                                         "param": {"proxyport": proxyportars}
                                                         }
                                                },
                                               timeout)
-            structreverse={ "action": "reversesshqa",
-                            "sessionid": name_random(5, "plug_rev"),
-                            "from": xmppobject.boundjid.bare,
-                            "data": {"ipARS": ipARS,
-                                     "jidARS": jidARS,
-                                     "jidAM": jidAM,
-                                     "remoteport": remoteport,
-                                     "portproxy": proxyportars,
-                                     "type_reverse": type_reverse,
-                                     "port_ssh_ars": 22,
-                                     "private_key_ars": resultatinformation['get_ars_key_id_rsa'],
-                                     "public_key_ars": resultatinformation['get_ars_key_id_rsa_pub']
-                                     }
-                            }
-            result = xmppobject.iqsendpulse(jidAM,structreverse, 15)
+            structreverse = {"action": "reversesshqa",
+                             "sessionid": name_random(5, "plug_rev"),
+                             "from": xmppobject.boundjid.bare,
+                             "data": {"ipARS": ipARS,
+                                      "jidARS": jidARS,
+                                      "jidAM": jidAM,
+                                      "remoteport": remoteport,
+                                      "portproxy": proxyportars,
+                                      "type_reverse": type_reverse,
+                                      "port_ssh_ars": 22,
+                                      "private_key_ars": resultatinformation['get_ars_key_id_rsa'],
+                                      "public_key_ars": resultatinformation['get_ars_key_id_rsa_pub']
+                                      }
+                             }
+            result = xmppobject.iqsendpulse(jidAM, structreverse, 15)
     except KeyError as e:
         logger.debug(
             "data[0] not found while calling %s. The plugin is probably called from a quick action." % (plugin['NAME']))
