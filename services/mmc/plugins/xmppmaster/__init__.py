@@ -805,7 +805,7 @@ def create_reverse_ssh_from_am_to_ars(jidmachine, remoteport, proxyport=None):
     else:
         return -1
     jidARS = machine['groupdeploy']
-    jidAM  = jidmachine
+    jidAM = jidmachine
     #logging.getLogger().error("machine %s " % machine)
     #logging.getLogger().error("jidARS %s " % machine['groupdeploy'])
     #logging.getLogger().error("jidAM %s " %jidmachine)

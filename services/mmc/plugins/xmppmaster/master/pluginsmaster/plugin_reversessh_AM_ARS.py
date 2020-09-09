@@ -90,12 +90,12 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 proxyportars = proxyport
             timeout = 20
             result = xmppobject.iqsendpulse(jidARS,
-                                              {"action": "information",
-                                               "data": {"listinformation": ["add_proxy_port_reverse"],
-                                                        "param": {"proxyport": proxyportars}
-                                                        }
-                                               },
-                                              timeout)
+                                            {"action": "information",
+                                             "data": {"listinformation": ["add_proxy_port_reverse"],
+                                                      "param": {"proxyport": proxyportars}
+                                                      }
+                                             },
+                                            timeout)
             structreverse = {"action": "reversesshqa",
                              "sessionid": name_random(5, "plug_rev"),
                              "from": xmppobject.boundjid.bare,
