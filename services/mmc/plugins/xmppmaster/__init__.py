@@ -811,22 +811,29 @@ def create_reverse_ssh_from_am_to_ars(jidmachine, remoteport,  proxyport=None):
     #logging.getLogger().error("jidAM %s " %jidmachine)
     type_reverse = "R"
     logging.getLogger().error("proxyport %s " %proxyport)
+
     result = ObjectXmpp().iqsendpulse(jidARS,
                                             {"action": "information",
                                                 "data": {"listinformation": ["get_ars_key_id_rsa_pub",
                                                                              "get_ars_key_id_rsa",
-                                                                             "get_free_tcp_port"],
+                                                                             "get_free_tcp_port",
+                                                                             "clean_reverse_ssh"],
                                                         "param" : {} }},
                                         timeout)
     res = json.loads(result)
     if res['numerror'] != 0:
-        logger.error("iq information error to %s on get_ars_key_id_rsa_pub,get_ars_key_id_rsa,get_free_tcp_port"%jidARS)
+        logger.error("iq information error to %s on get_ars_key_id_rsa_pub, get_ars_key_id_rsa ,get_free_tcp_port"%jidARS)
         return
     resultatinformation = res['result']['informationresult']
     if proxyport is None or proxyport == 0  or proxyport == "":
         proxyportars = resultatinformation['get_free_tcp_port']
     else:
         proxyportars = proxyport
+    result = ObjectXmpp().iqsendpulse(jidARS,
+                                            {"action": "information",
+                                                "data": {"listinformation": ["add_proxy_port_reverse"],
+                                                        "param" : { "proxyport" : proxyportars} }},
+                                        timeout) 
     structreverse={ "action": "reversesshqa",
                     "sessionid" : name_random(8, "reversshiq"),
                     "from" : ObjectXmpp().boundjid.bare,
@@ -843,7 +850,7 @@ def create_reverse_ssh_from_am_to_ars(jidmachine, remoteport,  proxyport=None):
                     
     logging.getLogger().error("structreverse %s" % structreverse)               
     result = ObjectXmpp().iqsendpulse(jidAM,structreverse, timeout)
-    return proxyportars
+    return structreverse['data']
 
 def get_packages_list(jid, filter=""):
     timeout = 15
