@@ -789,6 +789,73 @@ def get_relay_qa_launched(jid, login, start, maxperpage):
     result = XmppMasterDatabase().get_relay_qa_launched(jid, login, start, maxperpage)
     return result
 
+def create_reverse_ssh_from_am_to_ars(jidmachine, remoteport, proxyport=None):
+    """
+        this function creates a reverse ssh
+        The machine exports its "remoteport" port on its ARS
+        The port on the ARS to reach the machine local port is proxyport
+        If proxyport is not defined, the ARS will be asked to suggest a free port
+        The function returns the proxy port
+    """
+    timeout = 15
+    ssh_port_machine = 22
+    machine = XmppMasterDatabase().getMachinefromjid(jidmachine)
+    if machine:
+        ipARS = XmppMasterDatabase().ippackageserver(machine['groupdeploy'])[0]
+    else:
+        return -1
+    jidARS = machine['groupdeploy']
+    jidAM = jidmachine
+    #logging.getLogger().error("machine %s " % machine)
+    #logging.getLogger().error("jidARS %s " % machine['groupdeploy'])
+    #logging.getLogger().error("jidAM %s " %jidmachine)
+    type_reverse = "R"
+    logging.getLogger().error("proxyport %s " % proxyport)
+
+    result = ObjectXmpp().iqsendpulse(jidARS,
+                                      {"action": "information",
+                                       "data": {"listinformation": ["get_ars_key_id_rsa_pub",
+                                                                    "get_ars_key_id_rsa",
+                                                                    "get_free_tcp_port",
+                                                                    "clean_reverse_ssh"],
+                                                "param": {}
+                                                }
+                                       },
+                                      timeout)
+    res = json.loads(result)
+    if res['numerror'] != 0:
+        logger.error("iq information error to %s on get_ars_key_id_rsa_pub, get_ars_key_id_rsa ,get_free_tcp_port" % jidARS)
+        return
+    resultatinformation = res['result']['informationresult']
+    if proxyport is None or proxyport == 0 or proxyport == "":
+        proxyportars = resultatinformation['get_free_tcp_port']
+    else:
+        proxyportars = proxyport
+    result = ObjectXmpp().iqsendpulse(jidARS,
+                                      {"action": "information",
+                                       "data": {"listinformation": ["add_proxy_port_reverse"],
+                                                "param": {"proxyport": proxyportars}
+                                                }
+                                       },
+                                      timeout)
+    structreverse = {"action": "reversesshqa",
+                     "sessionid": name_random(8, "reversshiq"),
+                     "from": ObjectXmpp().boundjid.bare,
+                     "data": {"ipARS": ipARS,
+                              "jidARS": jidARS,
+                              "jidAM": jidAM,
+                              "remoteport": remoteport,
+                              "portproxy": proxyportars,
+                              "type_reverse": type_reverse,
+                              "port_ssh_ars": ssh_port_machine,
+                              "private_key_ars": resultatinformation['get_ars_key_id_rsa'],
+                              "public_key_ars": resultatinformation['get_ars_key_id_rsa_pub']
+                              }
+                     }
+
+    logging.getLogger().error("structreverse %s" % structreverse)
+    result = ObjectXmpp().iqsendpulse(jidAM, structreverse, timeout)
+    return structreverse['data']
 
 def get_packages_list(jid, filter=""):
     timeout = 15

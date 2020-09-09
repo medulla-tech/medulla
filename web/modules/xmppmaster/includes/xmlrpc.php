@@ -550,4 +550,9 @@ function xmlrpc_getPanelImage($hostname, $panel_title, $from, $to){
 function xmlrpc_getLastOnlineStatus($jid){
   return xmlCall("xmppmaster.getLastOnlineStatus", [$jid]);
 }
+
+function xmlrpc_create_reverse_ssh_from_am_to_ars($jidmachine, $remoteport,  $proxyport=null){
+  return xmlCall("xmppmaster.create_reverse_ssh_from_am_to_ars", [$jidmachine, $remoteport, $proxyport]);
+}
+
 ?>
