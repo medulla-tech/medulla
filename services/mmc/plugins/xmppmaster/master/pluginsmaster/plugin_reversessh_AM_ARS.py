@@ -39,19 +39,19 @@ import ConfigParser
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
-logger = logging.getLogger() 
+logger = logging.getLogger()
 plugin = {"VERSION": "1.0", "NAME": "reversessh_AM_ARS", "TYPE": "master"}
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("=====================================================")
     logger.debug(plugin)
-    logger.debug( json.dumps(data, indent=4))
+    logger.debug(json.dumps(data, indent=4))
     logger.debug("=====================================================")
     try:
-        logger.debug( json.dumps(data['data'], indent=4))
+        logger.debug(json.dumps(data['data'], indent=4))
         #logger.debug( json.dumps(data[0], indent=4))
         if 'data' in data and isinstance(data['data'], list):
-            proxyport  = None
+            proxyport = None
             remoteport = None
             try:
                 parameters = json.loads(data['data'][-1][0])
@@ -59,11 +59,11 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 logger.error("parameter missing")
                 return
             try:
-                proxyport  = parameters['proxyport']
+                proxyport = parameters['proxyport']
             except Exception:
                 pass
             try:
-                remoteport  = parameters['remoteport']
+                remoteport = parameters['remoteport']
             except Exception:
                 logger.error("parameter remoteport missing")
                 pass
@@ -72,48 +72,54 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             ipARS = XmppMasterDatabase().ippackageserver(jidARS)[0]
             port_ssh_ars = 22
             type_reverse = "R"
-            logger.debug("ipARS %s"%ipARS)
-            logger.debug("jidARS %s"%jidARS)
-            logger.debug("jidAM %s"%jidAM)
-            logger.debug("remoteport %s"%remoteport)
-            ## il faut inscrire la clef publique de la machine distante dans 
+            logger.debug("ipARS %s" % ipARS)
+            logger.debug("jidARS %s" % jidARS)
+            logger.debug("jidAM %s" % jidAM)
+            logger.debug("remoteport %s" % remoteport)
+            ## il faut inscrire la clef publique de la machine distante dans
             ## /var/lib/pulse2/clients/reversessh/.ssh/authorized_keys
 
             result = xmppobject.iqsendpulse(jidARS,
                                             {"action": "information",
-                                                "data": {"listinformation": ["get_ars_key_id_rsa_pub",
-                                                                             "get_ars_key_id_rsa",
-                                                                             "get_free_tcp_port"],
-                                                        "param" : {} }},
-                                        5)
+                                             "data": {"listinformation": ["get_ars_key_id_rsa_pub",
+                                                                          "get_ars_key_id_rsa",
+                                                                          "get_free_tcp_port"],
+                                                      "param" : {}
+                                                      }
+                                             },
+                                            5)
             res = json.loads(result)
             if res['numerror'] != 0:
                 logger.error("iq information error to %s on get_ars_key_id_rsa_pub,get_ars_key_id_rsa,get_free_tcp_port"%jidARS)
                 return
             resultatinformation = res['result']['informationresult']
-            logger.debug("parameter %s"% data['data'][-1])
+            logger.debug("parameter %s" % data['data'][-1])
             if proxyport is None:
                 proxyportars = resultatinformation['get_free_tcp_port']
             else:
                 proxyportars = proxyport
+            timeout = 20
             result = ObjectXmpp().iqsendpulse(jidARS,
-                                                    {"action": "information",
-                                                        "data": {"listinformation": ["add_proxy_port_reverse"],
-                                                                "param" : { "proxyport" : proxyportars} }},
-                                                timeout)
+                                              {"action": "information",
+                                               "data": {"listinformation": ["add_proxy_port_reverse"],
+                                                        "param": {"proxyport": proxyportars}
+                                                        }
+                                               },
+                                              timeout)
             structreverse={ "action": "reversesshqa",
-                            "sessionid" :  name_random(5, "plug_rev"),,
-                            "from" : xmppobject.boundjid.bare,
-                            "data" : {"ipARS" : ipARS,
-                                      "jidARS" : jidARS,
-                                      "jidAM" : jidAM,
-                                      "remoteport" : remoteport,
-                                      "portproxy" : proxyportars,
-                                      "type_reverse":type_reverse,
-                                      "port_ssh_ars" : 22,
-                                      "private_key_ars" : resultatinformation['get_ars_key_id_rsa'],
-                                      "public_key_ars" :  resultatinformation['get_ars_key_id_rsa_pub']
-                                      }}
+                            "sessionid": name_random(5, "plug_rev"),
+                            "from": xmppobject.boundjid.bare,
+                            "data": {"ipARS": ipARS,
+                                     "jidARS": jidARS,
+                                     "jidAM": jidAM,
+                                     "remoteport": remoteport,
+                                     "portproxy": proxyportars,
+                                     "type_reverse": type_reverse,
+                                     "port_ssh_ars": 22,
+                                     "private_key_ars": resultatinformation['get_ars_key_id_rsa'],
+                                     "public_key_ars": resultatinformation['get_ars_key_id_rsa_pub']
+                                     }
+                            }
             result = xmppobject.iqsendpulse(jidAM,structreverse, 15)
     except KeyError as e:
         logger.debug(
