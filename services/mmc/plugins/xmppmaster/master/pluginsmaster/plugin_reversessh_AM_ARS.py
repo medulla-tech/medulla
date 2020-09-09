@@ -96,6 +96,11 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 proxyportars = resultatinformation['get_free_tcp_port']
             else:
                 proxyportars = proxyport
+            result = ObjectXmpp().iqsendpulse(jidARS,
+                                                    {"action": "information",
+                                                        "data": {"listinformation": ["add_proxy_port_reverse"],
+                                                                "param" : { "proxyport" : proxyportars} }},
+                                                timeout)
             structreverse={ "action": "reversesshqa",
                             "sessionid" :  name_random(5, "plug_rev"),,
                             "from" : xmppobject.boundjid.bare,
