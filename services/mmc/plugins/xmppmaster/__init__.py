@@ -789,7 +789,11 @@ def get_relay_qa_launched(jid, login, start, maxperpage):
     result = XmppMasterDatabase().get_relay_qa_launched(jid, login, start, maxperpage)
     return result
 
-def create_reverse_ssh_from_am_to_ars(jidmachine, remoteport, proxyport=None):
+def create_reverse_ssh_from_am_to_ars(jidmachine, 
+                                      remoteport,  
+                                      proxyport=None, 
+                                      ssh_port_machine=22,
+                                      uninterrupted=False):
     """
         this function creates a reverse ssh
         The machine exports its "remoteport" port on its ARS
@@ -831,13 +835,14 @@ def create_reverse_ssh_from_am_to_ars(jidmachine, remoteport, proxyport=None):
         proxyportars = resultatinformation['get_free_tcp_port']
     else:
         proxyportars = proxyport
-    result = ObjectXmpp().iqsendpulse(jidARS,
-                                      {"action": "information",
-                                       "data": {"listinformation": ["add_proxy_port_reverse"],
-                                                "param": {"proxyport": proxyportars}
-                                                }
-                                       },
-                                      timeout)
+    if not uninterrupted:
+        result = ObjectXmpp().iqsendpulse(jidARS,
+                                        {"action": "information",
+                                        "data": {"listinformation": ["add_proxy_port_reverse"],
+                                                    "param": {"proxyport": proxyportars}
+                                                    }
+                                        },
+                                        timeout)
     structreverse = {"action": "reversesshqa",
                      "sessionid": name_random(8, "reversshiq"),
                      "from": ObjectXmpp().boundjid.bare,
@@ -855,6 +860,9 @@ def create_reverse_ssh_from_am_to_ars(jidmachine, remoteport, proxyport=None):
 
     logging.getLogger().error("structreverse %s" % structreverse)
     result = ObjectXmpp().iqsendpulse(jidAM, structreverse, timeout)
+    del structreverse['data']['private_key_ars']
+    del structreverse['data']['public_key_ars']
+    structreverse['data']['uninterrupted'] = uninterrupted
     return structreverse['data']
 
 def get_packages_list(jid, filter=""):

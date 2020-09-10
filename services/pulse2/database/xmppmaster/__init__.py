@@ -1133,6 +1133,25 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
+    def updateaddCommand_action(self, session, command_result, sessionid , typemessage = "result"):
+        try:
+            sql="""UPDATE `xmppmaster`.`command_action` 
+                    SET 
+                        `typemessage` = '%s',
+                        `command_result` = CONCAT(`command_result`, ' ', '%s')
+                    WHERE
+                        (`session_id` = '%s');"""%(typemessage,
+                                                command_result,
+                                                sessionid)
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            return True
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return False
+
+    @DatabaseHelper._sessionm
     def logtext(self, session, text, sessionname='', type="noset", priority=0, who=''):
         try:
             new_log = Logs()
