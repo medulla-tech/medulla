@@ -39,7 +39,7 @@ def process_system(functionname,
                    id_machine,
                    hostname,
                    id_mon_machine):
-    device_type = functionname[11:]
+    device_type = functionname[8:]
     logger.debug("Device %s" % device_type)
     serial, status, firmware, alarm_msg = ["", "ready", "", []]
     if "serial" in data:
@@ -72,7 +72,7 @@ def process_nfcReader(functionname,
                       id_machine,
                       hostname,
                       id_mon_machine):
-    device_type = functionname[11:]
+    device_type = functionname[8:]
     logger.debug("===========================================================")
     logger.debug("Device %s" % device_type)
     serial, status, firmware, alarm_msg = ["", "ready", "", []]
@@ -106,7 +106,7 @@ def process_generic(functionname,
                     id_machine,
                     hostname,
                     id_mon_machine):
-    device_type = functionname[11:]
+    device_type = functionname[8:]
     logger.debug("Device %s" % device_type)
     serial, status, firmware, alarm_msg = ["", "ready", "", []]
     if "serial" in data:
