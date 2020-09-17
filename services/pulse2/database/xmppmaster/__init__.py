@@ -6542,15 +6542,15 @@ where agenttype="machine" and groupdeploy in (
         try:
             logging.getLogger().debug("==================================\n"
                                       "device_type [%s]"%device_type)
-            if device_type not in ['thermalPrinter',
-                                   'nfcReader',
-                                   'opticalReader',
-                                   'cpu',
-                                   'memory',
-                                   'storage',
-                                   'network',
-                                   'system']:
-                raise DomaineTypeDeviceError()
+            #if device_type not in ['thermalPrinter',
+                                   #'nfcReader',
+                                   #'opticalReader',
+                                   #'cpu',
+                                   #'memory',
+                                   #'storage',
+                                   #'network',
+                                   #'system']:
+                #raise DomaineTypeDeviceError()
             if status not in ['ready', 'busy', 'warning', 'error', 'disable']:
                 raise DomainestatusDeviceError()
             new_Monitoring_device = Mon_devices()
