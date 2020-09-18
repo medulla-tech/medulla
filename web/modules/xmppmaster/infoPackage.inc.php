@@ -122,6 +122,9 @@ $submod->addPage($page);
 $page = new Page("monitoringview", _T('XMPP Monitoring view', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("fileviewer", _T('File Viewer', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("xmppfilesbrowsing", _T('File Browser', 'xmppmaster'));
 $submod->addPage($page);
 

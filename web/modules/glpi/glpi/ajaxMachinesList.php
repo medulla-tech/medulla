@@ -33,6 +33,20 @@ global $config;
 .selectable{
 	cursor:pointer;
 }
+
+li.displayg a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("img/common/icn_show.gif");
+    background-repeat: no-repeat;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
 </style>
 <?php
 
@@ -92,6 +106,8 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
   $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
   $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
   $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
+	$fileviewer = new ActionItem(_("files viewer"),"fileviewer","display","computers", "xmppmaster", "xmppmaster");
+	$filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","displayg","computers","xmppmaster", "xmppmaster");
 }else{
   $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
 }
@@ -117,6 +133,7 @@ $actionxmppquickdeoloy = array();
 $cssClasses = array();
 $actioneditremoteconfiguration = array();
 $actionxmppbrowsing = array();
+$actionfilebrowser = array();
 $actionxmppbrowsingne = array();
 
 $raw = 0;
@@ -164,6 +181,7 @@ foreach($datas['uuid'] as $uuid)
 				if (isExpertMode()){
 					$actionConsole[] = $inventconsole;
 					$actionxmppbrowsing[] = $inventxmppbrowsing;
+					$actionfilebrowser[] = $fileviewer;
 					$actioneditremoteconfiguration[] = $editremoteconfiguration;
 				}
 				else{
@@ -174,6 +192,7 @@ foreach($datas['uuid'] as $uuid)
 				if (isExpertMode()){
 					$actionConsole[] = $inventnoconsole;
 					$actionxmppbrowsing[] = $inventnoxmppbrowsing;
+					$actionfilebrowser[] = $filenoviewer;
 					$actioneditremoteconfiguration[] = $editnoremoteconfiguration;
 				}
 				else{
@@ -326,6 +345,7 @@ if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
   if (isExpertMode()){
     $n->addActionItemArray($actionConsole);
     $n->addActionItemArray($actionxmppbrowsing);
+		$n->addActionItemArray($actionfilebrowser);
     if (!(isset($_GET['logview']) &&  $_GET['logview'] == "viewlogs")){
       $n->addActionItemArray($actioneditremoteconfiguration);
     }
