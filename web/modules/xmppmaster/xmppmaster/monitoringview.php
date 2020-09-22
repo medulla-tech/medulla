@@ -51,7 +51,7 @@
 
     ## il faut refaire la fonction xmlrpc_getPanelsForMachine pour permettre la navigation ($hostname, $filter, $start, $start + $maxperpage);
     // la function doit renvoyer [count le nbelement,$panels_list]
-    $panels_list = xmlrpc_getPanelsForMachine($hostname);
+    $panels_list = xmlrpc_getPanelsForMachine(strtolower($hostname));
 
     $count = count($panels_list); // nombre total de d'element
 
@@ -101,7 +101,7 @@
 
         $arrayurl = array();
         foreach($array_timefrom as $index => $from){
-            $url = xmlrpc_getPanelImage($hostname, $val['title'], $from, $to);
+            $url = xmlrpc_getPanelImage(strtolower($hostname), $val['title'], $from, $to);
             $arrayurl[]="<a class='showgraph' title='".
                         $arraytitle[$index][0].
                         "' href='".$url."'>".
