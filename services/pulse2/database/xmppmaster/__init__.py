@@ -5162,13 +5162,15 @@ class XmppMasterDatabase(DatabaseHelper):
         return True
 
     @DatabaseHelper._sessionm
-    def getGuacamoleRelayServerMachineHostname(self, session, hostname, enable = 1):
+    def getGuacamoleRelayServerMachineHostname(self, session, hostname,
+                                               enable = 1, agenttype="machine"):
         querymachine = session.query(Machines)
         if enable == None:
             querymachine = querymachine.filter(Machines.hostname == hostname)
         else:
             querymachine = querymachine.filter(and_(Machines.hostname == hostname,
-                                                    Machines.enabled == enable))
+                                                    Machines.enabled == enable,
+                                                    Machines.agenttype == agenttype))
         machine = querymachine.one()
         session.commit()
         session.flush()
