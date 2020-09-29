@@ -52,7 +52,7 @@ create table if not exists qa_relay_launched(
   id int not null auto_increment, primary key(id),
   id_command int NULL, -- Which command
   user_command varchar(45) NULL, -- Who launched
-  command_start datetime default NOW(), -- when
+  command_start TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP, -- when
   command_cluster varchar(45) NULL, -- on which cluster ...
   command_relay varchar(45) NULL -- ... or mahcine
 );
