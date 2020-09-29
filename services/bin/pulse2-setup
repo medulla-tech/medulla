@@ -452,7 +452,7 @@ class Pulse2ConfigFile(object):
                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig',
                 'InventoryServerConfig', 'PackageServerConfig', 'SchedulerConfig',
                 'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig',
-                'PluginsKioskConfig']
+                'PluginsKioskConfig', 'PluginsXmppmasterConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -679,6 +679,10 @@ class PluginsKioskConfig(Pulse2ConfigFile):
     path = 'plugins/kiosk.ini'
 
 
+class PluginsXmppmasterConfig(Pulse2ConfigFile):
+    path = 'plugins/xmppmaster.ini'
+
+
 class SetupApp(object):
     defaults = {}
     confs = {}
@@ -703,7 +707,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update', 'kiosk', 'pkgs']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update', 'kiosk', 'pkgs', 'xmppmaster']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -792,6 +796,7 @@ class SetupApp(object):
         self.defaults['defaultUserGroup'] = self.confs['plugins/base.ini'].get('ldap', 'defaultUserGroup')
 
         self.defaults['dbhost'] = self.options['dbhost'] or self.confs['plugins/pulse2.ini'].get('database', 'dbhost')
+        self.defaults['dbport'] = self.options['dbport'] or self.confs['plugins/pulse2.ini'].get('database', 'dbport')
         self.defaults['dbadminuser'] = self.options['dbadminuser'] or 'root'
         self.defaults['dbadminpasswd'] = self.options['dbadminpasswd'] or ''
 
@@ -916,13 +921,15 @@ class SetupApp(object):
         while invalid:
             # Get DB connection informations
             self.config['dbhost'] = self.read_opt('Database host', self.defaults['dbhost'])
+            self.config['dbport'] = self.read_opt('Database port', self.defaults['dbport'])
             self.config['dbadminuser'] = self.read_opt('Database admin user', self.defaults['dbadminuser'])
             self.config['dbadminpasswd'] = self.read_passwd('Database admin password', self.defaults['dbadminpasswd'])
 
             # Create connection to DB and check it
-            url = 'mysql://%s:%s@%s/mysql' % (self.config['dbadminuser'],
+            url = 'mysql://%s:%s@%s:%s/mysql' % (self.config['dbadminuser'],
                                               self.config['dbadminpasswd'],
-                                              self.config['dbhost'])
+                                              self.config['dbhost'],
+                                              self.config['dbport'])
             self.engine = sa.create_engine(url)
             try:
                 conn = self.engine.connect()
@@ -965,8 +972,7 @@ class SetupApp(object):
             db_control = DBControl(user=self.config['dbadminuser'],
                                    passwd=self.config['dbadminpasswd'],
                                    host=self.config['dbhost'],
-                                   # TODO - get the port number from config file
-                                   port=3306,
+                                   port=int(self.config['dbport']),
                                    module=module,
                                    log=log)
             db_control.process()
@@ -1027,22 +1033,27 @@ class SetupApp(object):
 
         # dyngroup db
         self.confs['plugins/dyngroup.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/dyngroup.ini'].set('database', 'dbport', self.config['dbport'])
         self.confs['plugins/dyngroup.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/dyngroup.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # update db
         self.confs['plugins/update.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/update.ini'].set('database', 'dbport', self.config['dbport'])
         self.confs['plugins/update.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/update.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # imaging db
         self.confs['plugins/imaging.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/imaging.ini'].set('database', 'dbport', self.config['dbport'])
         self.confs['plugins/imaging.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/imaging.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # inventory db (plugin)
         self.confs['plugins/inventory.ini']\
             .set('inventory', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/inventory.ini']\
+            .set('inventory', 'dbport', self.config['dbport'])
         self.confs['plugins/inventory.ini']\
             .set('inventory', 'dbuser', self.config['dbuser'])
         self.confs['plugins/inventory.ini']\
@@ -1052,12 +1063,15 @@ class SetupApp(object):
         self.confs['pulse2/inventory-server/inventory-server.ini']\
             .set('database', 'dbhost', self.config['dbhost'])
         self.confs['pulse2/inventory-server/inventory-server.ini']\
+            .set('database', 'dbport', self.config['dbport'])
+        self.confs['pulse2/inventory-server/inventory-server.ini']\
             .set('database', 'dbuser', self.config['dbuser'])
         self.confs['pulse2/inventory-server/inventory-server.ini']\
             .set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # msc db (plugin)
         self.confs['plugins/msc.ini'].set('msc', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/msc.ini'].set('msc', 'dbport', self.config['dbport'])
         self.confs['plugins/msc.ini'].set('msc', 'dbuser', self.config['dbuser'])
         self.confs['plugins/msc.ini'].set('msc', 'dbpasswd', self.config['dbpasswd'])
 
@@ -1065,29 +1079,41 @@ class SetupApp(object):
         self.confs['pulse2/scheduler/scheduler.ini']\
             .set('database', 'dbhost', self.config['dbhost'])
         self.confs['pulse2/scheduler/scheduler.ini']\
+            .set('database', 'dbport', self.config['dbport'])
+        self.confs['pulse2/scheduler/scheduler.ini']\
             .set('database', 'dbuser', self.config['dbuser'])
         self.confs['pulse2/scheduler/scheduler.ini']\
             .set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # pulse2
         self.confs['plugins/pulse2.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/pulse2.ini'].set('database', 'dbport', self.config['dbport'])
         self.confs['plugins/pulse2.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/pulse2.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # backuppc
         self.confs['plugins/backuppc.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/backuppc.ini'].set('database', 'dbport', self.config['dbport'])
         self.confs['plugins/backuppc.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/backuppc.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # kiosk
         self.confs['plugins/kiosk.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/kiosk.ini'].set('database', 'dbport', self.config['dbport'])
         self.confs['plugins/kiosk.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/kiosk.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # pkgs db
         self.confs['plugins/pkgs.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/pkgs.ini'].set('database', 'dbport', self.config['dbport'])
         self.confs['plugins/pkgs.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/pkgs.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # xmppmaster db
+        self.confs['plugins/xmppmaster.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/xmppmaster.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/xmppmaster.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/xmppmaster.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
     def init_glpi(self):
         """GLPI coupling"""
@@ -1350,6 +1376,8 @@ if __name__ == '__main__':
                       help="Reset all databases (imaging, inventory, dyngroup...)")
     parser.add_option("--mysql-host", dest="dbhost",
                       help="MySQL server hostname")
+    parser.add_option("--mysql-port", dest="dbport",
+                      help="MySQL server port number")
     parser.add_option("--mysql-user", dest="dbadminuser",
                       help="MySQL administrator username")
     parser.add_option("--mysql-passwd", dest="dbadminpasswd",
@@ -1420,6 +1448,7 @@ if __name__ == '__main__':
         'reset_conf': options.reset_conf,
         'reset_db': options.reset_db,
         'dbhost': options.dbhost,
+        'dbport': options.dbport,
         'dbadminuser': options.dbadminuser,
         'dbadminpasswd': options.dbadminpasswd,
         'ldapurl': options.ldapurl,
