@@ -1135,8 +1135,8 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updateaddCommand_action(self, session, command_result, sessionid , typemessage = "result"):
         try:
-            sql="""UPDATE `xmppmaster`.`command_action` 
-                    SET 
+            sql="""UPDATE `xmppmaster`.`command_action`
+                    SET
                         `typemessage` = '%s',
                         `command_result` = CONCAT(`command_result`, ' ', '%s')
                     WHERE
@@ -1526,7 +1526,17 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getMachinefrommacadress(self, session, macaddress):
         """ information machine"""
-        machine = session.query(Machines).filter(Machines.macaddress.like(macaddress) ).first()
+        if agenttype is None:
+            machine = session.query(Machines).\
+                filter(Machines.macaddress.like(macaddress) ).first()
+        elif agenttype=="machine":
+            machine = session.query(Machines).\
+                filter(and_(Machines.macaddress.like(macaddress),
+                            Machines.agenttype.like("machine")) ).first()
+        elif agenttype=="relayserver":
+            machine = session.query(Machines).\
+                filter(and_(Machines.macaddress.like(macaddress),
+                            Machines.agenttype.like("relayserver")) ).first()
         session.commit()
         session.flush()
         result = {}
@@ -6608,7 +6618,7 @@ where agenttype="machine" and groupdeploy in (
                                         mon_machine_id,
                                         id_device_reg,
                                         doc,
-                                        status_event=1, 
+                                        status_event=1,
                                         hostname=hostname)
             else:
                 # Check if there is a general rule for this device
@@ -6626,7 +6636,7 @@ where agenttype="machine" and groupdeploy in (
                                             mon_machine_id,
                                             id_device_reg,
                                             doc,
-                                            status_event=1, 
+                                            status_event=1,
                                             hostname=hostname)
             logging.getLogger().debug("==================================")
             return id_device_reg
@@ -6664,7 +6674,7 @@ where agenttype="machine" and groupdeploy in (
                           id_machine,
                           id_device,
                           doc,
-                          status_event=1, 
+                          status_event=1,
                           hostname=None):
 
         if objectlist_local_rule:
@@ -6691,7 +6701,7 @@ where agenttype="machine" and groupdeploy in (
                         return False
                     bindingcmd = z['no_success_binding_cmd']
                 if hostname is not None:
-                    self.remise_status_event(z['id'], 
+                    self.remise_status_event(z['id'],
                                              0,
                                              hostname)
                 self.setMonitoring_event(id_machine,
@@ -6704,22 +6714,22 @@ where agenttype="machine" and groupdeploy in (
     @DatabaseHelper._sessionm
     def remise_status_event(self,
                             session,
-                            id_rule, 
+                            id_rule,
                             status_event,
                             hostname):
         try:
             sql="""UPDATE `xmppmaster`.`mon_event`
                         JOIN
-                    xmppmaster.mon_machine ON xmppmaster.mon_machine.id = xmppmaster.mon_event.machines_id 
-                SET 
+                    xmppmaster.mon_machine ON xmppmaster.mon_machine.id = xmppmaster.mon_event.machines_id
+                SET
                     `xmppmaster`.`mon_event`.`status_event` = '%s'
                 WHERE
                         xmppmaster.mon_machine.hostname LIKE '%s'
-                    AND 
+                    AND
                         xmppmaster.mon_event.id_rule = %s;""" % (status_event,
                                                                  hostname,
                                                                  id_rule)
-                        
+
             result = session.execute(sql)
             session.commit()
             session.flush()
@@ -6903,3 +6913,132 @@ where agenttype="machine" and groupdeploy in (
         except Exception, e:
             logging.getLogger().error(str(e))
         return list_panels_template
+
+    @DatabaseHelper._sessionm
+    def get_mon_events(self, session, start, max, filter):
+        """Get monitoring events informations
+        Params:
+            - sqlalchemy session: managed by DatabaseHelper._sessionm decorator
+            - int start: represents the starting offset for a sql limit clause
+            - int max: represents the number of result returned by the function
+            - string filter: if not empty this string is searched into each event
+        Returns:
+            dict events: all the events found for the limit and filter clause. The
+            dict has the following shape:
+            result = {
+                'total': 1,
+                'datas' : [
+                    {dict representing the event 1},
+                    {dict representing the event 2},
+                    ...
+                ]
+            }
+        """
+
+        try:
+            start = int(start)
+        except ValueError:
+            start = -1
+
+        try:
+            max = int(max)
+        except ValueError:
+            max = -1
+
+        count = 0
+        query = session.query(Mon_event, Mon_devices, Mon_rules, Mon_machine, Machines)\
+            .outerjoin(Mon_devices, Mon_event.id_device == Mon_devices.id)\
+            .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)\
+            .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)\
+            .outerjoin(Machines, Mon_machine.machines_id == Machines.id)\
+            .filter(Mon_event.status_event == 1)
+
+        if filter != "":
+            query = query.filter(or_(
+                    Machines.hostname.contains(filter),
+                    Machines.jid.contains(filter),
+                    Mon_machine.date.contains(filter),
+                    Mon_machine.statusmsg.contains(filter),
+                    Mon_devices.alarm_msg.contains(filter),
+                    Mon_rules.comment.contains(filter),
+                    Mon_rules.device_type.contains(filter),
+                    Mon_devices.firmware.contains(filter),
+                    Mon_devices.serial.contains(filter),
+                    Mon_event.type_event.contains(filter)
+                    )
+                )
+
+        count = query.count()
+        query = query.order_by(desc(Mon_machine.date))
+
+        if start != -1:
+            query = query.offset(start)
+        if max != -1:
+            query = query.limit(max)
+
+
+        query = query.all()
+
+        result = {
+        'total': count,
+        'datas': []
+        }
+        if query:
+            for event, device, rule, mon_machine, machine in query:
+                year = str(mon_machine.date.year)
+                month = str(mon_machine.date.month) if mon_machine.date.month >= 10 else '0'+str(mon_machine.date.month)
+                day = str(mon_machine.date.day) if mon_machine.date.day >= 10 else '0'+str(mon_machine.date.day)
+                hour = str(mon_machine.date.hour)  if mon_machine.date.hour >= 10 else '0'+str(mon_machine.date.hour)
+                minute = str(mon_machine.date.minute) if mon_machine.date.minute >= 10 else '0'+str(mon_machine.date.minute)
+                second = str(mon_machine.date.second) if mon_machine.date.second >= 10 else '0'+str(mon_machine.date.second)
+                tmp = {
+                    'event_id': event.id,
+                    'event_status': event.status_event if event.status_event is not None else "",
+                    'event_type_event': event.type_event if event.type_event is not None else "",
+                    'event_cmd': event.cmd if event.cmd is not None else "",
+                    'rule_id': rule.id,
+                    'rule_hostname': rule.hostname if rule.hostname is not None else "",
+                    'rule_device_type': rule.device_type if rule.device_type is not None else "",
+                    'rule_binding': rule.binding if rule.binding is not None else "",
+                    'rule_succes_binding_cmd': rule.succes_binding_cmd if rule.succes_binding_cmd is not None else "",
+                    'rule_error_on_binding': rule.error_on_binding if rule.error_on_binding is not None else "",
+                    'rule_user': rule.user if rule.user is not None else "",
+                    'rule_comment': rule.comment if rule.comment is not None else "",
+                    'mon_machine_date': "%s-%s-%s %s:%s:%s"%(year,month, day, hour, minute, second),
+                    'machine_hostname': machine.hostname if machine.hostname is not None else "",
+                    'machine_jid': machine.jid if machine.jid is not None else "",
+                    'machine_enabled': machine.enabled if machine.enabled is not None else "",
+                    'machine_uuid': machine.uuid_inventorymachine if machine.uuid_inventorymachine is not None else "",
+                    'mon_machine_statusmsg': mon_machine.statusmsg if mon_machine.statusmsg is not None else "",
+                    'device_type': device.device_type if device.device_type is not None else "",
+                    'device_serial': device.serial if device.serial is not None else "",
+                    'device_firmware': device.firmware if device.firmware is not None else "",
+                    'device_status': device.status if device.status is not None else "",
+                    'device_alarm_msg': device.alarm_msg if device.alarm_msg is not None else "",
+                    'device_doc': device.doc if device.doc is not None else ""
+                }
+                result['datas'].append(tmp)
+        return result
+
+    @DatabaseHelper._sessionm
+    def acquit_mon_event(self, session, id, user):
+        """Disables the selected event specified by its id.
+        params:
+            - sqlalchemy session : managed by DatabaseHelper._sessionm decorator
+            - int id : monitoring event id
+            - string user: user name (not used yet)
+        returns:
+            string "success" if the modification successed or "failure" in the other case
+        """
+        try:
+            id = int(id)
+        except:
+            return "failure"
+        try:
+            session.query(Mon_event).filter(Mon_event.id == id)\
+            .update({Mon_event.status_event: 0})
+            session.commit()
+            session.flush()
+            return "success"
+        except:
+            return "failure"

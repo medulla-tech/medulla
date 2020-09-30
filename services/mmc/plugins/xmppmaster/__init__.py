@@ -789,9 +789,9 @@ def get_relay_qa_launched(jid, login, start, maxperpage):
     result = XmppMasterDatabase().get_relay_qa_launched(jid, login, start, maxperpage)
     return result
 
-def create_reverse_ssh_from_am_to_ars(jidmachine, 
-                                      remoteport,  
-                                      proxyport=None, 
+def create_reverse_ssh_from_am_to_ars(jidmachine,
+                                      remoteport,
+                                      proxyport=None,
                                       ssh_port_machine=22,
                                       uninterrupted=False):
     """
@@ -947,3 +947,13 @@ def getPanelImage(hostname, panel_title, from_timestamp, to_timestamp):
 def getLastOnlineStatus(jid):
     result = XmppMasterDatabase().last_event_presence_xmpp(jid)
     return result[0]['status']
+
+
+def get_mon_events(start, maxperpage, filter):
+    result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter)
+    return result
+
+
+def acquit_mon_event(id, user):
+    result = XmppMasterDatabase().acquit_mon_event(id, user)
+    return result
