@@ -48,6 +48,7 @@ from mmc.core.log import ColoredFormatter
 import imp
 import logging
 import logging.config
+from logging.handlers import TimedRotatingFileHandler
 import xmlrpclib
 import os
 import sys
@@ -59,6 +60,59 @@ import grp
 import string
 import threading
 import re
+import zipfile
+from stat import ST_CTIME
+
+
+
+
+
+class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
+    """
+    Extended version of TimedRotatingFileHandler that compress logs on rollover.
+    the rotation file is compress in zip
+    """
+  
+    def __init__(self, filename, when='h', interval=1, backupCount=0, 
+                 encoding=None, delay=False, utc=False,  compress="zip"):
+        super(TimedCompressedRotatingFileHandler, self).__init__(filename, when, 
+                                                                 interval, backupCount, encoding, 
+                                                                 delay, utc)
+        self.backupCountlocal= backupCount
+ 
+    def get_files_by_date(self):
+        dir_name, base_name = os.path.split(self.baseFilename)
+        file_names = os.listdir(dir_name)
+        result = []
+        result1 = []
+        prefix = '{}'.format(base_name) 
+        for file_name in file_names:
+            if file_name.startswith(prefix) and not file_name.endswith('.zip'):
+                f=os.path.join(dir_name, file_name )
+                result.append((os.stat(f)[ST_CTIME], f)  )
+            if file_name.startswith(prefix) and  file_name.endswith('.zip'):
+                f=os.path.join(dir_name, file_name )
+                result1.append((os.stat(f)[ST_CTIME], f))
+        result1.sort()
+        result.sort()
+        while result1 and len(result1) >= self.backupCountlocal:
+            el = result1.pop(0)
+            if os.path.exists(el[1]):
+                os.remove(el[1])
+        return result[1][1]
+
+    def doRollover(self):
+        super(TimedCompressedRotatingFileHandler, self).doRollover()
+        try:
+            dfn = self.get_files_by_date()
+        except:
+            return
+        dfn_zipped = '{}.zip'.format(dfn)
+        if os.path.exists(dfn_zipped):
+            os.remove(dfn_zipped)
+        with zipfile.ZipFile(dfn_zipped, 'w') as f:
+            f.write(dfn, dfn_zipped, zipfile.ZIP_DEFLATED)
+        os.remove(dfn)
 
 logger = logging.getLogger()
 
@@ -810,6 +864,7 @@ class MMCApp(object):
 
     def initialize(self):
         # Initialize logging object
+        logging.handlers.TimedCompressedRotatingFileHandler = TimedCompressedRotatingFileHandler
         logging.config.fileConfig(self.conffile)
 
         # In foreground mode, log to stderr
