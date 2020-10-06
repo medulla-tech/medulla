@@ -1524,7 +1524,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return presence
 
     @DatabaseHelper._sessionm
-    def getMachinefrommacadress(self, session, macaddress):
+    def getMachinefrommacadress(self, session, macaddress, agenttype=None):
         """ information machine"""
         if agenttype is None:
             machine = session.query(Machines).\
@@ -1588,7 +1588,7 @@ class XmppMasterDatabase(DatabaseHelper):
                            keysyncthing = ""):
         msg ="Create Machine"
         pe = -1
-        machineforupdate = self.getMachinefrommacadress(macaddress)
+        machineforupdate = self.getMachinefrommacadress(macaddress, agenttype="machine")
         if machineforupdate:
             pe = machineforupdate['id']
         if pe != -1:
