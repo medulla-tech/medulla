@@ -1588,7 +1588,8 @@ class XmppMasterDatabase(DatabaseHelper):
                            keysyncthing = ""):
         msg ="Create Machine"
         pe = -1
-        machineforupdate = self.getMachinefrommacadress(macaddress, agenttype="machine")
+        machineforupdate = self.getMachinefrommacadress(macaddress,
+                                                        agenttype=agenttype)
         if machineforupdate:
             pe = machineforupdate['id']
         if pe != -1:
