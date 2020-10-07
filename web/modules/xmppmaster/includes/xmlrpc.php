@@ -547,6 +547,10 @@ function xmlrpc_getPanelImage($hostname, $panel_title, $from, $to){
   return xmlCall("xmppmaster.getPanelImage", [$hostname, $panel_title, $from, $to]);
 }
 
+function xmlrpc_getPanelGraph($hostname, $panel_title, $from, $to){
+  return xmlCall("xmppmaster.getPanelGraph", [$hostname, $panel_title, $from, $to]);
+}
+
 function xmlrpc_getLastOnlineStatus($jid){
   return xmlCall("xmppmaster.getLastOnlineStatus", [$jid]);
 }
