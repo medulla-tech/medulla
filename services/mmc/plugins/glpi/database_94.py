@@ -92,7 +92,7 @@ class Glpi94(DyngroupDatabaseHelper):
         except OperationalError:
             self._glpi_version = list(self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values())[0].replace(' ', '')
 
-        if LooseVersion(self._glpi_version) >=  LooseVersion("9.4") and LooseVersion(self._glpi_version) <=  LooseVersion("9.4.5"):
+        if LooseVersion(self._glpi_version) >=  LooseVersion("9.4") and LooseVersion(self._glpi_version) <=  LooseVersion("9.4.6"):
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:

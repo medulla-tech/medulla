@@ -41,8 +41,8 @@ INSERT INTO `rules` VALUES (1,'user','Associate relay server based on user',3),
 (4,'subnet','Select relay server in same subnet',5),
 (5,'default','Use default relay server',7),
 (6,'load balancer','Choses the least used ARS',8),
-(7,'orgADmach','Choses ARS based on AD OUs organised by machines ',1),
-(8,'orgADuser','Choses ARS based on AD OUs organised by users',2);
+(7,'orgADmach','Choses ARS based on AD machines OUs',1),
+(8,'orgADuser','Choses ARS based on AD users OUs',2);
 /*!40000 ALTER TABLE `rules` ENABLE KEYS */;
 UNLOCK TABLES;
 

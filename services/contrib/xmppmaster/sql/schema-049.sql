@@ -1,5 +1,5 @@
 --
--- (c) 2018 Siveo, http://www.siveo.net/
+-- (c) 2020 Siveo, http://www.siveo.net/
 --
 -- $Id$
 --
@@ -22,13 +22,10 @@
 
 START TRANSACTION;
 
-LOCK TABLES `rules` WRITE;
-INSERT INTO `rules` VALUES (9,'networkaddress','Associate relay based on network address',9);
-UNLOCK TABLES;
+USE `xmppmaster`;
 
--- ----------------------------------------------------------------------
--- Database version
--- ----------------------------------------------------------------------
-UPDATE version SET Number = 18;
+-- We need to remove this uniq index to allow the cohabitation between agent relay and agent machine
+DROP INDEX if exists mac_UNIQUE on network;
 
+UPDATE version SET Number = 49;
 COMMIT;

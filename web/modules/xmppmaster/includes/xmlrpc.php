@@ -538,4 +538,28 @@ function xmlrpc_get_relay_qa_launched($jid, $login, $start=-1, $maxperpage=-1){
 function xmlrpc_get_packages_list($jid, $filter=""){
   return xmlCall("xmppmaster.get_packages_list", [$jid, $filter]);
 }
+
+function xmlrpc_getPanelsForMachine($hostname){
+  return xmlCall("xmppmaster.getPanelsForMachine", [$hostname]);
+}
+
+function xmlrpc_getPanelImage($hostname, $panel_title, $from, $to){
+  return xmlCall("xmppmaster.getPanelImage", [$hostname, $panel_title, $from, $to]);
+}
+
+function xmlrpc_getLastOnlineStatus($jid){
+  return xmlCall("xmppmaster.getLastOnlineStatus", [$jid]);
+}
+
+function xmlrpc_create_reverse_ssh_from_am_to_ars($jidmachine, $remoteport,  $proxyport=null){
+  return xmlCall("xmppmaster.create_reverse_ssh_from_am_to_ars", [$jidmachine, $remoteport, $proxyport]);
+}
+
+function xmlrpc_get_mon_events($start=-1, $maxperpage=-1, $filter=""){
+  return xmlCall("xmppmaster.get_mon_events", [$start, $maxperpage, $filter]);
+}
+
+function xmlrpc_acquit_mon_event($id, $user){
+  return xmlCall("xmppmaster.acquit_mon_event", [$id, $user]);
+}
 ?>

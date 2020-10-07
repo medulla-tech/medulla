@@ -86,7 +86,7 @@ class manage_grafana:
         """Returns a JSON containing the dashboard for a hostname"""
         # Check all parameters and prepare request
         try:
-            logger.info("Getting dashboard for hostname %s" % self.hostname)
+            logger.debug("Getting dashboard for hostname %s" % self.hostname)
             headers = {'Authorization': 'Bearer %s'
                        % self.api_config['api_key']}
             url = "%s/api/dashboards/uid/%s" % (self.api_config['url'],
@@ -114,10 +114,10 @@ class manage_grafana:
 
     def grafanaGetDashboardIdForHostname(self):
         try:
-            logger.info("Getting dashboard id for hostname %s" % self.hostname)
+            logger.debug("Getting dashboard id for hostname %s" % self.hostname)
             db_json = self.grafanaGetDashboardForHostname()
-            logger.info("dashboard id for hostname %s: %s"
-                        % (self.hostname, db_json['dashboard']['id']))
+            logger.debug("dashboard id for hostname %s: %s"
+                         % (self.hostname, db_json['dashboard']['id']))
             return db_json['dashboard']['id']
         except Exception as e:
             logger.error("Error getting dashboard id for hostname%s: %s"
@@ -163,6 +163,7 @@ class manage_grafana:
         dashboard['time'] = {}
         dashboard['time']['from'] = 'now/d'
         dashboard['time']['to'] = 'now/d'
+        dashboard['panels'] = []
         payload['dashboard'] = dashboard
         payload['folderId'] = 0
         payload['overwrite'] = False
@@ -179,31 +180,30 @@ class manage_grafana:
     def grafanaGetPanels(self):
         """Returns a JSON containing the panels for a hostname"""
         try:
-            logger.info("Getting panels for hostname %s" % self.hostname)
+            logger.debug("Getting panels for hostname %s" % self.hostname)
             db_json = self.grafanaGetDashboardForHostname()
             panel_json = []
             for panel in db_json['dashboard']['panels']:
                 panel_json.append({'id': panel['id'], 'title': panel['title']})
-            logger.info("dashboard panels for hostname %s: %s"
-                        % (self.hostname, panel_json))
+            logger.debug("dashboard panels for hostname %s: %s"
+                         % (self.hostname, panel_json))
             return panel_json
-        except Exception as e:
-            logger.error("Error getting panels for hostname%s: %s"
-                         % (self.hostname, str(e)))
+        except Exception:
+            logger.warning("No panels defined for hostname %s" % self.hostname)
             return None
 
     def grafanaGetPanelIdFromTitle(self, panel_title):
         try:
-            logger.info("Getting panel %s id for hostname %s"
-                        % (panel_title, self.hostname))
+            logger.debug("Getting panel %s id for hostname %s"
+                         % (panel_title, self.hostname))
             current_panels = self.grafanaGetPanels()
             for index, panel in enumerate(current_panels):
                 if panel_title == panel['title']:
-                    logger.info("Panel %s has id %s and index %s"
+                    logger.debug("Panel %s has id %s and index %s"
                                  % (panel_title, panel['id'], index))
                     return panel['id']
-            logger.warning("Panel %s not found for hostname %s"
-                           % (panel_title, self.hostname))
+            logger.debug("Panel %s not found for hostname %s"
+                         % (panel_title, self.hostname))
             return None
         except Exception as e:
             logger.error("Error while getting panel %s for hostname %s: %s"
@@ -212,10 +212,10 @@ class manage_grafana:
 
     def grafanaEditPanel(self, panel_json):
         """Add or edit a panel to the dashboard from the JSON contents"""
+        panel_dict = json.loads(panel_json)
         # Check if dashboard exists. If not create it
-        try:
-            db_id = self.grafanaGetDashboardIdForHostname()
-        except Exception:
+        db_id = self.grafanaGetDashboardIdForHostname()
+        if not db_id:
             db_id = self.grafanaCreateDashboard()
         if db_id is None:
             logger.error("Error getting panel for hostname %s"
@@ -225,34 +225,41 @@ class manage_grafana:
         # If it exists, update the panel
         current_panels = self.grafanaGetPanels()
         db_json = self.grafanaGetDashboardForHostname()
-        for index, panel in enumerate(current_panels):
-            if panel_json['title'] == panel['title']:
-                panel_id = panel['id']
-                panel_index = index
-        if panel_id:
+        try:
+            for index, panel in enumerate(current_panels):
+                if panel_dict['title'] == panel['title']:
+                    panel_id = panel['id']
+                    panel_index = index
+        except Exception:
+            logger.debug("No panels found for hostname %s" % self.hostname)
+        # if panel_id and panel_index are defined, delete the panel
+        try:
             logger.info("Updating panel %s for hostname %s"
                         % (panel_id, self.hostname))
             # Remove existing panel
             db_json['dashboard']['panels'].remove(panel_index)
-        else:
-            panel_id = max(panel_json, key=lambda x: x['id'])['id'] + 1
-            logger.info("Adding panel %s for hostname %s"
-                        % (panel_id, self.hostname))
+        except NameError:
+            try:
+                panel_id = max(current_panels, key=lambda x: x['id'])['id'] + 1
+            except (TypeError, ValueError):
+                panel_id = 1
+                logger.info("Adding panel %s for hostname %s"
+                            % (panel_id, self.hostname))
         # Insert id and add the panel to dashboard json
-        panel_json['id'] = panel_id
-        db_json['dashboard']['panels'].append(panel_json)
+        panel_dict['id'] = int(panel_id)
+        db_json['dashboard']['panels'].append(panel_dict)
         logger.debug("New dashboard json for hostname %s: %s"
                      % (self.hostname, db_json))
         dashb_id = self.grafanaWriteDashboardForHostname(db_json)
         if dashb_id:
             logger.info("Dashboard %s updated with panel %s "
                         "for hostname %s" % (dashb_id,
-                                             panel_json['title'],
+                                             panel_dict['title'],
                                              self.hostname))
             return True
         # Error writing dashboard
         logger.error("Error writing panel %s to dashboard "
-                     "for hostname %s" % (panel_json['title'],
+                     "for hostname %s" % (panel_dict['title'],
                                           self.hostname))
         return False
 
@@ -313,18 +320,21 @@ class manage_grafana:
                      % (panel_title, self.hostname))
         return False
 
-    def grafanaGetPanelImage(self, panel_title):
+    def grafanaGetPanelImage(self, panel_title, from_timestamp, to_timestamp):
         """Returns the url of the image generated by Grafana for a panel"""
-        logger.info("Getting image url for panel %s for hostname %s"
-                    % (panel_title, self.hostname))
+        logger.debug("Getting image url for panel %s for hostname %s"
+                     % (panel_title, self.hostname))
         panel_id = self.grafanaGetPanelIdFromTitle(panel_title)
         if panel_id:
-            img = "%s/%s/%s?panelId=%s&width=800&height=400" % (self.api_config['render_url'],
-                                                                self.hostname,
-                                                                self.hostname,
-                                                                panel_id)
-            logger.info("Image url for panel %s for hostname %s: %s"
-                        % (panel_title, self.hostname, img))
+            img = "%s/%s/%s?panelId=%s&width=800&height=400&from=%s&to=%s" % (
+                self.api_config['render_url'],
+                self.hostname,
+                self.hostname,
+                panel_id,
+                from_timestamp*1000,
+                to_timestamp*1000)
+            logger.debug("Image url for panel %s for hostname %s: %s"
+                         % (panel_title, self.hostname, img))
             return img
         # No panel found
         return None
