@@ -268,7 +268,8 @@ foreach($datas['uuid'] as $uuid)
 		*/
 		if($field != 'reg' && $field != 'cn' )
 		{ // The selectable class is used to fill the search field;
-			$datas[$field][$raw] = '<span class="selectable">'.$datas[$field][$raw].'</span>';
+			$datas[$field][$raw] = str_replace("<br>", "\r\n", $datas[$field][$raw]);
+			$datas[$field][$raw] = '<span class="selectable">'.htmlentities($datas[$field][$raw]).'</span>';
 		}
 	}
 	$raw++;
@@ -372,8 +373,20 @@ $n->display();
 ?>
 
 <script>
+function escapeHtml(text) {
+  var map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+
+  return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
 jQuery(".selectable").on("click", function(){
-	jQuery("#param").val(jQuery(this).text());
+	jQuery("#param").val(jQuery(this).html());
 	pushSearch();
 });
 </script>
