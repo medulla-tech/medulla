@@ -270,6 +270,7 @@ _T('Up-to-date', 'glpi');
 ?>
 
 </table>
+<script src="modules/glpi/graph/js/autoresize.js"></script>
 <script type="text/javascript">
 //demo: http://so.devilmaycode.it/jquery-convert-line-breaks-to-br-nl2br-equivalent
 function nl2br (str) {
@@ -286,6 +287,8 @@ jQuery('label.editableField').on('click',function(){
     var input = jQuery('textarea.editableField[name="'+name+'"]').first();
     jQuery(this).hide();
     input.val(value).show().focus();
+    input.css('width', '100%');
+    input.autoResize()
 });
 
 jQuery('textarea.editableField').bind('keyup focusout',function(e){
