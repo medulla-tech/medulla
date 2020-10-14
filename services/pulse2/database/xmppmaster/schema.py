@@ -178,7 +178,6 @@ class Machines(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     # id = Column(Integer, primary_key=True)
     jid = Column(String(255), nullable=False)
-    uuid_serial_machine = Column(String(45))
     need_reconf = Column(Boolean, nullable=False, default="0")
     enabled = Column(Boolean, unique=False)
     platform = Column(String(60))
@@ -275,8 +274,7 @@ class Users(Base, XmppMasterDBObj):
     postal_code = Column(String(45))
     country_code = Column(String(45))
     country_name = Column(String(45))
-    creation_user =Column(DateTime, nullable=True)
-    last_modif = Column(DateTime, nullable=True)
+
 
 class Has_machinesusers(Base, XmppMasterDBObj):
     # ====== Table name =========================
