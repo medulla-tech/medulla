@@ -965,6 +965,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         ret = {}
         for line in query:
             papi = cPickle.loads(line.papi)
+            if 'mountpoint' not in papi:
+                papi['mountpoint'] =  '/package_api_get1'
             if not papi['mountpoint'] in ret:
                 ret[papi['mountpoint']] = {}
             ret[papi['mountpoint']][line.packageUUID] = line.active
