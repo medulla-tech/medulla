@@ -48,6 +48,16 @@ foreach($result['datas'] as $event){
   $acquitActions[] = $acquitAction;
 }
 
+$params['machine_hostname'] = (isset($params['machine_hostname'])) ? $params['machine_hostname'] : [];
+$params['mon_machine_date'] = (isset($params['mon_machine_date'])) ? $params['mon_machine_date'] : [];
+$params['event_type_event'] = (isset($params['event_type_event'])) ? $params['event_type_event'] : [];
+$params['mon_machine_statusmsg'] = (isset($params['mon_machine_statusmsg'])) ? $params['mon_machine_statusmsg'] : [];
+$params['device_type'] = (isset($params['device_type'])) ? $params['device_type'] : [];
+$params['device_status'] = (isset($params['device_status'])) ? $params['device_status'] : [];
+$params['device_alarm_msg'] = (isset($params['device_alarm_msg'])) ? $params['device_alarm_msg'] : [];
+$params['device_serial'] = (isset($params['device_serial'])) ? $params['device_serial'] : [];
+$params['device_firmware'] = (isset($params['device_firmware'])) ? $params['device_firmware'] : [];
+$params['rule_comment'] = (isset($params['rule_comment'])) ? $params['rule_comment'] : [];
 // Display the list
 $n = new OptimizedListInfos($params['machine_hostname'], _T("Machine name", "xmppmaster"));
 $n->disableFirstColumnActionLink();
@@ -69,7 +79,7 @@ $n->addActionItemArray($acquitActions);
 $n->start = 0;
 $n->end = $result['total'];
 
-print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
+print "<br/><br/>";
 
 $n->display();
 ?>
