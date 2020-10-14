@@ -113,9 +113,8 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
                  */
                 if (is_array($all[$k][0])) {
                     $editable = $all[$k][0];
-                    $description = htmlentities(str_replace("<br>", "\r\n", $editable[2]));
-                    $val[] = sprintf("<pre class='editableField' name='%s' data='%s' style='min-height:1em;'>%s</pre>", $editable[0], $editable[1], $description)
-                             .sprintf('<textarea class="editableField" name="%s" style="display:none">%s</textarea>', $editable[0], $description);
+                    $val[] = sprintf('<label class="editableField" name="%s" data="%s" style="min-height:1em;">%s</label>', $editable[0], $editable[1], $editable[2])
+                             .sprintf('<textarea class="editableField" name="%s" style="display:none">%s</textarea>', $editable[0], $editable[2]);
                 }
                 else {
                     $val[] = $all[$k][0];
@@ -280,10 +279,10 @@ function nl2br (str) {
 }
 
 // Editable fields label click
-jQuery('pre.editableField').on('click',function(){
+jQuery('label.editableField').on('click',function(){
     var name = jQuery(this).attr('name');
     // Get the label raw html to have <br> tags and replace them by \r\n chars
-    var value = jQuery(this).text();
+    var value = jQuery(this).html().split(new RegExp(/<br[ /]*>/g)).join("\r\n");
     // corresponding input
     var input = jQuery('textarea.editableField[name="'+name+'"]').first();
     jQuery(this).hide();
@@ -297,7 +296,7 @@ jQuery('textarea.editableField').bind('keyup focusout',function(e){
     if (e.keyCode != null && e.keyCode != 27) return;
 
     var name = jQuery(this).attr('name');
-    var value = jQuery(this).val();
+    var value = nl2br(jQuery(this).val());
     var input = jQuery(this);
 
     // Special case: computername regex
@@ -308,8 +307,8 @@ jQuery('textarea.editableField').bind('keyup focusout',function(e){
     }
 
     // Posting ajax request
-    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php echo quickGet('uuid'); ?>&name='+name+'&value='+nl2br(value)).success(function(){
-        var label = jQuery('pre.editableField[name="'+name+'"]').first();
+    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php echo quickGet('uuid'); ?>&name='+name+'&value='+value).success(function(){
+        var label = jQuery('label.editableField[name="'+name+'"]').first();
         label.html(value).show();
         input.hide();
     });
