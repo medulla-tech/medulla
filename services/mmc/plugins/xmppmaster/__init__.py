@@ -802,7 +802,7 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
         The function returns the proxy port
     """
     timeout = 15
-    ssh_port_machine = 22
+    #ssh_port_machine = 22
     machine = XmppMasterDatabase().getMachinefromjid(jidmachine)
     if machine:
         ipARS = XmppMasterDatabase().ippackageserver(machine['groupdeploy'])[0]
@@ -814,35 +814,46 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
     #logging.getLogger().error("jidARS %s " % machine['groupdeploy'])
     #logging.getLogger().error("jidAM %s " %jidmachine)
     type_reverse = "R"
-    logging.getLogger().error("proxyport %s " % proxyport)
-
+    logging.getLogger().debug("proxyport %s " % proxyport)
+    iqcomand = {"action": "information",
+                "data": {"listinformation": ["get_ars_key_id_rsa_pub",
+                                            "get_ars_key_id_rsa",
+                                            "get_free_tcp_port",
+                                            "clean_reverse_ssh"],
+                        "param": {}
+                        }
+                }
+    logging.getLogger().debug("iq to %s iqcommand is : %s " % (jidARS, iqcomand))
     result = ObjectXmpp().iqsendpulse(jidARS,
-                                      {"action": "information",
-                                       "data": {"listinformation": ["get_ars_key_id_rsa_pub",
-                                                                    "get_ars_key_id_rsa",
-                                                                    "get_free_tcp_port",
-                                                                    "clean_reverse_ssh"],
-                                                "param": {}
-                                                }
-                                       },
+                                      iqcomand,
                                       timeout)
+    
     res = json.loads(result)
+    
+    logging.getLogger().debug("result iqcommand : %s" % json.dumps(res, indent = 4))
     if res['numerror'] != 0:
         logger.error("iq information error to %s on get_ars_key_id_rsa_pub, get_ars_key_id_rsa ,get_free_tcp_port" % jidARS)
+        logger.error("abandon reverse ssh")
         return
+        
     resultatinformation = res['result']['informationresult']
     if proxyport is None or proxyport == 0 or proxyport == "":
         proxyportars = resultatinformation['get_free_tcp_port']
     else:
         proxyportars = proxyport
     if not uninterrupted:
+        uninterruptedstruct= { "action": "information",
+                               "data": {"listinformation": ["add_proxy_port_reverse"],
+                                           "param": {"proxyport": proxyportars}
+                                           }
+                             }
+        logging.getLogger().debug("send iqcommand to %s : %s" % (jidARS,
+                                                                 uninterruptedstruct))
         result = ObjectXmpp().iqsendpulse(jidARS,
-                                        {"action": "information",
-                                        "data": {"listinformation": ["add_proxy_port_reverse"],
-                                                    "param": {"proxyport": proxyportars}
-                                                    }
-                                        },
+                                        uninterruptedstruct,
                                         timeout)
+        
+        logging.getLogger().debug("result iqcommand : %s" % result)
     structreverse = {"action": "reversesshqa",
                      "sessionid": name_random(8, "reversshiq"),
                      "from": ObjectXmpp().boundjid.bare,
@@ -857,9 +868,10 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
                               "public_key_ars": resultatinformation['get_ars_key_id_rsa_pub']
                               }
                      }
-
-    logging.getLogger().error("structreverse %s" % structreverse)
+    logging.getLogger().debug("send iqcommand to %s : %s" % (jidAM,
+                                                             structreverse))
     result = ObjectXmpp().iqsendpulse(jidAM, structreverse, timeout)
+    logging.getLogger().debug("result iqcommand : %s" % result)
     del structreverse['data']['private_key_ars']
     del structreverse['data']['public_key_ars']
     structreverse['data']['uninterrupted'] = uninterrupted
