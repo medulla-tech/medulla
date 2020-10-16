@@ -3485,8 +3485,8 @@ class XmppMasterDatabase(DatabaseHelper):
         ret['lentotal'] = lentaillerequette#[0]
         ret['total_of_rows'] = lenrequest[0][0]
         for linedeploy in result:
-            macaddress = ''.join(linedeploy.macadress.split(':'))
-            if linedeploy.host.split("/")[-1] == macaddress:
+            macaddress = ''.join(linedeploy.macadress.split(':')).split("||")
+            if linedeploy.host.split("/")[-1] in macaddress:
                 hostname = linedeploy.host.split(".")[0]
             else:
                 hostname = linedeploy.host.split("/")[-1]
@@ -3581,8 +3581,8 @@ class XmppMasterDatabase(DatabaseHelper):
         #ret['lentotal'] = nbfilter
         ret['lentotal'] = count[0][0]
         for linedeploy in result:
-            macaddress = ''.join(linedeploy.macadress.split(':'))
-            if linedeploy.host.split("/")[-1] == macaddress:
+            macaddress = ''.join(linedeploy.macadress.split(':')).split("||")
+            if linedeploy.host.split("/")[-1] in macaddress:
                 hostname = linedeploy.host.split(".")[0]
             else:
                 hostname = linedeploy.host.split("/")[-1]
