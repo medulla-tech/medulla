@@ -28,6 +28,7 @@ function onlyValues($n) {
 }
 
 function prettyOctetDisplay($num, $base = 1024, $unit = '') {
+    $num = $num + 0;
     if ($unit == '')
         $unit = _T('Bytes', 'msc');
     foreach (array('', 'k', 'M', 'G', 'T', 'P') as $i) {
