@@ -136,10 +136,6 @@ $submod->addPage($page);
 $page = new Page("monitoringview", _T('XMPP Monitoring view', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("fileviewer", _T('File Viewer', 'xmppmaster'));
-$page->setFile("modules/xmppmaster/xmppmaster/filebrowser.php");
-$submod->addPage($page);
-
 $page = new Page("xmppfilesbrowsing", _T('File Browser', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -378,6 +374,15 @@ $submod->addPage($page);
 
 $page = new Page("ajaxpackageslist", _T("Packages List", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php");
+$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
+$page = new Page("monconfig", _T("Monitoring Configuration", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/monitoring/monconfig.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxmonconfig", _T("Monitoring Configuration", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/monitoring/ajaxmonconfig.php");
 $page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
