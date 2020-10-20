@@ -112,9 +112,6 @@ Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
-%post -n mmc-web-dyngroup
-systemctl restart php-fpm
-
 %description -n mmc-web-dyngroup
 This package contains the dynamic computer group plugin for the MMC web
 interface. It allows one to build static and dynamic group of computers to
@@ -173,9 +170,6 @@ Summary:        Backuppc plugin for the MMC web interface
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
-
-%post -n mmc-web-backuppc
-systemctl restart php-fpm
 
 %description -n mmc-web-backuppc
 This package contains the backuppc plugin for the MMC web interface.
@@ -240,9 +234,6 @@ Requires:       mmc-web-base >= %mmc_version
 
 Provides:       pulse-mmc-web-computers-inventory-backend = %version-%release
 
-%post -n mmc-web-glpi
-systemctl restart php-fpm
-
 %description -n mmc-web-glpi
 This package contains the GLPI plugin for the MMC web interface. It
 allows one to query a GLPI database to display computer inventory.
@@ -281,9 +272,6 @@ Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
-%post -n mmc-web-msc
-systemctl restart php-fpm
-
 %description -n mmc-web-msc
 This package contains the MSC (Mageia Secure Control) plugin for the
 MMC web interface. It allows one to control and manage the entire software
@@ -316,9 +304,6 @@ Summary:	Imaging plugin for the MMC web interface
 Group:		System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       python-mmc-base >= %mmc_version
-
-%post -n mmc-web-imaging
-systemctl restart php-fpm
 
 %description -n mmc-web-imaging
 This package contains the imaging plugin for the MMC web interface.
@@ -354,9 +339,6 @@ Requires:       python-mmc-base >= %mmc_version
 
 %description -n mmc-web-support
 This package contains the imaging plugin for the MMC web interface.
-
-%post -n mmc-web-support
-systemctl restart php-fpm
 
 %files -n mmc-web-support
 %defattr(-,root,root,0755)
@@ -418,9 +400,6 @@ Provides:       pulse-mmc-web-computers-inventory-backend = %version-%release
 
 %description -n mmc-web-inventory
 This package contains the inventory plugin for the MMC web interface.
-
-%post -n mmc-web-inventory
-systemctl restart php-fpm
 
 %files -n mmc-web-inventory
 %{_datadir}/mmc/modules/inventory
@@ -526,9 +505,6 @@ Requires:       mmc-web-base >= %mmc_version
 This package contains the package management plugin for the MMC web
 interface.
 
-%post -n mmc-web-pkgs
-systemctl restart php-fpm
-
 %files -n mmc-web-pkgs
 %{_datadir}/mmc/modules/pkgs
 
@@ -544,9 +520,6 @@ Requires:       mmc-web-base >= %mmc_version
 %description -n mmc-web-kiosk
 This package contains the kiosk plugin for the MMC web
 interface.
-
-%post -n mmc-web-kiosk
-systemctl restart php-fpm
 
 %files -n mmc-web-kiosk
 %{_datadir}/mmc/modules/kiosk
@@ -584,9 +557,6 @@ Requires:       mmc-web-imaging
 
 %description -n mmc-web-pulse2
 This package contains the base plugin for the MMC web interface.
-
-%post -n mmc-web-pulse2
-systemctl restart php-fpm
 
 %files -n mmc-web-pulse2
 %{_datadir}/mmc/modules/pulse2
@@ -1058,9 +1028,6 @@ Requires:       mmc-web-base >= %{version}
 %description -n mmc-web-dashboard
 Dashboard module for the MMC web interface
 
-%post -n mmc-web-dashboard
-systemctl restart php-fpm
-
 %files -n mmc-web-dashboard
 %{_datadir}/mmc/modules/dashboard
 
@@ -1105,9 +1072,6 @@ Requires:       mmc-web-base >= %{version}
 %description -n mmc-web-services
 Services module for the MMC web interface
 
-%post -n mmc-web-services
-systemctl restart php-fpm
-
 %files -n mmc-web-services
 %{_datadir}/mmc/modules/services
 
@@ -1120,9 +1084,6 @@ Requires:	mmc-web-base
 
 %description -n mmc-web-ppolicy
 Contains the password policy web interface
-
-%post -n mmc-web-ppolicy
-systemctl restart php-fpm
 
 %files -n mmc-web-ppolicy
 %defattr(-,root,root,0755)
@@ -1153,7 +1114,6 @@ if [ ! -L "/usr/share/mmc/jsframework/d3" ];
 then
     ln -s /usr/lib/node_modules/d3 /usr/share/mmc/jsframework/d3
 fi
-systemctl restart php-fpm
 
 %files -n mmc-web-base
 %defattr(-,root,root,0755)
@@ -1221,9 +1181,6 @@ Requires:       mmc-web-base >= %{version}
 
 %description -n mmc-web-report
 Report module for the MMC web interface
-
-%post -n mmc-web-report
-systemctl restart php-fpm
 
 %files -n mmc-web-report
 %{_datadir}/mmc/modules/report
