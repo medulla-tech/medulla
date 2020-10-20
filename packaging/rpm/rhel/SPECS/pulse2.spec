@@ -109,7 +109,6 @@ software deployment.
 %package -n     mmc-web-dyngroup
 Summary:        Dynamic computer group plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-dyngroup
@@ -168,7 +167,6 @@ This package contains the connection manager plugin for the MMC agent.
 %package -n     mmc-web-backuppc
 Summary:        Backuppc plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-backuppc
@@ -229,7 +227,6 @@ inventory plugin for the MMC agent.
 %package -n     mmc-web-glpi
 Summary:        GLPI plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 Provides:       pulse-mmc-web-computers-inventory-backend = %version-%release
@@ -269,7 +266,6 @@ process.
 %package -n     mmc-web-msc
 Summary:        MSC plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-msc
@@ -302,7 +298,6 @@ This package contains the imaging plugin for MMC agent.
 %package -n	mmc-web-imaging
 Summary:	Imaging plugin for the MMC web interface
 Group:		System/Servers
-Requires:       pulse-common = %version-%release
 Requires:       python-mmc-base >= %mmc_version
 
 %description -n mmc-web-imaging
@@ -334,7 +329,6 @@ This package contains the imaging plugin for MMC agent.
 %package -n     mmc-web-support
 Summary:        Imaging plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse-common = %version-%release
 Requires:       python-mmc-base >= %mmc_version
 
 %description -n mmc-web-support
@@ -372,7 +366,6 @@ This package contains the inventory plugin for the MMC agent
 %package -n pulse2-register-pxe
 Summary:    Pulse 2 Register PXE Servic/
 Group:      System/Servers
-Requires:   pulse-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
 Requires:   python-pulse-common-database-inventory = %version-%release
 Requires:   python-magic
@@ -393,7 +386,6 @@ Pulse 2 Register PXE Service
 %package -n     mmc-web-inventory
 Summary:        Inventory plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 Provides:       pulse-mmc-web-computers-inventory-backend = %version-%release
@@ -497,7 +489,6 @@ This package contains the guacamole plugin for the MMC agent.
 %package -n     mmc-web-pkgs
 Summary:        Package management plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 
@@ -513,7 +504,6 @@ interface.
 %package -n     mmc-web-kiosk
 Summary:        Kiosk plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 
@@ -551,7 +541,6 @@ This package will install all the Pulse 2 MMC agent interface plugins
 %package -n     mmc-web-pulse2
 Summary:        Base plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 Requires:       mmc-web-imaging
 
