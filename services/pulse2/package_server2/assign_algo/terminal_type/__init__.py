@@ -28,9 +28,9 @@
 
 from mmc.site import mmcconfdir
 
-from pulse2.package_server.assign_algo import MMAssignAlgo
-from pulse2.package_server.assign_algo.terminal_type.database import PluginInventoryAADatabase
-from pulse2.package_server.assign_algo.terminal_type.config import PluginInventoryAAConfig
+from pulse2.package_server2.assign_algo import MMAssignAlgo
+from pulse2.package_server2.assign_algo.terminal_type.database import PluginInventoryAADatabase
+from pulse2.package_server2.assign_algo.terminal_type.config import PluginInventoryAAConfig
 
 class MMUserAssignAlgo(MMAssignAlgo):
     name = 'terminal_type'

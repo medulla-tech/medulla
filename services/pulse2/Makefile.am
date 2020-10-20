@@ -24,17 +24,17 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	database.imaging database.inventory database.msc database.kiosk \
 	database.msc.orm database.pulse database.xmppmaster imaging \
 	imaging_server inventoryserver inventoryserver.scheduler \
-	managers package_server package_server.assign_algo \
-	package_server.assign_algo.default \
-	package_server.assign_algo.terminal_type \
-	package_server.assign_algo.multi_site \
-	package_server.common package_server.description \
-	package_server.imaging package_server.imaging.api \
-	package_server.imaging.pxe \
-	package_server.imaging.common package_server.mirror \
-	package_server.mirror_api package_server.package_api_get \
-	package_server.package_api_put package_server.scheduler_api \
-	package_server.user_package_api scheduler \
+	managers package_server2 package_server2.assign_algo \
+	package_server2.assign_algo.default \
+	package_server2.assign_algo.terminal_type \
+	package_server2.assign_algo.multi_site \
+	package_server2.common package_server2.description \
+	package_server2.imaging package_server2.imaging.api \
+	package_server2.imaging.pxe \
+	package_server2.imaging.common package_server.mirror \
+	package_server2.mirror_api package_server2.package_api_get \
+	package_server2.package_api_put package_server2.scheduler_api \
+	package_server2.user_package_api scheduler \
 	scheduler.phases scheduler.proxy scheduler.cache \
 	scheduler.tracking scheduler.api scheduler.tests \
 	database.backuppc \
