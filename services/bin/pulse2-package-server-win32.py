@@ -58,7 +58,7 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
         win32event.SetEvent(self.hWaitStop)
 
     def init(self, config):
-        from pulse2.package_server import ThreadLauncher, init_logger_debug, getRevision, getVersion
+        from pulse2.package_server2 import ThreadLauncher, init_logger_debug, getRevision, getVersion
         logging.config.fileConfig(self.inifile)
         logger = logging.getLogger()
         init_logger_debug()
@@ -73,7 +73,7 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
     def SvcDoRun(self):
         import servicemanager
         servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE, servicemanager.PYS_SERVICE_STARTED,(self._svc_display_name_, ''))
-        from pulse2.package_server.config import P2PServerCP
+        from pulse2.package_server2.config import P2PServerCP
         config = P2PServerCP()
         config.setup(self.inifile)
         if config.use_iocp_reactor:

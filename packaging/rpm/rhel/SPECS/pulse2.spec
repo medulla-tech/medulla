@@ -667,7 +667,7 @@ service pulse2-package-server start >/dev/null 2>&1 || :
 %{_sbindir}/pulse2-package-server-register-imaging
 %_mandir/man1/pulse2-package-server.1*
 %_mandir/man1/pulse2-package-server-register-imaging.1.*
-%python2_sitelib/pulse2/package_server
+%python2_sitelib/pulse2/package_server2
 
 #--------------------------------------------------------------------
 

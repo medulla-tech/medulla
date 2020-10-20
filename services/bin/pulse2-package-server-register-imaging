@@ -33,7 +33,7 @@ from twisted.internet import reactor
 
 from mmc.site import mmcconfdir
 from mmc.client import async
-from pulse2.package_server.config import P2PServerCP
+from pulse2.package_server2.config import P2PServerCP
 
 # Return codes
 ERROR_NO_UUID = 1

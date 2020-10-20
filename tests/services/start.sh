@@ -4,7 +4,7 @@ ERROR=0
 ERRORLOG=""
 
 RPCPSERVER=`mktemp`
-cat /usr/lib/python2.*/dist-packages/pulse2/package_server/mirror/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server/mirror_api/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server/package_api_put/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server/package_api_get/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server/scheduler_api/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server/user_package_api/__init__.py > $RPCPSERVER
+cat /usr/lib/python2.*/dist-packages/pulse2/package_server2/mirror/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server2/mirror_api/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server2/package_api_put/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server2/package_api_get/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server2/scheduler_api/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server2/user_package_api/__init__.py > $RPCPSERVER
 
 echo ""
 echo "Statistics of Pulse 2 unittest"

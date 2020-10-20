@@ -32,7 +32,7 @@ import os
 import re
 import json
 import datetime
-from pulse2.package_server.config import P2PServerCP
+from pulse2.package_server2.config import P2PServerCP
 from mmc.site import mmcconfdir
 import sys
 import ConfigParser

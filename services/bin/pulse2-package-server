@@ -34,8 +34,8 @@ import twisted
 import twisted.copyright
 
 from mmc.site import mmcconfdir
-from pulse2.package_server import ThreadLauncher, init_logger_debug, getVersion, getRevision
-from pulse2.package_server.config import P2PServerCP
+from pulse2.package_server2 import ThreadLauncher, init_logger_debug, getVersion, getRevision
+from pulse2.package_server2.config import P2PServerCP
 
 def running(inifile, daemonize, noconsoledebug = True):
     config = P2PServerCP()
