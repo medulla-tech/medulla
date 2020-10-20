@@ -377,7 +377,7 @@ class SrvInventoryserver(Service):
 
 
 class SrvPkgServer(Service):
-    name = 'pulse2-package-server'
+    name = 'pulse-package-server'
 
     def is_enable(self):
         return self.config['package.service.enable']
@@ -1274,7 +1274,7 @@ class SetupApp(object):
     def post_restart(self):
 
         self.is_service_started('mmc-agent')
-        self.is_service_started('pulse2-package-server')
+        self.is_service_started('pulse-package-server')
         time.sleep(10)
 
         # Register imaging server, if necessary

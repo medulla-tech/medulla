@@ -70,12 +70,12 @@ Requires:       mmc-web-pulse2
 Requires:       python-mmc-pulse2
 Requires:       mmc-web-kiosk
 Requires:       python-mmc-kiosk
-Requires:       pulse2-common
+Requires:       pulse-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
 Requires:       pulse2-package-server
 Requires:       pulse2-scheduler
-Requires:       python-pulse2-common-database-dyngroup
+Requires:       python-pulse-common-database-dyngroup
 Requires:       pulse-mmc-web-computers-inventory-backend
 Requires:       pulse-python-mmc-computers-inventory-backend
 Requires:       pulse2-homepage
@@ -91,8 +91,8 @@ base and password policies modules.
 %package -n python-mmc-dyngroup
 Summary:    Dynamic computer group plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-Requires:   python-pulse2-common-database-dyngroup = %version-%release
+Requires:   pulse-common = %version-%release
+Requires:   python-pulse-common-database-dyngroup = %version-%release
 
 %description -n python-mmc-dyngroup
 This package contains the dynamic computer group plugin for the MMC agent. It
@@ -109,7 +109,7 @@ software deployment.
 %package -n     mmc-web-dyngroup
 Summary:        Dynamic computer group plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-dyngroup
@@ -125,7 +125,7 @@ ease massive software deployment.
 %package -n python-mmc-backuppc
 Summary:    Backuppc plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 Requires:   p7zip
 Requires:   python-pyquery
 
@@ -147,7 +147,7 @@ This package contains the backuppc plugin for the MMC agent.
 %package -n python-mmc-connection-manager
 Summary:    Connection Manager plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 Requires:   p7zip
 Requires:   python-pyquery
 
@@ -168,7 +168,7 @@ This package contains the connection manager plugin for the MMC agent.
 %package -n     mmc-web-backuppc
 Summary:        Backuppc plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-backuppc
@@ -205,11 +205,11 @@ service pulse2-launchers stop >/dev/null 2>&1 || :
 %package -n python-mmc-glpi
 Summary:    GLPI plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
 Requires:   python-sqlalchemy >= 0.6.3
 Requires:   MySQL-python >= 1.2.1
-Requires:   python-pulse2-common = %version-%release
+Requires:   python-pulse-common = %version-%release
 
 Provides:   pulse-python-mmc-computers-inventory-backend = %version-%release
 
@@ -229,7 +229,7 @@ inventory plugin for the MMC agent.
 %package -n     mmc-web-glpi
 Summary:        GLPI plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 Provides:       pulse-mmc-web-computers-inventory-backend = %version-%release
@@ -247,9 +247,9 @@ allows one to query a GLPI database to display computer inventory.
 Summary:    Pulse 2 MSC plugin for MMC agent
 Group:      System/Servers
 Requires:   python-libs
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
-Requires:   python-pulse2-common-database-msc = %version-%release
+Requires:   python-pulse-common-database-msc = %version-%release
 Requires:   python-xlwt
 
 %description -n python-mmc-msc
@@ -269,7 +269,7 @@ process.
 %package -n     mmc-web-msc
 Summary:        MSC plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-msc
@@ -285,8 +285,8 @@ deployment process.
 %package -n python-mmc-imaging
 Summary:    Imaging plugin for MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-Requires:   python-pulse2-common-database-imaging = %version-%release
+Requires:   pulse-common = %version-%release
+Requires:   python-pulse-common-database-imaging = %version-%release
 # Needed for ImportError: No module named tasks
 Requires:   python-mmc-core >= 3.1.1
 Requires:   python-ipaddr
@@ -302,7 +302,7 @@ This package contains the imaging plugin for MMC agent.
 %package -n	mmc-web-imaging
 Summary:	Imaging plugin for the MMC web interface
 Group:		System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       python-mmc-base >= %mmc_version
 
 %description -n mmc-web-imaging
@@ -317,8 +317,8 @@ This package contains the imaging plugin for the MMC web interface.
 %package -n python-mmc-support
 Summary:    Imaging plugin for MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-Requires:   python-pulse2-common-database-imaging = %version-%release
+Requires:   pulse-common = %version-%release
+Requires:   python-pulse-common-database-imaging = %version-%release
 # Needed for ImportError: No module named tasks
 Requires:   python-mmc-core >= 3.1.1
 
@@ -334,7 +334,7 @@ This package contains the imaging plugin for MMC agent.
 %package -n     mmc-web-support
 Summary:        Imaging plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       python-mmc-base >= %mmc_version
 
 %description -n mmc-web-support
@@ -349,9 +349,9 @@ This package contains the imaging plugin for the MMC web interface.
 %package -n python-mmc-inventory
 Summary:    Inventory plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
-Requires:   python-pulse2-common-database-inventory = %version-%release
+Requires:   python-pulse-common-database-inventory = %version-%release
 Requires:   python-magic
 Requires:   python-inotify
 
@@ -372,9 +372,9 @@ This package contains the inventory plugin for the MMC agent
 %package -n pulse2-register-pxe
 Summary:    Pulse 2 Register PXE Servic/
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
-Requires:   python-pulse2-common-database-inventory = %version-%release
+Requires:   python-pulse-common-database-inventory = %version-%release
 Requires:   python-magic
 Requires:   python-inotify
 
@@ -393,7 +393,7 @@ Pulse 2 Register PXE Service
 %package -n     mmc-web-inventory
 Summary:        Inventory plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 Provides:       pulse-mmc-web-computers-inventory-backend = %version-%release
@@ -409,7 +409,7 @@ This package contains the inventory plugin for the MMC web interface.
 %package -n python-mmc-pkgs
 Summary:    Pkgs plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 Requires:   python2-requests
 Requires:   python2-unidecode
@@ -427,7 +427,7 @@ This package contains the pkgs plugin for the MMC agent.
 %package -n python-mmc-kiosk
 Summary:    Kiosk plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 
 %description -n python-mmc-kiosk
 This package contains the pkgs plugin for the MMC agent.
@@ -442,7 +442,7 @@ This package contains the pkgs plugin for the MMC agent.
 %package -n python-mmc-xmppmaster
 Summary:    Xmppmaster plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 Requires:   python-GeoIP
 Requires:   GeoIP-data
@@ -481,7 +481,7 @@ fi
 %package -n python-mmc-guacamole
 Summary:    Guacamole plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 
 %description -n python-mmc-guacamole
@@ -497,7 +497,7 @@ This package contains the guacamole plugin for the MMC agent.
 %package -n     mmc-web-pkgs
 Summary:        Package management plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 
@@ -513,7 +513,7 @@ interface.
 %package -n     mmc-web-kiosk
 Summary:        Kiosk plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 
@@ -529,12 +529,12 @@ interface.
 %package -n python-mmc-pulse2
 Summary:    Pulse 2 MMC agent interface plugins
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   pulse-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
 Requires:   python-mmc-msc = %version-%release
 Requires:   python-mmc-dyngroup = %version-%release
 Requires:   python-mmc-pkgs = %version-%release
-Requires:   python-pulse2-common = %version-%release
+Requires:   python-pulse-common = %version-%release
 Requires:   python-sqlalchemy >= 0.6.3
 Requires:   pulse-python-mmc-computers-inventory-backend = %version-%release
 Requires:   python-service-identity
@@ -551,7 +551,7 @@ This package will install all the Pulse 2 MMC agent interface plugins
 %package -n     mmc-web-pulse2
 Summary:        Base plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 Requires:       mmc-web-imaging
 
@@ -563,7 +563,7 @@ This package contains the base plugin for the MMC web interface.
 
 #--------------------------------------------------------------------
 
-%package -n     pulse2-common
+%package -n     pulse-common
 Summary:        Pulse2 common files
 Group:          System/Servers
 Requires:       p7zip
@@ -579,10 +579,10 @@ Requires:       python-mmc-connection-manager
 
 Provides:       /usr/sbin/pulse2-debug
 
-%description -n pulse2-common
+%description -n pulse-common
 This package contains Pulse 2 common files like documentation.
 
-%files -n pulse2-common
+%files -n pulse-common
 %{_sbindir}/pulse2-setup
 %{_sbindir}/pulse2-load-defaults
 %{_sbindir}/pulse2-dbupdate
@@ -606,9 +606,9 @@ This package contains Pulse 2 common files like documentation.
 %package -n     pulse2-inventory-server
 Summary:        Pulse 2 inventory server
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common = %version-%release
-Requires:       python-pulse2-common-database-inventory = %version-%release
+Requires:       pulse-common = %version-%release
+Requires:       python-pulse-common = %version-%release
+Requires:       python-pulse-common-database-inventory = %version-%release
 Requires:       python-mmc-base >= %mmc_version
 Requires:       pyOpenSSL
 
@@ -638,8 +638,8 @@ service pulse2-inventory-server stop >/dev/null 2>&1 || :
 %package -n     pulse2-package-server
 Summary:        Pulse 2 package server
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
+Requires:       python-pulse-common = %version-%release
 Requires:       python-mmc-core
 Requires:       genisoimage
 Requires:       pyOpenSSL
@@ -708,74 +708,74 @@ service pulse2-scheduler stop >/dev/null 2>&1 || :
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database-dyngroup
+%package -n     python-pulse-common-database-dyngroup
 Summary:        Pulse 2 common dynamic groups database files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common-database = %version-%release
+Requires:       pulse-common = %version-%release
+Requires:       python-pulse-common-database = %version-%release
 
-%description -n python-pulse2-common-database-dyngroup
+%description -n python-pulse-common-database-dyngroup
 This package contains Pulse 2 common dynamic groups database files.
 
-%files -n python-pulse2-common-database-dyngroup
+%files -n python-pulse-common-database-dyngroup
 %python2_sitelib/pulse2/database/dyngroup
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database-imaging
+%package -n     python-pulse-common-database-imaging
 Summary:        Pulse 2 common imaging database files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common-database = %version-%release
+Requires:       pulse-common = %version-%release
+Requires:       python-pulse-common-database = %version-%release
 
-%description -n python-pulse2-common-database-imaging
+%description -n python-pulse-common-database-imaging
 This package contains Pulse 2 common imaging database files
 
-%files -n python-pulse2-common-database-imaging
+%files -n python-pulse-common-database-imaging
 %python2_sitelib/pulse2/database/imaging
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database-inventory
+%package -n     python-pulse-common-database-inventory
 Summary:        Pulse 2 common inventory database files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common-database = %version-%release
+Requires:       pulse-common = %version-%release
+Requires:       python-pulse-common-database = %version-%release
 
-%description -n python-pulse2-common-database-inventory
+%description -n python-pulse-common-database-inventory
 This package contains Pulse 2 common inventory database files
 
-%files -n python-pulse2-common-database-inventory
+%files -n python-pulse-common-database-inventory
 %python2_sitelib/pulse2/database/inventory
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database-msc
+%package -n     python-pulse-common-database-msc
 Summary:        Pulse 2 common MSC database files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common-database = %version-%release
+Requires:       pulse-common = %version-%release
+Requires:       python-pulse-common-database = %version-%release
 
-%description -n python-pulse2-common-database-msc
+%description -n python-pulse-common-database-msc
 This package contains Pulse 2 common MSC database files
 
-%files -n python-pulse2-common-database-msc
+%files -n python-pulse-common-database-msc
 %python2_sitelib/pulse2/database/msc
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database
+%package -n     python-pulse-common-database
 Summary:        Pulse 2 common database files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
+Requires:       python-pulse-common = %version-%release
 Requires:       python-sqlalchemy >= 0.6.3
 Requires:       MySQL-python
 
-%description -n python-pulse2-common-database
+%description -n python-pulse-common-database
 This package contains Pulse 2 common database files.
 
-%files -n python-pulse2-common-database
+%files -n python-pulse-common-database
 %python2_sitelib/pulse2/database/__init__.py
 %python2_sitelib/pulse2/database/pulse/__init__.py
 %python2_sitelib/pulse2/database/pulse/config.py
@@ -785,7 +785,7 @@ This package contains Pulse 2 common database files.
 %package -n     pulse2-uuid-resolver
 Summary:        Helper to resolve Pulse's UUID into IP address
 Group:          System/Servers
-Requires:       python-pulse2-common = %version-%release
+Requires:       python-pulse-common = %version-%release
 
 %description -n pulse2-uuid-resolver
 This package contains a helper to resolve Pulse's UUID into IP address.
@@ -799,7 +799,7 @@ This package contains a helper to resolve Pulse's UUID into IP address.
 %package -n     pulse2-dlp-server
 Summary:        Pulse 2 Download provider service
 Group:          System/Servers
-Requires:       python-pulse2-common = %version-%release
+Requires:       python-pulse-common = %version-%release
 Requires:       python-cherrypy
 
 %description -n pulse2-dlp-server
@@ -823,23 +823,23 @@ service pulse2-dlp-server stop >/dev/null 2>&1 || :
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common
+%package -n     python-pulse-common
 Summary:        Pulse 2 common files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       pulse-common = %version-%release
 Requires:       python-twisted-web >= 2.4.0
 
 Provides:       python-pulse2-meta < 1.5.0
 Obsoletes:      python-pulse2-meta = %version-%release
 
-Provides:       pulse2-common-client-apis < 1.5.0
-Obsoletes:      pulse2-common-client-apis = %version-%release
+Provides:       pulse-common-client-apis < 1.5.0
+Obsoletes:      pulse-common-client-apis = %version-%release
 
 
-%description -n python-pulse2-common
+%description -n python-pulse-common
 This package contains Pulse 2 common files.
 
-%files -n python-pulse2-common
+%files -n python-pulse-common
 %python2_sitelib/pulse2/apis
 %python2_sitelib/pulse2/imaging
 %python2_sitelib/pulse2/managers
