@@ -1,0 +1,12 @@
+#!/bin/sh
+# postinst script for #PACKAGE#
+#
+# see: dh_installdeb(1)
+
+set -e
+
+service php7.0-fpm restart
+
+#DEBHELPER#
+
+exit 0
