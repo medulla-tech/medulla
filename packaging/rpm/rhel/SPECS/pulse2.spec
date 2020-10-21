@@ -552,6 +552,38 @@ This package contains the base plugin for the MMC web interface.
 
 #--------------------------------------------------------------------
 
+%package -n     pulse-common-bin
+Summary:        Pulse2 common files
+Group:          System/Servers
+Requires:       p7zip
+Requires:       python-configobj
+Requires:       curl
+Requires:       nsis
+Requires:       bind-utils
+Requires:       python-psutil >= 0.6.1
+Requires:       python-netaddr
+Requires:       python-netifaces
+
+Requires:       python-mmc-connection-manager
+
+Provides:       /usr/sbin/pulse2-debug
+
+Conflicts:      pulse-common < 4.6.3-1
+
+%description -n pulse-common-bin
+This package contains Pulse 2 common files like documentation.
+
+%files -n pulse-common-bin
+%{_sbindir}/pulse2-setup
+%{_sbindir}/pulse2-load-defaults
+%{_sbindir}/pulse2-dbupdate
+%{_sbindir}/pulse2-debug
+%{_sbindir}/pulse2-collect-info
+%{_sbindir}/restart-pulse-services
+%{_sbindir}/pulse2-packageparser.py
+
+#--------------------------------------------------------------------
+
 %package -n     pulse-common
 Summary:        Pulse2 common files
 Group:          System/Servers
@@ -579,6 +611,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-collect-info
 %{_sbindir}/restart-pulse-services
 %{_sbindir}/pulse2-packageparser.py
+
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
