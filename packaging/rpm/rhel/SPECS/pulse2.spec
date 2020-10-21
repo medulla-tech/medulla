@@ -604,14 +604,6 @@ Provides:       /usr/sbin/pulse2-debug
 This package contains Pulse 2 common files like documentation.
 
 %files -n pulse-common
-%{_sbindir}/pulse2-setup
-%{_sbindir}/pulse2-load-defaults
-%{_sbindir}/pulse2-dbupdate
-%{_sbindir}/pulse2-debug
-%{_sbindir}/pulse2-collect-info
-%{_sbindir}/restart-pulse-services
-%{_sbindir}/pulse2-packageparser.py
-
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
