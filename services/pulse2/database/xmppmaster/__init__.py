@@ -1566,6 +1566,48 @@ class XmppMasterDatabase(DatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
+    def getMachinefromuuidsetup(self, session, uuid_serial_machine, agenttype=None):
+        """ information machine"""
+        if agenttype is None:
+            machine = session.query(Machines).\
+                filter(Machines.uuid_serial_machine.like(uuid_serial_machine) ).first()
+        elif agenttype=="machine":
+            machine = session.query(Machines).\
+                filter(and_(Machines.uuid_serial_machine.like(uuid_serial_machine),
+                            Machines.agenttype.like("machine")) ).first()
+        elif agenttype=="relayserver":
+            machine = session.query(Machines).\
+                filter(and_(Machines.uuid_serial_machine.like(uuid_serial_machine),
+                            Machines.agenttype.like("relayserver")) ).first()
+        session.commit()
+        session.flush()
+        result = {}
+        if machine:
+            result = {  "id" : machine.id,
+                        "jid" : machine.jid,
+                        "platform" : machine.platform,
+                        "archi" : machine.archi,
+                        "hostname" : machine.hostname,
+                        "uuid_inventorymachine" : machine.uuid_inventorymachine,
+                        "ip_xmpp" : machine.ip_xmpp,
+                        "ippublic" : machine.ippublic,
+                        "macaddress" : machine.macaddress,
+                        "subnetxmpp" : machine.subnetxmpp,
+                        "agenttype" : machine.agenttype,
+                        "classutil" : machine.classutil,
+                        "groupdeploy" : machine.groupdeploy,
+                        "urlguacamole" : machine.urlguacamole,
+                        "picklekeypublic" : machine.picklekeypublic,
+                        'ad_ou_user': machine.ad_ou_user,
+                        'ad_ou_machine': machine.ad_ou_machine,
+                        'kiosk_presence': machine.kiosk_presence,
+                        'lastuser': machine.lastuser,
+                        'keysyncthing' : machine.keysyncthing,
+                        'enabled' : machine.enabled,
+                        'uuid_serial_machine' : machine.uuid_serial_machine}
+        return result
+
+    @DatabaseHelper._sessionm
     def addPresenceMachine(self,
                            session,
                            jid,
@@ -1590,8 +1632,12 @@ class XmppMasterDatabase(DatabaseHelper):
                            uuid_serial_machine=""):
         msg ="Create Machine"
         pe = -1
-        machineforupdate = self.getMachinefrommacadress(macaddress,
-                                                        agenttype=agenttype)
+        if uuid_serial_machine != "":
+            machineforupdate = self.getMachinefromuuidsetup(uuid_serial_machine,
+                                                            agenttype=agenttype)
+        else:
+            machineforupdate = self.getMachinefrommacadress(macaddress,
+                                                            agenttype=agenttype)
         if machineforupdate:
             pe = machineforupdate['id']
         if pe != -1:
@@ -1608,12 +1654,12 @@ class XmppMasterDatabase(DatabaseHelper):
             else:
                 uuidnew = str(uuid_inventorymachine)
             maxuuid=max([len(uuidold), len(uuidnew)])
-            msg ="Update Machine %8s\n" \
+            msg ="Update Machine %8s (%s)\n" \
                 "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|\n" \
                 "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|\n" \
                 "by\n" \
                 "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|"%(
-                    machineforupdate['id'],
+                    machineforupdate['id'], uuid_serial_machine,
                     maxlenhostname, "hostname",
                     maxlenjid, "jid",
                     maxmacadress, "macaddress",
@@ -1664,6 +1710,29 @@ class XmppMasterDatabase(DatabaseHelper):
             return pe, msg
         else:
             #create
+            lenhostname = len(hostname)
+            lenjid = len(jid)
+            lenmacadress = len(macaddress)
+            lenip_xmpp = len(ip_xmpp)
+            lensubnetxmpp = len(subnetxmpp)
+            lenonoff = 6
+            msg ="creat Machine (%s)\n" \
+                "|%*s|%*s|%*s|%*s|%*s|%*s|\n" \
+                "|%*s|%*s|%*s|%*s|%*s|%*s|\n" % (
+                    uuid_serial_machine,
+                    lenhostname, "hostname",
+                    lenjid, "jid",
+                    lenmacadress, "macaddress",
+                    lenip_xmpp, "ip_xmpp",
+                    lensubnetxmpp, "subnetxmpp",
+                    lenonoff, "On/OFF",
+                    lenhostname, hostname,
+                    lenjid, jid,
+                    lenmacadress, macaddress,
+                    lenip_xmpp, ip_xmpp,
+                    lensubnetxmpp, subnetxmpp,
+                    lenonoff, "1")
+            self.logger.debug(msg)
             try:
                 new_machine = Machines()
                 new_machine.jid = jid
@@ -1801,6 +1870,9 @@ class XmppMasterDatabase(DatabaseHelper):
                                 session,
                                 old_id_inventory,
                                 new_id_inventory):
+        if old_id_inventory is None :
+            logging.getLogger().warning("Organization AD id inventory is not exits")
+            return -1
         try:
             session.query(Organization_ad).\
                 filter( Organization_ad.id_inventory ==  self.uuidtoid(old_id_inventory)).\
@@ -3050,7 +3122,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return idresult
 
     @DatabaseHelper._sessionm
-    def adduser(self, 
+    def adduser(self,
                 session,
                 namesession,
                 hostname,

@@ -3975,6 +3975,64 @@ class Glpi92(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def _machineobject(self, ret):
+        """ result view glpi_computers_pulse """
+        if ret:
+            try:
+                return {'id' : ret.id,
+                        'entities_id': ret.entities_id,
+                        'name': ret.name,
+                        'serial': ret.serial,
+                        'otherserial': ret.otherserial,
+                        'contact': ret.contact,
+                        'contact_num': ret.contact_num,
+                        'users_id_tech': ret.users_id_tech,
+                        'groups_id_tech': ret.groups_id_tech,
+                        'comment': ret.comment,
+                        'date_mod': ret.date_mod,
+                        'autoupdatesystems_id': ret.autoupdatesystems_id,
+                        'locations_id': ret.locations_id ,
+                        'domains_id': ret.domains_id,
+                        'networks_id': ret.networks_id,
+                        'computermodels_id': ret.computermodels_id,
+                        'computertypes_id': ret.computertypes_id,
+                        'is_template': ret.is_template,
+                        'template_name': ret.template_name,
+                        'manufacturers_id': ret.manufacturers_id,
+                        'is_deleted': ret.is_deleted,
+                        'is_dynamic': ret.is_dynamic,
+                        'users_id': ret.users_id,
+                        'groups_id': ret.groups_id,
+                        'states_id': ret.states_id,
+                        'ticket_tco': ret.ticket_tco,
+                        'uuid': ret.uuid,
+                        'date_creation': ret.date_creation,
+                        'is_recursive': ret.is_recursive,
+                        'operatingsystems_id': ret.operatingsystems_id,
+                        'operatingsystemversions_id': ret.operatingsystemversions_id,
+                        'operatingsystemservicepacks_id': ret.operatingsystemservicepacks_id,
+                        'operatingsystemarchitectures_id': ret.operatingsystemarchitectures_id,
+                        'license_number': ret.license_number,
+                        'license_id': ret.license_id,
+                        'operatingsystemkernelversions_id': ret.operatingsystemkernelversions_id}
+            except Exception:
+                logger.error("\n%s" % (traceback.format_exc()))
+        return {}
+
+    def getMachineBySerial(self, serial):
+        """ @return: all computers that have this mac address """
+        session = create_session()
+        ret = session.query(Machine).filter(Machine.serial.like(serial)).first()
+        session.close()
+        return self._machineobject(ret)
+
+    def getMachineByUuidSetup(self, uuidsetupmachine):
+        """ @return: all computers that have this uuid setup machine """
+        session = create_session()
+        ret = session.query(Machine).filter(Machine.uuid.like(uuidsetupmachine)).first()
+        session.close()
+        return self._machineobject(ret)
+
     def getMachineByMacAddress(self, ctx, filt):
         """ @return: all computers that have this mac address """
         session = create_session()
