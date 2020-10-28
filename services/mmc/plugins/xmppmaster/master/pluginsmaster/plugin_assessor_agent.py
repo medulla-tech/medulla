@@ -327,6 +327,9 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                 logger.info("rule subnet : Test if network are identical")
             subnetexist = False
             for z in data['information']['listipinfo']:
+                if z['ipaddress'] is None or z['mask'] is None:
+                    continue
+
                 result1 = XmppMasterDatabase().algorulesubnet(subnetnetwork(z['ipaddress'],
                                                                             z['mask']),
                                                                 data['classutil'])
