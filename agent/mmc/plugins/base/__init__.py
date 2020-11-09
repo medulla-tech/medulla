@@ -149,7 +149,7 @@ def activate():
     for ou in ous:
         head, path = ou.split(",", 1)
         ouName = head.split("=")[1]
-        ldapObj.addOu(ouName, path)
+        ldapObj.addOu(bytes(ouName), path)
 
     # Create the default user group
     if not ldapObj.existGroup(ldapObj.defaultUserGroup):
@@ -756,7 +756,7 @@ class LdapUserGroupControl:
         self.l = LDAPConnection(self.config).get()
 
         # Any error will throw a ldap.LDAPError exception
-        self.l.simple_bind_s(self.config.username, self.config.password)
+        self.l.simple_bind_s(bytes(self.config.username), self.config.password)
 
     def runHook(self, hookName, uid = None, password = None):
         """
@@ -1692,7 +1692,7 @@ class LdapUserGroupControl:
         if not basedn:
             basedn = self.baseDN
         result_set = []
-        ldap_result_id = self.l.search(basedn, scope, searchFilter, attrs)
+        ldap_result_id = self.l.search(bytes(basedn), scope, searchFilter, attrs)
         while 1:
             try:
                 result_type, result_data = self.l.result(ldap_result_id, 0)
@@ -2083,7 +2083,7 @@ class LdapUserGroupControl:
         attributes=[ (k,v) for k,v in addr_info.items() ]
 
         try:
-            self.l.add_s(addrdn, attributes)
+            self.l.add_s(bytes(addrdn), attributes)
             self.logger.info("Created OU " + addrdn)
         except ldap.ALREADY_EXISTS:
             pass
