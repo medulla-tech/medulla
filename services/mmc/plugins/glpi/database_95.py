@@ -446,8 +446,8 @@ class Glpi95(DyngroupDatabaseHelper):
         mapper(Software, self.software)
 
         # glpi_inst_software
-        self.inst_software = Table("glpi_computers_softwareversions", self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+        self.inst_software = Table("glpi_items_softwareversions", self.metadata,
+            Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             Column('softwareversions_id', Integer, ForeignKey('glpi_softwareversions.id')),
             autoload = True)
         mapper(InstSoftware, self.inst_software)
