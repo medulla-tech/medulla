@@ -36,7 +36,7 @@ from mmc.plugins.glpi.database_91 import Glpi91
 from mmc.plugins.glpi.database_92 import Glpi92
 from mmc.plugins.glpi.database_93 import Glpi93
 from mmc.plugins.glpi.database_94 import Glpi94
-from mmc.plugins.glpi.database_94 import Glpi95
+from mmc.plugins.glpi.database_95 import Glpi95
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 

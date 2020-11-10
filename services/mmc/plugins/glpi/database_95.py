@@ -120,7 +120,7 @@ class Glpi95(DyngroupDatabaseHelper):
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
-        5 self.db.execute(u'SELECT "\xe9"')
+            self.db.execute(u'SELECT "\xe9"')
             setattr(Glpi95, "decode", decode_utf8)
             setattr(Glpi95, "encode", encode_utf8)
         except:
