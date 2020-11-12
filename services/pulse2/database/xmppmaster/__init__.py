@@ -7216,3 +7216,94 @@ where agenttype="machine" and groupdeploy in (
             return "success"
         except:
             return "failure"
+
+
+    @DatabaseHelper._sessionm
+    def get_ars_group_in_list_clusterid(self,
+                                        session,
+                                        clusterid,
+                                        enabled = None):
+        """ cherche les ars en appartenant a 1 ou plusieurs cluster.
+            params : clusterid id d'un cluster ou [list id de clusteur]
+                     enable  prend ou pas en compte les ars enable.
+        """
+        setsearch = clusterid
+        if isinstance(clusterid, list):
+            # liste de clusters
+            listidcluster = [x for x in set(clusterid)]
+            if listidcluster:
+                setsearch=("%s"%listidcluster)[1:-1]
+            else:
+                raise
+        searchclusterars = "(%s)"%setsearch
+
+        sql ="""SELECT
+                    relayserver.id AS ars_id,
+                    relayserver.urlguacamole AS urlguacamole,
+                    relayserver.subnet AS subnet,
+                    relayserver.nameserver AS nameserver,
+                    relayserver.ipserver AS ipserver,
+                    relayserver.ipconnection AS ipconnection,
+                    relayserver.port AS port,
+                    relayserver.portconnection AS portconnection,
+                    relayserver.mask AS mask,
+                    relayserver.jid AS jid,
+                    relayserver.longitude AS longitude,
+                    relayserver.latitude AS latitude,
+                    relayserver.enabled AS enabled,
+                    relayserver.mandatory AS mandatory,
+                    relayserver.switchonoff AS switchonoff,
+                    relayserver.classutil AS classutil,
+                    relayserver.groupdeploy AS groupdeploy,
+                    relayserver.package_server_ip AS package_server_ip,
+                    relayserver.package_server_port AS package_server_port,
+                    relayserver.moderelayserver AS moderelayserver,
+                    relayserver.keysyncthing AS keysyncthing,
+                    relayserver.syncthing_port AS syncthing_port,
+                    has_cluster_ars.id_cluster AS id_cluster,
+                    cluster_ars.name AS name_cluster
+                FROM
+                    xmppmaster.relayserver
+                        INNER JOIN
+                    xmppmaster.has_cluster_ars ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
+                        INNER JOIN
+                    xmppmaster.cluster_ars ON xmppmaster.cluster_ars.id = xmppmaster.has_cluster_ars.id_cluster
+                WHERE
+                    id_cluster IN %s """ % (searchclusterars)
+        if enabled is not None:
+            sql +="""AND
+                            `relayserver`.`enabled` = %s""" % enabled
+        sql +=";"
+        logging.getLogger().error(sql)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        resultlist=[]
+        for t in result:
+            tmpdict={ "ars_id": t[0],
+                "urlguacamole": t[1],
+                "subnet": t[2],
+                "nameserver": t[3],
+                "ipserver": t[4],
+                "ipconnection": t[5],
+                "port": t[6],
+                "portconnection": t[7],
+                "mask": t[8],
+                "jid": t[9],
+                "longitude": t[10],
+                "latitude": t[11],
+                "enabled": t[12],
+                "mandatory": t[13],
+                "switchonoff": t[14],
+                "classutil": t[15],
+                "groupdeploy": t[16],
+                "package_server_ip": t[17],
+                "package_server_port": t[18],
+                "moderelayserver": t[19],
+                "keysyncthing": t[20],
+                "syncthing_port": t[21],
+                "id_cluster": t[22],
+                "name_cluster": t[23]}
+            resultlist.append(tmpdict)
+        logging.getLogger().error(resultlist)
+        return resultlist
