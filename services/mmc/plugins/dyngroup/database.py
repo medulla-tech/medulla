@@ -456,6 +456,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         the owner will be the ctx
         a share will be created for the owner (needed to set the visibility)
         """
+        if parent_id is not None and parent_id == '':
+            parent_id = 0
         root_context = SecurityContext()
         root_context.userid = 'root'
 

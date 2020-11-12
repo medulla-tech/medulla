@@ -1,12 +1,10 @@
 <?php
-
 /*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2015-2020 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.siveo.net
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,21 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * file : xmppmaster/xmppmaster/monitoring/ajaxmonconfig.php
  */
-
-function onlyValues($n) {
-    return array($n['uuid'], $n['hostname']);
-}
-
-function prettyOctetDisplay($num, $base = 1024, $unit = '') {
-    $num = $num + 0;
-    if ($unit == '')
-        $unit = _T('Bytes', 'msc');
-    foreach (array('', 'k', 'M', 'G', 'T', 'P') as $i) {
-        if ($num < $base)
-            return sprintf(_T('%3.1f %s%s', 'msc'), $num, $i, $unit);
-        $num /= $base;
-    }
-}
-
+  if(isset($_POST['save'], $_POST['path'], $_POST['datas'])){
+    require_once("modules/xmppmaster/includes/xmlrpc.php");
+    xmlrpc_write_content($_POST['path'], htmlentities($_POST['datas']));
+  }
 ?>

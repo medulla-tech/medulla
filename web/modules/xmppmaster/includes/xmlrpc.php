@@ -547,6 +547,10 @@ function xmlrpc_getPanelImage($hostname, $panel_title, $from, $to){
   return xmlCall("xmppmaster.getPanelImage", [$hostname, $panel_title, $from, $to]);
 }
 
+function xmlrpc_getPanelGraph($hostname, $panel_title, $from, $to){
+  return xmlCall("xmppmaster.getPanelGraph", [$hostname, $panel_title, $from, $to]);
+}
+
 function xmlrpc_getLastOnlineStatus($jid){
   return xmlCall("xmppmaster.getLastOnlineStatus", [$jid]);
 }
@@ -561,5 +565,29 @@ function xmlrpc_get_mon_events($start=-1, $maxperpage=-1, $filter=""){
 
 function xmlrpc_acquit_mon_event($id, $user){
   return xmlCall("xmppmaster.acquit_mon_event", [$id, $user]);
+}
+
+function xmlrpc_create_dir($path){
+  return xmlCall("xmppmaster.create_dir", [$path]);
+}
+
+function xmlrpc_dir_exists($path){
+  return xmlCall("xmppmaster.dir_exists", [$path]);
+}
+
+function xmlrpc_create_file($path){
+  return xmlCall("xmppmaster.create_file", [$path]);
+}
+
+function xmlrpc_file_exists($path){
+  return xmlCall("xmppmaster.file_exists", [$path]);
+}
+
+function xmlrpc_get_content($path){
+  return xmlCall("xmppmaster.get_content", [$path]);
+}
+
+function xmlrpc_write_content($path, $datas){
+  return xmlCall("xmppmaster.write_content", [$path, $datas, "w"]);
 }
 ?>

@@ -2946,7 +2946,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def addPresenceNetwork(self, session, macaddress, ipaddress, broadcast, gateway, mask, mac, id_machine):
-        self.delNetwork_for_machines_id(id_machine)
+        #self.delNetwork_for_machines_id(id_machine)
         try:
             new_network = Network()
             new_network.macaddress=macaddress
@@ -3485,8 +3485,8 @@ class XmppMasterDatabase(DatabaseHelper):
         ret['lentotal'] = lentaillerequette#[0]
         ret['total_of_rows'] = lenrequest[0][0]
         for linedeploy in result:
-            macaddress = ''.join(linedeploy.macadress.split(':'))
-            if linedeploy.host.split("/")[-1] == macaddress:
+            macaddress = ''.join(linedeploy.macadress.split(':')).split("||")
+            if linedeploy.host.split("/")[-1] in macaddress:
                 hostname = linedeploy.host.split(".")[0]
             else:
                 hostname = linedeploy.host.split("/")[-1]
@@ -3581,8 +3581,8 @@ class XmppMasterDatabase(DatabaseHelper):
         #ret['lentotal'] = nbfilter
         ret['lentotal'] = count[0][0]
         for linedeploy in result:
-            macaddress = ''.join(linedeploy.macadress.split(':'))
-            if linedeploy.host.split("/")[-1] == macaddress:
+            macaddress = ''.join(linedeploy.macadress.split(':')).split("||")
+            if linedeploy.host.split("/")[-1] in macaddress:
                 hostname = linedeploy.host.split(".")[0]
             else:
                 hostname = linedeploy.host.split("/")[-1]
@@ -4402,6 +4402,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def updateMachineidinventory(self, session, id_machineinventory, idmachine):
+        updatedb=-1
         try:
             sql = """UPDATE `machines`
                     SET
@@ -5718,6 +5719,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def updateMachinejidGuacamoleGroupdeploy(self, session, jid, urlguacamole, groupdeploy, idmachine):
+        updatedb=-1
         try:
             sql = """UPDATE machines
                     SET

@@ -29,7 +29,7 @@ import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from .master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
-
+import hashlib
 import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -944,6 +944,12 @@ def getPanelImage(hostname, panel_title, from_timestamp, to_timestamp):
                                                          to_timestamp)
 
 
+def getPanelGraph(hostname, panel_title, from_timestamp, to_timestamp):
+ return manage_grafana(hostname).grafanaGetPanelGraph(panel_title,
+                                                      from_timestamp,
+                                                      to_timestamp)
+
+
 def getLastOnlineStatus(jid):
     result = XmppMasterDatabase().last_event_presence_xmpp(jid)
     return result[0]['status']
@@ -957,3 +963,49 @@ def get_mon_events(start, maxperpage, filter):
 def acquit_mon_event(id, user):
     result = XmppMasterDatabase().acquit_mon_event(id, user)
     return result
+
+def dir_exists(path):
+    return os.path.isdir(path)
+
+def create_dir(path):
+    try:
+        os.makedirs(path, 0755)
+        return True
+    except OSError:
+        return False
+
+def file_exists(path):
+    return os.path.isfile(path)
+
+def create_file(path):
+    with open(path, 'a') as new_file:
+        new_file.write("")
+        new_file.close()
+
+def get_content(path):
+    content = ""
+    if path != "" and file_exists(path):
+        with open(path, 'r') as file:
+            content = file.read()
+            file.close()
+    return content
+
+def write_content(path, datas, mode="w"):
+    content = ""
+    if mode not in ["a", "w"]:
+        mode = "w"
+
+    olddatas = get_content(path)
+
+    md5sum_old = hashlib.md5(olddatas).hexdigest()
+    md5sum_new = hashlib.md5(datas).hexdigest()
+
+    if path != "" and file_exists(path):
+        try:
+            with open(path, mode) as file:
+                if md5sum_old != md5sum_new:
+                    content = file.write(datas)
+                file.close()
+                return True
+        except:
+            return False

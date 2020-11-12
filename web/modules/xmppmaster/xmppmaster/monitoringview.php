@@ -22,6 +22,18 @@
  * file : xmppmaster/xmppmaster/monitoringview.php
  */
 ?>
+
+
+<style type='text/css'>
+iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    }
+</style>
 <?
     require("modules/base/computers/localSidebar.php");
     require("graph/navbar.inc.php");
@@ -70,13 +82,12 @@
                       $debut_du_mois,
                       $debut_le_debut_3_mois];
     */
-
-    $array_timefrom=[ time() - (24 * 60 * 60),          // day 24h
-                      time() - (7 * 24 * 60 * 60),      // week 7 jour
-                      time() - (31 * 24 * 60 * 60),     // mois considere 31 jour.
-                      time() - (3 * 31 * 24 * 60 * 60)]; // considere 63 jour
-
-
+    $to = time();
+    $array_timefrom=[ $to - (24 * 60 * 60),          // day 24h
+                      $to - (7 * 24 * 60 * 60),      // week 7 jour
+                      $to - (31 * 24 * 60 * 60),     // mois considere 31 jour.
+                      $to - (3 * 31 * 24 * 60 * 60)]; // considere 63 jour
+    $oneyear = $to - (60 * 60 * 24 * 365);
 
     $params= array();
     $array_col_Monitoring_item = array();
@@ -86,7 +97,7 @@
                  array(_T("Graph for one week",     "xmppmaster"),_T("1 week",   "xmppmaster")),
                  array(_T("Graph for one month",    "xmppmaster"),_T("1 month",  "xmppmaster")),
                  array(_T("Graph for three months", "xmppmaster"),_T("3 months", "xmppmaster"))];
-    $to = time();
+
 
     foreach($panels_list as $val){
         $array_col_Monitoring_item[]= $val['title'];
@@ -100,6 +111,7 @@
         }
 
         $arrayurl = array();
+        $arrayurlpage = array();
         foreach($array_timefrom as $index => $from){
             $url = xmlrpc_getPanelImage(strtolower($hostname), $val['title'], $from, $to);
             $arrayurl[]="<a class='showgraph' title='".
@@ -108,15 +120,21 @@
                         $arraytitle[$index][1].
                         "</a>";
         }
+        $urlpage = xmlrpc_getPanelGraph(strtolower($hostname), $val['title'], $oneyear, $to);
+        $arrayurl[]="<a class='showgraph1' title='".
+                        _T("Panel Graph for one year","xmppmaster").
+                        "' href='".$urlpage."'>".
+                        _T("custom","xmppmaster").
+                        "</a>";
         $array_col_historyaction[] = implode(" | ", $arrayurl);
     }
     echo '<div id="dialog"></div>';
+    echo '<div id="dialog1"></div>';
     // Display the list
     $n = new OptimizedListInfos($array_col_Monitoring_item, _T("Monitoring item", "xmppmaster"));
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($array_col_lastvalue, _T("Last value", "xmppmaster"));
     $n->addExtraInfo($array_col_historyaction, _T("History", "xmppmaster"));
-
     //navigation et filter
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
@@ -156,6 +174,22 @@ jQuery( document ).ready(function() {
     });
     //modal window end
 
+
+    jQuery(function(){
+        //modal window start
+        jQuery(".showgraph1").unbind('click');
+        jQuery(".showgraph1").bind('click',function(){
+                showDialog1();
+                var titletext=jQuery(this).attr("title");
+                var openpage=jQuery(this).attr("href");
+                jQuery("#dialog1").dialog( "option", "title", titletext );
+                jQuery("#dialog1").dialog( "option", "resizable", true );
+                jQuery("#dialog1").html(jQuery("<iframe>").attr("src", openpage));
+                return false;
+            });
+    });
+
+
     //Modal Window Initiation start
     function showDialog(){
         jQuery("#dialog").dialog({
@@ -165,6 +199,16 @@ jQuery( document ).ready(function() {
             modal: true
         });
         jQuery("#dialog").dialog("open");
+    }
+    //Modal Window Initiation start
+    function showDialog1(){
+        jQuery("#dialog1").dialog({
+            autoOpen: false,
+            height: 650,
+            width: 1000,
+            modal: true
+        });
+        jQuery("#dialog1").dialog("open");
     }
 });
 

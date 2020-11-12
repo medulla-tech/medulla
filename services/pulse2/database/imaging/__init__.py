@@ -75,10 +75,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.logger.info("ImagingDatabase is activating")
         self.config = config
         db_path = self.makeConnectionPath()
-        if db_path.find('?') == -1:
-            db_path = db_path + "?charset=utf8&use_unicode=0"
-        else:
-            db_path = db_path + "&charset=utf8&use_unicode=0"
         self.db = create_engine(db_path, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True)
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
@@ -596,7 +592,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
         Given an entity <loc_id>, returns its default menu (more precisely, its imaging server default menu)
 
-        FIXME: this code doesn't handle the case when imaging_server.recursive
+        FIXME: this code doesn't handle the case when imaging_server.is_recursive
         is True
 
         @param loc_id the entity UUID
@@ -2779,7 +2775,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q = session.query(Entity).add_column(self.entity.c.uuid).select_from(self.imaging_server.join(self.entity)) \
                 .filter(and_(
                     self.entity.c.uuid.in_(parent_path),
-                    self.imaging_server.c.recursive == 1,
+                    self.imaging_server.c.is_recursive == 1,
                     self.imaging_server.c.associated == 1
                 )).all()
             h_temp = {}
@@ -2804,7 +2800,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q = session.query(ImagingServer).add_column(self.entity.c.uuid). \
                 select_from(self.imaging_server.join(self.entity)).filter(and_(
                     self.entity.c.uuid.in_(parent_path),
-                    self.imaging_server.c.recursive == 1,
+                    self.imaging_server.c.is_recursive == 1,
                     self.imaging_server.c.associated == 1
                 )).all()
             h_temp = {}
@@ -4462,7 +4458,7 @@ class ImageOnImagingServer(DBObject):
     pass
 
 class ImagingServer(DBObject):
-    to_be_exported = ['id', 'name', 'url', 'packageserver_uuid', 'recursive', 'fk_entity', 'fk_default_menu', 'fk_language', 'language']
+    to_be_exported = ['id', 'name', 'url', 'packageserver_uuid', 'is_recursive', 'fk_entity', 'fk_default_menu', 'fk_language', 'language']
 
 class Internationalization(DBObject):
     to_be_exported = ['id', 'label', 'fk_language']

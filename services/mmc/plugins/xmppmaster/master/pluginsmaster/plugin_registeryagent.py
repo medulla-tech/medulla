@@ -340,8 +340,8 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     data['keysyncthing'] = data['information']['keysyncthing']
                 else:
                     data['keysyncthing'] = ""
-                if data['agenttype'] == "relayserver" and 'syncthing_port' not in data:
-                    data['syncthing_port'] = 23000
+            if data['agenttype'] == "relayserver" and 'syncthing_port' not in data:
+                data['syncthing_port'] = 23000
             publickeybase64 = info['publickey']
             is_masterpublickey = info['is_masterpublickey']
             del info['publickey']
@@ -528,6 +528,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                     '',
                                                     '',
                                                     xmppobject.boundjid.bare)
+                XmppMasterDatabase().delNetwork_for_machines_id(idmachine)
                 for i in data['information']["listipinfo"]:
                     # exclude mac address from table network
                     try:

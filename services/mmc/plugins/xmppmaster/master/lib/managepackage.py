@@ -82,7 +82,7 @@ class apimanagepackagemsc:
         result['sub_packages'] = datapacquage['sub_packages']
         result['description'] = datapacquage['description']
         result['targetos'] =  datapacquage['targetos']
-        result['size'] = apimanagepackagemsc.sizedirectory(result['basepath'])
+        result['size'] = str(apimanagepackagemsc.sizedirectory(result['basepath']))
         result['Qversion'] = datapacquage['inventory']['queries']['Qversion']
         result['boolcnd'] = datapacquage['inventory']['queries']['boolcnd']
         result['Qsoftware'] = datapacquage['inventory']['queries']['Qsoftware']
@@ -94,7 +94,7 @@ class apimanagepackagemsc:
             result['files'].append({"path" : pathfile,
                                     "name" : os.path.basename(fich),
                                     "id" : str(uuid.uuid4()),
-                                    "size" : os.path.getsize(fich) })
+                                    "size" : str(os.path.getsize(fich)) })
         return ((result))
 
     @staticmethod
@@ -142,13 +142,13 @@ class apimanagepackagemsc:
                             obj[str(z)] = str(data_file_conf_json['inventory'][z])
             obj['files']=[]
             obj['basepath'] = os.path.dirname(packagefiles)
-            obj['size'] = apimanagepackagemsc.sizedirectory(obj['basepath'])
+            obj['size'] = str(apimanagepackagemsc.sizedirectory(obj['basepath']))
             for fich in apimanagepackagemsc.listfilepackage(obj['basepath'] ):
                 pathfile = os.path.join("/",os.path.basename(os.path.dirname(fich)))
                 obj['files'].append({"path" : pathfile,
                                      "name" : os.path.basename(fich),
                                      "id" : str(uuid.uuid4()),
-                                     "size" : os.path.getsize(fich) })
+                                     "size" : str(os.path.getsize(fich)) })
             if 'name' in obj:
                 obj['label'] = obj['name']
             obj1 = [obj]
