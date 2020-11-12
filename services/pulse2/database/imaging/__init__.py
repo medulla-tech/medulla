@@ -75,10 +75,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.logger.info("ImagingDatabase is activating")
         self.config = config
         db_path = self.makeConnectionPath()
-        if db_path.find('?') == -1:
-            db_path = db_path + "?charset=utf8&use_unicode=0"
-        else:
-            db_path = db_path + "&charset=utf8&use_unicode=0"
         self.db = create_engine(db_path, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize, convert_unicode=True)
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
