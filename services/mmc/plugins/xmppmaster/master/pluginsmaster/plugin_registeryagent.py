@@ -446,7 +446,8 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                 # adress mac exclut alert
                 if data['information']["listipinfo"]:
                     data['xmppmacaddress'] = data['information']["listipinfo"][0]['macaddress']
-
+            if 'uuid_serial_machine' not in data:
+                data['uuid_serial_machine']=""
             idmachine, msgret = XmppMasterDatabase().addPresenceMachine(data['from'],
                                                                 data['platform'],
                                                                 data['information']['info']['hostname'],
@@ -465,8 +466,8 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                                 ad_ou_machine=data['adorgbymachine'],
                                                                 kiosk_presence=kiosk_presence,
                                                                 lastuser=data['lastusersession'],
-                                                                keysyncthing=data['keysyncthing']
-                                                                )
+                                                                keysyncthing=data['keysyncthing'],
+                                                                uuid_serial_machine=data['uuid_serial_machine'])
             if msgret.startswith("Update Machine"):
                 if showinfobool:
                     logger.info("%s"%msgret)
