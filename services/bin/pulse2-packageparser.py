@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/python3
 # -*- coding: utf-8; -*-
 #
 # (c) 2018 Siveo, http://www.siveo.net

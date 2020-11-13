@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 #-*- coding:utf-8 -*-
 
 # Glpi rest client to interact with GLPI webservices plugin
