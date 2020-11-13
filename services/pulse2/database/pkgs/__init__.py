@@ -726,7 +726,6 @@ class PkgsDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
             return None
-
     @DatabaseHelper._sessionm
     def pkgs_Orderrules(self, session):
         sql = """SELECT
@@ -738,3 +737,82 @@ class PkgsDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [x for x in result]
+
+    @DatabaseHelper._sessionm
+    def pkgs_sharing_rule_search(self, session, loginname, type="local"):
+
+        if type == "global":
+            sql ="""SELECT
+                        pkgs.pkgs_shares.id as id_sharing,
+                        pkgs.pkgs_shares.name as name,
+                        pkgs.pkgs_shares.comments as comments,
+                        pkgs.pkgs_shares.enabled as enabled,
+                        pkgs.pkgs_shares.type as type,
+                        pkgs.pkgs_shares.uri as uri,
+                        pkgs.pkgs_shares.ars_name as ars_name,
+                        pkgs.pkgs_shares.ars_id as ars_id,
+                        pkgs.pkgs_shares.share_path as share_path,
+                        pkgs.pkgs_rules_global.id as id_rule,
+                        pkgs.pkgs_rules_global.pkgs_rules_algos_id as algos_id,
+                        pkgs.pkgs_rules_global.order as orderrule,
+                        pkgs.pkgs_rules_global.suject as suject
+                    FROM
+                        pkgs.pkgs_shares
+                            INNER JOIN
+                        pkgs.pkgs_rules_global
+                            ON pkgs.pkgs_rules_global.pkgs_shares_id = pkgs.pkgs_shares.id
+                    WHERE
+                        pkgs.pkgs_shares.type = 'global'
+                            AND '%s' REGEXP (pkgs.pkgs_rules_global.suject)
+                            AND pkgs.pkgs_shares.enabled = 1
+                    ORDER BY pkgs.pkgs_rules_global.order
+                    LIMIT 1;""" % (loginname)
+        else:
+            sql ="""SELECT
+                        pkgs.pkgs_shares.id as id_sharing,
+                        pkgs.pkgs_shares.name as name,
+                        pkgs.pkgs_shares.comments as comments,
+                        pkgs.pkgs_shares.enabled as enabled,
+                        pkgs.pkgs_shares.type as type,
+                        pkgs.pkgs_shares.uri as uri,
+                        pkgs.pkgs_shares.ars_name as ars_name,
+                        pkgs.pkgs_shares.ars_id as ars_id,
+                        pkgs.pkgs_shares.share_path as share_path,
+                        pkgs.pkgs_rules_local.id as id_rule,
+                        pkgs.pkgs_rules_local.pkgs_rules_algos_id as algos_id,
+                        pkgs.pkgs_rules_local.order as order_rule,
+                        pkgs.pkgs_rules_local.suject as suject
+                    FROM
+                        pkgs.pkgs_shares
+                            INNER JOIN
+                        pkgs.pkgs_rules_local
+                            ON pkgs.pkgs_rules_local.pkgs_shares_id = pkgs.pkgs_shares.id
+                    WHERE
+                        pkgs.pkgs_shares.type = 'local'
+                            AND '%s' REGEXP (pkgs.pkgs_rules_local.suject)
+                            AND pkgs.pkgs_shares.enabled = 1
+                    ORDER BY pkgs.pkgs_rules_local.order;""" % (loginname)
+        logging.getLogger().debug(str(sql))
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        ret = []
+        if result:
+            # create dict partage
+            for y in result:
+                resuldict={}
+                resuldict['id_sharing']=y[0]
+                resuldict['name']=y[1]
+                resuldict['comments']=y[2]
+                resuldict['type']=y[4]
+                resuldict['uri']=y[5]
+                resuldict['ars_name']=y[6]
+                resuldict['ars_id']=[7]
+                resuldict['share_path']=y[8]
+                # information from table pkgs_rules_local or pkgs_rules_global
+                resuldict['id_rule']=y[9]
+                resuldict['algos_id']=y[10]
+                resuldict['order_rule']=y[11]
+                resuldict['regexp']=y[12]
+                ret.append(resuldict)
+        return ret
