@@ -71,7 +71,7 @@ if __name__ == "__main__":
         cp.read(options.inifile)
         cp.read(options.inifile + '.local')
     except Exception, e:
-        print str(e)
+        print(str(e))
         sys.exit(3)
 
     # Start the application
