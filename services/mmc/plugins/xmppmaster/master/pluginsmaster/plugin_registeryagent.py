@@ -195,7 +195,9 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                         logger.debug("Update it's uuid_inventory_machine")
                         logger.debug("=============")
                         logger.debug("=============")
-
+                    if data['agenttype'] == "relayserver":
+                        # on notify to ars pour sa registration
+                        notify_ars_to_recording("recording_case1", str(msg['from']), xmppobject)
                     if data['from'] != machine['jid'] or\
                         data['baseurlguacamole'] != machine['urlguacamole'] or\
                         data['deployment'] != machine['groupdeploy']:
@@ -438,7 +440,9 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                 logger.info("=============")
                 logger.info("=============")
                 logger.info("Adding or updating machine presence into machines table")
-
+            if data['agenttype'] == "relayserver":
+                # on notify to ars pour sa registration
+                notify_ars_to_recording("recording_case1", str(msg['from']), xmppobject) 
             for interface in data['information']["listipinfo"]:
                 if interface['macaddress'] == data['xmppmacaddress']:
                     break
@@ -976,6 +980,15 @@ def adduserdatageolocalisation(xmppobject, data, msg, sessionid, showinfobool):
         logger.error("\n%s"%(traceback.format_exc()))
         return -1, {}
 
+def notify_ars_to_recording(notify, to, xmppobject):
+    datasend = {   "action": "notify_information",
+                   'ret': 0,
+                   'sessionid': getRandomName(5, "notify_information"),
+                   'data' : { "notify" : notify}}
+    xmppobject.send_message(mto=to,
+                        mbody=json.dumps(datasend),
+                        mtype='chat')
+                
 def read_conf_remote_registeryagent(xmppobject):
     ### xmppobject.config.pathdirconffile =
 
