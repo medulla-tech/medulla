@@ -71,7 +71,8 @@ if($presence){
 	$proxy = (isset($result)) ? $result['portproxy'] : 0;
 
 	$relay = explode('@', $relay)[1];
-	$host = 'http://'.$_SERVER['HTTP_HOST'];
+
+	$host = $_SERVER['HTTP_HOST'];
 	echo '<iframe id="fb_frame" src="" width="99%" style="height:700px;"></iframe>';
 	?>
 
@@ -81,7 +82,7 @@ if($presence){
 	}
 
 	jQuery().ready(function(){
-	  uri = "<?php echo $host.'/mmc/fb/'.$relay.'/'.$proxy.'/';?>"
+	  uri = window.location.protocol+"//<?php echo $host.'/mmc/fb/'.$relay.'/'.$proxy.'/';?>"
 	  jQuery('#fb_frame').attr('src', uri);
 
 	});

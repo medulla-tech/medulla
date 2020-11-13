@@ -40,5 +40,8 @@ ADD COLUMN `uuid_serial_machine` VARCHAR(45) NULL DEFAULT '\"\"' AFTER `keysynct
 ALTER TABLE `xmppmaster`.`machines` 
 CHANGE COLUMN `uuid_serial_machine` `uuid_serial_machine` VARCHAR(45) NULL DEFAULT '""' AFTER `jid`;
 
+-- Increase table size to 100
+ALTER TABLE has_relayserverrules MODIFY subject varchar(100);
+
 UPDATE version SET Number = 50;
 COMMIT;
