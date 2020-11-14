@@ -70,7 +70,7 @@ if __name__ == "__main__":
         cp = MMCConfigParser()
         cp.read(options.inifile)
         cp.read(options.inifile + '.local')
-    except Exception, e:
+    except Exception as e:
         print(str(e))
         sys.exit(3)
 
