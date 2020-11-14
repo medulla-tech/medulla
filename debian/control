@@ -120,7 +120,7 @@ Description: Pulse 2 common database files
 Package: python-pulse2-common
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-twisted-web (>= 2.4.0)
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-twisted (>= 2.4.0)
 Description: Pulse 2 common files
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -382,7 +382,7 @@ Description: Pulse 2 support plugin (provide remote access)
 
 Package: pulse2-uuid-resolver
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-twisted-web (>= 2.4.0)
+Depends: ${misc:Depends}, ${python:Depends}, python3-twisted (>= 2.4.0)
 Description: Pulse 2 UUID resolver
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -458,7 +458,7 @@ Description: Pulse 2 MMC agent plugins
 Package: python-mmc-core
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, python-twisted-web, python-memory-profiler
+Depends: ${misc:Depends}, ${python:Depends}, python3-twisted, python-memory-profiler
 Suggests: python-sqlalchemy (>= 0.5), python-mysqldb (>= 1.2.2-7)
 Description: Core shared dependency for MMC API
  Contains base functions used by MMC.
