@@ -5496,7 +5496,7 @@ class XmppMasterDatabase(DatabaseHelper):
                       'kiosk_presence': machine.kiosk_presence,
                       'lastuser': machine.lastuser,
                       'enabled': machine.enabled,
-                      'uuid_serial_machine': uuid_serial_machine}
+                      'uuid_serial_machine': machine.uuid_serial_machine}
         return result
 
     @DatabaseHelper._sessionm
