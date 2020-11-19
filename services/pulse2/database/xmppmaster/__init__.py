@@ -6447,7 +6447,7 @@ where agenttype="machine" and groupdeploy in (
                 'kiosk_presence' : machine.kiosk_presence,
                 'lastuser' : machine.lastuser,
                 'keysyncthing' : machine.keysyncthing,
-                'uuid_serial_machine': uuid_serial_machine}
+                'uuid_serial_machine': machine.uuid_serial_machine}
         return result
 
     # SUBSTITUTE UPDATE TIME
