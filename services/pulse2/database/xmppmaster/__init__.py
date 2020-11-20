@@ -3490,8 +3490,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 # New jid : name.salt@relay/macaddress
                 hostname = linedeploy.host.split('.')[0]
             else:
-                # Old jid : macaddress@relay/name
-                hostname = linedeploy.host.split('/')[1]
+                try:
+                    # Old jid : macaddress@relay/name
+                    hostname = linedeploy.host.split('/')[1]
+                except Exception as e:
+                    hostname = linedeploy.host.split('.')[0]
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
@@ -3588,8 +3591,12 @@ class XmppMasterDatabase(DatabaseHelper):
                 # New jid : name.salt@relay/macaddress
                 hostname = linedeploy.host.split('.')[0]
             else:
-                # Old jid : macaddress@relay/name
-                hostname = linedeploy.host.split('/')[1]
+                try:
+                    # Old jid : macaddress@relay/name
+                    hostname = linedeploy.host.split('/')[1]
+                except Exception as e:
+                    hostname = linedeploy.host.split('.')[0]
+
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
