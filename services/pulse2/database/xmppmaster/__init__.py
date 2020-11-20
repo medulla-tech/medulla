@@ -3484,12 +3484,14 @@ class XmppMasterDatabase(DatabaseHelper):
 
         ret['lentotal'] = lentaillerequette#[0]
         ret['total_of_rows'] = lenrequest[0][0]
+        reg = "(.*)\.(.*)@(.*)\/(.*)"
         for linedeploy in result:
-            macaddress = ''.join(linedeploy.macadress.split(':')).split("||")
-            if linedeploy.host.split("/")[-1] in macaddress:
-                hostname = linedeploy.host.split(".")[0]
+            if re.match(reg, linedeploy.host):
+                # New jid : name.salt@relay/macaddress
+                hostname = linedeploy.host.split('.')[0]
             else:
-                hostname = linedeploy.host.split("/")[-1]
+                # Old jid : macaddress@relay/name
+                hostname = linedeploy.host.split('/')[1]
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
@@ -3580,12 +3582,14 @@ class XmppMasterDatabase(DatabaseHelper):
 
         #ret['lentotal'] = nbfilter
         ret['lentotal'] = count[0][0]
+        reg = "(.*)\.(.*)@(.*)\/(.*)"
         for linedeploy in result:
-            macaddress = ''.join(linedeploy.macadress.split(':')).split("||")
-            if linedeploy.host.split("/")[-1] in macaddress:
-                hostname = linedeploy.host.split(".")[0]
+            if re.match(reg, linedeploy.host):
+                # New jid : name.salt@relay/macaddress
+                hostname = linedeploy.host.split('.')[0]
             else:
-                hostname = linedeploy.host.split("/")[-1]
+                # Old jid : macaddress@relay/name
+                hostname = linedeploy.host.split('/')[1]
             ret['tabdeploy']['state'].append(linedeploy.state)
             ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
