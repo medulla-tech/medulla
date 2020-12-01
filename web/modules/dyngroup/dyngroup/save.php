@@ -118,7 +118,7 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
             $group->setImagingServer($imaging_server);
         }
     }
-    $root_context = (if($_SESSION["login"] == "root")) ? true : false;
+    $root_context = ($_SESSION["login"] == "root") ? true : false;
     $request = $r->toS();
     if ($save_type == 1) { // request save
         $group->setRequest($request, $root_context);
