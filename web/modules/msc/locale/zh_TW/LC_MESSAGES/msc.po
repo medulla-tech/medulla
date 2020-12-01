@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 18:22+0200\n"
+"POT-Creation-Date: 2020-12-01 18:08+0100\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/zh_TW/)\n"
@@ -829,11 +829,11 @@ msgstr ""
 msgid "Create a group"
 msgstr ""
 
-#: modules/msc/includes/utilities.php:32
+#: modules/msc/includes/utilities.php:33
 msgid "Bytes"
 msgstr ""
 
-#: modules/msc/includes/utilities.php:35
+#: modules/msc/includes/utilities.php:36
 #, php-format
 msgid "%3.1f %s%s"
 msgstr ""
