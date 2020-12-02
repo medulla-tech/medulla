@@ -32,6 +32,9 @@ UPDATE `qa_custom_command` SET `customcmd`='tail -n100 /var/log/pulse/xmpp-agent
 UPDATE `qa_custom_command` SET `customcmd`='tail -n100 \'/Library/Application Support/Pulse/var/log/xmpp-agent-machine.log\'' WHERE `namecmd`='Show last 100 lines of agent logs' AND `os`='macos';
 UPDATE `qa_custom_command` SET `customcmd`='powershell.exe Get-Content  \'C:\\Program Files\\Pulse\\var\\log\\xmpp-agent-machine.log\' -Tail 100' WHERE `namecmd`='Show last 100 lines of agent logs' AND `os`='windows';
 
+ALTER TABLE `xmppmaster`.`has_relayserverrules`
+ADD INDEX `idx_uniq_rules` (`rules_id`,`order`,`subject`,`relayserver_id`) ;
+
 UPDATE version SET Number = 52;
 
 COMMIT;
