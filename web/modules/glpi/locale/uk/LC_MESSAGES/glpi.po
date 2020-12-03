@@ -335,7 +335,7 @@ msgstr "докладне розгортання"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:96
 msgid "Monitoring"
-msgstr ""
+msgstr "Спостереження"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:97
 #: modules/glpi/glpi/ajaxMachinesList.php:112
@@ -363,7 +363,7 @@ msgstr "Редагувати файли налаштувань"
 #: modules/glpi/glpi/ajaxMachinesList.php:109
 #: modules/glpi/glpi/ajaxMachinesList.php:110
 msgid "files viewer"
-msgstr ""
+msgstr "переглядач файлів"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:114
 msgid "Imaging management"

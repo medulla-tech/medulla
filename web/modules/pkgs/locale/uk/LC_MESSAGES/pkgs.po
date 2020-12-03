@@ -1011,7 +1011,7 @@ msgstr "Отримати файл"
 
 #: modules/pkgs/includes/actions/action_download.php:127
 msgid "Download File:"
-msgstr ""
+msgstr "Отримання файла:"
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151

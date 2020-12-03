@@ -77,7 +77,7 @@ msgstr "Список змін"
 #: modules/xmppmaster/xmppmaster/monitoring/alerts.php:29
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
 msgid "Monitoring Alerts"
-msgstr ""
+msgstr "Повідомлення спостереження"
 
 #: modules/xmppmaster/infoPackage.inc.php:93
 msgid "XMPP Machine details"
@@ -106,11 +106,11 @@ msgstr "Журнал XMPP щодо групи"
 
 #: modules/xmppmaster/infoPackage.inc.php:136
 msgid "XMPP Monitoring view"
-msgstr ""
+msgstr "Панель спостереження XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:139
 msgid "File Viewer"
-msgstr ""
+msgstr "Переглядач файлів"
 
 #: modules/xmppmaster/infoPackage.inc.php:143
 #: modules/xmppmaster/infoPackage.inc.php:147
@@ -262,7 +262,7 @@ msgstr "Список пакунків"
 #: modules/xmppmaster/infoPackage.inc.php:388
 #: modules/xmppmaster/xmppmaster/localSidebar.php:45
 msgid "Monitoring Configuration"
-msgstr ""
+msgstr "Налаштування спостереження"
 
 #: modules/xmppmaster/includes/html.inc.php:86
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:563
@@ -275,11 +275,11 @@ msgstr "Оновлення змін"
 
 #: modules/xmppmaster/includes/html.inc.php:385
 msgid "The file will be automatically saved"
-msgstr ""
+msgstr "Файл буде збережено автоматично"
 
 #: modules/xmppmaster/includes/html.inc.php:388
 msgid "Edit file: "
-msgstr ""
+msgstr "Редагування файла:"
 
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
 #, php-format
@@ -1278,55 +1278,55 @@ msgstr "Останні завдання усіх користувачів"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:59
 msgid "Monitoring for"
-msgstr ""
+msgstr "Спостереження за"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:96
 msgid "Graph for one day"
-msgstr ""
+msgstr "Графік для одного дня"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:96
 msgid "1 day"
-msgstr ""
+msgstr "1 день"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:97
 msgid "Graph for one week"
-msgstr ""
+msgstr "Графік для одного тижня"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:97
 msgid "1 week"
-msgstr ""
+msgstr "1 тиждень"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:98
 msgid "Graph for one month"
-msgstr ""
+msgstr "Графік для одного місяця"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:98
 msgid "1 month"
-msgstr ""
+msgstr "1 місяць"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:99
 msgid "Graph for three months"
-msgstr ""
+msgstr "Графік для трьох місяців"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:99
 msgid "3 months"
-msgstr ""
+msgstr "3 місяці"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:125
 msgid "Panel Graph for one year"
-msgstr ""
+msgstr "Панель графіка для одного року"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:127
 msgid "custom"
-msgstr ""
+msgstr "нетиповий"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:134
 msgid "Monitoring item"
-msgstr ""
+msgstr "Запис спостереження"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:136
 msgid "Last value"
-msgstr ""
+msgstr "Останнє значення"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:137
 msgid "History"
@@ -1404,23 +1404,23 @@ msgstr "Запит щодо копіювання файла успішно на�
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
 msgid "Acquit"
-msgstr ""
+msgstr "Звільнити"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:62
 msgid "Machine name"
-msgstr ""
+msgstr "Назва комп'ютера"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:66
 msgid "Date Event"
-msgstr ""
+msgstr "Дата події"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:67
 msgid "Event Type"
-msgstr ""
+msgstr "Тип події"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:68
 msgid "Machine Message"
-msgstr ""
+msgstr "Повідомлення комп'ютера"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:69
 msgid "Device"
@@ -1428,19 +1428,19 @@ msgstr "Пристрій"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:70
 msgid "Device Status"
-msgstr ""
+msgstr "Стан пристрою"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:71
 msgid "Device Message"
-msgstr ""
+msgstr "Повідомлення пристрою"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:72
 msgid "Device Serial"
-msgstr ""
+msgstr "Серійний номер пристрою"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:73
 msgid "Device Firmware"
-msgstr ""
+msgstr "Мікропрограма пристрою"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:74
 msgid "Comment"
@@ -1449,21 +1449,21 @@ msgstr "Коментар"
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:32
 #, php-format
 msgid "Failed to acquit the alert : %s on device %s_%s (%s)"
-msgstr ""
+msgstr "Не вдалося відпустити повідомлення: %s на пристрої %s_%s (%s)"
 
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:34
 #, php-format
 msgid "Success to acquit the alert : %s on device %s_%s (%s)"
-msgstr ""
+msgstr "Успішно відпущено повідомлення: %s на пристрої %s_%s (%s)"
 
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:39
 #, php-format
 msgid "Acquit this alert : %s on device %s_%s (%s)"
-msgstr ""
+msgstr "Відпустити це повідомлення: %s на пристрої %s_%s (%s)"
 
 #: modules/xmppmaster/xmppmaster/monitoring/monconfig.php:34
 msgid "Monitoring Configurator"
-msgstr ""
+msgstr "Налаштовування спостереження"
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:47
 msgid "Console Agent Relay Server"
@@ -1538,7 +1538,7 @@ msgstr "Опис команди"
 
 #: modules/xmppmaster/xmppmaster/filebrowser.php:61
 msgid "File viewer"
-msgstr ""
+msgstr "Переглядач файлів"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Custom command name"
