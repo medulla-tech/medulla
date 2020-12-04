@@ -28,6 +28,7 @@ dist_qactions_DATA = msc/qactions/001reboot.msc \
 	msc/qactions/011windows_update.msc
 
 nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
+	admin/sql/schema-001.sql \
 	dyngroup/sql/schema-001.sql \
 	dyngroup/sql/schema-002.sql \
 	dyngroup/sql/schema-003.sql \
