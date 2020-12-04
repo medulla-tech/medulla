@@ -250,7 +250,7 @@ class Editor{
   public function mode(){return $this->m_mode;}
   public function fontSize(){return $this->m_fontSize;}
   public function id(){return $this->id;}
-  public function class(){return $this->m_class;}
+  public function cssclass(){return $this->m_class;}
   public function name(){return $this->m_name;}
   public function css(){return $this->m_css;}
   public function scripts(){return $this->m_scripts;}
