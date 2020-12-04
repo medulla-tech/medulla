@@ -324,6 +324,11 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                                     $deploymachine['enddateh'][0]);
         $end_date_plan_msc = date("Y-m-d H:i:s", $end_date_plan_msc);
 
+        if (isset($otherinfos[0]->ipmachine) && $otherinfos[0]->ipmachine != ""){
+            $titeleip = _T("IP Address (from GLPI)","xmppmaster");
+        }else{
+            $titeleip =_T("IP Address (from XMPP)","xmppmaster");
+        }
             echo "<br>";
             echo '<h2 class="replytab" id="detailmach">'.$hideText.' '._T("Machine Details","xmppmaster"). '</h2>';
             echo "<div id='titledetailmach'>";
@@ -335,7 +340,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                             echo '</td>';
 
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">'._T("IP Address (from GLPI)","xmppmaster").'</span>';
+                                echo '<span style=" padding-left: 32px;">'.$titeleip.'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
                                 echo '<span style=" padding-left: 32px;">'._T("MAC Address","xmppmaster").'</span>';
