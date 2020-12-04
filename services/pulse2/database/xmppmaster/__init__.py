@@ -5937,6 +5937,44 @@ class XmppMasterDatabase(DatabaseHelper):
         return {'total': count, 'datas': result}
 
     @DatabaseHelper._sessionm
+    def get_clusters_list(self, session, start, max, filter):
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            max = int(max)
+        except:
+            max = -1
+
+        query = session.query(Cluster_ars)
+
+        if filter != "":
+            query = query.filter(or_(
+                Cluster_ars.name.contains(filter),
+                Cluster_ars.description.contains(filter),
+            ))
+        count = query.count()
+
+        if start != -1 and max != -1:
+            query = query.offset(start).limit(max)
+
+        result = {
+            'id' : [],
+            'name' : [],
+            'description': [],
+            'nb_ars': [],
+        }
+
+
+        for cluster in query:
+            count_ars = session.query(Has_cluster_ars.id_cluster).filter(Has_cluster_ars.id_cluster == cluster.id).count()
+            result['id'].append(cluster.id)
+            result['name'].append(cluster.name)
+            result['description'].append(cluster.description)
+            result['nb_ars'].append(count_ars if count_ars is not None else 0)
+
+    @DatabaseHelper._sessionm
     def get_xmpprelays_list(self, session, start, limit, filter, presence):
         try:
             start = int(start)
