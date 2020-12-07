@@ -5,17 +5,17 @@
 # 
 # Translators:
 # tekmans <yvan.manon@siveo.net>, 2019
-# Nicolas Lécureuil <neoclust@mageia.org>, 2020
 # SPO <spointu@gmail.com>, 2020
+# Nicolas Lécureuil <neoclust@mageia.org>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 18:22+0200\n"
+"POT-Creation-Date: 2020-12-01 18:08+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
-"Last-Translator: SPO <spointu@gmail.com>, 2020\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,8 +49,8 @@ msgstr "XMPP Toutes mes tâches passées"
 
 #: modules/xmppmaster/infoPackage.inc.php:54
 #: modules/xmppmaster/infoPackage.inc.php:57
-#: modules/xmppmaster/infoPackage.inc.php:119
-#: modules/xmppmaster/infoPackage.inc.php:139
+#: modules/xmppmaster/infoPackage.inc.php:133
+#: modules/xmppmaster/infoPackage.inc.php:160
 msgid "XMPP Console"
 msgstr "Console XMPP"
 
@@ -75,184 +75,212 @@ msgid "Relays List"
 msgstr "Liste de relais XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:79
+#: modules/xmppmaster/xmppmaster/monitoring/alerts.php:29
+#: modules/xmppmaster/xmppmaster/localSidebar.php:41
+msgid "Monitoring Alerts"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:93
 msgid "XMPP Machine details"
 msgstr "les détails de la machine"
 
-#: modules/xmppmaster/infoPackage.inc.php:92
+#: modules/xmppmaster/infoPackage.inc.php:106
 msgid "Edit Custom Quick Action"
 msgstr "Editer l'action rapide personnalisée"
 
-#: modules/xmppmaster/infoPackage.inc.php:100
-#: modules/xmppmaster/infoPackage.inc.php:136
+#: modules/xmppmaster/infoPackage.inc.php:114
+#: modules/xmppmaster/infoPackage.inc.php:157
 msgid "List config files"
 msgstr "Lister les fichiers de configuration"
 
-#: modules/xmppmaster/infoPackage.inc.php:109
+#: modules/xmppmaster/infoPackage.inc.php:123
 msgid "Delete Custom Quick Action"
 msgstr "Supprimer l'action rapide personnalisée"
 
-#: modules/xmppmaster/infoPackage.inc.php:113
+#: modules/xmppmaster/infoPackage.inc.php:127
 msgid "XMPP logs"
 msgstr "Journaux XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:116
+#: modules/xmppmaster/infoPackage.inc.php:130
 msgid "XMPP logs on group"
 msgstr "Journaux des groupes"
 
-#: modules/xmppmaster/infoPackage.inc.php:122
-#: modules/xmppmaster/infoPackage.inc.php:126
+#: modules/xmppmaster/infoPackage.inc.php:136
+msgid "XMPP Monitoring view"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:139
+msgid "File Viewer"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:143
+#: modules/xmppmaster/infoPackage.inc.php:147
 msgid "File Browser"
 msgstr "Navigateur de fichiers"
 
-#: modules/xmppmaster/infoPackage.inc.php:129
-#: modules/xmppmaster/infoPackage.inc.php:133
+#: modules/xmppmaster/infoPackage.inc.php:150
+#: modules/xmppmaster/infoPackage.inc.php:154
 msgid "Remote edit configuration file"
 msgstr "Edition de fichier de configuration distant"
 
-#: modules/xmppmaster/infoPackage.inc.php:142
+#: modules/xmppmaster/infoPackage.inc.php:163
 msgid "Quick Action on group"
 msgstr "Action Rapide sur groupe"
 
-#: modules/xmppmaster/infoPackage.inc.php:145
+#: modules/xmppmaster/infoPackage.inc.php:166
 msgid "Quick Action on group results"
 msgstr "Résultats d'actions rapides sur groupes"
 
-#: modules/xmppmaster/infoPackage.inc.php:148
+#: modules/xmppmaster/infoPackage.inc.php:169
 #: modules/xmppmaster/xmppmaster/localSidebar.php:26
 msgid "Wake on LAN"
 msgstr "Réveil réseau"
 
-#: modules/xmppmaster/infoPackage.inc.php:151
+#: modules/xmppmaster/infoPackage.inc.php:172
 msgid "Quick Monitoring"
 msgstr "Monitoring rapide"
 
-#: modules/xmppmaster/infoPackage.inc.php:164
+#: modules/xmppmaster/infoPackage.inc.php:185
 msgid "Custom quick action"
 msgstr "Action rapide personnalisée"
 
-#: modules/xmppmaster/infoPackage.inc.php:169
+#: modules/xmppmaster/infoPackage.inc.php:190
 msgid "ajax refresh files remote"
 msgstr "rafraichir les fichiers à distance"
 
-#: modules/xmppmaster/infoPackage.inc.php:174
+#: modules/xmppmaster/infoPackage.inc.php:195
 msgid "ajax refresh files local"
 msgstr "rafraichir les fichiers locaux"
 
-#: modules/xmppmaster/infoPackage.inc.php:218
+#: modules/xmppmaster/infoPackage.inc.php:239
 msgid "action deploy quick"
 msgstr "action déployer rapidement"
 
-#: modules/xmppmaster/infoPackage.inc.php:223
+#: modules/xmppmaster/infoPackage.inc.php:244
 msgid "quick action deploy group"
 msgstr "action déployer rapidement sur un groupe"
 
-#: modules/xmppmaster/infoPackage.inc.php:229
+#: modules/xmppmaster/infoPackage.inc.php:250
 msgid "quick action Wol"
 msgstr "action rapide WOL"
 
-#: modules/xmppmaster/infoPackage.inc.php:234
+#: modules/xmppmaster/infoPackage.inc.php:255
 msgid "quick action Inventory"
 msgstr "action rapide inventaire"
 
-#: modules/xmppmaster/infoPackage.inc.php:240
+#: modules/xmppmaster/infoPackage.inc.php:261
 msgid "quick action Restart"
 msgstr "action rapide redémarrer"
 
-#: modules/xmppmaster/infoPackage.inc.php:245
+#: modules/xmppmaster/infoPackage.inc.php:266
 msgid "quick action shutdown"
 msgstr "action rapide arrêter"
 
-#: modules/xmppmaster/infoPackage.inc.php:250
+#: modules/xmppmaster/infoPackage.inc.php:271
 msgid "quick action change vnc settings"
 msgstr "action rapide changer les paramètres vnc "
 
-#: modules/xmppmaster/infoPackage.inc.php:255
+#: modules/xmppmaster/infoPackage.inc.php:276
 msgid "quick action Install key"
 msgstr "action rapide install clé"
 
-#: modules/xmppmaster/infoPackage.inc.php:262
+#: modules/xmppmaster/infoPackage.inc.php:283
 msgid "quick action reversessh for guacamole"
 msgstr "action rapide tunnel ssh Guacamole"
 
-#: modules/xmppmaster/infoPackage.inc.php:268
+#: modules/xmppmaster/infoPackage.inc.php:289
 msgid "Audit deployment"
 msgstr "Audit déploiement"
 
-#: modules/xmppmaster/infoPackage.inc.php:273
+#: modules/xmppmaster/infoPackage.inc.php:294
 msgid "XMPP log"
 msgstr "Journaux XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:278
-#: modules/xmppmaster/infoPackage.inc.php:283
+#: modules/xmppmaster/infoPackage.inc.php:299
+#: modules/xmppmaster/infoPackage.inc.php:304
 msgid "XMPP group logs"
 msgstr "logs du groupe XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:288
+#: modules/xmppmaster/infoPackage.inc.php:309
 msgid "List all groups of computers"
 msgstr "Liste tous les groupes d'ordinateurs"
 
-#: modules/xmppmaster/infoPackage.inc.php:293
+#: modules/xmppmaster/infoPackage.inc.php:314
 msgid "ajax view grp deploy"
 msgstr "groupe de vue ajax déployé"
 
-#: modules/xmppmaster/infoPackage.inc.php:298
+#: modules/xmppmaster/infoPackage.inc.php:319
 msgid "List computers deploy"
 msgstr "Liste ordinateurs déployé"
 
-#: modules/xmppmaster/infoPackage.inc.php:303
+#: modules/xmppmaster/infoPackage.inc.php:324
 msgid "List computers deploy by group"
 msgstr "Liste des ordinateurs déployés par groupe"
 
-#: modules/xmppmaster/infoPackage.inc.php:308
+#: modules/xmppmaster/infoPackage.inc.php:329
 msgid "List computer deploy"
 msgstr "Liste des ordinateurs deployé "
 
-#: modules/xmppmaster/infoPackage.inc.php:313
+#: modules/xmppmaster/infoPackage.inc.php:334
 msgid "List of not launched deployments"
 msgstr "Liste des déploiements non lancés"
 
-#: modules/xmppmaster/infoPackage.inc.php:318
+#: modules/xmppmaster/infoPackage.inc.php:339
 msgid "Transfert syncthing list no transfered"
 msgstr "Liste des transfert syncthing non démarrés"
 
-#: modules/xmppmaster/infoPackage.inc.php:323
+#: modules/xmppmaster/infoPackage.inc.php:344
 msgid "Switch Relay"
 msgstr "Switcher le relais"
 
-#: modules/xmppmaster/infoPackage.inc.php:328
+#: modules/xmppmaster/infoPackage.inc.php:349
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
 msgid "Reconfigure Machines"
 msgstr "Reconfigurer les machines"
 
-#: modules/xmppmaster/infoPackage.inc.php:333
+#: modules/xmppmaster/infoPackage.inc.php:354
 msgid "Relays Detail Actions"
 msgstr "Actions des relais"
 
-#: modules/xmppmaster/infoPackage.inc.php:338
-#: modules/xmppmaster/infoPackage.inc.php:343
+#: modules/xmppmaster/infoPackage.inc.php:359
+#: modules/xmppmaster/infoPackage.inc.php:364
 msgid "Qa launched on Relays"
 msgstr "QA lancées sur les relais"
 
-#: modules/xmppmaster/infoPackage.inc.php:348
+#: modules/xmppmaster/infoPackage.inc.php:369
 msgid "Qa result on Relays"
 msgstr "Résultat de QA des relais"
 
-#: modules/xmppmaster/infoPackage.inc.php:353
-#: modules/xmppmaster/infoPackage.inc.php:358
+#: modules/xmppmaster/infoPackage.inc.php:374
+#: modules/xmppmaster/infoPackage.inc.php:379
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:57
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
 msgid "Packages List"
 msgstr "Liste de packages"
 
-#: modules/xmppmaster/includes/html.inc.php:82
+#: modules/xmppmaster/infoPackage.inc.php:384
+#: modules/xmppmaster/infoPackage.inc.php:388
+#: modules/xmppmaster/xmppmaster/localSidebar.php:45
+msgid "Monitoring Configuration"
+msgstr ""
+
+#: modules/xmppmaster/includes/html.inc.php:86
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:563
 msgid "Refresh"
 msgstr "Rafraichir"
 
-#: modules/xmppmaster/includes/html.inc.php:83
+#: modules/xmppmaster/includes/html.inc.php:87
 msgid "Change refresh"
 msgstr "Modifier le rafraichissement"
+
+#: modules/xmppmaster/includes/html.inc.php:385
+msgid "The file will be automatically saved"
+msgstr ""
+
+#: modules/xmppmaster/includes/html.inc.php:388
+msgid "Edit file: "
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
 #, php-format
@@ -1245,6 +1273,62 @@ msgstr "Mes tâches passées"
 msgid "All users past tasks"
 msgstr "Les tâches passées de tous les utilisateurs"
 
+#: modules/xmppmaster/xmppmaster/monitoringview.php:59
+msgid "Monitoring for"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:96
+msgid "Graph for one day"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:96
+msgid "1 day"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:97
+msgid "Graph for one week"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:97
+msgid "1 week"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:98
+msgid "Graph for one month"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:98
+msgid "1 month"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:99
+msgid "Graph for three months"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:99
+msgid "3 months"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:125
+msgid "Panel Graph for one year"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:127
+msgid "custom"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:134
+msgid "Monitoring item"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:136
+msgid "Last value"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:137
+msgid "History"
+msgstr "Historique"
+
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:100
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:102
 msgid "Config file"
@@ -1314,6 +1398,69 @@ msgstr "vers fichier local"
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:631
 msgid "The file copy has been requested successfully"
 msgstr "La demande de copie de fichier a été enregistrée"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
+msgid "Acquit"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:62
+msgid "Machine name"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:66
+msgid "Date Event"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:67
+msgid "Event Type"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:68
+msgid "Machine Message"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:69
+msgid "Device"
+msgstr "Périphrique"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:70
+msgid "Device Status"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:71
+msgid "Device Message"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:72
+msgid "Device Serial"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:73
+msgid "Device Firmware"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:74
+msgid "Comment"
+msgstr "Commentaire"
+
+#: modules/xmppmaster/xmppmaster/monitoring/acquit.php:32
+#, php-format
+msgid "Failed to acquit the alert : %s on device %s_%s (%s)"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/acquit.php:34
+#, php-format
+msgid "Success to acquit the alert : %s on device %s_%s (%s)"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/acquit.php:39
+#, php-format
+msgid "Acquit this alert : %s on device %s_%s (%s)"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/monconfig.php:34
+msgid "Monitoring Configurator"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:47
 msgid "Console Agent Relay Server"
@@ -1385,6 +1532,10 @@ msgstr "Commande"
 #: modules/xmppmaster/xmppmaster/editqa.php:84
 msgid "Command description"
 msgstr "Description de la commande"
+
+#: modules/xmppmaster/xmppmaster/filebrowser.php:61
+msgid "File viewer"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Custom command name"
@@ -1503,7 +1654,7 @@ msgid "History download"
 msgstr "Historique des téléchargements"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:583
-#: modules/xmppmaster/xmppmaster/localSidebar.php:48
+#: modules/xmppmaster/xmppmaster/localSidebar.php:56
 msgid "File Manager"
 msgstr "Navigateur de fichiers"
 
@@ -1563,14 +1714,14 @@ msgstr "Liste des relais"
 msgid "List of Uninventoried Machines"
 msgstr "Liste des machines non-inventoriées"
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:41
+#: modules/xmppmaster/xmppmaster/localSidebar.php:49
 msgid "Custom Quick Actions"
 msgstr "Action Rapide personnalisée"
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:44
+#: modules/xmppmaster/xmppmaster/localSidebar.php:52
 msgid "Quick Action results"
 msgstr "Résultats d'Actions Rapides"
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:53
+#: modules/xmppmaster/xmppmaster/localSidebar.php:61
 msgid "Machines Topology"
 msgstr "Topologie machines"

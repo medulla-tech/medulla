@@ -1,6 +1,6 @@
-<?
+<?php
 /*
- *  (c) 2016 - 1017 siveo, http://www.siveo.net
+ *  (c) 2016 - 2020 siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -39,6 +39,10 @@ $sidemenu->addSideMenuItem(
 
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Monitoring Alerts","xmppmaster"), "xmppmaster", "xmppmaster", "alerts")
+);
+
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Monitoring Configuration","xmppmaster"), "xmppmaster", "xmppmaster", "monconfig")
 );
 
 $sidemenu->addSideMenuItem(

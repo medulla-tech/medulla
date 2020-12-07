@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 18:22+0200\n"
+"POT-Creation-Date: 2020-12-01 18:08+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -48,8 +48,8 @@ msgstr "Ваші минулі завдання XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:54
 #: modules/xmppmaster/infoPackage.inc.php:57
-#: modules/xmppmaster/infoPackage.inc.php:119
-#: modules/xmppmaster/infoPackage.inc.php:139
+#: modules/xmppmaster/infoPackage.inc.php:133
+#: modules/xmppmaster/infoPackage.inc.php:160
 msgid "XMPP Console"
 msgstr "Консоль XMPP"
 
@@ -74,184 +74,212 @@ msgid "Relays List"
 msgstr "Список змін"
 
 #: modules/xmppmaster/infoPackage.inc.php:79
+#: modules/xmppmaster/xmppmaster/monitoring/alerts.php:29
+#: modules/xmppmaster/xmppmaster/localSidebar.php:41
+msgid "Monitoring Alerts"
+msgstr "Повідомлення спостереження"
+
+#: modules/xmppmaster/infoPackage.inc.php:93
 msgid "XMPP Machine details"
 msgstr "Параметри комп'ютера XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:92
+#: modules/xmppmaster/infoPackage.inc.php:106
 msgid "Edit Custom Quick Action"
 msgstr "Змінити нетипову швидку дію"
 
-#: modules/xmppmaster/infoPackage.inc.php:100
-#: modules/xmppmaster/infoPackage.inc.php:136
+#: modules/xmppmaster/infoPackage.inc.php:114
+#: modules/xmppmaster/infoPackage.inc.php:157
 msgid "List config files"
 msgstr "Вивести список файлів налаштувань"
 
-#: modules/xmppmaster/infoPackage.inc.php:109
+#: modules/xmppmaster/infoPackage.inc.php:123
 msgid "Delete Custom Quick Action"
 msgstr "Вилучити нетипову швидку дію"
 
-#: modules/xmppmaster/infoPackage.inc.php:113
+#: modules/xmppmaster/infoPackage.inc.php:127
 msgid "XMPP logs"
 msgstr "Журнал XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:116
+#: modules/xmppmaster/infoPackage.inc.php:130
 msgid "XMPP logs on group"
 msgstr "Журнал XMPP щодо групи"
 
-#: modules/xmppmaster/infoPackage.inc.php:122
-#: modules/xmppmaster/infoPackage.inc.php:126
+#: modules/xmppmaster/infoPackage.inc.php:136
+msgid "XMPP Monitoring view"
+msgstr "Панель спостереження XMPP"
+
+#: modules/xmppmaster/infoPackage.inc.php:139
+msgid "File Viewer"
+msgstr "Переглядач файлів"
+
+#: modules/xmppmaster/infoPackage.inc.php:143
+#: modules/xmppmaster/infoPackage.inc.php:147
 msgid "File Browser"
 msgstr "Навігатор файлами"
 
-#: modules/xmppmaster/infoPackage.inc.php:129
-#: modules/xmppmaster/infoPackage.inc.php:133
+#: modules/xmppmaster/infoPackage.inc.php:150
+#: modules/xmppmaster/infoPackage.inc.php:154
 msgid "Remote edit configuration file"
 msgstr "Віддалене редагування файла налаштувань"
 
-#: modules/xmppmaster/infoPackage.inc.php:142
+#: modules/xmppmaster/infoPackage.inc.php:163
 msgid "Quick Action on group"
 msgstr "Швидка дія над групою"
 
-#: modules/xmppmaster/infoPackage.inc.php:145
+#: modules/xmppmaster/infoPackage.inc.php:166
 msgid "Quick Action on group results"
 msgstr "Швидка дія над результатами групи"
 
-#: modules/xmppmaster/infoPackage.inc.php:148
+#: modules/xmppmaster/infoPackage.inc.php:169
 #: modules/xmppmaster/xmppmaster/localSidebar.php:26
 msgid "Wake on LAN"
 msgstr "Пробудження з LAN"
 
-#: modules/xmppmaster/infoPackage.inc.php:151
+#: modules/xmppmaster/infoPackage.inc.php:172
 msgid "Quick Monitoring"
 msgstr "Швидке спостереження"
 
-#: modules/xmppmaster/infoPackage.inc.php:164
+#: modules/xmppmaster/infoPackage.inc.php:185
 msgid "Custom quick action"
 msgstr "Нетипова швидка дія"
 
-#: modules/xmppmaster/infoPackage.inc.php:169
+#: modules/xmppmaster/infoPackage.inc.php:190
 msgid "ajax refresh files remote"
 msgstr "Віддалене оновлення файлів ajax"
 
-#: modules/xmppmaster/infoPackage.inc.php:174
+#: modules/xmppmaster/infoPackage.inc.php:195
 msgid "ajax refresh files local"
 msgstr "Локальне оновлення файлів ajax"
 
-#: modules/xmppmaster/infoPackage.inc.php:218
+#: modules/xmppmaster/infoPackage.inc.php:239
 msgid "action deploy quick"
 msgstr "дія з швидкого розгортання"
 
-#: modules/xmppmaster/infoPackage.inc.php:223
+#: modules/xmppmaster/infoPackage.inc.php:244
 msgid "quick action deploy group"
 msgstr "група розгортання швидкої дії"
 
-#: modules/xmppmaster/infoPackage.inc.php:229
+#: modules/xmppmaster/infoPackage.inc.php:250
 msgid "quick action Wol"
 msgstr "швидка дія із пробудження мережею"
 
-#: modules/xmppmaster/infoPackage.inc.php:234
+#: modules/xmppmaster/infoPackage.inc.php:255
 msgid "quick action Inventory"
 msgstr "швидка дія з обліку"
 
-#: modules/xmppmaster/infoPackage.inc.php:240
+#: modules/xmppmaster/infoPackage.inc.php:261
 msgid "quick action Restart"
 msgstr "швидка дія з перезапуску"
 
-#: modules/xmppmaster/infoPackage.inc.php:245
+#: modules/xmppmaster/infoPackage.inc.php:266
 msgid "quick action shutdown"
 msgstr "швидка дія з вимикання"
 
-#: modules/xmppmaster/infoPackage.inc.php:250
+#: modules/xmppmaster/infoPackage.inc.php:271
 msgid "quick action change vnc settings"
 msgstr "швидка дія зі зміни параметрів vnc"
 
-#: modules/xmppmaster/infoPackage.inc.php:255
+#: modules/xmppmaster/infoPackage.inc.php:276
 msgid "quick action Install key"
 msgstr "швидка дія зі встановлення ключа"
 
-#: modules/xmppmaster/infoPackage.inc.php:262
+#: modules/xmppmaster/infoPackage.inc.php:283
 msgid "quick action reversessh for guacamole"
 msgstr "швидка дія reversessh для guacamole"
 
-#: modules/xmppmaster/infoPackage.inc.php:268
+#: modules/xmppmaster/infoPackage.inc.php:289
 msgid "Audit deployment"
 msgstr "Аудит розгортання"
 
-#: modules/xmppmaster/infoPackage.inc.php:273
+#: modules/xmppmaster/infoPackage.inc.php:294
 msgid "XMPP log"
 msgstr "Журнал XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:278
-#: modules/xmppmaster/infoPackage.inc.php:283
+#: modules/xmppmaster/infoPackage.inc.php:299
+#: modules/xmppmaster/infoPackage.inc.php:304
 msgid "XMPP group logs"
 msgstr "Журнали груп XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:288
+#: modules/xmppmaster/infoPackage.inc.php:309
 msgid "List all groups of computers"
 msgstr "Список усіх груп комп'ютерів"
 
-#: modules/xmppmaster/infoPackage.inc.php:293
+#: modules/xmppmaster/infoPackage.inc.php:314
 msgid "ajax view grp deploy"
 msgstr "перегляд ajax розгортання групи"
 
-#: modules/xmppmaster/infoPackage.inc.php:298
+#: modules/xmppmaster/infoPackage.inc.php:319
 msgid "List computers deploy"
 msgstr "Список розгортання комп'ютерів"
 
-#: modules/xmppmaster/infoPackage.inc.php:303
+#: modules/xmppmaster/infoPackage.inc.php:324
 msgid "List computers deploy by group"
 msgstr "Список розгортання комп'ютерів за групами"
 
-#: modules/xmppmaster/infoPackage.inc.php:308
+#: modules/xmppmaster/infoPackage.inc.php:329
 msgid "List computer deploy"
 msgstr "Список розгортання комп'ютерів"
 
-#: modules/xmppmaster/infoPackage.inc.php:313
+#: modules/xmppmaster/infoPackage.inc.php:334
 msgid "List of not launched deployments"
 msgstr "Список запущених розгортань"
 
-#: modules/xmppmaster/infoPackage.inc.php:318
+#: modules/xmppmaster/infoPackage.inc.php:339
 msgid "Transfert syncthing list no transfered"
 msgstr "Список передавань syncthing не передано"
 
-#: modules/xmppmaster/infoPackage.inc.php:323
+#: modules/xmppmaster/infoPackage.inc.php:344
 msgid "Switch Relay"
 msgstr "Перемкнути ретранслятор"
 
-#: modules/xmppmaster/infoPackage.inc.php:328
+#: modules/xmppmaster/infoPackage.inc.php:349
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
 msgid "Reconfigure Machines"
 msgstr "Переналаштувати машини"
 
-#: modules/xmppmaster/infoPackage.inc.php:333
+#: modules/xmppmaster/infoPackage.inc.php:354
 msgid "Relays Detail Actions"
 msgstr "Докладні дії ретрансляторів"
 
-#: modules/xmppmaster/infoPackage.inc.php:338
-#: modules/xmppmaster/infoPackage.inc.php:343
+#: modules/xmppmaster/infoPackage.inc.php:359
+#: modules/xmppmaster/infoPackage.inc.php:364
 msgid "Qa launched on Relays"
 msgstr "Запущено перевірку якості для ретрансляторів"
 
-#: modules/xmppmaster/infoPackage.inc.php:348
+#: modules/xmppmaster/infoPackage.inc.php:369
 msgid "Qa result on Relays"
 msgstr "Результат перевірки якості для ретрансляторів"
 
-#: modules/xmppmaster/infoPackage.inc.php:353
-#: modules/xmppmaster/infoPackage.inc.php:358
+#: modules/xmppmaster/infoPackage.inc.php:374
+#: modules/xmppmaster/infoPackage.inc.php:379
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:57
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
 msgid "Packages List"
 msgstr "Список пакунків"
 
-#: modules/xmppmaster/includes/html.inc.php:82
+#: modules/xmppmaster/infoPackage.inc.php:384
+#: modules/xmppmaster/infoPackage.inc.php:388
+#: modules/xmppmaster/xmppmaster/localSidebar.php:45
+msgid "Monitoring Configuration"
+msgstr "Налаштування спостереження"
+
+#: modules/xmppmaster/includes/html.inc.php:86
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:563
 msgid "Refresh"
 msgstr "Оновити"
 
-#: modules/xmppmaster/includes/html.inc.php:83
+#: modules/xmppmaster/includes/html.inc.php:87
 msgid "Change refresh"
 msgstr "Оновлення змін"
+
+#: modules/xmppmaster/includes/html.inc.php:385
+msgid "The file will be automatically saved"
+msgstr "Файл буде збережено автоматично"
+
+#: modules/xmppmaster/includes/html.inc.php:388
+msgid "Edit file: "
+msgstr "Редагування файла:"
 
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
 #, php-format
@@ -1248,6 +1276,62 @@ msgstr "Ваші останні завдання"
 msgid "All users past tasks"
 msgstr "Останні завдання усіх користувачів"
 
+#: modules/xmppmaster/xmppmaster/monitoringview.php:59
+msgid "Monitoring for"
+msgstr "Спостереження за"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:96
+msgid "Graph for one day"
+msgstr "Графік для одного дня"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:96
+msgid "1 day"
+msgstr "1 день"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:97
+msgid "Graph for one week"
+msgstr "Графік для одного тижня"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:97
+msgid "1 week"
+msgstr "1 тиждень"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:98
+msgid "Graph for one month"
+msgstr "Графік для одного місяця"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:98
+msgid "1 month"
+msgstr "1 місяць"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:99
+msgid "Graph for three months"
+msgstr "Графік для трьох місяців"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:99
+msgid "3 months"
+msgstr "3 місяці"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:125
+msgid "Panel Graph for one year"
+msgstr "Панель графіка для одного року"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:127
+msgid "custom"
+msgstr "нетиповий"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:134
+msgid "Monitoring item"
+msgstr "Запис спостереження"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:136
+msgid "Last value"
+msgstr "Останнє значення"
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:137
+msgid "History"
+msgstr "Журнал"
+
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:100
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:102
 msgid "Config file"
@@ -1317,6 +1401,69 @@ msgstr "до локального файла"
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:631
 msgid "The file copy has been requested successfully"
 msgstr "Запит щодо копіювання файла успішно надіслано"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
+msgid "Acquit"
+msgstr "Звільнити"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:62
+msgid "Machine name"
+msgstr "Назва комп'ютера"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:66
+msgid "Date Event"
+msgstr "Дата події"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:67
+msgid "Event Type"
+msgstr "Тип події"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:68
+msgid "Machine Message"
+msgstr "Повідомлення комп'ютера"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:69
+msgid "Device"
+msgstr "Пристрій"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:70
+msgid "Device Status"
+msgstr "Стан пристрою"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:71
+msgid "Device Message"
+msgstr "Повідомлення пристрою"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:72
+msgid "Device Serial"
+msgstr "Серійний номер пристрою"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:73
+msgid "Device Firmware"
+msgstr "Мікропрограма пристрою"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:74
+msgid "Comment"
+msgstr "Коментар"
+
+#: modules/xmppmaster/xmppmaster/monitoring/acquit.php:32
+#, php-format
+msgid "Failed to acquit the alert : %s on device %s_%s (%s)"
+msgstr "Не вдалося відпустити повідомлення: %s на пристрої %s_%s (%s)"
+
+#: modules/xmppmaster/xmppmaster/monitoring/acquit.php:34
+#, php-format
+msgid "Success to acquit the alert : %s on device %s_%s (%s)"
+msgstr "Успішно відпущено повідомлення: %s на пристрої %s_%s (%s)"
+
+#: modules/xmppmaster/xmppmaster/monitoring/acquit.php:39
+#, php-format
+msgid "Acquit this alert : %s on device %s_%s (%s)"
+msgstr "Відпустити це повідомлення: %s на пристрої %s_%s (%s)"
+
+#: modules/xmppmaster/xmppmaster/monitoring/monconfig.php:34
+msgid "Monitoring Configurator"
+msgstr "Налаштовування спостереження"
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:47
 msgid "Console Agent Relay Server"
@@ -1388,6 +1535,10 @@ msgstr "Команда"
 #: modules/xmppmaster/xmppmaster/editqa.php:84
 msgid "Command description"
 msgstr "Опис команди"
+
+#: modules/xmppmaster/xmppmaster/filebrowser.php:61
+msgid "File viewer"
+msgstr "Переглядач файлів"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Custom command name"
@@ -1507,7 +1658,7 @@ msgid "History download"
 msgstr "Журнал отримання"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:583
-#: modules/xmppmaster/xmppmaster/localSidebar.php:48
+#: modules/xmppmaster/xmppmaster/localSidebar.php:56
 msgid "File Manager"
 msgstr "Керування файлами"
 
@@ -1567,14 +1718,14 @@ msgstr "Список ретрансляторів"
 msgid "List of Uninventoried Machines"
 msgstr "Список необлікованих комп'ютерів"
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:41
+#: modules/xmppmaster/xmppmaster/localSidebar.php:49
 msgid "Custom Quick Actions"
 msgstr "Нетипові швидкі дії"
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:44
+#: modules/xmppmaster/xmppmaster/localSidebar.php:52
 msgid "Quick Action results"
 msgstr "Результати швидких дій"
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:53
+#: modules/xmppmaster/xmppmaster/localSidebar.php:61
 msgid "Machines Topology"
 msgstr "Топологія комп'ютерів"
