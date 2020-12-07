@@ -25,6 +25,7 @@ START TRANSACTION;
 USE `xmppmaster`;
 
 -- resize fild type  in table log
+TRUNCATE `xmppmaster`.`logs`;
 ALTER TABLE `xmppmaster`.`logs`
 CHANGE COLUMN `type` `type` VARCHAR(25) NOT NULL DEFAULT 'noset' ;
 
@@ -35,10 +36,7 @@ ADD COLUMN `last_modif` TIMESTAMP NULL AFTER `creation_user`;
 
 -- add uui_serial_machine in table machine
 ALTER TABLE `xmppmaster`.`machines`
-ADD COLUMN `uuid_serial_machine` VARCHAR(45) NULL DEFAULT '' AFTER `keysyncthing`;
-
-ALTER TABLE `xmppmaster`.`machines`
-CHANGE COLUMN `uuid_serial_machine` `uuid_serial_machine` VARCHAR(45) NULL DEFAULT '' AFTER `jid`;
+ADD COLUMN `uuid_serial_machine` VARCHAR(45) NULL DEFAULT '' AFTER `jid`;
 
 -- Increase table size to 100
 ALTER TABLE has_relayserverrules MODIFY subject varchar(100);
