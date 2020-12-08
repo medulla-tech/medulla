@@ -25,9 +25,12 @@ START TRANSACTION;
 USE `xmppmaster`;
 
 -- resize fild type  in table log
-TRUNCATE `xmppmaster`.`logs`;
+ALTER TABLE `xmppmaster`.`logs`
+DROP INDEX `ind_log_type`;
 ALTER TABLE `xmppmaster`.`logs`
 CHANGE COLUMN `type` `type` VARCHAR(25) NOT NULL DEFAULT 'noset' ;
+ALTER TABLE `xmppmaster`.`logs`
+ADD INDEX `ind_log_type` (`type` ASC);
 
 -- add 2 filds in table user for event registers  machine
 ALTER TABLE `xmppmaster`.`users`
