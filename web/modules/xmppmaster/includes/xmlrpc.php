@@ -590,4 +590,12 @@ function xmlrpc_get_content($path){
 function xmlrpc_write_content($path, $datas){
   return xmlCall("xmppmaster.write_content", [$path, $datas, "w"]);
 }
+
+function xmlprc_get_ars_from_cluster($id, $filter=""){
+  return xmlCall("xmppmaster.get_ars_from_cluster", [$id, $filter]);
+}
+
+function xmlrpc_update_cluster($id, $name, $description, $relay_ids){
+  return xmlCall("xmppmaster.update_cluster", [$id, $name, $description, $relay_ids]);
+}
 ?>

@@ -1009,3 +1009,11 @@ def write_content(path, datas, mode="w"):
                 return True
         except:
             return False
+
+def get_ars_from_cluster(id, filter=""):
+    result = XmppMasterDatabase().get_ars_from_cluster(id, filter)
+    return result
+
+def update_cluster(id, name, description, relay_ids):
+    result = XmppMasterDatabase().update_cluster(id, name, description, relay_ids)
+    return result

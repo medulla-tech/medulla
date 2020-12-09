@@ -7181,3 +7181,76 @@ where agenttype="machine" and groupdeploy in (
             return "success"
         except:
             return "failure"
+
+    @DatabaseHelper._sessionm
+    def get_ars_from_cluster(self, session, id, filter=""):
+        result = {
+            'in_cluster' : [],
+            'out_cluster' :[],
+            'in_ars_list' : [],
+            'out_ars_list' : []
+        }
+
+        query = session.query(Has_cluster_ars.id_ars, Has_cluster_ars.id_cluster)\
+            .add_column(RelayServer.nameserver)\
+            .add_column(RelayServer.jid)\
+            .outerjoin(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
+            .filter(Has_cluster_ars.id_cluster == id).all()
+
+        if query is not None:
+            for id_ars, id_cluster, name, jid in query:
+                result['in_cluster'].append({
+                    'id_ars': id_ars,
+                    'id_cluster': id_cluster,
+                    'name' : name,
+                    'jid' : jid
+                })
+                result['in_ars_list'].append(id_ars)
+
+        query2 = session.query(Has_cluster_ars.id_ars, Has_cluster_ars.id_cluster)\
+            .add_column(RelayServer.nameserver)\
+            .add_column(RelayServer.jid)\
+            .outerjoin(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
+            .filter(not_(Has_cluster_ars.id_ars.in_(result['in_ars_list'])))\
+            .filter(RelayServer.id )
+
+
+        query2 = query2.all()
+
+
+        if query2 is not None:
+            for id_ars, id_cluster, name, jid in query2:
+                result['out_cluster'].append({
+                    'id_ars' : id_ars,
+                    'id_cluster' : id_cluster,
+                    'name' : name,
+                    'jid' : jid
+                })
+                result['out_ars_list'].append(id_ars)
+        return result
+
+    @DatabaseHelper._sessionm
+    def update_cluster(self, session, id, name, description, relay_ids):
+        relay_ids = relay_ids.split(',')
+
+        try:
+            id = int(id)
+            if name != "":
+                query = session.query(Cluster_ars).filter(Cluster_ars.id == id)\
+                    .update({Cluster_ars.name : name, Cluster_ars.description : description})
+                session.commit()
+                session.flush()
+            else:
+                query = session.query(Cluster_ars).filter(Cluster_ars == id)\
+                    .update({Cluster_ars.description : description})
+                session.commit()
+                session.flush()
+
+            query = session.query(Has_cluster_ars).filter(Has_cluster_ars.id_ars.in_(relay_ids))\
+                .update({Has_cluster_ars.id_cluster: id}, synchronize_session='fetch')
+            session.commit()
+            session.flush()
+
+        except Exception as err:
+            return {'state': 'failure', 'msg':'No cluster found'}
+        return {'state': 'success'}
