@@ -93,9 +93,12 @@ $page->setFile("modules/admin/admin/ajaxpackageslist.php");
 $page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
+$page = new Page("editCluster", _T("Edit Cluster", "admin"));
+$page->setFile("modules/admin/admin/editCluster.php");
+$submod->addPage($page);
 
-$page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
-$page->setFile("modules/xmppmaster/xmppmaster/consolexmpp.php");
+$page = new Page("newCluster", _T("New Cluster", "admin"));
+$page->setFile("modules/admin/admin/newCluster.php");
 $submod->addPage($page);
 
 

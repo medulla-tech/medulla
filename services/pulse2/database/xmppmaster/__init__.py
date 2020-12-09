@@ -7254,3 +7254,27 @@ where agenttype="machine" and groupdeploy in (
         except Exception as err:
             return {'state': 'failure', 'msg':'No cluster found'}
         return {'state': 'success'}
+
+    @DatabaseHelper._sessionm
+    def create_cluster(self, session, name, description, relay_ids):
+        relay_ids = relay_ids.split(',')
+
+        try:
+            if name != "":
+                cluster = Cluster_ars()
+                cluster.name = name
+                cluster.description = description
+                session.add(cluster)
+                session.commit()
+                session.flush()
+
+                query = session.query(Has_cluster_ars).filter(Has_cluster_ars.id_ars.in_(relay_ids))\
+                    .update({Has_cluster_ars.id_cluster: cluster.id}, synchronize_session='fetch')
+                session.commit()
+                session.flush()
+            else:
+                return {'state': 'failure', 'msg':'This cluster has no name'}
+
+        except Exception as err:
+            return {'state': 'failure', 'msg':'No cluster found'}
+        return {'state': 'success'}
