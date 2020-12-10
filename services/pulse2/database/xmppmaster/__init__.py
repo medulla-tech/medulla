@@ -7278,3 +7278,92 @@ where agenttype="machine" and groupdeploy in (
         except Exception as err:
             return {'state': 'failure', 'msg':'No cluster found'}
         return {'state': 'success'}
+
+    @DatabaseHelper._sessionm
+    def get_rules_list(self, session, start, end, filter):
+        try:
+            start = int(start)
+        except:
+            start = -1
+
+        try:
+            end = int(end)
+        except:
+            end = -1
+
+        result = {
+            'total' : 0,
+            'datas':{
+                'id' : [],
+                'name' : [],
+                'description' : [],
+                'level' : []
+            }
+        }
+
+        query = session.query(Regles).order_by(Regles.level)
+
+        if filter != "":
+            #knokno
+            query = query.filter(or_(
+                Regles.name.contains(filter),
+                Regles.description.contains(filter),
+                Regles.level.contains(filter)
+            ))
+        count = query.count()
+
+        if start != -1 and end != -1:
+            query = query.offset(start).limit(end)
+
+        query = query.all()
+        result['total'] = count
+        if query is not None:
+            for rule in query:
+                result['datas']['id'].append(rule.id)
+                result['datas']['name'].append(rule.name)
+                result['datas']['description'].append(rule.description)
+                result['datas']['level'].append(rule.level)
+        return result
+
+    @DatabaseHelper._sessionm
+    def order_relay_rule(self, session, action, id):
+        try:
+            id = int(id)
+        except Exception as err:
+            return {'status':'error', 'message': 'Invalid id'}
+        if action not in ['raise', 'down']:
+            return {'status':'error', 'message': 'Unknown action'}
+        else:
+            selected = session.query(Regles).filter(Regles.id == id).one()
+            if selected is not None:
+                selected_level = selected.level
+                if action == "raise":
+                    query = session.query(Regles)\
+                        .filter(Regles.level < selected.level)\
+                        .order_by(desc(Regles.level))\
+                        .first()
+
+                    if query is None:
+                        return {'status':'success', 'message': 'Is top level'}
+                    else:
+                        new_level = query.level
+                else:
+                    query = session.query(Regles)\
+                        .filter(Regles.level > selected.level)\
+                        .order_by(Regles.level)\
+                        .first()
+                    if query is None:
+                        return {'status':'success', 'message': 'Is lowest level'}
+                    else:
+                        new_level = query.level
+
+                query.level, selected.level = selected.level, query.level
+
+                session.commit()
+                session.flush()
+                if action == "raise":
+                    return {'status':'success', 'message': 'raised'}
+                else:
+                    return {'status':'success', 'message': 'downed'}
+            else:
+                return {'status':'error', 'message': 'No rule found with id # %s'%id}

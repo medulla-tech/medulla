@@ -602,4 +602,12 @@ function xmlrpc_update_cluster($id, $name, $description, $relay_ids){
 function xmlrpc_create_cluster($name, $description, $relay_ids){
   return xmlCall("xmppmaster.create_cluster", [$name, $description, $relay_ids]);
 }
+
+function xmlrpc_get_rules_list($start, $end, $filter){
+  return xmlCall("xmppmaster.get_rules_list", [$start, $end, $filter]);
+}
+
+function xmlrpc_order_relay_rule($action, $id){
+  return xmlCall("xmppmaster.order_relay_rule", [$action, $id]);
+}
 ?>

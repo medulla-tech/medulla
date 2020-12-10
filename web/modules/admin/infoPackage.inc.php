@@ -101,6 +101,14 @@ $page = new Page("newCluster", _T("New Cluster", "admin"));
 $page->setFile("modules/admin/admin/newCluster.php");
 $submod->addPage($page);
 
+$page = new Page("rules", _T("Rules", "admin"));
+$page->setFile("modules/admin/admin/rules.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxRules", _T("Rules", "admin"));
+$page->setFile("modules/admin/admin/ajaxRules.php");
+$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
 
 $mod->addSubmod($submod);
 

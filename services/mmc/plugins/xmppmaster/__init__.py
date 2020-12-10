@@ -1021,3 +1021,10 @@ def update_cluster(id, name, description, relay_ids):
 def create_cluster(name, description, relay_ids):
     result = XmppMasterDatabase().create_cluster(name, description, relay_ids)
     return result
+
+def get_rules_list(start, end, filter):
+    return XmppMasterDatabase().get_rules_list(start, end, filter)
+
+def order_relay_rule(action, id):
+    result = XmppMasterDatabase().order_relay_rule(action, id)
+    return result
