@@ -98,9 +98,9 @@ else{
   echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
   echo '<thead>';
   echo '<tr>';
-  echo '<td>'_T("Rule", "admin").'</td>';
-  echo '<td>'_T("Description", "admin").'</td>';
-  echo '<td>'_T("Level", "admin").'</td>';
+  echo '<td>'._T("Rule", "admin").'</td>';
+  echo '<td>'._T("Description", "admin").'</td>';
+  echo '<td>'._T("Level", "admin").'</td>';
   echo '</tr>';
   echo '</thead>';
   echo '</table>';
