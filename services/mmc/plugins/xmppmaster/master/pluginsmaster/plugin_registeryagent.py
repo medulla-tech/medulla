@@ -147,21 +147,41 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                 try:
                     result = XmppMasterDatabase().listMacAdressforMachine(machine['id'],
                                                                           infomac=showinfobool)
-                    if result[0] is None:
+                    macadresssort=sorted([ x['macnotshortened'] for x in  \
+                                            data['information']['listipinfo']])
+                    macadressstr=",".join(macadresssort)
+                    logger.info("macadressstr %s " %macadressstr)
+                    if result[0] is None or result[0] != macadressstr:
+                        if result[0] is not None:
+                            logger.warning("mac adress diff :\n\t %s : %s\n\t "\
+                                           "network table : %s" %(data['agenttype'],
+                                                                  macadressstr,
+                                                                  result[0]))
                         raise
+                    machine['enabled'] = 1
                 except Exception:
-                    # incoherence entre machine et network
-                    # on supprime la machine
-                    # la machine est reincrite
-                    logger.warning("*** Machine %s : incoherence between machines "\
-                        "and network tables."%data['from'])
-
-                    if data['agenttype'] != "relayserver":
-                        machine['enabled'] = 0
-                        logger.warning("*** Full reinscription of the machine")
-                    else:
-                        logger.warning("*** You must verify coherence for ARS")
-
+                    # incoherence entre machine list et network list mac table
+                    # delete machine and new registration
+                    logger.warning("*** Machine %s : incoherence between machines list mac "\
+                        "and network list mac tables."%data['from'])
+                    machine['enabled'] = 0
+                    # on supprime la machine de la base machine
+                    XmppMasterDatabase().delPresenceMachinebyjiduser(msg['from'].user)
+                    logger.warning("*** Full reinscription of the %s %s" % (msg['from'].user,
+                                                                            data['agenttype']))
+                    XmppMasterDatabase().setlogxmpp("Full reinscription of "\
+                                                        "the %s %s" % ( msg['from'].user,
+                                                                        data['agenttype']),
+                                                    "info",
+                                                    sessionid,
+                                                    -1,
+                                                    msg['from'],
+                                                    '',
+                                                    '',
+                                                    'Registration | Notify',
+                                                    '',
+                                                    '',
+                                                    xmppobject.boundjid.bare)
                 if machine['enabled'] == 1:
                     logger.info("Machine %s registered with %s" %
                                                     (msg['from'], machine['id']))
