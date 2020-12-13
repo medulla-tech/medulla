@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 18:22+0200\n"
+"POT-Creation-Date: 2020-12-01 18:08+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -631,6 +631,7 @@ msgstr ""
 #: modules/pkgs/includes/actions/actionprocessscript.php:273
 #: modules/pkgs/includes/actions/action_set_config_file.php:60
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:87
+#: modules/pkgs/includes/actions/action_download.php:135
 msgid "Delete"
 msgstr "删除"
 
@@ -647,6 +648,7 @@ msgstr ""
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
 #: modules/pkgs/includes/actions/action_set_config_file.php:29
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:30
+#: modules/pkgs/includes/actions/action_download.php:85
 msgid "Step label :"
 msgstr ""
 
@@ -657,6 +659,8 @@ msgstr ""
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:134
 #: modules/pkgs/includes/actions/actionprocessscript.php:57
 #: modules/pkgs/includes/actions/actionprocessscript.php:71
+#: modules/pkgs/includes/actions/action_download.php:103
+#: modules/pkgs/includes/actions/action_download.php:117
 msgid "Alternate package"
 msgstr ""
 
@@ -672,6 +676,7 @@ msgstr ""
 #: modules/pkgs/includes/actions/actionprocessscript.php:274
 #: modules/pkgs/includes/actions/action_set_config_file.php:65
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:88
+#: modules/pkgs/includes/actions/action_download.php:136
 msgid "Options"
 msgstr ""
 
@@ -978,6 +983,14 @@ msgstr ""
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:41
 msgid "Wait for (seconds)"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_download.php:73
+msgid "Download File"
+msgstr ""
+
+#: modules/pkgs/includes/actions/action_download.php:127
+msgid "Download File:"
 msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:60

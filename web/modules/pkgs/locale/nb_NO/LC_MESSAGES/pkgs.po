@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2019
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 18:22+0200\n"
+"POT-Creation-Date: 2020-12-01 18:08+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -641,6 +641,7 @@ msgstr "Oppdater seksjon"
 #: modules/pkgs/includes/actions/actionprocessscript.php:273
 #: modules/pkgs/includes/actions/action_set_config_file.php:60
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:87
+#: modules/pkgs/includes/actions/action_download.php:135
 msgid "Delete"
 msgstr "Slett"
 
@@ -657,6 +658,7 @@ msgstr "Gå til pakkemappe"
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
 #: modules/pkgs/includes/actions/action_set_config_file.php:29
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:30
+#: modules/pkgs/includes/actions/action_download.php:85
 msgid "Step label :"
 msgstr "Trinnetikett:"
 
@@ -667,6 +669,8 @@ msgstr "Trinnetikett:"
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:134
 #: modules/pkgs/includes/actions/actionprocessscript.php:57
 #: modules/pkgs/includes/actions/actionprocessscript.php:71
+#: modules/pkgs/includes/actions/action_download.php:103
+#: modules/pkgs/includes/actions/action_download.php:117
 msgid "Alternate package"
 msgstr "Alternativ pakke"
 
@@ -682,6 +686,7 @@ msgstr "Alternativ pakke"
 #: modules/pkgs/includes/actions/actionprocessscript.php:274
 #: modules/pkgs/includes/actions/action_set_config_file.php:65
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:88
+#: modules/pkgs/includes/actions/action_download.php:136
 msgid "Options"
 msgstr "Alternativer"
 
@@ -995,6 +1000,14 @@ msgstr "Vent og gå til trinn"
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:41
 msgid "Wait for (seconds)"
 msgstr "Vent i (sekunder)"
+
+#: modules/pkgs/includes/actions/action_download.php:73
+msgid "Download File"
+msgstr "Last ned fil"
+
+#: modules/pkgs/includes/actions/action_download.php:127
+msgid "Download File:"
+msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151

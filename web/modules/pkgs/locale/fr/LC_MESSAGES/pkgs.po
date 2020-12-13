@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 18:22+0200\n"
+"POT-Creation-Date: 2020-12-01 18:08+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: SPO <spointu@gmail.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -644,6 +644,7 @@ msgstr "Section de mise-à-jour"
 #: modules/pkgs/includes/actions/actionprocessscript.php:273
 #: modules/pkgs/includes/actions/action_set_config_file.php:60
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:87
+#: modules/pkgs/includes/actions/action_download.php:135
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -660,6 +661,7 @@ msgstr "Aller au dossier du package"
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
 #: modules/pkgs/includes/actions/action_set_config_file.php:29
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:30
+#: modules/pkgs/includes/actions/action_download.php:85
 msgid "Step label :"
 msgstr "Nom de l'étape:"
 
@@ -670,6 +672,8 @@ msgstr "Nom de l'étape:"
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:134
 #: modules/pkgs/includes/actions/actionprocessscript.php:57
 #: modules/pkgs/includes/actions/actionprocessscript.php:71
+#: modules/pkgs/includes/actions/action_download.php:103
+#: modules/pkgs/includes/actions/action_download.php:117
 msgid "Alternate package"
 msgstr "Package alternatif"
 
@@ -685,6 +689,7 @@ msgstr "Package alternatif"
 #: modules/pkgs/includes/actions/actionprocessscript.php:274
 #: modules/pkgs/includes/actions/action_set_config_file.php:65
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:88
+#: modules/pkgs/includes/actions/action_download.php:136
 msgid "Options"
 msgstr "Options"
 
@@ -998,6 +1003,14 @@ msgstr "Attendre et aller à l'étape"
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:41
 msgid "Wait for (seconds)"
 msgstr "Attendre pendant (secondes)"
+
+#: modules/pkgs/includes/actions/action_download.php:73
+msgid "Download File"
+msgstr "Télécharger le fichier"
+
+#: modules/pkgs/includes/actions/action_download.php:127
+msgid "Download File:"
+msgstr ""
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151

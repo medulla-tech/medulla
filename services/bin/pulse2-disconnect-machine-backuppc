@@ -23,7 +23,7 @@ def conffilename(type):
     if type in ["machine"]:
         conffilenameparamter = "agentconf.ini"
     else:
-        conffilenameparamter = "relayconf.ini"
+        conffilenameparamter = "relayconf.ini.local"
     if sys.platform.startswith('linux'):
         fileconf = os.path.join("/", "etc", "pulse-xmpp-agent", conffilenameparamter)
     elif sys.platform.startswith('win'):

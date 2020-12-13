@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 18:22+0200\n"
+"POT-Creation-Date: 2020-12-01 18:08+0100\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -22,8 +22,8 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: modules/glpi/infoPackage.inc.php:32
-#: modules/glpi/glpi/ajaxMachinesList.php:67
-#: modules/glpi/glpi/ajaxMachinesList.php:71
+#: modules/glpi/glpi/ajaxMachinesList.php:87
+#: modules/glpi/glpi/ajaxMachinesList.php:91
 msgid "GLPI Inventory"
 msgstr "GLPI Инвентарь"
 
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Get the whole machines list"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:74 modules/glpi/glpi/machinesList.php:28
+#: modules/glpi/infoPackage.inc.php:74 modules/glpi/glpi/machinesList.php:29
 msgid "Machines List"
 msgstr ""
 
@@ -313,122 +313,131 @@ msgstr "Реестр"
 msgid "Get XLS Report"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:68
-#: modules/glpi/glpi/ajaxMachinesList.php:73
-#: modules/glpi/glpi/ajaxMachinesList.php:77
+#: modules/glpi/glpi/ajaxMachinesList.php:88
+#: modules/glpi/glpi/ajaxMachinesList.php:93
+#: modules/glpi/glpi/ajaxMachinesList.php:98
 msgid "Software deployment"
 msgstr "Развертывание ПО"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:70
+#: modules/glpi/glpi/ajaxMachinesList.php:90
 msgid "Inventory"
 msgstr "Инвентарь"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:72
+#: modules/glpi/glpi/ajaxMachinesList.php:92
 msgid "detaildeploy"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:76
-#: modules/glpi/glpi/ajaxMachinesList.php:89
-#: modules/glpi/glpi/ajaxMachinesList.php:99
+#: modules/glpi/glpi/ajaxMachinesList.php:96
+msgid "Monitoring"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:97
+#: modules/glpi/glpi/ajaxMachinesList.php:112
+#: modules/glpi/glpi/ajaxMachinesList.php:122
 msgid "Remote control"
 msgstr "Удаленное управление"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:79
-#: modules/glpi/glpi/ajaxMachinesList.php:80
+#: modules/glpi/glpi/ajaxMachinesList.php:100
+#: modules/glpi/glpi/ajaxMachinesList.php:101
 msgid "xmppconsole"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:82
-#: modules/glpi/glpi/ajaxMachinesList.php:83
-#: modules/glpi/glpi/ajaxMachinesList.php:84
-#: modules/glpi/glpi/ajaxMachinesList.php:87
+#: modules/glpi/glpi/ajaxMachinesList.php:103
+#: modules/glpi/glpi/ajaxMachinesList.php:104
+#: modules/glpi/glpi/ajaxMachinesList.php:105
+#: modules/glpi/glpi/ajaxMachinesList.php:108
 msgid "files browsing"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:85
-#: modules/glpi/glpi/ajaxMachinesList.php:86
+#: modules/glpi/glpi/ajaxMachinesList.php:106
+#: modules/glpi/glpi/ajaxMachinesList.php:107
 msgid "Edit config files"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:91
+#: modules/glpi/glpi/ajaxMachinesList.php:109
+#: modules/glpi/glpi/ajaxMachinesList.php:110
+msgid "files viewer"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:114
 msgid "Imaging management"
 msgstr "Управление образами"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:92
+#: modules/glpi/glpi/ajaxMachinesList.php:115
 msgid "extTicket issue"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:94
+#: modules/glpi/glpi/ajaxMachinesList.php:117
 msgid "Show Profile"
 msgstr "Показать профиль"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:96
+#: modules/glpi/glpi/ajaxMachinesList.php:119
 msgid "Quick action"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:225
+#: modules/glpi/glpi/ajaxMachinesList.php:277
 #: modules/glpi/glpi/ajaxViewPart.php:231
 msgid "Computer Name"
 msgstr "Имя компьютера"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:228
+#: modules/glpi/glpi/ajaxMachinesList.php:280
 #: modules/glpi/glpi/addLocation.php:101 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/addEntityRule.php:77
 #: modules/glpi/glpi/ajaxViewPart.php:232
 msgid "Description"
 msgstr "Описание"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:230
+#: modules/glpi/glpi/ajaxMachinesList.php:282
 #: modules/glpi/glpi/ajaxViewPart.php:238
 msgid "Operating System"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:232
+#: modules/glpi/glpi/ajaxMachinesList.php:284
 #: modules/glpi/glpi/ajaxViewPart.php:239
 msgid "Computer Type"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:234
+#: modules/glpi/glpi/ajaxMachinesList.php:286
 #: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Last Logged User"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:236
+#: modules/glpi/glpi/ajaxMachinesList.php:288
 msgid "Owner"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:238
+#: modules/glpi/glpi/ajaxMachinesList.php:290
 #: modules/glpi/glpi/ajaxViewPart.php:234
 msgid "Entity"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:240
+#: modules/glpi/glpi/ajaxMachinesList.php:292
 msgid "Localization"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:242
+#: modules/glpi/glpi/ajaxMachinesList.php:294
 msgid "Owner Firstname"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:244
+#: modules/glpi/glpi/ajaxMachinesList.php:296
 msgid "Owner Real Name"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:246
+#: modules/glpi/glpi/ajaxMachinesList.php:298
 #: modules/glpi/glpi/ajaxViewPart.php:241
 msgid "Model"
 msgstr "Модель"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:248
+#: modules/glpi/glpi/ajaxMachinesList.php:300
 #: modules/glpi/glpi/ajaxViewPart.php:242
 msgid "Manufacturer"
 msgstr "Производитель"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:271
+#: modules/glpi/glpi/ajaxMachinesList.php:324
 msgid "Backup status"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:307
+#: modules/glpi/glpi/ajaxMachinesList.php:361
 msgid "Delete computer"
 msgstr "Удалить компьютер"
 
@@ -877,7 +886,7 @@ msgstr ""
 msgid "Up-to-date"
 msgstr "Своевременный"
 
-#: modules/glpi/glpi/ajaxViewPart.php:301
+#: modules/glpi/glpi/ajaxViewPart.php:305
 msgid "Invalid hostname"
 msgstr ""
 
@@ -910,19 +919,19 @@ msgstr ""
 msgid "Location name"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:39
+#: modules/glpi/glpi/machinesList.php:40
 msgid "All computers"
 msgstr "Все компьютеры"
 
-#: modules/glpi/glpi/machinesList.php:43
+#: modules/glpi/glpi/machinesList.php:44
 msgid "Online computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:47
+#: modules/glpi/glpi/machinesList.php:48
 msgid "Offline computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:52
+#: modules/glpi/glpi/machinesList.php:53
 msgid "All my entities"
 msgstr "Все мои объекты"
 

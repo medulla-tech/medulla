@@ -272,6 +272,9 @@ class MscDatabase(DatabaseHelper):
         #cmd.do_reboot = do_reboot
         #cmd.do_wol = do_wol
         #cmd.do_imaging_menu = do_wol_with_imaging
+        if next_connection_delay is not None and next_connection_delay == '':
+            next_connection_delay = 0
+
         cmd.next_connection_delay = next_connection_delay
         cmd.max_connection_attempt = max_connection_attempt
         #cmd.do_inventory = do_inventory
