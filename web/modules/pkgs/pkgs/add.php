@@ -256,8 +256,8 @@ if (isset($_POST['bconfirm'])){
 
         $methodtransfer = new SelectItem('methodetransfert');
         // Allowed methods are pullcurl, pushrsync, pullrsync, pullscp
-        $methodtransfer->setElements([ 'pushrsync', 'pullrsync', 'pulldirect']);
-        $methodtransfer->setElementsVal([ 'pushrsync', 'pullrsync', 'pulldirect']);
+        $methodtransfer->setElements([ 'pulldirect', 'pushrsync', 'pullrsync' ]);
+        $methodtransfer->setElementsVal([ 'pulldirect', 'pushrsync', 'pullrsync']);
         $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer,['trid'=>'trTransfermethod']),['value'=>'']);
 
 

@@ -324,6 +324,11 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                                     $deploymachine['enddateh'][0]);
         $end_date_plan_msc = date("Y-m-d H:i:s", $end_date_plan_msc);
 
+        if (isset($otherinfos[0]->ipmachine) && $otherinfos[0]->ipmachine != ""){
+            $titleip = _T("IP Address (from XMPP)","xmppmaster");
+        }else{
+            $titleip =_T("IP Address (from GLPI)","xmppmaster");
+        }
             echo "<br>";
             echo '<h2 class="replytab" id="detailmach">'.$hideText.' '._T("Machine Details","xmppmaster"). '</h2>';
             echo "<div id='titledetailmach'>";
@@ -335,10 +340,10 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                             echo '</td>';
 
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">'._T("Ip Machine","xmppmaster").'</span>';
+                                echo '<span style=" padding-left: 32px;">'.$titleip.'</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
-                                echo '<span style=" padding-left: 32px;">'._T("Mac Address","xmppmaster").'</span>';
+                                echo '<span style=" padding-left: 32px;">'._T("MAC Address","xmppmaster").'</span>';
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
@@ -479,25 +484,25 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         $jidmachine = $info['objectdeploy'][0]['jidmachine'];
         $jid_relay = $info['objectdeploy'][0]['jid_relay'];
             echo "<br>";
-            echo '<h2 class="replytab" id="xmppinfo">'.$hideText.' '._T("xmpp information", "xmppmaster").'</h2>';
+            echo '<h2 class="replytab" id="xmppinfo">'.$hideText.' '._T("XMPP Information", "xmppmaster").'</h2>';
             echo "<div id='titlexmppinfo'>";
             echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
                 echo "<tr>";
                     echo '<td  style="width : 120px;">';
-                        echo '<span style=" padding-left: 32px;">'._T("jid machine","xmppmaster").'</span>';
+                        echo '<span style=" padding-left: 32px;">'._T("Machine JID","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td>';
-                        echo '<span style=" padding-left:0px;">'._T("jid Relay server","xmppmaster").'</span>';
+                        echo '<span style=" padding-left:0px;">'._T("Relay Server JID","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td style="width: ;">';
-                    echo '<span style=" padding-left: 32px;">'._T("ip machine","xmppmaster").'</span>';
+                    echo '<span style=" padding-left: 32px;">'._T("Machine IP","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">'._T("ip relayserver","xmppmaster").'</span>';
+                        echo '<span style=" padding-left: 32px;">'._T("Relay Server IP","xmppmaster").'</span>';
                     echo '</td>';
                     echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">'._T("ip master","xmppmaster").'</span>';
+                        echo '<span style=" padding-left: 32px;">'._T("Master IP","xmppmaster").'</span>';
                     echo '</td>';
                 echo "</tr>";
             echo "</thead>";

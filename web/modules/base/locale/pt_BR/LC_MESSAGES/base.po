@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 18:22+0200\n"
+"POT-Creation-Date: 2020-12-01 18:08+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -441,15 +441,15 @@ msgstr "Backup"
 
 #: modules/base/computers/index.php:48
 #: modules/base/computers/localSidebar.php:5
-#: modules/glpi/glpi/machinesList.php:39
+#: modules/glpi/glpi/machinesList.php:40
 msgid "All computers"
 msgstr "Todos os computadores"
 
-#: modules/base/computers/index.php:52 modules/glpi/glpi/machinesList.php:43
+#: modules/base/computers/index.php:52 modules/glpi/glpi/machinesList.php:44
 msgid "Online computers"
 msgstr ""
 
-#: modules/base/computers/index.php:56 modules/glpi/glpi/machinesList.php:47
+#: modules/base/computers/index.php:56 modules/glpi/glpi/machinesList.php:48
 msgid "Offline computers"
 msgstr ""
 
@@ -903,18 +903,23 @@ msgid "The password is too short."
 msgstr "A senha é muito curta."
 
 #: modules/base/includes/computers_list.inc.php:100
-#: modules/glpi/glpi/ajaxMachinesList.php:70
+#: modules/glpi/glpi/ajaxMachinesList.php:90
 msgid "Inventory"
 msgstr "Inventário"
 
 #: modules/base/includes/computers_list.inc.php:101
-#: modules/glpi/glpi/ajaxMachinesList.php:67
-#: modules/glpi/glpi/ajaxMachinesList.php:71
+#: modules/glpi/glpi/ajaxMachinesList.php:96
+msgid "Monitoring"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:102
+#: modules/glpi/glpi/ajaxMachinesList.php:87
+#: modules/glpi/glpi/ajaxMachinesList.php:91
 msgid "GLPI Inventory"
 msgstr "Inventário GLPI"
 
-#: modules/base/includes/computers_list.inc.php:102
-#: modules/glpi/glpi/ajaxMachinesList.php:72
+#: modules/base/includes/computers_list.inc.php:103
+#: modules/glpi/glpi/ajaxMachinesList.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:80
@@ -923,22 +928,22 @@ msgstr "Inventário GLPI"
 msgid "detaildeploy"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:103
-#: modules/base/includes/computers_list.inc.php:106
-#: modules/glpi/glpi/ajaxMachinesList.php:68
-#: modules/glpi/glpi/ajaxMachinesList.php:73
-#: modules/glpi/glpi/ajaxMachinesList.php:77
+#: modules/base/includes/computers_list.inc.php:104
+#: modules/base/includes/computers_list.inc.php:107
+#: modules/glpi/glpi/ajaxMachinesList.php:88
+#: modules/glpi/glpi/ajaxMachinesList.php:93
+#: modules/glpi/glpi/ajaxMachinesList.php:98
 msgid "Software deployment"
 msgstr "Instalação de software"
 
-#: modules/base/includes/computers_list.inc.php:105
+#: modules/base/includes/computers_list.inc.php:106
 msgid "Read log"
 msgstr "Ler log"
 
-#: modules/base/includes/computers_list.inc.php:108
 #: modules/base/includes/computers_list.inc.php:109
-#: modules/glpi/glpi/ajaxMachinesList.php:79
-#: modules/glpi/glpi/ajaxMachinesList.php:80
+#: modules/base/includes/computers_list.inc.php:110
+#: modules/glpi/glpi/ajaxMachinesList.php:100
+#: modules/glpi/glpi/ajaxMachinesList.php:101
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:17
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:18
 #: modules/pulse2/includes/menu_actionaudit.php:78
@@ -946,14 +951,14 @@ msgstr "Ler log"
 msgid "xmppconsole"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:111
 #: modules/base/includes/computers_list.inc.php:112
-#: modules/base/includes/computers_list.inc.php:124
+#: modules/base/includes/computers_list.inc.php:113
 #: modules/base/includes/computers_list.inc.php:125
-#: modules/glpi/glpi/ajaxMachinesList.php:82
-#: modules/glpi/glpi/ajaxMachinesList.php:83
-#: modules/glpi/glpi/ajaxMachinesList.php:84
-#: modules/glpi/glpi/ajaxMachinesList.php:87
+#: modules/base/includes/computers_list.inc.php:126
+#: modules/glpi/glpi/ajaxMachinesList.php:103
+#: modules/glpi/glpi/ajaxMachinesList.php:104
+#: modules/glpi/glpi/ajaxMachinesList.php:105
+#: modules/glpi/glpi/ajaxMachinesList.php:108
 #: modules/pulse2/includes/menu_actionaudit.php:79
 #: modules/pulse2/includes/menu_actionaudit.php:82
 #: modules/pulse2/includes/menu_action.php:70
@@ -962,10 +967,10 @@ msgstr ""
 msgid "files browsing"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:118
-#: modules/base/includes/computers_list.inc.php:120
-#: modules/glpi/glpi/ajaxMachinesList.php:85
-#: modules/glpi/glpi/ajaxMachinesList.php:86
+#: modules/base/includes/computers_list.inc.php:119
+#: modules/base/includes/computers_list.inc.php:121
+#: modules/glpi/glpi/ajaxMachinesList.php:106
+#: modules/glpi/glpi/ajaxMachinesList.php:107
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:34
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:35
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:15
@@ -976,12 +981,12 @@ msgstr ""
 msgid "Edit config files"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:127
-#: modules/base/includes/computers_list.inc.php:129
-#: modules/base/includes/computers_list.inc.php:140
-#: modules/glpi/glpi/ajaxMachinesList.php:76
-#: modules/glpi/glpi/ajaxMachinesList.php:89
-#: modules/glpi/glpi/ajaxMachinesList.php:99
+#: modules/base/includes/computers_list.inc.php:128
+#: modules/base/includes/computers_list.inc.php:130
+#: modules/base/includes/computers_list.inc.php:141
+#: modules/glpi/glpi/ajaxMachinesList.php:97
+#: modules/glpi/glpi/ajaxMachinesList.php:112
+#: modules/glpi/glpi/ajaxMachinesList.php:122
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:55
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:19
@@ -991,52 +996,52 @@ msgstr ""
 msgid "Remote control"
 msgstr "Controle remoto"
 
-#: modules/base/includes/computers_list.inc.php:131
-#: modules/glpi/glpi/ajaxMachinesList.php:91
+#: modules/base/includes/computers_list.inc.php:132
+#: modules/glpi/glpi/ajaxMachinesList.php:114
 #: modules/pulse2/includes/menu_group_action.php:76
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:156
 msgid "Imaging management"
 msgstr "gerenciamento das imagens"
 
-#: modules/base/includes/computers_list.inc.php:132
+#: modules/base/includes/computers_list.inc.php:133
 msgid "Download file"
 msgstr "Baixar arquivo"
 
-#: modules/base/includes/computers_list.inc.php:133
+#: modules/base/includes/computers_list.inc.php:134
 #: modules/base/users/ajaxFilter.php:85
-#: modules/glpi/glpi/ajaxMachinesList.php:92
+#: modules/glpi/glpi/ajaxMachinesList.php:115
 msgid "extTicket issue"
 msgstr "questo extTicket"
 
-#: modules/base/includes/computers_list.inc.php:135
-#: modules/glpi/glpi/ajaxMachinesList.php:94
+#: modules/base/includes/computers_list.inc.php:136
+#: modules/glpi/glpi/ajaxMachinesList.php:117
 msgid "Show Profile"
 msgstr "Mostrar Perfil"
 
-#: modules/base/includes/computers_list.inc.php:137
-#: modules/glpi/glpi/ajaxMachinesList.php:96
+#: modules/base/includes/computers_list.inc.php:138
+#: modules/glpi/glpi/ajaxMachinesList.php:119
 #: modules/pulse2/includes/menu_actionaudit.php:68
 #: modules/pulse2/includes/menu_action.php:75
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:69
 msgid "Quick action"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:345
+#: modules/base/includes/computers_list.inc.php:348
 msgid "Computers list"
 msgstr "Lista de computadores"
 
-#: modules/base/includes/computers_list.inc.php:362
-#: modules/glpi/glpi/ajaxMachinesList.php:271
+#: modules/base/includes/computers_list.inc.php:368
+#: modules/glpi/glpi/ajaxMachinesList.php:324
 #: modules/pulse2/includes/menu_actionaudit.php:66
 msgid "Backup status"
 msgstr "Status do Backup"
 
-#: modules/base/includes/computers_list.inc.php:402
-#: modules/glpi/glpi/ajaxMachinesList.php:307
+#: modules/base/includes/computers_list.inc.php:408
+#: modules/glpi/glpi/ajaxMachinesList.php:361
 msgid "Delete computer"
 msgstr "Remover computador"
 
-#: modules/base/includes/computers_list.inc.php:405
+#: modules/base/includes/computers_list.inc.php:411
 msgid "Remove machine from group"
 msgstr "Remover máquina de grupo"
 
@@ -1711,6 +1716,11 @@ msgstr[1] "%d serviços inativos"
 msgid "Appstream"
 msgstr "Appstream"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:109
+#: modules/glpi/glpi/ajaxMachinesList.php:110
+msgid "files viewer"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:298
 msgid "cluster list"
 msgstr ""
@@ -1808,6 +1818,10 @@ msgid ""
 "I am aware that this disable/enable a relay forcing a <em><b>reconfiguration"
 " of all the machines</b></em> managed by the cluster.<br />Check this box if"
 " it is what you want."
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
+msgid "Acquit"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52

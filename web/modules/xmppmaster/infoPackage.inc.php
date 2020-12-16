@@ -76,6 +76,20 @@ $page->setFile("modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("alerts", _T("Monitoring Alerts", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/monitoring/alerts.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxalerts");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setFile("modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php");
+$submod->addPage($page);
+
+$page = new Page("acquit");
+$page->setFile("modules/xmppmaster/xmppmaster/monitoring/acquit.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page("machine_xmpp_detail", _T('XMPP Machine details', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -117,6 +131,13 @@ $page = new Page("logbygrpmachine", _T('XMPP logs on group', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("consolecomputerxmpp", _T('XMPP Console', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("monitoringview", _T('XMPP Monitoring view', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("fileviewer", _T('File Viewer', 'xmppmaster'));
+$page->setFile("modules/xmppmaster/xmppmaster/filebrowser.php");
 $submod->addPage($page);
 
 $page = new Page("xmppfilesbrowsing", _T('File Browser', 'xmppmaster'));
@@ -357,6 +378,15 @@ $submod->addPage($page);
 
 $page = new Page("ajaxpackageslist", _T("Packages List", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php");
+$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
+$page = new Page("monconfig", _T("Monitoring Configuration", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/monitoring/monconfig.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxmonconfig", _T("Monitoring Configuration", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/monitoring/ajaxmonconfig.php");
 $page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 

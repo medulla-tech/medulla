@@ -40,6 +40,10 @@ def activate():
 
 def queryPossibilities():
     ret = {}
+    ret['Printer name'] = ['list', getAllNamePrinters]
+    ret['Printer serial'] = ['list', getAllSerialPrinters]
+    ret['Peripheral name'] = ['list', getAllNamePeripherals]
+    ret['Peripheral serial'] = ['list', getAllSerialPeripherals]
     ret['Owner of the machine'] = ['list', getAllOwnerMachine]
     ret['User location'] = ['list', getAllLocations1]
     ret['Last Logged User'] = ['list', getAllContacts]
@@ -89,6 +93,20 @@ def queryGroups():
                  ['Inventory number', 'Your internal inventory number'],
                  ['Group', 'GLPI Group']
                  ]])
+    """
+    # If we want to add printers, everything is already done.
+    Currently all printers are searched through peripherals
+
+    ret.append(['Printers',
+                [['Printer name', 'Name printer'],
+                 ['Printer serial', 'serial printer']
+                 ]])
+    """
+    ret.append(['Peripherals',
+                [['Peripheral name', 'Peripheral name'],
+                 ['Peripheral serial', 'Peripheral serial']
+                 ]])
+
     # Hardware cat
     ret.append(['Hardware',
                 [['System type', 'Laptop, Desktop, Rack Mount Chassis ...'],
@@ -148,9 +166,6 @@ def extendedPossibilities():
 
 
 def query(ctx, criterion, value):
-    logging.getLogger().info(ctx)
-    logging.getLogger().info(criterion)
-    logging.getLogger().info(value)
     machines = []
     if criterion == 'OS' or criterion == 'Operating system':
         machines = [x.name for x in Glpi().getMachineByOs(ctx, value)]
@@ -193,6 +208,14 @@ def query(ctx, criterion, value):
         machines = [x.name for x in Glpi().getMachineByOsVersion(ctx, value)]
     elif criterion == "Architecture":
         machines = [x.name for x in Glpi().getMachineByArchitecure(ctx, value)]
+    elif criterion == "Printer name":
+        machines = [x.name for x in Glpi().getMachineByPrinter(ctx, value)]
+    elif criterion == "Printer serial":
+        machines = [x.name for x in Glpi().getMachineByPrinterserial(ctx, value)]
+    elif criterion == "Peripheral name":
+        machines = [x.name for x in Glpi().getMachineByPeripheral(ctx, value)]
+    elif criterion == "Peripheral serial":
+        machines = [x.name for x in Glpi().getMachineByPeripheralserial(ctx, value)]
     #elif criterion == '':
     #    machines = map(lambda x: x.name, Glpi().getMachineBy(ctx, value))
     return [machines, True]
@@ -320,3 +343,19 @@ def getAllOsVersions(ctx, value=""):
 
 def getAllArchitectures(ctx, value=""):
     return unique([element.name for element in Glpi().getAllArchitectures(ctx, filt=value)])
+
+
+def getAllNamePrinters(ctx, value=""):
+    return unique([element.name for element in Glpi().getAllNamePrinters(ctx, filt=value)])
+
+
+def getAllSerialPrinters(ctx, value=""):
+    return unique([element.serial for element in Glpi().getAllSerialPrinters(ctx, filt=value)])
+
+
+def getAllNamePeripherals(ctx, value=""):
+    return unique([element.name for element in Glpi().getAllNamePeripherals(ctx, filt=value)])
+
+
+def getAllSerialPeripherals(ctx, value=""):
+    return unique([element.serial for element in Glpi().getAllSerialPeripherals(ctx, filt=value)])

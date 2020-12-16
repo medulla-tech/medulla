@@ -113,8 +113,8 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
                  */
                 if (is_array($all[$k][0])) {
                     $editable = $all[$k][0];
-                    $val[] = sprintf('<label class="editableField" name="%s" data="%s" style="height:1em;">%s</label>', $editable[0], $editable[1], $editable[2])
-                             .sprintf('<input type="text" class="editableField" name="%s" value="%s" style="display:none" />', $editable[0], $editable[2]);
+                    $val[] = sprintf('<label class="editableField" name="%s" data="%s" style="min-height:1em;">%s</label>', $editable[0], $editable[1], $editable[2])
+                             .sprintf('<textarea class="editableField" name="%s" style="display:none">%s</textarea>', $editable[0], $editable[2]);
                 }
                 else {
                     $val[] = $all[$k][0];
@@ -270,29 +270,33 @@ _T('Up-to-date', 'glpi');
 ?>
 
 </table>
+<script src="modules/glpi/graph/js/autoresize.js"></script>
 <script type="text/javascript">
-// TODO: To remove
-jQuery('tbody tr td:not(.action)').on('click',function(){
-    jQuery('#param').val(jQuery(this).text().replace(/&nbsp;/g, ' '));
-    pushSearch();
-});
+//demo: http://so.devilmaycode.it/jquery-convert-line-breaks-to-br-nl2br-equivalent
+function nl2br (str) {
+    var breakTag = '<br>';
+    return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
+}
 
 // Editable fields label click
 jQuery('label.editableField').on('click',function(){
     var name = jQuery(this).attr('name');
-    var value = jQuery(this).text();
+    // Get the label raw html to have <br> tags and replace them by \r\n chars
+    var value = jQuery(this).html().split(new RegExp(/<br[ /]*>/g)).join("\r\n");
     // corresponding input
-    var input = jQuery('input.editableField[name="'+name+'"]').first();
+    var input = jQuery('textarea.editableField[name="'+name+'"]').first();
     jQuery(this).hide();
     input.val(value).show().focus();
+    input.css('width', '100%');
+    input.autoResize()
 });
 
-jQuery('input.editableField').bind('keyup focusout',function(e){
-    // If we receive a keycode (keyup), it must be #13 [return]
-    if (e.keyCode != null && e.keyCode != 13) return;
+jQuery('textarea.editableField').bind('keyup focusout',function(e){
+    // If we receive a keycode (keyup), it must be #27 [esc]
+    if (e.keyCode != null && e.keyCode != 27) return;
 
     var name = jQuery(this).attr('name');
-    var value = jQuery(this).val();
+    var value = nl2br(jQuery(this).val());
     var input = jQuery(this);
 
     // Special case: computername regex

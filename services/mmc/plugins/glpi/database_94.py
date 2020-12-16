@@ -92,7 +92,7 @@ class Glpi94(DyngroupDatabaseHelper):
         except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
-        if LooseVersion(self._glpi_version) >=  LooseVersion("9.4") and LooseVersion(self._glpi_version) <=  LooseVersion("9.4.5"):
+        if LooseVersion(self._glpi_version) >=  LooseVersion("9.4") and LooseVersion(self._glpi_version) <=  LooseVersion("9.4.6"):
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
@@ -497,6 +497,27 @@ class Glpi94(DyngroupDatabaseHelper):
             autoload = True)
         mapper(Computersitems, self.computersitems)
 
+        # use view glpi_view_computers_items_printer
+        self.view_computers_items_printer = Table("glpi_view_computers_items_printer", self.metadata,
+                                                  Column('id', Integer, primary_key=True),
+                                                  Column('items_id', Integer, ForeignKey('glpi_printers.id')),
+                                                  Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                                                  autoload=True)
+        mapper(Computersviewitemsprinter, self.view_computers_items_printer)
+
+        self.view_computers_items_peripheral = Table("glpi_view_computers_items_peripheral", self.metadata,
+                                                     Column('id', Integer, primary_key=True),
+                                                     Column('items_id', Integer, ForeignKey('glpi_peripherals.id')),
+                                                     Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                                                     autoload=True)
+        mapper(Computersviewitemsperipheral, self.view_computers_items_peripheral)
+
+        self.glpi_view_peripherals_manufacturers = Table("glpi_view_peripherals_manufacturers", self.metadata,
+                                                         Column('id', Integer, primary_key=True),
+                                                         Column('items_id', Integer, ForeignKey('glpi_peripherals.manufacturers_id')),
+                                                         autoload=True)
+        mapper(Peripheralsmanufacturers, self.glpi_view_peripherals_manufacturers)
+
         # Monitors items
         self.monitors = Table("glpi_monitors", self.metadata,
             autoload = True)
@@ -605,6 +626,8 @@ class Glpi94(DyngroupDatabaseHelper):
 
         location = ""
         criterion = ""
+        field = ""
+        contains = ""
 
         master_config = xmppMasterConfig()
         reg_columns = []
@@ -623,6 +646,11 @@ class Glpi94(DyngroupDatabaseHelper):
         if "filter" in ctx and ctx["filter"] != "":
             criterion = ctx["filter"]
 
+        if "field" in ctx and ctx["field"] != "":
+            field = ctx["field"]
+
+        if "contains" in ctx and ctx["contains"] != "":
+            contains = ctx["contains"]
 
         # Get the list of online computers
         online_machines = []
@@ -639,6 +667,12 @@ class Glpi94(DyngroupDatabaseHelper):
         .join(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)\
         .outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
 
+        if field != "":
+            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            if field != "type":
+                query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                   Computersitems.itemtype == "Peripheral"))\
+                    .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
 
@@ -684,23 +718,31 @@ class Glpi94(DyngroupDatabaseHelper):
             query = query.filter(Entities.id == location)
 
         # Add all the like clauses to find machines containing the criterion
-        if filter != "":
-            query = query.filter()
-            query = query.filter(or_(
-                Machine.name.contains(criterion),
-                Machine.comment.contains(criterion),
-                self.os.c.name.contains(criterion),
-                self.glpi_computertypes.c.name.contains(criterion),
-                Machine.contact.contains(criterion),
-                Entities.name.contains(criterion),
-                self.user.c.firstname.contains(criterion),
-                self.user.c.realname.contains(criterion),
-                self.user.c.name.contains(criterion),
-                self.locations.c.name.contains(criterion),
-                self.manufacturers.c.name.contains(criterion),
-                self.model.c.name.contains(criterion),
-                self.regcontents.c.value.contains(criterion)
-            ))
+        if criterion != "":
+            if field == "":
+                query = query.filter(or_(
+                    Machine.name.contains(criterion),
+                    Machine.comment.contains(criterion),
+                    self.os.c.name.contains(criterion),
+                    self.glpi_computertypes.c.name.contains(criterion),
+                    Machine.contact.contains(criterion),
+                    Entities.name.contains(criterion),
+                    self.user.c.firstname.contains(criterion),
+                    self.user.c.realname.contains(criterion),
+                    self.user.c.name.contains(criterion),
+                    self.locations.c.name.contains(criterion),
+                    self.manufacturers.c.name.contains(criterion),
+                    self.model.c.name.contains(criterion),
+                    self.regcontents.c.value.contains(criterion)
+                ))
+            else:
+                if field == "peripherals":
+                    if contains == "notcontains":
+                        query = query.filter(not_(Peripherals.name.contains(criterion)))
+                    else:
+                        query = query.filter(Peripherals.name.contains(criterion))
+                else:
+                    pass
 
         query = query.order_by(Machine.name)
         # All computers
@@ -1135,6 +1177,14 @@ class Glpi94(DyngroupDatabaseHelper):
             return base + [self.os_sp]
         elif query[2] == 'Architecture':
             return base + [self.os_arch]
+        elif query[2] == 'Printer name':
+            return base + [self.view_computers_items_printer, self.printers]
+        elif query[2] == 'Printer serial':
+            return base + [self.view_computers_items_printer, self.printers]
+        elif query[2] == 'Peripheral name':
+            return base + [self.view_computers_items_peripheral, self.peripherals]
+        elif query[2] == 'Peripheral serial':
+            return base + [self.view_computers_items_peripheral, self.peripherals]
         elif query[2] == 'Group':
             return base + [self.group]
         elif query[2] == 'Network':
@@ -3859,6 +3909,7 @@ class Glpi94(DyngroupDatabaseHelper):
         ret = query.group_by(self.net.c.name).all()
         session.close()
         return ret
+
     def getMachineByNetwork(self, ctx, filt):
         """ @return: all machines that have this contact number """
         session = create_session()
@@ -3870,6 +3921,64 @@ class Glpi94(DyngroupDatabaseHelper):
         ret = query.all()
         session.close()
         return ret
+
+    def _machineobject(self, ret):
+        """ result view glpi_computers_pulse """
+        if ret:
+            try:
+                return {'id' : ret.id,
+                        'entities_id': ret.entities_id,
+                        'name': ret.name,
+                        'serial': ret.serial,
+                        'otherserial': ret.otherserial,
+                        'contact': ret.contact,
+                        'contact_num': ret.contact_num,
+                        'users_id_tech': ret.users_id_tech,
+                        'groups_id_tech': ret.groups_id_tech,
+                        'comment': ret.comment,
+                        'date_mod': ret.date_mod,
+                        'autoupdatesystems_id': ret.autoupdatesystems_id,
+                        'locations_id': ret.locations_id ,
+                        'domains_id': ret.domains_id,
+                        'networks_id': ret.networks_id,
+                        'computermodels_id': ret.computermodels_id,
+                        'computertypes_id': ret.computertypes_id,
+                        'is_template': ret.is_template,
+                        'template_name': ret.template_name,
+                        'manufacturers_id': ret.manufacturers_id,
+                        'is_deleted': ret.is_deleted,
+                        'is_dynamic': ret.is_dynamic,
+                        'users_id': ret.users_id,
+                        'groups_id': ret.groups_id,
+                        'states_id': ret.states_id,
+                        'ticket_tco': ret.ticket_tco,
+                        'uuid': ret.uuid,
+                        'date_creation': ret.date_creation,
+                        'is_recursive': ret.is_recursive,
+                        'operatingsystems_id': ret.operatingsystems_id,
+                        'operatingsystemversions_id': ret.operatingsystemversions_id,
+                        'operatingsystemservicepacks_id': ret.operatingsystemservicepacks_id,
+                        'operatingsystemarchitectures_id': ret.operatingsystemarchitectures_id,
+                        'license_number': ret.license_number,
+                        'license_id': ret.license_id,
+                        'operatingsystemkernelversions_id': ret.operatingsystemkernelversions_id}
+            except Exception:
+                logger.error("\n%s" % (traceback.format_exc()))
+        return {}
+
+    def getMachineBySerial(self, serial):
+        """ @return: all computers that have this mac address """
+        session = create_session()
+        ret = session.query(Machine).filter(Machine.serial.like(serial)).first()
+        session.close()
+        return self._machineobject(ret)
+
+    def getMachineByUuidSetup(self, uuidsetupmachine):
+        """ @return: all computers that have this uuid setup machine """
+        session = create_session()
+        ret = session.query(Machine).filter(Machine.uuid.like(uuidsetupmachine)).first()
+        session.close()
+        return self._machineobject(ret)
 
     def getMachineByMacAddress(self, ctx, filt):
         """ @return: all computers that have this mac address """
@@ -5380,4 +5489,15 @@ class Printers(DbTOA):
     pass
 
 class Peripherals(DbTOA):
+    pass
+
+class Computersviewitemsprinter(DbTOA):
+    pass
+
+
+class Computersviewitemsperipheral(DbTOA):
+    pass
+
+
+class Peripheralsmanufacturers(DbTOA):
     pass

@@ -30,7 +30,7 @@ class Package_pending_exclusions(object):
             return self.id
         else:
             return 0
-    
+
     def getRelayserver_jid(self):
         if self.relayserver_jid != None:
             return self.relayserver_jid

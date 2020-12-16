@@ -114,9 +114,14 @@ def read_conf_showregistration(objectxmpp):
     objectxmpp.plugin_loadshowregistration = types.MethodType(plugin_loadshowregistration, objectxmpp)
 
 def plugin_loadshowregistration(self, msg, data):
+    try:
+        mach1 = str(msg['from']).split("@")[0]
+        mach = mach1.split(".")[0]
+    except:
+        mach = ""
     if "all" in self.showinfomachine or \
         "ALL" in self.showinfomachine or \
-            data['machine'].split(".")[0] in self.showinfomachine:
+            mach in self.showinfomachine:
         if self.showinfodeploy:
             self.presencedeployment = {}
             listrs = XmppMasterDatabase().listjidRSdeploy()

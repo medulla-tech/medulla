@@ -23,7 +23,7 @@
 START TRANSACTION;
 
 LOCK TABLES `rules` WRITE;
-INSERT INTO `rules` VALUES (9,'networkaddress','Associate relay server based on network address',9);
+INSERT INTO `rules` VALUES (9,'networkaddress','Associate relay based on network address',9);
 UNLOCK TABLES;
 
 -- ----------------------------------------------------------------------

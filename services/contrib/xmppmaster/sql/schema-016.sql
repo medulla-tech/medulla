@@ -53,9 +53,9 @@ INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Enable fast startu
 INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Restart machine agent','plugin_restartbot@_@','Restart the machine agent');
 INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Restart machine agent','plugin_restartbot@_@','Restart the machine agent');
 INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Restart machine agent','plugin_restartbot@_@','Restart the machine agent');
-INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Download agent log to file-transfer folder','plugin_downloadfile@_@C:\\Program Files\\Pulse\\var\\log\\xmpp-agent.log','Download agent full log to file-transfer folder');
-INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Download agent log to file-transfer folder','plugin_downloadfile@_@/var/log/pulse/xmpp-agent.log','Download agent full log to file-transfer folder');
-INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Download agent log to file-transfer folder','plugin_downloadfile@_@/Library/Application Support/Pulse/var/log/xmpp-agent.log','Download agent full log to file-transfer folder');
+INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Download agent log to file-transfer folder','plugin_downloadfile@_@C:\\Program Files\\Pulse\\var\\log\\xmpp-agent.log','Download agent log to file-transfer folder');
+INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Download agent log to file-transfer folder','plugin_downloadfile@_@/var/log/pulse/xmpp-agent.log','Download agent log to file-transfer folder');
+INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Download agent log to file-transfer folder','plugin_downloadfile@_@/Library/Application Support/Pulse/var/log/xmpp-agent.log','Download agent log to file-transfer folder');
 UNLOCK TABLES;
 
 

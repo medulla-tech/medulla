@@ -186,4 +186,195 @@ if ($this->refresh) {
           }
 }
 
+ class AjaxFilterParams extends AjaxFilterLocation {
+   /*
+   Like AjaxFilterGlpi, this object create a search bar with this fileds:
+    - entities selectbox
+    - peripherals field selectbox
+    - value field
+   */
+   function AjaxFilterParams($url, $divid = "container", $paramname = 'location', $params = array()) {
+       $this->AjaxFilter($url, $divid, $params);
+       $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
+       $this->paramname = $paramname;
+       $this->checkbox=array();
+       $this->onchange="pushSearch(); return false;";
+   }
+   function addCheckbox($checkbox)
+   {
+       $checkbox->onchange=$this->onchange;
+       $this->checkbox[]=$checkbox;
+   }
+   function setElements($elt) {
+       if (count($elt) == 0) {
+           $this->location = new NoLocationTpl($this->paramname);
+       } else if (count($elt) == 1) {
+           $loc = array_values($elt);
+           $this->location = new SingleLocationTpl($this->paramname, $loc[0]);
+       } else {
+           $this->location->setElements($elt);
+       }
+   }
+
+   function setElementsVal($elt) {
+       if (count($elt) >= 1) {
+           $this->location->setElementsVal($elt);
+       }
+   }
+
+   function setSelected($elemnt) {
+       $this->location->setSelected($elemnt);
+   }
+
+   function display($arrParam = array()) {
+       global $conf;
+       $root = $conf["global"]["root"];
+       ?>
+       <form name="Form" id="Form" action="#" onsubmit="return false;">
+           <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+           <div id="searchSpan" class="searchbox" style="float: right;">
+           <div id="searchBest">
+               <?php foreach ($this->checkbox as $checkbox)
+                   {
+                       $checkbox->display();
+                   }
+                   ?>
+               <span class="searchfield">
+                   <?php
+                   $this->location->display();
+                   ?>
+               </span>
+               <span class="searchfield" onchange="pushSearch(); return false;">
+                 <select id="field">
+                     <option value="">Displayed fields</option>
+                     <option value="peripherals">Peripheral Details</option>
+                 </select>
+               </span>
+               <!--<span class="searchfield" onchange="pushSearch(); return false;">
+                   <select id="contains">
+                     <option value="">All</option>
+                     <option value="notcontains">Doesn't contain</option>
+                   </select>
+               </span>-->
+               <span style="width:50px;">
+               <input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
+                       return false;" />
+                   <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
+                        onclick="document.getElementById('param').value = '';
+                                pushSearch();
+                                return false;" />
+              </span>
+           </div>
+           </div>
+
+           <script type="text/javascript">
+               jQuery('#param').focus();
+               jQuery("#searchBest").width(jQuery("#searchBest").width()+20);
+               if(!(navigator.userAgent.toLowerCase().indexOf('chrome') > -1)) {
+                   jQuery("#searchBest").width(jQuery("#searchBest").width()+20);
+               }
+
+       <?php
+       if (isset($this->storedfilter)) {
+           ?>
+                   document.Form.param.value = "<?php echo $this->storedfilter ?>";
+           <?php
+       }
+       ?>
+               var maxperpage = <?php echo $conf["global"]["maxperpage"] ?>;
+               if (jQuery('#maxperpage').length)
+                   maxperpage = jQuery('#maxperpage').val();
+
+               /**
+                * update div with user
+                */
+               function updateSearch() {
+                   /*add checkbox param*/
+                   var strCheckbox ="";
+                   jQuery(".checkboxsearch").each(function() {
+                       if (jQuery(this).is(":checked")) {
+                           strCheckbox+='&'+jQuery(this).attr('id')+"=true";
+                       }
+                   });
+                   launch--;
+                   if (launch == 0) {
+                     var field = "";
+                     field = jQuery("#field").val();
+                     var contains = "";
+                     if(typeof(jQuery("#contains").val())!= "undefined")
+                      contains = jQuery("#contains").val();
+                       jQuery.ajax({
+                           'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&field='+field+'&contains='+contains+'&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage +strCheckbox,
+                           type: 'get',
+                           success: function(data) {
+                               jQuery("#<?php echo $this->divid; ?>").html(data);
+                           }
+                       });
+                   }
+               }
+
+               /**
+                * provide navigation in ajax for user
+                */
+
+               function updateSearchParam(filt, start, end) {
+                   /*add checkbox param*/
+                   var strCheckbox ="";
+                   jQuery(".checkboxsearch").each(function() {
+                       if (jQuery(this).is(":checked")) {
+                           strCheckbox+='&'+jQuery(this).attr('id')+"=true";
+                       }
+                   });
+                   var reg = new RegExp("##", "g");
+                   var tableau = filt.split(reg);
+                   var location = "";
+                   var filter = "";
+                   var reg1 = new RegExp(tableau[0] + "##", "g");
+                   if (filt.match(reg1)) {
+                       if (tableau[0] != undefined) {
+                           filter = tableau[0];
+                       }
+                       if (tableau[1] != undefined) {
+                           location = tableau[1];
+                       }
+                   } else if (tableau.length == 1) {
+                       if (tableau[0] != undefined) {
+                           location = tableau[0];
+                       }
+                   }
+                   if (jQuery('#maxperpage').length)
+                       maxperpage = jQuery('#maxperpage').val();
+                   if (!location)
+                       location = document.Form.<?php echo $this->paramname ?>.value;
+                   if (!filter)
+                       filter = document.Form.param.value;
+
+                   jQuery.ajax({
+                       'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage +strCheckbox,
+                       type: 'get',
+                       success: function(data) {
+                           jQuery("#<?php echo $this->divid; ?>").html(data);
+                       }
+                   });
+
+               }
+
+               /**
+                * wait 500ms and update search
+                */
+
+               function pushSearch() {
+                   launch++;
+                   setTimeout("updateSearch()", 500);
+               }
+
+               pushSearch();
+           </script>
+
+       </form>
+       <?php
+   }
+
+}
+
 ?>
