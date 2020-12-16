@@ -9,7 +9,7 @@ Pulse 2 4.6.5
 * [FEATURE] Use glpi's UUID uniq value add machines in the machines sql table
 * [FEATURE] Set pulldirect deployement mode by default
 * [FEATURE] Add support for python-ldap from version 3.2.0
-* [FEATURE] Notify recording ARS
+* [FEATURE] Add Notify recording ARS
 * [FEATURE] Allow to disable the UUID feature ( if using an old GLPI for ex.)
 * [BUGFIX] Update Translations
 * [BUGFIX] The Relay List now show the good JID
