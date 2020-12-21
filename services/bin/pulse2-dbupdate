@@ -43,7 +43,7 @@ def db_update (options):
         db_control = DBControl(user=options.user,
                                passwd=options.password,
                                host=options.host,
-                               port=options.port,
+                               port=int(options.port),
                                module=options.database,
                                log=log)
         db_control.process()

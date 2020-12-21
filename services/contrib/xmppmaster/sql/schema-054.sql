@@ -22,27 +22,32 @@
 
 START TRANSACTION;
 
+
 USE `xmppmaster`;
+DROP procedure IF EXISTS `afterinsertmachine`;
 
--- resize fild type  in table log
-ALTER TABLE `xmppmaster`.`logs`
-DROP INDEX `ind_log_type`;
-ALTER TABLE `xmppmaster`.`logs`
-CHANGE COLUMN `type` `type` VARCHAR(25) NOT NULL DEFAULT 'noset' ;
-ALTER TABLE `xmppmaster`.`logs`
-ADD INDEX `ind_log_type` (`type` ASC);
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `afterinsertmachine`(IN newjid VARCHAR(255))
+BEGIN
+set @userjid =  SUBSTRING_INDEX(SUBSTRING_INDEX(newjid, '@', 1),'.',1);
+set @tmpval = SUBSTRING_INDEX(newjid, '@', -1);
+set @domain = SUBSTRING_INDEX(@tmpval, '/', 1);
+set @resource = SUBSTRING_INDEX(@tmpval, '/', -1);
+-- delete old form jid
+DELETE FROM `xmppmaster`.`machines`
+WHERE
+    jid LIKE CONCAT(@resource, '%');
+-- delete doublon
+DELETE FROM `xmppmaster`.`machines`
+WHERE
+    `jid` NOT LIKE newjid
+    AND `jid` LIKE CONCAT(@userjid, '%')
+    AND `enabled` = 0
+    AND `uuid_inventorymachine`  IS NOT NULL;
+END$$
 
--- add 2 filds in table user for event registers  machine
-ALTER TABLE `xmppmaster`.`users`
-ADD COLUMN `creation_user` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `country_name`,
-ADD COLUMN `last_modif` TIMESTAMP NULL AFTER `creation_user`;
+DELIMITER ;
+UPDATE version SET Number = 54;
 
--- add uui_serial_machine in table machine
-ALTER TABLE `xmppmaster`.`machines`
-ADD COLUMN `uuid_serial_machine` VARCHAR(45) NULL DEFAULT '' AFTER `jid`;
-
--- Increase table size to 100
-ALTER TABLE has_relayserverrules MODIFY subject varchar(100);
-
-UPDATE version SET Number = 50;
 COMMIT;

@@ -1,3 +1,30 @@
+Pulse 2 4.6.6
+=============
+
+
+Pulse 2 4.6.5
+=============
+* [FEATURE] Add Glpi 9.5 Support
+* [FEATURE] Support php-fpm by default
+* [FEATURE] Save Online/Offline states and their duration, to be used later
+* [FEATURE] Add grafana support for monitoring
+* [FEATURE] Allow to create a reversessh tunel from a QuickAction
+* [FEATURE] Rename log files to have the name of  the service (machine/relay)
+* [FEATURE] Use glpi's UUID uniq value add machines in the machines sql table
+* [FEATURE] Set pulldirect deployement mode by default
+* [FEATURE] Add support for python-ldap from version 3.2.0
+* [FEATURE] Notify recording ARS
+* [FEATURE] Allow to disable the UUID feature ( if using an old GLPI for ex.)
+* [BUGFIX] Update Translations
+* [BUGFIX] The Relay List now show the good JID
+* [BUGFIX] The Computer page now list the machines by name
+* [BUGFIX] Add the firmware column to the filter
+* [BUGFIX] Fix reversessh support
+* [BUGFIX] Fix support with MariaDB 10.3
+* [BUGFIX] Fix Audit page when the machines has several mac addresses
+* [BUGFIX] Fix registering the machines if the interface changes
+* [BUGFIX] Fix wording regarding source of IP address in audit view
+
 Pulse 2 4.6.4
 =============
 * [FEATURE] Add quick actions to relays management

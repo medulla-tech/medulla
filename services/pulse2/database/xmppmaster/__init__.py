@@ -4450,13 +4450,12 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def listMacAdressforMachine(self, session, id_machine, infomac = False):
         try:
-            sql = """SELECT
-                        GROUP_CONCAT(CONCAT(mac)) AS listmac
+            sql = """SELECT 
+                        GROUP_CONCAT(DISTINCT mac ORDER BY mac ASC  SEPARATOR ',') AS listmac
                     FROM
                         xmppmaster.network
                     WHERE
-                        machines_id = '%s'
-                    LIMIT 1;""" % (id_machine)
+                        machines_id = '%s';""" % (id_machine)
             if infomac:
                 logging.getLogger().debug("SQL request to get the mac addresses list "\
                                         "for the presence machine #%s" % id_machine)
