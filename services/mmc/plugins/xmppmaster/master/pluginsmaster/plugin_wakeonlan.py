@@ -150,21 +150,21 @@ def historymessage(xmppobject, sessionid, msg):
 
 
 def read_conf_wol(xmppobject):
-    " 
+    """
         This function read the configuration file for the wol plugin.
         The configuration file should be like:
         [wakeonlan]
         remotelan = True
         # wakeonlanport using only for remotelan is False
         wakeonlanport = 9
-    "
+    """
     conf_filename = plugin['NAME'] + ".ini"
     pathfileconf = os.path.join( xmppobject.config.pathdirconffile, conf_filename)
     xmppobject.wakeonlanremotelan = True
     xmppobject.wakeonlanport = 9
     if not os.path.isfile(pathfileconf):
         logger.error("The configuration file for the plugin %s is missing.\n" \
-                     "It should be located to %s)" % (plugin['NAME'], pathfileconf)
+                     "It should be located to %s)" % (plugin['NAME'], pathfileconf))
     else:
         Config = ConfigParser.ConfigParser()
         Config.read(pathfileconf)
