@@ -493,4 +493,8 @@ $f->display();
 
 ?>
 
+<script>
+jQuery(function(){
+  jQuery("input[name='label']").attr("maxlength", 60);
+})
 </script>

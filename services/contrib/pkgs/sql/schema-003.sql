@@ -20,29 +20,12 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+-- Fixes for mariadb 10.3
+
 START TRANSACTION;
 
-USE `xmppmaster`;
+USE `pkgs`;
+ALTER TABLE `pkgs`.`packages` CHANGE COLUMN `label` `label` VARCHAR(60);
+UPDATE version SET Number = 3;
 
--- resize fild type  in table log
-ALTER TABLE `xmppmaster`.`logs`
-DROP INDEX `ind_log_type`;
-ALTER TABLE `xmppmaster`.`logs`
-CHANGE COLUMN `type` `type` VARCHAR(25) NOT NULL DEFAULT 'noset' ;
-ALTER TABLE `xmppmaster`.`logs`
-ADD INDEX `ind_log_type` (`type` ASC);
-
--- add 2 filds in table user for event registers  machine
-ALTER TABLE `xmppmaster`.`users`
-ADD COLUMN `creation_user` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `country_name`,
-ADD COLUMN `last_modif` TIMESTAMP NULL AFTER `creation_user`;
-
--- add uui_serial_machine in table machine
-ALTER TABLE `xmppmaster`.`machines`
-ADD COLUMN `uuid_serial_machine` VARCHAR(45) NULL DEFAULT '' AFTER `jid`;
-
--- Increase table size to 100
-ALTER TABLE has_relayserverrules MODIFY subject varchar(100);
-
-UPDATE version SET Number = 50;
 COMMIT;

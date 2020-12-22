@@ -19,7 +19,6 @@ set -e
 
 # Make sure we reload the systemd service and restart the service
 systemctl daemon-reload
-service mmc-agent restart
 
 case "$1" in
     configure)

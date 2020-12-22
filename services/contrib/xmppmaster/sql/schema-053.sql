@@ -32,6 +32,8 @@ insert into qa_relay_command(user, name, script, description) VALUES
 ('allusers', 'show routing table', 'netstat -rn', 'Show the IP routing table'),
 ('allusers', 'show disk space', 'df -h', 'Show free disk space');
 
+UPDATE `qa_custom_command` SET `customcmd`='for /F %A in (C:\\Python27\\Lib\\site-packages\\pulse_xmpp_agent\\INFOSTMP\\pidagent) do taskkill /PID %A /F' WHERE `namecmd`='Restart Pulse Agent service' AND `os`='windows';
+
 UPDATE version SET Number = 53;
 
 COMMIT;
