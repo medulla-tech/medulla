@@ -84,10 +84,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                                 mbody=json.dumps(senddataplugin,
                                                                  encoding='latin1'),
                                                 mtype='chat')
-                        msglog = "REMONTE WOL : ARS %s : WOL sent to mac address %s " \
-                                 "for mach uuid %s" % (serverrelay['jid'],
-                                                       macadress,
-                                                       data['UUID'])
                         msglog = "A WOL request has been sent from the ARS %s" \
                                  "to the mac address %s " \
                                  "for the computer with the uuid %s" % (serverrelay['jid'],
