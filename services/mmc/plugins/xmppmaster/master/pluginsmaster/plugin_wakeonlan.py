@@ -34,9 +34,8 @@ import ConfigParser
 from wakeonlan import wol
 
 logger = logging.getLogger()
-# plugin run wake on lan on mac adress
 
-plugin = {"VERSION": "1.1", "NAME": "wakeonlan", "TYPE": "master"}
+plugin = {"VERSION": "1.2", "NAME": "wakeonlan", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
@@ -178,10 +177,3 @@ def read_conf_wol(xmppobject):
             if Config.has_option("wakeonlan", "wakeonlanport"):
                 xmppobject.wakeonlanport = Config.getint('wakeonlan', 'wakeonlanport')
 
-        logger.debug("The configuration file is : %s" \
-                     "\tConfiguration parameters are :\n" \
-                     "\t\t\"remotelan\" is %s\n"\
-                     "\t\t\"wakeonlanport\" is %s" % (plugin['NAME'],
-                                                      pathfileconf,
-                                                      xmppobject.wakeonlanremotelan,
-                                                      xmppobject.wakeonlanport))
