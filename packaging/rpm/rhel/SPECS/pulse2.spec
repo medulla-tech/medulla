@@ -462,17 +462,19 @@ if ! getent passwd | grep -q "^pulsetransfert:"; then
 fi
 
 %files -n python-mmc-xmppmaster
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/xmppmaster.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/inventoryconf.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/resultinventory.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/assessor_agent.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadautoupdate.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadlogsrotation.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadpluginlistversion.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadpluginschedulerlistversion.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadshowregistration.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/registeryagent.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadreconf.ini
+%{_sysconfdir}/mmc/plugins/xmppmaster.ini
+%{_sysconfdir}/mmc/plugins/inventoryconf.ini
+%{_sysconfdir}/mmc/plugins/resultinventory.ini
+%{_sysconfdir}/mmc/plugins/assessor_agent.ini
+%{_sysconfdir}/mmc/plugins/loadautoupdate.ini
+%{_sysconfdir}/mmc/plugins/loadlogsrotation.ini
+%{_sysconfdir}/mmc/plugins/loadpluginlistversion.ini
+%{_sysconfdir}/mmc/plugins/loadpluginschedulerlistversion.ini
+%{_sysconfdir}/mmc/plugins/loadshowregistration.ini
+%{_sysconfdir}/mmc/plugins/registeryagent.ini
+%{_sysconfdir}/mmc/plugins/loadreconf.ini
+%{_sysconfdir}/mmc/plugins/wakeonlangroup.ini
+%{_sysconfdir}/mmc/plugins/wakeonlan.ini
 %python2_sitelib/mmc/plugins/xmppmaster
 %python2_sitelib/pulse2/database/xmppmaster
 
