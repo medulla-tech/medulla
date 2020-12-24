@@ -74,12 +74,9 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             if 'macadress' in data:
                 wol.send_magic_packet(*data['macadress'],
                                       port=xmppobject.wakeonlangroupport)
-                msglog = "local lan WOL for mac "\
-                         "address %s - [port %s]" % ( data['macadress'],
-                                                      xmppobject.wakeonlangroupport)
                 msglog = "A local lan WOL request have been sent to the" \
                          " mac address %s and port %s" % (data['macadress'],
-                                                          xmppobject.wakeonlanport)
+                                                          xmppobject.wakeonlangroupport)
                 historymessage(xmppobject, sessionid, msglog)
                 logger.debug(msglog)
 
