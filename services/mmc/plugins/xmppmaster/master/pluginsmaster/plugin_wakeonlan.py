@@ -148,7 +148,7 @@ def read_conf_wol(xmppobject):
     """
         This function read the configuration file for the wol plugin.
         The configuration file should be like:
-        [wakeonlan]
+        [parameters]
         remotelan = True
         # wakeonlanport using only for remotelan is False
         wakeonlanport = 9
@@ -166,10 +166,9 @@ def read_conf_wol(xmppobject):
         if os.path.exists(pathfileconf + ".local"):
             Config.read(pathfileconf + ".local")
 
-        if Config.has_option("wakeonlan", "remotelan"):
-            xmppobject.wakeonlanremotelan = Config.getboolean('wakeonlan', 'remotelan')
+        if Config.has_option("parameters", "remotelan"):
+            xmppobject.wakeonlanremotelan = Config.getboolean('parameters', 'remotelan')
 
         if not xmppobject.wakeonlanremotelan:
-            if Config.has_option("wakeonlan", "wakeonlanport"):
-                xmppobject.wakeonlanport = Config.getint('wakeonlan', 'wakeonlanport')
-
+            if Config.has_option("parameters", "wakeonlanport"):
+                xmppobject.wakeonlanport = Config.getint('parameters', 'wakeonlanport')
