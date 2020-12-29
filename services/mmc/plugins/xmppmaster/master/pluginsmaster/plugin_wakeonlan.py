@@ -34,9 +34,8 @@ import ConfigParser
 from wakeonlan import wol
 
 logger = logging.getLogger()
-# plugin run wake on lan on mac adress
 
-plugin = {"VERSION": "1.1", "NAME": "wakeonlan", "TYPE": "master"}
+plugin = {"VERSION": "1.2", "NAME": "wakeonlan", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
@@ -85,10 +84,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                                 mbody=json.dumps(senddataplugin,
                                                                  encoding='latin1'),
                                                 mtype='chat')
-                        msglog = "REMONTE WOL : ARS %s : WOL sent to mac address %s " \
-                                 "for mach uuid %s" % (serverrelay['jid'],
-                                                       macadress,
-                                                       data['UUID'])
                         msglog = "A WOL request has been sent from the ARS %s" \
                                  "to the mac address %s " \
                                  "for the computer with the uuid %s" % (serverrelay['jid'],
@@ -150,38 +145,30 @@ def historymessage(xmppobject, sessionid, msg):
 
 
 def read_conf_wol(xmppobject):
-    " 
+    """
         This function read the configuration file for the wol plugin.
         The configuration file should be like:
-        [wakeonlan]
+        [parameters]
         remotelan = True
         # wakeonlanport using only for remotelan is False
         wakeonlanport = 9
-    "
+    """
     conf_filename = plugin['NAME'] + ".ini"
     pathfileconf = os.path.join( xmppobject.config.pathdirconffile, conf_filename)
     xmppobject.wakeonlanremotelan = True
     xmppobject.wakeonlanport = 9
     if not os.path.isfile(pathfileconf):
         logger.error("The configuration file for the plugin %s is missing.\n" \
-                     "It should be located to %s)" % (plugin['NAME'], pathfileconf)
+                     "It should be located to %s)" % (plugin['NAME'], pathfileconf))
     else:
         Config = ConfigParser.ConfigParser()
         Config.read(pathfileconf)
         if os.path.exists(pathfileconf + ".local"):
             Config.read(pathfileconf + ".local")
 
-        if Config.has_option("wakeonlan", "remotelan"):
-            xmppobject.wakeonlanremotelan = Config.getboolean('wakeonlan', 'remotelan')
+        if Config.has_option("parameters", "remotelan"):
+            xmppobject.wakeonlanremotelan = Config.getboolean('parameters', 'remotelan')
 
         if not xmppobject.wakeonlanremotelan:
-            if Config.has_option("wakeonlan", "wakeonlanport"):
-                xmppobject.wakeonlanport = Config.getint('wakeonlan', 'wakeonlanport')
-
-        logger.debug("The configuration file is : %s" \
-                     "\tConfiguration parameters are :\n" \
-                     "\t\t\"remotelan\" is %s\n"\
-                     "\t\t\"wakeonlanport\" is %s" % (plugin['NAME'],
-                                                      pathfileconf,
-                                                      xmppobject.wakeonlanremotelan,
-                                                      xmppobject.wakeonlanport))
+            if Config.has_option("parameters", "wakeonlanport"):
+                xmppobject.wakeonlanport = Config.getint('parameters', 'wakeonlanport')
