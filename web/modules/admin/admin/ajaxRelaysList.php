@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2020 Siveo, http://www.siveo.net
+ * (c) 2020 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -57,6 +57,8 @@ $vncemptyaction = $vncClientActiongriser = new EmptyActionItem1(_("Remote contro
 $packageaction = new ActionItem(_("Packages List"), "packageslist", 'package', "", "admin", "admin");
 $packageemptyaction = new EmptyActionItem1(_("Packages List"), "packageslist", 'packageg', "", "admin", "admin");
 
+$relayRulesAction = new ActionItem(_("Relay Rules"), "rules_tabs", 'inventory', "", "admin", "admin");
+
 $raw = 0;
 $params = [];
 if($relays['total'] > 0){
@@ -101,6 +103,7 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $vncActions[] = $vncemptyaction;
     $packagesAction[] = $packageemptyaction;
   }
+  $relayRulesActions[] = $relayRulesAction;
 
   if($relays['datas']['mandatory'][$raw] == 1){
     $switchActions[] = $switchemptyaction;
@@ -140,6 +143,7 @@ $n->addActionItemArray($configActions);
 $n->addActionItemArray($qalistActions);
 $n->addActionItemArray($quickActions);
 $n->addActionItemArray($vncActions);
+$n->addActionItemArray($relayRulesActions);
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $relays['total'];

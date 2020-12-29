@@ -20,22 +20,25 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("graph/navbar.inc.php");
-require("modules/admin/admin/localSidebar.php");
+if(isset($_GET['rule_id'])){
+  $rule_id = htmlentities($_GET['rule_id']);
 
-require_once("modules/xmppmaster/includes/xmlrpc.php");
-if(isExpertMode()){
-$p = new PageGenerator(_T("XMPP Relays list", 'glpi'));
-$p->setSideMenu($sidemenu);
-$p->display();
+  $result = xmlrpc_delete_rule_relay($rule_id);
 
-  print "<br/><br/><br/>";
-  $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRelaysList"), "container", array('login' => $_SESSION['login']), 'formRunning');
-  $ajax->display();
-  print "<br/><br/><br/>";
-  $ajax->displayDivToUpdate();
+  if($result['status'] == 'success'){
+    new NotifyWidgetSuccess(_T("Rule deleted", "admin"));
+
+  }
+  else{
+    new NotifyWidgetFailure(_T("Error during rule deletion", "admin"));
+  }
+
+
+  header("Location: " . urlStrRedirect("admin/admin/rules_tabs", [
+    'id'=>$_GET['id'],
+    'jid'=>$_GET['jid'],
+    'hostname'=>$_GET['hostname']
+]));
+  exit;
 }
-else{
-  header("Location: " . urlStrRedirect("dashboard/main/default"));
-}
- ?>
+?>

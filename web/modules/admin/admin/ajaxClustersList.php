@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2020 Siveo, http://www.siveo.net
+ * (c) 2020 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -31,7 +31,6 @@ $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
 $clusters = xmlrpc_get_clusters_list($start, $maxperpage, $filter);
 
-$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
 $editcluster = new ActionItem(_("Edit Cluster"),"editCluster","edit","", "admin", "admin");
 
 $row = 0;

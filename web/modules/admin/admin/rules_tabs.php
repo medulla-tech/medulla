@@ -22,18 +22,32 @@
 
 require("graph/navbar.inc.php");
 require("modules/admin/admin/localSidebar.php");
-
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-if(isExpertMode()){
-$p = new PageGenerator(_T("XMPP Relays list", 'glpi'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
-  print "<br/><br/><br/>";
-  $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRelaysList"), "container", array('login' => $_SESSION['login']), 'formRunning');
-  $ajax->display();
-  print "<br/><br/><br/>";
-  $ajax->displayDivToUpdate();
+
+// Transfer GET params to the called page
+$params = $_GET;
+// But before remove the route infos
+unset($params['module']);
+unset($params['submod']);
+unset($params['action']);
+unset($params['tab']);
+$params['hostname'] = htmlentities($params['hostname']);
+
+if(isExpertMode()){
+  $page = new TabbedPageGenerator();
+  //Display sidemenu
+  $page->setSideMenu($sidemenu);
+  $tabList = array(
+  	'relayRules' => _T('Rules List', "admin"),
+  	'newRelayRule' => _T('New Rule', 'admin'),
+  );
+  //create tabList, where tab parameter is the page name to display.
+  foreach ($tabList as $tab => $str) {
+      $page->addTab($tab, $str, $str.' '._T('for Relay ['.$params['hostname'].']', "admin"), "modules/admin/admin/$tab.php", $params);
+      //$page->addTab($tab, $str, $str, 'admin');
+  }
+  $page->display();
 }
 else{
   header("Location: " . urlStrRedirect("dashboard/main/default"));

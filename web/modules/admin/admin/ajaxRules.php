@@ -60,21 +60,27 @@ $raiseActions = [];
 $lowerActions = [];
 $params = [];
 
+$is_default = false;
 foreach($rulesList['datas']['name'] as $key=>$array){
-  $actionEditClusters[] = $editcluster;
   $params[] = [
     'id' => $rulesList['datas']['id'][$key],
     'name'=> $rulesList['datas']['name'][$key],
     'description' => $rulesList['datas']['description'][$key],
   ];
 
-  $rulesList['datas']['id'][$key] = '<span class="clickable">'.$rulesList['datas']['id'][$key].'</span>';
-  $rulesList['datas']['name'][$key] = '<span class="clickable">'.$rulesList['datas']['name'][$key].'</span>';
-  $rulesList['datas']['description'][$key] = '<span class="clickable">'.$rulesList['datas']['description'][$key].'</span>';
-  $rulesList['datas']['level'][$key] = '<span class="clickable">'.$rulesList['datas']['level'][$key].'</span>';
+  $color = ($is_default) ? "red" : "green";
+
+  $rulesList['datas']['id'][$key] = '<span style="color:'.$color.';" class="clickable">'.$rulesList['datas']['id'][$key].'</span>';
+  $rulesList['datas']['name'][$key] = '<span style="color:'.$color.';" class="clickable">'.$rulesList['datas']['name'][$key].'</span>';
+  $rulesList['datas']['description'][$key] = '<span style="color:'.$color.';" class="clickable">'.$rulesList['datas']['description'][$key].'</span>';
+  $rulesList['datas']['level'][$key] = '<span style="color:'.$color.';" class="clickable">'.$rulesList['datas']['level'][$key].'</span>';
+
 
   $raiseActions[] = $raiseAction;
   $lowerActions[] = $lowerAction;
+
+  if($params[$key]['name'] == 'default')
+    $is_default = true;
 }
 
 if($rulesList['total'] > 0){

@@ -27,16 +27,16 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 
-$id = $_GET['id'];
-$name = $_GET['name'];
-$description = $_GET['description'];
+$id = htmlentities($_GET['id']);
+$name = htmlentities($_GET['name']);
+$description = htmlentities($_GET['description']);
 
 
 if(isset($_POST['bconfirm'])){
-  $cluster_id = $_POST['cluster_id'];
-  $cluster_name = $_POST['cluster_name'];
-  $cluster_description = $_POST['cluster_description'];
-  $relay_ids = $_POST['relays_id'];
+  $cluster_id = htmlentities($_POST['cluster_id']);
+  $cluster_name = htmlentities($_POST['cluster_name']);
+  $cluster_description = htmlentities($_POST['cluster_description']);
+  $relay_ids = htmlentities($_POST['relays_id']);
   $result = xmlrpc_update_cluster($cluster_id, $cluster_name, $cluster_description, $relay_ids);
 
   if($result['state'] == 'success'){

@@ -1028,3 +1028,24 @@ def get_rules_list(start, end, filter):
 def order_relay_rule(action, id):
     result = XmppMasterDatabase().order_relay_rule(action, id)
     return result
+
+def get_relay_rules(id, start, end, filter):
+    return XmppMasterDatabase().get_relay_rules(id, start, end, filter)
+
+def new_rule_order_relay(id):
+    return XmppMasterDatabase().new_rule_order_relay(id)
+
+def add_rule_to_relay(relay_id, rule_id, order, subject):
+    return XmppMasterDatabase().add_rule_to_relay(relay_id, rule_id, order, subject)
+
+def delete_rule_relay(rule_id):
+    return XmppMasterDatabase().delete_rule_relay(rule_id)
+
+def move_relay_rule(relay_id, rule_id, action):
+    return XmppMasterDatabase().move_relay_rule(relay_id, rule_id, action)
+
+def get_relay_rule(rule_id):
+    return XmppMasterDatabase().get_relay_rule(rule_id)
+
+def edit_rule_to_relay(id, rule_id, subject):
+    return XmppMasterDatabase().edit_rule_to_relay(id, rule_id, subject)

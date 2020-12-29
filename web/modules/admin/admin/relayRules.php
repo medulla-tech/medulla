@@ -20,17 +20,21 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("graph/navbar.inc.php");
-require("modules/admin/admin/localSidebar.php");
-
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+
+// Transfer GET params to the called page
+$params = $_GET;
+
+// But before remove the route infos
+unset($params['module']);
+unset($params['submod']);
+unset($params['action']);
+$params['hostname'] = htmlentities($params['hostname']);
+
 if(isExpertMode()){
-$p = new PageGenerator(_T("XMPP Relays list", 'glpi'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
   print "<br/><br/><br/>";
-  $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRelaysList"), "container", array('login' => $_SESSION['login']), 'formRunning');
+  $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRelayRules"), "container", $params);
   $ajax->display();
   print "<br/><br/><br/>";
   $ajax->displayDivToUpdate();

@@ -110,6 +110,38 @@ $page->setFile("modules/admin/admin/ajaxRules.php");
 $page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
+//Tab pages
+$page = new Page("rules_tabs", _T("Relay Rules", "admin"));
+$page->setFile("modules/admin/admin/rules_tabs.php");
+$page->setOptions(array("visible" => true));
+
+//Tab1
+$tab = new Tab("relayRules", _T("Relay Rules", "admin"));
+$page->addTab($tab);
+
+//Tab2
+$tab = new Tab("newRelayRule", _T("New Relay Rule", "admin"));
+$page->addTab($tab);
+
+$submod->addPage($page);
+
+$page = new Page("ajaxRelayRules", _T("Relay Rules", "admin"));
+$page->setFile("modules/admin/admin/ajaxRelayRules.php");
+$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
+$page = new Page("deleteRelayRule", _T("Delete Relay Rules", "admin"));
+$page->setFile("modules/admin/admin/deleteRelayRule.php");
+$submod->addPage($page);
+
+$page = new Page("moveRelayRule", _T("Move Relay Rule", "admin"));
+$page->setFile("modules/admin/admin/moveRelayRule.php");
+$submod->addPage($page);
+
+$page = new Page("editRelayRule", _T("Edit Relay Rule", "admin"));
+$page->setFile("modules/admin/admin/editRelayRule.php");
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

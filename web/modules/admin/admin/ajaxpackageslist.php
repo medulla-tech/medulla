@@ -1,8 +1,6 @@
 <?php
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
- * (c) 2014-2020 Siveo, http://siveo.net
+ * (c) 2020 Siveo, http://siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).

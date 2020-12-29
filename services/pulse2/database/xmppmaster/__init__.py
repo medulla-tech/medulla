@@ -7440,3 +7440,240 @@ where agenttype="machine" and groupdeploy in (
                     return {'status':'success', 'message': 'downed'}
             else:
                 return {'status':'error', 'message': 'No rule found with id # %s'%id}
+
+    @DatabaseHelper._sessionm
+    def get_relay_rules(self, session, id, start, end, filter):
+        try:
+            start = int(start)
+        except:
+            start = 0
+        try:
+            end = int(end)
+        except:
+            end = -1
+
+        result = {
+            'total': 0,
+            'datas' : {
+                'id' : [],
+                'subject' : [],
+                'order' : [],
+                'name' : []
+            },
+            'status': "error",
+            'message': ""
+        }
+        try:
+            id = int(id)
+        except Exception as err:
+            result['message'] = "Bad relay Id"
+            return result
+
+
+        query = session.query(Has_relayserverrules).filter(Has_relayserverrules.relayserver_id == id)\
+            .add_column(Regles.name)\
+            .join(Regles, Regles.id == Has_relayserverrules.rules_id)\
+            .order_by(Has_relayserverrules.order)
+
+        if filter != "":
+            query = query.filter(or_(
+                Has_relayserverrules.subject.contains(filter),
+                Has_relayserverrules.order.contains(filter),
+                Regles.name.contains(filter),
+            ))
+
+        result['total'] = query.count()
+
+        if end != -1:
+            query = query.offset(start).limit(end)
+        else:
+            query = query.offset(start)
+
+        query = query.all()
+        result["status"] = "success"
+        if query is not None:
+            for rule, name in query:
+                result['datas']['id'].append(rule.id)
+                result['datas']['subject'].append(rule.subject)
+                result['datas']['order'].append(rule.order)
+                result['datas']['name'].append(name)
+            return result
+        else:
+            return result
+
+    @DatabaseHelper._sessionm
+    def new_rule_order_relay(self, session, id):
+        query = session.query(Has_relayserverrules.order)\
+        .filter(Has_relayserverrules.relayserver_id == id)\
+        .order_by(desc(Has_relayserverrules.order))\
+        .first()
+
+        if query is not None:
+
+            return int(query[0]) + 1
+        else:
+            return 0
+
+    @DatabaseHelper._sessionm
+    def add_rule_to_relay(self, session, relay_id, rule_id, order, subject):
+        has_rule = Has_relayserverrules()
+
+        has_rule.rules_id = rule_id
+        has_rule.order = order
+        has_rule.subject = subject
+        has_rule.relayserver_id = relay_id
+        try:
+            session.add(has_rule)
+            session.commit()
+            session.flush()
+            return {'status' : 'success'}
+        except:
+            return {'status' : 'error'}
+
+    @DatabaseHelper._sessionm
+    def delete_rule_relay(self, session, rule_id):
+        try:
+            rule_id = int(rule_id)
+        except:
+            return {'status' : 'error'}
+        try:
+            result = session.query(Has_relayserverrules).\
+                filter(Has_relayserverrules.id == rule_id).delete()
+            session.commit()
+            session.flush()
+            if result == 0:
+                return {'status' : 'error', 'message': 'rule doesn\'t exist'}
+            else:
+                return {'status' : 'success'}
+        except:
+            return {'status' : 'error'}
+
+
+    @DatabaseHelper._sessionm
+    def move_relay_rule(self, session, relay_id, rule_id, action):
+        result = {
+            "status": None,
+            "message": ""
+            }
+
+        try:
+            relay_id = int(relay_id)
+        except:
+            result['status'] = "error"
+            result['message'] = "wrong relay id"
+            return result
+
+        try:
+            rule_id = int(rule_id)
+        except:
+            result['status'] = "error"
+            result['message'] = "wrong rule id"
+            return result
+
+        # Get the selected rule
+        rule = session.query(Has_relayserverrules)\
+            .filter(Has_relayserverrules.id == rule_id).one()
+
+        if rule is not None:
+            if action == "raise":
+                selected = session.query(Has_relayserverrules)\
+                    .filter(Has_relayserverrules.order < rule.order)\
+                    .order_by(desc(Has_relayserverrules.order)).first()
+
+            elif action == "down":
+                selected = session.query(Has_relayserverrules)\
+                    .filter(Has_relayserverrules.order > rule.order)\
+                    .order_by(Has_relayserverrules.order).first()
+            else:
+                result['status'] = "error"
+                result['message'] = "bad action"
+                return result
+
+            if selected is not None:
+                selected.order, rule.order = rule.order, selected.order
+                session.commit()
+                session.flush()
+
+                result['status'] = "success"
+                result['message'] = "%sed"%action
+            else:
+                result['status'] = "success"
+                result['message'] = "reached top level" if action == "raise" else "reached last level"
+            return result
+
+        else:
+            result['status'] = "error"
+            result['message'] = "No rule found"
+            return result
+
+    @DatabaseHelper._sessionm
+    def get_relay_rule(self, session, rule_id):
+        result = {
+            'status': None,
+            'massage' : ''
+        }
+        try:
+            rule_id = int(rule_id)
+        except:
+            result['status'] = "error"
+            result['message'] = "bad rule id"
+            return result
+
+        query = session.query(Has_relayserverrules)\
+            .filter(Has_relayserverrules.id == rule_id).first()
+
+        if query is not None:
+            has_rule = query
+            result['datas'] = {
+                'id' : query.id,
+                'rules_id' : query.rules_id,
+                'order' : query.order,
+                'relayserver_id': query.relayserver_id,
+                'subject' : query.subject
+            }
+            result['status'] = 'success'
+            result['message'] = ""
+        else:
+            result['status'] = "error"
+            result['message'] = "no rule found"
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def edit_rule_to_relay(self, session, id, rule_id, subject):
+        result = {
+            "status" : None,
+            "message" : ""
+        }
+
+        try:
+            id = int(id)
+        except:
+            result['status'] = 'error'
+            result['message'] = "bad id"
+            return result
+
+        try:
+            rule_id = int(rule_id)
+        except:
+            result['status'] = 'error'
+            result['message'] = "bad rule_id"
+            return result
+
+        query = session.query(Has_relayserverrules)\
+            .filter(Has_relayserverrules.id == id).first()
+
+        if query is None:
+            result['status'] = 'error'
+            result['message'] = "no rule found"
+        else:
+            query.rules_id = rule_id
+            if subject != "":
+                query.subject = subject
+            session.commit()
+            session.flush()
+
+            result['status'] = 'success'
+            result['message'] = "rule edited"
+
+        return result

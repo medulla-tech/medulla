@@ -1,7 +1,7 @@
 <?php
 
 /*
- * (c) 2015-2017 Siveo, http://www.siveo.net
+ * (c) 2015-2020 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -609,5 +609,34 @@ function xmlrpc_get_rules_list($start, $end, $filter){
 
 function xmlrpc_order_relay_rule($action, $id){
   return xmlCall("xmppmaster.order_relay_rule", [$action, $id]);
+}
+
+function xmlrpc_get_relay_rules($id, $start, $end, $filter){
+  return xmlCall("xmppmaster.get_relay_rules", [$id, $start, $end, $filter]);
+}
+
+function xmlrpc_new_rule_order_relay($id){
+  return xmlCall("xmppmaster.new_rule_order_relay", [$id]);
+}
+
+function xmlrpc_add_rule_to_relay($relay_id, $rule_id, $order, $subject){
+  return xmlCall("xmppmaster.add_rule_to_relay", [$relay_id, $rule_id, $order, $subject]);
+}
+
+
+function xmlrpc_delete_rule_relay($rule_id){
+  return xmlCall("xmppmaster.delete_rule_relay", [$rule_id]);
+}
+
+function xmlrpc_move_relay_rule($relayid, $rule, $action){
+  return xmlCall("xmppmaster.move_relay_rule", [$relayid, $rule, $action]);
+}
+
+function xmlrpc_get_relay_rule($ruleid){
+  return xmlCall("xmppmaster.get_relay_rule", [$ruleid]);
+}
+
+function xmlrpc_edit_rule_to_relay($selected_rule, $rule_id, $subject){
+  return xmlCall("xmppmaster.edit_rule_to_relay", [$selected_rule, $rule_id, $subject]);
 }
 ?>

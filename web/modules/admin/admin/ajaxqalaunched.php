@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2020 siveo, http://www.siveo.net/
+ * (c) 2020 siveo, http://www.siveo.net/
  *
  * $Id$
  *

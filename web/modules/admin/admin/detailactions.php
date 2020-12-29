@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2020 siveo, http://www.siveo.net/
+ * (c) 2020 siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -20,7 +20,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * file deployquick.php
+ * file detailactions.php
 */
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
