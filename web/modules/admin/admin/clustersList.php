@@ -20,12 +20,12 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//require("graph/navbar.inc.php");
-//require("modules/admin/admin/localSidebar.php");
+require("graph/navbar.inc.php");
+require("modules/admin/admin/localSidebar.php");
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 if(isExpertMode()){
-/*$p = new PageGenerator(_T("Clusters list", 'admin'));
+$p = new PageGenerator(_T("Clusters list", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -33,9 +33,7 @@ $p->display();
   $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxClustersList"), "container", array('login' => $_SESSION['login']), 'formRunning');
   $ajax->display();
   print "<br/><br/><br/>";
-  $ajax->displayDivToUpdate();*/
-  //require('modules/admin/admin/relaysList.php');
-  header("Location: " . urlStrRedirect("admin/admin/relaysList"));
+  $ajax->displayDivToUpdate();
 }
 else{
   header("Location: " . urlStrRedirect("dashboard/main/default"));

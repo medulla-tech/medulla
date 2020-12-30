@@ -34,8 +34,12 @@ $submod->setImg('modules/admin/graph/navbar/admin');
 $submod->setDefaultPage("admin/admin/index");
 $submod->setPriority(1001);
 
-$page = new Page("index", _T('Clusters List', 'admin'));
+$page = new Page("index", _T('Relays List', 'admin'));
 $page->setFile("modules/admin/admin/index.php");
+$submod->addPage($page);
+
+$page = new Page("clustersList", _T('Clusters List', 'admin'));
+$page->setFile("modules/admin/admin/clustersList.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxClustersList", _T("Clusters List", "admin"));
