@@ -49,7 +49,7 @@ if(isset($_GET['jid']))
   echo '<td id="diskusage" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'disk_usage']).'"><img src="modules/base/graph/navbar/diskusage.png" height="70" width="70"></a></td>';
   echo '<td id="agentversion" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="modules/base/graph/navbar/information.png" height="70" width="70"></a></td>';
   echo '<td id="netstat" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'netstat']).'"><img src="modules/base/graph/computers/network.png" height="70" width="70"></a></td>';
-  echo '<td id="console" align="center"><a href="'.urlStrRedirect("admin/admin/consolexmpp", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="modules/base/graph/computers/console.jpg" height="70" width="70"></a></td>';
+  echo '<td id="console" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/consolexmpp", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="modules/base/graph/computers/console.jpg" height="70" width="70"></a></td>';
   echo '</tr>';
   echo '</table>';
   $qalist = xmlrpc_get_qa_for_relays($_SESSION['login']);
