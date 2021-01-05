@@ -25,35 +25,23 @@ require("modules/admin/admin/localSidebar.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 
-// Transfer GET params to the called page
-$params = $_GET;
-// But before remove the route infos
-unset($params['module']);
-unset($params['submod']);
-unset($params['action']);
-unset($params['tab']);
-$params['hostname'] = htmlentities($params['hostname']);
-
 if(isExpertMode()){
-  $page = new TabbedPageGenerator();
-  //Display sidemenu
-  $page->setSideMenu($sidemenu);
-  $tabList = array(
-  	'relayRules' => _T('Rules List', "admin"),
-  	'newRelayRule' => _T('New Rule', 'admin'),
-  );
+  $name = (isset($_GET['name'])) ? htmlentities($_GET['name']) : "";
+  $p = new PageGenerator(_T("Detail for Rule $name", 'admin'));
+  $p->setSideMenu($sidemenu);
+  $p->display();
 
-  //create tabList, where tab parameter is the page name to display.
-  foreach ($tabList as $tab => $str) {
-    if(!isset($_GET['prev_action'])){
-      $page->addTab($tab, $str, $str.' '._T('for Relay ['.$params['hostname'].']', "admin"), "modules/admin/admin/$tab.php", $params);
-    }
-    else{
-      $page->addTab($tab, $str, $str.' '._T(htmlentities($_GET['name']), "admin"), "modules/admin/admin/$tab.php", $params);
-    }
-      //$page->addTab($tab, $str, $str, 'admin');
-  }
-  $page->display();
+  $params = $_GET;
+  unset($params['module']);
+  unset($params['submod']);
+  unset($params['action']);
+
+
+  print "<br/><br/><br/>";
+  $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRulesDetail", $params));
+  $ajax->display();
+  print "<br/><br/><br/>";
+  $ajax->displayDivToUpdate();
 }
 else{
   header("Location: " . urlStrRedirect("dashboard/main/default"));

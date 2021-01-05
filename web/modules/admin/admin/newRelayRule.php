@@ -42,13 +42,30 @@ if(isset($_POST['bconfirm'])){
   else{
     new NotifyWidgetFailure(_T('The rule has not been added to relay '.$_GET['hostname'], "admin"));
   }
-$_GET['tab'] = 'relayRules';
-header("Location: " . urlStrRedirect("admin/admin/rules_tabs", $_GET));
+
+
+  if(isset($_GET['prev_action'])){
+    $action = htmlentities($_GET['prev_action']);
+    $id = htmlentities($_GET['rule']);
+
+    $params = [
+      'id'=>$id,
+      'jid'=>htmlentities($_GET['jid']),
+      'hostname'=>htmlentities($_GET['hostname']),
+    ];
+    header("Location: " . urlStrRedirect("admin/admin/$action", $params));
+  }
+  else{
+    header("Location: " . urlStrRedirect("admin/admin/rules_tabs", $_GET));
+  }
+
+
 exit;
 }
 
+$prev_action = (isset($_GET['prev_action'])) ? htmlentities($_GET['prev_action']) : "rules_tabs";
 $rulesList = xmlrpc_get_rules_list(-1, -1, "");
-
+$relaysList = xmlrpc_get_minimal_relays_list();
 
 $f = new ValidatingForm();
 $f->push(new Table());
@@ -57,6 +74,8 @@ $f->push(new Table());
 $rules = new SelectItem("rule");
 $rules->setElements($rulesList['datas']['description']);
 $rules->setElementsVal($rulesList['datas']['id']);
+if(isset($_GET['prev_action']))
+  $rules->setSelected($_GET['id']);
 
 $new_rule_order = xmlrpc_new_rule_order_relay($_GET['id']);
 
@@ -64,8 +83,14 @@ $new_rule_order = xmlrpc_new_rule_order_relay($_GET['id']);
 $f->add(new TrFormElement(_T("Rule", "admin"), $rules));
 $hidden = new HiddenTpl('rule_order');
 $f->add($hidden, ['value'=>$new_rule_order, 'hide'=>true]);
-$hidden = new HiddenTpl('relay_id');
-$f->add($hidden, ['value'=>$_GET['id'], 'hide'=>true]);
+
+$relays = new SelectItem("relay_id");
+$relays->setElements($relaysList['hostname']);
+$relays->setElementsVal($relaysList['id']);
+if(!isset($_GET['prev_action']))
+  $relays->setSelected($_GET['id']);
+$f->add(new TrFormElement(_T("Relays", "admin"), $relays));
+
 $regex = new InputTpl("regex");
 $regex->setAttributCustom('title="A few subject examples:
 Chooses ARS based on network address:
@@ -79,9 +104,7 @@ $f->add(new TrFormElement(_T("Subject", "admin"), $regex));
 $f->add(new TrFormElement(_T("Check regex", "admin"), new TextareaTpl("subject")));
 $f->add(new TrFormElement(_T("Matching Result", "admin"), new SpanElement('<div id="temp"></div><div id="result"></div>')));
 
-?>
-
-<?php $f->addValidateButton("bconfirm", _T("Edit", "admin"));
+$f->addValidateButton("bconfirm", _T("Edit", "admin"), ['prev_action'=> $prev_action]);
 $f->display();
 
 $fontsize = 1.3;

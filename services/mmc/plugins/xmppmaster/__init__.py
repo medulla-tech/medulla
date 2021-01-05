@@ -1047,5 +1047,11 @@ def move_relay_rule(relay_id, rule_id, action):
 def get_relay_rule(rule_id):
     return XmppMasterDatabase().get_relay_rule(rule_id)
 
-def edit_rule_to_relay(id, rule_id, subject):
-    return XmppMasterDatabase().edit_rule_to_relay(id, rule_id, subject)
+def get_relays_for_rule(rule_id, start, end, filter):
+    return XmppMasterDatabase().get_relays_for_rule(rule_id, start, end, filter)
+
+def edit_rule_to_relay(id, relay_id, rule_id, subject):
+    return XmppMasterDatabase().edit_rule_to_relay(id, relay_id, rule_id, subject)
+
+def get_minimal_relays_list(mode):
+    return XmppMasterDatabase().get_minimal_relays_list(mode)

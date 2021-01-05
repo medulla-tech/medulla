@@ -24,7 +24,6 @@ if(isset($_GET['rule_id'])){
   $rule_id = htmlentities($_GET['rule_id']);
 
   $result = xmlrpc_delete_rule_relay($rule_id);
-
   if($result['status'] == 'success'){
     new NotifyWidgetSuccess(_T("Rule deleted", "admin"));
 
@@ -34,11 +33,23 @@ if(isset($_GET['rule_id'])){
   }
 
 
-  header("Location: " . urlStrRedirect("admin/admin/rules_tabs", [
-    'id'=>$_GET['id'],
+  if(isset($_GET['prev_action'])){
+    $action = htmlentities($_GET['prev_action']);
+    $id = htmlentities($_GET['rule']);
+  }
+  else{
+    $action = "rules_tabs";
+    $id = htmlentities($_GET['id']);
+  }
+
+  $params = [
+    'id'=>$id,
     'jid'=>$_GET['jid'],
     'hostname'=>$_GET['hostname']
-]));
+  ];
+  if(isset($_GET['name']))
+    $params['name'] = htmlentities($_GET['name']);
+  header("Location: " . urlStrRedirect("admin/admin/$action", $params));
   exit;
 }
 ?>

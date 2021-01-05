@@ -146,6 +146,14 @@ $page = new Page("editRelayRule", _T("Edit Relay Rule", "admin"));
 $page->setFile("modules/admin/admin/editRelayRule.php");
 $submod->addPage($page);
 
+$page = new Page("rulesDetail", _T("Rules Detail", "admin"));
+$page->setFile("modules/admin/admin/rulesDetail.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxRulesDetail", _T("Rules Detail", "admin"));
+$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

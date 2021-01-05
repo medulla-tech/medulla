@@ -7370,14 +7370,14 @@ where agenttype="machine" and groupdeploy in (
                 'id' : [],
                 'name' : [],
                 'description' : [],
-                'level' : []
+                'level' : [],
+                'count' : []
             }
         }
 
         query = session.query(Regles).order_by(Regles.level)
 
         if filter != "":
-            #knokno
             query = query.filter(or_(
                 Regles.name.contains(filter),
                 Regles.description.contains(filter),
@@ -7392,10 +7392,14 @@ where agenttype="machine" and groupdeploy in (
         result['total'] = count
         if query is not None:
             for rule in query:
+                count_rules = session.query(Has_relayserverrules.id)\
+                    .filter(Has_relayserverrules.rules_id == rule.id).count()
+
                 result['datas']['id'].append(rule.id)
                 result['datas']['name'].append(rule.name)
                 result['datas']['description'].append(rule.description)
                 result['datas']['level'].append(rule.level)
+                result['datas']['count'].append(count_rules)
         return result
 
     @DatabaseHelper._sessionm
@@ -7639,8 +7643,83 @@ where agenttype="machine" and groupdeploy in (
 
         return result
 
+
     @DatabaseHelper._sessionm
-    def edit_rule_to_relay(self, session, id, rule_id, subject):
+    def get_relays_for_rule(self, session, rule_id, start, end, filter=""):
+        result = {
+            'status': None,
+            'massage' : '',
+            'total' : 0,
+            'datas':{
+                'relay_id': [],
+                'hostname': [],
+                'order': [],
+                'subject': [],
+                'id' : [],
+                'rule_id': [],
+                'enabled': []
+            }
+        }
+        try:
+            rule_id = int(rule_id)
+        except:
+            result['status'] = "error"
+            result['message'] = "bad rule id"
+            return result
+
+        try:
+            start = int(start)
+        except:
+            result['status'] = "error"
+            result['message'] = "bad start offset"
+            return result
+        try:
+            end = int(end)
+        except:
+            result['status'] = "error"
+            result['message'] = "bad end limit"
+            return result
+
+
+        query = session.query(Has_relayserverrules, RelayServer)\
+            .filter(and_(Has_relayserverrules.rules_id == rule_id,
+                RelayServer.moderelayserver == "static"))\
+            .join(RelayServer, RelayServer.id == Has_relayserverrules.relayserver_id)\
+
+        if filter != "":
+            query = query.filter(or_(
+                RelayServer.id.contains(filter),
+                RelayServer.nameserver.contains(filter),
+                Has_relayserverrules.order.contains(filter),
+                Has_relayserverrules.subject.contains(filter)
+            ))
+        count = query.count()
+        query = query.order_by(Has_relayserverrules.order)\
+            .offset(start).limit(end)
+        query = query.all()
+
+        result['total'] = count
+
+        if query is not None:
+            for rule, relay in query:
+                result['datas']['id'].append(rule.id)
+                result['datas']['rule_id'].append(rule.rules_id)
+                result['datas']['relay_id'].append(relay.id)
+                result['datas']['hostname'].append(relay.nameserver)
+                result['datas']['enabled'].append(relay.enabled)
+                result['datas']['order'].append(rule.order)
+                result['datas']['subject'].append(rule.subject)
+
+            result['status'] = 'success'
+            result['message'] = ""
+        else:
+            result['status'] = "error"
+            result['message'] = "no rule found"
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def edit_rule_to_relay(self, session, id, relay_id, rule_id, subject):
         result = {
             "status" : None,
             "message" : ""
@@ -7651,6 +7730,13 @@ where agenttype="machine" and groupdeploy in (
         except:
             result['status'] = 'error'
             result['message'] = "bad id"
+            return result
+
+        try:
+            relay_id = int(relay_id)
+        except:
+            result['status'] = 'error'
+            result['message'] = "bad relay id"
             return result
 
         try:
@@ -7670,10 +7756,33 @@ where agenttype="machine" and groupdeploy in (
             query.rules_id = rule_id
             if subject != "":
                 query.subject = subject
+
+            query.relayserver_id = relay_id
+
             session.commit()
             session.flush()
 
             result['status'] = 'success'
             result['message'] = "rule edited"
 
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_minimal_relays_list(self, session, mode):
+        query = session.query(RelayServer.id, RelayServer.nameserver)
+        if mode in ['static', 'dynamic']:
+            query = query.filter(RelayServer.moderelayserver == mode)
+        else:
+            query = query.filter(RelayServer.moderelayserver == "static")
+        query = query.all()
+
+        result = {
+        'id': [],
+        'hostname': []
+        }
+
+        if query is not None:
+            for id, hostname in query:
+                result['id'].append(id)
+                result['hostname'].append(hostname)
         return result

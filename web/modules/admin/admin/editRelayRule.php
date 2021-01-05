@@ -31,24 +31,40 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 if(isset($_POST['bconfirm'])){
   $selected_rule = htmlentities($_POST['selected_rule']);
   $rule_id = htmlentities($_POST['rule']);
+  $relay_id = htmlentities($_POST['relay']);
   // Originaly regex and subject were inverted
   $subject = htmlentities($_POST['regex']);
   $hostname = (isset($_GET['hostname'])) ? $_GET['hostname'] : "";
 
-  $result = xmlrpc_edit_rule_to_relay($selected_rule, $rule_id, $subject);
+  $result = xmlrpc_edit_rule_to_relay($selected_rule, $relay_id, $rule_id, $subject);
   if($result['status'] == 'success'){
     new NotifyWidgetSuccess(_T('Rule edited to relay '.$hostname, "admin"));
   }
   else{
     new NotifyWidgetFailure(_T('The rule has not been edited to relay '.$hostname, "admin"));
   }
-header("Location: " . urlStrRedirect("admin/admin/rules_tabs", [
-  'id'=>htmlentities($_GET['id']),
+
+if(isset($_GET['prev_action'])){
+  $action = htmlentities($_GET['prev_action']);
+  $id = htmlentities($_GET['rule']);
+}
+else{
+  $action = "rules_tabs";
+  $id = htmlentities($_GET['id']);
+}
+$params = [
+  'id'=>$id,
   'jid'=>htmlentities($_GET['jid']),
   'hostname'=>htmlentities($_GET['hostname']),
-]));
+];
+if(isset($_GET['name']))
+  $params['name'] = htmlentities($_GET['name']);
+header("Location: " . urlStrRedirect("admin/admin/$action", $params));
 exit;
 
+}
+
+$prev_action = (isset($_GET['prev_action'])) ? htmlentities($_GET['prev_action']) : "rules_tabs";
 $rulename = (isset($_GET['name'])) ? htmlentities($_GET['name']) : "";
 $hostname = (isset($_GET['hostname'])) ? htmlentities($_GET['hostname']) : "";
 $ruleid = (isset($_GET['rule_id'])) ? htmlentities($_GET['rule_id']) : 0;
@@ -59,19 +75,28 @@ $p->display();
 
 $relayRule = xmlrpc_get_relay_rule($ruleid);
 $rulesList = xmlrpc_get_rules_list(-1, -1, "");
+$relaysList = xmlrpc_get_minimal_relays_list();
 
 $f = new ValidatingForm();
 $f->push(new Table());
 
 if($relayRule['status'] != "error"){
+
 //Get rules list
 $rules = new SelectItem("rule");
 $rules->setElements($rulesList['datas']['description']);
 $rules->setElementsVal($rulesList['datas']['id']);
 $rules->setSelected($relayRule['datas']['rules_id']);
-
 // General infos for cluster
 $f->add(new TrFormElement(_T("Rule", "admin"), $rules));
+
+$relays = new SelectItem("relay");
+$relays->setElements($relaysList['hostname']);
+$relays->setElementsVal($relaysList['id']);
+$relays->setSelected($_GET['id']);
+
+// General infos for cluster
+$f->add(new TrFormElement(_T("Relays", "admin"), $relays));
 
 $hidden = new HiddenTpl('selected_rule');
 $f->add($hidden, ['value'=>$ruleid, 'hide'=>true]);
@@ -88,9 +113,8 @@ $f->add(new TrFormElement(_T("Subject", "admin"), $regex), ['value'=>$relayRule[
 $f->add(new TrFormElement(_T("Check regex", "admin"), new TextareaTpl("subject")));
 $f->add(new TrFormElement(_T("Matching Result", "admin"), new SpanElement('<div id="temp"></div><div id="result"></div>')));
 
-$f->addValidateButton("bconfirm", _T("Edit", "admin"));
+$f->addValidateButton("bconfirm", _T("Edit", "admin"), ['prev_action'=> $prev_action]);
 $f->display();
-
 }
 
 $fontsize = 1.3;

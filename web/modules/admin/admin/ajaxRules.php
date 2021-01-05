@@ -55,9 +55,13 @@ $rulesList = xmlrpc_get_rules_list($start, $end, $filter);
 
 $raiseAction = new ActionItem(_T("Raise Rule", "admin"),"rules","up","", "admin", "admin", "", "raise");
 $lowerAction = new ActionItem(_T("Lower Rule", "admin"),"rules","down","", "admin", "admin", "", "down");
+$listAction = new ActionItem(_T("Rule Detail", "admin"),"rulesDetail","inventory","", "admin", "admin");
+$newAction = new ActionItem(_T("New Rule", "admin"),"rules_tabs&tab=newRelayRule","addbootmenu","", "admin", "admin");
 
 $raiseActions = [];
 $lowerActions = [];
+$listActions = [];
+$newActions = [];
 $params = [];
 
 $is_default = false;
@@ -66,6 +70,7 @@ foreach($rulesList['datas']['name'] as $key=>$array){
     'id' => $rulesList['datas']['id'][$key],
     'name'=> $rulesList['datas']['name'][$key],
     'description' => $rulesList['datas']['description'][$key],
+    'prev_action' => 'rules'
   ];
 
   $color = ($is_default) ? "red" : "green";
@@ -78,6 +83,8 @@ foreach($rulesList['datas']['name'] as $key=>$array){
 
   $raiseActions[] = $raiseAction;
   $lowerActions[] = $lowerAction;
+  $listActions[] = $listAction;
+  $newActions[] = $newAction;
 
   if($params[$key]['name'] == 'default')
     $is_default = true;
@@ -85,12 +92,14 @@ foreach($rulesList['datas']['name'] as $key=>$array){
 
 if($rulesList['total'] > 0){
   $n = new OptimizedListInfos( $rulesList['datas']['name'], _T("Rule", "admin"));
-  //$n->setMainActionClasses($clusters['datas']);
   $n->disableFirstColumnActionLink();
   $n->addExtraInfo( $rulesList['datas']['description'], _T("Description", "admin"));
   $n->addExtraInfo( $rulesList['datas']['level'], _T("Level", "admin"));
+  $n->addExtraInfo( $rulesList['datas']['count'], _T("Associated rules", "admin"));
   $n->addActionItemArray($raiseActions);
   $n->addActionItemArray($lowerActions);
+  $n->addActionItemArray($listActions);
+  $n->addActionItemArray($newActions);
   $n->setTableHeaderPadding(0);
   $n->setItemCount($rulesList['total']);
   $n->setNavBar(new AjaxNavBar($rulesList['total'], $filter, "updateSearchParamformRunning"));
@@ -116,6 +125,16 @@ else{
 <style>
   .clickable{
     cursor: pointer;
+  }
+  li.addbootmenu a {
+      background-image:url("modules/imaging/graph/images/imaging-add.png");
+      background-position:left top;
+      background-repeat:no-repeat;
+      color:#FFFFFF;
+      line-height:18px;
+      margin:0 0;
+      padding: 4px 3px 5px 20px;
+      text-decoration:none;
   }
 </style>
 

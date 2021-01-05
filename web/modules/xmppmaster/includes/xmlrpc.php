@@ -636,7 +636,15 @@ function xmlrpc_get_relay_rule($ruleid){
   return xmlCall("xmppmaster.get_relay_rule", [$ruleid]);
 }
 
-function xmlrpc_edit_rule_to_relay($selected_rule, $rule_id, $subject){
-  return xmlCall("xmppmaster.edit_rule_to_relay", [$selected_rule, $rule_id, $subject]);
+function xmlrpc_get_relays_for_rule($ruleid, $start, $end, $filter){
+  return xmlCall("xmppmaster.get_relays_for_rule", [$ruleid, $start, $end, $filter]);
+}
+
+function xmlrpc_edit_rule_to_relay($selected_rule, $relay_id, $rule_id, $subject){
+  return xmlCall("xmppmaster.edit_rule_to_relay", [$selected_rule, $relay_id, $rule_id, $subject]);
+}
+
+function xmlrpc_get_minimal_relays_list($mode="static"){
+  return xmlCall("xmppmaster.get_minimal_relays_list", [$mode]);
 }
 ?>
