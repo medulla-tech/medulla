@@ -40,7 +40,7 @@ Description: Pulse 2 metapackage
 Package: pulse2-common
 Architecture: all
 Section: python
-Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python-configobj, curl, nsis, dnsutils, python-psutil (>= 0.6.1), rpm (>= 4.8)
+Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python-configobj, curl, nsis, dnsutils, python-psutil (>= 0.6.1), rpm (>= 4.8), python-netifaces, python-netaddr
 Description: Pulse 2 common files (doc)
  Pulse 2 is Open Source computer system management for medium and large
  organizations.

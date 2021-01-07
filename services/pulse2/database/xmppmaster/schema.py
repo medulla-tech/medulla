@@ -295,7 +295,7 @@ class Has_relayserverrules(Base, XmppMasterDBObj):
     rules_id = Column(Integer, ForeignKey('rules.id'))
     relayserver_id = Column(Integer)
     subject = Column(String(45))
-    order = Column(String(45))
+    order = Column(Integer)
     rules = relationship(Regles)
 
 
