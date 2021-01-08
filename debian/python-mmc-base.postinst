@@ -5,7 +5,7 @@
 
 set -e
 
-service php7.0-fpm restart
+service php7.3-fpm restart
 
 # summary of how this script can be called:
 #        * <postinst> `configure' <most-recently-configured-version>
