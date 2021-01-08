@@ -93,7 +93,7 @@ install: build
 	rm -fv $(DESTDIR)/usr/share/doc/pulse2-common/contrib/imaging/sql/schema-018.sql
 	# Remove opencliparts files
 	rm -frv $(DESTDIR)/usr/share/mmc/media/images/msc/opencliparts_0.18
-	cp  $(DESTDIR)/usr/share/mmc/conf/apache/mmc.conf $(DESTDIR)/etc/apache2/conf-available/
+	cp  $(DESTDIR)/etc/mmc/apache/mmc.conf $(DESTDIR)/etc/apache2/conf-available/
 
 binary-indep: build install
 	dh_testdir
