@@ -1626,7 +1626,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
             data['mac'] = macadress #use macadress for WOL
             sessionid = self.createsessionfordeploydiffered(data)
             result = json.dumps(data, indent = 4)
-            msg.append("Machine %s online" % jidmachine)
             msg.append("First WOL sent to machine %s" % uuidmachine)
         else:
             state = "DEPLOYMENT START"
