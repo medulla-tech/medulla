@@ -71,12 +71,12 @@ $nbnsp = ($nbns/$nbt)*100;
 echo "<table class='listinfos'>";
     echo "<thead>";
     echo "<tr>";
-    echo '<th headers="resultsync" colspan="1" >'._T("Relay servers already synchronized : ", 'pkgs').$nbs.'/'.$nbt.' ('.$nbsp .'%)</th>';
+    echo '<th headers="resultnosync" colspan="1" >'._T("Relay servers not yet synchronized : ", 'pkgs').$nbns.'/'.$nbt.' ('.$nbnsp .'%)</th>';
     echo "</tr>";
     echo "</thead>";
-
     echo "<tbody>";
-    foreach($listsearchsynchro as $key=>$val){
+
+    foreach($listsearchnosynchro as $key=>$val){
         echo "<tr>";
             echo "<td>";
             echo $val;
@@ -90,12 +90,12 @@ echo "</table>";
 echo "<table class='listinfos'>";
     echo "<thead>";
     echo "<tr>";
-    echo '<th headers="resultnosync" colspan="1" >'._T("Relay servers not yet synchronized : ", 'pkgs').$nbns.'/'.$nbt.' ('.$nbnsp .'%)</th>';
+    echo '<th headers="resultsync" colspan="1" >'._T("Relay servers already synchronized : ", 'pkgs').$nbs.'/'.$nbt.' ('.$nbsp .'%)</th>';
     echo "</tr>";
     echo "</thead>";
-    echo "<tbody>";
 
-    foreach($listsearchnosynchro as $key=>$val){
+    echo "<tbody>";
+    foreach($listsearchsynchro as $key=>$val){
         echo "<tr>";
             echo "<td>";
             echo $val;
