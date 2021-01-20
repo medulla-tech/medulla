@@ -8,6 +8,7 @@ tar xzvf pulse2-$VERSION.tar.gz
 cp setup.py pulse2-$VERSION
 cp -frv debian pulse2-$VERSION
 cp -frv services/contrib/glpi-92.sql pulse2-$VERSION/services/contrib/ 
+cp -frv services/contrib/glpi-94.sql pulse2-$VERSION/services/contrib/
 mkdir pulse2-$VERSION/services/systemd
 cp -fv services/systemd/mmc-agent.service pulse2-$VERSION/services/systemd
 tar czvf pulse2-$VERSION.tar.gz pulse2-$VERSION
