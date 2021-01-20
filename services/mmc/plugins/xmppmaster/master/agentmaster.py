@@ -1789,7 +1789,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.session.decrementesessiondatainfo()
 
     def loadbasepluginagent(self):
-        self.loadPluginList()
+        self.loadBasePluginList()
         self.loadPluginschedulerList()
         self.loadfingerprintagentbase()
 
@@ -1799,7 +1799,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.Update_Remote_Agentlist = Update_Remote_Agent(self.config.diragentbase,
                                                            self.autoupdatebool)
 
-    def loadPluginList(self):
+    def loadBasePluginList(self):
         PkgsDatabase().clear_old_pending_synchro_package(timeseconde=3600)
         logger.debug("Load and Verify base plugin")
         self.plugindata = {}
