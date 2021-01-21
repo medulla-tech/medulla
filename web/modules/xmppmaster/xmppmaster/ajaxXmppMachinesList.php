@@ -87,7 +87,7 @@ $n->addExtraInfo( $machines['datas']['macaddress'], _T("Mac Address", "xmppmaste
 $n->addExtraInfo( $machines['datas']['ip_xmpp'], _T("Xmpp IP", "xmppmaster"));
 $n->setTableHeaderPadding(0);
 $n->setItemCount($machines['total']);
-$n->setNavBar(new AjaxNavBar($machines['total'], $filter, "updateSearchParamformRunning1"));
+$n->setNavBar(new AjaxNavBar($machines['total'], $filter, "updateSearchParamformRunning"));
 $n->addActionItemArray($vncActions);
 $n->addActionItemArray($consoleActions);
 $n->addActionItemArray($configActions);

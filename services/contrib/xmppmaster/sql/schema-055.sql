@@ -25,6 +25,8 @@ START TRANSACTION;
 USE `xmppmaster`;
 
 ALTER TABLE `xmppmaster`.`has_relayserverrules` CHANGE COLUMN `order` `order` INT DEFAULT 0;
+ALTER TABLE `xmppmaster`.`logs` CHANGE COLUMN `touser` `touser` VARCHAR(255) DEFAULT '' ;
+ALTER TABLE `xmppmaster`.`logs` CHANGE COLUMN `who` `who` VARCHAR(255) DEFAULT '' ;
 
 UPDATE version SET Number = 55;
 
