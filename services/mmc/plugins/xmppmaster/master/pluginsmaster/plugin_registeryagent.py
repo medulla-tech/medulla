@@ -802,7 +802,7 @@ def callinventory(xmppobject,  to):
     try:
         body = {'action': 'inventory',
                 'sessionid': getRandomName(5, "inventory"),
-                'data': {}}
+                'data': {'forced': 'forced'}}
         xmppobject.send_message(mto=to,
                             mbody=json.dumps(body),
                             mtype='chat')
