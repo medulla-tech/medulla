@@ -1626,7 +1626,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
             data['mac'] = macadress #use macadress for WOL
             sessionid = self.createsessionfordeploydiffered(data)
             result = json.dumps(data, indent = 4)
-            msg.append("Machine %s online" % jidmachine)
             msg.append("First WOL sent to machine %s" % uuidmachine)
         else:
             state = "DEPLOYMENT START"
@@ -1790,7 +1789,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.session.decrementesessiondatainfo()
 
     def loadbasepluginagent(self):
-        self.loadPluginList()
+        self.loadBasePluginList()
         self.loadPluginschedulerList()
         self.loadfingerprintagentbase()
 
@@ -1800,7 +1799,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.Update_Remote_Agentlist = Update_Remote_Agent(self.config.diragentbase,
                                                            self.autoupdatebool)
 
-    def loadPluginList(self):
+    def loadBasePluginList(self):
         PkgsDatabase().clear_old_pending_synchro_package(timeseconde=3600)
         logger.debug("Load and Verify base plugin")
         self.plugindata = {}

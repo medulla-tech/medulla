@@ -24,25 +24,10 @@ START TRANSACTION;
 
 USE `xmppmaster`;
 
--- resize fild type  in table log
-ALTER TABLE `xmppmaster`.`logs`
-DROP INDEX `ind_log_type`;
-ALTER TABLE `xmppmaster`.`logs`
-CHANGE COLUMN `type` `type` VARCHAR(25) NOT NULL DEFAULT 'noset' ;
-ALTER TABLE `xmppmaster`.`logs`
-ADD INDEX `ind_log_type` (`type` ASC);
+ALTER TABLE `xmppmaster`.`has_relayserverrules` CHANGE COLUMN `order` `order` INT DEFAULT 0;
+ALTER TABLE `xmppmaster`.`logs` CHANGE COLUMN `touser` `touser` VARCHAR(255) DEFAULT '' ;
+ALTER TABLE `xmppmaster`.`logs` CHANGE COLUMN `who` `who` VARCHAR(255) DEFAULT '' ;
 
--- add 2 filds in table user for event registers  machine
-ALTER TABLE `xmppmaster`.`users`
-ADD COLUMN `creation_user` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `country_name`,
-ADD COLUMN `last_modif` TIMESTAMP NULL AFTER `creation_user`;
+UPDATE version SET Number = 55;
 
--- add uui_serial_machine in table machine
-ALTER TABLE `xmppmaster`.`machines`
-ADD COLUMN `uuid_serial_machine` VARCHAR(45) NULL DEFAULT '' AFTER `jid`;
-
--- Increase table size to 100
-ALTER TABLE has_relayserverrules MODIFY subject varchar(100);
-
-UPDATE version SET Number = 50;
 COMMIT;
