@@ -886,7 +886,9 @@ echo '<script src="modules/xmppmaster/graph/js/chart.js"></script>';
     $errors = 0;
   }
   echo 'chart("holder", datas);';
+  echo 'if(typeof(datas2) != "undefined"){';
     echo 'chart("holder2", datas2);';
+  echo "}";
   echo'</script>';
     }
 ?>
