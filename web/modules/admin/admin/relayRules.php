@@ -31,15 +31,9 @@ unset($params['submod']);
 unset($params['action']);
 $params['hostname'] = htmlentities($params['hostname']);
 
-if(isExpertMode()){
-
-  print "<br/><br/><br/>";
-  $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRelayRules"), "container", $params);
-  $ajax->display();
-  print "<br/><br/><br/>";
-  $ajax->displayDivToUpdate();
-}
-else{
-  header("Location: " . urlStrRedirect("dashboard/main/default"));
-}
+print "<br/><br/><br/>";
+$ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRelayRules"), "container", $params);
+$ajax->display();
+print "<br/><br/><br/>";
+$ajax->displayDivToUpdate();
  ?>

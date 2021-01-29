@@ -24,7 +24,7 @@
 //require("modules/admin/admin/localSidebar.php");
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-if(isExpertMode()){
+
 /*$p = new PageGenerator(_T("Clusters list", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -36,8 +36,5 @@ $p->display();
   $ajax->displayDivToUpdate();*/
   //require('modules/admin/admin/relaysList.php');
   header("Location: " . urlStrRedirect("admin/admin/relaysList"));
-}
-else{
-  header("Location: " . urlStrRedirect("dashboard/main/default"));
-}
+
  ?>

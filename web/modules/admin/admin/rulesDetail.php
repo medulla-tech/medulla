@@ -25,25 +25,22 @@ require("modules/admin/admin/localSidebar.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 
-if(isExpertMode()){
-  $name = (isset($_GET['name'])) ? htmlentities($_GET['name']) : "";
-  $p = new PageGenerator(_T("Detail for Rule $name", 'admin'));
-  $p->setSideMenu($sidemenu);
-  $p->display();
 
-  $params = $_GET;
-  unset($params['module']);
-  unset($params['submod']);
-  unset($params['action']);
+$name = (isset($_GET['name'])) ? htmlentities($_GET['name']) : "";
+$p = new PageGenerator(_T("Detail for Rule $name", 'admin'));
+$p->setSideMenu($sidemenu);
+$p->display();
+
+$params = $_GET;
+unset($params['module']);
+unset($params['submod']);
+unset($params['action']);
 
 
-  print "<br/><br/><br/>";
-  $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRulesDetail", $params));
-  $ajax->display();
-  print "<br/><br/><br/>";
-  $ajax->displayDivToUpdate();
-}
-else{
-  header("Location: " . urlStrRedirect("dashboard/main/default"));
-}
+print "<br/><br/><br/>";
+$ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRulesDetail", $params));
+$ajax->display();
+print "<br/><br/><br/>";
+$ajax->displayDivToUpdate();
+
  ?>

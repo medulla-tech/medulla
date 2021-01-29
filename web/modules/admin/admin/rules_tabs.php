@@ -34,28 +34,24 @@ unset($params['action']);
 unset($params['tab']);
 $params['hostname'] = htmlentities($params['hostname']);
 
-if(isExpertMode()){
-  $page = new TabbedPageGenerator();
-  //Display sidemenu
-  $page->setSideMenu($sidemenu);
-  $tabList = array(
-  	'relayRules' => _T('Rules List', "admin"),
-  	'newRelayRule' => _T('New Rule', 'admin'),
-  );
+$page = new TabbedPageGenerator();
+//Display sidemenu
+$page->setSideMenu($sidemenu);
+$tabList = array(
+	'relayRules' => _T('Rules List', "admin"),
+	'newRelayRule' => _T('New Rule', 'admin'),
+);
 
-  //create tabList, where tab parameter is the page name to display.
-  foreach ($tabList as $tab => $str) {
-    if(!isset($_GET['prev_action'])){
-      $page->addTab($tab, $str, $str.' '._T('for Relay ['.$params['hostname'].']', "admin"), "modules/admin/admin/$tab.php", $params);
-    }
-    else{
-      $page->addTab($tab, $str, $str.' '._T(htmlentities($_GET['name']), "admin"), "modules/admin/admin/$tab.php", $params);
-    }
-      //$page->addTab($tab, $str, $str, 'admin');
+//create tabList, where tab parameter is the page name to display.
+foreach ($tabList as $tab => $str) {
+  if(!isset($_GET['prev_action'])){
+    $page->addTab($tab, $str, $str.' '._T('for Relay ['.$params['hostname'].']', "admin"), "modules/admin/admin/$tab.php", $params);
   }
-  $page->display();
+  else{
+    $page->addTab($tab, $str, $str.' '._T(htmlentities($_GET['name']), "admin"), "modules/admin/admin/$tab.php", $params);
+  }
+    //$page->addTab($tab, $str, $str, 'admin');
 }
-else{
-  header("Location: " . urlStrRedirect("dashboard/main/default"));
-}
+$page->display();
+
  ?>

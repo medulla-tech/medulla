@@ -24,18 +24,13 @@ require("graph/navbar.inc.php");
 require("modules/admin/admin/localSidebar.php");
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-if(isExpertMode()){
+
 $p = new PageGenerator(_T("XMPP Relays list", 'glpi'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-  print "<br/><br/><br/>";
-  $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRelaysList"), "container", array('login' => $_SESSION['login']), 'formRunning');
-  $ajax->display();
-  print "<br/><br/><br/>";
-  $ajax->displayDivToUpdate();
-}
-else{
-  header("Location: " . urlStrRedirect("dashboard/main/default"));
-}
- ?>
+print "<br/><br/><br/>";
+$ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRelaysList"), "container", array('login' => $_SESSION['login']), 'formRunning');
+$ajax->display();
+print "<br/><br/><br/>";
+$ajax->displayDivToUpdate(); ?>
