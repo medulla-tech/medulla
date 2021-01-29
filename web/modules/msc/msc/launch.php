@@ -959,8 +959,9 @@ function updateSyncthing(){
         return datum/1000;
     }
 
-
-    jQuery('#start_date').change( function() {
+    // When the start_date or the end_date is modified, the validation button is disabled
+    // else the validation button is enabled
+    jQuery('#start_date,#end_date').change( function() {
         var start = toTimestamp(jQuery('#start_date').val())
         var end   = toTimestamp(jQuery('#end_date').val())
         var exec  = toTimestamp(jQuery('#exec_date').val())
@@ -968,20 +969,25 @@ function updateSyncthing(){
             jQuery('#exec_date').val(jQuery('#start_date').val())
         }
         if (start > end){
-            alert ("inconsistency within the deployment range");
+            jQuery(".btnPrimary").prop("disabled", true);
+        }
+        else{
+          jQuery(".btnPrimary").prop("disabled", false);
         }
     });
 
-    jQuery('#end_date').change( function() {
-        var start = toTimestamp(jQuery('#start_date').val())
-        var end   = toTimestamp(jQuery('#end_date').val())
-        var exec  = toTimestamp(jQuery('#exec_date').val())
-        if (exec < start){
-            jQuery('#exec_date').val(jQuery('#start_date').val())
-        }
-        if (start > end){
-            alert ("inconsistency within the deployment range");
-        }
+    jQuery(".btnPrimary").hover(function(){
+      var start = toTimestamp(jQuery('#start_date').val())
+      var end   = toTimestamp(jQuery('#end_date').val())
+      var exec  = toTimestamp(jQuery('#exec_date').val())
+
+      if (start > end){
+          alert ("inconsistency within the deployment range");
+          jQuery(this).prop("disabled", true);
+      }
+      else{
+        jQuery(this).prop("disabled", false);
+      }
     });
 
     jQuery('#exec_date').change( function() {

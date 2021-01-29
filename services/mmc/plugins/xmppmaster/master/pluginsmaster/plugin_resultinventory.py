@@ -79,7 +79,7 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
             logger.debug("copy file to %s" % namefile)
             return
         else:
-            logger.debug("injection direct of intentory")
+            logger.debug("injection direct of inventory")
             request = urllib2.Request(url, inventory, HEADER)
             try:
                 response = urllib2.urlopen(request)

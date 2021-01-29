@@ -1244,6 +1244,7 @@ cp -fv %buildroot%_datadir/mmc/conf/apache/pulse.conf %buildroot%_sysconfdir/htt
 mkdir -p %buildroot%_var/lib/pulse2/file-transfer
 
 cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/mmc/contrib/
+cp services/contrib/glpi-94.sql %buildroot%_datadir/doc/mmc/contrib/
 
 rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
 mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
