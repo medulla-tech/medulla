@@ -70,6 +70,8 @@ Requires:       mmc-web-pulse2
 Requires:       python-mmc-pulse2
 Requires:       mmc-web-kiosk
 Requires:       python-mmc-kiosk
+Requires:       mmc-web-admin
+Requires:       python-mmc-admin
 Requires:       pulse2-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
@@ -436,6 +438,22 @@ This package contains the pkgs plugin for the MMC agent.
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/kiosk.ini
 %python2_sitelib/mmc/plugins/kiosk
 %python2_sitelib/pulse2/database/kiosk
+
+
+#--------------------------------------------------------------------
+
+%package -n python-mmc-admin
+Summary:    Kiosk plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+
+%description -n python-mmc-admin
+This package contains the admin plugin for the MMC agent.
+
+%files -n python-mmc-admin
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/admin.ini
+%python2_sitelib/mmc/plugins/admin
+%python2_sitelib/pulse2/database/admin
 
 #--------------------------------------------------------------------
 
@@ -1128,6 +1146,7 @@ fi
 %exclude %{_datadir}/mmc/modules/ppolicy
 %exclude %{_datadir}/mmc/modules/services
 %exclude %{_datadir}/mmc/modules/dashboard
+%exclude %{_datadir}/mmc/modules/admin
 
 #--------------------------------------------------------------------
 
@@ -1186,6 +1205,20 @@ Report module for the MMC web interface
 
 %files -n mmc-web-report
 %{_datadir}/mmc/modules/report
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-admin
+Summary:        Admin module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-report
+Admin module for the MMC web interface
+
+%files -n mmc-web-report
+%{_datadir}/mmc/modules/admin
+%{_docdir}/mmc/contrib/admin
 
 #--------------------------------------------------------------------
 
