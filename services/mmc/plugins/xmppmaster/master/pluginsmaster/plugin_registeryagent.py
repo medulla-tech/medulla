@@ -82,7 +82,11 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
             if 'completedatamachine' in data:
                 info = json.loads(base64.b64decode(data['completedatamachine']))
                 data['information'] = info
-
+                if not xmppobject.use_uuid:
+                    data['uuid_serial_machine'] = ""
+                    if showinfobool:
+                        logger.info("parameter use_uuid is False: " \
+                            "uuid serial machine is not used")
                 if 'uuid_serial_machine' not in data:
                     data['uuid_serial_machine'] = ""
                     if showinfobool:
@@ -798,7 +802,7 @@ def callinventory(xmppobject,  to):
     try:
         body = {'action': 'inventory',
                 'sessionid': getRandomName(5, "inventory"),
-                'data': {}}
+                'data': {'forced': 'forced'}}
         xmppobject.send_message(mto=to,
                             mbody=json.dumps(body),
                             mtype='chat')
@@ -1040,6 +1044,12 @@ def read_conf_remote_registeryagent(xmppobject):
             xmppobject.check_uuidinventory = Config.getboolean('parameters', 'check_uuidinventory')
         else:
             xmppobject.check_uuidinventory = False
+
+        if Config.has_option("parameters", "use_uuid"):
+            xmppobject.use_uuid = Config.getboolean('parameters',
+                                                    'use_uuid')
+        else:
+            xmppobject.use_uuid = True
 
         if Config.has_option("parameters", "pluginlistregistered"):
             pluginlistregistered = Config.get('parameters', 'pluginlistregistered')

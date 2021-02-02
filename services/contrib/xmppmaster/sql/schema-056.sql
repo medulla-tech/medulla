@@ -24,10 +24,23 @@ START TRANSACTION;
 
 USE `xmppmaster`;
 
-ALTER TABLE `xmppmaster`.`has_relayserverrules` CHANGE COLUMN `order` `order` INT DEFAULT 0;
-ALTER TABLE `xmppmaster`.`logs` CHANGE COLUMN `touser` `touser` VARCHAR(255) DEFAULT '' ;
-ALTER TABLE `xmppmaster`.`logs` CHANGE COLUMN `who` `who` VARCHAR(255) DEFAULT '' ;
+CREATE TABLE IF NOT EXISTS stats_hosts(
+  stats_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  nb_hosts INT NOT NULL
+);
 
-UPDATE version SET Number = 55;
+DELIMITER $$
+DROP EVENT IF EXISTS update_stats_hosts;
+CREATE EVENT IF NOT EXISTS update_stats_hosts
+    ON SCHEDULE
+        EVERY 1 MONTH
+        STARTS '2021-01-15 00:00:00'
+    DO BEGIN
+        INSERT INTO `stats_hosts` (`nb_hosts`)
+        SELECT COUNT(*) FROM `machines` WHERE `agenttype` = 'machine';
+    END$$
+DELIMITER ;
+
+UPDATE version SET Number = 56;
 
 COMMIT;

@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2017 Siveo, http://http://www.siveo.net
+ * (c) 2017-2021 Siveo, http://http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -21,7 +21,7 @@
  *
  * file viewgrouplogs.in.php
  */
-//require("modules/base/computers/localSidebar.php");
+
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
@@ -312,22 +312,20 @@ if ($statsyncthing['package'] != ""){
 ?>
 
 <script type="text/javascript">
-    function searchlogs(url){
-                            jQuery('#tablelog').DataTable({
-                            'retrieve': true,
-                            "iDisplayLength": 5,
-                            "dom": 'rt<"bottom"fp><"clear">',
-                            'order': [[ 0, "desc" ]]
-                        } )
-                            .ajax.url(
-                                url
-                            )
-                            .load();
-    }
+function searchlogs(url){
+  jQuery('#tablelog').DataTable({
+    'retrieve': true,
+    "iDisplayLength": 5,
+    "dom": 'rt<"bottom"fp><"clear">',
+    'order': [[ 0, "desc" ]]
+  })
+  .ajax.url(url)
+  .load();
+}
 
-    jQuery(function(){
-        searchlogs("modules/xmppmaster/xmppmaster/ajaxsyncthingmachineless.php?grp=<?php echo $_GET['gid']; ?>&cmd=<?php echo $cmd_id ?>")
-    } );
+jQuery(function(){
+    searchlogs("modules/xmppmaster/xmppmaster/ajaxsyncthingmachineless.php?grp=<?php echo $_GET['gid']; ?>&cmd=<?php echo $cmd_id ?>")
+} );
 
 jQuery( "#tablesyncthing" ).hide();
 
@@ -345,7 +343,7 @@ jQuery( "#buttontogglesyncthing" ).click(function() {
       jQuery( "#buttontogglesyncthing" ).val("Show Transfer");
     }
 });
-    </script>
+</script>
 
 <?php
 
@@ -435,21 +433,80 @@ echo "<div>";
         foreach($dynamicstatus as $label=>$status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
         }
+        echo "</tr>";
+      echo "</tbody></table>";
       }
-        else{
-            echo "<table class='listinfos deployment' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
-            echo '<td>'._T('Graph','xmppmaster').'</td>';
-            echo "<td>"._T("Success","xmppmaster")."</td>
-                <td>"._T("Error","xmppmaster")."</td>
-                <td>"._T("Aborted","xmppmaster")."</td>";
-            echo "</tr></thead>
-            <tbody><tr>";
-            echo '<td style="width:500px"><div id="holder"></div>';
-            echo '</td>';
-            echo "<td>".$deploymentsuccess."</td>
-                <td>".$errors."</td>
-                <td>".$aborted."</td>";
-        echo "</tr></tbody></table>";
+      else{
+          echo "<table class='listinfos deployment' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
+          echo '<td>'._T('Summary Graph','xmppmaster').'</td>';
+          echo "<td>"._T("Success","xmppmaster")."</td>
+              <td>"._T("Error","xmppmaster")."</td>
+              <td>"._T("Aborted","xmppmaster")."</td>";
+          echo "</tr></thead>
+          <tbody><tr>";
+          echo '<td style="width:500px"><div id="holder"></div>';
+          echo '</td>';
+          echo "<td>".$deploymentsuccess."</td>
+              <td>".$errors."</td>
+              <td>".$aborted."</td>";
+          echo "</tr>";
+        echo "</tbody></table>";
+
+        echo "<table class='listinfos deployment' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
+        echo '<td>'._T('Detailed Graph','xmppmaster').'</td>';
+        echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>"._T("Deployment Success","xmppmaster")."</td>" : "";
+        echo (isset($deploymenterror)&&$deploymenterror) ? "<td>"._T("Deployment Error","xmppmaster")."</td>" : "";
+        echo (isset($abortmissingagent)&&$abortmissingagent) ? "<td>"._T("Abort Missing Agent","xmppmaster")."</td>" : "";
+        echo (isset($abortrelaydown)&&$abortrelaydown) ? "<td>"._T("Abort Relay Down","xmppmaster")."</td>" : "";
+        echo (isset($abortalternativerelaysdow)&&$abortalternativerelaysdown) ?"<td>"._T("Abort Alternative relay down","xmppmaster")."</td>" : "";
+        echo (isset($abortinforelaymissing)&&$abortinforelaymissing) ? "<td>"._T("Abort Info Relay Missing","xmppmaster")."</td>" : "";
+        echo (isset($errorunknownerror)&&$errorunknownerror) ? "<td>"._T("Error Unknown Error","xmppmaster")."</td>" : "";
+        echo (isset($abortpackageidentifiermissing)&&$abortpackageidentifiermissing) ?"<td>"._T("Abort Package Identifier Missing","xmppmaster")."</td>" : "";
+        echo (isset($abortpackagenamemissing)&&$abortpackagenamemissing) ? "<td>"._T("Abort Package Name Missing","xmppmaster")."</td>" : "";
+        echo (isset($abortpackageversionmissing)&&$abortpackageversionmissing) ? "<td>"._T("Abort Package Version Missing","xmppmaster")."</td>" : "";
+        echo (isset($abortdescriptormissing)&&$abortdescriptormissing) ? "<td>"._T("Abort Descriptor Missing","xmppmaster")."</td>" : "";
+        echo (isset($abortmachinedisappeared)&&$abortmachinedisappeared) ? "<td>"._T("Abort Machine Disappeared","xmppmaster")."</td>" : "";
+        echo (isset($abortdeploymentcancelledbyuser)&&$abortdeploymentcancelledbyuser) ? "<td>"._T("Abort Deployment Cancelled By User","xmppmaster")."</td>" : "";
+        echo (isset($deploymentdelayed)&&$deploymentdelayed) ? "<td>"._T("Deployment Delayed","xmppmaster")."</td>" : "";
+        echo (isset($deploymentstart)&&$deploymentstart) ? "<td>"._T("Deployment start","xmppmaster")."</td>" : "";
+        echo (isset($deploymentpending)&&$deploymentpending) ? "<td>"._T("Deployment Pending","xmppmaster")."</td>" : "";
+        echo (isset($wol1)&&$wol1) ? "<td>"._T("WOL 1","xmppmaster")."</td>" : "";
+        echo (isset($wol2)&&$wol2) ? "<td>"._T("WOL 2","xmppmaster")."</td>" : "";
+        echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
+        echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
+        echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
+        foreach($dynamicstatus as $label=>$status){
+            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($status,"xmppmaster")))."</td>" : "";
+        }
+        echo "</tr></thead>";
+
+        echo "<tbody><tr>";
+        echo '<td style="width:500px"><div id="holder2"></div>';
+        echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>".$deploymentsuccess."</td>" : "";
+        echo (isset($deploymenterror)&&$deploymenterror) ? "<td>".$deploymenterror."</td>" : "";
+        echo (isset($abortmissingagent)&&$abortmissingagent) ? "<td>".$abortmissingagent."</td>" : "";
+        echo (isset($abortrelaydown)&&$abortrelaydown) ? "<td>".$abortrelaydown."</td>" : "";
+        echo (isset($abortalternativerelaysdow)&&$abortalternativerelaysdown) ?"<td>".$abortalternativerelaysdown."</td>" : "";
+        echo (isset($abortinforelaymissing)&&$abortinforelaymissing) ? "<td>".$abortinforelaymissing."</td>" : "";
+        echo (isset($errorunknownerror)&&$errorunknownerror) ? "<td>".$errorunknownerror."</td>" : "";
+        echo (isset($abortpackageidentifiermissing)&&$abortpackageidentifiermissing) > 0 ?"<td>".$abortpackageidentifiermissing."</td>" : "";
+        echo (isset($abortpackagenamemissing)&&$abortpackagenamemissing) ? "<td>".$abortpackagenamemissing."</td>" : "";
+        echo (isset($abortpackageversionmissing)&&$abortpackageversionmissing) ? "<td>".$abortpackageversionmissing."</td>" : "";
+        echo (isset($abortdescriptormissing)&&$abortdescriptormissing) ? "<td>".$abortdescriptormissing."</td>" : "";
+        echo (isset($abortmachinedisappeared)&&$abortmachinedisappeared) ? "<td>".$abortmachinedisappeared."</td>" : "";
+        echo (isset($abortdeploymentcancelledbyuser)&&$abortdeploymentcancelledbyuser) ? "<td>".$abortdeploymentcancelledbyuser."</td>" : "";
+        echo (isset($deploymentdelayed)&&$deploymentdelayed) ? "<td>".$deploymentdelayed."</td>" : "";
+        echo (isset($deploymentstart)&&$deploymentstart) ? "<td>".$deploymentstart."</td>" : "";
+        echo (isset($deploymentpending)&&$deploymentpending) ? "<td>".$deploymentpending."</td>" : "";
+        echo (isset($wol1)&&$wol1) ? "<td>".$wol1."</td>" : "";
+        echo (isset($wol2)&&$wol2) ? "<td>".$wol2."</td>" : "";
+        echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
+        echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
+        echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
+        foreach($dynamicstatus as $label=>$status){
+            echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
+        }
+        echo "</tr></thead></table>";
     }
 
 echo '</div>';
@@ -660,74 +717,74 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
 
 echo '<script src="modules/xmppmaster/graph/js/chart.js"></script>';
 
+  $bluelistcolor = ["#7080AF", "#665899", "#6F01F3", "#5D01A9", "#2D0151", "#3399CC", "#000099", "#6600FF"];
+  $max = count($bluelistcolor) - 1;
+
   if(!$terminate){
     echo '<script>
     var u = "";
     var r = "";
     var datas = new Array();';
     if ($deploymentsuccess > 0){
-        echo 'datas.push({"label":"Deployment Success", "value":'.$deploymentsuccess.', "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("deploymentsuccess",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
+        echo 'datas.push({"label":"Deployment Success", "value":parseInt('.$deploymentsuccess.'), "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("deploymentsuccess",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
     }
     if ($wol1 > 0){
-        echo 'datas.push({"label":"WOL 1", "value":'.$wol1.', "color": "#202020", "href":"'.urlredirect_group_for_deploy("wol1",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"WOL 1", "value":parseInt('.$wol1.'), "color": "#202020", "href":"'.urlredirect_group_for_deploy("wol1",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($wol2 > 0){
-        echo 'datas.push({"label":"WOL 2", "value":'.$wol2.', "color": "#2D0151", "href":"'.urlredirect_group_for_deploy("wol2",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"WOL 2", "value":parseInt('.$wol2.'), "color": "#2D0151", "href":"'.urlredirect_group_for_deploy("wol2",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($wol3 > 0){
-        echo 'datas.push({"label":"WOL 3", "value":'.$wol3.', "color": "#5D01A9", "href":"'.urlredirect_group_for_deploy("wol3",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"WOL 3", "value":parseInt('.$wol3.'), "color": "#5D01A9", "href":"'.urlredirect_group_for_deploy("wol3",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($waitingmachineonline > 0){
-        echo 'datas.push({"label":"Waiting Machine Online ", "value":'.$waitingmachineonline.', "color": "#6F01F3", "href":"'.urlredirect_group_for_deploy("waitingmachineonline",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Waiting Machine Online ", "value":parseInt('.$waitingmachineonline.'), "color": "#6F01F3", "href":"'.urlredirect_group_for_deploy("waitingmachineonline",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($deploymentpending > 0){
-        echo 'datas.push({"label":"Deployment Pending (Reboot/Shutdown/...) ", "value":'.$deploymentpending.', "color": "#665899", "href":"'.urlredirect_group_for_deploy("deploymentpending",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Deployment Pending (Reboot/Shutdown/...) ", "value":parseInt('.$deploymentpending.'), "color": "#665899", "href":"'.urlredirect_group_for_deploy("deploymentpending",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($deploymentdelayed > 0){
-        echo 'datas.push({"label":"Deployment Delayed ", "value":'.$deploymentdelayed.', "color": "#7080AF", "href":"'.urlredirect_group_for_deploy("deploymentdelayed",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Deployment Delayed ", "value":parseInt('.$deploymentdelayed.'), "color": "#7080AF", "href":"'.urlredirect_group_for_deploy("deploymentdelayed",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($deploymentstart > 0){
-        echo 'datas.push({"label":"Deployment Start", "value":'.$deploymentstart.', "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("deploymentstart",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Deployment Start", "value":parseInt('.$deploymentstart.'), "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("deploymentstart",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if($abortalternativerelaysdown > 0){
-        echo 'datas.push({"label":"Abort Alternative Relays Down ", "value":'.$abortalternativerelaysdown.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortalternativerelaysdown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Alternative Relays Down ", "value":parseInt('.$abortalternativerelaysdown.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortalternativerelaysdown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortrelaydown > 0){
-        echo 'datas.push({"label":"Abort Relay Down ", "value":'.$abortrelaydown.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortrelaydown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Relay Down ", "value":parseInt('.$abortrelaydown.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortrelaydown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortmissingagent > 0){
-        echo 'datas.push({"label":"Abort Missing Agent ", "value":'.$abortmissingagent.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmissingagent",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Missing Agent ", "value":parseInt('.$abortmissingagent.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmissingagent",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortinforelaymissing > 0){
-        echo 'datas.push({"label":"Abort Info For Relay Missing ", "value":'.$abortinforelaymissing.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinforelaymissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Info For Relay Missing ", "value":parseInt('.$abortinforelaymissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinforelaymissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortpackageidentifiermissing > 0){
-        echo 'datas.push({"label":"Abort Package Identifier Missing ", "value":'.$abortpackageidentifiermissing.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageidentifiermissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Package Identifier Missing ", "value":parseInt('.$abortpackageidentifiermissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageidentifiermissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortpackagenamemissing > 0){
-        echo 'datas.push({"label":"Abort Package Name Missing ", "value":'.$abortpackagenamemissing.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackagenamemissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Package Name Missing ", "value":parseInt('.$abortpackagenamemissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackagenamemissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortpackageversionmissing > 0){
-        echo 'datas.push({"label":"Abort Package Version Missing ", "value":'.$abortpackageversionmissing.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageversionmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Package Version Missing ", "value":parseInt('.$abortpackageversionmissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageversionmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortdescriptormissing > 0){
-        echo 'datas.push({"label":"Abort Descriptor Missing ", "value":'.$abortdescriptormissing.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdescriptormissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Descriptor Missing ", "value":parseInt('.$abortdescriptormissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdescriptormissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortmachinedisappeared > 0){
-        echo 'datas.push({"label":"Abort Machine Disappeared ", "value":'.$abortmachinedisappeared.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmachinedisappeared",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Machine Disappeared ", "value":parseInt('.$abortmachinedisappeared.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmachinedisappeared",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortdeploymentcancelledbyuser > 0){
-        echo 'datas.push({"label":"ABORT DEPLOYMENT CANCELLED BY USER ", "value":'.$abortdeploymentcancelledbyuser.', "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdeploymentcancelledbyuser",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"ABORT DEPLOYMENT CANCELLED BY USER ", "value":parseInt('.$abortdeploymentcancelledbyuser.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdeploymentcancelledbyuser",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($errorunknownerror > 0){
-        echo 'datas.push({"label":"Error Unknown Error ", "value":'.$errorunknownerror.', "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Error Unknown Error ", "value":parseInt('.$errorunknownerror.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($otherstatus > 0){
-        echo 'datas.push({"label":"Other Status ", "value":'.$otherstatus.', "color": "#FFDA00", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Other Status ", "value":parseInt('.$otherstatus.'), "color": "#FFDA00", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
-
-    $bluelistcolor = ["#7080AF", "#665899", "#6F01F3", "#5D01A9", "#2D0151", "#3399CC", "#000099", "#6600FF"];
-    $max = count($bluelistcolor) - 1;
 
     foreach($dynamicstatus as $label=>$status){
         if(isset($$label) && $$label){
@@ -737,8 +794,7 @@ echo '<script src="modules/xmppmaster/graph/js/chart.js"></script>';
                 $color = "#ff0000";
             else
                 $color = $bluelistcolor[rand(0, $max)];
-
-            echo 'datas.push({"label":"'.ucfirst(strtolower($status)).'", "value":"'.$$label.'", "color": "'.$color.'", "href":"'.urlredirect_group_for_deploy($label,$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+            echo 'datas.push({"label":"'.ucfirst(strtolower($status)).'", "value":parseInt('.$$label.'), "color": "'.$color.'", "href":"'.urlredirect_group_for_deploy($label,$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
     }
   }
@@ -747,14 +803,92 @@ echo '<script src="modules/xmppmaster/graph/js/chart.js"></script>';
     var u = "";
     var r = "";
     var datas = new Array();';
-
     echo 'datas.push({"label":"Deployment Success", "value":'.$deploymentsuccess.', "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("deploymentsuccess",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
     echo 'datas.push({"label":"Deployment Aborted", "value":'.$aborted.', "color": "orange", "href":"'.urlredirect_group_for_deploy("abort",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
     echo 'datas.push({"label":"Deployment Error", "value":'.$errors.', "color": "red", "href":"'.urlredirect_group_for_deploy("error",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
+
+    echo 'var datas2 = new Array();';
+    if ($deploymentsuccess > 0){
+        echo 'datas2.push({"label":"Deployment Success", "value":parseInt('.$deploymentsuccess.'), "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("deploymentsuccess",$_GET['gid'], $_GET['login'], $cmd_id).'"});';
+    }
+    if ($wol1 > 0){
+        echo 'datas2.push({"label":"WOL 1", "value":parseInt('.$wol1.'), "color": "#202020", "href":"'.urlredirect_group_for_deploy("wol1",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($wol2 > 0){
+        echo 'datas2.push({"label":"WOL 2", "value":parseInt('.$wol2.'), "color": "#2D0151", "href":"'.urlredirect_group_for_deploy("wol2",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($wol3 > 0){
+        echo 'datas2.push({"label":"WOL 3", "value":parseInt('.$wol3.'), "color": "#5D01A9", "href":"'.urlredirect_group_for_deploy("wol3",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($waitingmachineonline > 0){
+        echo 'datas2.push({"label":"Waiting Machine Online ", "value":parseInt('.$waitingmachineonline.'), "color": "#6F01F3", "href":"'.urlredirect_group_for_deploy("waitingmachineonline",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($deploymentpending > 0){
+        echo 'datas2.push({"label":"Deployment Pending (Reboot/Shutdown/...) ", "value":parseInt('.$deploymentpending.'), "color": "#665899", "href":"'.urlredirect_group_for_deploy("deploymentpending",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($deploymentdelayed > 0){
+        echo 'datas2.push({"label":"Deployment Delayed ", "value":parseInt('.$deploymentdelayed.'), "color": "#7080AF", "href":"'.urlredirect_group_for_deploy("deploymentdelayed",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($deploymentstart > 0){
+        echo 'datas2.push({"label":"Deployment Start", "value":parseInt('.$deploymentstart.'), "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("deploymentstart",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if($abortalternativerelaysdown > 0){
+        echo 'datas2.push({"label":"Abort Alternative Relays Down ", "value":parseInt('.$abortalternativerelaysdown.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortalternativerelaysdown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($abortrelaydown > 0){
+        echo 'datas2.push({"label":"Abort Relay Down ", "value":parseInt('.$abortrelaydown.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortrelaydown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($abortmissingagent > 0){
+        echo 'datas2.push({"label":"Abort Missing Agent ", "value":parseInt('.$abortmissingagent.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmissingagent",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($abortinforelaymissing > 0){
+        echo 'datas2.push({"label":"Abort Info For Relay Missing ", "value":parseInt('.$abortinforelaymissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinforelaymissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($abortpackageidentifiermissing > 0){
+        echo 'datas2.push({"label":"Abort Package Identifier Missing ", "value":parseInt('.$abortpackageidentifiermissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageidentifiermissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($abortpackagenamemissing > 0){
+        echo 'datas2.push({"label":"Abort Package Name Missing ", "value":parseInt('.$abortpackagenamemissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackagenamemissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($abortpackageversionmissing > 0){
+        echo 'datas2.push({"label":"Abort Package Version Missing ", "value":parseInt('.$abortpackageversionmissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageversionmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($abortdescriptormissing > 0){
+        echo 'datas2.push({"label":"Abort Descriptor Missing ", "value":parseInt('.$abortdescriptormissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdescriptormissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($abortmachinedisappeared > 0){
+        echo 'datas2.push({"label":"Abort Machine Disappeared ", "value":parseInt('.$abortmachinedisappeared.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmachinedisappeared",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($abortdeploymentcancelledbyuser > 0){
+        echo 'datas2.push({"label":"ABORT DEPLOYMENT CANCELLED BY USER ", "value":parseInt('.$abortdeploymentcancelledbyuser.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdeploymentcancelledbyuser",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($errorunknownerror > 0){
+        echo 'datas2.push({"label":"Error Unknown Error ", "value":parseInt('.$errorunknownerror.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($otherstatus > 0){
+        echo 'datas2.push({"label":"Other Status ", "value":parseInt('.$otherstatus.'), "color": "#FFDA00", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+
+    foreach($dynamicstatus as $label=>$status){
+        if(isset($$label) && $$label){
+            if(preg_match("#^abort#i", $status))
+                $color = "#FF8600";
+            else if(preg_match("#^error#i", $status))
+                $color = "#ff0000";
+            else
+                $color = $bluelistcolor[rand(0, $max)];
+            echo 'datas2.push({"label":"'.ucfirst(strtolower($status)).'", "value":parseInt('.$$label.'), "color": "'.$color.'", "href":"'.urlredirect_group_for_deploy($label,$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        }
+    }
+
+
     $aborted = 0;
     $errors = 0;
   }
   echo 'chart("holder", datas);';
+  echo 'if(typeof(datas2) != "undefined"){';
+    echo 'chart("holder2", datas2);';
+  echo "}";
   echo'</script>';
     }
 ?>
