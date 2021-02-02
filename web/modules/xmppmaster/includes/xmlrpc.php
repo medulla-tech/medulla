@@ -1,7 +1,7 @@
 <?php
 
 /*
- * (c) 2015-2017 Siveo, http://www.siveo.net
+ * (c) 2015-2020 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -589,5 +589,62 @@ function xmlrpc_get_content($path){
 
 function xmlrpc_write_content($path, $datas){
   return xmlCall("xmppmaster.write_content", [$path, $datas, "w"]);
+}
+
+function xmlprc_get_ars_from_cluster($id, $filter=""){
+  return xmlCall("xmppmaster.get_ars_from_cluster", [$id, $filter]);
+}
+
+function xmlrpc_update_cluster($id, $name, $description, $relay_ids){
+  return xmlCall("xmppmaster.update_cluster", [$id, $name, $description, $relay_ids]);
+}
+
+function xmlrpc_create_cluster($name, $description, $relay_ids){
+  return xmlCall("xmppmaster.create_cluster", [$name, $description, $relay_ids]);
+}
+
+function xmlrpc_get_rules_list($start, $end, $filter){
+  return xmlCall("xmppmaster.get_rules_list", [$start, $end, $filter]);
+}
+
+function xmlrpc_order_relay_rule($action, $id){
+  return xmlCall("xmppmaster.order_relay_rule", [$action, $id]);
+}
+
+function xmlrpc_get_relay_rules($id, $start, $end, $filter){
+  return xmlCall("xmppmaster.get_relay_rules", [$id, $start, $end, $filter]);
+}
+
+function xmlrpc_new_rule_order_relay($id){
+  return xmlCall("xmppmaster.new_rule_order_relay", [$id]);
+}
+
+function xmlrpc_add_rule_to_relay($relay_id, $rule_id, $order, $subject){
+  return xmlCall("xmppmaster.add_rule_to_relay", [$relay_id, $rule_id, $order, $subject]);
+}
+
+
+function xmlrpc_delete_rule_relay($rule_id){
+  return xmlCall("xmppmaster.delete_rule_relay", [$rule_id]);
+}
+
+function xmlrpc_move_relay_rule($relayid, $rule, $action){
+  return xmlCall("xmppmaster.move_relay_rule", [$relayid, $rule, $action]);
+}
+
+function xmlrpc_get_relay_rule($ruleid){
+  return xmlCall("xmppmaster.get_relay_rule", [$ruleid]);
+}
+
+function xmlrpc_get_relays_for_rule($ruleid, $start, $end, $filter){
+  return xmlCall("xmppmaster.get_relays_for_rule", [$ruleid, $start, $end, $filter]);
+}
+
+function xmlrpc_edit_rule_to_relay($selected_rule, $relay_id, $rule_id, $subject){
+  return xmlCall("xmppmaster.edit_rule_to_relay", [$selected_rule, $relay_id, $rule_id, $subject]);
+}
+
+function xmlrpc_get_minimal_relays_list($mode="static"){
+  return xmlCall("xmppmaster.get_minimal_relays_list", [$mode]);
 }
 ?>

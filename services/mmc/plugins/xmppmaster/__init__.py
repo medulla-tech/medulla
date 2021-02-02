@@ -1021,3 +1021,49 @@ def write_content(path, datas, mode="w"):
                 return True
         except:
             return False
+
+def get_ars_from_cluster(id, filter=""):
+    result = XmppMasterDatabase().get_ars_from_cluster(id, filter)
+    return result
+
+def update_cluster(id, name, description, relay_ids):
+    result = XmppMasterDatabase().update_cluster(id, name, description, relay_ids)
+    return result
+
+def create_cluster(name, description, relay_ids):
+    result = XmppMasterDatabase().create_cluster(name, description, relay_ids)
+    return result
+
+def get_rules_list(start, end, filter):
+    return XmppMasterDatabase().get_rules_list(start, end, filter)
+
+def order_relay_rule(action, id):
+    result = XmppMasterDatabase().order_relay_rule(action, id)
+    return result
+
+def get_relay_rules(id, start, end, filter):
+    return XmppMasterDatabase().get_relay_rules(id, start, end, filter)
+
+def new_rule_order_relay(id):
+    return XmppMasterDatabase().new_rule_order_relay(id)
+
+def add_rule_to_relay(relay_id, rule_id, order, subject):
+    return XmppMasterDatabase().add_rule_to_relay(relay_id, rule_id, order, subject)
+
+def delete_rule_relay(rule_id):
+    return XmppMasterDatabase().delete_rule_relay(rule_id)
+
+def move_relay_rule(relay_id, rule_id, action):
+    return XmppMasterDatabase().move_relay_rule(relay_id, rule_id, action)
+
+def get_relay_rule(rule_id):
+    return XmppMasterDatabase().get_relay_rule(rule_id)
+
+def get_relays_for_rule(rule_id, start, end, filter):
+    return XmppMasterDatabase().get_relays_for_rule(rule_id, start, end, filter)
+
+def edit_rule_to_relay(id, relay_id, rule_id, subject):
+    return XmppMasterDatabase().edit_rule_to_relay(id, relay_id, rule_id, subject)
+
+def get_minimal_relays_list(mode):
+    return XmppMasterDatabase().get_minimal_relays_list(mode)
