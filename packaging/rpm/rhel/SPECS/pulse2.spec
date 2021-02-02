@@ -1128,6 +1128,7 @@ fi
 %exclude %{_datadir}/mmc/modules/ppolicy
 %exclude %{_datadir}/mmc/modules/services
 %exclude %{_datadir}/mmc/modules/dashboard
+%exclude %{_datadir}/mmc/modules/admin
 
 #--------------------------------------------------------------------
 
@@ -1186,6 +1187,19 @@ Report module for the MMC web interface
 
 %files -n mmc-web-report
 %{_datadir}/mmc/modules/report
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-admin
+Summary:        Admin module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-report
+Admin module for the MMC web interface
+
+%files -n mmc-web-report
+%{_datadir}/mmc/modules/admin
 
 #--------------------------------------------------------------------
 

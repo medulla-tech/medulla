@@ -533,6 +533,12 @@ Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
 Description: Dashboard module for MMC
  Dashboard module in MMC.
 
+Package: mmc-web-admin
+Architecture: all
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
+Description: Admin module for MMC
+ Admin module in MMC.
+
 Package: mmc-web-services
 Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
