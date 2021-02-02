@@ -446,6 +446,7 @@ This package contains the pkgs plugin for the MMC agent.
 Summary:    Kiosk plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
+Requires:   python-pulse2-common-database-admin = %version-%release
 
 %description -n python-mmc-admin
 This package contains the admin plugin for the MMC agent.
@@ -781,6 +782,20 @@ This package contains Pulse 2 common MSC database files
 
 %files -n python-pulse2-common-database-msc
 %python2_sitelib/pulse2/database/msc
+
+#--------------------------------------------------------------------
+
+%package -n     python-pulse2-common-database-admin
+Summary:        Pulse 2 common admin database files
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       python-pulse2-common-database = %version-%release
+
+%description -n python-pulse2-common-database-admin
+This package contains Pulse 2 common admin database files
+
+%files -n python-pulse2-common-database-admin
+%python2_sitelib/pulse2/database/admin
 
 #--------------------------------------------------------------------
 

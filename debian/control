@@ -78,6 +78,16 @@ Description: Pulse 2 common inventory database files
  .
  This package contains Pulse 2 common inventory database files.
 
+Package: python-pulse2-common-database-admin
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Description: Pulse 2 common admin database files
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common admin database files.
+
 Package: python-pulse2-common-database-msc
 Architecture: all
 Section: python
@@ -255,7 +265,7 @@ Description: Pulse 2 support plugin (provide remote access)
 Package: python-mmc-admin
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-admin (= ${binary:Version})
 Description: Pulse 2 support plugin (admin access)
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
