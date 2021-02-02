@@ -453,7 +453,7 @@ This package contains the admin plugin for the MMC agent.
 %files -n python-mmc-admin
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/admin.ini
 %python2_sitelib/mmc/plugins/admin
-%python2_sitelib/pulse2/database/admin
+%{_docdir}/mmc/contrib/admin
 
 #--------------------------------------------------------------------
 
@@ -1218,7 +1218,6 @@ Admin module for the MMC web interface
 
 %files -n mmc-web-admin
 %{_datadir}/mmc/modules/admin
-%{_docdir}/mmc/contrib/admin
 
 #--------------------------------------------------------------------
 
