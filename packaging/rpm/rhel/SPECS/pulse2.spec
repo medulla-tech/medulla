@@ -1213,10 +1213,10 @@ Summary:        Admin module for the MMC web interface
 Group:          System/Servers
 Requires:       mmc-web-base >= %{version}
 
-%description -n mmc-web-report
+%description -n mmc-web-admin
 Admin module for the MMC web interface
 
-%files -n mmc-web-report
+%files -n mmc-web-admin
 %{_datadir}/mmc/modules/admin
 %{_docdir}/mmc/contrib/admin
 
