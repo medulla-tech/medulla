@@ -1200,6 +1200,7 @@ Admin module for the MMC web interface
 
 %files -n mmc-web-report
 %{_datadir}/mmc/modules/admin
+%{_docdir}/mmc/contrib/admin
 
 #--------------------------------------------------------------------
 
