@@ -25,7 +25,8 @@ Depends: ${misc:Depends},
          mmc-web-services, python-mmc-services,
          mmc-web-support, python-mmc-support,
          mmc-web-xmppmaster, python-mmc-xmppmaster,
-         pulse2-uuid-resolver, mmc-web-admin,
+         pulse2-uuid-resolver,
+         mmc-web-admin, python-mmc-admin,
          pulse-xmppmaster-agentplugins, pulse-xmpp-agent-relay,
          pulse-agent-installers, pulse2-common,
          pulse2-imaging-client | pulse2-davos-client,
@@ -249,6 +250,17 @@ Description: Pulse 2 support plugin (provide remote access)
  organizations.
  .
  This package contains the support plugin to provide remote access
+ to the Pulse server for support purpose.
+
+Package: python-mmc-admin
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Description: Pulse 2 support plugin (admin access)
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the support plugin to provide admin access
  to the Pulse server for support purpose.
 
 Package: pulse2-package-server

@@ -71,6 +71,7 @@ Requires:       python-mmc-pulse2
 Requires:       mmc-web-kiosk
 Requires:       python-mmc-kiosk
 Requires:       mmc-web-admin
+Requires:       python-mmc-admin
 Requires:       pulse2-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
@@ -437,6 +438,22 @@ This package contains the pkgs plugin for the MMC agent.
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/kiosk.ini
 %python2_sitelib/mmc/plugins/kiosk
 %python2_sitelib/pulse2/database/kiosk
+
+
+#--------------------------------------------------------------------
+
+%package -n python-mmc-admin
+Summary:    Kiosk plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+
+%description -n python-mmc-admin
+This package contains the admin plugin for the MMC agent.
+
+%files -n python-mmc-admin
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/admin.ini
+%python2_sitelib/mmc/plugins/admin
+%python2_sitelib/pulse2/database/admin
 
 #--------------------------------------------------------------------
 
