@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-03 16:06+0100\n"
+"POT-Creation-Date: 2021-02-03 16:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1414,7 +1414,7 @@ msgid "The file copy has been requested successfully"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
-msgid "Acquit"
+msgid "Acknowledge"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:62
@@ -1469,7 +1469,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:39
 #, php-format
-msgid "Acquit this alert : %s on device %s_%s (%s)"
+msgid "Acknowledge this alert : %s on device %s_%s (%s)"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/monitoring/monconfig.php:34
