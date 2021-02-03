@@ -6047,6 +6047,8 @@ class XmppMasterDatabase(DatabaseHelper):
             result['description'].append(cluster.description)
             result['nb_ars'].append(count_ars if count_ars is not None else 0)
 
+        return {'total': count, 'datas': result}
+
     @DatabaseHelper._sessionm
     def get_xmpprelays_list(self, session, start, limit, filter, presence):
         try:
