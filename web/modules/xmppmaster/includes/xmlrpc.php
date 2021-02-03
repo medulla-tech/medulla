@@ -647,4 +647,8 @@ function xmlrpc_edit_rule_to_relay($selected_rule, $relay_id, $rule_id, $subject
 function xmlrpc_get_minimal_relays_list($mode="static"){
   return xmlCall("xmppmaster.get_minimal_relays_list", [$mode]);
 }
+
+function xmlrpc_get_count_success_rate_for_dashboard(){
+  return xmlCall("xmppmaster.get_count_success_rate_for_dashboard", []);
+}
 ?>

@@ -36,6 +36,7 @@ require("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 <script src="modules/dashboard/graph/js/donut.js"></script>
 <script src="modules/dashboard/graph/js/line.js"></script>
 <script src="modules/dashboard/graph/js/pie.js"></script>
+<script src="modules/dashboard/graph/js/bar.js"></script>
 
 <?php
 $d = new Div(array("id" => "dashboard"));

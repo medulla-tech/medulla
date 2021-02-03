@@ -827,15 +827,15 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
     result = ObjectXmpp().iqsendpulse(jidARS,
                                       iqcomand,
                                       timeout)
-    
+
     res = json.loads(result)
-    
+
     logging.getLogger().debug("result iqcommand : %s" % json.dumps(res, indent = 4))
     if res['numerror'] != 0:
         logger.error("iq information error to %s on get_ars_key_id_rsa_pub, get_ars_key_id_rsa ,get_free_tcp_port" % jidARS)
         logger.error("abandon reverse ssh")
         return
-        
+
     resultatinformation = res['result']['informationresult']
     if proxyport is None or proxyport == 0 or proxyport == "":
         proxyportars = resultatinformation['get_free_tcp_port']
@@ -852,7 +852,7 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
         result = ObjectXmpp().iqsendpulse(jidARS,
                                         uninterruptedstruct,
                                         timeout)
-        
+
         logging.getLogger().debug("result iqcommand : %s" % result)
     structreverse = {"action": "reversesshqa",
                      "sessionid": name_random(8, "reversshiq"),
@@ -1021,6 +1021,10 @@ def write_content(path, datas, mode="w"):
                 return True
         except:
             return False
+
+def get_count_success_rate_for_dashboard():
+    result = XmppMasterDatabase().get_count_success_rate_for_dashboard()
+    return result
 
 def get_ars_from_cluster(id, filter=""):
     result = XmppMasterDatabase().get_ars_from_cluster(id, filter)
