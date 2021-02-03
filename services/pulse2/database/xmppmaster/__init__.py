@@ -7269,7 +7269,7 @@ where agenttype="machine" and groupdeploy in (
         query = session.execute("select @week1, @week2, @week3, @week4, @week5, @week6")
         query = query.fetchall()[0]
 
-        return list(query
+        return list(query)
 
     @DatabaseHelper._sessionm
     def get_ars_from_cluster(self, session, id, filter=""):
