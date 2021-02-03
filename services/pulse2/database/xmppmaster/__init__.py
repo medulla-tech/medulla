@@ -7258,6 +7258,20 @@ where agenttype="machine" and groupdeploy in (
             return "failure"
 
     @DatabaseHelper._sessionm
+    def get_count_success_rate_for_dashboard(self, session):
+        """
+        call the stored procedure to get the deployment success rate for the 6 last weeks
+
+        @returns:
+            list of float
+        """
+        session.execute("call countSuccessRateLastSixWeeks(@week1, @week2, @week3, @week4, @week5, @week6)")
+        query = session.execute("select @week1, @week2, @week3, @week4, @week5, @week6")
+        query = query.fetchall()[0]
+
+        return list(query
+
+    @DatabaseHelper._sessionm
     def get_ars_from_cluster(self, session, id, filter=""):
         result = {
             'in_cluster' : [],
