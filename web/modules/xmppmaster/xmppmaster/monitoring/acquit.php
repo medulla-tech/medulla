@@ -29,9 +29,9 @@ if (isset($_POST["bconfirm"])) {
 
   $result = xmlrpc_acquit_mon_event($id, $user);
   if($result == "failure")
-    new NotifyWidgetFailure(sprintf(_T("Failed to acquit the alert : %s on device %s_%s (%s)"),$device_alarm_msg, $device_type, $device_serial, $machine_hostname));
+    new NotifyWidgetFailure(sprintf(_T("Failed acknowledging the alert : %s on device %s_%s (%s)"),$device_alarm_msg, $device_type, $device_serial, $machine_hostname));
   else
-    new NotifyWidgetSuccess(sprintf(_T("Success to acquit the alert : %s on device %s_%s (%s)"),$device_alarm_msg, $device_type, $device_serial, $machine_hostname));
+    new NotifyWidgetSuccess(sprintf(_T("Success acknowledging the alert : %s on device %s_%s (%s)"),$device_alarm_msg, $device_type, $device_serial, $machine_hostname));
   header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/alerts", []));
   exit;
 }
