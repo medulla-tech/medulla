@@ -37,7 +37,7 @@ from datetime import datetime, timedelta  # date,
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster.schema import Network, Machines,\
     RelayServer, Users, Has_machinesusers, \
-    Has_relayserverrules, Has_guacamole, UserLog, Deploy,\
+    Has_relayserverrules, Regles, Has_guacamole, UserLog, Deploy,\
     Has_login_command, Logs, \
     Organization, Packages_list, Qa_custom_command, Qa_relay_command,\
     Qa_relay_launched, Qa_relay_result,\
