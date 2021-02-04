@@ -83,8 +83,47 @@ begin
 
 end;
 //
+
+CREATE OR REPLACE PROCEDURE countDeployLastSixMonths(
+)
+begin
+set @month1 = 0;
+set @month2 = 0;
+set @month3 = 0;
+set @month4 = 0;
+set @month5 = 0;
+set @month6 = 0;
+
+-- current month
+set @date_end = NOW();
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month1:=count(id) from deploy where startcmd >= @date_begin2 and startcmd <= @date_end;
+
+set @date_end = DATE_SUB(@date_begin, INTERVAL 1 SECOND);
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month2:=count(id) from deploy where startcmd >= @date_begin and startcmd <= @date_end;
+
+set @date_end = DATE_SUB(@date_begin, INTERVAL 1 SECOND);
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month3:=count(id) from deploy where startcmd >= @date_begin and startcmd <= @date_end;
+
+set @date_end = DATE_SUB(@date_begin, INTERVAL 1 SECOND);
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month4:=count(id) from deploy where startcmd >= @date_begin and startcmd <= @date_end;
+
+set @date_end = DATE_SUB(@date_begin, INTERVAL 1 SECOND);
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month5:=count(id) from deploy where startcmd >= @date_begin and startcmd <= @date_end;
+
+set @date_end = DATE_SUB(@date_begin, INTERVAL 1 SECOND);
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month6:=count(id) from deploy where startcmd >= @date_begin and startcmd <= @date_end;
+
+end;
+//
 DELIMITER ;
 
-UPDATE version SET Number = 56;
+
+UPDATE version SET Number = 57;
 
 COMMIT;
