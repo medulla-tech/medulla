@@ -31,6 +31,10 @@ function xmlrpc_topology_pulse() {
     return xmlCall("xmppmaster.topologypulse", array());
 }
 
+ function xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx){
+     return xmlCall("xmppmaster.get_machines_list", [$start, $end, $ctx]);
+ }
+
 function xmlrpc_getPresenceuuid($uuid) {
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
 }

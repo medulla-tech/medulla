@@ -200,7 +200,8 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
                                            who,
                                            why,
                                            headercolumn)
-
+def get_machines_list(start, end, ctx)
+    return XmppMasterDatabase().get_machines_list(start, end, ctx)
 
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
