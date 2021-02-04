@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-01 18:08+0100\n"
+"POT-Creation-Date: 2020-12-03 17:50+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
@@ -316,13 +316,11 @@ msgid "Machine"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:338
-msgid "Ip Machine"
+msgid "IP Address (from GLPI)"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:341
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:129
-#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:86
-msgid "Mac Address"
+msgid "MAC Address"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:368
@@ -385,27 +383,27 @@ msgid "Start deployment : "
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:482
-msgid "xmpp information"
+msgid "XMPP Information"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:488
-msgid "jid machine"
+msgid "Machine JID"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:491
-msgid "jid Relay server"
+msgid "Relay Server JID"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:494
-msgid "ip machine"
+msgid "Machine IP"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:497
-msgid "ip relayserver"
+msgid "Relay Server IP"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:500
-msgid "ip master"
+msgid "Master IP"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:534
@@ -1018,6 +1016,11 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:128
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:80
 msgid "Class Util"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:129
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:86
+msgid "Mac Address"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:130
