@@ -18,7 +18,7 @@
 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-function lineChart(selector, datas){
+function lineChart(selector, rawdatas){
   /*
   * The function lineChart create a line chart into the specified tag. The plot line
   * is generated from a serie of points contained in datas.
@@ -32,28 +32,83 @@ function lineChart(selector, datas){
   *   {"x": 2, "y": 1.3},
   * ]
   */
-  var margin = {top: 50, right: 50, bottom: 50, left: 50}
-    , width = 125 // Use the window's width
-    , height = 70; // Use the window's height
+
+  var config = {
+    top: 50,
+    right: 50,
+    bottom: 50,
+    left: 50,
+    width:125,
+    height:70,
+    delta:"absolute", // If the delta is absolute : the delta y is included between 0 and Ymax
+    unit: " %"
+  }
+  if(typeof(rawdatas.config) !="undefined"){
+    for(key in rawdatas.config){
+      if(key != "delta")
+        config[key] = rawdatas.config[key];
+      else{
+        if(["absolute", "relative"].includes(rawdatas.config[key])){
+          config[key] = rawdatas.config[key];
+        }
+      }
+    }
+  }
+
+  // Set the bottom border when labels are displayed
+  if(config.xlabel == true){
+    if(config.bottom < 75)
+      config.bottom= 75;
+  }
+
+
+  if(typeof(rawdatas.datas) =="undefined"){
+    datas = rawdatas;
+  }
+  else{
+    datas = rawdatas.datas;
+  }
 
   var total = 0;
+  var load = datas.map(function(d){
+    total += d.y;
+    return d.y
+  });
+
+  n = load.length;
+  min = Math.min.apply(null, load);
+
+
   var n = datas.length;
   for(i =0; i < n; i++)
   {
     total += datas[i].y;
   }
 
-  datas.unshift({"x":0,"y":0});
-  datas.push({"x":n-1, "y":0});
-  n = load.length;
+  if(config.delta == "absolute"){
+    datas.unshift({"x":0,"y":0});
+    datas.push({"x":n-1, "y":0});
+  }
+  else{
+    datas.unshift({"x":0,"y":min});
+    datas.push({"x":n-1, "y":min});
+  }
+
 
   var xScale = d3.scaleLinear()
     .domain([0, n-1]) // input
-    .range([0, width]); // output
+    .range([0, config.width]); // output
 
-  var yScale = d3.scaleLinear()
-    .domain([0, d3.max(load)]) // input
-    .range([height, 0]); // output
+  if(config.delta == "absolute"){
+    var yScale = d3.scaleLinear()
+      .domain([0, d3.max(load)]) // input
+      .range([config.height, 0]); // output
+  }
+  else{
+    var yScale = d3.scaleLinear()
+      .domain([min, d3.max(load)]) // input
+      .range([config.height, 0]); // output
+  }
 
   var line = d3.line()
     .x(function(d, i) {return xScale(d.x); }) // set the x values for the line generator
@@ -61,18 +116,18 @@ function lineChart(selector, datas){
     .curve(d3.curveMonotoneX); // apply smoothing to the line
 
   var svg = d3.select("#"+selector).append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", config.width + config.left + config.right)
+    .attr("height", config.height + config.top + config.bottom)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + config.left + "," + config.top + ")");
 
-  svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
+  xaxis = svg.append("g")
+    .attr("class", "xaxis")
+    .attr("transform", "translate(0," + config.height + ")")
     .call(d3.axisBottom(xScale).ticks(0)); // Create an axis component with d3.axisBottom
 
-  svg.append("g")
-    .attr("class", "y axis")
+  yaxis = svg.append("g")
+    .attr("class", "yaxis")
     .call(d3.axisLeft(yScale).ticks(3)); // Create an axis component with d3.axisLeft
 
   svg.append("path")
@@ -104,7 +159,7 @@ function lineChart(selector, datas){
         .attr("x", d3.mouse(this)[0]+2)
         .attr("y", d3.mouse(this)[1]-10)
         .attr("text-anchor", "start")
-        .text(d.y+" %")
+        .text(d.y+" "+config.unit)
         .attr("fill","white");
 
         var tooltiptextwidth = jQuery("#"+selector+" svg ."+selector+"tooltip text")[0].getComputedTextLength();
@@ -128,4 +183,20 @@ function lineChart(selector, datas){
     .on("mouseout",function(){
       svg.select("."+selector+"tooltip").remove()
     });
+
+    if(config.xlabel == true){
+    svg.append("g")
+    .attr("class", "xlabel")
+    .attr("transform", "translate(0," + (config.height+15) + ") rotate(90)")
+    .selectAll(".label")
+    .data(datas)
+    .enter().filter(function(d){
+      if(typeof(d.label) != "undefined"){
+        return d
+      }
+    })
+    .append("text")
+    .attr("y", function(d){return -1*xScale(d.x)})
+    .text(function(d){return d.label;})
+  }
 }

@@ -139,3 +139,7 @@ class BackupPanel(Panel):
 class SuccessRatePanel(Panel):
     """This class is called by the SuccessRate widget from the dashboard"""
     pass
+
+class DeploymentsLaunchedPanel(Panel):
+    """This class is called by the DeploymentsLaunched widget from the dashboard"""
+    pass
