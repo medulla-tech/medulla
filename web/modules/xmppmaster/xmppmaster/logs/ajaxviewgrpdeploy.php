@@ -147,7 +147,6 @@ function datecmd($tabbleaudatetime){
 $infocmd = command_detail($cmd_id);
 $creator_user = $infocmd['creator'] ;
 $creation_date = datecmd($infocmd['creation_date']);
-$connect_as = $infocmd['connect_as'];
 
 $start_date =  $lastcommandid['start_dateunixtime'];
 $end_date = $lastcommandid['end_dateunixtime'];
@@ -239,7 +238,6 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
             echo '<td>'._T("Start Date", "xmppmaster").'</td>';
             echo '<td>'._T("End Date", "xmppmaster").'</td>';
             echo '<td>'._T("Creator", "xmppmaster").'</td>';
-            echo '<td>'._T("Connect as", "xmppmaster").'</td>';
             if($isconvergence != 0){
                 echo '<td>'._T("Convergence", "xmppmaster").'</td>';
             }
@@ -253,7 +251,6 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
             echo '<td>'.date("Y-m-d H:i:s", $start_date).'</td>';
             echo '<td>'.date("Y-m-d H:i:s", $end_date).'</td>';
             echo '<td>'.$creator_user.'</td>';
-            echo '<td>'.$connect_as.'</td>';
             if($isconvergence != 0){
                 echo "<td><img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/></td>";
             }
