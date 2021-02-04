@@ -19,7 +19,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * file viewgrouplogs.in.php
+ * file xmppmaster/logs/ajaxviewgrpdeploy.php
  */
 
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
@@ -135,6 +135,20 @@ $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] )
 // search from msc table CommandsOnHost
 $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start, $end);
 
+function datecmd($tabbleaudatetime){
+    return date("Y-m-d H:i:s",
+                    mktime( $tabbleaudatetime[3], 
+                            $tabbleaudatetime[4],
+                            $tabbleaudatetime[5],
+                            $tabbleaudatetime[1],
+                            $tabbleaudatetime[2],
+                            $tabbleaudatetime[0]));
+}
+$infocmd = command_detail($cmd_id);
+$creator_user = $infocmd['creator'] ;
+$creation_date = datecmd($infocmd['creation_date']);
+$connect_as = $infocmd['connect_as'];
+
 $start_date =  $lastcommandid['start_dateunixtime'];
 $end_date = $lastcommandid['end_dateunixtime'];
 
@@ -221,9 +235,11 @@ $syncthing_enabled = ($statsyncthing['package'] == "") ? false : true;
 echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
     echo "<thead>";
         echo "<tr>";
+            echo '<td>'._T("Creation Date", "xmppmaster").'</td>';
             echo '<td>'._T("Start Date", "xmppmaster").'</td>';
             echo '<td>'._T("End Date", "xmppmaster").'</td>';
-            echo '<td>'._T("User", "xmppmaster").'</td>';
+            echo '<td>'._T("Creator", "xmppmaster").'</td>';
+            echo '<td>'._T("Connect as", "xmppmaster").'</td>';
             if($isconvergence != 0){
                 echo '<td>'._T("Convergence", "xmppmaster").'</td>';
             }
@@ -233,9 +249,11 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
     echo "</thead>";
     echo "<tbody>";
         echo "<tr>";
+            echo '<td>'.$creation_date.'</td>';
             echo '<td>'.date("Y-m-d H:i:s", $start_date).'</td>';
             echo '<td>'.date("Y-m-d H:i:s", $end_date).'</td>';
-            echo '<td>'.$_GET['login'].'</td>';
+            echo '<td>'.$creator_user.'</td>';
+            echo '<td>'.$connect_as.'</td>';
             if($isconvergence != 0){
                 echo "<td><img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/></td>";
             }
