@@ -1,7 +1,7 @@
 /**
  * (c) 2021 Siveo / http://siveo.net
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,21 +19,21 @@
  */
 
 function barchart(selector, rawdatas){
-  var config = {};
-  var datas = {};
-  if(typeof(rawdatas.config) == "undefined"){
-    config = {
-        top: 15,
-        right: 45,
-        bottom: 15,
-        left: 30,
-        width: 125,
-        height: 200,
-    };
+  var config = {
+      top: 15,
+      right: 45,
+      bottom: 15,
+      left: 30,
+      width: 125,
+      height: 200,
+  };
 
-  }
-  else{
-    config = rawdatas.config;
+  var datas = {};
+  if(typeof(rawdatas.config) != "undefined"){
+    for(key in rawdatas.config){
+      config[key] = rawdatas.config[key];
+
+    }
   }
 
   if(typeof(rawdatas.datas) == "undefined"){

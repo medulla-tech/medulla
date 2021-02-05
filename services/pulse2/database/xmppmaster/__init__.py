@@ -7802,3 +7802,13 @@ where agenttype="machine" and groupdeploy in (
                 result['id'].append(id)
                 result['hostname'].append(hostname)
         return result
+
+    @DatabaseHelper._sessionm
+    def get_count_total_deploy_for_dashboard(self, session):
+        """Get the total of deployments for each last six months
+            Returns: list of deployments
+        """
+        session.execute("call countDeployLastSixMonths()")
+        query = session.execute("select @month6, @month5, @month4, @month3, @month2, @month1")
+        query = query.fetchall()[0]
+        return list(query)

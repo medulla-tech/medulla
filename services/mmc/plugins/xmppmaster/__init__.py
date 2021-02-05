@@ -1026,6 +1026,10 @@ def get_count_success_rate_for_dashboard():
     result = XmppMasterDatabase().get_count_success_rate_for_dashboard()
     return result
 
+def get_count_total_deploy_for_dashboard():
+    result = XmppMasterDatabase().get_count_total_deploy_for_dashboard()
+    return result
+
 def get_ars_from_cluster(id, filter=""):
     result = XmppMasterDatabase().get_ars_from_cluster(id, filter)
     return result
