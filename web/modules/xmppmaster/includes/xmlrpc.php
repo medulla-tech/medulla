@@ -655,4 +655,8 @@ function xmlrpc_get_count_success_rate_for_dashboard(){
 function xmlrpc_get_count_total_deploy_for_dashboard(){
   return xmlCall("xmppmaster.get_count_total_deploy_for_dashboard", []);
 }
+
+function xmlrpc_get_count_agent_for_dashboard(){
+  return xmlCall("xmppmaster.get_count_agent_for_dashboard", []);
+}
 ?>

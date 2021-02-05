@@ -7812,3 +7812,10 @@ where agenttype="machine" and groupdeploy in (
         query = session.execute("select @month6, @month5, @month4, @month3, @month2, @month1")
         query = query.fetchall()[0]
         return list(query)
+
+    @DatabaseHelper._sessionm
+    def get_count_agent_for_dashboard(self, session):
+        session.execute("call countAgentsLastSixMonths()")
+        query = session.execute("select @month6, @month5, @month4, @month3, @month2, @month1")
+        query = query.fetchall()[0]
+        return list(query)
