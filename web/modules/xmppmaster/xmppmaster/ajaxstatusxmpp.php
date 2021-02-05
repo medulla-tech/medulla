@@ -138,12 +138,15 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $totalmachinedeploy = $result['totalmachinedeploy'];
         $deploymentsuccess = $result['deploymentsuccess'];
         $deploymenterror = (isset($result['deploymenterror'])) ? $result['deploymenterror'] : 0;
-        $processmachr[] = $inprogress;
         $tolmach[] = $totalmachinedeploy;
-        $successmach[]= $deploymentsuccess;
-        $errormach[]= $deploymenterror + $result['errorunknownerror'];
-        $abortmachuser[] = $aborted;
-
+        $inprogressPercent = ($inprogress/$totalmachinedeploy)*100;
+        $processmachr[] = $inprogress.' ('.$inprogressPercent.'%)';
+        $successPercent = ($deploymentsuccess/$totalmachinedeploy)*100;
+        $successmach[]= $deploymentsuccess.' ('.$successPercent.'%)';
+        $errorPercent = (($deploymenterror + $result['errorunknownerror'])/$totalmachinedeploy)*100;
+        $errormach[]= ($deploymenterror + $result['errorunknownerror']).' ('.$errorPercent.'%)';
+        $abortedPercent = ($aborted/$totalmachinedeploy)*100;
+        $abortmachuser[] = $aborted.' ('.$abortedPercent.'%)';
     if($groupid){
         if (isset($arraydeploy['tabdeploy']['group_uuid'][$index])){
             $namegrp = $groupname[$arraydeploy['tabdeploy']['group_uuid'][$index]]['name'];
@@ -274,10 +277,10 @@ if(isset($arraynotdeploy))
       //TODO
       $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline</span>';
       $tolmach[] = $deploy['nb_machines'];
-      $processmachr[] = 0;
-      $successmach[] = 0;
-      $errormach[] = 0;
-      $abortmachuser[] = 0;
+      $processmachr[] = '0 (0%)';
+      $successmach[] = '0 (0%)';
+      $errormach[] = '0 (0%)';
+      $abortmachuser[] = '0 (0%)';
       $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
   }
 }

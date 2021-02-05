@@ -34,7 +34,7 @@ if (isset($_GET["start"])) {
 
 $result = xmlrpc_get_mon_events($start, $maxperpage, $filter);
 
-$acquitAction = new ActionPopupItem(_("Acquit"), "acquit", "delete", "", "xmppmaster", "xmppmaster");
+$acquitAction = new ActionPopupItem(_("Acknowledge"), "acquit", "delete", "", "xmppmaster", "xmppmaster");
 
 $params = [];
 $display_device = [];

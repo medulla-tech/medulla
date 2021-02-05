@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-03 17:49+0100\n"
+"POT-Creation-Date: 2021-02-03 16:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -214,11 +214,11 @@ msgid "Password"
 msgstr ""
 
 #: modules/pkgs/pkgs/rsync.php:74
-msgid "Relay servers already synchronized : "
+msgid "Relay servers not yet synchronized : "
 msgstr ""
 
 #: modules/pkgs/pkgs/rsync.php:93
-msgid "Relay servers not yet synchronized : "
+msgid "Relay servers already synchronized : "
 msgstr ""
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
@@ -489,6 +489,10 @@ msgstr ""
 msgid "Upload Queued Files"
 msgstr ""
 
+#: modules/pkgs/pkgs/edit.php:499 modules/pkgs/pkgs/add.php:359
+msgid "Accentuated and special characters are not allowed"
+msgstr ""
+
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
 msgid "The rule %s has been removed"
@@ -564,7 +568,7 @@ msgstr ""
 msgid "Package source"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:435
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:439
 msgid "Files directory"
 msgstr ""
 
@@ -597,12 +601,12 @@ msgid ""
 "        <a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:457
+#: modules/pkgs/pkgs/add.php:461
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:457
+#: modules/pkgs/pkgs/add.php:461
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."

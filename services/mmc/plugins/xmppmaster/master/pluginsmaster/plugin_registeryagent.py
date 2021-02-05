@@ -44,7 +44,7 @@ from mmc.agent import PluginManager
 
 logger = logging.getLogger()
 
-plugin = {"VERSION": "1.51", "NAME": "registeryagent", "TYPE": "master"}
+plugin = {"VERSION": "1.54", "NAME": "registeryagent", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
@@ -135,12 +135,14 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                 xmppobject.boundjid.bare)
 
             machine = XmppMasterDatabase().getMachinefromjid(data['from'])
-            if machine and 'regcomplet' in data and data['regcomplet'] == True:
-                if showinfobool:
-                    logger.info("Performing a complete re-registration of the machine %s"%msg['from'])
-                    logger.info("Deleting machine %s in machines table"%msg['from'])
-                XmppMasterDatabase().delPresenceMachinebyjiduser(msg['from'].user)
-                machine = {}
+            if machine:
+                if 'regcomplet' in data and data['regcomplet'] is True or\
+                    str(jid.JID(data['from']).domain) != str(jid.JID(str(machine['jid'])).domain):
+                    if showinfobool:
+                        logger.info("Performing a complete re-registration of the machine %s" % msg['from'])
+                        logger.info("Deleting machine %s in machines table" % msg['from'])
+                    XmppMasterDatabase().delPresenceMachinebyjiduser(msg['from'].user)
+                    machine = {}
             if showinfobool:
                 if machine:
                     logger.info("Machine %s already exists in base" % msg['from'])
@@ -483,7 +485,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                 logger.info("Adding or updating machine presence into machines table")
             if data['agenttype'] == "relayserver":
                 # on notify to ars pour sa registration
-                notify_ars_to_recording("recording_case1", str(msg['from']), xmppobject) 
+                notify_ars_to_recording("recording_case1", str(msg['from']), xmppobject)
             for interface in data['information']["listipinfo"]:
                 if interface['macaddress'] == data['xmppmacaddress']:
                     break
@@ -802,7 +804,7 @@ def callinventory(xmppobject,  to):
     try:
         body = {'action': 'inventory',
                 'sessionid': getRandomName(5, "inventory"),
-                'data': {}}
+                'data': {'forced': 'forced'}}
         xmppobject.send_message(mto=to,
                             mbody=json.dumps(body),
                             mtype='chat')
@@ -999,7 +1001,7 @@ def notify_ars_to_recording(notify, to, xmppobject):
     xmppobject.send_message(mto=to,
                         mbody=json.dumps(datasend),
                         mtype='chat')
-                
+
 def read_conf_remote_registeryagent(xmppobject):
     ### xmppobject.config.pathdirconffile =
 

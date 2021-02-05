@@ -70,6 +70,8 @@ Requires:       mmc-web-pulse2
 Requires:       python-mmc-pulse2
 Requires:       mmc-web-kiosk
 Requires:       python-mmc-kiosk
+Requires:       mmc-web-admin
+Requires:       python-mmc-admin
 Requires:       pulse2-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
@@ -437,6 +439,23 @@ This package contains the pkgs plugin for the MMC agent.
 %python3_sitelib/mmc/plugins/kiosk
 %python3_sitelib/pulse2/database/kiosk
 
+
+#--------------------------------------------------------------------
+
+%package -n python-mmc-admin
+Summary:    Kiosk plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+Requires:   python-pulse2-common-database-admin = %version-%release
+
+%description -n python-mmc-admin
+This package contains the admin plugin for the MMC agent.
+
+%files -n python-mmc-admin
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/admin.ini
+%python2_sitelib/mmc/plugins/admin
+%{_docdir}/mmc/contrib/admin
+
 #--------------------------------------------------------------------
 
 %package -n python-mmc-xmppmaster
@@ -763,6 +782,20 @@ This package contains Pulse 2 common MSC database files
 
 %files -n python-pulse2-common-database-msc
 %python3_sitelib/pulse2/database/msc
+
+#--------------------------------------------------------------------
+
+%package -n     python-pulse2-common-database-admin
+Summary:        Pulse 2 common admin database files
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       python-pulse2-common-database = %version-%release
+
+%description -n python-pulse2-common-database-admin
+This package contains Pulse 2 common admin database files
+
+%files -n python-pulse2-common-database-admin
+%python2_sitelib/pulse2/database/admin
 
 #--------------------------------------------------------------------
 
@@ -1128,6 +1161,7 @@ fi
 %exclude %{_datadir}/mmc/modules/ppolicy
 %exclude %{_datadir}/mmc/modules/services
 %exclude %{_datadir}/mmc/modules/dashboard
+%exclude %{_datadir}/mmc/modules/admin
 
 #--------------------------------------------------------------------
 
@@ -1186,6 +1220,19 @@ Report module for the MMC web interface
 
 %files -n mmc-web-report
 %{_datadir}/mmc/modules/report
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-admin
+Summary:        Admin module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-admin
+Admin module for the MMC web interface
+
+%files -n mmc-web-admin
+%{_datadir}/mmc/modules/admin
 
 #--------------------------------------------------------------------
 

@@ -26,6 +26,7 @@ Depends: ${misc:Depends},
          mmc-web-support, python-mmc-support,
          mmc-web-xmppmaster, python-mmc-xmppmaster,
          pulse2-uuid-resolver,
+         mmc-web-admin, python-mmc-admin,
          pulse-xmppmaster-agentplugins, pulse-xmpp-agent-relay,
          pulse-agent-installers, pulse2-common,
          pulse2-imaging-client | pulse2-davos-client,
@@ -76,6 +77,16 @@ Description: Pulse 2 common inventory database files
  organizations.
  .
  This package contains Pulse 2 common inventory database files.
+
+Package: python-pulse2-common-database-admin
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Description: Pulse 2 common admin database files
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common admin database files.
 
 Package: python-pulse2-common-database-msc
 Architecture: all
@@ -249,6 +260,17 @@ Description: Pulse 2 support plugin (provide remote access)
  organizations.
  .
  This package contains the support plugin to provide remote access
+ to the Pulse server for support purpose.
+
+Package: python-mmc-admin
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-admin (= ${binary:Version})
+Description: Pulse 2 support plugin (admin access)
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the support plugin to provide admin access
  to the Pulse server for support purpose.
 
 Package: pulse2-package-server
@@ -532,6 +554,12 @@ Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
 Description: Dashboard module for MMC
  Dashboard module in MMC.
+
+Package: mmc-web-admin
+Architecture: all
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
+Description: Admin module for MMC
+ Admin module in MMC.
 
 Package: mmc-web-services
 Architecture: all
