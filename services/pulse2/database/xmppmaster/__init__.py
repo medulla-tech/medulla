@@ -3893,7 +3893,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 FROM
                     xmppmaster.relayserver
                 WHERE
-                    jid LIKE ('%s%%')
+                    jid LIKE ('%s@%%')
                                 LIMIT 1;""" % user
         result = session.execute(sql)
         session.commit()
