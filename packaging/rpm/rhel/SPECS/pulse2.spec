@@ -51,7 +51,11 @@ Source6:        get_file.php
 BuildRequires:	python-devel
 BuildRequires:	gettext
 BuildRequires:	gettext-devel
+%if %_vendor == "Mageia"
+BuildRequires:  xsltproc
+%else
 BuildRequires:  libxslt
+%endif
 BuildRequires:  wget
 BuildRequires:  docbook-style-xsl
 
@@ -717,7 +721,7 @@ service pulse2-scheduler stop >/dev/null 2>&1 || :
 %dir %_var/lib/pulse2/imaging/computers
 %dir %_var/lib/pulse2/imaging/inventories
 %dir %_var/lib/pulse2/imaging/masters
-#%dir %_var/lib/pulse2/imaging/custom
+#dir _var/lib/pulse2/imaging/custom
 %dir %_var/lib/pulse2/imaging/archives
 %config(noreplace) %_sysconfdir/mmc/pulse2/scheduler/scheduler.ini
 %{_sysconfdir}/mmc/pulse2/scheduler/keys
