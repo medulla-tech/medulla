@@ -252,7 +252,9 @@ allows one to query a GLPI database to display computer inventory.
 %package -n python-mmc-msc
 Summary:    Pulse 2 MSC plugin for MMC agent
 Group:      System/Servers
+%if %_vendor == "redhat"
 Requires:   python-libs
+%endif
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
 Requires:   python-pulse2-common-database-msc = %version-%release
