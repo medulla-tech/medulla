@@ -1268,7 +1268,7 @@ cp %{SOURCE6}   web/modules/base/computers
 
 %build
 
-%configure --disable-python-check --disable-wol
+%configure2_5x --disable-python-check
 
 %make_build
 
