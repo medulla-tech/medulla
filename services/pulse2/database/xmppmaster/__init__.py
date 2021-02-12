@@ -2913,7 +2913,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.machines
                 WHERE
                     `machines`.`enabled` = '1' and
-                    `machines`.`agenttype` = 'relayserver';"""
+                    `machines`.`agenttype` = 'relayserver'
+                ORDER BY hostname;"""
         presencelist = session.execute(sql)
         session.commit()
         session.flush()
@@ -2921,8 +2922,7 @@ class XmppMasterDatabase(DatabaseHelper):
             a=[]
             for t in presencelist:
                 a.append({'jid':t[0],'type': t[1], 'hostname':t[2]})
-                logging.getLogger().debug("t %s" % t)
-            logging.getLogger().debug("a %s" % a)
+
             return a
         except:
             return -1
@@ -7700,7 +7700,7 @@ where agenttype="machine" and groupdeploy in (
         query = session.query(Has_relayserverrules, RelayServer)\
             .filter(and_(Has_relayserverrules.rules_id == rule_id,
                 RelayServer.moderelayserver == "static"))\
-            .join(RelayServer, RelayServer.id == Has_relayserverrules.relayserver_id)\
+            .join(RelayServer, RelayServer.id == Has_relayserverrules.relayserver_id)
 
         if filter != "":
             query = query.filter(or_(
@@ -7710,7 +7710,7 @@ where agenttype="machine" and groupdeploy in (
                 Has_relayserverrules.subject.contains(filter)
             ))
         count = query.count()
-        query = query.order_by(Has_relayserverrules.order)\
+        query = query.order_by(RelayServer.nameserver)\
             .offset(start).limit(end)
         query = query.all()
 
