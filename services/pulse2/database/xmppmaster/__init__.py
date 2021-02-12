@@ -7790,6 +7790,7 @@ where agenttype="machine" and groupdeploy in (
             query = query.filter(RelayServer.moderelayserver == mode)
         else:
             query = query.filter(RelayServer.moderelayserver == "static")
+        query = query.order_by(RelayServer.nameserver)
         query = query.all()
 
         result = {
