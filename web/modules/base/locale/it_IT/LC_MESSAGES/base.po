@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-03 17:50+0100\n"
+"POT-Creation-Date: 2021-02-03 16:46+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/siveo/teams/72118/it_IT/)\n"
@@ -956,6 +956,8 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:16
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
+#: modules/admin/admin/ajaxRelaysList.php:34
+#: modules/admin/admin/ajaxRelaysList.php:35
 #: modules/pulse2/includes/menu_actionaudit.php:80
 msgid "Edit config files"
 msgstr ""
@@ -970,6 +972,8 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:55
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:19
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:20
+#: modules/admin/admin/ajaxRelaysList.php:54
+#: modules/admin/admin/ajaxRelaysList.php:55
 #: modules/pulse2/includes/menu_actionaudit.php:75
 #: modules/pulse2/includes/menu_action.php:64
 msgid "Remote control"
@@ -1724,40 +1728,55 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:37
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
+#: modules/admin/admin/ajaxRelaysList.php:37
+#: modules/admin/admin/ajaxRelaysList.php:38
 msgid "Relay Detail"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:40
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
+#: modules/admin/admin/ajaxRelaysList.php:40
+#: modules/admin/admin/ajaxRelaysList.php:41
 msgid "Detail actions"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:43
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
+#: modules/admin/admin/ajaxRelaysList.php:43
+#: modules/admin/admin/ajaxRelaysList.php:44
 msgid "Console Relay"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:46
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
+#: modules/admin/admin/ajaxRelaysList.php:45
+#: modules/admin/admin/ajaxRelaysList.php:46
+#: modules/admin/admin/ajaxRelaysList.php:47
 msgid "Switch"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
+#: modules/admin/admin/ajaxRelaysList.php:49
+#: modules/admin/admin/ajaxRelaysList.php:50
 msgid "Reconfigure Machines"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:52
+#: modules/admin/admin/ajaxRelaysList.php:52
 msgid "QA Launched"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:57
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
+#: modules/admin/admin/ajaxRelaysList.php:57
+#: modules/admin/admin/ajaxRelaysList.php:58
 msgid "Packages List"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:25
+#: modules/admin/admin/reconfiguremachines.php:25
 msgid ""
 "You have to check the box <b>\"I am aware that this action is forcing a "
 "<em><b>reconfiguration of all the machines</b></em> managed by the "
@@ -1765,10 +1784,12 @@ msgid ""
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
+#: modules/admin/admin/reconfiguremachines.php:32
 msgid "The machines of the relay "
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
+#: modules/admin/admin/reconfiguremachines.php:51
 msgid ""
 "I am aware that this action is forcing a <em><b>reconfiguration of all the "
 "machines</b></em> managed by the relayserver.<br />Check this box if it is "
@@ -1776,10 +1797,12 @@ msgid ""
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
+#: modules/admin/admin/ajaxqalaunched.php:35
 msgid "Show Result"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
+#: modules/admin/admin/switchrelay.php:25
 msgid ""
 "You have to check the box <b>\"I am aware that this disable/enable a relay "
 "forcing a <em><b>reconfiguration of all the machines</b></em> managed by the"
@@ -1787,10 +1810,12 @@ msgid ""
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
+#: modules/admin/admin/switchrelay.php:32
 msgid "The relay "
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
+#: modules/admin/admin/switchrelay.php:51
 msgid ""
 "I am aware that this disable/enable a relay forcing a <em><b>reconfiguration"
 " of all the machines</b></em> managed by the cluster.<br />Check this box if"
@@ -1798,7 +1823,7 @@ msgid ""
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
-msgid "Acquit"
+msgid "Acknowledge"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
@@ -1817,12 +1842,16 @@ msgstr ""
 msgid "Uptime"
 msgstr ""
 
-#: modules/admin/includes/configure.inc.php:50
-msgid " configuration"
+#: modules/admin/admin/ajaxClustersList.php:34
+msgid "Edit Cluster"
 msgstr ""
 
-#: modules/admin/includes/configure.inc.php:62
-msgid " configuration page"
+#: modules/admin/admin/ajaxRulesDetail.php:32
+msgid "Edit rule"
+msgstr ""
+
+#: modules/admin/admin/ajaxRelaysList.php:60
+msgid "Relay Rules"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:82
