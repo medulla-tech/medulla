@@ -8,15 +8,16 @@
 # tekmans <yvan.manon@siveo.net>, 2019
 # SPO <spointu@gmail.com>, 2020
 # Nicolas Lécureuil <neoclust@mageia.org>, 2021
+# Noel Kneib <noel.kneib@siveo.net>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-03 16:46+0100\n"
+"POT-Creation-Date: 2021-02-15 17:18+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2021\n"
+"Last-Translator: Noel Kneib <noel.kneib@siveo.net>, 2021\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1753,29 +1754,29 @@ msgstr "Appstream"
 #: modules/glpi/glpi/ajaxMachinesList.php:109
 #: modules/glpi/glpi/ajaxMachinesList.php:110
 msgid "files viewer"
-msgstr ""
+msgstr "Visionneuse de fichiers"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:298
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:313
 msgid "cluster list"
 msgstr "Liste des clusters"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:299
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:314
 msgid "cluster nb ars"
 msgstr "nb d'ars du cluster"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:300
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:315
 msgid "machine"
 msgstr "machine"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:301
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:316
 msgid "progress"
 msgstr "en cours"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:302
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:317
 msgid "start"
 msgstr "début"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:303
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:318
 msgid "end"
 msgstr "fin"
 

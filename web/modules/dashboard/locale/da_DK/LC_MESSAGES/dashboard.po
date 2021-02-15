@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-03 16:46+0100\n"
+"POT-Creation-Date: 2021-02-15 17:18+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Language-Team: Danish (Denmark) (https://www.transifex.com/siveo/teams/72118/da_DK/)\n"
 "MIME-Version: 1.0\n"
@@ -116,6 +116,14 @@ msgstr ""
 msgid "Create a group"
 msgstr ""
 
+#: modules/dashboard/includes/panels/agents.inc.php:30
+msgid "Agents"
+msgstr ""
+
+#: modules/dashboard/includes/panels/agents.inc.php:52
+msgid "Machines in Pulse from "
+msgstr ""
+
 #: modules/dashboard/includes/panels/plugins.inc.php:29
 msgid "Plugins loaded"
 msgstr ""
@@ -145,6 +153,14 @@ msgstr ""
 msgid "Pulse processes"
 msgstr ""
 
+#: modules/dashboard/includes/panels/deploymentsLaunched.inc.php:30
+msgid "Deployments Launched"
+msgstr ""
+
+#: modules/dashboard/includes/panels/deploymentsLaunched.inc.php:52
+msgid "Deployements launched from "
+msgstr ""
+
 #: modules/dashboard/includes/panels/computersOnline.inc.php:31
 msgid "Machines Online"
 msgstr ""
@@ -167,6 +183,14 @@ msgstr ""
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:56
 msgid "Updates available."
+msgstr ""
+
+#: modules/dashboard/includes/panels/successRate.inc.php:30
+msgid "Success Rate"
+msgstr ""
+
+#: modules/dashboard/includes/panels/successRate.inc.php:44
+msgid "Deployment success rates for the past 6 weeks"
 msgstr ""
 
 #: modules/dashboard/includes/panels/general.inc.php:29

@@ -7,15 +7,16 @@
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
 # tekmans <yvan.manon@siveo.net>, 2019
 # SPO <spointu@gmail.com>, 2020
+# Noel Kneib <noel.kneib@siveo.net>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-03 16:46+0100\n"
+"POT-Creation-Date: 2021-02-15 17:18+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
-"Last-Translator: SPO <spointu@gmail.com>, 2020\n"
+"Last-Translator: Noel Kneib <noel.kneib@siveo.net>, 2021\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,6 +123,14 @@ msgstr "Non supportés"
 msgid "Create a group"
 msgstr "Créer un groupe"
 
+#: modules/dashboard/includes/panels/agents.inc.php:30
+msgid "Agents"
+msgstr "Agents"
+
+#: modules/dashboard/includes/panels/agents.inc.php:52
+msgid "Machines in Pulse from "
+msgstr "Machines dans Pulse depuis "
+
 #: modules/dashboard/includes/panels/plugins.inc.php:29
 msgid "Plugins loaded"
 msgstr "Plugins chargés"
@@ -151,6 +160,14 @@ msgstr "Ordinateurs non inventoriés"
 msgid "Pulse processes"
 msgstr "Processus pulse"
 
+#: modules/dashboard/includes/panels/deploymentsLaunched.inc.php:30
+msgid "Deployments Launched"
+msgstr "Déploiements lancés"
+
+#: modules/dashboard/includes/panels/deploymentsLaunched.inc.php:52
+msgid "Deployements launched from "
+msgstr "Déploiements lancés depuis "
+
 #: modules/dashboard/includes/panels/computersOnline.inc.php:31
 msgid "Machines Online"
 msgstr "Machines en ligne"
@@ -174,6 +191,14 @@ msgstr "Installer les mises à jour"
 #: modules/dashboard/includes/panels/product_updates.inc.php:56
 msgid "Updates available."
 msgstr "Mise à jour disponible."
+
+#: modules/dashboard/includes/panels/successRate.inc.php:30
+msgid "Success Rate"
+msgstr "Taux de succès"
+
+#: modules/dashboard/includes/panels/successRate.inc.php:44
+msgid "Deployment success rates for the past 6 weeks"
+msgstr "Taux de succès pour les 6 dernières semaines"
 
 #: modules/dashboard/includes/panels/general.inc.php:29
 msgid "General"

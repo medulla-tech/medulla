@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-03 16:46+0100\n"
+"POT-Creation-Date: 2021-02-15 17:18+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -333,12 +333,13 @@ msgid "Package Details"
 msgstr "Параметри пакунка"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:379
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:240
 msgid "Creator"
 msgstr "Творець"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:382
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:545
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:574
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:589
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
 msgid "Name"
 msgstr "Назва"
@@ -348,6 +349,7 @@ msgid "Folder"
 msgstr "Тека"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:388
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:237
 msgid "Creation Date"
 msgstr "Дата створення"
 
@@ -356,7 +358,6 @@ msgid "Deployment plan"
 msgstr "План розгортання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:417
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:226
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:299
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
@@ -371,7 +372,7 @@ msgid "Package Name"
 msgstr "Назва пакунка"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:423
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:224
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:238
 msgid "Start Date"
 msgstr "Дата початку"
 
@@ -420,14 +421,14 @@ msgid "Software"
 msgstr "Програмне забезпечення"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:551
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:580
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:595
 #: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:80
 msgid "Version"
 msgstr "Версія"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:554
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:583
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:701
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:598
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:716
 #: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:79
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:54
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:55
@@ -475,279 +476,279 @@ msgstr "значення"
 msgid "Deployment [ group"
 msgstr "Розгортання [група"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:225
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:239
 msgid "End Date"
 msgstr "Кінцева дата"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:228
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:242
 msgid "Convergence"
 msgstr "Збіжність"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:230
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:244
 msgid "Syncthing enabled"
 msgstr "Syncthing увімкнено"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:231
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:245
 msgid "Progress"
 msgstr "Поступ"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:244
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:259
 msgid "Yes"
 msgstr "Так"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:244
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:259
 msgid "No"
 msgstr "Ні"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:257
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:272
 msgid "Syncthing Detail"
 msgstr "Подробиці щодо Syncthing"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:262
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:277
 msgid "Share name"
 msgstr "Назва спільного ресурсу"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:263
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:278
 msgid "Number of participants"
 msgstr "Кількість учасників"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:264
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:279
 msgid "Transfer progress"
 msgstr "Поступ передавання"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:265
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:280
 msgid "Detail"
 msgstr "Подробиці"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:275
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:290
 msgid "Show Transfer"
 msgstr "Показувати перенесення"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:275
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:290
 msgid "refresh View"
 msgstr "Оновити перегляд"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:298
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:313
 msgid "cluster list"
 msgstr "список кластерів"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:299
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:314
 msgid "cluster nb ars"
 msgstr "к-ть стовпчиків кл."
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:300
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:315
 msgid "machine"
 msgstr "комп'ютер"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:301
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:316
 msgid "progress"
 msgstr "поступ"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:302
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:317
 msgid "start"
 msgstr "початок"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:303
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:318
 msgid "end"
 msgstr "кінець"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:361
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:376
 msgid "Deployment complete"
 msgstr "Розгортання завершено"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:364
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:379
 msgid "Deployment in progress"
 msgstr "Виконуємо розгортання"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:365
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:380
 msgid "Started since"
 msgstr "Запущено з"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:370
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:385
 msgid "WAITING FOR START "
 msgstr "ОЧІКУЄМО НА ЗАПУСК"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:377
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:392
 msgid "Abort Deployment"
 msgstr "Перервати розгортання"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:383
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:398
 msgid "Graph"
 msgstr "Графік"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:384
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:457
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:399
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:472
 msgid "Deployment Success"
 msgstr "Успіх розгортання"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:385
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:458
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:400
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:473
 msgid "Deployment Error"
 msgstr "Помилка розгортання"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:386
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:459
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:401
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:474
 msgid "Abort Missing Agent"
 msgstr "Переривання — немає агента"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:387
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:460
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:402
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:475
 msgid "Abort Relay Down"
 msgstr "Переривання — ретранслятор не працює"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:388
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:461
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:403
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:476
 msgid "Abort Alternative relay down"
 msgstr "Переривання — альтернативний ретранслятор не працює"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:389
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:462
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:404
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:477
 msgid "Abort Info Relay Missing"
 msgstr "Переривання — немає інформаційного ретранслятора"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:390
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:463
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:405
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:478
 msgid "Error Unknown Error"
 msgstr "Помилка: невідома помилка"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:391
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:464
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:406
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:479
 msgid "Abort Package Identifier Missing"
 msgstr "Переривання — немає ідентифікатора пакунка"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:392
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:465
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:407
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:480
 msgid "Abort Package Name Missing"
 msgstr "Переривання — не вказано назви пакунка"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:393
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:466
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:408
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:481
 msgid "Abort Package Version Missing"
 msgstr "Переривання — не вказано версії пакунка"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:394
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:467
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:409
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:482
 msgid "Abort Descriptor Missing"
 msgstr "Переривання — не вказано дескриптора"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:395
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:468
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:410
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:483
 msgid "Abort Machine Disappeared"
 msgstr "Переривання — комп'ютер зник"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:396
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:469
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:411
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:484
 msgid "Abort Deployment Cancelled By User"
 msgstr "Переривання — розгортання скасовано користувачем"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:397
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:470
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:412
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:485
 msgid "Deployment Delayed"
 msgstr "Розгортання відкладено"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:398
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:471
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:413
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:486
 msgid "Deployment start"
 msgstr "Розгортання розпочато"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:399
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:472
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:414
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:487
 msgid "Deployment Pending"
 msgstr "Розгортання заплановано"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:400
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:473
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:415
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:488
 msgid "WOL 1"
 msgstr "WOL 1"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:401
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:474
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:416
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:489
 msgid "WOL 2"
 msgstr "WOL 2"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:402
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:475
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:417
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:490
 msgid "WOL 3"
 msgstr "WOL 3"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:403
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:476
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:418
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:491
 msgid "Waiting Machine Online"
 msgstr "Активний комп'ютер в очікуванні"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:404
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:477
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:419
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:492
 msgid "Other Status"
 msgstr "Інший стан"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:441
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:456
 msgid "Summary Graph"
 msgstr "Граф резюме"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:442
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:457
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:296
 msgid "Success"
 msgstr "Успіх"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:443
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:458
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:297
 msgid "Error"
 msgstr "Помилка"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:444
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:459
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:298
 msgid "Aborted"
 msgstr "Перервано"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:456
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:471
 msgid "Detailed Graph"
 msgstr "Докладний граф"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:514
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:529
 msgid "Package Detail"
 msgstr "Подробиці щодо пакунка"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:577
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:592
 msgid "Associated Inventory"
 msgstr "Пов'язаний облік"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:586
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:601
 msgid "Size"
 msgstr "Розмір"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:653
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:668
 msgid "OFFLINE"
 msgstr "ПОЗА МЕРЕЖЕЮ"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:693
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:708
 msgid "Deployment Detail"
 msgstr "Подробиці щодо розгортання"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:699
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:714
 msgid "Machine Name"
 msgstr "Назва комп'ютера"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:702
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:717
 #: modules/xmppmaster/xmppmaster/editqa.php:78
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
 msgid "Operating System"
 msgstr "Операційна система"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:703
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:718
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:189
 msgid "Status"
 msgstr "Стан"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:704
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:719
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:92
 msgid "Type"
 msgstr "Тип"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:705
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:720
 msgid "Last User"
 msgstr "Останній користувач"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:706
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:721
 msgid "Entity"
 msgstr "Запис"
 

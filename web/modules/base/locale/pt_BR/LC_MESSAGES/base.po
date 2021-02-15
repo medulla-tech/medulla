@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-03 16:46+0100\n"
+"POT-Creation-Date: 2021-02-15 17:18+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -1725,27 +1725,27 @@ msgstr "Appstream"
 msgid "files viewer"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:298
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:313
 msgid "cluster list"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:299
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:314
 msgid "cluster nb ars"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:300
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:315
 msgid "machine"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:301
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:316
 msgid "progress"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:302
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:317
 msgid "start"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:303
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:318
 msgid "end"
 msgstr ""
 
