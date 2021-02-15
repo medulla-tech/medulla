@@ -51,7 +51,11 @@ Source6:        get_file.php
 BuildRequires:	python3-devel
 BuildRequires:	gettext
 BuildRequires:	gettext-devel
+%if %_vendor == "Mageia"
+BuildRequires:  xsltproc
+%else
 BuildRequires:  libxslt
+%endif
 BuildRequires:  wget
 BuildRequires:  docbook-style-xsl
 
@@ -248,7 +252,9 @@ allows one to query a GLPI database to display computer inventory.
 %package -n python-mmc-msc
 Summary:    Pulse 2 MSC plugin for MMC agent
 Group:      System/Servers
+%if %_vendor == "redhat"
 Requires:   python-libs
+%endif
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
 Requires:   python-pulse2-common-database-msc = %version-%release
@@ -717,7 +723,7 @@ service pulse2-scheduler stop >/dev/null 2>&1 || :
 %dir %_var/lib/pulse2/imaging/computers
 %dir %_var/lib/pulse2/imaging/inventories
 %dir %_var/lib/pulse2/imaging/masters
-#%dir %_var/lib/pulse2/imaging/custom
+#dir _var/lib/pulse2/imaging/custom
 %dir %_var/lib/pulse2/imaging/archives
 %config(noreplace) %_sysconfdir/mmc/pulse2/scheduler/scheduler.ini
 %{_sysconfdir}/mmc/pulse2/scheduler/keys
@@ -1264,7 +1270,7 @@ cp %{SOURCE6}   web/modules/base/computers
 
 %build
 
-%configure --disable-python-check --disable-wol
+%configure2_5x --disable-python-check
 
 %make_build
 
