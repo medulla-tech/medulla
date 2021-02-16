@@ -37,7 +37,7 @@ class SuccessRatePanel extends Panel {
     $json = [];
 
     foreach($result as $key=>$value){
-      $newKey = ($key+1)." w.";
+      $newKey = "w. ".($key+1);
       $json[] = ["label"=>$newKey, "value"=>number_format($value, 1)];
     }
     $json = json_encode($json);
