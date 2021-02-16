@@ -1,6 +1,6 @@
 <?
 /*
- * (c) 2015-2016 Siveo, http://www.siveo.net
+ * (c) 2015-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -139,13 +139,13 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $deploymentsuccess = $result['deploymentsuccess'];
         $deploymenterror = (isset($result['deploymenterror'])) ? $result['deploymenterror'] : 0;
         $tolmach[] = $totalmachinedeploy;
-        $inprogressPercent = ($inprogress/$totalmachinedeploy)*100;
+        $inprogressPercent = round(($inprogress/$totalmachinedeploy)*100, 1);
         $processmachr[] = $inprogress.' ('.$inprogressPercent.'%)';
-        $successPercent = ($deploymentsuccess/$totalmachinedeploy)*100;
+        $successPercent = round(($deploymentsuccess/$totalmachinedeploy)*100, 1);
         $successmach[]= $deploymentsuccess.' ('.$successPercent.'%)';
-        $errorPercent = (($deploymenterror + $result['errorunknownerror'])/$totalmachinedeploy)*100;
+        $errorPercent = round((($deploymenterror + $result['errorunknownerror'])/$totalmachinedeploy)*100, 1);
         $errormach[]= ($deploymenterror + $result['errorunknownerror']).' ('.$errorPercent.'%)';
-        $abortedPercent = ($aborted/$totalmachinedeploy)*100;
+        $abortedPercent = round(($aborted/$totalmachinedeploy)*100, 1);
         $abortmachuser[] = $aborted.' ('.$abortedPercent.'%)';
     if($groupid){
         if (isset($arraydeploy['tabdeploy']['group_uuid'][$index])){
