@@ -827,15 +827,15 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
     result = ObjectXmpp().iqsendpulse(jidARS,
                                       iqcomand,
                                       timeout)
-    
+
     res = json.loads(result)
-    
+
     logging.getLogger().debug("result iqcommand : %s" % json.dumps(res, indent = 4))
     if res['numerror'] != 0:
         logger.error("iq information error to %s on get_ars_key_id_rsa_pub, get_ars_key_id_rsa ,get_free_tcp_port" % jidARS)
         logger.error("abandon reverse ssh")
         return
-        
+
     resultatinformation = res['result']['informationresult']
     if proxyport is None or proxyport == 0 or proxyport == "":
         proxyportars = resultatinformation['get_free_tcp_port']
@@ -852,7 +852,7 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
         result = ObjectXmpp().iqsendpulse(jidARS,
                                         uninterruptedstruct,
                                         timeout)
-        
+
         logging.getLogger().debug("result iqcommand : %s" % result)
     structreverse = {"action": "reversesshqa",
                      "sessionid": name_random(8, "reversshiq"),
@@ -1021,3 +1021,57 @@ def write_content(path, datas, mode="w"):
                 return True
         except:
             return False
+
+def get_count_success_rate_for_dashboard():
+    result = XmppMasterDatabase().get_count_success_rate_for_dashboard()
+    return result
+
+def get_count_total_deploy_for_dashboard():
+    result = XmppMasterDatabase().get_count_total_deploy_for_dashboard()
+    return result
+
+def get_ars_from_cluster(id, filter=""):
+    result = XmppMasterDatabase().get_ars_from_cluster(id, filter)
+    return result
+
+def update_cluster(id, name, description, relay_ids):
+    result = XmppMasterDatabase().update_cluster(id, name, description, relay_ids)
+    return result
+
+def create_cluster(name, description, relay_ids):
+    result = XmppMasterDatabase().create_cluster(name, description, relay_ids)
+    return result
+
+def get_rules_list(start, end, filter):
+    return XmppMasterDatabase().get_rules_list(start, end, filter)
+
+def order_relay_rule(action, id):
+    result = XmppMasterDatabase().order_relay_rule(action, id)
+    return result
+
+def get_relay_rules(id, start, end, filter):
+    return XmppMasterDatabase().get_relay_rules(id, start, end, filter)
+
+def new_rule_order_relay(id):
+    return XmppMasterDatabase().new_rule_order_relay(id)
+
+def add_rule_to_relay(relay_id, rule_id, order, subject):
+    return XmppMasterDatabase().add_rule_to_relay(relay_id, rule_id, order, subject)
+
+def delete_rule_relay(rule_id):
+    return XmppMasterDatabase().delete_rule_relay(rule_id)
+
+def move_relay_rule(relay_id, rule_id, action):
+    return XmppMasterDatabase().move_relay_rule(relay_id, rule_id, action)
+
+def get_relay_rule(rule_id):
+    return XmppMasterDatabase().get_relay_rule(rule_id)
+
+def get_relays_for_rule(rule_id, start, end, filter):
+    return XmppMasterDatabase().get_relays_for_rule(rule_id, start, end, filter)
+
+def edit_rule_to_relay(id, relay_id, rule_id, subject):
+    return XmppMasterDatabase().edit_rule_to_relay(id, relay_id, rule_id, subject)
+
+def get_minimal_relays_list(mode):
+    return XmppMasterDatabase().get_minimal_relays_list(mode)

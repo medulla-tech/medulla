@@ -1,12 +1,8 @@
 <?php
-
-/*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2010 Mandriva, http://www.mandriva.com
+/**
+ * (c) 2020 Siveo, http://siveo.net
  *
- * $Id$
- *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,44 +15,148 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/* require_once("modules/ppolicy/includes/ppolicy-xmlrpc.php"); */
-/* require_once("modules/ppolicy/includes/ppolicy.inc.php"); */
-
-/**
- * ppolicy module declaration
- */
-
-/* require_once("modules/admin/includes/admin.inc.php"); */
-require_once("modules/admin/includes/commons.inc.php");
+require_once("modules/pulse2/version.php");
 
 $mod = new Module("admin");
 $mod->setVersion("4.6.6");
-$mod->setRevision('$Rev$');
-$mod->setDescription(_T("Configuration", "admin"));
-$mod->setAPIVersion("4.1.3");
-$mod->setPriority(600);
+//$mod->setRevision('');
+$mod->setDescription(_T("Admin", "admin"));
+$mod->setAPIVersion("1:0:0");
+$mod->setPriority(2000);
 
-/* Add the page to the module */
-
-$submod = new SubModule("configure");
+$submod = new SubModule("admin");
+$submod->setDescription(_T("Admin", "admin"));
 $submod->setVisibility(True);
-$submod->setDescription(_T("Administration"));
-$submod->setDefaultPage("admin/configure/index");
-$submod->setImg('img/navbar/load');
+$submod->setImg('modules/admin/graph/navbar/admin');
+$submod->setDefaultPage("admin/admin/index");
+$submod->setPriority(1001);
+
+$page = new Page("index", _T('Relays List', 'admin'));
+$page->setFile("modules/admin/admin/index.php");
+$submod->addPage($page);
+
+$page = new Page("clustersList", _T('Clusters List', 'admin'));
+$page->setFile("modules/admin/admin/clustersList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxClustersList", _T("Clusters List", "admin"));
+$page->setFile("modules/admin/admin/ajaxClustersList.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("relaysList", _T("Get the xmpp relays list", "glpi"));
+$page->setFile("modules/admin/admin/relaysList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxRelaysList", _T("Relays List", "glpi"));
+$page->setFile("modules/admin/admin/ajaxRelaysList.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+$page = new Page("switchrelay",_T("Switch Relay","xmppmaster"));
+$page->setFile("modules/admin/admin/switchrelay.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("reconfiguremachines",_T("Reconfigure Machines","xmppmaster"));
+$page->setFile("modules/admin/admin/reconfiguremachines.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("detailactions", _T("Relays Detail Actions", "xmppmaster"));
+$page->setFile("modules/admin/admin/detailactions.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("qalaunched", _T("Qa launched on Relays", "xmppmaster"));
+$page->setFile("modules/admin/admin/qalaunched.php");
+//$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("ajaxqalaunched", _T("Qa launched on Relays", "xmppmaster"));
+$page->setFile("modules/admin/admin/ajaxqalaunched.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("qaresult", _T("Qa result on Relays", "xmppmaster"));
+$page->setFile("modules/admin/admin/qaresult.php");
+//$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
+$page = new Page("packageslist", _T("Packages List", "xmppmaster"));
+$page->setFile("modules/admin/admin/packageslist.php");
+//$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
+$page = new Page("ajaxpackageslist", _T("Packages List", "xmppmaster"));
+$page->setFile("modules/admin/admin/ajaxpackageslist.php");
+$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
+$page = new Page("editCluster", _T("Edit Cluster", "admin"));
+$page->setFile("modules/admin/admin/editCluster.php");
+$submod->addPage($page);
+
+$page = new Page("newCluster", _T("New Cluster", "admin"));
+$page->setFile("modules/admin/admin/newCluster.php");
+$submod->addPage($page);
+
+$page = new Page("rules", _T("Rules", "admin"));
+$page->setFile("modules/admin/admin/rules.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxRules", _T("Rules", "admin"));
+$page->setFile("modules/admin/admin/ajaxRules.php");
+$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
+//Tab pages
+$page = new Page("rules_tabs", _T("Relay Rules", "admin"));
+$page->setFile("modules/admin/admin/rules_tabs.php");
+$page->setOptions(array("visible" => true));
+
+//Tab1
+$tab = new Tab("relayRules", _T("Relay Rules", "admin"));
+$page->addTab($tab);
+
+//Tab2
+$tab = new Tab("newRelayRule", _T("New Relay Rule", "admin"));
+$page->addTab($tab);
+
+$submod->addPage($page);
+
+$page = new Page("ajaxRelayRules", _T("Relay Rules", "admin"));
+$page->setFile("modules/admin/admin/ajaxRelayRules.php");
+$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
+$page = new Page("deleteRelayRule", _T("Delete Relay Rules", "admin"));
+$page->setFile("modules/admin/admin/deleteRelayRule.php");
+$submod->addPage($page);
+
+$page = new Page("moveRelayRule", _T("Move Relay Rule", "admin"));
+$page->setFile("modules/admin/admin/moveRelayRule.php");
+$submod->addPage($page);
+
+$page = new Page("editRelayRule", _T("Edit Relay Rule", "admin"));
+$page->setFile("modules/admin/admin/editRelayRule.php");
+$submod->addPage($page);
+
+$page = new Page("rulesDetail", _T("Rules Detail", "admin"));
+$page->setFile("modules/admin/admin/rulesDetail.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxRulesDetail", _T("Rules Detail", "admin"));
+$page->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
-/* Add the (yet empty) module to the app */
-$MMCApp = MMCApp::getInstance();
+$MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
-unset($MMCApp);
-
-/* Load all configuration page found in the "pages" directory, they will
- be added to the main submodule
-*/
-loadAllConfigurationPages();
-
 
 ?>

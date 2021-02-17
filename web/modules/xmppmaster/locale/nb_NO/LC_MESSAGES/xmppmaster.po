@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-01 18:08+0100\n"
+"POT-Creation-Date: 2020-12-03 17:50+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -317,14 +317,12 @@ msgid "Machine"
 msgstr "Maskin"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:338
-msgid "Ip Machine"
-msgstr "IP maskin"
+msgid "IP Address (from GLPI)"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:341
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:129
-#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:86
-msgid "Mac Address"
-msgstr "Mac Adresse"
+msgid "MAC Address"
+msgstr "MAC Adresse"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:368
 msgid "Package Details"
@@ -386,28 +384,28 @@ msgid "Start deployment : "
 msgstr "Start utrulling"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:482
-msgid "xmpp information"
-msgstr "xmpp informasjon"
+msgid "XMPP Information"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:488
-msgid "jid machine"
-msgstr "jid maskin"
+msgid "Machine JID"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:491
-msgid "jid Relay server"
-msgstr "jid rele server"
+msgid "Relay Server JID"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:494
-msgid "ip machine"
-msgstr "ip maskin"
+msgid "Machine IP"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:497
-msgid "ip relayserver"
-msgstr "ip releserver"
+msgid "Relay Server IP"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:500
-msgid "ip master"
-msgstr "ip master"
+msgid "Master IP"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:534
 msgid "Package and Dependency"
@@ -1022,6 +1020,11 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:80
 msgid "Class Util"
 msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:129
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:86
+msgid "Mac Address"
+msgstr "Mac Adresse"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:130
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:87

@@ -20,7 +20,7 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-pythonmodules = apis apis.clients database database.dyngroup \
+pythonmodules = apis apis.clients database database.admin database.dyngroup \
 	database.imaging database.inventory database.msc database.kiosk \
 	database.msc.orm database.pulse database.xmppmaster imaging \
 	imaging_server inventoryserver inventoryserver.scheduler \

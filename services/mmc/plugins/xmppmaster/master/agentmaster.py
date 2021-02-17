@@ -2025,7 +2025,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         try:
             body = {'action': 'inventory',
                     'sessionid': name_random(5, "inventory"),
-                    'data': {}}
+                    'data': {'forced': 'forced'}}
             self.send_message(mto=to,
                               mbody=json.dumps(body),
                               mtype='chat')

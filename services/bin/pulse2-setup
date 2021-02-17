@@ -452,7 +452,7 @@ class Pulse2ConfigFile(object):
                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig',
                 'InventoryServerConfig', 'PackageServerConfig', 'SchedulerConfig',
                 'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig',
-                'PluginsKioskConfig', 'PluginsXmppmasterConfig']
+                'PluginsKioskConfig', 'PluginsXmppmasterConfig', 'PluginsAdminConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -682,6 +682,9 @@ class PluginsKioskConfig(Pulse2ConfigFile):
 class PluginsXmppmasterConfig(Pulse2ConfigFile):
     path = 'plugins/xmppmaster.ini'
 
+class PluginsAdminConfig(Pulse2ConfigFile):
+    path = 'plugins/admin.ini'
+
 
 class SetupApp(object):
     defaults = {}
@@ -707,7 +710,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update', 'kiosk', 'pkgs', 'xmppmaster']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update', 'kiosk', 'pkgs', 'xmppmaster', 'admin']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -1114,6 +1117,12 @@ class SetupApp(object):
         self.confs['plugins/xmppmaster.ini'].set('database', 'dbport', self.config['dbport'])
         self.confs['plugins/xmppmaster.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/xmppmaster.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # admin db
+        self.confs['plugins/admin.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/admin.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/admin.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/admin.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
     def init_glpi(self):
         """GLPI coupling"""
