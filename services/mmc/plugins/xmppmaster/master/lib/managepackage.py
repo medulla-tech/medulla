@@ -270,7 +270,7 @@ class managepackage:
                     return package
             except Exception as e:
                 logger.error("The conf.json for the package %s is missing" % package)
-                logger.error("we are encountering the error: %s" str(e))
+                logger.error("we are encountering the error: %s"  % str(e))
                 return None
         logger.error("We did not find the package %s" % package)
         return None
