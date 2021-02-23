@@ -299,7 +299,7 @@ class managepackage:
                     (packageuuid, str(e)))
         logger.error("package %s verify version" \
                         "in descriptor conf.json [%s]" %(packageuuid))
-         return None
+        return None
 
     @staticmethod
     def getnamepackagefromuuidpackage(uuidpackage):
