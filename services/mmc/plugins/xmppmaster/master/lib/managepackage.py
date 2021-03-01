@@ -32,6 +32,7 @@ from pulse2.database.pkgs import PkgsDatabase
 logger = logging.getLogger()
 
 class apimanagepackagemsc:
+    exclud_name_package=["sharing", ".stfolder", ".stignore" ]
     @staticmethod
     def readjsonfile(namefile):
         with open(namefile) as json_data:
@@ -43,13 +44,13 @@ class apimanagepackagemsc:
         folderpackages = os.path.join("/", "var" ,"lib","pulse2","packages")
         return [ os.path.join(folderpackages,x) for x in os.listdir(folderpackages) \
             if os.path.isdir(os.path.join(folderpackages,x)) \
-                and str(os.path.join(folderpackages,x))[-9:] != ".stfolder" ]
+                and x not in apimanagepackagemsc.exclud_name_package]
 
     @staticmethod
     def listfilepackage(folderpackages):
         return [ os.path.join(folderpackages,x) for x in os.listdir(folderpackages) \
             if not os.path.isdir(os.path.join(folderpackages,x)) \
-            and str(os.path.join(folderpackages,x))[-9:] != ".stfolder"]
+                and x not in apimanagepackagemsc.exclud_name_package]
 
     @staticmethod
     def packagelistmscconfjson(pending = False):
@@ -57,7 +58,7 @@ class apimanagepackagemsc:
         listfichierconf =  [ os.path.join(folderpackages,x,"conf.json") \
             for x in os.listdir(folderpackages) \
                 if os.path.isdir(os.path.join(folderpackages,x)) \
-                    and str(os.path.join(folderpackages,x))[-9:] != ".stfolder" ]
+                    and x not in apimanagepackagemsc.exclud_name_package]
         listpackagependig = PkgsDatabase().list_pending_synchro_package()
         listpendingfichierconf = []
         listnotpendingfichierconf = []
@@ -181,6 +182,7 @@ class apimanagepackagemsc:
             return ((nb, result))
 
 class managepackage:
+    exclud_name_package=["sharing", ".stfolder", ".stignore" ]
     @staticmethod
     def packagedir():
         if sys.platform.startswith('linux'):
@@ -197,7 +199,7 @@ class managepackage:
         return [os.path.join(managepackage.packagedir(), x) \
             for x in os.listdir(managepackage.packagedir()) \
                 if os.path.isdir(os.path.join(managepackage.packagedir(), x)) \
-                    and str(os.path.join(managepackage.packagedir(), x))[-9:] != ".stfolder"]
+                    and x not in managepackage.exclud_name_package]
 
     @staticmethod
     def loadjsonfile(filename):
