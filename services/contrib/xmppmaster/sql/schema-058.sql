@@ -63,7 +63,7 @@ ADD INDEX IF NOT EXISTS `index2` (`glpi_id` ASC);
 
 
 ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX IF NOT EXISTS `index_locent` (`glpi_entity_id` ASC, `glpi_location_id` ASC);
+ADD INDEX IF NOT EXISTS `index_location_entity` (`glpi_entity_id` ASC, `glpi_location_id` ASC);
 
 
 ALTER TABLE `xmppmaster`.`machines`
