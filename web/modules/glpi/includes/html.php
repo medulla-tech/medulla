@@ -453,7 +453,7 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
                </span>
                <span class="searchfield" onchange="pushSearch(); return false;">
                  <select id="field">
-                     <option value="allchamp">search on all fields =></option>
+                     <option value="allchamp">search all fields</option>
                      <?
                      foreach( $this->fields as $keys => $value){
                         echo '<option value="'.$value.'">'.$keys.'</option>';
