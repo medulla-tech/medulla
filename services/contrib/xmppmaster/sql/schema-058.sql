@@ -25,16 +25,16 @@ USE `xmppmaster`;
 SET FOREIGN_KEY_CHECKS=0;
 DELETE FROM `xmppmaster`.`machines` WHERE 1;
 ALTER TABLE `xmppmaster`.`machines`
-ADD COLUMN `glpi_description` VARCHAR(90) NULL DEFAULT '' AFTER `keysyncthing`,
-ADD COLUMN `glpi_owner_firstname` VARCHAR(45) NULL DEFAULT '' AFTER `glpi_description`,
-ADD COLUMN `glpi_owner_realname` VARCHAR(45) NULL DEFAULT '' AFTER `glpi_owner_firstname`,
-ADD COLUMN `glpi_owner` VARCHAR(45) NULL DEFAULT '' AFTER `glpi_owner_realname`,
-ADD COLUMN `glpi_entity_id` INT(11)  DEFAULT NULL AFTER `glpi_owner`,
-ADD COLUMN `glpi_location_id` INT(11)  DEFAULT NULL AFTER `glpi_entity_id`,
-ADD COLUMN `model` VARCHAR(45) NULL DEFAULT '' AFTER `glpi_location_id`,
-ADD COLUMN `manufacturer` VARCHAR(45) NULL DEFAULT '' AFTER `model`;
+ADD COLUMN IF NOT EXISTS `glpi_description` VARCHAR(90) NULL DEFAULT '' AFTER `keysyncthing`,
+ADD COLUMN IF NOT EXISTS `glpi_owner_firstname` VARCHAR(45) NULL DEFAULT '' AFTER `glpi_description`,
+ADD COLUMN IF NOT EXISTS `glpi_owner_realname` VARCHAR(45) NULL DEFAULT '' AFTER `glpi_owner_firstname`,
+ADD COLUMN IF NOT EXISTS `glpi_owner` VARCHAR(45) NULL DEFAULT '' AFTER `glpi_owner_realname`,
+ADD COLUMN IF NOT EXISTS `glpi_entity_id` INT(11)  DEFAULT NULL AFTER `glpi_owner`,
+ADD COLUMN IF NOT EXISTS `glpi_location_id` INT(11)  DEFAULT NULL AFTER `glpi_entity_id`,
+ADD COLUMN IF NOT EXISTS `model` VARCHAR(45) NULL DEFAULT '' AFTER `glpi_location_id`,
+ADD COLUMN IF NOT EXISTS `manufacturer` VARCHAR(45) NULL DEFAULT '' AFTER `model`;
 
-CREATE TABLE `glpi_entity` (
+CREATE TABLE IF NOT EXISTS  `glpi_entity` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `complete_name` varchar(512) NOT NULL,
     `name` varchar(45) NOT NULL,
@@ -44,11 +44,11 @@ CREATE TABLE `glpi_entity` (
 
     -- optimise jointure machine
     ALTER TABLE `xmppmaster`.`glpi_entity`
-ADD INDEX `index_glpi_id` (`glpi_id` ASC);
+ADD INDEX IF NOT EXISTS `index_glpi_id` (`glpi_id` ASC);
 
 
 
-CREATE TABLE `glpi_location` (
+CREATE TABLE IF NOT EXISTS  `glpi_location` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `complete_name` varchar(512) NOT NULL,
     `name` varchar(45) NOT NULL,
@@ -57,22 +57,22 @@ CREATE TABLE `glpi_location` (
      ENGINE=InnoDB DEFAULT CHARSET=utf8;
   -- optimise jointure machine
 ALTER TABLE `xmppmaster`.`glpi_location`
-ADD INDEX `index2` (`glpi_id` ASC);
+ADD INDEX IF NOT EXISTS `index2` (`glpi_id` ASC);
 
 
 
 
 ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX `ind_locent` (`glpi_entity_id` ASC, `glpi_location_id` ASC);
+ADD INDEX IF NOT EXISTS `index_locent` (`glpi_entity_id` ASC, `glpi_location_id` ASC);
 
 
 ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX `ind_aggenttype` (`agenttype`(1) ASC);
+ADD INDEX IF NOT EXISTS `index_aggenttype` (`agenttype`(1) ASC);
 ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX `ind_enabled` (`enabled` ASC);
+ADD INDEX IF NOT EXISTS `index_enabled` (`enabled` ASC);
 
 
-CREATE TABLE `glpi_register_keys` (
+CREATE TABLE IF NOT EXISTS `glpi_register_keys` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `name` varchar(90) NOT NULL,
     `value` varchar(90) NOT NULL,
@@ -88,24 +88,23 @@ CREATE TABLE `glpi_register_keys` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- DELETE FROM `xmppmaster`.`machines` WHERE 1;
-ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX `fk_glpi_register_keys_id` (`glpi_regkey_id` ASC);
+-- ALTER TABLE `xmppmaster`.`machines`
+-- ADD INDEX IF NOT EXISTS `fk_glpi_register_keys_id` (`glpi_regkey_id` ASC);
 
-
 ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX `fk_glpi_entity_id` (`glpi_entity_id` ASC);
+ADD INDEX IF NOT EXISTS `fk_glpi_entity_id` (`glpi_entity_id` ASC);
 ALTER TABLE `xmppmaster`.`machines`
 ADD CONSTRAINT `fk_glpi_entity_id`
-  FOREIGN KEY (`glpi_entity_id`)
+  FOREIGN KEY IF NOT EXISTS(`glpi_entity_id`)
   REFERENCES `xmppmaster`.`glpi_entity` (`id`)
   ON DELETE CASCADE
   ON UPDATE CASCADE;
 
 ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX `fk_glpi_location_id` (`glpi_location_id` ASC);
+ADD INDEX IF NOT EXISTS `fk_glpi_location_id` (`glpi_location_id` ASC);
 ALTER TABLE `xmppmaster`.`machines`
 ADD CONSTRAINT `fk_glpi_location_id`
-  FOREIGN KEY (`glpi_location_id`)
+  FOREIGN KEY IF NOT EXISTS(`glpi_location_id`)
   REFERENCES `xmppmaster`.`glpi_location` (`id`)
   ON DELETE CASCADE
   ON UPDATE CASCADE;
