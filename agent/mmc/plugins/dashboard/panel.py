@@ -2,8 +2,9 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2012 Mandriva, http://www.mandriva.com
+# (c) 2021 Siveo, http://siveo.net
 #
-# This file is part of Mandriva Management Console (MMC).
+# This file is part of Management Console (MMC).
 #
 # MMC is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -142,4 +143,8 @@ class SuccessRatePanel(Panel):
 
 class DeploymentsLaunchedPanel(Panel):
     """This class is called by the DeploymentsLaunched widget from the dashboard"""
+    pass
+
+class AgentsPanel(Panel):
+    """This class is called by the Agents widget from the dashboard"""
     pass

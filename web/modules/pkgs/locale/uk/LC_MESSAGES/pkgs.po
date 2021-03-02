@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2020
+# Yuri Chornoivan <yurchor@ukr.net>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-03 17:49+0100\n"
+"POT-Creation-Date: 2021-02-15 17:18+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -223,12 +223,12 @@ msgid "Password"
 msgstr "Пароль"
 
 #: modules/pkgs/pkgs/rsync.php:74
-msgid "Relay servers already synchronized : "
-msgstr "Проміжні сервери, які вже синхронізовано:"
-
-#: modules/pkgs/pkgs/rsync.php:93
 msgid "Relay servers not yet synchronized : "
 msgstr "Проміжні сервери, які ще не синхронізовано:"
+
+#: modules/pkgs/pkgs/rsync.php:93
+msgid "Relay servers already synchronized : "
+msgstr "Проміжні сервери, які вже синхронізовано:"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
 msgid "Waiting..."
@@ -500,6 +500,10 @@ msgstr "Натисніть, щоб вибрати файли"
 msgid "Upload Queued Files"
 msgstr "Вивантажити файли з черги"
 
+#: modules/pkgs/pkgs/edit.php:499 modules/pkgs/pkgs/add.php:359
+msgid "Accentuated and special characters are not allowed"
+msgstr "Не можна використовувати символи з акцентами або спеціальні символи"
+
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
 msgid "The rule %s has been removed"
@@ -575,7 +579,7 @@ msgstr "Створити порожній пакунок"
 msgid "Package source"
 msgstr "Джерело пакунка"
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:435
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:439
 msgid "Files directory"
 msgstr "Каталог файлів"
 
@@ -609,12 +613,12 @@ msgstr ""
 "        Крім того, ви можете пошукати у Google параметри команди для автоматичного встановлення. Якщо вам скрізь таланить, можете спробувати ось таку адресу для пошуку у Google:\\n\\n\n"
 "        <a href=\"@@GOOGLE_SEARCH_URL@@\">Пошук у Google</a>"
 
-#: modules/pkgs/pkgs/add.php:457
+#: modules/pkgs/pkgs/add.php:461
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Вивантаження файлів (<b><u title='%s'>макс. %s МБ</u></b>)"
 
-#: modules/pkgs/pkgs/add.php:457
+#: modules/pkgs/pkgs/add.php:461
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."

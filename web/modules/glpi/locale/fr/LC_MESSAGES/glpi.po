@@ -7,15 +7,16 @@
 # tekmans <yvan.manon@siveo.net>, 2019
 # Nicolas Lécureuil <neoclust@mageia.org>, 2020
 # SPO <spointu@gmail.com>, 2020
+# Noel Kneib <noel.kneib@siveo.net>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-03 17:49+0100\n"
+"POT-Creation-Date: 2021-02-15 17:18+0100\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
-"Last-Translator: SPO <spointu@gmail.com>, 2020\n"
+"Last-Translator: Noel Kneib <noel.kneib@siveo.net>, 2021\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -363,7 +364,7 @@ msgstr "Éditer les fichiers de configuration"
 #: modules/glpi/glpi/ajaxMachinesList.php:109
 #: modules/glpi/glpi/ajaxMachinesList.php:110
 msgid "files viewer"
-msgstr ""
+msgstr "Visionneuse de fichiers"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:114
 msgid "Imaging management"

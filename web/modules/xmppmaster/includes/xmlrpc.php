@@ -31,6 +31,10 @@ function xmlrpc_topology_pulse() {
     return xmlCall("xmppmaster.topologypulse", array());
 }
 
+ function xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx){
+     return xmlCall("xmppmaster.get_machines_list", [$start, $end, $ctx]);
+ }
+
 function xmlrpc_getPresenceuuid($uuid) {
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
 }
@@ -654,5 +658,9 @@ function xmlrpc_get_count_success_rate_for_dashboard(){
 
 function xmlrpc_get_count_total_deploy_for_dashboard(){
   return xmlCall("xmppmaster.get_count_total_deploy_for_dashboard", []);
+}
+
+function xmlrpc_get_count_agent_for_dashboard(){
+  return xmlCall("xmppmaster.get_count_agent_for_dashboard", []);
 }
 ?>

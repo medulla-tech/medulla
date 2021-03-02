@@ -31,7 +31,7 @@ import traceback
 from pulse2.database.xmppmaster import XmppMasterDatabase
 logger = logging.getLogger()
 
-plugin = {"VERSION": "1.0", "NAME": "vectormonitoringagent", "TYPE": "master"}
+plugin = {"VERSION": "1.1", "NAME": "vectormonitoringagent", "TYPE": "master"}
 
 
 def process_system(functionname,
@@ -187,4 +187,23 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                          machine['hostname'],
                                          id_mom_machine)
         elif data['subaction'] == "terminalAlert":
-            pass
+            if 'device_service' in data:
+                # load version agent agentversion
+                statusmsg = ""
+                if 'status' in data:
+                    statusmsg = json.dumps(data['status'])
+                id_mom_machine = XmppMasterDatabase().setMonitoring_machine(
+                                    machine['id'],
+                                    machine['hostname'],
+                                    date=data['date'],
+                                    statusmsg=statusmsg)
+                for element in data['device_service']:
+                    for devicename in element:
+                        # call defined process functions
+                        if devicename.lower() in xmppobject.typelistMonitoring_device:
+                            # globals()["process_%s"%element](data['opticalReader'])
+                            callFunction(devicename,
+                                         element[devicename],
+                                         machine['id'],
+                                         machine['hostname'],
+                                         id_mom_machine)

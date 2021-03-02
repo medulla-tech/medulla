@@ -61,7 +61,10 @@ from pulse2.database.xmppmaster.schema import Network, Machines,\
     Mon_device_service, \
     Mon_rules, \
     Mon_event , \
-    Mon_panels_template
+    Mon_panels_template, \
+    Glpi_entity, \
+    Glpi_location, \
+    Glpi_Register_Keys
 # Imported last
 import logging
 import json
@@ -1204,7 +1207,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     idorganization = result_organization.id
 
                 except Exception, e:
-                    logging.getLogger().debug("organization id : %s is not exist" % organization_id)
+                    logging.getLogger().debug("organization id : %s does not exists" % organization_id)
                     return -1
             elif organization_name != None:
                 idorganization = self.getIdOrganization(organization_name)
@@ -1247,7 +1250,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return result_organization.id
         except Exception, e:
             logging.getLogger().error(str(e))
-            logging.getLogger().debug("organization name : %s is not exist" % name_organization)
+            logging.getLogger().debug("organization name : %s does not exists" % name_organization)
             return -1
 
     @DatabaseHelper._sessionm
@@ -1314,6 +1317,320 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             logging.getLogger().debug("qa_custom_command error")
             return -1
+
+    @DatabaseHelper._sessionm
+    def update_Glpi_entity( self,
+                           session,
+                           glpi_id,
+                           complete_name = None,
+                           name = None):
+        try:
+            result_entity = session.query(Glpi_entity).filter( Glpi_entity.glpi_id == glpi_id ).one()
+            if result_entity:
+                if complete_name is not None:
+                    result_entity.complete_name = complete_name
+                if name is not None:
+                    result_entity.name = name
+                session.commit()
+                session.flush()
+                return result_entity.get_data()
+            else:
+                logging.getLogger().debug("id entity no exist for update")
+        except Exception:
+            logging.getLogger().error("update Glpi_entity ")
+        return None
+
+    @DatabaseHelper._sessionm
+    def update_Glpi_location( self,
+                           session,
+                           glpi_id,
+                           complete_name = None,
+                           name = None):
+        try:
+            result_location = session.query(Glpi_location).filter( Glpi_location.glpi_id == glpi_id ).one()
+            if result_location:
+                if complete_name is not None:
+                    result_location.complete_name = complete_name
+                if name is not None:
+                    result_location.name = name
+                session.commit()
+                session.flush()
+                return result_location.get_data()
+            else:
+                logging.getLogger().debug("id location no exist for update")
+        except Exception:
+            logging.getLogger().error("update Glpi_location ")
+        return None
+
+    @DatabaseHelper._sessionm
+    def update_Glpi_register_key(self,
+                                 session,
+                                 machines_id,
+                                 name,
+                                 value,
+                                 comment=""):
+        try:
+            if name is not None and name != "":
+                result_register_key = session.query(Glpi_Register_Keys).\
+                                            filter(or_( Glpi_Register_Keys.machines_id == machines_id,
+                                                Glpi_Register_Keys.name == name)).one()
+                session.commit()
+                session.flush()
+                if result_register_key:
+                    return result_register_key.get_data()
+                else:
+                    logging.getLogger().debug("id registration no exist for update")
+        except Exception:
+            logging.getLogger().error("update Glpi_Register_Keys  : %s for machine %s does not exists" % (name,
+                                                                                 machines_id))
+        return None
+
+    @DatabaseHelper._sessionm
+    def get_Glpi_entity( self,
+                         session,
+                         glpi_id):
+        """
+            get Glpi_entity by glpi id machine
+        """
+        #logging.getLogger().error("get_Glpi_entity")
+        try:
+            result_entity = session.query(Glpi_entity).\
+                filter( Glpi_entity.glpi_id == glpi_id ).one()
+            session.commit()
+            session.flush()
+            if result_entity:
+               return result_entity.get_data()
+            else:
+                logging.getLogger().debug("Glpi_entity id : %s does not exists" % glpi_id)
+        except Exception, e:
+            logging.getLogger().error("Glpi_entity id : %s does not exists" % glpi_id)
+        return None
+
+    @DatabaseHelper._sessionm
+    def get_Glpi_location(self,
+                          session,
+                          glpi_id):
+        """
+            get Glpi_location by glpi id machine
+        """
+        #logging.getLogger().error("get_Glpi_location")
+        try:
+            result_location = session.query(Glpi_location).\
+                filter( Glpi_location.glpi_id == glpi_id ).one()
+            session.commit()
+            session.flush()
+            if result_location:
+               return result_location.get_data()
+            else:
+                logging.getLogger().debug("Glpi_location id : %s des not exists" % glpi_id)
+        except Exception, e:
+            logging.getLogger().error("Glpi_location id : %s does not exists" % glpi_id)
+        return None
+
+    @DatabaseHelper._sessionm
+    def get_Glpi_register_key( self,
+                               session,
+                               machines_id,
+                               name):
+        """
+            get Glpi_register_key by glpi id machine and name key reg
+        """
+        #logging.getLogger().error("get_Glpi_register_key %s %s" %(machines_id, name) )
+        try:
+            result_register_key = session.query(Glpi_Register_Keys).\
+                filter(and_( Glpi_Register_Keys.machines_id == machines_id,
+                             Glpi_Register_Keys.name == name)).one()
+            result_register_key=result_register_key
+            session.commit()
+            session.flush()
+            if result_register_key:
+               return result_register_key.get_data()
+            else:
+                logging.getLogger().debug("Glpi_Register_Keys  : %s"\
+                    " for machine %s does not exists" % (name,
+                                                      machines_id))
+        except Exception, e:
+                logging.getLogger().error("Glpi_Register_Keys  : %s "\
+                    "for machine %s does not exists" % (name,
+                                                     machines_id))
+        return None
+
+    @DatabaseHelper._sessionm
+    def create_Glpi_entity( self,
+                            session,
+                            complete_name,
+                            name,
+                            glpi_id):
+        """
+            create Glpi_entity
+        """
+        if glpi_id is None or glpi_id == '':
+            logging.getLogger().warning("create_Glpi_entity glpi_id missing")
+            return None
+        ret = self.get_Glpi_entity(glpi_id)
+        if ret is None:
+            # Creation of this entity
+            try:
+                # We create it if it does not exists
+                new_glpi_entity = Glpi_entity()
+                new_glpi_entity.complete_name = complete_name
+                new_glpi_entity.name = name
+                new_glpi_entity.glpi_id = glpi_id
+                session.add(new_glpi_entity)
+                session.commit()
+                session.flush()
+                return new_glpi_entity.get_data()
+            except Exception, e:
+                logging.getLogger().error(str(e))
+                logging.getLogger().error("glpi_entity error")
+        else:
+            if ret['name'] == name and ret['complete_name'] == complete_name:
+                return ret
+            else:
+                # update entity
+                logging.getLogger().warning("update entity exist")
+                return self.update_Glpi_entity(glpi_id,
+                                        complete_name,
+                                        name)
+        return None
+    @DatabaseHelper._sessionm
+    def create_Glpi_location( self,
+                            session,
+                            complete_name,
+                            name,
+                            glpi_id):
+        """
+            create Glpi_location
+        """
+        if glpi_id is None or glpi_id == '':
+            logging.getLogger().warning("create_Glpi_location glpi_id missing")
+            return None
+        ret = self.get_Glpi_location(glpi_id)
+        if ret is None:
+            try:
+                new_glpi_location = Glpi_location()
+                new_glpi_location.complete_name = complete_name
+                new_glpi_location.name = name
+                new_glpi_location.glpi_id = glpi_id
+                session.add(new_glpi_location)
+                session.commit()
+                session.flush()
+                return new_glpi_location.get_data()
+            except Exception, e:
+                logging.getLogger().error(str(e))
+                logging.getLogger().error("create_Glpi_location error")
+        else:
+            if ret['name'] == name and ret['complete_name'] == complete_name:
+                return ret
+            else:
+                logging.getLogger().debug("We update the location")
+                return self.update_Glpi_location(glpi_id,
+                                        complete_name,
+                                        name)
+        return None
+
+    @DatabaseHelper._sessionm
+    def create_Glpi_register_keys( self,
+                                  session,
+                                  machines_id,
+                                  name,
+                                  value=0,
+                                  comment=''):
+        """
+            create Glpi_Register_Keys
+        """
+
+        #logging.getLogger().error("create %s = %s" %(name, value))
+
+
+        if machines_id is None or machines_id == '' or name is None or name == "":
+            return None
+        ret = self.get_Glpi_register_key(machines_id, name)
+        if ret is None:
+            # creation de cette register_keys
+            try:
+                # creation si cette entite n'existe pas.
+                new_glpi_register_keys = Glpi_Register_Keys()
+                new_glpi_register_keys.name = name
+                new_glpi_register_keys.value = value
+                new_glpi_register_keys.machines_id = machines_id
+                new_glpi_register_keys.comment = comment
+                session.add(new_glpi_register_keys)
+                session.commit()
+                session.flush()
+                return new_glpi_register_keys.get_data()
+            except Exception, e:
+                logging.getLogger().error(str(e))
+                logging.getLogger().error("Glpi_register_keys error")
+        else:
+            if ret['name'] == name and ret['value'] == value:
+                return ret
+            else:
+                logging.getLogger().warning("We update the register_keys")
+                return self.update_Glpi_register_key(machines_id,
+                                                     name,
+                                                     value,
+                                                     comment)
+        return None
+
+    @DatabaseHelper._sessionm
+    def updateMachineGlpiInformationInventory(self,
+                                              session,
+                                              glpiinformation,
+                                              idmachine,
+                                              data):
+        retentity = self.create_Glpi_entity(glpiinformation['data']['complete_entity'][0],
+                                      glpiinformation['data']['entity'][0],
+                                      glpiinformation['data']['entity_glpi_id'][0])
+        if retentity is None:
+            entity_id_xmpp = "NULL"
+        else:
+            entity_id_xmpp = retentity['id']
+
+        retlocation = self.create_Glpi_location(glpiinformation['data']['complete_location'][0],
+                                      glpiinformation['data']['location'][0],
+                                      glpiinformation['data']['location_glpi_id'][0])
+        if retlocation is None:
+            location_id_xmpp = "NULL"
+        else:
+            location_id_xmpp = retlocation['id']
+        if 'win' in data['information']['info']['platform'].lower():
+            for regwindokey in glpiinformation['data']['reg']:
+                if glpiinformation['data']['reg'][regwindokey][0] is not None:
+                    self.create_Glpi_register_keys( idmachine,
+                                                    regwindokey,
+                                                    value=glpiinformation['data']['reg'][regwindokey][0])
+        updatedb=-1
+        try:
+            sql = '''
+                UPDATE `machines`
+                SET
+                    `uuid_inventorymachine` = '%s',
+                    `glpi_description`  = '%s',
+                    `glpi_owner_firstname` = '%s',
+                    `glpi_owner_realname` = '%s',
+                    `glpi_owner` = '%s',
+                    `model` = '%s',
+                    `manufacturer` = '%s',
+                    `glpi_entity_id` = %s,
+                    `glpi_location_id` = %s
+                WHERE
+                    `id` = '%s';''' % ("UUID%s" % glpiinformation['data']['uuidglpicomputer'][0],
+                                    glpiinformation['data']['description'][0],
+                                    glpiinformation['data']['owner_firstname'][0],
+                                    glpiinformation['data']['owner_realname'][0],
+                                    glpiinformation['data']['owner'][0],
+                                    glpiinformation['data']['model'][0],
+                                    glpiinformation['data']['manufacturer'][0],
+                                    entity_id_xmpp,
+                                    location_id_xmpp,
+                                    idmachine)
+            updatedb = session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+        return updatedb
 
     @DatabaseHelper._sessionm
     def updateName_Qa_custom_command( self,
@@ -1473,8 +1790,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     session.flush()
                     idorganization = result_organization.id
                 except Exception, e:
-                    logging.getLogger().debug("organization id : %s "\
-                        "is not exist" % organization_id)
+                    logging.getLogger().debug("organization id : %s does not exist" % organization_id)
                     return -1
             elif organization_name != None:
                 idorganization = self.getIdOrganization(organization_name)
@@ -1493,10 +1809,9 @@ class XmppMasterDatabase(DatabaseHelper):
             return packageslist.id
         except Exception, e:
             logging.getLogger().error(str(e))
-            logging.getLogger().debug("add Package [%s] for Organization :"\
-                "%s%s is not exist" % (packageuuid,
-                                     self.__returntextisNone__(organization_name),
-                                     self.__returntextisNone__(organization_id)))
+            logging.getLogger().debug("add Package [%s] for Organization : %s %s does not exists" % (packageuuid,
+                                                                                                     self.__returntextisNone__(organization_name),
+                                                                                                     self.__returntextisNone__(organization_id)))
             return -1
 
     def __returntextisNone__(para, text = ""):
@@ -1629,7 +1944,20 @@ class XmppMasterDatabase(DatabaseHelper):
                            kiosk_presence="False",
                            lastuser="",
                            keysyncthing="",
-                           uuid_serial_machine=""):
+                           uuid_serial_machine="",
+                           glpi_description="",
+                           glpi_owner_firstname="",
+                           glpi_owner_realname="",
+                           glpi_owner="",
+                           model="",
+                           manufacturer="",
+                           json_re="",
+                           glpi_entity_id=None,
+                           glpi_location_id=None,
+                           glpi_regkey_id=None):
+
+        if uuid_inventorymachine is None:
+            uuid_inventorymachine = ""
         msg ="Create Machine"
         pe = -1
         if uuid_serial_machine != "":
@@ -1754,6 +2082,16 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_machine.kiosk_presence = kiosk_presence
                 new_machine.lastuser = lastuser
                 new_machine.keysyncthing = keysyncthing
+                new_machine.glpi_description = glpi_description
+                new_machine.glpi_owner_firstname = glpi_owner_firstname
+                new_machine.glpi_owner_realname = glpi_owner_realname
+                new_machine.glpi_owner = glpi_owner
+                new_machine.model = model
+                new_machine.manufacturer = manufacturer
+                new_machine.json_re = json_re
+                new_machine.glpi_entity_id = glpi_entity_id
+                new_machine.glpi_location_id = glpi_location_id
+                new_machine.glpi_regkey_id = glpi_regkey_id
                 new_machine.enabled = '1'
                 new_machine.uuid_serial_machine = uuid_serial_machine
                 session.add(new_machine)
@@ -4582,6 +4920,214 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
         return updatedb
 
+    def datetimetotimestamp(self, date):
+        return int(time.mktime(date.timetuple()))
+
+    def query_to_array_of_dict(self, ret,
+                               timestmp = False,
+                               list_colonne_name = True,
+                               bycolumn=True,
+                               nbelement = True,
+                               listexclude= []):
+        """ convert sql objet to list of dict"""
+        result = []
+        if ret is not None:
+            countelt = ret.rowcount
+            columns_name = ret.keys()
+            columns_name = [x for x in columns_name if x not in listexclude]
+            if not bycolumn:
+                for row in ret:
+                    if row is not None:
+                        dictresult = {}
+                        for key, value in row.items():
+                            if key in listexclude:
+                                continue
+                            logger.warning("value type %s" % type(value))
+                            if value is  None :
+                                dictresult[key] = ''
+                            elif isinstance(value, datetime):
+                                dictresult[key] = value.strftime("%Y-%m-%d %H:%M:%S")
+                                if timestmp:
+                                    dictresult["%s_stmp"%key] = self.datetimetotimestamp(value)
+                            else:
+                                dictresult[key] = value
+                        logger.warning("value type %s" % type(value))
+                        result.append(dictresult)
+
+            else: # by column
+                # create list by name.
+                # initialisation structure result
+                if ret:
+                    result = {"data":{index : [] for index in columns_name}}
+                    if nbelement :
+                        result["count"] = countelt
+                    if list_colonne_name:
+                        result['data']['columns_name'] = columns_name
+                    for row in ret:
+                        if row is not None:
+                            for key, value in row.items():
+                                if key in listexclude:
+                                    continue
+                                if value is  None :
+                                    result['data'][key].append('')
+                                elif isinstance(value, datetime):
+                                    result['data'][key].append(value.strftime("%Y-%m-%d %H:%M:%S"))
+                                    #if timestmp:
+                                        #dictresult["%s_stmp"%key] = self.datetimetotimestamp(value)
+                                else:
+                                    result['data'][key].append(value)
+        else:
+            result =[{}]
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_machines_list(self, session, start, end, ctx):
+        def _likecriterium(field, filter):
+            return  " AND %s like '%%%s%%'"% (field,filter)
+        # fiel for table mach
+        machinefield = ['id', 'jid',
+                        'uuid_serial_machine',
+                        'enabled', 'platform',
+                        'archi','hostname',
+                        'uuid_inventorymachine','ippublic',
+                        'ip_xmpp', 'macaddress',
+                        'subnetxmpp', 'agenttype',
+                        'classutil', 'groupdeploy',
+                        'urlguacamole', 'picklekeypublic',
+                        'ad_ou_machine', 'ad_ou_user',
+                        'glpi_description',
+                        'lastuser', 'keysyncthing',
+                        'glpi_owner_firstname', 'glpi_owner_realname',
+                        'glpi_owner', 'glpi_entity_id',
+                        'glpi_location_id','model',
+                        'manufacturer','need_reconf', 'kiosk_presence']
+        # fiel for table ent and alias
+        entityfield =   {'entityname': "name",
+                         'entitypath': "complete_name",
+                         'entityid': "glpi_id"}
+        # fiel for table location and alias
+        locationfield = {'locationname': "name",
+                         'locationpath': "complete_name",
+                         'locationid': "glpi_id"}
+        debugfunction = 0
+        recherchefild = ""
+        ctx['field']=ctx['field'].strip()
+        ctx['filter']=ctx['filter'].strip()
+        if "@@@DEBUG@@@" in ctx['filter']:
+            debugfunction = 1
+            ctx['filter']  = ctx['filter'].replace("@@DEBUG@@", "").strip()
+
+        if 'field' in ctx and ctx['field'].strip() != '':
+            if 'filter' in ctx and ctx['filter'].strip() != '':
+                if ctx['field'] == "allchamp":
+                    tabelt=[]
+                    for indexchamp in machinefield:
+                        elt = "mach.%s" % indexchamp
+                        tabelt.append( "COALESCE(%s, '')"%elt)
+                    for indexchamp in entityfield:
+                        elt = "ent.%s" % entityfield[indexchamp]
+                        tabelt.append( "COALESCE(%s, '')"%elt)
+                    for indexchamp in locationfield:
+                        elt = "loc.%s" % locationfield[indexchamp]
+                        tabelt.append( "COALESCE(%s, '')"%elt)
+                    tabelt = ",'~',".join(tabelt)
+                    ## logger.warning("tabelt %s" % tabelt)
+                    recherchefild = " AND ( concat(%s) like '%%%s%%')"% (tabelt, ctx['filter'])
+                else:
+                    #traitement des boolean posssible value
+                    if ctx['field'] in ['need_reconf', 'kiosk_presence']:
+                        reply = str(ctx['filter']).lower().strip()
+                        if reply[0] in ['y', 'o', 't', 'v', '1' ]:
+                            ctx['filter'] = '1'
+                        elif reply[0] in ['n', 'f', '0' ]:
+                            ctx['filter'] = '0'
+                    if ctx['field'] in machinefield:
+                        ctx['field'] = "mach.%s"%ctx['field']
+                    elif ctx['field'] in entityfield:
+                       ctx['field'] = "ent.%s"%entityfield[ctx['field']]
+                    elif ctx['field'] in locationfield:
+                       ctx['field'] = "loc.%s"%locationfield[ctx['field']]
+                    if ctx['filter'].lower().strip() == "null":
+                        recherchefild = " AND %s IS NULL "%ctx['field']
+                    elif ctx['field'] in ['mach.id', 'mach.glpi_entity_id',
+                                            'mach.glpi_location_id',
+                                            'ent.glpi_id', 'loc.glpi_id']:
+                        recherchefild = " AND %s = '%s'"% (ctx['field'], ctx['filter'])
+                    else:
+                        recherchefild = _likecriterium(ctx['field'], ctx['filter'])
+        r=re.compile(r'reg_key_.*')
+        regs=filter(r.search, self.config.summary)
+        list_reg_columns_name = [getattr( self.config, regkey).split("|")[0].split("\\")[-1] \
+                        for regkey in regs]
+        computerpresence = ""
+        if 'computerpresence' in ctx:
+            if ctx['computerpresence'] == 'presence':
+                computerpresence = " AND enabled > 0 "
+            elif ctx['computerpresence'] == 'no_presence':
+                computerpresence = " AND enabled = 0 "
+        sql = """
+                SELECT
+                    mach.*,
+                    GROUP_CONCAT(DISTINCT CONCAT(reg.name, '|', reg.value)
+                        SEPARATOR '@@@') AS regedit,
+                    loc.name AS locationname,
+                    loc.complete_name AS locationpath,
+                    loc.glpi_id AS locationid,
+                    ent.name AS entityname,
+                    ent.complete_name AS entitypath,
+                    ent.glpi_id AS entityid,
+                    GROUP_CONCAT(DISTINCT IF( netw.ipaddress='', null,netw.ipaddress) SEPARATOR ',') AS listipadress,
+                    GROUP_CONCAT(DISTINCT IF( netw.broadcast='', null,netw.broadcast) SEPARATOR ',') AS broadcast,
+                    GROUP_CONCAT(DISTINCT IF( netw.gateway='', null,netw.gateway) SEPARATOR ',') AS gateway,
+                    GROUP_CONCAT(DISTINCT IF( netw.mask='', null, netw.mask) SEPARATOR ',') AS mask
+                FROM
+                    xmppmaster.machines mach
+                        LEFT OUTER JOIN
+                    glpi_location loc ON loc.id = mach.glpi_location_id
+                        LEFT OUTER JOIN
+                    glpi_entity ent ON ent.id = mach.glpi_entity_id
+                        LEFT OUTER JOIN
+                    glpi_register_keys reg ON reg.machines_id = mach.id
+                        LEFT OUTER JOIN
+                    network netw ON  netw.machines_id = mach.id
+                WHERE
+                    agenttype LIKE 'm%%'%s%s
+                GROUP BY mach.id
+                limit %s, %s;""" % (computerpresence,
+                                   recherchefild,
+                                   start, end)
+
+        if debugfunction:
+            logger.info("SQL request :  %s" % sql)
+
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        ret = self.query_to_array_of_dict(result,bycolumn=True,
+                                           listexclude=['picklekeypublic',
+                                                        'urlguacamole'])
+                                                        #'keysyncthing',
+                                           #'glpi_location_id',
+                                                        #'locationid',
+                                                        #'locationpath',
+                                                        #'locationname'
+        ret['column'] = self.config.summary
+        ret['list_reg_columns_name'] = list_reg_columns_name
+
+        for columkeyreg in list_reg_columns_name:
+            ret['data'][columkeyreg] =[]
+            for stringkeyregistre in ret['data']['regedit'] :
+                if stringkeyregistre == '':
+                    ret['data'][columkeyreg].append('')
+                else:
+                    for strkeyvalue in stringkeyregistre.split('@@@'):
+                        couplekeyvalue = strkeyvalue.split('|')
+                        if len(couplekeyvalue) == 2:
+                            if couplekeyvalue[0] == columkeyreg:
+                                ret['data'][columkeyreg].append(couplekeyvalue[1])
+        return ret
+
+
     @DatabaseHelper._sessionm
     def getPresenceuuid(self, session, uuid):
         machinespresente = session.query(Machines.uuid_inventorymachine).\
@@ -5523,7 +6069,6 @@ class XmppMasterDatabase(DatabaseHelper):
         """ information machine"""
         user = str(jid).split("@")[0]
         machine = session.query(Machines).filter(Machines.jid.like("%s%%" % user)).first()
-        #machine = session.query(Machines).filter(Machines.jid == jid).first()
         session.commit()
         session.flush()
         result = {}
@@ -7810,6 +8355,13 @@ where agenttype="machine" and groupdeploy in (
             Returns: list of deployments
         """
         session.execute("call countDeployLastSixMonths()")
+        query = session.execute("select @month6, @month5, @month4, @month3, @month2, @month1")
+        query = query.fetchall()[0]
+        return list(query)
+
+    @DatabaseHelper._sessionm
+    def get_count_agent_for_dashboard(self, session):
+        session.execute("call countAgentsLastSixMonths()")
         query = session.execute("select @month6, @month5, @month4, @month3, @month2, @month1")
         query = query.fetchall()[0]
         return list(query)

@@ -200,7 +200,8 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
                                            who,
                                            why,
                                            headercolumn)
-
+def get_machines_list(start, end, ctx):
+    return XmppMasterDatabase().get_machines_list(start, end, ctx)
 
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
@@ -1075,3 +1076,7 @@ def edit_rule_to_relay(id, relay_id, rule_id, subject):
 
 def get_minimal_relays_list(mode):
     return XmppMasterDatabase().get_minimal_relays_list(mode)
+
+def get_count_agent_for_dashboard():
+    result = XmppMasterDatabase().get_count_agent_for_dashboard()
+    return result

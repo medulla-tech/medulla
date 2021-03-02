@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-03 17:49+0100\n"
+"POT-Creation-Date: 2021-02-15 17:18+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: SPO <spointu@gmail.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -221,12 +221,12 @@ msgid "Password"
 msgstr "Mot de passe"
 
 #: modules/pkgs/pkgs/rsync.php:74
-msgid "Relay servers already synchronized : "
-msgstr "Serveurs relais déjà synchronisés :"
-
-#: modules/pkgs/pkgs/rsync.php:93
 msgid "Relay servers not yet synchronized : "
 msgstr "Serveurs relais pas encore synchronisés :"
+
+#: modules/pkgs/pkgs/rsync.php:93
+msgid "Relay servers already synchronized : "
+msgstr "Serveurs relais déjà synchronisés :"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
 msgid "Waiting..."
@@ -498,6 +498,10 @@ msgstr "Cliquer ici pour sélectionner les fichiers"
 msgid "Upload Queued Files"
 msgstr "Transmettre les fichiers en attente"
 
+#: modules/pkgs/pkgs/edit.php:499 modules/pkgs/pkgs/add.php:359
+msgid "Accentuated and special characters are not allowed"
+msgstr ""
+
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
 msgid "The rule %s has been removed"
@@ -574,7 +578,7 @@ msgstr "Faire un package vide"
 msgid "Package source"
 msgstr "Source des packages"
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:435
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:439
 msgid "Files directory"
 msgstr "Répertoire des fichiers"
 
@@ -608,12 +612,12 @@ msgstr ""
 "Vous pouvez également faire une recherche Google. Si vous vous êtes chanceux, voici une recherche Google qui pourrait vous aider:\\n\\n\n"
 "<a href=\"@@GOOGLE_SEARCH_URL@@\">Recherche Googleh</a>"
 
-#: modules/pkgs/pkgs/add.php:457
+#: modules/pkgs/pkgs/add.php:461
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Envoi de fichiers (<b><u title='%s'>%sM max</u></b>)"
 
-#: modules/pkgs/pkgs/add.php:457
+#: modules/pkgs/pkgs/add.php:461
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."

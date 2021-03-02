@@ -1168,7 +1168,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                        wol=0):
         sessiondeployementless = name_random(5, "arsdeploy")
         msg=[]
-        name = managepackage.getnamepackagefromuuidpackage(uuidpackage)
+        name = uuidpackage
         if name is not None:
             return self.applicationdeployjsonuuid(str(uuidmachine),
                                                   str(name),
@@ -1453,7 +1453,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         The package is already on the machine and also in relay server.
         """
         sessiondeployementless = name_random(5, "arsdeploy")
-        if managepackage.getversionpackagename(name) is None:
+        if managepackage.getversionpackageuuid(name) is None:
             logger.error("deploy %s error package name version missing" % (name))
             msg.append("<span class='log_err'>Package name or version missing for %s</span>"%(name))
             msg.append("Action : check the package %s"%name)
@@ -1485,7 +1485,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             fromuser=login)
             return False
         # Name the event
-        path = managepackage.getpathpackagename(name)
+        path = managepackage.getpathpackagebyuuid(name)
         if path is None:
             msg.append("<span class='log_err'>Package name missing in package %s</span>"%(name))
             msg.append("Action : check the package %s"%(name))
