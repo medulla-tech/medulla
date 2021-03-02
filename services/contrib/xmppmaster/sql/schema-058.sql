@@ -110,6 +110,6 @@ ADD CONSTRAINT `fk_glpi_location_id`
   ON UPDATE CASCADE;
 
 SET FOREIGN_KEY_CHECKS=1;
-UPDATE version SET Number = 56;
+UPDATE version SET Number = 58;
 
 COMMIT;
