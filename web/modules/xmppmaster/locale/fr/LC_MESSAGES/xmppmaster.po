@@ -5,17 +5,17 @@
 # 
 # Translators:
 # tekmans <yvan.manon@siveo.net>, 2019
-# SPO <spointu@gmail.com>, 2020
 # Nicolas Lécureuil <neoclust@mageia.org>, 2020
+# SPO <spointu@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-15 17:18+0100\n"
+"POT-Creation-Date: 2021-03-02 15:58+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
+"Last-Translator: SPO <spointu@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,7 +78,7 @@ msgstr "Liste de relais XMPP"
 #: modules/xmppmaster/xmppmaster/monitoring/alerts.php:29
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
 msgid "Monitoring Alerts"
-msgstr ""
+msgstr "Alertes de monitoring"
 
 #: modules/xmppmaster/infoPackage.inc.php:93
 msgid "XMPP Machine details"
@@ -107,11 +107,11 @@ msgstr "Journaux des groupes"
 
 #: modules/xmppmaster/infoPackage.inc.php:136
 msgid "XMPP Monitoring view"
-msgstr ""
+msgstr "Affichage du monitoring"
 
 #: modules/xmppmaster/infoPackage.inc.php:139
 msgid "File Viewer"
-msgstr ""
+msgstr "Visionneuse de fichiers"
 
 #: modules/xmppmaster/infoPackage.inc.php:143
 #: modules/xmppmaster/infoPackage.inc.php:147
@@ -263,7 +263,7 @@ msgstr "Liste de packages"
 #: modules/xmppmaster/infoPackage.inc.php:388
 #: modules/xmppmaster/xmppmaster/localSidebar.php:45
 msgid "Monitoring Configuration"
-msgstr ""
+msgstr "Configuration du monitoring"
 
 #: modules/xmppmaster/includes/html.inc.php:86
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:563
@@ -276,11 +276,11 @@ msgstr "Modifier le rafraichissement"
 
 #: modules/xmppmaster/includes/html.inc.php:385
 msgid "The file will be automatically saved"
-msgstr ""
+msgstr "Le fichier sera enregistré automatiquement"
 
 #: modules/xmppmaster/includes/html.inc.php:388
 msgid "Edit file: "
-msgstr ""
+msgstr "Editer le fichier:"
 
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
 #, php-format
@@ -309,11 +309,11 @@ msgstr "Wake on Lan"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:328
 msgid "IP Address (from XMPP)"
-msgstr ""
+msgstr "Adresse IP (de XMPP)"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:330
 msgid "IP Address (from GLPI)"
-msgstr ""
+msgstr "Adresse IP (de GLPI)"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:333
 msgid "Machine Details"
@@ -391,27 +391,27 @@ msgstr "Début du déploiement :"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:487
 msgid "XMPP Information"
-msgstr ""
+msgstr "Informations XMPP"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:493
 msgid "Machine JID"
-msgstr ""
+msgstr "JID machine"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:496
 msgid "Relay Server JID"
-msgstr ""
+msgstr "JID serveur relais"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:499
 msgid "Machine IP"
-msgstr ""
+msgstr "IP machine"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:502
 msgid "Relay Server IP"
-msgstr ""
+msgstr "IP serveur relais"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:505
 msgid "Master IP"
-msgstr ""
+msgstr "IP master"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:539
 msgid "Package and Dependency"
@@ -684,7 +684,7 @@ msgstr "Autre statut"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:456
 msgid "Summary Graph"
-msgstr ""
+msgstr "Graphique résumé"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:457
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:296
@@ -703,7 +703,7 @@ msgstr "Arrêté"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:471
 msgid "Detailed Graph"
-msgstr ""
+msgstr "Graphique détaillé"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:529
 msgid "Package Detail"
@@ -1311,55 +1311,55 @@ msgstr "Les tâches passées de tous les utilisateurs"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:59
 msgid "Monitoring for"
-msgstr ""
+msgstr "Monitoring pour"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:96
 msgid "Graph for one day"
-msgstr ""
+msgstr "Graphique sur une journée"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:96
 msgid "1 day"
-msgstr ""
+msgstr "1 jour"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:97
 msgid "Graph for one week"
-msgstr ""
+msgstr "Graphique sur une semaine"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:97
 msgid "1 week"
-msgstr ""
+msgstr "1 semaine"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:98
 msgid "Graph for one month"
-msgstr ""
+msgstr "Graphique sur un mois"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:98
 msgid "1 month"
-msgstr ""
+msgstr "1 mois"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:99
 msgid "Graph for three months"
-msgstr ""
+msgstr "Graphique sur trois mois"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:99
 msgid "3 months"
-msgstr ""
+msgstr "3 mois"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:125
 msgid "Panel Graph for one year"
-msgstr ""
+msgstr "Graphique sur une année"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:127
 msgid "custom"
-msgstr ""
+msgstr "personnalisé"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:134
 msgid "Monitoring item"
-msgstr ""
+msgstr "Item de monitoring"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:136
 msgid "Last value"
-msgstr ""
+msgstr "Dernière valeur"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:137
 msgid "History"
@@ -1437,23 +1437,23 @@ msgstr "La demande de copie de fichier a été enregistrée"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
 msgid "Acknowledge"
-msgstr ""
+msgstr "Acquitter"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:62
 msgid "Machine name"
-msgstr ""
+msgstr "Nom machine"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:66
 msgid "Date Event"
-msgstr ""
+msgstr "Date d'événement"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:67
 msgid "Event Type"
-msgstr ""
+msgstr "Type d'événement"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:68
 msgid "Machine Message"
-msgstr ""
+msgstr "Message machine"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:69
 msgid "Device"
@@ -1461,19 +1461,19 @@ msgstr "Périphrique"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:70
 msgid "Device Status"
-msgstr ""
+msgstr "Statut"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:71
 msgid "Device Message"
-msgstr ""
+msgstr "Message"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:72
 msgid "Device Serial"
-msgstr ""
+msgstr "Numéro de série"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:73
 msgid "Device Firmware"
-msgstr ""
+msgstr "Firmware"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:74
 msgid "Comment"
@@ -1482,21 +1482,21 @@ msgstr "Commentaire"
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:32
 #, php-format
 msgid "Failed acknowledging the alert : %s on device %s_%s (%s)"
-msgstr ""
+msgstr "Erreur d'acquittement de l'alerte : %s sur %s_%s (%s)"
 
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:34
 #, php-format
 msgid "Success acknowledging the alert : %s on device %s_%s (%s)"
-msgstr ""
+msgstr "Succès d'acquittement de l'alerte : %s sur %s_%s (%s)"
 
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:39
 #, php-format
 msgid "Acknowledge this alert : %s on device %s_%s (%s)"
-msgstr ""
+msgstr "Acquittement de l'alerte : %s sur %s_%s (%s)"
 
 #: modules/xmppmaster/xmppmaster/monitoring/monconfig.php:34
 msgid "Monitoring Configurator"
-msgstr ""
+msgstr "Configuration du monitoring"
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:47
 msgid "Console Agent Relay Server"
@@ -1571,7 +1571,7 @@ msgstr "Description de la commande"
 
 #: modules/xmppmaster/xmppmaster/filebrowser.php:61
 msgid "File viewer"
-msgstr ""
+msgstr "Visionneuse de fichiers"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Custom command name"

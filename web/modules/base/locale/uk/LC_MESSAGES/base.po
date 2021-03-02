@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-15 17:18+0100\n"
+"POT-Creation-Date: 2021-03-02 15:58+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -301,7 +301,7 @@ msgid "Computer list"
 msgstr "Список комп'ютерів"
 
 #: modules/base/infoPackage.inc.php:323
-#: modules/base/computers/localSidebar.php:8
+#: modules/base/computers/localSidebar.php:10
 msgid "Add computer"
 msgstr "Додати комп'ютер"
 
@@ -443,15 +443,20 @@ msgstr "Резервування"
 
 #: modules/base/computers/index.php:48
 #: modules/base/computers/localSidebar.php:5
-#: modules/glpi/glpi/machinesList.php:40
+#: modules/glpi/glpi/machinesListglpi.php:39
+#: modules/glpi/glpi/machinesList.php:39
 msgid "All computers"
 msgstr "Усі комп'ютери"
 
-#: modules/base/computers/index.php:52 modules/glpi/glpi/machinesList.php:44
+#: modules/base/computers/index.php:52
+#: modules/glpi/glpi/machinesListglpi.php:43
+#: modules/glpi/glpi/machinesList.php:43
 msgid "Online computers"
 msgstr "Комп'ютери у мережі"
 
-#: modules/base/computers/index.php:56 modules/glpi/glpi/machinesList.php:48
+#: modules/base/computers/index.php:56
+#: modules/glpi/glpi/machinesListglpi.php:47
+#: modules/glpi/glpi/machinesList.php:47
 msgid "Offline computers"
 msgstr "Комп'ютери поза мережею"
 
@@ -534,6 +539,10 @@ msgstr "Опис"
 #: modules/base/computers/edit.php:123
 msgid "Location"
 msgstr "Адреса"
+
+#: modules/base/computers/localSidebar.php:7
+msgid "All computers glpi"
+msgstr "glpi усіх комп'ютерів"
 
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
 msgid "Add user"
@@ -914,23 +923,27 @@ msgid "The password is too short."
 msgstr "Пароль є надто коротким."
 
 #: modules/base/includes/computers_list.inc.php:100
-#: modules/glpi/glpi/ajaxMachinesList.php:90
+#: modules/glpi/glpi/ajaxMachinesList.php:163
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:89
 msgid "Inventory"
 msgstr "Облік"
 
 #: modules/base/includes/computers_list.inc.php:101
-#: modules/glpi/glpi/ajaxMachinesList.php:96
+#: modules/glpi/glpi/ajaxMachinesList.php:169
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:95
 msgid "Monitoring"
 msgstr "Спостереження"
 
 #: modules/base/includes/computers_list.inc.php:102
-#: modules/glpi/glpi/ajaxMachinesList.php:87
-#: modules/glpi/glpi/ajaxMachinesList.php:91
+#: modules/glpi/glpi/ajaxMachinesList.php:160
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:86
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:90
 msgid "GLPI Inventory"
 msgstr "Облік GLPI"
 
 #: modules/base/includes/computers_list.inc.php:103
-#: modules/glpi/glpi/ajaxMachinesList.php:92
+#: modules/glpi/glpi/ajaxMachinesList.php:165
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:91
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:80
@@ -941,9 +954,12 @@ msgstr "докладне розгортання"
 
 #: modules/base/includes/computers_list.inc.php:104
 #: modules/base/includes/computers_list.inc.php:107
-#: modules/glpi/glpi/ajaxMachinesList.php:88
-#: modules/glpi/glpi/ajaxMachinesList.php:93
-#: modules/glpi/glpi/ajaxMachinesList.php:98
+#: modules/glpi/glpi/ajaxMachinesList.php:161
+#: modules/glpi/glpi/ajaxMachinesList.php:166
+#: modules/glpi/glpi/ajaxMachinesList.php:171
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:87
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:92
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
 msgid "Software deployment"
 msgstr "Розгортання програмного забезпечення"
 
@@ -953,8 +969,10 @@ msgstr "Читати журнал"
 
 #: modules/base/includes/computers_list.inc.php:109
 #: modules/base/includes/computers_list.inc.php:110
-#: modules/glpi/glpi/ajaxMachinesList.php:100
-#: modules/glpi/glpi/ajaxMachinesList.php:101
+#: modules/glpi/glpi/ajaxMachinesList.php:173
+#: modules/glpi/glpi/ajaxMachinesList.php:174
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:99
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:100
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:17
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:18
 #: modules/pulse2/includes/menu_actionaudit.php:78
@@ -966,10 +984,14 @@ msgstr "xmppconsole"
 #: modules/base/includes/computers_list.inc.php:113
 #: modules/base/includes/computers_list.inc.php:125
 #: modules/base/includes/computers_list.inc.php:126
-#: modules/glpi/glpi/ajaxMachinesList.php:103
-#: modules/glpi/glpi/ajaxMachinesList.php:104
-#: modules/glpi/glpi/ajaxMachinesList.php:105
-#: modules/glpi/glpi/ajaxMachinesList.php:108
+#: modules/glpi/glpi/ajaxMachinesList.php:176
+#: modules/glpi/glpi/ajaxMachinesList.php:177
+#: modules/glpi/glpi/ajaxMachinesList.php:178
+#: modules/glpi/glpi/ajaxMachinesList.php:181
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:102
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:103
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:104
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:107
 #: modules/pulse2/includes/menu_actionaudit.php:79
 #: modules/pulse2/includes/menu_actionaudit.php:82
 #: modules/pulse2/includes/menu_action.php:70
@@ -980,8 +1002,10 @@ msgstr "навігація файлами"
 
 #: modules/base/includes/computers_list.inc.php:119
 #: modules/base/includes/computers_list.inc.php:121
-#: modules/glpi/glpi/ajaxMachinesList.php:106
-#: modules/glpi/glpi/ajaxMachinesList.php:107
+#: modules/glpi/glpi/ajaxMachinesList.php:179
+#: modules/glpi/glpi/ajaxMachinesList.php:180
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:105
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:106
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:34
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:35
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:15
@@ -997,9 +1021,12 @@ msgstr "Редагувати файли налаштувань"
 #: modules/base/includes/computers_list.inc.php:128
 #: modules/base/includes/computers_list.inc.php:130
 #: modules/base/includes/computers_list.inc.php:141
-#: modules/glpi/glpi/ajaxMachinesList.php:97
-#: modules/glpi/glpi/ajaxMachinesList.php:112
-#: modules/glpi/glpi/ajaxMachinesList.php:122
+#: modules/glpi/glpi/ajaxMachinesList.php:170
+#: modules/glpi/glpi/ajaxMachinesList.php:185
+#: modules/glpi/glpi/ajaxMachinesList.php:195
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:96
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:111
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:121
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:55
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:19
@@ -1012,7 +1039,8 @@ msgid "Remote control"
 msgstr "Дистанційне керування"
 
 #: modules/base/includes/computers_list.inc.php:132
-#: modules/glpi/glpi/ajaxMachinesList.php:114
+#: modules/glpi/glpi/ajaxMachinesList.php:187
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:113
 #: modules/pulse2/includes/menu_group_action.php:76
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:156
 msgid "Imaging management"
@@ -1024,17 +1052,20 @@ msgstr "Отримати файл"
 
 #: modules/base/includes/computers_list.inc.php:134
 #: modules/base/users/ajaxFilter.php:85
-#: modules/glpi/glpi/ajaxMachinesList.php:115
+#: modules/glpi/glpi/ajaxMachinesList.php:188
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:114
 msgid "extTicket issue"
 msgstr "Вада extTicket"
 
 #: modules/base/includes/computers_list.inc.php:136
-#: modules/glpi/glpi/ajaxMachinesList.php:117
+#: modules/glpi/glpi/ajaxMachinesList.php:190
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:116
 msgid "Show Profile"
 msgstr "Показувати профіль"
 
 #: modules/base/includes/computers_list.inc.php:138
-#: modules/glpi/glpi/ajaxMachinesList.php:119
+#: modules/glpi/glpi/ajaxMachinesList.php:192
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:118
 #: modules/pulse2/includes/menu_actionaudit.php:68
 #: modules/pulse2/includes/menu_action.php:75
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:69
@@ -1046,13 +1077,15 @@ msgid "Computers list"
 msgstr "Список комп'ютерів"
 
 #: modules/base/includes/computers_list.inc.php:368
-#: modules/glpi/glpi/ajaxMachinesList.php:324
+#: modules/glpi/glpi/ajaxMachinesList.php:371
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:323
 #: modules/pulse2/includes/menu_actionaudit.php:66
 msgid "Backup status"
 msgstr "Стан резервного копіювання"
 
 #: modules/base/includes/computers_list.inc.php:408
-#: modules/glpi/glpi/ajaxMachinesList.php:361
+#: modules/glpi/glpi/ajaxMachinesList.php:408
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:360
 msgid "Delete computer"
 msgstr "Вилучити комп'ютер"
 
@@ -1739,8 +1772,10 @@ msgstr[3] "%d неактивних служб"
 msgid "Appstream"
 msgstr "Appstream"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:109
-#: modules/glpi/glpi/ajaxMachinesList.php:110
+#: modules/glpi/glpi/ajaxMachinesList.php:182
+#: modules/glpi/glpi/ajaxMachinesList.php:183
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:108
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:109
 msgid "files viewer"
 msgstr "переглядач файлів"
 
