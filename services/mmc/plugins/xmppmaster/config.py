@@ -87,6 +87,36 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         if self.has_option("bowserfile", "rootfilesystem"):
             self.rootfilesystem = self.get('browserfile', 'rootfilesystem')
 
+        # This will be used to configure the machine table from GLPI
+        # the reg_key_ to show are defined  reg_key_1 reg_key_2
+        # regarding the reg_key_1 et reg_key_2 defined in the inventory section
+        self.summary = ['cn', 'description', 'os', 'type', 'user', 'entity']
+        if self.has_option("computer_list", "summary"):
+            self.summary = self.get("computer_list", "summary").split(' ')
+
+        ## Registry keys that need to be pushed in an inventory
+        ## Format: reg_key_x = path_to_key|key_label_shown_in_mmc
+        ## eg.:
+        ## reg_key_1 = HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA|LUAEnabled
+        ## reg_key_2 = HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\ProductName|WindowsVersion
+        ## max_key_index = 2
+
+        ##reg_key_1 = HKEY_CURRENT_USER\Software\test\dede|dede
+        #reg_key_1 = HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA|LUAEnabled
+        #reg_key_2 = HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\ProductName|ProductName
+        #max_key_index=2
+
+        self.max_key_index = 50
+        if self.has_option("inventory", "max_key_index"):
+            self.max_key_index = self.getint("inventory", "max_key_index")
+        # create mutex
+        self.arraykeys=[]
+        for index_key in range(1, self.max_key_index+1):
+            if self.has_option("inventory", "reg_key_%s" % index_key):
+                self.arraykeys.append( self.get("inventory", "reg_key_%s" % index_key))
+
+        self.max_key_index = len(self.arraykeys)
+
         ###################Chatroom for dynamic configuration of agents#######################
         # Dynamic configuration information
         self.confjidchatroom = "%s@%s" % (
