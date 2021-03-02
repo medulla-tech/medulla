@@ -216,44 +216,44 @@ $raw = 0;
 // And tabs in detail page will be broken
 $cn = [];
 $chaine = array(
-        'hostname'              => _T("Hostname ", 'xmppmaster'),
-        'jid'                   => _T("Jabber ID ", 'xmppmaster'),
-        'platform'              => _T("Platform " , 'xmppmaster'),
-        'archi'                 => _T("Architecture " , 'xmppmaster'),
-        'uuid_serial_machine'   => _T("Machine UUID " , 'xmppmaster'),
-        'need_reconf'           => _T("Reconf. requested " , 'xmppmaster'),
-        'enabled'               => _T("Online " , 'xmppmaster'),
-        'ip_xmpp'               => _T("IP address ", 'xmppmaster'),
-        'subnetxmpp'            => _T("Subnet " , 'xmppmaster'),
-        'ippublic'              => _T("Public IP ", 'xmppmaster'),
-        'macaddress'            => _T("Mac address " , 'xmppmaster'),
-        'agenttype'             => _T("Agent type " , 'xmppmaster'),
-        'classutil'             => _T("Usage class ", 'xmppmaster'),
-        'groupdeploy'           => _T("Relay JID ", 'xmppmaster'),
-        'ad_ou_machine'         => _T("AD machine OU " , 'xmppmaster'),
-        'ad_ou_user'            => _T("AD user OU " , 'xmppmaster'),
-        'kiosk_presence'        => _T("Kiosk enabled " , 'xmppmaster'),
-        'lastuser'              => _T("Last user connected " , 'xmppmaster'),
-        'keysyncthing'          => _T("Syncthing ID " , 'xmppmaster'),
-        'regedit'               => _T("Registry keys "  , 'xmppmaster'),
-        'id'                    => _T("Machine ID ", 'xmppmaster'),
-        'uuid_inventorymachine' => _T("GLPI ID " , 'xmppmaster'),
-        'glpi_description'      => _T("GLPI description "  , 'xmppmaster'),
-        'glpi_owner_firstname'  => _T("Owner firstname " , 'xmppmaster'),
-        'glpi_owner_realname'   => _T("Owner lastname ", 'xmppmaster'),
-        'glpi_owner'            => _T("Owner " , 'xmppmaster'),
-        'model'                 => _T("Model ", 'xmppmaster'),
-        'manufacturer'          => _T("Manufacturer ", 'xmppmaster'),
-        'entityname'            => _T("Short entity name " , 'xmppmaster'),
-        'entitypath'            => _T("Full entity name ", 'Xmppmaster'),
-        'entityid'              => _T("Entity ID ", 'xmppmaster'),
-        'locationname'          => _T("Short location name " , 'xmppmaster'),
-        'locationpath'          => _T("Full location name ", 'Xmppmaster'),
-        'locationid'            => _T("Location ID ", 'xmppmaster'),
-        'listipadress'          => _T("IP addresses " , 'xmppmaster'),
-        'mask'                  => _T("Network mask " , 'xmppmaster'),
-        'broadcast'             => _T("Broadcast address ", 'xmppmaster'),
-        'gateway'               => _T("Gateway address " , 'xmppmaster'));
+        'hostname'              => _T("Hostname", 'xmppmaster'),
+        'jid'                   => _T("Jabber ID", 'xmppmaster'),
+        'platform'              => _T("Platform" , 'xmppmaster'),
+        'archi'                 => _T("Architecture" , 'xmppmaster'),
+        'uuid_serial_machine'   => _T("Machine UUID" , 'xmppmaster'),
+        'need_reconf'           => _T("Reconf. requested" , 'xmppmaster'),
+        'enabled'               => _T("Online" , 'xmppmaster'),
+        'ip_xmpp'               => _T("IP address", 'xmppmaster'),
+        'subnetxmpp'            => _T("Subnet" , 'xmppmaster'),
+        'ippublic'              => _T("Public IP", 'xmppmaster'),
+        'macaddress'            => _T("Mac address" , 'xmppmaster'),
+        'agenttype'             => _T("Agent type" , 'xmppmaster'),
+        'classutil'             => _T("Usage class", 'xmppmaster'),
+        'groupdeploy'           => _T("Relay JID", 'xmppmaster'),
+        'ad_ou_machine'         => _T("AD machine OU" , 'xmppmaster'),
+        'ad_ou_user'            => _T("AD user OU" , 'xmppmaster'),
+        'kiosk_presence'        => _T("Kiosk enabled" , 'xmppmaster'),
+        'lastuser'              => _T("Last user connected" , 'xmppmaster'),
+        'keysyncthing'          => _T("Syncthing ID" , 'xmppmaster'),
+        'regedit'               => _T("Registry keys"  , 'xmppmaster'),
+        'id'                    => _T("Machine ID", 'xmppmaster'),
+        'uuid_inventorymachine' => _T("GLPI ID" , 'xmppmaster'),
+        'glpi_description'      => _T("GLPI description"  , 'xmppmaster'),
+        'glpi_owner_firstname'  => _T("Owner firstname" , 'xmppmaster'),
+        'glpi_owner_realname'   => _T("Owner lastname", 'xmppmaster'),
+        'glpi_owner'            => _T("Owner" , 'xmppmaster'),
+        'model'                 => _T("Model", 'xmppmaster'),
+        'manufacturer'          => _T("Manufacturer", 'xmppmaster'),
+        'entityname'            => _T("Short entity name" , 'xmppmaster'),
+        'entitypath'            => _T("Full entity name", 'Xmppmaster'),
+        'entityid'              => _T("Entity ID", 'xmppmaster'),
+        'locationname'          => _T("Short location name" , 'xmppmaster'),
+        'locationpath'          => _T("Full location name", 'Xmppmaster'),
+        'locationid'            => _T("Location ID", 'xmppmaster'),
+        'listipadress'          => _T("IP addresses" , 'xmppmaster'),
+        'mask'                  => _T("Network mask" , 'xmppmaster'),
+        'broadcast'             => _T("Broadcast address", 'xmppmaster'),
+        'gateway'               => _T("Gateway address" , 'xmppmaster'));
 
 
 foreach ($machines1['list_reg_columns_name'] as $columns_name){
@@ -268,7 +268,7 @@ foreach ($machines1['list_reg_columns_name'] as $columns_name){
             if(in_array($mach,$exclud ) ||  $value[$index] ==""){
                 continue;
             }
-            $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$mach] ."</td><td class='ttabletd'>".$value[$index]."</td></tr>";
+            $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$mach] ."</td><td class='ttabletd'>: ".$value[$index]."</td></tr>";
         }
         $chainestr .= "</table>";
         $cn[] = sprintf('<span class="infomach" mydata="%s">%s</pan>', $chainestr, $datas['hostname'][$index]);
