@@ -38,6 +38,8 @@ SERVICES='mmc-agent \
           pulse-xmpp-master-substitute-monitoring \
           pulse-xmpp-master-substitute-all'
 
+systemctl daemon-reload
+
 for service in ${SERVICES}; do
   if systemctl is-enabled ${service} &>/dev/null ; then
     if [ -z $1 ]; then
