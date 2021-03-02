@@ -454,10 +454,15 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
                <span class="searchfield" onchange="pushSearch(); return false;">
                  <select id="field">
                      <option value="allchamp">search all fields</option>
-                     <?
-                     foreach( $this->fields as $keys => $value){
-                        echo '<option value="'.$value.'">'.$keys.'</option>';
-                     }
+                     <?php
+                        foreach( $this->fields as $keys => $value){
+                            if ($keys == "Hostname: " ){
+                                echo '<option  selected="selected" value="'.$value.'">'.$keys.'</option>';
+                            }
+                            else{
+                                echo '<option value="'.$value.'">'.$keys.'</option>';
+                            }
+                        }
                      ?>
                  </select>
                </span>
