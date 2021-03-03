@@ -255,6 +255,49 @@ $chaine = array(
         'broadcast'             => _T("Broadcast address", 'xmppmaster'),
         'gateway'               => _T("Gateway address" , 'xmppmaster'));
 
+$orderkey = array( "glpi_owner",
+            "mask",
+            "uuid_inventorymachine",
+            "id",
+            "jid",
+            "ip_xmpp",
+            "ad_ou_user",
+            "columns_name",
+            "entityname",
+            "hostname",
+            "listipadress",
+            "platform",
+            "locationid",
+            "glpi_entity_id",
+            "lastuser",
+            "ippublic",
+            "need_reconf",
+            "broadcast",
+            "classutil",
+            "uuid_serial_machine",
+            "agenttype",
+            "keysyncthing",
+            "groupdeploy",
+            "glpi_owner_realname",
+            "glpi_owner_firstname",
+            "gateway",
+            "locationpath",
+            "entityid",
+            "entitypath",
+            "manufacturer",
+            "macaddress",
+            "glpi_description",
+            "archi",
+            "enabled",
+            "ProductName",
+            "subnetxmpp",
+            "ad_ou_machine",
+            "regedit",
+            "locationname",
+            "model",
+            "EnableLUA",
+            "kiosk_presence",
+            "glpi_location_id");
 
 foreach ($machines1['list_reg_columns_name'] as $columns_name){
     $chaine[$columns_name] = $columns_name;
@@ -264,11 +307,12 @@ foreach ($machines1['list_reg_columns_name'] as $columns_name){
     for ($index = 0; $index < count($datas['hostname'] ); $index++) {
         $chainestr ="<table class='ttable'>";
 
-        foreach($datas as $mach => $value ){
-            if(in_array($mach,$exclud ) ||  $value[$index] ==""){
-                continue;
+        foreach($orderkey as $keyordor){
+            $dd=$datas[$keyordor];
+            if(in_array($mach,$exclud ) ||  $dd[$index] == ""){
+                 continue;
             }
-            $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$mach] ."</td><td class='ttabletd'>: ".$value[$index]."</td></tr>";
+            $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$keyordor] ."</td><td class='ttabletd'>".$dd[$index]."</td></tr>";
         }
         $chainestr .= "</table>";
         $cn[] = sprintf('<span class="infomach" mydata="%s">%s</pan>', $chainestr, $datas['hostname'][$index]);
