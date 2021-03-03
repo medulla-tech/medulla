@@ -68,7 +68,7 @@ from mmc.agent import PluginManager
 import traceback,sys
 class Glpi95(DyngroupDatabaseHelper):
     """
-    Singleton Class to query the glpi database in version >= 9.4
+    Singleton Class to query the glpi database in version >= 9.5
 
     """
     is_activated = False
@@ -1335,6 +1335,14 @@ class Glpi95(DyngroupDatabaseHelper):
             return [[self.os_sp.c.name, query[3]]]
         elif query[2] == 'Architecture':
             return [[self.os_arch.c.name, query[3]]]
+        elif query[2] == 'Printer name':
+            return [[self.printers.c.name, query[3]]]
+        elif query[2] == 'Printer serial':
+            return [[self.printers.c.serial, query[3]]]
+        elif query[2] == 'Peripheral name':
+            return [[self.peripheral.c.name, query[3]]]
+        elif query[2] == 'Peripheral serial':
+            return [[self.peripheral.c.serial, query[3]]]
         elif query[2] == 'Group': # TODO double join on Entity
             return [[self.group.c.name, query[3]]]
         elif query[2] == 'Network':
@@ -3909,6 +3917,7 @@ class Glpi95(DyngroupDatabaseHelper):
         ret = query.group_by(self.net.c.name).all()
         session.close()
         return ret
+
     def getMachineByNetwork(self, ctx, filt):
         """ @return: all machines that have this contact number """
         session = create_session()
@@ -4043,6 +4052,62 @@ class Glpi95(DyngroupDatabaseHelper):
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.os_arch.c.name == filt)
+        ret = query.all()
+        session.close()
+
+    def getMachineByPrinter(self, ctx, filt):
+        session = create_session()
+        query = session.query(Machine).select_from(self.machine.join(self.computersitems)).\
+        select_from(self.computersitems.join(self.printers))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.printers.c.name == filt)
+        ret = query.all()
+        session.close()
+
+    def getMachineByPrinterserial(self, ctx, filt):
+        session = create_session()
+        query = session.query(Machine).distinct(Machine.id).\
+            join(Computersitems, Machine.id == Computersitems.computers_id).\
+            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
+                                     Computersitems.itemtype == 'Printer')).\
+            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
+                                          Computersitems.itemtype == 'Peripheral'))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.printers.c.serial == filt)
+        ret = query.all()
+        session.close()
+
+    def getMachineByPeripheral(self, ctx, filt):
+        session = create_session()
+        query = session.query(Machine).distinct(Machine.id).\
+            join(Computersitems, Machine.id == Computersitems.computers_id).\
+            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
+                                          Computersitems.itemtype == 'Printer')).\
+            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
+                                          Computersitems.itemtype == 'Peripheral'))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.peripherals.c.name == filt)
+        ret = query.all()
+        session.close()
+
+    def getMachineByPeripheralserial(self, ctx, filt):
+        session = create_session()
+        query = session.query(Machine).distinct(Machine.id).\
+            join(Computersitems, Machine.id == Computersitems.computers_id).\
+            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
+                                          Computersitems.itemtype == 'Printer')).\
+            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
+                                          Computersitems.itemtype == 'Peripheral'))
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.peripherals.c.serial == filt)
         ret = query.all()
         session.close()
 
@@ -4988,6 +5053,26 @@ class Glpi95(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getAllNamePrinters(self, ctx, filt = ''):
+        """ @return: all printer name in the GLPI database """
+        session = create_session()
+        query = session.query(Printers)
+        if filter != '':
+            query = query.filter(Printers.name.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllSerialPrinters(self, ctx, filt = ''):
+        """ @return: all printer serial in the GLPI database """
+        session = create_session()
+        query = session.query(Printers)
+        if filter != '':
+            query = query.filter(Printers.serial.like('%'+filt+'%'))
+        ret = query.all()
+        session.close()
+        return ret
+
     @DatabaseHelper._sessionm
     def addRegistryCollectContent(self, session, computers_id, registry_id, key, value):
         """
@@ -5476,6 +5561,12 @@ class OsVersion(DbTOA):
     pass
 
 class Computersitems(DbTOA):
+    pass
+
+class Computersviewitemsprinter(DbTOA):
+    pass
+
+class Computersviewitemsperipheral(DbTOA):
     pass
 
 class Monitors(DbTOA):
