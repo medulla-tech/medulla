@@ -213,12 +213,22 @@ def associatePackages(pid, fs, level = 0):
 def _remove_non_ascii(text):
     return unidecode(unicode(text, encoding = "utf-8"))
 
-def _create_uuid_sympa(label):
+def create_simple_package_uuid(label, localisation=None):
+    """
+    This function is used to create more simpler packages uuids
+    Args:
+        label: This is the name of the package
+        localisation: Tells if localisation feature is enabled.
+                      This is set to None by default
+    Returns: It returns the new simple package uuid
+    """
+    if localisation is not None:
+        label = label + "_" + localisation
     data = _remove_non_ascii((str(uuid.uuid1())[:9] + label+"_").replace(' ', '_'))
-    data = name_random(36 , pref=data)[:36]
+    data = name_random(36, pref=data)[:36]
     return data
 
-def to_json_xmppdeploy( package):
+def to_json_xmppdeploy(package):
         """
             create JSON xmppdeploy descriptor
         """
@@ -301,11 +311,10 @@ def to_json_xmppdeploy( package):
 
         return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
 
-def putPackageDetail( package, need_assign = True):
+def putPackageDetail(package, need_assign = True):
     if package['id'] == "" :
         # create uuid
-        #package['id'] = str( uuid.uuid1())
-        package['id'] = _create_uuid_sympa(package['label'])
+        package['id'] = create_simple_package_uuid(package['label'])
     if len(package['id']) != 36:
         return False
     packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
