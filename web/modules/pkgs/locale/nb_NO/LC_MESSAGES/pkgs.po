@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-03 17:49+0100\n"
+"POT-Creation-Date: 2021-03-02 15:57+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -219,12 +219,12 @@ msgid "Password"
 msgstr "Passord"
 
 #: modules/pkgs/pkgs/rsync.php:74
-msgid "Relay servers already synchronized : "
-msgstr "Relé-serverne er allerede synkronisert:"
-
-#: modules/pkgs/pkgs/rsync.php:93
 msgid "Relay servers not yet synchronized : "
 msgstr "Relé-serverne er ikke synkronisert enda:"
+
+#: modules/pkgs/pkgs/rsync.php:93
+msgid "Relay servers already synchronized : "
+msgstr "Relé-serverne er allerede synkronisert:"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
 msgid "Waiting..."
@@ -496,6 +496,10 @@ msgstr "Klikk her for å velge filer"
 msgid "Upload Queued Files"
 msgstr "Last opp køede filer"
 
+#: modules/pkgs/pkgs/edit.php:499 modules/pkgs/pkgs/add.php:359
+msgid "Accentuated and special characters are not allowed"
+msgstr ""
+
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
 msgid "The rule %s has been removed"
@@ -571,7 +575,7 @@ msgstr "Skap en tom pakke"
 msgid "Package source"
 msgstr "Pakkekilde"
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:435
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:439
 msgid "Files directory"
 msgstr "Filkatalog"
 
@@ -605,12 +609,12 @@ msgstr ""
 "Du kan også be Google om lydløs installasjonsbrytere. Hvis du føler deg heldig, er dette et Google-søk som kan hjelpe: \\n\\n\n"
 "<a href=\"@@GOOGLE_SEARCH_URL@@\">Google søk</a>"
 
-#: modules/pkgs/pkgs/add.php:457
+#: modules/pkgs/pkgs/add.php:461
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Filopplastning (<b><u title='%s'>%s M maks</u></b>)"
 
-#: modules/pkgs/pkgs/add.php:457
+#: modules/pkgs/pkgs/add.php:461
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -630,7 +634,7 @@ msgstr "Oppdater seksjon"
 #: modules/pkgs/includes/actions/action_section_update.php:25
 #: modules/pkgs/includes/actions/action_pwd_package.php:84
 #: modules/pkgs/includes/actions/action_comment.php:73
-#: modules/pkgs/includes/actions/action_unzip_file.php:346
+#: modules/pkgs/includes/actions/action_unzip_file.php:370
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:220
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:436
 #: modules/pkgs/includes/actions/actionrestart.php:72
@@ -664,8 +668,8 @@ msgstr "Trinnetikett:"
 
 #: modules/pkgs/includes/actions/action_pwd_package.php:56
 #: modules/pkgs/includes/actions/action_pwd_package.php:70
-#: modules/pkgs/includes/actions/action_unzip_file.php:90
-#: modules/pkgs/includes/actions/action_unzip_file.php:104
+#: modules/pkgs/includes/actions/action_unzip_file.php:114
+#: modules/pkgs/includes/actions/action_unzip_file.php:128
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:134
 #: modules/pkgs/includes/actions/actionprocessscript.php:57
 #: modules/pkgs/includes/actions/actionprocessscript.php:71
@@ -676,7 +680,7 @@ msgstr "Alternativ pakke"
 
 #: modules/pkgs/includes/actions/action_pwd_package.php:85
 #: modules/pkgs/includes/actions/action_comment.php:74
-#: modules/pkgs/includes/actions/action_unzip_file.php:347
+#: modules/pkgs/includes/actions/action_unzip_file.php:371
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:437
 #: modules/pkgs/includes/actions/actionrestart.php:73
 #: modules/pkgs/includes/actions/actioncleaning.php:38
@@ -702,55 +706,55 @@ msgstr "Informasjon"
 msgid "Your log comments !"
 msgstr "Dine loggkommentarer !"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:53
+#: modules/pkgs/includes/actions/action_unzip_file.php:77
 msgid "Unzip File"
 msgstr "Pakk ut filen"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:62
+#: modules/pkgs/includes/actions/action_unzip_file.php:86
 msgid "Step label:"
 msgstr "Trinnetikett:"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:71
+#: modules/pkgs/includes/actions/action_unzip_file.php:95
 msgid "Zip file:"
 msgstr "Zip fil:"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:119
+#: modules/pkgs/includes/actions/action_unzip_file.php:143
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:68
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:283
 #: modules/pkgs/includes/actions/actionprocessscript.php:121
 msgid "10 first lines of result"
 msgstr "10 første resultatlinjer"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:120
+#: modules/pkgs/includes/actions/action_unzip_file.php:144
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:69
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:284
 #: modules/pkgs/includes/actions/actionprocessscript.php:122
 msgid "20 first lines of result"
 msgstr "20 første resultatlinjer"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:121
+#: modules/pkgs/includes/actions/action_unzip_file.php:145
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:70
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:285
 #: modules/pkgs/includes/actions/actionprocessscript.php:123
 msgid "30 first lines of result"
 msgstr "30 første resultatlinjer"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:122
+#: modules/pkgs/includes/actions/action_unzip_file.php:146
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:71
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:286
 #: modules/pkgs/includes/actions/actionprocessscript.php:124
 msgid "Complete results"
 msgstr "Komplette resultater"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:123
+#: modules/pkgs/includes/actions/action_unzip_file.php:147
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:72
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:287
 #: modules/pkgs/includes/actions/actionprocessscript.php:125
 msgid "10 last lines of result"
 msgstr "10 siste resultatlinjer"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:124
-#: modules/pkgs/includes/actions/action_unzip_file.php:126
+#: modules/pkgs/includes/actions/action_unzip_file.php:148
+#: modules/pkgs/includes/actions/action_unzip_file.php:150
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:73
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:75
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:288
@@ -760,21 +764,21 @@ msgstr "10 siste resultatlinjer"
 msgid "20 last lines of result"
 msgstr "20 siste resultatlinjer"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:125
+#: modules/pkgs/includes/actions/action_unzip_file.php:149
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:74
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:289
 #: modules/pkgs/includes/actions/actionprocessscript.php:127
 msgid "30 last lines of result"
 msgstr "30 siste resultatlinjer"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:127
+#: modules/pkgs/includes/actions/action_unzip_file.php:151
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:76
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:291
 #: modules/pkgs/includes/actions/actionprocessscript.php:129
 msgid "The last line of result"
 msgstr "Den siste resultatlinjen"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:173
+#: modules/pkgs/includes/actions/action_unzip_file.php:197
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:122
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:137
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:337
@@ -784,18 +788,18 @@ msgstr "Den siste resultatlinjen"
 msgid "Return result"
 msgstr "Returnert resultat"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:214
-#: modules/pkgs/includes/actions/action_unzip_file.php:229
+#: modules/pkgs/includes/actions/action_unzip_file.php:238
+#: modules/pkgs/includes/actions/action_unzip_file.php:253
 msgid "Unzip to specified folder"
 msgstr "Pakk ut til angitt mappe"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:248
-#: modules/pkgs/includes/actions/action_unzip_file.php:262
+#: modules/pkgs/includes/actions/action_unzip_file.php:272
+#: modules/pkgs/includes/actions/action_unzip_file.php:286
 msgid "Go to step"
 msgstr "Gå til trinn"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:285
-#: modules/pkgs/includes/actions/action_unzip_file.php:300
+#: modules/pkgs/includes/actions/action_unzip_file.php:309
+#: modules/pkgs/includes/actions/action_unzip_file.php:324
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:158
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:173
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:374
@@ -805,8 +809,8 @@ msgstr "Gå til trinn"
 msgid "On success go to step"
 msgstr "Ved suksess gå til trinn"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:320
-#: modules/pkgs/includes/actions/action_unzip_file.php:335
+#: modules/pkgs/includes/actions/action_unzip_file.php:344
+#: modules/pkgs/includes/actions/action_unzip_file.php:359
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:193
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:208
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:409

@@ -285,7 +285,7 @@ def to_json_xmppdeploy( package):
             "info": { "Dependency": [],
                       "description": package['description'],
                       "metagenerator": "standard",
-                      "methodetransfert": "pullcurl",
+                      "methodetransfert": "pushrsync",
                       "name": str(package['label'] + ' ' +
                                   package['version'] + ' (' +
                                   package['id']+')'),

@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2020
+# Yuri Chornoivan <yurchor@ukr.net>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-03 17:49+0100\n"
+"POT-Creation-Date: 2021-03-02 15:57+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -223,12 +223,12 @@ msgid "Password"
 msgstr "Пароль"
 
 #: modules/pkgs/pkgs/rsync.php:74
-msgid "Relay servers already synchronized : "
-msgstr "Проміжні сервери, які вже синхронізовано:"
-
-#: modules/pkgs/pkgs/rsync.php:93
 msgid "Relay servers not yet synchronized : "
 msgstr "Проміжні сервери, які ще не синхронізовано:"
+
+#: modules/pkgs/pkgs/rsync.php:93
+msgid "Relay servers already synchronized : "
+msgstr "Проміжні сервери, які вже синхронізовано:"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
 msgid "Waiting..."
@@ -500,6 +500,10 @@ msgstr "Натисніть, щоб вибрати файли"
 msgid "Upload Queued Files"
 msgstr "Вивантажити файли з черги"
 
+#: modules/pkgs/pkgs/edit.php:499 modules/pkgs/pkgs/add.php:359
+msgid "Accentuated and special characters are not allowed"
+msgstr "Не можна використовувати символи з акцентами або спеціальні символи"
+
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
 msgid "The rule %s has been removed"
@@ -575,7 +579,7 @@ msgstr "Створити порожній пакунок"
 msgid "Package source"
 msgstr "Джерело пакунка"
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:435
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:439
 msgid "Files directory"
 msgstr "Каталог файлів"
 
@@ -609,12 +613,12 @@ msgstr ""
 "        Крім того, ви можете пошукати у Google параметри команди для автоматичного встановлення. Якщо вам скрізь таланить, можете спробувати ось таку адресу для пошуку у Google:\\n\\n\n"
 "        <a href=\"@@GOOGLE_SEARCH_URL@@\">Пошук у Google</a>"
 
-#: modules/pkgs/pkgs/add.php:457
+#: modules/pkgs/pkgs/add.php:461
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Вивантаження файлів (<b><u title='%s'>макс. %s МБ</u></b>)"
 
-#: modules/pkgs/pkgs/add.php:457
+#: modules/pkgs/pkgs/add.php:461
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -634,7 +638,7 @@ msgstr "Оновити розділ"
 #: modules/pkgs/includes/actions/action_section_update.php:25
 #: modules/pkgs/includes/actions/action_pwd_package.php:84
 #: modules/pkgs/includes/actions/action_comment.php:73
-#: modules/pkgs/includes/actions/action_unzip_file.php:346
+#: modules/pkgs/includes/actions/action_unzip_file.php:370
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:220
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:436
 #: modules/pkgs/includes/actions/actionrestart.php:72
@@ -668,8 +672,8 @@ msgstr "Мітка кроку:"
 
 #: modules/pkgs/includes/actions/action_pwd_package.php:56
 #: modules/pkgs/includes/actions/action_pwd_package.php:70
-#: modules/pkgs/includes/actions/action_unzip_file.php:90
-#: modules/pkgs/includes/actions/action_unzip_file.php:104
+#: modules/pkgs/includes/actions/action_unzip_file.php:114
+#: modules/pkgs/includes/actions/action_unzip_file.php:128
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:134
 #: modules/pkgs/includes/actions/actionprocessscript.php:57
 #: modules/pkgs/includes/actions/actionprocessscript.php:71
@@ -680,7 +684,7 @@ msgstr "Альтернативний пакунок"
 
 #: modules/pkgs/includes/actions/action_pwd_package.php:85
 #: modules/pkgs/includes/actions/action_comment.php:74
-#: modules/pkgs/includes/actions/action_unzip_file.php:347
+#: modules/pkgs/includes/actions/action_unzip_file.php:371
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:437
 #: modules/pkgs/includes/actions/actionrestart.php:73
 #: modules/pkgs/includes/actions/actioncleaning.php:38
@@ -706,55 +710,55 @@ msgstr "Інформація"
 msgid "Your log comments !"
 msgstr "Ваші коментарі до журналу!"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:53
+#: modules/pkgs/includes/actions/action_unzip_file.php:77
 msgid "Unzip File"
 msgstr "Розпакувати файл"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:62
+#: modules/pkgs/includes/actions/action_unzip_file.php:86
 msgid "Step label:"
 msgstr "Мітка кроку:"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:71
+#: modules/pkgs/includes/actions/action_unzip_file.php:95
 msgid "Zip file:"
 msgstr "Файл архіву:"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:119
+#: modules/pkgs/includes/actions/action_unzip_file.php:143
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:68
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:283
 #: modules/pkgs/includes/actions/actionprocessscript.php:121
 msgid "10 first lines of result"
 msgstr "10 перших рядків результату"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:120
+#: modules/pkgs/includes/actions/action_unzip_file.php:144
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:69
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:284
 #: modules/pkgs/includes/actions/actionprocessscript.php:122
 msgid "20 first lines of result"
 msgstr "20 перших рядків результату"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:121
+#: modules/pkgs/includes/actions/action_unzip_file.php:145
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:70
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:285
 #: modules/pkgs/includes/actions/actionprocessscript.php:123
 msgid "30 first lines of result"
 msgstr "30 перших рядків результату"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:122
+#: modules/pkgs/includes/actions/action_unzip_file.php:146
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:71
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:286
 #: modules/pkgs/includes/actions/actionprocessscript.php:124
 msgid "Complete results"
 msgstr "Результати повністю"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:123
+#: modules/pkgs/includes/actions/action_unzip_file.php:147
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:72
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:287
 #: modules/pkgs/includes/actions/actionprocessscript.php:125
 msgid "10 last lines of result"
 msgstr "10 останніх рядків результату"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:124
-#: modules/pkgs/includes/actions/action_unzip_file.php:126
+#: modules/pkgs/includes/actions/action_unzip_file.php:148
+#: modules/pkgs/includes/actions/action_unzip_file.php:150
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:73
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:75
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:288
@@ -764,21 +768,21 @@ msgstr "10 останніх рядків результату"
 msgid "20 last lines of result"
 msgstr "20 останніх рядків результату"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:125
+#: modules/pkgs/includes/actions/action_unzip_file.php:149
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:74
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:289
 #: modules/pkgs/includes/actions/actionprocessscript.php:127
 msgid "30 last lines of result"
 msgstr "30 останніх рядків результату"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:127
+#: modules/pkgs/includes/actions/action_unzip_file.php:151
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:76
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:291
 #: modules/pkgs/includes/actions/actionprocessscript.php:129
 msgid "The last line of result"
 msgstr "Останній рядок результату"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:173
+#: modules/pkgs/includes/actions/action_unzip_file.php:197
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:122
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:137
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:337
@@ -788,18 +792,18 @@ msgstr "Останній рядок результату"
 msgid "Return result"
 msgstr "Повернути результат"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:214
-#: modules/pkgs/includes/actions/action_unzip_file.php:229
+#: modules/pkgs/includes/actions/action_unzip_file.php:238
+#: modules/pkgs/includes/actions/action_unzip_file.php:253
 msgid "Unzip to specified folder"
 msgstr "Розпакувати до вказаної теки"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:248
-#: modules/pkgs/includes/actions/action_unzip_file.php:262
+#: modules/pkgs/includes/actions/action_unzip_file.php:272
+#: modules/pkgs/includes/actions/action_unzip_file.php:286
 msgid "Go to step"
 msgstr "Перейти до кроку"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:285
-#: modules/pkgs/includes/actions/action_unzip_file.php:300
+#: modules/pkgs/includes/actions/action_unzip_file.php:309
+#: modules/pkgs/includes/actions/action_unzip_file.php:324
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:158
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:173
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:374
@@ -809,8 +813,8 @@ msgstr "Перейти до кроку"
 msgid "On success go to step"
 msgstr "Якщо успішно, перейти до кроку"
 
-#: modules/pkgs/includes/actions/action_unzip_file.php:320
-#: modules/pkgs/includes/actions/action_unzip_file.php:335
+#: modules/pkgs/includes/actions/action_unzip_file.php:344
+#: modules/pkgs/includes/actions/action_unzip_file.php:359
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:193
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:208
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:409

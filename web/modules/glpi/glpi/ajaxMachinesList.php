@@ -48,6 +48,76 @@ li.displayg a {
     opacity:0.5;
 }
 </style>
+
+<style>
+
+.tooltip{   font-size:20px; }
+.ui-tooltip {
+                padding: 6px 4px 8px 4px;
+                max-width: 600px;
+                color: #ffffff;
+                background-color: #000000;
+                -moz-box-shadow: 4px 4px 10px #888;
+                -webkit-box-shadow: 4px 4px 10px #888;
+                box-shadow:4px 4px 6px #888;
+                border-radius: 15px;}
+
+.tooltip-content {
+                    padding: 2px;
+                    color: #FF00AA;
+                    max-width: 800px;}
+
+.ttabletr   {   margin:0;
+                padding:0;
+                background:none;
+                border:none;
+                border-collapse:collapse;
+                border-spacing:0;
+                background-image:none;}
+
+
+.ttabletd   {   margin:0;
+                padding:0;
+                background:none;
+                border:none;
+                border-collapse:collapse;
+                border-spacing:0;
+                background-image:none;}
+
+.ttable tr td{  margin:0;
+                padding:0;
+                background:none;
+                border:none;
+                border-collapse:collapse;
+                border-spacing:0;
+                background-image:none;
+                font-size:.9em;
+
+</style>
+
+<script>
+jQuery(function()
+{
+	 jQuery( function() {
+      jQuery(".infomach").tooltip({
+      position: { my: "left+15 center", at: "right center" },
+          items: "[mydata]",
+          content: function() {
+              var element = jQuery( this );
+              if ( element.is( "[mydata]" ) ) {
+              console.log(element.attr('mydata'));
+                  var text = element.attr('mydata');
+                  return text;
+              }
+
+          }
+      });
+  } );
+
+});
+</script>
+
+
 <?php
 
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
@@ -69,13 +139,16 @@ $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
+
+
 if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
     $ctx['computerpresence'] = $_SESSION['computerpresence'];
 
-$machines = xmlrpc_get_machines_list($start, $maxperpage, $ctx);
 
-$count = $machines["count"];
-$datas = $machines["data"];
+    $machines1 = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
+
+$count = $machines1["count"];
+$datas = $machines1["data"];
 $xmppdatas = $machines['xmppdata'];
 
 $presencesClass = [];
@@ -88,7 +161,7 @@ $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","invento
 $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
 
 $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
-$glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
+//$glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
 $logAction = new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
 $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
 
@@ -135,181 +208,199 @@ $actioneditremoteconfiguration = array();
 $actionxmppbrowsing = array();
 $actionfilebrowser = array();
 $actionxmppbrowsingne = array();
+?>
 
+<?
 $raw = 0;
 // Do not modify directly $datas['cn'] it is reused later for $params
 // And tabs in detail page will be broken
 $cn = [];
+$chaine = array(
+        'hostname'              => _T("Hostname", 'xmppmaster'),
+        'jid'                   => _T("Jabber ID", 'xmppmaster'),
+        'platform'              => _T("Platform" , 'xmppmaster'),
+        'archi'                 => _T("Architecture" , 'xmppmaster'),
+        'uuid_serial_machine'   => _T("Machine UUID" , 'xmppmaster'),
+        'need_reconf'           => _T("Reconf. requested" , 'xmppmaster'),
+        'enabled'               => _T("Online" , 'xmppmaster'),
+        'ip_xmpp'               => _T("IP address", 'xmppmaster'),
+        'subnetxmpp'            => _T("Subnet" , 'xmppmaster'),
+        'ippublic'              => _T("Public IP", 'xmppmaster'),
+        'macaddress'            => _T("Mac address" , 'xmppmaster'),
+        'agenttype'             => _T("Agent type" , 'xmppmaster'),
+        'classutil'             => _T("Usage class", 'xmppmaster'),
+        'groupdeploy'           => _T("Relay JID", 'xmppmaster'),
+        'ad_ou_machine'         => _T("AD machine OU" , 'xmppmaster'),
+        'ad_ou_user'            => _T("AD user OU" , 'xmppmaster'),
+        'kiosk_presence'        => _T("Kiosk enabled" , 'xmppmaster'),
+        'lastuser'              => _T("Last user connected" , 'xmppmaster'),
+        'keysyncthing'          => _T("Syncthing ID" , 'xmppmaster'),
+        'regedit'               => _T("Registry keys"  , 'xmppmaster'),
+        'id'                    => _T("Machine ID", 'xmppmaster'),
+        'uuid_inventorymachine' => _T("GLPI ID" , 'xmppmaster'),
+        'glpi_description'      => _T("GLPI description"  , 'xmppmaster'),
+        'glpi_owner_firstname'  => _T("Owner firstname" , 'xmppmaster'),
+        'glpi_owner_realname'   => _T("Owner lastname", 'xmppmaster'),
+        'glpi_owner'            => _T("Owner" , 'xmppmaster'),
+        'model'                 => _T("Model", 'xmppmaster'),
+        'manufacturer'          => _T("Manufacturer", 'xmppmaster'),
+        'entityname'            => _T("Short entity name" , 'xmppmaster'),
+        'entitypath'            => _T("Full entity name", 'Xmppmaster'),
+        'entityid'              => _T("Entity ID", 'xmppmaster'),
+        'locationname'          => _T("Short location name" , 'xmppmaster'),
+        'locationpath'          => _T("Full location name", 'Xmppmaster'),
+        'locationid'            => _T("Location ID", 'xmppmaster'),
+        'listipadress'          => _T("IP addresses" , 'xmppmaster'),
+        'mask'                  => _T("Network mask" , 'xmppmaster'),
+        'broadcast'             => _T("Broadcast address", 'xmppmaster'),
+        'gateway'               => _T("Gateway address" , 'xmppmaster'));
 
-foreach($datas['uuid'] as $uuid)
-{
-	if(isset($xmppdatas['UUID'.$uuid])){
-		$cnstr = '<span ';
-		$cnstr .= 'title="';
-		$cnstr .= "jid : \t ". $xmppdatas['UUID'.$uuid]['jid']."\n";
-		$cnstr .= "classutil : \t ". $xmppdatas['UUID'.$uuid]['classutil']."\n";
-		$cnstr .= "ad_ou_user : \t ". $xmppdatas['UUID'.$uuid]['ad_ou_user']."\n";
-		$cnstr .= "ad_ou_machine : \t ". $xmppdatas['UUID'.$uuid]['ad_ou_machine']."\n";
-		$cnstr .= "need_reconf : \t ". $xmppdatas['UUID'.$uuid]['need_reconf']."\n";
-		$cnstr .= "keysyncthing : \t ". $xmppdatas['UUID'.$uuid]['keysyncthing']."\n";
-		$cnstr .= "groupdeploy : \t ". $xmppdatas['UUID'.$uuid]['groupdeploy']."\n";
-		$cnstr .= "subnetxmpp : \t ". $xmppdatas['UUID'.$uuid]['subnetxmpp']."\n";
-		$cnstr .= "ip_xmpp : \t ". $xmppdatas['UUID'.$uuid]['ip_xmpp']."\n";
-		$cnstr .= "ippublic : \t ". $xmppdatas['UUID'.$uuid]['ippublic']."\n";
-		$cnstr .= "kiosk_presence : \t ". $xmppdatas['UUID'.$uuid]['kiosk_presence']."\n";
-		$cnstr .= '"';
-		$cnstr .= '>'.$datas['cn'][$raw].'</span>';
-		$cn[] = $cnstr;
-	}
-	else
-		$cn[] = $datas['cn'][$raw];
-	$presencesClass[] = ($datas['presence'][$raw] == 1) ? "machineNamepresente" : "machineName";
+$orderkey = array( "glpi_owner",
+            "mask",
+            "uuid_inventorymachine",
+            "id",
+            "jid",
+            "ip_xmpp",
+            "ad_ou_user",
+            "columns_name",
+            "entityname",
+            "hostname",
+            "listipadress",
+            "platform",
+            "locationid",
+            "glpi_entity_id",
+            "lastuser",
+            "ippublic",
+            "need_reconf",
+            "broadcast",
+            "classutil",
+            "uuid_serial_machine",
+            "agenttype",
+            "keysyncthing",
+            "groupdeploy",
+            "glpi_owner_realname",
+            "glpi_owner_firstname",
+            "gateway",
+            "locationpath",
+            "entityid",
+            "entitypath",
+            "manufacturer",
+            "macaddress",
+            "glpi_description",
+            "archi",
+            "enabled",
+            "ProductName",
+            "subnetxmpp",
+            "ad_ou_machine",
+            "regedit",
+            "locationname",
+            "model",
+            "EnableLUA",
+            "kiosk_presence",
+            "glpi_location_id");
 
-	if (in_array("inventory", $_SESSION["supportModList"])) {
-		$actionInventory[] = $inventAction;
-	}
-	else {
-		$actionInventory[] = $glpiAction;
-	}
-
-		if ( in_array("xmppmaster", $_SESSION["supportModList"])  ) {
-			$actionxmppquickdeoloy[]=$DeployQuickxmpp;
-			$action_deploy_msc[] = $mscAction;
-			$action_logs_msc[]   = $logAction;
-			$actionMonitoring[] = $monitoring;
-			if ( $datas['presence'][$raw] ){
-				if (isExpertMode()){
-					$actionConsole[] = $inventconsole;
-					$actionxmppbrowsing[] = $inventxmppbrowsing;
-					$actionfilebrowser[] = $fileviewer;
-					$actioneditremoteconfiguration[] = $editremoteconfiguration;
-				}
-				else{
-					$actionxmppbrowsingne[] = $inventxmppbrowsingne;
-				}
-			}
-			else{
-				if (isExpertMode()){
-					$actionConsole[] = $inventnoconsole;
-					$actionxmppbrowsing[] = $inventnoxmppbrowsing;
-					$actionfilebrowser[] = $filenoviewer;
-					$actioneditremoteconfiguration[] = $editnoremoteconfiguration;
-				}
-				else{
-					$actionxmppbrowsingne[] = $inventnoxmppbrowsingne;
-				}
-			}
-	}
-	else{
-			if ( in_array("msc", $_SESSION["supportModList"])  ) {
-				$action_deploy_msc[] = $mscAction;
-				$action_logs_msc[]   = $logAction;
-			}
-	 }
-
-	 if (in_array("imaging", $_SESSION["supportModList"])) {
-		$actionImaging[] = $imgAction;
-	}
-
-	if (in_array("extticket", $_SESSION["supportModList"])) {
-		$actionExtTicket[] = $extticketAction;
-	}
-
-	if (in_array("guacamole", $_SESSION["supportModList"]) && in_array("xmppmaster", $_SESSION["supportModList"])) {
-		if ($datas['presence'][$raw]){
-			$actionVncClient[] = $vncClientAction;
-		}else
-		{//show icone vnc griser
-			$actionVncClient[] = $vncClientActiongriser;
-		}
-	}else
-	if ($msc_vnc_show_icon) {
-		$actionVncClient[] = $vncClientAction;
-	}
-
-	$params[] = [
-		'objectUUID'=>'UUID'.$datas['uuid'][$raw],
-		'UUID'=>$datas['uuid'][$raw],
-		'cn'=>$datas['cn'][$raw],
-		'os'=>$datas['os'][$raw],
-		'type'=>$datas['type'][$raw],
-		'presencemachinexmpp'=>$datas['presence'][$raw],
-		'entity' => $datas['entity'][$raw],
-		'user' => $datas['user'][$raw],
-    'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
-	];
-
-	foreach($datas as $field=>$table){
-		/*The reg array is composed of multiple array. This example reproduces the datas structure with the reg key
-			$datas = [
-				'description' => [
-					'description for computer 1',
-					'description for computer 2',
-					'description for computer 3'
-				],
-				'os' => [
-					'os for computer 1',
-					'os for computer 2',
-					'os for computer 3'
-				],
-				'reg' => [
-					'enableLUA' => [
-						'enableLUA value for computer 1',
-						'enableLUA value for computer 2',
-						'enableLUA value for computer 3'
-					],
-					'MyKey2'=> [
-						'MyKey2 value for computer 1',
-						'MyKey2 value for computer 2',
-						'MyKey2 value for computer 3'
-					]
-				]
-			]
-		*/
-		if($field != 'reg' && $field != 'cn' )
-		{ // The selectable class is used to fill the search field;
-			$datas[$field][$raw] = '<span class="selectable">'.$datas[$field][$raw].'</span>';
-		}
-	}
-	$raw++;
+foreach ($machines1['list_reg_columns_name'] as $columns_name){
+    $chaine[$columns_name] = $columns_name;
 }
+
+    $exclud=array('glpi_location_id', 'glpi_entity_id', 'columns_name',"list_reg_columns_name" );
+    for ($index = 0; $index < count($datas['hostname'] ); $index++) {
+        $chainestr ="<table class='ttable'>";
+
+        foreach($orderkey as $keyordor){
+            $dd=$datas[$keyordor];
+            if(in_array($mach,$exclud ) ||  $dd[$index] == ""){
+                 continue;
+            }
+            $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$keyordor] ."</td><td class='ttabletd'>".$dd[$index]."</td></tr>";
+        }
+        $chainestr .= "</table>";
+        $cn[] = sprintf('<span class="infomach" mydata="%s">%s</pan>', $chainestr, $datas['hostname'][$index]);
+    }
+    $index=0;
+    foreach(  $datas['enabled'] as $valeue){
+        $actionInventory[] = $glpiAction;
+        $actionxmppquickdeoloy[]=$DeployQuickxmpp;
+        $action_deploy_msc[] = $mscAction;
+        $action_logs_msc[]   = $logAction;
+        $actionMonitoring[] = $monitoring;
+        if ($valeue == 1){
+            $presencesClass[] = "machineNamepresente";
+
+            if (isExpertMode()){
+                $actionConsole[] = $inventconsole;
+                $actionxmppbrowsing[] = $inventxmppbrowsing;
+                $actionfilebrowser[] = $fileviewer;
+                $actioneditremoteconfiguration[] = $editremoteconfiguration;
+            }
+            else{
+                $actionxmppbrowsingne[] = $inventxmppbrowsingne;
+            }
+        } else {
+            $presencesClass[] = "machineName";}
+
+            if (isExpertMode()){
+                $actionConsole[] = $inventnoconsole;
+                $actionxmppbrowsing[] = $inventnoxmppbrowsing;
+                $actionfilebrowser[] = $filenoviewer;
+                $actioneditremoteconfiguration[] = $editnoremoteconfiguration;
+            }
+            else{
+                $actionxmppbrowsingne[] = $inventnoxmppbrowsingne;
+            }
+
+        if (in_array("imaging", $_SESSION["supportModList"])) {
+            $actionImaging[] = $imgAction;
+        }
+
+        if (in_array("extticket", $_SESSION["supportModList"])) {
+            $actionExtTicket[] = $extticketAction;
+        }
+
+        if (in_array("guacamole", $_SESSION["supportModList"]) && in_array("xmppmaster", $_SESSION["supportModList"])) {
+            if ($datas['enabled'][$index]){
+                $actionVncClient[] = $vncClientAction;
+            }else
+            {//show icone vnc griser
+                $actionVncClient[] = $vncClientActiongriser;
+            }
+        }else
+        if ($msc_vnc_show_icon) {
+            $actionVncClient[] = $vncClientAction;
+        }
+        $params[] = [
+            'objectUUID'=>$datas['uuid_inventorymachine'][$index],
+            'UUID'=>str_replace("UUID", "", $datas['uuid_inventorymachine'][$index]),
+            'cn'=>$datas['hostname'][$index],
+            'os'=>$datas['platform'][$index],
+            'type'=>$datas['model'][$index],
+            'presencemachinexmpp'=>$datas['enabled'][$index],
+            'entity' => $datas['entityname'][$index],
+            'user' => $datas['glpi_owner'][$index],
+        'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
+        ];
+
+        $index++;
+    }
+
 
 $n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
 $n->setParamInfo($params); // [params]
-if(array_key_exists("description", $datas))
-  $n->addExtraInfo($datas["description"], _T("Description", "glpi"));
-if(array_key_exists("os", $datas))
-  $n->addExtraInfo($datas["os"], _T("Operating System", "glpi"));
-if(array_key_exists("type", $datas))
-  $n->addExtraInfo($datas["type"], _T("Computer Type", "glpi"));
-if(array_key_exists('user', $datas))
-  $n->addExtraInfo($datas["user"], _T("Last Logged User", "glpi"));
-if(array_key_exists('owner', $datas))
-  $n->addExtraInfo($datas["owner"], _T("Owner", "glpi"));
-if(array_key_exists("entity", $datas))
-  $n->addExtraInfo($datas["entity"], _T("Entity", "glpi"));
-if(array_key_exists("location", $datas))
-  $n->addExtraInfo($datas["location"], _T("Localization", "glpi"));
-if(array_key_exists("owner_firstname", $datas))
-  $n->addExtraInfo($datas["owner_firstname"], _T("Owner Firstname", "glpi"));
-if(array_key_exists("owner_realname", $datas))
-  $n->addExtraInfo($datas["owner_realname"], _T("Owner Real Name", "glpi"));
-if(array_key_exists("model", $datas))
-  $n->addExtraInfo($datas["model"], _T("Model", "glpi"));
-if(array_key_exists("manufacturer", $datas))
-  $n->addExtraInfo($datas["manufacturer"], _T("Manufacturer", "glpi"));
-if(array_key_exists("reg", $datas))
-{
-  foreach($datas['reg'] as $key => $value)
-  {
-	// Here $value is the table of reg values
-	foreach($datas["reg"][$key] as $id=>$regvalue){
-		$regvalue = '<span class="selectable">'.$regvalue.'</span>';
-	}
-    $n->addExtraInfo($datas["reg"][$key], _T($key, "glpi"));
-  }
-}
 
+if(in_array ("description", $machines1["column"])) $n->addExtraInfo($datas["glpi_description"], _T("Description", "glpi"));
+if(in_array("os", $machines1["column"])) $n->addExtraInfo($datas["platform"], _T("Operating System", "glpi"));
+if(in_array("type",  $machines1["column"])) $n->addExtraInfo($datas["model"], _T("Computer Type", "glpi"));
+if(in_array('user', $machines1["column"])) $n->addExtraInfo($datas["lastuser"], _T("Last Logged User", "glpi"));
+if(in_array('owner',  $machines1["column"]))  $n->addExtraInfo($datas["glpi_owner"], _T("Owner", "glpi"));
+if(in_array("entity",  $machines1["column"])) $n->addExtraInfo($datas["entityname"], _T("Entity", "glpi"));
+if(in_array("location", $machines1["column"])) $n->addExtraInfo($datas["locationname"], _T("Localization", "glpi"));
+if(in_array("owner_firstname",  $machines1["column"]))  $n->addExtraInfo($datas["glpi_owner_firstname"], _T("Owner Firstname", "glpi"));
+if(in_array("owner_realname", $machines1["column"]))  $n->addExtraInfo($datas["glpi_owner_realname"], _T("Owner Real Name", "glpi"));
+if(in_array("manufacturer", $machines1["column"])) $n->addExtraInfo($datas["manufacturer"], _T("Manufacturer", "glpi"));
+
+foreach($machines1['list_reg_columns_name'] as $columnamekey){
+    $n->addExtraInfo($datas[$columnamekey], $columnamekey);
+}
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])){
   $n->addActionItemArray($actionInventory);
@@ -376,4 +467,6 @@ jQuery(".selectable").on("click", function(){
 	jQuery("#param").val(jQuery(this).text());
 	pushSearch();
 });
+
+
 </script>
