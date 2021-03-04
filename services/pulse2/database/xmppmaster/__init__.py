@@ -8365,3 +8365,100 @@ where agenttype="machine" and groupdeploy in (
         query = session.execute("select @month6, @month5, @month4, @month3, @month2, @month1")
         query = query.fetchall()[0]
         return list(query)
+
+
+
+    @DatabaseHelper._sessionm
+    def get_ars_group_in_list_clusterid(self,
+                                        session,
+                                        clusterid,
+                                        enabled=None):
+        """
+        This function is used to get the list of the ars from a cluster.
+
+        Args:
+            session: the SQLAlchemy session
+            clusterid: the id of the used cluster 
+            enabled: Tell if we used enabled ars only
+                     If None we do not use enabled in the SQL request
+        Returns:
+            It returns informations from the ars of a cluster
+            like jid, name, classutil, enabled, etc. 
+        """
+        setsearch = clusterid
+        if isinstance(clusterid, list):
+            listidcluster = [x for x in set(clusterid)]
+            if listidcluster:
+                setsearch=("%s" % listidcluster)[1:-1]
+            else:
+                raise
+        searchclusterars = "(%s)" % setsearch
+
+        sql ="""SELECT
+                    relayserver.id AS ars_id,
+                    relayserver.urlguacamole AS urlguacamole,
+                    relayserver.subnet AS subnet,
+                    relayserver.nameserver AS nameserver,
+                    relayserver.ipserver AS ipserver,
+                    relayserver.ipconnection AS ipconnection,
+                    relayserver.port AS port,
+                    relayserver.portconnection AS portconnection,
+                    relayserver.mask AS mask,
+                    relayserver.jid AS jid,
+                    relayserver.longitude AS longitude,
+                    relayserver.latitude AS latitude,
+                    relayserver.enabled AS enabled,
+                    relayserver.mandatory AS mandatory,
+                    relayserver.switchonoff AS switchonoff,
+                    relayserver.classutil AS classutil,
+                    relayserver.groupdeploy AS groupdeploy,
+                    relayserver.package_server_ip AS package_server_ip,
+                    relayserver.package_server_port AS package_server_port,
+                    relayserver.moderelayserver AS moderelayserver,
+                    relayserver.keysyncthing AS keysyncthing,
+                    relayserver.syncthing_port AS syncthing_port,
+                    has_cluster_ars.id_cluster AS id_cluster,
+                    cluster_ars.name AS name_cluster
+                FROM
+                    xmppmaster.relayserver
+                        INNER JOIN
+                    xmppmaster.has_cluster_ars ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
+                        INNER JOIN
+                    xmppmaster.cluster_ars ON xmppmaster.cluster_ars.id = xmppmaster.has_cluster_ars.id_cluster
+                WHERE
+                    id_cluster IN %s """ % (searchclusterars)
+        if enabled is not None:
+            sql += """AND `relayserver`.`enabled` = %s""" % enabled
+        sql += ";"
+        clusterList = session.execute(sql)
+        session.commit()
+        session.flush()
+        arsListInfos = []
+        for ars in clusterList:
+            arsInfos = {"ars_id": ars[0],
+                       "urlguacamole": ars[1],
+                       "subnet": ars[2],
+                       "nameserver": ars[3],
+                       "ipserver": ars[4],
+                       "ipconnection": ars[5],
+                       "port": ars[6],
+                       "portconnection": ars[7],
+                       "mask": ars[8],
+                       "jid": ars[9],
+                       "longitude": ars[10],
+                       "latitude": ars[11],
+                       "enabled": ars[12],
+                       "mandatory": ars[13],
+                       "switchonoff": ars[14],
+                       "classutil": ars[15],
+                       "groupdeploy": ars[16],
+                       "package_server_ip": ars[17],
+                       "package_server_port": ars[18],
+                       "moderelayserver": ars[19],
+                       "keysyncthing": ars[20],
+                       "syncthing_port": ars[21],
+                       "id_cluster": ars[22],
+                       "name_cluster": ars[23]}
+            arsListInfos.append(arsInfos)
+        return arsListInfos
+

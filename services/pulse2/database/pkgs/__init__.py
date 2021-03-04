@@ -44,6 +44,12 @@ from pulse2.database.pkgs.orm.extensions import Extensions
 from pulse2.database.pkgs.orm.dependencies import Dependencies
 from pulse2.database.pkgs.orm.syncthingsync import Syncthingsync
 from pulse2.database.pkgs.orm.package_pending_exclusions import Package_pending_exclusions
+from pulse2.database.pkgs.orm.pkgs_rules_algos import Pkgs_rules_algos
+from pulse2.database.pkgs.orm.pkgs_rules_global import Pkgs_rules_global
+from pulse2.database.pkgs.orm.pkgs_rules_local import Pkgs_rules_local
+from pulse2.database.pkgs.orm.pkgs_shares_ars import Pkgs_shares_ars
+from pulse2.database.pkgs.orm.pkgs_shares_ars_web import Pkgs_shares_ars_web
+from pulse2.database.pkgs.orm.pkgs_shares import Pkgs_shares
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster import XmppMasterDatabase
 # Pulse 2 stuff
@@ -131,7 +137,47 @@ class PkgsDatabase(DatabaseHelper):
                 self.metadata,
                 autoload = True
             )
+            #pkgs_shares_ars_web
+            self.pkgs_shares_ars_web = Table(
+                "pkgs_shares_ars_web",
+                self.metadata,
+                autoload = True
+            )
 
+            #pkgs_shares_ars
+            self.pkgs_shares_ars = Table(
+                "pkgs_shares_ars",
+                self.metadata,
+                autoload = True
+            )
+
+            #pkgs_shares
+            self.pkgs_shares = Table(
+                "pkgs_shares",
+                self.metadata,
+                autoload = True
+            )
+
+            #pkgs_rules_algos
+            self.pkgs_rules_algos = Table(
+                "pkgs_rules_algos",
+                self.metadata,
+                autoload = True
+            )
+
+            #pkgs_rules_global
+            self.pkgs_rules_global = Table(
+                "pkgs_rules_global",
+                self.metadata,
+                autoload = True
+            )
+
+            #pkgs_rules_local
+            self.pkgs_rules_local = Table(
+                "pkgs_rules_local",
+                self.metadata,
+                autoload = True
+            )
         except NoSuchTableError, e:
             self.logger.error("Cant load the Pkgs database : table '%s' does not exists"%(str(e.args[0])))
             return False
@@ -146,6 +192,12 @@ class PkgsDatabase(DatabaseHelper):
         mapper(Dependencies, self.dependencies)
         mapper(Syncthingsync, self.syncthingsync)
         mapper(Package_pending_exclusions, self.package_pending_exclusions)
+        mapper(Pkgs_shares, self.pkgs_shares)
+        mapper(Pkgs_shares_ars, self.pkgs_shares_ars)
+        mapper(Pkgs_shares_ars_web, self.pkgs_shares_ars_web)
+        mapper(Pkgs_rules_algos, self.pkgs_rules_algos)
+        mapper(Pkgs_rules_global, self.pkgs_rules_global)
+        mapper(Pkgs_rules_local, self.pkgs_rules_local)
     ####################################
 
     @DatabaseHelper._sessionm
@@ -530,3 +582,159 @@ class PkgsDatabase(DatabaseHelper):
         query = query.delete(synchronize_session='fetch')
         session.commit()
         session.flush()
+
+    @DatabaseHelper._sessionm
+    def SetPkgs_shares(self,
+                       session,
+                       name,
+                       comments,
+                       enabled,
+                       shareType,
+                       uri,
+                       ars_name,
+                       ars_id,
+                       share_path):
+        try:
+            new_Pkgs_shares = Pkgs_shares()
+            new_Pkgs_shares.name = name
+            new_Pkgs_shares.comments = comments
+            new_Pkgs_shares.enabled = enabled
+            new_Pkgs_shares.type = shareType
+            new_Pkgs_shares.uri = uri
+            new_Pkgs_shares.ars_name = ars_name
+            new_Pkgs_shares.ars_id = ars_id
+            new_Pkgs_shares.share_path = share_path
+            session.add(new_Pkgs_shares)
+            session.commit()
+            session.flush()
+            return new_Pkgs_shares.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return None
+
+    @DatabaseHelper._sessionm
+    def SetPkgs_shares_ars(self,
+                           session,
+                           shareId,
+                           hostname,
+                           jid, 
+                           pkgs_shares_id):
+        try:
+            new_Pkgs_shares_ars = Pkgs_shares_ars()
+            new_Pkgs_shares_ars.id = shareId
+            new_Pkgs_shares_ars.hostname =  hostname
+            new_Pkgs_shares_ars.jid =  jid
+            new_Pkgs_shares_ars.pkgs_shares_id =  pkgs_shares_id
+            session.add(new_Pkgs_shares_ars)
+            session.commit()
+            session.flush()
+            return new_Pkgs_shares_ars.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return None
+
+    @DatabaseHelper._sessionm
+    def SetPkgs_shares_ars_web(self,
+                               session,
+                               pkgs_share_id,
+                               ars_share_id,
+                               packages_id,
+                               status,
+                               finger_print,
+                               size,
+                               edition_date):
+        try:
+            new_Pkgs_shares_ars_web = Pkgs_shares_ars_web()
+            new_Pkgs_shares_ars_web.ars_share_id =  ars_share_id
+            new_Pkgs_shares_ars_web.packages_id = packages_id
+            new_Pkgs_shares_ars_web.status =  status
+            new_Pkgs_shares_ars_web.finger_print =  finger_print
+            new_Pkgs_shares_ars_web.size = size
+            new_Pkgs_shares_ars_web.date_edition =  date_edition
+            session.add(new_Pkgs_shares_ars_web)
+            session.commit()
+            session.flush()
+            return new_Pkgs_shares_ars_web.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return None
+
+    @DatabaseHelper._sessionm
+    def SetPkgs_rules_algos(self,
+                            session,
+                            name,
+                            description,
+                            level):
+        try:
+            new_Pkgs_rules_algos = Pkgs_rules_algos()
+            new_Pkgs_rules_algos.ars_share_id =  ars_share_id
+            new_Pkgs_rules_algos.packages_id = packages_id
+            new_Pkgs_rules_algos.status =  status
+            session.add(new_Pkgs_rules_algos)
+            session.commit()
+            session.flush()
+            return new_Pkgs_rules_algos.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return None
+
+    @DatabaseHelper._sessionm
+    def SetPkgs_rules_global(self,
+                             session,
+                             pkgs_rules_algos_id,
+                             pkgs_shares_id,
+                             order,
+                             suject):
+        try:
+            new_Pkgs_rules_global = Pkgs_rules_global()
+            new_Pkgs_rules_global.ars_share_id = ars_share_id
+            new_Pkgs_rules_global.packages_id = packages_id
+            new_Pkgs_rules_global.status = status
+            new_Pkgs_rules_global.finger_print = finger_print
+            session.add(new_Pkgs_rules_global)
+            session.commit()
+            session.flush()
+            return new_Pkgs_rules_global.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return None
+
+    @DatabaseHelper._sessionm
+    def SetPkgs_rules_local(self,
+                            session,
+                            pkgs_rules_algos_id,
+                            pkgs_shares_id,
+                            order,
+                            suject):
+        try:
+            new_Pkgs_rules_local = Pkgs_rules_local()
+            new_Pkgs_rules_local.ars_share_id = ars_share_id
+            new_Pkgs_rules_local.packages_id = packages_id
+            new_Pkgs_rules_local.status = status
+            new_Pkgs_rules_local.finger_print = finger_print
+            session.add(new_Pkgs_rules_local)
+            session.commit()
+            session.flush()
+            return new_Pkgs_rules_local.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return None
+
+    @DatabaseHelper._sessionm
+    def pkgs_Orderrules(self, session):
+        """
+        This function is used to obtain the pkgs_rules_algos
+        Args:
+            session: The SQLAlchemy session
+        Returns:
+            it returns the pkgs_rules_algos ordered by level
+        """
+        sql = """SELECT
+                    *
+                FROM
+                    pkgs.pkgs_rules_algos
+                ORDER BY level;"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
