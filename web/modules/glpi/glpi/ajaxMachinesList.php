@@ -106,7 +106,7 @@ li.inventoryg a {
                 border-spacing:0;
                 background-image:none;
                 font-size:.9em;
-
+}
 </style>
 
 <script>
@@ -130,8 +130,8 @@ jQuery(function()
   } );
 
 });
-</script>
 
+</script>
 
 <?php
 
@@ -232,6 +232,8 @@ $actioneditremoteconfiguration = array();
 $actionxmppbrowsing = array();
 $actionfilebrowser = array();
 $actionxmppbrowsingne = array();
+
+$dissociatedFirstColumns = [];
 ?>
 
 <?
@@ -334,6 +336,16 @@ $orderkey = array( "glpi_owner",
     for ($index = 0; $index < count($datas['hostname'] ); $index++) {
         $chainestr ="<table class='ttable'>";
 
+/*
+        foreach($orderkey as $keyordor){
+            $dd=$datas[$keyordor];
+            if(in_array($mach,$exclud ) ||  $dd[$index] == ""){
+                continue;
+            }
+         $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$keyordor] ."</td><td class='ttabletd'>".$dd[$index]."</td></tr>";
+        }
+*/
+
         foreach($datas as $mach => $value ){
             if(in_array($mach,$exclud ) ||  $value[$index] ==""){
                 continue;
@@ -349,6 +361,7 @@ $orderkey = array( "glpi_owner",
 
         if ($datas['uuid_inventorymachine'][$index] =="" ){
             $actionInventory[] = $glpinoAction;
+						$dissociatedFirstColumns[] = $index;
         }else{
          $actionInventory[] = $glpiAction;
         }
@@ -356,10 +369,15 @@ $orderkey = array( "glpi_owner",
         //$action_logs_msc[]   = $mscNoAction;
         $actionMonitoring[] = $monitoring;
         if ($valeue == 1){
+            //PRESENCE MACHINE
             $presencesClass[] = "machineNamepresente";
 
-            $action_deploy_msc[] = $mscAction; //deployement
-
+            if ($datas['uuid_inventorymachine'][$index] ==""){
+               $action_deploy_msc[] = $mscNoAction; //deployement
+            }
+            else{
+               $action_deploy_msc[] = $mscAction; //deployement
+            }
             if (isExpertMode()){
                 $actionConsole[] = $inventconsole;
                 $actionxmppbrowsing[] = $inventxmppbrowsing;
@@ -371,6 +389,7 @@ $orderkey = array( "glpi_owner",
             }
         }
         else {
+            // NO PRESENCE MACHINE
             $action_deploy_msc[] = $mscNoAction; //deployement
             $presencesClass[] = "machineName";
             if (isExpertMode()){
@@ -421,7 +440,7 @@ $orderkey = array( "glpi_owner",
 
 $n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
 $n->setParamInfo($params); // [params]
-
+$n->dissociateColumnActionLink($dissociatedFirstColumns);
 if(in_array ("description", $machines1["column"])) $n->addExtraInfo($datas["glpi_description"], _T("Description", "glpi"));
 if(in_array("os", $machines1["column"])) $n->addExtraInfo($datas["platform"], _T("Operating System", "glpi"));
 if(in_array("type",  $machines1["column"])) $n->addExtraInfo($datas["model"], _T("Computer Type", "glpi"));
