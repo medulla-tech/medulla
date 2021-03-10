@@ -56,7 +56,7 @@ class Glpi(DyngroupDatabaseHelper):
         self.config = GlpiConfig("glpi", conffile)
 
         # we choose the good backend for the database
-        elif Glpi084().try_activation(self.config):
+        if Glpi084().try_activation(self.config):
             self.database = Glpi084()
         elif Glpi92().try_activation(self.config):
             self.database = Glpi92()
