@@ -173,6 +173,7 @@ $msc_vnc_show_icon = web_vnc_show_icon();
 
 $glpinoAction = new EmptyActionItem1(_("GLPI Inventory"),"glpitabs","inventoryg","inventory", "base", "computers");
 
+
 // Actions for each machines
 $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
 
@@ -191,7 +192,6 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
   # Standard Mode
   $inventxmppbrowsingne   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
   $inventnoxmppbrowsingne = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsingne","folderg","computers","xmppmaster", "xmppmaster");
-
   # Expert mode
   $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
   $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
@@ -234,9 +234,7 @@ $actionfilebrowser = array();
 $actionxmppbrowsingne = array();
 
 $dissociatedFirstColumns = [];
-?>
 
-<?
 $raw = 0;
 // Do not modify directly $datas['cn'] it is reused later for $params
 // And tabs in detail page will be broken
@@ -337,12 +335,13 @@ $orderkey = array( "glpi_owner",
         $chainestr ="<table class='ttable'>";
 
 /*
-        foreach($orderkey as $keyordor){
-            $dd=$datas[$keyordor];
-            if(in_array($mach,$exclud ) ||  $dd[$index] == ""){
+ *      FIXME: Do not remove, will be oised to order the entries on the menu
+        foreach($orderkey as $key_in_order){
+            $data_order=$datas[$key_in_order];
+            if(in_array($mach,$exclude ) ||  $data_order[$index] == ""){
                 continue;
             }
-         $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$keyordor] ."</td><td class='ttabletd'>".$dd[$index]."</td></tr>";
+         $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$key_in_order] ."</td><td class='ttabletd'>".$data_order[$index]."</td></tr>";
         }
 */
 
@@ -361,15 +360,13 @@ $orderkey = array( "glpi_owner",
 
         if ($datas['uuid_inventorymachine'][$index] =="" ){
             $actionInventory[] = $glpinoAction;
-						$dissociatedFirstColumns[] = $index;
+            $dissociatedFirstColumns[] = $index;
         }else{
          $actionInventory[] = $glpiAction;
         }
         $actionxmppquickdeoloy[]=$DeployQuickxmpp; //Quick action presence ou non presence.
-        //$action_logs_msc[]   = $mscNoAction;
         $actionMonitoring[] = $monitoring;
         if ($valeue == 1){
-            //PRESENCE MACHINE
             $presencesClass[] = "machineNamepresente";
 
             if ($datas['uuid_inventorymachine'][$index] ==""){
@@ -389,7 +386,6 @@ $orderkey = array( "glpi_owner",
             }
         }
         else {
-            // NO PRESENCE MACHINE
             $action_deploy_msc[] = $mscNoAction; //deployement
             $presencesClass[] = "machineName";
             if (isExpertMode()){
