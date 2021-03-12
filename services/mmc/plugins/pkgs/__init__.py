@@ -367,25 +367,158 @@ def to_json_xmppdeploy(package):
 
         return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
 
-def putPackageDetail(package, need_assign = True):
+def prepare_shared_folder():
+    """
+        This function creates the sharing environment.
+        It creates folders if missing.
+    """
+    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
+    if not os.path.isdir(packages_input_dir_sharing):
+        os.mkdir(packages_input_dir_sharing, 0755)
+    packages_input_dir_sharing_global = os.path.join(packages_input_dir_sharing, "global")
+    if not os.path.isdir(packages_input_dir_sharing_global):
+        os.mkdir(packages_input_dir_sharing_global, 0755)
+
+def get_share_from_descriptor(package_descriptor):
+    """
+        This function allow to prepare the system to package server.
+        It creates sharing folder if it does not exist.
+
+        Args:
+            package_descriptor: This provide informations as localisation_server.
+    """
+    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages","sharing")
+    if not "localisation_server" in package_descriptor:
+        logging.getLogger().warning("keys localisation_server missing global sharing by default")
+        return os.path.join(packages_input_dir_sharing,
+                            "global",
+                             package_descriptor['id'])
+    elif  ("localisation_server" in package_descriptor and \
+                package_descriptor['localisation_server'] == ""):
+        logging.getLogger().warning("keys localisation_server non definie global sharing by default")
+        return os.path.join(packages_input_dir_sharing,
+                            "global",
+                            package_descriptor['id'])
+    else:
+        logging.getLogger().debug("local package %s" % os.path.join(packages_input_dir_sharing,
+                             package_descriptor['localisation_server'],
+                             package_descriptor['id']))
+        return  os.path.join(packages_input_dir_sharing,
+                             package_descriptor['localisation_server'],
+                             package_descriptor['id'])
+
+def test_ln(pathdirpackage):
+    """
+        This function tests a path to know if this is a symlink or not.
+        If this is a dead symlink, it removes it.
+        Args:
+            pathdirpackage: The path to test
+        Returns:
+            It returns an array with the directory type and the real path.
+    """
+    dir_exists = os.path.isdir(pathdirpackage)
+    if dir_exists:
+        if os.path.islink(pathdirpackage):
+            return { "result" : True ,
+                     "type" : "ln" ,
+                     "realpath":  os.path.realpath(pathdirpackage) }
+        else:
+            return { "result" : True,
+                     "type" : "dir" ,
+                     "realpath":  os.path.realpath(pathdirpackage) }
+    elif os.path.islink(pathdirpackage):
+        os.remove(pathdirpackage)
+    return { "result" : False }
+
+def putPackageDetail(package, need_assign=True):
+    """
+        This function is used to create or edite a package
+        Args:
+            package: a dictionnary with informations on the package
+            need_assign: If set to True, it creates the package.
+                         If set to False, it edits the package.
+        Returns: 
+            It returns the new simple package list 
+            [True, package['id'], path, dict package]
+    """
+    Bcreatepackage = False
     if package['id'] == "" :
-        # create uuid
-        package['id'] = create_simple_package_uuid(package['label'])
+        package['id'] = create_simple_package_uuid(package['label']) # create uuid package
+        Bcreatepackage = True
+
     if len(package['id']) != 36:
         return False
-    packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
-    packages_id_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages", package['id'] )
 
-    if packages_input_dir == packages_id_input_dir:
-        return False
-    # si le dossier n existe pas alors le creéer
-    if not os.path.isdir(packages_id_input_dir):
-        os.mkdir(packages_id_input_dir, 0755)
+    packages_id_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages", package['id'])
+    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages","sharing")
+
+    prepare_shared_folder()
+
+    centralizedmultiplesharing = PkgsConfig("pkgs").centralizedmultiplesharing
+
+    logger.debug("centralized multiple sharing mode%s" % centralizedmultiplesharing)
+
+    if centralizedmultiplesharing:
+        directorysharing = get_share_from_descriptor(package)
+
+        testresult = test_ln(packages_id_input_dir)
+        if not testresult['result']:
+            # As there is no folder nor symlink, we create it.
+            os.mkdir(packages_id_input_dir, 0755)
+
+            result = simplecommand("mv %s %s " % (packages_id_input_dir,
+                                                  directorysharing))
+            result = simplecommand("ln -s %s %s " % (directorysharing,
+                                                     packages_id_input_dir))
+        else:
+            # Case 1: the folder exists.
+            # But is it at the correct location ?
+            if testresult['type'] == "dir":
+                # The package is the /var/lib/package folder. We need to move it in the correct one.
+                # We need to put it in the correct share.
+                
+                result = simplecommand("mv %s %s " % (packages_id_input_dir,
+                                                      directorysharing))
+                result = simplecommand("ln -s %s %s " % (directorysharing,
+                                                         packages_id_input_dir))
+            else:
+                # This operation is only possible if  the movepackage parameter is set to True
+                # This is a symlink
+                if testresult['realpath'] != directorysharing and \
+                    PkgsConfig("pkgs").movepackage:
+                    # we need to move the package to the correct location
+                    # and replace the symlink.
+                    os.remove(packages_id_input_dir) # supppression ln symbolique
+                    result = simplecommand("mv -nf %s %s " % (testresult['realpath'],
+                                                              directorysharing)) # mv to new partage
+                    result = simplecommand("ln -s %s %s " % (directorysharing,
+                                                             packages_id_input_dir))
+                else:
+                    # on ne peut pas continuer car interdit
+                    logger.error("forbiden move packages between sharings (parameter movepackage)")
+                    return None
+    else:
+        if not os.path.isdir(packages_id_input_dir):
+            os.mkdir(packages_id_input_dir, 0755)
+
+    if "editor" not in package:
+        package["editor"] = ""
+
+    if "edition_date" not in package:
+        package["edition_date"] = ""
+
     confjson={
         "sub_packages" : [],
         "description" : package['description'],
         "entity_id" : "0",
         "id" : package['id'],
+        "localisation_server" : package['localisation_server'] if "localisation_server" in package else "global",
+        "previous_localisation_server": package["previous_localisation_server"] if "previous_localisation_server" in package else package["localisation_server"],
+        "creator": package["creator"],
+        "creation_date": package["creation_date"],
+        "editor" : package["editor"] if "editor" in package else "",
+        "edition_date" : package["edition_date"] if "edition_date" in package else "",
+        "edition_date" : package["edition_date"] if "edition_date" in package else "",
         "commands" :{
             "postCommandSuccess" : {"command" : "", "name" : ""},
             "installInit" : {"command" : "", "name" : ""},
@@ -411,13 +544,55 @@ def putPackageDetail(package, need_assign = True):
             }
         }
     }
+
+    typesynchro = 'create'
+    if 'mode' in package and   package['mode'] !=  'creation':
+        typesynchro = 'chang'
+
     # writte file to xmpp deploy
     xmppdeployfile = to_json_xmppdeploy(package)
     fichier = open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" )
     fichier.write(xmppdeployfile)
     fichier.close()
+
+    if centralizedmultiplesharing:
+        localisation_server = package['localisation_server'] if 'localisation_server' in package else None
+
+        login = package['creator']
+        if 'mode' in package and package['mode'] == 'creation':
+            login = package['editor']
+            if login=="":
+                login = package['creator']
+                package['editor'] = package['creator']
+
+        if login == "root":
+            pkgs_shares = PkgsDatabase().pkgs_sharing_admin_profil()
+        else:
+            pkgs_shares = PkgsDatabase().pkgs_get_sharing_list_login(login)
+        pkgs_share_id = None
+        ars_id=None
+        for share in pkgs_shares:
+            logging.getLogger().warning("JFkkkkkkkkkkk %s" %share)
+            if share['name'] != localisation_server:
+                continue
+            else:
+                logging.getLogger().error("package %s" % share)
+                pkgs_share_id = share['id_sharing']
+                package['shareobject'] = share
+
     # Add the package into the database
-    pkgmanage().add_package(confjson)
+    if centralizedmultiplesharing:
+        pkgmanage().add_package(confjson, pkgs_share_id)
+        if package['localisation_server'] == "global":
+            pkgs_register_synchro_package(package['id'],
+                                      typesynchro )
+        else:
+            PkgsDatabase().pkgs_register_synchro_package_multisharing(package,
+                                                                  typesynchro )
+    else:
+        pkgs_register_synchro_package(package['id'],
+                                      typesynchro )
+        pkgmanage().add_package(confjson)
 
     # write file to package directory
     with open( os.path.join(packages_id_input_dir,"conf.json"), "w" ) as outfile:
