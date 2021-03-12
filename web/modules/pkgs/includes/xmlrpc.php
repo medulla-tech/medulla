@@ -240,4 +240,8 @@ function xmlrpc_delete_from_pending($pid = "", $jidrelay = []){
 function xmlrpc_get_all_packages($login, $start=-1, $end=-1, $filter=""){
   return xmlCall("pkgs.get_all_packages", [$login, $start, $end, $filter]);
 }
+
+function xmlrpc_update_package_size($uuid){
+  return xmlCall("pkgs.update_package_size", [$uuid]);
+}
 ?>
