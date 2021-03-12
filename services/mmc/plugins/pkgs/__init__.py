@@ -150,6 +150,62 @@ def get_package_summary(package_id):
 def delete_from_pending(pid = "", jidrelay = []):
     return PkgsDatabase().delete_from_pending(pid, jidrelay)
 
+def pkgs_search_share(objsearch):
+    """
+        This function is used to retrieve the shares and the permissions
+            following the defined rules.
+        Args:
+            objsearch:
+            # TODO: Fix documentation 
+        Results:
+            It returns the the shares and the permissions following the defined rules.
+
+    """
+    sharing_result = []
+    order_rules = PkgsDatabase().pkgs_Orderrules()
+
+    logger.debug("The rule used for the share detection is number %s" % order_rules)
+    wrapper = {"config": {}, "datas": []}
+    wrapper["config"]["centralizedmultiplesharing"] = PkgsConfig("pkgs").centralizedmultiplesharing
+    wrapper["config"]["movepackage"] = PkgsConfig("pkgs").movepackage
+
+    # global sharing
+    if objsearch['login'] == 'root':
+        # global sharing yes
+        # all local sharing yes
+        logger.debug("As we are using the root user, we can load all the packages from the list.")
+        wrapper["datas"] = PkgsDatabase().pkgs_sharing_admin_profil()
+        return wrapper
+    else:
+        for algo in order_rules:
+            id_algo = algo[0]
+            # User Rule : 1 sharing on login user
+            if id_algo == 1:
+                if 'login' in objsearch:
+                    logger.debug(" algos id is %s [%s]" % (id_algo, algo[2]))
+                    result = PkgsDatabase().pkgs_sharing_rule_search(objsearch['login'], id_algo)
+                    if result:
+                        for t in result:
+                            re = [x['name'] for x in sharing_result]
+                            if t['name'] in re: 
+                                continue
+                            sharing_result.append(t);
+                    logger.debug("search sharing local %s" % (result))
+            elif id_algo == 2: # 1 sharing on profile userlogger.
+                if 'profil' in objsearch:
+                    debug("algos id is %s [%s]" % (id_algo, algo[2]))
+                    result = PkgsDatabase().pkgs_sharing_rule_search(objsearch['profil'], algoid=id_algo)
+                    if result:
+                        for t in result:
+                            re = [x['name'] for x in sharing_result]
+                            if t['name'] in re: 
+                                continue
+                            sharing_result.append(t);
+                    logger.debug("search sharing local %s" % (result))
+
+    wrapper["datas"] = sharing_result
+    return wrapper
+
 ############### synchro syncthing package #####################
 def pkgs_register_synchro_package(uuidpackage, typesynchro):
     return pkgmanage().pkgs_register_synchro_package(uuidpackage, typesynchro)
