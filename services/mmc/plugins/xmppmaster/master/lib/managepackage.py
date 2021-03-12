@@ -32,7 +32,8 @@ from pulse2.database.pkgs import PkgsDatabase
 logger = logging.getLogger()
 
 class apimanagepackagemsc:
-    exclud_name_package=["sharing", ".stfolder", ".stignore" ]
+    exclude_name_package = ["sharing", ".stfolder", ".stignore" ]
+
     @staticmethod
     def readjsonfile(namefile):
         with open(namefile) as json_data:
@@ -40,17 +41,57 @@ class apimanagepackagemsc:
         return data_dict
 
     @staticmethod
+    def search_list_package():
+        """
+            This function searches packages in the global and
+            local shares.
+        """
+        packagelist = []
+        dirpackage = os.path.join("/", "var", "lib", "pulse2", "packages")
+        global_package_folder = os.path.join(dirpackage, "sharing", "global")
+        packagelist = [os.path.join(global_package_folder, f)
+                for f in os.listdir(global_package_folder) if len(f) == 36]
+        local_package_folder  = os.path.join(dirpackage, "sharing")
+        share_pathname = [os.path.join(local_package_folder, f)
+                for f in os.listdir(local_package_folder) if f != "global"]
+        for part in share_pathname:
+            filelist = [os.path.join(part, f) for f in os.listdir(part) if len(f) == 36]
+            packagelist += filelist
+        return packagelist
+
+    @staticmethod
+    def package_for_deploy_from_share():
+        """
+            This function creates symlinks in the packages directory
+            to the target in the local/global share
+        """
+        dirpackage = os.path.join("/", "var", "lib", "pulse2", "packages")
+        for package in search_list_package():
+            os.symlink(package , os.path.join(dirpackage, os.path.basename(package)))
+
+    @staticmethod
+    def remove_symlinks():
+        """
+        This function remove symlinks
+        """
+        dirpackage = os.path.join("/", "var", "lib", "pulse2", "packages")
+        packagelist = [os.path.join(dirpackage, package) for package in os.listdir(dirpackage) if len(package) == 36]
+        for package in packagelist:
+            if os.path.islink(package) and not os.path.exists(package):
+                os.remove(package)
+
+    @staticmethod
     def packagelistmsc():
         folderpackages = os.path.join("/", "var" ,"lib","pulse2","packages")
         return [ os.path.join(folderpackages,x) for x in os.listdir(folderpackages) \
             if os.path.isdir(os.path.join(folderpackages,x)) \
-                and x not in apimanagepackagemsc.exclud_name_package]
+                and x not in apimanagepackagemsc.exclude_name_package]
 
     @staticmethod
     def listfilepackage(folderpackages):
         return [ os.path.join(folderpackages,x) for x in os.listdir(folderpackages) \
             if not os.path.isdir(os.path.join(folderpackages,x)) \
-                and x not in apimanagepackagemsc.exclud_name_package]
+                and x not in apimanagepackagemsc.exclude_name_package]
 
     @staticmethod
     def packagelistmscconfjson(pending = False):
@@ -58,7 +99,7 @@ class apimanagepackagemsc:
         listfichierconf =  [ os.path.join(folderpackages,x,"conf.json") \
             for x in os.listdir(folderpackages) \
                 if os.path.isdir(os.path.join(folderpackages,x)) \
-                    and x not in apimanagepackagemsc.exclud_name_package]
+                    and x not in apimanagepackagemsc.exclude_name_package]
         listpackagependig = PkgsDatabase().list_pending_synchro_package()
         listpendingfichierconf = []
         listnotpendingfichierconf = []
@@ -119,7 +160,7 @@ class apimanagepackagemsc:
         return ((result))
 
     @staticmethod
-    def loadpackagelistmsc(filter = None, start = None, end = None):
+    def loadpackagelistmsc(login, filter = None, start = None, end = None):
         pending = False
         if "pending" in filter:
             pending = True
@@ -132,48 +173,73 @@ class apimanagepackagemsc:
                'metagenerator',
                'id',
                'name',
-               'basepath']
+               'basepath',
+               'localisation_server',
+               'sharing_type']
         result = []
+        if login == "root":
+            pkgs_shares = PkgsDatabase().pkgs_sharing_admin_profil()
+        else:
+            pkgs_shares = PkgsDatabase().pkgs_get_sharing_list_login(login)
+        _pkgs_shares = {}
+        pkgs_share_global = None
+        for share in pkgs_shares:
+            if share['type'] == "global":
+                pkgs_share_global = share
+            _pkgs_shares[share['name']] = share
 
         for packagefiles in apimanagepackagemsc.packagelistmscconfjson(pending):
             obj={}
-            data_file_conf_json = apimanagepackagemsc.readjsonfile(packagefiles)
-            if 'filter' in filter:
-                if not (re.search(filter['filter'], data_file_conf_json['name'] , re.IGNORECASE) or
-                        re.search(filter['filter'], data_file_conf_json['description'] , re.IGNORECASE) or
-                        re.search(filter['filter'], data_file_conf_json['version'] , re.IGNORECASE) or
-                        re.search(filter['filter'], data_file_conf_json['targetos'] , re.IGNORECASE)):
-                    continue
-            if 'filter1' in filter and \
-                not data_file_conf_json['name'].startswith("Pulse Agent v"):
-                if not (re.search(filter['filter1'], data_file_conf_json['targetos'] , re.IGNORECASE)):
-                    continue
-            for key in data_file_conf_json:
-                if key in tab:
-                    obj[str(key)] = str(data_file_conf_json[key])
-                elif key == 'commands':
-                    for z in data_file_conf_json['commands']:
-                        obj[str(z)] = str(data_file_conf_json['commands'][z])
-                elif key == 'inventory':
-                    for z in data_file_conf_json['inventory']:
-                        if z == 'queries':
-                            for t in data_file_conf_json['inventory']['queries']:
-                                obj[str(t)] = str(data_file_conf_json['inventory']['queries'][t])
-                        else:
-                            obj[str(z)] = str(data_file_conf_json['inventory'][z])
-            obj['files']=[]
-            obj['basepath'] = os.path.dirname(packagefiles)
-            obj['size'] = str(apimanagepackagemsc.sizedirectory(obj['basepath']))
-            for fich in apimanagepackagemsc.listfilepackage(obj['basepath'] ):
-                pathfile = os.path.join("/",os.path.basename(os.path.dirname(fich)))
-                obj['files'].append({"path" : pathfile,
-                                     "name" : os.path.basename(fich),
-                                     "id" : str(uuid.uuid4()),
-                                     "size" : str(os.path.getsize(fich)) })
-            if 'name' in obj:
-                obj['label'] = obj['name']
-            obj1 = [obj]
-            result.append(obj1)
+            try:
+                data_file_conf_json = apimanagepackagemsc.readjsonfile(packagefiles)
+                if "localisation_server" not in data_file_conf_json:
+                    data_file_conf_json['localisation_server'] = pkgs_share_global['name']
+                    data_file_conf_json['sharing_type'] = pkgs_share_global['type']
+                else:
+                    _localisation = data_file_conf_json['localisation_server']
+                    data_file_conf_json['sharing_type'] = _pkgs_shares[_localisation]['type']
+
+                if 'filter' in filter:
+                    if not (re.search(filter['filter'], data_file_conf_json['name'] , re.IGNORECASE) or
+                            re.search(filter['filter'], data_file_conf_json['description'] , re.IGNORECASE) or
+                            re.search(filter['filter'], data_file_conf_json['version'] , re.IGNORECASE) or
+                            re.search(filter['filter'], data_file_conf_json['targetos'] , re.IGNORECASE) or
+                            re.search(filter['filter'], data_file_conf_json['localisation_server'] , re.IGNORECASE) or
+                            re.search(filter['filter'], data_file_conf_json['sharing_type'] , re.IGNORECASE)
+                            ):
+                        continue
+                if 'filter1' in filter and \
+                    not data_file_conf_json['name'].startswith("Pulse Agent v"):
+                    if not (re.search(filter['filter1'], data_file_conf_json['targetos'] , re.IGNORECASE)):
+                        continue
+                for key in data_file_conf_json:
+                    if key in tab:
+                        obj[str(key)] = str(data_file_conf_json[key])
+                    elif key == 'commands':
+                        for z in data_file_conf_json['commands']:
+                            obj[str(z)] = str(data_file_conf_json['commands'][z])
+                    elif key == 'inventory':
+                        for z in data_file_conf_json['inventory']:
+                            if z == 'queries':
+                                for t in data_file_conf_json['inventory']['queries']:
+                                    obj[str(t)] = str(data_file_conf_json['inventory']['queries'][t])
+                            else:
+                                obj[str(z)] = str(data_file_conf_json['inventory'][z])
+                obj['files']=[]
+                obj['basepath'] = os.path.dirname(packagefiles)
+                obj['size'] = str(apimanagepackagemsc.sizedirectory(obj['basepath']))
+                for fich in apimanagepackagemsc.listfilepackage(obj['basepath'] ):
+                    pathfile = os.path.join("/",os.path.basename(os.path.dirname(fich)))
+                    obj['files'].append({"path" : pathfile,
+                                         "name" : os.path.basename(fich),
+                                         "id" : str(uuid.uuid4()),
+                                         "size" : str(os.path.getsize(fich)) })
+                if 'name' in obj:
+                    obj['label'] = obj['name']
+                obj1 = [obj]
+                result.append(obj1)
+            except:
+                continue
 
         nb = len(result)
         if start is not None and end is not None:
@@ -182,7 +248,8 @@ class apimanagepackagemsc:
             return ((nb, result))
 
 class managepackage:
-    exclud_name_package=["sharing", ".stfolder", ".stignore" ]
+    exclude_name_package=["sharing", ".stfolder", ".stignore" ]
+
     @staticmethod
     def packagedir():
         if sys.platform.startswith('linux'):
@@ -199,7 +266,7 @@ class managepackage:
         return [os.path.join(managepackage.packagedir(), x) \
             for x in os.listdir(managepackage.packagedir()) \
                 if os.path.isdir(os.path.join(managepackage.packagedir(), x)) \
-                    and x not in managepackage.exclud_name_package]
+                    and x not in managepackage.exclude_name_package]
 
     @staticmethod
     def loadjsonfile(filename):
