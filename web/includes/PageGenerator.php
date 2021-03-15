@@ -401,6 +401,7 @@ class ListInfos extends HtmlElement {
         $this->tooltip = array();
         $this->tooltip[] = $tooltip;
         $this->firstColumnActionLink = True;
+        $this->dissociateColumnsActionLink = [];
         $this->_addInfo = array();
     }
 
@@ -477,6 +478,13 @@ class ListInfos extends HtmlElement {
         $this->firstColumnActionLink = False;
     }
 
+    function dissociateColumnActionLink($ids){
+      foreach($ids as $id){
+        if(!in_array($id, $this->dissociateColumnsActionLink)){
+          $this->dissociateColumnsActionLink[] = intval($id);
+        }
+      }
+    }
     /**
      *  init class' vars
      */
@@ -666,7 +674,7 @@ class ListInfos extends HtmlElement {
             }
 
             //link to first action (if we have an action)
-            if (count($this->arrAction) && $this->firstColumnActionLink) {
+            if (count($this->arrAction) && $this->firstColumnActionLink && !in_array($idx, $this->dissociateColumnsActionLink)) {
                 $this->drawMainAction($idx);
             } else {
                 if (!empty($this->cssClass)) {
