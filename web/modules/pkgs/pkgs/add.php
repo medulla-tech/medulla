@@ -40,7 +40,6 @@ $p->display();
 // @see ajaxrefreshPackageTempdir.php
 $_SESSION['pkgs-add-reloaded'] = array();
 
-
 if (isset($_POST['bconfirm'])){
     //$p_api_id = $_POST['p_api'];
     $random_dir = isset($_SESSION['random_dir'])?$_SESSION['random_dir'] : "";
@@ -52,7 +51,8 @@ if (isset($_POST['bconfirm'])){
     }
 
     foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware',
-            'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
+            'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator',
+            'creator', 'creation_date', 'localisation_server') as $post) {
         //$package[$post] = iconv("utf-8","ascii//TRANSLIT",$_POST[$post]);
         if(isset($_POST[$post])) {
             $package[$post] = $_POST[$post];
@@ -113,6 +113,7 @@ if (isset($_POST['bconfirm'])){
         }
 
         $ret = associatePackages($pid, $cbx, $level);
+        xmlrpc_update_package_size($pid);
         if (!isXMLRPCError() and is_array($ret)) {
             if ($ret[0]) {
                 $explain = '';
@@ -183,14 +184,42 @@ if (isset($_POST['bconfirm'])){
 //     );
 
     $f->add(new TrFormElement(_T("Package source", "pkgs"), $r), array());
-    $f->add(new TrFormElement("<div id='directory-label'>" . _T("Files directory", "pkgs") . "</div>", new Div(array("id" => "package-temp-directory"))), array());
+    $f->add(new TrFormElement("<div id='directory-label'>" . _T("Files directory", "pkgs") . "</div>",
+                new Div(array("id" => "package-temp-directory"))), array());
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
-
     $span = new SpanElement(_T("Package Creation", "pkgs"), "pkgs-title");
     $f->add(new TrFormElement("", $span), array());
+    $f->add(new HiddenTpl("creator"), array("value" => $_SESSION['login'], "hide" => True));
+    $f->add(new HiddenTpl("creation_date"), array("value" => date("Y-m-d H:i:s"), "hide" => True));
 
+
+    $getShares  = xmlrpc_pkgs_search_share(['login'=>$_SESSION['login']]);
+    $shares =[];
+    foreach($getShares['datas'] as $share){
+      if(preg_match("#w#", $share['permission'])){
+        $shares[] = $share;
+      }
+    }
+    if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true ){
+      if(count($shares) == 1){
+        $f->add(new HiddenTpl("localisation_server"), array("value" => $shares[0]["name"], "hide" => True));
+      }
+      else{
+        $sharesNames = [];
+        $sharesPaths = [];
+        foreach($shares as $key=>$share){
+          $sharesNames[] = (isset($share['comments']) && $share['comments'] != "") ? $share['comments'] : $share['name'];
+          $sharesPaths[] = $share['name'];
+        }
+        $location_servers = new SelectItem('localisation_server');
+        $location_servers->setElements($sharesNames);
+        $location_servers->setElementsVal($sharesPaths);
+        $f->add(
+                new TrFormElement(_T('Location server', 'pkgs'), $location_servers), array("value" => '')
+        );
+      }
+    }
     // fields
-
     $fields = array(
         array("label", _T("Name", "pkgs"), array("required" => True, 'placeholder' => _T('<fill_package_name>', 'pkgs'))),
         array("version", _T("Version", "pkgs"), array("required" => True)),
@@ -263,7 +292,8 @@ if (isset($_POST['bconfirm'])){
         $bpuploaddownload = new IntegerTpl("limit_rate_ko");
         $bpuploaddownload->setAttributCustom('min = 0');
         $f->add(
-                new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
+                new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''),
+                array('placeholder' => _T('<in ko>', 'pkgs')))
         );
         //spooling priority
         $rb = new RadioTpl("spooling");
@@ -319,7 +349,8 @@ if (isset($_POST['bconfirm'])){
                 new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)
         );
         $f->add(
-                new TrFormElement($p[2], new TextareaTplArray(["name"=>$p[0] . 'cmd',"required"=>"required"])), array("value" => '')
+                new TrFormElement($p[2], new TextareaTplArray(["name"=>$p[0] . 'cmd',"required"=>"required"])),
+                array("value" => '')
         );
     }
 
@@ -355,8 +386,7 @@ if (isset($_POST['bconfirm'])){
     jQuery(function() { // load this piece of code when page is loaded
         // Limit the text length for label
         jQuery("input[name='label']").attr("maxlength", 60);
-        jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special characters are not allowed", "pkgs");?></div>");
-
+        jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
         jQuery('.label span a').each(function() {
             jQuery(this).attr('href', 'http://www.google.com/#q=file.exe+silent+install');
             jQuery(this).attr('target', '_blank');

@@ -55,8 +55,9 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $need_assign = True;
     }
 
-    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion',
-            'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion', 'mode',
+            'boolcnd', 'licenses', 'targetos', 'metagenerator',
+            'creator', 'creation_date', 'editor', 'edition_date', 'localisation_server', 'previous_localisation_server') as $post) {
         //$package[$post] = iconv("utf-8","ascii//TRANSLIT",$_POST[$post]);
         $package[$post] = $_POST[$post];
     }
@@ -141,8 +142,10 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $str =_T("Package failed to save", "pkgs");
         new NotifyWidgetFailure($str);
     }
-    if($package_uuid != "")
+    if($package_uuid != ""){
+      xmlrpc_update_package_size($pid);
       xmlrpc_chown($package_uuid);
+    }
 }
 
 //start formulaire
@@ -162,7 +165,6 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
     if (!isXMLRPCError() and is_array($ret)) {
         $errorexplain = "";
         $successexplain = "";
-        print_r($ret);
         if (count($ret[1]) > 0) {$errorexplain   = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));}
         if (count($ret[0]) > 0) {$successexplain = sprintf(" : <br/>%s", implode("<br/>", $ret[0]));}
         if (count($ret[1]) > 0){
@@ -186,7 +188,6 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
 }
     $formElt = new HiddenTpl("id");//use in js for createUploader
     $selectpapi = new HiddenTpl('p_api');//use in js for createUploader
-
     if (count($package) == 0) {
 
         $title = _T("Edit a package", "pkgs");
@@ -228,10 +229,13 @@ $f->push(new Table());
 $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 // Uploaded field,
 $f->add(new HiddenTpl("files_uploaded"), array("value" => 0, "hide" => True));
-
 if ($_GET["action"] == "add") {
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
 }
+else{
+    $f->add(new HiddenTpl("mode"), array("value" => "edition", "hide" => True));
+}
+
 
 $fields = array(
     array("label", _T("Package label", "pkgs"), array("required" => True)),
@@ -258,6 +262,52 @@ $os = array(
     array(_T('Windows'), _T('Linux'), _T('Mac OS'))
 );
 
+$f->add(new HiddenTpl("editor"), array("value" => $_SESSION['login'], "hide" => True));
+$f->add(new HiddenTpl("edition_date"), array("value" => date("Y-m-d H:i:s"), "hide" => True));
+$f->add(new HiddenTpl("creator"), array("value" => $package["creator"], "hide" => True));
+$f->add(new HiddenTpl("creation_date"), array("value" => $package["creation_date"], "hide" => True));
+
+$getShares  = xmlrpc_pkgs_search_share(['login'=>$_SESSION['login']]);
+$shares =[];
+foreach($getShares['datas'] as $share){
+  if(preg_match("#w#", $share['permission'])){
+    $shares[] = $share;
+  }
+}
+$json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
+
+if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true){
+  $f->add(new HiddenTpl("previous_localisation_server"), array("value" => $package["previous_localisation_server"], "hide" => True));
+  if(isset($getShares["config"]["movepackage"]) && $getShares["config"]["movepackage"] == True){
+    if(isset($json["info"]["Dependency"]) && count($json["info"]["Dependency"]) == 0){
+      if(count($shares) == 1){ // Just 1 sharing (no choice)
+        $f->add(new HiddenTpl("localisation_server"), array("value" => $shares[0]["name"], "hide" => True));
+      }
+      else{ // sharing server > 1
+        $sharesNames = [];
+        $sharesPaths = [];
+        foreach($shares as $key=>$value){
+          $sharesNames[] = (isset($value['comments']) && $value['comments'] != "") ? $value['comments'] : $value['name'];
+          $sharesPaths[] = $value['name'];
+        }
+        $location_servers = new SelectItem('localisation_server');
+        $location_servers->setElements($sharesNames);
+        $location_servers->setElementsVal($sharesPaths);
+        $location_servers->setSelected($package["localisation_server"]);
+
+        $f->add(
+                new TrFormElement(_T('Location server', 'pkgs'), $location_servers), array()
+        );
+      }
+    }
+    else{ // Dependencies > 0
+      $f->add(new HiddenTpl("localisation_server"), array("value" => $package["previous_localisation_server"], "hide" => True));
+    }
+  }
+  else{ // movepackage == false
+    $f->add(new HiddenTpl("localisation_server"), array("value" => $package["previous_localisation_server"], "hide" => True));
+  }
+}
 foreach ($fields as $p) {
     $f->add(
             new TrFormElement($p[1], new AsciiInputTpl($p[0])), array_merge(array("value" => $package[$p[0]]), $p[2])
@@ -288,7 +338,7 @@ else {
 
 if(isExpertMode())
 {
-    $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
+    //$f->add(new HiddenTpl("last_editor"), array("value" => $_SESSION['login'], "hide" => True));
     $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
 
     if(isset($json['info']['methodetransfert']))
@@ -422,7 +472,6 @@ $params = array();
 
 $pserver_base_url = '';
 
-
 foreach ($package['files'] as $file) {
     if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json")
         continue;
@@ -495,6 +544,6 @@ $f->display();
 <script>
 jQuery(function(){
   jQuery("input[name='label']").attr("maxlength", 60);
-  jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special characters are not allowed", "pkgs");?></div>");
+  jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
 })
 </script>

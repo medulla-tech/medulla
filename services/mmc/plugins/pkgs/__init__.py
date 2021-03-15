@@ -581,7 +581,6 @@ def putPackageDetail(package, need_assign=True):
         pkgs_share_id = None
         ars_id=None
         for share in pkgs_shares:
-            logging.getLogger().warning("JFkkkkkkkkkkk %s" %share)
             if share['name'] != localisation_server:
                 continue
             else:
