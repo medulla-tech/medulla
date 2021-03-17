@@ -738,3 +738,88 @@ class PkgsDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [x for x in result]
+
+    def get_shares(self, session):
+        """
+        This function is used to obtain the list of the shares
+        Args:
+            session: The SQLAlchemy session
+
+        Returns:
+            It returns the list of the actual shares
+        """
+        query = session.query(Pkgs_shares).all()
+        list_of_shares = [elem.toH() for elem in query]
+        return list_of_shares
+
+    @DatabaseHelper._sessionm
+    def pkgs_sharing_admin_profil(self, session):
+        """
+            This function is used to obtain packages list
+            from the admin profile
+        Args:
+            session: The SQLAlchemy session
+
+        Returns:
+            It returns the list of the actual shares for the admin profile.
+        """
+        sql ="""SELECT
+                    pkgs.pkgs_shares.id AS id_sharing,
+                    pkgs.pkgs_shares.name AS name,
+                    pkgs.pkgs_shares.comments AS comments,
+                    pkgs.pkgs_shares.enabled AS enabled,
+                    pkgs.pkgs_shares.type AS type,
+                    pkgs.pkgs_shares.uri AS uri,
+                    pkgs.pkgs_shares.ars_name AS ars_name,
+                    pkgs.pkgs_shares.ars_id AS ars_id,
+                    pkgs.pkgs_shares.share_path AS share_path,
+                    pkgs.pkgs_rules_local.id AS id_rule,
+                    pkgs.pkgs_rules_local.pkgs_rules_algos_id AS algos_id,
+                    pkgs.pkgs_rules_local.order AS order_rule,
+                    pkgs.pkgs_rules_local.suject AS suject
+                FROM
+                    pkgs.pkgs_shares
+                        INNER JOIN
+                    pkgs.pkgs_rules_local ON pkgs.pkgs_rules_local.pkgs_shares_id = pkgs.pkgs_shares.id
+                UNION SELECT
+                    pkgs.pkgs_shares.id AS id_sharing,
+                    pkgs.pkgs_shares.name AS name,
+                    pkgs.pkgs_shares.comments AS comments,
+                    pkgs.pkgs_shares.enabled AS enabled,
+                    pkgs.pkgs_shares.type AS type,
+                    pkgs.pkgs_shares.uri AS uri,
+                    pkgs.pkgs_shares.ars_name AS ars_name,
+                    pkgs.pkgs_shares.ars_id AS ars_id,
+                    pkgs.pkgs_shares.share_path AS share_path,
+                    pkgs.pkgs_rules_global.id AS id_rule,
+                    pkgs.pkgs_rules_global.pkgs_rules_algos_id AS algos_id,
+                    pkgs.pkgs_rules_global.order AS orderrule,
+                    pkgs.pkgs_rules_global.suject AS suject
+                FROM
+                    pkgs.pkgs_shares
+                        INNER JOIN
+                    pkgs.pkgs_rules_global ON pkgs.pkgs_rules_global.pkgs_shares_id = pkgs.pkgs_shares.id;"""
+        logging.getLogger().debug(str(sql))
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        ret = []
+        if result:
+            for y in result:
+                resuldict = {}
+                resuldict['id_sharing'] = y[0]
+                resuldict['name'] = y[1]
+                resuldict['comments'] = y[2]
+                resuldict['type'] = y[4]
+                resuldict['uri'] = y[5]
+                resuldict['ars_name'] = y[6]
+                resuldict['ars_id'] = [7]
+                resuldict['share_path'] = y[8]
+                # information from table pkgs_rules_local or pkgs_rules_global
+                resuldict['id_rule'] = y[9]
+                resuldict['algos_id'] = y[10]
+                resuldict['order_rule'] = y[11]
+                resuldict['regexp'] = y[12]
+                ret.append(resuldict)
+        return ret
+
