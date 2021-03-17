@@ -692,9 +692,6 @@ def xmpp_getPackageDetail(pid_package):
 
 ############### synchro syncthing package #####################
 
-def pkgs_regiter_synchro_package(uuidpackage, typesynchro):
-    return PkgsDatabase().pkgs_regiter_synchro_package(uuidpackage, typesynchro)
-
 def pkgs_delete_synchro_package(uuidpackage):
     return PkgsDatabase().pkgs_delete_synchro_package(uuidpackage)
 

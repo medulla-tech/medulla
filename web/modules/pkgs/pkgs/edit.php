@@ -72,7 +72,6 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($package, $need_assign);
-    xmlrpc_pkgs_register_synchro_package($ret[1],'chang');
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
 

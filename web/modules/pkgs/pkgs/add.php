@@ -79,7 +79,6 @@ if (isset($_POST['bconfirm'])){
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($package, $need_assign);
-    xmlrpc_pkgs_register_synchro_package($ret[1], 'create');
     $pid = $ret[3]['id'];
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
