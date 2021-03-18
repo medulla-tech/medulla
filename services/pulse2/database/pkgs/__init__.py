@@ -352,6 +352,11 @@ class PkgsDatabase(DatabaseHelper):
         else:
             offset = " "
 
+        if login != "root":
+            where_clause = "where pkgs_rules_local.suject REGEXP '%s' and pkgs_shares.enabled = 1 ORDER BY packages.label "%login
+        else:
+            where_clause = "where pkgs_shares.enabled = 1 ORDER BY packages.label "
+
         sql = """select
           SQL_CALC_FOUND_ROWS
           packages.id as package_id,
@@ -369,12 +374,10 @@ class PkgsDatabase(DatabaseHelper):
         on pkgs_rules_local.pkgs_shares_id = pkgs_shares.id
         left join pkgs_rules_algos
         on pkgs_rules_local.pkgs_rules_algos_id = pkgs_rules_algos.id
-        where pkgs_rules_local.suject REGEXP "%s" and pkgs_shares.enabled = 1
-         %s %s %s
-        ;"""%(login, _filter, limit, offset)
+        %s %s %s %s
+        ;"""%(where_clause, _filter, limit, offset)
 
         ret = session.execute(sql)
-
         sql_count = "SELECT FOUND_ROWS();"
         ret_count = session.execute(sql_count)
         count = ret_count.first()[0]

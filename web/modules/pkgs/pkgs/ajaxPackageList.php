@@ -67,141 +67,324 @@ if (isset($_GET["start"])) {
 } else {
     $start = 0;
 }
-/*
- * These variables will contain the packages info
- */
-$params = array();
-$arraypackagename = array();
-$versions = array();
-$licenses = array();
-$size = array();
-$err = array();
-$desc = array();
-$os = array();
-$editActions = array();
+
 $editAction = new ActionItem(_T("Edit a package", "pkgs"), "edit", "edit", "pkgs", "pkgs", "pkgs");
 $editExpertAction = new EmptyActionItem(_T("Please switch to Expert mode to edit this package", "pkgs"));
+$editNoRightsAction = new EmptyActionItem(_T("You must have write rights to edit this package", "pkgs"));
 $emptyAction = new EmptyActionItem();
-$delActions = array();
 $delAction = new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs");
+$delNoRightsAction = new EmptyActionItem(_T("You must have write rights to delete this package", "pkgs"));
 
-$packages = xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
-$count = $packages[0];
-$packages = $packages[1];
+$sharings = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
 
-foreach ($packages as $p) {
-    $p = $p[0];
-    $countfiles = 0;
-    $countfiles = count($p['files']);
-    $listfiles = "";
-    foreach($p['files']  as $k){
-        // Compose list des fichiers dans le packages
-         $listfiles .="\t".$k['name']." : ".prettyOctetDisplay($k['size'])."\n";
-    }
-    switch($p['metagenerator']){
-        case "expert":
-            $arraypackagename[] = "<img style='position:relative; top : 5px;' 
-                                        src='modules/pkgs/graph/img/package_expert.png'/>" .
-                                        "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
-                                            $p['label'].
-                                        "</span>" ;
-        break;
-        case "standard":
-            $arraypackagename[] = "<img style='position:relative; top : 5px;
-                                        'src='modules/pkgs/graph/img/package.png'/>".
-                                        "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
-                                            $p['label'].
-                                        "</span>"  ;
-        break;
-        default: //"manual":
-            $arraypackagename[] = "<img style='position:relative; top : 5px;' 
-                                        src='modules/pkgs/graph/img/package.png'/>".
-                                        "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
-                                            $p['label'].
-                                        "</span>" ;
-        break;
-    }
+if($sharings['config']['centralizedmultiplesharing'] == true){
+  /*
+   * These variables will contain the packages info
+   */
+  $_params = array();
+  $__arraypackagename = array();
+  $_versions = array();
+  $_licenses = array();
+  $_size = array();
+  $_err = array();
+  $_desc = array();
+  $_os = array();
+  $_editActions = array();
+  $_delActions = array();
 
-    $uuid = $p['id'];
-    $versions[] = $p['version'];
-    $desc[] = $p['description'];
-    $os[] = $p['targetos'];
-    // #### begin licenses ####
-    $tmp_licenses = '';
-    if ($p['associateinventory'] == 1 && isset($p['licenses']) && !empty($p['licenses'])) {
-        $licensescount = getLicensesCount($p['Qvendor'], $p['Qsoftware'], $p['Qversion'])['count'];
-        // Link to the group creation for machines with licence.
-        $param = array();
-        $param['vendor'] = $p['Qvendor'];
-        $param['software'] = $p['Qsoftware'];
-        $param['version'] = $p['Qversion'];
-        $param['count'] = $licensescount;
-        $param['licencemax'] = $p['licenses'];
-        $urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $param);
+  $_packages = xmlrpc_get_all_packages($_SESSION['login'], $start, $maxperpage, $filter);
 
-        $tmp_licenses = '<span style="border-width:1px;border-style:dotted; border-color:black; ">' .
-            '<a href="' .
-            $urlRedirect . '" title="Create group">' .
-            $licensescount .
-            '/' .
-            $p['licenses'] .
-            '</a></span>';
-        if ($licensescount > $p['licenses']) { // highlights the exceeded license count
-            $tmp_licenses = '<font color="FF0000">' . $tmp_licenses . '</font>';
-        }
-    }
-    $licenses[] = $tmp_licenses;
-    // #### end licenses ####
-    $size[] = prettyOctetDisplay($p['size']);
-    $params[] = array( 'pid' => base64_encode($p['id']), 'packageUuid' => $p['id']);
-    if(!isExpertMode()) {
-        // mode standart
-        // seul root peut supprimer package manuel
-        if ($p['metagenerator'] == 'manual') {
-            $editActions[] = $emptyAction;
-            if ($_SESSION['login'] == "root"){
-                $delActions[] = $delAction;
+  $_count = $_packages["total"];
+  $_packages = $_packages["datas"];
+
+  $_arraypackagename = [];
+  $_localisations = [];
+  $_sharing_types = [];
+  $_descriptions = [];
+  $_versions = [];
+  $_licenses = [];
+  $_sizes = [];
+
+  $_params = [];
+
+    for($i=0; $i< count($_packages['uuid']); $i++){
+      $_tmpParam = [];
+      $_localisations[] = $_packages['share_name'][$i];
+      $_sharing_types[] = $_packages['share_type'][$i];
+      $_descriptions[] = $_packages['conf_json'][$i]['description'];
+      $_versions[] = $_packages['conf_json'][$i]['version'];
+      $_licenses[] = $_packages['conf_json'][$i]['inventory']['licenses'];
+      $_os[] = $_packages['conf_json'][$i]['targetos'];
+
+      $_tmpParam['pid']=base64_encode($_packages['uuid'][$i]);
+      $_tmpParam['packageUuid'] = $_packages['uuid'][$i];
+
+      $countfiles = _T('Non precised');
+      $listfiles = "";
+      // Missing list of file for each package
+      switch($_packages['conf_json'][$i]['metagenerator']){
+          case "expert":
+              $_arraypackagename[] = "<img style='position:relative; top : 5px;'
+                                          src='modules/pkgs/graph/img/package_expert.png'/>" .
+                                          "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                              $_packages['conf_json'][$i]['name'].
+                                          "</span>" ;
+          break;
+          case "standard":
+              $_arraypackagename[] = "<img style='position:relative; top : 5px;
+                                          'src='modules/pkgs/graph/img/package.png'/>".
+                                          "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                              $_packages['conf_json'][$i]['name'].
+                                          "</span>"  ;
+          break;
+          default: //"manual":
+              $_arraypackagename[] = "<img style='position:relative; top : 5px;'
+                                          src='modules/pkgs/graph/img/package.png'/>".
+                                          "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                              $_packages['conf_json'][$i]['name'].
+                                          "</span>" ;
+          break;
+      }
+
+      $_tmp_licenses = '';
+      if ($_packages['conf_json'][$i]['inventory']['associateinventory'] == 1 && isset($_packages['conf_json'][$i]['inventory']['licenses']) && !empty($_packages['conf_json'][$i]['inventory']['licenses'])) {
+          $_licensescount = getLicensesCount($_packages['conf_json'][$i]['inventory']['queries']['Qvendor'], $_packages['conf_json'][$i]['inventory']['queries']['Qsoftware'], $_packages['conf_json'][$i]['inventory']['queries']['Qversion'])['count'];
+          // Link to the group creation for machines with licence.
+          $_tmpParam['vendor'] = $_packages['conf_json'][$i]['inventory']['queries']['Qvendor'];
+          $_tmpParam['software'] = $_packages['conf_json'][$i]['inventory']['queries']['Qsoftware'];
+          $_tmpParam['version'] = $_packages['conf_json'][$i]['inventory']['queries']['Qversion'];
+          $_tmpParam['count'] = $_licensescount;
+          $_tmpParam['licencemax'] = $_packages['conf_json'][$i]['inventory']['licenses'];
+          $_urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $_param);
+
+          $_tmp_licenses = '<span style="border-width:1px;border-style:dotted; border-color:black; ">' .
+              '<a href="' .
+              $_urlRedirect . '" title="Create group">' .
+              $_licensescount .
+              '/' .
+              $_packages['conf_json'][$i]['inventory']['licenses'] .
+              '</a></span>';
+          if ($_licensescount > $_packages['conf_json'][$i]['inventory']['licenses']) { // highlights the exceeded license count
+              $_tmp_licenses = '<font color="FF0000">' . $tmp_licenses . '</font>';
+          }
+      }
+      $_licenses[] = $_tmp_licenses;
+      $_tmpParam['permission'] = $_packages['permission'][$i];
+
+      if(!isExpertMode()) {
+          // mode standart
+          // seul root peut supprimer package manuel
+          if ($_packages['conf_json'][$i]['metagenerator'] == 'manual') {
+              $_editActions[] = $emptyAction;
+              if ($_SESSION['login'] == "root"){
+                  $_delActions[] = $delAction;
+              }
+              else{
+                  $_delActions[] = $emptyAction;
+              }
+          }
+          else if ($_packages['conf_json'][$i]['metagenerator'] == 'expert') {
+            if($_packages['permission'][$i] == 'w' || $_packages['permission'][$i] == 'rw'){
+              $_editActions[] = $editExpertAction;
+              $_delActions[] = $delAction;
             }
             else{
-                $delActions[] = $emptyAction;
+              // No permission for editing/deleting
+              $_editActions[] = $emptyAction;
+              $_delActions[] = $emptyAction;
             }
-        }
-        elseif ($p['metagenerator'] == 'expert') {
-            $editActions[] = $editExpertAction;
-            $delActions[] = $delAction;
-        }
-        else {
-            $editActions[] = $editAction;
-            $delActions[] = $delAction;
-        }
+          }
+          else {
+            if($_packages['permission'][$i] == 'w' || $_packages['permission'][$i] == 'rw'){
+              $_editActions[] = $editAction;
+              $_delActions[] = $delAction;
+            }
+            else{
+              // No permission for editing/deleting
+              $_editActions[] = $emptyAction;
+              $_delActions[] = $emptyAction;
+            }
+          }
+      }
+      else {
+          //mode expert
+          if ($_packages['conf_json'][$i]['metagenerator'] == 'manual') {
+              $_editActions[] = $emptyAction;
+              if($_packages['permission'][$i] == 'w' || $_packages['permission'][$i] == 'rw'){
+                $_delActions[] = $delAction;
+              }
+              else{
+                $_delActions[] = $emptyAction;
+              }
+          }
+          else {
+              if($_packages['permission'][$i] == 'w' || $_packages['permission'][$i] == 'rw'){
+                $_editActions[] = $editAction;
+                $_delActions[] = $delAction;
+            }
+            else{
+              $_editActions[] = $emptyAction;
+              $_delActions[] = $emptyAction;
+            }
+          }
+      }
+      $_params[] = $_tmpParam;
     }
-    else {
-        //mode expert
-        if ($p['metagenerator'] == 'manual') {
-            $editActions[] = $emptyAction;
-            $delActions[] = $delAction;
-        }
-        else {
-            $editActions[] = $editAction;
-            $delActions[] = $delAction;
-        }
-    }
+
+    // Display the list
+    $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
+    $n->disableFirstColumnActionLink();
+    $n->addExtraInfo($_packages['share_name'], _T("Localization", "pkgs"));
+    $n->addExtraInfo($_packages['permission'], _T("Permissions", "pkgs"));
+    $n->addExtraInfo($_sharing_types, _T("Localization type", "pkgs"));
+    $n->addExtraInfo($_descriptions, _T("Description", "pkgs"));
+    $n->addExtraInfo($_versions, _T("Version", "pkgs"));
+    $n->addExtraInfo($_licenses, _T("Licenses", "pkgs"));
+    $n->addExtraInfo($_os, _T("Os", "pkgs"));
+    $n->addExtraInfo($_packages['size'], _T("Package size", "pkgs"));
+    $n->setItemCount($_count);
+    $n->setNavBar(new AjaxNavBar($_count, $filter1));
+    $n->setParamInfo($_params);
+    $n->addActionItemArray($_editActions);
+    $n->addActionItemArray($_delActions);
+    $n->start = 0;
+    $n->end = $_count;
 }
-// Display the list
-$n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
-$n->disableFirstColumnActionLink();
-$n->addExtraInfo($desc, _T("Description", "pkgs"));
-$n->addExtraInfo($versions, _T("Version", "pkgs"));
-$n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
-$n->addExtraInfo($os, _T("Os", "pkgs"));
-$n->addExtraInfo($size, _T("Package size", "pkgs"));
-$n->setItemCount($count);
-$n->setNavBar(new AjaxNavBar($count, $filter1));
-$n->setParamInfo($params);
-$n->addActionItemArray($editActions);
-$n->addActionItemArray($delActions);
-$n->start = 0;
-$n->end = $count;
+else{
+  $params = array();
+  $arraypackagename = array();
+  $versions = array();
+  $licenses = array();
+  $size = array();
+  $err = array();
+  $desc = array();
+  $os = array();
+  $editActions = array();
+  $delActions = array();
+
+
+  $packages = xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
+  $count = $packages[0];
+  $packages = $packages[1];
+
+  foreach ($packages as $p) {
+      $p = $p[0];
+      $countfiles = 0;
+      $countfiles = count($p['files']);
+      $listfiles = "";
+      foreach($p['files']  as $k){
+          // Compose list des fichiers dans le packages
+           $listfiles .="\t".$k['name']." : ".prettyOctetDisplay($k['size'])."\n";
+      }
+      switch($p['metagenerator']){
+          case "expert":
+              $arraypackagename[] = "<img style='position:relative; top : 5px;'
+                                          src='modules/pkgs/graph/img/package_expert.png'/>" .
+                                          "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                              $p['label'].
+                                          "</span>" ;
+          break;
+          case "standard":
+              $arraypackagename[] = "<img style='position:relative; top : 5px;
+                                          'src='modules/pkgs/graph/img/package.png'/>".
+                                          "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                              $p['label'].
+                                          "</span>"  ;
+          break;
+          default: //"manual":
+              $arraypackagename[] = "<img style='position:relative; top : 5px;'
+                                          src='modules/pkgs/graph/img/package.png'/>".
+                                          "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                              $p['label'].
+                                          "</span>" ;
+          break;
+      }
+
+      $uuid = $p['id'];
+      $versions[] = $p['version'];
+      $desc[] = $p['description'];
+      $os[] = $p['targetos'];
+      // #### begin licenses ####
+      $tmp_licenses = '';
+      if ($p['associateinventory'] == 1 && isset($p['licenses']) && !empty($p['licenses'])) {
+          $licensescount = getLicensesCount($p['Qvendor'], $p['Qsoftware'], $p['Qversion'])['count'];
+          // Link to the group creation for machines with licence.
+          $param = array();
+          $param['vendor'] = $p['Qvendor'];
+          $param['software'] = $p['Qsoftware'];
+          $param['version'] = $p['Qversion'];
+          $param['count'] = $licensescount;
+          $param['licencemax'] = $p['licenses'];
+          $urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $param);
+
+          $tmp_licenses = '<span style="border-width:1px;border-style:dotted; border-color:black; ">' .
+              '<a href="' .
+              $urlRedirect . '" title="Create group">' .
+              $licensescount .
+              '/' .
+              $p['licenses'] .
+              '</a></span>';
+          if ($licensescount > $p['licenses']) { // highlights the exceeded license count
+              $tmp_licenses = '<font color="FF0000">' . $tmp_licenses . '</font>';
+          }
+      }
+      $licenses[] = $tmp_licenses;
+      // #### end licenses ####
+      $size[] = prettyOctetDisplay($p['size']);
+      $params[] = array( 'pid' => base64_encode($p['id']), 'packageUuid' => $p['id']);
+      if(!isExpertMode()) {
+          // mode standart
+          // seul root peut supprimer package manuel
+          if ($p['metagenerator'] == 'manual') {
+              $editActions[] = $emptyAction;
+              if ($_SESSION['login'] == "root"){
+                  $delActions[] = $delAction;
+              }
+              else{
+                  $delActions[] = $emptyAction;
+              }
+          }
+          elseif ($p['metagenerator'] == 'expert') {
+              $editActions[] = $editExpertAction;
+              $delActions[] = $delAction;
+          }
+          else {
+              $editActions[] = $editAction;
+              $delActions[] = $delAction;
+          }
+      }
+      else {
+          //mode expert
+          if ($p['metagenerator'] == 'manual') {
+              $editActions[] = $emptyAction;
+              $delActions[] = $delAction;
+          }
+          else {
+              $editActions[] = $editAction;
+              $delActions[] = $delAction;
+          }
+      }
+    $localisations[] = $p['localisation_server'];
+    $sharing_types[] = $p['sharing_type'];
+  }
+
+  // Display the list
+  $n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
+  $n->disableFirstColumnActionLink();
+  $n->addExtraInfo($descriptions, _T("Description", "pkgs"));
+  $n->addExtraInfo($versions, _T("Version", "pkgs"));
+  $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
+  $n->addExtraInfo($os, _T("Os", "pkgs"));
+  $n->addExtraInfo($sizes, _T("Package size", "pkgs"));
+  $n->setItemCount($count);
+  $n->setNavBar(new AjaxNavBar($count, $filter1));
+  $n->setParamInfo($params);
+  $n->addActionItemArray($editActions);
+  $n->addActionItemArray($delActions);
+  $n->start = 0;
+  $n->end = $count;
+
+}
 
 print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 

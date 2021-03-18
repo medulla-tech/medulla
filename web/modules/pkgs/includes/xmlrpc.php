@@ -34,6 +34,11 @@ function putPackageDetail($package, $need_assign = True) {
     return xmlCall("pkgs.putPackageDetail", array($package, $need_assign));
 }
 
+
+function xmlrpc_pkgs_search_share($objectsearch){
+    return xmlCall("pkgs.pkgs_search_share", array($objectsearch));
+}
+
 // function pushPackage($papi, $random_dir, $files, $local_mmc) {
 //     return xmlCall("pkgs.ppa_pushPackage", array($papi, $random_dir, $files, $local_mmc));
 // }
