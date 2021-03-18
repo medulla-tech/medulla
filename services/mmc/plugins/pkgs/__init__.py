@@ -164,7 +164,6 @@ def pkgs_search_share(objsearch):
     sharing_result = []
     order_rules = PkgsDatabase().pkgs_Orderrules()
 
-    logger.debug("The rule used for the share detection is number %s" % order_rules)
     wrapper = {"config": {}, "datas": []}
     wrapper["config"]["centralizedmultiplesharing"] = PkgsConfig("pkgs").centralizedmultiplesharing
     wrapper["config"]["movepackage"] = PkgsConfig("pkgs").movepackage
@@ -1817,3 +1816,6 @@ esac""" %(basename(self.file), basename(self.file))
             return self.getRpmCommand()
         else:
             return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))
+
+def get_all_packages(login, start=-1, end=-1, filter=""):
+    return PkgsDatabase().get_all_packages(login, start, end, filter)
