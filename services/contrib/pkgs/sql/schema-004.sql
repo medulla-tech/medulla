@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_rules_global` (
   `pkgs_rules_algos_id` INT NOT NULL,
   `pkgs_shares_id` INT NOT NULL,
   `order` INT NULL DEFAULT 0,
-  `suject` VARCHAR(255) NOT NULL,
+  `subject` VARCHAR(255) NOT NULL,
   `permission` varchar(5) DEFAULT 'rw',
   PRIMARY KEY (`id`, `pkgs_rules_algos_id`),
   INDEX `fk_pkgs_rules_global_pkgs_rules_algos1_idx` (`pkgs_rules_algos_id` ASC),
@@ -166,6 +166,15 @@ ADD COLUMN `edition_status` INT NULL DEFAULT 1 AFTER `pkgs_share_id`;
 
 ALTER TABLE `pkgs`.`packages` 
 ADD COLUMN `conf_json` TEXT NULL AFTER `edition_status`;
+
+-- -----------------------------------------------------
+-- add field `table pkgs_shares`.manage quotas
+-- -----------------------------------------------------
+
+ALTER TABLE `pkgs`.`pkgs_shares`
+ADD COLUMN `usedquotas` INT NULL DEFAULT 0 AFTER `share_path`,
+ADD COLUMN `quotas` INT NULL DEFAULT 0 AFTER `usedquotas`;
+
 
 UPDATE version SET Number = 4;
 
