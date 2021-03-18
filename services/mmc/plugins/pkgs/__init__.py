@@ -265,6 +265,16 @@ def associatePackages(pid, fs, level = 0):
     chown(destination)
     return [ boolsucess, errortransfert ]
 
+def update_package_size(uuid):
+    """
+    This function modify the size on the package in the database.
+    Args:
+        uuid: The uuid of the package
+    """
+    package_root = os.path.join("/", "var", "lib", "pulse2", "packages", uuid)
+    size = simplecommand("du -Lab %s" % package_root)['result'][-1].split("\t")[0]
+    PkgsDatabase().update_package_size(uuid, size);
+
 def _remove_non_ascii(text):
     return unidecode(unicode(text, encoding = "utf-8"))
 
