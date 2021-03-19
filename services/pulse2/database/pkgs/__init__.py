@@ -713,7 +713,7 @@ class PkgsDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def SetPkgs_shares(self, session, name, comments,
                        enabled, share_type, uri, ars_name,
-                       ars_id, share_path):
+                       ars_id, share_path, usedquotas, quotas):
         try:
             new_Pkgs_shares = Pkgs_shares()
             new_Pkgs_shares.name = name
