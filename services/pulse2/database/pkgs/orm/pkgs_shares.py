@@ -117,7 +117,9 @@ class Pkgs_shares(object):
             'uri': self.getUri(),
             'ars_name': self.getArs_name(),
             'Ars_id': self.getArs_id(),
-            'share_path': self.getshare_path()}
+            'share_path': self.getshare_path(),
+            'usedquotas' : self.getusedquotas(),
+            'quotas' : self.getquotas()}
 
     def toH(self):
         return {
@@ -129,4 +131,6 @@ class Pkgs_shares(object):
             'uri': self.uri,
             'ars_name': self.ars_name,
             'ars_id': self.ars_id,
-            'share_path': self.share_path}
+            'share_path': self.share_path,
+            'usedquotas' : self.usedquotas,
+            'quotas' : self.quotas}
