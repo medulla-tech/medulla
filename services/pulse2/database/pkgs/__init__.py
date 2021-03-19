@@ -1014,23 +1014,23 @@ class PkgsDatabase(DatabaseHelper):
         if result:
             # create dict partage
             for y in result:
-                resuldict={}
-                resuldict['id_sharing']=y[0]
-                resuldict['name']=y[1]
-                resuldict['comments']=y[2]
-                resuldict['type']=y[4]
-                resuldict['uri']=y[5]
-                resuldict['ars_name']=y[6]
-                resuldict['ars_id']=y[7]
-                resuldict['share_path']=y[8]
-                resuldict['permission']="rw"
-                resuldict['quotas']=y[9]
-                resuldict['usedquotas']=y[10]
+                resuldict = {}
+                resuldict['id_sharing'] = y[0]
+                resuldict['name'] = y[1]
+                resuldict['comments'] = y[2]
+                resuldict['type'] = y[4]
+                resuldict['uri'] = y[5]
+                resuldict['ars_name'] = y[6]
+                resuldict['ars_id'] = y[7]
+                resuldict['share_path'] = y[8]
+                resuldict['permission'] = "rw"
+                resuldict['quotas'] = y[9]
+                resuldict['usedquotas'] = y[10]
                 ret.append(resuldict)
                 if resuldict['type'] == 'global':
-                    resuldict['nbpackage']=self.nb_package_in_sharing(share_id=None)
+                    resuldict['nbpackage'] = self.nb_package_in_sharing(share_id=None)
                 else:
-                    resuldict['nbpackage']=self.nb_package_in_sharing(share_id=resuldict['id_sharing'])
+                    resuldict['nbpackage'] = self.nb_package_in_sharing(share_id=resuldict['id_sharing'])
         return ret
 
     @DatabaseHelper._sessionm
