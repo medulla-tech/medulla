@@ -582,6 +582,17 @@ class PkgsDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
+    def pkgs_register_synchro_package_multisharing(self, session, package, typesynchro="create"):
+        list_idars = XmppMasterDatabase().get_List_Mutual_ARS_from_cluster_of_one_idars(package['shareobject']['ars_id'])
+        list_server_relay = XmppMasterDatabase().getRelayServerfromid(list_idars[0])
+        #list id server relay
+        for relaydata in list_server_relay:
+            # We exclude the local package server from the relayservers
+            if relaydata['jid'].startswith("rspulse@pulse/"):
+                continue
+            self.setSyncthingsync(package['id'], relaydata['jid'], typesynchro , watching = 'yes')
+
+    @DatabaseHelper._sessionm
     def pkgs_register_synchro_package(self, session, uuidpackage, typesynchro):
         """
             This function
