@@ -625,17 +625,6 @@ class PkgsDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
-    def pkgs_register_synchro_package_multisharing(self, session, package, typesynchro="create"):
-        list_idars = XmppMasterDatabase().get_List_Mutual_ARS_from_cluster_of_one_idars(package['shareobject']['ars_id'])
-        list_server_relay = XmppMasterDatabase().getRelayServerfromid(list_idars[0])
-        #list id server relay
-        for relaydata in list_server_relay:
-            # We exclude the local package server from the relayservers
-            if relaydata['jid'].startswith("rspulse@pulse/"):
-                continue
-            self.setSyncthingsync(package['id'], relaydata['jid'], typesynchro , watching = 'yes')
-
-    @DatabaseHelper._sessionm
     def pkgs_register_synchro_package(self, session, uuidpackage, typesynchro):
         """
             This function
@@ -651,14 +640,14 @@ class PkgsDatabase(DatabaseHelper):
                 continue
             self.setSyncthingsync(uuidpackage, jid[0], typesynchro, watching='yes')
 
-    @DatabaseHelper._sessionm
-    def pkgs_register_synchro_package(self, session, uuidpackage, typesynchro ):
-        list_server_relay = self.get_List_jid_ServerRelay_enable(enabled=1)
-        for jid in list_server_relay:
-            # Exclude local package server
-            if jid[0].startswith("rspulse@pulse/"):
-                continue
-            self.setSyncthingsync(uuidpackage, jid[0], typesynchro, watching='yes')
+    def pkgs_register_synchro_package_multisharing(self, session, package, typesynchro="create"):
+        list_idars = XmppMasterDatabase().get_List_Mutual_ARS_from_cluster_of_one_idars(package['shareobject']['ars_id'])
+        list_server_relay = XmppMasterDatabase().getRelayServerfromid(list_idars[0])
+        for relaydata in list_server_relay:
+
+            if relaydata['jid'].startswith("rspulse@pulse/"):
+                 continue
+            self.setSyncthingsync(package['id'], relaydata['jid'], typesynchro, watching='yes')
 
     @DatabaseHelper._sessionm
     def pkgs_unregister_synchro_package(self, session, uuidpackage, typesynchro, jid_relayserver):
