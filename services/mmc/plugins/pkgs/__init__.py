@@ -493,19 +493,18 @@ def putPackageDetail(package, need_assign=True):
             else:
                 # This operation is only possible if  the movepackage parameter is set to True
                 # This is a symlink
-                if testresult['realpath'] != directorysharing and \
-                    PkgsConfig("pkgs").movepackage:
-                    # we need to move the package to the correct location
-                    # and replace the symlink.
-                    os.remove(packages_id_input_dir) # supppression ln symbolique
-                    result = simplecommand("mv -nf %s %s " % (testresult['realpath'],
-                                                              directorysharing)) # mv to new partage
-                    result = simplecommand("ln -s %s %s " % (directorysharing,
-                                                             packages_id_input_dir))
-                else:
-                    # on ne peut pas continuer car interdit
-                    logger.error("forbiden move packages between sharings (parameter movepackage)")
-                    return None
+                if testresult['realpath'] != directorysharing:
+                    if PkgsConfig("pkgs").movepackage:
+                        # we need to move the package to the correct location
+                        # and replace the symlink.
+                        os.remove(packages_id_input_dir)
+                        result = simplecommand("mv -nf %s %s " % (testresult['realpath'],
+                                                                  directorysharing))
+                        result = simplecommand("ln -s %s %s " % (directorysharing,
+                                                                 packages_id_input_dir))
+                    else:
+                        logger.error("The move of the packages between shares is forbiden because the movepackage parameter is set to False")
+                        return None
     else:
         if not os.path.isdir(packages_id_input_dir):
             os.mkdir(packages_id_input_dir, 0755)
