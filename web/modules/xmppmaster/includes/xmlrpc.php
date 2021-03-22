@@ -476,7 +476,7 @@ function xmlrpc_xmpp_get_info_synchro_packageid($pid_ppackage){
 //######################################
 
 function xmlrpc_xmppGetAllPackages($filter, $start, $end) {
-    return xmlCall("xmppmaster.xmppGetAllPackages", array($filter, $start, $end));
+    return xmlCall("xmppmaster.xmppGetAllPackages", array($_SESSION['login'], $filter, $start, $end));
 }
 
 function xmpp_getPackageDetail($pid){

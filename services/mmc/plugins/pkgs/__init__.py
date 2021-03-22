@@ -156,7 +156,7 @@ def pkgs_search_share(objsearch):
             following the defined rules.
         Args:
             objsearch:
-            # TODO: Fix documentation 
+            # TODO: Fix documentation
         Results:
             It returns the the shares and the permissions following the defined rules.
 
@@ -186,7 +186,7 @@ def pkgs_search_share(objsearch):
                     if result:
                         for t in result:
                             re = [x['name'] for x in sharing_result]
-                            if t['name'] in re: 
+                            if t['name'] in re:
                                 continue
                             sharing_result.append(t);
                     logger.debug("search sharing local %s" % (result))
@@ -197,7 +197,7 @@ def pkgs_search_share(objsearch):
                     if result:
                         for t in result:
                             re = [x['name'] for x in sharing_result]
-                            if t['name'] in re: 
+                            if t['name'] in re:
                                 continue
                             sharing_result.append(t);
                     logger.debug("search sharing local %s" % (result))
@@ -446,8 +446,8 @@ def putPackageDetail(package, need_assign=True):
             package: a dictionnary with informations on the package
             need_assign: If set to True, it creates the package.
                          If set to False, it edits the package.
-        Returns: 
-            It returns the new simple package list 
+        Returns:
+            It returns the new simple package list
             [True, package['id'], path, dict package]
     """
     Bcreatepackage = False
@@ -485,7 +485,7 @@ def putPackageDetail(package, need_assign=True):
             if testresult['type'] == "dir":
                 # The package is the /var/lib/package folder. We need to move it in the correct one.
                 # We need to put it in the correct share.
-                
+
                 result = simplecommand("mv %s %s " % (packages_id_input_dir,
                                                       directorysharing))
                 result = simplecommand("ln -s %s %s " % (directorysharing,
@@ -1826,5 +1826,5 @@ esac""" %(basename(self.file), basename(self.file))
         else:
             return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))
 
-def get_all_packages(login, start=-1, end=-1, filter=""):
-    return PkgsDatabase().get_all_packages(login, start, end, filter)
+def get_all_packages(login, sharing_activated=False, start=-1, end=-1, filter=""):
+    return PkgsDatabase().get_all_packages(login, sharing_activated, start, end, filter)

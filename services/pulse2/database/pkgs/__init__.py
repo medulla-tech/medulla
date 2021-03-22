@@ -294,7 +294,7 @@ class PkgsDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._sessionm
-    def get_all_packages(self, session, login, start=-1, end=-1, ctx={}):
+    def get_all_packages(self, session, login, sharing_activated=False, start=-1, end=-1, ctx={}):
         """
         Get the list of all the packages stored in database.
         Params:
@@ -911,8 +911,8 @@ class PkgsDatabase(DatabaseHelper):
                                  algoid,
                                  enabled=1,
                                  share_type=None):
-        
-        sql ="""SELECT 
+
+        sql ="""SELECT
                     pkgs.pkgs_shares.id AS id_sharing,
                     pkgs.pkgs_shares.name AS name,
                     pkgs.pkgs_shares.comments AS comments,
@@ -942,8 +942,8 @@ class PkgsDatabase(DatabaseHelper):
                                                                                  algoid)
         typeclause = ""
         if share_type is not None:
-            typeclause =""" AND pkgs.pkgs_shares.type = '%s' """ % (share_type)       
-        sql = """ %s 
+            typeclause =""" AND pkgs.pkgs_shares.type = '%s' """ % (share_type)
+        sql = """ %s
                   %s %s
                   ORDER BY pkgs.pkgs_rules_local.order;""" % (sql,
                                                               whereclause,

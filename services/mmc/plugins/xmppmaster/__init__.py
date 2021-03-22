@@ -684,8 +684,8 @@ def getCountOnlineMachine():
 
 
 ############### package #####################
-def xmppGetAllPackages(filter,  start, end):
-    return apimanagepackagemsc.loadpackagelistmsc(filter, start, end)
+def xmppGetAllPackages(login, filter,  start, end):
+    return apimanagepackagemsc.loadpackagelistmsc(login, filter, start, end)
 
 def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)

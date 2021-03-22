@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
-# 
+#
 # (c) 2016-2021 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
@@ -177,35 +177,16 @@ class apimanagepackagemsc:
                'localisation_server',
                'sharing_type']
         result = []
-        if login == "root":
-            pkgs_shares = PkgsDatabase().pkgs_sharing_admin_profil()
-        else:
-            pkgs_shares = PkgsDatabase().pkgs_get_sharing_list_login(login)
-        _pkgs_shares = {}
-        pkgs_share_global = None
-        for share in pkgs_shares:
-            if share['type'] == "global":
-                pkgs_share_global = share
-            _pkgs_shares[share['name']] = share
 
         for packagefiles in apimanagepackagemsc.packagelistmscconfjson(pending):
             obj={}
             try:
                 data_file_conf_json = apimanagepackagemsc.readjsonfile(packagefiles)
-                if "localisation_server" not in data_file_conf_json:
-                    data_file_conf_json['localisation_server'] = pkgs_share_global['name']
-                    data_file_conf_json['sharing_type'] = pkgs_share_global['type']
-                else:
-                    _localisation = data_file_conf_json['localisation_server']
-                    data_file_conf_json['sharing_type'] = _pkgs_shares[_localisation]['type']
-
                 if 'filter' in filter:
                     if not (re.search(filter['filter'], data_file_conf_json['name'] , re.IGNORECASE) or
                             re.search(filter['filter'], data_file_conf_json['description'] , re.IGNORECASE) or
                             re.search(filter['filter'], data_file_conf_json['version'] , re.IGNORECASE) or
-                            re.search(filter['filter'], data_file_conf_json['targetos'] , re.IGNORECASE) or
-                            re.search(filter['filter'], data_file_conf_json['localisation_server'] , re.IGNORECASE) or
-                            re.search(filter['filter'], data_file_conf_json['sharing_type'] , re.IGNORECASE)
+                            re.search(filter['filter'], data_file_conf_json['targetos'] , re.IGNORECASE)
                             ):
                         continue
                 if 'filter1' in filter and \
