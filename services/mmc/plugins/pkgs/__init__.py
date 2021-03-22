@@ -98,8 +98,8 @@ class pkgmanage():
     def list_all(self, param):
         return PkgsDatabase().list_all()
 
-    def add_package(self, package):
-        return PkgsDatabase().createPackage(package)
+    def add_package(self, package, share_id=None, edition_status=1):
+        return PkgsDatabase().createPackage(package, share_id, edition_status)
 
     def pkgs_register_synchro_package(self, uuidpackage, typesynchro):
         return PkgsDatabase().pkgs_register_synchro_package(uuidpackage, typesynchro)
