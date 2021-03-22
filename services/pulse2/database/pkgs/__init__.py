@@ -293,6 +293,7 @@ class PkgsDatabase(DatabaseHelper):
         session.commit()
         session.flush()
 
+
     @DatabaseHelper._sessionm
     def get_all_packages(self, session, login, sharing_activated=False, start=-1, end=-1, ctx={}):
         """
@@ -300,38 +301,17 @@ class PkgsDatabase(DatabaseHelper):
         Params:
             session: The SQLAlchemy session
             login: The user login. (str)
+            sharing_activated: True, if the sharing system is activated
             start: int of the starting offset
             end: int of the limit
         Returns:
             It returns the list of the packages.
         """
 
-        # This query works, but not additionnals filters
-        """query = session.query(Packages, Pkgs_shares, Pkgs_rules_local, Pkgs_rules_algos)\
-            .join(Pkgs_shares, Pkgs_shares.id == Packages.pkgs_share_id)\
-            .join(Pkgs_rules_local, Pkgs_rules_local.pkgs_shares_id == Pkgs_shares.id)\
-            .join(Pkgs_rules_algos, Pkgs_rules_local.pkgs_rules_algos_id == Pkgs_rules_algos.id)\
-            .filter(Pkgs_rules_local.suject == login)"""
-
         if 'filter' in ctx:
             filter = ctx['filter']
         else:
             filter = ""
-
-        if filter == "":
-            _filter = ""
-        else:
-            _filter = """AND
-            (packages.conf_json LIKE '%%%s%%'
-        OR
-            pkgs_shares.name LIKE '%%%s%%'
-        OR
-            pkgs_shares.type LIKE '%%%s%%'
-        OR
-            permission LIKE '%%%s%%'
-        OR
-            pkgs_rules_algos.name LIKE '%%%s%%'
-        )"""%(filter, filter, filter, filter, filter)
 
         try:
             start = int(start)
@@ -342,49 +322,85 @@ class PkgsDatabase(DatabaseHelper):
         except:
             end = -1
 
-        if start >= 0:
-            limit = "LIMIT %s"%start
+
+        if sharing_activated is True:
+            if filter == "":
+                _filter = ""
+            else:
+                _filter = """AND
+                (packages.conf_json LIKE '%%%s%%'
+            OR
+                pkgs_shares.name LIKE '%%%s%%'
+            OR
+                pkgs_shares.type LIKE '%%%s%%'
+            OR
+                permission LIKE '%%%s%%'
+            OR
+                pkgs_rules_algos.name LIKE '%%%s%%'
+            )"""%(filter, filter, filter, filter, filter)
+
+            if start >= 0:
+                limit = "LIMIT %s"%start
+            else:
+                limit = " "
+
+            if end > 0:
+                offset = ", %s"%end
+            else:
+                offset = " "
+            if login != "root":
+                where_clause = "where pkgs_rules_local.suject REGEXP '%s' ORDER BY packages.label "%login
+            else:
+                where_clause = "where pkgs_shares.enabled = 1 ORDER BY packages.label "
+
+            sql = """select
+              SQL_CALC_FOUND_ROWS
+              packages.id as package_id,
+              packages.label as package_label,
+              packages.description as package_description,
+              packages.version as package_version,
+              packages.uuid,
+              packages.conf_json,
+              packages.pkgs_share_id as share_id,
+              pkgs_shares.name as share_name,
+              pkgs_shares.type as share_type,
+              pkgs_rules_local.permission,
+              packages.size,
+              packages.inventory_licenses as licenses,
+              packages.inventory_associateinventory as associateinventory,
+              packages.Qversion as qversion,
+              packages.Qvendor as qvendor,
+              packages.Qsoftware as qsoftware
+            from packages
+            left join pkgs_shares
+            on pkgs_shares.id = packages.pkgs_share_id
+            left join pkgs_rules_local
+            on pkgs_rules_local.pkgs_shares_id = pkgs_shares.id
+            left join pkgs_rules_algos
+            on pkgs_rules_local.pkgs_rules_algos_id = pkgs_rules_algos.id
+            %s %s %s %s
+            ;"""%(where_clause, _filter, limit, offset)
+            ret = session.execute(sql)
+            sql_count = "SELECT FOUND_ROWS();"
+            ret_count = session.execute(sql_count)
+            count = ret_count.first()[0]
         else:
-            limit = " "
 
-        if end > 0:
-            offset = ", %s"%end
-        else:
-            offset = " "
+            query = session.query(Packages).order_by(Packages.label)
+            if filter != "":
+                query = query.filter(Packages.conf_json.contains(filter))
+            count = query.count()
+            if start >=0 and end > 0:
+                query = query.offset(start).limit(end)
+            ret = query.all()
 
-        if login != "root":
-            where_clause = "where pkgs_rules_local.suject REGEXP '%s' and pkgs_shares.enabled = 1 ORDER BY packages.label "%login
-        else:
-            where_clause = "where pkgs_shares.enabled = 1 ORDER BY packages.label "
-
-        sql = """select
-          SQL_CALC_FOUND_ROWS
-          packages.id as package_id,
-          packages.uuid,
-          packages.conf_json,
-          packages.pkgs_share_id as share_id,
-          pkgs_shares.name as share_name,
-          pkgs_shares.type as share_type,
-          pkgs_rules_local.permission,
-          packages.size
-        from packages
-        left join pkgs_shares
-        on pkgs_shares.id = packages.pkgs_share_id
-        left join pkgs_rules_local
-        on pkgs_rules_local.pkgs_shares_id = pkgs_shares.id
-        left join pkgs_rules_algos
-        on pkgs_rules_local.pkgs_rules_algos_id = pkgs_rules_algos.id
-        %s %s %s %s
-        ;"""%(where_clause, _filter, limit, offset)
-
-        ret = session.execute(sql)
-        sql_count = "SELECT FOUND_ROWS();"
-        ret_count = session.execute(sql_count)
-        count = ret_count.first()[0]
         result = {
             "total": count,
             "datas" : {
                 "id": [],
+                "name": [],
+                "description" : [],
+                "version" : [],
                 "uuid": [],
                 "conf_json" : [],
                 "share_id": [],
@@ -395,21 +411,48 @@ class PkgsDatabase(DatabaseHelper):
             }
         }
 
-        for package in ret:
-            result["datas"]["id"].append(package[0] if package[0] is not None else "")
-            result["datas"]["uuid"].append(package[1] if package[1] is not None else "")
-            try:
-                conf_json = json.loads(package[2])
-            except:
-                conf_json = {}
-            result["datas"]["conf_json"].append(conf_json)
-            result["datas"]["share_id"].append(package[3] if package[3] is not None else "")
-            result["datas"]["share_name"].append(package[4] if package[4] is not None else "")
-            result["datas"]["share_type"].append(package[5] if package[5] is not None else "")
-            result["datas"]["permission"].append(package[6] if package[6] is not None else "")
-            result["datas"]["size"].append(package[7] if package[7] is not None else "")
+        if sharing_activated is True:
+            result["datas"]["licence"]=[]
+            result["datas"]["associateinventory"]=[]
+            result["datas"]["qversion"]=[]
+            result["datas"]["qvendor"]=[]
+            result["datas"]["qsoftware"]=[]
+            for package in ret:
+                try:
+                    conf_json = json.loads(package[5])
+                except:
+                    conf_json = {}
+                result["datas"]["id"].append(package[0])
+                result["datas"]["uuid"].append(package[4])
+                result["datas"]["name"].append(package[1])
+                result["datas"]["description"].append(package[2])
+                result["datas"]["version"].append(package[3])
+                result["datas"]["conf_json"].append(conf_json)
+                result["datas"]["share_id"].append(package[6] if package[6] is not None else "")
+                result["datas"]["share_name"].append(package[7] if package[7] is not None else "")
+                result["datas"]["share_type"].append(package[8] if package[8] is not None else "")
+                result["datas"]["permission"].append(package[9] if package[9] is not None else "")
+                result["datas"]["size"].append(package[10] if package[10] is not None else "")
+                result["datas"]["licence"].append(package[11] if package[11] is not None else "")
+                result["datas"]["associateinventory"].append(package[12] if package[12] is not None else "")
+                result["datas"]["qversion"].append(package[13] if package[13] is not None else "")
+                result["datas"]["qvendor"].append(package[14] if package[14] is not None else "")
+                result["datas"]["qsoftware"].append(package[15] if package[15] is not None else "")
+        else:
+            for package in ret:
+                result["datas"]["id"].append(package.id if package.id is not None else "")
+                result["datas"]["uuid"].append(package.uuid if package.uuid is not None else "")
+                result["datas"]["name"].append(package.label if package.label is not None else "")
+                result["datas"]["description"].append(package.description if package.description is not None else "")
+                result["datas"]["version"].append(package.version if package.version is not None else "")
+                try:
+                    conf_json = json.loads(package.conf_json)
+                except:
+                    conf_json = {}
+                result["datas"]["conf_json"].append(conf_json)
+                result["datas"]["share_id"].append(package.pkgs_share_id if package.pkgs_share_id is not None else "")
+                result["datas"]["size"].append(package.size if package.size is not None else "")
         return result
-
     @DatabaseHelper._sessionm
     def update_package_size(self, session, uuid, size):
         package = session.query(Packages).filter(Packages.uuid == uuid).first()
