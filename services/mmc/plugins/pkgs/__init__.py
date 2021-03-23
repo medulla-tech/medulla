@@ -458,6 +458,23 @@ def putPackageDetail(package, need_assign=True):
     if len(package['id']) != 36:
         return False
 
+    # ___ try compability with old packages ___
+    if "localisation_server" not in  package:
+        package['localisation_server']="global"
+
+    if "creator" not in  package:
+        package['creator']="root"
+        package['creation_date']=strdate
+
+
+    if package['creator'] == "" and package['editor'] != "":
+        #package old format_exc
+        #reinitialisation metadata new package.
+        package['creator']=package['editor']
+        package['creation_date']=package['edition_date']
+        package['localisation_server']="global"
+    # -------------------------------------------
+
     packages_id_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages", package['id'])
     packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages","sharing")
 
