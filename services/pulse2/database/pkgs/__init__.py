@@ -453,17 +453,59 @@ class PkgsDatabase(DatabaseHelper):
                 result["datas"]["share_id"].append(package.pkgs_share_id if package.pkgs_share_id is not None else "")
                 result["datas"]["size"].append(package.size if package.size is not None else "")
         return result
+
     @DatabaseHelper._sessionm
     def update_package_size(self, session, uuid, size):
-        package = session.query(Packages).filter(Packages.uuid == uuid).first()
-        package.size = size
+        """
+        This function update the size in package of tehe package.
+        Args:
+            session: the SQLAlchemy session
+            uuid: The uuid of the package
+            size: The new size of the package
+        Returns:
+            It returns the Quota for the shares.
+
+        """
+        result = {"size" : size, "uuid" : uuid, "error" : 0}
+        try:
+            package = session.query(Packages).filter(Packages.uuid == uuid).first()
+            if package:
+                package.size = size
+                result["label"] = package.label
+                pkgs_share_id = package.pkgs_share_id
+                result["pkgs_share_id"] = pkgs_share_id
+                session.commit()
+                session.flush()
+                if pkgs_share_id is not None:
+                    re1 = session.query( func.sum(Packages.size).label("total_size")).filter(Packages.pkgs_share_id == pkgs_share_id).first()
+                    resultquotas = self.update_sharing_susedquotas(pkgs_share_id, re1.total_size)
+                    result.update(resultquotas)
+        except:
+            result["error"] = 1
+        return result
+
+    @DatabaseHelper._sessionm
+    def update_sharing_susedquotas(self, session, rule_id , usesize):
+        """
+        Search quotas in the shares
+        Args:
+            session: the SQLAlchemy session
+            usesize:
+        """
+        result = {"quotas" : 0, "usedquotas" : 0  }
+        re = session.query(Pkgs_shares).filter(Pkgs_shares.id == rule_id).first()
+        if re:
+            re.usedquotas = usesize
         session.commit()
         session.flush()
+        return result
 
     @DatabaseHelper._sessionm
     def remove_package(self, session, uuid):
-        """Delete the specified package from the DB
+        """
+        Delete the specified package from the DB
         Param :
+            session: the SQLAlchemy session
             uuid: string of the uuid of the specified package.
         """
         session.query(Packages).filter(Packages.uuid == uuid).delete()
@@ -480,9 +522,9 @@ class PkgsDatabase(DatabaseHelper):
         return extensions
 
     @DatabaseHelper._sessionm
-    def delete_extension(self,session, id):
+    def delete_extension(self,session, rule_id):
         try:
-            session.query(Extensions).filter(Extensions.id == id).delete()
+            session.query(Extensions).filter(Extensions.id == rule_id).delete()
             session.commit()
             session.flush()
             return True
@@ -490,12 +532,14 @@ class PkgsDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
-    def raise_extension(self,session, id):
-        """ Raise the selected rule
+    def raise_extension(self,session, rule_id):
+        """ 
+        Raise the selected rule
         Param:
-            id: int corresponding to the rule id we want to raise
+            session: the SQLAlchemy session
+            rule_id: int corresponding to the rule id we want to raise
         """
-        rule_to_raise = session.query(Extensions).filter(Extensions.id == id).one()
+        rule_to_raise = session.query(Extensions).filter(Extensions.id == rule_id).one()
         rule_to_switch = session.query(Extensions).filter(Extensions.rule_order < rule_to_raise.rule_order).order_by(desc(Extensions.rule_order)).first()
 
         rule_to_raise.rule_order, rule_to_switch.rule_order = rule_to_switch.getRule_order(), rule_to_raise.getRule_order()
@@ -504,12 +548,14 @@ class PkgsDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def lower_extension(self,session, id):
-        """ Lower the selected rule
+    def lower_extension(self,session, rule_id):
+        """ 
+        Lower the selected rule
         Param:
-            id: int corresponding to the rule id we want to raise
+            session: the SQLAlchemy session
+            rule_id: int corresponding to the rule id we want to raise
         """
-        rule_to_lower = session.query(Extensions).filter(Extensions.id == id).one()
+        rule_to_lower = session.query(Extensions).filter(Extensions.id == rule_id).one()
         rule_to_switch = session.query(Extensions).filter(Extensions.rule_order > rule_to_lower.rule_order).order_by(asc(Extensions.rule_order)).first()
 
         rule_to_lower.rule_order, rule_to_switch.rule_order = rule_to_switch.getRule_order(), rule_to_lower.getRule_order()
@@ -520,6 +566,7 @@ class PkgsDatabase(DatabaseHelper):
     def get_last_extension_order(self,session):
         """ Lower the selected rule
         Param:
+            session: the SQLAlchemy session
             id: int corresponding to the rule id we want to raise
         """
         last_rule = session.query(Extensions).order_by(desc(Extensions.rule_order)).first()
@@ -533,6 +580,7 @@ class PkgsDatabase(DatabaseHelper):
     def add_extension(self,session, datas):
         """ Lower the selected rule
         Param:
+            session: the SQLAlchemy session
             id: int corresponding to the rule id we want to raise
         """
         if 'id' in datas:
