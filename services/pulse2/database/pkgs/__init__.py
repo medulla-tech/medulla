@@ -349,37 +349,42 @@ class PkgsDatabase(DatabaseHelper):
             else:
                 offset = " "
             if login != "root":
-                where_clause = "where pkgs_rules_local.suject REGEXP '%s' ORDER BY packages.label "%login
+                where_clause = "AND pkgs_rules_local.suject REGEXP '%s' ORDER BY packages.label "%login
             else:
-                where_clause = "where pkgs_shares.enabled = 1 ORDER BY packages.label "
+                where_clause = "AND pkgs_shares.enabled = 1 ORDER BY packages.label "
 
-            sql = """select
-              SQL_CALC_FOUND_ROWS
-              packages.id as package_id,
-              packages.label as package_label,
-              packages.description as package_description,
-              packages.version as package_version,
-              packages.uuid,
-              packages.conf_json,
-              packages.pkgs_share_id as share_id,
-              pkgs_shares.name as share_name,
-              pkgs_shares.type as share_type,
-              pkgs_rules_local.permission,
-              packages.size,
-              packages.inventory_licenses as licenses,
-              packages.inventory_associateinventory as associateinventory,
-              packages.Qversion as qversion,
-              packages.Qvendor as qvendor,
-              packages.Qsoftware as qsoftware
-            from packages
-            left join pkgs_shares
-            on pkgs_shares.id = packages.pkgs_share_id
-            left join pkgs_rules_local
-            on pkgs_rules_local.pkgs_shares_id = pkgs_shares.id
-            left join pkgs_rules_algos
-            on pkgs_rules_local.pkgs_rules_algos_id = pkgs_rules_algos.id
-            %s %s %s %s
-            ;"""%(where_clause, _filter, limit, offset)
+            sql="""SELECT SQL_CALC_FOUND_ROWS
+                        packages.id AS package_id,
+                        packages.label AS package_label,
+                        packages.description AS package_description,
+                        packages.version AS package_version,
+                        packages.uuid,
+                        packages.conf_json,
+                        packages.pkgs_share_id AS share_id,
+                        pkgs_shares.name AS share_name,
+                        pkgs_shares.type AS share_type,
+                        pkgs_rules_local.permission,
+                        packages.size,
+                        packages.inventory_licenses AS licenses,
+                        packages.inventory_associateinventory AS associateinventory,
+                        packages.Qversion AS qversion,
+                        packages.Qvendor AS qvendor,
+                        packages.Qsoftware AS qsoftware
+                    FROM
+                        packages
+                            LEFT JOIN
+                        pkgs_shares ON pkgs_shares.id = packages.pkgs_share_id
+                            LEFT JOIN
+                        pkgs_rules_local ON pkgs_rules_local.pkgs_shares_id = pkgs_shares.id
+                            LEFT JOIN
+                        pkgs_rules_algos ON pkgs_rules_local.pkgs_rules_algos_id = pkgs_rules_algos.id
+                    WHERE
+                        packages.uuid NOT IN (SELECT 
+                                syncthingsync.uuidpackage
+                            FROM
+                                pkgs.syncthingsync)
+                    %s %s %s %s
+                        ;"""%(where_clause, _filter, limit, offset)
             ret = session.execute(sql)
             sql_count = "SELECT FOUND_ROWS();"
             ret_count = session.execute(sql_count)
