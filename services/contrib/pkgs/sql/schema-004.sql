@@ -154,17 +154,17 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_rules_local` (
 ENGINE = InnoDB
 COMMENT = 'definition des regles ordonees qui sont utilisees pour determiner les partages locaux.';
 
--- 
+--
 -- -----------------------------------------------------
 -- add field `table packages`.
 -- -----------------------------------------------------
-ALTER TABLE `pkgs`.`packages` 
+ALTER TABLE `pkgs`.`packages`
 ADD COLUMN `pkgs_share_id` INT(11) NULL DEFAULT NULL AFTER `preCommand_name`;
 
-ALTER TABLE `pkgs`.`packages` 
+ALTER TABLE `pkgs`.`packages`
 ADD COLUMN `edition_status` INT NULL DEFAULT 1 AFTER `pkgs_share_id`;
 
-ALTER TABLE `pkgs`.`packages` 
+ALTER TABLE `pkgs`.`packages`
 ADD COLUMN `conf_json` TEXT NULL AFTER `edition_status`;
 
 ALTER TABLE `pkgs`.`packages`
