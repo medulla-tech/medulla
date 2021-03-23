@@ -2,11 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
- * (c) 2018 Siveo, http://www.siveo.net/
+ * (c) 2018-2021 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -204,6 +204,7 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
  * Page form
  */
 
+$json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
 // display an edit package form (description, version, ...)
 $f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
 $f->push(new Table());
@@ -264,24 +265,25 @@ $os = array(
 
 $f->add(new HiddenTpl("editor"), array("value" => $_SESSION['login'], "hide" => True));
 $f->add(new HiddenTpl("edition_date"), array("value" => date("Y-m-d H:i:s"), "hide" => True));
-$f->add(new HiddenTpl("creator"), array("value" => $package["creator"], "hide" => True));
-$f->add(new HiddenTpl("creation_date"), array("value" => $package["creation_date"], "hide" => True));
+$f->add(new HiddenTpl("creator"), array("value" => $json['info']['creator'], "hide" => True));
+$f->add(new HiddenTpl("creation_date"), array("value" => $json['info']["creation_date"], "hide" => True));
 
 $getShares  = xmlrpc_pkgs_search_share(['login'=>$_SESSION['login']]);
 $shares =[];
 foreach($getShares['datas'] as $share){
-  if(preg_match("#w#", $share['permission'])){
+  if(preg_match("#w#i", $share['permission'])){
     $shares[] = $share;
   }
 }
-$json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
 
 if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true){
-  $f->add(new HiddenTpl("previous_localisation_server"), array("value" => $package["previous_localisation_server"], "hide" => True));
+  $previous_localisation = (isset($json['info']['previous_localisation_server']) && $json['info']['previous_localisation_server'] != "") ? $json['info']['previous_localisation_server'] : $json['info']['localisation_server'];
+
+  $f->add(new HiddenTpl("previous_localisation_server"), array("value" => $previous_localisation, "hide" => True));
   if(isset($getShares["config"]["movepackage"]) && $getShares["config"]["movepackage"] == True){
     if(isset($json["info"]["Dependency"]) && count($json["info"]["Dependency"]) == 0){
       if(count($shares) == 1){ // Just 1 sharing (no choice)
-        $f->add(new HiddenTpl("localisation_server"), array("value" => $shares[0]["name"], "hide" => True));
+        $f->add(new HiddenTpl("localisation_server"), array("value" => $json["info"]['localisation_server'], "hide" => True));
       }
       else{ // sharing server > 1
         $sharesNames = [];
@@ -293,7 +295,7 @@ if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["conf
         $location_servers = new SelectItem('localisation_server');
         $location_servers->setElements($sharesNames);
         $location_servers->setElementsVal($sharesPaths);
-        $location_servers->setSelected($package["localisation_server"]);
+        $location_servers->setSelected($json['info']["localisation_server"]);
 
         $f->add(
                 new TrFormElement(_T('Location server', 'pkgs'), $location_servers), array()
@@ -301,11 +303,11 @@ if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["conf
       }
     }
     else{ // Dependencies > 0
-      $f->add(new HiddenTpl("localisation_server"), array("value" => $package["previous_localisation_server"], "hide" => True));
+      $f->add(new HiddenTpl("localisation_server"), array("value" => $json['info']["localisation_server"], "hide" => True));
     }
   }
   else{ // movepackage == false
-    $f->add(new HiddenTpl("localisation_server"), array("value" => $package["previous_localisation_server"], "hide" => True));
+    $f->add(new HiddenTpl("localisation_server"), array("value" => $json['info']["localisation_server"], "hide" => True));
   }
 }
 foreach ($fields as $p) {
