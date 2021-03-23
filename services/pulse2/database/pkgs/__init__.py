@@ -627,11 +627,13 @@ class PkgsDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def pkgs_register_synchro_package(self, session, uuidpackage, typesynchro):
         """
-            This function
+            This function allows to register the ARS that needs to tell the update of a package.
+            This function is only used in the "not shared" mode of the packageserver.
+            All the ARS are concerned.
             Args:
                 session: the SQLAlchemy session
-                uuidpackage: the UUID of the package
-                typesynchro:
+                uuidpackage: the UUID of the package.
+                typesynchro: Tells if the package will be created or changed.
         """
         list_server_relay = XmppMasterDatabase().get_List_jid_ServerRelay_enable(enabled=1)
         for jid in list_server_relay:
@@ -640,7 +642,19 @@ class PkgsDatabase(DatabaseHelper):
                 continue
             self.setSyncthingsync(uuidpackage, jid[0], typesynchro, watching='yes')
 
+    @DatabaseHelper._sessionm
     def pkgs_register_synchro_package_multisharing(self, session, package, typesynchro="create"):
+        """
+        This function allows to register the ARS that needs to tell the update of a package.
+        This function is only used in the "shared" mode of the package server.
+        Only the the ars in the share are concerned.
+
+        Args:
+            session: the SQLAlchemy session.
+            package: The package to synchronize.
+            typesynchro: Tells if the package will be created or changed.
+
+        """
         list_idars = XmppMasterDatabase().get_List_Mutual_ARS_from_cluster_of_one_idars(package['shareobject']['ars_id'])
         list_server_relay = XmppMasterDatabase().getRelayServerfromid(list_idars[0])
         for relaydata in list_server_relay:
