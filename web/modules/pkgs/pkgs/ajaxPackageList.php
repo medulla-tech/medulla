@@ -81,6 +81,19 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
   /*
    * These variables will contain the packages info
    */
+   $quotas = [];
+   $sharingNames = [];
+   $sharingUsedQuotas = [];
+   $sharingQuotas = [];
+
+   for($i = 0; $i < count($sharings['datas']); $i++){
+     $quotas[$sharings['datas'][$i]['id_sharing']] = [
+       'usedquotas'=>$sharings['datas'][$i]['usedquotas'],
+       'quotas' => $sharings['datas'][$i]['quotas'],
+       'percent' => ($sharings['datas'][$i]['quotas'] == 0) ? 0 : number_format(($sharings['datas'][$i]['usedquotas'] / 1073741824*$sharings['datas'][$i]['quotas'])*100, 3)
+     ];
+   }
+
   $_params = array();
   $__arraypackagename = array();
   $_versions = array();
@@ -103,10 +116,42 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
   $_versions = [];
   $_licenses = [];
   $_sizes = [];
-
+  $_diskUsages = [];
   $_params = [];
 
     for($i=0; $i< count($_packages['uuid']); $i++){
+      $packageSize = $_packages['size'][$i];
+      $usedQuotas = $quotas[$_packages['share_id'][$i]]['usedquotas'];
+      $totalQuotas = 1073741824*$quotas[$_packages['share_id'][$i]]['quotas'];
+      $percentQuotas = $quotas[$_packages['share_id'][$i]]['percent'];
+
+      if(($quotas[$_packages['share_id'][$i]]['quotas'] > 0)){
+        $occupation = number_format(($_packages['size'][$i] / $totalQuotas)*100, 3);
+
+
+        $size = "<span style='border-bottom: 4px double blue' title='Size : $packageSize&#013;"._T('Sharing disk usage', 'pkgs')." : &#013;$usedQuotas / $totalQuotas ($percentQuotas %)&#013;"._T('Package occupation','pkgs')." : $occupation%'>$packageSize</span>";
+      }
+      else{
+        $occupation = _T("Not limited", "pkgs");
+        $size = "<span style='border-bottom: 4px double black' title='Size : $packageSize&#013;"._T('Sharing disk usage', 'pkgs')." : $usedQuotas / "._T('not limited', 'pkgs')."&#013;'>$packageSize</span>";
+      }
+      $_sizes[] = $size;
+
+      if($totalQuotas != 0){
+        if($percentQuotas < 70){
+          $_diskUsages[] = "<span style='color:green;'>$percentQuotas %</span>";
+        }
+        else if($percentQuotas >=70 && $percentQuotas < 90){
+          $_diskUsages[] = "<span style='color:orange;'>$percentQuotas %</span>";
+        }
+        else{
+          $_diskUsages[] = "<span style='color:red;'>$percentQuotas %</span>";
+        }
+      }
+      else{
+        $_diskUsages[] = _T("not limited", "pkgs");
+      }
+
       $_tmpParam = [];
       $_localisations[] = $_packages['share_name'][$i];
       $_sharing_types[] = $_packages['share_type'][$i];
@@ -154,7 +199,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
           $_tmpParam['version'] = $_packages['conf_json'][$i]['inventory']['queries']['Qversion'];
           $_tmpParam['count'] = $_licensescount;
           $_tmpParam['licencemax'] = $_packages['conf_json'][$i]['inventory']['licenses'];
-          $_urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $_param);
+          $_urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $_params);
 
           $_tmp_licenses = '<span style="border-width:1px;border-style:dotted; border-color:black; ">' .
               '<a href="' .
@@ -235,12 +280,13 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($_packages['share_name'], _T("Localization", "pkgs"));
     $n->addExtraInfo($_packages['permission'], _T("Permissions", "pkgs"));
-    $n->addExtraInfo($_sharing_types, _T("Localization type", "pkgs"));
+    //$n->addExtraInfo($_sharing_types, _T("Localization type", "pkgs"));
     $n->addExtraInfo($_descriptions, _T("Description", "pkgs"));
     $n->addExtraInfo($_versions, _T("Version", "pkgs"));
     $n->addExtraInfo($_licenses, _T("Licenses", "pkgs"));
     $n->addExtraInfo($_os, _T("Os", "pkgs"));
-    $n->addExtraInfo($_packages['size'], _T("Package size", "pkgs"));
+    $n->addExtraInfo($_sizes, _T("Package size", "pkgs"));
+    $n->addExtraInfo($_diskUsages, _T("Share usage", "pkgs"));
     $n->setItemCount($_count);
     $n->setNavBar(new AjaxNavBar($_count, $filter1));
     $n->setParamInfo($_params);
