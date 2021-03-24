@@ -29,6 +29,8 @@ import logging
 from utils import md5, simplecommand
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.pkgs import PkgsDatabase
+import traceback
+
 logger = logging.getLogger()
 
 class apimanagepackagemsc:
@@ -158,6 +160,64 @@ class apimanagepackagemsc:
                                     "id" : str(uuid.uuid4()),
                                     "size" : str(os.path.getsize(fich)) })
         return ((result))
+
+    @staticmethod
+    def loadpackagelistmsc_on_select_package(listuuidpackag):
+        folderpackages = os.path.join("/", "var" ,"lib","pulse2","packages")
+        pending = False
+        tab = ['description',
+               'targetos',
+               'sub_packages',
+               'entity_id',
+               'reboot',
+               'version',
+               'metagenerator',
+               'id',
+               'name',
+               'basepath',
+               'localisation_server',
+               'sharing_type']
+
+        result = []
+        for packagefiles in [os.path.join(folderpackages, x, "conf.json" ) for x in listuuidpackag["uuid"]]:
+            if not os.path.exists(packagefiles):
+                logger.error("package %s conf.json missing" % packagefiles)
+                continue
+            obj={}
+            try:
+                data_file_conf_json = apimanagepackagemsc.readjsonfile(packagefiles)
+                for key in data_file_conf_json:
+                    if key in tab:
+                        obj[str(key)] = str(data_file_conf_json[key])
+                    elif key == 'commands':
+                        for z in data_file_conf_json['commands']:
+                            obj[str(z)] = str(data_file_conf_json['commands'][z])
+                    elif key == 'inventory':
+                        for z in data_file_conf_json['inventory']:
+                            if z == 'queries':
+                                for t in data_file_conf_json['inventory']['queries']:
+                                    obj[str(t)] = str(data_file_conf_json['inventory']['queries'][t])
+                            else:
+                                obj[str(z)] = str(data_file_conf_json['inventory'][z])
+                obj['files']=[]
+                obj['basepath'] = os.path.dirname(packagefiles)
+                obj['size'] = str(apimanagepackagemsc.sizedirectory(obj['basepath']))
+                for fich in apimanagepackagemsc.listfilepackage(obj['basepath'] ):
+                    pathfile = os.path.join("/",os.path.basename(os.path.dirname(fich)))
+                    obj['files'].append({"path" : pathfile,
+                                         "name" : os.path.basename(fich),
+                                         "id" : str(uuid.uuid4()),
+                                         "size" : str(os.path.getsize(fich)) })
+                if 'name' in obj:
+                    obj['label'] = obj['name']
+                obj1 = [obj]
+                result.append(obj1)
+            except:
+                errorstr = "%s" % traceback.format_exc()
+                logger.error("loadpackagelistmsc_on_select_package for package %s\n%s" % (errorstr,
+                                                                                          packagefiles))
+                continue
+        return ((listuuidpackag['count'], result))
 
     @staticmethod
     def loadpackagelistmsc(login, filter = None, start = None, end = None):

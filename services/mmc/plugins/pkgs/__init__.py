@@ -2,7 +2,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2008 Mandriva
-# (c) 2017      Siveo
+# (c) 2017-2021 Siveo
 #
 # $Id$
 #
@@ -67,6 +67,8 @@ from mmc.plugins.xmppmaster.master.lib.utils import simplecommand,\
                                                     make_tarfile,\
                                                     extract_file,\
                                                     md5folder
+from mmc.plugins.xmppmaster.master.lib.managepackage import apimanagepackagemsc
+
 from unidecode import unidecode
 import uuid
 from xml.dom import minidom
@@ -1844,3 +1846,15 @@ esac""" %(basename(self.file), basename(self.file))
 
 def get_all_packages(login, sharing_activated=False, start=-1, end=-1, filter=""):
     return PkgsDatabase().get_all_packages(login, sharing_activated, start, end, filter)
+
+def list_sharing_id(objsearch):
+    list_id_sharing = []
+    for sharing in pkgs_search_share(objsearch)['datas']:
+        list_id_sharing.append(sharing['id_sharing'])
+    return list_id_sharing
+
+def get_all_packages_deploy(login, start=-1, end=-1, filter=""):
+    objsearch = {'login': login}
+    objsearch['list_sharing'] = list_sharing_id(objsearch)
+    listuuidpackag=PkgsDatabase().get_list_packages_deploy_view(objsearch, start, end, filter)
+    return apimanagepackagemsc.loadpackagelistmsc_on_select_package(listuuidpackag)

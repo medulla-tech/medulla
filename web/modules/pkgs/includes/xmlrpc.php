@@ -249,4 +249,9 @@ function xmlrpc_get_all_packages($login, $sharing_activated = false, $start=-1, 
 function xmlrpc_update_package_size($uuid){
   return xmlCall("pkgs.update_package_size", [$uuid]);
 }
+
+function get_all_packages_deploy($login, $start=-1, $end=-1, $filter=""){
+  return xmlCall("pkgs.get_all_packages_deploy", [$login, $start, $end, $filter]);
+}
+
 ?>

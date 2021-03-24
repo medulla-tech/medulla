@@ -293,6 +293,95 @@ class PkgsDatabase(DatabaseHelper):
         session.commit()
         session.flush()
 
+    @DatabaseHelper._sessionm
+    def get_list_packages_deploy_view(self, session, objsearch, start=-1, end=-1, ctx={}):
+        """
+        Get the list of all the packages uuid for deploy.
+        Params:
+            session: The SQLAlchemy session
+            login: The user login. (str)
+            sharing_activated: True, if the sharing system is activated
+            start: int of the starting offset
+            end: int of the limit
+        Returns:
+            It returns the list of the packages.
+        """
+        result={'count' : 0, "uuid" :[]}
+        if 'filter1'in ctx:
+            filter1 =   ctx['filter1']
+
+        if 'filter' in ctx:
+            filter = ctx['filter']
+        else:
+            filter = ""
+
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            end = int(end)
+        except:
+            end = -1
+
+        if filter == "":
+            _filter = ""
+        else:
+            _filter = """AND
+            (packages.conf_json LIKE '%%%s%%'
+        OR
+            pkgs_shares.name LIKE '%%%s%%'
+        OR
+            pkgs_shares.type LIKE '%%%s%%'
+        OR
+            permission LIKE '%%%s%%')"""%(filter,
+                                            filter,
+                                            filter,
+                                            filter)
+
+        if filter1 == "":
+            _filter1 = ""
+        else:
+            _filter1 = """ AND
+            packages.os LIKE '%s' """%(filter1)
+
+        if start >= 0:
+            limit = "LIMIT %s"%start
+        else:
+            limit = " "
+
+        if end > 0:
+            offset = ", %s"%end
+        else:
+            offset = " "
+        where_clause = ""
+        if objsearch['list_sharing']:
+            strlist = ",".join([str(x) for x in objsearch['list_sharing']])
+            where_clause =  where_clause  + " AND packages.`pkgs_share_id` IN (%s) "%strlist
+
+        where_clause =  where_clause  + "AND pkgs_shares.enabled = 1 ORDER BY packages.label "
+
+        sql="""SELECT SQL_CALC_FOUND_ROWS
+                    packages.uuid
+                FROM
+                    packages
+                        LEFT JOIN
+                    pkgs_shares ON pkgs_shares.id = packages.pkgs_share_id
+                WHERE
+                    packages.uuid NOT IN (SELECT
+                            syncthingsync.uuidpackage
+                        FROM
+                            pkgs.syncthingsync)
+                %s %s %s %s %s
+                    ;"""%(_filter, _filter1,where_clause, limit, offset)
+        logger.error("jfkjfk %s" % sql)
+        ret = session.execute(sql)
+        sql_count = "SELECT FOUND_ROWS();"
+        ret_count = session.execute(sql_count)
+        result['count'] = ret_count.first()[0]
+        for package in ret:
+            result["uuid"].append(package[0])
+        return result
 
     @DatabaseHelper._sessionm
     def get_all_packages(self, session, login, sharing_activated=False, start=-1, end=-1, ctx={}):
