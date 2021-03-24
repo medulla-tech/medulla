@@ -419,7 +419,7 @@ if __name__ == '__main__':
 
             result = simplecommand("du -b %s" % package)
             sizebytefolder = int(result['result'][0].split()[0])
-            package_infos = {"size": "%sb" % sizebytefolder,
+            package_infos = {"size": "%s" % sizebytefolder,
                      "label":json_file['name'],
                      "description": json_file['description'],
                      "version": json_file['version'],
@@ -488,7 +488,7 @@ if __name__ == '__main__':
                                                     "%s","%s","%s","%s","%s",
                                                     "%s","%s","%s","%s","%s",
                                                     "%s","%s","%s","%s","%s",
-                                                    %s,"%s","%s","%s");"""%(
+                                                    %s,"%s","%s",%s);"""%(
                                                     package_infos['label'],
                                                     package_infos['description'],
                                                     package_infos['uuid'],
