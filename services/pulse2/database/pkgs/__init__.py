@@ -470,7 +470,7 @@ class PkgsDatabase(DatabaseHelper):
             else:
                 offset = " "
             if login != "root":
-                where_clause = "AND pkgs_rules_local.suject REGEXP '%s' ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "%login
+                where_clause = "AND pkgs_rules_local.subject REGEXP '%s' ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "%login
             else:
                 where_clause = "AND pkgs_shares.enabled = 1 ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "
             sql="""SELECT SQL_CALC_FOUND_ROWS
@@ -1060,7 +1060,7 @@ class PkgsDatabase(DatabaseHelper):
             new_Pkgs_rules_global.pkgs_rules_algos_id = pkgs_rules_algos_id
             new_Pkgs_rules_global.pkgs_shares_id = pkgs_shares_id
             new_Pkgs_rules_global.order = order
-            new_Pkgs_rules_global.suject = subject
+            new_Pkgs_rules_global.subject = subject
             session.add(new_Pkgs_rules_global)
             session.commit()
             session.flush()
@@ -1081,7 +1081,7 @@ class PkgsDatabase(DatabaseHelper):
             new_Pkgs_rules_local.pkgs_rules_algos_id = pkgs_rules_algos_id
             new_Pkgs_rules_local.pkgs_shares_id = pkgs_shares_id
             new_Pkgs_rules_local.order = order
-            new_Pkgs_rules_local.suject = subject
+            new_Pkgs_rules_local.subject = subject
             new_Pkgs_rules_local.permission = permission
             session.add(new_Pkgs_rules_local)
             session.commit()
@@ -1180,7 +1180,7 @@ class PkgsDatabase(DatabaseHelper):
                     pkgs.pkgs_rules_local ON pkgs.pkgs_rules_local.pkgs_shares_id = pkgs.pkgs_shares.id
                 WHERE""";
 
-        whereclause = """'%s' REGEXP (pkgs.pkgs_rules_local.suject)
+        whereclause = """'%s' REGEXP (pkgs.pkgs_rules_local.subject)
                         AND pkgs.pkgs_shares.enabled = %s
                         AND pkgs.pkgs_rules_local.pkgs_rules_algos_id = %s""" % (user_information,
                                                                                  enabled,
@@ -1331,7 +1331,7 @@ class PkgsDatabase(DatabaseHelper):
                     pkgs.pkgs_rules_local.id as id_rule,
                     pkgs.pkgs_rules_local.pkgs_rules_algos_id as algos_id,
                     pkgs.pkgs_rules_local.order as order_rule,
-                    pkgs.pkgs_rules_local.suject as subject,
+                    pkgs.pkgs_rules_local.subject as subject,
                     pkgs.pkgs_rules_local.permission as permission
                 FROM
                     pkgs.pkgs_shares
@@ -1339,7 +1339,7 @@ class PkgsDatabase(DatabaseHelper):
                     pkgs.pkgs_rules_local
                         ON pkgs.pkgs_rules_local.pkgs_shares_id = pkgs.pkgs_shares.id
                 WHERE
-                        '%s' REGEXP (pkgs.pkgs_rules_local.suject)
+                        '%s' REGEXP (pkgs.pkgs_rules_local.subject)
                         AND pkgs.pkgs_shares.enabled = 1
                 ORDER BY pkgs.pkgs_rules_local.order;""" % (loginname)
         result = session.execute(sql)

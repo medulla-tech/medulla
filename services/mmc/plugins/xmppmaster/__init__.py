@@ -593,8 +593,8 @@ def remotecommandshell(command, jidmachine, timeout):
     return callremotecommandshell(jidmachine, command, timeout=timeout)
 
 
-def remoteXmppMonitoring(suject, jidmachine, timeout):
-    data = callremoteXmppMonitoring(jidmachine,  suject, timeout=timeout)
+def remoteXmppMonitoring(subject, jidmachine, timeout):
+    data = callremoteXmppMonitoring(jidmachine,  subject, timeout=timeout)
     result = json.loads(data)
     resultdata = zlib.decompress(base64.b64decode(result['result']))
     dataresult = [x for x in resultdata.split('\n')]

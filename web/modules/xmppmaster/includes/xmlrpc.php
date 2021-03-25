@@ -71,8 +71,8 @@ function xmlrpc_remotecommandshell($command, $jidmachine, $timeout){
     return xmlCall("xmppmaster.remotecommandshell", array($command, $jidmachine, $timeout));
 }
 
-function xmlrpc_remoteXmppMonitoring($sujectinfo, $jidmachine, $timeout){
-    return xmlCall("xmppmaster.remoteXmppMonitoring", array($sujectinfo, $jidmachine, $timeout));
+function xmlrpc_remoteXmppMonitoring($subjectinfo, $jidmachine, $timeout){
+    return xmlCall("xmppmaster.remoteXmppMonitoring", array($subjectinfo, $jidmachine, $timeout));
 }
 
 function xmlrpc_listremotefileedit($jidmachine){

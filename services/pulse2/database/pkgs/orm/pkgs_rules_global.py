@@ -31,7 +31,7 @@ import logging
 """
 class Pkgs_rules_global(object):
     """ Mapping between pkgs.pkgs_rules_global and SA
-        colunm table: 'id,pkgs_rules_algos_id,pkgs_shares_id,order,suject'
+        colunm table: 'id,pkgs_rules_algos_id,pkgs_shares_id,order,subject'
     """
 
     def getId(self):
@@ -59,8 +59,8 @@ class Pkgs_rules_global(object):
             return ""
 
     def getSuject(self):
-        if self.suject is not None:
-            return self.suject
+        if self.subject is not None:
+            return self.subject
         else:
             return ""
 
@@ -70,7 +70,7 @@ class Pkgs_rules_global(object):
             'pkgs_rules_algos_id': self.getRules_algos_id(),
             'pkgs_shares_id': self.getShares_id(),
             'order': self.getOrder(),
-            'suject': self.getSuject()}
+            'subject': self.getSuject()}
 
     def toH(self):
         return {
@@ -78,5 +78,5 @@ class Pkgs_rules_global(object):
             'pkgs_rules_algos_id': self.pkgs_rules_algos_id,
             'pkgs_shares_id': self.pkgs_shares_id,
             'order': self.order,
-            'suject': self.suject}
+            'subject': self.subject}
 

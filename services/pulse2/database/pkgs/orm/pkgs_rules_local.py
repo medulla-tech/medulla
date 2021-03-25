@@ -31,7 +31,7 @@ import logging
 """
 class Pkgs_rules_local(object):
     """ Mapping between pkgs.pkgs_rules_local and SA
-        colunm table: 'id,pkgs_rules_algos_id,order,suject,pkgs_shares_id'
+        colunm table: 'id,pkgs_rules_algos_id,order,subject,pkgs_shares_id'
     """
 
     def getId(self):
@@ -59,8 +59,8 @@ class Pkgs_rules_local(object):
             return ""
 
     def getSuject(self):
-        if self.suject is not None:
-            return self.suject
+        if self.subject is not None:
+            return self.subject
         else:
             return ""
 
@@ -76,7 +76,7 @@ class Pkgs_rules_local(object):
             'pkgs_rules_algos_id': self.getRules_algos_id(),
             'pkgs_shares_id': self.getShares_id(),
             'order': self.getOrder(),
-            'suject': self.getSuject(),
+            'subject': self.getSuject(),
             'permission': self.getPermission()}
 
     def toH(self):
@@ -85,5 +85,5 @@ class Pkgs_rules_local(object):
             'pkgs_rules_algos_id': self.pkgs_rules_algos_id,
             'pkgs_shares_id': self.pkgs_shares_id,
             'order': self.order,
-            'suject': self.suject,
+            'subject': self.subject,
             'permision' : self.permission}

@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_rules_local` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `pkgs_rules_algos_id` INT NOT NULL,
   `order` INT NULL DEFAULT 0,
-  `suject` VARCHAR(255) NULL,
+  `subject` VARCHAR(255) NULL,
   `permission` varchar(5) DEFAULT 'rw',
   `pkgs_shares_id` INT NOT NULL,
   PRIMARY KEY (`id`, `pkgs_rules_algos_id`),

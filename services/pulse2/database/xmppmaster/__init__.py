@@ -4657,8 +4657,8 @@ class XmppMasterDatabase(DatabaseHelper):
             enabled = 1 Only on active relayserver.
             If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
             subnetmachine CIDR machine.
-                CIDR matching with suject of table has_relayserverrules
-                -- suject is the expresseion relationel.
+                CIDR matching with subject of table has_relayserverrules
+                -- subject is the expresseion relationel.
                 -- eg : ^55\.171\.[5-6]{1}\.[0-9]{1,3}/24$
                 -- eg : ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/24$ all adress mask 255.255.255.255
         """
