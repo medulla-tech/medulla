@@ -2,11 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
- * (c) 2018 Siveo, http://www.siveo.net/
+ * (c) 2018-2021 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -196,7 +196,8 @@ if (isset($_POST['bconfirm'])){
     $getShares  = xmlrpc_pkgs_search_share(['login'=>$_SESSION['login']]);
     $shares =[];
     foreach($getShares['datas'] as $share){
-      if(preg_match("#w#", $share['permission'])){
+      $diskUsage = ($share['quotas'] > 0) ? ($share['usedquotas']/(1073741824*$share['quotas']))*100 : 0;
+      if(preg_match("#w#", $share['permission']) && $diskUsage < 100 ){
         $shares[] = $share;
       }
     }
@@ -205,6 +206,12 @@ if (isset($_POST['bconfirm'])){
         $f->add(new HiddenTpl("localisation_server"), array("value" => $shares[0]["name"], "hide" => True));
       }
       else{
+        $searchSharing = new InputTpl("searchSharing");
+        $f->add(
+                new TrFormElement(_T("Search on Location",'pkgs'), $searchSharing), array_merge(array("value" => ''),
+                array('placeholder' => _T('Search by name ...', 'pkgs')))
+        );
+
         $sharesNames = [];
         $sharesPaths = [];
         foreach($shares as $key=>$share){
@@ -303,7 +310,8 @@ if (isset($_POST['bconfirm'])){
         $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
         $packagesInOption = '';
-        foreach(xmpp_packages_list() as $package)
+        $dependencies = list_dependancies_for_user_permission($_SESSION["login"]);
+        foreach($dependencies as $package)
         {
             $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
         }
@@ -333,6 +341,7 @@ if (isset($_POST['bconfirm'])){
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
                     <h3>'._T('Available dependencies', 'pkgs').'</h3>
+                    <input type="text" id="dependenciesFilter" value="" placeholder="'._T("search by name ...", "pkgs").'"><br/>
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOption.'
                     </select>
@@ -384,6 +393,54 @@ if (isset($_POST['bconfirm'])){
 
 <script type="text/javascript">
     jQuery(function() { // load this piece of code when page is loaded
+
+      dependenciesFilter = jQuery("#dependenciesFilter");
+      pooldependencies = jQuery("#pooldependencies option");
+
+      dependenciesFilter.on("change click hover keypress keydown", function(event){
+        if(dependenciesFilter.val() != ""){
+          regex = new RegExp(dependenciesFilter.val(), "gi");
+          jQuery.each(pooldependencies, function(id, dependency){
+            optionSelector = jQuery(dependency)
+            if(regex.test(optionSelector.val()) === false){
+              optionSelector.hide();
+            }
+            else{
+              optionSelector.show();
+            }
+          })
+        }
+        else{
+          jQuery.each(pooldependencies, function(id, dependency){
+            optionSelector = jQuery(dependency)
+            optionSelector.show();
+          })
+        }
+      })
+
+      sharingFilter = jQuery("#searchSharing");
+      sharingList = jQuery("#localisation_server option");
+      sharingFilter.on("change click hover keypress keydown", function(event){
+        if(sharingFilter.val() != ""){
+          regex = new RegExp(sharingFilter.val(), "gi");
+          jQuery.each(sharingList, function(id, opt){
+            optionSelector = jQuery(opt)
+            if(regex.test(optionSelector.text()) === false){
+              optionSelector.hide();
+            }
+            else{
+              optionSelector.show();
+            }
+          })
+        }
+        else{
+          jQuery.each(sharingList, function(id, opt){
+            optionSelector = jQuery(opt)
+            optionSelector.show();
+          })
+        }
+      })
+
         // Limit the text length for label
         jQuery("input[name='label']").attr("maxlength", 60);
         jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");

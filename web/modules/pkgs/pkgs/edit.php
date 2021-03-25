@@ -443,6 +443,7 @@ if(isExpertMode())
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
                     <h3>'._T('Available dependencies', 'pkgs').'</h3>
+                    <input type="text" id="dependenciesFilter" value="" placeholder="'._T("search by name ...", "pkgs").'"><br/>
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOptionNotAdded.'
                     </select>
@@ -545,6 +546,31 @@ $f->display();
 
 <script>
 jQuery(function(){
+  dependenciesFilter = jQuery("#dependenciesFilter");
+  pooldependencies = jQuery("#pooldependencies option");
+
+  dependenciesFilter.on("change click hover keypress keydown", function(event){
+    if(dependenciesFilter.val() != ""){
+      regex = new RegExp(dependenciesFilter.val(), "gi");
+      jQuery.each(pooldependencies, function(id, dependency){
+        optionSelector = jQuery(dependency)
+        if(regex.test(optionSelector.val()) === false){
+          optionSelector.hide();
+        }
+        else{
+          optionSelector.show();
+        }
+      })
+    }
+    else{
+      jQuery.each(pooldependencies, function(id, dependency){
+        optionSelector = jQuery(dependency)
+        optionSelector.show();
+      })
+    }
+  })
+
+
   jQuery("input[name='label']").attr("maxlength", 60);
   jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
 })
