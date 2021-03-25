@@ -47,6 +47,20 @@ li.displayg a {
     -moz-filter: grayscale(50%);
     opacity:0.5;
 }
+
+li.inventoryg a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/inventory.png");
+    background-repeat: no-repeat;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
 </style>
 
 <style>
@@ -96,6 +110,7 @@ li.displayg a {
 </style>
 
 <script>
+
 jQuery(function()
 {
 	 jQuery( function() {
@@ -156,38 +171,47 @@ $params = [];
 
 $msc_vnc_show_icon = web_vnc_show_icon();
 
+$glpinoAction = new EmptyActionItem1(_("GLPI Inventory"),"glpitabs","inventoryg","inventory", "base", "computers");
+
 // Actions for each machines
 $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
-$mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
 
-$inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
-//$glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
-$logAction = new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
-$mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
   $monitoring = new ActionItem(_("Monitoring"),"monitoringview","monit","computers", "xmppmaster", "xmppmaster");
   $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
+
+
+  $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
   $mscNoAction = new EmptyActionItem1(_("Software deployment"),"msctabs","installg","computer", "base", "computers");
 
   $inventconsole   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
   $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
-  $actionConsole = array();
+
+  # Standard Mode
   $inventxmppbrowsingne   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
   $inventnoxmppbrowsingne = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsingne","folderg","computers","xmppmaster", "xmppmaster");
+
+  # Expert mode
   $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
+  $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
+
+
   $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
   $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
-  $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
-	$fileviewer = new ActionItem(_("files viewer"),"fileviewer","display","computers", "xmppmaster", "xmppmaster");
-	$filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","displayg","computers","xmppmaster", "xmppmaster");
-}else{
+
+  $fileviewer = new ActionItem(_("files viewer"),"fileviewer","display","computers", "xmppmaster", "xmppmaster");
+  $filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","displayg","computers","xmppmaster", "xmppmaster");
+}
+else{
   $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
 }
+
 $imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
+
 $extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
 
-$profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers");
+// $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers");
 
 $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
 $DeployQuickxmpp->setWidth(600);
@@ -196,7 +220,7 @@ $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client",
 
 $actionMonitoring = array();
 $actionInventory = array();
-$action_logs_msc = array();
+$actionConsole = array();
 $action_deploy_msc = array();
 $actionImaging = array();
 $actionVncClient = array();
@@ -255,6 +279,12 @@ $chaine = array(
         'broadcast'             => _T("Broadcast address", 'xmppmaster'),
         'gateway'               => _T("Gateway address" , 'xmppmaster'));
 
+
+foreach ($machines1['list_reg_columns_name'] as $columns_name){
+    $chaine[$columns_name] = $columns_name;
+}
+
+
 $orderkey = array( "glpi_owner",
             "mask",
             "uuid_inventorymachine",
@@ -299,33 +329,36 @@ $orderkey = array( "glpi_owner",
             "kiosk_presence",
             "glpi_location_id");
 
-foreach ($machines1['list_reg_columns_name'] as $columns_name){
-    $chaine[$columns_name] = $columns_name;
-}
 
     $exclud=array('glpi_location_id', 'glpi_entity_id', 'columns_name',"list_reg_columns_name" );
     for ($index = 0; $index < count($datas['hostname'] ); $index++) {
         $chainestr ="<table class='ttable'>";
 
-        foreach($orderkey as $keyordor){
-            $dd=$datas[$keyordor];
-            if(in_array($mach,$exclud ) ||  $dd[$index] == ""){
-                 continue;
+        foreach($datas as $mach => $value ){
+            if(in_array($mach,$exclud ) ||  $value[$index] ==""){
+                continue;
             }
-            $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$keyordor] ."</td><td class='ttabletd'>".$dd[$index]."</td></tr>";
+            $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$mach] ."</td><td class='ttabletd'>: ".$value[$index]."</td></tr>";
         }
         $chainestr .= "</table>";
         $cn[] = sprintf('<span class="infomach" mydata="%s">%s</pan>', $chainestr, $datas['hostname'][$index]);
     }
+
     $index=0;
     foreach(  $datas['enabled'] as $valeue){
-        $actionInventory[] = $glpiAction;
-        $actionxmppquickdeoloy[]=$DeployQuickxmpp;
-        $action_deploy_msc[] = $mscAction;
-        $action_logs_msc[]   = $logAction;
+
+        if ($datas['uuid_inventorymachine'][$index] =="" ){
+            $actionInventory[] = $glpinoAction;
+        }else{
+         $actionInventory[] = $glpiAction;
+        }
+        $actionxmppquickdeoloy[]=$DeployQuickxmpp; //Quick action presence ou non presence.
+        //$action_logs_msc[]   = $mscNoAction;
         $actionMonitoring[] = $monitoring;
         if ($valeue == 1){
             $presencesClass[] = "machineNamepresente";
+
+            $action_deploy_msc[] = $mscAction; //deployement
 
             if (isExpertMode()){
                 $actionConsole[] = $inventconsole;
@@ -336,9 +369,10 @@ foreach ($machines1['list_reg_columns_name'] as $columns_name){
             else{
                 $actionxmppbrowsingne[] = $inventxmppbrowsingne;
             }
-        } else {
-            $presencesClass[] = "machineName";}
-
+        }
+        else {
+            $action_deploy_msc[] = $mscNoAction; //deployement
+            $presencesClass[] = "machineName";
             if (isExpertMode()){
                 $actionConsole[] = $inventnoconsole;
                 $actionxmppbrowsing[] = $inventnoxmppbrowsing;
@@ -348,6 +382,7 @@ foreach ($machines1['list_reg_columns_name'] as $columns_name){
             else{
                 $actionxmppbrowsingne[] = $inventnoxmppbrowsingne;
             }
+         }
 
         if (in_array("imaging", $_SESSION["supportModList"])) {
             $actionImaging[] = $imgAction;
@@ -419,13 +454,10 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])){
   };
 }
 
-if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SESSION["supportModList"]) ) {
-  if (in_array("xmppmaster", $_SESSION["supportModList"])){
-    $n->addActionItemArray($action_deploy_msc);
-  }else{
-    $n->addActionItemArray($action_logs_msc);
-  }
-}
+
+ if (in_array("xmppmaster", $_SESSION["supportModList"])){
+     $n->addActionItemArray($action_deploy_msc);
+ }
 
 if (in_array("imaging", $_SESSION["supportModList"])) {
   if (in_array("xmppmaster", $_SESSION["supportModList"])){
