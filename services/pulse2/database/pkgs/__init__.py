@@ -379,7 +379,7 @@ class PkgsDatabase(DatabaseHelper):
                             LEFT JOIN
                         pkgs_rules_algos ON pkgs_rules_local.pkgs_rules_algos_id = pkgs_rules_algos.id
                     WHERE
-                        packages.uuid NOT IN (SELECT 
+                        packages.uuid NOT IN (SELECT
                                 syncthingsync.uuidpackage
                             FROM
                                 pkgs.syncthingsync)
@@ -462,7 +462,7 @@ class PkgsDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def update_package_size(self, session, uuid, size):
         """
-        This function update the size in package of tehe package.
+        This function update the size in package of the package.
         Args:
             session: the SQLAlchemy session
             uuid: The uuid of the package
@@ -482,15 +482,15 @@ class PkgsDatabase(DatabaseHelper):
                 session.commit()
                 session.flush()
                 if pkgs_share_id is not None:
-                    re1 = session.query( func.sum(Packages.size).label("total_size")).filter(Packages.pkgs_share_id == pkgs_share_id).first()
-                    resultquotas = self.update_sharing_susedquotas(pkgs_share_id, re1.total_size)
+                    sql_request = session.query( func.sum(Packages.size).label("total_size")).filter(Packages.pkgs_share_id == pkgs_share_id).first()
+                    resultquotas = self.update_sharing_usedquotas(pkgs_share_id, sql_request.total_size)
                     result.update(resultquotas)
         except:
             result["error"] = 1
         return result
 
     @DatabaseHelper._sessionm
-    def update_sharing_susedquotas(self, session, rule_id , usesize):
+    def update_sharing_usedquotas(self, session, rule_id , usesize):
         """
         Search quotas in the shares
         Args:
@@ -506,9 +506,26 @@ class PkgsDatabase(DatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
+    def get_pkgs_share_from_uuid(self, session, uuid):
+        """
+        This function is used to obtain a package based on the uuid.
+        Args:
+            session: the SQLAlchemy session.
+            uuid: string of the uuid of the specified package.
+
+        Returns:
+            It returns the package based on the uuid.
+        """
+        package = session.query(Packages).filter(Packages.uuid == uuid).first()
+        if package:
+           return package.to_array()
+        return None
+
+    @DatabaseHelper._sessionm
     def remove_package(self, session, uuid):
         """
-        Delete the specified package from the DB
+        Delete the specified package from the DB and
+        Updates the quotas used by the sharing in which the UUID package belongs.
         Param :
             session: the SQLAlchemy session
             uuid: string of the uuid of the specified package.
@@ -516,6 +533,14 @@ class PkgsDatabase(DatabaseHelper):
         session.query(Packages).filter(Packages.uuid == uuid).delete()
         session.commit()
         session.flush()
+        if packagesdata is not None and \
+                'pkgs_share_id' in packagesdata and \
+                    packagesdata['pkgs_share_id'] is not None:
+            sql_request = session.query( func.sum(Packages.size).label("total_size")).\
+                filter(Packages.pkgs_share_id == packagesdata['pkgs_share_id']).first()
+            return self.update_sharing_usedquotas(packagesdata['pkgs_share_id'],
+                                                           sql_request.total_size)
+        return {"quotas" : 0, "usedquotas" : 0}
 
     ######## Extensions / Rules ##########
     @DatabaseHelper._sessionm
