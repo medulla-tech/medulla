@@ -369,7 +369,8 @@ class PkgsDatabase(DatabaseHelper):
             strlist = ",".join([str(x) for x in objsearch['list_sharing']])
             where_clause =  where_clause  + " AND packages.`pkgs_share_id` IN (%s) "%strlist
 
-        where_clause =  where_clause  + "AND pkgs_shares.enabled = 1 ORDER BY packages.label "
+        where_clause =  where_clause  + "AND pkgs_shares.enabled = 1  ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC  "
+
 
         sql="""SELECT SQL_CALC_FOUND_ROWS
                     packages.uuid
