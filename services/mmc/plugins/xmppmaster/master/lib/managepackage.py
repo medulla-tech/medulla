@@ -162,6 +162,21 @@ class apimanagepackagemsc:
         return ((result))
 
     @staticmethod
+    def load_packagelist_dependencies(listuuidpackag):
+        xmpp_list = []
+        folderpackages = os.path.join("/", "var", "lib", "pulse2", "packages")
+        for packagefiles in [os.path.join(folderpackages, x, "xmppdeploy.json" ) for x in listuuidpackag["uuid"]]:
+        for x in listuuidpackag["uuid"]:
+            packagefiles = os.path.join(folderpackages, x, "xmppdeploy.json" )
+            if not os.path.exists(packagefiles):
+                logger.error("package %s xmppdeploy.json missing" % packagefiles)
+                continue
+            data_file_conf_json = apimanagepackagemsc.readjsonfile(packagefiles)
+            data_file_conf_json["info"]["uuid"] = x
+            xmpp_list.append(data_file_conf_json["info"])
+        return xmpp_list
+
+    @staticmethod
     def loadpackagelistmsc_on_select_package(listuuidpackag):
         folderpackages = os.path.join("/", "var" ,"lib","pulse2","packages")
         pending = False

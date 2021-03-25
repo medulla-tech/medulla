@@ -1867,3 +1867,16 @@ def get_all_packages_deploy(login, start=-1, end=-1, filter=""):
     objsearch['list_sharing'] = list_sharing_id(objsearch)
     listuuidpackag=PkgsDatabase().get_list_packages_deploy_view(objsearch, start, end, filter)
     return apimanagepackagemsc.loadpackagelistmsc_on_select_package(listuuidpackag)
+
+def get_dependencies_list_from_permissions(login):
+    """
+    This function is used to retrieve the dependency list in function of the permissions.
+    Args:
+        login: The login of the user we are seeking dependencies
+    Returns:
+        It returns the dependency list in function of the permissions
+    """
+    objsearch = {'login': login, 'permission': "r"}
+    objsearch['list_sharing'] = list_sharing_id(objsearch)
+    listuuidpackag = PkgsDatabase().get_list_packages_deploy_view(objsearch)
+    return apimanagepackagemsc.load_packagelist_dependencies(listuuidpackag)

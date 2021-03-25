@@ -309,8 +309,16 @@ class PkgsDatabase(DatabaseHelper):
         result={'count' : 0, "uuid" :[]}
         if 'list_sharing' in  objsearch and not objsearch['list_sharing']:
             return result
+
         if 'filter1'in ctx:
             filter1 =   ctx['filter1']
+        else:
+            filter1 =  ""
+
+        if 'filter1'in ctx:
+            filter1 =   ctx['filter1']
+        else:
+            filter1 =  ""
 
         if 'filter' in ctx:
             filter = ctx['filter']
