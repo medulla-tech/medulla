@@ -1160,8 +1160,7 @@ class PkgsDatabase(DatabaseHelper):
 
         permitionclause = ""
         if permission is not None:
-            permitionclause =""" AND pkgs.pkgs_shares.permission like '%%%s%%' """ % (permission)
-
+            permitionclause =""" AND pkgs.pkgs_rules_local.permission like '%%%s%%' """ % (permission)
         sql = """ %s
                   %s %s %s
                   ORDER BY pkgs.pkgs_rules_local.order;""" % (sql,
