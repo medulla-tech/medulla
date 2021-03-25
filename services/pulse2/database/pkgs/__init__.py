@@ -337,17 +337,26 @@ class PkgsDatabase(DatabaseHelper):
         if filter == "":
             _filter = ""
         else:
-            _filter = """AND
-            (packages.conf_json LIKE '%%%s%%'
-        OR
-            pkgs_shares.name LIKE '%%%s%%'
-        OR
-            pkgs_shares.type LIKE '%%%s%%'
-        OR
-            permission LIKE '%%%s%%')"""%(filter,
-                                            filter,
-                                            filter,
-                                            filter)
+            _filter = """AND ( pkgs_shares.name LIKE '%%%s%%'
+            OR
+                pkgs_shares.type LIKE '%%%s%%'
+            OR
+                packages.label LIKE '%%%s%%'
+            OR
+                packages.description LIKE '%%%s%%'
+            OR
+                packages.version LIKE '%%%s%%'
+            OR
+                packages.uuid LIKE '%%%s%%'
+            OR
+                packages.metagenerator LIKE '%%%s%%'
+            OR
+                packages.Qversion LIKE '%%%s%%'
+            OR
+                packages.Qvendor LIKE '%%%s%%'
+            OR
+                packages.Qsoftware LIKE '%%%s%%'
+            )"""%(filter, filter, filter, filter, filter,filter, filter, filter, filter, filter,filter, filter, filter)
 
         if filter1 == "":
             _filter1 = ""
@@ -384,8 +393,7 @@ class PkgsDatabase(DatabaseHelper):
                         FROM
                             pkgs.syncthingsync)
                 %s %s %s %s %s
-                    ;"""%(_filter, _filter1,where_clause, limit, offset)
-        logger.error("jfkjfk %s" % sql)
+                    ;""" % (_filter, _filter1, where_clause, limit, offset)
         ret = session.execute(sql)
         sql_count = "SELECT FOUND_ROWS();"
         ret_count = session.execute(sql_count)
@@ -421,23 +429,36 @@ class PkgsDatabase(DatabaseHelper):
             end = int(end)
         except:
             end = -1
-
-
         if sharing_activated is True:
             if filter == "":
                 _filter = ""
             else:
-                _filter = """AND
-                (packages.conf_json LIKE '%%%s%%'
-            OR
-                pkgs_shares.name LIKE '%%%s%%'
+                _filter = """AND ( pkgs_shares.name LIKE '%%%s%%'
             OR
                 pkgs_shares.type LIKE '%%%s%%'
             OR
-                permission LIKE '%%%s%%'
+                pkgs_rules_local.permission LIKE '%%%s%%'
             OR
                 pkgs_rules_algos.name LIKE '%%%s%%'
-            )"""%(filter, filter, filter, filter, filter)
+            OR
+                packages.label LIKE '%%%s%%'
+            OR
+                packages.description LIKE '%%%s%%'
+            OR
+                packages.version LIKE '%%%s%%'
+            OR
+                packages.uuid LIKE '%%%s%%'
+            OR
+                packages.os LIKE '%%%s%%'
+            OR
+                packages.metagenerator LIKE '%%%s%%'
+            OR
+                packages.Qversion LIKE '%%%s%%'
+            OR
+                packages.Qvendor LIKE '%%%s%%'
+            OR
+                packages.Qsoftware LIKE '%%%s%%'
+            )"""%(filter, filter, filter, filter, filter, filter, filter, filter, filter, filter, filter, filter, filter)
 
             if start >= 0:
                 limit = "LIMIT %s"%start
@@ -452,7 +473,6 @@ class PkgsDatabase(DatabaseHelper):
                 where_clause = "AND pkgs_rules_local.suject REGEXP '%s' ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "%login
             else:
                 where_clause = "AND pkgs_shares.enabled = 1 ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "
-
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         packages.id AS package_id,
                         packages.label AS package_label,
@@ -484,7 +504,7 @@ class PkgsDatabase(DatabaseHelper):
                             FROM
                                 pkgs.syncthingsync)
                     %s %s %s %s
-                        ;"""%(_filter, where_clause,  limit, offset)
+                        ;"""%(_filter, where_clause, limit, offset)
             ret = session.execute(sql)
             sql_count = "SELECT FOUND_ROWS();"
             ret_count = session.execute(sql_count)
