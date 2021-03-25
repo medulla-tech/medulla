@@ -307,6 +307,8 @@ class PkgsDatabase(DatabaseHelper):
             It returns the list of the packages.
         """
         result={'count' : 0, "uuid" :[]}
+        if 'list_sharing' in  objsearch and not objsearch['list_sharing']:
+            return result
         if 'filter1'in ctx:
             filter1 =   ctx['filter1']
 
