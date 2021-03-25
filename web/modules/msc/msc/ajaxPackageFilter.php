@@ -164,7 +164,7 @@ foreach ($packages as $c_package) {
             $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
             $elt_convergence_status = prettyConvergenceStatusDisplay($current_convergence_status);
             $a_convergence_status[] = $elt_convergence_status;
-            $a_convergence_action[] = isset($package->associateinventory) ? $convergenceAction : $emptyAction;
+            $a_convergence_action[] = (isset($package->associateinventory) && $package->associateinventory == 1) ? $convergenceAction : $emptyAction;
         }
       }
 
