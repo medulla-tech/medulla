@@ -484,7 +484,7 @@ class PkgsDatabase(DatabaseHelper):
                             FROM
                                 pkgs.syncthingsync)
                     %s %s %s %s
-                        ;"""%(where_clause, _filter, limit, offset)
+                        ;"""%(_filter, where_clause,  limit, offset)
             ret = session.execute(sql)
             sql_count = "SELECT FOUND_ROWS();"
             ret_count = session.execute(sql_count)
