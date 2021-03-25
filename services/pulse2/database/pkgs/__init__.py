@@ -1123,7 +1123,8 @@ class PkgsDatabase(DatabaseHelper):
                                  user_information,
                                  algoid,
                                  enabled=1,
-                                 share_type=None):
+                                 share_type=None,
+                                 permission=None):
 
         sql ="""SELECT
                     pkgs.pkgs_shares.id AS id_sharing,
@@ -1138,7 +1139,7 @@ class PkgsDatabase(DatabaseHelper):
                     pkgs.pkgs_rules_local.id AS id_rule,
                     pkgs.pkgs_rules_local.pkgs_rules_algos_id AS algos_id,
                     pkgs.pkgs_rules_local.order AS order_rule,
-                    pkgs.pkgs_rules_local.suject AS subject
+                    pkgs.pkgs_rules_local.subject AS subject,
                     pkgs.pkgs_rules_local.permission AS permission,
                     pkgs.pkgs_shares.quotas AS quotas,
                     pkgs.pkgs_shares.usedquotas AS usedquotas
@@ -1156,11 +1157,17 @@ class PkgsDatabase(DatabaseHelper):
         typeclause = ""
         if share_type is not None:
             typeclause =""" AND pkgs.pkgs_shares.type = '%s' """ % (share_type)
+
+        permitionclause = ""
+        if permission is not None:
+            permitionclause =""" AND pkgs.pkgs_shares.permission like '%%%s%%' """ % (permission)
+
         sql = """ %s
-                  %s %s
+                  %s %s %s
                   ORDER BY pkgs.pkgs_rules_local.order;""" % (sql,
                                                               whereclause,
-                                                              typeclause)
+                                                              typeclause,
+                                                              permitionclause)
         result = session.execute(sql)
         session.commit()
         session.flush()
