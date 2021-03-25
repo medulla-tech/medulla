@@ -106,7 +106,7 @@ li.inventoryg a {
                 border-spacing:0;
                 background-image:none;
                 font-size:.9em;
-
+}
 </style>
 
 <script>
@@ -130,8 +130,8 @@ jQuery(function()
   } );
 
 });
-</script>
 
+</script>
 
 <?php
 
@@ -173,6 +173,7 @@ $msc_vnc_show_icon = web_vnc_show_icon();
 
 $glpinoAction = new EmptyActionItem1(_("GLPI Inventory"),"glpitabs","inventoryg","inventory", "base", "computers");
 
+
 // Actions for each machines
 $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
 
@@ -191,7 +192,6 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
   # Standard Mode
   $inventxmppbrowsingne   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
   $inventnoxmppbrowsingne = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsingne","folderg","computers","xmppmaster", "xmppmaster");
-
   # Expert mode
   $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
   $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
@@ -232,9 +232,9 @@ $actioneditremoteconfiguration = array();
 $actionxmppbrowsing = array();
 $actionfilebrowser = array();
 $actionxmppbrowsingne = array();
-?>
 
-<?
+$dissociatedFirstColumns = [];
+
 $raw = 0;
 // Do not modify directly $datas['cn'] it is reused later for $params
 // And tabs in detail page will be broken
@@ -334,6 +334,17 @@ $orderkey = array( "glpi_owner",
     for ($index = 0; $index < count($datas['hostname'] ); $index++) {
         $chainestr ="<table class='ttable'>";
 
+/*
+ *      FIXME: Do not remove, will be oised to order the entries on the menu
+        foreach($orderkey as $key_in_order){
+            $data_order=$datas[$key_in_order];
+            if(in_array($mach,$exclude ) ||  $data_order[$index] == ""){
+                continue;
+            }
+         $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$key_in_order] ."</td><td class='ttabletd'>".$data_order[$index]."</td></tr>";
+        }
+*/
+
         foreach($datas as $mach => $value ){
             if(in_array($mach,$exclud ) ||  $value[$index] ==""){
                 continue;
@@ -349,17 +360,21 @@ $orderkey = array( "glpi_owner",
 
         if ($datas['uuid_inventorymachine'][$index] =="" ){
             $actionInventory[] = $glpinoAction;
+            $dissociatedFirstColumns[] = $index;
         }else{
          $actionInventory[] = $glpiAction;
         }
         $actionxmppquickdeoloy[]=$DeployQuickxmpp; //Quick action presence ou non presence.
-        //$action_logs_msc[]   = $mscNoAction;
         $actionMonitoring[] = $monitoring;
         if ($valeue == 1){
             $presencesClass[] = "machineNamepresente";
 
-            $action_deploy_msc[] = $mscAction; //deployement
-
+            if ($datas['uuid_inventorymachine'][$index] ==""){
+               $action_deploy_msc[] = $mscNoAction; //deployement
+            }
+            else{
+               $action_deploy_msc[] = $mscAction; //deployement
+            }
             if (isExpertMode()){
                 $actionConsole[] = $inventconsole;
                 $actionxmppbrowsing[] = $inventxmppbrowsing;
@@ -421,7 +436,7 @@ $orderkey = array( "glpi_owner",
 
 $n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
 $n->setParamInfo($params); // [params]
-
+$n->dissociateColumnActionLink($dissociatedFirstColumns);
 if(in_array ("description", $machines1["column"])) $n->addExtraInfo($datas["glpi_description"], _T("Description", "glpi"));
 if(in_array("os", $machines1["column"])) $n->addExtraInfo($datas["platform"], _T("Operating System", "glpi"));
 if(in_array("type",  $machines1["column"])) $n->addExtraInfo($datas["model"], _T("Computer Type", "glpi"));
