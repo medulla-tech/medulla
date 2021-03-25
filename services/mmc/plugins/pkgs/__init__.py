@@ -188,7 +188,7 @@ def pkgs_search_share(objsearch):
             if id_algo == 1:
                 if 'login' in objsearch:
                     logger.debug(" algos id is %s [%s]" % (id_algo, algo[2]))
-                    result = PkgsDatabase().pkgs_sharing_rule_search(objsearch['profil'],
+                    result = PkgsDatabase().pkgs_sharing_rule_search(objsearch['login'],
                                                                      algoid=id_algo,
                                                                      permission=permission)
                     if result:
