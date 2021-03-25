@@ -448,9 +448,9 @@ class PkgsDatabase(DatabaseHelper):
             else:
                 offset = " "
             if login != "root":
-                where_clause = "AND pkgs_rules_local.suject REGEXP '%s' ORDER BY pkgs_shares.name, packages.label "%login
+                where_clause = "AND pkgs_rules_local.suject REGEXP '%s' ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "%login
             else:
-                where_clause = "AND pkgs_shares.enabled = 1 ORDER BY pkgs_shares.name, packages.label "
+                where_clause = "AND pkgs_shares.enabled = 1 ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         packages.id AS package_id,
