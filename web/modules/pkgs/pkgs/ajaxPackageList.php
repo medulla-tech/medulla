@@ -90,7 +90,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
      $quotas[$sharings['datas'][$i]['id_sharing']] = [
        'usedquotas'=>$sharings['datas'][$i]['usedquotas'],
        'quotas' => $sharings['datas'][$i]['quotas'],
-       'percent' => ($sharings['datas'][$i]['quotas'] == 0) ? 0 : number_format(($sharings['datas'][$i]['usedquotas'] / 1073741824*$sharings['datas'][$i]['quotas'])*100, 3)
+       'percent' => ($sharings['datas'][$i]['quotas'] == 0) ? 0 : number_format(($sharings['datas'][$i]['usedquotas'] / 1073741824*$sharings['datas'][$i]['quotas'])*100, 2)
      ];
    }
 
@@ -122,20 +122,20 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
     for($i=0; $i< count($_packages['uuid']); $i++){
       $packageSize = $_packages['size'][$i];
       $usedQuotas = $quotas[$_packages['share_id'][$i]]['usedquotas'];
-      $totalQuotas = 1073741824*$quotas[$_packages['share_id'][$i]]['quotas'];
+      $totalQuotas = 1048576*$quotas[$_packages['share_id'][$i]]['quotas'];
       $percentQuotas = $quotas[$_packages['share_id'][$i]]['percent'];
 
       if(($quotas[$_packages['share_id'][$i]]['quotas'] > 0)){
-        $occupation = number_format(($_packages['size'][$i] / $totalQuotas)*100, 3);
+        $occupation = number_format(($_packages['size'][$i] / $totalQuotas)*100, 2);
 
 
-        $size = "<span style='border-bottom: 4px double blue' title='Size : $packageSize&#013;"._T('Sharing disk usage', 'pkgs')." : &#013;$usedQuotas / $totalQuotas ($percentQuotas %)&#013;"._T('Package occupation','pkgs')." : $occupation%'>$packageSize</span>";
-      }
-      else{
-        $occupation = _T("Not limited", "pkgs");
-        $size = "<span style='border-bottom: 4px double black' title='Size : $packageSize&#013;"._T('Sharing disk usage', 'pkgs')." : $usedQuotas / "._T('not limited', 'pkgs')."&#013;'>$packageSize</span>";
-      }
-      $_sizes[] = $size;
+      $size = "<span style='border-bottom: 4px double blue' title='Size : ".number_format(($packageSize/1048576), 2)." Mb&#013;"._T('Sharing disk usage', 'pkgs')." : &#013;".number_format(($usedQuotas/1048576), 2)." Mb / ".number_format(($totalQuotas/1048576), 2)." Mb ($percentQuotas %)&#013;"._T('Package occupation','pkgs')." : $occupation%'>".number_format(($packageSize/1048576), 2)." Mb</span>";
+    }
+    else{
+      $occupation = _T("Not limited", "pkgs");
+      $size = "<span style='border-bottom: 4px double black' title='Size : ".number_format(($packageSize/1048576), 2)." Mb&#013;"._T('Sharing disk usage', 'pkgs')." : ".number_format(($usedQuotas/1048576), 2)." Mb / "._T('not limited', 'pkgs')."&#013;'>".number_format(($packageSize/1048576), 2)." Mb</span>";
+    }
+    $_sizes[] = $size;
 
       if($totalQuotas != 0){
         if($percentQuotas < 70){
