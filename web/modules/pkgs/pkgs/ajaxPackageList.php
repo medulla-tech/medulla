@@ -86,7 +86,9 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
    $sharingUsedQuotas = [];
    $sharingQuotas = [];
 
+   $countSharingsWithWRight = 0;
    for($i = 0; $i < count($sharings['datas']); $i++){
+     $countSharingsWithWRight += ($sharings['datas'][$i]['permission'] == "w" || $sharings['datas'][$i]['permission'] == "rw") ? 1 :0;
      $quotas[$sharings['datas'][$i]['id_sharing']] = [
        'usedquotas'=>$sharings['datas'][$i]['usedquotas'],
        'quotas' => $sharings['datas'][$i]['quotas'],
@@ -94,6 +96,11 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
      ];
    }
 
+  if($countSharingsWithWRight == 0){
+    ?>
+    <script>jQuery("#add").hide();</script>
+    <?php
+  }
   $_params = array();
   $__arraypackagename = array();
   $_versions = array();
