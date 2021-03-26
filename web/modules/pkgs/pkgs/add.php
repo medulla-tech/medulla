@@ -310,7 +310,7 @@ if (isset($_POST['bconfirm'])){
         $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
         $packagesInOption = '';
-        $dependencies = list_dependancies_for_user_permission($_SESSION["login"]);
+        $dependencies = get_dependencies_list_from_permissions($_SESSION["login"]);
         foreach($dependencies as $package)
         {
             $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
