@@ -956,6 +956,268 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x[0] for x in result]
 
     @DatabaseHelper._sessionm
+    def get_List_Mutual_ARS_from_cluster_of_list_idars(self, session, listidars):
+        """
+            This function returns the list of the ars from a cluster based
+            on the list id of one provided ARS.
+            Args:
+                session: The SQLAlchemy session
+                idars: The id of the ARS
+            Returns:
+                It returns the list of the ARS contained in the cluster
+
+        """
+        listin = "%s"%  ",".join([str(x) for x in listidars])
+        sql = """SELECT
+                    id_ars
+                 FROM
+                     xmppmaster.has_cluster_ars
+                 WHERE
+                    id_cluster IN (SELECT
+                            id_cluster
+                        FROM
+                            xmppmaster.has_cluster_ars
+                        WHERE
+                            id_ars in  (%s));""" % listin
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x[0] for x in result]
+
+    @DatabaseHelper._sessionm
+    def get_stat_ars_machine(self, session, listarsjid):
+        listin = ",".join(["'%s'" % x for  x in listarsjid])
+        sql="""
+            SELECT
+                groupdeploy,
+                SUM(CASE
+                    WHEN (LOCATE('linux', platform)) THEN 1
+                    ELSE 0
+                END) AS nblinuxmachine,
+                SUM(CASE
+                    WHEN (LOCATE('windows', platform)) THEN 1
+                    ELSE 0
+                END) AS nbwindows,
+                SUM(CASE
+                    WHEN (LOCATE('darwin', platform)) THEN 1
+                    ELSE 0
+                END) AS nbdarwin,
+                SUM(CASE
+                    WHEN (enabled = '1') THEN 1
+                    ELSE 0
+                END) AS mach_on,
+                SUM(CASE
+                    WHEN (enabled = '0') THEN 1
+                    ELSE 0
+                END) AS mach_off,
+                SUM(CASE
+                    WHEN (uuid_inventorymachine IS NULL) THEN 1
+                    ELSE 0
+                END) AS uninventoried,
+                SUM(CASE
+                    WHEN (uuid_inventorymachine IS NOT NULL) THEN 1
+                    ELSE 0
+                END) AS inventoried,
+                SUM(CASE
+                    WHEN
+                        (enabled = '1'
+                            AND uuid_inventorymachine IS NULL)
+                    THEN
+                        1
+                    ELSE 0
+                END) AS uninventoried_online,
+                SUM(CASE
+                    WHEN
+                        (enabled = '0'
+                            AND uuid_inventorymachine IS NULL)
+                    THEN
+                        1
+                    ELSE 0
+                END) AS uninventoried_offline,
+                SUM(CASE
+                    WHEN
+                        (enabled = 1
+                            AND uuid_inventorymachine IS NOT NULL)
+                    THEN
+                        1
+                    ELSE 0
+                END) AS inventoried_online,
+                SUM(CASE
+                    WHEN
+                        (enabled = '0'
+                            AND uuid_inventorymachine IS NOT NULL)
+                    THEN
+                        1
+                    ELSE 0
+                END) AS inventoried_offline,
+                SUM(CASE
+                    WHEN id THEN 1
+                    ELSE 0
+                END) AS nbmachine,
+                SUM(CASE
+                    WHEN (COALESCE(uuid_serial_machine, '') != '') THEN 1
+                    ELSE 0
+                END) AS with_uuid_serial,
+                SUM(CASE
+                    WHEN (classutil = 'both') THEN 1
+                    ELSE 0
+                END) AS bothclass,
+                SUM(CASE
+                    WHEN (classutil = 'public') THEN 1
+                    ELSE 0
+                END) AS publicclass,
+                SUM(CASE
+                    WHEN (classutil = 'private') THEN 1
+                    ELSE 0
+                END) AS privateclass,
+                SUM(CASE
+                    WHEN (COALESCE(ad_ou_user, '') != '') THEN 1
+                    ELSE 0
+                END) AS nb_ou_user,
+                SUM(CASE
+                    WHEN (COALESCE(ad_ou_machine, '') != '') THEN 1
+                    ELSE 0
+                END) AS nb_OU_mach,
+                SUM(CASE
+                    WHEN (kiosk_presence = 'True') THEN 1
+                    ELSE 0
+                END) AS kioskon,
+                SUM(CASE
+                    WHEN (kiosk_presence = 'FALSE') THEN 1
+                    ELSE 0
+                END) AS kioskoff,
+                SUM(CASE
+                    WHEN need_reconf THEN 1
+                    ELSE 0
+                END) AS nbmachinereconf
+            FROM
+                machines
+            WHERE
+                groupdeploy IN (%s)
+                    AND agenttype = 'machine'
+            GROUP BY groupdeploy;"""%listin
+
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        resultatout = {}
+        if result:
+            for row in result:
+                resultatout[row[0]]={}
+                resultatout[row[0]]['nblinuxmachine'] = int(row[1])
+                resultatout[row[0]]['nbwindows'] = int(row[2])
+                resultatout[row[0]]['nbdarwin'] = int(row[3])
+                resultatout[row[0]]['mach_on'] = int(row[4])
+                resultatout[row[0]]['mach_off'] = int(row[5])
+                resultatout[row[0]]['uninventoried'] = int(row[6])
+                resultatout[row[0]]['inventoried'] = int(row[7])
+                resultatout[row[0]]['uninventoried_online'] = int(row[8])
+                resultatout[row[0]]['uninventoried_offline'] = int(row[9])
+                resultatout[row[0]]['inventoried_online'] = int(row[10])
+                resultatout[row[0]]['inventoried_offline'] = int(row[11])
+                resultatout[row[0]]['nbmachine'] = int(row[12])
+                resultatout[row[0]]['with_uuid_serial'] = int(row[13])
+                resultatout[row[0]]['bothclass'] = int(row[14])
+                resultatout[row[0]]['publicclass'] = int(row[15])
+                resultatout[row[0]]['privateclass'] = int(row[16])
+                resultatout[row[0]]['nb_ou_user'] = int(row[17])
+                resultatout[row[0]]['nb_OU_mach'] = int(row[18])
+                resultatout[row[0]]['kioskon'] = int(row[19])
+                resultatout[row[0]]['kioskoff'] = int(row[20])
+                resultatout[row[0]]['nbmachinereconf'] = int(row[21])
+        return resultatout
+
+    @DatabaseHelper._sessionm
+    def get_ars_list_belongs_cluster(self, session, self, session, listidars, start, limit, filter):
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        if listidars:
+            listin = "%s"%  ",".join([str(x) for x in listidars])
+            sql="""
+                SELECT
+                    relayserver.id AS relayserver_id,
+                    relayserver.ipserver AS relayserver_ipserver,
+                    relayserver.nameserver AS relayserver_nameserver,
+                    relayserver.moderelayserver AS relayserver_moderelayserver,
+                    relayserver.jid AS jid_from_relayserver,
+                    relayserver.classutil AS relayserver_classutil,
+                    relayserver.enabled AS relayserver_enabled,
+                    relayserver.switchonoff AS relayserver_switchonoff,
+                    relayserver.mandatory AS relayserver_mandatory,
+                    machines.jid AS machines_jid,
+                    cluster_ars.name AS cluster_name,
+                    cluster_ars.description AS cluster_description,
+                    cluster_ars.id AS cluster_id,
+                    machines.macaddress AS macaddress
+                FROM
+                    relayserver
+                        LEFT OUTER JOIN
+                    has_cluster_ars ON has_cluster_ars.id_ars = relayserver.id
+                        LEFT OUTER JOIN
+                    cluster_ars ON cluster_ars.id = has_cluster_ars.id_cluster
+                        LEFT OUTER JOIN
+                    machines ON SUBSTRING_INDEX(machines.jid, '@', 1) = SUBSTRING_INDEX(relayserver.jid, '@', 1)
+                WHERE
+                    relayserver.moderelayserver = 'static'
+                    AND relayserver.id in(	 SELECT
+                                                has_cluster_ars.id_ars
+                                            FROM
+                                                xmppmaster.has_cluster_ars
+                                            WHERE
+                                                has_cluster_ars.id_cluster IN (
+                                                                                SELECT
+                                                                                        id_cluster
+                                                                                    FROM
+                                                                                        xmppmaster.has_cluster_ars
+                                                                                    WHERE
+                                                                                        id_ars in  (%s))
+
+                    )""" % listin
+            if start != -1 and limit != -1:
+                sql = sql+"LIMIT %s OFFSET %s"%(limit, start)
+            sql=sql+";"
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+
+            resultobj ={'id': [],
+                        'hostname': [],
+                        'jid': [],
+                        'jid_from_relayserver': [],
+                        'cluster_name': [],
+                        'cluster_description': [],
+                        'classutil': [],
+                        'macaddress': [],
+                        'ip_xmpp': [],
+                        'enabled': [],
+                        'enabled_css': [],
+                        'mandatory': [],
+                        'switchonoff': []}
+            if result:
+                for row in result:
+                    resultobj['id'].append(row[0])
+                    resultobj['hostname'].append(row[2])
+                    resultobj['jid'].append(row[9])
+                    resultobj['jid_from_relayserver'].append(row[4])
+                    resultobj['cluster_name'].append(row[10])
+                    resultobj['cluster_description'].append(row[11])
+                    resultobj['classutil'].append(row[3])
+                    resultobj['ip_xmpp'].append(row[1])
+                    resultobj['macaddress'].append(row[13])
+                    resultobj['enabled'].append(row[6])
+                    resultobj['enabled_css'].append("machineNamepresente" if row[6] == "1" else "machineName")
+                    resultobj['mandatory'].append(row[8])
+                    resultobj['switchonoff'].append(row[7])
+        return resultobj
+
+    @DatabaseHelper._sessionm
     def getRelayServer(self, session, enable = None ):
         relayserver_list = []
         if enable is not None:

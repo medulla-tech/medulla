@@ -745,6 +745,64 @@ def get_xmppmachines_list(start, limit, filter, presence):
 def get_xmpprelays_list(start, limit, filter, presence):
     return XmppMasterDatabase().get_xmpprelays_list(start, limit, filter, presence)
 
+def get_list_ars_from_sharing(sharings, start, limit, filter):
+    listidars = []
+    for share in sharings:
+        if "r" in share['permission'] :
+            listidars.append(share['ars_id'])
+    ars_list = {}
+    ars_list = XmppMasterDatabase().get_ars_list_belongs_cluster(listidars, start, limit, filter)
+    stat_ars_machine = XmppMasterDatabase().get_stat_ars_machine(re['jid'])
+    ars_list['total_machines'] = []
+    ars_list['uninventoried'] = []
+    ars_list['publicclass'] = []
+    ars_list['nblinuxmachine'] = []
+    ars_list['inventoried_online'] = []
+    ars_list['mach_on'] = []
+    ars_list['uninventoried_online'] = []
+    ars_list['nbmachinereconf'] = []
+    ars_list['kioskon'] = []
+    ars_list['inventoried'] = []
+    ars_list['nbdarwin'] = []
+    ars_list['kioskoff'] = []
+    ars_list['bothclass'] = []
+    ars_list['privateclass'] = []
+    ars_list['mach_off'] = []
+    ars_list['inventoried_offline'] = []
+    ars_list['with_uuid_serial'] = []
+    ars_list['nb_OU_mach'] = []
+    ars_list['uninventoried_offline'] = []
+    ars_list['nbwindows'] = []
+    ars_list['nb_ou_user'] = []
+    for jid in ars_list['jid']:
+        ars_list['total_machines'].append(stat_ars_machine[jid]['nbmachine'])
+        ars_list['uninventoried'].append(stat_ars_machine[jid]['uninventoried'])
+        ars_list['publicclass'].append(stat_ars_machine[jid]['publicclass'])
+        ars_list['nblinuxmachine'].append(stat_ars_machine[jid]['nblinuxmachine'])
+        ars_list['inventoried_online'].append(stat_ars_machine[jid]['inventoried_online'])
+        ars_list['mach_on'].append(stat_ars_machine[jid]['mach_on'])
+        ars_list['uninventoried_online'].append(stat_ars_machine[jid]['uninventoried_online'])
+        ars_list['nbmachinereconf'].append(stat_ars_machine[jid]['nbmachinereconf'])
+        ars_list['kioskon'].append(stat_ars_machine[jid]['kioskon'])
+        ars_list['inventoried'].append(stat_ars_machine[jid]['inventoried'])
+        ars_list['nbdarwin'].append(stat_ars_machine[jid]['nbdarwin'])
+        ars_list['kioskoff'].append(stat_ars_machine[jid]['kioskoff'])
+        ars_list['bothclass'].append(stat_ars_machine[jid]['bothclass'])
+        ars_list['privateclass'].append(stat_ars_machine[jid]['privateclass'])
+        ars_list['mach_off'].append(stat_ars_machine[jid]['mach_off'])
+        ars_list['inventoried_offline'].append(stat_ars_machine[jid]['inventoried_offline'])
+        ars_list['with_uuid_serial'].append(stat_ars_machine[jid]['with_uuid_serial'])
+        ars_list['nb_OU_mach'].append(stat_ars_machine[jid]['nb_OU_mach'])
+        ars_list['uninventoried_offline'].append(stat_ars_machine[jid]['uninventoried_offline'])
+        ars_list['nbwindows'].append(stat_ars_machine[jid]['nbwindows'])
+        ars_list['nb_ou_user'].append(stat_ars_machine[jid]['nb_ou_user'])
+
+
+    res = {"total": len(ars_list['jid']),
+           "datas": ars_list
+           }
+    return res
+
 def get_clusters_list(start, limit, filter):
     return XmppMasterDatabase().get_clusters_list(start, limit, filter)
 
