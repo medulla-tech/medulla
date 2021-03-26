@@ -397,7 +397,8 @@ if(isExpertMode())
 
     //Get all the dependencies as uuid => name
     $allDependenciesList = [];
-    foreach(xmpp_packages_list() as $xmpp_package) {
+    $dependencies = get_dependencies_list_from_permissions($_SESSION["login"]);
+    foreach($dependencies as $xmpp_package) {
         if($_GET['packageUuid'] != $xmpp_package['uuid'])
             $allDependenciesList[$xmpp_package['uuid']] = $xmpp_package['name'];
     }
