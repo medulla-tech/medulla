@@ -1138,6 +1138,27 @@ class XmppMasterDatabase(DatabaseHelper):
         except:
             limit = -1
 
+        # filter activate
+        filterars = ""
+        if filter != "":
+            filterars = """ AND (relayserver.subnet LIKE '%%%s%%' OR
+                relayserver.nameserver LIKE '%%%s%%' OR
+                relayserver.ipserver LIKE '%%%s%%' OR
+                relayserver.ipconnection LIKE '%%%s%%' OR
+                relayserver.port LIKE '%%%s%%' OR
+                relayserver.portconnection LIKE '%%%s%%' OR
+                relayserver.mask LIKE '%%%s%%' OR
+                relayserver.jid LIKE '%%%s%%' OR
+                relayserver.longitude LIKE '%%%s%%' OR
+                relayserver.latitude LIKE '%%%s%%' OR
+                relayserver.classutil LIKE '%%%s%%' OR
+                relayserver.groupdeploy LIKE '%%%s%%' OR
+                relayserver.package_server_ip LIKE '%%%s%%' OR
+                relayserver.package_server_port LIKE '%%%s%%' OR
+                relayserver.syncthing_port LIKE '%%%s%%') """ % (filter,filter,filter,filter,filter,
+                                                                 filter,filter,filter,filter,filter,
+                                                                 filter,filter,filter,filter,filter)
+
         if listidars:
             listin = "%s"%  ",".join([str(x) for x in listidars])
             sql="""
@@ -1165,7 +1186,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         LEFT OUTER JOIN
                     machines ON SUBSTRING_INDEX(machines.jid, '@', 1) = SUBSTRING_INDEX(relayserver.jid, '@', 1)
                 WHERE
-                    relayserver.moderelayserver = 'static'
+                    relayserver.moderelayserver = 'static' %s
                     AND relayserver.id in(	 SELECT
                                                 has_cluster_ars.id_ars
                                             FROM
@@ -1179,7 +1200,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                                                                     WHERE
                                                                                         id_ars in  (%s))
 
-                    )""" % listin
+                    )""" %  (filterars,listin)
             if start != -1 and limit != -1:
                 sql = sql+"LIMIT %s OFFSET %s"%(limit, start)
             sql=sql+";"
