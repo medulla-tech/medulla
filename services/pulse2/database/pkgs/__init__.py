@@ -650,6 +650,7 @@ class PkgsDatabase(DatabaseHelper):
             session: the SQLAlchemy session
             uuid: string of the uuid of the specified package.
         """
+        packagesdata = self.get_pkgs_share_from_uuid(uuid)
         session.query(Packages).filter(Packages.uuid == uuid).delete()
         session.commit()
         session.flush()
