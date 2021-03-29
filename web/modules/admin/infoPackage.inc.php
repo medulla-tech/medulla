@@ -21,7 +21,7 @@
 require_once("modules/pulse2/version.php");
 
 $mod = new Module("admin");
-$mod->setVersion("4.6.6");
+$mod->setVersion("4.6.7");
 //$mod->setRevision('');
 $mod->setDescription(_T("Admin", "admin"));
 $mod->setAPIVersion("1:0:0");
