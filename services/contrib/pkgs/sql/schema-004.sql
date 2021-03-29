@@ -178,6 +178,12 @@ ALTER TABLE `pkgs`.`pkgs_shares`
 ADD COLUMN `usedquotas` INT NULL DEFAULT 0 AFTER `share_path`,
 ADD COLUMN `quotas` INT NULL DEFAULT 0 AFTER `usedquotas`;
 
+-- -----------------------------------------------------
+-- Initialise table `pkgs_rules_algos`
+-- -----------------------------------------------------
+INSERT INTO `pkgs_rules_algos` VALUES 
+(1,'login','Search shares based on login',0),
+(2,'no_sharing','No sharing',1);
 
 UPDATE version SET Number = 4;
 
