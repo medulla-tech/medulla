@@ -798,7 +798,7 @@ def get_list_ars_from_sharing(sharings, start, limit, filter):
         ars_list['nb_ou_user'].append(stat_ars_machine[jid]['nb_ou_user'])
 
 
-    res = {"total": len(ars_list['jid']),
+    res = {"total": ars_list['count'],
            "datas": ars_list,
            "partielcount" : len(ars_list['jid'])
            }
