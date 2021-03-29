@@ -752,7 +752,7 @@ def get_list_ars_from_sharing(sharings, start, limit, filter):
             listidars.append(share['ars_id'])
     ars_list = {}
     ars_list = XmppMasterDatabase().get_ars_list_belongs_cluster(listidars, start, limit, filter)
-    stat_ars_machine = XmppMasterDatabase().get_stat_ars_machine(re['jid'])
+    stat_ars_machine = XmppMasterDatabase().get_stat_ars_machine(ars_list['jid'])
     ars_list['total_machines'] = []
     ars_list['uninventoried'] = []
     ars_list['publicclass'] = []
@@ -799,7 +799,8 @@ def get_list_ars_from_sharing(sharings, start, limit, filter):
 
 
     res = {"total": len(ars_list['jid']),
-           "datas": ars_list
+           "datas": ars_list,
+           "partielcount" : len(ars_list['jid'])
            }
     return res
 

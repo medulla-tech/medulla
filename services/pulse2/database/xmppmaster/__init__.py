@@ -1128,7 +1128,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return resultatout
 
     @DatabaseHelper._sessionm
-    def get_ars_list_belongs_cluster(self, session, self, session, listidars, start, limit, filter):
+    def get_ars_list_belongs_cluster(self, session, listidars, start, limit, filter):
         try:
             start = int(start)
         except:
@@ -1141,7 +1141,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if listidars:
             listin = "%s"%  ",".join([str(x) for x in listidars])
             sql="""
-                SELECT
+                SELECT SQL_CALC_FOUND_ROWS
                     relayserver.id AS relayserver_id,
                     relayserver.ipserver AS relayserver_ipserver,
                     relayserver.nameserver AS relayserver_nameserver,
@@ -1184,6 +1184,12 @@ class XmppMasterDatabase(DatabaseHelper):
                 sql = sql+"LIMIT %s OFFSET %s"%(limit, start)
             sql=sql+";"
             result = session.execute(sql)
+
+            #  Count the ARS
+            sql_count = "SELECT FOUND_ROWS();"
+            ret_count = session.execute(sql_count)
+            count = ret_count.first()[0]
+
             session.commit()
             session.flush()
 
@@ -1215,6 +1221,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     resultobj['enabled_css'].append("machineNamepresente" if row[6] == "1" else "machineName")
                     resultobj['mandatory'].append(row[8])
                     resultobj['switchonoff'].append(row[7])
+        
+        resultobj["count"] = count
         return resultobj
 
     @DatabaseHelper._sessionm
