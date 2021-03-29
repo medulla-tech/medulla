@@ -546,7 +546,7 @@ msgstr "Éditer une règle"
 #: modules/pkgs/pkgs/editRule.php:41
 #, php-format
 msgid "The rule %s has been modified"
-msgstr "La règle %s n'a pas été modifiée"
+msgstr "La règle %s a été modifiée"
 
 #: modules/pkgs/pkgs/add.php:35
 msgid "Add package"
