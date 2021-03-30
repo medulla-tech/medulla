@@ -1239,7 +1239,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     resultobj['ip_xmpp'].append(row[1])
                     resultobj['macaddress'].append(row[13])
                     resultobj['enabled'].append(row[6])
-                    resultobj['enabled_css'].append("machineNamepresente" if row[6] == "1" else "machineName")
+                    resultobj['enabled_css'].append("machineNamepresente" if (row[6] == "1" or row[6] == 1) else "machineName")
                     resultobj['mandatory'].append(row[8])
                     resultobj['switchonoff'].append(row[7])
 
