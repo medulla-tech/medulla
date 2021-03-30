@@ -459,9 +459,9 @@ if __name__ == '__main__':
     -h, --help            show this help message and exit
     -H HOSTNAME, --hostname=HOSTNAME
                             hostname SGBD
-    -p PORT, --port=PORT  port_decreation
+    -P PORT, --port=PORT  port_decreation
     -u USER, --user=USER  user compter
-    -P PASSWORD, --password=PASSWORD
+    -p PASSWORD, --password=PASSWORD
                             password connection
     -v, --verbeux         mode verbeux
     -r, --report          print report messages to stdout
@@ -485,7 +485,7 @@ if __name__ == '__main__':
                     dest="hostname", default = "localhost",
                     help="hostname SGBD")
 
-    optp.add_option("-p", "--port",
+    optp.add_option("-P", "--port",
                     dest="port", default = 3306,
                     help="port_decreation")
 
@@ -493,7 +493,7 @@ if __name__ == '__main__':
                     dest="user", default = "root",
                     help="user compter")
     password=""
-    optp.add_option("-P", "--password",
+    optp.add_option("-p", "--password",
                     dest="password", default = "",
                     help="password connection")
 
