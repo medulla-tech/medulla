@@ -354,7 +354,7 @@ if __name__ == '__main__':
                     dest="hostname", default = "localhost",
                     help="Hostname of the SQL Server")
 
-    optp.add_option("-p", "--port",
+    optp.add_option("-P", "--port",
                     dest="port", default = 3306,
                     help="port of the SQL Server")
 
@@ -362,7 +362,7 @@ if __name__ == '__main__':
                     dest="user", default = "root",
                     help="username in the SQL Server")
     password=""
-    optp.add_option("-P", "--password",
+    optp.add_option("-p", "--password",
                     dest="password", default = "",
                     help="Password of the user in the SQL Server")
 
