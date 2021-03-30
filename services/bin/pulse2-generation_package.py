@@ -836,7 +836,7 @@ if __name__ == '__main__':
                                             '------------------------------------',
                                             '----------------------------------------')
             else:
-                print "\n AUCUN PACKAGE N A ETAIT INJECTE DANS LA BASE"
+                print "\n No packages have been injected in the database"
         print
         print
         if  errorcreationpackageinbase and opts.verbosereport:
