@@ -20,7 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# file  : generation_package.py
+# file  : pulse2-generation_package.py
 
 import shutil
 import sys,os
@@ -464,6 +464,7 @@ if __name__ == '__main__':
     -p PASSWORD, --password=PASSWORD
                             password connection
     -v, --verbeux         mode verbeux
+    -t, --testconnect     teste la connexion et quitte
     -r, --report          print report messages to stdout
     -g, --regeneratetable
                             reinitialise des packages dans la bases
@@ -481,7 +482,7 @@ if __name__ == '__main__':
     logging.StreamHandler.emit = add_coloring_to_emit_ansi(logging.StreamHandler.emit)
     logging.basicConfig(level = logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
     optp = OptionParser(description=textprogrammehelp)
-    optp.add_option("-H", "--hostname",
+    optp.add_option("-H", "--host",
                     dest="hostname", default = "localhost",
                     help="hostname SGBD")
 
@@ -517,6 +518,10 @@ if __name__ == '__main__':
                     dest="linkcreate", default=False,
                     help="regenere les liens symbolique des package")
 
+    optp.add_option("-t", "--testconnect",action="store_true",
+                    dest="testconnect", default=False,
+                    help="test connection et quitte")
+
     optp.add_option("-i", "--info",action="store_true",
                     dest="info", default=False,
                     help="message information et quitte")
@@ -542,11 +547,21 @@ if __name__ == '__main__':
                                                                  opts.port,
                                                                  base) ,
                                        stream=None)
+    if opts.verbeux or opts.testconnect:
+            logger.debug("try Connecting with parameters\n" \
+                            "\thost: %s\n" \
+                            "\tuser: %s\n" \
+                            "\tport: %s\n" \
+                            "\tdb: %s\n" %( opts.hostname,
+                                            opts.user,
+                                            int(opts.port),
+                                            base))
 
     try:
         db = MySQLdb.connect(host=opts.hostname,
                              user=opts.user,
                              passwd=Passwordbase,
+                             port = int(opts.port),
                              db=base)
 
         if opts.verbeux:
@@ -556,6 +571,11 @@ if __name__ == '__main__':
                             "\tdb: %s\n" %( opts.hostname,
                                         opts.user,
                                         base))
+
+        if opts.testconnect:
+            logger.debug("CONNECT SUCCESS")
+            sys.exit(0)
+
         if opts.regeneratetable:
             if opts.verbosereport:
                 print "truncate table package"
