@@ -22,7 +22,7 @@
  */
 
 require("graph/navbar.inc.php");
-require("modules/base/computers/localSidebar.php");
+require("modules/admin/admin/localSidebar.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("modules/msc/includes/utilities.php");
 global $config;
