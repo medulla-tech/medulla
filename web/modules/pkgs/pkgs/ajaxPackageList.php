@@ -428,11 +428,11 @@ else{
     // Display the list
     $n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($desc, _T("Description", "pkgs"));
+    $n->addExtraInfo($descriptions, _T("Description", "pkgs"));
     $n->addExtraInfo($versions, _T("Version", "pkgs"));
     $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
     $n->addExtraInfo($os, _T("Os", "pkgs"));
-    $n->addExtraInfo($size, _T("Package size", "pkgs"));
+    $n->addExtraInfo($sizes, _T("Package size", "pkgs"));
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter1));
     $n->setParamInfo($params);
