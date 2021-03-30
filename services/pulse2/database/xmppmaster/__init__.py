@@ -1242,7 +1242,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     resultobj['enabled_css'].append("machineNamepresente" if row[6] == "1" else "machineName")
                     resultobj['mandatory'].append(row[8])
                     resultobj['switchonoff'].append(row[7])
-        
+
         resultobj["count"] = count
         return resultobj
 
@@ -8831,4 +8831,3 @@ where agenttype="machine" and groupdeploy in (
                        "name_cluster": ars[23]}
             arsListInfos.append(arsInfos)
         return arsListInfos
-
