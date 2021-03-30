@@ -71,8 +71,8 @@ function xmlrpc_remotecommandshell($command, $jidmachine, $timeout){
     return xmlCall("xmppmaster.remotecommandshell", array($command, $jidmachine, $timeout));
 }
 
-function xmlrpc_remoteXmppMonitoring($sujectinfo, $jidmachine, $timeout){
-    return xmlCall("xmppmaster.remoteXmppMonitoring", array($sujectinfo, $jidmachine, $timeout));
+function xmlrpc_remoteXmppMonitoring($subjectinfo, $jidmachine, $timeout){
+    return xmlCall("xmppmaster.remoteXmppMonitoring", array($subjectinfo, $jidmachine, $timeout));
 }
 
 function xmlrpc_listremotefileedit($jidmachine){
@@ -476,7 +476,7 @@ function xmlrpc_xmpp_get_info_synchro_packageid($pid_ppackage){
 //######################################
 
 function xmlrpc_xmppGetAllPackages($filter, $start, $end) {
-    return xmlCall("xmppmaster.xmppGetAllPackages", array($filter, $start, $end));
+    return xmlCall("xmppmaster.xmppGetAllPackages", array($_SESSION['login'], $filter, $start, $end));
 }
 
 function xmpp_getPackageDetail($pid){
@@ -501,6 +501,10 @@ function xmlrpc_get_xmppmachines_list($start=-1, $limit=-1, $filter="", $presenc
 
 function xmlrpc_get_xmpprelays_list($start=-1, $limit=-1, $filter="", $presence='all'){
   return xmlCall("xmppmaster.get_xmpprelays_list", [$start, $limit, $filter, $presence]);
+}
+
+function get_list_ars_from_sharing($sharings, $start=-1, $limit=-1, $filter=""){
+  return xmlCall("xmppmaster.get_list_ars_from_sharing", [$sharings, $start, $limit, $filter]);
 }
 
 function xmlrpc_get_clusters_list($start=-1, $limit=-1, $filter=""){

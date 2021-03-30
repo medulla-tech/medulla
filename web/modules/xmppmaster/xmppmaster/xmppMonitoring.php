@@ -214,18 +214,18 @@ switch($_GET['information']){
     break;
     case 'litlog':
         echo "<h2>"._T("AGENT LOG MACHINE", "xmppmaster")."</h2>";
-        $suject = array();
-        $suject['subaction'] = 'litlog';
+        $subject = array();
+        $subject['subaction'] = 'litlog';
         $r = explode(",", $_GET['args']);
         if (count($r) != 0 and $r[0] != ""){
-            $suject['args'] = $r;
+            $subject['args'] = $r;
         }else{
-            $suject['args'] = array();
+            $subject['args'] = array();
         }
-        $suject['kwargs'] =  json_decode($_GET['kwargs'], true);
-        $sujectmonitoring = json_encode ($suject);
-        //print_r($sujectmonitoring);
-        $re =  xmlrpc_remoteXmppMonitoring($sujectmonitoring, $jidmachine, 100);
+        $subject['kwargs'] =  json_decode($_GET['kwargs'], true);
+        $subjectmonitoring = json_encode ($subject);
+        //print_r($subjectmonitoring);
+        $re =  xmlrpc_remoteXmppMonitoring($subjectmonitoring, $jidmachine, 100);
         //$description = nl2br($re['result'][0]);
         $description = str_replace(array("\\r\\n","\\r","\\n"),"<br/>", $re['result'][0]);
         echo "$description";
@@ -233,17 +233,17 @@ switch($_GET['information']){
     case 'cputimes':
         echo _T('TIMES CPU', 'xmppmaster')."\n";
         //todo mise en forme result
-        $suject = array();
-        $suject['subaction'] = 'cputimes';
+        $subject = array();
+        $subject['subaction'] = 'cputimes';
         $r = explode(",", $_GET['args']);
         if (count($r) != 0 and $r[0] != ""){
-            $suject['args'] = $r;
+            $subject['args'] = $r;
         }else{
-            $suject['args'] = array();
+            $subject['args'] = array();
         }
-        $suject['kwargs'] =  json_decode($_GET['kwargs'], true);
-        $sujectmonitoring = json_encode ($suject);
-        $re =  xmlrpc_remoteXmppMonitoring($sujectmonitoring, $jidmachine, 100);
+        $subject['kwargs'] =  json_decode($_GET['kwargs'], true);
+        $subjectmonitoring = json_encode ($subject);
+        $re =  xmlrpc_remoteXmppMonitoring($subjectmonitoring, $jidmachine, 100);
         $tabresult = json_decode($re['result'][0], true);
         $keystab = array_keys ($tabresult['allcpu']);
         echo "<table style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";

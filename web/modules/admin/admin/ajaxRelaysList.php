@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2020 Siveo, http://www.siveo.net
+ * (c) 2015-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -21,6 +21,8 @@
  */
 
 require_once("modules/xmppmaster/includes/html.inc.php");
+require_once("modules/pkgs/includes/xmlrpc.php");
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = $_GET["filter"];
@@ -29,7 +31,8 @@ $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
-$relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
+$sharings = xmlrpc_pkgs_search_share(["login"=> $_SESSION["login"]]);
+$relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage, $filter);
 
 $editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
 $editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");

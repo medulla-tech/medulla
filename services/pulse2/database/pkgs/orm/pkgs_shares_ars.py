@@ -1,6 +1,9 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2013 Mandriva, http://www.mandriva.com/
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007-2009 Mandriva, http://www.mandriva.com/
+#
+# $Id$
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
@@ -19,33 +22,38 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# flie : pkgs/orm/pkgs_shares_ars.py
+
 import logging
-from sqlalchemy.orm import create_session
 
-
-
-""" Class to map pkgs.dependencies to SA
+""" Class to map pkgs.pkgs_shares_ars to SA
 """
 
-class Dependencies(object):
-    """ Mapping between msc.bundle and SA
+class Pkgs_shares_ars(object):
+    """ Mapping between pkgs.pkgs_shares_ars and SA
+    colunm : 'id,hostname,jid,pkgs_shares_id
     """
-
     def getId(self):
         if self.id is not None:
             return self.id
         else:
             return 0
 
-    def getUuid_package(self):
-        if self.uuid_package is not None:
-            return self.uuid_package
+    def getHostname(self):
+        if self.hostname is not None:
+            return self.hostname
         else:
             return ""
 
-    def getUuid_dependency(self):
-        if self.uuid_dependency is not None:
-            return self.uuid_dependency
+    def getJid(self):
+        if self.jid is not None:
+            return self.jid
+        else:
+            return ""
+
+    def getShareid(self):
+        if self.pkgs_shares_id is not None:
+            return self.pkgs_shares_ars
         else:
             return ""
 
@@ -58,6 +66,12 @@ class Dependencies(object):
         """
         return {
             'id' : self.getId(),
-            'uuid_package': self.getUuid_package(),
-            'uuid_dependency': self.getUuid_dependency()
-        }
+            'hostname': self.getHostname(),
+            'jid': self.getJid(),
+            'pkgs_shares_id': getShareid()}
+
+    def toH(self):
+        return {'id': self.id,
+                'hostname': self.hostname,
+                'jid': self.jid,
+                'pkgs_shares_id': self.pkgs_shares_id}

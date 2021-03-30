@@ -29,7 +29,11 @@ $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
-$relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
+//$relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
+$sharings = xmlrpc_pkgs_search_share(["login"=> $_SESSION["login"]]);
+$relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage, $filter);
+
+//$relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all')
 
 $editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
 $editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");

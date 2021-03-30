@@ -2,7 +2,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2008 Mandriva
-# (c) 2017      Siveo
+# (c) 2017-2021 Siveo
 #
 # $Id$
 #
@@ -67,6 +67,8 @@ from mmc.plugins.xmppmaster.master.lib.utils import simplecommand,\
                                                     make_tarfile,\
                                                     extract_file,\
                                                     md5folder
+from mmc.plugins.xmppmaster.master.lib.managepackage import apimanagepackagemsc
+
 from unidecode import unidecode
 import uuid
 from xml.dom import minidom
@@ -98,8 +100,8 @@ class pkgmanage():
     def list_all(self, param):
         return PkgsDatabase().list_all()
 
-    def add_package(self, package):
-        return PkgsDatabase().createPackage(package)
+    def add_package(self, package, share_id=None, edition_status=1):
+        return PkgsDatabase().createPackage(package, share_id, edition_status)
 
     def pkgs_register_synchro_package(self, uuidpackage, typesynchro):
         return PkgsDatabase().pkgs_register_synchro_package(uuidpackage, typesynchro)
@@ -149,6 +151,19 @@ def get_package_summary(package_id):
 
 def delete_from_pending(pid = "", jidrelay = []):
     return PkgsDatabase().delete_from_pending(pid, jidrelay)
+
+def pkgs_search_share(objsearch):
+    """
+        This function is used to retrieve the shares and the permissions
+            following the defined rules.
+        Args:
+            objsearch:
+            # TODO: Fix documentation
+        Results:
+            It returns the the shares and the permissions following the defined rules.
+
+    """
+    return PkgsDatabase().pkgs_search_share(objsearch)
 
 ############### synchro syncthing package #####################
 def pkgs_register_synchro_package(uuidpackage, typesynchro):
@@ -210,15 +225,35 @@ def associatePackages(pid, fs, level = 0):
     chown(destination)
     return [ boolsucess, errortransfert ]
 
+def update_package_size(uuid):
+    """
+    This function modify the size on the package in the database.
+    Args:
+        uuid: The uuid of the package
+    """
+    package_root = os.path.join("/", "var", "lib", "pulse2", "packages", uuid)
+    size = simplecommand("du -Lab %s" % package_root)['result'][-1].split("\t")[0]
+    return PkgsDatabase().update_package_size(uuid, size)
+
 def _remove_non_ascii(text):
     return unidecode(unicode(text, encoding = "utf-8"))
 
-def _create_uuid_sympa(label):
+def create_simple_package_uuid(label, localisation=None):
+    """
+    This function is used to create more simpler packages uuids
+    Args:
+        label: This is the name of the package
+        localisation: Tells if localisation feature is enabled.
+                      This is set to None by default
+    Returns: It returns the new simple package uuid
+    """
+    if localisation is not None:
+        label = label + "_" + localisation
     data = _remove_non_ascii((str(uuid.uuid1())[:9] + label+"_").replace(' ', '_'))
-    data = name_random(36 , pref=data)[:36]
+    data = name_random(36, pref=data)[:36]
     return data
 
-def to_json_xmppdeploy( package):
+def to_json_xmppdeploy(package):
         """
             create JSON xmppdeploy descriptor
         """
@@ -301,26 +336,174 @@ def to_json_xmppdeploy( package):
 
         return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
 
-def putPackageDetail( package, need_assign = True):
+def prepare_shared_folder():
+    """
+        This function creates the sharing environment.
+        It creates folders if missing.
+    """
+    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
+    if not os.path.isdir(packages_input_dir_sharing):
+        os.mkdir(packages_input_dir_sharing, 0755)
+    packages_input_dir_sharing_global = os.path.join(packages_input_dir_sharing, "global")
+    if not os.path.isdir(packages_input_dir_sharing_global):
+        os.mkdir(packages_input_dir_sharing_global, 0755)
+
+def get_share_from_descriptor(package_descriptor):
+    """
+        This function allow to prepare the system to package server.
+        It creates sharing folder if it does not exist.
+
+        Args:
+            package_descriptor: This provide informations as localisation_server.
+    """
+    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages","sharing")
+    if not "localisation_server" in package_descriptor:
+        logging.getLogger().warning("keys localisation_server missing global sharing by default")
+        return os.path.join(packages_input_dir_sharing,
+                            "global",
+                             package_descriptor['id'])
+    elif  ("localisation_server" in package_descriptor and \
+                package_descriptor['localisation_server'] == ""):
+        logging.getLogger().warning("keys localisation_server non definie global sharing by default")
+        return os.path.join(packages_input_dir_sharing,
+                            "global",
+                            package_descriptor['id'])
+    else:
+        logging.getLogger().debug("local package %s" % os.path.join(packages_input_dir_sharing,
+                             package_descriptor['localisation_server'],
+                             package_descriptor['id']))
+        return  os.path.join(packages_input_dir_sharing,
+                             package_descriptor['localisation_server'],
+                             package_descriptor['id'])
+
+def test_ln(pathdirpackage):
+    """
+        This function tests a path to know if this is a symlink or not.
+        If this is a dead symlink, it removes it.
+        Args:
+            pathdirpackage: The path to test
+        Returns:
+            It returns an array with the directory type and the real path.
+    """
+    dir_exists = os.path.isdir(pathdirpackage)
+    if dir_exists:
+        if os.path.islink(pathdirpackage):
+            return { "result" : True ,
+                     "type" : "ln" ,
+                     "realpath":  os.path.realpath(pathdirpackage) }
+        else:
+            return { "result" : True,
+                     "type" : "dir" ,
+                     "realpath":  os.path.realpath(pathdirpackage) }
+    elif os.path.islink(pathdirpackage):
+        os.remove(pathdirpackage)
+    return { "result" : False }
+
+def putPackageDetail(package, need_assign=True):
+    """
+        This function is used to create or edite a package
+        Args:
+            package: a dictionnary with informations on the package
+            need_assign: If set to True, it creates the package.
+                         If set to False, it edits the package.
+        Returns:
+            It returns the new simple package list
+            [True, package['id'], path, dict package]
+    """
+    Bcreatepackage = False
     if package['id'] == "" :
-        # create uuid
-        #package['id'] = str( uuid.uuid1())
-        package['id'] = _create_uuid_sympa(package['label'])
+        package['id'] = create_simple_package_uuid(package['label']) # create uuid package
+        Bcreatepackage = True
+
     if len(package['id']) != 36:
         return False
-    packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
-    packages_id_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages", package['id'] )
 
-    if packages_input_dir == packages_id_input_dir:
-        return False
-    # si le dossier n existe pas alors le creéer
-    if not os.path.isdir(packages_id_input_dir):
-        os.mkdir(packages_id_input_dir, 0755)
+    # ___ try compability with old packages ___
+    if "localisation_server" not in  package:
+        package['localisation_server']="global"
+
+    if "creator" not in  package:
+        package['creator']="root"
+        package['creation_date']=strdate
+
+
+    if package['creator'] == "" and package['editor'] != "":
+        #package old format_exc
+        #reinitialisation metadata new package.
+        package['creator']=package['editor']
+        package['creation_date']=package['edition_date']
+        package['localisation_server']="global"
+    # -------------------------------------------
+
+    packages_id_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages", package['id'])
+    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages","sharing")
+
+    prepare_shared_folder()
+
+    centralizedmultiplesharing = PkgsConfig("pkgs").centralizedmultiplesharing
+
+    logger.debug("centralized multiple sharing mode%s" % centralizedmultiplesharing)
+
+    if centralizedmultiplesharing:
+        directorysharing = get_share_from_descriptor(package)
+
+        testresult = test_ln(packages_id_input_dir)
+        if not testresult['result']:
+            # As there is no folder nor symlink, we create it.
+            os.mkdir(packages_id_input_dir, 0755)
+
+            result = simplecommand("mv %s %s " % (packages_id_input_dir,
+                                                  directorysharing))
+            result = simplecommand("ln -s %s %s " % (directorysharing,
+                                                     packages_id_input_dir))
+        else:
+            # Case 1: the folder exists.
+            # But is it at the correct location ?
+            if testresult['type'] == "dir":
+                # The package is the /var/lib/package folder. We need to move it in the correct one.
+                # We need to put it in the correct share.
+
+                result = simplecommand("mv %s %s " % (packages_id_input_dir,
+                                                      directorysharing))
+                result = simplecommand("ln -s %s %s " % (directorysharing,
+                                                         packages_id_input_dir))
+            else:
+                # This operation is only possible if  the movepackage parameter is set to True
+                # This is a symlink
+                if testresult['realpath'] != directorysharing:
+                    if PkgsConfig("pkgs").movepackage:
+                        # we need to move the package to the correct location
+                        # and replace the symlink.
+                        os.remove(packages_id_input_dir)
+                        result = simplecommand("mv -nf %s %s " % (testresult['realpath'],
+                                                                  directorysharing))
+                        result = simplecommand("ln -s %s %s " % (directorysharing,
+                                                                 packages_id_input_dir))
+                    else:
+                        logger.error("The move of the packages between shares is forbiden because the movepackage parameter is set to False")
+                        return None
+    else:
+        if not os.path.isdir(packages_id_input_dir):
+            os.mkdir(packages_id_input_dir, 0755)
+
+    if "editor" not in package:
+        package["editor"] = ""
+
+    if "edition_date" not in package:
+        package["edition_date"] = ""
+
     confjson={
         "sub_packages" : [],
         "description" : package['description'],
         "entity_id" : "0",
         "id" : package['id'],
+        "localisation_server" : package['localisation_server'] if "localisation_server" in package else "global",
+        "previous_localisation_server": package["previous_localisation_server"] if "previous_localisation_server" in package else package["localisation_server"],
+        "creator": package["creator"],
+        "creation_date": package["creation_date"],
+        "editor" : package["editor"] if "editor" in package else "",
+        "edition_date" : package["edition_date"] if "edition_date" in package else "",
+        "edition_date" : package["edition_date"] if "edition_date" in package else "",
         "commands" :{
             "postCommandSuccess" : {"command" : "", "name" : ""},
             "installInit" : {"command" : "", "name" : ""},
@@ -346,13 +529,54 @@ def putPackageDetail( package, need_assign = True):
             }
         }
     }
+
+    typesynchro = 'create'
+    if 'mode' in package and   package['mode'] !=  'creation':
+        typesynchro = 'chang'
+
     # writte file to xmpp deploy
     xmppdeployfile = to_json_xmppdeploy(package)
     fichier = open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" )
     fichier.write(xmppdeployfile)
     fichier.close()
+
+    if centralizedmultiplesharing:
+        localisation_server = package['localisation_server'] if 'localisation_server' in package else None
+
+        login = package['creator']
+        if 'mode' in package and package['mode'] == 'creation':
+            login = package['editor']
+            if login=="":
+                login = package['creator']
+                package['editor'] = package['creator']
+
+        if login == "root":
+            pkgs_shares = PkgsDatabase().pkgs_sharing_admin_profil()
+        else:
+            pkgs_shares = PkgsDatabase().pkgs_get_sharing_list_login(login)
+        pkgs_share_id = None
+        ars_id=None
+        for share in pkgs_shares:
+            if share['name'] != localisation_server:
+                continue
+            else:
+                logging.getLogger().error("package %s" % share)
+                pkgs_share_id = share['id_sharing']
+                package['shareobject'] = share
+
     # Add the package into the database
-    pkgmanage().add_package(confjson)
+    if centralizedmultiplesharing:
+        pkgmanage().add_package(confjson, pkgs_share_id)
+        if package['localisation_server'] == "global":
+            pkgs_register_synchro_package(package['id'],
+                                      typesynchro )
+        else:
+            PkgsDatabase().pkgs_register_synchro_package_multisharing(package,
+                                                                  typesynchro )
+    else:
+        pkgs_register_synchro_package(package['id'],
+                                      typesynchro )
+        pkgmanage().add_package(confjson)
 
     # write file to package directory
     with open( os.path.join(packages_id_input_dir,"conf.json"), "w" ) as outfile:
@@ -1284,15 +1508,17 @@ def remove_xmpp_package(package_uuid):
 
     # If the package exists, delete it and return true
     pathpackagename = os.path.join(_path_package(), package_uuid)
-    if os.path.exists(pathpackagename):
-        shutil.rmtree(pathpackagename)
-        # Delete the package from the bdd
+    realname = os.path.abspath(os.path.realpath(pathpackagename))
+
+    if os.path.exists(realname):
+        shutil.rmtree(realname)
+        # Delete the package from the database
         pkgmanage().remove_package(package_uuid)
+        if os.path.islink(pathpackagename):
+            os.unlink(pathpackagename)
         return True
     else :
         return False
-
-
 
 def get_xmpp_package(package_uuid):
     """
@@ -1575,3 +1801,34 @@ esac""" %(basename(self.file), basename(self.file))
             return self.getRpmCommand()
         else:
             return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))
+
+def get_all_packages(login, sharing_activated=False, start=-1, end=-1, filter=""):
+    return PkgsDatabase().get_all_packages(login, sharing_activated, start, end, filter)
+
+def list_sharing_id(objsearch):
+    list_id_sharing = []
+    for sharing in pkgs_search_share(objsearch)['datas']:
+        list_id_sharing.append(sharing['id_sharing'])
+    return list_id_sharing
+
+def get_all_packages_deploy(login, start=-1, end=-1, filter=""):
+    """
+        Only the packages with share permissions can deploy
+    """
+    objsearch={'login' : login, 'permission' : "r"}
+    objsearch['list_sharing'] = list_sharing_id(objsearch)
+    listuuidpackag=PkgsDatabase().get_list_packages_deploy_view(objsearch, start, end, filter)
+    return apimanagepackagemsc.loadpackagelistmsc_on_select_package(listuuidpackag)
+
+def get_dependencies_list_from_permissions(login):
+    """
+    This function is used to retrieve the dependency list in function of the permissions.
+    Args:
+        login: The login of the user we are seeking dependencies
+    Returns:
+        It returns the dependency list in function of the permissions
+    """
+    objsearch = {'login': login, 'permission': "r"}
+    objsearch['list_sharing'] = list_sharing_id(objsearch)
+    listuuidpackag = PkgsDatabase().get_list_packages_deploy_view(objsearch)
+    return apimanagepackagemsc.load_packagelist_dependencies(listuuidpackag)
