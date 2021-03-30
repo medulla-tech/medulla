@@ -401,7 +401,6 @@ class PkgsDatabase(DatabaseHelper):
         for package in ret:
             result["uuid"].append(package[0])
         return result
-
     @DatabaseHelper._sessionm
     def get_all_packages(self, session, login, sharing_activated=False, start=-1, end=-1, ctx={}):
         """
@@ -415,6 +414,15 @@ class PkgsDatabase(DatabaseHelper):
         Returns:
             It returns the list of the packages.
         """
+
+        sharing = self.pkgs_search_share({ 'login' : login})
+        listidsharing = [ [str(x['id_sharing']), x['permission']] for x in sharing['datas'] ]
+        idsharestr = ",".join([x[0] for x in listidsharing])
+
+        #  creation  dict
+        dictpermission={}
+        for t in listidsharing:
+            dictpermission[t[0]] = t[1]
 
         if 'filter' in ctx:
             filter = ctx['filter']
@@ -458,7 +466,10 @@ class PkgsDatabase(DatabaseHelper):
                 packages.Qvendor LIKE '%%%s%%'
             OR
                 packages.Qsoftware LIKE '%%%s%%'
-            )"""%(filter, filter, filter, filter, filter, filter, filter, filter, filter, filter, filter, filter, filter)
+            )"""%(filter, filter, filter, filter,
+                  filter, filter, filter, filter,
+                  filter, filter, filter, filter,
+                  filter)
 
             if start >= 0:
                 limit = "LIMIT %s"%start
@@ -473,38 +484,37 @@ class PkgsDatabase(DatabaseHelper):
                 where_clause = "AND pkgs_rules_local.subject REGEXP '%s' ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "%login
             else:
                 where_clause = "AND pkgs_shares.enabled = 1 ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "
-            sql="""SELECT SQL_CALC_FOUND_ROWS
-                        packages.id AS package_id,
-                        packages.label AS package_label,
-                        packages.description AS package_description,
-                        packages.version AS package_version,
-                        packages.uuid,
-                        packages.conf_json,
-                        packages.pkgs_share_id AS share_id,
-                        pkgs_shares.name AS share_name,
-                        pkgs_shares.type AS share_type,
-                        pkgs_rules_local.permission,
-                        packages.size,
-                        packages.inventory_licenses AS licenses,
-                        packages.inventory_associateinventory AS associateinventory,
-                        packages.Qversion AS qversion,
-                        packages.Qvendor AS qvendor,
-                        packages.Qsoftware AS qsoftware
-                    FROM
-                        packages
-                            LEFT JOIN
-                        pkgs_shares ON pkgs_shares.id = packages.pkgs_share_id
-                            LEFT JOIN
-                        pkgs_rules_local ON pkgs_rules_local.pkgs_shares_id = pkgs_shares.id
-                            LEFT JOIN
-                        pkgs_rules_algos ON pkgs_rules_local.pkgs_rules_algos_id = pkgs_rules_algos.id
-                    WHERE
-                        packages.uuid NOT IN (SELECT
-                                syncthingsync.uuidpackage
-                            FROM
-                                pkgs.syncthingsync)
-                    %s %s %s %s
-                        ;"""%(_filter, where_clause, limit, offset)
+
+            sql="""SELECT SQL_CALC_FOUND_ROWS DISTINCT
+                            packages.id AS package_id,
+                            packages.label AS package_label,
+                            packages.description AS package_description,
+                            packages.version AS package_version,
+                            packages.uuid,
+                            packages.conf_json,
+                            packages.pkgs_share_id AS share_id,
+                            pkgs_shares.name AS share_name,
+                            pkgs_shares.type AS share_type,
+                            packages.size,
+                            packages.inventory_licenses AS licenses,
+                            packages.inventory_associateinventory AS associateinventory,
+                            packages.Qversion AS qversion,
+                            packages.Qvendor AS qvendor,
+                            packages.Qsoftware AS qsoftware
+                        FROM
+                            packages
+                                LEFT JOIN
+                            pkgs_shares ON pkgs_shares.id = packages.pkgs_share_id
+                        WHERE
+                            packages.pkgs_share_id IN (%s) AND
+                            packages.uuid NOT IN (SELECT
+                                    syncthingsync.uuidpackage
+                                FROM
+                                    pkgs.syncthingsync)
+                            %s %s %s %s
+                        ;"""%(idsharestr, _filter, where_clause, limit, offset)
+
+
             ret = session.execute(sql)
             sql_count = "SELECT FOUND_ROWS();"
             ret_count = session.execute(sql_count)
@@ -556,13 +566,13 @@ class PkgsDatabase(DatabaseHelper):
                 result["datas"]["share_id"].append(package[6] if package[6] is not None else "")
                 result["datas"]["share_name"].append(package[7] if package[7] is not None else "")
                 result["datas"]["share_type"].append(package[8] if package[8] is not None else "")
-                result["datas"]["permission"].append(package[9] if package[9] is not None else "")
-                result["datas"]["size"].append(package[10] if package[10] is not None else "")
-                result["datas"]["licence"].append(package[11] if package[11] is not None else "")
-                result["datas"]["associateinventory"].append(package[12] if package[12] is not None else "")
-                result["datas"]["qversion"].append(package[13] if package[13] is not None else "")
-                result["datas"]["qvendor"].append(package[14] if package[14] is not None else "")
-                result["datas"]["qsoftware"].append(package[15] if package[15] is not None else "")
+                result["datas"]["permission"].append(dictpermission[str(package[6])])
+                result["datas"]["size"].append(package[9] if package[9] is not None else "")
+                result["datas"]["licence"].append(package[10] if package[10] is not None else "")
+                result["datas"]["associateinventory"].append(package[11] if package[11] is not None else "")
+                result["datas"]["qversion"].append(package[12] if package[12] is not None else "")
+                result["datas"]["qvendor"].append(package[13] if package[13] is not None else "")
+                result["datas"]["qsoftware"].append(package[14] if package[14] is not None else "")
         else:
             for package in ret:
                 result["datas"]["id"].append(package.id if package.id is not None else "")
