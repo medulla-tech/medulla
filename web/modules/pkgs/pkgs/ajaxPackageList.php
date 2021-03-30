@@ -96,7 +96,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
      ];
    }
 
-  if($countSharingsWithWRight == 0){
+  if($countSharingsWithWRight == 0 && $_SESSION['login'] != 'root'){
     ?>
     <script>jQuery("#add").hide();</script>
     <?php
@@ -282,25 +282,32 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
       $_params[] = $_tmpParam;
     }
 
-    // Display the list
-    $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
-    $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($_packages['share_name'], _T("Localization", "pkgs"));
-    $n->addExtraInfo($_packages['permission'], _T("Permissions", "pkgs"));
-    //$n->addExtraInfo($_sharing_types, _T("Localization type", "pkgs"));
-    $n->addExtraInfo($_descriptions, _T("Description", "pkgs"));
-    $n->addExtraInfo($_versions, _T("Version", "pkgs"));
-    $n->addExtraInfo($_licenses, _T("Licenses", "pkgs"));
-    $n->addExtraInfo($_os, _T("Os", "pkgs"));
-    $n->addExtraInfo($_sizes, _T("Package size", "pkgs"));
-    $n->addExtraInfo($_diskUsages, _T("Share usage", "pkgs"));
-    $n->setItemCount($_count);
-    $n->setNavBar(new AjaxNavBar($_count, $filter1));
-    $n->setParamInfo($_params);
-    $n->addActionItemArray($_editActions);
-    $n->addActionItemArray($_delActions);
-    $n->start = 0;
-    $n->end = $_count;
+    if($_count > 0){
+      // Display the list
+      $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
+      $n->disableFirstColumnActionLink();
+      $n->addExtraInfo($_packages['share_name'], _T("Localization", "pkgs"));
+      $n->addExtraInfo($_packages['permission'], _T("Permissions", "pkgs"));
+      //$n->addExtraInfo($_sharing_types, _T("Localization type", "pkgs"));
+      $n->addExtraInfo($_descriptions, _T("Description", "pkgs"));
+      $n->addExtraInfo($_versions, _T("Version", "pkgs"));
+      $n->addExtraInfo($_licenses, _T("Licenses", "pkgs"));
+      $n->addExtraInfo($_os, _T("Os", "pkgs"));
+      $n->addExtraInfo($_sizes, _T("Package size", "pkgs"));
+      $n->addExtraInfo($_diskUsages, _T("Share usage", "pkgs"));
+      $n->setItemCount($_count);
+      $n->setNavBar(new AjaxNavBar($_count, $filter1));
+      $n->setParamInfo($_params);
+      $n->addActionItemArray($_editActions);
+      $n->addActionItemArray($_delActions);
+      $n->start = 0;
+      $n->end = $_count;
+      $n->display();
+    }
+    else{
+      echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">
+<thead><tr><td style="width: ;"><span style=" padding-left: 32px;">Nom du package</span></td><td style="width: ;"><span style=" ">Localization</span></td><td style="width: ;"><span style=" ">Permissions</span></td><td style="width: ;"><span style=" ">Description</span></td><td style="width: ;"><span style=" ">Version</span></td><td style="width: ;"><span style=" ">Licences</span></td><td style="width: ;"><span style=" ">OS</span></td><td style="width: ;"><span style=" ">Taille du package</span></td><td style="width: ;"><span style=" ">Share usage</span></td><td style="text-align: center; width: ;"><span>Actions</span></td></tr></thead></table>';
+    }
 }
 else{
   $params = array();
@@ -419,26 +426,31 @@ else{
     $localisations[] = $p['localisation_server'];
     $sharing_types[] = $p['sharing_type'];
   }
-
-  // Display the list
-  $n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
-  $n->disableFirstColumnActionLink();
-  $n->addExtraInfo($descriptions, _T("Description", "pkgs"));
-  $n->addExtraInfo($versions, _T("Version", "pkgs"));
-  $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
-  $n->addExtraInfo($os, _T("Os", "pkgs"));
-  $n->addExtraInfo($sizes, _T("Package size", "pkgs"));
-  $n->setItemCount($count);
-  $n->setNavBar(new AjaxNavBar($count, $filter1));
-  $n->setParamInfo($params);
-  $n->addActionItemArray($editActions);
-  $n->addActionItemArray($delActions);
-  $n->start = 0;
-  $n->end = $count;
-
+  if($count > 0){
+    // Display the list
+    $n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
+    $n->disableFirstColumnActionLink();
+    $n->addExtraInfo($descriptions, _T("Description", "pkgs"));
+    $n->addExtraInfo($versions, _T("Version", "pkgs"));
+    $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
+    $n->addExtraInfo($os, _T("Os", "pkgs"));
+    $n->addExtraInfo($sizes, _T("Package size", "pkgs"));
+    $n->setItemCount($count);
+    $n->setNavBar(new AjaxNavBar($count, $filter1));
+    $n->setParamInfo($params);
+    $n->addActionItemArray($editActions);
+    $n->addActionItemArray($delActions);
+    $n->start = 0;
+    $n->end = $count;
+    $n->display();
+  }
+  else{
+    echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">
+<thead><tr><td style="width: ;"><span style=" padding-left: 32px;">Nom du package</span></td><td style="width: ;"><span style=" ">Localization</span></td><td style="width: ;"><span style=" ">Permissions</span></td><td style="width: ;"><span style=" ">Description</span></td><td style="width: ;"><span style=" ">Version</span></td><td style="width: ;"><span style=" ">Licences</span></td><td style="width: ;"><span style=" ">OS</span></td><td style="width: ;"><span style=" ">Taille du package</span></td><td style="width: ;"><span style=" ">Share usage</span></td><td style="text-align: center; width: ;"><span>Actions</span></td></tr></thead></table>';
+  }
 }
 
 print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 
-$n->display();
+
 ?>
