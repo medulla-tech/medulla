@@ -156,9 +156,9 @@ def callremotecommandshell(jidmachine, command="", timeout=20):
                                                  "timeout": timeout}, timeout)
 
 
-def callremoteXmppMonitoring(jidmachine, suject,  timeout=15):
+def callremoteXmppMonitoring(jidmachine, subject,  timeout=15):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotexmppmonitoring",
-                                                 "data": suject,
+                                                 "data": subject,
                                                  "timeout": timeout}, timeout)
 
 def calllocalfile(currentdir=""):

@@ -117,6 +117,14 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
         self.max_key_index = len(self.arraykeys)
 
+        self.centralizedmultiplesharing = True
+        if self.has_option("pkgs", "centralizedmultiplesharing"):
+            self.centralizedmultiplesharing = self.getboolean("pkgs", "centralizedmultiplesharing")
+
+        self.movepackage = False
+        if self.has_option("pkgs", "movepackage"):
+            self.movepackage = self.getboolean("pkgs", "movepackage")
+
         ###################Chatroom for dynamic configuration of agents#######################
         # Dynamic configuration information
         self.confjidchatroom = "%s@%s" % (

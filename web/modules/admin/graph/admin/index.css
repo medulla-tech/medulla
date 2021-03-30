@@ -34,3 +34,14 @@ li.inventory a {
         text-decoration: none;
         color: #FFF;
 }
+
+li.package a {
+	padding: 0px 0px 5px 23px;
+	margin: 0 0px 0 0px;
+	background-image: url("modules/pkgs/graph/img/package.png");
+	background-repeat: no-repeat;
+	background-position: left top;
+	line-height: 18px;
+	text-decoration: none;
+	color: #FFF;
+}

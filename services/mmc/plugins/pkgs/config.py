@@ -132,3 +132,12 @@ class PkgsConfig(PluginConfig):
         # Appstream settings
         if self.has_option("appstream", "url"):
             self.appstream_url = self.get("appstream", "url")
+
+        # PKGS PARAMETERS
+        self.centralizedmultiplesharing = True
+        if self.has_option("pkgs", "centralizedmultiplesharing"):
+            self.centralizedmultiplesharing = self.getboolean("pkgs",
+                                                              "centralizedmultiplesharing")
+        self.movepackage = False
+        if self.has_option("pkgs", "movepackage"):
+            self.movepackage = self.getboolean("pkgs", "movepackage")
