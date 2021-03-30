@@ -2,10 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,5 +46,5 @@ $group->addMembers($groupmembers);
 $truncate_limit = getMaxElementsForStaticList();
 if ($truncate_limit == count($groupmembers)) new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
 
-header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
+header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id, 'groupname'=>$groupname)));
 exit;

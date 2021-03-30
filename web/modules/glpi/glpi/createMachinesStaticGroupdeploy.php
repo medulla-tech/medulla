@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2017 Siveo, http://http://www.siveo.net
+ * (c) 2017-2021 Siveo, http://http://www.siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -32,7 +32,7 @@ extract($_GET);
     $group = new Group();
     $group->create($groupname, False);
     $group->addMembers($uuids);
-    header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
+    header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id, 'groupname'=>$groupname)));
     exit;
   };
 
