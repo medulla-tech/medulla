@@ -388,6 +388,7 @@ if __name__ == '__main__':
         db = MySQLdb.connect(host=opts.hostname,
                              user=opts.user,
                              passwd=Passwordbase,
+                             port = int(opts.port),
                              db=base)
         if opts.regeneratetable:
             try:
