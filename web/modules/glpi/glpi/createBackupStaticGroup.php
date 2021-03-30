@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2016 siveo, http://www.siveo.net/
+ * (c) 2016-2021 siveo, http://www.siveo.net/
  *
  * This file is part of Management Console (MMC).
  *
@@ -68,6 +68,6 @@ $group->miniAddMembers($groupmembers);
 $truncate_limit = getMaxElementsForStaticList();
 if ($truncate_limit == count($groupmembers)) new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
 
-header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
+header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id, 'groupname'=>$groupname)));
 
 exit;
