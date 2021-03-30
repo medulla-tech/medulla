@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://siveo.net
  *
  * $Id$
  *
@@ -42,5 +43,5 @@ $group->addMembers($groupmembers);
 $truncate_limit = getMaxElementsForStaticList();
 if ($truncate_limit == count($groupmembers)) new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers. Use the filter to find specific machines.", "dyngroup"), $truncate_limit));
 
-header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
+header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id, 'groupname'=>$groupname)));
 exit;
