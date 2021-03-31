@@ -592,7 +592,12 @@ class Glpi084(DyngroupDatabaseHelper):
         # start and end are used to set the limit parameter in the query
         start = int(start)
         end = int(end)
-        list_reg_columns_name = [regkey.split("|")[0].split("\\")[-1] \
+        try:
+            self.config.arraykeys
+        except:
+            self.config.arraykeys=[]
+        if self.config.arraykeys:
+            list_reg_columns_name = [regkey.split("|")[0].split("\\")[-1] \
                         for regkey in self.config.arraykeys]
         uuidsetup = ctx['uuidsetup'] if "uuidsetup" in ctx else ""
         idmachine = ctx['idmachine'].replace("UUID", "") if "idmachine" in ctx else ""
