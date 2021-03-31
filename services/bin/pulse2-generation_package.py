@@ -648,7 +648,7 @@ if __name__ == '__main__':
                 du = simplecommand("du -sb")
                 result = simplecommand("du -b %s" % path_package)
                 taillebytefolder = int(result['result'][0].split()[0])
-                fiche={ "size" : "%sb" % taillebytefolder,
+                fiche={ "size" : "%s" % taillebytefolder,
                         "label" :contenuedejson['name'],
                         "description" : contenuedejson['description'],
                         "version" : contenuedejson['version'],
