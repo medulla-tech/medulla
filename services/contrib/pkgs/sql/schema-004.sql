@@ -34,14 +34,17 @@ DROP TABLE IF EXISTS `pkgs_shares`;
 CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_shares` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
-  `comments` VARCHAR(1024) NULL DEFAULT '\"\"',
+  `comments` VARCHAR(255) NULL DEFAULT '""',
   `enabled` INT NOT NULL DEFAULT 1,
   `type` VARCHAR(45) NOT NULL DEFAULT 'local',
   `uri` VARCHAR(255) NOT NULL,
   `ars_name` VARCHAR(255) NULL,
   `ars_id` INT NOT NULL,
   `share_path` VARCHAR(255) NOT NULL DEFAULT '\"/var/lib/pulse/local\"',
-  PRIMARY KEY (`id`))
+  `usedquotas` INT NULL DEFAULT 0,
+  `quotas` INT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  INDEX `idx_uniq_sharing` (`name` ASC, `comments` ASC, `ars_id` ASC))
 ENGINE = InnoDB
 COMMENT = 'Cette table permet de definir des partages.\n';
 
@@ -154,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_rules_local` (
 ENGINE = InnoDB
 COMMENT = 'definition des regles ordonees qui sont utilisees pour determiner les partages locaux.';
 
---
+
 -- -----------------------------------------------------
 -- add field `table packages`.
 -- -----------------------------------------------------
@@ -170,13 +173,6 @@ ADD COLUMN `conf_json` TEXT NULL AFTER `edition_status`;
 ALTER TABLE `pkgs`.`packages`
 ADD COLUMN `size` INT NULL DEFAULT "0" AFTER `conf_json`;
 
--- -----------------------------------------------------
--- add field `table pkgs_shares`.manage quotas
--- -----------------------------------------------------
-
-ALTER TABLE `pkgs`.`pkgs_shares`
-ADD COLUMN `usedquotas` INT NULL DEFAULT 0 AFTER `share_path`,
-ADD COLUMN `quotas` INT NULL DEFAULT 0 AFTER `usedquotas`;
 
 -- -----------------------------------------------------
 -- Initialise table `pkgs_rules_algos`
