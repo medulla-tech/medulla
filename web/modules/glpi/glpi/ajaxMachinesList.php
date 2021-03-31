@@ -361,20 +361,15 @@ $orderkey = array( "glpi_owner",
         if ($datas['uuid_inventorymachine'][$index] =="" ){
             $actionInventory[] = $glpinoAction;
             $dissociatedFirstColumns[] = $index;
+            $action_deploy_msc[] = $mscNoAction; //deployement
         }else{
-         $actionInventory[] = $glpiAction;
+            $actionInventory[] = $glpiAction;
+            $action_deploy_msc[] = $mscAction; //deployement
         }
         $actionxmppquickdeoloy[]=$DeployQuickxmpp; //Quick action presence ou non presence.
         $actionMonitoring[] = $monitoring;
         if ($valeue == 1){
             $presencesClass[] = "machineNamepresente";
-
-            if ($datas['uuid_inventorymachine'][$index] ==""){
-               $action_deploy_msc[] = $mscNoAction; //deployement
-            }
-            else{
-               $action_deploy_msc[] = $mscAction; //deployement
-            }
             if (isExpertMode()){
                 $actionConsole[] = $inventconsole;
                 $actionxmppbrowsing[] = $inventxmppbrowsing;
@@ -386,7 +381,6 @@ $orderkey = array( "glpi_owner",
             }
         }
         else {
-            $action_deploy_msc[] = $mscNoAction; //deployement
             $presencesClass[] = "machineName";
             if (isExpertMode()){
                 $actionConsole[] = $inventnoconsole;
