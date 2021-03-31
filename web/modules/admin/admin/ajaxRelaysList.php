@@ -31,18 +31,17 @@ $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
-$sharings = xmlrpc_pkgs_search_share(["login"=> $_SESSION["login"]]);
-if($sharings['centralizedmultiplesharing'] == 1){
-  try{
-    $relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage, $filter);
-  }
-  catch(Exception $e){
+if ($_SESSION["login"] == "root"){
+  $relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
+}else{
+  $sharings = xmlrpc_pkgs_search_share(["login"=> $_SESSION["login"]]);
+  if($sharings['config']['centralizedmultiplesharing'] == 1){
+      $relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage, $filter);
+  }else{
     $relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
   }
 }
-else{
-  $relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
-}
+
 $editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
 $editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
 

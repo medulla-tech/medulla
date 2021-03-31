@@ -752,6 +752,11 @@ def get_list_ars_from_sharing(sharings, start, limit, filter):
             listidars.append(share['ars_id'])
     ars_list = {}
     ars_list = XmppMasterDatabase().get_ars_list_belongs_cluster(listidars, start, limit, filter)
+    if not ars_list or ars_list['count']== 0:
+        res =  { "total" : 0,
+            "datas": {},
+            "partielcount" : 0
+            }
     stat_ars_machine = XmppMasterDatabase().get_stat_ars_machine(ars_list['jid'])
     ars_list['total_machines'] = []
     ars_list['uninventoried'] = []
