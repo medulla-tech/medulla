@@ -401,6 +401,7 @@ class PkgsDatabase(DatabaseHelper):
         for package in ret:
             result["uuid"].append(package[0])
         return result
+
     @DatabaseHelper._sessionm
     def get_all_packages(self, session, login, sharing_activated=False, start=-1, end=-1, ctx={}):
         """
@@ -415,6 +416,22 @@ class PkgsDatabase(DatabaseHelper):
             It returns the list of the packages.
         """
 
+        result = {
+            "total": 0,
+            "datas" : {
+                "id": [],
+                "name": [],
+                "description" : [],
+                "version" : [],
+                "uuid": [],
+                "conf_json" : [],
+                "share_id": [],
+                "share_name": [],
+                "share_type": [],
+                "permission" : [],
+                "size" : [],
+            }
+        }
         sharing = self.pkgs_search_share({ 'login' : login})
         listidsharing = [ [str(x['id_sharing']), x['permission']] for x in sharing['datas'] ]
         idsharestr = ",".join([x[0] for x in listidsharing])
@@ -437,7 +454,12 @@ class PkgsDatabase(DatabaseHelper):
             end = int(end)
         except:
             end = -1
+
         if sharing_activated is True:
+            # No sharing found no need to continue, there
+            if idsharestr == "":
+                return result
+
             if filter == "":
                 _filter = ""
             else:
@@ -480,10 +502,6 @@ class PkgsDatabase(DatabaseHelper):
                 offset = ", %s"%end
             else:
                 offset = " "
-            if login != "root":
-                where_clause = "AND pkgs_rules_local.subject REGEXP '%s' ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "%login
-            else:
-                where_clause = "AND pkgs_shares.enabled = 1 ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC "
 
             sql="""SELECT SQL_CALC_FOUND_ROWS DISTINCT
                             packages.id AS package_id,
@@ -511,14 +529,15 @@ class PkgsDatabase(DatabaseHelper):
                                     syncthingsync.uuidpackage
                                 FROM
                                     pkgs.syncthingsync)
-                            %s %s %s %s
-                        ;"""%(idsharestr, _filter, where_clause, limit, offset)
-
+                            %s
+                        AND pkgs_shares.enabled = 1 ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC
+                        %s %s;"""%(idsharestr, _filter, limit, offset)
 
             ret = session.execute(sql)
             sql_count = "SELECT FOUND_ROWS();"
             ret_count = session.execute(sql_count)
             count = ret_count.first()[0]
+
         else:
 
             query = session.query(Packages).order_by(Packages.label)
@@ -529,22 +548,7 @@ class PkgsDatabase(DatabaseHelper):
                 query = query.offset(start).limit(end)
             ret = query.all()
 
-        result = {
-            "total": count,
-            "datas" : {
-                "id": [],
-                "name": [],
-                "description" : [],
-                "version" : [],
-                "uuid": [],
-                "conf_json" : [],
-                "share_id": [],
-                "share_name": [],
-                "share_type": [],
-                "permission" : [],
-                "size" : [],
-            }
-        }
+        result['total'] = count
 
         if sharing_activated is True:
             result["datas"]["licence"]=[]
@@ -1005,7 +1009,7 @@ class PkgsDatabase(DatabaseHelper):
                            session,
                            shareId,
                            hostname,
-                           jid, 
+                           jid,
                            pkgs_shares_id):
         try:
             new_Pkgs_shares_ars = Pkgs_shares_ars()
@@ -1439,4 +1443,3 @@ class PkgsDatabase(DatabaseHelper):
                 resuldict['permission']=y[13]
                 ret.append(resuldict)
         return ret
-
