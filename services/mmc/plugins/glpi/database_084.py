@@ -698,8 +698,8 @@ class Glpi084(DyngroupDatabaseHelper):
                                     'operatingsystems_id',
                                     'operatingsystemversions_id',
                                     'operatingsystemservicepacks_id']
-                                  
-            for addcolunm in listcolumaddforinfo                     :
+
+            for addcolunm in listcolumaddforinfo:
                 query = query.add_column(getattr(Machine, addcolunm).label(addcolunm))
 
         # Don't select deleted or template machines
