@@ -268,7 +268,12 @@ $f->add(new HiddenTpl("edition_date"), array("value" => date("Y-m-d H:i:s"), "hi
 $f->add(new HiddenTpl("creator"), array("value" => $json['info']['creator'], "hide" => True));
 $f->add(new HiddenTpl("creation_date"), array("value" => $json['info']["creation_date"], "hide" => True));
 
-$getShares  = xmlrpc_pkgs_search_share(['login'=>$_SESSION['login']]);
+if(isset($_SESSION['sharings'])){
+  $getShares = $_SESSION['sharings'];
+}
+else{
+  $getShares = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
+}
 $shares =[];
 foreach($getShares['datas'] as $share){
   if(preg_match("#w#i", $share['permission'])){
