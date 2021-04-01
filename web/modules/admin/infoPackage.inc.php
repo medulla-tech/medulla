@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2020 Siveo, http://siveo.net
+ * (c) 2020-2021 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -53,7 +53,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxRelaysList", _T("Relays List", "glpi"));
 $page->setFile("modules/admin/admin/ajaxRelaysList.php");
-$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$page->setOptions(array("AJAX"=>true, "visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
 
@@ -69,7 +69,7 @@ $submod->addPage($page);
 
 $page = new Page("detailactions", _T("Relays Detail Actions", "xmppmaster"));
 $page->setFile("modules/admin/admin/detailactions.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
 $page = new Page("qalaunched", _T("Qa launched on Relays", "xmppmaster"));
