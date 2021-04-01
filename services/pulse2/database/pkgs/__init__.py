@@ -467,10 +467,6 @@ class PkgsDatabase(DatabaseHelper):
             OR
                 pkgs_shares.type LIKE '%%%s%%'
             OR
-                pkgs_rules_local.permission LIKE '%%%s%%'
-            OR
-                pkgs_rules_algos.name LIKE '%%%s%%'
-            OR
                 packages.label LIKE '%%%s%%'
             OR
                 packages.description LIKE '%%%s%%'
@@ -490,8 +486,7 @@ class PkgsDatabase(DatabaseHelper):
                 packages.Qsoftware LIKE '%%%s%%'
             )"""%(filter, filter, filter, filter,
                   filter, filter, filter, filter,
-                  filter, filter, filter, filter,
-                  filter)
+                  filter, filter, filter)
 
             if start >= 0:
                 limit = "LIMIT %s"%start
