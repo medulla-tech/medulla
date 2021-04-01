@@ -599,6 +599,8 @@ class Glpi084(DyngroupDatabaseHelper):
         if self.config.arraykeys:
             list_reg_columns_name = [regkey.split("|")[0].split("\\")[-1] \
                         for regkey in self.config.arraykeys]
+        else:
+            list_reg_columns_name = []
         uuidsetup = ctx['uuidsetup'] if "uuidsetup" in ctx else ""
         idmachine = ctx['idmachine'].replace("UUID", "") if "idmachine" in ctx else ""
         # "location" filter is corresponding to the entity selection in the interface
