@@ -286,7 +286,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
       // Display the list
       $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
       $n->disableFirstColumnActionLink();
-      $n->addExtraInfo($_packages['share_name'], _T("Localization", "pkgs"));
+      $n->addExtraInfo($_packages['share_name'], _T("Share", "pkgs"));
       $n->addExtraInfo($_packages['permission'], _T("Permissions", "pkgs"));
       //$n->addExtraInfo($_sharing_types, _T("Localization type", "pkgs"));
       $n->addExtraInfo($_descriptions, _T("Description", "pkgs"));

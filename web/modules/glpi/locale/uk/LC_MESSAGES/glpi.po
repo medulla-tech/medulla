@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-02 15:57+0100\n"
+"POT-Creation-Date: 2021-04-01 10:54+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -23,7 +23,8 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #: modules/glpi/infoPackage.inc.php:32
-#: modules/glpi/glpi/ajaxMachinesList.php:160
+#: modules/glpi/glpi/ajaxMachinesList.php:174
+#: modules/glpi/glpi/ajaxMachinesList.php:178
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:86
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:90
 msgid "GLPI Inventory"
@@ -320,50 +321,39 @@ msgstr "Реєстр"
 msgid "Get XLS Report"
 msgstr "Отримати звіт у XLS"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:161
-#: modules/glpi/glpi/ajaxMachinesList.php:166
-#: modules/glpi/glpi/ajaxMachinesList.php:171
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:87
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:92
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
-msgid "Software deployment"
-msgstr "Розгортання програмного забезпечення"
-
-#: modules/glpi/glpi/ajaxMachinesList.php:163
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:89
-msgid "Inventory"
-msgstr "Облік"
-
-#: modules/glpi/glpi/ajaxMachinesList.php:165
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:91
-msgid "detaildeploy"
-msgstr "докладне розгортання"
-
-#: modules/glpi/glpi/ajaxMachinesList.php:169
+#: modules/glpi/glpi/ajaxMachinesList.php:182
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:95
 msgid "Monitoring"
 msgstr "Спостереження"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:170
-#: modules/glpi/glpi/ajaxMachinesList.php:185
-#: modules/glpi/glpi/ajaxMachinesList.php:195
+#: modules/glpi/glpi/ajaxMachinesList.php:183
+#: modules/glpi/glpi/ajaxMachinesList.php:207
+#: modules/glpi/glpi/ajaxMachinesList.php:219
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:96
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:111
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:121
 msgid "Remote control"
 msgstr "Дистанційне керування"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:173
-#: modules/glpi/glpi/ajaxMachinesList.php:174
+#: modules/glpi/glpi/ajaxMachinesList.php:186
+#: modules/glpi/glpi/ajaxMachinesList.php:187
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:87
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:92
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
+msgid "Software deployment"
+msgstr "Розгортання програмного забезпечення"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:189
+#: modules/glpi/glpi/ajaxMachinesList.php:190
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:99
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:100
 msgid "xmppconsole"
 msgstr "xmppconsole"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:176
-#: modules/glpi/glpi/ajaxMachinesList.php:177
-#: modules/glpi/glpi/ajaxMachinesList.php:178
-#: modules/glpi/glpi/ajaxMachinesList.php:181
+#: modules/glpi/glpi/ajaxMachinesList.php:193
+#: modules/glpi/glpi/ajaxMachinesList.php:194
+#: modules/glpi/glpi/ajaxMachinesList.php:196
+#: modules/glpi/glpi/ajaxMachinesList.php:197
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:102
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:103
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:104
@@ -371,247 +361,242 @@ msgstr "xmppconsole"
 msgid "files browsing"
 msgstr "навігація файлами"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:179
-#: modules/glpi/glpi/ajaxMachinesList.php:180
+#: modules/glpi/glpi/ajaxMachinesList.php:200
+#: modules/glpi/glpi/ajaxMachinesList.php:201
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:105
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:106
 msgid "Edit config files"
 msgstr "Редагувати файли налаштувань"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:182
-#: modules/glpi/glpi/ajaxMachinesList.php:183
+#: modules/glpi/glpi/ajaxMachinesList.php:203
+#: modules/glpi/glpi/ajaxMachinesList.php:204
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:108
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:109
 msgid "files viewer"
 msgstr "переглядач файлів"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:187
+#: modules/glpi/glpi/ajaxMachinesList.php:210
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:113
 msgid "Imaging management"
 msgstr "Керування образами"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:188
+#: modules/glpi/glpi/ajaxMachinesList.php:212
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:114
 msgid "extTicket issue"
 msgstr "Вада extTicket"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:190
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:116
-msgid "Show Profile"
-msgstr "Показувати профіль"
-
-#: modules/glpi/glpi/ajaxMachinesList.php:192
+#: modules/glpi/glpi/ajaxMachinesList.php:216
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:118
 msgid "Quick action"
 msgstr "Швидка дія"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:219
+#: modules/glpi/glpi/ajaxMachinesList.php:243
 #: modules/glpi/glpi/addEntityRule.php:99
 #: modules/glpi/glpi/machinesList.php:62
 msgid "Hostname"
 msgstr "Назва вузла"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:220
+#: modules/glpi/glpi/ajaxMachinesList.php:244
 #: modules/glpi/glpi/machinesList.php:56
 msgid "Jabber ID"
 msgstr "Ід. Jabber"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:221
+#: modules/glpi/glpi/ajaxMachinesList.php:245
 #: modules/glpi/glpi/machinesList.php:60
 msgid "Platform"
 msgstr "Платформа"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:222
+#: modules/glpi/glpi/ajaxMachinesList.php:246
 #: modules/glpi/glpi/ajaxViewPart.php:260
 #: modules/glpi/glpi/machinesList.php:61
 msgid "Architecture"
 msgstr "Архітектура"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:223
+#: modules/glpi/glpi/ajaxMachinesList.php:247
 #: modules/glpi/glpi/machinesList.php:57
 msgid "Machine UUID"
 msgstr "UUID комп'ютера"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:224
+#: modules/glpi/glpi/ajaxMachinesList.php:248
 #: modules/glpi/glpi/machinesList.php:58
 msgid "Reconf. requested"
 msgstr "Надіслано запит щодо переналаштовування"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:225
+#: modules/glpi/glpi/ajaxMachinesList.php:249
 #: modules/glpi/glpi/machinesList.php:59
 msgid "Online"
 msgstr "У мережі"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:226
+#: modules/glpi/glpi/ajaxMachinesList.php:250
 #: modules/glpi/glpi/machinesList.php:64
 msgid "IP address"
 msgstr "IP-адреса"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:227
+#: modules/glpi/glpi/ajaxMachinesList.php:251
 #: modules/glpi/glpi/addEntityRule.php:102
 #: modules/glpi/glpi/machinesList.php:65
 msgid "Subnet"
 msgstr "Підмережа"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:228
+#: modules/glpi/glpi/ajaxMachinesList.php:252
 #: modules/glpi/glpi/machinesList.php:67
 msgid "Public IP"
 msgstr "Загальнодоступний IP"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:229
+#: modules/glpi/glpi/ajaxMachinesList.php:253
 #: modules/glpi/glpi/machinesList.php:66
 msgid "Mac address"
 msgstr "MAC-адреса"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:230
+#: modules/glpi/glpi/ajaxMachinesList.php:254
 #: modules/glpi/glpi/machinesList.php:68
 msgid "Agent type"
 msgstr "Тип агента"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:231
+#: modules/glpi/glpi/ajaxMachinesList.php:255
 #: modules/glpi/glpi/machinesList.php:69
 msgid "Usage class"
 msgstr "Клас використання"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:232
+#: modules/glpi/glpi/ajaxMachinesList.php:256
 #: modules/glpi/glpi/machinesList.php:70
 msgid "Relay JID"
 msgstr "JID ретрансляції"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:233
+#: modules/glpi/glpi/ajaxMachinesList.php:257
 #: modules/glpi/glpi/machinesList.php:71
 msgid "AD machine OU"
 msgstr "OU комп'ютера в AD"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:234
+#: modules/glpi/glpi/ajaxMachinesList.php:258
 #: modules/glpi/glpi/machinesList.php:72
 msgid "AD user OU"
 msgstr "OU користувача в AD"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:235
+#: modules/glpi/glpi/ajaxMachinesList.php:259
 #: modules/glpi/glpi/machinesList.php:73
 msgid "Kiosk enabled"
 msgstr "Увімкнено кіоск"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:236
+#: modules/glpi/glpi/ajaxMachinesList.php:260
 #: modules/glpi/glpi/machinesList.php:74
 msgid "Last user connected"
 msgstr "Останній з'єднаний користувач"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:237
+#: modules/glpi/glpi/ajaxMachinesList.php:261
 #: modules/glpi/glpi/machinesList.php:75
 msgid "Syncthing ID"
 msgstr "Ід. Syncthing"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:238
+#: modules/glpi/glpi/ajaxMachinesList.php:262
 #: modules/glpi/glpi/machinesList.php:76
 msgid "Registry keys"
 msgstr "Ключі реєстру"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:239
+#: modules/glpi/glpi/ajaxMachinesList.php:263
 #: modules/glpi/glpi/machinesList.php:55
 msgid "Machine ID"
 msgstr "Ід. комп'ютера"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:240
+#: modules/glpi/glpi/ajaxMachinesList.php:264
 #: modules/glpi/glpi/machinesList.php:63
 msgid "GLPI ID"
 msgstr "Ід. GLPI"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:241
+#: modules/glpi/glpi/ajaxMachinesList.php:265
 #: modules/glpi/glpi/machinesList.php:77
 msgid "GLPI description"
 msgstr "Опис GLPI"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:242
+#: modules/glpi/glpi/ajaxMachinesList.php:266
 #: modules/glpi/glpi/machinesList.php:78
 msgid "Owner firstname"
 msgstr "Ім'я власника"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:243
+#: modules/glpi/glpi/ajaxMachinesList.php:267
 #: modules/glpi/glpi/machinesList.php:79
 msgid "Owner lastname"
 msgstr "Прізвище власника"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:244
-#: modules/glpi/glpi/ajaxMachinesList.php:350
+#: modules/glpi/glpi/ajaxMachinesList.php:268
+#: modules/glpi/glpi/ajaxMachinesList.php:438
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:287
 #: modules/glpi/glpi/machinesList.php:80
 msgid "Owner"
 msgstr "Власник"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:245
+#: modules/glpi/glpi/ajaxMachinesList.php:269
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:297
 #: modules/glpi/glpi/ajaxViewPart.php:241
 #: modules/glpi/glpi/machinesList.php:81
 msgid "Model"
 msgstr "Модель"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:246
-#: modules/glpi/glpi/ajaxMachinesList.php:355
+#: modules/glpi/glpi/ajaxMachinesList.php:270
+#: modules/glpi/glpi/ajaxMachinesList.php:443
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:299
 #: modules/glpi/glpi/ajaxViewPart.php:242
 #: modules/glpi/glpi/machinesList.php:82
 msgid "Manufacturer"
 msgstr "Виробник"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:247
+#: modules/glpi/glpi/ajaxMachinesList.php:271
 #: modules/glpi/glpi/machinesList.php:83
 msgid "Short entity name"
 msgstr "Скорочена назва запису"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:248
+#: modules/glpi/glpi/ajaxMachinesList.php:272
 #: modules/glpi/glpi/machinesList.php:84
 msgid "Full entity name"
 msgstr "Повна назва запису"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:249
+#: modules/glpi/glpi/ajaxMachinesList.php:273
 #: modules/glpi/glpi/machinesList.php:85
 msgid "Entity ID"
 msgstr "Ід. запису"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:250
+#: modules/glpi/glpi/ajaxMachinesList.php:274
 #: modules/glpi/glpi/machinesList.php:86
 msgid "Short location name"
 msgstr "Скорочена назва місця"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:251
+#: modules/glpi/glpi/ajaxMachinesList.php:275
 #: modules/glpi/glpi/machinesList.php:87
 msgid "Full location name"
 msgstr "Повна назва місця"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:252
+#: modules/glpi/glpi/ajaxMachinesList.php:276
 #: modules/glpi/glpi/machinesList.php:88
 msgid "Location ID"
 msgstr "Ід. місця"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:253
+#: modules/glpi/glpi/ajaxMachinesList.php:277
 #: modules/glpi/glpi/machinesList.php:89
 msgid "IP addresses"
 msgstr "IP-адреси"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:254
+#: modules/glpi/glpi/ajaxMachinesList.php:278
 #: modules/glpi/glpi/machinesList.php:90
 msgid "Network mask"
 msgstr "Маска мережі"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:255
+#: modules/glpi/glpi/ajaxMachinesList.php:279
 #: modules/glpi/glpi/machinesList.php:91
 msgid "Broadcast address"
 msgstr "Адреса трансляції"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:256
+#: modules/glpi/glpi/ajaxMachinesList.php:280
 #: modules/glpi/glpi/machinesList.php:92
 msgid "Gateway address"
 msgstr "Адреса шлюзу"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:343
+#: modules/glpi/glpi/ajaxMachinesList.php:431
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:276
 #: modules/glpi/glpi/ajaxViewPart.php:231
 msgid "Computer Name"
 msgstr "Назва комп'ютера"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:346
+#: modules/glpi/glpi/ajaxMachinesList.php:434
 #: modules/glpi/glpi/addLocation.php:101 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:279
 #: modules/glpi/glpi/addEntityRule.php:77
@@ -619,51 +604,51 @@ msgstr "Назва комп'ютера"
 msgid "Description"
 msgstr "Опис"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:347
+#: modules/glpi/glpi/ajaxMachinesList.php:435
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:281
 #: modules/glpi/glpi/ajaxViewPart.php:238
 msgid "Operating System"
 msgstr "Операційна система"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:348
+#: modules/glpi/glpi/ajaxMachinesList.php:436
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:283
 #: modules/glpi/glpi/ajaxViewPart.php:239
 msgid "Computer Type"
 msgstr "Тип комп'ютера"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:349
+#: modules/glpi/glpi/ajaxMachinesList.php:437
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:285
 #: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Last Logged User"
 msgstr "Останній користувач системи"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:351
+#: modules/glpi/glpi/ajaxMachinesList.php:439
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:289
 #: modules/glpi/glpi/ajaxViewPart.php:234
 msgid "Entity"
 msgstr "Сутність"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:352
+#: modules/glpi/glpi/ajaxMachinesList.php:440
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:291
 msgid "Localization"
 msgstr "Локалізація"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:353
+#: modules/glpi/glpi/ajaxMachinesList.php:441
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:293
 msgid "Owner Firstname"
 msgstr "Ім'я власника"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:354
+#: modules/glpi/glpi/ajaxMachinesList.php:442
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:295
 msgid "Owner Real Name"
 msgstr "Справжнє ім'я власника"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:371
+#: modules/glpi/glpi/ajaxMachinesList.php:459
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:323
 msgid "Backup status"
 msgstr "Стан резервного копіювання"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:408
+#: modules/glpi/glpi/ajaxMachinesList.php:493
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:360
 msgid "Delete computer"
 msgstr "Вилучити комп'ютер"
@@ -754,6 +739,18 @@ msgstr "Редагувати запис"
 msgid "Parent entity"
 msgstr "Батьківський запис"
 
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:89
+msgid "Inventory"
+msgstr "Облік"
+
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:91
+msgid "detaildeploy"
+msgstr "докладне розгортання"
+
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:116
+msgid "Show Profile"
+msgstr "Показувати профіль"
+
 #: modules/glpi/glpi/createMachinesStaticGroup.php:61
 #, php-format
 msgid "Machines online at %s"
@@ -765,7 +762,7 @@ msgid "Machines offline at %s"
 msgstr "Неробочі машини на %s"
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:75
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:47
 #: modules/glpi/glpi/createBackupStaticGroup.php:69
 #: modules/glpi/glpi/createOSStaticGroup.php:54
 #, php-format
@@ -1134,17 +1131,17 @@ msgstr "Комп'ютери поза мережею"
 msgid "All my entities"
 msgstr "Усі ваші записи"
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:31
 #, php-format
 msgid "Antivirus status is OK at %s"
 msgstr "Прийнятний стан антивірусу на %s"
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:34
 #, php-format
 msgid "Antivirus is not running or not up-to-date at %s"
 msgstr "Антивірус на %s не запущено або він застарів"
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:37
 #, php-format
 msgid "No antivirus found at %s"
 msgstr "На %s не знайдено антивірусів"
@@ -1192,17 +1189,17 @@ msgstr "Усі адреси"
 msgid "Entity name"
 msgstr "Назва запису"
 
-#: modules/glpi/glpi/createStaticGroup.php:30
+#: modules/glpi/glpi/createStaticGroup.php:31
 #, php-format
 msgid "Latest inventory is less than %s days at %s"
 msgstr "Останній облік було здійснено менше за %s днів тому на %s"
 
-#: modules/glpi/glpi/createStaticGroup.php:33
+#: modules/glpi/glpi/createStaticGroup.php:34
 #, php-format
 msgid "Latest inventory is more than %s days at %s"
 msgstr "Останній облік було здійснено більше за %s днів тому на %s"
 
-#: modules/glpi/glpi/createStaticGroup.php:43
+#: modules/glpi/glpi/createStaticGroup.php:44
 #, php-format
 msgid ""
 "Computers list has been truncated at %d computers. Use the filter to find "

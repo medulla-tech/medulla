@@ -298,7 +298,7 @@ if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["conf
         $location_servers->setSelected($json['info']["localisation_server"]);
 
         $f->add(
-                new TrFormElement(_T('Location server', 'pkgs'), $location_servers), array()
+                new TrFormElement(_T('Share', 'pkgs'), $location_servers), array()
         );
       }
     }
