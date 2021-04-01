@@ -206,12 +206,6 @@ if (isset($_POST['bconfirm'])){
         $f->add(new HiddenTpl("localisation_server"), array("value" => $shares[0]["name"], "hide" => True));
       }
       else{
-        $searchSharing = new InputTpl("searchSharing");
-        $f->add(
-                new TrFormElement(_T("Search on Location",'pkgs'), $searchSharing), array_merge(array("value" => ''),
-                array('placeholder' => _T('Search by name ...', 'pkgs')))
-        );
-
         $sharesNames = [];
         $sharesPaths = [];
         foreach($shares as $key=>$share){
@@ -222,7 +216,7 @@ if (isset($_POST['bconfirm'])){
         $location_servers->setElements($sharesNames);
         $location_servers->setElementsVal($sharesPaths);
         $f->add(
-                new TrFormElement(_T('Location server', 'pkgs'), $location_servers), array("value" => '')
+                new TrFormElement(_T('Share', 'pkgs'), $location_servers), array("value" => '')
         );
       }
     }
@@ -413,29 +407,6 @@ if (isset($_POST['bconfirm'])){
         else{
           jQuery.each(pooldependencies, function(id, dependency){
             optionSelector = jQuery(dependency)
-            optionSelector.show();
-          })
-        }
-      })
-
-      sharingFilter = jQuery("#searchSharing");
-      sharingList = jQuery("#localisation_server option");
-      sharingFilter.on("change click hover keypress keydown", function(event){
-        if(sharingFilter.val() != ""){
-          regex = new RegExp(sharingFilter.val(), "gi");
-          jQuery.each(sharingList, function(id, opt){
-            optionSelector = jQuery(opt)
-            if(regex.test(optionSelector.text()) === false){
-              optionSelector.hide();
-            }
-            else{
-              optionSelector.show();
-            }
-          })
-        }
-        else{
-          jQuery.each(sharingList, function(id, opt){
-            optionSelector = jQuery(opt)
             optionSelector.show();
           })
         }
