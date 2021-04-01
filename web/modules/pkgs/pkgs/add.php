@@ -193,7 +193,12 @@ if (isset($_POST['bconfirm'])){
     $f->add(new HiddenTpl("creation_date"), array("value" => date("Y-m-d H:i:s"), "hide" => True));
 
 
-    $getShares  = xmlrpc_pkgs_search_share(['login'=>$_SESSION['login']]);
+    if(isset($_SESSION['sharings'])){
+      $getShares = $_SESSION['sharings'];
+    }
+    else{
+      $getShares = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
+    }
     $shares =[];
     foreach($getShares['datas'] as $share){
       $diskUsage = ($share['quotas'] > 0) ? ($share['usedquotas']/(1073741824*$share['quotas']))*100 : 0;

@@ -75,7 +75,13 @@ $emptyAction = new EmptyActionItem();
 $delAction = new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs");
 $delNoRightsAction = new EmptyActionItem(_T("You must have write rights to delete this package", "pkgs"));
 
-$sharings = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
+if(isset($_SESSION['sharings'])){
+  $sharings = $_SESSION['sharings'];
+}
+else{
+  $sharings = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
+}
+
 
 if($sharings['config']['centralizedmultiplesharing'] == true){
   /*
@@ -96,11 +102,6 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
      ];
    }
 
-  if($countSharingsWithWRight == 0 && $_SESSION['login'] != 'root'){
-    ?>
-    <script>jQuery("#add").hide();</script>
-    <?php
-  }
   $_params = array();
   $__arraypackagename = array();
   $_versions = array();

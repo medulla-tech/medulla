@@ -1138,6 +1138,21 @@ class XmppMasterDatabase(DatabaseHelper):
         except:
             limit = -1
 
+        resultobj ={'id': [],
+                    'hostname': [],
+                    'jid': [],
+                    'jid_from_relayserver': [],
+                    'cluster_name': [],
+                    'cluster_description': [],
+                    'classutil': [],
+                    'macaddress': [],
+                    'ip_xmpp': [],
+                    'enabled': [],
+                    'enabled_css': [],
+                    'mandatory': [],
+                    'switchonoff': []}
+
+        count = 0
         # filter activate
         filterars = ""
         if filter != "":
@@ -1214,19 +1229,6 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
 
-            resultobj ={'id': [],
-                        'hostname': [],
-                        'jid': [],
-                        'jid_from_relayserver': [],
-                        'cluster_name': [],
-                        'cluster_description': [],
-                        'classutil': [],
-                        'macaddress': [],
-                        'ip_xmpp': [],
-                        'enabled': [],
-                        'enabled_css': [],
-                        'mandatory': [],
-                        'switchonoff': []}
             if result:
                 for row in result:
                     resultobj['id'].append(row[0])
@@ -8748,12 +8750,12 @@ where agenttype="machine" and groupdeploy in (
 
         Args:
             session: the SQLAlchemy session
-            clusterid: the id of the used cluster 
+            clusterid: the id of the used cluster
             enabled: Tell if we used enabled ars only
                      If None we do not use enabled in the SQL request
         Returns:
             It returns informations from the ars of a cluster
-            like jid, name, classutil, enabled, etc. 
+            like jid, name, classutil, enabled, etc.
         """
         setsearch = clusterid
         if isinstance(clusterid, list):

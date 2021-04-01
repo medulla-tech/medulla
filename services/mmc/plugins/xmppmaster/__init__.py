@@ -757,6 +757,8 @@ def get_list_ars_from_sharing(sharings, start, limit, filter):
             "datas": {},
             "partielcount" : 0
             }
+        return res
+
     stat_ars_machine = XmppMasterDatabase().get_stat_ars_machine(ars_list['jid'])
     ars_list['total_machines'] = []
     ars_list['uninventoried'] = []
@@ -801,7 +803,6 @@ def get_list_ars_from_sharing(sharings, start, limit, filter):
         ars_list['uninventoried_offline'].append(stat_ars_machine[jid]['uninventoried_offline'])
         ars_list['nbwindows'].append(stat_ars_machine[jid]['nbwindows'])
         ars_list['nb_ou_user'].append(stat_ars_machine[jid]['nb_ou_user'])
-
 
     res = {"total": ars_list['count'],
            "datas": ars_list,
