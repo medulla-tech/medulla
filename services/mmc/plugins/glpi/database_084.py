@@ -468,6 +468,24 @@ class Glpi084(DyngroupDatabaseHelper):
         self.group = Table("glpi_groups", self.metadata, autoload = True)
         mapper(Group, self.group)
 
+        # collects
+        self.collects = Table("glpi_plugin_fusioninventory_collects", self.metadata,
+            Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
+            autoload = True)
+        mapper(Collects, self.collects)
+
+        # registries
+        self.registries = Table("glpi_plugin_fusioninventory_collects_registries", self.metadata,
+            Column('plugin_fusioninventory_collects_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects.id')),
+            autoload = True)
+        mapper(Registries, self.registries)
+
+        # registries contents
+        self.regcontents = Table("glpi_plugin_fusioninventory_collects_registries_contents", self.metadata,
+            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('plugin_fusioninventory_collects_registries_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects_registries.id')),
+            autoload = True)
+        mapper(RegContents, self.regcontents)
     ##################### internal query generators
     def __filter_on(self, query):
         """
@@ -5288,6 +5306,9 @@ class IPAddresses_IPNetworks(object):
     pass
 
 class Collects(object):
+    pass
+
+class Registries(object):
     pass
 
 class RegContents(object):
