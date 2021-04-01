@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-01 10:55+0200\n"
+"POT-Creation-Date: 2021-04-01 11:32+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/siveo/teams/72118/it_IT/)\n"
@@ -159,8 +159,9 @@ msgstr ""
 msgid "Package name"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:289
-msgid "Localization"
+#: modules/pkgs/pkgs/ajaxPackageList.php:289 modules/pkgs/pkgs/edit.php:301
+#: modules/pkgs/pkgs/add.php:219
+msgid "Share"
 msgstr ""
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:290
@@ -171,14 +172,14 @@ msgstr ""
 #: modules/pkgs/pkgs/ajaxPackageList.php:431 modules/pkgs/pkgs/addRule.php:60
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
 #: modules/pkgs/pkgs/edit.php:244 modules/pkgs/pkgs/editRule.php:65
-#: modules/pkgs/pkgs/add.php:233
+#: modules/pkgs/pkgs/add.php:227
 msgid "Description"
 msgstr "Descrizione"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:293
 #: modules/pkgs/pkgs/ajaxPackageList.php:432
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-#: modules/pkgs/pkgs/add.php:232 modules/pkgs/includes/query.php:88
+#: modules/pkgs/pkgs/add.php:226 modules/pkgs/includes/query.php:88
 msgid "Version"
 msgstr ""
 
@@ -352,7 +353,7 @@ msgid "Element in Strings Result"
 msgstr ""
 
 #: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
-#: modules/pkgs/pkgs/add.php:381
+#: modules/pkgs/pkgs/add.php:375
 msgid "Add"
 msgstr "Aggiungi"
 
@@ -453,7 +454,7 @@ msgstr ""
 msgid "Package version"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:248
+#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:242
 msgid "Command's name : "
 msgstr ""
 
@@ -461,67 +462,63 @@ msgstr ""
 msgid "Command : "
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:256 modules/pkgs/pkgs/add.php:252
+#: modules/pkgs/pkgs/edit.php:256 modules/pkgs/pkgs/add.php:246
 msgid "Need a reboot ?"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:257
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:251
 msgid "Windows"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:257
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:251
 msgid "Linux"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:257
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:251
 msgid "Mac OS"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:301 modules/pkgs/pkgs/add.php:225
-msgid "Location server"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:330 modules/pkgs/pkgs/add.php:276
+#: modules/pkgs/pkgs/edit.php:330 modules/pkgs/pkgs/add.php:270
 msgid "Operating System"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:360 modules/pkgs/pkgs/add.php:296
+#: modules/pkgs/pkgs/edit.php:360 modules/pkgs/pkgs/add.php:290
 msgid "Transfer method"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:373 modules/pkgs/pkgs/add.php:302
+#: modules/pkgs/pkgs/edit.php:373 modules/pkgs/pkgs/add.php:296
 msgid "bandwidth throttling (ko)"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:373 modules/pkgs/pkgs/add.php:303
+#: modules/pkgs/pkgs/edit.php:373 modules/pkgs/pkgs/add.php:297
 msgid "<in ko>"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:385 modules/pkgs/pkgs/add.php:307
+#: modules/pkgs/pkgs/edit.php:385 modules/pkgs/pkgs/add.php:301
 msgid "high priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:385 modules/pkgs/pkgs/add.php:307
+#: modules/pkgs/pkgs/edit.php:385 modules/pkgs/pkgs/add.php:301
 msgid "ordinary priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:388 modules/pkgs/pkgs/add.php:310
+#: modules/pkgs/pkgs/edit.php:388 modules/pkgs/pkgs/add.php:304
 msgid "Spooling"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:421 modules/pkgs/pkgs/add.php:318
+#: modules/pkgs/pkgs/edit.php:421 modules/pkgs/pkgs/add.php:312
 msgid "Dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:431 modules/pkgs/pkgs/add.php:328
+#: modules/pkgs/pkgs/edit.php:431 modules/pkgs/pkgs/add.php:322
 msgid "Added dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:446 modules/pkgs/pkgs/add.php:343
+#: modules/pkgs/pkgs/edit.php:446 modules/pkgs/pkgs/add.php:337
 msgid "Available dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:447 modules/pkgs/pkgs/add.php:344
+#: modules/pkgs/pkgs/edit.php:447 modules/pkgs/pkgs/add.php:338
 msgid "search by name ..."
 msgstr ""
 
@@ -549,7 +546,7 @@ msgstr ""
 msgid "Upload Queued Files"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:576 modules/pkgs/pkgs/add.php:446
+#: modules/pkgs/pkgs/edit.php:576 modules/pkgs/pkgs/add.php:417
 msgid "Accentuated and special chars are not allowed"
 msgstr ""
 
@@ -628,7 +625,7 @@ msgstr ""
 msgid "Package source"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:525
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:496
 msgid "Files directory"
 msgstr ""
 
@@ -636,27 +633,19 @@ msgstr ""
 msgid "Package Creation"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:211
-msgid "Search on Location"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:212
-msgid "Search by name ..."
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:231
+#: modules/pkgs/pkgs/add.php:225
 msgid "Name"
 msgstr "Nome"
 
-#: modules/pkgs/pkgs/add.php:231
+#: modules/pkgs/pkgs/add.php:225
 msgid "<fill_package_name>"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:240
+#: modules/pkgs/pkgs/add.php:234
 msgid "Command:"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:241
+#: modules/pkgs/pkgs/add.php:235
 msgid ""
 "Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
 "        If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
@@ -665,12 +654,12 @@ msgid ""
 "        <a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:547
+#: modules/pkgs/pkgs/add.php:518
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:547
+#: modules/pkgs/pkgs/add.php:518
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
