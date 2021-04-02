@@ -940,7 +940,19 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
     structreverse['data']['uninterrupted'] = uninterrupted
     return structreverse['data']
 
-def get_packages_list(jid, filter=""):
+def get_packages_list(jid, CGIGET=""):
+    filter = ""
+    maxperpage = 10
+    start = 0
+    nb_dataset = 0
+    if "filter" in CGIGET:
+        filter = CGIGET["filter"]
+    if "maxperpage" in CGIGET:
+        maxperpage = int(CGIGET["maxperpage"])
+    if "start" in  CGIGET:
+        start = int(CGIGET["start"])
+    end = start + maxperpage
+
     timeout = 15
     result = ObjectXmpp().iqsendpulse(jid, {"action": "packageslist", "data": "/var/lib/pulse2/packages"}, timeout)
 
@@ -958,50 +970,41 @@ def get_packages_list(jid, filter=""):
             'metagenerator': [],
             'count_files': [],
         },
-        'total': 0
+        'total': 0,
+        'nb_dataset' : 0
     }
 
     try:
         packages = json.loads(result)
         count = 0
-        for package in packages['datas']:
-            if filter != "":
+        _result['datas']['total'] = len(packages['datas']);
+        pp=[]
+        if filter != "":
+            for package in packages['datas']:
                 if re.search(filter, package['description']) or\
                     re.search(filter, package['name']) or\
                     re.search(filter, package['version']) or\
                     re.search(filter, package['targetos']) or\
                     re.search(filter, package['methodtransfer']) or\
                     re.search(filter, package['metagenerator']):
-
-                    _result['datas']['files'].append(package['files'])
-                    _result['datas']['description'].append(package['description'])
-                    _result['datas']['licenses'].append(package['licenses'])
-                    _result['datas']['name'].append(package['name'])
-                    _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
-                    _result['datas']['os'].append(package['targetos'])
-                    _result['datas']['size'].append(package['size'])
-                    _result['datas']['version'].append(package['version'])
-                    _result['datas']['methodtransfer'].append(package['methodtransfer'])
-                    _result['datas']['metagenerator'].append(package['metagenerator'])
-                    _result['datas']['count_files'].append(package['count_files'])
-                    count += 1
-            else:
-                _result['datas']['files'].append(package['files'])
-                _result['datas']['description'].append(package['description'])
-                _result['datas']['licenses'].append(package['licenses'])
-                _result['datas']['name'].append(package['name'])
-                _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
-                _result['datas']['os'].append(package['targetos'])
-                _result['datas']['size'].append(package['size'])
-                _result['datas']['version'].append(package['version'])
-                _result['datas']['methodtransfer'].append(package['methodtransfer'])
-                _result['datas']['metagenerator'].append(package['metagenerator'])
-                _result['datas']['count_files'].append(package['count_files'])
-
-        if filter != "":
-            _result['total'] = count
+                    pp.append(package)
         else:
-            _result['total'] = packages['total']
+            pp= packages['datas']
+        for package in pp[start:end]:
+            nb_dataset+=1
+            _result['datas']['files'].append(package['files'])
+            _result['datas']['description'].append(package['description'])
+            _result['datas']['licenses'].append(package['licenses'])
+            _result['datas']['name'].append(package['name'])
+            _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
+            _result['datas']['os'].append(package['targetos'])
+            _result['datas']['size'].append(package['size'])
+            _result['datas']['version'].append(package['version'])
+            _result['datas']['methodtransfer'].append(package['methodtransfer'])
+            _result['datas']['metagenerator'].append(package['metagenerator'])
+            _result['datas']['count_files'].append(package['count_files'])
+        _result['total'] = len(pp);
+        _result['nb_dataset'] = nb_dataset
     except Exception as e:
         logging.error(e)
         pass
