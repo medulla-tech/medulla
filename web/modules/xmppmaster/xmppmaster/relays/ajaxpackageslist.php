@@ -31,7 +31,7 @@ $end = (isset($_GET['end'])) ? $_GET['end'] : "";
 $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
 $maxperpage = (isset($_GET['maxperpage'])) ? $_GET['maxperpage'] : -1;
 
-$list = xmlrpc_get_packages_list($jid, $filter);
+$list = xmlrpc_get_packages_list($jid, $_GET );
 $prettySize = [];
 $row = 0;
 $packagesname = [];
@@ -83,6 +83,7 @@ $n->addExtraInfo( $list['datas']['os'], _T("Os", "pkgs"));
 $n->addExtraInfo( $list['datas']['size'], _T("Package size", "pkgs"));
 $n->addExtraInfo( $list['datas']['methodtransfer'], _T("Transfer Method", "pkgs"));
 $n->setNavBar(new AjaxNavBar($list['total'], $filter, "updateSearchParamformRunning"));
-
+$n->start = 0;
+$n->end = $list['total'];
 $n->display();
 ?>
