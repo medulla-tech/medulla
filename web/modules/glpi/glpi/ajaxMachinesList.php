@@ -163,6 +163,7 @@ if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "a
     $machines1 = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
 
 $count = $machines1["count"];
+$total = $machines1["total"];
 $datas = $machines1["data"];
 $xmppdatas = $machines['xmppdata'];
 
@@ -495,11 +496,11 @@ if(canDelComputer()){
 
 
 $n->setMainActionClasses($presencesClass);
-$n->setItemCount($count);
+$n->setItemCount($total);
 
-$n->setNavBar(new AjaxNavBar($count, $location));
+$n->setNavBar(new AjaxNavBar($total, $location));
 $n->start = 0;
-$n->end = $count;
+$n->end = $total;
 $n->display();
 ?>
 

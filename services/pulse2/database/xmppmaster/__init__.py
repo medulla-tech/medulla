@@ -5501,7 +5501,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         if len(couplekeyvalue) == 2:
                             if couplekeyvalue[0] == columkeyreg:
                                 ret['data'][columkeyreg].append(couplekeyvalue[1])
-        ret['count'] = count
+        ret['total'] = count
         return ret
 
 
