@@ -5438,7 +5438,7 @@ class XmppMasterDatabase(DatabaseHelper):
             elif ctx['computerpresence'] == 'no_presence':
                 computerpresence = " AND enabled = 0 "
         sql = """
-                SELECT
+                SELECT SQL_CALC_FOUND_ROWS
                     mach.*,
                     GROUP_CONCAT(DISTINCT CONCAT(reg.name, '|', reg.value)
                         SEPARATOR '@@@') AS regedit,
@@ -5473,6 +5473,10 @@ class XmppMasterDatabase(DatabaseHelper):
             logger.info("SQL request :  %s" % sql)
 
         result = session.execute(sql)
+        result = session.execute(sql)
+        sql_count = "SELECT FOUND_ROWS();"
+        ret_count = session.execute(sql_count)
+        count = ret_count.first()[0]
         session.commit()
         session.flush()
         ret = self.query_to_array_of_dict(result,bycolumn=True,
@@ -5497,6 +5501,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         if len(couplekeyvalue) == 2:
                             if couplekeyvalue[0] == columkeyreg:
                                 ret['data'][columkeyreg].append(couplekeyvalue[1])
+        ret['count'] = count
         return ret
 
 
