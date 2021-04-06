@@ -727,8 +727,7 @@ class Glpi084(DyngroupDatabaseHelper):
                     self.user.c.name.contains(criterion),
                     self.locations.c.name.contains(criterion),
                     self.manufacturers.c.name.contains(criterion),
-                    self.model.c.name.contains(criterion),
-                    self.regcontents.c.value.contains(criterion)
+                    self.model.c.name.contains(criterion)
                 ))
             else:
                 if field == "peripherals":
