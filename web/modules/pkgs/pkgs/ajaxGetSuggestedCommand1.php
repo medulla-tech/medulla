@@ -23,7 +23,8 @@
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 extract($_GET);
-$datas = getTemporaryFileSuggestedCommand1( $tempdir);
+$maxsize = 524288000;
+$datas = getTemporaryFileSuggestedCommand1($tempdir, $maxsize);
 header('Content-type: application/json');
 print(json_encode($datas));
 ?>

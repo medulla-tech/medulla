@@ -599,14 +599,18 @@ def pkgs_getTemporaryFiles():
             ret.append([f, os.path.isdir(os.path.join(tmp_input_dir, f))])
     return ret
 
-def getTemporaryFileSuggestedCommand1(tempdir):
+def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
     tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
     ret = {
             "version": '0.1',
             "commandcmd": [],
         }
     suggestedCommand = []
-    if not isinstance(tempdir, list):
+    file_size = simplecommand("du -b %s"%os.path.join(tmp_input_dir, tempdir))
+    sizebytefolder = file_size['result'][0].split('\t')[0]
+    sizebytefolder = int(sizebytefolder)
+
+    if not isinstance(tempdir, list) and sizebytefolder <= size_max:
         if os.path.exists(tmp_input_dir):
             for f in os.listdir(os.path.join(tmp_input_dir, tempdir)):
                 fileadd = os.path.join(tmp_input_dir, tempdir, f)

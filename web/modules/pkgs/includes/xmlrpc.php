@@ -77,8 +77,8 @@ function getTemporaryFiles() {
     return xmlCall("pkgs.pkgs_getTemporaryFiles", array());
 }
 
-function getTemporaryFileSuggestedCommand1($tempdir) {
-    return xmlcall("pkgs.getTemporaryFileSuggestedCommand1", array( $tempdir));
+function getTemporaryFileSuggestedCommand1($tempdir, $sizeBytes=524288000) {
+    return xmlcall("pkgs.getTemporaryFileSuggestedCommand1", array( $tempdir, $sizeBytes));
 }
 
 function associatePackages($pid, $files, $level = 0) {
