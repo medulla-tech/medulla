@@ -71,7 +71,7 @@ $ctx['maxperpage'] = $maxperpage;
 if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
     $ctx['computerpresence'] = $_SESSION['computerpresence'];
 
-$machines = xmlrpc_get_machines_list($start, $maxperpage, $ctx);
+$machines = xmlrpc_get_machines_list1($start, $maxperpage, $ctx);
 
 $count = $machines["count"];
 $datas = $machines["data"];
