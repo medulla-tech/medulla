@@ -2052,13 +2052,11 @@ class Glpi084(DyngroupDatabaseHelper):
             query2 = session.query(Entities).add_column(self.userprofile.c.is_recursive).select_from(self.entities.join(self.userprofile).join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(self.config.activeProfiles))
             self.logger.debug("*** Query Entities ***")
             self.logger.debug("Parameters :")
-            self.logger.debug(" User : %s"%user)
-            self.logger.debug(" Profile : %s"%self.config.activeProfiles)
+            self.logger.debug(" User : %s" % user)
+            self.logger.debug(" Profile : %s" % self.config.activeProfiles)
             self.logger.debug("Query : ")
-            self.logger.debug("%s"%query2)
+            self.logger.debug("%s" % query2)
             plocs = query2.all()
-            self.logger.debug("Query Result : ")
-            self.logger.debug("%s"%entids)
             for ploc in plocs:
                 if ploc[1]:
                     # The user profile link to the entities is recursive, and so
@@ -2083,7 +2081,7 @@ class Glpi084(DyngroupDatabaseHelper):
         query = session.query(Entities).group_by(self.entities.c.completename).order_by(asc(self.entities.c.completename))
         self.logger.debug("*** Get All Entities ***")
         self.logger.debug("Query : ")
-        self.logger.debug("%s"%query)
+        self.logger.debug("%s" %query)
         q = query.all()
         session.close()
         for entities in q:
