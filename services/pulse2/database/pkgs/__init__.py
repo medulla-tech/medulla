@@ -356,7 +356,7 @@ class PkgsDatabase(DatabaseHelper):
                 packages.Qvendor LIKE '%%%s%%'
             OR
                 packages.Qsoftware LIKE '%%%s%%'
-            )"""%(filter, filter, filter, filter, filter,filter, filter, filter, filter, filter,filter, filter, filter)
+            )"""%(filter, filter, filter, filter, filter,filter, filter, filter, filter, filter)
 
         if filter1 == "":
             _filter1 = ""
