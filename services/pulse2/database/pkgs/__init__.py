@@ -1216,21 +1216,21 @@ class PkgsDatabase(DatabaseHelper):
             # create dict partage
             for y in result:
                 resuldict={}
-                resuldict['id_sharing'] = y[0]
-                resuldict['name'] = y[1]
-                resuldict['comments'] = y[2]
-                resuldict['type'] = y[4]
-                resuldict['uri'] = y[5]
-                resuldict['ars_name'] = y[6]
-                resuldict['ars_id'] = y[7]
-                resuldict['share_path'] = y[8]
-                resuldict['id_rule'] = y[9]
-                resuldict['algos_id'] = y[10]
-                resuldict['order_rule'] = y[11]
-                resuldict['regexp'] = y[12]
-                resuldict['permission'] = y[13]
-                resuldict['quotas'] = y[14]
-                resuldict['usedquotas'] = y[15]
+                resuldict['id_sharing'] = y[0] if y[0] is not None else ""
+                resuldict['name'] = y[1] if y[1] is not None else ""
+                resuldict['comments'] = y[2] if y[2] is not None else ""
+                resuldict['type'] = y[4] if y[4] is not None else ""
+                resuldict['uri'] = y[5] if y[5] is not None else ""
+                resuldict['ars_name'] = y[6] if y[6] is not None else ""
+                resuldict['ars_id'] = y[7] if y[7] is not None else ""
+                resuldict['share_path'] = y[8] if y[8] is not None else ""
+                resuldict['id_rule'] = y[9] if y[9] is not None else ""
+                resuldict['algos_id'] = y[10] if y[10] is not None else ""
+                resuldict['order_rule'] = y[11] if y[11] is not None else ""
+                resuldict['regexp'] = y[12] if y[12] is not None else ""
+                resuldict['permission'] = y[13] if y[13] is not None else ""
+                resuldict['quotas'] = y[14] if y[14] is not None else ""
+                resuldict['usedquotas'] = y[15] if y[15] is not None else ""
                 if resuldict['type'] == 'global':
                     resuldict['nbpackage'] = self.nb_package_in_sharing(share_id=None)
                 else:
@@ -1348,17 +1348,17 @@ class PkgsDatabase(DatabaseHelper):
             # create dict partage
             for y in result:
                 resuldict = {}
-                resuldict['id_sharing'] = y[0]
-                resuldict['name'] = y[1]
-                resuldict['comments'] = y[2]
-                resuldict['type'] = y[4]
-                resuldict['uri'] = y[5]
-                resuldict['ars_name'] = y[6]
-                resuldict['ars_id'] = y[7]
-                resuldict['share_path'] = y[8]
+                resuldict['id_sharing'] = y[0] if y[0] is not None else ""
+                resuldict['name'] = y[1] if y[1] is not None else ""
+                resuldict['comments'] = y[2] if y[2] is not None else ""
+                resuldict['type'] = y[4] if y[4] is not None else ""
+                resuldict['uri'] = y[5] if y[5] is not None else ""
+                resuldict['ars_name'] = y[6] if y[6] is not None else ""
+                resuldict['ars_id'] = y[7] if y[7] is not None else ""
+                resuldict['share_path'] = y[8] if y[8] is not None else ""
                 resuldict['permission'] = "rw"
-                resuldict['quotas'] = y[9]
-                resuldict['usedquotas'] = y[10]
+                resuldict['quotas'] = y[9] if y[9] is not None else ""
+                resuldict['usedquotas'] = y[10] if y[10] is not None else ""
                 ret.append(resuldict)
                 if resuldict['type'] == 'global':
                     resuldict['nbpackage'] = self.nb_package_in_sharing(share_id=None)
