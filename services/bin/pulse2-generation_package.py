@@ -644,6 +644,10 @@ if __name__ == '__main__':
                         contenuedejson['edition_date'] == "" :
                     contenuedejson['edition_date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+                edition_status = 1
+                if contenuedejson['metagenerator'] == "manual":
+                    edition_status = 0
+
                 ### print json.dumps(contenuedejson, indent=4)
                 du = simplecommand("du -sb")
                 result = simplecommand("du -b %s" % path_package)
