@@ -133,7 +133,9 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                 '',
                                                 '',
                                                 xmppobject.boundjid.bare)
-
+            if 'oldjid' in data:
+                logger.debug("The hostname changed from %s to %s" % (data['oldjid'], data['from']))
+                XmppMasterDatabase().delPresenceMachinebyjiduser(jid.JID(data['oldjid']).user)
             machine = XmppMasterDatabase().getMachinefromjid(data['from'])
             if machine:
                 if 'regcomplet' in data and data['regcomplet'] is True or\
