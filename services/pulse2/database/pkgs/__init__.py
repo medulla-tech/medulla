@@ -362,7 +362,7 @@ class PkgsDatabase(DatabaseHelper):
             _filter1 = ""
         else:
             _filter1 = """ AND
-            packages.os LIKE '%s' """%(filter1)
+            packages.os LIKE '%%%s%%' """%(filter1)
 
         if start >= 0:
             limit = "LIMIT %s"%start
