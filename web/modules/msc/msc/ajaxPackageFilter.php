@@ -29,6 +29,7 @@ require_once('modules/msc/includes/widgets.inc.php');
 require_once('modules/msc/includes/utilities.php');
 require_once("includes/xmlrpc.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/pkgs/includes/xmlrpc.php");
 
 $group = null;
 if (!empty($_GET['gid'])) {
@@ -127,7 +128,9 @@ if (isset($_GET['uuid'])){
         $filter['filter1'] = "darwin";
     }
 };
-list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
+list($count, $packages) =  get_all_packages_deploy($_SESSION['login'], $start,  $start + $maxperpage, $filter);
+
+// list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
 $packages[0][1] = 0;
 $packages[0][2] = array();
 $packages[0][2]["mountpoint"] = "/package_api_get1";
@@ -164,7 +167,7 @@ foreach ($packages as $c_package) {
             $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
             $elt_convergence_status = prettyConvergenceStatusDisplay($current_convergence_status);
             $a_convergence_status[] = $elt_convergence_status;
-            $a_convergence_action[] = isset($package->associateinventory) ? $convergenceAction : $emptyAction;
+            $a_convergence_action[] = (isset($package->associateinventory) && $package->associateinventory == 1) ? $convergenceAction : $emptyAction;
         }
       }
 

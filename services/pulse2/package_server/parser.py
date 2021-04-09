@@ -453,7 +453,7 @@ class PackageParserJSON:
         data['info']['version'] = str(package.version)
         data['info']['description'] = package.description
         data['info']['transferfile'] = True
-        data['info']['methodetransfert'] = 'pullcurl'
+        data['info']['methodetransfert'] = 'pushrsync'
         data['info']['Dependency'] = []
         data['info']['metagenerator'] = package.metagenerator
 

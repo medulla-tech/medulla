@@ -41,6 +41,7 @@ class SuccessRatePanel extends Panel {
       $json[] = ["label"=>$newKey, "value"=>number_format($value, 1)];
     }
     $json = json_encode($json);
+    echo '<h1>'._T('Deployment success rates for the past 6 weeks','dashboard').'</h1>';
     echo <<< RATE
 
     <div id="successRate-graphs"></div>

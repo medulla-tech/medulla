@@ -35,11 +35,25 @@ SERVICES='mmc-agent \
           pulse-xmpp-master-substitute-subscription \
           pulse-xmpp-master-substitute-logger \
           pulse-xmpp-master-substitute-reconfigurator \
+          pulse-xmpp-master-substitute-monitoring \
           pulse-xmpp-master-substitute-all'
+
+systemctl daemon-reload
 
 for service in ${SERVICES}; do
   if systemctl is-enabled ${service} &>/dev/null ; then
+    if [ -z $1 ]; then
+        echo "Restarting ${service}"
+        systemctl restart ${service}
+    elif [ $1 = "--stop" ] || [ $1 = "stop" ]; then
+      echo "Stopping ${service}"
+      systemctl stop ${service}
+  elif [ $1 = "--restart" ] || [ $1 = "restart" ] || [ $1 = "--start" ] || [ $1 = "start" ]; then
     echo "Restarting ${service}"
     systemctl restart ${service}
+    else
+      echo "Usage: $0 [--stop]"
+      exit 1
+    fi
   fi
 done

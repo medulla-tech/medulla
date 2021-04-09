@@ -23,7 +23,13 @@ import logging
 from sqlalchemy.orm import create_session
 
 
+
+""" Class to map pkgs.dependencies to SA
+"""
+
 class Dependencies(object):
+    """ Mapping between msc.bundle and SA
+    """
 
     def getId(self):
         if self.id is not None:

@@ -2,7 +2,6 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2012 Mandriva, http://www.mandriva.com
-# (c) 2021 Siveo, http://siveo.net
 #
 # This file is part of Mandriva Management Console (MMC).
 #
@@ -28,9 +27,10 @@ import logging
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.config import DashboardConfig
 from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel, ProcessPanel, \
-                                        ComputersOnlinePanel, UpdatePanel, BackupPanel, SuccessRatePanel, DeploymentsLaunchedPanel
+                                        ComputersOnlinePanel, UpdatePanel, BackupPanel, SuccessRatePanel, \
+                                        DeploymentsLaunchedPanel, AgentsPanel
 
-VERSION = "4.6.6"
+VERSION = "4.6.7"
 APIVERSION = "0:1:0"
 REVISION = ""
 
@@ -55,6 +55,7 @@ def activate():
     DM.register_panel(UpdatePanel("product_updates"))
     DM.register_panel(SuccessRatePanel("successRate"))
     DM.register_panel(SuccessRatePanel("deploymentsLaunched"))
+    DM.register_panel(SuccessRatePanel("agents"))
     return True
 
 # XML-RPC methods

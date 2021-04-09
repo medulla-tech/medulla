@@ -1,10 +1,10 @@
 <?php
 /**
- * (c) 2020 Siveo, http://siveo.net
+ * (c) 2020-2021 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
  */
 
 require("graph/navbar.inc.php");
-require("modules/base/computers/localSidebar.php");
+require("modules/admin/admin/localSidebar.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("modules/msc/includes/utilities.php");
 global $config;
@@ -37,7 +37,7 @@ $p->display();
 
 print "<br/><br/><br/>";
 if($agenttype && $jid){
-  $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxpackageslist"), "container", ['jid'=>$jid], 'formRunning');
+  $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxpackageslist"), "container", ['jid'=>$jid]);
   $ajax->display();
   print "<br/><br/><br/>";
   $ajax->displayDivToUpdate();

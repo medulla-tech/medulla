@@ -60,7 +60,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                               'data': { 'macaddress': ""}}
             serverrelaylist = XmppMasterDatabase().random_list_ars_relay_one_only_in_cluster()
             if 'macadress' in data:
-                senddataplugin['data']['macadress'] = data['macadress']
+                senddataplugin['data']['macaddress'] = data['macadress']
                 for serverrelay in serverrelaylist:
                     xmppobject.send_message(mto=serverrelay['jid'],
                                             mbody=json.dumps(senddataplugin,
@@ -78,7 +78,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 for macadress in listadressmacs:
                     if macadress == '00:00:00:00:00:00':
                         continue
-                    senddataplugin['data']['macadress'] = macadress
+                    senddataplugin['data']['macaddress'] = macadress
                     for serverrelay in serverrelaylist:
                         xmppobject.send_message(mto=serverrelay['jid'],
                                                 mbody=json.dumps(senddataplugin,

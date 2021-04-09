@@ -25,8 +25,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           4.6.6
-%define mmc_version            4.6.6
+%define real_version           4.6.7
+%define mmc_version            4.6.7
 
 Summary:	Management Console
 Name:		pulse2
@@ -51,7 +51,11 @@ Source6:        get_file.php
 BuildRequires:	python-devel
 BuildRequires:	gettext
 BuildRequires:	gettext-devel
+%if %_vendor == "Mageia"
+BuildRequires:  xsltproc
+%else
 BuildRequires:  libxslt
+%endif
 BuildRequires:  wget
 BuildRequires:  docbook-style-xsl
 
@@ -248,7 +252,9 @@ allows one to query a GLPI database to display computer inventory.
 %package -n python-mmc-msc
 Summary:    Pulse 2 MSC plugin for MMC agent
 Group:      System/Servers
+%if %_vendor == "redhat"
 Requires:   python-libs
+%endif
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
 Requires:   python-pulse2-common-database-msc = %version-%release
@@ -611,6 +617,8 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-collect-info
 %{_sbindir}/restart-pulse-services
 %{_sbindir}/pulse2-packageparser.py
+%{_sbindir}/pulse2-inscription_packages_in_base.py
+%{_sbindir}/pulse2-generation_package.py
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
@@ -717,7 +725,7 @@ service pulse2-scheduler stop >/dev/null 2>&1 || :
 %dir %_var/lib/pulse2/imaging/computers
 %dir %_var/lib/pulse2/imaging/inventories
 %dir %_var/lib/pulse2/imaging/masters
-#%dir %_var/lib/pulse2/imaging/custom
+#dir _var/lib/pulse2/imaging/custom
 %dir %_var/lib/pulse2/imaging/archives
 %config(noreplace) %_sysconfdir/mmc/pulse2/scheduler/scheduler.ini
 %{_sysconfdir}/mmc/pulse2/scheduler/keys
@@ -1264,7 +1272,7 @@ cp %{SOURCE6}   web/modules/base/computers
 
 %build
 
-%configure --disable-python-check --disable-wol
+%configure2_5x --disable-python-check
 
 %make_build
 

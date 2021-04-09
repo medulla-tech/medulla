@@ -54,6 +54,7 @@ class Package:
                 True if the package is not empty and the main files are present
                 else returns False
         """
+        self.logger.info("\n")
         self.logger.info("Test if the package %s contains the main files", self.uuid)
         flag = True
         if not self.files:
@@ -120,12 +121,23 @@ class Package:
 
 class PackageParser:
     """PackageParser manage the tests for the packages"""
-
+    excluded_list = ['.stfolder', 'sharing', '.stignore']
     def __init__(self):
-        self.log_file = os.path.join("/", "var", "log", "mmc", "packageparser.log")
+        index = 0
+        log_file = os.path.join("/", "var", "log", "mmc", "packageparser.log")
+        self.log_file = log_file
+        logfile_exists = os.path.isfile(self.log_file)
+        if logfile_exists is True:
+            while logfile_exists:
+
+                index += 1
+                self.log_file = "%s.%s"%(log_file, index)
+                logfile_exists = os.path.isfile(self.log_file)
+
         self.package_folder = ["/", "var", "lib", "pulse2", "packages"]
         self.packages_list = []
         self.summary = {}
+        self.counts = {'valids': 0, 'invalids' : 0, 'total': 0}
 
         self.logger = logging.getLogger("PackageParser")
         logging.basicConfig(filename=self.log_file, level=logging.DEBUG)
@@ -195,27 +207,40 @@ class PackageParser:
             plist = os.listdir(self.get_package_folder())
 
             for package in plist:
-                files_list = os.listdir(os.path.join(self.get_package_folder(), package))
-                tmp = Package(path=os.path.join(self.get_package_folder(), package),
-                              uuid=package,
-                              files=files_list)
+                # Blacklist some names
+                if package not in PackageParser.excluded_list:
+                    files_list = os.listdir(os.path.join(self.get_package_folder(), package))
+                    tmp = Package(path=os.path.join(self.get_package_folder(), package),
+                        uuid=package,
+                        files=files_list)
 
-                self.packages_list.append(tmp)
-                self.logger.info("\t %s", package)
+                    self.packages_list.append(tmp)
+                    self.logger.info("\t %s", package)
 
 
-            self.logger.info("=== Test the packages ===")
+            self.logger.info("\n=== Test the packages ===")
             # At this point of the program the packages list is generated
             for package in self.packages_list:
+                self.counts['total'] += 1
                 if package.test_files_list():
                     self.logger.info("The main files of the package %s are present", package.uuid)
                     if package.test_json_files():
                         self.logger.info("The files of the package %s (%s) seems to be ok", package.uuid, package.name)
                         self.test_dependencies(package)
+                        self.counts['valids'] += 1
+                    else:
+                        self.counts['invalids'] += 1
+                else:
+                    self.counts['invalids'] += 1
+            self.logger.info("\n")
+            self.logger.info("Total : %s"%self.counts['total'])
+            self.logger.info("Valids : %s"%self.counts['valids'])
+            self.logger.info("Invalids : %s"%self.counts['invalids'])
+
 
 if __name__ == "__main__":
     checker = PackageParser()
     checker.run()
     # To use the package report into script.
     # All the information are sent to /var/log/mmc/package/packageparser.log
-    print("A report is generated into the /var/log/mmc/packageparser.log file.")
+    print("A report is generated into the %s file."%checker.log_file)

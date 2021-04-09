@@ -45,8 +45,8 @@ function barchart(selector, rawdatas){
 
   var color1 = d3.scaleLinear()
     // Force constant color between 0 and 80%
-    .domain([0, 80, 100])
-    .range(['#e03c3c', '#e03c3c', '#52b749'])
+    .domain([0, 30, 100])
+    .range(['#000000','#e03c3c', '#52b749'])
     .interpolate(d3.interpolateHcl); //interpolateHsl interpolateHcl interpolateRgb";
 
   // Setup the svg canvas

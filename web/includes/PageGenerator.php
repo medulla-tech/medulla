@@ -2,10 +2,10 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
- *
+ * (c) 2021 Siveo, http://siveo.net
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -401,6 +401,7 @@ class ListInfos extends HtmlElement {
         $this->tooltip = array();
         $this->tooltip[] = $tooltip;
         $this->firstColumnActionLink = True;
+        $this->dissociateColumnsActionLink = [];
         $this->_addInfo = array();
     }
 
@@ -432,7 +433,7 @@ class ListInfos extends HtmlElement {
      *
      */
     function addActionItemArray($objActionItemArray) {
-        assert(is_array($objActionItemArray));
+      if(is_array($objActionItemArray))
         $this->arrAction[] = &$objActionItemArray;
     }
 
@@ -444,11 +445,13 @@ class ListInfos extends HtmlElement {
      *  @param tooltip Tooltip to display on the column name
      */
     function addExtraInfo($arrString, $description = "", $width = "", $tooltip = "") {
-        assert(is_array($arrString));
+      if(is_array($arrString))
+      {
         $this->extraInfo[] = &$arrString;
         $this->description[] = $description;
         $this->col_width[] = $width;
         $this->tooltip[] = $tooltip;
+      }
     }
 
     /**
@@ -456,7 +459,7 @@ class ListInfos extends HtmlElement {
      *  @param $arrString an Array of string to be used as parameters for the main action
      */
     function setParamInfo($arrString) {
-        assert(is_array($arrString));
+      if(is_array($arrString))
         $this->paramInfo = $arrString;
     }
 
@@ -477,6 +480,13 @@ class ListInfos extends HtmlElement {
         $this->firstColumnActionLink = False;
     }
 
+    function dissociateColumnActionLink($ids){
+      foreach($ids as $id){
+        if(!in_array($id, $this->dissociateColumnsActionLink)){
+          $this->dissociateColumnsActionLink[] = intval($id);
+        }
+      }
+    }
     /**
      *  init class' vars
      */
@@ -666,7 +676,7 @@ class ListInfos extends HtmlElement {
             }
 
             //link to first action (if we have an action)
-            if (count($this->arrAction) && $this->firstColumnActionLink) {
+            if (count($this->arrAction) && $this->firstColumnActionLink && !in_array($idx, $this->dissociateColumnsActionLink)) {
                 $this->drawMainAction($idx);
             } else {
                 if (!empty($this->cssClass)) {
