@@ -5433,7 +5433,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         for regkey in regs]
         entity = ""
         if 'location' in ctx and ctx['location'] != "":
-            entity = " AND glpi_entity_id = '%s' "% str(ctx['location']).replace('UUID',"")
+            entity = " AND glpi_entity_id in(%s) "% str(ctx['location']).replace('UUID',"")
 
         computerpresence = ""
         if 'computerpresence' in ctx:
