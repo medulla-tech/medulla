@@ -1210,6 +1210,9 @@ class SetupApp(object):
         #Enable pkgs module
         self.confs['plugins/pkgs.ini'].set('main', 'disable', 0)
 
+        #Enable admin module
+        self.confs['plugins/admin.ini'].set('main', 'disable', 0)
+
         # Ensure various dirs are created
         for path in [self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
                      self.confs['plugins/msc.ini'].get('msc', 'repopath'),
