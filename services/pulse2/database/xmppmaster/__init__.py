@@ -5431,6 +5431,10 @@ class XmppMasterDatabase(DatabaseHelper):
         regs=filter(r.search, self.config.summary)
         list_reg_columns_name = [getattr( self.config, regkey).split("|")[0].split("\\")[-1] \
                         for regkey in regs]
+        entity = ""
+        if 'location' in ctx and ctx['location'] != "":
+            entity = " AND glpi_entity_id = '%s' "% str(ctx['location']).replace('UUID',"")
+
         computerpresence = ""
         if 'computerpresence' in ctx:
             if ctx['computerpresence'] == 'presence':
@@ -5463,11 +5467,13 @@ class XmppMasterDatabase(DatabaseHelper):
                         LEFT OUTER JOIN
                     network netw ON  netw.machines_id = mach.id
                 WHERE
-                    agenttype LIKE 'm%%'%s%s
+                    agenttype LIKE 'm%%'%s%s%s
                 GROUP BY mach.id
                 limit %s, %s;""" % (computerpresence,
-                                   recherchefild,
-                                   start, end)
+                                    entity,
+                                    recherchefild,
+                                    start,
+                                    end)
 
         if debugfunction:
             logger.info("SQL request :  %s" % sql)
