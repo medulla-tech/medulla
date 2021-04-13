@@ -660,7 +660,7 @@ class Glpi92(DyngroupDatabaseHelper):
         online_machines = XmppMasterDatabase().getlistPresenceMachineid()
 
         if online_machines is not None:
-            online_machines = [id.replace("UUID", "") for id in online_machines]
+            online_machines = [int(id.replace("UUID", "")) for id in online_machines]
         query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
         .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
         .outerjoin(self.user, Machine.users_id == self.user.c.id)\
@@ -4406,7 +4406,7 @@ class Glpi92(DyngroupDatabaseHelper):
         return ret
 
     def getMachineInformationByUuidSetup(self, uuidsetupmachine):
-        """ 
+        """
         @return: all computers that have this uuid setup machine """
         return self.get_machines_list(0, 0, {'uuidsetup' : uuidsetupmachine})
 
