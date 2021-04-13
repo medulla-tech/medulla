@@ -5674,7 +5674,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.machines
                  WHERE
                     enabled = '1' and
-                    agenttype = 'machine' and uuid_inventorymachine IS NOT NULL;"""
+                    agenttype = 'machine' and uuid_inventorymachine IS NOT NULL OR uuid_inventorymachine!='';"""
 
         presencelist = session.execute(sql)
         session.commit()
