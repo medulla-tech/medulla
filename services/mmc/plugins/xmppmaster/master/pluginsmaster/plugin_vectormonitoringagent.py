@@ -20,18 +20,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 #
-# file pluginsmaster pluginsmaster/plugin_vectormonitoringagent.py
+# file pluginsmaster/plugin_vectormonitoringagent.py
 import sys
 import json
-
 import logging
-
-
 import traceback
 from pulse2.database.xmppmaster import XmppMasterDatabase
 logger = logging.getLogger()
 
-plugin = {"VERSION": "1.1", "NAME": "vectormonitoringagent", "TYPE": "master"}
+plugin = {"VERSION": "1.2", "NAME": "vectormonitoringagent", "TYPE": "master"}
 
 
 def process_system(functionname,
@@ -66,8 +63,7 @@ def process_system(functionname,
                                                   json.dumps(alarm_msg),
                                                   json.dumps(data['metriques']))
 
-
-def process_nfcReader(functionname,
+def process_nfcreader(functionname,
                       data,
                       id_machine,
                       hostname,
@@ -99,7 +95,6 @@ def process_nfcReader(functionname,
                                                   status,
                                                   json.dumps(alarm_msg),
                                                   json.dumps(data['metriques']))
-
 
 def process_generic(functionname,
                     data,
@@ -133,9 +128,8 @@ def process_generic(functionname,
                                                   json.dumps(alarm_msg),
                                                   json.dumps(data['metriques']))
 
-
 def callFunction(functionname, *args, **kwargs):
-    functionname = "process_%s" % functionname
+    functionname = "process_%s" % functionname.lower()
     logger.debug("**call function %s %s %s" % (functionname, args, kwargs))
     thismodule = sys.modules[__name__]
     try:
@@ -145,7 +139,6 @@ def callFunction(functionname, *args, **kwargs):
         process_generic(functionname, *args, **kwargs)
     except Exception:
         logger.error("\n%s" % (traceback.format_exc()))
-
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("#################################################")
@@ -164,46 +157,26 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
 
     machine = XmppMasterDatabase().getMachinefromjid(message['from'])
     logger.debug("Machine %s %s" % (machine['id'], machine['hostname']))
-    if "subaction" in data:
-        if data['subaction'] == "terminalInformations":
-            # load version agent agentversion
-            statusmsg = ""
-            if 'status' in data:
-                statusmsg = json.dumps(data['status'])
-            id_mom_machine = XmppMasterDatabase().setMonitoring_machine(
-                                 machine['id'],
-                                 machine['hostname'],
-                                 date=data['date'],
-                                 statusmsg=statusmsg)
-            if 'device_service' in data:
-                for element in data['device_service']:
-                    for devicename in element:
-                        # call process functions defined
-                        if devicename.lower() in xmppobject.typelistMonitoring_device:
-                            # globals()["process_%s"%element](data['opticalReader'])
-                            callFunction(devicename,
-                                         element[devicename],
-                                         machine['id'],
-                                         machine['hostname'],
-                                         id_mom_machine)
-        elif data['subaction'] == "terminalAlert":
-            if 'device_service' in data:
-                # load version agent agentversion
-                statusmsg = ""
-                if 'status' in data:
-                    statusmsg = json.dumps(data['status'])
-                id_mom_machine = XmppMasterDatabase().setMonitoring_machine(
-                                    machine['id'],
-                                    machine['hostname'],
-                                    date=data['date'],
-                                    statusmsg=statusmsg)
-                for element in data['device_service']:
-                    for devicename in element:
-                        # call defined process functions
-                        if devicename.lower() in xmppobject.typelistMonitoring_device:
-                            # globals()["process_%s"%element](data['opticalReader'])
-                            callFunction(devicename,
-                                         element[devicename],
-                                         machine['id'],
-                                         machine['hostname'],
-                                         id_mom_machine)
+    if "subaction" in data and \
+        data['subaction'].lower() in [ "terminalinformations", "terminalalert"]:
+        # inscription message alert depuis machine
+        statusmsg = ""
+        if 'status' in data:
+            statusmsg = json.dumps(data['status'])
+        id_mom_machine = XmppMasterDatabase().setMonitoring_machine(
+                                machine['id'],
+                                machine['hostname'],
+                                date=data['date'],
+                                statusmsg=statusmsg)
+        # for each device/service call process
+        if 'device_service' in data:
+            for element in data['device_service']:
+                for devicename in element:
+                    # call process functions defined
+                    if devicename.lower() in xmppobject.typelistMonitoring_device:
+                        # globals()["process_%s"%element](data['opticalReader'])
+                        callFunction(devicename,
+                                        element[devicename],
+                                        machine['id'],
+                                        machine['hostname'],
+                                        id_mom_machine)
