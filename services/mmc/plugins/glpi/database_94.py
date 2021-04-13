@@ -655,12 +655,8 @@ class Glpi94(DyngroupDatabaseHelper):
             online_machines = []
             online_machines = XmppMasterDatabase().getlistPresenceMachineid()
             if online_machines is not None:
-<<<<<<< HEAD
                 online_machines = [int(id.replace("UUID", "")) for id in online_machines if id != "UUID" and id != ""]
 
-=======
-                online_machines = [int(id.replace("UUID", "")) for id in online_machines if id !=""]
->>>>>>> a89b2d5fc ([glpi] function for view machine glpi and xmppmaster)
         query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
             .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
             .outerjoin(self.user, Machine.users_id == self.user.c.id)\
