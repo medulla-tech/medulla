@@ -658,7 +658,6 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                 }
                 else{
                     $actions = ltrim(str_replace("_"," ",substr($step->action,6)));
-                    echo $step->action;
                 }
                 $color="red";
                 echo "<br>";
@@ -693,7 +692,19 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                                     echo "</ul>";
                                 }
                                 else{
-                                    echo $keystep." :".$infostep."<br>";
+                                  switch($keystep)
+                                  {
+                                    case "error":
+                                    echo _T("On step error, goto step", "xmppmaster")." : ".$arraylist[$infostep]->action."<br>";
+                                    break;
+                                    case "success":
+                                      echo _T("On step success, goto step", "xmppmaster")." : ".$arraylist[$infostep]->action."<br>";
+                                      break;
+                                    default:
+                                      echo $keystep." :".$infostep."<br>";
+                                      break;
+                                  }
+
                                 }
                             }
                         }

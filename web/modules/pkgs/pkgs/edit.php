@@ -401,26 +401,28 @@ if(isExpertMode())
         $dependencies = [];
 
     //Get all the dependencies as uuid => name
+    $allPackagesList = get_dependencies_list_from_permissions($_SESSION["login"]);
     $allDependenciesList = [];
-    $dependencies = get_dependencies_list_from_permissions($_SESSION["login"]);
-    foreach($dependencies as $xmpp_package) {
-        if($_GET['packageUuid'] != $xmpp_package['uuid'])
-            $allDependenciesList[$xmpp_package['uuid']] = $xmpp_package['name'];
-    }
-
-    //Generate the list of not-added dependencies, the sort is not important
-    $packagesInOptionNotAdded = '';
-
-    foreach($allDependenciesList as $xmpp_package => $xmpp_name){
-        if(!in_array($xmpp_package,$dependencies))
-            $packagesInOptionNotAdded .= '<option value="'.$xmpp_package.'">'.$xmpp_name.'</option>';
-    }
-
-    //Generate the sorted list of added dependencies
     $packagesInOptionAdded = '';
-    foreach($dependencies as $uuid_package){
-        if(isset($allDependenciesList[$uuid_package]))
-            $packagesInOptionAdded .= '<option value="'.$uuid_package.'">'.$allDependenciesList[$uuid_package].'</option>';
+    $packagesInOptionNotAdded = '';
+    foreach($allPackagesList as $xmpp_package) {
+      if(is_array($xmpp_package)){
+        if($_GET['packageUuid'] != $xmpp_package['uuid']){
+          $uuid = $xmpp_package['uuid'];
+          $name = $xmpp_package['name'];
+          $version = $xmpp_package['version'];
+
+          if(in_array($uuid, $dependencies))
+          {
+            $packagesInOptionAdded .= '<option value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+
+          }
+          else{
+            $packagesInOptionNotAdded .= '<option value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+            $allDependenciesList[] = $xmpp_package;
+          }
+        }
+      }
     }
 
     $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">

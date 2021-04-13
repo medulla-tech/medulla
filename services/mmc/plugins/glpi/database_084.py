@@ -278,6 +278,18 @@ class Glpi084(DyngroupDatabaseHelper):
         self.os_version = Table('glpi_operatingsystemversions', self.metadata, autoload = True)
         mapper(OsVersion, self.os_version)
 
+        ## OCS inventory
+        self.ocslinks = None
+        try:
+            self.logger.debug('Try to load ocslinks table...')
+            self.ocslinks = Table('glpi_plugin_ocsinventoryng_ocslinks', self.metadata,
+                Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+                autoload = True)
+            mapper(OCSLinks, self.ocslinks)
+            self.logger.debug('... Success !!')
+        except:
+            self.logger.warn('Load of ocs ocslinks table failed')
+
         ## Fusion Inventory tables
 
         self.fusionantivirus = None
@@ -679,7 +691,8 @@ class Glpi084(DyngroupDatabaseHelper):
 
         # Select machines from the specified entity
         if location != "":
-            query = query.filter(Entities.id == location)
+            listentity=[int(x.strip()) for x in location.split(',')]
+            query = query.filter(Entities.id.in_(listentity))
 
         # Add all the like clauses to find machines containing the criterion
         if criterion != "":
@@ -2052,13 +2065,11 @@ class Glpi084(DyngroupDatabaseHelper):
             query2 = session.query(Entities).add_column(self.userprofile.c.is_recursive).select_from(self.entities.join(self.userprofile).join(self.user).join(self.profile)).filter(self.user.c.name == user).filter(self.profile.c.name.in_(self.config.activeProfiles))
             self.logger.debug("*** Query Entities ***")
             self.logger.debug("Parameters :")
-            self.logger.debug(" User : %s"%user)
-            self.logger.debug(" Profile : %s"%self.config.activeProfiles)
+            self.logger.debug(" User : %s" % user)
+            self.logger.debug(" Profile : %s" % self.config.activeProfiles)
             self.logger.debug("Query : ")
-            self.logger.debug("%s"%query2)
+            self.logger.debug("%s" % query2)
             plocs = query2.all()
-            self.logger.debug("Query Result : ")
-            self.logger.debug("%s"%entids)
             for ploc in plocs:
                 if ploc[1]:
                     # The user profile link to the entities is recursive, and so
@@ -2083,7 +2094,7 @@ class Glpi084(DyngroupDatabaseHelper):
         query = session.query(Entities).group_by(self.entities.c.completename).order_by(asc(self.entities.c.completename))
         self.logger.debug("*** Get All Entities ***")
         self.logger.debug("Query : ")
-        self.logger.debug("%s"%query)
+        self.logger.debug("%s" %query)
         q = query.all()
         session.close()
         for entities in q:
@@ -2696,6 +2707,7 @@ class Glpi084(DyngroupDatabaseHelper):
             .add_column(self.glpi_operatingsystemversions.c.name) \
             .add_column(self.glpi_domains.c.name) \
             .add_column(self.state.c.name) \
+            .add_column(self.ocslinks.c.last_ocs_update)\
             #.add_column(self.fusionagents.c.last_contact) \
             .select_from(
                 self.machine.outerjoin(self.entities) \
@@ -2708,14 +2720,15 @@ class Glpi084(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_operatingsystemservicepacks) \
                 .outerjoin(self.glpi_operatingsystemversions) \
                 .outerjoin(self.state) \
-                .outerjoin(self.glpi_domains)
+                .outerjoin(self.glpi_domains)\
+                .outerjoin(self.ocslinks)
             ), uuid)
 
         if count:
             ret = query.count()
         else:
             ret = []
-            for machine, infocoms, entity, location, oslocal, manufacturer, type, model, servicepack, version, domain, state in query:
+            for machine, infocoms, entity, location, oslocal, manufacturer, type, model, servicepack, version, domain, state, last_ocs_update in query:
                 endDate = ''
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -2761,7 +2774,7 @@ class Glpi084(DyngroupDatabaseHelper):
 
                 # Last inventory date
                 date_mod = machine.date_mod
-
+                last_inventory = last_ocs_update if last_ocs_update is not None else date_mod
                 l = [
                     ['Computer Name', ['computer_name', 'text', machine.name]],
                     ['Description', ['description', 'text', machine.comment]],
@@ -2780,7 +2793,7 @@ class Glpi084(DyngroupDatabaseHelper):
                     ['Inventory Number', ['inventory_number', 'text', machine.otherserial]],
                     ['State', state],
                     ['Warranty End Date', endDate],
-                    ['Last Inventory Date', date_mod.strftime("%Y-%m-%d %H:%M:%S")],
+                    ['Last Inventory Date', last_inventory.strftime("%Y-%m-%d %H:%M:%S")],
                     ]
                 ret.append(l)
         return ret
@@ -5495,4 +5508,7 @@ class RuleAction(DbTOA):
     pass
 
 class OsVersion(DbTOA):
+    pass
+
+class OCSLinks(DbTOA):
     pass

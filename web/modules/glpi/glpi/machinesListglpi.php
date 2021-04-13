@@ -50,7 +50,7 @@ $ajax = new AjaxFilterParams(urlStrRedirect("base/computers/ajaxMachinesListglpi
 list($list, $values) = getEntitiesSelectableElements();
 
 $listWithAll = array_merge([_T("All my entities", "glpi")], $list);
-$valuesWithAll = array_merge([""], $values);
+$valuesWithAll = array_merge([implode(',',$values)], $values);
 
 $ajax->setElements($listWithAll);
 $ajax->setElementsVal($valuesWithAll);

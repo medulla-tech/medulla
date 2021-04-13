@@ -262,8 +262,14 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                         result1 = XmppMasterDatabase().IdlonglatServerRelay(data['classutil'])
                         for x in result1:
                             # pour tout les relay on clacule la distance a vol oiseau.
-                            if x[1] != "" and x[2] != "":
-                                pointrelay = Point(float(x[2]), float(x[1]))
+                            if x[1] != "" and x[2] != "" and \
+                                x[1] != "unknown" and x[2] != "unknown":
+                                try:
+                                    xpoint = float(x[2])
+                                    ypoint = float(x[1])
+                                except Exception:
+                                    continue
+                                pointrelay = Point(xpoint, ypoint)
                                 if str(pointrelay.lat) == str(pointmachine.lat) and \
                                     str(pointrelay.lon) == str(pointmachine.lon):
                                     distancecalculated = 0
