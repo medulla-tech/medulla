@@ -722,7 +722,7 @@ class Glpi92(DyngroupDatabaseHelper):
             query = query.filter(Entities.id.in_(listentity))
 
         # Add all the like clauses to find machines containing the criterion
-        if criterion != "":
+        if criterion != "" and idmachine == "" and uuidsetup == "":
             if field == "":
                 query = query.filter(or_(
                     Machine.name.contains(criterion),
@@ -947,10 +947,11 @@ class Glpi92(DyngroupDatabaseHelper):
 
         # Select machines from the specified entity
         if location != "":
-            query = query.filter(Entities.id == location)
+            listentity=[int(x.strip()) for x in location.split(',')]
+            query = query.filter(Entities.id.in_(listentity))
 
         # Add all the like clauses to find machines containing the criterion
-        if criterion != ""  and idmachine == "" and uuidsetup == "":
+        if criterion != "" and idmachine == "" and uuidsetup == "":
             if field == "":
                 query = query.filter(or_(
                     Machine.name.contains(criterion),
