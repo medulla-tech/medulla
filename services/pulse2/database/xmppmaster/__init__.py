@@ -8133,13 +8133,17 @@ where agenttype="machine" and groupdeploy in (
         except ValueError:
             max = -1
 
+        event_types = ['log', 'ack']
         count = 0
         query = session.query(Mon_event, Mon_devices, Mon_rules, Mon_machine, Machines)\
             .outerjoin(Mon_devices, Mon_event.id_device == Mon_devices.id)\
             .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)\
             .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)\
             .outerjoin(Machines, Mon_machine.machines_id == Machines.id)\
-            .filter(Mon_event.status_event == 1)
+            .filter(and_(
+                Mon_event.status_event == 1,
+                Mon_event.type_event.in_(event_types))
+            )
 
         if filter != "":
             query = query.filter(or_(
@@ -8152,6 +8156,7 @@ where agenttype="machine" and groupdeploy in (
                     Mon_rules.device_type.contains(filter),
                     Mon_devices.firmware.contains(filter),
                     Mon_devices.serial.contains(filter),
+                    Mon_devices.status.contains(filter),
                     Mon_event.type_event.contains(filter)
                     )
                 )
