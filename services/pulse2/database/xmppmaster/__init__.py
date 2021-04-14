@@ -7818,40 +7818,86 @@ where agenttype="machine" and groupdeploy in (
                           doc,
                           status_event=1,
                           hostname=None):
-
         if objectlist_local_rule:
             # apply binding to find out if an alert or event is defined
             for z in objectlist_local_rule:
-                result = self.__binding_application(doc,
-                                                    z['binding'],
-                                                    z['device_type'])
-                if isinstance(result, basestring):
-                    # exception case
-                    # create event if action associated to exception error
-                    if z['error_on_binding'] is None:
-                        return False
-                    bindingcmd = z['error_on_binding']
-                elif result:
+                msg, result = self.__binding_application_check(doc,
+                                                               z['binding'],
+                                                               z['device_type'])
+                if result == -1:
+                    if z['error_on_binding'] is None or \
+                        z['error_on_binding'].strip() == "":
+                        # aucun trairement sur error
+                        continue
+                elif result == 1:
                     # alert True
                     # create event if action associated to true
-                    if z['succes_binding_cmd'] is None:
-                        return False
+                    if z['succes_binding_cmd'] is None or \
+                        z['succes_binding_cmd'].strip() == "":
+                        # aucun trairement sur success binding
+                        continue
+                    # 1 event est a prendre en compte.
                     bindingcmd = z['succes_binding_cmd']
-                else:
-                    # create event if action associated to false
-                    if z['no_success_binding_cmd'] is None:
-                        return False
+                elif result == 0:
+                    # alert False
+                    # create event if action associated to False
+                    if z['no_success_binding_cmd'] is None or \
+                        z['no_success_binding_cmd'].strip() == "":
+                        continue
                     bindingcmd = z['no_success_binding_cmd']
-                if hostname is not None:
-                    self.remise_status_event(z['id'],
-                                             0,
-                                             hostname)
+                else:
+                    #cas pas encore prevu
+                    continue
+                #if hostname is not None:
+                    #self.remise_status_event(z['id'],
+                                             #0,
+                                             #hostname)
+                self.logger.debug("%s create event %s " %(z['device_type'],
+                                                          z['type_event']))
                 self.setMonitoring_event(id_machine,
                                          id_device,
                                          z['id'],
                                          bindingcmd,
                                          type_event=z['type_event'],
                                          status_event=1)
+
+    def __binding_application_check(self, datastring, bindingstring, device_type):
+        resultbinding = None
+        try:
+            data=json.loads(datastring)
+        except Exception as e:
+            msg =  "[binding error device rule %s] : data from message" \
+                " monitoring format json error %s" % (device_type, str(e))
+            logging.getLogger().error("%s" % msg)
+            return (msg, -1)
+        try:
+            logging.getLogger().debug("compile")
+            code = compile(bindingstring, '<string>', 'exec')
+            exec(code)
+        except KeyError as e:
+            msg = "[binding error device rule %s] : key %s in "\
+                "binding:\n%s\nis missing. Check your binding on data\n%s" % (
+                    device_type,
+                    str(e),
+                    bindingstring,
+                    json.dumps(data,indent=4))
+            logging.getLogger().error("%s" % msg)
+            return (msg, -1)
+        except Exception as e:
+            msg = "[binding device rule %s error %s] in binding:\n%s\ "\
+                "on data\n%s"%(device_type,
+                               str(e),
+                               bindingstring,
+                               json.dumps(data,indent=4))
+            logging.getLogger().error("%s" % msg)
+            return (msg, -1)
+        msg = "[ %s : result binding %s for binding:\n%s\ "\
+                "on data\n%s"%(device_type,
+                               resultbinding,
+                               bindingstring,
+                               json.dumps(data,indent=4))
+        logging.getLogger().debug("%s" % msg)
+        return (msg, resultbinding)
 
     @DatabaseHelper._sessionm
     def remise_status_event(self,
