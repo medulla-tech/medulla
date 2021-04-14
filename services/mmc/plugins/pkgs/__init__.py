@@ -480,8 +480,7 @@ def putPackageDetail(package, need_assign=True):
                         result = simplecommand("ln -s %s %s " % (directorysharing,
                                                                  packages_id_input_dir))
                     else:
-                        logger.error("The move of the packages between shares is forbiden because the movepackage parameter is set to False")
-                        return None
+                        logger.warning("The move of the packages between shares is forbiden because the movepackage parameter is set to False")
     else:
         if not os.path.isdir(packages_id_input_dir):
             os.mkdir(packages_id_input_dir, 0755)
@@ -533,6 +532,7 @@ def putPackageDetail(package, need_assign=True):
     typesynchro = 'create'
     if 'mode' in package and   package['mode'] !=  'creation':
         typesynchro = 'chang'
+
 
     # writte file to xmpp deploy
     xmppdeployfile = to_json_xmppdeploy(package)
