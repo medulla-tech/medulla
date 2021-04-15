@@ -1069,6 +1069,9 @@ def get_mon_events(start, maxperpage, filter):
     result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter)
     return result
 
+def get_mon_events_history(start, maxperpage, filter):
+    result = XmppMasterDatabase().get_mon_events_history(start, maxperpage, filter)
+    return result
 
 def acquit_mon_event(id, user):
     result = XmppMasterDatabase().acquit_mon_event(id, user)

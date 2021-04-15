@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2020 Siveo, http://www.siveo.net
+ * (c) 2020-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -42,7 +42,7 @@ else{
   $f->add($hidden, array("value" => $event_id, "hide" => True));
 
   $hidden = new HiddenTpl("user");
-  $f->add($hidden, array("value" => $rule_user, "hide" => True));
+  $f->add($hidden, array("value" => $_SESSION['login'], "hide" => True));
 
   $hidden = new HiddenTpl("alarm_msg");
   $f->add($hidden, array("value" => htmlentities($device_alarm_msg), "hide" => True));
