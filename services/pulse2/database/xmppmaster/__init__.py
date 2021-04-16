@@ -2324,7 +2324,7 @@ class XmppMasterDatabase(DatabaseHelper):
                            model="",
                            manufacturer="",
                            json_re="",
-                           glpi_entity_id=None,
+                           glpi_entity_id=1,
                            glpi_location_id=None,
                            glpi_regkey_id=None):
 
