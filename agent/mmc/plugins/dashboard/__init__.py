@@ -28,7 +28,7 @@ from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.config import DashboardConfig
 from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel, ProcessPanel, \
                                         ComputersOnlinePanel, UpdatePanel, BackupPanel, SuccessRatePanel, \
-                                        DeploymentsLaunchedPanel, AgentsPanel
+                                        DeploymentsLaunchedPanel, AgentsPanel, AlertsPanel
 
 VERSION = "4.6.7"
 APIVERSION = "0:1:0"
@@ -54,8 +54,9 @@ def activate():
     DM.register_panel(BackupPanel("backup"))
     DM.register_panel(UpdatePanel("product_updates"))
     DM.register_panel(SuccessRatePanel("successRate"))
-    DM.register_panel(SuccessRatePanel("deploymentsLaunched"))
-    DM.register_panel(SuccessRatePanel("agents"))
+    DM.register_panel(DeploymentsLaunchedPanel("deploymentsLaunched"))
+    DM.register_panel(AgentsPanel("agents"))
+    DM.register_panel(AlertsPanel("alerts"))
     return True
 
 # XML-RPC methods

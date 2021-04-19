@@ -148,3 +148,7 @@ class DeploymentsLaunchedPanel(Panel):
 class AgentsPanel(Panel):
     """This class is called by the Agents widget from the dashboard"""
     pass
+
+class AlertsPanel(Panel):
+    """This class is called by the Alerts widget from the dashboard"""
+    pass
