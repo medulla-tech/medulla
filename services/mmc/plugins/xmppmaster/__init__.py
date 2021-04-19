@@ -1024,13 +1024,14 @@ def get_packages_list(jid, CGIGET=""):
             pp= packages['datas']
         for package in pp[start:end]:
             nb_dataset+=1
+            package['files'] = [[str(elem) for elem in _file] for _file in package['files']]
             _result['datas']['files'].append(package['files'])
             _result['datas']['description'].append(package['description'])
             _result['datas']['licenses'].append(package['licenses'])
             _result['datas']['name'].append(package['name'])
             _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
             _result['datas']['os'].append(package['targetos'])
-            _result['datas']['size'].append(package['size'])
+            _result['datas']['size'].append(str(package['size']))
             _result['datas']['version'].append(package['version'])
             _result['datas']['methodtransfer'].append(package['methodtransfer'])
             _result['datas']['metagenerator'].append(package['metagenerator'])
