@@ -1,6 +1,30 @@
+Pulse 2 4.6.7
+=============
+* [FEATURE] Order relay list
+* [FEATURE] Add ACL on the package synchronisation
+* [FEATURE] Add ACL on the GLPI view
+* [FEATURE] Add ACL on package and relay view
+* [FEATURE] Add Quotas for relay servers
+* [FEATURE] New computer view
+* [BUGFIX] Fix deploying packages with the same name
+* [BUGFIX] Fix creating a package using the Zip action
+* [BUGFIX] Hide convergence if not available.
+* [BUGFIX] Export CSV
+
 Pulse 2 4.6.6
 =============
 * [FEATURE] Add admin page
+* [FEATURE] Allow to set up the send of WOL
+* [FEATURE] Allow to disable the use of UUID for glpi association
+* [FEATURE] Show non sync relays at the top of the list ( package view )
+* [FEATURE] Create packages in pushrsync by default and fallback in pulldirect if pushrsync fails.
+* [FEATURE] Ajout du camembert intermédiaire une fois le déploiement terminé
+* [FEATURE] Add  the percent in the Audit  view
+* [BUGFIX] Fix packages sync when a relay is down
+* [BUGFIX] Fix the percentages in the deploy view
+* [BUGFIX] Fix the action "set_config" in packaging
+* [BUGFIX] Fix the dates when planning a deployment
+* [BUGFIX] Fix detection of the package server when using pulldirect
 
 Pulse 2 4.6.5
 =============
