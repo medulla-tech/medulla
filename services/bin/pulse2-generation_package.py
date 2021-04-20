@@ -643,6 +643,8 @@ if __name__ == '__main__':
                 if not "edition_date" in contenuedejson or\
                         contenuedejson['edition_date'] == "" :
                     contenuedejson['edition_date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                if 'metagenerator' not in contenuedejson:
+                    contenuedejson['metagenerator'] = "expert"
 
                 edition_status = 1
                 if contenuedejson['metagenerator'] == "manual":
