@@ -284,7 +284,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),"..",
                              namelibplugins))
         logger.debug('Module path plugin xmppmaster is %s'%self.modulepath)
-        self.listmodulemmc = PluginManager().getAvailablePlugins()
+        self.listmodulemmc = PluginManager().getEnabledPluginNames()
         self.config = conf
         self.session = session()
         self.domaindefault = "pulse"
