@@ -36,12 +36,18 @@ class AlertsPanel extends Panel {
 
       foreach($result['datas'] as $alert){
 
-        $machine = explode('.',$alert['machine_jid'])[0];
+        $machine = $alert['machine_hostname'];
         $uuid = $alert['machine_uuid'];
+
         $params = [
           'cn'=> $machine,
           'objectUUID' => $uuid
-      ];
+        ];
+        $params_action = $alert;
+        $params_action['device_alarm_msg'] = htmlentities($params_action['device_alarm_msg']);
+        $params_action['device_doc'] = htmlentities($params_action['device_doc']);
+        $acquitAction = new ActionPopupItem(_("Acknowledge"), "acquit", "delete", "", "xmppmaster", "xmppmaster");
+
         echo '<h3 class="'.$alert['device_status'].'"><b>'.$alert['rule_comment'].'</b> on machine: <b>'.$machine.'</b></h3>';
 
         echo '<div>';
@@ -49,6 +55,15 @@ class AlertsPanel extends Panel {
         echo '<b>'._T("Date","xmppmaster").'</b> : '.$alert['mon_machine_date'].'<br>';
         echo '<b>'._T("Evenement","xmppmaster").'</b> : '.$alert['rule_comment'].'<br>';
         echo '<b>'._T("Machine","xmppmaster").'</b> : <a href="'.urlStrRedirect("base/computers/glpitabs", $params).'">'.$machine.'</a><br>';
+        echo '<br>';
+        echo '<ul class="action">';
+        //comming soon : show this alert
+        //echo '<li class="display" title="'._T("Detail", "xmppmaster").'"><a href="#"> </a></li>';
+
+        // acknowledge this alert
+        $acquitAction->display('', $params_action);
+
+        echo '</ul>';
         echo '</div>';
 
       }
