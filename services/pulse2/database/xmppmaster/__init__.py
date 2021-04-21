@@ -1988,7 +1988,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     `glpi_location_id` = %s
                 WHERE
                     `id` = '%s';''' % ("UUID%s" % glpiinformation['data']['uuidglpicomputer'][0],
-                                    glpiinformation['data']['description'][0],
+                                    glpiinformation['data']['description'][0].replace("'", "\\'"),
                                     glpiinformation['data']['owner_firstname'][0],
                                     glpiinformation['data']['owner_realname'][0],
                                     glpiinformation['data']['owner'][0],
