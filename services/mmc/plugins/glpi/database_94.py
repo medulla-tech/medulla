@@ -3981,8 +3981,8 @@ class Glpi94(DyngroupDatabaseHelper):
                 self.logger.error("\n We encountered the error %s" % e)
                 self.logger.error("\n The backtrace is \n%s" % (traceback.format_exc()))
         return resultrecord
-    
-    
+
+
     @DatabaseHelper._sessionm
     def get_machines_list1(self, session, start, end, ctx):
         # start and end are used to set the limit parameter in the query
@@ -4084,7 +4084,7 @@ class Glpi94(DyngroupDatabaseHelper):
             query = query.filter(Entities.id.in_(listentity))
 
         # Add all the like clauses to find machines containing the criterion
-        if criterion != "" and idmachine == "" and uuidsetup == "":
+        if criterion != "":
             if field == "":
                 query = query.filter(or_(
                     Machine.name.contains(criterion),
