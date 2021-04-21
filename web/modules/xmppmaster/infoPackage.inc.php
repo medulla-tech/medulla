@@ -67,6 +67,10 @@ $submod->addPage($page);
 $page = new Page("topology", _T('XMPP topology Machine', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("alertsdetail", _T("Alerts Detail", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/monitoring/detail.php");
+$submod->addPage($page);
+
 // Tabs for alerts notifications
 $page = new Page("alerts", _T("Monitoring Alerts", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/monitoring/alerts.php");

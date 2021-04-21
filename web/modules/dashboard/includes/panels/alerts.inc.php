@@ -43,9 +43,7 @@ class AlertsPanel extends Panel {
           'cn'=> $machine,
           'objectUUID' => $uuid
         ];
-        $params_action = $alert;
-        $params_action['device_alarm_msg'] = htmlentities($params_action['device_alarm_msg']);
-        $params_action['device_doc'] = htmlentities($params_action['device_doc']);
+        $detailAction = new ActionItem(_("Detail"), "alertsdetail", "display", "", "xmppmaster", "xmppmaster");
         $acquitAction = new ActionPopupItem(_("Acknowledge"), "acquit", "delete", "", "xmppmaster", "xmppmaster");
 
         echo '<h3 class="'.$alert['device_status'].'"><b>'.$alert['rule_comment'].'</b> on machine: <b>'.$machine.'</b></h3>';
@@ -57,18 +55,14 @@ class AlertsPanel extends Panel {
         echo '<b>'._T("Machine","xmppmaster").'</b> : <a href="'.urlStrRedirect("base/computers/glpitabs", $params).'">'.$machine.'</a><br>';
         echo '<br>';
         echo '<ul class="action">';
-        //comming soon : show this alert
-        //echo '<li class="display" title="'._T("Detail", "xmppmaster").'"><a href="#"> </a></li>';
 
         // acknowledge this alert
-        $acquitAction->display('', $params_action);
-
+        $detailAction->display('', $alert);
+        $acquitAction->display('', $alert);
         echo '</ul>';
         echo '</div>';
-
       }
       echo '</div>';
-
       ?>
 <script>
 jQuery(function(){

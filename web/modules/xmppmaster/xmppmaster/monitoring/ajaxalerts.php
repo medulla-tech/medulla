@@ -35,17 +35,20 @@ if (isset($_GET["start"])) {
 $result = xmlrpc_get_mon_events($start, $maxperpage, $filter);
 
 $acquitAction = new ActionPopupItem(_("Acknowledge"), "acquit", "delete", "", "xmppmaster", "xmppmaster");
+$detailAction = new ActionItem(_("Detail"), "alertsdetail", "display", "", "xmppmaster", "xmppmaster");
 
 $params = [];
 $display_device = [];
 $display_css = [];
 $acquitActions = [];
+$detailActions = [];
 
 foreach($result['datas'] as $event){
   foreach($event as $key=>$value)
     $params[$key][] = $value;
   $display_css[] = ($event['machine_enabled'] == 1) ? "machineNamepresente" : "machineName";
   $acquitActions[] = $acquitAction;
+  $detailActions[] = $detailAction;
 }
 
 $params['machine_hostname'] = (isset($params['machine_hostname'])) ? $params['machine_hostname'] : [];
@@ -75,6 +78,7 @@ $n->addExtraInfo($params['rule_comment'], _T("Comment", "xmppmaster"));
 $n->setItemCount($result['total']);
 $n->setNavBar(new AjaxNavBar($result['total'], $filter));
 
+$n->addActionItemArray($detailActions);
 $n->addActionItemArray($acquitActions);
 $n->start = 0;
 $n->end = $result['total'];

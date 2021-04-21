@@ -25,6 +25,7 @@
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = (isset($_GET["filter"])) ? htmlentities($_GET["filter"]) : "";
+$detailAction = new ActionItem(_("Detail"), "alertsdetail", "display", "", "xmppmaster", "xmppmaster");
 
 if (isset($_GET["start"])) {
     $start = $_GET["start"];
@@ -37,11 +38,13 @@ $result = xmlrpc_get_mon_events_history($start, $maxperpage, $filter);
 $params = [];
 $display_device = [];
 $display_css = [];
+$detailActions = [];
 
 foreach($result['datas'] as $event){
   foreach($event as $key=>$value)
     $params[$key][] = $value;
   $display_css[] = ($event['machine_enabled'] == 1) ? "machineNamepresente" : "machineName";
+  $detailActions[] = $detailAction;
 }
 
 $params['machine_hostname'] = (isset($params['machine_hostname'])) ? $params['machine_hostname'] : [];
@@ -72,6 +75,7 @@ $n->addExtraInfo($params['device_alarm_msg'], _T("Device Message", "xmppmaster")
 $n->addExtraInfo($params['device_serial'], _T("Device Serial", "xmppmaster"));
 $n->addExtraInfo($params['device_firmware'], _T("Device Firmware", "xmppmaster"));
 $n->addExtraInfo($params['rule_comment'], _T("Comment", "xmppmaster"));
+$n->addActionItemArray($detailActions);
 $n->setItemCount($result['total']);
 $n->setNavBar(new AjaxNavBar($result['total'], $filter));
 
