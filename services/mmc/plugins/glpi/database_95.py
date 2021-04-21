@@ -4230,7 +4230,7 @@ class Glpi95(DyngroupDatabaseHelper):
                         'operatingsystemservicepacks_id': ret.operatingsystemservicepacks_id,
                         'operatingsystemarchitectures_id': ret.operatingsystemarchitectures_id,
                         'license_number': ret.license_number,
-                        'license_id': ret.license_id,
+                        'license_id': ret.licenseid,
                         'operatingsystemkernelversions_id': ret.operatingsystemkernelversions_id}
             except Exception:
                 self.logger.error("\n%s" % (traceback.format_exc()))
