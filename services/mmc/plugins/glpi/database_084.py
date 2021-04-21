@@ -695,7 +695,7 @@ class Glpi084(DyngroupDatabaseHelper):
             query = query.filter(Entities.id.in_(listentity))
 
         # Add all the like clauses to find machines containing the criterion
-        if criterion != "" and idmachine == "" and uuidsetup == "":
+        if criterion != "":
             if field == "":
                 query = query.filter(or_(
                     Machine.name.contains(criterion),
