@@ -1013,12 +1013,12 @@ def get_packages_list(jid, CGIGET=""):
         pp=[]
         if filter != "":
             for package in packages['datas']:
-                if re.search(filter, package['description']) or\
-                    re.search(filter, package['name']) or\
-                    re.search(filter, package['version']) or\
-                    re.search(filter, package['targetos']) or\
-                    re.search(filter, package['methodtransfer']) or\
-                    re.search(filter, package['metagenerator']):
+                if re.search(filter, package['description'], re.IGNORECASE) or\
+                    re.search(filter, package['name'], re.IGNORECASE) or\
+                    re.search(filter, package['version'], re.IGNORECASE) or\
+                    re.search(filter, package['targetos'], re.IGNORECASE) or\
+                    re.search(filter, package['methodtransfer'], re.IGNORECASE) or\
+                    re.search(filter, package['metagenerator'], re.IGNORECASE):
                     pp.append(package)
         else:
             pp= packages['datas']
