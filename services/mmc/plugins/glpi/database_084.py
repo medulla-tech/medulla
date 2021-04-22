@@ -572,7 +572,6 @@ class Glpi084(DyngroupDatabaseHelper):
                             resultrecord[keynameresult] = ""
                         else:
                             typestr = str(type(getattr(ret, keynameresult)))
-
                             if "class" in typestr:
                                 try:
                                     if 'decimal.Decimal' in typestr:
@@ -586,7 +585,10 @@ class Glpi084(DyngroupDatabaseHelper):
                                 if isinstance(getattr(ret, keynameresult), datetime.datetime):
                                     resultrecord[keynameresult] = getattr(ret, keynameresult).strftime("%m/%d/%Y %H:%M:%S")
                                 else:
-                                    resultrecord[keynameresult] = getattr(ret, keynameresult)
+                                    if isinstance(getattr(ret, keynameresult), basestring):
+                                        resultrecord[keynameresult] =  getattr(ret, keynameresult).decode('utf-8',  errors='ignore')
+                                    else:
+                                        resultrecord[keynameresult] = getattr(ret, keynameresult)
                     except AttributeError:
                         resultrecord[keynameresult] = ""
         except Exception as e:
