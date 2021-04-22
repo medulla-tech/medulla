@@ -4212,28 +4212,33 @@ class Glpi92(DyngroupDatabaseHelper):
         try:
             if ret :
                 for keynameresult in ret.keys():
-                    if getattr(ret, keynameresult) is None:
-                        resultrecord[keynameresult] = ""
-                    else:
-                        typestr = str(type(getattr(ret, keynameresult)))
-
-                        if "class" in typestr:
-                            try:
-                                if 'decimal.Decimal' in typestr:
-                                    resultrecord[keynameresult] = float(getattr(ret, keynameresult))
-                                else:
-                                    resultrecord[keynameresult] = str(getattr(ret, keynameresult))
-                            except:
-                                self.logger.warning("type class %s no used for key %s" % (typestr, keynameresult))
-                                resultrecord[keynameresult] = ""
+                    try:
+                        if getattr(ret, keynameresult) is None:
+                            resultrecord[keynameresult] = ""
                         else:
-                            if isinstance(getattr(ret, keynameresult), datetime.datetime):
-                                resultrecord[keynameresult] = getattr(ret, keynameresult).strftime("%m/%d/%Y %H:%M:%S")
+                            typestr = str(type(getattr(ret, keynameresult)))
+                            if "class" in typestr:
+                                try:
+                                    if 'decimal.Decimal' in typestr:
+                                        resultrecord[keynameresult] = float(getattr(ret, keynameresult))
+                                    else:
+                                        resultrecord[keynameresult] = str(getattr(ret, keynameresult))
+                                except:
+                                    self.logger.warning("type class %s no used for key %s" % (typestr, keynameresult))
+                                    resultrecord[keynameresult] = ""
                             else:
-                                resultrecord[keynameresult] = getattr(ret, keynameresult)
+                                if isinstance(getattr(ret, keynameresult), datetime.datetime):
+                                    resultrecord[keynameresult] = getattr(ret, keynameresult).strftime("%m/%d/%Y %H:%M:%S")
+                                else:
+                                    if isinstance(getattr(ret, keynameresult), basestring):
+                                        resultrecord[keynameresult] =  getattr(ret, keynameresult).decode('utf-8',  errors='ignore')
+                                    else:
+                                        resultrecord[keynameresult] = getattr(ret, keynameresult)
+                    except AttributeError:
+                        resultrecord[keynameresult] = ""
         except Exception as e:
-                self.logger.error("\n We encountered the error %s" % e)
-                self.logger.error("\n The backtrace is \n%s" % (traceback.format_exc()))
+            self.logger.error("We encountered the error %s" % str(e) )
+            self.logger.error("\n with the backtrace \n%s" % (traceback.format_exc()))
         return resultrecord
 
     def _machineobject(self, ret):
