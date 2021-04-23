@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * file : /glpi/glpi/ajaxMachinesList.php
  */
 
 require_once("modules/glpi/includes/xmlrpc.php");
@@ -159,7 +160,6 @@ $ctx['maxperpage'] = $maxperpage;
 if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
     $ctx['computerpresence'] = $_SESSION['computerpresence'];
 
-
     $machines1 = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
 
 $count = $machines1["count"];
@@ -167,13 +167,21 @@ $total = $machines1["total"];
 $datas = $machines1["data"];
 $xmppdatas = $machines['xmppdata'];
 
+    $desc=array();
+    $br = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
+    foreach($datas["glpi_description"] as  $key => $value){
+       $value = str_ireplace($br, "\r\n", $value);
+       $desc[] =  htmlentities($value);
+    }
+    $datas["glpi_description"]=array();
+    $datas["glpi_description"] = $desc;
+
 $presencesClass = [];
 $params = [];
 
 $msc_vnc_show_icon = web_vnc_show_icon();
 
 $glpinoAction = new EmptyActionItem1(_("GLPI Inventory"),"glpitabs","inventoryg","inventory", "base", "computers");
-
 
 // Actions for each machines
 $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
