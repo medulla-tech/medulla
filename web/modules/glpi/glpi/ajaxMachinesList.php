@@ -167,14 +167,18 @@ $total = $machines1["total"];
 $datas = $machines1["data"];
 $xmppdatas = $machines['xmppdata'];
 
-    $desc=array();
-    $br = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
-    foreach($datas["glpi_description"] as  $key => $value){
-       $value = str_ireplace($br, "\r\n", $value);
-       $desc[] =  htmlentities($value);
+$br = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
+foreach ($datas as $nametableau => $tableau){
+    foreach($datas[$nametableau] as  $key => &$value){
+        $value = str_ireplace( array("\\r\\n"), "\r\n", $value);
+        $value = str_ireplace( array("\\n"), "\r\n", $value);
+        $value = str_ireplace($br, "\r\n", $value);
+        if(stripos ($value, "script") !== false){
+            $value  = htmlspecialchars($value);
+        }
+        $value =  htmlentities($value);
     }
-    $datas["glpi_description"]=array();
-    $datas["glpi_description"] = $desc;
+}
 
 $presencesClass = [];
 $params = [];
