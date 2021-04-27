@@ -747,6 +747,7 @@ def get_xmpprelays_list(start, limit, filter, presence):
 
 def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
     listidars = []
+    arslistextend = []
 
     if userlogin != "":
         objsearch['login'] = userlogin
