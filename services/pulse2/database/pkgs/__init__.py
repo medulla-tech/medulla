@@ -1062,13 +1062,13 @@ class PkgsDatabase(DatabaseHelper):
     def SetPkgs_rules_global(self,
                              session,
                              pkgs_rules_algos_id,
-                             pkgs_shares_id,
+                             pkgs_cluster_ars_id,
                              order,
                              subject):
         try:
             new_Pkgs_rules_global = Pkgs_rules_local()
             new_Pkgs_rules_global.pkgs_rules_algos_id = pkgs_rules_algos_id
-            new_Pkgs_rules_global.pkgs_shares_id = pkgs_shares_id
+            new_Pkgs_rules_global.pkgs_cluster_ars_id = pkgs_cluster_ars_id
             new_Pkgs_rules_global.order = order
             new_Pkgs_rules_global.subject = subject
             session.add(new_Pkgs_rules_global)
@@ -1237,6 +1237,49 @@ class PkgsDatabase(DatabaseHelper):
                      resuldict['nbpackage'] = self.nb_package_in_sharing(share_id=resuldict['id_sharing'])
                 ret.append(resuldict)
         return ret
+
+    @DatabaseHelper._sessionm
+    def get_Cluster_list_rule(self,
+                              session,
+                              objsearch):
+        if 'login' in objsearch:
+            sql ="""
+                SELECT
+                    pkgs_cluster_ars_id
+                FROM
+                    pkgs.pkgs_rules_global
+                WHERE
+                    '%s' REGEXP (pkgs.pkgs_rules_global.subject)
+                        AND permission LIKE '%%r%%';"""%objsearch['login']
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            return [x for x in result]
+        return []
+
+    def pkgs_search_ars_list_from_cluster_rules(self, objsearch):
+        """
+            This function is used to retrieve the ars list for read permissions
+                following the defined rules.
+            Args:
+                objsearch:
+                # TODO: Fix documentation
+            Results:
+                It returns the the ars id followind the defined rules.
+
+        """
+        cluster_result = []
+        extend_ars_list=[]
+        order_rules = self.pkgs_Orderrules()
+        # global sharing
+        if objsearch['login'] == 'root':
+            return []
+        else:
+            for algo in order_rules:
+                if algo[0] == 3:
+                    listcluster = self.get_Cluster_list_rule(objsearch)
+                    extend_ars_list = XmppMasterDatabase().get_Arsid_list_from_clusterid_list(listcluster)
+        return extend_ars_list
 
     def pkgs_search_share(self, objsearch):
         """
