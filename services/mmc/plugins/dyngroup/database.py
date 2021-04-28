@@ -963,7 +963,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             }
         }
         """
-        query = session.query(Convergence).filter_by(parentGroupId = gid)
+        query = session.query(Convergence).filter_by(parentGroupId = gid).all()
         ret = {}
         for line in query:
             papi = cPickle.loads(line.papi)
