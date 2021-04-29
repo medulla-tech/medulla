@@ -40,6 +40,9 @@ INSERT INTO `pkgs`.`pkgs_rules_algos` (`id`, `name`, `description`, `level`) VAL
 ALTER TABLE `pkgs`.`pkgs_rules_global`
 CHANGE COLUMN `pkgs_shares_id` `pkgs_cluster_ars_id` INT(11) NOT NULL ;
 
+ALTER TABLE packages
+CHANGE COLUMN size size BIGINT null default 0;
+
 UPDATE version SET Number = 5;
 
 COMMIT;
