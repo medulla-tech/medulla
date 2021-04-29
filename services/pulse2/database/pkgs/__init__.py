@@ -1229,8 +1229,8 @@ class PkgsDatabase(DatabaseHelper):
                 resuldict['order_rule'] = y[11] if y[11] is not None else ""
                 resuldict['regexp'] = y[12] if y[12] is not None else ""
                 resuldict['permission'] = y[13] if y[13] is not None else ""
-                resuldict['quotas'] = y[14] if y[14] is not None else ""
-                resuldict['usedquotas'] = y[15] if y[15] is not None else ""
+                resuldict['quotas'] = str(y[14]) if y[14] is not None else ""
+                resuldict['usedquotas'] = str(y[15]) if y[15] is not None else ""
                 if resuldict['type'] == 'global':
                     resuldict['nbpackage'] = self.nb_package_in_sharing(share_id=None)
                 else:
@@ -1400,8 +1400,8 @@ class PkgsDatabase(DatabaseHelper):
                 resuldict['ars_id'] = y[7] if y[7] is not None else ""
                 resuldict['share_path'] = y[8] if y[8] is not None else ""
                 resuldict['permission'] = "rw"
-                resuldict['quotas'] = y[9] if y[9] is not None else ""
-                resuldict['usedquotas'] = y[10] if y[10] is not None else ""
+                resuldict['quotas'] = str(y[9]) if y[9] is not None else ""
+                resuldict['usedquotas'] = str(y[10]) if y[10] is not None else ""
                 ret.append(resuldict)
                 if resuldict['type'] == 'global':
                     resuldict['nbpackage'] = self.nb_package_in_sharing(share_id=None)
