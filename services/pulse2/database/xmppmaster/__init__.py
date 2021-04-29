@@ -217,7 +217,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             q = session.query(Agentsubscription)
             q = q.filter(Agentsubscription.name == name)
-            record = q.one_or_none()
+            record = q.first()
             if record:
                 record.name = name
                 session.commit()
@@ -227,6 +227,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 return self.setagentsubscription(name)
         except Exception as e:
             logging.getLogger().error(str(e))
+            return None
 
     @DatabaseHelper._sessionm
     def setSubscription(self,
@@ -259,7 +260,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             q = session.query(Subscription)
             q = q.filter(Subscription.macadress == macadress)
-            record = q.one_or_none()
+            record = q.first()
             if record:
                 record.macadress = macadress
                 record.idagentsubscription = idagentsubscription
@@ -270,6 +271,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 return self.setSubscription(macadress, idagentsubscription)
         except Exception as e:
             logging.getLogger().error(str(e))
+            return None
 
     @DatabaseHelper._sessionm
     def setuplistSubscription(self,
