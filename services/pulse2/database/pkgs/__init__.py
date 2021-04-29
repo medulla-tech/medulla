@@ -566,7 +566,7 @@ class PkgsDatabase(DatabaseHelper):
                 result["datas"]["share_name"].append(package[7] if package[7] is not None else "")
                 result["datas"]["share_type"].append(package[8] if package[8] is not None else "")
                 result["datas"]["permission"].append(dictpermission[str(package[6])])
-                result["datas"]["size"].append(package[9] if package[9] is not None else "")
+                result["datas"]["size"].append(str(package[9]) if package[9] is not None else "")
                 result["datas"]["licence"].append(package[10] if package[10] is not None else "")
                 result["datas"]["associateinventory"].append(package[11] if package[11] is not None else "")
                 result["datas"]["qversion"].append(package[12] if package[12] is not None else "")
