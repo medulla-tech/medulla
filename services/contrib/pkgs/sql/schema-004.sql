@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_rules_algos` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 COMMENT = 'definition of the share attribution algorythms';
+
 -- -----------------------------------------------------
 -- Table `pkgs`.`pkgs_rules_global`
 -- -----------------------------------------------------
@@ -125,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_rules_global` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-COMMENT = 'Define ordered rules used to determine global shares'
+COMMENT = 'Define ordered rules used to determine global shares';
 
 -- -----------------------------------------------------
 -- Table `pkgs`.`pkgs_rules_local`
@@ -152,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_rules_local` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-COMMENT = 'Define ordered rules used to determine local shares'
+COMMENT = 'Define ordered rules used to determine local shares';
 
 -- -----------------------------------------------------
 -- add field `table packages`.
