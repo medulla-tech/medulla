@@ -152,3 +152,7 @@ class AgentsPanel(Panel):
 class AlertsPanel(Panel):
     """This class is called by the Alerts widget from the dashboard"""
     pass
+
+class AlertsEntityPanel(Panel):
+    """This class is called by the Alerts Entity widget from the dashboard"""
+    pass

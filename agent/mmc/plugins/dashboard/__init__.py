@@ -28,7 +28,7 @@ from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.config import DashboardConfig
 from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel, ProcessPanel, \
                                         ComputersOnlinePanel, UpdatePanel, BackupPanel, SuccessRatePanel, \
-                                        DeploymentsLaunchedPanel, AgentsPanel, AlertsPanel
+                                        DeploymentsLaunchedPanel, AgentsPanel, AlertsPanel, AlertsEntityPanel
 
 VERSION = "4.6.7"
 APIVERSION = "0:1:0"
@@ -57,6 +57,7 @@ def activate():
     DM.register_panel(DeploymentsLaunchedPanel("deploymentsLaunched"))
     DM.register_panel(AgentsPanel("agents"))
     DM.register_panel(AlertsPanel("alerts"))
+    DM.register_panel(AlertsEntityPanel("alertsentity"))
     return True
 
 # XML-RPC methods

@@ -22,18 +22,18 @@
 include_once("modules/dashboard/includes/panel.class.php");
 include_once("modules/xmppmaster/includes/xmlrpc.php");
 $options = array(
-    "class" => "AlertsPanel",
-    "id" => "alerts",
+    "class" => "AlertsEntityPanel",
+    "id" => "alertsentity",
     "refresh" => 3600,
-    "title" => _T("Alerts", "dashboard"),
+    "title" => _T("Alerts by Entity", "dashboard"),
 );
 
-class AlertsPanel extends Panel {
+class AlertsEntityPanel extends Panel {
 
     function display_content() {
-      $result = xmlrpc_get_mon_events(0, 5, "");
+      $result = xmlrpc_get_mon_events_entity(0, 5, "");
       if($result["total"] > 0){
-        echo '<div id="alertsaccordion">';
+        echo '<div id="alertsentityaccordion">';
         foreach($result['datas'] as $alert){
           $machine = $alert['machine_hostname'];
           $uuid = $alert['machine_uuid'];
@@ -65,17 +65,17 @@ class AlertsPanel extends Panel {
           echo '</div>';
         }
       echo '</div>';
-    }
-    else{
+      }
+      else{
       echo '<h3><b>'._T("No alerts", "xmppmaster").'</b></h3>';
-    }
+      }
       ?>
 <script>
 jQuery(function(){
   jQuery('.warning').css('background-color', 'orange');
   jQuery('.error').css('background-color', 'red');
   jQuery('.ready').css('background-color', 'green');
-  jQuery("#alertsaccordion").accordion({
+  jQuery("#alertsentityaccordion").accordion({
     'collapsible': true,
 
   });
