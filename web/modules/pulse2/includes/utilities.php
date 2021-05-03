@@ -3,10 +3,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -126,5 +127,23 @@ function get_pull_targets() {
         }
     }
     return $_SESSION['pull_targets'];
+}
+
+function clean_xss($value){
+  /*
+   * Remove hex codes from string (i.e. %3B%2F ...), html <tags>
+   * and closing tags like "> or '> to force script execution
+   *
+   */
+  $binaryPattern = '#(%[0-9a-z]{2})#i';
+  $tagsPattern = '#<[^>]*>#i';
+  $closurePattern = '#[ ?>|\' ?>;"\']#i';
+
+  $value = preg_replace($binaryPattern, "", $value);
+  $value = preg_replace($tagsPattern, "", $value);
+  $value = preg_replace($closurePattern, "", $value);
+
+  $value = htmlentities($value);
+  return $value;
 }
 ?>
