@@ -671,7 +671,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     XmppMasterDatabase().update_state_deploy(int(machine['id']), "DEPLOYMENT START")
                     #"relance deployement on machine online"
                     # il faut verifier qu'il y ai 1 groupe deja en syncthing.alors seulement on peut decoder de l'incorporer
-                    if data['advanced']['grp'] is not None and \
+                    if 'grp' in data['advanced'] and data['advanced']['grp'] is not None and \
                         'syncthing' in data['advanced'] and \
                             data['advanced']['syncthing'] == 1 and \
                                 XmppMasterDatabase().nbsyncthingdeploy(machine['group_uuid'],
