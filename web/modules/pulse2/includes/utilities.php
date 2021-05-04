@@ -139,11 +139,20 @@ function clean_xss($value){
   $tagsPattern = '#<[^>]*>#i';
   $closurePattern = '#[ ?>|\' ?>;"\']#i';
 
-  $value = preg_replace($binaryPattern, "", $value);
-  $value = preg_replace($tagsPattern, "", $value);
-  $value = preg_replace($closurePattern, "", $value);
-
-  $value = htmlentities($value);
+  if(is_array($value)){
+    foreach($value as $_value){
+      $_value = preg_replace($binaryPattern, "", $_value);
+      $_value = preg_replace($tagsPattern, "", $_value);
+      $_value = preg_replace($closurePattern, "", $_value);
+      $_value = htmlentities($_value);
+    }
+  }
+  else{
+    $value = preg_replace($binaryPattern, "", $value);
+    $value = preg_replace($tagsPattern, "", $value);
+    $value = preg_replace($closurePattern, "", $value);
+    $value = htmlentities($value);
+  }
   return $value;
 }
 ?>
