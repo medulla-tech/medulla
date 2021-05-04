@@ -4021,12 +4021,6 @@ class Glpi94(DyngroupDatabaseHelper):
         if "contains" in ctx and ctx["contains"] != "":
             contains = ctx["contains"]
 
-        # Get the list of online computers
-        online_machines = []
-        online_machines = XmppMasterDatabase().getlistPresenceMachineid()
-
-        if online_machines is not None:
-            online_machines = [int(id.replace("UUID", "")) for id in online_machines if id != "UUID" and id != ""]
         query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
         .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
         .outerjoin(self.user, Machine.users_id == self.user.c.id)\
@@ -4115,14 +4109,20 @@ class Glpi94(DyngroupDatabaseHelper):
                     pass
 
         query = query.order_by(Machine.name)
+
+        online_machines = []
         # All computers
         if "computerpresence" not in ctx:
             # Do nothing more
             pass
         elif ctx["computerpresence"] == "no_presence":
-            query = query.filter(Machine.id.notin_(online_machines))
+            online_machines = XmppMasterDatabase().getidlistPresenceMachine(presence=False)
         else:
+            online_machines = XmppMasterDatabase().getidlistPresenceMachine(presence=True)
+
+        if online_machines:
             query = query.filter(Machine.id.in_(online_machines))
+
         query = self.__filter_on(query)
 
         # From now we can have the count of machines

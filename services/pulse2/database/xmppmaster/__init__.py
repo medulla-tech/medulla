@@ -5719,6 +5719,46 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
 
     @DatabaseHelper._sessionm
+    def getidlistPresenceMachine(self, session, presence=None):
+        """
+        This function is used to retrieve the list of the machines based on the 'presence' argument.
+
+        Args:
+            session: The SQLAlchemy session
+            presence: if True, it returns the list of the machine with an agent up.
+                      if False, it returns the list of the machine with an agent down.
+                      if None, it returns the list with all the machines.
+        Returns:
+            It returns the list of the machine based on the 'presence' argument.
+        """
+        strpresence = ""
+
+        try:
+            if presence is not None:
+                if presence == True:
+                    strpresence = " and enabled = 1"
+                else:
+                    strpresence = " and enabled = 0"
+            sql = """SELECT
+                        SUBSTR(uuid_inventorymachine, 5)
+                    FROM
+                        xmppmaster.machines
+                    WHERE
+                        agenttype = 'machine'
+                    and
+                        uuid_inventorymachine IS NOT NULL %s;""" % strpresence
+            presencelist = session.execute(sql)
+            session.commit()
+            session.flush()
+            return [ x[0] for x in  presencelist ]
+        except Exception as e:
+            logging.getLogger().error("Error debug for the getidlistPresenceMachine function!")
+            logging.getLogger().error("The presence of the machine is:  %s" % presence)
+            logging.getLogger().error("The sql error is: %s" % sql)
+            logging.getLogger().error("the Exception catched is %s" % str(e))
+            return []
+
+    @DatabaseHelper._sessionm
     def getxmppmasterfilterforglpi(self, session, listqueryxmppmaster = None):
         fl = listqueryxmppmaster[3].replace('*',"%")
         if listqueryxmppmaster[2] == "OU user":
