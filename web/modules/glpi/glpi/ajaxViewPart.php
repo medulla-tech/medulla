@@ -272,7 +272,7 @@ _T('Up-to-date', 'glpi');
 ?>
 
 </table>
-<script src="modules/glpi/graph/js/autoresize.js"></script>
+<!--<script src="modules/glpi/graph/js/autoresize.js"></script>-->
 <script type="text/javascript">
 //demo: http://so.devilmaycode.it/jquery-convert-line-breaks-to-br-nl2br-equivalent
 function nl2br (str) {
@@ -290,7 +290,7 @@ jQuery('label.editableField').on('click',function(){
     jQuery(this).hide();
     input.val(value).show().focus();
     input.css('width', '100%');
-    input.autoResize()
+    //input.autoResize()
 });
 
 jQuery('textarea.editableField').bind('keyup focusout',function(e){
@@ -309,10 +309,10 @@ jQuery('textarea.editableField').bind('keyup focusout',function(e){
     }
 
     // Posting ajax request
-    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php echo quickGet('uuid'); ?>&name='+name+'&value='+value).success(function(){
-        var label = jQuery('label.editableField[name="'+name+'"]').first();
-        label.html(value).show();
-        input.hide();
+    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php echo quickGet('uuid'); ?>&name='+name+'&value='+value, function(datas){
+      var label = jQuery('label.editableField[name="'+name+'"]').first();
+      label.html(value).show();
+      input.hide();
     });
 });
 
