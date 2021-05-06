@@ -13,7 +13,7 @@ Pulse 2 4.6.8 (unreleased)
 * [BUGFIX]  Fix rendering of accentuated letters from glpi to pulse.
 * [BUGFIX]  Fix detection of online/offline machine in the Glpi view
 * [BUGFIX]  Add back addMachinesToCommand function ( fixing restarting
-converges)
+convergences)
 * [BUGFIX]  Do not allow ; in computers descriptions
 * [BUGFIX]  Fix the int limitation problem for quotas in sharing
 * [BUGFIX]  Change the size of the packages size column
