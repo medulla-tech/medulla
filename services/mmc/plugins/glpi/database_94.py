@@ -3950,7 +3950,7 @@ class Glpi94(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-     def _machineobjectdymresult(self, ret, encode= 'iso-8859-1'):
+    def _machineobjectdymresult(self, ret, encode= 'iso-8859-1'):
         """
             this function return dict result sqlalchimy
         """
