@@ -752,10 +752,11 @@ class Glpi94(DyngroupDatabaseHelper):
 
         # Select machines from the specified entity
         if location != "":
-            query = query.filter(Entities.id == location)
+            listentity=[int(x.strip()) for x in location.split(',')]
+            query = query.filter(Entities.id.in_(listentity))
 
         # Add all the like clauses to find machines containing the criterion
-        if criterion != ""  and idmachine == "" and uuidsetup == "":
+        if criterion != "" and idmachine == "" and uuidsetup == "":
             if field == "":
                 query = query.filter(or_(
                     Machine.name.contains(criterion),
@@ -3949,7 +3950,7 @@ class Glpi94(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def _machineobjectdymresult(self, ret):
+    def _machineobjectdymresult(self, ret, encode= 'iso-8859-1'):
         """
             this function return dict result sqlalchimy
         """
@@ -3957,31 +3958,39 @@ class Glpi94(DyngroupDatabaseHelper):
         try:
             if ret :
                 for keynameresult in ret.keys():
-                    if getattr(ret, keynameresult) is None:
-                        resultrecord[keynameresult] = ""
-                    else:
-                        typestr = str(type(getattr(ret, keynameresult)))
-
-                        if "class" in typestr:
-                            try:
-                                if 'decimal.Decimal' in typestr:
-                                    resultrecord[keynameresult] = float(getattr(ret, keynameresult))
-                                else:
-                                    resultrecord[keynameresult] = str(getattr(ret, keynameresult))
-                            except:
-                                self.logger.warning("type class %s no used for key %s" % (typestr, keynameresult))
-                                resultrecord[keynameresult] = ""
+                    try:
+                        if getattr(ret, keynameresult) is None:
+                            resultrecord[keynameresult] = ""
                         else:
-                            if isinstance(getattr(ret, keynameresult), datetime.datetime):
-                                resultrecord[keynameresult] = getattr(ret, keynameresult).strftime("%m/%d/%Y %H:%M:%S")
+                            typestr = str(type(getattr(ret, keynameresult)))
+                            if "class" in typestr:
+                                try:
+                                    if 'decimal.Decimal' in typestr:
+                                        resultrecord[keynameresult] = float(getattr(ret, keynameresult))
+                                    else:
+                                        resultrecord[keynameresult] = str(getattr(ret, keynameresult))
+                                except:
+                                    self.logger.warning("type class %s no used for key %s" % (typestr, keynameresult))
+                                    resultrecord[keynameresult] = ""
                             else:
-                                resultrecord[keynameresult] = getattr(ret, keynameresult)
+                                if isinstance(getattr(ret, keynameresult), datetime.datetime):
+                                    resultrecord[keynameresult] = getattr(ret, keynameresult).strftime("%m/%d/%Y %H:%M:%S")
+                                else:
+                                    strre = getattr(ret, keynameresult)
+                                    if isinstance(strre, basestring):
+                                        if encode != "utf8":
+                                            resultrecord[keynameresult] =  "%s"%strre.decode(encode).encode('utf8')
+                                        else:
+                                            resultrecord[keynameresult] =  "%s"%strre.encode('utf8')
+                                    else:
+                                        resultrecord[keynameresult] = strre
+                    except AttributeError:
+                        resultrecord[keynameresult] = ""
         except Exception as e:
-                self.logger.error("\n We encountered the error %s" % e)
-                self.logger.error("\n The backtrace is \n%s" % (traceback.format_exc()))
+            self.logger.error("\n We encountered the error %s" % e)
+            self.logger.error("\n The backtrace is \n%s" % (traceback.format_exc()))
         return resultrecord
-    
-    
+
     @DatabaseHelper._sessionm
     def get_machines_list1(self, session, start, end, ctx):
         # start and end are used to set the limit parameter in the query
@@ -4016,12 +4025,6 @@ class Glpi94(DyngroupDatabaseHelper):
         if "contains" in ctx and ctx["contains"] != "":
             contains = ctx["contains"]
 
-        # Get the list of online computers
-        online_machines = []
-        online_machines = XmppMasterDatabase().getlistPresenceMachineid()
-
-        if online_machines is not None:
-            online_machines = [int(id.replace("UUID", "")) for id in online_machines if id != "UUID" and id != ""]
         query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
         .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
         .outerjoin(self.user, Machine.users_id == self.user.c.id)\
@@ -4110,14 +4113,20 @@ class Glpi94(DyngroupDatabaseHelper):
                     pass
 
         query = query.order_by(Machine.name)
+
+        online_machines = []
         # All computers
         if "computerpresence" not in ctx:
             # Do nothing more
             pass
         elif ctx["computerpresence"] == "no_presence":
-            query = query.filter(Machine.id.notin_(online_machines))
+            online_machines = XmppMasterDatabase().getidlistPresenceMachine(presence=False)
         else:
+            online_machines = XmppMasterDatabase().getidlistPresenceMachine(presence=True)
+
+        if online_machines:
             query = query.filter(Machine.id.in_(online_machines))
+
         query = self.__filter_on(query)
 
         # From now we can have the count of machines

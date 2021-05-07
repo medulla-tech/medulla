@@ -566,10 +566,6 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
                      var contains = "";
                      if(typeof(jQuery("#contains").val())!= "undefined")
                       contains = jQuery("#contains").val();
-                       console.log("test")
-                      console.log(encodeURIComponent(document.Form.param.value))
-                     console.log( '<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&field='+field+'&contains='+contains+'&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage +strCheckbox)
-                       console.log("test")
 
                        jQuery.ajax({
                            'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&field='+field+'&contains='+contains+'&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage +strCheckbox,

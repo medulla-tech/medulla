@@ -47,7 +47,6 @@ CREATE TABLE IF NOT EXISTS  `glpi_entity` (
 ADD INDEX IF NOT EXISTS `index_glpi_id` (`glpi_id` ASC);
 
 
-
 CREATE TABLE IF NOT EXISTS  `glpi_location` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `complete_name` varchar(512) NOT NULL,
@@ -59,8 +58,11 @@ CREATE TABLE IF NOT EXISTS  `glpi_location` (
 ALTER TABLE `xmppmaster`.`glpi_location`
 ADD INDEX IF NOT EXISTS `index2` (`glpi_id` ASC);
 
+DELETE FROM `xmppmaster`.`glpi_entity` WHERE 1;
+INSERT INTO `glpi_entity` VALUES (1, 'Root entity', 'Root entity', 0);
 
-
+ALTER TABLE `xmppmaster`.`machines`
+CHANGE COLUMN `glpi_entity_id` `glpi_entity_id` INT(11) DEFAULT 1 ;
 
 ALTER TABLE `xmppmaster`.`machines`
 ADD INDEX IF NOT EXISTS `index_location_entity` (`glpi_entity_id` ASC, `glpi_location_id` ASC);

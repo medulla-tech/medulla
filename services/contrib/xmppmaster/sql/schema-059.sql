@@ -22,23 +22,8 @@
 START TRANSACTION;
 
 USE `xmppmaster`;
-SET FOREIGN_KEY_CHECKS=0;
+ALTER TABLE `xmppmaster`.`machines` CHANGE COLUMN `glpi_description` `glpi_description` TEXT NULL DEFAULT '';
 
--- ----------------------------------------------------------------------
--- Database add colunms in table mon_event
---    - parameter_other : Field reserved for 1 subsequent use 
---    - ack_user        : field used to indicate the user who acquitted the alarm
---    - ack_date        : field used to indicate when the alarm was acquired. 
--- ----------------------------------------------------------------------
-
-ALTER TABLE `xmppmaster`.`mon_event`
-    ADD COLUMN `parameter_other` VARCHAR(1024) NULL DEFAULT NULL AFTER `id_device`,
-    ADD COLUMN `ack_user` VARCHAR(90) NULL DEFAULT NULL AFTER `parameter_other`;
-ALTER TABLE `xmppmaster`.`mon_event` 
-    ADD COLUMN `ack_date` TIMESTAMP NULL DEFAULT NULL AFTER `ack_user`;
-
-
-SET FOREIGN_KEY_CHECKS=1;
 UPDATE version SET Number = 59;
 
 COMMIT;

@@ -52,25 +52,20 @@ if (! in_array("xmppmaster", $_SESSION["supportModList"])) {
 }
 
 function getConvergenceStatus($mountpoint, $pid, $group_convergence_status, $associateinventory) {
-    $return = 0;
+    $ret = 0;
     if ($associateinventory) {
-        if (array_key_exists($mountpoint, $group_convergence_status)) {
-            if (array_key_exists($pid, $group_convergence_status[$mountpoint])) {
-                if ($group_convergence_status[$mountpoint][$pid]) {
-                    $return = 1;
-                }
-                else {
-                    $return = 2;
-                }
-            }
+        if (array_key_exists($pid, $group_convergence_status)) {
+            if ($group_convergence_status[$pid] == 0)
+                $ret = 2;
+            else
+                $ret = 1;
         }
     }
     else {
-        $return = 3;
+        $ret = 3;
     }
-    return $return;
+    return $ret;
 }
-
 
 function prettyConvergenceStatusDisplay($status) {
     switch ($status) {
@@ -85,9 +80,10 @@ function prettyConvergenceStatusDisplay($status) {
             return _T('Not available', 'msc');
     }
 }
+$a_convergence_status = array();
 if ($group != null) {
     $group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
-    $a_convergence_status = array();
+    $group_convergence_status1 = $group_convergence_status['/package_api_get1'];
 }
 $emptyAction = new EmptyActionItem();
 $convergenceAction = new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers");
@@ -161,7 +157,7 @@ foreach ($packages as $c_package) {
         if ($group != null) {
             $current_convergence_status = ($package != null) ? getConvergenceStatus(0,
                                                                $package->id,
-                                                               $group_convergence_status,
+                                                               $group_convergence_status1,
                                                                $package->associateinventory) : null;
             // set param_convergence_edit to True if convergence status is active or inactive
             $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
