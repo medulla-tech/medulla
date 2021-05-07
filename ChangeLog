@@ -7,6 +7,7 @@ Pulse 2 4.6.8 (unreleased)
 * [FEATURE] Rename "Localisation server" to "Share" and remove the search field
 * [FEATURE] Remove "add package" from menu when the user has no writing rights
 * [FEATURE] Update the package parser to catch more errors
+* [FEATURE] Enhance error messages.
 * [FEATURE] Fix several XSS issues.
 * [BUGFIX]  Fix backtrace during deployment
 * [BUGFIX]  Fixes listing of packages for deployment
