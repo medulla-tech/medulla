@@ -748,7 +748,7 @@ def get_xmpprelays_list(start, limit, filter, presence):
 def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
     listidars = []
     arslistextend = []
-
+    objsearch = {}
     if userlogin != "":
         objsearch['login'] = userlogin
         arslistextend = PkgsDatabase().pkgs_search_ars_list_from_cluster_rules(objsearch)
