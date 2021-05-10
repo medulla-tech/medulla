@@ -5588,6 +5588,33 @@ class XmppMasterDatabase(DatabaseHelper):
             result[linemachine.uuid_inventorymachine] = [out, 1 ]
         return result
 
+    @DatabaseHelper._sessionm
+    def update_uuid_inventory(self, session, sql_id, uuid):
+        """
+        This function is used to update the uuid_inventorymachine value
+        in the database for a specific machine.
+        Args:
+            session: The SQLAlchemy session
+            sql_id: the id of the machine in the SQL database
+            uuid: The uuid_inventorymachine of the machine
+        Return:
+           It returns None if it failed to update the machine uuid_inventorymachine.
+        """
+        try:
+            sql = """UPDATE `xmppmaster`.`machines`
+                    SET
+                        `uuid_inventorymachine` = '%s'
+                    WHERE
+                        `id`  = %s;""" % (uuid, sql_id)
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            return result
+        except Exception as e:
+            logging.getLogger().error("Function update_uuid_inventory")
+            logging.getLogger().error("We got the error: %s" % str(e))
+            return None
+
     #topology
     @DatabaseHelper._sessionm
     def listRS(self,session):
