@@ -761,7 +761,8 @@ class Glpi92(DyngroupDatabaseHelper):
 
         # From now we can have the count of machines
         count = query.count()
-
+        # Then continue with others criterions and filters
+        query = query.offset(start).limit(end)
         columns_name = [column['name'] for column in query.column_descriptions]
         machines = query.all()
 
