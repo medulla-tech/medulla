@@ -1897,17 +1897,18 @@ class XmppMasterDatabase(DatabaseHelper):
                                         name)
         return None
     @DatabaseHelper._sessionm
-    def create_Glpi_location( self,
-                            session,
-                            complete_name,
-                            name,
-                            glpi_id):
+    def create_Glpi_location(self,
+                             session,
+                             complete_name,
+                             name,
+                             glpi_id):
         """
             create Glpi_location
         """
         if glpi_id is None or glpi_id == '':
             logging.getLogger().warning("create_Glpi_location glpi_id missing")
             return None
+
         ret = self.get_Glpi_location(glpi_id)
         if ret is None:
             try:
