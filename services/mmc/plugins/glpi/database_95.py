@@ -747,7 +747,7 @@ class Glpi95(DyngroupDatabaseHelper):
 
         # Even if computerpresence is not specified,
         # needed in "all computers" page to know which computer in online or offline
-        online_machines = [int(id) for id in XmppMasterDatabase().getidlistPresenceMachine(presence=True)]
+        online_machines = [int(id) for id in XmppMasterDatabase().getidlistPresenceMachine(presence=True) if id != "UUID" and id != ""]
         if "computerpresence" not in ctx:
             # Do nothing more
             pass
