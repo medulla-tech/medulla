@@ -1897,17 +1897,18 @@ class XmppMasterDatabase(DatabaseHelper):
                                         name)
         return None
     @DatabaseHelper._sessionm
-    def create_Glpi_location( self,
-                            session,
-                            complete_name,
-                            name,
-                            glpi_id):
+    def create_Glpi_location(self,
+                             session,
+                             complete_name,
+                             name,
+                             glpi_id):
         """
             create Glpi_location
         """
         if glpi_id is None or glpi_id == '':
             logging.getLogger().warning("create_Glpi_location glpi_id missing")
             return None
+
         ret = self.get_Glpi_location(glpi_id)
         if ret is None:
             try:
@@ -3398,39 +3399,38 @@ class XmppMasterDatabase(DatabaseHelper):
             machinedeploy =session.query(Deploy.state,
                                          func.count(Deploy.state)).\
                                              filter(and_( Deploy.command == command_id,
-
                                                             Deploy.startcmd == datestart
                                                         )
                                                 ).group_by(Deploy.state)
             machinedeploy = machinedeploy.all()
-            ret = {
-                    'totalmachinedeploy' : 0,
-                    'deploymentsuccess' : 0,
-                    'abortontimeout' : 0,
-                    'abortmissingagent' : 0,
-                    'abortrelaydown' : 0,
-                    'abortalternativerelaysdown' : 0,
-                    'abortinforelaymissing' : 0,
-                    'errorunknownerror' : 0,
-                    'abortpackageidentifiermissing' : 0,
-                    'abortpackagenamemissing' : 0,
-                    'abortpackageversionmissing' : 0,
-                    'abortpackageworkflowerror' : 0,
-                    'abortdescriptormissing' : 0,
-                    'abortmachinedisappeared' : 0,
-                    'abortdeploymentcancelledbyuser' : 0,
-                    'aborttransferfailed' : 0,
-                    'abortpackageexecutionerror' : 0,
-                    'deploymentstart' : 0,
-                    'wol1' : 0,
-                    'wol2' : 0,
-                    'wol3' : 0,
-                    'waitingmachineonline' : 0,
-                    'deploymentpending' : 0,
-                    'deploymentdelayed' : 0,
-                    'deploymentspooled' : 0,
-                    'otherstatus' : 0,
-                    }
+            ret = {'totalmachinedeploy': 0,
+                   'deploymentsuccess': 0,
+                   'abortontimeout': 0,
+                   'abortmissingagent': 0,
+                   'abortinconsistentglpiinformation': 0,
+                   'abortrelaydown': 0,
+                   'abortalternativerelaysdown': 0,
+                   'abortinforelaymissing': 0,
+                   'errorunknownerror': 0,
+                   'abortpackageidentifiermissing': 0,
+                   'abortpackagenamemissing': 0,
+                   'abortpackageversionmissing': 0,
+                   'abortpackageworkflowerror': 0,
+                   'abortdescriptormissing': 0,
+                   'abortmachinedisappeared': 0,
+                   'abortdeploymentcancelledbyuser': 0,
+                   'aborttransferfailed': 0,
+                   'abortpackageexecutionerror': 0,
+                   'deploymentstart': 0,
+                   'wol1': 0,
+                   'wol2': 0,
+                   'wol3': 0,
+                   'waitingmachineonline': 0,
+                   'deploymentpending': 0,
+                   'deploymentdelayed': 0,
+                   'deploymentspooled': 0,
+                   'otherstatus': 0,
+                  }
             dynamic_status_list = self.get_log_status()
             dynamic_label = []
             dynamic_status = []
@@ -3451,6 +3451,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['abortontimeout'] = liststatus[t]
                 elif t == 'ABORT MISSING AGENT':
                     ret['abortmissingagent'] = liststatus[t]
+                elif t == 'ABORT INCONSISTENT GLPI INFORMATION':
+                    ret['abortinconsistentglpiinformation'] = liststatus[t]
                 elif t == 'ABORT RELAY DOWN':
                     ret['abortrelaydown'] = liststatus[t]
                 elif t == 'ABORT ALTERNATIVE RELAYS DOWN':
@@ -3475,7 +3477,6 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['abortdeploymentcancelledbyuser'] = liststatus[t]
                 elif t == 'ABORT PACKAGE EXECUTION ERROR':
                     ret['abortpackageexecutionerror'] = liststatus[t]
-
                 elif t == 'DEPLOYMENT START':
                     ret['deploymentstart'] = liststatus[t]
                 elif t == 'WOL 1':
@@ -3499,6 +3500,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return ret
         except Exception:
             return ret
+
 
     @DatabaseHelper._sessionm
     def getdeployment(self, session, command_id, filter="", start=0, limit=-1):
@@ -5586,6 +5588,33 @@ class XmppMasterDatabase(DatabaseHelper):
                 out = 1
             result[linemachine.uuid_inventorymachine] = [out, 1 ]
         return result
+
+    @DatabaseHelper._sessionm
+    def update_uuid_inventory(self, session, sql_id, uuid):
+        """
+        This function is used to update the uuid_inventorymachine value
+        in the database for a specific machine.
+        Args:
+            session: The SQLAlchemy session
+            sql_id: the id of the machine in the SQL database
+            uuid: The uuid_inventorymachine of the machine
+        Return:
+           It returns None if it failed to update the machine uuid_inventorymachine.
+        """
+        try:
+            sql = """UPDATE `xmppmaster`.`machines`
+                    SET
+                        `uuid_inventorymachine` = '%s'
+                    WHERE
+                        `id`  = %s;""" % (uuid, sql_id)
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            return result
+        except Exception as e:
+            logging.getLogger().error("Function update_uuid_inventory")
+            logging.getLogger().error("We got the error: %s" % str(e))
+            return None
 
     #topology
     @DatabaseHelper._sessionm

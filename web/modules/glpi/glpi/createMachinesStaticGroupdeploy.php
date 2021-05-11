@@ -58,6 +58,9 @@ if($criterion == '')
     case 'abortmissingagent':
       $criterion = "ABORT MISSING AGENT";
       break;
+    case 'abortinconsistentglpiinformation':
+      $criterion = "ABORT INCONSISTENT GLPI INFORMATION";
+      break;
     case 'abortrelaydown':
       $criterion = "ABORT RELAY DOWN";
       break;

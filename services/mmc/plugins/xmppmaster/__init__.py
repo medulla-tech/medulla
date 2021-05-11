@@ -748,7 +748,7 @@ def get_xmpprelays_list(start, limit, filter, presence):
 def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
     listidars = []
     arslistextend = []
-
+    objsearch = {}
     if userlogin != "":
         objsearch['login'] = userlogin
         arslistextend = PkgsDatabase().pkgs_search_ars_list_from_cluster_rules(objsearch)
@@ -1013,24 +1013,25 @@ def get_packages_list(jid, CGIGET=""):
         pp=[]
         if filter != "":
             for package in packages['datas']:
-                if re.search(filter, package['description']) or\
-                    re.search(filter, package['name']) or\
-                    re.search(filter, package['version']) or\
-                    re.search(filter, package['targetos']) or\
-                    re.search(filter, package['methodtransfer']) or\
-                    re.search(filter, package['metagenerator']):
+                if re.search(filter, package['description'], re.IGNORECASE) or\
+                    re.search(filter, package['name'], re.IGNORECASE) or\
+                    re.search(filter, package['version'], re.IGNORECASE) or\
+                    re.search(filter, package['targetos'], re.IGNORECASE) or\
+                    re.search(filter, package['methodtransfer'], re.IGNORECASE) or\
+                    re.search(filter, package['metagenerator'], re.IGNORECASE):
                     pp.append(package)
         else:
             pp= packages['datas']
         for package in pp[start:end]:
             nb_dataset+=1
+            package['files'] = [[str(elem) for elem in _file] for _file in package['files']]
             _result['datas']['files'].append(package['files'])
             _result['datas']['description'].append(package['description'])
             _result['datas']['licenses'].append(package['licenses'])
             _result['datas']['name'].append(package['name'])
             _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
             _result['datas']['os'].append(package['targetos'])
-            _result['datas']['size'].append(package['size'])
+            _result['datas']['size'].append(str(package['size']))
             _result['datas']['version'].append(package['version'])
             _result['datas']['methodtransfer'].append(package['methodtransfer'])
             _result['datas']['metagenerator'].append(package['metagenerator'])
