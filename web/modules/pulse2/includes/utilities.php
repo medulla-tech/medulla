@@ -137,7 +137,7 @@ function clean_xss($value){
    */
   $binaryPattern = '#(%[0-9a-z]{2})#i';
   $tagsPattern = '#<[^>]*>#i';
-  $closurePattern = '#[ ?>|\' ?>;"\']#i';
+  $closurePattern = '#([\' ?"]>)#i';
 
   if(is_array($value)){
     foreach($value as $_value){
