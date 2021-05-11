@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2021
+# Yuri Chornoivan <yurchor@ukr.net>, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-02 15:57+0100\n"
+"POT-Creation-Date: 2021-04-01 11:32+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +51,7 @@ msgid "Add a package"
 msgstr "Додати пакунок"
 
 #: modules/pkgs/infoPackage.inc.php:71
-#: modules/pkgs/pkgs/ajaxPackageList.php:82 modules/pkgs/pkgs/edit.php:193
+#: modules/pkgs/pkgs/ajaxPackageList.php:71 modules/pkgs/pkgs/edit.php:193
 msgid "Edit a package"
 msgstr "Редагувати пакунок"
 
@@ -77,7 +77,7 @@ msgid "Pending Package synchronization"
 msgstr "Черга синхронізації пакунків"
 
 #: modules/pkgs/infoPackage.inc.php:119
-#: modules/pkgs/pkgs/ajaxPackageList.php:86
+#: modules/pkgs/pkgs/ajaxPackageList.php:75
 msgid "Delete a package"
 msgstr "Вилучити пакунок"
 
@@ -117,44 +117,93 @@ msgstr "Оновлення Appstream"
 msgid "Appstream update"
 msgstr "Оновлення Appstream"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:83
+#: modules/pkgs/pkgs/ajaxPackageList.php:72
 msgid "Please switch to Expert mode to edit this package"
 msgstr ""
 "Будь ласка, перемкніться на режим досвідченого користувача, щоб редагувати "
 "цей пакунок"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:191
+#: modules/pkgs/pkgs/ajaxPackageList.php:73
+msgid "You must have write rights to edit this package"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:76
+msgid "You must have write rights to delete this package"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:139
+#: modules/pkgs/pkgs/ajaxPackageList.php:143
+msgid "Sharing disk usage"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:139
+msgid "Package occupation"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:142
+msgid "Not limited"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:143
+#: modules/pkgs/pkgs/ajaxPackageList.php:159
+msgid "not limited"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:173
+msgid "Non precised"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:287
+#: modules/pkgs/pkgs/ajaxPackageList.php:429
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
 msgid "Package name"
 msgstr "Назва пакунка"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:193 modules/pkgs/pkgs/addRule.php:60
+#: modules/pkgs/pkgs/ajaxPackageList.php:289 modules/pkgs/pkgs/edit.php:301
+#: modules/pkgs/pkgs/add.php:219
+msgid "Share"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:290
+msgid "Permissions"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:292
+#: modules/pkgs/pkgs/ajaxPackageList.php:431 modules/pkgs/pkgs/addRule.php:60
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:240 modules/pkgs/pkgs/editRule.php:65
-#: modules/pkgs/pkgs/add.php:198
+#: modules/pkgs/pkgs/edit.php:244 modules/pkgs/pkgs/editRule.php:65
+#: modules/pkgs/pkgs/add.php:227
 msgid "Description"
 msgstr "Опис"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:194
+#: modules/pkgs/pkgs/ajaxPackageList.php:293
+#: modules/pkgs/pkgs/ajaxPackageList.php:432
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-#: modules/pkgs/pkgs/add.php:197 modules/pkgs/includes/query.php:88
+#: modules/pkgs/pkgs/add.php:226 modules/pkgs/includes/query.php:88
 msgid "Version"
 msgstr "Версія"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:195
+#: modules/pkgs/pkgs/ajaxPackageList.php:294
+#: modules/pkgs/pkgs/ajaxPackageList.php:433
 msgid "Licenses"
 msgstr "Ліцензії"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:196
+#: modules/pkgs/pkgs/ajaxPackageList.php:295
+#: modules/pkgs/pkgs/ajaxPackageList.php:434
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:71
 msgid "Os"
 msgstr "ОС"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:197
+#: modules/pkgs/pkgs/ajaxPackageList.php:296
+#: modules/pkgs/pkgs/ajaxPackageList.php:435
 msgid "Package size"
 msgstr "Розмір пакунка"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:297
+msgid "Share usage"
+msgstr ""
 
 #: modules/pkgs/pkgs/addXMPP.php:40
 msgid "Available Actions"
@@ -309,7 +358,7 @@ msgid "Element in Strings Result"
 msgstr "Елемент у результаті Strings"
 
 #: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
-#: modules/pkgs/pkgs/add.php:342
+#: modules/pkgs/pkgs/add.php:375
 msgid "Add"
 msgstr "Додати"
 
@@ -390,119 +439,123 @@ msgstr "Не вдалося пов'язати файли"
 msgid "Package failed to save"
 msgstr "Не вдалося зберегти пакунок"
 
-#: modules/pkgs/pkgs/edit.php:170
+#: modules/pkgs/pkgs/edit.php:171
 #, php-format
 msgid "Failed to delete files%s"
 msgstr "Не вдалося вилучити файли%s"
 
-#: modules/pkgs/pkgs/edit.php:172 modules/pkgs/pkgs/edit.php:177
+#: modules/pkgs/pkgs/edit.php:173 modules/pkgs/pkgs/edit.php:178
 #, php-format
 msgid "<br/>File successfully deleted. %s"
 msgstr "<br/>Файл успішно вилучено. %s"
 
-#: modules/pkgs/pkgs/edit.php:182
+#: modules/pkgs/pkgs/edit.php:183
 msgid "Failed to delete files"
 msgstr "Не вдалося вилучити файли"
 
-#: modules/pkgs/pkgs/edit.php:238
+#: modules/pkgs/pkgs/edit.php:242
 msgid "Package label"
 msgstr "Мітка пакунка"
 
-#: modules/pkgs/pkgs/edit.php:239
+#: modules/pkgs/pkgs/edit.php:243
 msgid "Package version"
 msgstr "Версія пакунка"
 
-#: modules/pkgs/pkgs/edit.php:248 modules/pkgs/pkgs/add.php:213
+#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:242
 msgid "Command's name : "
 msgstr "Назва програми: "
 
-#: modules/pkgs/pkgs/edit.php:248
+#: modules/pkgs/pkgs/edit.php:252
 msgid "Command : "
 msgstr "Команда:"
 
-#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:217
+#: modules/pkgs/pkgs/edit.php:256 modules/pkgs/pkgs/add.php:246
 msgid "Need a reboot ?"
 msgstr "Потребує перезавантаження?"
 
-#: modules/pkgs/pkgs/edit.php:259 modules/pkgs/pkgs/add.php:222
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:251
 msgid "Windows"
 msgstr "Windows"
 
-#: modules/pkgs/pkgs/edit.php:259 modules/pkgs/pkgs/add.php:222
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:251
 msgid "Linux"
 msgstr "Linux"
 
-#: modules/pkgs/pkgs/edit.php:259 modules/pkgs/pkgs/add.php:222
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:251
 msgid "Mac OS"
 msgstr "Mac OS"
 
-#: modules/pkgs/pkgs/edit.php:279 modules/pkgs/pkgs/add.php:241
+#: modules/pkgs/pkgs/edit.php:330 modules/pkgs/pkgs/add.php:270
 msgid "Operating System"
 msgstr "Операційна система"
 
-#: modules/pkgs/pkgs/edit.php:309 modules/pkgs/pkgs/add.php:261
+#: modules/pkgs/pkgs/edit.php:360 modules/pkgs/pkgs/add.php:290
 msgid "Transfer method"
 msgstr "Спосіб передавання"
 
-#: modules/pkgs/pkgs/edit.php:322 modules/pkgs/pkgs/add.php:267
+#: modules/pkgs/pkgs/edit.php:373 modules/pkgs/pkgs/add.php:296
 msgid "bandwidth throttling (ko)"
 msgstr "звуження каналу (кілооктети)"
 
-#: modules/pkgs/pkgs/edit.php:322 modules/pkgs/pkgs/add.php:267
+#: modules/pkgs/pkgs/edit.php:373 modules/pkgs/pkgs/add.php:297
 msgid "<in ko>"
 msgstr "<у ko>"
 
-#: modules/pkgs/pkgs/edit.php:334 modules/pkgs/pkgs/add.php:271
+#: modules/pkgs/pkgs/edit.php:385 modules/pkgs/pkgs/add.php:301
 msgid "high priority"
 msgstr "висока пріоритетність"
 
-#: modules/pkgs/pkgs/edit.php:334 modules/pkgs/pkgs/add.php:271
+#: modules/pkgs/pkgs/edit.php:385 modules/pkgs/pkgs/add.php:301
 msgid "ordinary priority"
 msgstr "звичайна пріоритетність"
 
-#: modules/pkgs/pkgs/edit.php:337 modules/pkgs/pkgs/add.php:274
+#: modules/pkgs/pkgs/edit.php:388 modules/pkgs/pkgs/add.php:304
 msgid "Spooling"
 msgstr "Буферизація"
 
-#: modules/pkgs/pkgs/edit.php:369 modules/pkgs/pkgs/add.php:281
+#: modules/pkgs/pkgs/edit.php:421 modules/pkgs/pkgs/add.php:312
 msgid "Dependencies"
 msgstr "Залежності"
 
-#: modules/pkgs/pkgs/edit.php:379 modules/pkgs/pkgs/add.php:291
+#: modules/pkgs/pkgs/edit.php:431 modules/pkgs/pkgs/add.php:322
 msgid "Added dependencies"
 msgstr "Додані залежності"
 
-#: modules/pkgs/pkgs/edit.php:394 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:446 modules/pkgs/pkgs/add.php:337
 msgid "Available dependencies"
 msgstr "Доступні залежності"
 
-#: modules/pkgs/pkgs/edit.php:443
+#: modules/pkgs/pkgs/edit.php:447 modules/pkgs/pkgs/add.php:338
+msgid "search by name ..."
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:495
 msgid "File"
 msgstr "Файл"
 
-#: modules/pkgs/pkgs/edit.php:452
+#: modules/pkgs/pkgs/edit.php:504
 msgid "Delete file"
 msgstr "Вилучити файл"
 
-#: modules/pkgs/pkgs/edit.php:452
+#: modules/pkgs/pkgs/edit.php:504
 msgid "Are you sure you want to delete this file?"
 msgstr "Ви справді хочете вилучити цей файл?"
 
-#: modules/pkgs/pkgs/edit.php:468
+#: modules/pkgs/pkgs/edit.php:520
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 #: modules/pkgs/includes/html.inc.php:59
 msgid "Click here to select files"
 msgstr "Натисніть, щоб вибрати файли"
 
-#: modules/pkgs/pkgs/edit.php:469
+#: modules/pkgs/pkgs/edit.php:521
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 #: modules/pkgs/includes/html.inc.php:42
 msgid "Upload Queued Files"
 msgstr "Вивантажити файли з черги"
 
-#: modules/pkgs/pkgs/edit.php:499 modules/pkgs/pkgs/add.php:359
-msgid "Accentuated and special characters are not allowed"
-msgstr "Не можна використовувати символи з акцентами або спеціальні символи"
+#: modules/pkgs/pkgs/edit.php:576 modules/pkgs/pkgs/add.php:417
+msgid "Accentuated and special chars are not allowed"
+msgstr ""
 
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
@@ -579,7 +632,7 @@ msgstr "Створити порожній пакунок"
 msgid "Package source"
 msgstr "Джерело пакунка"
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:439
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:496
 msgid "Files directory"
 msgstr "Каталог файлів"
 
@@ -587,19 +640,19 @@ msgstr "Каталог файлів"
 msgid "Package Creation"
 msgstr "Створення пакунка"
 
-#: modules/pkgs/pkgs/add.php:196
+#: modules/pkgs/pkgs/add.php:225
 msgid "Name"
 msgstr "Назва"
 
-#: modules/pkgs/pkgs/add.php:196
+#: modules/pkgs/pkgs/add.php:225
 msgid "<fill_package_name>"
 msgstr "<вкажіть_назву_пакунка>"
 
-#: modules/pkgs/pkgs/add.php:205
+#: modules/pkgs/pkgs/add.php:234
 msgid "Command:"
 msgstr "Команда:"
 
-#: modules/pkgs/pkgs/add.php:206
+#: modules/pkgs/pkgs/add.php:235
 msgid ""
 "Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
 "        If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
@@ -613,12 +666,12 @@ msgstr ""
 "        Крім того, ви можете пошукати у Google параметри команди для автоматичного встановлення. Якщо вам скрізь таланить, можете спробувати ось таку адресу для пошуку у Google:\\n\\n\n"
 "        <a href=\"@@GOOGLE_SEARCH_URL@@\">Пошук у Google</a>"
 
-#: modules/pkgs/pkgs/add.php:461
+#: modules/pkgs/pkgs/add.php:518
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Вивантаження файлів (<b><u title='%s'>макс. %s МБ</u></b>)"
 
-#: modules/pkgs/pkgs/add.php:461
+#: modules/pkgs/pkgs/add.php:518
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."

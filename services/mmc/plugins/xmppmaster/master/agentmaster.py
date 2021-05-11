@@ -156,9 +156,9 @@ def callremotecommandshell(jidmachine, command="", timeout=20):
                                                  "timeout": timeout}, timeout)
 
 
-def callremoteXmppMonitoring(jidmachine, suject,  timeout=15):
+def callremoteXmppMonitoring(jidmachine, subject,  timeout=15):
     return ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotexmppmonitoring",
-                                                 "data": suject,
+                                                 "data": subject,
                                                  "timeout": timeout}, timeout)
 
 def calllocalfile(currentdir=""):
@@ -284,7 +284,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 os.path.join(os.path.dirname(os.path.realpath(__file__)),"..",
                              namelibplugins))
         logger.debug('Module path plugin xmppmaster is %s'%self.modulepath)
-        self.listmodulemmc = PluginManager().getAvailablePlugins()
+        self.listmodulemmc = PluginManager().getEnabledPluginNames()
         self.config = conf
         self.session = session()
         self.domaindefault = "pulse"
@@ -671,7 +671,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     XmppMasterDatabase().update_state_deploy(int(machine['id']), "DEPLOYMENT START")
                     #"relance deployement on machine online"
                     # il faut verifier qu'il y ai 1 groupe deja en syncthing.alors seulement on peut decoder de l'incorporer
-                    if data['advanced']['grp'] is not None and \
+                    if 'grp' in data['advanced'] and data['advanced']['grp'] is not None and \
                         'syncthing' in data['advanced'] and \
                             data['advanced']['syncthing'] == 1 and \
                                 XmppMasterDatabase().nbsyncthingdeploy(machine['group_uuid'],
@@ -781,7 +781,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     XmppMasterDatabase().refresh_syncthing_deploy_clean(deploydata['id'])
         except Exception:
             pass
-        listobjnoexist = []
+        #listobjnoexist = []
         listobjsupp = []
         #search deploy to rumming
         resultdeploymachine = MscDatabase().deployxmpp()
@@ -789,11 +789,38 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for deployobject in resultdeploymachine:
             # creation deployment
             UUID = deployobject['UUID']
+            UUIDSTR = UUID.replace('UUID', "")
             resultpresence = XmppMasterDatabase().getPresenceExistuuids(UUID)
             if resultpresence[UUID][1] == 0:
-                sessiondeployementless = name_random(5, "missingagent")
-                # machine dans GLPI mais pas enregistré sur tavle machine xmpp.
-                listobjnoexist.append(deployobject)
+                re_search = XmppMasterDatabase().getMachinedeployexistonHostname(deployobject['name'])
+                if re_search:
+                    msg.append( "<span class='log_err'>Consolidation GLPI XMPP ERROR for machine %s. " \
+                                "Deployment impossible : GLPI ID is %s</span>" % (deployobject['name'],
+                                                                                    UUIDSTR))
+                    for mach in re_search:
+                        msg.append( "<span> Action : Please check"\
+                            " that mac address or serial is/are properly"\
+                                " imported in GLPI: serial (%s) or macs(%s)</span>"% (mach['serial'],
+                                                                                    mach['macs']))
+                    MSG_ERROR = "ABORT INCONSISTENT GLPI INFORMATION"
+                    sessiondeployementless = name_random(5, "glpixmppconsolidationerror")
+                else:
+                    MSG_ERROR = "ABORT MISSING AGENT"
+                    sessiondeployementless = name_random(5, "missingagent")
+                    msg.append( "<span class='log_err'>Agent missing on machine %s. " \
+                                "Deployment impossible : GLPI ID is %s</span>" % (deployobject['name'],
+                                                                                    UUIDSTR))
+                    msg.append( "Action : Check that the machine "\
+                                "agent is working, or install the agent on the"\
+                                " machine %s (%s) if it is missing." % (deployobject['name'],
+                                                                        UUIDSTR))
+
+                    logging.warning("No machine found on hostname. You must verify consolidation GLPI with xmpp")
+                    logging.warning("INFO\nGLPI : name %s uuid %s " % (deployobject['name'],
+                                                                    deployobject['UUID']))
+                    logging.warning("INFO\nXMPP : No machine found for %s" % (deployobject['name']))
+
+
                 #incrition dans deploiement cette machine sans agent
                 XmppMasterDatabase().adddeploy(deployobject['commandid'],
                                                 deployobject['name'],

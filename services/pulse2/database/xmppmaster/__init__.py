@@ -217,7 +217,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             q = session.query(Agentsubscription)
             q = q.filter(Agentsubscription.name == name)
-            record = q.one_or_none()
+            record = q.first()
             if record:
                 record.name = name
                 session.commit()
@@ -227,6 +227,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 return self.setagentsubscription(name)
         except Exception as e:
             logging.getLogger().error(str(e))
+            return None
 
     @DatabaseHelper._sessionm
     def setSubscription(self,
@@ -259,7 +260,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             q = session.query(Subscription)
             q = q.filter(Subscription.macadress == macadress)
-            record = q.one_or_none()
+            record = q.first()
             if record:
                 record.macadress = macadress
                 record.idagentsubscription = idagentsubscription
@@ -270,6 +271,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 return self.setSubscription(macadress, idagentsubscription)
         except Exception as e:
             logging.getLogger().error(str(e))
+            return None
 
     @DatabaseHelper._sessionm
     def setuplistSubscription(self,
@@ -877,8 +879,409 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
+    def getRelayServerfromid(self, session, ids):
+        """
+            This function is used to obtain the relayservers infos
+            based on the ids
+            Args:
+                session: The SQLAlchemy session
+                ids: ids of the relayservers
+            Returns:
+                It returns the complete infos of the relayservers
+        """
+        relayserver_list = []
+        if isinstance(ids, basestring):
+            ids = ids.split(',')
+        elif isinstance(ids, int):
+            ids = [ids]
+
+        try:
+            relayservers = session.query(RelayServer).filter(RelayServer.id.in_(ids))
+            relayservers = relayservers.all()
+            session.commit()
+            session.flush()
+            for relayserver in relayservers:
+                res = {'id': relayserver.id,
+                       'urlguacamole': relayserver.urlguacamole,
+                       'subnet': relayserver.subnet,
+                       'nameserver' : relayserver.nameserver,
+                       'ipserver': relayserver.ipserver,
+                       'ipconnection' : relayserver.ipconnection,
+                       'port': relayserver.port,
+                       'portconnection': relayserver.portconnection,
+                       'mask': relayserver.mask,
+                       'jid': relayserver.jid,
+                       'longitude': relayserver.longitude,
+                       'latitude': relayserver.latitude,
+                       'enabled': relayserver.enabled,
+                       'switchonoff': relayserver.switchonoff,
+                       'mandatory': relayserver.mandatory,
+                       'classutil': relayserver.classutil,
+                       'groupdeploy': relayserver.groupdeploy,
+                       'package_server_ip': relayserver.package_server_ip,
+                       'package_server_port': relayserver.package_server_port,
+                       'moderelayserver': relayserver.moderelayserver
+                    }
+                relayserver_list.append(res)
+            return relayserver_list
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            traceback.print_exc(file=sys.stdout)
+            return relayserver_list
+
+    @DatabaseHelper._sessionm
+    def get_Arsid_list_from_clusterid_list(self,
+                                           session,
+                                           idscluster):
+        """
+            This function returns the list of the ars from a cluster id or cluster cluster list id.
+            Args:
+                session: The SQLAlchemy session
+                idscluster: cluster id or cluster list id
+            Returns:
+                It returns the list of the ARS contained in the cluster(s)
+        """
+        if isinstance( idscluster, basestring ):
+            idscluster = [ idscluster.strip() ]
+
+        if not idscluster:
+            return []
+        strlistcluster = ",".join([str(x) for x in idscluster])
+        sql="""SELECT
+                    id_ars
+                FROM
+                    xmppmaster.has_cluster_ars
+                WHERE
+                    id_cluster IN (%s);""" % strlistcluster
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._sessionm
+    def get_List_Mutual_ARS_from_cluster_of_one_idars(self, session, idars):
+        """
+            This function returns the list of the ars from a cluster based
+            on the id of one provided ARS.
+            Args:
+                session: The SQLAlchemy session
+                idars: The id of the ARS
+            Returns:
+                It returns the list of the ARS contained in the cluster
+
+        """
+        sql = """SELECT
+                    id_ars
+                 FROM
+                     xmppmaster.has_cluster_ars
+                 WHERE
+                    id_cluster IN (SELECT
+                            id_cluster
+                        FROM
+                            xmppmaster.has_cluster_ars
+                        WHERE
+                            id_ars = %d);""" % idars
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x[0] for x in result]
+
+    @DatabaseHelper._sessionm
+    def get_List_Mutual_ARS_from_cluster_of_list_idars(self, session, listidars):
+        """
+            This function returns the list of the ars from a cluster based
+            on the list id of one provided ARS.
+            Args:
+                session: The SQLAlchemy session
+                idars: The id of the ARS
+            Returns:
+                It returns the list of the ARS contained in the cluster
+
+        """
+        listin = "%s"%  ",".join([str(x) for x in listidars])
+        sql = """SELECT
+                    id_ars
+                 FROM
+                     xmppmaster.has_cluster_ars
+                 WHERE
+                    id_cluster IN (SELECT
+                            id_cluster
+                        FROM
+                            xmppmaster.has_cluster_ars
+                        WHERE
+                            id_ars in  (%s));""" % listin
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x[0] for x in result]
+
+    @DatabaseHelper._sessionm
+    def get_stat_ars_machine(self, session, listarsjid):
+        listin = ",".join(["'%s'" % x for  x in listarsjid])
+        sql="""
+            SELECT
+                groupdeploy,
+                SUM(CASE
+                    WHEN (LOCATE('linux', platform)) THEN 1
+                    ELSE 0
+                END) AS nblinuxmachine,
+                SUM(CASE
+                    WHEN (LOCATE('windows', platform)) THEN 1
+                    ELSE 0
+                END) AS nbwindows,
+                SUM(CASE
+                    WHEN (LOCATE('darwin', platform)) THEN 1
+                    ELSE 0
+                END) AS nbdarwin,
+                SUM(CASE
+                    WHEN (enabled = '1') THEN 1
+                    ELSE 0
+                END) AS mach_on,
+                SUM(CASE
+                    WHEN (enabled = '0') THEN 1
+                    ELSE 0
+                END) AS mach_off,
+                SUM(CASE
+                    WHEN (uuid_inventorymachine IS NULL) THEN 1
+                    ELSE 0
+                END) AS uninventoried,
+                SUM(CASE
+                    WHEN (uuid_inventorymachine IS NOT NULL) THEN 1
+                    ELSE 0
+                END) AS inventoried,
+                SUM(CASE
+                    WHEN
+                        (enabled = '1'
+                            AND uuid_inventorymachine IS NULL)
+                    THEN
+                        1
+                    ELSE 0
+                END) AS uninventoried_online,
+                SUM(CASE
+                    WHEN
+                        (enabled = '0'
+                            AND uuid_inventorymachine IS NULL)
+                    THEN
+                        1
+                    ELSE 0
+                END) AS uninventoried_offline,
+                SUM(CASE
+                    WHEN
+                        (enabled = 1
+                            AND uuid_inventorymachine IS NOT NULL)
+                    THEN
+                        1
+                    ELSE 0
+                END) AS inventoried_online,
+                SUM(CASE
+                    WHEN
+                        (enabled = '0'
+                            AND uuid_inventorymachine IS NOT NULL)
+                    THEN
+                        1
+                    ELSE 0
+                END) AS inventoried_offline,
+                SUM(CASE
+                    WHEN id THEN 1
+                    ELSE 0
+                END) AS nbmachine,
+                SUM(CASE
+                    WHEN (COALESCE(uuid_serial_machine, '') != '') THEN 1
+                    ELSE 0
+                END) AS with_uuid_serial,
+                SUM(CASE
+                    WHEN (classutil = 'both') THEN 1
+                    ELSE 0
+                END) AS bothclass,
+                SUM(CASE
+                    WHEN (classutil = 'public') THEN 1
+                    ELSE 0
+                END) AS publicclass,
+                SUM(CASE
+                    WHEN (classutil = 'private') THEN 1
+                    ELSE 0
+                END) AS privateclass,
+                SUM(CASE
+                    WHEN (COALESCE(ad_ou_user, '') != '') THEN 1
+                    ELSE 0
+                END) AS nb_ou_user,
+                SUM(CASE
+                    WHEN (COALESCE(ad_ou_machine, '') != '') THEN 1
+                    ELSE 0
+                END) AS nb_OU_mach,
+                SUM(CASE
+                    WHEN (kiosk_presence = 'True') THEN 1
+                    ELSE 0
+                END) AS kioskon,
+                SUM(CASE
+                    WHEN (kiosk_presence = 'FALSE') THEN 1
+                    ELSE 0
+                END) AS kioskoff,
+                SUM(CASE
+                    WHEN need_reconf THEN 1
+                    ELSE 0
+                END) AS nbmachinereconf
+            FROM
+                machines
+            WHERE
+                groupdeploy IN (%s)
+                    AND agenttype = 'machine'
+            GROUP BY groupdeploy;"""%listin
+
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        resultatout = {}
+        if result:
+            for row in result:
+                resultatout[row[0]]={}
+                resultatout[row[0]]['nblinuxmachine'] = int(row[1])
+                resultatout[row[0]]['nbwindows'] = int(row[2])
+                resultatout[row[0]]['nbdarwin'] = int(row[3])
+                resultatout[row[0]]['mach_on'] = int(row[4])
+                resultatout[row[0]]['mach_off'] = int(row[5])
+                resultatout[row[0]]['uninventoried'] = int(row[6])
+                resultatout[row[0]]['inventoried'] = int(row[7])
+                resultatout[row[0]]['uninventoried_online'] = int(row[8])
+                resultatout[row[0]]['uninventoried_offline'] = int(row[9])
+                resultatout[row[0]]['inventoried_online'] = int(row[10])
+                resultatout[row[0]]['inventoried_offline'] = int(row[11])
+                resultatout[row[0]]['nbmachine'] = int(row[12])
+                resultatout[row[0]]['with_uuid_serial'] = int(row[13])
+                resultatout[row[0]]['bothclass'] = int(row[14])
+                resultatout[row[0]]['publicclass'] = int(row[15])
+                resultatout[row[0]]['privateclass'] = int(row[16])
+                resultatout[row[0]]['nb_ou_user'] = int(row[17])
+                resultatout[row[0]]['nb_OU_mach'] = int(row[18])
+                resultatout[row[0]]['kioskon'] = int(row[19])
+                resultatout[row[0]]['kioskoff'] = int(row[20])
+                resultatout[row[0]]['nbmachinereconf'] = int(row[21])
+        return resultatout
+
+    @DatabaseHelper._sessionm
+    def get_ars_list_belongs_cluster(self, session, listidars, start, limit, filter):
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        resultobj ={'id': [],
+                    'hostname': [],
+                    'jid': [],
+                    'jid_from_relayserver': [],
+                    'cluster_name': [],
+                    'cluster_description': [],
+                    'classutil': [],
+                    'macaddress': [],
+                    'ip_xmpp': [],
+                    'enabled': [],
+                    'enabled_css': [],
+                    'mandatory': [],
+                    'switchonoff': []}
+
+        count = 0
+        # filter activate
+        filterars = ""
+        if filter != "":
+            filterars = """ AND (relayserver.subnet LIKE '%%%s%%' OR
+                relayserver.nameserver LIKE '%%%s%%' OR
+                relayserver.ipserver LIKE '%%%s%%' OR
+                relayserver.ipconnection LIKE '%%%s%%' OR
+                relayserver.port LIKE '%%%s%%' OR
+                relayserver.portconnection LIKE '%%%s%%' OR
+                relayserver.mask LIKE '%%%s%%' OR
+                relayserver.jid LIKE '%%%s%%' OR
+                relayserver.longitude LIKE '%%%s%%' OR
+                relayserver.latitude LIKE '%%%s%%' OR
+                relayserver.classutil LIKE '%%%s%%' OR
+                relayserver.groupdeploy LIKE '%%%s%%' OR
+                relayserver.package_server_ip LIKE '%%%s%%' OR
+                relayserver.package_server_port LIKE '%%%s%%' OR
+                relayserver.syncthing_port LIKE '%%%s%%') """ % (filter,filter,filter,filter,filter,
+                                                                 filter,filter,filter,filter,filter,
+                                                                 filter,filter,filter,filter,filter)
+
+        if listidars:
+            listin = "%s"%  ",".join([str(x) for x in listidars])
+            sql="""
+                SELECT SQL_CALC_FOUND_ROWS
+                    relayserver.id AS relayserver_id,
+                    relayserver.ipserver AS relayserver_ipserver,
+                    relayserver.nameserver AS relayserver_nameserver,
+                    relayserver.moderelayserver AS relayserver_moderelayserver,
+                    relayserver.jid AS jid_from_relayserver,
+                    relayserver.classutil AS relayserver_classutil,
+                    relayserver.enabled AS relayserver_enabled,
+                    relayserver.switchonoff AS relayserver_switchonoff,
+                    relayserver.mandatory AS relayserver_mandatory,
+                    machines.jid AS machines_jid,
+                    cluster_ars.name AS cluster_name,
+                    cluster_ars.description AS cluster_description,
+                    cluster_ars.id AS cluster_id,
+                    machines.macaddress AS macaddress
+                FROM
+                    relayserver
+                        LEFT OUTER JOIN
+                    has_cluster_ars ON has_cluster_ars.id_ars = relayserver.id
+                        LEFT OUTER JOIN
+                    cluster_ars ON cluster_ars.id = has_cluster_ars.id_cluster
+                        LEFT OUTER JOIN
+                    machines ON SUBSTRING_INDEX(machines.jid, '@', 1) = SUBSTRING_INDEX(relayserver.jid, '@', 1)
+                WHERE
+                    relayserver.moderelayserver = 'static' %s
+                    AND relayserver.id in(	 SELECT
+                                                has_cluster_ars.id_ars
+                                            FROM
+                                                xmppmaster.has_cluster_ars
+                                            WHERE
+                                                has_cluster_ars.id_cluster IN (
+                                                                                SELECT
+                                                                                        id_cluster
+                                                                                    FROM
+                                                                                        xmppmaster.has_cluster_ars
+                                                                                    WHERE
+                                                                                        id_ars in  (%s))
+
+                    )""" %  (filterars,listin)
+            if start != -1 and limit != -1:
+                sql = sql+"LIMIT %s OFFSET %s"%(limit, start)
+            sql=sql+";"
+            result = session.execute(sql)
+
+            #  Count the ARS
+            sql_count = "SELECT FOUND_ROWS();"
+            ret_count = session.execute(sql_count)
+            count = ret_count.first()[0]
+
+            session.commit()
+            session.flush()
+
+            if result:
+                for row in result:
+                    resultobj['id'].append(row[0])
+                    resultobj['hostname'].append(row[2])
+                    resultobj['jid'].append(row[9])
+                    resultobj['jid_from_relayserver'].append(row[4])
+                    resultobj['cluster_name'].append(row[10])
+                    resultobj['cluster_description'].append(row[11])
+                    resultobj['classutil'].append(row[3])
+                    resultobj['ip_xmpp'].append(row[1])
+                    resultobj['macaddress'].append(row[13])
+                    resultobj['enabled'].append(row[6])
+                    resultobj['enabled_css'].append("machineNamepresente" if (row[6] == "1" or row[6] == 1) else "machineName")
+                    resultobj['mandatory'].append(row[8])
+                    resultobj['switchonoff'].append(row[7])
+
+        resultobj["count"] = count
+        return resultobj
+
+    @DatabaseHelper._sessionm
     def getRelayServer(self, session, enable = None ):
-        listrelayserver = []
+        relayserver_list = []
         if enable is not None:
             relayservers = session.query(RelayServer).\
                 filter(and_(RelayServer.enabled == enable)).all()
@@ -909,12 +1312,12 @@ class XmppMasterDatabase(DatabaseHelper):
                         'package_server_port': relayserver.package_server_port,
                         'moderelayserver': relayserver.moderelayserver
                     }
-                listrelayserver.append(res)
-            return listrelayserver
+                relayserver_list.append(res)
+            return relayserver_list
         except Exception as e:
             logging.getLogger().error(str(e))
             traceback.print_exc(file=sys.stdout)
-            return listrelayserver
+            return relayserver_list
 
     @DatabaseHelper._sessionm
     def get_relayservers_no_sync_for_packageuuid(self, session, uuidpackage):
@@ -1494,17 +1897,18 @@ class XmppMasterDatabase(DatabaseHelper):
                                         name)
         return None
     @DatabaseHelper._sessionm
-    def create_Glpi_location( self,
-                            session,
-                            complete_name,
-                            name,
-                            glpi_id):
+    def create_Glpi_location(self,
+                             session,
+                             complete_name,
+                             name,
+                             glpi_id):
         """
             create Glpi_location
         """
         if glpi_id is None or glpi_id == '':
             logging.getLogger().warning("create_Glpi_location glpi_id missing")
             return None
+
         ret = self.get_Glpi_location(glpi_id)
         if ret is None:
             try:
@@ -1616,7 +2020,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     `glpi_location_id` = %s
                 WHERE
                     `id` = '%s';''' % ("UUID%s" % glpiinformation['data']['uuidglpicomputer'][0],
-                                    glpiinformation['data']['description'][0],
+                                    glpiinformation['data']['description'][0].replace('"','\\"').replace("'","\\'"),
                                     glpiinformation['data']['owner_firstname'][0],
                                     glpiinformation['data']['owner_realname'][0],
                                     glpiinformation['data']['owner'][0],
@@ -1952,7 +2356,7 @@ class XmppMasterDatabase(DatabaseHelper):
                            model="",
                            manufacturer="",
                            json_re="",
-                           glpi_entity_id=None,
+                           glpi_entity_id=1,
                            glpi_location_id=None,
                            glpi_regkey_id=None):
 
@@ -2995,39 +3399,38 @@ class XmppMasterDatabase(DatabaseHelper):
             machinedeploy =session.query(Deploy.state,
                                          func.count(Deploy.state)).\
                                              filter(and_( Deploy.command == command_id,
-
                                                             Deploy.startcmd == datestart
                                                         )
                                                 ).group_by(Deploy.state)
             machinedeploy = machinedeploy.all()
-            ret = {
-                    'totalmachinedeploy' : 0,
-                    'deploymentsuccess' : 0,
-                    'abortontimeout' : 0,
-                    'abortmissingagent' : 0,
-                    'abortrelaydown' : 0,
-                    'abortalternativerelaysdown' : 0,
-                    'abortinforelaymissing' : 0,
-                    'errorunknownerror' : 0,
-                    'abortpackageidentifiermissing' : 0,
-                    'abortpackagenamemissing' : 0,
-                    'abortpackageversionmissing' : 0,
-                    'abortpackageworkflowerror' : 0,
-                    'abortdescriptormissing' : 0,
-                    'abortmachinedisappeared' : 0,
-                    'abortdeploymentcancelledbyuser' : 0,
-                    'aborttransferfailed' : 0,
-                    'abortpackageexecutionerror' : 0,
-                    'deploymentstart' : 0,
-                    'wol1' : 0,
-                    'wol2' : 0,
-                    'wol3' : 0,
-                    'waitingmachineonline' : 0,
-                    'deploymentpending' : 0,
-                    'deploymentdelayed' : 0,
-                    'deploymentspooled' : 0,
-                    'otherstatus' : 0,
-                    }
+            ret = {'totalmachinedeploy': 0,
+                   'deploymentsuccess': 0,
+                   'abortontimeout': 0,
+                   'abortmissingagent': 0,
+                   'abortinconsistentglpiinformation': 0,
+                   'abortrelaydown': 0,
+                   'abortalternativerelaysdown': 0,
+                   'abortinforelaymissing': 0,
+                   'errorunknownerror': 0,
+                   'abortpackageidentifiermissing': 0,
+                   'abortpackagenamemissing': 0,
+                   'abortpackageversionmissing': 0,
+                   'abortpackageworkflowerror': 0,
+                   'abortdescriptormissing': 0,
+                   'abortmachinedisappeared': 0,
+                   'abortdeploymentcancelledbyuser': 0,
+                   'aborttransferfailed': 0,
+                   'abortpackageexecutionerror': 0,
+                   'deploymentstart': 0,
+                   'wol1': 0,
+                   'wol2': 0,
+                   'wol3': 0,
+                   'waitingmachineonline': 0,
+                   'deploymentpending': 0,
+                   'deploymentdelayed': 0,
+                   'deploymentspooled': 0,
+                   'otherstatus': 0,
+                  }
             dynamic_status_list = self.get_log_status()
             dynamic_label = []
             dynamic_status = []
@@ -3048,6 +3451,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['abortontimeout'] = liststatus[t]
                 elif t == 'ABORT MISSING AGENT':
                     ret['abortmissingagent'] = liststatus[t]
+                elif t == 'ABORT INCONSISTENT GLPI INFORMATION':
+                    ret['abortinconsistentglpiinformation'] = liststatus[t]
                 elif t == 'ABORT RELAY DOWN':
                     ret['abortrelaydown'] = liststatus[t]
                 elif t == 'ABORT ALTERNATIVE RELAYS DOWN':
@@ -3072,7 +3477,6 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['abortdeploymentcancelledbyuser'] = liststatus[t]
                 elif t == 'ABORT PACKAGE EXECUTION ERROR':
                     ret['abortpackageexecutionerror'] = liststatus[t]
-
                 elif t == 'DEPLOYMENT START':
                     ret['deploymentstart'] = liststatus[t]
                 elif t == 'WOL 1':
@@ -3096,6 +3500,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return ret
         except Exception:
             return ret
+
 
     @DatabaseHelper._sessionm
     def getdeployment(self, session, command_id, filter="", start=0, limit=-1):
@@ -4578,8 +4983,8 @@ class XmppMasterDatabase(DatabaseHelper):
             enabled = 1 Only on active relayserver.
             If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
             subnetmachine CIDR machine.
-                CIDR matching with suject of table has_relayserverrules
-                -- suject is the expresseion relationel.
+                CIDR matching with subject of table has_relayserverrules
+                -- subject is the expresseion relationel.
                 -- eg : ^55\.171\.[5-6]{1}\.[0-9]{1,3}/24$
                 -- eg : ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/24$ all adress mask 255.255.255.255
         """
@@ -5059,6 +5464,10 @@ class XmppMasterDatabase(DatabaseHelper):
         regs=filter(r.search, self.config.summary)
         list_reg_columns_name = [getattr( self.config, regkey).split("|")[0].split("\\")[-1] \
                         for regkey in regs]
+        entity = ""
+        if 'location' in ctx and ctx['location'] != "":
+            entity = " AND ent.glpi_id in (%s) "% str(ctx['location']).replace('UUID',"")
+
         computerpresence = ""
         if 'computerpresence' in ctx:
             if ctx['computerpresence'] == 'presence':
@@ -5066,7 +5475,7 @@ class XmppMasterDatabase(DatabaseHelper):
             elif ctx['computerpresence'] == 'no_presence':
                 computerpresence = " AND enabled = 0 "
         sql = """
-                SELECT
+                SELECT SQL_CALC_FOUND_ROWS
                     mach.*,
                     GROUP_CONCAT(DISTINCT CONCAT(reg.name, '|', reg.value)
                         SEPARATOR '@@@') AS regedit,
@@ -5091,16 +5500,22 @@ class XmppMasterDatabase(DatabaseHelper):
                         LEFT OUTER JOIN
                     network netw ON  netw.machines_id = mach.id
                 WHERE
-                    agenttype LIKE 'm%%'%s%s
+                    agenttype LIKE 'm%%'%s%s%s
                 GROUP BY mach.id
                 limit %s, %s;""" % (computerpresence,
-                                   recherchefild,
-                                   start, end)
+                                    entity,
+                                    recherchefild,
+                                    start,
+                                    end)
 
         if debugfunction:
             logger.info("SQL request :  %s" % sql)
 
         result = session.execute(sql)
+        result = session.execute(sql)
+        sql_count = "SELECT FOUND_ROWS();"
+        ret_count = session.execute(sql_count)
+        count = ret_count.first()[0]
         session.commit()
         session.flush()
         ret = self.query_to_array_of_dict(result,bycolumn=True,
@@ -5125,6 +5540,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         if len(couplekeyvalue) == 2:
                             if couplekeyvalue[0] == columkeyreg:
                                 ret['data'][columkeyreg].append(couplekeyvalue[1])
+        ret['total'] = count
         return ret
 
 
@@ -5172,6 +5588,33 @@ class XmppMasterDatabase(DatabaseHelper):
                 out = 1
             result[linemachine.uuid_inventorymachine] = [out, 1 ]
         return result
+
+    @DatabaseHelper._sessionm
+    def update_uuid_inventory(self, session, sql_id, uuid):
+        """
+        This function is used to update the uuid_inventorymachine value
+        in the database for a specific machine.
+        Args:
+            session: The SQLAlchemy session
+            sql_id: the id of the machine in the SQL database
+            uuid: The uuid_inventorymachine of the machine
+        Return:
+           It returns None if it failed to update the machine uuid_inventorymachine.
+        """
+        try:
+            sql = """UPDATE `xmppmaster`.`machines`
+                    SET
+                        `uuid_inventorymachine` = '%s'
+                    WHERE
+                        `id`  = %s;""" % (uuid, sql_id)
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            return result
+        except Exception as e:
+            logging.getLogger().error("Function update_uuid_inventory")
+            logging.getLogger().error("We got the error: %s" % str(e))
+            return None
 
     #topology
     @DatabaseHelper._sessionm
@@ -5291,7 +5734,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.machines
                  WHERE
                     enabled = '1' and
-                    agenttype = 'machine' and uuid_inventorymachine IS NOT NULL;"""
+                    agenttype = 'machine' and uuid_inventorymachine IS NOT NULL OR uuid_inventorymachine!='';"""
 
         presencelist = session.execute(sql)
         session.commit()
@@ -5303,6 +5746,46 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
         except:
             return a
+
+    @DatabaseHelper._sessionm
+    def getidlistPresenceMachine(self, session, presence=None):
+        """
+        This function is used to retrieve the list of the machines based on the 'presence' argument.
+
+        Args:
+            session: The SQLAlchemy session
+            presence: if True, it returns the list of the machine with an agent up.
+                      if False, it returns the list of the machine with an agent down.
+                      if None, it returns the list with all the machines.
+        Returns:
+            It returns the list of the machine based on the 'presence' argument.
+        """
+        strpresence = ""
+
+        try:
+            if presence is not None:
+                if presence == True:
+                    strpresence = " and enabled = 1"
+                else:
+                    strpresence = " and enabled = 0"
+            sql = """SELECT
+                        SUBSTR(uuid_inventorymachine, 5)
+                    FROM
+                        xmppmaster.machines
+                    WHERE
+                        agenttype = 'machine'
+                    and
+                        uuid_inventorymachine IS NOT NULL %s;""" % strpresence
+            presencelist = session.execute(sql)
+            session.commit()
+            session.flush()
+            return [ x[0] for x in  presencelist ]
+        except Exception as e:
+            logging.getLogger().error("Error debug for the getidlistPresenceMachine function!")
+            logging.getLogger().error("The presence of the machine is:  %s" % presence)
+            logging.getLogger().error("The sql error is: %s" % sql)
+            logging.getLogger().error("the Exception catched is %s" % str(e))
+            return []
 
     @DatabaseHelper._sessionm
     def getxmppmasterfilterforglpi(self, session, listqueryxmppmaster = None):
@@ -5873,6 +6356,62 @@ class XmppMasterDatabase(DatabaseHelper):
         if ret[0] == 0:
             return False
         return True
+
+    @DatabaseHelper._sessionm
+    def getMachinedeployexistonHostname(self, session, hostname):
+        """
+        This function is used to find all the machines based on the hostname
+        Args:
+            session: The SQLAlchemy session
+            hostname: The hostname we are searching
+
+        Returns:
+            It returns the list of the machines with the searched hostname
+        """
+        machinesexits = []
+        try:
+            sql="""SELECT
+                    machines.id AS id,
+                    machines.uuid_inventorymachine AS uuid,
+                    machines.uuid_serial_machine AS serial,
+                    GROUP_CONCAT(network.mac) AS macs
+                FROM
+                    xmppmaster.machines
+                        JOIN
+                    xmppmaster.network ON machines.id = network.machines_id
+                WHERE
+                    machines.agenttype = 'machine'
+                        AND machines.hostname LIKE '%s'
+                GROUP BY machines.id;""" % hostname.strip()
+            machines = session.execute(sql)
+        except Exception as e:
+            logging.getLogger().error("The hostname is: %s" % str(e))
+            logging.getLogger().error("We encountered the error: %s" % str(e))
+            return machinesexits
+
+        for machine in machines:
+            mach = {'id':  machine.id,
+                    'uuid': machine.uuid,
+                    'macs': machine.macs,
+                    'serial': machine.serial}
+            machinesexits.append(mach)
+        return machinesexits
+
+    @DatabaseHelper._sessionm
+    def getMachineHostname(self, session, hostname):
+        try:
+            machine = session.query(Machines.id,
+                                    Machines.uuid_inventorymachine).\
+                                        filter(Machines.hostname == hostname).first()
+            session.commit()
+            session.flush()
+            if machine:
+                return {"id": machine.id,
+                        "uuid_inventorymachine": machine.uuid_inventorymachine}
+        except Exception as e:
+            logging.getLogger().error("function getMachineHostname %s" % str(e))
+
+        return {}
 
     @DatabaseHelper._sessionm
     def getGuacamoleRelayServerMachineHostname(self, session, hostname,
@@ -8365,3 +8904,99 @@ where agenttype="machine" and groupdeploy in (
         query = session.execute("select @month6, @month5, @month4, @month3, @month2, @month1")
         query = query.fetchall()[0]
         return list(query)
+
+
+
+    @DatabaseHelper._sessionm
+    def get_ars_group_in_list_clusterid(self,
+                                        session,
+                                        clusterid,
+                                        enabled=None):
+        """
+        This function is used to get the list of the ars from a cluster.
+
+        Args:
+            session: the SQLAlchemy session
+            clusterid: the id of the used cluster
+            enabled: Tell if we used enabled ars only
+                     If None we do not use enabled in the SQL request
+        Returns:
+            It returns informations from the ars of a cluster
+            like jid, name, classutil, enabled, etc.
+        """
+        setsearch = clusterid
+        if isinstance(clusterid, list):
+            listidcluster = [x for x in set(clusterid)]
+            if listidcluster:
+                setsearch=("%s" % listidcluster)[1:-1]
+            else:
+                raise
+        searchclusterars = "(%s)" % setsearch
+
+        sql ="""SELECT
+                    relayserver.id AS ars_id,
+                    relayserver.urlguacamole AS urlguacamole,
+                    relayserver.subnet AS subnet,
+                    relayserver.nameserver AS nameserver,
+                    relayserver.ipserver AS ipserver,
+                    relayserver.ipconnection AS ipconnection,
+                    relayserver.port AS port,
+                    relayserver.portconnection AS portconnection,
+                    relayserver.mask AS mask,
+                    relayserver.jid AS jid,
+                    relayserver.longitude AS longitude,
+                    relayserver.latitude AS latitude,
+                    relayserver.enabled AS enabled,
+                    relayserver.mandatory AS mandatory,
+                    relayserver.switchonoff AS switchonoff,
+                    relayserver.classutil AS classutil,
+                    relayserver.groupdeploy AS groupdeploy,
+                    relayserver.package_server_ip AS package_server_ip,
+                    relayserver.package_server_port AS package_server_port,
+                    relayserver.moderelayserver AS moderelayserver,
+                    relayserver.keysyncthing AS keysyncthing,
+                    relayserver.syncthing_port AS syncthing_port,
+                    has_cluster_ars.id_cluster AS id_cluster,
+                    cluster_ars.name AS name_cluster
+                FROM
+                    xmppmaster.relayserver
+                        INNER JOIN
+                    xmppmaster.has_cluster_ars ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
+                        INNER JOIN
+                    xmppmaster.cluster_ars ON xmppmaster.cluster_ars.id = xmppmaster.has_cluster_ars.id_cluster
+                WHERE
+                    id_cluster IN %s """ % (searchclusterars)
+        if enabled is not None:
+            sql += """AND `relayserver`.`enabled` = %s""" % enabled
+        sql += ";"
+        clusterList = session.execute(sql)
+        session.commit()
+        session.flush()
+        arsListInfos = []
+        for ars in clusterList:
+            arsInfos = {"ars_id": ars[0],
+                       "urlguacamole": ars[1],
+                       "subnet": ars[2],
+                       "nameserver": ars[3],
+                       "ipserver": ars[4],
+                       "ipconnection": ars[5],
+                       "port": ars[6],
+                       "portconnection": ars[7],
+                       "mask": ars[8],
+                       "jid": ars[9],
+                       "longitude": ars[10],
+                       "latitude": ars[11],
+                       "enabled": ars[12],
+                       "mandatory": ars[13],
+                       "switchonoff": ars[14],
+                       "classutil": ars[15],
+                       "groupdeploy": ars[16],
+                       "package_server_ip": ars[17],
+                       "package_server_port": ars[18],
+                       "moderelayserver": ars[19],
+                       "keysyncthing": ars[20],
+                       "syncthing_port": ars[21],
+                       "id_cluster": ars[22],
+                       "name_cluster": ars[23]}
+            arsListInfos.append(arsInfos)
+        return arsListInfos

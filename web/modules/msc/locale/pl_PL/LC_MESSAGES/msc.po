@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-02 15:57+0100\n"
+"POT-Creation-Date: 2021-04-01 11:32+0200\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
@@ -69,7 +69,7 @@ msgstr "Stan"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:136
 #: modules/msc/logs/ajaxConsultLogsFilter.php:142
-#: modules/msc/msc/ajaxPackageFilter.php:206 modules/msc/msc/packages.php:40
+#: modules/msc/msc/ajaxPackageFilter.php:209 modules/msc/msc/packages.php:40
 msgid "Package"
 msgstr ""
 
@@ -843,7 +843,7 @@ msgid "Set order"
 msgstr ""
 
 #: modules/msc/includes/bundle_widgets.php:150
-#: modules/msc/msc/ajaxPackageFilter.php:203
+#: modules/msc/msc/ajaxPackageFilter.php:206
 msgid "Please contact your administrator."
 msgstr "Proszę skontaktować się ze swoim administratorem"
 
@@ -859,7 +859,7 @@ msgstr ""
 
 #: modules/msc/includes/bundle_widgets.php:170
 #: modules/msc/includes/bundle_widgets.php:199
-#: modules/msc/msc/ajaxPackageFilter.php:148
+#: modules/msc/msc/ajaxPackageFilter.php:151
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr ""
@@ -1247,58 +1247,58 @@ msgstr ""
 msgid "Not enough information"
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:46
+#: modules/msc/msc/ajaxPackageFilter.php:47
 #, php-format
 msgid "These packages can be installed on computer \"%s\""
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:48
+#: modules/msc/msc/ajaxPackageFilter.php:49
 #, php-format
 msgid "These packages can be installed on group \"%s\""
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:77
+#: modules/msc/msc/ajaxPackageFilter.php:78
 msgid "Available"
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:79
+#: modules/msc/msc/ajaxPackageFilter.php:80
 msgid "Active"
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:81
+#: modules/msc/msc/ajaxPackageFilter.php:82
 msgid "Inactive"
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:84
+#: modules/msc/msc/ajaxPackageFilter.php:85
 msgid "Not available"
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:92
-#: modules/msc/msc/ajaxPackageFilter.php:211 modules/msc/msc/launch.php:651
+#: modules/msc/msc/ajaxPackageFilter.php:93
+#: modules/msc/msc/ajaxPackageFilter.php:214 modules/msc/msc/launch.php:651
 #: modules/msc/msc/launch.php:658
 msgid "Convergence"
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:207
+#: modules/msc/msc/ajaxPackageFilter.php:210
 msgid "Description"
 msgstr "Opis"
 
-#: modules/msc/msc/ajaxPackageFilter.php:208 modules/msc/msc/packages.php:41
+#: modules/msc/msc/ajaxPackageFilter.php:211 modules/msc/msc/packages.php:41
 #: modules/msc/msc/package_detail.php:37
 msgid "Version"
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:209
+#: modules/msc/msc/ajaxPackageFilter.php:212
 msgid "Package size"
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:225
-#: modules/msc/msc/ajaxPackageFilter.php:229
+#: modules/msc/msc/ajaxPackageFilter.php:228
+#: modules/msc/msc/ajaxPackageFilter.php:232
 msgid "Advanced launch"
 msgstr ""
 
-#: modules/msc/msc/ajaxPackageFilter.php:226
-#: modules/msc/msc/ajaxPackageFilter.php:231
+#: modules/msc/msc/ajaxPackageFilter.php:229
+#: modules/msc/msc/ajaxPackageFilter.php:234
 msgid "Direct launch"
 msgstr ""
 

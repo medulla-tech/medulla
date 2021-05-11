@@ -1,10 +1,11 @@
 <?php
 /*
  * (c) 2008 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Pulse 2, http://pulse2.mandriva.org
+ * This file is part of Pulse 2, http://siveo.net
  *
  * Pulse 2 is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,11 +40,12 @@ if (!isset($_GET['part'])) { $_GET['part'] = 'Summary'; }
 $uuid = '';
 $hostname = '';
 if (isset($_GET['uuid'])) { $uuid = $_GET['uuid']; }
-if (isset($_GET['hostname'])) { $hostname = $_GET['hostname']; }
+//clean_xss function is located in pulse2/includes/utilities.php
+if (isset($_GET['hostname'])) { $hostname = clean_xss($_GET['hostname']); }
 
 $uri = getGlpiMachineUri();
 if ($uri) {
-    $glpi_link = sprintf('<a href="%s" target="new">GLPI</a>', $uri.str_replace('UUID', '', $uuid));
+    $glpi_link = sprintf('<a href="%s" target="new">GLPI</a>', $uri.str_replace('UUID', '', clean_xss($uuid)));
 }
 else {
     $glpi_link = 'GLPI';
@@ -58,7 +60,7 @@ if (isset($_SESSION['pull_targets']) && in_array($uuid, $_SESSION['pull_targets'
         $p->setDescription(
             sprintf('%s <a class="btn btn-primary" href="%s">%s</a>',
                 _T('This client has been registered in pull mode', 'glpi'),
-                urlStrRedirect('base/computers/remove_from_pull', array('uuid' => $uuid, 'remove_pull_id' => $remove_pull_id)),
+                urlStrRedirect('base/computers/remove_from_pull', array('uuid' => clean_xss($uuid), 'remove_pull_id' => $remove_pull_id)),
                 _T('Leave pull mode', 'glpi')
             )
         );

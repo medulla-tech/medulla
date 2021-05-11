@@ -1,9 +1,9 @@
 <?php
 /**
- * (c) 2020 Siveo, http://siveo.net
+ * (c) 2020-2021 Siveo, http://siveo.net
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,8 @@ $end = (isset($_GET['end'])) ? $_GET['end'] : "";
 $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
 $maxperpage = (isset($_GET['maxperpage'])) ? $_GET['maxperpage'] : -1;
 
-$list = xmlrpc_get_packages_list($jid, $filter);
+$list = xmlrpc_get_packages_list($jid, $_GET);
+
 $prettySize = [];
 $row = 0;
 $packagesname = [];
@@ -73,14 +74,16 @@ foreach($list['datas']['size'] as $size){
   $row++;
 }
 
-$n = new ListInfos( $packagesname, _T("Package name", "pkgs"));
+$n = new OptimizedListInfos( $packagesname, _T("Package name", "pkgs"));
 $n->addExtraInfo( $list['datas']['description'], _T("Description", "pkgs"));
 $n->addExtraInfo( $list['datas']['version'], _T("Version", "pkgs"));
 $n->addExtraInfo( $list['datas']['licenses'], _T("Licenses", "pkgs"));
 $n->addExtraInfo( $list['datas']['os'], _T("Os", "pkgs"));
 $n->addExtraInfo( $list['datas']['size'], _T("Package size", "pkgs"));
 $n->addExtraInfo( $list['datas']['methodtransfer'], _T("Transfer Method", "pkgs"));
-$n->setNavBar(new AjaxNavBar($list['total'], $filter, "updateSearchParamformRunning"));
-
+$n->setItemCount($list['total']);
+$n->setNavBar(new AjaxNavBar($list['total'], $filter));
+$n->start = 0;
+$n->end = $list['total'];
 $n->display();
 ?>

@@ -2,11 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
- * (c) 2018 Siveo, http://www.siveo.net/
+ * (c) 2018-2021 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,8 +55,9 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $need_assign = True;
     }
 
-    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion',
-            'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion', 'mode',
+            'boolcnd', 'licenses', 'targetos', 'metagenerator',
+            'creator', 'creation_date', 'editor', 'edition_date', 'localisation_server', 'previous_localisation_server') as $post) {
         //$package[$post] = iconv("utf-8","ascii//TRANSLIT",$_POST[$post]);
         $package[$post] = $_POST[$post];
     }
@@ -72,7 +73,6 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($package, $need_assign);
-    xmlrpc_pkgs_register_synchro_package($ret[1],'chang');
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
 
@@ -142,8 +142,10 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $str =_T("Package failed to save", "pkgs");
         new NotifyWidgetFailure($str);
     }
-    if($package_uuid != "")
+    if($package_uuid != ""){
+      xmlrpc_update_package_size($pid);
       xmlrpc_chown($package_uuid);
+    }
 }
 
 //start formulaire
@@ -163,7 +165,6 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
     if (!isXMLRPCError() and is_array($ret)) {
         $errorexplain = "";
         $successexplain = "";
-        print_r($ret);
         if (count($ret[1]) > 0) {$errorexplain   = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));}
         if (count($ret[0]) > 0) {$successexplain = sprintf(" : <br/>%s", implode("<br/>", $ret[0]));}
         if (count($ret[1]) > 0){
@@ -187,7 +188,6 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
 }
     $formElt = new HiddenTpl("id");//use in js for createUploader
     $selectpapi = new HiddenTpl('p_api');//use in js for createUploader
-
     if (count($package) == 0) {
 
         $title = _T("Edit a package", "pkgs");
@@ -204,6 +204,7 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
  * Page form
  */
 
+$json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
 // display an edit package form (description, version, ...)
 $f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
 $f->push(new Table());
@@ -229,10 +230,13 @@ $f->push(new Table());
 $f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
 // Uploaded field,
 $f->add(new HiddenTpl("files_uploaded"), array("value" => 0, "hide" => True));
-
 if ($_GET["action"] == "add") {
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
 }
+else{
+    $f->add(new HiddenTpl("mode"), array("value" => "edition", "hide" => True));
+}
+
 
 $fields = array(
     array("label", _T("Package label", "pkgs"), array("required" => True)),
@@ -259,6 +263,58 @@ $os = array(
     array(_T('Windows'), _T('Linux'), _T('Mac OS'))
 );
 
+$f->add(new HiddenTpl("editor"), array("value" => $_SESSION['login'], "hide" => True));
+$f->add(new HiddenTpl("edition_date"), array("value" => date("Y-m-d H:i:s"), "hide" => True));
+$f->add(new HiddenTpl("creator"), array("value" => $json['info']['creator'], "hide" => True));
+$f->add(new HiddenTpl("creation_date"), array("value" => $json['info']["creation_date"], "hide" => True));
+
+if(isset($_SESSION['sharings'])){
+  $getShares = $_SESSION['sharings'];
+}
+else{
+  $getShares = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
+}
+$shares =[];
+foreach($getShares['datas'] as $share){
+  if(preg_match("#w#i", $share['permission'])){
+    $shares[] = $share;
+  }
+}
+
+if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true){
+  $previous_localisation = (isset($json['info']['previous_localisation_server']) && $json['info']['previous_localisation_server'] != "") ? $json['info']['previous_localisation_server'] : $json['info']['localisation_server'];
+
+  $f->add(new HiddenTpl("previous_localisation_server"), array("value" => $previous_localisation, "hide" => True));
+  if(isset($getShares["config"]["movepackage"]) && $getShares["config"]["movepackage"] == True){
+    if(isset($json["info"]["Dependency"]) && count($json["info"]["Dependency"]) == 0){
+      if(count($shares) == 1){ // Just 1 sharing (no choice)
+        $f->add(new HiddenTpl("localisation_server"), array("value" => $json["info"]['localisation_server'], "hide" => True));
+      }
+      else{ // sharing server > 1
+        $sharesNames = [];
+        $sharesPaths = [];
+        foreach($shares as $key=>$value){
+          $sharesNames[] = (isset($value['comments']) && $value['comments'] != "") ? $value['comments'] : $value['name'];
+          $sharesPaths[] = $value['name'];
+        }
+        $location_servers = new SelectItem('localisation_server');
+        $location_servers->setElements($sharesNames);
+        $location_servers->setElementsVal($sharesPaths);
+        $location_servers->setSelected($json['info']["localisation_server"]);
+
+        $f->add(
+                new TrFormElement(_T('Share', 'pkgs'), $location_servers), array()
+        );
+      }
+    }
+    else{ // Dependencies > 0
+      $f->add(new HiddenTpl("localisation_server"), array("value" => $json['info']["localisation_server"], "hide" => True));
+    }
+  }
+  else{ // movepackage == false
+    $f->add(new HiddenTpl("localisation_server"), array("value" => $json['info']["localisation_server"], "hide" => True));
+  }
+}
 foreach ($fields as $p) {
     $f->add(
             new TrFormElement($p[1], new AsciiInputTpl($p[0])), array_merge(array("value" => $package[$p[0]]), $p[2])
@@ -289,7 +345,7 @@ else {
 
 if(isExpertMode())
 {
-    $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
+    //$f->add(new HiddenTpl("last_editor"), array("value" => $_SESSION['login'], "hide" => True));
     $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
 
     if(isset($json['info']['methodetransfert']))
@@ -345,25 +401,28 @@ if(isExpertMode())
         $dependencies = [];
 
     //Get all the dependencies as uuid => name
+    $allPackagesList = get_dependencies_list_from_permissions($_SESSION["login"]);
     $allDependenciesList = [];
-    foreach(xmpp_packages_list() as $xmpp_package) {
-        if($_GET['packageUuid'] != $xmpp_package['uuid'])
-            $allDependenciesList[$xmpp_package['uuid']] = $xmpp_package['name'];
-    }
-
-    //Generate the list of not-added dependencies, the sort is not important
-    $packagesInOptionNotAdded = '';
-
-    foreach($allDependenciesList as $xmpp_package => $xmpp_name){
-        if(!in_array($xmpp_package,$dependencies))
-            $packagesInOptionNotAdded .= '<option value="'.$xmpp_package.'">'.$xmpp_name.'</option>';
-    }
-
-    //Generate the sorted list of added dependencies
     $packagesInOptionAdded = '';
-    foreach($dependencies as $uuid_package){
-        if(isset($allDependenciesList[$uuid_package]))
-            $packagesInOptionAdded .= '<option value="'.$uuid_package.'">'.$allDependenciesList[$uuid_package].'</option>';
+    $packagesInOptionNotAdded = '';
+    foreach($allPackagesList as $xmpp_package) {
+      if(is_array($xmpp_package)){
+        if($_GET['packageUuid'] != $xmpp_package['uuid']){
+          $uuid = $xmpp_package['uuid'];
+          $name = $xmpp_package['name'];
+          $version = $xmpp_package['version'];
+
+          if(in_array($uuid, $dependencies))
+          {
+            $packagesInOptionAdded .= '<option value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+
+          }
+          else{
+            $packagesInOptionNotAdded .= '<option value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+            $allDependenciesList[] = $xmpp_package;
+          }
+        }
+      }
     }
 
     $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">
@@ -392,6 +451,7 @@ if(isExpertMode())
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
                     <h3>'._T('Available dependencies', 'pkgs').'</h3>
+                    <input type="text" id="dependenciesFilter" value="" placeholder="'._T("search by name ...", "pkgs").'"><br/>
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOptionNotAdded.'
                     </select>
@@ -422,7 +482,6 @@ $names = array();
 $params = array();
 
 $pserver_base_url = '';
-
 
 foreach ($package['files'] as $file) {
     if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json")
@@ -495,7 +554,32 @@ $f->display();
 
 <script>
 jQuery(function(){
+  dependenciesFilter = jQuery("#dependenciesFilter");
+  pooldependencies = jQuery("#pooldependencies option");
+
+  dependenciesFilter.on("change click hover keypress keydown", function(event){
+    if(dependenciesFilter.val() != ""){
+      regex = new RegExp(dependenciesFilter.val(), "gi");
+      jQuery.each(pooldependencies, function(id, dependency){
+        optionSelector = jQuery(dependency)
+        if(regex.test(optionSelector.val()) === false){
+          optionSelector.hide();
+        }
+        else{
+          optionSelector.show();
+        }
+      })
+    }
+    else{
+      jQuery.each(pooldependencies, function(id, dependency){
+        optionSelector = jQuery(dependency)
+        optionSelector.show();
+      })
+    }
+  })
+
+
   jQuery("input[name='label']").attr("maxlength", 60);
-  jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special characters are not allowed", "pkgs");?></div>");
+  jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
 })
 </script>

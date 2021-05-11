@@ -2,11 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
- * (c) 2018 Siveo, http://www.siveo.net/
+ * (c) 2018-2021 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,6 @@ $p->display();
 // @see ajaxrefreshPackageTempdir.php
 $_SESSION['pkgs-add-reloaded'] = array();
 
-
 if (isset($_POST['bconfirm'])){
     //$p_api_id = $_POST['p_api'];
     $random_dir = isset($_SESSION['random_dir'])?$_SESSION['random_dir'] : "";
@@ -52,7 +51,8 @@ if (isset($_POST['bconfirm'])){
     }
 
     foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware',
-            'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
+            'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator',
+            'creator', 'creation_date', 'localisation_server') as $post) {
         //$package[$post] = iconv("utf-8","ascii//TRANSLIT",$_POST[$post]);
         if(isset($_POST[$post])) {
             $package[$post] = $_POST[$post];
@@ -79,7 +79,6 @@ if (isset($_POST['bconfirm'])){
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($package, $need_assign);
-    xmlrpc_pkgs_register_synchro_package($ret[1], 'create');
     $pid = $ret[3]['id'];
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
@@ -114,6 +113,7 @@ if (isset($_POST['bconfirm'])){
         }
 
         $ret = associatePackages($pid, $cbx, $level);
+        xmlrpc_update_package_size($pid);
         if (!isXMLRPCError() and is_array($ret)) {
             if ($ret[0]) {
                 $explain = '';
@@ -184,14 +184,48 @@ if (isset($_POST['bconfirm'])){
 //     );
 
     $f->add(new TrFormElement(_T("Package source", "pkgs"), $r), array());
-    $f->add(new TrFormElement("<div id='directory-label'>" . _T("Files directory", "pkgs") . "</div>", new Div(array("id" => "package-temp-directory"))), array());
+    $f->add(new TrFormElement("<div id='directory-label'>" . _T("Files directory", "pkgs") . "</div>",
+                new Div(array("id" => "package-temp-directory"))), array());
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
-
     $span = new SpanElement(_T("Package Creation", "pkgs"), "pkgs-title");
     $f->add(new TrFormElement("", $span), array());
+    $f->add(new HiddenTpl("creator"), array("value" => $_SESSION['login'], "hide" => True));
+    $f->add(new HiddenTpl("creation_date"), array("value" => date("Y-m-d H:i:s"), "hide" => True));
 
+
+    if(isset($_SESSION['sharings'])){
+      $getShares = $_SESSION['sharings'];
+    }
+    else{
+      $getShares = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
+    }
+    $shares =[];
+    foreach($getShares['datas'] as $share){
+      $diskUsage = ($share['quotas'] > 0) ? ($share['usedquotas']/(1073741824*$share['quotas']))*100 : 0;
+      if(preg_match("#w#", $share['permission']) && $diskUsage < 100 ){
+        $shares[] = $share;
+      }
+    }
+    if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true ){
+      if(count($shares) == 1){
+        $f->add(new HiddenTpl("localisation_server"), array("value" => $shares[0]["name"], "hide" => True));
+      }
+      else{
+        $sharesNames = [];
+        $sharesPaths = [];
+        foreach($shares as $key=>$share){
+          $sharesNames[] = (isset($share['comments']) && $share['comments'] != "") ? $share['comments'] : $share['name'];
+          $sharesPaths[] = $share['name'];
+        }
+        $location_servers = new SelectItem('localisation_server');
+        $location_servers->setElements($sharesNames);
+        $location_servers->setElementsVal($sharesPaths);
+        $f->add(
+                new TrFormElement(_T('Share', 'pkgs'), $location_servers), array("value" => '')
+        );
+      }
+    }
     // fields
-
     $fields = array(
         array("label", _T("Name", "pkgs"), array("required" => True, 'placeholder' => _T('<fill_package_name>', 'pkgs'))),
         array("version", _T("Version", "pkgs"), array("required" => True)),
@@ -264,7 +298,8 @@ if (isset($_POST['bconfirm'])){
         $bpuploaddownload = new IntegerTpl("limit_rate_ko");
         $bpuploaddownload->setAttributCustom('min = 0');
         $f->add(
-                new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
+                new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''),
+                array('placeholder' => _T('<in ko>', 'pkgs')))
         );
         //spooling priority
         $rb = new RadioTpl("spooling");
@@ -274,9 +309,10 @@ if (isset($_POST['bconfirm'])){
         $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
         $packagesInOption = '';
-        foreach(xmpp_packages_list() as $package)
+        $dependencies = get_dependencies_list_from_permissions($_SESSION["login"]);
+        foreach($dependencies as $package)
         {
-            $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
+            $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].' V.'.$package['version'].'</option>';
         }
         $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">
     <table style="border: none;" cellspacing="0">
@@ -304,6 +340,7 @@ if (isset($_POST['bconfirm'])){
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
                     <h3>'._T('Available dependencies', 'pkgs').'</h3>
+                    <input type="text" id="dependenciesFilter" value="" placeholder="'._T("search by name ...", "pkgs").'"><br/>
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOption.'
                     </select>
@@ -320,7 +357,8 @@ if (isset($_POST['bconfirm'])){
                 new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)
         );
         $f->add(
-                new TrFormElement($p[2], new TextareaTplArray(["name"=>$p[0] . 'cmd',"required"=>"required"])), array("value" => '')
+                new TrFormElement($p[2], new TextareaTplArray(["name"=>$p[0] . 'cmd',"required"=>"required"])),
+                array("value" => '')
         );
     }
 
@@ -354,10 +392,34 @@ if (isset($_POST['bconfirm'])){
 
 <script type="text/javascript">
     jQuery(function() { // load this piece of code when page is loaded
+
+      dependenciesFilter = jQuery("#dependenciesFilter");
+      pooldependencies = jQuery("#pooldependencies option");
+
+      dependenciesFilter.on("change click hover keypress keydown", function(event){
+        if(dependenciesFilter.val() != ""){
+          regex = new RegExp(dependenciesFilter.val(), "gi");
+          jQuery.each(pooldependencies, function(id, dependency){
+            optionSelector = jQuery(dependency)
+            if(regex.test(optionSelector.val()) === false){
+              optionSelector.hide();
+            }
+            else{
+              optionSelector.show();
+            }
+          })
+        }
+        else{
+          jQuery.each(pooldependencies, function(id, dependency){
+            optionSelector = jQuery(dependency)
+            optionSelector.show();
+          })
+        }
+      })
+
         // Limit the text length for label
         jQuery("input[name='label']").attr("maxlength", 60);
-        jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special characters are not allowed", "pkgs");?></div>");
-
+        jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
         jQuery('.label span a').each(function() {
             jQuery(this).attr('href', 'http://www.google.com/#q=file.exe+silent+install');
             jQuery(this).attr('target', '_blank');

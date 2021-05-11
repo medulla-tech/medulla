@@ -626,39 +626,36 @@ class Glpi94(DyngroupDatabaseHelper):
     @DatabaseHelper._sessionm
     def get_machines_list(self, session, start, end, ctx):
         """
-        This function is used for afficher the computer view based on glpi.
-        Args:
-            session: The SQLAlchely session
-            start:
-            end:
-            ctx:
-        Returns:
-            It returns the list of the machines.
+            this function is used for afficher the computer view based on glpi.
+            this function is used for consolidation xmpp table machine (ctx id_machine and uuidsetup
+
         """
         # start and end are used to set the limit parameter in the query
         start = int(start)
         end = int(end)
-
-        master_config = xmppMasterConfig()
-
-        r = re.compile(r'reg_key_.*')
-        regs = filter(r.search, self.config.summary)
-        list_reg_columns_name = [getattr(master_config, regkey).split("|")[0].split("\\")[-1] \
-                                 for regkey in regs]
+        try:
+            self.config.arraykeys
+        except:
+            self.config.arraykeys=[]
+        if self.config.arraykeys:
+            list_reg_columns_name = [regkey.split("|")[0].split("\\")[-1] \
+                        for regkey in self.config.arraykeys]
+        else:
+            list_reg_columns_name = []
         uuidsetup = ctx['uuidsetup'] if "uuidsetup" in ctx else ""
         idmachine = ctx['idmachine'].replace("UUID", "") if "idmachine" in ctx else ""
         # "location" filter is corresponding to the entity selection in the interface
         location = ctx['location'].replace("UUID", "") if "location" in ctx else ""
-
         # "filter" filter is corresponding to the string the user wants to find
         criterion = ctx['filter'] if "filter" in ctx else ""
         field = ctx['field'] if "field" in ctx else ""
         contains = ctx['contains'] if "contains" in ctx else ""
         if idmachine == "" and uuidsetup == "":
+            # Get the list of online computers
             online_machines = []
             online_machines = XmppMasterDatabase().getlistPresenceMachineid()
             if online_machines is not None:
-                online_machines = [int(uuid.replace("UUID", "")) for uuid in online_machines if uuid !=""]
+                online_machines = [int(id.replace("UUID", "")) for id in online_machines if id != "UUID" and id != ""]
 
         query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
             .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
@@ -666,8 +663,7 @@ class Glpi94(DyngroupDatabaseHelper):
             .join(Entities, Entities.id == Machine.entities_id)\
             .outerjoin(self.locations, Machine.locations_id == self.locations.c.id)\
             .outerjoin(self.manufacturers, Machine.manufacturers_id == self.manufacturers.c.id)\
-            .join(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)\
-            .outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
+            .join(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)
 
         if field != "":
             query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
@@ -675,12 +671,11 @@ class Glpi94(DyngroupDatabaseHelper):
                 query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
                                    Computersitems.itemtype == "Peripheral"))\
                     .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
-
         # fild always exist
         query = query.add_column(Machine.name.label("cn"))
         if uuidsetup != "" or idmachine != "":
             query = query.add_column(Machine.uuid.label("uuid_setup"))
-
+        # if idmachine est definie ou setupuuid alors recuperation de tout les champs.
         if 'os' in self.config.summary or idmachine != "" or uuidsetup != "":
             query = query.add_column(self.os.c.name.label("os")).join(self.os)
 
@@ -717,44 +712,39 @@ class Glpi94(DyngroupDatabaseHelper):
 
         if 'manufacturer' in self.config.summary or idmachine != "" or uuidsetup != "":
             query = query.add_column(self.manufacturers.c.name.label("manufacturer"))
-
         if idmachine != "" or uuidsetup != "":
-            list_column_add_for_info = ['id',
-                                   'entities_id',
-                                   'name',
-                                   'serial',
-                                   'otherserial',
-                                   'contact',
-                                   'contact_num',
-                                   'users_id_tech',
-                                   'groups_id_tech',
-                                   'comment',
-                                   'date_mod',
-                                   'autoupdatesystems_id',
-                                   'locations_id',
-                                   'domains_id',
-                                   'networks_id',
-                                   'computermodels_id',
-                                   'computertypes_id',
-                                   'is_template',
-                                   'template_name',
-                                   'is_deleted',
-                                   'is_dynamic',
-                                   'users_id',
-                                   'groups_id',
-                                   'states_id',
-                                   'ticket_tco',
-                                   'date_creation',
-                                   'is_recursive',
-                                   'operatingsystems_id',
-                                   'operatingsystemversions_id',
-                                   'operatingsystemservicepacks_id',
-                                   'operatingsystemarchitectures_id',
-                                   'license_number',
-                                   'license_id',
-                                   'operatingsystemkernelversions_id']
-            for addcolumn in list_column_add_for_info:
-                query = query.add_column(getattr(Machine, addcolumn).label(addcolumn))
+            ### add couum for information
+            listcolumaddforinfo = [ 'id',
+                                    'entities_id',
+                                    'name',
+                                    'serial',
+                                    'otherserial',
+                                    'contact',
+                                    'contact_num',
+                                    'users_id_tech',
+                                    'groups_id_tech',
+                                    'comment',
+                                    'date_mod',
+                                    'autoupdatesystems_id',
+                                    'locations_id',
+                                    'domains_id',
+                                    'networks_id',
+                                    'computermodels_id',
+                                    'computertypes_id',
+                                    'is_template',
+                                    'template_name',
+                                    'is_deleted',
+                                    'is_dynamic',
+                                    'users_id',
+                                    'groups_id',
+                                    'states_id',
+                                    'ticket_tco',
+                                    'operatingsystems_id',
+                                    'operatingsystemversions_id',
+                                    'operatingsystemservicepacks_id']
+
+            for addcolunm in listcolumaddforinfo:
+                query = query.add_column(getattr(Machine, addcolunm).label(addcolunm))
 
         # Don't select deleted or template machines
         query = query.filter(Machine.is_deleted==0)\
@@ -762,10 +752,11 @@ class Glpi94(DyngroupDatabaseHelper):
 
         # Select machines from the specified entity
         if location != "":
-            query = query.filter(Entities.id == location)
+            listentity=[int(x.strip()) for x in location.split(',')]
+            query = query.filter(Entities.id.in_(listentity))
 
         # Add all the like clauses to find machines containing the criterion
-        if criterion != ""  and idmachine == "" and uuidsetup == "":
+        if criterion != "" and idmachine == "" and uuidsetup == "":
             if field == "":
                 query = query.filter(or_(
                     Machine.name.contains(criterion),
@@ -779,8 +770,7 @@ class Glpi94(DyngroupDatabaseHelper):
                     self.user.c.name.contains(criterion),
                     self.locations.c.name.contains(criterion),
                     self.manufacturers.c.name.contains(criterion),
-                    self.model.c.name.contains(criterion),
-                    self.regcontents.c.value.contains(criterion)
+                    self.model.c.name.contains(criterion)
                 ))
             else:
                 if field == "peripherals":
@@ -790,7 +780,6 @@ class Glpi94(DyngroupDatabaseHelper):
                         query = query.filter(Peripherals.name.contains(criterion))
                 else:
                     pass
-
         if idmachine == "" and uuidsetup == "":
             query = query.order_by(Machine.name)
         query = self.__filter_on(query)
@@ -815,16 +804,20 @@ class Glpi94(DyngroupDatabaseHelper):
 
         nb_columns = len(columns_name)
         if idmachine != "" or uuidsetup != "":
+            #result['data']['entity_glpi_id'] = 0 if result['data']['entity_glpi_id'] == '' else int(result['data']['entity_glpi_id'])
             result['data']['columns_name'] = columns_name
             result['data']['columns_name_reg'] = list_reg_columns_name
+
+        #initialiser 1 tableau pour chaque registerkey windows demande in configuration
         regs = {reg_column :[] for reg_column in list_reg_columns_name}
         result['data']['reg'] = regs
 
         for machine in machines:
             if idmachine == "" and uuidsetup == "":
                 result['data']['presence'].append(1 if machine[0] in online_machines else 0)
-                for indexcolumn in range(nb_columns):
-                    result['data'][columns_name[indexcolumn]].append(machine[indexcolumn])
+                for indexcolum in range(nb_columns):
+                    result['data'][columns_name[indexcolum]].append(machine[indexcolum])
+                    #
             else:
                 recordmachinedict = self._machineobjectdymresult(machine)
                 for recordmachine in recordmachinedict:
@@ -833,26 +826,11 @@ class Glpi94(DyngroupDatabaseHelper):
             for column in list_reg_columns_name:
                 result['data']['reg'][column].append(None)
 
-        regquery = session.query(
-            self.regcontents.c.computers_id,
-            self.regcontents.c.key,
-            self.regcontents.c.value)\
-        .filter(
-            and_(
-                self.regcontents.c.key.in_(list_reg_columns_name),
-                self.regcontents.c.computers_id.in_(result['data']['uuid'])
-            )
-        ).all()
-        for reg in regquery:
-            index = result['data']['uuid'].index(reg[0])
-            result['data']['reg'][reg[1]][index] = reg[2]
-
         result['count'] = count
 
         uuids = []
         for id in result['data']['uuid']:
             uuids.append('UUID%s'%id)
-
         if idmachine == "" and uuidsetup == "":
             result['xmppdata'] = []
             result['xmppdata'] = XmppMasterDatabase().getmachinesbyuuids(uuids)
@@ -3972,7 +3950,7 @@ class Glpi94(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def _machineobjectdymresult(self, ret):
+    def _machineobjectdymresult(self, ret, encode= 'iso-8859-1'):
         """
             this function return dict result sqlalchimy
         """
@@ -3980,29 +3958,229 @@ class Glpi94(DyngroupDatabaseHelper):
         try:
             if ret :
                 for keynameresult in ret.keys():
-                    if getattr(ret, keynameresult) is None:
-                        resultrecord[keynameresult] = ""
-                    else:
-                        typestr = str(type(getattr(ret, keynameresult)))
-
-                        if "class" in typestr:
-                            try:
-                                if 'decimal.Decimal' in typestr:
-                                    resultrecord[keynameresult] = float(getattr(ret, keynameresult))
-                                else:
-                                    resultrecord[keynameresult] = str(getattr(ret, keynameresult))
-                            except:
-                                self.logger.warning("type class %s no used for key %s" % (typestr, keynameresult))
-                                resultrecord[keynameresult] = ""
+                    try:
+                        if getattr(ret, keynameresult) is None:
+                            resultrecord[keynameresult] = ""
                         else:
-                            if isinstance(getattr(ret, keynameresult), datetime.datetime):
-                                resultrecord[keynameresult] = getattr(ret, keynameresult).strftime("%m/%d/%Y %H:%M:%S")
+                            typestr = str(type(getattr(ret, keynameresult)))
+                            if "class" in typestr:
+                                try:
+                                    if 'decimal.Decimal' in typestr:
+                                        resultrecord[keynameresult] = float(getattr(ret, keynameresult))
+                                    else:
+                                        resultrecord[keynameresult] = str(getattr(ret, keynameresult))
+                                except:
+                                    self.logger.warning("type class %s no used for key %s" % (typestr, keynameresult))
+                                    resultrecord[keynameresult] = ""
                             else:
-                                resultrecord[keynameresult] = getattr(ret, keynameresult)
+                                if isinstance(getattr(ret, keynameresult), datetime.datetime):
+                                    resultrecord[keynameresult] = getattr(ret, keynameresult).strftime("%m/%d/%Y %H:%M:%S")
+                                else:
+                                    strre = getattr(ret, keynameresult)
+                                    if isinstance(strre, basestring):
+                                        if encode != "utf8":
+                                            resultrecord[keynameresult] =  "%s"%strre.decode(encode).encode('utf8')
+                                        else:
+                                            resultrecord[keynameresult] =  "%s"%strre.encode('utf8')
+                                    else:
+                                        resultrecord[keynameresult] = strre
+                    except AttributeError:
+                        resultrecord[keynameresult] = ""
         except Exception as e:
-                self.logger.error("\n We encountered the error %s" % e)
-                self.logger.error("\n The backtrace is \n%s" % (traceback.format_exc()))
+            self.logger.error("\n We encountered the error %s" % e)
+            self.logger.error("\n The backtrace is \n%s" % (traceback.format_exc()))
         return resultrecord
+
+    @DatabaseHelper._sessionm
+    def get_machines_list1(self, session, start, end, ctx):
+        # start and end are used to set the limit parameter in the query
+        start = int(start)
+        end = int(end)
+
+        location = ""
+        criterion = ""
+        field = ""
+        contains = ""
+
+        master_config = xmppMasterConfig()
+        #reg_columns = []
+        #r=re.compile(r'reg_key_.*')
+        #regs=filter(r.search, self.config.summary)
+        #for regkey in regs:
+        #    regkeyconf = getattr( master_config, regkey).split("|")[0].split("\\")[-1]
+        #    #logging.getLogger().error(regkeyconf)
+        #    reg_columns.append(regkeyconf)
+
+        # location filter is corresponding to the entity selection in the interface
+        if "location" in ctx and ctx['location'] != "":
+            location = ctx['location'].replace("UUID", "")
+
+        # "filter" filter is corresponding to the string the user wants to find
+        if "filter" in ctx and ctx["filter"] != "":
+            criterion = ctx["filter"]
+
+        if "field" in ctx and ctx["field"] != "":
+            field = ctx["field"]
+
+        if "contains" in ctx and ctx["contains"] != "":
+            contains = ctx["contains"]
+
+        query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
+        .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
+        .outerjoin(self.user, Machine.users_id == self.user.c.id)\
+        .join(Entities, Entities.id == Machine.entities_id)\
+        .outerjoin(self.locations, Machine.locations_id == self.locations.c.id)\
+        .outerjoin(self.manufacturers, Machine.manufacturers_id == self.manufacturers.c.id)\
+        .join(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)#\
+        #.outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
+
+        if field != "":
+            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            if field != "type":
+                query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                   Computersitems.itemtype == "Peripheral"))\
+                    .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
+        if 'cn' in self.config.summary:
+            query = query.add_column(Machine.name.label("cn"))
+
+        if 'os' in self.config.summary:
+            query = query.add_column(self.os.c.name.label("os")).join(self.os)
+
+        if 'description' in self.config.summary:
+            query = query.add_column(Machine.comment.label("description"))
+
+        if 'type' in self.config.summary:
+            query = query.add_column(self.glpi_computertypes.c.name.label("type"))
+
+        if 'owner_firstname' in self.config.summary:
+            query = query.add_column(self.user.c.firstname.label("owner_firstname"))
+
+        if 'owner_realname' in self.config.summary:
+            query = query.add_column(self.user.c.realname.label("owner_realname"))
+
+        if 'owner' in self.config.summary:
+            query = query.add_column(self.user.c.name.label("owner"))
+
+        if 'user' in self.config.summary:
+            query = query.add_column(Machine.contact.label("user"))
+
+        if 'entity' in self.config.summary:
+            query = query.add_column(Entities.name.label("entity"))
+
+        if 'location' in self.config.summary:
+            query = query.add_column(self.locations.c.name.label("location"))
+
+        if 'model' in self.config.summary:
+            query = query.add_column(self.model.c.name.label("model"))
+
+        if 'manufacturer' in self.config.summary:
+            query = query.add_column(self.manufacturers.c.name.label("manufacturer"))
+
+        # Don't select deleted or template machines
+        query = query.filter(Machine.is_deleted==0)\
+        .filter(Machine.is_template==0)
+
+        # Select machines from the specified entity
+        if location != "":
+            listentity=[int(x.strip()) for x in location.split(',')]
+            query = query.filter(Entities.id.in_(listentity))
+
+        # Add all the like clauses to find machines containing the criterion
+        if criterion != "":
+            if field == "":
+                query = query.filter(or_(
+                    Machine.name.contains(criterion),
+                    Machine.comment.contains(criterion),
+                    self.os.c.name.contains(criterion),
+                    self.glpi_computertypes.c.name.contains(criterion),
+                    Machine.contact.contains(criterion),
+                    Entities.name.contains(criterion),
+                    self.user.c.firstname.contains(criterion),
+                    self.user.c.realname.contains(criterion),
+                    self.user.c.name.contains(criterion),
+                    self.locations.c.name.contains(criterion),
+                    self.manufacturers.c.name.contains(criterion),
+                    self.model.c.name.contains(criterion),
+                    #self.regcontents.c.value.contains(criterion)
+                ))
+            else:
+                if field == "peripherals":
+                    if contains == "notcontains":
+                        query = query.filter(not_(Peripherals.name.contains(criterion)))
+                    else:
+                        query = query.filter(Peripherals.name.contains(criterion))
+                else:
+                    pass
+
+        query = query.order_by(Machine.name)
+
+        # Even if computerpresence is not specified,
+        # needed in "all computers" page to know which computer in online or offline
+        online_machines = [int(id) for id in XmppMasterDatabase().getidlistPresenceMachine(presence=True) if id != "UUID" and id != ""]
+        if "computerpresence" not in ctx:
+            # Do nothing more
+            pass
+        elif ctx["computerpresence"] == "no_presence":
+            query = query.filter(Machine.id.notin_(online_machines))
+        else:
+            query = query.filter(Machine.id.in_(online_machines))
+
+        query = self.__filter_on(query)
+
+        # From now we can have the count of machines
+        count = query.count()
+
+        # Then continue with others criterions and filters
+        query = query.offset(start).limit(end)
+
+        columns_name = [column['name'] for column in query.column_descriptions]
+        machines = query.all()
+
+        result = {"count" : count, "data":{index : [] for index in columns_name}}
+        result['data']['presence'] = []
+
+        nb_columns = len(columns_name)
+
+        #regs = {reg_column :[] for reg_column in reg_columns}
+        #result['data']['reg'] = regs
+
+        for machine in machines:
+            _count = 0
+            while _count < nb_columns:
+                result['data'][columns_name[_count]].append(machine[_count])
+                _count += 1
+
+            if machine[0] in online_machines:
+                result['data']['presence'].append(1)
+            else:
+                result['data']['presence'].append(0)
+
+            #for column in reg_columns:
+                #result['data']['reg'][column].append(None)
+
+        #regquery = session.query(
+        #    self.regcontents.c.computers_id,
+        #    self.regcontents.c.key,
+        #    self.regcontents.c.value)\
+        #.filter(
+        #    and_(
+        #        self.regcontents.c.key.in_(reg_columns),
+        #        self.regcontents.c.computers_id.in_(result['data']['uuid'])
+        #    )
+        #).all()
+        #for reg in regquery:
+        #    index = result['data']['uuid'].index(reg[0])
+        #    result['data']['reg'][reg[1]][index] = reg[2]
+
+        result['count'] = count
+
+        uuids = []
+        for id in result['data']['uuid']:
+            uuids.append('UUID%s'%id)
+
+        result['xmppdata'] = []
+        result['xmppdata'] = XmppMasterDatabase().getmachinesbyuuids(uuids)
+        return result
 
     def _machineobject(self, ret):
         """ result view glpi_computers_pulse """

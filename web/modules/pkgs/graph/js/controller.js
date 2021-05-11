@@ -147,7 +147,7 @@ function moveToLeft()
     selectedDependencies = jQuery("#pooldependencies").val();
 
     jQuery.each(selectedDependencies, function(id,dependency){
-        jQuery("#addeddependencies").append(jQuery("#pooldependencies").find("[value="+dependency+"]")[0]);
+        jQuery("#addeddependencies").append(jQuery("#pooldependencies").find("[value=\""+dependency+"\"]")[0]);
     });
 
 }

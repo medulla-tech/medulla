@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * file : /glpi/glpi/ajaxMachinesList.php
  */
 
 require_once("modules/glpi/includes/xmlrpc.php");
@@ -159,12 +160,25 @@ $ctx['maxperpage'] = $maxperpage;
 if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
     $ctx['computerpresence'] = $_SESSION['computerpresence'];
 
-
     $machines1 = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
 
 $count = $machines1["count"];
+$total = $machines1["total"];
 $datas = $machines1["data"];
 $xmppdatas = $machines['xmppdata'];
+
+$br = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
+foreach ($datas as $nametableau => $tableau){
+    foreach($datas[$nametableau] as  $key => &$value){
+        $value = str_ireplace( array("\\r\\n"), "\r\n", $value);
+        $value = str_ireplace( array("\\n"), "\r\n", $value);
+        $value = str_ireplace($br, "\r\n", $value);
+        if(stripos ($value, "script") !== false){
+            $value  = htmlspecialchars($value);
+        }
+        $value =  htmlentities($value);
+    }
+}
 
 $presencesClass = [];
 $params = [];
@@ -172,7 +186,6 @@ $params = [];
 $msc_vnc_show_icon = web_vnc_show_icon();
 
 $glpinoAction = new EmptyActionItem1(_("GLPI Inventory"),"glpitabs","inventoryg","inventory", "base", "computers");
-
 
 // Actions for each machines
 $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
@@ -361,20 +374,15 @@ $orderkey = array( "glpi_owner",
         if ($datas['uuid_inventorymachine'][$index] =="" ){
             $actionInventory[] = $glpinoAction;
             $dissociatedFirstColumns[] = $index;
+            $action_deploy_msc[] = $mscNoAction; //deployement
         }else{
-         $actionInventory[] = $glpiAction;
+            $actionInventory[] = $glpiAction;
+            $action_deploy_msc[] = $mscAction; //deployement
         }
         $actionxmppquickdeoloy[]=$DeployQuickxmpp; //Quick action presence ou non presence.
         $actionMonitoring[] = $monitoring;
         if ($valeue == 1){
             $presencesClass[] = "machineNamepresente";
-
-            if ($datas['uuid_inventorymachine'][$index] ==""){
-               $action_deploy_msc[] = $mscNoAction; //deployement
-            }
-            else{
-               $action_deploy_msc[] = $mscAction; //deployement
-            }
             if (isExpertMode()){
                 $actionConsole[] = $inventconsole;
                 $actionxmppbrowsing[] = $inventxmppbrowsing;
@@ -386,7 +394,6 @@ $orderkey = array( "glpi_owner",
             }
         }
         else {
-            $action_deploy_msc[] = $mscNoAction; //deployement
             $presencesClass[] = "machineName";
             if (isExpertMode()){
                 $actionConsole[] = $inventnoconsole;
@@ -501,11 +508,11 @@ if(canDelComputer()){
 
 
 $n->setMainActionClasses($presencesClass);
-$n->setItemCount($count);
+$n->setItemCount($total);
 
-$n->setNavBar(new AjaxNavBar($count, $location));
+$n->setNavBar(new AjaxNavBar($total, $location));
 $n->start = 0;
-$n->end = $count;
+$n->end = $total;
 $n->display();
 ?>
 

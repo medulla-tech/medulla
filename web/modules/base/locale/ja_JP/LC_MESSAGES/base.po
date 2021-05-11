@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-02 15:58+0100\n"
+"POT-Creation-Date: 2021-04-01 11:32+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
 "Language-Team: Japanese (Japan) (https://www.transifex.com/siveo/teams/72118/ja_JP/)\n"
@@ -899,26 +899,25 @@ msgid "The password is too short."
 msgstr "パスワードが短すぎます"
 
 #: modules/base/includes/computers_list.inc.php:100
-#: modules/glpi/glpi/ajaxMachinesList.php:163
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:89
 msgid "Inventory"
 msgstr "在庫"
 
 #: modules/base/includes/computers_list.inc.php:101
-#: modules/glpi/glpi/ajaxMachinesList.php:169
+#: modules/glpi/glpi/ajaxMachinesList.php:182
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:95
 msgid "Monitoring"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:102
-#: modules/glpi/glpi/ajaxMachinesList.php:160
+#: modules/glpi/glpi/ajaxMachinesList.php:174
+#: modules/glpi/glpi/ajaxMachinesList.php:178
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:86
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:90
 msgid "GLPI Inventory"
 msgstr "GLPI 在庫"
 
 #: modules/base/includes/computers_list.inc.php:103
-#: modules/glpi/glpi/ajaxMachinesList.php:165
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:91
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
@@ -930,9 +929,8 @@ msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:104
 #: modules/base/includes/computers_list.inc.php:107
-#: modules/glpi/glpi/ajaxMachinesList.php:161
-#: modules/glpi/glpi/ajaxMachinesList.php:166
-#: modules/glpi/glpi/ajaxMachinesList.php:171
+#: modules/glpi/glpi/ajaxMachinesList.php:186
+#: modules/glpi/glpi/ajaxMachinesList.php:187
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:87
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:92
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:97
@@ -945,8 +943,8 @@ msgstr "ログの読み込み"
 
 #: modules/base/includes/computers_list.inc.php:109
 #: modules/base/includes/computers_list.inc.php:110
-#: modules/glpi/glpi/ajaxMachinesList.php:173
-#: modules/glpi/glpi/ajaxMachinesList.php:174
+#: modules/glpi/glpi/ajaxMachinesList.php:189
+#: modules/glpi/glpi/ajaxMachinesList.php:190
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:99
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:100
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:17
@@ -960,10 +958,10 @@ msgstr ""
 #: modules/base/includes/computers_list.inc.php:113
 #: modules/base/includes/computers_list.inc.php:125
 #: modules/base/includes/computers_list.inc.php:126
-#: modules/glpi/glpi/ajaxMachinesList.php:176
-#: modules/glpi/glpi/ajaxMachinesList.php:177
-#: modules/glpi/glpi/ajaxMachinesList.php:178
-#: modules/glpi/glpi/ajaxMachinesList.php:181
+#: modules/glpi/glpi/ajaxMachinesList.php:193
+#: modules/glpi/glpi/ajaxMachinesList.php:194
+#: modules/glpi/glpi/ajaxMachinesList.php:196
+#: modules/glpi/glpi/ajaxMachinesList.php:197
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:102
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:103
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:104
@@ -978,18 +976,18 @@ msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:119
 #: modules/base/includes/computers_list.inc.php:121
-#: modules/glpi/glpi/ajaxMachinesList.php:179
-#: modules/glpi/glpi/ajaxMachinesList.php:180
+#: modules/glpi/glpi/ajaxMachinesList.php:200
+#: modules/glpi/glpi/ajaxMachinesList.php:201
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:105
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:106
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:34
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:35
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:39
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:15
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:16
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
-#: modules/admin/admin/ajaxRelaysList.php:34
-#: modules/admin/admin/ajaxRelaysList.php:35
+#: modules/admin/admin/ajaxRelaysList.php:45
+#: modules/admin/admin/ajaxRelaysList.php:46
 #: modules/pulse2/includes/menu_actionaudit.php:80
 msgid "Edit config files"
 msgstr ""
@@ -997,25 +995,25 @@ msgstr ""
 #: modules/base/includes/computers_list.inc.php:128
 #: modules/base/includes/computers_list.inc.php:130
 #: modules/base/includes/computers_list.inc.php:141
-#: modules/glpi/glpi/ajaxMachinesList.php:170
-#: modules/glpi/glpi/ajaxMachinesList.php:185
-#: modules/glpi/glpi/ajaxMachinesList.php:195
+#: modules/glpi/glpi/ajaxMachinesList.php:183
+#: modules/glpi/glpi/ajaxMachinesList.php:207
+#: modules/glpi/glpi/ajaxMachinesList.php:219
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:96
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:111
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:121
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:55
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:59
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:19
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:20
-#: modules/admin/admin/ajaxRelaysList.php:54
-#: modules/admin/admin/ajaxRelaysList.php:55
+#: modules/admin/admin/ajaxRelaysList.php:65
+#: modules/admin/admin/ajaxRelaysList.php:66
 #: modules/pulse2/includes/menu_actionaudit.php:75
 #: modules/pulse2/includes/menu_action.php:64
 msgid "Remote control"
 msgstr "リモートコントロール"
 
 #: modules/base/includes/computers_list.inc.php:132
-#: modules/glpi/glpi/ajaxMachinesList.php:187
+#: modules/glpi/glpi/ajaxMachinesList.php:210
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:113
 #: modules/pulse2/includes/menu_group_action.php:76
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:156
@@ -1028,19 +1026,18 @@ msgstr "ファイルダウンロード"
 
 #: modules/base/includes/computers_list.inc.php:134
 #: modules/base/users/ajaxFilter.php:85
-#: modules/glpi/glpi/ajaxMachinesList.php:188
+#: modules/glpi/glpi/ajaxMachinesList.php:212
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:114
 msgid "extTicket issue"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:136
-#: modules/glpi/glpi/ajaxMachinesList.php:190
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:116
 msgid "Show Profile"
 msgstr "プロファイル表示"
 
 #: modules/base/includes/computers_list.inc.php:138
-#: modules/glpi/glpi/ajaxMachinesList.php:192
+#: modules/glpi/glpi/ajaxMachinesList.php:216
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:118
 #: modules/pulse2/includes/menu_actionaudit.php:68
 #: modules/pulse2/includes/menu_action.php:75
@@ -1053,14 +1050,14 @@ msgid "Computers list"
 msgstr "コンピューター一覧"
 
 #: modules/base/includes/computers_list.inc.php:368
-#: modules/glpi/glpi/ajaxMachinesList.php:371
+#: modules/glpi/glpi/ajaxMachinesList.php:459
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:323
 #: modules/pulse2/includes/menu_actionaudit.php:66
 msgid "Backup status"
 msgstr "バックアップステータス"
 
 #: modules/base/includes/computers_list.inc.php:408
-#: modules/glpi/glpi/ajaxMachinesList.php:408
+#: modules/glpi/glpi/ajaxMachinesList.php:493
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:360
 msgid "Delete computer"
 msgstr "コンピューターの削除"
@@ -1157,15 +1154,15 @@ msgstr "コンピューターのネットマスクアドレス"
 
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100 includes/ajaxTools.php:63
-#: includes/ajaxTools.php:69 includes/PageGenerator.php:881
-#: includes/PageGenerator.php:1128 includes/FormGenerator.php:647
+#: includes/ajaxTools.php:69 includes/PageGenerator.php:889
+#: includes/PageGenerator.php:1136 includes/FormGenerator.php:647
 msgid "Previous"
 msgstr "前"
 
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111 includes/ajaxTools.php:74
-#: includes/ajaxTools.php:82 includes/PageGenerator.php:895
-#: includes/PageGenerator.php:1138 includes/FormGenerator.php:648
+#: includes/ajaxTools.php:82 includes/PageGenerator.php:903
+#: includes/PageGenerator.php:1146 includes/FormGenerator.php:648
 msgid "Next"
 msgstr "次"
 
@@ -1325,8 +1322,8 @@ msgstr "すべてのユーザー"
 #: modules/base/groups/members.php:191 modules/base/groups/edit.php:117
 #: modules/dyngroup/includes/groups.inc.php:85
 #: modules/dyngroup/includes/groups.inc.php:283
-#: includes/PageGenerator.php:2636 includes/PageGenerator.php:2705
-#: includes/PageGenerator.php:2731
+#: includes/PageGenerator.php:2644 includes/PageGenerator.php:2713
+#: includes/PageGenerator.php:2739
 msgid "Confirm"
 msgstr "確認"
 
@@ -1337,7 +1334,7 @@ msgstr "確認"
 #: modules/imaging/imaging/multicast.php:390
 #: modules/dyngroup/includes/groups.inc.php:86
 #: modules/dyngroup/includes/groups.inc.php:284
-#: includes/PageGenerator.php:2640 includes/PageGenerator.php:2709
+#: includes/PageGenerator.php:2648 includes/PageGenerator.php:2717
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -1733,8 +1730,8 @@ msgstr[0] ""
 msgid "Appstream"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:182
-#: modules/glpi/glpi/ajaxMachinesList.php:183
+#: modules/glpi/glpi/ajaxMachinesList.php:203
+#: modules/glpi/glpi/ajaxMachinesList.php:204
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:108
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:109
 msgid "files viewer"
@@ -1764,52 +1761,52 @@ msgstr ""
 msgid "end"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:37
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
-#: modules/admin/admin/ajaxRelaysList.php:37
-#: modules/admin/admin/ajaxRelaysList.php:38
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:42
+#: modules/admin/admin/ajaxRelaysList.php:48
+#: modules/admin/admin/ajaxRelaysList.php:49
 msgid "Relay Detail"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:40
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
-#: modules/admin/admin/ajaxRelaysList.php:40
-#: modules/admin/admin/ajaxRelaysList.php:41
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
+#: modules/admin/admin/ajaxRelaysList.php:51
+#: modules/admin/admin/ajaxRelaysList.php:52
 msgid "Detail actions"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:43
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
-#: modules/admin/admin/ajaxRelaysList.php:43
-#: modules/admin/admin/ajaxRelaysList.php:44
-msgid "Console Relay"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:46
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
-#: modules/admin/admin/ajaxRelaysList.php:45
-#: modules/admin/admin/ajaxRelaysList.php:46
-#: modules/admin/admin/ajaxRelaysList.php:47
-msgid "Switch"
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:48
+#: modules/admin/admin/ajaxRelaysList.php:54
+#: modules/admin/admin/ajaxRelaysList.php:55
+msgid "Console Relay"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
-#: modules/admin/admin/ajaxRelaysList.php:49
-#: modules/admin/admin/ajaxRelaysList.php:50
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:51
+#: modules/admin/admin/ajaxRelaysList.php:56
+#: modules/admin/admin/ajaxRelaysList.php:57
+#: modules/admin/admin/ajaxRelaysList.php:58
+msgid "Switch"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:53
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
+#: modules/admin/admin/ajaxRelaysList.php:60
+#: modules/admin/admin/ajaxRelaysList.php:61
 msgid "Reconfigure Machines"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:52
-#: modules/admin/admin/ajaxRelaysList.php:52
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:56
+#: modules/admin/admin/ajaxRelaysList.php:63
 msgid "QA Launched"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:57
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
-#: modules/admin/admin/ajaxRelaysList.php:57
-#: modules/admin/admin/ajaxRelaysList.php:58
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:61
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:62
+#: modules/admin/admin/ajaxRelaysList.php:68
+#: modules/admin/admin/ajaxRelaysList.php:69
 msgid "Packages List"
 msgstr ""
 
@@ -1888,7 +1885,7 @@ msgstr ""
 msgid "Edit rule"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:60
+#: modules/admin/admin/ajaxRelaysList.php:71
 msgid "Relay Rules"
 msgstr ""
 
@@ -2045,45 +2042,45 @@ msgstr[0] ""
 "\n"
 "other: サービスを再起動しますか？"
 
-#: includes/PageGenerator.php:568 includes/PageGenerator.php:800
+#: includes/PageGenerator.php:576 includes/PageGenerator.php:808
 msgid "to"
 msgstr "至"
 
-#: includes/PageGenerator.php:570 includes/PageGenerator.php:802
+#: includes/PageGenerator.php:578 includes/PageGenerator.php:810
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - 合計  <b>%s </b>"
 
-#: includes/PageGenerator.php:573 includes/PageGenerator.php:805
+#: includes/PageGenerator.php:581 includes/PageGenerator.php:813
 msgid "page"
 msgstr "ページ"
 
-#: includes/PageGenerator.php:915
+#: includes/PageGenerator.php:923
 msgid "Pagination"
 msgstr "ページネーション"
 
-#: includes/PageGenerator.php:988
+#: includes/PageGenerator.php:996
 msgid "Go to page"
 msgstr "ページに移動"
 
-#: includes/PageGenerator.php:1419
+#: includes/PageGenerator.php:1427
 msgid "No item available"
 msgstr "使用できる項目がありません"
 
-#: includes/PageGenerator.php:1638
+#: includes/PageGenerator.php:1646
 msgid "Select entity"
 msgstr "エンティティ選択"
 
-#: includes/PageGenerator.php:2258 includes/FormGenerator.php:646
+#: includes/PageGenerator.php:2266 includes/FormGenerator.php:646
 #: graph/header.inc.php:251
 msgid "Close"
 msgstr "閉じる"
 
-#: includes/PageGenerator.php:2883
+#: includes/PageGenerator.php:2891
 msgid "Select all"
 msgstr "すべて選択"
 
-#: includes/PageGenerator.php:2883
+#: includes/PageGenerator.php:2891
 msgid "Unselect all"
 msgstr "すべて選択解除"
 

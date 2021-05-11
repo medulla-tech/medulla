@@ -859,36 +859,36 @@ class MscDatabase(msc.MscDatabase):
         machines_in_deploy_group = ComputerManager().getRestrictedComputersList(ctx, filt={'gid': convergence_deploy_group_id}, justId=True)
         return [x for x in machines_in_deploy_group if x not in machines_in_command]
 
-    #def addMachinesToCommand(self,
-                             #ctx,
-                             #cmd_id,
-                             #targets,
-                             #group_id='',
-                             #root=None,
-                             #mode='push',
-                             #proxies=[],
-                             #phases={}
-            #):
+    def addMachinesToCommand(self,
+                             ctx,
+                             cmd_id,
+                             targets,
+                             group_id='',
+                             root=None,
+                             mode='push',
+                             proxies=[],
+                             phases={}
+            ):
+        """
+        Main func to inject a new command in our MSC database
+
+        Return a Deferred object resulting to the command id
         #"""
-        #Main func to inject a new command in our MSC database
+        cmd = self.getCommands(ctx, cmd_id)
+        if root == None:
+            root = self.config.repopath
 
-        #Return a Deferred object resulting to the command id
-        #"""
-        #cmd = self.getCommands(ctx, cmd_id)
-        #if root == None:
-            #root = self.config.repopath
+        targets_to_insert = []
+        targets_name = []
+        coh_to_insert = []
+        target_uuids = targets
+        existing_coh_ids = [coh.id for coh in cmd.getCohIds(target_uuids=target_uuids)]
 
-        #targets_to_insert = []
-        #targets_name = []
-        #coh_to_insert = []
-        #target_uuids = targets
-        #existing_coh_ids = [coh.id for coh in cmd.getCohIds(target_uuids=target_uuids)]
-
-        #targets, targetsdata = self.getComputersData(ctx, targets, group_id)
-        ##if targets ==False:
-        #if len(targets) == 0:
-            #self.logger.error("The machine list is empty, does your machines have a network interface ?")
-            #return -2
+        targets, targetsdata = self.getComputersData(ctx, targets, group_id)
+        #if targets ==False:
+        if len(targets) == 0:
+            self.logger.error("The machine list is empty, does your machines have a network interface ?")
+            return -2
 
         #def cbGetTargetsMirrors(schedulers):
             #args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)

@@ -1,6 +1,98 @@
+Pulse 2 4.6.8 (unreleased)
+=============
+* [FEATURE] Disable relay list page from computers menu
+* [FEATURE] Add utilities to migrate to new package server
+* [FEATURE] Disable new sharing mode by default
+* [FEATURE] Update translations
+* [FEATURE] Rename "Localisation server" to "Share" and remove the search field
+* [FEATURE] Remove "add package" from menu when the user has no writing rights
+* [FEATURE] Update the package parser to catch more errors
+* [FEATURE] Enhance error messages.
+* [FEATURE] Fix several XSS issues.
+* [FEATURE] Allow to retrieve the glpi uuid if missing
+* [BUGFIX]  Fix backtrace during deployment
+* [BUGFIX]  Fixes listing of packages for deployment
+* [BUGFIX]  Add acl for relays actions
+* [BUGFIX]  Fix rendering of accentuated letters from glpi to pulse.
+* [BUGFIX]  Fix detection of online/offline machine in the Glpi view
+* [BUGFIX]  Add back addMachinesToCommand function ( fixing restarting
+convergences)
+* [BUGFIX]  Do not allow ; in computers descriptions
+* [BUGFIX]  Fix the int limitation problem for quotas in sharing
+* [BUGFIX]  Change the size of the packages size column
+* [BUGFIX]  Fix use of older SQLAlchey
+* [BUGFIX]  Fix registry when there no uuidsetup defined
+* [BUGFIX]  Change glpi_description sql field to text
+* [BUGFIX]  Fix display of active/available convergences
+* [BUGFIX]  Fix permissions for viewing ars based on clusters
+* [BUGFIX]  Grant Rights for Admin on the ARS Cluster.
+* [BUGFIX]  Fix use of <br> in the description field (glpi )
+* [BUGFIX]  Escape simple quotes in descriptions ( glpi )
+* [BUGFIX]  Fix listing enabled plugins.
+* [BUGFIX]  Fix crash when metagenerator is missing
+* [BUGFIX]  Set metagenerator key to expert if missing
+* [BUGFIX]  Fix registration when there is no entity in xmppmaster database yet
+* [BUGFIX]  Fixes traceback when editing
+* [BUGFIX]  Convert id from string to int for glpi 084 and 92
+* [BUGFIX]  Use OCS inventory date if exists
+* [BUGFIX]  All entities return all entities uuids allowed to the user
+* [BUGFIX]  Fix search in entities
+* [BUGFIX]  Add the entity to the search.
+* [BUGFIX]  Fix a problem when the hostname changed.
+* [BUGFIX]  Pkgs display on "os" definition in config.json
+* [BUGFIX]  Fix the edition status if the metagenerator is set to manual
+* [BUGFIX]  Remove too many arguments in the formatted filter
+* [BUGFIX]  Set to "" the none values on sharings infos
+* [BUGFIX]  A undefined variable were used, replaced it by the real name
+* [BUGFIX]  Modify assert tests to conditionnal tests in the page generator
+* [BUGFIX]  Do not look for installation command if package is larger than 500MB
+* [BUGFIX]  Fix backtrace when no machines are associated to a relay
+* [BUGFIX]  Fix pagination on packages list admin page
+* [BUGFIX]  Enhance glpi 0.84 support
+* [BUGFIX]  Remove registries from machines filters
+* [BUGFIX]  Keep the partial count and use the total
+* [BUGFIX]  Fixes the pagination for the computers list
+* [BUGFIX]  Fix pagination in admin relay page
+* [BUGFIX]  Fix traceback when a user doesn't have rights on shares for relays list in admin
+* [BUGFIX]  Fix missing declaration for an array in glpi 0.84
+* [BUGFIX]  Remove old parameters from the filter
+* [BUGFIX]  Fix traceback on arraykeys when listing all computers in glpi 0.84
+* [BUGFIX]  Fix deployment action when machine is offline
+* [BUGFIX]  User can view only the relays allowed in pkgs_rules_local
+* [BUGFIX]  Fix wol by correcting a wrong variable name
+* [BUGFIX]  Fix size output to be human readable
+* [BUGFIX]  Fix package page when there is no packages to display
+* [BUGFIX]  Fix checking if new sharing is used, if not used the old style
+* [BUGFIX]  Add name to csv when the group is created
+* [BUGFIX]  Add missing parameters in pkgs.ini and initialise pkgs_rules_algo table
+* [BUGFIX]  Fix pagination in GLPI View
+Pulse 2 4.6.7
+=============
+* [FEATURE] Order relay list
+* [FEATURE] Add ACL on the package synchronisation
+* [FEATURE] Add ACL on the GLPI view
+* [FEATURE] Add ACL on package and relay view
+* [FEATURE] Add Quotas for relay servers
+* [FEATURE] New computer view
+* [BUGFIX] Fix deploying packages with the same name
+* [BUGFIX] Fix creating a package using the Zip action
+* [BUGFIX] Hide convergence if not available.
+* [BUGFIX] Export CSV
+
 Pulse 2 4.6.6
 =============
 * [FEATURE] Add admin page
+* [FEATURE] Allow to set up the send of WOL
+* [FEATURE] Allow to disable the use of UUID for glpi association
+* [FEATURE] Show non sync relays at the top of the list ( package view )
+* [FEATURE] Create packages in pushrsync by default and fallback in pulldirect if pushrsync fails.
+* [FEATURE] Ajout du camembert intermédiaire une fois le déploiement terminé
+* [FEATURE] Add  the percent in the Audit  view
+* [BUGFIX] Fix packages sync when a relay is down
+* [BUGFIX] Fix the percentages in the deploy view
+* [BUGFIX] Fix the action "set_config" in packaging
+* [BUGFIX] Fix the dates when planning a deployment
+* [BUGFIX] Fix detection of the package server when using pulldirect
 
 Pulse 2 4.6.5
 =============

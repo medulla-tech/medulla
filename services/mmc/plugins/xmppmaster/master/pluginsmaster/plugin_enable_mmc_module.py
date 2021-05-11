@@ -35,7 +35,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("=====================================================")
     datasend = { 'action': 'resultenablemmcmodul',
                  'sessionid': sessionid,
-                 'data': PluginManager().getAvailablePlugins()}
+                 'data': PluginManager().getEnabledPluginNames()}
     xmppobject.send_message( mto = message['from'],
                              mbody = json.dumps(datasend),
                              mtype = 'chat')
