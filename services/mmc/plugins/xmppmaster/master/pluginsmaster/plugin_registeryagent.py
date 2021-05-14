@@ -151,20 +151,21 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                 else:
                     logger.info("Machine %s does not exist in base" % msg['from'])
             if machine:
-                # on regarde si coherence avec table network.
+                # We look if there is coherency with the network table
                 try:
                     result = XmppMasterDatabase().listMacAdressforMachine(machine['id'],
                                                                           infomac=showinfobool)
-                    macadresssort=sorted([ x['macnotshortened'] for x in  \
+                    macadresssort = sorted([x['macnotshortened'] for x in  \
                                             data['information']['listipinfo']])
-                    macadressstr=",".join(macadresssort)
-                    logger.info("macadressstr %s " %macadressstr)
+                    macadressstr = "," . join(macadresssort)
+                    logger.debug("The mac address is: %s" % macadressstr)
                     if result[0] is None or result[0] != macadressstr:
                         if result[0] is not None:
-                            logger.warning("mac adress diff :\n\t %s : %s\n\t "\
-                                           "network table : %s" %(data['agenttype'],
-                                                                  macadressstr,
-                                                                  result[0]))
+                            logger.warning("The is a difference in the database between \n"\
+                                           "the %s 's table: %s" \
+                                           "and the network's table %s" %(data['agenttype'],
+                                                                          macadressstr,
+                                                                          result[0]))
                         raise
                     machine['enabled'] = 1
                 except Exception:
