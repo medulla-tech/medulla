@@ -1115,11 +1115,11 @@ def read_conf_remote_registeryagent(xmppobject):
 
     for regexpconf in blacklisted_mac_addresseslist:
         try:
-            logger.info("BUILD REGEXP FOR BLACKLIST MAC ADRESS -> %s"%regexpconf)
+            logger.debug("We are backlisting the following mac address: %s" % regexpconf)
             xmppobject.blacklisted_mac_addresses.append(re.compile(regexpconf))
         except Exception:
             logger.error("\n%s" % (traceback.format_exc()))
-            logger.error("COMPIL REGEXP BLACKLIST MAC ADRESS -> %s <- [IGNORE THIS REGEXP]" % regexpconf)
+            logger.error("An error occured while blacklisting this mac address %s. We ignore it." % regexpconf)
     logger.debug("Plugin list registered is %s" % xmppobject.pluginlistregistered)
     logger.debug("Plugin list unregistered is %s" % xmppobject.pluginlistunregistered)
 
