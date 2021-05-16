@@ -2874,15 +2874,15 @@ class XmppMasterDatabase(DatabaseHelper):
         datenow = datetime.now()
         result = session.query(Deploy).filter( and_( Deploy.startcmd <= datenow,
                                                      Deploy.syncthing == 1)).all()
-        id_deploylist=set()
+        id_deploylist = set()
         # TODO: search keysyncthing in table machine.
         session.commit()
         session.flush()
         if not result:
             return list(id_deploylist)
-        list_id_ars={}
-        list_ars = set( )
-        list_cluster = set( )
+        list_id_ars = {}
+        list_ars = set()
+        list_cluster = set()
         # syncthing and set stat to 2
         self.chang_status_deploy_syncthing(datenow)
         cluster = self.clusterlistars()
@@ -2909,13 +2909,13 @@ class XmppMasterDatabase(DatabaseHelper):
 
             e = json.loads(t.result)
             package = os.path.basename( e['path'])
-            #creation du partage si celui ci n'existe pas.
-            id_deploy = self.setSyncthing_deploy_group( t.title,
-                                                        uuid.uuid4(),#namepartage
-                                                        package,
-                                                        t.command,
-                                                        t.group_uuid,
-                                                        dateend = t.endcmd)
+            # We create the share if it does not exist.
+            id_deploy = self.setSyncthing_deploy_group(t.title,
+                                                       uuid.uuid4(),
+                                                       package,
+                                                       t.command,
+                                                       t.group_uuid,
+                                                       dateend=t.endcmd)
             id_deploylist.add(id_deploy)
             clu =  self.clusternum(t.jid_relay)
             ars_cluster_id = self.setSyncthing_ars_cluster( clu['numcluster'],
@@ -2932,28 +2932,28 @@ class XmppMasterDatabase(DatabaseHelper):
                 if t.jid_relay in cluster[z]['listarscluster']:
                     # on trouve le cluster qui possede ars
                     clusterdata = cluster[z]
-            self.setSyncthing_machine(  t.jidmachine,
-                                        t.jid_relay,
-                                        json.dumps(clusterdata),
-                                        package,
-                                        t.sessionid,
-                                        t.start,
-                                        t.startcmd,
-                                        t.endcmd,
-                                        t.command,
-                                        t.group_uuid,
-                                        t.result,
-                                        ars_cluster_id,
-                                        syncthing = t.syncthing,
-                                        state =t.state,
-                                        user =t.user,
-                                        type_partage= "",
-                                        title=t.title,
-                                        inventoryuuid=t.inventoryuuid,
-                                        login=t.login,
-                                        macadress=t.macadress,
-                                        comment="%s_%s" % (t.command,
-                                                           t.group_uuid,))
+            self.setSyncthing_machine(t.jidmachine,
+                                      t.jid_relay,
+                                      json.dumps(clusterdata),
+                                      package,
+                                      t.sessionid,
+                                      t.start,
+                                      t.startcmd,
+                                      t.endcmd,
+                                      t.command,
+                                      t.group_uuid,
+                                      t.result,
+                                      ars_cluster_id,
+                                      syncthing=t.syncthing,
+                                      state=t.state,
+                                      user=t.user,
+                                      type_partage= "",
+                                      title=t.title,
+                                      inventoryuuid=t.inventoryuuid,
+                                      login=t.login,
+                                      macadress=t.macadress,
+                                      comment="%s_%s" % (t.command,
+                                                         t.group_uuid,))
 
         return list(id_deploylist)
 
