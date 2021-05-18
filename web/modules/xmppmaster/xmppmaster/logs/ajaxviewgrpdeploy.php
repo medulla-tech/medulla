@@ -126,7 +126,12 @@ $p->display();
 
 //FROM MSC BASE
 // The deployment is a convergence
-$isconvergence = is_commands_convergence_type($cmd_id, $filter, $start, $end);
+$isconvergence = is_commands_convergence_type($cmd_id);
+if($isconvergence != 0){
+    echo "<h2>";
+    echo $title;
+    echo "</h2>";
+}
 
 // Get syncthing stats for this deployment
 $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
@@ -147,22 +152,27 @@ $infocmd = command_detail($cmd_id);
 $creator_user = $infocmd['creator'] ;
 $creation_date = datecmd($infocmd['creation_date']);
 
-$start_date =  $lastcommandid['start_dateunixtime'];
-$end_date = $lastcommandid['end_dateunixtime'];
-
+$start_date =  $startcmd;
+$end_date   =  $endcmd ;
 // Get uuid, hostname and status of the deployed machines from xmppmaster.deploy
-$getdeployment = xmlrpc_getdeployment($cmd_id, $filter, $start, $maxperpage);
-
+$getdeployment = xmlrpc_getdeployment_cmd_and_title($cmd_id,
+                                                    $title,
+                                                    $filter,
+                                                    $start,
+                                                    $maxperpage);
 // Get the same machines from glpi
-$re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'], $filter, $start, $maxperpage);
+$re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'],
+                                $filter,
+                                $start,
+                                $maxperpage);
 
 if($getdeployment['total'] != 0)
-  $count = $getdeployment['total'];
+    $count = $getdeployment['total'];
 else
-  $count = $re['total'];
-// STATS FROM XMPPMASTER DEPLOY
-$statsfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,  date("Y-m-d H:i:s", $start_date));
+    $count = $re['total'];
 
+// STATS FROM XMPPMASTER DEPLOY
+$statsfromdeploy = xmlrpc_getstatdeploy_from_command_id_and_title($cmd_id, $title);
 // get some info from msc for this deployment
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
@@ -247,8 +257,8 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
     echo "<tbody>";
         echo "<tr>";
             echo '<td>'.$creation_date.'</td>';
-            echo '<td>'.date("Y-m-d H:i:s", $start_date).'</td>';
-            echo '<td>'.date("Y-m-d H:i:s", $end_date).'</td>';
+            echo '<td>'. $start_date.'</td>';
+            echo '<td>'.$end_date.'</td>';
             echo '<td>'.$creator_user.'</td>';
             if($isconvergence != 0){
                 echo "<td><img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/></td>";
@@ -735,7 +745,14 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
 
 echo '<script src="modules/xmppmaster/graph/js/chart.js"></script>';
 
-  $bluelistcolor = ["#7080AF", "#665899", "#6F01F3", "#5D01A9", "#2D0151", "#3399CC", "#000099", "#6600FF"];
+  $bluelistcolor = ["#7080AF",
+                    "#665899",
+                    "#6F01F3",
+                    "#5D01A9",
+                    "#2D0151",
+                    "#3399CC",
+                    "#000099",
+                    "#6600FF"];
   $max = count($bluelistcolor) - 1;
 
   if(!$terminate){
@@ -907,7 +924,6 @@ echo '<script src="modules/xmppmaster/graph/js/chart.js"></script>';
             echo 'datas2.push({"label":"'.ucfirst(strtolower($status)).'", "value":parseInt('.$$label.'), "color": "'.$color.'", "href":"'.urlredirect_group_for_deploy($label,$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
     }
-
 
     $aborted = 0;
     $errors = 0;

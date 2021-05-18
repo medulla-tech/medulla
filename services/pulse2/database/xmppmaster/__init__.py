@@ -3501,6 +3501,170 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception:
             return ret
 
+    @DatabaseHelper._sessionm
+    def getstatdeploy_from_command_id_and_title(self, session, command_id, title):
+        """
+        Retrieve the deploy statistics based on the command_id and name
+        Args:
+            session: The SQL Alchemy session
+            command_id: id of the deploy
+            title: The name of deploy
+        Return:
+            It returns the number of machines per status.
+        """
+        try:
+            machinedeploy = session.query(Deploy.state,
+                                          func.count(Deploy.state)).\
+                                              filter(and_(Deploy.command == command_id,
+                                                          Deploy.title == title)
+                                                    ).group_by(Deploy.state)
+            machinedeploy = machinedeploy.all()
+            ret = {'totalmachinedeploy': 0,
+                   'deploymentsuccess': 0,
+                   'abortontimeout': 0,
+                   'abortmissingagent': 0,
+                   'abortrelaydown': 0,
+                   'abortalternativerelaysdown': 0,
+                   'abortinforelaymissing': 0,
+                   'errorunknownerror': 0,
+                   'abortpackageidentifiermissing': 0,
+                   'abortpackagenamemissing': 0,
+                   'abortpackageversionmissing': 0,
+                   'abortpackageworkflowerror': 0,
+                   'abortdescriptormissing': 0,
+                   'abortmachinedisappeared': 0,
+                   'abortdeploymentcancelledbyuser': 0,
+                   'aborttransferfailed': 0,
+                   'abortpackageexecutionerror': 0,
+                   'deploymentstart': 0,
+                   'wol1': 0,
+                   'wol2': 0,
+                   'wol3': 0,
+                   'waitingmachineonline': 0,
+                   'deploymentpending': 0,
+                   'deploymentdelayed': 0,
+                   'deploymentspooled': 0,
+                   'otherstatus': 0,
+                  }
+            dynamic_status_list = self.get_log_status()
+            dynamic_label = []
+            dynamic_status = []
+            if dynamic_status_list != []:
+                for status in dynamic_status_list:
+                    ret[status['label']] = 0
+                    dynamic_label.append(status['label'])
+                    dynamic_status.append(status['status'])
+
+            liststatus = { x[0] : x[1] for x in machinedeploy}
+            totalmachinedeploy = 0
+            for t in liststatus:
+                ret['totalmachinedeploy'] += liststatus[t]
+
+                if t == 'DEPLOYMENT SUCCESS':
+                    ret['deploymentsuccess'] = liststatus[t]
+                elif t == 'ABORT ON TIMEOUT':
+                    ret['abortontimeout'] = liststatus[t]
+                elif t == 'ABORT MISSING AGENT':
+                    ret['abortmissingagent'] = liststatus[t]
+                elif t == 'ABORT RELAY DOWN':
+                    ret['abortrelaydown'] = liststatus[t]
+                elif t == 'ABORT ALTERNATIVE RELAYS DOWN':
+                    ret['abortalternativerelaysdown'] = liststatus[t]
+                elif t == 'ABORT INFO RELAY MISSING':
+                    ret['abortinforelaymissing'] = liststatus[t]
+                elif t == 'ERROR UNKNOWN ERROR':
+                    ret['errorunknownerror'] = liststatus[t]
+                elif t == 'ABORT PACKAGE IDENTIFIER MISSING':
+                    ret['abortpackageidentifiermissing'] = liststatus[t]
+                elif t == 'ABORT PACKAGE NAME MISSING':
+                    ret['abortpackagenamemissing'] = liststatus[t]
+                elif t == 'ABORT PACKAGE VERSION MISSING':
+                    ret['abortpackageversionmissing'] = liststatus[t]
+                elif t == 'ABORT PACKAGE WORKFLOW ERROR':
+                    ret['abortpackageworkflowerror'] = liststatus[t]
+                elif t == 'ABORT DESCRIPTOR MISSING':
+                    ret['abortdescriptormissing'] = liststatus[t]
+                elif t == 'ABORT MACHINE DISAPPEARED':
+                    ret['abortmachinedisappeared'] = liststatus[t]
+                elif t == 'ABORT DEPLOYMENT CANCELLED BY USER':
+                    ret['abortdeploymentcancelledbyuser'] = liststatus[t]
+                elif t == 'ABORT PACKAGE EXECUTION ERROR':
+                    ret['abortpackageexecutionerror'] = liststatus[t]
+
+                elif t == 'DEPLOYMENT START':
+                    ret['deploymentstart'] = liststatus[t]
+                elif t == 'WOL 1':
+                    ret['wol1'] = liststatus[t]
+                elif t == 'WOL 2':
+                    ret['wol2'] = liststatus[t]
+                elif t == 'WOL 3':
+                    ret['wol3'] = liststatus[t]
+                elif t == 'WAITING MACHINE ONLINE':
+                    ret['waitingmachineonline'] = liststatus[t]
+                elif t == 'DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)':
+                    ret['deploymentpending'] = liststatus[t]
+                elif t == 'DEPLOYMENT DELAYED':
+                    ret['deploymentdelayed'] = liststatus[t]
+
+                elif t in dynamic_status:
+                    index = dynamic_status.index(t)
+                    ret[dynamic_label[index]] = liststatus[t]
+                else:
+                    ret['otherstatus'] = liststatus[t]
+            return ret
+        except Exception:
+            return ret
+
+    @DatabaseHelper._sessionm
+    def getdeployment_cmd_and_title(self,
+                                    session,
+                                    command_id,
+                                    title,
+                                    filter="",
+                                    start=0,
+                                    limit=-1):
+        """
+        Get the list of deploys based on the command_id and title of the packages.
+
+        Arg:
+            sesion: The SQL Alchemy session
+            command_id: The id the package
+            title: Name of the package
+            filter: Used filters in the web page
+            start: Number of the first package to show.
+            limit: Maximum number of deploys sent at once.
+        Return:
+            It returns the list of the deploys
+
+        """
+        criterion = filter['criterion']
+        filter = filter['filter']
+
+        start = int(start)
+        limit = int(limit)
+
+        query = session.query(Deploy).filter(and_(Deploy.command == command_id,
+                                                  Deploy.title == title))
+        if filter == "status" and criterion != "":
+            query = query.filter(or_(Deploy.state.contains(criterion),
+                                     Deploy.inventoryuuid.contains(criterion),))
+        if filter != 'infos':
+            count = query.count()
+            if limit != -1:
+                query = query.offset(start).limit(limit)
+        else:
+            count = 0
+        result = query.all()
+        elements = {"id": [],
+                    "uuid": [],
+                    "status": []
+                   }
+
+        for deployment in result:
+            elements['id'].append(deployment.inventoryuuid.replace("UUID", ""))
+            elements['uuid'].append(deployment.inventoryuuid)
+            elements['status'].append(deployment.state)
+        return {"total": count, "datas": elements}
 
     @DatabaseHelper._sessionm
     def getdeployment(self, session, command_id, filter="", start=0, limit=-1):
