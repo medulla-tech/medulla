@@ -23,6 +23,7 @@ START TRANSACTION;
 
 USE `xmppmaster`;
 ALTER TABLE `xmppmaster`.`machines` CHANGE COLUMN `glpi_description` `glpi_description` TEXT NULL DEFAULT '';
+ALTER TABLE `xmppmaster`.`glpi_location` change column name name varchar(255) NOT NULL;
 
 UPDATE version SET Number = 59;
 

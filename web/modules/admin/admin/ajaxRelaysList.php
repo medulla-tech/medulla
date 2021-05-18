@@ -36,7 +36,7 @@ if ($_SESSION["login"] == "root"){
 }else{
   $sharings = xmlrpc_pkgs_search_share(["login"=> $_SESSION["login"]]);
   if($sharings['config']['centralizedmultiplesharing'] == 1){
-      $relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage, $filter);
+      $relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage, $_SESSION["login"], $filter);
   }else{
     $relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
   }

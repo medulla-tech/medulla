@@ -36,6 +36,7 @@ ALTER TABLE `pkgs`.`pkgs_rules_global`
 DROP INDEX `fk_pkgs_rules_global_pkgs_shares1_idx` ;
 
 INSERT INTO `pkgs`.`pkgs_rules_algos` (`id`, `name`, `description`, `level`) VALUES ('3', 'login_cluster_ars_admin', 'Rule Use to add admin rights to the cluster.', '1');
+UPDATE `pkgs`.`pkgs_rules_algos` SET `level` = 2 WHERE `id` = 2;
 
 ALTER TABLE `pkgs`.`pkgs_rules_global`
 CHANGE COLUMN `pkgs_shares_id` `pkgs_cluster_ars_id` INT(11) NOT NULL ;

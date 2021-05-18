@@ -1,10 +1,11 @@
 <?php
 /*
  * (c) 2013 Mandriva, http://www.mandriva.com/
+ * (c) 2020-2021 Siveo, http://siveo.net/
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -518,6 +519,7 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
                    var tableau = filt.split(reg);
                    var location = "";
                    var filter = "";
+                   var field = jQuery("#field").val();
                    var reg1 = new RegExp(tableau[0] + "##", "g");
                    if (filt.match(reg1)) {
                        if (tableau[0] != undefined) {
@@ -539,7 +541,7 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
                        filter = document.Form.param.value;
 
                    jQuery.ajax({
-                       'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage +strCheckbox,
+                       'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter) + '<?php echo $this->params ?>&field='+field+'&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage +strCheckbox,
                        type: 'get',
                        success: function(data) {
                            jQuery("#<?php echo $this->divid; ?>").html(data);
