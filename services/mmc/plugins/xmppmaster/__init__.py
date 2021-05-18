@@ -339,6 +339,48 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid):
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+
+def getdeployment_cmd_and_title(command_id,
+                                title,
+                                search_filter="",
+                                start=0,
+                                limit=-1):
+    """
+    Get the list of deploys based on the command_id and title of the packages.
+
+    Arg:
+        sesion: The SQL Alchemy session
+        command_id: The id the package
+        title: Name of the package
+        search_filter: Used filters in the web page
+        start: Number of the first package to show.
+        limit: Maximum number of deploys sent at once.
+
+    Return:
+        It returns the list of the deploys
+
+    """
+    return XmppMasterDatabase().getdeployment_cmd_and_title(command_id,
+                                                            title,
+                                                            search_filter,
+                                                            start,
+                                                            limit)
+
+def getstatdeploy_from_command_id_and_title(command_id,
+                                            title):
+
+    """
+    Retrieve the deploy statistics based on the command_id and name
+    Args:
+        session: The SQL Alchemy session
+        command_id: id of the deploy
+        title: The name of deploy
+    Return:
+        It returns the number of machines per status.
+    """
+    return XmppMasterDatabase().getstatdeploy_from_command_id_and_title(command_id,
+                                                                        title)
+
 def getdeployment(command_id, filter="", start=0, limit=-1):
     return XmppMasterDatabase().getdeployment(command_id, filter, start, limit)
 

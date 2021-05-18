@@ -991,10 +991,15 @@ class MscDatabase(DatabaseHelper):
         machine_list = []
         machine_do_deploy = {}
         self.logger.debug("select deploy machine")
-        for x in selectedMachines:
+        datenow = datetime.datetime.now()
+        datestr = datenow.strftime('%Y-%m-%d %H:%M:%S')
+        for msc_machine_to_deploy in selectedMachines:
             self.logger.debug("machine %s [%s] presente for deploy package %s" % (msc_machine_to_deploy.target_target_name,
                                                                                   msc_machine_to_deploy.target_target_uuid,
                                                                                   msc_machine_to_deploy.commands_package_id))
+            title = str(msc_machine_to_deploy.commands_title)
+            if title.startswith("Convergence on"):
+                title ="%s %s" % (title, datestr)
             deployobject = {'name': str(msc_machine_to_deploy.target_target_name)[:-1],
                             'pakkageid': str(msc_machine_to_deploy.commands_package_id),
                             'commandid':  msc_machine_to_deploy.commands_id,
@@ -1004,7 +1009,7 @@ class MscDatabase(DatabaseHelper):
                             'login': str(msc_machine_to_deploy.commands_creator),
                             'start_date': msc_machine_to_deploy.commands_start_date,
                             'end_date': msc_machine_to_deploy.commands_end_date,
-                            'title': str(msc_machine_to_deploy.commands_title),
+                            'title': title,
                             'UUID': str(msc_machine_to_deploy.target_target_uuid),
                             'GUID': msc_machine_to_deploy.target_id_group}
 
