@@ -460,8 +460,7 @@ echo "<div>";
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
         }
         echo "</tr>";
-      echo "</tbody></table>";
-      }
+      echo "</tbody></table>";}
       else{
           echo "<table class='listinfos deployment' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
           echo '<td>'._T('Summary Graph','xmppmaster').'</td>';
