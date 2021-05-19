@@ -977,55 +977,68 @@ class MscDatabase(DatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
-    def __dispach_deploy(self, session, q):
+    def __dispach_deploy(self, session, selectedMachines):
+        """
+        Prepare the xmpp deploy
+        Args:
+            session: The SQL Alchemy session
+            selectedMachines: The selected machines from msc for the deploy
+        Return:
+            The modified states in the msc table. This way xmpp knows the machines it needs to deploy in.
+        """
         tabmachine = []
         updatemachine = []
-        listemachine = []
+        machine_list = []
         machine_do_deploy = {}
         self.logger.debug("select deploy machine")
-        for x in q:
-            self.logger.debug("machine %s [%s] presente for deploy package %s"%(x.target_target_name,
-                                                                                    x.target_target_uuid,
-                                                                                    x.commands_package_id))
-            deployobject = {'name' : str(x.target_target_name)[:-1],
-                            'pakkageid': str(x.commands_package_id),
-                            'commandid':  x.commands_id,
-                            'mac': str(x.target_target_macaddr),
+        datenow = datetime.datetime.now()
+        datestr = datenow.strftime('%Y-%m-%d %H:%M:%S')
+        for msc_machine_to_deploy in selectedMachines:
+            self.logger.debug("machine %s [%s] presente for deploy package %s" % (msc_machine_to_deploy.target_target_name,
+                                                                                  msc_machine_to_deploy.target_target_uuid,
+                                                                                  msc_machine_to_deploy.commands_package_id))
+            title = str(msc_machine_to_deploy.commands_title)
+            if title.startswith("Convergence on"):
+                title ="%s %s" % (title, datestr)
+            deployobject = {'name': str(msc_machine_to_deploy.target_target_name)[:-1],
+                            'pakkageid': str(msc_machine_to_deploy.commands_package_id),
+                            'commandid':  msc_machine_to_deploy.commands_id,
+                            'mac': str(msc_machine_to_deploy.target_target_macaddr),
                             'count': 0,
                             'cycle': 0,
-                            'login': str(x.commands_creator),
-                            'start_date': x.commands_start_date,
-                            'end_date': x.commands_end_date,
-                            'title': str(x.commands_title),
-                            'UUID': str(x.target_target_uuid),
-                            'GUID': x.target_id_group}
-            if not x.target_target_uuid in tabmachine:
-                tabmachine.append(x.target_target_uuid)
+                            'login': str(msc_machine_to_deploy.commands_creator),
+                            'start_date': msc_machine_to_deploy.commands_start_date,
+                            'end_date': msc_machine_to_deploy.commands_end_date,
+                            'title': title,
+                            'UUID': str(msc_machine_to_deploy.target_target_uuid),
+                            'GUID': msc_machine_to_deploy.target_id_group}
+
+            if not msc_machine_to_deploy.target_target_uuid in tabmachine:
+                tabmachine.append(msc_machine_to_deploy.target_target_uuid)
                 #recherche machine existe pour xmpp
-                self.logger.info("deploy on machine %s [%s] -> %s"%(x.target_target_name,
-                                                                    x.target_target_uuid,
-                                                                    x.commands_package_id))
-                machine_do_deploy[x.target_target_uuid] = x.commands_package_id
+                self.logger.info("deploy on machine %s [%s] -> %s" % (msc_machine_to_deploy.target_target_name,
+                                                                      msc_machine_to_deploy.target_target_uuid,
+                                                                      msc_machine_to_deploy.commands_package_id))
+                machine_do_deploy[msc_machine_to_deploy.target_target_uuid] = msc_machine_to_deploy.commands_package_id
                 updatemachine.append(deployobject)
 
-                sql ="""UPDATE `msc`.`commands_on_host` SET `current_state`='done', `stage`='ended' WHERE    `commands_on_host`.`id` = %s;"""%x.commands_on_host_id
+                sql ="""UPDATE `msc`.`commands_on_host` SET `current_state`='done', `stage`='ended' WHERE `commands_on_host`.`id` = %s;""" % msc_machine_to_deploy.commands_on_host_id
                 session.execute(sql)
                 session.commit()
 
                 session.flush()
-                sql="""UPDATE `msc`.`phase` SET `phase`.`state`='done' WHERE `phase`.`fk_commands_on_host` =%s;"""%x.commands_on_host_id;
+                sql="""UPDATE `msc`.`phase` SET `phase`.`state`='done' WHERE `phase`.`fk_commands_on_host` =%s;""" % msc_machine_to_deploy.commands_on_host_id;
                 session.execute(sql)
                 session.commit()
                 session.flush()
 
             else:
                 self.logger.warn("Cancel deploy in process\n"\
-                    "Deploy on machine %s [%s] -> %s"%(x.target_target_name,
-                                                        x.target_target_uuid,
-                                                        x.commands_package_id))
-                listemachine.append(deployobject)
+                                 "Deploy on machine %s [%s] -> %s" % (msc_machine_to_deploy.target_target_name,
+                                                                      msc_machine_to_deploy.target_target_uuid,
+                                                                      msc_machine_to_deploy.commands_package_id))
+                machine_list.append(deployobject)
 
-        # return updatemachine, machine_do_deploy, listemachine #complete infos
         return updatemachine
 
     def deleteCommand(self, cmd_id):

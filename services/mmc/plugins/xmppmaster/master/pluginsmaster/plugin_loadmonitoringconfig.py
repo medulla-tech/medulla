@@ -146,7 +146,7 @@ def plugin_loadmonitoringconfig(self, msg, data):
                                  "plugin %s: %s"%(plugin['NAME'], str(e)))
                     logger.error("\n%s"%(traceback.format_exc()))
             else:
-                logger.warning("Monitoring configuration up to date")
+                logger.debug("Monitoring configuration up to date")
     except Exception as e:
         logger.debug("Plugin %s : %s"%(plugin['NAME'], str(e)))
         logger.error("\n%s"%(traceback.format_exc()))

@@ -151,20 +151,21 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                 else:
                     logger.info("Machine %s does not exist in base" % msg['from'])
             if machine:
-                # on regarde si coherence avec table network.
+                # We look if there is coherency with the network table
                 try:
                     result = XmppMasterDatabase().listMacAdressforMachine(machine['id'],
                                                                           infomac=showinfobool)
-                    macadresssort=sorted([ x['macnotshortened'] for x in  \
+                    macadresssort = sorted([x['macnotshortened'] for x in  \
                                             data['information']['listipinfo']])
-                    macadressstr=",".join(macadresssort)
-                    logger.info("macadressstr %s " %macadressstr)
+                    macadressstr = "," . join(macadresssort)
+                    logger.debug("The mac address is: %s" % macadressstr)
                     if result[0] is None or result[0] != macadressstr:
                         if result[0] is not None:
-                            logger.warning("mac adress diff :\n\t %s : %s\n\t "\
-                                           "network table : %s" %(data['agenttype'],
-                                                                  macadressstr,
-                                                                  result[0]))
+                            logger.warning("The is a difference in the database between \n"\
+                                           "the %s 's table: %s" \
+                                           "and the network's table %s" %(data['agenttype'],
+                                                                          macadressstr,
+                                                                          result[0]))
                         raise
                     machine['enabled'] = 1
                 except Exception:
@@ -1115,11 +1116,11 @@ def read_conf_remote_registeryagent(xmppobject):
 
     for regexpconf in blacklisted_mac_addresseslist:
         try:
-            logger.info("BUILD REGEXP FOR BLACKLIST MAC ADRESS -> %s"%regexpconf)
+            logger.debug("We are backlisting the following mac address: %s" % regexpconf)
             xmppobject.blacklisted_mac_addresses.append(re.compile(regexpconf))
         except Exception:
             logger.error("\n%s" % (traceback.format_exc()))
-            logger.error("COMPIL REGEXP BLACKLIST MAC ADRESS -> %s <- [IGNORE THIS REGEXP]" % regexpconf)
+            logger.error("An error occured while blacklisting this mac address %s. We ignore it." % regexpconf)
     logger.debug("Plugin list registered is %s" % xmppobject.pluginlistregistered)
     logger.debug("Plugin list unregistered is %s" % xmppobject.pluginlistunregistered)
 
