@@ -166,7 +166,9 @@ def deploypackage(data, message, xmppobject):
                      (data['uuid'], machine['hostname']))
         return None
     objdeployadvanced = XmppMasterDatabase().datacmddeploy(commandid)
-
+    if not objdeployadvanced:
+        logger.error("The line has_login_command for the idcommand %s is missing" % commandid)
+        logger.error("To solve this, please remove the group, and recreate it")
     datasend = {"name": name,
                 "login": nameuser,
                 "idcmd": commandid,
