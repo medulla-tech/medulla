@@ -990,13 +990,13 @@ class MscDatabase(DatabaseHelper):
         updatemachine = []
         machine_list = []
         machine_do_deploy = {}
-        self.logger.debug("select deploy machine")
+        self.logger.debug("Looking to new machines to deploy")
         datenow = datetime.datetime.now()
         datestr = datenow.strftime('%Y-%m-%d %H:%M:%S')
         for msc_machine_to_deploy in selectedMachines:
-            self.logger.debug("machine %s [%s] presente for deploy package %s" % (msc_machine_to_deploy.target_target_name,
-                                                                                  msc_machine_to_deploy.target_target_uuid,
-                                                                                  msc_machine_to_deploy.commands_package_id))
+            self.logger.debug("The machine %s [%s] is available to deploy the package %s" % (msc_machine_to_deploy.target_target_name,
+                                                                                             msc_machine_to_deploy.target_target_uuid,
+                                                                                             msc_machine_to_deploy.commands_package_id))
             title = str(msc_machine_to_deploy.commands_title)
             if title.startswith("Convergence on"):
                 title ="%s %s" % (title, datestr)
@@ -1033,10 +1033,11 @@ class MscDatabase(DatabaseHelper):
                 session.flush()
 
             else:
-                self.logger.warn("Cancel deploy in process\n"\
-                                 "Deploy on machine %s [%s] -> %s" % (msc_machine_to_deploy.target_target_name,
-                                                                      msc_machine_to_deploy.target_target_uuid,
-                                                                      msc_machine_to_deploy.commands_package_id))
+                self.logger.warn("We cannot start the deploy on the machine %s [%s] for the package with the uuid %s" % (msc_machine_to_deploy.target_target_name,
+                                                                                                                         msc_machine_to_deploy.target_target_uuid,
+                                                                                                                         msc_machine_to_deploy.commands_package_id))
+
+
                 machine_list.append(deployobject)
 
         return updatemachine
