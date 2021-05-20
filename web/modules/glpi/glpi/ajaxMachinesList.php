@@ -165,7 +165,6 @@ if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "a
 $count = $machines1["count"];
 $total = $machines1["total"];
 $datas = $machines1["data"];
-$xmppdatas = $machines['xmppdata'];
 
 $br = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
 foreach ($datas as $nametableau => $tableau){
