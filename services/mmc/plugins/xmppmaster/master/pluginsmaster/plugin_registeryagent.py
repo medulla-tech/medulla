@@ -151,20 +151,21 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                 else:
                     logger.info("Machine %s does not exist in base" % msg['from'])
             if machine:
-                # on regarde si coherence avec table network.
+                # We look if there is coherency with the network table
                 try:
                     result = XmppMasterDatabase().listMacAdressforMachine(machine['id'],
                                                                           infomac=showinfobool)
-                    macadresssort=sorted([ x['macnotshortened'] for x in  \
+                    macadresssort = sorted([x['macnotshortened'] for x in  \
                                             data['information']['listipinfo']])
-                    macadressstr=",".join(macadresssort)
-                    logger.info("macadressstr %s " %macadressstr)
+                    macadressstr = "," . join(macadresssort)
+                    logger.debug("The mac address is: %s" % macadressstr)
                     if result[0] is None or result[0] != macadressstr:
                         if result[0] is not None:
-                            logger.warning("mac adress diff :\n\t %s : %s\n\t "\
-                                           "network table : %s" %(data['agenttype'],
-                                                                  macadressstr,
-                                                                  result[0]))
+                            logger.warning("The is a difference in the database between \n"\
+                                           "the %s 's table: %s" \
+                                           "and the network's table %s" %(data['agenttype'],
+                                                                          macadressstr,
+                                                                          result[0]))
                         raise
                     machine['enabled'] = 1
                 except Exception:
@@ -629,6 +630,10 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                 return
                         else:
                             logger.warning("information about the operating system is missing for %s" % (msg['from'].bare))
+                        try:
+                            xmppobject.listmodulemmc
+                        except AttributeError:
+                            xmppobject.listmodulemmc=[]
                         #if "kiosk" in xmppobject.listmodulemmc and kiosk_presence:
                         if PluginManager().isEnabled("kiosk"):
                             # send a data message to kiosk when an inventory is registered
@@ -1111,46 +1116,55 @@ def read_conf_remote_registeryagent(xmppobject):
 
     for regexpconf in blacklisted_mac_addresseslist:
         try:
-            logger.info("BUILD REGEXP FOR BLACKLIST MAC ADRESS -> %s"%regexpconf)
+            logger.debug("We are backlisting the following mac address: %s" % regexpconf)
             xmppobject.blacklisted_mac_addresses.append(re.compile(regexpconf))
         except Exception:
             logger.error("\n%s" % (traceback.format_exc()))
-            logger.error("COMPIL REGEXP BLACKLIST MAC ADRESS -> %s <- [IGNORE THIS REGEXP]" % regexpconf)
+            logger.error("An error occured while blacklisting this mac address %s. We ignore it." % regexpconf)
     logger.debug("Plugin list registered is %s" % xmppobject.pluginlistregistered)
     logger.debug("Plugin list unregistered is %s" % xmppobject.pluginlistunregistered)
 
 def test_consolidation_inventory(xmppobject, sessionid, data, showinfobool, msg, idmachine):
     btestfindcomputer = False
     machineglpiid = -1
+    if 'uuid_serial_machine' in data and data['uuid_serial_machine']:
+        data['uuid_serial_machine'] = data['uuid_serial_machine'].strip()
+    else:
+        data['uuid_serial_machine'] = ""
     if data['uuid_serial_machine'] != "":
         if showinfobool:
             logger.info("***** Finding uuid from GLPI computer id for uuid setup machine")
     else:
         if showinfobool:
             logger.info("***** Finding uuid from GLPI computer id for mac address ")
-
+    setupuuid = False
     if data['uuid_serial_machine'] != "":
-        # cherche machine in glpi on uuid_setup
-        setupuuid = getMachineInformationByUuidSetup(data['uuid_serial_machine'],
-                                                     showinfobool)
-        if setupuuid:
-            logger.info("The setupuuid is: %s" % setupuuid)
-            uuid = 'UUID' + str(setupuuid['data']['id'][0])
-            if showinfobool:
-                logger.info("** Calling updateMachineidinventory uuid %s " \
-                    "for machine %s setup uuid %s" % (uuid,
-                                                        msg['from'],
-                                                        data['uuid_serial_machine']))
-            XmppMasterDatabase().updateMachineGlpiInformationInventory(setupuuid,
-                                                                       idmachine,
-                                                                       data)
-            btestfindcomputer=True
-            machineglpiid = setupuuid['data']['id'][0]
-            if showinfobool:
-                logger.info("Machine %s : Finding computer id [%s] from GLPI," \
-                    " for UUID SETUP MACHINE %s" % (setupuuid['data']['name'][0],
-                                                    setupuuid['data']['id'][0],
+        #cherche machine in glpi on uuid_setup
+        try:
+            setupuuid = getMachineInformationByUuidSetup(data['uuid_serial_machine'],
+                                                         showinfobool)
+        except Exception:
+            logger.error("\n%s" % (traceback.format_exc()))
+            setupuuid={}
+    if isinstance(setupuuid, dict) and 'count' in setupuuid and setupuuid['count'] != 0:
+        if showinfobool:
+            logger.debug("The setupuuid is: %s" % setupuuid)
+        uuid = 'UUID' + str(setupuuid['data']['id'][0])
+        if showinfobool:
+            logger.info("** Calling updateMachineidinventory uuid %s " \
+                "for machine %s setup uuid %s" % (uuid,
+                                                    msg['from'],
                                                     data['uuid_serial_machine']))
+        XmppMasterDatabase().updateMachineGlpiInformationInventory(setupuuid,
+                                                                    idmachine,
+                                                                    data)
+        btestfindcomputer=True
+        machineglpiid = setupuuid['data']['id'][0]
+        if showinfobool:
+            logger.info("Machine %s : Finding computer id [%s] from GLPI," \
+                " for UUID SETUP MACHINE %s" % (setupuuid['data']['name'][0],
+                                                setupuuid['data']['id'][0],
+                                                data['uuid_serial_machine']))
     else:
         if showinfobool:
             logger.info("Searching list of mac addresses for the machine %s " \
@@ -1201,9 +1215,14 @@ def test_consolidation_inventory(xmppobject, sessionid, data, showinfobool, msg,
                     logger.info("** Calling updateMachineidinventory uuid %s for machine %s id %s" % (uuid,
                                                                                                     msg['from'],
                                                                                                     idmachine))
-                setupuuid = getMachineInformationByUuidMachine(uuid, showinfobool=True)
-                if setupuuid:
-                    logger.info("setupuuid %s" % setupuuid)
+                setupuuid = False
+                try:
+                    setupuuid = getMachineInformationByUuidMachine(uuid, showinfobool=True)
+                except Exception:
+                    setupuuid = {}
+                if isinstance(setupuuid, dict) and 'count' in setupuuid and setupuuid['count'] != 0:
+                    if showinfobool:
+                        logger.info("setupuuid %s" % setupuuid)
                     # structure machine de glpi_computer table pour uuid setup .data['uuid_serial_machine']
                     # on a 1 setup uuid on consolide xmpp et glpi sur uuid_serial_machine
                     uuid = 'UUID' + str(setupuuid['data']['id'][0])

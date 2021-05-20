@@ -859,146 +859,112 @@ class MscDatabase(msc.MscDatabase):
         machines_in_deploy_group = ComputerManager().getRestrictedComputersList(ctx, filt={'gid': convergence_deploy_group_id}, justId=True)
         return [x for x in machines_in_deploy_group if x not in machines_in_command]
 
-    #def addMachinesToCommand(self,
-                             #ctx,
-                             #cmd_id,
-                             #targets,
-                             #group_id='',
-                             #root=None,
-                             #mode='push',
-                             #proxies=[],
-                             #phases={}
-            #):
-        #"""
-        #Main func to inject a new command in our MSC database
+    def addMachinesToCommand(self,
+                             ctx,
+                             cmd_id,
+                             targets,
+                             group_id='',
+                             root=None,
+                             mode='push',
+                             proxies=[],
+                             phases={}):
+        """
+        Update the list of machines to deploy when creating the dynamic group.
 
-        #Return a Deferred object resulting to the command id
-        #"""
-        #cmd = self.getCommands(ctx, cmd_id)
-        #if root == None:
-            #root = self.config.repopath
+        Args:
+            ctx: Context
+            cmd_id: Id of the command in SQL
+            group_id: If of the group we dploy in
+            root:
+            mode:
+            proxies:
+            phases:
+        Return:
+            It returns the updated list of machines
 
-        #targets_to_insert = []
-        #targets_name = []
-        #coh_to_insert = []
-        #target_uuids = targets
-        #existing_coh_ids = [coh.id for coh in cmd.getCohIds(target_uuids=target_uuids)]
+        """
+        cmd = self.getCommands(ctx, cmd_id)
+        if root == None:
+            root = self.config.repopath
+        targets_to_insert = []
+        coh_to_insert = []
+        target_uuids = targets
+        existing_coh_ids = [coh.id for coh in cmd.getCohIds(target_uuids=target_uuids)]
+        targets, targetsdata = self.getComputersData(ctx, targets, group_id)
 
-        #targets, targetsdata = self.getComputersData(ctx, targets, group_id)
-        ##if targets ==False:
-        #if len(targets) == 0:
-            #self.logger.error("The machine list is empty, does your machines have a network interface ?")
-            #return -2
+        if len(targets) == 0:
+            self.logger.error("The machine list is empty, does your machines have a network interface ?")
+            return -2
 
-        #def cbGetTargetsMirrors(schedulers):
-            #args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
-            #d1 = MirrorApi().getMirrors(args)
-            #d1.addCallback(cbGetTargetsFallbackMirrors, schedulers)
-            #d1.addErrback(lambda err: err)
-            #return d1
+        def cbCreateTargets():
+            uri = ""
+            for i in range(len(targets)):
 
-        #def cbGetTargetsFallbackMirrors(mirrors, schedulers):
-            #args = map(lambda x: {"uuid" : x[0], "name": x[1]}, targets)
-            #d2 = MirrorApi().getFallbackMirrors(args)
-            #d2.addCallback(cbCreateTargets, mirrors, schedulers)
-            #d2.addErrback(lambda err: err)
-            #return d2
+                targets_to_insert.append((targetsdata[i],
+                                          targets[i][1],
+                                          None))
 
-        #def cbPushModeCreateTargets(schedulers):
-            #return cbCreateTargets(None, None, schedulers, push_pull = False)
+            session = create_session()
+            session.begin()
 
-        #def cbCreateTargets(fbmirrors, mirrors, schedulers, push_pull = True):
-            #for i in range(len(targets)):
-                #if push_pull:
-                    ## FIXME: we only take the the first mirrors
-                    #mirror = mirrors[i]
-                    #fallback = fbmirrors[i]
-                    #uri = '%s://%s:%s%s' % (mirror['protocol'],
-                                            #mirror['server'],
-                                            #str(mirror['port']),
-                                            #mirror['mountpoint']) \
-                        #+ '||' + '%s://%s:%s%s' % (fallback['protocol'],
-                                                   #fallback['server'],
-                                                   #str(fallback['port']),
-                                                   #fallback['mountpoint'])
-                #else:
-                    #uri = '%s://%s' % ('file', root)
+            for atarget, target_name, ascheduler in targets_to_insert :
+                target = Target()
+                target.target_macaddr = atarget["target_macaddr"]
+                target.id_group = atarget["id_group"]
+                target.target_uuid = atarget["target_uuid"]
+                target.target_bcast = atarget["target_bcast"]
+                target.target_name = atarget["target_name"]
+                target.target_ipaddr = atarget["target_ipaddr"]
+                target.mirrors = atarget["mirrors"]
+                target.target_network = atarget["target_network"]
 
-                #targetsdata[i]['mirrors'] = uri
-                ## Keep not blacklisted target name for commands_on_host
-                ## creation.
-                #targets_name.append(targets[i][1])
-                ## Maybe could be done in prepareTarget
-                #targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
+                session.add(target)
+                session.flush()
+                if hasattr(session, "refresh") :
+                    session.refresh(target)
 
-                #targets_to_insert.append((targetsdata[i],
-                                          #targets[i][1],
-                                          #schedulers[i]))
-            #session = create_session()
-            #session.begin()
+                order_in_proxy = None
+                max_clients_per_proxy = 0
+                try:
+                    candidates = filter(lambda(x): x['uuid'] == atarget["target_uuid"], proxies)
+                    if len(candidates) == 1:
+                        max_clients_per_proxy = candidates[0]['max_clients']
+                        order_in_proxy = candidates[0]['priority']
+                except ValueError:
+                    self.logger.warn("Failed to get values 'order_in_proxy' or 'max_clients'")
+                coh_to_insert.append(self.createCommandsOnHost(cmd_id,
+                                                               atarget,
+                                                               target.id,
+                                                               target_name,
+                                                               cmd.max_connection_attempt,
+                                                               cmd.start_date,
+                                                               cmd.end_date,
+                                                               ascheduler,
+                                                               order_in_proxy,
+                                                               max_clients_per_proxy))
+            session.execute(self.commands_on_host.insert(), coh_to_insert)
 
-            #for atarget, target_name, ascheduler in targets_to_insert :
-                #target = Target()
-                #target.target_macaddr = atarget["target_macaddr"]
-                #target.id_group = atarget["id_group"]
-                #target.target_uuid = atarget["target_uuid"]
-                #target.target_bcast = atarget["target_bcast"]
-                #target.target_name = atarget["target_name"]
-                #target.target_ipaddr = atarget["target_ipaddr"]
-                #target.mirrors = atarget["mirrors"]
-                #target.target_network = atarget["target_network"]
+            cohs = [coh for coh in cmd.getCohIds(target_uuids=target_uuids) if coh.id not in existing_coh_ids]
 
-                #session.add(target)
-                #session.flush()
-                #if hasattr(session, "refresh") :
-                    #session.refresh(target)
+            def _get_phase(name):
+                return phases.get(name, False) == 'on' and 'enable' or 'disable'
 
-                #order_in_proxy = None
-                #max_clients_per_proxy = 0
-                #try:
-                    #candidates = filter(lambda(x): x['uuid'] == atarget["target_uuid"], proxies)
-                    #if len(candidates) == 1:
-                        #max_clients_per_proxy = candidates[0]['max_clients']
-                        #order_in_proxy = candidates[0]['priority']
-                #except ValueError:
-                    #self.logger.warn("Failed to get values 'order_in_proxy' or 'max_clients'")
-                #coh_to_insert.append(self.createCommandsOnHost(cmd_id,
-                                                               #atarget,
-                                                               #target.id,
-                                                               #target_name,
-                                                               #cmd.max_connection_attempt,
-                                                               #cmd.start_date,
-                                                               #cmd.end_date,
-                                                               #ascheduler,
-                                                               #order_in_proxy,
-                                                               #max_clients_per_proxy))
-            #session.execute(self.commands_on_host.insert(), coh_to_insert)
+            self._createPhases(session,
+                               cohs,
+                               cmd.do_imaging_menu,
+                               _get_phase('do_wol'),
+                               cmd.files,
+                               _get_phase('start_script'),
+                               _get_phase('clean_on_success'),
+                               _get_phase('do_inventory'),
+                               _get_phase('do_halt'),
+                               _get_phase('do_reboot'),
+                               _get_phase('do_windows_update'),
+                               is_quick_action = False)
+            session.commit()
+            self._force_command_type(cmd_id, 2)
+            self._set_command_ready(cmd_id)
+            return cmd_id
 
-            #cohs = [coh for coh in cmd.getCohIds(target_uuids=target_uuids) if coh.id not in existing_coh_ids]
-            #def _get_phase(name):
-                #return phases.get(name, False) == 'on' and 'enable' or 'disable'
-
-            #self._createPhases(session,
-                               #cohs,
-                               #cmd.do_imaging_menu,
-                               #_get_phase('do_wol'),
-                               #cmd.files,
-                               #_get_phase('start_script'),
-                               #_get_phase('clean_on_success'),
-                               #_get_phase('do_inventory'),
-                               #_get_phase('do_halt'),
-                               #_get_phase('do_reboot'),
-                               #_get_phase('do_windows_update'),
-                               #is_quick_action = False)
-            #session.commit()
-            #self._force_command_type(cmd_id, 2)
-            #self._set_command_ready(cmd_id)
-            #return cmd_id
-
-        #d = self.getMachinesSchedulers(targets)
-        #if mode == 'push_pull':
-            #d.addCallback(cbGetTargetsMirrors)
-        #else:
-            #d.addCallback(cbPushModeCreateTargets)
-        #d.addErrback(lambda err: err)
-        #return d
+        d = cbCreateTargets()
+        return d

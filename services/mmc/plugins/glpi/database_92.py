@@ -655,12 +655,6 @@ class Glpi92(DyngroupDatabaseHelper):
         if "contains" in ctx and ctx["contains"] != "":
             contains = ctx["contains"]
 
-        # Get the list of online computers
-        online_machines = []
-        online_machines = XmppMasterDatabase().getlistPresenceMachineid()
-
-        if online_machines is not None:
-            online_machines = [int(id.replace("UUID", "")) for id in online_machines if id != "UUID" and id != ""]
         query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
         .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
         .outerjoin(self.user, Machine.users_id == self.user.c.id)\
@@ -749,7 +743,10 @@ class Glpi92(DyngroupDatabaseHelper):
                     pass
 
         query = query.order_by(Machine.name)
-        # All computers
+
+        # Even if computerpresence is not specified,
+        # needed in "all computers" page to know which computer in online or offline
+        online_machines = [int(id) for id in XmppMasterDatabase().getidlistPresenceMachine(presence=True) if id != "UUID" and id != ""]
         if "computerpresence" not in ctx:
             # Do nothing more
             pass
@@ -757,14 +754,13 @@ class Glpi92(DyngroupDatabaseHelper):
             query = query.filter(Machine.id.notin_(online_machines))
         else:
             query = query.filter(Machine.id.in_(online_machines))
+
         query = self.__filter_on(query)
 
         # From now we can have the count of machines
         count = query.count()
-
         # Then continue with others criterions and filters
         query = query.offset(start).limit(end)
-
         columns_name = [column['name'] for column in query.column_descriptions]
         machines = query.all()
 
@@ -4204,7 +4200,7 @@ class Glpi92(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def _machineobjectdymresult(self, ret):
+    def _machineobjectdymresult(self, ret, encode= 'iso-8859-1'):
         """
             this function return dict result sqlalchimy
         """
@@ -4230,10 +4226,14 @@ class Glpi92(DyngroupDatabaseHelper):
                                 if isinstance(getattr(ret, keynameresult), datetime.datetime):
                                     resultrecord[keynameresult] = getattr(ret, keynameresult).strftime("%m/%d/%Y %H:%M:%S")
                                 else:
-                                    if isinstance(getattr(ret, keynameresult), basestring):
-                                        resultrecord[keynameresult] =  getattr(ret, keynameresult).decode('utf-8',  errors='ignore')
+                                    strre = getattr(ret, keynameresult)
+                                    if isinstance(strre, basestring):
+                                        if encode != "utf8":
+                                            resultrecord[keynameresult] =  "%s"%strre.decode(encode).encode('utf8')
+                                        else:
+                                            resultrecord[keynameresult] =  "%s"%strre.encode('utf8')
                                     else:
-                                        resultrecord[keynameresult] = getattr(ret, keynameresult)
+                                        resultrecord[keynameresult] = strre
                     except AttributeError:
                         resultrecord[keynameresult] = ""
         except Exception as e:

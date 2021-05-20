@@ -566,7 +566,7 @@ class PkgsDatabase(DatabaseHelper):
                 result["datas"]["share_name"].append(package[7] if package[7] is not None else "")
                 result["datas"]["share_type"].append(package[8] if package[8] is not None else "")
                 result["datas"]["permission"].append(dictpermission[str(package[6])])
-                result["datas"]["size"].append(package[9] if package[9] is not None else "")
+                result["datas"]["size"].append(str(package[9]) if package[9] is not None else "")
                 result["datas"]["licence"].append(package[10] if package[10] is not None else "")
                 result["datas"]["associateinventory"].append(package[11] if package[11] is not None else "")
                 result["datas"]["qversion"].append(package[12] if package[12] is not None else "")
@@ -1062,13 +1062,13 @@ class PkgsDatabase(DatabaseHelper):
     def SetPkgs_rules_global(self,
                              session,
                              pkgs_rules_algos_id,
-                             pkgs_shares_id,
+                             pkgs_cluster_ars_id,
                              order,
                              subject):
         try:
             new_Pkgs_rules_global = Pkgs_rules_local()
             new_Pkgs_rules_global.pkgs_rules_algos_id = pkgs_rules_algos_id
-            new_Pkgs_rules_global.pkgs_shares_id = pkgs_shares_id
+            new_Pkgs_rules_global.pkgs_cluster_ars_id = pkgs_cluster_ars_id
             new_Pkgs_rules_global.order = order
             new_Pkgs_rules_global.subject = subject
             session.add(new_Pkgs_rules_global)
@@ -1229,14 +1229,57 @@ class PkgsDatabase(DatabaseHelper):
                 resuldict['order_rule'] = y[11] if y[11] is not None else ""
                 resuldict['regexp'] = y[12] if y[12] is not None else ""
                 resuldict['permission'] = y[13] if y[13] is not None else ""
-                resuldict['quotas'] = y[14] if y[14] is not None else ""
-                resuldict['usedquotas'] = y[15] if y[15] is not None else ""
+                resuldict['quotas'] = str(y[14]) if y[14] is not None else ""
+                resuldict['usedquotas'] = str(y[15]) if y[15] is not None else ""
                 if resuldict['type'] == 'global':
                     resuldict['nbpackage'] = self.nb_package_in_sharing(share_id=None)
                 else:
                      resuldict['nbpackage'] = self.nb_package_in_sharing(share_id=resuldict['id_sharing'])
                 ret.append(resuldict)
         return ret
+
+    @DatabaseHelper._sessionm
+    def get_Cluster_list_rule(self,
+                              session,
+                              objsearch):
+        if 'login' in objsearch:
+            sql ="""
+                SELECT
+                    pkgs_cluster_ars_id
+                FROM
+                    pkgs.pkgs_rules_global
+                WHERE
+                    '%s' REGEXP (pkgs.pkgs_rules_global.subject)
+                        AND permission LIKE '%%r%%';"""%objsearch['login']
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            return [x for x in result]
+        return []
+
+    def pkgs_search_ars_list_from_cluster_rules(self, objsearch):
+        """
+            This function is used to retrieve the ars list for read permissions
+                following the defined rules.
+            Args:
+                objsearch:
+                # TODO: Fix documentation
+            Results:
+                It returns the the ars id followind the defined rules.
+
+        """
+        cluster_result = []
+        extend_ars_list=[]
+        order_rules = self.pkgs_Orderrules()
+        # global sharing
+        if objsearch['login'] == 'root':
+            return []
+        else:
+            for algo in order_rules:
+                if algo[0] == 3:
+                    listcluster = self.get_Cluster_list_rule(objsearch)
+                    extend_ars_list = XmppMasterDatabase().get_Arsid_list_from_clusterid_list(listcluster)
+        return extend_ars_list
 
     def pkgs_search_share(self, objsearch):
         """
@@ -1357,8 +1400,8 @@ class PkgsDatabase(DatabaseHelper):
                 resuldict['ars_id'] = y[7] if y[7] is not None else ""
                 resuldict['share_path'] = y[8] if y[8] is not None else ""
                 resuldict['permission'] = "rw"
-                resuldict['quotas'] = y[9] if y[9] is not None else ""
-                resuldict['usedquotas'] = y[10] if y[10] is not None else ""
+                resuldict['quotas'] = str(y[9]) if y[9] is not None else ""
+                resuldict['usedquotas'] = str(y[10]) if y[10] is not None else ""
                 ret.append(resuldict)
                 if resuldict['type'] == 'global':
                     resuldict['nbpackage'] = self.nb_package_in_sharing(share_id=None)

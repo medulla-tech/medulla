@@ -218,6 +218,19 @@ function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE") {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
 }
 
+function xmlrpc_getdeployment_cmd_and_title($command_id, $title, $filter = "", $start, $limit) {
+    return xmlCall("xmppmaster.getdeployment_cmd_and_title", array( $command_id,
+                                                                    $title,
+                                                                    $filter,
+                                                                    $start,
+                                                                    $limit));
+}
+
+function xmlrpc_getstatdeploy_from_command_id_and_title($command_id, $title) {
+    return xmlCall("xmppmaster.getstatdeploy_from_command_id_and_title", array($command_id,
+                                                                        $title));
+}
+
 function xmlrpc_getdeployment($command_id, $filter = "", $start, $limit) {
     return xmlCall("xmppmaster.getdeployment", array($command_id, $filter, $start, $limit));
 }
@@ -503,8 +516,8 @@ function xmlrpc_get_xmpprelays_list($start=-1, $limit=-1, $filter="", $presence=
   return xmlCall("xmppmaster.get_xmpprelays_list", [$start, $limit, $filter, $presence]);
 }
 
-function get_list_ars_from_sharing($sharings, $start=-1, $limit=-1, $filter=""){
-  return xmlCall("xmppmaster.get_list_ars_from_sharing", [$sharings, $start, $limit, $filter]);
+function get_list_ars_from_sharing($sharings, $start=-1, $limit=-1, $objectlogin="", $filter=""){
+  return xmlCall("xmppmaster.get_list_ars_from_sharing", [$sharings, $start, $limit, $objectlogin, $filter]);
 }
 
 function xmlrpc_get_clusters_list($start=-1, $limit=-1, $filter=""){

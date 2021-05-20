@@ -112,17 +112,23 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                                     sessionid,
                                     data, msg, ret, dataobj):
     """
-        applies the allocation rules algorithms to determine the chosen relayserver.
-    """
-    codechaine="%s"%(msg['from'])
+    Allocate the Relay server of the machine and reconfigure the agent.
+
+    Args:
+        objectxmpp: Reference object to the xmpp server
+        action: Name of the plugin
+        sessionid: The SQL Alchemy session
+        data: The xmpp message.
+        msg: A dictionnary with informations like from and to where are going the messages.
+     """
+
+    codechaine = "%s" % (msg['from'])
     try:
         host = codechaine.split('/')[1]
     except Exception:
         host = msg['from']
 
-
-
-    logger.info("CONFIGURATION AGENT MACHINE %s"%host)
+    logger.debug("We configure the machine agent for the machine: %s" % host)
     if data['machine'].split(".")[0] in objectxmpp.assessor_agent_showinfomachine:
         showinfomachine = True
         logger.info("showinfomachine = %s in file /etc/mmc/plugins/assessor_agent.ini(.local)"%(host))

@@ -1,5 +1,5 @@
 --
--- (c) 2010 Mandriva, http://www.mandriva.com/
+-- (c) 2021 Siveo, http://www.siveo.net/
 --
 -- $Id$
 --
@@ -40,20 +40,19 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_shares` (
   `uri` VARCHAR(255) NOT NULL,
   `ars_name` VARCHAR(255) NULL,
   `ars_id` INT NOT NULL,
-  `share_path` VARCHAR(255) NOT NULL DEFAULT '\"/var/lib/pulse/local\"',
+  `share_path` VARCHAR(255) NOT NULL DEFAULT '\"/var/lib/pulse/packages/sharing/local\"',
   `usedquotas` INT NULL DEFAULT 0,
   `quotas` INT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `idx_uniq_sharing` (`name` ASC, `comments` ASC, `ars_id` ASC))
 ENGINE = InnoDB
-COMMENT = 'Cette table permet de definir des partages.\n';
-
+COMMENT = 'This table allow to define shares.';
 -- -----------------------------------------------------
 -- Table `pkgs`.`pkgs_shares_ars`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `pkgs_shares_ars`;
 CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_shares_ars` (
-  `id` INT NOT NULL COMMENT 'cet id doit correspondre a id de ars de la table relayserver.',
+  `id` INT NOT NULL COMMENT 'This id must be the one from the relayserver table',
   `hostname` VARCHAR(255) NULL,
   `jid` VARCHAR(255) NULL,
   `pkgs_shares_id` INT NULL,
@@ -100,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_rules_algos` (
   `level` INT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-COMMENT = 'definition des algos pour attribution des partages.';
+COMMENT = 'definition of the share attribution algorythms';
 
 -- -----------------------------------------------------
 -- Table `pkgs`.`pkgs_rules_global`
@@ -127,8 +126,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_rules_global` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-COMMENT = 'definition des regles ordonees qui sont utilisees pour determiner les partages globals.';
-
+COMMENT = 'Define ordered rules used to determine global shares';
 
 -- -----------------------------------------------------
 -- Table `pkgs`.`pkgs_rules_local`
@@ -155,8 +153,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_rules_local` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-COMMENT = 'definition des regles ordonees qui sont utilisees pour determiner les partages locaux.';
-
+COMMENT = 'Define ordered rules used to determine local shares';
 
 -- -----------------------------------------------------
 -- add field `table packages`.

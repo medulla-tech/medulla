@@ -107,7 +107,6 @@ progress::-moz-progress-bar {
 <?php
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-
 extract($_GET);
 
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
@@ -127,7 +126,12 @@ $p->display();
 
 //FROM MSC BASE
 // The deployment is a convergence
-$isconvergence = is_commands_convergence_type($cmd_id, $filter, $start, $end);
+$isconvergence = is_commands_convergence_type($cmd_id);
+if($isconvergence != 0){
+    echo "<h2>";
+    echo $title;
+    echo "</h2>";
+}
 
 // Get syncthing stats for this deployment
 $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
@@ -137,7 +141,7 @@ $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start,
 
 function datecmd($tabbleaudatetime){
     return date("Y-m-d H:i:s",
-                    mktime( $tabbleaudatetime[3], 
+                    mktime( $tabbleaudatetime[3],
                             $tabbleaudatetime[4],
                             $tabbleaudatetime[5],
                             $tabbleaudatetime[1],
@@ -148,22 +152,27 @@ $infocmd = command_detail($cmd_id);
 $creator_user = $infocmd['creator'] ;
 $creation_date = datecmd($infocmd['creation_date']);
 
-$start_date =  $lastcommandid['start_dateunixtime'];
-$end_date = $lastcommandid['end_dateunixtime'];
-
+$start_date =  $startcmd;
+$end_date   =  $endcmd ;
 // Get uuid, hostname and status of the deployed machines from xmppmaster.deploy
-$getdeployment = xmlrpc_getdeployment($cmd_id, $filter, $start, $maxperpage);
-
+$getdeployment = xmlrpc_getdeployment_cmd_and_title($cmd_id,
+                                                    $title,
+                                                    $filter,
+                                                    $start,
+                                                    $maxperpage);
 // Get the same machines from glpi
-$re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'], $filter, $start, $maxperpage);
+$re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'],
+                                $filter,
+                                $start,
+                                $maxperpage);
 
 if($getdeployment['total'] != 0)
-  $count = $getdeployment['total'];
+    $count = $getdeployment['total'];
 else
-  $count = $re['total'];
-// STATS FROM XMPPMASTER DEPLOY
-$statsfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,  date("Y-m-d H:i:s", $start_date));
+    $count = $re['total'];
 
+// STATS FROM XMPPMASTER DEPLOY
+$statsfromdeploy = xmlrpc_getstatdeploy_from_command_id_and_title($cmd_id, $title);
 // get some info from msc for this deployment
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
@@ -248,8 +257,8 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
     echo "<tbody>";
         echo "<tr>";
             echo '<td>'.$creation_date.'</td>';
-            echo '<td>'.date("Y-m-d H:i:s", $start_date).'</td>';
-            echo '<td>'.date("Y-m-d H:i:s", $end_date).'</td>';
+            echo '<td>'. $start_date.'</td>';
+            echo '<td>'.$end_date.'</td>';
             echo '<td>'.$creator_user.'</td>';
             if($isconvergence != 0){
                 echo "<td><img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/></td>";
@@ -399,6 +408,7 @@ echo "<div>";
         echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>"._T("Deployment Success","xmppmaster")."</td>" : "";
         echo (isset($deploymenterror)&&$deploymenterror) ? "<td>"._T("Deployment Error","xmppmaster")."</td>" : "";
         echo (isset($abortmissingagent)&&$abortmissingagent) ? "<td>"._T("Abort Missing Agent","xmppmaster")."</td>" : "";
+        echo (isset($abortinconsistentglpiinformation)&&$abortinconsistentglpiinformation) ? "<td>"._T("Abort inconsistent GLPI Information","xmppmaster")."</td>" : "";
         echo (isset($abortrelaydown)&&$abortrelaydown) ? "<td>"._T("Abort Relay Down","xmppmaster")."</td>" : "";
         echo (isset($abortalternativerelaysdow)&&$abortalternativerelaysdown) ?"<td>"._T("Abort Alternative relay down","xmppmaster")."</td>" : "";
         echo (isset($abortinforelaymissing)&&$abortinforelaymissing) ? "<td>"._T("Abort Info Relay Missing","xmppmaster")."</td>" : "";
@@ -427,6 +437,7 @@ echo "<div>";
         echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>".$deploymentsuccess."</td>" : "";
         echo (isset($deploymenterror)&&$deploymenterror) ? "<td>".$deploymenterror."</td>" : "";
         echo (isset($abortmissingagent)&&$abortmissingagent) ? "<td>".$abortmissingagent."</td>" : "";
+        echo (isset($abortinconsistentglpiinformation)&&$abortinconsistentglpiinformation) ? "<td>".$abortinconsistentglpiinformation."</td>" : "";
         echo (isset($abortrelaydown)&&$abortrelaydown) ? "<td>".$abortrelaydown."</td>" : "";
         echo (isset($abortalternativerelaysdow)&&$abortalternativerelaysdown) ?"<td>".$abortalternativerelaysdown."</td>" : "";
         echo (isset($abortinforelaymissing)&&$abortinforelaymissing) ? "<td>".$abortinforelaymissing."</td>" : "";
@@ -449,8 +460,7 @@ echo "<div>";
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
         }
         echo "</tr>";
-      echo "</tbody></table>";
-      }
+      echo "</tbody></table>";}
       else{
           echo "<table class='listinfos deployment' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
           echo '<td>'._T('Summary Graph','xmppmaster').'</td>';
@@ -472,6 +482,7 @@ echo "<div>";
         echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>"._T("Deployment Success","xmppmaster")."</td>" : "";
         echo (isset($deploymenterror)&&$deploymenterror) ? "<td>"._T("Deployment Error","xmppmaster")."</td>" : "";
         echo (isset($abortmissingagent)&&$abortmissingagent) ? "<td>"._T("Abort Missing Agent","xmppmaster")."</td>" : "";
+        echo (isset($abortinconsistentglpiinformation)&&$abortinconsistentglpiinformation) ? "<td>"._T("Abort Inconsistent GLPI Information","xmppmaster")."</td>" : "";
         echo (isset($abortrelaydown)&&$abortrelaydown) ? "<td>"._T("Abort Relay Down","xmppmaster")."</td>" : "";
         echo (isset($abortalternativerelaysdow)&&$abortalternativerelaysdown) ?"<td>"._T("Abort Alternative relay down","xmppmaster")."</td>" : "";
         echo (isset($abortinforelaymissing)&&$abortinforelaymissing) ? "<td>"._T("Abort Info Relay Missing","xmppmaster")."</td>" : "";
@@ -500,6 +511,7 @@ echo "<div>";
         echo (isset($deploymentsuccess)&&$deploymentsuccess) ? "<td>".$deploymentsuccess."</td>" : "";
         echo (isset($deploymenterror)&&$deploymenterror) ? "<td>".$deploymenterror."</td>" : "";
         echo (isset($abortmissingagent)&&$abortmissingagent) ? "<td>".$abortmissingagent."</td>" : "";
+        echo (isset($abortinconsistentglpiinformation)&&$abortinconsistentglpiinformation) ? "<td>".$abortinconsistentglpiinformation."</td>" : "";
         echo (isset($abortrelaydown)&&$abortrelaydown) ? "<td>".$abortrelaydown."</td>" : "";
         echo (isset($abortalternativerelaysdow)&&$abortalternativerelaysdown) ?"<td>".$abortalternativerelaysdown."</td>" : "";
         echo (isset($abortinforelaymissing)&&$abortinforelaymissing) ? "<td>".$abortinforelaymissing."</td>" : "";
@@ -732,7 +744,14 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
 
 echo '<script src="modules/xmppmaster/graph/js/chart.js"></script>';
 
-  $bluelistcolor = ["#7080AF", "#665899", "#6F01F3", "#5D01A9", "#2D0151", "#3399CC", "#000099", "#6600FF"];
+  $bluelistcolor = ["#7080AF",
+                    "#665899",
+                    "#6F01F3",
+                    "#5D01A9",
+                    "#2D0151",
+                    "#3399CC",
+                    "#000099",
+                    "#6600FF"];
   $max = count($bluelistcolor) - 1;
 
   if(!$terminate){
@@ -773,6 +792,10 @@ echo '<script src="modules/xmppmaster/graph/js/chart.js"></script>';
     if ($abortmissingagent > 0){
         echo 'datas.push({"label":"Abort Missing Agent ", "value":parseInt('.$abortmissingagent.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmissingagent",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
+    if ($abortinconsistentglpiinformation > 0){
+        echo 'datas.push({"label":"Abort Inconsistent GLPI Information ", "value":parseInt('.$abortinconsistentglpiinformation.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinconsistentglpiinformation",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+
     if ($abortinforelaymissing > 0){
         echo 'datas.push({"label":"Abort Info For Relay Missing ", "value":parseInt('.$abortinforelaymissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinforelaymissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
@@ -856,6 +879,11 @@ echo '<script src="modules/xmppmaster/graph/js/chart.js"></script>';
     if ($abortmissingagent > 0){
         echo 'datas2.push({"label":"Abort Missing Agent ", "value":parseInt('.$abortmissingagent.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmissingagent",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
+
+    if ($abortinconsistentglpiinformation > 0){
+        echo 'datas2.push({"label":"Abort Inconsistent GLPI Information ", "value":parseInt('.$abortinconsistentglpiinformation.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinconsistentglpiinformation",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+
     if ($abortinforelaymissing > 0){
         echo 'datas2.push({"label":"Abort Info For Relay Missing ", "value":parseInt('.$abortinforelaymissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinforelaymissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
@@ -895,7 +923,6 @@ echo '<script src="modules/xmppmaster/graph/js/chart.js"></script>';
             echo 'datas2.push({"label":"'.ucfirst(strtolower($status)).'", "value":parseInt('.$$label.'), "color": "'.$color.'", "href":"'.urlredirect_group_for_deploy($label,$_GET['gid'],$_GET['login'],$cmd_id).'"});';
         }
     }
-
 
     $aborted = 0;
     $errors = 0;

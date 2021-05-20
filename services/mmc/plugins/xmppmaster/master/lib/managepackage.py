@@ -142,7 +142,10 @@ class apimanagepackagemsc:
         result['id'] = datapacquage['id']
         result['version'] = datapacquage['version']
         result['label'] = datapacquage['name']
-        result['metagenerator'] = datapacquage['metagenerator']
+        try:
+            result['metagenerator'] = datapacquage['metagenerator']
+        except KeyError:
+            result['metagenerator'] = "expert"
         result['sub_packages'] = datapacquage['sub_packages']
         result['description'] = datapacquage['description']
         result['targetos'] =  datapacquage['targetos']
