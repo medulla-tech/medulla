@@ -68,6 +68,7 @@ convergences)
 * [BUGFIX]  Add missing parameters in pkgs.ini and initialise pkgs_rules_algo table
 * [BUGFIX]  Fix pagination in GLPI View
 * [BUGFIX]  Fix registering ARS
+* [BUGFIX]  Fix displaying the relay list
 
 Pulse 2 4.6.7
 =============

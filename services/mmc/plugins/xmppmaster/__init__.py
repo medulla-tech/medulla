@@ -833,7 +833,7 @@ def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
     ars_list['nbwindows'] = []
     ars_list['nb_ou_user'] = []
     for jid in ars_list['jid']:
-        if 'jid' in stat_ars_machine:
+        if jid in stat_ars_machine:
             ars_list['total_machines'].append(stat_ars_machine[jid]['nbmachine'])
             ars_list['uninventoried'].append(stat_ars_machine[jid]['uninventoried'])
             ars_list['publicclass'].append(stat_ars_machine[jid]['publicclass'])
