@@ -11,6 +11,7 @@ Pulse 2 4.6.8
 * [FEATURE] Fix several XSS issues.
 * [FEATURE] Allow to retrieve the glpi uuid if missing
 * [FEATURE] Convergences are now identified by their name + date
+* [FEATURE] Do not display old view when creating the packages.
 * [BUGFIX]  Fix backtrace during deployment
 * [BUGFIX]  Fixes listing of packages for deployment
 * [BUGFIX]  Add acl for relays actions
