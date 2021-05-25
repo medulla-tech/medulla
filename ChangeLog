@@ -69,6 +69,7 @@ convergences)
 * [BUGFIX]  Fix pagination in GLPI View
 * [BUGFIX]  Fix registering ARS
 * [BUGFIX]  Fix displaying the relay list
+* [BUGFIX]  Fix and add ACLs
 
 Pulse 2 4.6.7
 =============

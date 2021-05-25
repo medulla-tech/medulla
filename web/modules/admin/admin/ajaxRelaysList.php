@@ -36,14 +36,16 @@ if ($_SESSION["login"] == "root"){
 }else{
   $sharings = xmlrpc_pkgs_search_share(["login"=> $_SESSION["login"]]);
   if($sharings['config']['centralizedmultiplesharing'] == 1){
-      $relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage, $_SESSION["login"], $filter);
+      $relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage, $filter);
   }else{
     $relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
   }
 }
 
-$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
-$editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
+//$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
+$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"conffile", "configg","","admin", "admin");
+//$editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
+$editremoteconfiguration = new ActionItem(_("Edit config files"),"conffile","config","", "admin", "admin");
 
 $detailactionempty = new EmptyActionItem1(_("Relay Detail"),"relaystatusdetail", "logfileg","","admin", "admin");
 $detailaction = new ActionItem(_("Relay Detail"),"relaystatusdetail", "logfile","","admin", "admin");
