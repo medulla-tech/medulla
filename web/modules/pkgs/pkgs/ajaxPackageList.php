@@ -59,6 +59,7 @@ a.info:hover span{
 
 <?php
 global $conf;
+function isExpertMode1(){return 1;}
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = array('filter'=> $_GET["filter"], 'bundle' => 0);
 $filter1 = $_GET["filter"];
@@ -223,7 +224,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
       $_licenses[] = $_tmp_licenses;
       $_tmpParam['permission'] = $_packages['permission'][$i];
 
-      if(!isExpertMode()) {
+      if(!isExpertMode1()) {
           // mode standart
           // seul root peut supprimer package manuel
           if ($_packages['conf_json'][$i]['metagenerator'] == 'manual') {
@@ -392,7 +393,7 @@ else{
       // #### end licenses ####
       $size[] = prettyOctetDisplay($p['size']);
       $params[] = array( 'pid' => base64_encode($p['id']), 'packageUuid' => $p['id']);
-      if(!isExpertMode()) {
+      if(!isExpertMode1()) {
           // mode standart
           // seul root peut supprimer package manuel
           if ($p['metagenerator'] == 'manual') {
