@@ -99,7 +99,7 @@ def main():
                 print "new file \n %s" % json.dumps(jsondata,indent=4)
             else:
                 print "Correct values pour ce packages"
-            print "The file named: %s is now fixed"
+            print "The package is now fixed"
         except:
             print "VERIFY JSON FILE %s" % jsonfile_name
             print "%s" % traceback.format_exc()
