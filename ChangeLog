@@ -71,6 +71,8 @@ convergences)
 * [BUGFIX]  Fix registering ARS
 * [BUGFIX]  Fix displaying the relay list
 * [BUGFIX]  Fix and add ACLs
+* [BUGFIX]  Fix migration to new packages layout
+* [BUGFIX]  Change hostname in cluster_resources size to 255
 
 Pulse 2 4.6.7
 =============
