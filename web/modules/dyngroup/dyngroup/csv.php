@@ -2,10 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,11 +52,18 @@ function get_values($h, $values) {
 }
 
 $headers = getComputersListHeaders();
-print "\"".implode('","', array_map("get_second", $headers))."\"\n";
+foreach($headers as $key => $header){
+  if($header[0] == "displayName"){
+    unset($headers[$key]);
+  }
+}
+print '"'.implode('","', array_map("get_second", $headers)).'"'."\n";
 
 $datum = getRestrictedComputersList(0, -1, array('gid'=>$gid, 'location' => $location), False);
-foreach ($datum as $machine) {
-    print "\"".implode('","', get_values(array_map("get_first", $headers), $machine[1]))."\"\n";
+foreach ($datum as $id => $machine) {
+    if(isset($datum[$id][1]["displayName"]))
+      unset($datum[$id][1]["displayName"]);
+    print '"'.implode('","', get_values(array_map("get_first", $headers), $machine[1])).'"'."\n";
 }
 
 exit;
