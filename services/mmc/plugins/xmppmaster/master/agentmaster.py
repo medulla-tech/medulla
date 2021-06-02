@@ -750,7 +750,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # TODO
         # If 1 package is in pending state, then the limit rate is removed.
         ###########################################################################
-        msg=[]
         list_ars_syncthing_pause =  XmppMasterDatabase().get_ars_for_pausing_syncthing(2)
         for arssyncthing in list_ars_syncthing_pause:
             datasend = {  "action" : "deploysyncthing",
@@ -787,6 +786,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         resultdeploymachine = MscDatabase().deployxmpp()
 
         for deployobject in resultdeploymachine:
+            msg = []
             # creation deployment
             UUID = deployobject['UUID']
             UUIDSTR = UUID.replace('UUID', "")
