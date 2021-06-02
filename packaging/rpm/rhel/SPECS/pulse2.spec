@@ -619,6 +619,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-packageparser.py
 %{_sbindir}/pulse2-inscription_packages_in_base.py
 %{_sbindir}/pulse2-generation_package.py
+%{_sbindir}/pulse2-migration_old_package.py
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
