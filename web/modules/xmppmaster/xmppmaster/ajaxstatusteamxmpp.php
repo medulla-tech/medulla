@@ -30,6 +30,26 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 
 <?php
 global $conf;
+
+function convtostringdate($data){
+    if (is_array($data) && count($data) == 9){
+        return date("Y-m-d H:i:s", mktime( $data[3],
+                        $data[4],
+                        $data[5],
+                        $data[1],
+                        $data[2],
+                        $data[0]));
+    }elseif(is_object ($data) && xmlrpc_get_type($data) == "datetime" ){
+        return convtostringdate($data->timestamp);
+    }elseif(is_string($data)){
+        return $data;
+    }elseif( is_numeric($data) || is_int($data)){
+        return gmdate("Y-m-d H:i:s", $data);
+    }else{
+    return "error date";}
+}
+
+
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = $_GET["filter"];
 
@@ -41,13 +61,26 @@ if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1'){
   $status="";
   $LastdeployINsecond = 3600*24;
   echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
-  $arraydeploy = xmlrpc_get_deploy_by_user_with_interval( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter) ;
-  $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
+  $arraydeploy = xmlrpc_getdeploybyteamuserrecent(  $_GET['login'] ,
+                                                    $status,
+                                                    $LastdeployINsecond,
+                                                    $start,
+                                                    $end,
+                                                    $filter) ;
+    $arraynotdeploy = xmlrpc_getnotdeploybyteamuserrecent(  $_GET['login'],
+                                                            $LastdeployINsecond,
+                                                            $start,
+                                                            $end,
+                                                            $filter); 
 }
 else {
   $LastdeployINsecond = 3600*2160;
   echo "<h2>" . _T("Past tasks (last 3 months)") ."</h2>";
-  $arraydeploy = xmlrpc_get_deploy_by_user_finished( $_GET['login'] ,$LastdeployINsecond, $start, $end, $filter) ;
+  $arraydeploy = xmlrpc_get_deploy_by_team_finished($_GET['login'],
+                                                $LastdeployINsecond,
+                                                $start,
+                                                $end,
+                                                $filter) ;
 }
 
 if (isset($arraydeploy['total_of_rows']))
@@ -289,7 +322,7 @@ if(isset($arraynotdeploy))
       $arrayname[] = $name;
 
       $date = (array)$deploy['date_start'];
-      $arraydeploy['tabdeploy']['start'][] = substr($date['scalar'], 0, 4).'-'.substr($date['scalar'], 4, 2).'-'.substr($date['scalar'], 6, 2).' '.substr($date['scalar'], 9);
+      $arraydeploy['tabdeploy']['start'][] = date("Y-m-d H:i:s",$date['timestamp']);
       //TODO
       $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline</span>';
       $tolmach[] = $deploy['nb_machines'];

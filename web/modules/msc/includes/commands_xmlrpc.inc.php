@@ -324,7 +324,7 @@ function delete_command_on_host($id) {
     return xmlCall('msc.delete_command_on_host', array($id));
 }
 
-function xmlrpc_getnotdeploybyuserrecent( $login, $time, $min=null, $max=null, $filt=null) {
-    return xmlCall("msc.getnotdeploybyuserrecent", array($login, $time, $min , $max, $filt));
+function xmlrpc_get_deploy_inprogress_by_team_member( $login, $time, $min=null, $max=null, $filt=null) {
+    return xmlCall("msc.get_deploy_inprogress_by_team_member", array($login, $time, $min , $max, $filt));
 }
 ?>

@@ -669,7 +669,21 @@ class MscDatabase(DatabaseHelper):
         self.logger.warning("command [%s] deploy missing for slot [%s,%s]"%(command_id, datestartstr, dateendstr))
         return ""
 
-    def deployxmppscheduler(self, login, min , max, filt):
+    def deployxmppscheduler(self, login, minimum , maximum, filt):
+        """
+        This function isued to retrieve all the scheduled deployments on msc
+
+        Args:
+            login: The login of the user
+            minimum: Minimum value ( for pagination )
+            maximum: Maximum value ( for pagination )
+            filt: Filter of the search
+        Returns:
+            It returns the list of all the scheduled deployments on msc
+        """
+        listuser = []
+        if isinstance(login, list):
+            listuser = [ '"%s"'%x.strip() for x in login if x.strip() != ""]
         datenow = datetime.datetime.now()
         sqlselect="""
             SELECT
@@ -710,9 +724,14 @@ class MscDatabase(DatabaseHelper):
                     phase.state = 'ready'"""
 
         if login:
-            sqlfilter = sqlfilter + """
-            AND
-                commands.creator = '%s'"""%login
+            if listuser:
+                sqlfilter = sqlfilter + """
+                AND
+                    commands.creator in (%s)""" % ",".join(listuser)
+            else:
+                sqlfilter = sqlfilter + """
+                AND
+                    commands.creator = '%s'""" % login
 
         if filt:
             sqlfilter = sqlfilter + """
@@ -726,18 +745,16 @@ class MscDatabase(DatabaseHelper):
         reqsql = sqlselect + sqlfilter
 
         sqllimit=""
-        if min and max:
+        if minimum and maximum:
             sqllimit = """
                 LIMIT %d
-                OFFSET %d"""%(int(max)-int(min), int(min))
+                OFFSET %d"""%(int(maximum)-int(minimum), int(minimum))
             reqsql = reqsql + sqllimit
 
         sqlgroupby = """
             GROUP BY titledeploy"""
 
         reqsql = reqsql + sqlgroupby+";"
-
-        ###### print reqsql
 
         sqlselect="""
             Select COUNT(nb) AS TotalRecords from(
@@ -761,13 +778,14 @@ class MscDatabase(DatabaseHelper):
             AND
             """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;";
+
         result={}
         resulta = self.db.execute(reqsql)
         resultb = self.db.execute(reqsql1)
         sizereq = [x for x in resultb][0][0]
         result['lentotal'] = sizereq
-        result['min'] = int(min)
-        result['nb']  = (int(max)-int(min))
+        result['min'] = int(minimum)
+        result['nb']  = (int(maximum)-int(minimum))
         result['tabdeploy'] = {}
         inventoryuuid = []
         host = []
@@ -808,6 +826,7 @@ class MscDatabase(DatabaseHelper):
         result['tabdeploy']['groupid'] = groupid
         result['tabdeploy']['titledeploy'] = titledeploy
         return result
+
 
     def updategroup(self, group):
         session = create_session()
@@ -916,15 +935,31 @@ class MscDatabase(DatabaseHelper):
         return resultsql
 
     @DatabaseHelper._sessionm
-    def getnotdeploybyuserrecent(self, session, login, intervalsearch, min, max, filt):
-        """
-            select deploys not deployed
-        """
+    def get_deploy_inprogress_by_team_member(self, session, login, intervalsearch, minimum, maximum, filt):
+    """
+    This function is used to retrieve not yet done deployements of a team.
+    This team is found based on the login of a member.
 
+    Args:
+        session: The SQL Alchemy session
+        login: The login of the user
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+        Returns:
+            It returns all the deployement not yet started of a specific team.
+            It can be done by time search too.
+    """
+        list_login=[]
+        if login:
+            if isinstance(login, (tuple, list)):
+                list_login=[x.strip() for x in login if x.strip() != ""]
+            else :
+                list_login.append(login)
         datenow = datetime.datetime.now()
         delta = datetime.timedelta(seconds=intervalsearch)
         datereduced = datenow - delta
-
         query = session.query(Commands.id,
                               func.count(Commands.id).label('nb_machine'),
                               Commands.title,
@@ -945,21 +980,33 @@ class MscDatabase(DatabaseHelper):
         .filter(Commands.end_date > datereduced)\
         .filter(Commands.type != 2)
 
-        if filt:
-            query = query.filter(or_(Commands.title.like("%%%s%%"%filt), \
-                                     Commands.creator.like("%%%s%%"%filt),\
-                                     Commands.package_id.like("%%%s%%"%filt),\
-                                     Commands.start_date.like("%%%s%%"%filt),\
-                                     Commands.end_date.like("%%%s%%"%filt),\
-                                     CommandsOnHost.id.like("%%%s%%"%filt),\
-                                     Target.target_name.like("%%%s%%"%filt),\
-                                     Target.target_uuid.like("%%%s%%"%filt),\
-                                     Target.id_group.like("%%%s%%"%filt),\
-                                     Target.target_macaddr.like("%%%s%%"%filt)))
-
+       if list_login:
+            query = query.filter(Commands.creator.in_(list_login))
+            if filt:
+                query = query.filter(or_(Commands.title.like("%%%s%%"%filt),
+                                        Commands.package_id.like("%%%s%%"%filt),
+                                        Commands.start_date.like("%%%s%%"%filt),
+                                        Commands.end_date.like("%%%s%%"%filt),
+                                        CommandsOnHost.id.like("%%%s%%"%filt),
+                                        Target.target_name.like("%%%s%%"%filt),
+                                        Target.target_uuid.like("%%%s%%"%filt),
+                                        Target.id_group.like("%%%s%%"%filt),
+                                        Target.target_macaddr.like("%%%s%%"%filt)))
+        else:
+            if filt:
+                query = query.filter(or_(Commands.title.like("%%%s%%"%filt),
+                                        Commands.creator.like("%%%s%%"%filt),
+                                        Commands.package_id.like("%%%s%%"%filt),
+                                        Commands.start_date.like("%%%s%%"%filt),
+                                        Commands.end_date.like("%%%s%%"%filt),
+                                        CommandsOnHost.id.like("%%%s%%"%filt),
+                                        Target.target_name.like("%%%s%%"%filt),
+                                        Target.target_uuid.like("%%%s%%"%filt),
+                                        Target.id_group.like("%%%s%%"%filt),
+                                        Target.target_macaddr.like("%%%s%%"%filt)))
         query = query.group_by(Commands.id, CommandsOnHostPhase.state)
         nb = query.count()
-        query = query.offset(int(min)).limit(int(max)-int(min))
+        query = query.offset(int(minimum)).limit(int(maximum)-int(minimum))
         res = query.all()
 
         result = {'total': nb, 'elements':[]}
@@ -977,6 +1024,7 @@ class MscDatabase(DatabaseHelper):
                            'gid': element[10],
                            'mac_address': element[11]})
         return result
+
 
     @DatabaseHelper._sessionm
     def __dispach_deploy(self, session, selectedMachines):
