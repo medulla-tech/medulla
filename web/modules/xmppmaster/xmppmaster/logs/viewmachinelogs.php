@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2017 siveo, http://www.siveo.net/
+ * (c) 2017-2021 siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -22,14 +22,6 @@
  *
  *  file : logs/viewmachinelogs.php
  */
-
-$p = new PageGenerator(_T("Deployment [machine ", 'xmppmaster')." ".$hostname."]");
-$p->setSideMenu($sidemenu);
-$p->display();
-
-$hideText = _T("Hide", "xmppmaster");
-$showText = _T("Show", "xmppmaster");
-
 ?>
 <style>
 
@@ -160,10 +152,21 @@ require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/pulse2/includes/menu_actionaudit.php');
 include_once('modules/glpi/includes/xmlrpc.php');
+include_once('modules/pkgs/includes/xmlrpc.php');
+
     // Retrieve information deploy. For cmn_id
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
 $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
+
+$pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
+
+$p = new PageGenerator(_T("Deployment [machine ", 'xmppmaster')." ".$deploymachine['target_name']."]");
+$p->setSideMenu($sidemenu);
+$p->display();
+
+$hideText = _T("Hide", "xmppmaster");
+$showText = _T("Show", "xmppmaster");
 
     if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT ABORT"){
         echo "<H1>DEPLOYMENT ABORT</H1>";
@@ -350,7 +353,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                     echo "<tbody>";
                         echo "<tr>";
                             echo "<td>";
-                                echo $hostname;
+                                echo $deploymachine['target_name'];
                             echo "</td>";
 
                             echo "<td>";
@@ -395,7 +398,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                                 echo $deploymachine['creator'];
                             echo "</td>";
                             echo "<td>";
-                            echo $info['objectdeploy'][0]['pathpackage'];
+                            echo $pkgname[$deploymachine['package_id']];
                             echo "</td>";
                             echo "<td>";
                                 echo $deploymachine['package_id'];

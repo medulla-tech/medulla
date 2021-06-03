@@ -258,4 +258,12 @@ function get_dependencies_list_from_permissions($login){
   return xmlCall("pkgs.get_dependencies_list_from_permissions", [$login]);
 }
 
+function get_pkg_name_from_uuid($uuids){
+  return xmlCall("pkgs.get_pkg_name_from_uuid", [$uuids]);
+}
+
+function xmlrpc_get_files_infos($uuid, $filename=""){
+  return xmlCall("pkgs.get_files_infos", [$uuid, $filename]);
+}
+
 ?>
