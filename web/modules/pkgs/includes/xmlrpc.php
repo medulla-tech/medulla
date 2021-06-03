@@ -266,4 +266,7 @@ function xmlrpc_get_files_infos($uuid, $filename=""){
   return xmlCall("pkgs.get_files_infos", [$uuid, $filename]);
 }
 
+function get_pkg_creator_from_uuid($uuids){
+  return xmlCall("pkgs.get_pkg_creator_from_uuid", [$uuids]);
+}
 ?>
