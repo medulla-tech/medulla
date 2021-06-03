@@ -1507,6 +1507,36 @@ class PkgsDatabase(DatabaseHelper):
         return pkg
 
     @DatabaseHelper._sessionm
+    def get_pkg_creator_from_uuid(self, session, uuids):
+        """
+            Retrieve the creator of the package based on the uuids
+            Args:
+                session: The SQL Alchemy session
+                uuids: uuids of the packages
+            Return:
+                It returns the name of the creator of the package
+        """
+        query = session.query(Packages.conf_json, Packages.uuid)
+        if type(uuids) is list:
+            query = query.filter(Packages.uuid.in_(uuids))
+        elif type(uuids) is str:
+            query = query.filter(Packages.uuid == uuids)
+        result = query.all()
+
+        pkg = {}
+        if result is not None:
+            for tmp in result:
+                try:
+                    conf_json = json.loads(tmp.conf_json)
+                    if 'creator' in conf_json:
+                        pkg[tmp.uuid] = conf_json['creator']
+                    else:
+                        pkg[tmp.uuid] = ""
+                except:
+                    pkg[tmp.uuid] = ""
+        return pkg
+
+    @DatabaseHelper._sessionm
     def get_files_infos(self, session, uuid, filename=""):
         """
             This is used to retrieve informations about a package.

@@ -160,6 +160,7 @@ $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
 $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
 
 $pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
+$pkgcreator = get_pkg_creator_from_uuid($deploymachine['package_id']);
 
 $p = new PageGenerator(_T("Deployment [machine ", 'xmppmaster')." ".$deploymachine['target_name']."]");
 $p->setSideMenu($sidemenu);
@@ -302,6 +303,14 @@ $showText = _T("Show", "xmppmaster");
         }
     }
     if (count($deploymachine != 0)){
+        $creation_date = mktime( $deploymachine['creation_date'][3],
+                                 $deploymachine['creation_date'][4],
+                                 $deploymachine['creation_date'][5],
+                                 $deploymachine['creation_date'][1],
+                                 $deploymachine['creation_date'][2],
+                                 $deploymachine['creation_date'][0]);
+        $creation_date = date("Y-m-d H:i:s", $creation_date);
+
         $start_datemsc = mktime( $deploymachine['startdatec'][3],
                                  $deploymachine['startdatec'][4],
                                  $deploymachine['startdatec'][5],
@@ -395,7 +404,7 @@ $showText = _T("Show", "xmppmaster");
                     echo "<tbody>";
                         echo "<tr>";
                             echo "<td>";
-                                echo $deploymachine['creator'];
+                                echo $pkgcreator[$deploymachine['package_id']];
                             echo "</td>";
                             echo "<td>";
                             echo $pkgname[$deploymachine['package_id']];
@@ -404,7 +413,7 @@ $showText = _T("Show", "xmppmaster");
                                 echo $deploymachine['package_id'];
                             echo "</td>";
                             echo "<td>";
-                                echo $start_datemsc;
+                                echo $creation_date;
                             echo "</td>";
                         echo "</tr>";
                     echo "</tbody>";
@@ -436,7 +445,7 @@ $showText = _T("Show", "xmppmaster");
                     echo "<tbody>";
                         echo "<tr>";
                             echo "<td>";
-                                echo $deploymachine['connect_as'];
+                                echo $deploymachine['creator'];
                             echo "</td>";
                             echo "<td>";
                             echo $deploymachine['title'];
