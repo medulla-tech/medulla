@@ -289,7 +289,7 @@ if(isset($arraynotdeploy))
       $arrayname[] = $name;
 
       $date = (array)$deploy['date_start'];
-      $arraydeploy['tabdeploy']['start'][] = date("Y-m-d H:i:s",$date['timestamp']);
+      $arraydeploy['tabdeploy']['start'][] = substr($date['scalar'], 0, 4).'-'.substr($date['scalar'], 4, 2).'-'.substr($date['scalar'], 6, 2).' '.substr($date['scalar'], 9);
       //TODO
       $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline</span>';
       $tolmach[] = $deploy['nb_machines'];

@@ -75,6 +75,7 @@ convergences)
 * [BUGFIX]  Change hostname in cluster_resources size to 255
 * [BUGFIX]  Remove description from csv generation
 * [BUGFIX]  Modify concatenation of " bracket from csv generation
+* [BUGFIX]  Fix display of dates in the audit page
 
 Pulse 2 4.6.7
 =============
