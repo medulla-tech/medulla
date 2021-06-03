@@ -1502,7 +1502,7 @@ class PkgsDatabase(DatabaseHelper):
         pkg = {}
         if result is not None:
             for tmp in result:
-                pkg[pkg.uuid] = tmp.label
+                pkg[tmp.uuid] = tmp.label
 
         return pkg
 
