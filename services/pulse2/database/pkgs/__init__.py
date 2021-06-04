@@ -1556,7 +1556,7 @@ class PkgsDatabase(DatabaseHelper):
             .join(Packages, Pkgs_shares.id == Packages.pkgs_share_id)\
             .filter(Packages.uuid == uuid).first()
 
-        path = query[0] if query is not None else None
+        path = query[0] if query is not None else ""
 
         result = {
             "path": path,
