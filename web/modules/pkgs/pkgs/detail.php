@@ -290,6 +290,16 @@ echo '</div>';
   padding:3px;
   border: dashed 1px rgb(100,100,100);
 }
+
+.actions a:hover{
+  background-color: #007fff;
+  color:rgb(255, 255, 255);
+  border: 1px solid #003eff
+}
+
+.actions a{
+  padding:1px;
+}
 </style>
 
 <script>
