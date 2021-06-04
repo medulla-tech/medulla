@@ -1206,7 +1206,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                                                  filter,filter,filter,filter,filter)
 
         if listidars:
-            listin = "%s"%  ",".join([str(x) for x in listidars])
+            listin = "%s"%  ",".join([str(x) for x in listidars if x != ""])
             sql="""
                 SELECT SQL_CALC_FOUND_ROWS
                     relayserver.id AS relayserver_id,
