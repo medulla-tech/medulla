@@ -3684,6 +3684,10 @@ class XmppMasterDatabase(DatabaseHelper):
                 Deploy.state.contains(criterion),
                 Deploy.inventoryuuid.contains(criterion),
             ))
+
+        elif filter == "relays" and criterion != "":
+            query = query.filter(Deploy.jid_relay.contains(criterion))
+
         if filter != 'infos':
             count = query.count()
             if limit != -1:

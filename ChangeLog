@@ -12,6 +12,7 @@ Pulse 2 4.6.8
 * [FEATURE] Allow to retrieve the glpi uuid if missing
 * [FEATURE] Convergences are now identified by their name + date
 * [FEATURE] Do not display old view when creating the packages.
+* [FEATURE] Allow to filter searches based on the relay ji
 * [BUGFIX]  Fix backtrace during deployment
 * [BUGFIX]  Fixes listing of packages for deployment
 * [BUGFIX]  Add acl for relays actions
