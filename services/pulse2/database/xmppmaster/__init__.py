@@ -3684,6 +3684,10 @@ class XmppMasterDatabase(DatabaseHelper):
                 Deploy.state.contains(criterion),
                 Deploy.inventoryuuid.contains(criterion),
             ))
+
+        elif filter == "relays" and criterion != "":
+            query = query.filter(Deploy.jid_relay.contains(criterion))
+
         if filter != 'infos':
             count = query.count()
             if limit != -1:
@@ -4889,7 +4893,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
             where
                 `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
@@ -4902,7 +4906,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
             where
                 `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
@@ -4916,15 +4920,21 @@ class XmppMasterDatabase(DatabaseHelper):
     def algoruleadorganisedbymachines(self,
                                       session,
                                       machineou,
-                                      classutilMachine = "both",
-                                      rule = 7,
+                                      classutilMachine="both",
+                                      rule=7,
                                       enabled=1):
         """
-            Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 7 by organization machine
-            Field "subject" is used to define the organisation by machine OU eg Computers/HeadQuarter/Locations
-            Field "relayserver_id" is used to define the Relayserver associe a this organization
-            enabled = 1 Only on active relayserver.
-            If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
+            This is used to assign an ARS to a machine based on the machine's OU of the AD.
+            Args:
+                session: The SQL Alchemy session
+                machineou: The OU where the machine is located.
+                classutilMachine: Type of ARS ( can be private, public, both )
+                rule: the number of the rule to proceed
+                enabled: Tell if the relayserver is enabled or not.
+                         1 means the relayserver is enabled, 0 otherwise
+
+            Returns:
+                It returns the ID of the relay server matching this SQL Request.
         """
         if classutilMachine == "private":
             sql = """select `relayserver`.`id`
@@ -4933,7 +4943,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
             where
                 `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
@@ -4946,7 +4956,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
             where
                 `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)
@@ -4973,7 +4983,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
             where
                 `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
@@ -4985,7 +4995,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id`
             where
                 `has_relayserverrules`.`rules_id` = %d
-                    AND `has_relayserverrules`.`subject` = '%s'
+                    AND '%s' REGEXP `has_relayserverrules`.`subject`
                     AND `relayserver`.`enabled` = %d
                     AND `relayserver`.`moderelayserver` = 'static'
             limit 1;""" % (rule, username, enabled)

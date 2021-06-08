@@ -49,6 +49,7 @@ class AjaxFilterAudit extends AjaxFilter {
 
         <option value="status"><?php echo _T("Deployment Status", "xmppmaster");?></option>
         <option value="infos"><?php echo _T("Machine Inventory", "xmppmaster");?></option>
+        <option value="relays"><?php echo _T("Relays", "xmppmaster");?></option>
       </select>
 
       <span class="searchfield">
