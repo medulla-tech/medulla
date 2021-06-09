@@ -1501,28 +1501,31 @@ def xmpp_packages_list():
 
 def remove_xmpp_package(package_uuid):
     """
-    Remove the specified xmpp package. If it is ok, return true, else return false
+    Remove the specified package from both the filesystem and the database.
 
     Args:
-    package_uuid: uuid of the package
+        package_uuid: uuid of the package
 
     Returns:
-    success | failure
+        Returns True if it deletes correctly the package.
+                False otherwise.
+
     """
 
     # If the package exists, delete it and return true
     pathpackagename = os.path.join(_path_package(), package_uuid)
     realname = os.path.abspath(os.path.realpath(pathpackagename))
-
-    if os.path.exists(realname):
+    ret = True
+    try:
         shutil.rmtree(realname)
+    except Exception as e:
+        ret = False
         # Delete the package from the database
+    finally:
         pkgmanage().remove_package(package_uuid)
-        if os.path.islink(pathpackagename):
-            os.unlink(pathpackagename)
-        return True
-    else :
-        return False
+    if os.path.islink(pathpackagename):
+        os.unlink(pathpackagename)
+    return ret
 
 def get_xmpp_package(package_uuid):
     """
