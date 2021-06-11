@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015 siveo, http://www.siveo.net/
+ * (c) 2015-2021 siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -120,12 +120,14 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                         }
                     }
                 }
+
                 echo "<table>";
                     echo '<tr>';
                     echo'<td>Custom command</td>
                     <td>
                         <select id="select">';
                         foreach($qacomand['command'] as $tabblecommand){
+                          if($tabblecommand['namecmd'] != "Restart machine agent"){
                             $tabblecommand['customcmd'] = preg_replace('/\r?\n|\r/',' ', $tabblecommand['customcmd']);
                             $tabblecommand['customcmd'] = trim ( $tabblecommand['customcmd'] , " \t\n\r");
                             echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].'</option>';
@@ -134,7 +136,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                         'customcmd' : '".addslashes($tabblecommand['customcmd'])."',
                                         'os' : '".addslashes($tabblecommand['os'])."',
                                         'user' : '".addslashes($tabblecommand['user'])."'}";
-                                    };
+                          }
+                        };
                         echo'</select>
                     </td>
                     <td><input id="buttoncmd" class="btn btn-primary" type=button value="Send custom command"></td>';
