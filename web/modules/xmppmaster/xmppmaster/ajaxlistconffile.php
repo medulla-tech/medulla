@@ -1,6 +1,6 @@
 <?php
 /**
- *  (c) 2015-2017 Siveo, http://www.siveo.net
+ *  (c) 2015-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -79,7 +79,7 @@ if(isset($result['result'])){
 $_result = [];
 $agenttype = (isset($_GET['agenttype'])) ? $_GET['agenttype'] : '';
 foreach($result['result'] as $file){
-  $params[] = ['jid'=> $jid, 'name'=>$file, 'agenttype'=>$agenttype];
+  $params[] = ['jid'=> $jid, 'name'=>$file, 'agenttype'=>$agenttype, 'hostname'=>htmlentities($_GET['hostname'])];
   if($filter)
   {
     if(preg_match('#'.$filter.'#i', $file)){
