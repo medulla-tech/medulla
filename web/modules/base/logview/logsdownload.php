@@ -54,13 +54,13 @@ Who: Nom du groupe ou de la machine
 Why: Groupe ou machine
 */
 ?>
-<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
+<script src="jsframework/lib/plugin.jquery-ui/datatable/js/dataTables.buttons.min.js"></script>
+<script src="jsframework/lib/plugin.jquery-ui/datatable/js/buttons.flash.min.js"></script>
+<script src="jsframework/lib/jszip.min.js"></script>
+<script src="jsframework/lib/pdfmake.min.js"></script>
+<script src="jsframework/lib/vfs_fonts.js"></script>
+<script src="jsframework/lib/plugin.jquery-ui/datatable/js/buttons.html5.min.js"></script>
+<script src="jsframework/lib/plugin.jquery-ui/datatable/js/buttons.print.min.js"></script>
 <?php
     require("graph/navbar.inc.php");
     require("localSidebar.inc.php");
@@ -258,7 +258,7 @@ $modules2->setElementsVal($typecritereval);*/
                 <th><?php echo $start_date->display(); ?></th>
                 <th><?php echo $end_date->display(); ?></th>
                 <th><?php echo $modules->display(); ?></th>
-                <?php 
+                <?php
 //                     echo "<th>";
 //                         echo $modules1->display();
 //                     echo "</th>";
