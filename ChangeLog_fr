@@ -7,6 +7,7 @@ fileviewer ( Serveur, port, taille de la popup, etc.)
 des Actions rapides
 * [FONCTIONNALITE]    Suppression de l'action rapdie "Restart machine agent"
 * [FONCTIONNALITE]    Ajout d'un bouton de validation des recherches
+* [FONCTIONNALITE]    Optimisation de l'affichage de la vue ordinateur
 * [CORRECTION DE BUG] Correction de la suppression de packages. Bug#1323
 * [CORRECTION DE BUG] Correction de la suppression d'anciens compte
 utilisateurs dans ejabberd

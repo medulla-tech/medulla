@@ -6,6 +6,7 @@ popup, etc.)
 * [FEATURE] Add link to machines in the Quick Action summary page
 * [FEATURE] Add a button to run the researches on computers
 * [FEATURE] Remove the "Restart machine agent" Quick action
+* [FEATURE] Optimize Comuter view display
 * [BUGFIX]  Fix removing packages from the database. Bug#1323
 * [BUGFIX]  Fix deleting old users in ejabberd
 * [BUGFIX]  Remove cdn from js files import. Use local files instead

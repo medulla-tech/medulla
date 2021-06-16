@@ -5872,7 +5872,7 @@ class XmppMasterDatabase(DatabaseHelper):
         ctx['filter']=ctx['filter'].strip()
         if "@@@DEBUG@@@" in ctx['filter']:
             debugfunction = 1
-            ctx['filter']  = ctx['filter'].replace("@@DEBUG@@", "").strip()
+            ctx['filter']  = ctx['filter'].replace("@@@DEBUG@@@", "").strip()
 
         if 'field' in ctx and ctx['field'].strip() != '':
             if 'filter' in ctx and ctx['filter'].strip() != '':
@@ -5952,7 +5952,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         LEFT OUTER JOIN
                     network netw ON  netw.machines_id = mach.id
                 WHERE
-                    agenttype LIKE 'm%%'%s%s%s
+                    agenttype = 'machine'%s%s%s
                 GROUP BY mach.id
                 limit %s, %s;""" % (computerpresence,
                                     entity,
@@ -5963,7 +5963,6 @@ class XmppMasterDatabase(DatabaseHelper):
         if debugfunction:
             logger.info("SQL request :  %s" % sql)
 
-        result = session.execute(sql)
         result = session.execute(sql)
         sql_count = "SELECT FOUND_ROWS();"
         ret_count = session.execute(sql_count)
