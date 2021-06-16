@@ -7527,7 +7527,11 @@ class XmppMasterDatabase(DatabaseHelper):
             .join(RelayServer, RelayServer.jid == Machines.groupdeploy)\
             .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)\
             .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
-            .filter(Machines.agenttype == 'machine', Machines.uuid_inventorymachine == None)
+            .filter(
+                and_(Machines.agenttype == 'machine',
+                    or_(Machines.uuid_inventorymachine == "", Machines.uuid_inventorymachine == None)
+                )
+            )
 
         if presence == 'nopresence':
             query = query.filter(Machines.enabled != 1)
