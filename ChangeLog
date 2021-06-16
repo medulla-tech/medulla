@@ -8,6 +8,7 @@ popup, etc.)
 * [FEATURE] Remove the "Restart machine agent" Quick action
 * [FEATURE] Optimize Comuter view display
 * [FEATURE] Optimize admin view display
+* [FEATURE] Add online/offline switch to the uninventoried page
 * [BUGFIX]  Fix removing packages from the database. Bug#1323
 * [BUGFIX]  Fix deleting old users in ejabberd
 * [BUGFIX]  Remove cdn from js files import. Use local files instead

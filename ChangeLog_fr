@@ -9,6 +9,8 @@ des Actions rapides
 * [FONCTIONNALITE]    Ajout d'un bouton de validation des recherches
 * [FONCTIONNALITE]    Optimisation de l'affichage de la vue ordinateur
 * [FONCTIONNALITE]    Optimisation de l'affichage de la vue admin
+* [FONCTIONNALITE]    Ajout d'un selecteur en ligne/hors ligne pour la vue des
+machines non inventoriées
 * [CORRECTION DE BUG] Correction de la suppression de packages. Bug#1323
 * [CORRECTION DE BUG] Correction de la suppression d'anciens compte
 utilisateurs dans ejabberd
