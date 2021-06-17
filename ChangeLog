@@ -9,9 +9,11 @@ popup, etc.)
 * [FEATURE] Optimize Comuter view display
 * [FEATURE] Optimize admin view display
 * [FEATURE] Add online/offline switch to the uninventoried page
+* [FEATURE] Add a @@@DEBUG@@@ option in queries to show played SQL Requests
 * [BUGFIX]  Fix removing packages from the database. Bug#1323
 * [BUGFIX]  Fix deleting old users in ejabberd
 * [BUGFIX]  Remove cdn from js files import. Use local files instead
+* [BUGFIX]  Several SQL Optimisations
 
 Pulse 2 4.6.8
 =============

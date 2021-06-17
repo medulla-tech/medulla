@@ -55,7 +55,7 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.GLPIClient import XMLRPCClient
-from mmc.plugins.glpi.utilities import complete_ctx
+from mmc.plugins.glpi.utilities import complete_ctx, literalquery
 from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
@@ -795,6 +795,13 @@ class Glpi94(DyngroupDatabaseHelper):
             query = query.offset(start).limit(end)
 
         columns_name = [column['name'] for column in query.column_descriptions]
+
+        if debugfunction:
+            try:
+                logger.info("@@@DEBUG@@@ %s"%literalquery(query))
+            except Exception as e:
+                logger.error("display @@@DEBUG@@@ sql literal from alchemy error : %s" % e)
+
         machines = query.all()
 
         # initialisation structure result
@@ -3993,6 +4000,10 @@ class Glpi94(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machines_list1(self, session, start, end, ctx):
+        debugfunction = False
+        if 'filter' in ctx and "@@@DEBUG@@@" in ctx['filter']:
+            debugfunction = True
+            ctx['filter']  = ctx['filter'].replace("@@@DEBUG@@@", "").strip()
         # start and end are used to set the limit parameter in the query
         start = int(start)
         end = int(end)

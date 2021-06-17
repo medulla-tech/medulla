@@ -11,11 +11,14 @@ des Actions rapides
 * [FONCTIONNALITE]    Optimisation de l'affichage de la vue admin
 * [FONCTIONNALITE]    Ajout d'un selecteur en ligne/hors ligne pour la vue des
 machines non inventoriées
+* [FONCTIONNALITE]    Ajout de l'option @@@DEBUG@@@ lors des recherches afin
+de montrer les Requetes SQL jouées
 * [CORRECTION DE BUG] Correction de la suppression de packages. Bug#1323
 * [CORRECTION DE BUG] Correction de la suppression d'anciens compte
 utilisateurs dans ejabberd
 * [CORRECTION DE BUG] Suppression des cdn pour l'utilisation des fichiers js.
 Utilisation de fichiers locaux à la place
+* [CORRECTION DE BUG] De nombreuses optimisations dans les requetes SQL jouées
 
 Pulse 2 4.6.8
 =============
