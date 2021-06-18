@@ -38,6 +38,7 @@ from sqlalchemy.orm.exc import NoResultFound
 ##from sqlalchemy.orm import sessionmaker
 import datetime
 import magic
+import base64
 # ORM mappings
 from pulse2.database.pkgs.orm.version import Version
 from pulse2.database.pkgs.orm.pakages import Packages
