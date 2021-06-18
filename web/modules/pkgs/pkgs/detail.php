@@ -46,7 +46,7 @@ function renderAction($sequence, $os){
     }
     if(isset($action['script'])){
       $content.= '<li>';
-      $content .= _T("Script", "pkgs").' : '.htmlentities(base64_decode($action['script']));
+      $content .= _T("Script", "pkgs").' : '.nl2br(htmlentities(base64_decode($action['script'])));
       $content .= '</li>';
     }
     if(isset($action['timeout']) && $action['timeout'] != ""){
