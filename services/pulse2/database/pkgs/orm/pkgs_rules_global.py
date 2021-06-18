@@ -31,7 +31,7 @@ import logging
 """
 class Pkgs_rules_global(object):
     """ Mapping between pkgs.pkgs_rules_global and SA
-        colunm table: 'id,pkgs_rules_algos_id,pkgs_shares_id,order,subject'
+        colunm table: 'id,pkgs_rules_algos_id,pkgs_cluster_ars_id,order,suject'
     """
 
     def getId(self):
@@ -46,9 +46,9 @@ class Pkgs_rules_global(object):
         else:
             return-1
 
-    def getShares_id(self):
-        if self.pkgs_shares_id is not None:
-            return self.pkgs_shares_id
+    def getCluster_ars_id(self):
+        if self.pkgs_cluster_ars_id is not None:
+            return self.pkgs_cluster_ars_id
         else:
             return ""
 
@@ -59,8 +59,8 @@ class Pkgs_rules_global(object):
             return ""
 
     def getSuject(self):
-        if self.subject is not None:
-            return self.subject
+        if self.suject is not None:
+            return self.suject
         else:
             return ""
 
@@ -68,15 +68,15 @@ class Pkgs_rules_global(object):
         return {
             'id': self.getId(),
             'pkgs_rules_algos_id': self.getRules_algos_id(),
-            'pkgs_shares_id': self.getShares_id(),
+            'pkgs_cluster_ars_id': self.getCluster_ars_id(),
             'order': self.getOrder(),
-            'subject': self.getSuject()}
+            'suject': self.getSuject()}
 
     def toH(self):
         return {
             'id': self.id,
             'pkgs_rules_algos_id': self.pkgs_rules_algos_id,
-            'pkgs_shares_id': self.pkgs_shares_id,
+            'pkgs_cluster_ars_id': self.pkgs_cluster_ars_id,
             'order': self.order,
-            'subject': self.subject}
+            'suject': self.suject}
 

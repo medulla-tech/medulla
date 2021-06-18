@@ -46,7 +46,7 @@ from mmc.plugins.ppolicy.signals import ppolicy_applied, ppolicy_removed, ppolic
 
 logger = logging.getLogger()
 
-VERSION = "4.6.7"
+VERSION = "4.6.8"
 APIVERSION = "0:1:0"
 REVISION = scmRevision("$Rev$")
 

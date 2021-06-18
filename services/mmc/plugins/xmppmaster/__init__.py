@@ -339,6 +339,48 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid):
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+
+def getdeployment_cmd_and_title(command_id,
+                                title,
+                                search_filter="",
+                                start=0,
+                                limit=-1):
+    """
+    Get the list of deploys based on the command_id and title of the packages.
+
+    Arg:
+        sesion: The SQL Alchemy session
+        command_id: The id the package
+        title: Name of the package
+        search_filter: Used filters in the web page
+        start: Number of the first package to show.
+        limit: Maximum number of deploys sent at once.
+
+    Return:
+        It returns the list of the deploys
+
+    """
+    return XmppMasterDatabase().getdeployment_cmd_and_title(command_id,
+                                                            title,
+                                                            search_filter,
+                                                            start,
+                                                            limit)
+
+def getstatdeploy_from_command_id_and_title(command_id,
+                                            title):
+
+    """
+    Retrieve the deploy statistics based on the command_id and name
+    Args:
+        session: The SQL Alchemy session
+        command_id: id of the deploy
+        title: The name of deploy
+    Return:
+        It returns the number of machines per status.
+    """
+    return XmppMasterDatabase().getstatdeploy_from_command_id_and_title(command_id,
+                                                                        title)
+
 def getdeployment(command_id, filter="", start=0, limit=-1):
     return XmppMasterDatabase().getdeployment(command_id, filter, start, limit)
 
@@ -745,11 +787,20 @@ def get_xmppmachines_list(start, limit, filter, presence):
 def get_xmpprelays_list(start, limit, filter, presence):
     return XmppMasterDatabase().get_xmpprelays_list(start, limit, filter, presence)
 
-def get_list_ars_from_sharing(sharings, start, limit, filter):
+def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
     listidars = []
+    arslistextend = []
+    objsearch = {}
+    if userlogin != "":
+        objsearch['login'] = userlogin
+        arslistextend = PkgsDatabase().pkgs_search_ars_list_from_cluster_rules(objsearch)
+        # on utilise la table rules global pour etendre ou diminuer les droits d'admins sur les ars.
+
     for share in sharings:
         if "r" in share['permission'] :
             listidars.append(share['ars_id'])
+    if arslistextend:
+        listidars.extend([x[0] for x in arslistextend])
     ars_list = {}
     ars_list = XmppMasterDatabase().get_ars_list_belongs_cluster(listidars, start, limit, filter)
     if not ars_list or ars_list['count']== 0:
@@ -782,7 +833,7 @@ def get_list_ars_from_sharing(sharings, start, limit, filter):
     ars_list['nbwindows'] = []
     ars_list['nb_ou_user'] = []
     for jid in ars_list['jid']:
-        if 'jid' in stat_ars_machine:
+        if jid in stat_ars_machine:
             ars_list['total_machines'].append(stat_ars_machine[jid]['nbmachine'])
             ars_list['uninventoried'].append(stat_ars_machine[jid]['uninventoried'])
             ars_list['publicclass'].append(stat_ars_machine[jid]['publicclass'])
@@ -1004,24 +1055,25 @@ def get_packages_list(jid, CGIGET=""):
         pp=[]
         if filter != "":
             for package in packages['datas']:
-                if re.search(filter, package['description']) or\
-                    re.search(filter, package['name']) or\
-                    re.search(filter, package['version']) or\
-                    re.search(filter, package['targetos']) or\
-                    re.search(filter, package['methodtransfer']) or\
-                    re.search(filter, package['metagenerator']):
+                if re.search(filter, package['description'], re.IGNORECASE) or\
+                    re.search(filter, package['name'], re.IGNORECASE) or\
+                    re.search(filter, package['version'], re.IGNORECASE) or\
+                    re.search(filter, package['targetos'], re.IGNORECASE) or\
+                    re.search(filter, package['methodtransfer'], re.IGNORECASE) or\
+                    re.search(filter, package['metagenerator'], re.IGNORECASE):
                     pp.append(package)
         else:
             pp= packages['datas']
         for package in pp[start:end]:
             nb_dataset+=1
+            package['files'] = [[str(elem) for elem in _file] for _file in package['files']]
             _result['datas']['files'].append(package['files'])
             _result['datas']['description'].append(package['description'])
             _result['datas']['licenses'].append(package['licenses'])
             _result['datas']['name'].append(package['name'])
             _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
             _result['datas']['os'].append(package['targetos'])
-            _result['datas']['size'].append(package['size'])
+            _result['datas']['size'].append(str(package['size']))
             _result['datas']['version'].append(package['version'])
             _result['datas']['methodtransfer'].append(package['methodtransfer'])
             _result['datas']['metagenerator'].append(package['metagenerator'])

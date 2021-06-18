@@ -49,6 +49,7 @@ class AjaxFilterAudit extends AjaxFilter {
 
         <option value="status"><?php echo _T("Deployment Status", "xmppmaster");?></option>
         <option value="infos"><?php echo _T("Machine Inventory", "xmppmaster");?></option>
+        <option value="relays"><?php echo _T("Relays", "xmppmaster");?></option>
       </select>
 
       <span class="searchfield">
@@ -114,7 +115,11 @@ $ajax = new AjaxFilterAudit(urlStrRedirect("xmppmaster/xmppmaster/ajaxviewgrpdep
   'cmd_id' => $_GET['cmd_id'],
   'gid' => $_GET['gid'],
   'hostname' => $_GET['hostname'],
-  'uuid' => $_GET['uuid']
+  'uuid' => $_GET['uuid'],
+  'title' => urlencode ( $_GET['title']),
+  'startdeploy' => urlencode ( $_GET['start']),
+  'endcmd' => urlencode ( $_GET['endcmd']),
+  'startcmd' => urlencode ( $_GET['startcmd'])
 ));
 
 $sidemenu->display();

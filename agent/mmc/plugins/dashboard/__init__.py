@@ -30,7 +30,7 @@ from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel
                                         ComputersOnlinePanel, UpdatePanel, BackupPanel, SuccessRatePanel, \
                                         DeploymentsLaunchedPanel, AgentsPanel
 
-VERSION = "4.6.7"
+VERSION = "4.6.8"
 APIVERSION = "0:1:0"
 REVISION = ""
 

@@ -38,7 +38,7 @@ if (in_array('dyngroup', $_SESSION['modulesList'])) {
 $p = new PageGenerator(_T("Edit package", "pkgs"));
 $p->setSideMenu($sidemenu);
 $p->display();
-
+function isExpertMode1(){return 1;}
 // var formating
 $_GET['p_api'] = isset($_GET['p_api']) ? $_GET['p_api'] : "";
 $_GET['p_api'] = "UUID/package_api_get1";
@@ -245,7 +245,7 @@ $fields = array(
 );
 $cmds = array();
 $options = array();
-if(!isExpertMode())
+if(!isExpertMode1())
 {
 
     $cmds = array(
@@ -282,13 +282,13 @@ foreach($getShares['datas'] as $share){
 }
 
 if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true){
-  $previous_localisation = (isset($json['info']['previous_localisation_server']) && $json['info']['previous_localisation_server'] != "") ? $json['info']['previous_localisation_server'] : $json['info']['localisation_server'];
+  $previous_localisation = (isset($package['previous_localisation_server']) && $package['previous_localisation_server'] != "") ? $package['previous_localisation_server'] : $json['info']['localisation_server'];
 
   $f->add(new HiddenTpl("previous_localisation_server"), array("value" => $previous_localisation, "hide" => True));
   if(isset($getShares["config"]["movepackage"]) && $getShares["config"]["movepackage"] == True){
     if(isset($json["info"]["Dependency"]) && count($json["info"]["Dependency"]) == 0){
       if(count($shares) == 1){ // Just 1 sharing (no choice)
-        $f->add(new HiddenTpl("localisation_server"), array("value" => $json["info"]['localisation_server'], "hide" => True));
+        $f->add(new HiddenTpl("localisation_server"), array("value" => $package['localisation_server'], "hide" => True));
       }
       else{ // sharing server > 1
         $sharesNames = [];
@@ -308,7 +308,7 @@ if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["conf
       }
     }
     else{ // Dependencies > 0
-      $f->add(new HiddenTpl("localisation_server"), array("value" => $json['info']["localisation_server"], "hide" => True));
+      $f->add(new HiddenTpl("localisation_server"), array("value" => $package["localisation_server"], "hide" => True));
     }
   }
   else{ // movepackage == false
@@ -335,7 +335,7 @@ $f->add(
         new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => $package['targetos'])
 );
 
-if(isExpertMode())
+if(isExpertMode1())
 {
   $f->add(new HiddenTpl("metagenerator"), array("value" => "expert", "hide" => True));
 }
@@ -343,7 +343,7 @@ else {
   $f->add(new HiddenTpl("metagenerator"), array("value" => "standard", "hide" => True));
 }
 
-if(isExpertMode())
+if(isExpertMode1())
 {
     //$f->add(new HiddenTpl("last_editor"), array("value" => $_SESSION['login'], "hide" => True));
     $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
@@ -401,26 +401,28 @@ if(isExpertMode())
         $dependencies = [];
 
     //Get all the dependencies as uuid => name
+    $allPackagesList = get_dependencies_list_from_permissions($_SESSION["login"]);
     $allDependenciesList = [];
-    $dependencies = get_dependencies_list_from_permissions($_SESSION["login"]);
-    foreach($dependencies as $xmpp_package) {
-        if($_GET['packageUuid'] != $xmpp_package['uuid'])
-            $allDependenciesList[$xmpp_package['uuid']] = $xmpp_package['name'];
-    }
-
-    //Generate the list of not-added dependencies, the sort is not important
-    $packagesInOptionNotAdded = '';
-
-    foreach($allDependenciesList as $xmpp_package => $xmpp_name){
-        if(!in_array($xmpp_package,$dependencies))
-            $packagesInOptionNotAdded .= '<option value="'.$xmpp_package.'">'.$xmpp_name.'</option>';
-    }
-
-    //Generate the sorted list of added dependencies
     $packagesInOptionAdded = '';
-    foreach($dependencies as $uuid_package){
-        if(isset($allDependenciesList[$uuid_package]))
-            $packagesInOptionAdded .= '<option value="'.$uuid_package.'">'.$allDependenciesList[$uuid_package].'</option>';
+    $packagesInOptionNotAdded = '';
+    foreach($allPackagesList as $xmpp_package) {
+      if(is_array($xmpp_package)){
+        if($_GET['packageUuid'] != $xmpp_package['uuid']){
+          $uuid = $xmpp_package['uuid'];
+          $name = $xmpp_package['name'];
+          $version = $xmpp_package['version'];
+
+          if(in_array($uuid, $dependencies))
+          {
+            $packagesInOptionAdded .= '<option value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+
+          }
+          else{
+            $packagesInOptionNotAdded .= '<option value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+            $allDependenciesList[] = $xmpp_package;
+          }
+        }
+      }
     }
 
     $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">
@@ -538,7 +540,7 @@ $f->add(
 // =========================================================================
 
 $f->pop();
-if(isExpertMode())
+if(isExpertMode1())
 {
     $f->add(new HiddenTpl('saveList'), array('id'=>'saveList','name'=>'saveList',"value" => '', "hide" => True));
     include('addXMPP.php');

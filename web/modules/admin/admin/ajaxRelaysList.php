@@ -42,8 +42,10 @@ if ($_SESSION["login"] == "root"){
   }
 }
 
-$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
-$editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
+//$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
+$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"conffile", "configg","","admin", "admin");
+//$editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
+$editremoteconfiguration = new ActionItem(_("Edit config files"),"conffile","config","", "admin", "admin");
 
 $detailactionempty = new EmptyActionItem1(_("Relay Detail"),"relaystatusdetail", "logfileg","","admin", "admin");
 $detailaction = new ActionItem(_("Relay Detail"),"relaystatusdetail", "logfile","","admin", "admin");

@@ -2,10 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +24,7 @@
 
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require("modules/pulse2/includes/profiles_xmlrpc.inc.php");
+require_once("modules/pulse2/includes/utilities.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -70,17 +72,18 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
         $DeployQuickxmpp->setWidth(600);
     }
 
+
 $empty = new EmptyActionItem();
 
 foreach ($list as $group) {
     if($is_gp == 1){
         $profile = xmlrpc_getProfileLocation($group->id);
-        $ids[] =  array("id"=>$group->id, "gid"=>$group->id, "groupname"=> $group->name, 'type'=>$is_gp,'profile'=>$profile);
+        $ids[] =  array("id"=>clean_xss($group->id), "gid"=>clean_xss($group->id), "groupname"=> clean_xss($group->name), 'type'=>clean_xss($is_gp),'profile'=>clean_xss($profile));
     }else{
-        $ids[]=  array("id"=>$group->id, "gid"=>$group->id, "groupname"=> $group->name, 'type'=>$is_gp);
+        $ids[]=  array("id"=>clean_xss($group->id), "gid"=>clean_xss($group->id), "groupname"=> clean_xss($group->name), 'type'=>clean_xss($is_gp));
     }
-
-    $name[]= $group->getName();
+    $name[] = clean_xss($group->getName());
+    //$name[]= htmlentities($group->getName());
     if ($group->isDyn()) {
         $type[]= (!$group->isRequest() ? sprintf(_T('result (%s)', 'dyngroup'), $group->countResult()) : _T('query', 'dyngroup'));
     } else {
