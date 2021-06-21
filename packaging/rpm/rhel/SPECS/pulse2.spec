@@ -25,8 +25,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           4.6.7
-%define mmc_version            4.6.7
+%define real_version           4.6.8
+%define mmc_version            4.6.8
 
 Summary:	Management Console
 Name:		pulse2
@@ -419,8 +419,9 @@ Summary:    Pkgs plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
-Requires:   python3-requests
-Requires:   python3-unidecode
+Requires:   python2-requests
+Requires:   python2-unidecode
+Requires:   python-magic
 
 %description -n python-mmc-pkgs
 This package contains the pkgs plugin for the MMC agent.
@@ -619,6 +620,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-packageparser.py
 %{_sbindir}/pulse2-inscription_packages_in_base.py
 %{_sbindir}/pulse2-generation_package.py
+%{_sbindir}/pulse2-migration_old_package.py
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf

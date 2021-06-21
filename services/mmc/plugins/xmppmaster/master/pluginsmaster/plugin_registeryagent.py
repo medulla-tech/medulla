@@ -235,6 +235,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     if data['agenttype'] == "relayserver":
                         # on notify to ars pour sa registration
                         notify_ars_to_recording("recording_case1", str(msg['from']), xmppobject)
+                        XmppMasterDatabase().update_Presence_Relay(str(msg['from']), presence=1)
                     if data['from'] != machine['jid'] or\
                         data['baseurlguacamole'] != machine['urlguacamole'] or\
                         data['deployment'] != machine['groupdeploy']:

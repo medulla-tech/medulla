@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2020 Siveo, http://www.siveo.net
+ * (c) 2020-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -53,11 +53,10 @@ $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
 
 $rulesList = xmlrpc_get_rules_list($start, $end, $filter);
 
-$raiseAction = new ActionItem(_T("Raise Rule", "admin"),"rules","up","", "admin", "admin", "", "raise");
-$lowerAction = new ActionItem(_T("Lower Rule", "admin"),"rules","down","", "admin", "admin", "", "down");
+$raiseAction = new ActionItem(_T("Raise Rule", "admin"),"moveRule","up","", "admin", "admin", "", "raise");
+$lowerAction = new ActionItem(_T("Lower Rule", "admin"),"moveRule","down","", "admin", "admin", "", "down");
 $listAction = new ActionItem(_T("Rule Detail", "admin"),"rulesDetail","inventory","", "admin", "admin");
-$newAction = new ActionItem(_T("New Rule", "admin"),"rules_tabs&tab=newRelayRule","addbootmenu","", "admin", "admin");
-
+$newAction = new ActionItem(_T("New Rule", "admin"),"rules_tabs","addbootmenu","tab", "admin", "admin", "newRelayRule");
 $raiseActions = [];
 $lowerActions = [];
 $listActions = [];

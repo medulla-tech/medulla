@@ -493,7 +493,8 @@ class MscDatabase(DatabaseHelper):
                 target_network,
                 package_id,
                 creator,
-                connect_as
+                connect_as,
+                commands.creation_date
             FROM
                 commands_on_host
                     INNER JOIN
@@ -525,6 +526,7 @@ class MscDatabase(DatabaseHelper):
             result['package_id'] = x.package_id
             result['creator'] = x.creator
             result['connect_as'] = x.connect_as
+            result['creation_date'] = x.creation_date
         return result
 
     @DatabaseHelper._sessionm

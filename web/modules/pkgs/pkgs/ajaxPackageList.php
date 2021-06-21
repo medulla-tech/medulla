@@ -59,6 +59,7 @@ a.info:hover span{
 
 <?php
 global $conf;
+function isExpertMode1(){return 1;}
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = array('filter'=> $_GET["filter"], 'bundle' => 0);
 $filter1 = $_GET["filter"];
@@ -68,6 +69,7 @@ if (isset($_GET["start"])) {
     $start = 0;
 }
 
+$detailAction = new ActionItem(_T("Package Detail", "pkgs"), "detail", "display", "pkgs", "pkgs");
 $editAction = new ActionItem(_T("Edit a package", "pkgs"), "edit", "edit", "pkgs", "pkgs", "pkgs");
 $editExpertAction = new EmptyActionItem(_T("Please switch to Expert mode to edit this package", "pkgs"));
 $editNoRightsAction = new EmptyActionItem(_T("You must have write rights to edit this package", "pkgs"));
@@ -223,7 +225,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
       $_licenses[] = $_tmp_licenses;
       $_tmpParam['permission'] = $_packages['permission'][$i];
 
-      if(!isExpertMode()) {
+      if(!isExpertMode1()) {
           // mode standart
           // seul root peut supprimer package manuel
           if ($_packages['conf_json'][$i]['metagenerator'] == 'manual') {
@@ -281,6 +283,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
           }
       }
       $_params[] = $_tmpParam;
+      $_detailActions[] = $detailAction;
     }
 
     if($_count > 0){
@@ -299,6 +302,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
       $n->setItemCount($_count);
       $n->setNavBar(new AjaxNavBar($_count, $filter1));
       $n->setParamInfo($_params);
+      $n->addActionItemArray($_detailActions);
       $n->addActionItemArray($_editActions);
       $n->addActionItemArray($_delActions);
       $n->start = 0;
@@ -392,7 +396,7 @@ else{
       // #### end licenses ####
       $size[] = prettyOctetDisplay($p['size']);
       $params[] = array( 'pid' => base64_encode($p['id']), 'packageUuid' => $p['id']);
-      if(!isExpertMode()) {
+      if(!isExpertMode1()) {
           // mode standart
           // seul root peut supprimer package manuel
           if ($p['metagenerator'] == 'manual') {
@@ -424,6 +428,7 @@ else{
               $delActions[] = $delAction;
           }
       }
+      $detailActions[] = $detailAction;
   }
   if($count > 0){
     // Display the list
@@ -437,6 +442,7 @@ else{
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter1));
     $n->setParamInfo($params);
+    $n->addActionItemArray($detailActions);
     $n->addActionItemArray($editActions);
     $n->addActionItemArray($delActions);
     $n->start = 0;

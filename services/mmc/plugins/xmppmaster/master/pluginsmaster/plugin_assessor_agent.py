@@ -397,6 +397,8 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                 if result1:
                     if showinfomachine:
                         logger.info("Applied rule : AD organized by machines")
+                        logger.info("We matched the relayserver ID: %s" % result1)
+
                     result = XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                     msg_log("AD organized by machine",
                             data['information']['info']['hostname'],

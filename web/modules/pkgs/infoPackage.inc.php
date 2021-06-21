@@ -2,10 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,6 +70,13 @@ $page = new Page("add", _T('Add a package', 'pkgs'));
 $submod->addPage($page);
 
 $page = new Page("edit", _T('Edit a package', 'pkgs'));
+$submod->addPage($page);
+
+$page = new Page("detail", _T('Package detail', 'pkgs'));
+$submod->addPage($page);
+
+$page = new Page("preview", _T('Package File Preview', 'pkgs'));
+$page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>False));
 $submod->addPage($page);
 
 // $page = new Page("addBundle", _T('Add a bundle', 'pkgs'));

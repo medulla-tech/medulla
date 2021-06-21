@@ -1,4 +1,8 @@
-Pulse 2 4.6.8 (unreleased)
+Pulse 2 4.6.9 (unreleased)
+=============
+* [BUGFIX]  Fix removing packages from the database. Bug#1323
+
+Pulse 2 4.6.8
 =============
 * [FEATURE] Disable relay list page from computers menu
 * [FEATURE] Add utilities to migrate to new package server
@@ -11,6 +15,8 @@ Pulse 2 4.6.8 (unreleased)
 * [FEATURE] Fix several XSS issues.
 * [FEATURE] Allow to retrieve the glpi uuid if missing
 * [FEATURE] Convergences are now identified by their name + date
+* [FEATURE] Do not display old view when creating the packages.
+* [FEATURE] Allow to filter searches based on the relay jid
 * [BUGFIX]  Fix backtrace during deployment
 * [BUGFIX]  Fixes listing of packages for deployment
 * [BUGFIX]  Add acl for relays actions
@@ -67,6 +73,15 @@ convergences)
 * [BUGFIX]  Add name to csv when the group is created
 * [BUGFIX]  Add missing parameters in pkgs.ini and initialise pkgs_rules_algo table
 * [BUGFIX]  Fix pagination in GLPI View
+* [BUGFIX]  Fix registering ARS
+* [BUGFIX]  Fix displaying the relay list
+* [BUGFIX]  Fix and add ACLs
+* [BUGFIX]  Fix migration to new packages layout
+* [BUGFIX]  Change hostname in cluster_resources size to 255
+* [BUGFIX]  Remove description from csv generation
+* [BUGFIX]  Modify concatenation of " bracket from csv generation
+* [BUGFIX]  Fix display of dates in the audit page
+
 Pulse 2 4.6.7
 =============
 * [FEATURE] Order relay list

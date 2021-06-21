@@ -154,6 +154,8 @@ class apimanagepackagemsc:
         result['boolcnd'] = datapacquage['inventory']['queries']['boolcnd']
         result['Qsoftware'] = datapacquage['inventory']['queries']['Qsoftware']
         result['Qvendor'] = datapacquage['inventory']['queries']['Qvendor']
+        result['localisation_server'] = datapacquage['localisation_server']
+        result['previous_localisation_server'] = datapacquage['previous_localisation_server']
         result['do_reboot'] = 'disable'
         result['files'] = []
         for fich in apimanagepackagemsc.listfilepackage(result['basepath'] ):

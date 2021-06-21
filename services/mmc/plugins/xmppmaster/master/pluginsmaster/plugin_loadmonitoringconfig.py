@@ -37,7 +37,7 @@ DEBUGPULSEPLUGIN = 25
 
 # this plugin is called at agent start
 
-plugin = {"VERSION": "1.0", "NAME": "loadmonitoringconfig", "TYPE": "master"}
+plugin = {"VERSION": "1.1", "NAME": "loadmonitoringconfig", "TYPE": "master"}
 
 
 def action(objectxmpp, action, sessionid, data, msg, dataerreur):
@@ -101,7 +101,13 @@ def read_conf_load_plugin_monitoring_version_config(objectxmpp):
 
 def plugin_loadmonitoringconfig(self, msg, data):
     """
-        this function is called by the substitute that implements this plugin
+        This function is used load the configuration of the plugin. We also update
+        it if needed.
+
+        Args:
+            msg: informations from where and to who goes the messages.
+            data: XMPP messages sent to the plugin
+
     """
     try:
         if data['agenttype'] in ["relayserver"]:
@@ -135,8 +141,8 @@ def plugin_loadmonitoringconfig(self, msg, data):
                                'data': {'pluginname': 'monitoring_config_file',
                                         'content': self.monitoring_agent_config_file_content}}
 
-                logger.debug("fichierdata %s "
-                             % (json.dumps(fichierdata, indent=4)))
+                logger.debug("The new configuration is %s :" % (json.dumps(fichierdata,
+                                                                           indent=4)))
                 try:
                     self.send_message(mto=msg['from'],
                                     mbody=json.dumps(fichierdata),
@@ -145,8 +151,6 @@ def plugin_loadmonitoringconfig(self, msg, data):
                     logger.debug("Error creating configuration message for "
                                  "plugin %s: %s"%(plugin['NAME'], str(e)))
                     logger.error("\n%s"%(traceback.format_exc()))
-            else:
-                logger.debug("Monitoring configuration up to date")
     except Exception as e:
         logger.debug("Plugin %s : %s"%(plugin['NAME'], str(e)))
         logger.error("\n%s"%(traceback.format_exc()))
