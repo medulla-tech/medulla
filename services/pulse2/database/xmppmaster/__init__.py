@@ -946,7 +946,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if not idscluster:
             return []
-        strlistcluster = ",".join([str(x) for x in idscluster])
+        strlistcluster = ",".join([str(x[0]) for x in idscluster])
         sql="""SELECT
                     id_ars
                 FROM

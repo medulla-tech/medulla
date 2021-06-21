@@ -1251,7 +1251,8 @@ class PkgsDatabase(DatabaseHelper):
                     pkgs.pkgs_rules_global
                 WHERE
                     '%s' REGEXP (pkgs.pkgs_rules_global.subject)
-                        AND permission LIKE '%%r%%';"""%objsearch['login']
+                         AND permission LIKE '%%r%%'
+                         AND pkgs.pkgs_rules_global.pkgs_rules_algos_id = 3;""" % objsearch['login']
             result = session.execute(sql)
             session.commit()
             session.flush()
