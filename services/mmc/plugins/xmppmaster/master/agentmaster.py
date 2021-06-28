@@ -292,15 +292,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.wolglobal_set = set() #use group wol
         self.confaccount=[] #list des account for clear
         #clear conf compte.
-        logger.debug('Clear MUC conf account')
-        cmd = "for i in  $(ejabberdctl registered_users pulse | grep '^conf' ); do echo $i; ejabberdctl unregister $i pulse; done"
+        logger.debug('Delete old ejabberd accounts')
+        cmd = "ejabberdctl delete_old_users 1"
         try:
             a = simplecommandstr(cmd)
             logger.debug(a['result'])
         except Exception as e:
             pass
         #del old message offline
-        logger.debug('del old message offline')
+        logger.debug('Delete old offline ejabberd messages')
         cmd = "ejabberdctl delete_old_messages 1"
         try:
             a = simplecommandstr(cmd)
