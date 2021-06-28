@@ -1,7 +1,10 @@
 Pulse 2 4.6.9 (unreleased)
 =============
 * [FEATURE] Add Team support in Audit page
+* [FEATURE] Add new infos in the fileviewer as config ( server, port, size
+popup, etc.)
 * [BUGFIX]  Fix removing packages from the database. Bug#1323
+* [BUGFIX]  Fix deleting old users in ejabberd
 
 Pulse 2 4.6.8
 =============
