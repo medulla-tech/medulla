@@ -936,21 +936,21 @@ class MscDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_deploy_inprogress_by_team_member(self, session, login, intervalsearch, minimum, maximum, filt):
-    """
-    This function is used to retrieve not yet done deployements of a team.
-    This team is found based on the login of a member.
+        """
+        This function is used to retrieve not yet done deployements of a team.
+        This team is found based on the login of a member.
 
-    Args:
-        session: The SQL Alchemy session
-        login: The login of the user
-        intervalsearch: The interval on which we search the deploys.
-        minimum: Minimum value ( for pagination )
-        maximum: Maximum value ( for pagination )
-        filt: Filter of the search
-        Returns:
-            It returns all the deployement not yet started of a specific team.
-            It can be done by time search too.
-    """
+        Args:
+            session: The SQL Alchemy session
+            login: The login of the user
+            intervalsearch: The interval on which we search the deploys.
+            minimum: Minimum value ( for pagination )
+            maximum: Maximum value ( for pagination )
+            filt: Filter of the search
+            Returns:
+                It returns all the deployement not yet started of a specific team.
+                It can be done by time search too.
+        """
         list_login=[]
         if login:
             if isinstance(login, (tuple, list)):
@@ -980,7 +980,7 @@ class MscDatabase(DatabaseHelper):
         .filter(Commands.end_date > datereduced)\
         .filter(Commands.type != 2)
 
-       if list_login:
+        if list_login:
             query = query.filter(Commands.creator.in_(list_login))
             if filt:
                 query = query.filter(or_(Commands.title.like("%%%s%%"%filt),
