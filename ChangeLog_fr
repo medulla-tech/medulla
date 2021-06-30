@@ -19,6 +19,8 @@ utilisateurs dans ejabberd
 * [CORRECTION DE BUG] Suppression des cdn pour l'utilisation des fichiers js.
 Utilisation de fichiers locaux à la place
 * [CORRECTION DE BUG] De nombreuses optimisations dans les requetes SQL jouées
+* [CORRECTION DE BUG] Correction de l'état de déployement affiché en début de
+déployement.
 
 Pulse 2 4.6.8
 =============

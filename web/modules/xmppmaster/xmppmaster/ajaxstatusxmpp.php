@@ -124,7 +124,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $error = False;
     if(($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT DIFFERED" ||
         strpos($arraydeploy['tabdeploy']['state'][$index], "DEPLOYMENT START")!==false) &&
-            (get_object_vars($arraydeploy['tabdeploy']['endcmd'][$index])['timestamp']- time()) < 0){
+            (strtotime($arraydeploy['tabdeploy']['endcmd'][$index])- time()) < 0){
         $error = True;
         $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
     }
