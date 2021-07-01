@@ -1008,6 +1008,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 touser = ""):
         if who == "":
             who = self.boundjid.bare
+        if touser == "":
+            touser = self.boundjid.bare
         XmppMasterDatabase().setlogxmpp(text,
                                         type=type,
                                         sessionname=sessionname,
