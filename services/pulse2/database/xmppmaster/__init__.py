@@ -3427,6 +3427,7 @@ class XmppMasterDatabase(DatabaseHelper):
                    'abortdeploymentcancelledbyuser': 0,
                    'aborttransferfailed': 0,
                    'abortpackageexecutionerror': 0,
+                   'abortduplicatemachines': 0,
                    'deploymentstart': 0,
                    'wol1': 0,
                    'wol2': 0,
@@ -3483,6 +3484,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['abortdeploymentcancelledbyuser'] = liststatus[t]
                 elif t == 'ABORT PACKAGE EXECUTION ERROR':
                     ret['abortpackageexecutionerror'] = liststatus[t]
+                elif t == 'ABORT DUPLICATE MACHINES':
+                    ret['abortduplicatemachines'] = liststatus[t]
                 elif t == 'DEPLOYMENT START':
                     ret['deploymentstart'] = liststatus[t]
                 elif t == 'WOL 1':
@@ -3543,6 +3546,7 @@ class XmppMasterDatabase(DatabaseHelper):
                    'abortdeploymentcancelledbyuser': 0,
                    'aborttransferfailed': 0,
                    'abortpackageexecutionerror': 0,
+                   'abortduplicatemachines': 0,
                    'deploymentstart': 0,
                    'wol1': 0,
                    'wol2': 0,
@@ -3599,6 +3603,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['abortdeploymentcancelledbyuser'] = liststatus[t]
                 elif t == 'ABORT PACKAGE EXECUTION ERROR':
                     ret['abortpackageexecutionerror'] = liststatus[t]
+                elif t == 'ABORT DUPLICATE MACHINES':
+                    ret['abortduplicatemachines'] = liststatus[t]
                 elif t == 'DEPLOYMENT START':
                     ret['deploymentstart'] = liststatus[t]
                 elif t == 'WOL 1':
