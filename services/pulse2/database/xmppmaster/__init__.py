@@ -30,7 +30,7 @@ xmppmaster database handler
 from sqlalchemy import create_engine, MetaData, func, and_, desc, or_,\
                         distinct, not_  # cast, Date, select,
 from sqlalchemy.orm import sessionmaker
-
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.exc import DBAPIError
 from datetime import datetime, timedelta  # date,
 # PULSE2 modules
@@ -7012,53 +7012,129 @@ class XmppMasterDatabase(DatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
-    def getGuacamoleRelayServerMachineUuid(self, session, uuid, enable = 1):
-        querymachine = session.query(Machines)
-        if enable == None:
-            querymachine = querymachine.filter(Machines.uuid_inventorymachine == uuid)
-        else:
-            querymachine = querymachine.filter(and_(Machines.uuid_inventorymachine == uuid,
-                                                    Machines.enabled == enable))
-        machine = querymachine.one()
-        session.commit()
-        session.flush()
+    def get_machine_with_dupplicate_uuidinventory(self, session, uuid, enable=1):
+        """
+        This function is used to retrieve computers with dupplicate uuids.
+        Args:
+            session: The SQL Alchemy session
+            uuid: The uuid we are looking for
+            enable: Used to search for enabled or disabled only machines
+
+        Returns:
+            It return machines with dupplicate UUIDs.
+            We can search for enabled/disabled or all machines.
+        """
         try:
-            result = {
-                        "uuid": uuid,
-                        "jid": machine.jid,
-                        "groupdeploy": machine.groupdeploy,
-                        "urlguacamole": machine.urlguacamole,
-                        "subnetxmpp": machine.subnetxmpp,
-                        "hostname": machine.hostname,
-                        "platform": machine.platform,
-                        "macaddress": machine.macaddress,
-                        "archi": machine.archi,
-                        "uuid_inventorymachine": machine.uuid_inventorymachine,
-                        "ip_xmpp": machine.ip_xmpp,
-                        "agenttype": machine.agenttype,
-                        "keysyncthing":  machine.keysyncthing,
-                        "enabled": machine.enabled
-                        }
+            querymachine = session.query(Machines)
+            if enable == None:
+                querymachine = querymachine.filter(Machines.uuid_inventorymachine == uuid)
+            else:
+                querymachine = querymachine.filter(and_(Machines.uuid_inventorymachine == uuid,
+                                                        Machines.enabled == enable))
+            machine = querymachine.all()
+            resultdata = []
+            if machine:
+                for t in machine:
+                    result = {"uuid": uuid,
+                              "jid": t.jid,
+                              "groupdeploy": t.groupdeploy,
+                              "urlguacamole": t.urlguacamole,
+                              "subnetxmpp": t.subnetxmpp,
+                              "hostname": t.hostname,
+                              "platform": t.platform,
+                              "macaddress": t.macaddress,
+                              "archi": t.archi,
+                              "uuid_inventorymachine": t.uuid_inventorymachine,
+                              "ip_xmpp": t.ip_xmpp,
+                              "agenttype": t.agenttype,
+                              "keysyncthing":  t.keysyncthing,
+                              "enabled": t.enabled}
+                    for i in result:
+                        if result[i] == None:
+                            result[i] = ""
+                    resultdata.append(result)
+            session.commit()
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error("We failed to search the computers having %s as uuid" % uuid)
+            logging.getLogger().error("The backtrace we trapped is: \n %s" % str(e))
+        return resultdata
+
+    @DatabaseHelper._sessionm
+    def getGuacamoleRelayServerMachineUuid(self, session, uuid, enable=1):
+        result = {'error': "noresult",
+                  "uuid": uuid,
+                  "jid": "",
+                  "groupdeploy": "",
+                  "urlguacamole": "",
+                  "subnetxmpp": "",
+                  "hostname": "",
+                  "platform": "",
+                  "macaddress": "",
+                  "archi": "",
+                  "uuid_inventorymachine": "",
+                  "ip_xmpp": "",
+                  "agenttype": "",
+                  "keysyncthing":  "",
+                  "enabled": enable }
+        try:
+            querymachine = session.query(Machines)
+            if enable == None:
+                querymachine = querymachine.filter(Machines.uuid_inventorymachine == uuid)
+            else:
+                querymachine = querymachine.filter(and_(Machines.uuid_inventorymachine == uuid,
+                                                        Machines.enabled == enable))
+            machine = querymachine.one()
+
+            session.commit()
+            session.flush()
+
+            result = {'error' : 'noerror',
+                      "uuid": uuid,
+                      "jid": machine.jid,
+                      "groupdeploy": machine.groupdeploy,
+                      "urlguacamole": machine.urlguacamole,
+                      "subnetxmpp": machine.subnetxmpp,
+                      "hostname": machine.hostname,
+                      "platform": machine.platform,
+                      "macaddress": machine.macaddress,
+                      "archi": machine.archi,
+                      "uuid_inventorymachine": machine.uuid_inventorymachine,
+                      "ip_xmpp": machine.ip_xmpp,
+                      "agenttype": machine.agenttype,
+                      "keysyncthing":  machine.keysyncthing,
+                      "enabled": machine.enabled
+                     }
             for i in result:
-                if result[i] == None:
+                if result[i] is None:
                     result[i] = ""
-        except Exception:
-            result = {
-                        "uuid": uuid,
-                        "jid": "",
-                        "groupdeploy": "",
-                        "urlguacamole": "",
-                        "subnetxmpp": "",
-                        "hostname": "",
-                        "platform": "",
-                        "macaddress": "",
-                        "archi": "",
-                        "uuid_inventorymachine": "",
-                        "ip_xmpp": "",
-                        "agenttype": "",
-                        "keysyncthing":  "",
-                        "enabled": 0
-                    }
+
+        except NoResultFound as e:
+            result['error'] = 'NoResultFound'
+            if enable is None:
+                logging.getLogger().error("We found no machines with the UUID %s" % uuid)
+            else:
+                logging.getLogger().error("We found no machines with the UUID %s, and with enabled: %s" % uuid, enable)
+
+            logging.getLogger().error("We encountered the following error:\n %s" % str(e))
+        except MultipleResultsFound as e:
+            result['error'] = 'MultipleResultsFound'
+            if enable is None:
+                logging.getLogger().error("We found multiple machines with the UUID %s" % uuid)
+            else:
+                logging.getLogger().error("We found multiple machines with the UUID %s, and with enabled: %s" % uuid, enable)
+
+            logging.getLogger().error("We encountered the following error:\n %s" % str(e))
+
+        except Exception as e:
+            result['error'] = str(e)
+            if enable is None:
+                logging.getLogger().error("We were searching for machines with the UUID %s" % uuid)
+            else:
+                logging.getLogger().error("We were searching for machines with the UUID %s, and with enabled: %s" % uuid, enable)
+
+            logging.getLogger().error("We encountered the following error:\n %s" % str(e))
+
         return result
 
     @DatabaseHelper._sessionm
