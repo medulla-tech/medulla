@@ -24,6 +24,80 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 
 global $conf;
+
+?>
+
+<style>
+
+.tooltip{   font-size:20px; }
+.ui-tooltip {
+                padding: 6px 4px 8px 4px;
+                max-width: 600px;
+                color: #ffffff;
+                background-color: #000000;
+                -moz-box-shadow: 4px 4px 10px #888;
+                -webkit-box-shadow: 4px 4px 10px #888;
+                box-shadow:4px 4px 6px #888;
+                border-radius: 15px;}
+
+.tooltip-content {
+                    padding: 2px;
+                    color: #FF00AA;
+                    max-width: 800px;}
+
+.ttabletr   {   margin:0;
+                padding:0;
+                background:none;
+                border:none;
+                border-collapse:collapse;
+                border-spacing:0;
+                background-image:none;}
+
+
+.ttabletd   {   margin:0;
+                padding:0;
+                background:none;
+                border:none;
+                border-collapse:collapse;
+                border-spacing:0;
+                background-image:none;}
+
+.ttable tr td{  margin:0;
+                padding:0;
+                background:none;
+                border:none;
+                border-collapse:collapse;
+                border-spacing:0;
+                background-image:none;
+                font-size:.9em;
+}
+</style>
+
+<script>
+
+jQuery(function()
+{
+	 jQuery( function() {
+      jQuery(".infomach").tooltip({
+      position: { my: "left+15 center", at: "right center" },
+          items: "[mydata]",
+          content: function() {
+              var element = jQuery( this );
+              if ( element.is( "[mydata]" ) ) {
+              console.log(element.attr('mydata'));
+                  var text = element.attr('mydata');
+                  return text;
+              }
+
+          }
+      });
+  } );
+
+});
+
+</script>
+
+<?php
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = $_GET["filter"];
 
@@ -31,15 +105,28 @@ $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
-if ($_SESSION["login"] == "root"){
-  $relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
-}else{
   $sharings = xmlrpc_pkgs_search_share(["login"=> $_SESSION["login"]]);
   if($sharings['config']['centralizedmultiplesharing'] == 1){
       $relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage,$_SESSION["login"],  $filter);
   }else{
     $relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
   }
+
+$chaine = [];
+$cn = [];
+$datas = $relays['datas'];
+foreach ($datas as $columns_name => $tabvalue){
+    $chaine[$columns_name] = $columns_name;
+}
+for ($index = 0; $index < count($datas['publicclass'] ); $index++) {
+    $chainestr ="<table class='ttable'>";
+    foreach($datas as $mach => $value ){
+        $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$mach ."</td><td class='ttabletd'>: ".$value[$index]."</td></tr>";
+    }
+
+    $chainestr .= "</table>";
+$cn[] = sprintf('<span class="infomach" mydata="%s">%s</pan>', $chainestr, $datas['hostname'][$index]);
+
 }
 
 //$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
@@ -133,7 +220,7 @@ foreach($relays['datas']['hostname'] as $key=>$array){
   $raw++;
 }
 echo '<div id="switchresult"></div>';
-$n = new OptimizedListInfos( $relays['datas']['hostname'], _T("Relays Xmpp", "admin"));
+$n = new OptimizedListInfos( $cn, _T("Relays Xmpp", "admin"));
 $n->setMainActionClasses($relays['datas']['enabled_css']);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $relays['datas']['jid'], _T("Jid", "xmppmaster"));

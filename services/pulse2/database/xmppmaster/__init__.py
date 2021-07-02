@@ -1042,33 +1042,38 @@ class XmppMasterDatabase(DatabaseHelper):
                     ELSE 0
                 END) AS mach_off,
                 SUM(CASE
-                    WHEN (uuid_inventorymachine IS NULL) THEN 1
-                    ELSE 0
+                    WHEN SUBSTRING(uuid_inventorymachine,1,1) = "U"
+                    THEN
+                    0
+                    ELSE
+                    1
                 END) AS uninventoried,
                 SUM(CASE
-                    WHEN (uuid_inventorymachine IS NOT NULL) THEN 1
+                    WHEN  SUBSTRING(uuid_inventorymachine,1,1) = "U"
+                    THEN
+                        1
                     ELSE 0
                 END) AS inventoried,
                 SUM(CASE
                     WHEN
                         (enabled = '1'
-                            AND uuid_inventorymachine IS NULL)
+                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
                     THEN
-                        1
-                    ELSE 0
+                        0
+                    ELSE 1
                 END) AS uninventoried_online,
                 SUM(CASE
                     WHEN
                         (enabled = '0'
-                            AND uuid_inventorymachine IS NULL)
+                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
                     THEN
-                        1
-                    ELSE 0
+                        0
+                    ELSE 1
                 END) AS uninventoried_offline,
                 SUM(CASE
                     WHEN
                         (enabled = 1
-                            AND uuid_inventorymachine IS NOT NULL)
+                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
                     THEN
                         1
                     ELSE 0
@@ -1076,7 +1081,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 SUM(CASE
                     WHEN
                         (enabled = '0'
-                            AND uuid_inventorymachine IS NOT NULL)
+                            AND  SUBSTRING(uuid_inventorymachine,1,1) = "U"  )
                     THEN
                         1
                     ELSE 0
@@ -1127,7 +1132,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 groupdeploy IN (%s)
                     AND agenttype = 'machine'
             GROUP BY groupdeploy;"""%listin
-
+        #logger.error("sql\n%s"%sql)
         result = session.execute(sql)
         session.commit()
         session.flush()

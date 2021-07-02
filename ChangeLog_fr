@@ -8,6 +8,7 @@ des Actions rapides
 * [FONCTIONNALITE]    Suppression de l'action rapdie "Restart machine agent"
 * [FONCTIONNALITE]    Ajout d'un bouton de validation des recherches
 * [FONCTIONNALITE]    Optimisation de l'affichage de la vue ordinateur
+* [FONCTIONNALITE]    Optimisation de l'affichage de la vue admin
 * [CORRECTION DE BUG] Correction de la suppression de packages. Bug#1323
 * [CORRECTION DE BUG] Correction de la suppression d'anciens compte
 utilisateurs dans ejabberd
