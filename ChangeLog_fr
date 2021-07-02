@@ -3,9 +3,15 @@ Pulse 2 4.6.9 (unreleased)
 * [FONCTIONNALITE]    Ajout du support des Equipe dans la page Audit
 * [FONCTIONNALITE]    Ajout de nouvelles options de configuration dans le
 fileviewer ( Serveur, port, taille de la popup, etc.)
+* [FONCTIONNALITE]    Ajout du lien vers les machines dans la page de sommaire
+des Actions rapides
+* [FONCTIONNALITE]    Suppression de l'action rapdie "Restart machine agent"
+* [FONCTIONNALITE]    Ajout d'un bouton de validation des recherches
 * [CORRECTION DE BUG] Correction de la suppression de packages. Bug#1323
 * [CORRECTION DE BUG] Correction de la suppression d'anciens compte
 utilisateurs dans ejabberd
+* [CORRECTION DE BUG] Suppression des cdn pour l'utilisation des fichiers js.
+Utilisation de fichiers locaux à la place
 
 Pulse 2 4.6.8
 =============
