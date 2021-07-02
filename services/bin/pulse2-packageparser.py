@@ -66,10 +66,6 @@ class Package:
             self.logger.error("The file conf.json is missing")
             self.to_summary("error", "The file conf.json is missing")
             flag = False
-        if "MD5SUMS" not in self.files:
-            self.logger.error("The file MD5SUMS is missing")
-            self.to_summary("error", "The file MD5SUMS is missing")
-            flag = False
         if "xmppdeploy.json" not in self.files:
             self.logger.error("The file xmppdeploy.json is missing")
             self.to_summary("error", "The file xmppdeploy.json is missing")
