@@ -15,6 +15,7 @@ popup, etc.)
 * [BUGFIX]  Remove cdn from js files import. Use local files instead
 * [BUGFIX]  Several SQL Optimisations
 * [BUGFIX]  Fix shown state when starting a deployment
+* [BUGFIX]  Fix handling some accounts creation
 
 Pulse 2 4.6.8
 =============
