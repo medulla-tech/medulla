@@ -30,7 +30,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------------------------------------------------
 -- Creation table pulse_users
 -- This table is used to define users. We attribute them preferences and permissions to allow to visualize shares
-- ----------------------------------------------------------------------
+-- ----------------------------------------------------------------------
 CREATE TABLE `pulse_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(255) NOT NULL,
