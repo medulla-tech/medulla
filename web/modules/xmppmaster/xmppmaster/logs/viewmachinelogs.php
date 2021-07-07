@@ -182,7 +182,7 @@ include_once('modules/pkgs/includes/xmlrpc.php');
     // Retrieve information deploy. For cmn_id
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
-$deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
+$deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id, $uuid);
 
 $pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
 $pkgcreator = get_pkg_creator_from_uuid($deploymachine['package_id']);

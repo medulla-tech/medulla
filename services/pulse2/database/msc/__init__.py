@@ -475,7 +475,7 @@ class MscDatabase(DatabaseHelper):
                             scalar()
         return numberTimedout
 
-    def deployxmpponmachine(self, command_id):
+    def deployxmpponmachine(self, command_id, uuid):
         result = {}
         sqlselect="""
             SELECT
@@ -506,9 +506,9 @@ class MscDatabase(DatabaseHelper):
             WHERE
                 commands.id = %s
                 and commands_on_host.id_group IS NULL
-                ORDER BY commands_on_host.id DESC
-                limit 1
-                ;"""%command_id
+                and target_uuid = "%s"
+            GROUP BY commands_on_host.id
+                ;"""%(command_id, uuid)
         resultsql = self.db.execute(sqlselect)
         for x in resultsql:
             result['host'] = x.host

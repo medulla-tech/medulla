@@ -309,8 +309,8 @@ class RpcProxy(RpcProxyI):
     def get_deployxmppscheduler(self, login, nin, max, filt):
         return xmlrpcCleanup(MscDatabase().deployxmppscheduler(login, nin, max, filt))
 
-    def get_deployxmpponmachine(self, command_id):
-        return xmlrpcCleanup(MscDatabase().deployxmpponmachine(command_id))
+    def get_deployxmpponmachine(self, command_id, uuid):
+        return xmlrpcCleanup(MscDatabase().deployxmpponmachine(command_id, uuid))
 
     def get_count_timeout_wol_deploy(self, command_id, date_start):
         return xmlrpcCleanup(MscDatabase().get_count_timeout_wol_deploy(command_id, date_start))

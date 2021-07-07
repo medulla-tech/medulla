@@ -21,6 +21,10 @@ Utilisation de fichiers locaux à la place
 * [CORRECTION DE BUG] De nombreuses optimisations dans les requetes SQL jouées
 * [CORRECTION DE BUG] Correction de l'état de déployement affiché en début de
 déployement.
+* [CORRECTION DE BUG]  Correction de la gestion de la creation de certains
+utilisateurs ( subsitutes )
+* [CORRECTION DE BUG]  Correction de l'affichage des informations dans la page
+audit ( nom de la machine par exemple).
 
 Pulse 2 4.6.8
 =============
