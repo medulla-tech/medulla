@@ -37,7 +37,8 @@ from datetime import datetime, timedelta  # date,
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster.schema import Network, Machines,\
     RelayServer, Users, Has_machinesusers, \
-    Has_relayserverrules, Regles, Has_guacamole, UserLog, Deploy,\
+    Has_relayserverrules, Regles, Has_guacamole, Base, \
+    UserLog, Deploy,\
     Has_login_command, Logs, \
     Organization, Packages_list, Qa_custom_command, Qa_relay_command,\
     Qa_relay_launched, Qa_relay_result,\
@@ -131,6 +132,8 @@ class XmppMasterDatabase(DatabaseHelper):
         self.logger = logging.getLogger()
         if self.is_activated:
             return None
+        # This is used to automatically create the mapping
+        Base = automap_base()
         self.config = config
         self.db = create_engine(self.makeConnectionPath(),
                                 pool_recycle=self.config.dbpoolrecycle,
@@ -139,6 +142,12 @@ class XmppMasterDatabase(DatabaseHelper):
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
+
+        Base.prepare(self.db, reflect=True)
+        # add table auto_base
+        self.Update_machine = Base.classes.update_machine
+        self.Ban_machines = Base.classes.ban_machines
+
         if not self.initMappersCatchException():
             self.session = None
             return False
@@ -9634,3 +9643,187 @@ where agenttype="machine" and groupdeploy in (
                        "name_cluster": ars[23]}
             arsListInfos.append(arsInfos)
         return arsListInfos
+
+# Update machine scheduling
+    def __updatemachine(self, object_update_machine):
+        """
+            This function create a dictionnary with the informations of the
+            machine that need to be updated.
+
+            Args:
+                object_update_machine: An object with the informations of the machine.
+            Returns:
+                A dicth with the informations of the machine.
+        """
+        try:
+            ret = {'id': object_update_machine.id,
+                   'jid': object_update_machine.jid,
+                   'ars': object_update_machine.ars,
+                   'status': object_update_machine.status,
+                   'descriptor': object_update_machine.descriptor,
+                   'md5': object_update_machine.md5 ,
+                   'date_creation': object_update_machine.date_creation}
+            return ret
+
+        except Exception as error_creating:
+            logging.getLogger().error("We failed to retrieve the informations of the machine to update")
+            logging.getLogger().error("We got the error \n : %s" % str(error_creating))
+            return None
+
+    @DatabaseHelper._sessionm
+    def update_update_machine(self,
+                              session,
+                              hostname,
+                              jid,
+                              ars="",
+                              status="ready",
+                              descriptor="",
+                              md5="",
+                              date_creation=None):
+        """
+            We create the informations of the machines in the update SQL table
+            Args:
+                session: The SQL Alchemy session
+                hostname: The hostname of the machine to update
+                jid: The jid of the machine to update
+                ars: The ARS on which the machine is connected
+                status: The status of the update (ready, updating, ... )
+                descriptor: All the md5sum of files that needs to be updated.
+                md5: md5 of the md5 of files ( that helps to see quickly if an update is needed )
+                date_creation: Date when it has been added on the update table.
+        """
+        try:
+            query = session.query(self.Update_machine).\
+                       filter(self.Update_machine.jid.like(jid)).one()
+
+
+            query.hostname = hostname
+            query.ars = ars
+            query.status = status
+            query.descriptor = descriptor
+            query.md5 = md5
+            session.commit()
+            session.flush()
+            return self.__updatemachine(query)
+        except Exception as e:
+            logging.getLogger().error("We failed to update the informations on the SQL Table")
+            logging.getLogger().error("We got the error %s " % str(e))
+            self.logger.error("We hit the backtrace \n%s" % (traceback.format_exc()))
+            return None
+
+    @DatabaseHelper._sessionm
+    def setUpdate_machine(self,
+                          session,
+                          hostname,
+                          jid,
+                          ars="",
+                          status="ready",
+                          descriptor="",
+                          md5="",
+                          date_creation=None):
+        """
+            We update the informations of the machines in the update SQL table
+            Args:
+                session: The SQL Alchemy session
+                hostname: The hostname of the machine to update
+                jid: The jid of the machine to update
+                ars: The ARS on which the machine is connected
+                status: The status of the update (ready, updating, ... )
+                descriptor: All the md5sum of files that needs to be updated.
+                md5: md5 of the md5 of files ( that helps to see quickly if an update is needed )
+                date_creation: Date when it has been added on the update table.
+        """
+        try:
+            new_Update_machine = self.Update_machine()
+            new_Update_machine.hostname = hostname
+            new_Update_machine.jid = jid
+            new_Update_machine.ars = ars
+            new_Update_machine.status = status
+            new_Update_machine.descriptor = descriptor
+            new_Update_machine.md5 = md5
+            if date_creation is not None:
+                new_Update_machine.date_creation = date_creation
+            session.add(new_Update_machine)
+            session.commit()
+            session.flush()
+            return self.__updatemachine(new_Update_machine)
+        except IntegrityError as e:
+            reason = e.message
+            #self.logger.error("\n%s" % (traceback.format_exc()))
+            if "Duplicate entry" in reason:
+                self.logger.info("%s already in table." % e.params[0])
+                return self.update_update_machine(hostname,
+                                            jid,
+                                            ars,
+                                            status,
+                                            descriptor,
+                                            md5)
+            else:
+                self.logger.info("setUpdate_machine : %s" % str(e))
+                return None
+        except Exception as e:
+            logging.getLogger().error(str(e))
+            self.logger.error("\n%s" % (traceback.format_exc()))
+            return None
+
+
+    @DatabaseHelper._sessionm
+    def getUpdate_machine(self,
+                          session,
+                          status="updating",
+                          nblimiti=1000):
+        """
+            This function is used to retrieve the machines in the pending list
+            for update.
+
+            Args:
+                session: The SQL Alchemy session
+                status: The status of the machine in the database ( ready, updating, ... )
+                nblimit: Number maximum of machines allowed to be updated at once.
+        """
+
+        sql ="""SELECT
+                    MIN(id) AS minid , MAX(id) AS maxid
+                FROM
+                    (SELECT id
+                        FROM
+                            update_machine
+                        WHERE
+                            status LIKE '%s'
+                        LIMIT %s) AS dt;""" %(status,
+                                              nblimit)
+
+        machines_jid_for_updating = []
+        borne = session.execute(sql)
+
+        result = [x for x in borne][0]
+        minid = result[0]
+        maxid = result[0]
+        if minid is not None:
+            sql=""" SELECT
+                        jid, ars
+                    FROM
+                        update_machine
+                    WHERE
+                        id >= %s and id <= %s and
+                            status LIKE '%s';"""%(minid,
+                                                maxid,
+                                                status)
+            resultquery = session.execute(sql)
+
+            for record_updating_machine in resultquery:
+                machines_jid_for_updating.append( (record_updating_machine.jid, record_updating_machine.ars,))
+            sql=""" delete
+
+                    FROM
+                        update_machine
+                    WHERE
+                        id >= %s and id <= %s and
+                            status LIKE '%s';"""%(minid,
+                                                maxid,
+                                                status)
+            resultquery = session.execute(sql)
+
+            session.commit()
+            session.flush()
+        return machines_jid_for_updating
