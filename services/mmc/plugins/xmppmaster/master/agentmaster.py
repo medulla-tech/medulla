@@ -782,17 +782,47 @@ class MUCBot(sleekxmpp.ClientXMPP):
             pass
         #listobjnoexist = []
         listobjsupp = []
-        #search deploy to rumming
-        resultdeploymachine = MscDatabase().deployxmpp()
+        #search deploy to running
+        try:
+            # Search deploy to running
+            nb_machine_select_for_deploy_cycle, resultdeploymachine = MscDatabase().deployxmpp(limitnbr=100)
+        except Exception:
+            logger.error("%s" % (traceback.format_exc()))
+        if nb_machine_select_for_deploy_cycle == 0:
+            return
+
+        uuidlist = []
+        for deployobject in resultdeploymachine:
+            uuidlist.append(deployobject['UUID'])
+        resultpresence = XmppMasterDatabase().getPresenceExistuuids(uuidlist)
 
         for deployobject in resultdeploymachine:
-            msg = []
             # creation deployment
             UUID = deployobject['UUID']
             UUIDSTR = UUID.replace('UUID', "")
-            resultpresence = XmppMasterDatabase().getPresenceExistuuids(UUID)
-            if resultpresence[UUID][1] == 0:
+            re_search = []
+            if resultpreseince[UUID][1] == 0:
+                # There is no GLPI UUID
                 re_search = XmppMasterDatabase().getMachinedeployexistonHostname(deployobject['name'])
+                if self.Recover_GLPI_Identifier_from_name and len(re_search) == 1:
+                    update_result = XmppMasterDatabase().update_uuid_inventory(re_search[0]['id'], UUID)
+                    if update_result is not None:
+                        if update_result.rowcount > 0:
+                            logger.info("update uuid inventory %s for machine %s" % (UUID, deployobject['name']))
+                    resultpresence[UUID][1] = 1
+                    reloadresultpresence_uuid = XmppMasterDatabase().getPresenceExistuuids(UUID)
+                    resultpresence[UUID]=reloadresultpresence_uuid[UUID]
+                    self.xmpplog("Attaching GLPI identifier [%s] in xmppmaster machine [%s]" % (UUID, deployobject['name']),
+                                 type='deploy',
+                                 sessionname="no_session",
+                                 priority=-1,
+                                 action="xmpplog",
+                                 why=self.boundjid.bare,
+                                 module="Deployment | Start | Creation| Notify",
+                                 date=None,
+                                 fromuser=deployobject['login'])
+
+            if resultpresence[UUID][1] == 0:
                 if re_search:
                     msg.append( "<span class='log_err'>Consolidation GLPI XMPP ERROR for machine %s. " \
                                 "Deployment impossible : GLPI ID is %s</span>" % (deployobject['name'],
@@ -820,47 +850,42 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     deployobject['UUID']))
                     logging.warning("INFO\nXMPP : No machine found for %s" % (deployobject['name']))
 
-
-                #incrition dans deploiement cette machine sans agent
+                #listobjnoexist.append(deployobject)
+                # incription dans deploiement cette machine sans agent
                 XmppMasterDatabase().adddeploy(deployobject['commandid'],
-                                                deployobject['name'],
-                                                deployobject['name'],
-                                                deployobject['name'],
-                                                UUID,
-                                                deployobject['login'],
-                                                "ABORT MISSING AGENT",
-                                                sessiondeployementless,
-                                                user=deployobject['login'],
-                                                login=deployobject['login'],
-                                                title=deployobject['title'],
-                                                group_uuid=deployobject['GUID'],
-                                                startcmd=deployobject['start_date'],
-                                                endcmd=deployobject['end_date'],
-                                                macadress=deployobject['mac'],
-                                                result = "",
-                                                syncthing = 0)
+                                            deployobject['name'],
+                                            deployobject['name'],
+                                            deployobject['name'],
+                                            UUID,
+                                            deployobject['login'],
+                                            MSG_ERROR,
+                                            sessiondeployementless,
+                                            user=deployobject['login'],
+                                            login=deployobject['login'],
+                                            title=deployobject['title'],
+                                            group_uuid=deployobject['GUID'],
+                                            startcmd=deployobject['start_date'],
+                                            endcmd=deployobject['end_date'],
+                                            macadress=deployobject['mac'],
+                                            result="",
+                                            syncthing=0)
 
-                msg.append("<span class='log_err'>Agent missing on machine %s. " \
-                            "Deployment impossible : GLPI ID is %s</span>"%(deployobject['name'],
-                                                                             UUID))
-                msg.append("Action : Check that the machine "\
-                    "agent is working, or install the agent on the"\
-                        " machine %s (%s) if it is missing."%(deployobject['name'],
-                                                                       UUID))
+
                 for logmsg in msg:
                     self.xmpplog(logmsg,
-                             type='deploy',
-                             sessionname=sessiondeployementless,
-                             priority=-1,
-                             action="xmpplog",
-                             why=self.boundjid.bare,
-                             module="Deployment | Start | Creation",
-                             date=None,
-                             fromuser=deployobject['login'])
+                                type='deploy',
+                                sessionname=sessiondeployementless,
+                                priority=-1,
+                                action="xmpplog",
+                                why=self.boundjid.bare,
+                                module="Deployment | Start | Creation",
+                                date=None,
+                                fromuser=deployobject['login'])
                 continue
 
-            if datetime.now() < deployobject['start_date']:
-                deployobject['wol'] = 2 #
+
+            if datetimenow < deployobject['start_date']:
+                deployobject['wol'] = 2
             else:
                 if resultpresence[UUID][0] == 1:
                     # If a machine is present, add deployment in deploy list to manage.
@@ -870,7 +895,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             try:
                 self.machineDeploy[UUID].append(deployobject)
             except:
-                #creation list deployement
+                # creation list deployement
                 self.machineDeploy[UUID] = []
                 self.machineDeploy[UUID].append(deployobject)
 
@@ -880,8 +905,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
             try:
                 deployobject = self.machineDeploy[deployuuid].pop(0)
                 listobjsupp.append(deployuuid)
-                logging.debug("send deploy on machine %s package %s" %
-                              (deployuuid, deployobject['pakkageid']))
+                logging.debug("send deploy on machine %s package %s" % (deployuuid,
+                                                                        deployobject['pakkageid']))
+
                 self.applicationdeployjsonUuidMachineAndUuidPackage(deployuuid,
                                                                     deployobject['pakkageid'],
                                                                     deployobject['commandid'],
@@ -896,7 +922,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     nbdeploy=nbdeploy,
                                                                     wol=deployobject['wol'])
             except Exception:
+                logger.error("%s" % (traceback.format_exc()))
                 listobjsupp.append(deployuuid)
+            if deployobject['wol'] == 1:
+                listmacadress = [x.strip() for x in deployobject['mac'].split("||")]
+                for macadressdata in listmacadress:
+                    self._addsetwol(self.wolglobal_set, macadressdata)
             if deployobject['wol'] == 1:
                 listmacadress = [x.strip() for x in deployobject['mac'].split("||")]
                 for macadressdata in listmacadress:

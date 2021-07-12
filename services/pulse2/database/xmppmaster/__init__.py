@@ -6079,20 +6079,32 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getPresenceExistuuids(self, session, uuids):
-        if isinstance(uuids, basestring):
-            uuids=[uuids]
+        """
+        This function is used to obtain the presence and the GLPI uuid
+        of machines based on the uuids.
+        Args:
+            session: SQLAlchemy session
+            uuids: uuid of the machine we are searching
+        Return: This fonction return a dictionnary:
+                {'UUID_GLPI': [presence of the machine, initialised glpi uuid]}
+        """
         result = { }
-        for uuidmachine in uuids:
-            result[uuidmachine] = [0,0]
-        machinespresente = session.query(Machines.uuid_inventorymachine,Machines.enabled).\
-            filter(Machines.uuid_inventorymachine.in_(uuids)).all()
-        session.commit()
-        session.flush()
-        for linemachine in machinespresente:
-            out = 0;
-            if linemachine.enabled == True:
-                out = 1
-            result[linemachine.uuid_inventorymachine] = [out, 1 ]
+        if isinstance(uuids, basestring):
+            if uuids == "":
+                return {}
+            uuids = [uuids]
+        if uuids:
+            for uuidmachine in uuids:
+                result[uuidmachine] = [0,0]
+            machinespresente = session.query(Machines.uuid_inventorymachine,Machines.enabled).\
+                filter(Machines.uuid_inventorymachine.in_(uuids)).all()
+            session.commit()
+            session.flush()
+            for linemachine in machinespresente:
+                out = 0
+                if linemachine.enabled is True:
+                    out = 1
+                result[linemachine.uuid_inventorymachine] = [out, 1]
         return result
 
     @DatabaseHelper._sessionm
