@@ -32,7 +32,7 @@ function renderAction($sequence, $os){
     if(isset($action['command'])){
       $command = base64_decode($action['command'], true) == false ? $action['command'] : base64_decode($action['command']);
       $content.= '<li>';
-      $content .= _T("Executed Command", "pkgs").' : '.htmlentities($command);
+      $content .= _T("Executed Command", "pkgs").' : '.nl2br(htmlentities($command));
       $content .= '</li>';
     }
     if(isset($action['typescript']) && $action['typescript'] != ""){
