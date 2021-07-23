@@ -17,6 +17,7 @@ popup, etc.)
 * [BUGFIX]  Fix shown state when starting a deployment
 * [BUGFIX]  Fix handling some accounts creation
 * [BUGFIX]  Fix display infos on group deployment audit
+* [BUGFIX]  Fix creating groups based on ADs
 
 Pulse 2 4.6.8
 =============

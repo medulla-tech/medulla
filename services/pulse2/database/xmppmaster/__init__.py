@@ -6049,6 +6049,10 @@ class XmppMasterDatabase(DatabaseHelper):
         ret['total'] = count
         return ret
 
+    @DatabaseHelper._sessionm
+    def getPresenceuuidenabled(self, session, uuid, enabled = 0):
+        return session.query(exists().where (and_(Machines.uuid_inventorymachine == uuid,
+                                                  Machines.enabled == enabled))).scalar()
 
     @DatabaseHelper._sessionm
     def getPresenceuuid(self, session, uuid):
@@ -6252,7 +6256,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.machines
                  WHERE
                     enabled = '1' and
-                    agenttype = 'machine' and (uuid_inventorymachine IS NOT NULL OR uuid_inventorymachine!='');"""
+                    agenttype = 'machine' and (uuid_inventorymachine IS NOT NULL AND uuid_inventorymachine!='');"""
 
         presencelist = session.execute(sql)
         session.commit()
@@ -6307,22 +6311,43 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getxmppmasterfilterforglpi(self, session, listqueryxmppmaster = None):
-        fl = listqueryxmppmaster[3].replace('*',"%")
-        if listqueryxmppmaster[2] == "OU user":
-            machineid = session.query(Organization_ad.id_inventory)
-            machineid = machineid.filter(Organization_ad.ouuser.like(fl))
-        elif listqueryxmppmaster[2] == "OU machine":
-            machineid = session.query(Organization_ad.id_inventory)
-            machineid = machineid.filter(Organization_ad.oumachine.like(fl))
-        elif listqueryxmppmaster[2] == "Online computer":
+        listqueryxmppmaster[2] = listqueryxmppmaster[2].lower()
+        Regexpression = False
+        if listqueryxmppmaster[2] in [ "ou user", "ou machine"]:
+            if listqueryxmppmaster[3][:1] == "/" and  listqueryxmppmaster[3][-1:] == "/":
+                Regexpression = True
+                fl = listqueryxmppmaster[3][1:-1]
+        if not Regexpression:
+            # SQL Wildcards
+            # % : The percentage symbol represent zero, one or several wildcard caracters.
+            fl = listqueryxmppmaster[3].replace('*',"%")
+
+        if listqueryxmppmaster[2] == "ou user":
+            machineid = session.query(Machines.uuid_inventorymachine).\
+                filter( Machines.uuid_inventorymachine.isnot(None))
+            if Regexpression:
+                machineid = machineid.filter(Machines.ad_ou_user.op('regexp')(fl))
+            else:
+                machineid = machineid.filter(Machines.ad_ou_user.like(fl))
+        elif listqueryxmppmaster[2]== "ou machine":
+            machineid = session.query(Machines.uuid_inventorymachine).\
+                filter( Machines.uuid_inventorymachine.isnot(None))
+            if Regexpression:
+                machineid = machineid.filter(Machines.ad_ou_machine.op('regexp')(fl))
+            else:
+                machineid = machineid.filter(Machines.ad_ou_machine.like(fl))
+
+
+        elif listqueryxmppmaster[2] == "online computer":
             d = XmppMasterDatabase().getlistPresenceMachineid()
             listid = [x.replace("UUID", "") for x in d]
             return listid
         machineid = machineid.all()
         session.commit()
         session.flush()
-        ret = [str(m.id_inventory) for m in machineid]
+        ret = [str(m.uuid_inventorymachine).replace("UUID", "")  for m in machineid]
         return ret
+
 
 
     @DatabaseHelper._sessionm
