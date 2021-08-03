@@ -79,6 +79,7 @@ import re
 import uuid
 import random
 import copy
+from sqlalchemy.ext.automap import automap_base
 
 Session = sessionmaker()
 
@@ -130,6 +131,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     def activate(self, config):
         self.logger = logging.getLogger()
+        Base = automap_base()
         if self.is_activated:
             return None
         # This is used to automatically create the mapping
@@ -139,6 +141,10 @@ class XmppMasterDatabase(DatabaseHelper):
                                 pool_recycle=self.config.dbpoolrecycle,
                                 pool_size=self.config.dbpoolsize,
                                 pool_timeout=self.config.dbpooltimeout)
+
+        Base.prepare(self.db, reflect=True)
+        self.Ban_machines = Base.classes.ban_machines
+
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
@@ -9706,6 +9712,187 @@ where agenttype="machine" and groupdeploy in (
                        "name_cluster": ars[23]}
             arsListInfos.append(arsInfos)
         return arsListInfos
+
+
+    @DatabaseHelper._sessionm
+    def get_machines_for_ban(self, session, jid_ars, start=0, end=-1, filter=""):
+
+        try:
+            start = int(start)
+        except:
+            start=0
+
+        try:
+            end = int(end)
+        except:
+            end=-1
+
+        subquery = session.query(self.Ban_machines.jid)\
+            .filter(self.Ban_machines.ars_server == jid_ars)\
+            .subquery()
+
+        query = session.query(Machines.jid, Machines.hostname)
+
+        if filter != "":
+            query = query.filter(
+                and_(
+                    Machines.agenttype == "machine",
+                    Machines.groupdeploy == jid_ars,
+                    Machines.hostname.contains(filter),
+                    not_(Machines.jid.in_(subquery))
+                )
+            )
+
+        else:
+            query = query.filter(
+                and_(
+                    Machines.agenttype == "machine",
+                    Machines.groupdeploy == jid_ars,
+                    not_(Machines.jid.in_(subquery))
+                )
+            )
+
+        count = query.count()
+
+        query = query.offset(start)
+        if end > 0:
+            query = query.limit(end)
+
+        query = query.all()
+
+        result = {
+            "total": count,
+            "datas": []
+        }
+
+        if query is not None:
+            for element in query:
+                result['datas'].append({"jid": element.jid, "name" : element.hostname})
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_machines_to_unban(self, session, jid_ars, start=0, end=-1, filter=""):
+
+        try:
+            start = int(start)
+        except:
+            start = 0
+
+        try:
+            end = int(end)
+        except:
+            end = -1
+
+
+        subquery = session.query(self.Ban_machines.jid)\
+            .filter(self.Ban_machines.ars_server == jid_ars)\
+            .subquery()
+
+        query = session.query(Machines.jid, Machines.hostname)
+
+        if filter != "":
+            query = query.filter(
+                and_(
+                    Machines.agenttype == "machine",
+                    Machines.groupdeploy == jid_ars,
+                    Machines.hostname.contains(filter),
+                    Machines.jid.in_(subquery)
+                )
+            )
+
+        else:
+            query = query.filter(
+                and_(
+                    Machines.agenttype == "machine",
+                    Machines.groupdeploy == jid_ars,
+                    Machines.jid.in_(subquery)
+                )
+            )
+
+        count = query.count()
+
+        query = query.offset(start)
+        if end > 0:
+            query = query.limit(end)
+
+        query = query.all()
+
+        result = {
+            "total": count,
+            "datas": []
+        }
+
+        if query is not None:
+            for element in query:
+                result['datas'].append({"jid": element.jid, "name" : element.hostname})
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def ban_machines(self, session, jid_ars, machines, dates=[], reasons=[]):
+        if machines != "all" or type(machines) is list and 'all' not in machines:
+            _list = machines
+
+        else:
+            subquery = session.query(self.Ban_machines.jid)\
+                .filter(self.Ban_machines.ars_server == jid_ars)\
+                .subquery()
+
+            machines_list = session.query(Machines.jid)\
+                .filter(
+                    and_(
+                        Machines.groupdeploy == jid_ars,
+                        Machines.agenttype == "machine",
+                        not_(Machines.jid.in_(subquery))
+                    )
+                )\
+                .all()
+
+            _list = []
+            if machines_list is not None:
+                _list = [element.jid for element in machines_list]
+
+        for machine in _list:
+            new_ban = self.Ban_machines()
+            new_ban.jid = machine
+            new_ban.ars_server = jid_ars
+            try:
+                session.add(new_ban)
+            except:
+                continue
+        try:
+            session.commit()
+            session.flush()
+        except:
+            pass
+
+        return {'jid_ars': jid_ars, 'jid_machines':_list}
+
+    @DatabaseHelper._sessionm
+    def unban_machines(self, session, jid_ars, machines, dates=[], reasons=[]):
+        if machines != "all" or type(machines) is list and 'all' not in machines:
+            _list = machines
+
+        else:
+            _list = machines
+        query = session.query(self.Ban_machines)\
+            .filter(self.Ban_machines.ars_server == jid_ars)
+
+        # Before deleting, we need to select machines info to send to the relay
+        machines_list = query.all()
+        if machines_list is not None:
+            _list = [element.jid for element in machines_list]
+
+        try:
+            query.delete()
+        except:
+            pass
+        finally:
+            session.commit()
+            session.flush()
+
+        return {'jid_ars': jid_ars, 'jid_machines':_list}
 
 # Update machine scheduling
     def __updatemachine(self, object_update_machine):

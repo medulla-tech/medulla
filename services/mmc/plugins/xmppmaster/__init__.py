@@ -1379,3 +1379,24 @@ def get_minimal_relays_list(mode):
 def get_count_agent_for_dashboard():
     result = XmppMasterDatabase().get_count_agent_for_dashboard()
     return result
+
+def get_machines_for_ban(jid_ars, start=0, end=-1, filter=""):
+    result = XmppMasterDatabase().get_machines_for_ban(jid_ars, start, end, filter)
+    return result
+
+def get_machines_to_unban(jid_ars, start=0, end=-1, filter=""):
+    result = XmppMasterDatabase().get_machines_to_unban(jid_ars, start, end, filter)
+    return result
+
+def ban_machines(subaction, jid_ars, machines):
+    sessionid = name_random(8, "banmachines")
+    datasend = {
+        "action": "banmachines",
+        "from": ObjectXmpp().boundjid.bare,
+        "sessionid": sessionid,
+        "data": {'subaction': subaction, 'jid_ars': jid_ars, 'jid_machines':machines},
+        "base64": False
+    }
+    callXmppPlugin("banmachines", datasend)
+
+    return True

@@ -734,4 +734,16 @@ function xmlrpc_get_count_total_deploy_for_dashboard(){
 function xmlrpc_get_count_agent_for_dashboard(){
   return xmlCall("xmppmaster.get_count_agent_for_dashboard", []);
 }
+
+function xmlrpc_get_machines_for_ban($jid_ars, $start=0, $end=-1, $filter=""){
+  return xmlCall("xmppmaster.get_machines_for_ban", [$jid_ars, $start, $end, $filter]);
+}
+
+function xmlrpc_get_machines_to_unban($jid_ars, $start=0, $end=-1, $filter=""){
+  return xmlCall("xmppmaster.get_machines_to_unban", [$jid_ars, $start, $end, $filter]);
+}
+
+function xmlrpc_ban_machines($subaction, $jid_ars, $machines){
+  return xmlCall("xmppmaster.ban_machines", [$subaction, $jid_ars, $machines]);
+}
 ?>
