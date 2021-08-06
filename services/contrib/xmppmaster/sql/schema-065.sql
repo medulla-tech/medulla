@@ -25,7 +25,7 @@ USE `xmppmaster`;
 
 CREATE TABLE `ban_machines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `jid` varchar(100) DEFAULT NULL COMMENT 'Allow to know the account name,\nBanned machine''s jid.',
+  `jid` varchar(100) DEFAULT NULL COMMENT 'Allow to know the account name,\nBanned machines jid.',
   `ars_server` varchar(100) DEFAULT NULL COMMENT 'define the ars where the ejabberd command have to be executed.',
   `reason` varchar(100) DEFAULT NULL COMMENT 'Specify the reason why the machine is banned',
   `start_date` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'The datetime when the machine started to be banned',
