@@ -293,7 +293,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.confaccount=[] #list des account for clear
         #clear conf compte.
         logger.debug('Delete old ejabberd accounts')
-        cmd = "ejabberdctl delete_old_users 1"
+        cmd = "ejabberdctl --no-timeout delete_old_users 1"
         try:
             a = simplecommandstr(cmd)
             logger.debug(a['result'])
@@ -301,7 +301,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             pass
         #del old message offline
         logger.debug('Delete old offline ejabberd messages')
-        cmd = "ejabberdctl delete_old_messages 1"
+        cmd = "ejabberdctl --no-timeout delete_old_messages 1"
         try:
             a = simplecommandstr(cmd)
             logger.debug(a['result'])
