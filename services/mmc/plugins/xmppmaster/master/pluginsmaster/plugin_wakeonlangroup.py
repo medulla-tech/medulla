@@ -64,8 +64,9 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                                              encoding='latin1'),
                                             mtype='chat')
                     msglog = "A WOL request has been sent from the ARS %s " \
-                             "to %s mac address" % (serverrelay['jid'],
-                                                    len(data['macadress']))
+                             "to the mac address (10 first adresses) %s" % (serverrelay['jid'],
+                                                                            data['macadress'][:10])
+
                     historymessage(xmppobject, sessionid, msglog)
                     logger.debug(msglog)
             else:
