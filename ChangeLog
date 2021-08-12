@@ -18,6 +18,7 @@ popup, etc.)
 * [BUGFIX]  Fix handling some accounts creation
 * [BUGFIX]  Fix display infos on group deployment audit
 * [BUGFIX]  Fix creating groups based on ADs
+* [BUGFIX]  The abort deployment button was always disabled
 
 Pulse 2 4.6.8
 =============

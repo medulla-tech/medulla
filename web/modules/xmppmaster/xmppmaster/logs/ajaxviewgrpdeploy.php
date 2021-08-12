@@ -233,7 +233,11 @@ if ($timestampnow > $start_date){
     $start_deploy = true;
 }
 
-if ($timestampnow > $end_date){
+
+if (gettype($end_date) == "integer" && $timestampnow > $end_date){
+    $end_deploy = true;
+}
+else if (gettype($end_date) == "string" && $timestampnow > strtotime($end_date)){
     $end_deploy = true;
 }
 
