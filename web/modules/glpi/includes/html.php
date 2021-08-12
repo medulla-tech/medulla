@@ -258,13 +258,14 @@ if ($this->refresh) {
                    </select>
                </span>-->
                <span style="width:50px;">
-               <input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
-                       return false;" />
+               <input type="text" class="searchfieldreal" name="param" id="param" />
                    <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
                         onclick="document.getElementById('param').value = '';
                                 pushSearch();
                                 return false;" />
               </span>
+              <button style="margin-left:20px;" onclick="pushSearch();
+                      return false;"><?php echo _T("Search", "glpi");?></button>
            </div>
            </div>
 
@@ -474,13 +475,14 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
                    </select>
                </span>-->
                <span style="width:50px;">
-               <input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
-                       return false;" />
+               <input type="text" class="searchfieldreal" name="param" id="param" />
                    <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
                         onclick="document.getElementById('param').value = '';
                                 pushSearch();
                                 return false;" />
               </span>
+              <button style="margin-left:20px;" onclick="pushSearch();
+                      return false;"><?php echo _T("Search", "glpi");?></button>
            </div>
            </div>
 

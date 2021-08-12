@@ -51,6 +51,12 @@ $submod->addPage($page);
 $page = new Page("auditmypastdeploys", _T('XMPP My Past tasks', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("auditmypastdeploysteam", _T('XMPP My teams past tasks', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("auditteam", _T('XMPP My teams tasks', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -140,7 +146,6 @@ $submod->addPage($page);
 
 $page = new Page("remoteeditorconfiguration", _T('Remote edit configuration file', 'xmppmaster'));
 $submod->addPage($page);
-
 
 $page = new Page("remoteeditorconfigurationlist", _T('Remote edit configuration file', 'xmppmaster'));
 $submod->addPage($page);
@@ -237,7 +242,6 @@ $page->setFile("modules/xmppmaster/xmppmaster/deployquickgroup.php");
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
-
 $page = new Page("actionwakeonlan", _T("quick action Wol", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionwakeonlan.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
@@ -247,7 +251,6 @@ $page = new Page("actioninventory", _T("quick action Inventory", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actioninventory.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
-
 
 $page = new Page("actionrestart", _T("quick action Restart", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionrestart.php");
@@ -302,6 +305,11 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("ajaxstatusteamxmpp",_T("List all groups of computers by teams","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page("ajaxviewgrpdeploy",_T("ajax view grp deploy","xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
@@ -319,6 +327,11 @@ $submod->addPage($page);
 
 $page = new Page("ajaxstatusxmppscheduler",_T("List computer deploy","xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxstatusteamxmppscheduler",_T("List computer deploy by team","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 

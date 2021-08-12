@@ -77,6 +77,7 @@ class manage_scheduler:
                 datascheduler = self.litschedule(name)
                 self.add_event(name, datascheduler)
             except Exception:
+                logger.error("%s" % traceback.format_exc())
                 pass
 
     def add_event(self, name, datascheduler):

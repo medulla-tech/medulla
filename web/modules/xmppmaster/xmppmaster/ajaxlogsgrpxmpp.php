@@ -33,7 +33,7 @@ $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 $etat="";
 $LastdeployINsecond = 3600*72;
 echo "<h2>machines deploy in group";
-$arraydeploy = xmlrpc_getdeploybymachinegrprecent( $_GET['gid'] ,"", $LastdeployINsecond, $start, $end, $filter);
+$arraydeploy = xmlrpc_get_deploy_from_group( $_GET['gid'] ,"", $LastdeployINsecond, $start, $end, $filter);
 $arrayname = array();
 
 $arraytitlename = array();

@@ -67,6 +67,7 @@ $n->addActionItemArray($deleteActions);
 $n->start = 0;
 $n->end = $total;
 $navbar = new AjaxNavBar($total, $filter);
+$n->setItemCount($total);
 $n->setNavBar($navbar);
 $n->display();
 ?>

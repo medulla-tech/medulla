@@ -1,3 +1,24 @@
+Pulse 2 4.6.9 (unreleased)
+=============
+* [FEATURE] Add Team support in Audit page
+* [FEATURE] Add new infos in the fileviewer as config ( server, port, size
+popup, etc.)
+* [FEATURE] Add link to machines in the Quick Action summary page
+* [FEATURE] Add a button to run the researches on computers
+* [FEATURE] Remove the "Restart machine agent" Quick action
+* [FEATURE] Optimize Comuter view display
+* [FEATURE] Optimize admin view display
+* [FEATURE] Add online/offline switch to the uninventoried page
+* [FEATURE] Add a @@@DEBUG@@@ option in queries to show played SQL Requests
+* [BUGFIX]  Fix removing packages from the database. Bug#1323
+* [BUGFIX]  Fix deleting old users in ejabberd
+* [BUGFIX]  Remove cdn from js files import. Use local files instead
+* [BUGFIX]  Several SQL Optimisations
+* [BUGFIX]  Fix shown state when starting a deployment
+* [BUGFIX]  Fix handling some accounts creation
+* [BUGFIX]  Fix display infos on group deployment audit
+* [BUGFIX]  Fix creating groups based on ADs
+
 Pulse 2 4.6.8
 =============
 * [FEATURE] Disable relay list page from computers menu

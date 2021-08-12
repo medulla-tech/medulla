@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2016-2018 Siveo, http://www.siveo.net
+ * (c) 2016-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -312,7 +312,8 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
                     function(data) {
                       var module = "<?php
                       if(isset($_GET['objectUUID'])){
-                          echo 'base';
+                          //echo 'base';
+                          echo 'xmppmaster';
                       }
                       else{
                         echo 'xmppmaster';
@@ -321,7 +322,8 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
 
                       var submod = "<?php
                       if(isset($_GET['objectUUID'])){
-                        echo 'computers';
+                        //echo 'computers';
+                        echo 'xmppmaster';
                       }
                       else{
                         echo 'xmppmaster';
@@ -332,16 +334,29 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
                         var action = "<?php
                         if(isset($_GET['agenttype'])){
                           if($_GET['agenttype'] == 'relayserver')
-                            echo 'xmppRelaysList';
+                            echo 'listconffile';
                           else
-                            echo 'xmppMachinesList';
+                            echo 'listfichierconf';
                         }
                         else{
-                          echo 'index';
+                          echo 'listfichierconf';
                         }
                         ?>";
-
-                        document.location.href="main.php?module="+module+"&submod="+submod+"&action="+action;
+                        var params ="<?php
+                        if(isset($_GET['agenttype'])){
+                            echo '&agenttype='.$_GET['agenttype'];
+                        }
+                        if(isset($_GET['objectUUID'])){
+                          echo '&objectUUID='.$_GET['objectUUID'];
+                        }
+                        if(isset($_GET['hostname'])){
+                          echo '&hostname='.$_GET['hostname'];
+                        }
+                        if(isset($_GET['jid'])){
+                          echo '&jid='.$_GET['jid'];
+                        }
+                        ?>";
+                        document.location.href="main.php?module="+module+"&submod="+submod+"&action="+action+params;
                     });
     }
     function loadconffile(param){

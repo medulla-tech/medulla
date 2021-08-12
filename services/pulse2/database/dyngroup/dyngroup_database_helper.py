@@ -27,6 +27,8 @@ from pulse2.managers.group import ComputerGroupManager
 
 from mmc.database.database_helper import DatabaseHelper
 
+import logging
+logger = logging.getLogger()
 
 # USAGE :
 #    def getAllMachines():
@@ -40,13 +42,15 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         self.filters = {}
 
     def filter(self, ctx, join_query, filt, query, grpby, filters = None):
+
+
+        # Add filter clause
         filters = [t for t in filters if t is not None]
         if filters != None:
             self.filters[ctx.userid] = and_(*filters)
         query_filter = None
 
         try:
-            #if not 'query' in filt:
             if not filt.has_key('query'):
                 return (join_query, query_filter)
             query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
@@ -82,7 +86,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         """
         filter_on = []
         for lq in queries:
-            if len(lq) == 4:
+            if len(lq) >= 4:
                 if lq[1] == 'dyngroup':
                     join_tab = self.computersTable()
                     computers = ComputerGroupManager().result_group_by_name(ctx, lq[3])
@@ -101,9 +105,27 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 q = query.add_column(grpby).select_from(join_q).filter(filt)
                 if ctx.userid in self.filters:
                     q = q.filter(self.filters[ctx.userid])
+
+                if lq[2] == 'online computer':
+                    if lq[3]=="True":
+                        q = q.filter(grpby.in_(lq[4]))
+                    else:
+                        q = q.filter(grpby.notin_(lq[4]))
+
+                if lq[2].lower() == 'ou machine':
+                    if (lq[4]):
+                        q = q.filter(grpby.in_(lq[4]))
+                    else:
+                        q = q.filter(False)
+
+                if lq[2].lower() == 'ou user':
+                    if (lq[4]):
+                        q = q.filter(grpby.in_(lq[4]))
+                    else:
+                        q = q.filter(False)
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                self.logger.debug(">>>> or : %s %s"%(str(lq), str(len(res))))
+                self.logger.debug("__treatQueryLevelOR : %s %s"%(str(lq), str(len(res))))
                 filter_on.append(grpby.in_(res))
             else:
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, lq, join_tables)
@@ -119,7 +141,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         result_set = None
         optimize = True
         for lq in queries:
-            if len(lq) == 4:
+            if len(lq) >= 4:
                 if lq[1] == 'dyngroup':
                     join_tab = self.computersTable()
                     computers = ComputerGroupManager().result_group_by_name(ctx, lq[3])
@@ -138,14 +160,34 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 q = query.add_column(grpby).select_from(join_q).filter(filt)
                 if ctx.userid in self.filters:
                     q = q.filter(self.filters[ctx.userid])
+
+                if lq[2] == 'online computer':
+                    if lq[3]=="True":
+                        q = q.filter(grpby.in_(lq[4]))
+                    else:
+                        q = q.filter(grpby.notin_(lq[4]))
+
+                if lq[2].lower() == 'ou machine':
+                    if (lq[4]):
+                        q = q.filter(grpby.in_(lq[4]))
+                    else:
+                        q = q.filter(False)
+
+                if lq[2].lower() == 'ou user':
+                    if (lq[4]):
+                        q = q.filter(grpby.in_(lq[4]))
+                    else:
+                        q = q.filter(False)
+
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                self.logger.debug(">>> and : %s %s"%(str(lq), str(len(res))))
+                self.logger.debug("__treatQueryLevelAND  : %s %s"%(str(lq), str(len(res))))
                 if result_set != None:
                     result_set.intersection_update(Set(res))
                 else:
                     result_set = Set(res)
                 filter_on.append(grpby.in_(res))
+
             else:
                 optimize = False
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, lq, join_tables)
@@ -162,7 +204,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         """
         filter_on = []
         for lq in queries:
-            if len(lq) == 4:
+            if len(lq) >= 4:
                 if lq[1] == 'dyngroup':
                     join_tab = self.computersTable()
                     computers = ComputerGroupManager().result_group_by_name(ctx, lq[3])
@@ -181,10 +223,28 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 q = query.add_column(grpby).select_from(join_q).filter(filt)
                 if ctx.userid in self.filters:
                     q = q.filter(self.filters[ctx.userid])
+
+                if lq[2] == 'online computer':
+                    if lq[3]=="True":
+                        q = q.filter(grpby.notin_(lq[4]))
+                    else:
+                        q = q.filter(grpby.in_(lq[4]))
+
+                if lq[2].lower() == 'ou machine':
+                    if (lq[4]):
+                        q = q.filter(grpby.notin_(lq[4]))
+
+                if lq[2].lower() == 'ou user':
+                    if (lq[4]):
+                        q = q.filter(grpby.notin_(lq[4]))
+                    else:
+                        q = q.filter(False)
+
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                self.logger.debug(">>> not : %s %s"%(str(lq), str(len(res))))
+                self.logger.debug("__treatQueryLevelNOT : %s %s"%(str(lq), str(len(res))))
                 filter_on.append(grpby.in_(res))
+
             else:
                 query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, lq, join_tables, invert)
                 filter_on.append(query_filter)

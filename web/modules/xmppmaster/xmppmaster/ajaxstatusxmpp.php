@@ -41,13 +41,13 @@ if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1'){
   $status="";
   $LastdeployINsecond = 3600*24;
   echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
-  $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter) ;
-  $arraynotdeploy = xmlrpc_getnotdeploybyuserrecent($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
+  $arraydeploy = xmlrpc_get_deploy_by_user_with_interval( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter) ;
+  $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
 }
 else {
   $LastdeployINsecond = 3600*2160;
   echo "<h2>" . _T("Past tasks (last 3 months)") ."</h2>";
-  $arraydeploy = xmlrpc_getdeploybyuserpast( $_GET['login'] ,$LastdeployINsecond, $start, $end, $filter) ;
+  $arraydeploy = xmlrpc_get_deploy_by_user_finished( $_GET['login'] ,$LastdeployINsecond, $start, $end, $filter) ;
 }
 
 if (isset($arraydeploy['total_of_rows']))
@@ -124,7 +124,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $error = False;
     if(($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT DIFFERED" ||
         strpos($arraydeploy['tabdeploy']['state'][$index], "DEPLOYMENT START")!==false) &&
-            (get_object_vars($arraydeploy['tabdeploy']['endcmd'][$index])['timestamp']- time()) < 0){
+            (strtotime($arraydeploy['tabdeploy']['endcmd'][$index])- time()) < 0){
         $error = True;
         $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
     }
