@@ -120,7 +120,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpclib.Fault
 ctx = None
-VERSION = "4.6.8"
+VERSION = "4.6.9"
 
 
 class IncludeStartsWithFilter(logging.Filter):
