@@ -22,6 +22,7 @@ popup, etc.)
 * [BUGFIX]  Fix creating groups based on ADs
 * [BUGFIX]  The abort deployment button was always disabled
 * [BUGFIX]  Fix creation of groups based on OU or AD. Bug#1238
+* [BUGFIX]  Add carriage return on "Executed command" info in detail view
 
 Pulse 2 4.6.8
 =============
