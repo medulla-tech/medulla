@@ -49,7 +49,7 @@ CREATE  TABLE IF NOT EXISTS  `update_machine` (
   KEY `ind_hostname` (`hostname`),
   KEY `ind_date` (`date_creation`),
   KEY `ind_ars` (`ars`)
-) ENGINE=InnoDB AUTO_INCREMENT=93368 DEFAULT CHARSET=utf8 COMMENT='This table is used to define the update state of a machine.'
+) ENGINE=InnoDB AUTO_INCREMENT=93368 DEFAULT CHARSET=utf8 COMMENT='This table is used to define the update state of a machine.';
 -- ----------------------------------------------------------------------
 -- Creation table ban_machine
 -- This table allow to define banned machines.
