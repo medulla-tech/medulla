@@ -31,7 +31,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- Creation table pulse_users
 -- This table is used to define users. We attribute them preferences and permissions to allow to visualize shares
 -- ----------------------------------------------------------------------
-CREATE TABLE `pulse_users` (
+CREATE TABLE IF NOT EXISTS `pulse_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(255) NOT NULL,
   `comment` varchar(512) DEFAULT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `pulse_users` (
 -- Creation table pulse_teams
 -- This table is used to define the teams
 -- ----------------------------------------------------------------------
-CREATE TABLE `pulse_teams` (
+CREATE TABLE IF NOT EXISTS `pulse_teams` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Define the team',
   `name` varchar(120) NOT NULL,
   `comment` varchar(1024) DEFAULT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE `pulse_teams` (
 -- This table allow to attribute preferences in a key/value format to one user
 -- ----------------------------------------------------------------------
 
-CREATE TABLE `pulse_preferences` (
+CREATE TABLE IF NOT EXISTS `pulse_preferences` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `key` varchar(120) NOT NULL,
   `value` text DEFAULT '""',
@@ -73,7 +73,7 @@ CREATE TABLE `pulse_preferences` (
 -- This table is used to create teams
 -- ----------------------------------------------------------------------
 
- CREATE TABLE `pulse_team_user` (
+ CREATE TABLE IF NOT EXISTS `pulse_team_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_user` int(11) DEFAULT NULL,
   `id_team` int(11) DEFAULT NULL,
