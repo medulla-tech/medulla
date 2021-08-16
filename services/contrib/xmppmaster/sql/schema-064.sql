@@ -50,20 +50,26 @@ CREATE  TABLE IF NOT EXISTS  `update_machine` (
   KEY `ind_date` (`date_creation`),
   KEY `ind_ars` (`ars`)
 ) ENGINE=InnoDB AUTO_INCREMENT=93368 DEFAULT CHARSET=utf8 COMMENT='This table is used to define the update state of a machine.';
+
 -- ----------------------------------------------------------------------
 -- Creation table ban_machine
 -- This table allow to define banned machines.
 -- ----------------------------------------------------------------------
 DROP TABLE IF EXISTS `ban_machines`;
-CREATE TABLE if not exists `ban_machines` (
-  `id` int(11) NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`),
-  `jid` varchar(100) DEFAULT NULL COMMENT 'Allow to know the account name,\nBanned machine\'s jid.',
+CREATE TABLE IF NOT EXISTS `ban_machines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `jid` varchar(100) DEFAULT NULL COMMENT 'Allow to know the account name,\nBanned machines jid.',
   `ars_server` varchar(100) DEFAULT NULL COMMENT 'define the ars where the ejabberd command have to be executed.',
   `reason` varchar(100) DEFAULT NULL COMMENT 'Specify the reason why the machine is banned',
   `start_date` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'The datetime when the machine started to be banned',
-  `end_date` timestamp NULL COMMENT 'If specified, the datetime of the end of the ban for the machine.\nIf not specified: permanantly ban',
-  UNIQUE KEY `jid_UNIQUE` (`jid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table give the possibility to exclude machines from relay. To reallow banned machines on the relay we must delete its account on the xmpp server';
+  `end_date` timestamp NULL DEFAULT NULL COMMENT 'If specified, the datetime of the end of the ban for the machine.\nIf not specified: permanantly ban',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `jid_UNIQUE` (`jid`),
+  KEY `ind_start_date` (`start_date`),
+  KEY `ind_end_date` (`end_date`),
+  KEY `jid_machine` (`jid`),
+  KEY `jud_ars` (`ars_server`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='This table give the possibility to exclude machines from relay. To reallow banned machines on the relay we must delete its account on the xmpp server';
 
 SET FOREIGN_KEY_CHECKS=1;
 -- ----------------------------------------------------------------------
