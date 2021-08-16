@@ -11,6 +11,7 @@ popup, etc.)
 * [FEATURE] Add online/offline switch to the uninventoried page
 * [FEATURE] Add a @@@DEBUG@@@ option in queries to show played SQL Requests
 * [FEATURE] Add the possibility to add a limit number to the autoupdate feature.
+* [FEATURE] Change the way WOL is handled.
 * [BUGFIX]  Fix removing packages from the database. Bug#1323
 * [BUGFIX]  Fix deleting old users in ejabberd
 * [BUGFIX]  Remove cdn from js files import. Use local files instead
@@ -20,6 +21,7 @@ popup, etc.)
 * [BUGFIX]  Fix display infos on group deployment audit
 * [BUGFIX]  Fix creating groups based on ADs
 * [BUGFIX]  The abort deployment button was always disabled
+* [BUGFIX]  Fix creation of groups based on OU or AD. Bug#1238
 
 Pulse 2 4.6.8
 =============
