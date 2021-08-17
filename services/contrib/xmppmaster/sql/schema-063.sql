@@ -95,13 +95,13 @@ CREATE TABLE IF NOT EXISTS `pulse_preferences` (
 -- create use root
 -- ----------------------------------------------------------------------
 
-INSERT INTO `xmppmaster`.`pulse_users` (`login`) VALUES ('root');
+INSERT IGNORE INTO `xmppmaster`.`pulse_users` (`login`) VALUES ('root');
 
 -- ----------------------------------------------------------------------
 -- Add in table logs index on date
 -- ----------------------------------------------------------------------
 ALTER TABLE `xmppmaster`.`logs`
-ADD INDEX `ind_date_log` (`date` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_date_log` (`date` ASC) ;
 
 -- ----------------------------------------------------------------------
 -- change size coluum in table logs field text
@@ -145,9 +145,7 @@ CHANGE COLUMN `who` `who` VARCHAR(255) NULL DEFAULT NULL ;
   `result` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8
-
-
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- /##########################################################################\
 -- | function  fs_help                                                        |
