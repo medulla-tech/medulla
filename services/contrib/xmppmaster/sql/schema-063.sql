@@ -313,22 +313,22 @@ INSERT INTO `xmppmaster`.`support_help_command` (`id`, `name`, `description`, `e
 
 
 -- /#####################################################################\
--- | function fs_tablefilds                                              |
+-- | function fs_tablefields                                              |
 -- | cette function renvoila list des champ de la table xmppmaster passe |
 -- | exemple select fs_jidusershort("jfk.xya@pulse/ressource1);          |
 -- \#####################################################################/
 
 
 USE `xmppmaster`;
-DROP function IF EXISTS `fs_tablefilds`;
+DROP function IF EXISTS `fs_tablefields`;
 
 USE `xmppmaster`;
-DROP function IF EXISTS `xmppmaster`.`fs_tablefilds`;
+DROP function IF EXISTS `xmppmaster`.`fs_tablefields`;
 ;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `fs_tablefilds`(tablename char(255)) RETURNS text CHARSET utf8
+CREATE DEFINER=`root`@`localhost` FUNCTION `fs_tablefields`(tablename char(255)) RETURNS text CHARSET utf8
 BEGIN
 select listcolumn  into @malist from (
   SELECT GROUP_CONCAT(COLUMN_NAME) as listcolumn
@@ -341,7 +341,7 @@ END$$
 DELIMITER ;
 ;
 
-INSERT INTO `xmppmaster`.`support_help_command` (`id`, `name`, `description`, `example`, `type`, `result`) VALUES ('', 'fs_tablefilds', 'cette function renvoila list des champs de la table xmppmaster passee', 'select fs_tablefilds(\'logs\');', 'F', '+----------------------------------------------------------------------------------+\n| fs_tablefilds(\'logs\')                                                            |\n+----------------------------------------------------------------------------------+\n| id,date,type,module,text,fromuser,touser,action,sessionname,how,why,priority,who |\n+----------------------------------------------------------------------------------+\n');
+INSERT INTO `xmppmaster`.`support_help_command` (`id`, `name`, `description`, `example`, `type`, `result`) VALUES ('', 'fs_tablefields', 'cette function renvoila list des champs de la table xmppmaster passee', 'select fs_tablefields(\'logs\');', 'F', '+----------------------------------------------------------------------------------+\n| fs_tablefields(\'logs\')                                                            |\n+----------------------------------------------------------------------------------+\n| id,date,type,module,text,fromuser,touser,action,sessionname,how,why,priority,who |\n+----------------------------------------------------------------------------------+\n');
 
 
 
