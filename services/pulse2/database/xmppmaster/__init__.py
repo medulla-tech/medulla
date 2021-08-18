@@ -4483,7 +4483,6 @@ class XmppMasterDatabase(DatabaseHelper):
             Returns:
                 It returns a list with all the logins belonging to the group of 'login'
         """
-
         if login is None or login == "":
             return []
 
@@ -4504,7 +4503,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 xmppmaster.pulse_team_user ON
                                     xmppmaster.pulse_team_user.id_user = xmppmaster.pulse_users.id
                             WHERE
-                                xmppmaster.pulse_users.login = '%s');""" % login
+                                '%s' REGEXP xmppmaster.pulse_users.login);""" % login
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -5970,8 +5969,7 @@ class XmppMasterDatabase(DatabaseHelper):
         entity = " "
         if 'location' in ctx and ctx['location'] != "":
             if ctx['location'].strip() == "-1":
-                logger.error("AA location is %s" % ctx['location'])
-                logger.error("AA location is %s" % type(ctx['location']))
+                logger.warning("location is %s" % ctx['location'])
                 pass
             else:
                 entitylist = [x.strip() \
