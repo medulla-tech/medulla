@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
 #
-# (c) 2018 Siveo, http://www.siveo.net
+# (c) 2018-2021 Siveo, http://www.siveo.net
 #
 #
 # This file is part of Management Console (MMC).
@@ -65,10 +65,6 @@ class Package:
         if "conf.json" not in self.files:
             self.logger.error("The file conf.json is missing")
             self.to_summary("error", "The file conf.json is missing")
-            flag = False
-        if "MD5SUMS" not in self.files:
-            self.logger.error("The file MD5SUMS is missing")
-            self.to_summary("error", "The file MD5SUMS is missing")
             flag = False
         if "xmppdeploy.json" not in self.files:
             self.logger.error("The file xmppdeploy.json is missing")
@@ -136,7 +132,7 @@ class PackageParser:
 
         self.package_folder = ["/", "var", "lib", "pulse2", "packages"]
         self.packages_list = []
-        self.summary = {}
+        self.summary = {'valids': [], 'invalids' :[]}
         self.counts = {'valids': 0, 'invalids' : 0, 'total': 0}
 
         self.logger = logging.getLogger("PackageParser")
@@ -150,17 +146,6 @@ class PackageParser:
         for element in self.package_folder:
             tmp = os.path.join(tmp, element)
         return tmp
-
-    def to_summary(self):
-        """Store what append in the summary dict
-            Returns:
-                dict: contains the summary of the problems occured"""
-
-        self.summary = {}
-        for package in self.packages_list:
-            if package.summary != {}:
-                self.summary.update(package.summary)
-        return self.summary
 
     def test_dependencies(self, package):
         """The dependencies of a package can be corrupted, this method prevent
@@ -228,15 +213,28 @@ class PackageParser:
                         self.logger.info("The files of the package %s (%s) seems to be ok", package.uuid, package.name)
                         self.test_dependencies(package)
                         self.counts['valids'] += 1
+                        self.summary['valids'].append({'uuid': package.uuid})
                     else:
+                        self.summary['invalids'].append({'uuid': package.uuid, 'msg':'json file not ok'})
                         self.counts['invalids'] += 1
                 else:
+                    self.summary['invalids'].append({'uuid': package.uuid, 'msg':'missing json files'})
                     self.counts['invalids'] += 1
             self.logger.info("\n")
+            self.logger.info("====== Counts ======")
             self.logger.info("Total : %s"%self.counts['total'])
             self.logger.info("Valids : %s"%self.counts['valids'])
             self.logger.info("Invalids : %s"%self.counts['invalids'])
 
+            self.logger.info("\n")
+            self.logger.info("====== Invalids ======")
+            for element in self.summary['invalids']:
+                self.logger.info("%s : %s"%(element['uuid'], element['msg']))
+
+            self.logger.info("\n")
+            self.logger.info("====== Valids ======")
+            for element in self.summary['valids']:
+                self.logger.info("%s"%(element['uuid']))
 
 if __name__ == "__main__":
     checker = PackageParser()

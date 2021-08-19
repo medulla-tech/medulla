@@ -54,7 +54,7 @@ else {
 //$groupname = getInfosNameGroup($arraydeploy['tabdeploy']['group_uuid']);
 $index = 0;
 
-$arraynotdeploy = xmlrpc_getnotdeploybyuserrecent($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
+$arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
 
 $notd_machinesname = [];
 $notd_packagename = [];

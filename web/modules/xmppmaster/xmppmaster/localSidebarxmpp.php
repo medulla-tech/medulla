@@ -19,13 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
-
+*/
 
 $sidemenu= new SideMenu();
 $sidemenu->setClass("xmppmaster");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("My tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("All users tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditdeploy"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("My teams tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditteam"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("My past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditmypastdeploys"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("All users past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditpastdeploys"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("My teams past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster","auditmypastdeploysteam" ));
 ?>

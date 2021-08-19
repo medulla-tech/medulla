@@ -97,8 +97,10 @@ $ajax->setfieldsearch(array_flip ($chaine ));
 list($list, $values) = getEntitiesSelectableElements();
 
 $listWithAll = array_merge([_T("All my entities", "glpi")], $list);
-$valuesWithAll = array_merge([implode(',',$values)], $values);
-
+if($_SESSION['login'] == "root")
+    $valuesWithAll = array_merge([-1], $values);
+else
+    $valuesWithAll = array_merge([implode(',',$values)], $values);
 $ajax->setElements($listWithAll);
 $ajax->setElementsVal($valuesWithAll);
 $ajax->display();

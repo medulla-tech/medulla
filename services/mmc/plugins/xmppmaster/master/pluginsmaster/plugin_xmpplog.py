@@ -90,7 +90,7 @@ def createlog(xmppobject, dataobj):
         module = dataobj['module'] if 'module' in dataobj else ""
         action = dataobj['action'] if 'action' in dataobj else ""
         fromuser = dataobj['fromuser'] if 'fromuser' in dataobj else ""
-        touser = dataobj['touser'] if 'touser' in dataobj else ""
+        touser = dataobj['touser'] if 'touser' in dataobj else xmppobject.boundjid.bare
         XmppMasterDatabase().setlogxmpp(text,
                                         type = type,
                                         sessionname = sessionname,
@@ -150,6 +150,7 @@ def xmpplogdeploy(xmppobject, data):
                             type = data['type'],
                             sessionname = data['sessionid'],
                             priority = data['priority'],
+                            touser=xmppobject.boundjid.bare,
                             who = data['who'])
         elif 'action' in data :
             if data['action'] == 'resultapplicationdeploymentjson':

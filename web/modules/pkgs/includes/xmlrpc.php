@@ -269,4 +269,12 @@ function xmlrpc_get_files_infos($uuid, $filename=""){
 function get_pkg_creator_from_uuid($uuids){
   return xmlCall("pkgs.get_pkg_creator_from_uuid", [$uuids]);
 }
+
+function pkgs_search_ars_list_from_cluster_rules($login){
+  return xmlCall("pkgs.pkgs_search_ars_list_from_cluster_rules", [$login]);
+}
+
+function get_Cluster_list_rule($login){
+  return xmlCall("pkgs.get_Cluster_list_rule", [$login]);
+}
 ?>

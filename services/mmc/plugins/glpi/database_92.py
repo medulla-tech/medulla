@@ -55,7 +55,7 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.GLPIClient import XMLRPCClient
-from mmc.plugins.glpi.utilities import complete_ctx
+from mmc.plugins.glpi.utilities import complete_ctx, literalquery
 from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
@@ -543,7 +543,7 @@ class Glpi92(DyngroupDatabaseHelper):
             autoload = True)
         mapper(Peripherals, self.peripherals)
 
-    ##################### internal query generators
+    # internal query generators
     def __filter_on(self, query):
         """
         Use the glpi.ini conf parameter filter_on to filter machines on some parameters
@@ -609,22 +609,35 @@ class Glpi92(DyngroupDatabaseHelper):
             result = element[0]
         return result
 
+
     def __xmppmasterfilter(self, filt = None):
-        ret = {}#if filt['computerpresence'] == "presence":
+        ret = {}
         if "computerpresence" in filt:
             d = XmppMasterDatabase().getlistPresenceMachineid()
             listid = [x.replace("UUID", "") for x in d]
             ret["computerpresence"] = ["computerpresence","xmppmaster",filt["computerpresence"] , listid]
-        elif "query" in filt and filt['query'][0] == "AND":
+        elif "query" in filt and filt['query'][0] in ["AND", "OR", "NOT"]:
             for q in filt['query'][1]:
-                if len(q) >=3 and (q[2] == "Online computer" or q[2] == "OU user" or q[2] == "OU machine"):
-                    listid = XmppMasterDatabase().getxmppmasterfilterforglpi(q)
-                    ret[q[2]] = [q[1], q[2], q[3], listid]
+                #if len(q) >=3: and  q[2].lower() in ["online computer", "ou user", "ou machine"]:
+                if len(q) >=3:
+                    if  q[2].lower() in ["online computer",
+                                         'ou machine',
+                                         'ou user']:
+                        listid = XmppMasterDatabase().getxmppmasterfilterforglpi(q)
+                        q.append(listid)
+                        ret[q[2]] = [q[1], q[2], q[3], listid]
         return ret
+
 
     @DatabaseHelper._sessionm
     def get_machines_list1(self, session, start, end, ctx):
         # start and end are used to set the limit parameter in the query
+
+        debugfunction = False
+        if 'filter' in ctx and "@@@DEBUG@@@" in ctx['filter']:
+            debugfunction = True
+            ctx['filter']  = ctx['filter'].replace("@@@DEBUG@@@", "").strip()
+
         start = int(start)
         end = int(end)
         location = ""
@@ -762,6 +775,13 @@ class Glpi92(DyngroupDatabaseHelper):
         # Then continue with others criterions and filters
         query = query.offset(start).limit(end)
         columns_name = [column['name'] for column in query.column_descriptions]
+
+        if debugfunction:
+            try:
+                logger.info("@@@DEBUG@@@ %s"%literalquery(query))
+            except Exception as e:
+                logger.error("display @@@DEBUG@@@ sql literal from alchemy : %s" % e)
+
         machines = query.all()
 
         result = {"count" : count, "data":{index : [] for index in columns_name}}
@@ -1084,7 +1104,10 @@ class Glpi92(DyngroupDatabaseHelper):
 
             query_filter = None
 
-            filters = [self.machine.c.is_deleted == 0, self.machine.c.is_template == 0, self.__filter_on_filter(query), self.__filter_on_entity_filter(query, ctx)]
+            filters = [self.machine.c.is_deleted == 0,
+                       self.machine.c.is_template == 0,
+                       self.__filter_on_filter(query),
+                       self.__filter_on_entity_filter(query, ctx)]
 
             join_query, query_filter = self.filter(ctx, self.machine, filt, session.query(Machine), self.machine.c.id, filters)
 
@@ -1173,15 +1196,6 @@ class Glpi92(DyngroupDatabaseHelper):
             query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
             if PluginManager().isEnabled("xmppmaster"):
                 if ret:
-                    if "Online computer" in ret:
-                        if ret["Online computer"][2] == "True":
-                            query = query.filter(Machine.id.in_(ret["Online computer"][3]))
-                        else:
-                            query = query.filter(Machine.id.notin_(ret["Online computer"][3]))
-                    if "OU user" in ret:
-                        query = query.filter(Machine.id.in_(ret["OU user"][3]))
-                    if "OU machine" in ret:
-                        query = query.filter(Machine.id.in_(ret["OU machine"][3]))
                     if "computerpresence" in ret:
                         if ret["computerpresence"][2] == "presence":
                             query = query.filter(Machine.id.in_(ret["computerpresence"][3]))
@@ -1435,7 +1449,7 @@ class Glpi92(DyngroupDatabaseHelper):
         """
         Map a name and request parameters on a sqlalchemy request
         """
-        if len(query) == 4:
+        if len(query) >= 4:
             # in case the glpi database is in latin1, don't forget dyngroup is in utf8
             # => need to convert what comes from the dyngroup database
             query[3] = self.encode(query[3])

@@ -38,6 +38,7 @@ from sqlalchemy.orm.exc import NoResultFound
 ##from sqlalchemy.orm import sessionmaker
 import datetime
 import magic
+import base64
 # ORM mappings
 from pulse2.database.pkgs.orm.version import Version
 from pulse2.database.pkgs.orm.pakages import Packages
@@ -1252,7 +1253,8 @@ class PkgsDatabase(DatabaseHelper):
                     pkgs.pkgs_rules_global
                 WHERE
                     '%s' REGEXP (pkgs.pkgs_rules_global.subject)
-                        AND permission LIKE '%%r%%';"""%objsearch['login']
+                         AND permission LIKE '%%r%%'
+                         AND pkgs.pkgs_rules_global.pkgs_rules_algos_id = 3;""" % objsearch['login']
             result = session.execute(sql)
             session.commit()
             session.flush()

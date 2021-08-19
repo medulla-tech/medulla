@@ -312,7 +312,7 @@ if (isset($_POST['bconfirm'])){
         $dependencies = get_dependencies_list_from_permissions($_SESSION["login"]);
         foreach($dependencies as $package)
         {
-            $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].' V.'.$package['version'].'</option>';
+            $packagesInOption .= '<option title="'.$package['name'].' v.'.$package['version'].'" value="'.$package['uuid'].'">'.$package['name'].' V.'.$package['version'].'</option>';
         }
         $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">
     <table style="border: none;" cellspacing="0">
@@ -329,6 +329,7 @@ if (isset($_POST['bconfirm'])){
                     <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
 
                     </select>
+                    <div class="opt_name" style="position:absolute;background-color:yellow"></div>
                 </div>
             </td>
             <td style="border: none;">
@@ -344,6 +345,7 @@ if (isset($_POST['bconfirm'])){
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOption.'
                     </select>
+                    <div class="opt_name" style="position:absolute;background-color:yellow;"></div>
                 </div>
                 <div class="clearer"></div>
             </td>
@@ -392,6 +394,26 @@ if (isset($_POST['bconfirm'])){
 
 <script type="text/javascript">
     jQuery(function() { // load this piece of code when page is loaded
+
+      jQuery(".opt_bubble").on("mouseover", function(e){
+        let bubble = jQuery(this).parent().next(".opt_name");
+        let element = this;
+        let bodyRect = document.body.getBoundingClientRect();
+        let elementRect = element.getBoundingClientRect();
+        let offsetY = elementRect.top - bodyRect.top - 15;
+
+        let pkgsName = jQuery(element).text();
+        jQuery(bubble).text(pkgsName);
+        jQuery(bubble).css("left", elementRect.x+"px");
+        jQuery(bubble).css("top", offsetY+"px");
+        jQuery(bubble).show();
+      })
+
+      jQuery(".opt_bubble").on("mouseleave", function(){
+        let bubble = jQuery(this).parent().next(".opt_name");
+        jQuery(bubble).text("");
+
+      });
 
       dependenciesFilter = jQuery("#dependenciesFilter");
       pooldependencies = jQuery("#pooldependencies option");

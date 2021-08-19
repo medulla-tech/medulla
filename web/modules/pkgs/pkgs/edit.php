@@ -414,11 +414,11 @@ if(isExpertMode1())
 
           if(in_array($uuid, $dependencies))
           {
-            $packagesInOptionAdded .= '<option value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+            $packagesInOptionAdded .= '<option title="'.$name.' v.'.$version.'" value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
 
           }
           else{
-            $packagesInOptionNotAdded .= '<option value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+            $packagesInOptionNotAdded .= '<option title="'.$name.' v.'.$version.'" value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
             $allDependenciesList[] = $xmpp_package;
           }
         }
@@ -440,6 +440,7 @@ if(isExpertMode1())
                     <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
                     '.$packagesInOptionAdded.'
                     </select>
+                    <div class="opt_name" style="position:absolute;"></div>
                 </div>
             </td>
             <td style="border: none;">
@@ -452,9 +453,11 @@ if(isExpertMode1())
                 <div class="list" style="padding-left: 10px;">
                     <h3>'._T('Available dependencies', 'pkgs').'</h3>
                     <input type="text" id="dependenciesFilter" value="" placeholder="'._T("search by name ...", "pkgs").'"><br/>
+
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOptionNotAdded.'
                     </select>
+                    <div class="opt_name" style="position:absolute;"></div>
                 </div>
                 <div class="clearer"></div>
             </td>
@@ -554,6 +557,27 @@ $f->display();
 
 <script>
 jQuery(function(){
+  jQuery(".opt_bubble").on("mouseover", function(e){
+    let bubble = jQuery(this).parent().next(".opt_name");
+    let element = this;
+    let bodyRect = document.body.getBoundingClientRect();
+    let elementRect = element.getBoundingClientRect();
+    let offsetY = elementRect.top - bodyRect.top - 15;
+
+    let pkgsName = jQuery(element).text();
+    jQuery(bubble).text(pkgsName);
+    jQuery(bubble).css("background-color", "yellow");
+    jQuery(bubble).css("left", elementRect.x+"px");
+    jQuery(bubble).css("top", offsetY+"px");
+    jQuery(bubble).show();
+  })
+
+  jQuery(".opt_bubble").on("mouseleave", function(){
+    let bubble = jQuery(this).parent().next(".opt_name");
+    jQuery(bubble).text("");
+
+  })
+
   dependenciesFilter = jQuery("#dependenciesFilter");
   pooldependencies = jQuery("#pooldependencies option");
 

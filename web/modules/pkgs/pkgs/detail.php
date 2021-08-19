@@ -30,8 +30,9 @@ function renderAction($sequence, $os){
 
     $content.= '<ul>';
     if(isset($action['command'])){
+      $command = base64_decode($action['command'], true) == false ? $action['command'] : base64_decode($action['command']);
       $content.= '<li>';
-      $content .= _T("Executed Command", "pkgs").' : '.htmlentities(base64_decode($action['command']));
+      $content .= _T("Executed Command", "pkgs").' : '.nl2br(htmlentities($command));
       $content .= '</li>';
     }
     if(isset($action['typescript']) && $action['typescript'] != ""){
@@ -45,8 +46,9 @@ function renderAction($sequence, $os){
       $content .= '</li>';
     }
     if(isset($action['script'])){
+      $script = (base64_decode($action['script'], true) == false) ? $action['script'] : base64_decode($action['script']);
       $content.= '<li>';
-      $content .= _T("Script", "pkgs").' : '.htmlentities(base64_decode($action['script']));
+      $content .= _T("Script", "pkgs").' : '.nl2br(htmlentities($script));
       $content .= '</li>';
     }
     if(isset($action['timeout']) && $action['timeout'] != ""){
@@ -80,8 +82,9 @@ function renderAction($sequence, $os){
       $content .= '</li>';
     }
     if(isset($action['set'])  && $action['set'] != ""){
+      $set = (base64_decode($action['set'], true) == false) ? $action['set'] : base64_decode($action['set']);
       $content.= '<li>';
-      $content .= _T("set", "pkgs").' : '.htmlentities(base64_decode($action['set']));
+      $content .= _T("Set", "pkgs").' : '.htmlentities($set);
       $content .= '</li>';
     }
     if(isset($action['url'])  && $action['url'] != ""){
@@ -94,6 +97,48 @@ function renderAction($sequence, $os){
       $content .= _T("Result Command", "pkgs").' : '.htmlentities($action['@resultcommand']);
       $content .= '</li>';
     }
+    if(isset($action['1@lastlines']) && $action['1@lastlines'] != ""){
+      $content.= '<li>';
+      $content .= _T("Result Command", "pkgs").' : '.htmlentities($action['1@lastlines']);
+      $content .= '</li>';
+    }
+    if(isset($action['10@lastlines']) && $action['10@lastlines'] != ""){
+      $content.= '<li>';
+      $content .= _T("Result Command", "pkgs").' : '.htmlentities($action['10@lastlines']);
+      $content .= '</li>';
+    }
+    if(isset($action['20@lastlines']) && $action['20@lastlines'] != ""){
+      $content.= '<li>';
+      $content .= _T("Result Command", "pkgs").' : '.htmlentities($action['20@lastlines']);
+      $content .= '</li>';
+    }
+    if(isset($action['30@lastlines']) && $action['30@lastlines'] != ""){
+      $content.= '<li>';
+      $content .= _T("Result Command", "pkgs").' : '.htmlentities($action['30@lastlines']);
+      $content .= '</li>';
+    }
+
+    if(isset($action['1@firstlines']) && $action['1@firstlines'] != ""){
+      $content.= '<li>';
+      $content .= _T("Result Command", "pkgs").' : '.htmlentities($action['1@firstlines']);
+      $content .= '</li>';
+    }
+    if(isset($action['10@firstlines']) && $action['10@firstlines'] != ""){
+      $content.= '<li>';
+      $content .= _T("Result Command", "pkgs").' : '.htmlentities($action['10@firstlines']);
+      $content .= '</li>';
+    }
+    if(isset($action['20@firstlines']) && $action['20@firstlines'] != ""){
+      $content.= '<li>';
+      $content .= _T("Result Command", "pkgs").' : '.htmlentities($action['20@firstlines']);
+      $content .= '</li>';
+    }
+    if(isset($action['30@firstlines']) && $action['30@firstlines'] != ""){
+      $content.= '<li>';
+      $content .= _T("Result Command", "pkgs").' : '.htmlentities($action['30@firstlines']);
+      $content .= '</li>';
+    }
+
     if(isset($action['targetrestart'])  && $action['targetrestart'] != ""){
       $content.= '<li>';
       $content .= ($action['targetrestart'] == "AM") ? _T("Restart", "pkgs").' : '._T("Agent Machine", "pkgs"): _T("Restart", "pkgs").' : '._T("Machine", "pkgs");
@@ -107,7 +152,8 @@ function renderAction($sequence, $os){
     }
     if(isset($action['comment'])  && $action['comment'] != ""){
       $content.= '<li>';
-      $content .= _T("Comment", "pkgs").' : '.htmlentities($action['comment']);
+      $comment = (base64_decode($action['comment'], true) == false) ? $action['comment'] : base64_decode($action['comment']);
+      $content .= _T("Comment", "pkgs").' : '.nl2br(htmlentities($comment));
       $content .= '</li>';
     }
     if(isset($action['inventory'])){

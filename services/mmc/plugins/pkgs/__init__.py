@@ -1876,3 +1876,13 @@ def get_dependencies_list_from_permissions(login):
     objsearch['list_sharing'] = list_sharing_id(objsearch)
     listuuidpackag = PkgsDatabase().get_list_packages_deploy_view(objsearch)
     return apimanagepackagemsc.load_packagelist_dependencies(listuuidpackag)
+
+def pkgs_search_ars_list_from_cluster_rules(login):
+    objsearch = {'login': login}
+    re = PkgsDatabase().pkgs_search_ars_list_from_cluster_rules(objsearch)
+    return [x[0] for x in re]
+
+def get_Cluster_list_rule(login):
+    objsearch = {'login': login}
+    re = PkgsDatabase().get_Cluster_list_rule(objsearch)
+    return [x[0] for x in re]

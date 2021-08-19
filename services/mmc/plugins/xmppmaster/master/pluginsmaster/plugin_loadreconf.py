@@ -75,7 +75,7 @@ def loadreconf(self, objectxmpp):
         listmachine_timeoutreconf = [x[0] for x in objectxmpp.listconcurentreconf if x[2] <= t]
         if len(listmachine_timeoutreconf) != 0:
             #acquite sur timeout
-            logger.warning ("update off presence machine reconf timeout%s"%listmachine_timeoutreconf)
+            logger.warning ("The following machines are currently offline and their reconfiguration will be processed later: %s"%listmachine_timeoutreconf)
             XmppMasterDatabase().call_set_list_machine(listmachine=listmachine_timeoutreconf)
             # on supprime les non acquites suivant timeout de plus de generate_reconf_interval seconde
             objectxmpp.listconcurentreconf = [x for x in objectxmpp.listconcurentreconf if x[2] > t]
