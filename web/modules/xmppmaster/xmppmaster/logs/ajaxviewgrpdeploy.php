@@ -120,25 +120,6 @@ function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy , $cmddep
     return $urlRedirect1;
 }
 
-$group = getPGobject($gid, true);
-$p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
-$p->display();
-
-//FROM MSC BASE
-// The deployment is a convergence
-$isconvergence = is_commands_convergence_type($cmd_id);
-if($isconvergence != 0){
-    echo "<h2>";
-    echo $title;
-    echo "</h2>";
-}
-
-// Get syncthing stats for this deployment
-$statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
-
-// search from msc table CommandsOnHost
-$lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start, $end);
-
 function datecmd($tabbleaudatetime){
     return date("Y-m-d H:i:s",
                     mktime( $tabbleaudatetime[3],
@@ -148,12 +129,45 @@ function datecmd($tabbleaudatetime){
                             $tabbleaudatetime[2],
                             $tabbleaudatetime[0]));
 }
+
+function installrefresh(){
+echo '<script type="text/javascript">
+    setTimeout(function(){document.location.reload(); }, 20000);
+</script>';
+}
+
+//FROM MSC BASE
+// The deployment is a convergence
+$isconvergence = is_commands_convergence_type($cmd_id);
+
+
+// Get syncthing stats for this deployment
+$statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
+
+// search from msc table CommandsOnHost
+$lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start, $end);
+
+
+
 $infocmd = command_detail($cmd_id);
+
+$title= $infocmd['title'];
 $creator_user = $infocmd['creator'] ;
 $creation_date = datecmd($infocmd['creation_date']);
+$end_date =  datecmd($infocmd['end_date']);
+$start_date = datecmd($infocmd['start_date']);
 
-$start_date =  $startcmd;
-$end_date   =  $endcmd ;
+$group = getPGobject($gid, true);
+$p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
+$p->display();
+
+if($isconvergence != 0){
+    echo "<h2>";
+    echo $title;
+    echo "</h2>";
+}
+
+
 // Get uuid, hostname and status of the deployed machines from xmppmaster.deploy
 $getdeployment = xmlrpc_getdeployment_cmd_and_title($cmd_id,
                                                     $title,
@@ -176,6 +190,11 @@ $statsfromdeploy = xmlrpc_getstatdeploy_from_command_id_and_title($cmd_id, $titl
 // get some info from msc for this deployment
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
+
+if ($info['len'] == 0){
+    // Refresh if no deployment is started. 
+    installrefresh();
+}
 $timestampnow = time();
 $info_from_machines = $re["listelet"];
 $statuslist = xmlrpc_get_log_status();
