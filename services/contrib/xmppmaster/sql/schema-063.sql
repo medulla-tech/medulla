@@ -288,7 +288,7 @@ RETURN  substring_index(substring_index(jid, '/', 1), '@', -1);
 END$$
 DELIMITER ;
 
-INSERT INTO `xmppmaster`.`support_help_command` (`id`, `name`, `description`, `example`, `type`, `result`) VALUES ('', 'fs_jiddomain', 'cette function renvoi domain d\'un jid', 'select fs_jiddomain(\"jfk.xya@pulse/ressource1\");', 'F', '+------------------------------------------+\n| fs_jiddomain(\"jfk.xya@pulse/ressource1\") |\n+------------------------------------------+\n| pulse                                    |\n+------------------------------------------+\n');
+INSERT INTO `xmppmaster`.`support_help_command` (`name`, `description`, `example`, `type`, `result`) VALUES ('fs_jiddomain', 'cette function renvoi domain d\'un jid', 'select fs_jiddomain(\"jfk.xya@pulse/ressource1\");', 'F', '+------------------------------------------+\n| fs_jiddomain(\"jfk.xya@pulse/ressource1\") |\n+------------------------------------------+\n| pulse                                    |\n+------------------------------------------+\n');
 
 
 -- /#####################################################################\
@@ -308,7 +308,7 @@ RETURN  substring_index(substring_index(jid, '@', 1), '.', 1);
 END$$
 DELIMITER ;
 
-INSERT INTO `xmppmaster`.`support_help_command` (`id`, `name`, `description`, `example`, `type`, `result`) VALUES ('', 'fs_jidusertrue', 'cette function renvoi domain d\'un jid sans le .xxx de user ', 'select fs_jidusertrue(\"jfk.xya@pulse/ressource1\");', 'F', '+--------------------------------------------+\n| fs_jidusertrue(\"jfk.xya@pulse/ressource1\") |\n+--------------------------------------------+\n| jfk                                        |\n+--------------------------------------------+\n');
+INSERT INTO `xmppmaster`.`support_help_command` (`name`, `description`, `example`, `type`, `result`) VALUES ('fs_jidusertrue', 'cette function renvoi domain d\'un jid sans le .xxx de user ', 'select fs_jidusertrue(\"jfk.xya@pulse/ressource1\");', 'F', '+--------------------------------------------+\n| fs_jidusertrue(\"jfk.xya@pulse/ressource1\") |\n+--------------------------------------------+\n| jfk                                        |\n+--------------------------------------------+\n');
 
 
 -- /#####################################################################\
@@ -340,7 +340,7 @@ END$$
 DELIMITER ;
 ;
 
-INSERT INTO `xmppmaster`.`support_help_command` (`id`, `name`, `description`, `example`, `type`, `result`) VALUES ('', 'fs_tablefields', 'cette function renvoila list des champs de la table xmppmaster passee', 'select fs_tablefields(\'logs\');', 'F', '+----------------------------------------------------------------------------------+\n| fs_tablefields(\'logs\')                                                            |\n+----------------------------------------------------------------------------------+\n| id,date,type,module,text,fromuser,touser,action,sessionname,how,why,priority,who |\n+----------------------------------------------------------------------------------+\n');
+INSERT INTO `xmppmaster`.`support_help_command` (`name`, `description`, `example`, `type`, `result`) VALUES ('fs_tablefields', 'cette function renvoila list des champs de la table xmppmaster passee', 'select fs_tablefields(\'logs\');', 'F', '+----------------------------------------------------------------------------------+\n| fs_tablefields(\'logs\')                                                            |\n+----------------------------------------------------------------------------------+\n| id,date,type,module,text,fromuser,touser,action,sessionname,how,why,priority,who |\n+----------------------------------------------------------------------------------+\n');
 
 
 
