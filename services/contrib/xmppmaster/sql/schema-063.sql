@@ -204,10 +204,10 @@ DELIMITER ;
 ;
 
 -- /#####################################################################\
--- | procedure support_restart_deploy                                    |
--- | cette procedure permet de remettre 1 deployment.                    |
--- | les log de la session passe sont supprimer.                         |
--- | exemple call support_restart_deploy('command3bd50e905a4f4c4e82');   |
+-- | support_restart_deploy procedure                                    |
+-- | This procedure is used to restart a deploy                          |
+-- | The session's logs are removed                                      |
+-- | exemple: call support_restart_deploy('command3bd50e905a4f4c4e82');  |
 -- \#####################################################################/
 USE `xmppmaster`;
 DROP procedure IF EXISTS `support_restart_deploy`;
@@ -230,8 +230,7 @@ END$$
 
 DELIMITER ;
 
-
-INSERT INTO `xmppmaster`.`support_help_command` (`name`, `description`, `example`, `type`) VALUES ('support_restart_deploy', 'calling this procedure relance le deployement pour la session donnée.\nles anciens logs de ce deploiement sont remplacé par ceux du deploiement relancer.', 'call support_restart_deploy(\'command3bd50e905a4f4c4e82\');', 'P');
+INSERT INTO `xmppmaster`.`support_help_command` (`name`, `description`, `example`, `type`) VALUES ('support_restart_deploy', 'This prodecure is used to restart deploys.\nThe old logs are replaced by the new ones.', 'call support_restart_deploy(\'command3bd50e905a4f4c4e82\');', 'P');
 
 -- ----------------------------------------------------------------------
 -- Definition functions for support
