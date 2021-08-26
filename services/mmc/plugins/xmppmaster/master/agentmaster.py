@@ -804,7 +804,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if resultpreseince[UUID][1] == 0:
                 # There is no GLPI UUID
                 re_search = XmppMasterDatabase().getMachinedeployexistonHostname(deployobject['name'])
-                if self.Recover_GLPI_Identifier_from_name and len(re_search) == 1:
+                if self.recover_glpi_identifier_from_name and len(re_search) == 1:
                     update_result = XmppMasterDatabase().update_uuid_inventory(re_search[0]['id'], UUID)
                     if update_result is not None:
                         if update_result.rowcount > 0:
