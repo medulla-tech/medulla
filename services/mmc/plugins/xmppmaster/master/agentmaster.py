@@ -801,7 +801,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             UUID = deployobject['UUID']
             UUIDSTR = UUID.replace('UUID', "")
             re_search = []
-            if resultpreseince[UUID][1] == 0:
+            if resultpresence[UUID][1] == 0:
                 # There is no GLPI UUID
                 re_search = XmppMasterDatabase().getMachinedeployexistonHostname(deployobject['name'])
                 if self.recover_glpi_identifier_from_name and len(re_search) == 1:
@@ -846,9 +846,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                         UUIDSTR))
 
                     logging.warning("No machine found on hostname. You must verify consolidation GLPI with xmpp")
-                    logging.warning("INFO\nGLPI : name %s uuid %s " % (deployobject['name'],
+                    logging.warning("INFO\nGLPI: name %s uuid %s " % (deployobject['name'],
                                                                     deployobject['UUID']))
-                    logging.warning("INFO\nXMPP : No machine found for %s" % (deployobject['name']))
+                    logging.warning("INFO\nXMPP: No machine found for %s" % (deployobject['name']))
 
                 #listobjnoexist.append(deployobject)
                 # incription dans deploiement cette machine sans agent
