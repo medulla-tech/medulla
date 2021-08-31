@@ -803,16 +803,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
             re_search = []
             if resultpresence[UUID][1] == 0:
                 # There is no GLPI UUID
-                re_search = XmppMasterDatabase().getMachinedeployexistonHostname(deployobject['name'])
+                hostname = deployobject['name'].split(".", 1)[0]
+                re_search = XmppMasterDatabase().getMachinedeployexistonHostname(hostname)
                 if self.recover_glpi_identifier_from_name and len(re_search) == 1:
                     update_result = XmppMasterDatabase().update_uuid_inventory(re_search[0]['id'], UUID)
                     if update_result is not None:
                         if update_result.rowcount > 0:
-                            logger.info("update uuid inventory %s for machine %s" % (UUID, deployobject['name']))
+                            logger.info("update uuid inventory %s for machine %s" % (UUID, hostname))
                     resultpresence[UUID][1] = 1
                     reloadresultpresence_uuid = XmppMasterDatabase().getPresenceExistuuids(UUID)
                     resultpresence[UUID]=reloadresultpresence_uuid[UUID]
-                    self.xmpplog("Attaching GLPI identifier [%s] in xmppmaster machine [%s]" % (UUID, deployobject['name']),
+                    self.xmpplog("Attaching GLPI identifier [%s] in xmppmaster machine [%s]" % (UUID, hostname),
                                  type='deploy',
                                  sessionname="no_session",
                                  priority=-1,
