@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-01 11:32+0200\n"
+"POT-Creation-Date: 2021-07-15 10:03+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -161,7 +161,7 @@ msgstr ""
 msgid "Csv export"
 msgstr "Csv "
 
-#: modules/pulse2/includes/utilities.php:86
+#: modules/pulse2/includes/utilities.php:87
 msgid "All my entities"
 msgstr "所有我的实体"
 
