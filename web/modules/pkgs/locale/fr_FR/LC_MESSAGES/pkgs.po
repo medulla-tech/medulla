@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-15 10:03+0200\n"
+"POT-Creation-Date: 2021-09-01 13:52+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: SPO <spointu@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -60,11 +60,11 @@ msgstr "Editer un package"
 
 #: modules/pkgs/infoPackage.inc.php:75
 msgid "Package detail"
-msgstr ""
+msgstr "Détails du paquet"
 
 #: modules/pkgs/infoPackage.inc.php:78
 msgid "Package File Preview"
-msgstr ""
+msgstr "Prévisualisation du fichier du package"
 
 #: modules/pkgs/infoPackage.inc.php:92
 msgid "Create licence static group"
@@ -147,11 +147,11 @@ msgstr "Vous devez avoir les droits pour supprimer ce paquet."
 #: modules/pkgs/pkgs/ajaxPackageList.php:142
 #: modules/pkgs/pkgs/ajaxPackageList.php:146
 msgid "Sharing disk usage"
-msgstr ""
+msgstr "Espace disque utilisé"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:142
 msgid "Package occupation"
-msgstr ""
+msgstr "Espace occupé"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:145
 msgid "Not limited"
@@ -393,15 +393,15 @@ msgstr "Supprimer les paquets en attente"
 
 #: modules/pkgs/pkgs/preview.php:5
 msgid "Content for file "
-msgstr ""
+msgstr "Contenu du fichier"
 
 #: modules/pkgs/pkgs/preview.php:16
 msgid "NL mode (unix)"
-msgstr ""
+msgstr "NL mode (unix)"
 
 #: modules/pkgs/pkgs/preview.php:17
 msgid "CRLF mode (win)"
-msgstr ""
+msgstr "CRLF mode (win)"
 
 #: modules/pkgs/pkgs/remove.php:39
 msgid "The package has been deleted."
@@ -433,15 +433,15 @@ msgstr "Activer ce flux Appstream ?"
 
 #: modules/pkgs/pkgs/detail.php:35
 msgid "Executed Command"
-msgstr ""
+msgstr "Commande exécutée"
 
 #: modules/pkgs/pkgs/detail.php:40
 msgid "Type Script"
-msgstr ""
+msgstr "Type de script"
 
 #: modules/pkgs/pkgs/detail.php:45
 msgid "Shebang"
-msgstr ""
+msgstr "Shebang"
 
 #: modules/pkgs/pkgs/detail.php:51
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
@@ -450,19 +450,19 @@ msgstr "Script"
 
 #: modules/pkgs/pkgs/detail.php:56
 msgid "Timeout"
-msgstr ""
+msgstr "Timeout"
 
 #: modules/pkgs/pkgs/detail.php:61
 msgid "Code Return"
-msgstr ""
+msgstr "Code retour"
 
 #: modules/pkgs/pkgs/detail.php:66
 msgid "Alternate Package"
-msgstr ""
+msgstr "Package alternatif"
 
 #: modules/pkgs/pkgs/detail.php:71
 msgid "Set Environ Variable"
-msgstr ""
+msgstr "Définir variable d'environnement"
 
 #: modules/pkgs/pkgs/detail.php:81 modules/pkgs/pkgs/detail.php:240
 #: modules/pkgs/pkgs/edit.php:505
@@ -471,7 +471,7 @@ msgstr "Fichier"
 
 #: modules/pkgs/pkgs/detail.php:87
 msgid "Set"
-msgstr ""
+msgstr "Définir"
 
 #: modules/pkgs/pkgs/detail.php:92
 #: modules/pkgs/includes/actions/action_download.php:73
@@ -484,7 +484,7 @@ msgstr "Télécharger le fichier"
 #: modules/pkgs/pkgs/detail.php:128 modules/pkgs/pkgs/detail.php:133
 #: modules/pkgs/pkgs/detail.php:138
 msgid "Result Command"
-msgstr ""
+msgstr "Résultat de commande"
 
 #: modules/pkgs/pkgs/detail.php:144 modules/pkgs/pkgs/detail.php:225
 #: modules/pkgs/includes/actions/actionrestart.php:36
@@ -493,7 +493,7 @@ msgstr "Redémarrage"
 
 #: modules/pkgs/pkgs/detail.php:144
 msgid "Agent Machine"
-msgstr ""
+msgstr "Agent Machine"
 
 #: modules/pkgs/pkgs/detail.php:144
 msgid "Machine"
@@ -505,11 +505,11 @@ msgstr "En attente"
 
 #: modules/pkgs/pkgs/detail.php:149
 msgid "secs."
-msgstr ""
+msgstr "secs."
 
 #: modules/pkgs/pkgs/detail.php:150
 msgid "Go to"
-msgstr ""
+msgstr "Aller à"
 
 #: modules/pkgs/pkgs/detail.php:156
 msgid "Comment"
@@ -517,27 +517,27 @@ msgstr "Commentaire"
 
 #: modules/pkgs/pkgs/detail.php:161
 msgid "Inventory Activated"
-msgstr ""
+msgstr "Inventaire activé"
 
 #: modules/pkgs/pkgs/detail.php:166
 msgid "Clear package after install"
-msgstr ""
+msgstr "Supprimer le package après installation"
 
 #: modules/pkgs/pkgs/detail.php:171
 msgid "If error go to"
-msgstr ""
+msgstr "Si erreur aller à"
 
 #: modules/pkgs/pkgs/detail.php:174
 msgid "If success go to"
-msgstr ""
+msgstr "Si succès aller à"
 
 #: modules/pkgs/pkgs/detail.php:187
 msgid "Detail of Package "
-msgstr ""
+msgstr "Détails du package"
 
 #: modules/pkgs/pkgs/detail.php:192
 msgid "Context"
-msgstr ""
+msgstr "Contexte"
 
 #: modules/pkgs/pkgs/detail.php:194
 msgid "Package Name"
@@ -549,7 +549,7 @@ msgstr "Créateur"
 
 #: modules/pkgs/pkgs/detail.php:197
 msgid "Edited By"
-msgstr ""
+msgstr "Modifié par"
 
 #: modules/pkgs/pkgs/detail.php:198
 msgid "Creation Date"
@@ -557,15 +557,15 @@ msgstr "Date de création"
 
 #: modules/pkgs/pkgs/detail.php:200
 msgid "Last Modification Date"
-msgstr ""
+msgstr "Date de dernière modification"
 
 #: modules/pkgs/pkgs/detail.php:202
 msgid "Sharing Location"
-msgstr ""
+msgstr "Emplacement de partage"
 
 #: modules/pkgs/pkgs/detail.php:203
 msgid "Package Uuid"
-msgstr ""
+msgstr "Uuid du paquet"
 
 #: modules/pkgs/pkgs/detail.php:206
 msgid "Type"
@@ -586,7 +586,7 @@ msgstr "Taille"
 
 #: modules/pkgs/pkgs/detail.php:220
 msgid "Transferfile"
-msgstr ""
+msgstr "Transfert"
 
 #: modules/pkgs/pkgs/detail.php:222 modules/pkgs/pkgs/edit.php:378
 #: modules/pkgs/pkgs/add.php:301
@@ -600,7 +600,7 @@ msgstr "Mise en file"
 
 #: modules/pkgs/pkgs/detail.php:223
 msgid "Priority"
-msgstr ""
+msgstr "Priorité"
 
 #: modules/pkgs/pkgs/detail.php:224
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
@@ -609,7 +609,7 @@ msgstr "Inventaire"
 
 #: modules/pkgs/pkgs/detail.php:232
 msgid "View File Content"
-msgstr ""
+msgstr "Voir contenu du fichier"
 
 #: modules/pkgs/pkgs/detail.php:235
 msgid "Files"
@@ -617,19 +617,19 @@ msgstr "Fichiers"
 
 #: modules/pkgs/pkgs/detail.php:235
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: modules/pkgs/pkgs/detail.php:242
 msgid "Ratio Size/Total"
-msgstr ""
+msgstr "Ratio Utilisation/Total"
 
 #: modules/pkgs/pkgs/detail.php:243
 msgid "Mime"
-msgstr ""
+msgstr "Mime"
 
 #: modules/pkgs/pkgs/detail.php:244
 msgid "Mime Type"
-msgstr ""
+msgstr "Type Mime"
 
 #: modules/pkgs/pkgs/detail.php:245 modules/pkgs/pkgs/detail.php:293
 msgid "Action"
@@ -646,11 +646,11 @@ msgstr "Paquet"
 
 #: modules/pkgs/pkgs/detail.php:292
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #: modules/pkgs/pkgs/detail.php:321
 msgid "Sequences"
-msgstr ""
+msgstr "Séquences"
 
 #: modules/pkgs/pkgs/edit.php:38
 msgid "Edit package"

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-15 10:03+0200\n"
+"POT-Creation-Date: 2021-09-01 13:52+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: SPO <spointu@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -1029,8 +1029,8 @@ msgstr "explorateur de fichiers"
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
 #: modules/admin/infoPackage.inc.php:65
-#: modules/admin/admin/ajaxRelaysList.php:133
-#: modules/admin/admin/ajaxRelaysList.php:135
+#: modules/admin/admin/ajaxRelaysList.php:46
+#: modules/admin/admin/ajaxRelaysList.php:48
 #: modules/pulse2/includes/menu_actionaudit.php:80
 msgid "Edit config files"
 msgstr "Éditer les fichiers de configuration"
@@ -1048,8 +1048,8 @@ msgstr "Éditer les fichiers de configuration"
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:59
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:41
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:42
-#: modules/admin/admin/ajaxRelaysList.php:154
-#: modules/admin/admin/ajaxRelaysList.php:155
+#: modules/admin/admin/ajaxRelaysList.php:67
+#: modules/admin/admin/ajaxRelaysList.php:68
 #: modules/pulse2/includes/menu_actionaudit.php:75
 #: modules/pulse2/includes/menu_action.php:64
 msgid "Remote control"
@@ -1793,76 +1793,76 @@ msgstr "Appstream"
 msgid "files viewer"
 msgstr "Visionneuse de fichiers"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:322
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:345
 msgid "cluster list"
 msgstr "Liste des clusters"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:323
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:346
 msgid "cluster nb ars"
 msgstr "nb d'ars du cluster"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:324
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:347
 msgid "machine"
 msgstr "machine"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:325
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:348
 msgid "progress"
 msgstr "en cours"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:326
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:349
 msgid "start"
 msgstr "début"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:327
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:350
 msgid "end"
 msgstr "fin"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:42
-#: modules/admin/admin/ajaxRelaysList.php:137
-#: modules/admin/admin/ajaxRelaysList.php:138
+#: modules/admin/admin/ajaxRelaysList.php:50
+#: modules/admin/admin/ajaxRelaysList.php:51
 msgid "Relay Detail"
 msgstr "Infos relais"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
-#: modules/admin/admin/ajaxRelaysList.php:140
-#: modules/admin/admin/ajaxRelaysList.php:141
+#: modules/admin/admin/ajaxRelaysList.php:53
+#: modules/admin/admin/ajaxRelaysList.php:54
 msgid "Detail actions"
 msgstr "Actions"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:48
-#: modules/admin/admin/ajaxRelaysList.php:143
-#: modules/admin/admin/ajaxRelaysList.php:144
+#: modules/admin/admin/ajaxRelaysList.php:56
+#: modules/admin/admin/ajaxRelaysList.php:57
 msgid "Console Relay"
 msgstr "Console XMPP"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:51
-#: modules/admin/admin/ajaxRelaysList.php:145
-#: modules/admin/admin/ajaxRelaysList.php:146
-#: modules/admin/admin/ajaxRelaysList.php:147
+#: modules/admin/admin/ajaxRelaysList.php:58
+#: modules/admin/admin/ajaxRelaysList.php:59
+#: modules/admin/admin/ajaxRelaysList.php:60
 msgid "Switch"
 msgstr "Switch"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:53
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
-#: modules/admin/admin/ajaxRelaysList.php:149
-#: modules/admin/admin/ajaxRelaysList.php:150
+#: modules/admin/admin/ajaxRelaysList.php:62
+#: modules/admin/admin/ajaxRelaysList.php:63
 msgid "Reconfigure Machines"
 msgstr "Reconfigurer les machines"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:56
-#: modules/admin/admin/ajaxRelaysList.php:152
+#: modules/admin/admin/ajaxRelaysList.php:65
 msgid "QA Launched"
 msgstr "QA lancées"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:61
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:62
-#: modules/admin/admin/ajaxRelaysList.php:157
-#: modules/admin/admin/ajaxRelaysList.php:158
+#: modules/admin/admin/ajaxRelaysList.php:70
+#: modules/admin/admin/ajaxRelaysList.php:71
 msgid "Packages List"
 msgstr "Liste de packages"
 
@@ -1954,9 +1954,19 @@ msgstr "Édition d'un cluster"
 msgid "Edit rule"
 msgstr "Editer la règle"
 
-#: modules/admin/admin/ajaxRelaysList.php:160
+#: modules/admin/admin/ajaxRelaysList.php:73
 msgid "Relay Rules"
 msgstr "Règles des relais"
+
+#: modules/admin/admin/ajaxRelaysList.php:75
+#: modules/admin/admin/ajaxRelaysList.php:76
+msgid "Ban"
+msgstr "Bannir"
+
+#: modules/admin/admin/ajaxRelaysList.php:78
+#: modules/admin/admin/ajaxRelaysList.php:79
+msgid "Unban"
+msgstr "Débannir"
 
 #: modules/pulse2/includes/menu_group_action.php:82
 msgid "Group Quick action"
