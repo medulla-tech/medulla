@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-15 10:03+0200\n"
+"POT-Creation-Date: 2021-09-01 13:52+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: SPO <spointu@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -49,11 +49,11 @@ msgstr "XMPP Toutes mes tâches passées"
 
 #: modules/xmppmaster/infoPackage.inc.php:54
 msgid "XMPP My teams past tasks"
-msgstr ""
+msgstr "XMPP Taches passées de mon équipe"
 
 #: modules/xmppmaster/infoPackage.inc.php:57
 msgid "XMPP My teams tasks"
-msgstr ""
+msgstr "XMPP Taches de mon équipe"
 
 #: modules/xmppmaster/infoPackage.inc.php:60
 #: modules/xmppmaster/infoPackage.inc.php:63
@@ -207,7 +207,7 @@ msgstr "Liste tous les groupes d'ordinateurs"
 
 #: modules/xmppmaster/infoPackage.inc.php:308
 msgid "List all groups of computers by teams"
-msgstr ""
+msgstr "Lister tous les groupes d'ordinateurs par équipe"
 
 #: modules/xmppmaster/infoPackage.inc.php:313
 msgid "ajax view grp deploy"
@@ -227,7 +227,7 @@ msgstr "Liste des ordinateurs deployé "
 
 #: modules/xmppmaster/infoPackage.inc.php:333
 msgid "List computer deploy by team"
-msgstr ""
+msgstr "Liste des ordinateurs déployés par équipe"
 
 #: modules/xmppmaster/infoPackage.inc.php:338
 msgid "List of not launched deployments"
@@ -343,13 +343,13 @@ msgid "Package Details"
 msgstr "les détails du package"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:416
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:249
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:272
 msgid "Creator"
 msgstr "Créateur"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:419
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:582
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:605
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:628
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
 msgid "Name"
 msgstr "Nom"
@@ -359,7 +359,7 @@ msgid "Folder"
 msgstr "Dossier"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:425
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:246
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:269
 msgid "Creation Date"
 msgstr "Date de création"
 
@@ -384,7 +384,7 @@ msgid "Package Name"
 msgstr "Nom du package"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:460
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:247
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:270
 msgid "Start Date"
 msgstr "Date de début"
 
@@ -433,14 +433,14 @@ msgid "Software"
 msgstr "Logiciel"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:588
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:611
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:634
 #: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:80
 msgid "Version"
 msgstr "Version"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:591
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:614
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:732
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:637
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:755
 #: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:79
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:54
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:55
@@ -483,11 +483,11 @@ msgstr "oui"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:732
 msgid "Successed"
-msgstr ""
+msgstr "Succès"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:736
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:768
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:469
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:492
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:312
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:345
 msgid "Success"
@@ -499,38 +499,38 @@ msgstr "non"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:740
 msgid "processing"
-msgstr ""
+msgstr "En cours"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:755
 msgid "Not completed"
-msgstr ""
+msgstr "Non terminé"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:755
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:760
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:764
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:768
 msgid "labelled"
-msgstr ""
+msgstr "étiquetté"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:760
 msgid "Processing"
-msgstr ""
+msgstr "En cours"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:764
 msgid "Failure"
-msgstr ""
+msgstr "Echec"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:776
 msgid "Executed Command"
-msgstr ""
+msgstr "Commande exécutée"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:781
 msgid "Type Script"
-msgstr ""
+msgstr "Type de script"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:786
 msgid "Shebang"
-msgstr ""
+msgstr "Shebang"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:792
 msgid "Script"
@@ -538,19 +538,19 @@ msgstr "Script"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:797
 msgid "Timeout"
-msgstr ""
+msgstr "Timeout"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:802
 msgid "Code Return"
-msgstr ""
+msgstr "Code retour"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:807
 msgid "Alternate Package"
-msgstr ""
+msgstr "Package alternatif"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:812
 msgid "Set Environ Variable"
-msgstr ""
+msgstr "Définir variable d'environnement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:822
 msgid "File"
@@ -558,7 +558,7 @@ msgstr "Fichier"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:828
 msgid "Set"
-msgstr ""
+msgstr "Définir"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:833
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:43
@@ -571,7 +571,7 @@ msgstr "Redémarrage"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:838
 msgid "Agent Machine"
-msgstr ""
+msgstr "Agent Machine"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:843
 msgid "Waiting"
@@ -579,11 +579,11 @@ msgstr "En attente"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:843
 msgid "secs."
-msgstr ""
+msgstr "secs."
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:844
 msgid "Go to"
-msgstr ""
+msgstr "Aller à"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:850
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:74
@@ -596,19 +596,19 @@ msgstr "Inventaire"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:863
 msgid "Clear package after install"
-msgstr ""
+msgstr "Supprimer le package après installation"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:872
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:876
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:883
 msgid "Next Step"
-msgstr ""
+msgstr "Prochaine étape"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:872
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:876
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:883
 msgid "at"
-msgstr ""
+msgstr "à"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:889
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:893
@@ -620,7 +620,7 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:920
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:925
 msgid "Result Command"
-msgstr ""
+msgstr "Résultat de commande"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:946
 msgid "Environment"
@@ -634,293 +634,293 @@ msgstr "clef"
 msgid "value"
 msgstr "valeur"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:124
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:161
 msgid "Deployment [ group"
 msgstr "Déploiement [ groupe"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:248
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:271
 msgid "End Date"
 msgstr "Date de fin"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:251
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:274
 msgid "Convergence"
 msgstr "Convergence"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:253
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:276
 msgid "Syncthing enabled"
 msgstr "Syncthing activé"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:254
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:277
 msgid "Progress"
 msgstr "Progression"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:268
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:291
 msgid "Yes"
 msgstr "Oui"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:268
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:291
 msgid "No"
 msgstr "Non"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:281
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:304
 msgid "Syncthing Detail"
 msgstr "Détails Syncthing"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:286
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:309
 msgid "Share name"
 msgstr "Nom du partage"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:287
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:310
 msgid "Number of participants"
 msgstr "Nombre de participants"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:288
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:311
 msgid "Transfer progress"
 msgstr "État d'avancement du transfert"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:289
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:312
 msgid "Detail"
 msgstr "Détails"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:299
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:322
 msgid "Show Transfer"
 msgstr "Voir transfert"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:299
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:322
 msgid "refresh View"
 msgstr "Rafraîchir"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:322
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:345
 msgid "cluster list"
 msgstr "Liste des clusters"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:323
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:346
 msgid "cluster nb ars"
 msgstr "nb d'ars du cluster"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:324
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:347
 msgid "machine"
 msgstr "machine"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:325
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:348
 msgid "progress"
 msgstr "en cours"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:326
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:349
 msgid "start"
 msgstr "début"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:327
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:350
 msgid "end"
 msgstr "fin"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:385
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:408
 msgid "Deployment complete"
 msgstr "Déploiement terminé"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:388
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:411
 msgid "Deployment in progress"
 msgstr "Déploiement en cours"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:389
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:412
 msgid "Started since"
 msgstr "Démarré depuis"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:394
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:417
 msgid "WAITING FOR START "
 msgstr "EN ATTENTE DE DEMARRAGE"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:401
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:424
 msgid "Abort Deployment"
 msgstr "Arrêter le déploiement"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:407
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:430
 msgid "Graph"
 msgstr "Graphique"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:408
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:484
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:431
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:507
 msgid "Deployment Success"
 msgstr "Déploiement réussi"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:409
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:485
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:432
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:508
 msgid "Deployment Error"
 msgstr "Déploiement en échec"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:410
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:486
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:433
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:509
 msgid "Abort Missing Agent"
 msgstr "Annulation Agent absent"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:411
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:434
 msgid "Abort inconsistent GLPI Information"
-msgstr ""
+msgstr "Annulation Informations GLPI incohérentes"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:412
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:488
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:435
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:511
 msgid "Abort Relay Down"
 msgstr "Annulation Relais éteint"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:413
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:489
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:436
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:512
 msgid "Abort Alternative relay down"
 msgstr "Annulation Relais alternatif éteint"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:414
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:490
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:437
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:513
 msgid "Abort Info Relay Missing"
 msgstr "Annulation Information de relais manquant"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:415
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:491
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:438
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:514
 msgid "Error Unknown Error"
 msgstr "Erreur Inconnue"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:416
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:492
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:439
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:515
 msgid "Abort Package Identifier Missing"
 msgstr "Annulation Identifiant de paquet manquant"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:417
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:493
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:440
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:516
 msgid "Abort Package Name Missing"
 msgstr "Annulation Nom de paquet manquant"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:418
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:494
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:441
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:517
 msgid "Abort Package Version Missing"
 msgstr "Annulation Version de paquet manquant"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:419
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:495
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:442
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:518
 msgid "Abort Descriptor Missing"
 msgstr "Annulation Descripteur manquant"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:420
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:496
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:443
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:519
 msgid "Abort Machine Disappeared"
 msgstr "Annulation Machine disparue"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:421
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:497
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:444
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:520
 msgid "Abort Deployment Cancelled By User"
 msgstr "Annulation Déploiement annulé par l'utilisateur"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:422
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:498
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:445
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:521
 msgid "Abort Duplicate Machines"
-msgstr ""
+msgstr "Annulation Machines dupliquées"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:423
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:499
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:446
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:522
 msgid "Deployment Delayed"
 msgstr "Déploiement différé"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:424
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:500
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:447
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:523
 msgid "Deployment start"
 msgstr "Déploiement démarré"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:425
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:501
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:448
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:524
 msgid "Deployment Pending"
 msgstr "Déploiement en attente"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:426
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:502
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:449
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:525
 msgid "WOL 1"
 msgstr "WOL 1"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:427
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:503
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:450
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:526
 msgid "WOL 2"
 msgstr "WOL 2"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:428
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:504
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:451
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:527
 msgid "WOL 3"
 msgstr "WOL 3"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:429
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:505
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:452
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:528
 msgid "Waiting Machine Online"
 msgstr "En attente de présence de machine"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:430
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:506
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:453
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:529
 msgid "Other Status"
 msgstr "Autre statut"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:468
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:491
 msgid "Summary Graph"
 msgstr "Graphique résumé"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:470
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:493
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:313
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:346
 msgid "Error"
 msgstr "Erreur de téléchargement"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:471
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:494
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:314
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:347
 msgid "Aborted"
 msgstr "Arrêté"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:483
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:506
 msgid "Detailed Graph"
 msgstr "Graphique détaillé"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:487
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:510
 msgid "Abort Inconsistent GLPI Information"
-msgstr ""
+msgstr "Annulation Informations GLPI incohérentes"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:545
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:568
 msgid "Package Detail"
 msgstr "Détails du paquet"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:608
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:631
 msgid "Associated Inventory"
 msgstr "Inventaire associé"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:617
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:640
 msgid "Size"
 msgstr "Taille"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:684
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:707
 msgid "OFFLINE"
 msgstr "Déconnecté"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:724
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:747
 msgid "Deployment Detail"
 msgstr "Détails du déploiement"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:730
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:753
 msgid "Machine Name"
 msgstr "Nom de l'ordinateur"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:733
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:756
 #: modules/xmppmaster/xmppmaster/editqa.php:78
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
 msgid "Operating System"
 msgstr "Système d'exploitation"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:734
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:757
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:189
 msgid "Status"
 msgstr "État"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:735
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:758
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
 msgid "Type"
 msgstr "Type"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:736
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:759
 msgid "Last User"
 msgstr "Dernier utilisateur"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:737
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:760
 msgid "Entity"
 msgstr "Entité"
 
@@ -934,7 +934,7 @@ msgstr "Critère d'inventaire"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:52
 msgid "Relays"
-msgstr ""
+msgstr "Relais"
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:35
 msgid "Wake On Lan"
@@ -1485,7 +1485,7 @@ msgstr "Les tâches de tous les utilisateurs"
 
 #: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:28
 msgid "My teams tasks"
-msgstr ""
+msgstr "Les tâches de mon équipe"
 
 #: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:29
 #: modules/xmppmaster/xmppmaster/auditmypastdeploysteam.php:35
@@ -1500,7 +1500,7 @@ msgstr "Les tâches passées de tous les utilisateurs"
 
 #: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:31
 msgid "My teams past tasks"
-msgstr ""
+msgstr "Les tâches passées de mon équipe"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:59
 msgid "Monitoring for"
