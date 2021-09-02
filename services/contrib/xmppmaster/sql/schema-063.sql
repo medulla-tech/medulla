@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `pulse_teams` (
 CREATE TABLE IF NOT EXISTS `pulse_preferences` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `key` varchar(120) NOT NULL,
-  `value` text DEFAULT '""',
+  `value` text DEFAULT '',
   `id_user` int(11) NOT NULL,
   `domain` varchar(80) DEFAULT NULL COMMENT 'This field can set preferences to a domain ( a domain can be a web page for ex. )',
   PRIMARY KEY (`id`),
