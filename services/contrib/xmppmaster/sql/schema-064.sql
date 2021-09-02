@@ -38,7 +38,7 @@ CREATE  TABLE IF NOT EXISTS  `update_machine` (
   `hostname` varchar(120) NOT NULL,
   `jid` varchar(255) NOT NULL,
   `status` varchar(15) NOT NULL DEFAULT 'ready',
-  `descriptor` text NOT NULL DEFAULT '""',
+  `descriptor` text NOT NULL DEFAULT '',
   `md5` varchar(45) NOT NULL,
   `date_creation` timestamp NOT NULL DEFAULT current_timestamp(),
   `ars` varchar(255) DEFAULT NULL COMMENT 'This information is needed if the machine needs to use an ARS to be updated',
