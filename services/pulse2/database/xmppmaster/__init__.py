@@ -7213,7 +7213,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if enable is None:
                 logging.getLogger().error("We found no machines with the UUID %s" % uuid)
             else:
-                logging.getLogger().error("We found no machines with the UUID %s, and with enabled: %s" % uuid, enable)
+                logging.getLogger().error("We found no machines with the UUID %s, and with enabled: %s" % (uuid, enable))
 
             logging.getLogger().error("We encountered the following error:\n %s" % str(e))
         except MultipleResultsFound as e:
