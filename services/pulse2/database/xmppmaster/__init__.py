@@ -4532,12 +4532,24 @@ class XmppMasterDatabase(DatabaseHelper):
                 It can be done by time search too.
         """
         pulse_usersid = self.get_teammembers_from_login(login)
-        llogin=','.join(['"%s"' % x for x in  pulse_usersid])
 
-        if len(pulse_usersid) <= 1:
-            return self.get_deploy_by_user_with_interval(login, state, intervalsearch, minimum=None, maximum=None, filt=None)
+        deploylog = session.query(Deploy)
 
-        deploylog = session.query(Deploy).filter(Deploy.login.in_(pulse_usersid))
+        if not pulse_usersid or len(pulse_usersid) == 1 and pulse_usersid[0] == "root":
+            return self.get_deploy_by_user_with_interval(login,
+                                                         state,
+                                                         intervalsearch,
+                                                         minimum=None,
+                                                         maximum=None,
+                                                         filt=None)
+
+        preposition_comparaisons = [Deploy.login.op('regexp')(field)  for field in pulse_usersid]
+        deploylog= deploylog.filter( or_(*preposition_comparaisons))
+
+        preposition_comparaisons_count = [ "login REGEXP '%s' "% field  for field in pulse_usersid]
+        preposition_sql_string = ""
+        if preposition_comparaisons_count:
+            preposition_sql_string ='and (' + ' or '.join(['%s' % x for x in  preposition_comparaisons_count]) +')'
 
         if state:
             deploylog = deploylog.filter(Deploy.state == state)
@@ -4555,7 +4567,7 @@ class XmppMasterDatabase(DatabaseHelper):
                             select count(id) as nb
                             from deploy
                             where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
-                            AND login in (%s)
+                            %s
                             AND (state LIKE "%%%s%%"
                             or pathpackage LIKE "%%%s%%"
                             or start LIKE "%%%s%%"
@@ -4563,16 +4575,21 @@ class XmppMasterDatabase(DatabaseHelper):
                             or host LIKE "%%%s%%"
                             )
                             group by title
-                            ) as x;""" % (llogin, filt, filt, filt, filt, filt,)
+                            ) as x;""" % (preposition_sql_string,
+                                          filt,
+                                          filt,
+                                          filt,
+                                          filt,
+                                          filt)
         else:
             # nb deploiement different
             count = """select count(*) as nb from (
                             select count(id) as nb
                             from deploy
                             where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
-                            AND login in (%s)
+                            %s
                             group by title
-                            ) as x;""" % llogin
+                            ) as x;""" % preposition_sql_string
 
         len_query = self.get_count(deploylog)
 
