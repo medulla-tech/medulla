@@ -23,6 +23,7 @@ popup, etc.)
 * [BUGFIX]  The abort deployment button was always disabled
 * [BUGFIX]  Fix creation of groups based on OU or AD. Bug#1238
 * [BUGFIX]  Add carriage return on "Executed command" info in detail view
+* [BUGFIX]  Fix detection of online machines with glpi 0.84
 
 Pulse 2 4.6.8
 =============
