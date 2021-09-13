@@ -1,4 +1,4 @@
-Pulse 2 4.6.9 (unreleased)
+Pulse 2 4.6.9
 =============
 * [FONCTIONNALITE]    Ajout du support des Equipe dans la page Audit
 * [FONCTIONNALITE]    Ajout de nouvelles options de configuration dans le
@@ -25,6 +25,11 @@ déployement.
 utilisateurs ( subsitutes )
 * [CORRECTION DE BUG]  Correction de l'affichage des informations dans la page
 audit ( nom de la machine par exemple).
+* [CORRECTION DE BUG]  Correction de la creation de groupes, basés sur OU de
+l'AD Bug#1238
+* [CORRECTION DE BUG]  Correction de la détection des machines en ligne avec
+Glpi 0.84
+
 
 Pulse 2 4.6.8
 =============
