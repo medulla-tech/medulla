@@ -433,6 +433,7 @@ $orderkey = array( "glpi_owner",
             'presencemachinexmpp'=>$datas['enabled'][$index],
             'entity' => $datas['entityname'][$index],
             'user' => $datas['glpi_owner'][$index],
+						'jid' => $datas['jid'][$index],
         'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
         ];
 
