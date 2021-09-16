@@ -7946,49 +7946,59 @@ class XmppMasterDatabase(DatabaseHelper):
             'inventoried_online': [],
             'total_machines': [],
         }
+        sql_counts = """SELECT
+            SUM(1) AS total,
+            SUM(CASE
+                WHEN (uuid_inventorymachine IS NULL and enabled = 0) THEN 1
+                ELSE 0
+            END) AS `uninventoried_offline`,
+            SUM(CASE
+                WHEN (uuid_inventorymachine IS NULL and enabled = 1) THEN 1
+                ELSE 0
+            END) AS `uninventoried_online`,
+
+            SUM(CASE
+                WHEN (uuid_inventorymachine IS NOT NULL and enabled = 0) THEN 1
+                ELSE 0
+            END) AS `inventoried_offline`,
+            SUM(CASE
+                WHEN (uuid_inventorymachine IS NOT NULL and enabled = 1) THEN 1
+                ELSE 0
+            END) AS `inventoried_online`,
+            groupdeploy as jid
+        from machines where agenttype="machine" group by groupdeploy;"""
+
+        counts_result = session.execute(sql_counts)
+        #uninventoried_offline = [x for x in count_uninventoried_offline]
+
+        counts = [{
+            "total": int(count_ars[0]),
+            "uninventoried_offline" : int(count_ars[1]),
+            "uninventoried_online" : int(count_ars[2]),
+            "inventoried_offline" : int(count_ars[3]),
+            "inventoried_online" : int(count_ars[4]),
+            "jid" : count_ars[5]
+        } for count_ars in counts_result]
+
         if query is not None:
-            sql1 = """select count(id) as nb
-from machines
-where uuid_inventorymachine IS NULL and enabled = 0 and agenttype="machine" """
-            sql2 = """select count(id) as nb
-from machines
-where uuid_inventorymachine IS NULL and enabled = 1 and agenttype="machine"
-"""
-
-            sql3 = """select count(id) as nb
-from machines
-where uuid_inventorymachine IS NOT NULL and enabled = 0 and agenttype="machine"
-"""
-            sql4 = """select count(id) as nb
-from machines
-where uuid_inventorymachine IS NOT NULL and enabled = 1 and agenttype="machine"
-"""
             for machine in query:
-                _sql1 = sql1 + """and groupdeploy = "%s";""" % machine.jid
-                count_uninventoried_offline = session.execute(_sql1)
-                uninventoried_offline = [x for x in count_uninventoried_offline]
-
-                _sql2 = sql2 + """and groupdeploy = "%s";""" % machine.jid
-                count_uninventoried_offline = session.execute(_sql2)
-                uninventoried_online = [x for x in count_uninventoried_offline]
-
-                _sql3 = sql3 + """and groupdeploy = "%s";""" % machine.jid
-                count_uninventoried_offline = session.execute(_sql3)
-                inventoried_offline = [x for x in count_uninventoried_offline]
-
-                _sql4 = sql4 + """and groupdeploy = "%s";""" % machine.jid
-                count_uninventoried_offline = session.execute(_sql4)
-                inventoried_online = [x for x in count_uninventoried_offline]
-
-                total_machines = uninventoried_offline[0][0] + \
-                    uninventoried_online[0][0] + \
-                    inventoried_offline[0][0] + \
-                    inventoried_online[0][0]
-                result['uninventoried_offline'].append(uninventoried_offline[0][0])
-                result['uninventoried_online'].append(uninventoried_online[0][0])
-                result['inventoried_offline'].append(inventoried_offline[0][0])
-                result['inventoried_online'].append(inventoried_online[0][0])
-                result['total_machines'].append(total_machines)
+                flag = False
+                for count_ars in counts:
+                    if machine.jid == count_ars["jid"]:
+                        flag = True
+                        break
+                if flag == True:
+                    result['uninventoried_offline'].append(count_ars["uninventoried_offline"])
+                    result['uninventoried_online'].append(count_ars["uninventoried_online"])
+                    result['inventoried_offline'].append(count_ars["inventoried_offline"])
+                    result['inventoried_online'].append(count_ars["inventoried_online"])
+                    result['total_machines'].append(count_ars["total"])
+                else:
+                    result['uninventoried_offline'].append(0)
+                    result['uninventoried_online'].append(0)
+                    result['inventoried_offline'].append(0)
+                    result['inventoried_online'].append(0)
+                    result['total_machines'].append(0)
 
                 result['id'].append(machine.id)
                 result['jid'].append(machine.jid)
