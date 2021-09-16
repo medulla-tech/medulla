@@ -419,10 +419,10 @@ def putPackageDetail(package, need_assign=True):
         return False
 
     # ___ try compability with old packages ___
-    if "localisation_server" not in  package:
+    if "localisation_server" not in package or package['localisation_server']== "":
         package['localisation_server']="global"
 
-    if "creator" not in  package:
+    if "creator" not in  package or package['creator'] == "":
         package['creator']="root"
         package['creation_date']=strdate
 
@@ -574,9 +574,21 @@ def putPackageDetail(package, need_assign=True):
             PkgsDatabase().pkgs_register_synchro_package_multisharing(package,
                                                                   typesynchro )
     else:
+        pkgs_shares = PkgsDatabase().pkgs_sharing_admin_profil()
+        pkgs_share_id = 0
+        for share in pkgs_shares:
+            if share['name'] != package['localisation_server']:
+                continue
+            else:
+                pkgs_share_id = share['id_sharing']
+                package['shareobject'] = share
+                break
+
+        pkgs_share_id = share['id_sharing']
         pkgs_register_synchro_package(package['id'],
                                       typesynchro )
-        pkgmanage().add_package(confjson)
+
+        pkgmanage().add_package(confjson, pkgs_share_id)
 
     # write file to package directory
     with open( os.path.join(packages_id_input_dir,"conf.json"), "w" ) as outfile:
