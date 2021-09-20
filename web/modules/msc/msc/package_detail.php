@@ -30,7 +30,8 @@ $uuid = $_GET["uuid"];
 $pid = $_GET["pid"];
 $p_api = new ServerAPI();
 $p_api->fromURI($_GET["papi"]);
-$details = getPackageDetails($p_api, $_GET["pid"]);
+//$details = getPackageDetails($p_api, $_GET["pid"]);
+$details = xmpp_getPackageDetail($_GET["pid"]);
 $name = $details['label'];
 
 $a_param = array(_T("Label", 'msc'), _T("Version", 'msc'), _T('Command', 'msc'));

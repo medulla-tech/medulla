@@ -1085,21 +1085,24 @@ INITRD ../davos/initrd.img
 
     def make(self):
         """
+        This function creates the /tmp/multicast.sh file with its content.
+        It returns True if correctly created.
+        False otherwise
         """
         ##generation bootmenu for multicast
         if not self.chooseMacAddress():
             return False
         ##generation command line in tmp
-        fichier = os.path.join("/tmp","multicast.sh")
+        multicast_file = os.path.join("/tmp","multicast.sh")
         try:
-            fid = file(fichier, 'w+b')
+            fid = file(multicast_file, 'w+b')
             fid.write(self.templatecmdline)
             fid.close()
-            os.chmod(fichier, stat.S_IXUSR| stat.S_IWUSR |stat.S_IRUSR)
-            self.logger.debug('Successfully wrote multicast command into file %s' % ( fichier))
+            os.chmod(multicast_file, stat.S_IXUSR| stat.S_IWUSR |stat.S_IRUSR)
+            self.logger.debug('Successfully wrote multicast command into file %s' % (multicast_file))
             return True
         except IOError, e:
-            self.logger.error("While writing commande for multicast command"
-                         % (filename, e))
+            self.logger.error("Error %s while writing command for multicast command in %s"
+                         % (e, multicast_file))
             return False
         return True

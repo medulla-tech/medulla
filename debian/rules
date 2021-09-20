@@ -30,6 +30,7 @@ DESTDIR=$(CURDIR)/debian/tmp
 CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
 CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
 LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
+export DH_ALWAYS_EXCLUDE=.pyc:.pyo
 
 CPPFLAGS += -Wno-error=unused-result
 
@@ -76,9 +77,6 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	$(MAKE) install DESTDIR=$(DESTDIR)
-	# Already provided by MMC packages
-	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/__init__.py
-	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/plugins/__init__.py
 	rm -rf $(DESTDIR)/etc/init.d
 	mkdir -p $(DESTDIR)/usr/lib/systemd/system
 	cp $(CURDIR)/services/systemd/*.service $(DESTDIR)/usr/lib/systemd/system
@@ -93,11 +91,30 @@ install: build
 	mkdir -p $(DESTDIR)/var/lib/pulse2/file-transfer
 	#(workaround) Remove schema-018.sql
 	rm -fv $(DESTDIR)/usr/share/doc/pulse2-common/contrib/imaging/sql/schema-018.sql
+	# Remove opencliparts files
+	rm -frv $(DESTDIR)/usr/share/mmc/media/images/msc/opencliparts_0.18
+	cp  $(DESTDIR)/etc/mmc/apache/mmc.conf $(DESTDIR)/etc/apache2/conf-available/
 
 binary-indep: build install
-binary-arch: build install
 	dh_testdir
 	dh_testroot
+	dh_install --sourcedir=$(DESTDIR) --fail-missing
+	dh_python2
+	dh_fixperms -X/etc/mmc
+	dh_installchangelogs
+	dh_installdocs
+	dh_installinit
+	dh_strip
+	## TODO: Add back
+	##dh_link
+	dh_compress -X/sql/ -X.pdf
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary-arch: build install
 	dh_installdirs
 	# Must be readable by backuppc
 	chmod 0644 $(DESTDIR)/etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini
@@ -116,7 +133,6 @@ binary-arch: build install
 	# This directory must be writable for www-data (first run)
 	chown www-data:root debian/python-mmc-support/etc/mmc/plugins/support
 	chmod 750 debian/python-mmc-support/etc/mmc/plugins/support
-	dh_python2
 	dh_fixperms -Xetc/mmc \
                     -Xusr/share/doc/pulse2-common/contrib/ \
                     -Xvar/lib/pulse2/dlp_packages \
@@ -131,13 +147,6 @@ binary-arch: build install
 		ln -sf pulse2-common debian/$$PKG/usr/share/doc/$$PKG; \
 	done
 	dh_shlibdeps
-	dh_strip
-	dh_link
-	dh_compress -X/sql/ -X.pdf
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install

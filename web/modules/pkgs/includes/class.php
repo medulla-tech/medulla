@@ -116,8 +116,7 @@ class Step {
     }
 
     /**
-     * Set the success option in $params
-     *
+     * Set the success option in $params     
      * @deprecated replaced by setOption
      * @param int $step is the step number used to order the sequence
      * @return void
@@ -558,7 +557,7 @@ class TextareaTplArray extends AbstractTpl{
   }
 
   // The function called when the page is displayed
-  public function display() {
+  public function display($arrParam = array()) {
       $stringToDisplay = '<textarea ';
       foreach($this->params as $opt=>$value)
       {

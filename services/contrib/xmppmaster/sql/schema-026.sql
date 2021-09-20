@@ -26,7 +26,7 @@ START TRANSACTION;
 -- Table machines creation index
 --
 
-CREATE OR REPLACE INDEX ind_jid_machine on machines (jid(12) ASC);
+CREATE INDEX ind_jid_machine on machines (jid(12) ASC);
 
 ALTER TABLE `xmppmaster`.`machines` 
 ADD INDEX `ind_uuid_machine` (`uuid_inventorymachine` ASC);
@@ -75,11 +75,12 @@ ALTER TABLE `xmppmaster`.`relayserver`
 ADD INDEX `ind_relay_grpdeploy` (`groupdeploy` ASC);
 
 -- base kiosk
-
-ALTER TABLE `kiosk`.`profile_has_ous` 
+ALTER TABLE `kiosk`.`profile_has_ous`
+CHANGE COLUMN `ou` `ou` VARCHAR(200) NULL DEFAULT NULL ;
+ALTER TABLE `kiosk`.`profile_has_ous`
 ADD INDEX `ind_pr_ous_ou` (`ou` ASC);
 
-ALTER TABLE `kiosk`.`profile_has_ous` 
+ALTER TABLE `kiosk`.`profile_has_ous`
 ADD INDEX `ind_profile` (`profile_id` ASC);
 
 

@@ -16,5 +16,9 @@
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 
 systemddir = $(localstatedir)/lib/systemd/system
+systemdfiles = mmc-agent.service pulse2-cm.service
 
-dist_systemd_DATA = pulse2-cm.service
+dist_systemd_DATA = $(systemdfiles)
+
+
+EXTRA_DIST = $(patsubst %,%.in,$(systemdfiles))

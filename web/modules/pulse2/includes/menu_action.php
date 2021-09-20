@@ -67,6 +67,8 @@ else{
     $vncClientAction = new ActionItem(_T("Remote control", "pulse2"), "vnc_client", "vncclient", "computer", "base", "computers");
 }
 
+$inventxmppbrowsing = new EmptyActionItem(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
+
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
 
     $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
@@ -145,6 +147,7 @@ function modIsActive($action) {
 }
 echo "<ul class='action'>";
 foreach ($actions as $action){
+  if(isset($action->action)){
         if (is_array($paramArray)) {
             $paramArray['mod'] = $action->mod;
             if ($action->action == "vnc_client") {
@@ -214,6 +217,7 @@ foreach ($actions as $action){
             }
         }
         echo "</li>";
+  }
 }
 echo "</ul>";
 ?>

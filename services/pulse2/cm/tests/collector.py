@@ -40,7 +40,7 @@ class Test00_SessionsTestCase(TestCase):
         for i in xrange(20):
             uid, d = self.sessions.make()
 
-        result = all([isinstance(d[1], Deferred) for d in self.sessions.content.values()])
+        result = all(isinstance(d[1], Deferred) for d in self.sessions.content.values())
         self.assertTrue(result)
 
 
@@ -111,7 +111,7 @@ class Test00_SessionsTestCase(TestCase):
         for uid in uids:
             sessions._expire(uid)
 
-        result = all([uid not in uids for uid in sessions.content])
+        result = all(uid not in uids for uid in sessions.content)
         # verify if all expired uis is no more in sessions content
         self.assertTrue(result)
 
@@ -141,7 +141,7 @@ class Test00_SessionsTestCase(TestCase):
                     to_stay.append(uid)
 
         def check_result():
-            result = all([uid not in to_expire for uid in sessions.content])
+            result = all(uid not in to_expire for uid in sessions.content)
             self.assertTrue(result)
 
 
@@ -149,7 +149,7 @@ class Test00_SessionsTestCase(TestCase):
         self.clock.advance(15)
         add_elements(False)
 
-        result = all([uid not in to_expire for uid in sessions.content])
+        result = all(uid not in to_expire for uid in sessions.content)
         self.assertTrue(result)
 
 

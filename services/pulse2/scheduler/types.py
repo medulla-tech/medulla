@@ -118,9 +118,11 @@ class PhaseProxyMethodContainer(object):
         for name in dir(self) :
             fnc = getattr(self, name)
 
-            if not hasattr(fnc, "is_proxy_fnc"): continue
-            if not callable(fnc) : continue
-            if fnc.is_proxy_fnc :
+            if not hasattr(fnc, "is_proxy_fnc"):
+                continue
+            if not callable(fnc):
+                continue
+            if fnc.is_proxy_fnc:
                 args, vargs, kwds, defaults = inspect.getargspec(fnc)
                 fnc(self, *args)
 
@@ -181,7 +183,7 @@ class PhaseBase (PhaseProxyMethodContainer):
         """
 
         if not isinstance(cohq, CoHQuery):
-           raise TypeError("Not CoHQuery type")
+            raise TypeError("Not CoHQuery type")
 
         self.coh = cohq.coh
         self.cmd = cohq.cmd
@@ -375,7 +377,7 @@ class Phase (PhaseBase):
                     client_group = pref_net_ip
                     break
         else :
-            if len(self.config.preferred_network) > 0 :
+            if self.config.preferred_network:
                 (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
                 client_group = pref_net_ip
 
@@ -738,14 +740,14 @@ class CircuitBase(object):
 
                     return pref_net_ip
 
-            if len(self.config.preferred_network) > 0 :
+            if self.config.preferred_network:
                 self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
                 (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
                 return pref_net_ip
         else:
             self.logger.warn("Circuit #%s: IP address detect failed" % (self.id))
 
-        if len(self.config.preferred_network) > 0 :
+        if self.config.preferred_network:
             self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
             (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
             return pref_net_ip
@@ -845,7 +847,7 @@ class Circuit (CircuitBase):
 	if self.id in self.dispatcher.stopped_track :
 	    self.release()
         # if give-up - actual phase is probably running - do not move - wait...
-        if result == DIRECTIVE.GIVE_UP or result == None :
+        if result == DIRECTIVE.GIVE_UP or result is None :
             return lambda : DIRECTIVE.GIVE_UP
         elif result == DIRECTIVE.FAILED :
             self.logger.info("Circuit #%s: failed - releasing" % self.id)
@@ -1199,7 +1201,7 @@ class MscContainer (object):
         @rtype: Circuit object
         """
         matches = [wf for wf in self._circuits if wf.id == id]
-        if len(matches) > 0 :
+        if matches:
             return matches[0]
         else :
             self.logger.debug("Circuit #%s: not exists" % id)
@@ -1225,7 +1227,7 @@ class MscContainer (object):
             else :
                 self.remove_circuit(circuit)
                 self.stopped_track.remove(circuit.id)
-            self.logger.info("Remaining content: %d circuits (+%d waitings)" % ((len(self.circuits)),len(self.waiting_circuits)))
+            self.logger.info("Remaining content: %d circuits (+%d waitings)" % ((len(self.circuits)), len(self.waiting_circuits)))
             return True
 
         return False

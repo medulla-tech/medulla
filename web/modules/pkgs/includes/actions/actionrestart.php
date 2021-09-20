@@ -1,5 +1,5 @@
 <?php
-
+require_once("../../../../includes/i18n.inc.php");
 // {
 //     "action": "actionrestart",
 //     "step": 0,
@@ -14,9 +14,9 @@ $idclass     =  "#".$tableToggle.' tr.'.$toggleable;
 
 
 $TargetstartList = array(
-                        array(  "Labelselect"=>"Restart Machine",
+                        array(  "Labelselect"=>_T("Restart Machine","pkgs"),
                                 "val" => "MA"),
-                        array(  "Labelselect"=>"Restart Agent Machine",
+                        array(  "Labelselect"=>_T("Restart Agent Machine","pkgs"),
                                 "val" => "AM")
 );
 $targetrestart = (isset($targetrestart))?$targetrestart : "machine";
@@ -33,7 +33,7 @@ $options = "";
         }
 ?>
 <div class="header">
-    <h1>Restart</h1>
+    <h1><?php echo _T('Restart', 'pkgs'); ?></h1>
 </div>
 
 <div class="content">
@@ -45,7 +45,7 @@ $options = "";
         //---------------------label-----------------------------------
         echo '<tr class="toggleable">';
             echo'
-                    <th width="16%">Step label : </th>
+                    <th width="16%">'._T("Step label :","pkgs").'</th>
                     <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>';
                     echo'
@@ -56,7 +56,7 @@ $options = "";
 
             echo '<tr class="toggleable">';
 
-                echo '<td width="16%">Target Restart</td>
+                echo '<td width="16%">'._T("Target Restart","pkgs").'</td>
                     <td width="25%">
                         <select title="" name="targetrestart">'.$options.'</select>
                     </td>';
@@ -69,8 +69,8 @@ $options = "";
         ?>
         <!-- All extra options are added here-->
     </div>
- <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-<input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
+ <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
+<input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 
 <script type="text/javascript">

@@ -23,73 +23,152 @@
 # file pluginsmaster/plugin_wakeonlan.py
 
 
-import base64
 import json
-import os
-import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
 import traceback
 from utils import name_random
 import logging
+import os
+import ConfigParser
+from wakeonlan import wol
 
-# plugin run wake on lan on mac adress
+logger = logging.getLogger()
 
-plugin = {"VERSION": "1.0", "NAME": "wakeonlan", "TYPE": "master"}
+plugin = {"VERSION": "1.2", "NAME": "wakeonlan", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug(plugin)
+    logger.debug("=====================================================")
+    logger.debug("call %s from %s" % (plugin, message['from']))
+    logger.debug("=====================================================")
     sessionid = name_random(5, "wakeonlan")
+
     try:
-        listserverrelay = XmppMasterDatabase().listserverrelay()
-        if 'macadress' in data:
+        compteurcallplugin = getattr(xmppobject, "num_call%s" % action)
+        logger.debug("compteurcallplugin %s" % compteurcallplugin)
+        if compteurcallplugin == 0:
+            read_conf_wol(xmppobject)
+    except:
+        logger.error("plugin %s\n%s" % (plugin['NAME'], traceback.format_exc()))
+
+    try:
+        if xmppobject.wakeonlanremotelan :
+            # remote msg to ars for WOL
             senddataplugin = {'action': 'wakeonlan',
                               'sessionid': sessionid,
-                              'data': {'macaddress': data['macadress']}}
-            for serverrelay in listserverrelay:
-                xmppobject.send_message(mto=serverrelay[0],
-                                        mbody=json.dumps(senddataplugin, encoding='latin1'),
-                                        mtype='chat')
-                xmppobject.xmpplog("ARS %s : WOL for macadress %s" % (serverrelay[0], data['macadress']),
-                                   type='deploy',
-                                   sessionname=sessionid,
-                                   priority=-1,
-                                   action="",
-                                   who="",
-                                   how="",
-                                   why=xmppobject.boundjid.bare,
-                                   module="Wol | Start | Creation",
-                                   date=None,
-                                   fromuser=xmppobject.boundjid.bare,
-                                   touser="")
-        elif 'UUID' in data:
-            listadressmacs = Glpi().getMachineMac(data['UUID'])
-            for macadress in listadressmacs:
-                if macadress == '00:00:00:00:00:00':
-                    continue
-                senddataplugin = {'action': 'wakeonlan',
-                                  'sessionid': sessionid,
-                                  'data': {'macaddress': macadress}}
-                for serverrelay in listserverrelay:
-                    xmppobject.send_message(mto=serverrelay[0],
-                                            mbody=json.dumps(senddataplugin, encoding='latin1'),
+                              'data': { 'macaddress': ""}}
+            serverrelaylist = XmppMasterDatabase().random_list_ars_relay_one_only_in_cluster()
+            if 'macadress' in data:
+                senddataplugin['data']['macaddress'] = data['macadress']
+                for serverrelay in serverrelaylist:
+                    xmppobject.send_message(mto=serverrelay['jid'],
+                                            mbody=json.dumps(senddataplugin,
+                                                             encoding='latin1'),
                                             mtype='chat')
-                    xmppobject.xmpplog("ARS %s : WOL for macadress %s" % (serverrelay[0], macadress),
-                                       type='deploy',
-                                       sessionname=sessionid,
-                                       priority=-1,
-                                       action="",
-                                       who="",
-                                       how="",
-                                       why=xmppobject.boundjid.bare,
-                                       module="Wol | Start | Creation",
-                                       date=None,
-                                       fromuser=xmppobject.boundjid.bare,
-                                       touser="")
-        else:
-            raise
+                    msglog = "A WOL request has been sent from the ARS %s " \
+                             "to the mac address %s" % (serverrelay['jid'],
+                                                        data['macadress'])
+                    historymessage(xmppobject, sessionid, msglog)
+                    logger.debug(msglog)
 
-    except:
-        print "error plugin plugin_wakeonlan %s" % data
-        traceback.print_exc(file=sys.stdout)
+            elif 'UUID' in data:
+                listadressmacs = Glpi().getMachineMac(data['UUID'])
+                listadressmacs =  [ x.strip() for x in listadressmacs if x != ""]
+                for macadress in listadressmacs:
+                    if macadress == '00:00:00:00:00:00':
+                        continue
+                    senddataplugin['data']['macaddress'] = macadress
+                    for serverrelay in serverrelaylist:
+                        xmppobject.send_message(mto=serverrelay['jid'],
+                                                mbody=json.dumps(senddataplugin,
+                                                                 encoding='latin1'),
+                                                mtype='chat')
+                        msglog = "A WOL request has been sent from the ARS %s" \
+                                 "to the mac address %s " \
+                                 "for the computer with the uuid %s" % (serverrelay['jid'],
+                                                                        macadress,
+                                                                        data['UUID'])
+                        historymessage(xmppobject, sessionid, msglog)
+                        logger.debug(msglog)
+            else:
+                raise
+        else:
+            if 'macadress' in data:
+                wol.send_magic_packet(data['macadress'],
+                                      port=xmppobject.wakeonlanport)
+                msglog = "A local lan WOL request have been sent to the" \
+                         " mac address %s and port %s" % (data['macadress'],
+                                                          xmppobject.wakeonlanport)
+                historymessage(xmppobject, sessionid, msglog)
+                logger.debug(msglog)
+
+            elif 'UUID' in data:
+                listadressmacs = Glpi().getMachineMac(data['UUID'])
+                listadressmacs =  [ x.strip() for x in listadressmacs if x != ""]
+                for macadress in listadressmacs:
+                    if macadress == '00:00:00:00:00:00':
+                        continue
+                    wol.send_magic_packet(macadress,
+                                          port=xmppobject.wakeonlanport)
+                    msglog = "A local lan WOL request have been sent to the" \
+                             " mac address %s and port %s" % (macadress,
+                                                              xmppobject.wakeonlanport)
+
+                    historymessage(xmppobject, sessionid, msglog)
+                    logger.debug(msglog)
+    except Exception as error_exception:
+        msglog = "An error occurent when loading the plugin plugin_wakeonlan %s" % data
+        tracebackerror= "\n%s" % (traceback.format_exc())
+        logger.error("%s" % (tracebackerror))
+        logger.error(msglog)
+        logger.error("The exception raised is %s" % error_exception)
+        historymessage(xmppobject,
+                       sessionid,
+                       "%s\ndetail error:\n%s" % (msglog,
+                                                  tracebackerror))
+
+
+def historymessage(xmppobject, sessionid, msg):
+    xmppobject.xmpplog(msg,
+                       type='deploy',
+                       sessionname=sessionid,
+                       priority=-1,
+                       action="xmpplog",
+                       who="",
+                       how="",
+                       why=xmppobject.boundjid.bare,
+                       module="Wol | Start | Creation",
+                       date=None,
+                       fromuser=xmppobject.boundjid.bare,
+                       touser="")
+
+
+def read_conf_wol(xmppobject):
+    """
+        This function read the configuration file for the wol plugin.
+        The configuration file should be like:
+        [parameters]
+        remotelan = True
+        # wakeonlanport using only for remotelan is False
+        wakeonlanport = 9
+    """
+    conf_filename = plugin['NAME'] + ".ini"
+    pathfileconf = os.path.join( xmppobject.config.pathdirconffile, conf_filename)
+    xmppobject.wakeonlanremotelan = True
+    xmppobject.wakeonlanport = 9
+    if not os.path.isfile(pathfileconf):
+        logger.error("The configuration file for the plugin %s is missing.\n" \
+                     "It should be located to %s)" % (plugin['NAME'], pathfileconf))
+    else:
+        Config = ConfigParser.ConfigParser()
+        Config.read(pathfileconf)
+        if os.path.exists(pathfileconf + ".local"):
+            Config.read(pathfileconf + ".local")
+
+        if Config.has_option("parameters", "remotelan"):
+            xmppobject.wakeonlanremotelan = Config.getboolean('parameters', 'remotelan')
+
+        if not xmppobject.wakeonlanremotelan:
+            if Config.has_option("parameters", "wakeonlanport"):
+                xmppobject.wakeonlanport = Config.getint('parameters', 'wakeonlanport')

@@ -28,6 +28,8 @@ require_once('modules/msc/includes/machines.inc.php');
 require_once('modules/msc/includes/widgets.inc.php');
 require_once('modules/msc/includes/utilities.php');
 require_once("includes/xmlrpc.inc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/pkgs/includes/xmlrpc.php");
 
 $group = null;
 if (!empty($_GET['gid'])) {
@@ -48,27 +50,22 @@ if (! in_array("xmppmaster", $_SESSION["supportModList"])) {
     }
     $label->display();
 }
-echo "<br><br>";
+
 function getConvergenceStatus($mountpoint, $pid, $group_convergence_status, $associateinventory) {
-    $return = 0;
+    $ret = 0;
     if ($associateinventory) {
-        if (array_key_exists($mountpoint, $group_convergence_status)) {
-            if (array_key_exists($pid, $group_convergence_status[$mountpoint])) {
-                if ($group_convergence_status[$mountpoint][$pid]) {
-                    $return = 1;
-                }
-                else {
-                    $return = 2;
-                }
-            }
+        if (array_key_exists($pid, $group_convergence_status)) {
+            if ($group_convergence_status[$pid] == 0)
+                $ret = 2;
+            else
+                $ret = 1;
         }
     }
     else {
-        $return = 3;
+        $ret = 3;
     }
-    return $return;
+    return $ret;
 }
-
 
 function prettyConvergenceStatusDisplay($status) {
     switch ($status) {
@@ -83,10 +80,10 @@ function prettyConvergenceStatusDisplay($status) {
             return _T('Not available', 'msc');
     }
 }
-
+$a_convergence_status = array();
 if ($group != null) {
     $group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
-    $a_convergence_status = array();
+    $group_convergence_status1 = $group_convergence_status['/package_api_get1'];
 }
 $emptyAction = new EmptyActionItem();
 $convergenceAction = new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers");
@@ -116,32 +113,83 @@ if (!empty($_GET['uuid'])) {
 }
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages
-list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
+//list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
+if (isset($_GET['uuid'])){
+    $platform = xmlrpc_getMachinefromuuid($_GET['uuid'])['platform'];
+    if ( stripos($platform, "win") !== false) {
+        $filter['filter1'] = "win";
+    }elseif( stripos($platform, "linux") !== false){
+        $filter['filter1'] = "linux";
+    }elseif( stripos($platform, "darwin") !== false){
+        $filter['filter1'] = "darwin";
+    }
+};
+list($count, $packages) =  get_all_packages_deploy($_SESSION['login'], $start,  $start + $maxperpage, $filter);
 
+// list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
+$packages[0][1] = 0;
+$packages[0][2] = array();
+$packages[0][2]["mountpoint"] = "/package_api_get1";
+$packages[0][2]["server"] = "localhost";
+$packages[0][2]["protocol"] = "https";
+$packages[0][2]["uuid"] = "UUID/package_api_get1";
+$packages[0][2]["port"] = 9990;
 $err = array();
 foreach ($packages as $c_package) {
-    $package = to_package($c_package[0]);
-    $type = $c_package[1];
-    $p_api = new ServerAPI($c_package[2]);
+    $elt_convergence_status = "";
+    $current_convergence_status = 0;
+    $package = isset($c_package[0]) ? to_package($c_package[0]) : null;
 
+    $type = isset($c_package[1]) ? $c_package[1] : 0;
+
+    $p_api = (isset($c_package[2])) ? new ServerAPI($c_package[2]) : new ServerAPI();
     if (isset($c_package[0]['ERR']) && $c_package[0]['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
         $err[] = sprintf(_T("MMC failed to contact package server %s.", "msc"), $c_package[0]['mirror']);
     } else {
+      if($package != null)
+      {
         $a_packages[] = $package->label;
-        $a_description[] = $package->description;
-        $a_pversions[] = $package->version;
+        $a_description[] = $package->description ;
+        $a_pversions[] = $package->version ;
+        $a_pos[] = $package->targetos ;
         $a_sizes[] = prettyOctetDisplay($package->size);
+
         if ($group != null) {
-            $current_convergence_status = getConvergenceStatus($p_api->mountpoint, $package->id, $group_convergence_status, $package->associateinventory);
+            $current_convergence_status = ($package != null) ? getConvergenceStatus(0,
+                                                               $package->id,
+                                                               $group_convergence_status1,
+                                                               $package->associateinventory) : null;
             // set param_convergence_edit to True if convergence status is active or inactive
             $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
-            $a_convergence_status[] = prettyConvergenceStatusDisplay($current_convergence_status);
-            $a_convergence_action[] = ($package->associateinventory) ? $convergenceAction : $emptyAction;
+            $elt_convergence_status = prettyConvergenceStatusDisplay($current_convergence_status);
+            $a_convergence_status[] = $elt_convergence_status;
+            $a_convergence_action[] = (isset($package->associateinventory) && $package->associateinventory == 1) ? $convergenceAction : $emptyAction;
         }
-        if (!empty($_GET['uuid'])) {
-            $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI());
+      }
+
+        if($package == null){
+
+        }
+        else if (!empty($_GET['uuid'])) {
+            $params[] = array('name' => $package->label,
+                              'version' => $package->version,
+                              'pid' => $package->id,
+                              'uuid' => $_GET['uuid'],
+                              'hostname' => $_GET['hostname'],
+                              'from' => 'base|computers|msctabs|tablogs',
+                              'papi' => $p_api->toURI(),
+                              'actionconvergence' => $elt_convergence_status,
+                              'actionconvergenceint' => $current_convergence_status);
         } else {
-            $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'gid' => $group->id, 'from' => 'base|computers|groupmsctabs|tablogs', 'papi' => $p_api->toURI(), 'editConvergence' => $param_convergence_edit);
+            $params[] = array('name' => $package->label,
+                              'version' => $package->version,
+                              'pid' => $package->id,
+                              'gid' => $group->id,
+                              'from' => 'base|computers|groupmsctabs|tablogs',
+                              'papi' => $p_api->toURI(),
+                              'editConvergence' => $param_convergence_edit,
+                              'actionconvergence' => $elt_convergence_status,
+                              'actionconvergenceint' => $current_convergence_status);
         }
         if ($type == 0) {
             $a_css[] = 'primary_list';
@@ -150,7 +198,6 @@ foreach ($packages as $c_package) {
         }
     }
 }
-
 if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "msc")))));
 }
@@ -170,14 +217,16 @@ $n->setTableHeaderPadding(1);
 $n->disableFirstColumnActionLink();
 $n->start = 0;
 $n->end = $count;
-$presencemachinexmpp = xmlrpc_getPresenceuuid( $_GET['uuid']);
+
+$presencemachinexmpp = (isset($_GET['uuid'])) ? xmlrpc_getPresenceuuid( $_GET['uuid']) : 0;
+
 if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
     $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
     $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
 }
 else{
     $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
-    if ( $presencemachinexmpp )
+    if ( $presencemachinexmpp || isset($_GET['gid']))
         $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
 }
 

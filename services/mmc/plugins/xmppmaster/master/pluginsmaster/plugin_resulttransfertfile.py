@@ -21,10 +21,9 @@
 # MA 02110-1301, USA.
 #
 # file pluginsmaster/plugin_resulttransfertfile.py
-from utils import pluginmaster, pluginmastersessionaction
+from utils import pluginmastersessionaction
 import base64
 import json
-import os
 import zlib
 from utils import md5
 import hashlib
@@ -58,7 +57,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj, objsessio
             'sessionid': sessionid,
             'data': ''
         }
-        result = {}
+
         try:
             part = sessiondata.getdatasession()['part']
         except:

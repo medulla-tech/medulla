@@ -124,7 +124,7 @@ class Connector(object):
                 raise ConnectionRefused(self.host, self.port)
 
             else:
-                self.logger.debug("Another connection error:", code, message)
+                self.logger.debug("Another connection error: %s %s " % (code, message))
 
 
 

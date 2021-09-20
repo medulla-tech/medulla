@@ -28,7 +28,6 @@ require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
 require_once('modules/dyngroup/includes/dyngroup.php');
-
 $from = $_GET['from'];
 $path =  explode('|', $from);
 $module = $path[0];
@@ -65,7 +64,8 @@ if ($gid) {
     $group = new Group($_GET['gid'], true);
     $cible = $group->getName();
 }
-
+$params["actionconvergenceint"] = $_GET['actionconvergenceint'];
+$params["actionconvergence"] = $_GET['actionconvergence'];
 $params["papi"] = $papi;
 $params["name"] = $hostname;
 $params["hostname"] = $hostname;
@@ -76,13 +76,14 @@ $params["pid"] = $pid;
 $params["create_directory"] = 'on';
 $params["next_connection_delay"] = web_def_delay();
 $params["max_connection_attempt"] = web_def_attempts();
+$params["papi"] = $papi;
 
 if ($_GET['editConvergence']) {
     $ServerAPI = new ServerAPI();
     $ServerAPI->fromURI($papi);
-    $cmd_id = xmlrpc_get_convergence_command_id($gid, $ServerAPI, $pid);
+    $cmd_id = xmlrpc_get_convergence_command_id($gid, $pid);
     $command_details = command_detail($cmd_id);
-    $command_phases = xmlrpc_get_convergence_phases($gid, $ServerAPI, $pid);
+    $command_phases = xmlrpc_get_convergence_phases($gid, $pid);
 
     $params["ltitle"] = $command_details['title'];
     $params["maxbw"] = $command_details['maxbw'] / 1024;
@@ -90,7 +91,7 @@ if ($_GET['editConvergence']) {
     $params["deployment_intervals"] = $command_details['deployment_intervals'];
     $params["parameters"] = $command_details['parameters'];
     $params["editConvergence"] = True;
-    $params["active"] = (xmlrpc_is_convergence_active($gid, $ServerAPI, $pid)) ? 'on' : '';
+    $params["active"] = (xmlrpc_is_convergence_active($gid, $pid)) ? 'on' : '';
 
     // phases
     foreach(array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'do_inventory', 'do_halt') as $key) {
@@ -116,13 +117,13 @@ else {
     $params["ltitle"] = _T('Convergence on ') . $name;
     $params["start_script"] = 'on';
     $params["clean_on_success"] = 'on';
-    $params["do_reboot"] = (getPackageHasToReboot($p_api, $_GET["pid"]) == 1 || web_def_reboot() == 1) ? 'on': '';
+    $params["do_reboot"] = '';
     $params["do_wol"] = web_def_awake() == 1 ? 'on' : '';
     $params["do_inventory"] = web_def_inventory() == 1 ? 'on' : '';
     $params["maxbw"] = web_def_maxbw();
     $params["copy_mode"] = web_def_mode();
     $params["deployment_intervals"] = web_def_deployment_intervals();
-    $params["active"] = 'on';
+    $params["active"] = 'off';
 
     $halt = web_def_issue_halt_to();
     foreach ($halt as $h) {
@@ -139,7 +140,7 @@ $params['badvanced'] = True;
 
 $params['convergence'] = True;
 
-header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
+ header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
 exit;
 
 ?>

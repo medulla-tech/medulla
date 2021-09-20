@@ -26,9 +26,9 @@ Depends: ${misc:Depends},
          mmc-web-support, python-mmc-support,
          mmc-web-xmppmaster, python-mmc-xmppmaster,
          pulse2-uuid-resolver,
-         pulse-xmppmaster-agentplugins, pulse-xmpp-agent,
-         pulseagent-plugins-relay, pulse-agent-installers,
-         pulse2-common,
+         mmc-web-admin, python-mmc-admin,
+         pulse-xmppmaster-agentplugins, pulse-xmpp-agent-relay,
+         pulse-agent-installers, pulse2-common,
          pulse2-imaging-client | pulse2-davos-client,
          pulse2-inventory-server,
          pulse2-launchers,
@@ -41,7 +41,7 @@ Description: Pulse 2 metapackage
 Package: pulse2-common
 Architecture: all
 Section: python
-Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python-configobj, curl, nsis, dnsutils, python-psutil (>= 0.6.1), rpm (>= 4.8)
+Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python-configobj, curl, nsis, dnsutils, python-psutil (>= 0.6.1), rpm (>= 4.8), python-netifaces, python-netaddr
 Description: Pulse 2 common files (doc)
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -78,6 +78,16 @@ Description: Pulse 2 common inventory database files
  .
  This package contains Pulse 2 common inventory database files.
 
+Package: python-pulse2-common-database-admin
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Description: Pulse 2 common admin database files
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common admin database files.
+
 Package: python-pulse2-common-database-msc
 Architecture: all
 Section: python
@@ -102,7 +112,7 @@ Package: python-pulse2-common-database-backuppc
 Architecture: all
 Section: python
 Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database (= ${binary:Version})
-Description: Pulse 2 / MBS common backuppc database files.
+Description: Pulse 2 common backuppc database files.
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
  .
@@ -213,7 +223,7 @@ Description: Pulse 2 dyngroup plugin for MMC agent
 Package: python-mmc-pkgs
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-msc (= ${binary:Version}), python-requests (>= 0.12.1)
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-msc (= ${binary:Version}), python-requests (>= 0.12.1), python-unidecode, python-magic
 Description: Pulse 2 pkgs plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -235,7 +245,7 @@ Architecture: all
 Section: python
 Pre-Depends: backuppc
 Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-backuppc (= ${binary:Version}), python-pyquery
-Description: Pulse 2 / MBS BackupPC plugin for MMC agent
+Description: Pulse 2 BackupPC plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
  .
@@ -250,6 +260,17 @@ Description: Pulse 2 support plugin (provide remote access)
  organizations.
  .
  This package contains the support plugin to provide remote access
+ to the Pulse server for support purpose.
+
+Package: python-mmc-admin
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-admin (= ${binary:Version})
+Description: Pulse 2 support plugin (admin access)
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the support plugin to provide admin access
  to the Pulse server for support purpose.
 
 Package: pulse2-package-server
@@ -346,7 +367,7 @@ Description: Pulse 2 base plugin for MMC web interface
 
 Package: mmc-web-imaging
 Architecture: all
-Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1), php7.0-xml
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1), php-xml
 Description: Pulse 2 imaging plugin for MMC web interface
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -356,7 +377,7 @@ Description: Pulse 2 imaging plugin for MMC web interface
 Package: mmc-web-backuppc
 Architecture: all
 Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
-Description: Pulse 2 / MBS BackupPC plugin for MMC web interface
+Description: Pulse 2 BackupPC plugin for MMC web interface
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
  .
@@ -365,7 +386,7 @@ Description: Pulse 2 / MBS BackupPC plugin for MMC web interface
 Package: mmc-web-monitoring
 Architecture: all
 Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
-Description: Pulse 2 / MBS monitoring plugin for MMC web interface
+Description: Pulse 2 monitoring plugin for MMC web interface
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
  .
@@ -410,7 +431,7 @@ Description: Pulse 2 Register PXE Service
 Package: python-mmc-xmppmaster
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4), python-sleekxmpp, python-geoip, python-dnspython, geoip-database-contrib
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4), python-sleekxmpp, python-geoip, python-dnspython, geoip-database-contrib, python-croniter
 Description: Pulse 2 MMC agent plugins
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -455,3 +476,105 @@ Description: Pulse 2 MMC agent plugins
  organizations.
  .
  This package will install all the Pulse 2 MMC agent interface plugins.
+
+Package: python-mmc-core
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, python-twisted-web, python-memory-profiler
+Suggests: python-sqlalchemy (>= 0.5), python-mysqldb (>= 1.2.2-7)
+Description: Core shared dependency for MMC API
+ Contains base functions used by MMC.
+
+Package: python-mmc-base
+Architecture: all
+Section: python
+Pre-depends: python-mmc-core (= ${source:Version})
+Depends: ${misc:Depends}, ${python:Depends}, python-ldap, python-xlwt, python-memory-profiler
+Description: Management Console base plugin
+ Contains the base infrastructure for all MMC plugins:
+  * support classes
+  * base LDAP management classes
+
+Package: python-mmc-ppolicy
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version})
+Suggests: mmc-check-password
+Description: Management Console password policy plugin
+ Contains password policy plugin to enforce minimum password security in MMC.
+
+Package: python-mmc-dashboard
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-psutil (>= 0.6.1)
+Description: Management Console dashboard plugin
+ Provides a simple dashboard in MMC.
+
+Package: python-mmc-services
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-systemd-dbus (>= 0.1), systemd
+Description: Management Console systemd services plugin
+ Handles system services through systemd.
+
+Package: python-mmc-database
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-sqlalchemy (>= 0.7), python-mysqldb
+Description: Management Console database common files
+ Allow the use of SQL databases within MMC framework.
+
+Package: python-mmc-report
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-mmc-database (= ${source:Version}), python-pygal, python-weasyprint, python-xlwt
+Description: Generate reports within MMC framework
+ Module to generate reports for other modules.
+
+Package: mmc-agent
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-openssl | python-pyopenssl, python (>= 2.6) | python-multiprocessing, ldap-utils, python-gobject (>= 2.21.4)
+Description: Management Console Agent
+ XMLRPC server of the MMC API.
+
+Package: mmc-web-base
+Architecture: all
+Depends: ${misc:Depends}, php-fpm | libapache2-mod-php, php-xmlrpc, php-gd, apache2 | apache2-mpm-prefork, wwwconfig-common, node-d3
+Description: MMC web interface to interact with a MMC agent
+ Management Console web interface designed by Siveo.
+
+Package: mmc-web-ppolicy
+Architecture: all
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
+Description: Password policy module for MMC
+ Module to enforce minimum password security in MMC.
+
+Package: mmc-web-dashboard
+Architecture: all
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
+Description: Dashboard module for MMC
+ Dashboard module in MMC.
+
+Package: mmc-web-admin
+Architecture: all
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
+Description: Admin module for MMC
+ Admin module in MMC.
+
+Package: mmc-web-services
+Architecture: all
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
+Description: Systemd module for MMC
+ Systemd service management module for MMC.
+
+Package: mmc-web-report
+Architecture: all
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
+Description: Generate reports within MMC framework
+ Module to generate reports for other modules.
+
+Package: mmc-web-xmppmaster
+Architecture: all
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version}), ajax-php-file-manager
+Description: Xmpp mmc module
+

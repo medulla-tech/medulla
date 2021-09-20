@@ -53,7 +53,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     if 'dest' in data and 'directory' in data and 'listfile' in data and 'jidmachine' in data:
         jidmachine = data['jidmachine']
         try:
-            #### reduit enregistrement 
+            #### reduit enregistrement
             listdirectory = [ x.strip() for x in data['listdirectory'].split(";") if x.strip() != ""]
             listfile = [ x.strip() for x in data['listfile'].split(";") if x.strip() != ""]
             listdirectory.sort()
@@ -71,7 +71,8 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             a=0
             nb = len(listdirectory)
             for y in range (nb - 1):
-                if y > a : a = y
+                if y > a:
+                    a = y
                 for index in range(a+1, nb):
                     if listdirectory[a] in listdirectory[index]:
                         dd.append( listdirectory[index] )
@@ -85,7 +86,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
 
 
         Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
-        #dest = 
+        #dest =
         #src = data['src']
         relayserver = XmppMasterDatabase().getMachinefromjid(Machineinfo['groupdeploy'])
         relayserinfo = XmppMasterDatabase().getRelayServerfromjid(Machineinfo['groupdeploy'])
@@ -112,7 +113,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                  'path_src_machine_dir': listdirstr,
                  'path_src_machine_file': listfile,
                  'path_dest_master': data['dest'],
-                 'jidmachine': jidmachine,
                  # item host is uuid glpi machine
                  'host': Machineinfo['uuid_inventorymachine'],
                  'ipars': relayserver['ip_xmpp'],

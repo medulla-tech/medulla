@@ -2,10 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,11 +42,29 @@ $submod->setDescription(_T("Packages", "pkgs"));
 $submod->setImg('modules/pkgs/img/navbar/pkgs');
 $submod->setDefaultPage("pkgs/pkgs/index");
 
+//------ Rules ------
+$page = new Page("rulesList" ,_T("Rules list", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/rulesList.php");
+$submod->addPage($page);
+
+$page = new Page("addRule" ,_T("Add a rule", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/addRule.php");
+$submod->addPage($page);
+
+$page = new Page("editRule" ,_T("Edit a rule", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/editRule.php");
+$submod->addPage($page);
+
+$page = new Page("deleteRule",_T("Delete a rule", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/deleteRule.php", array("AJAX" => True,"noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+//------ Packages ------
 $page = new Page("index", _T('Show all packages', 'pkgs'));
 $submod->addPage($page);
 
-$page = new Page("bundleList", _T('Show all bundles', 'pkgs'));
-$submod->addPage($page);
+// $page = new Page("bundleList", _T('Show all bundles', 'pkgs'));
+// $submod->addPage($page);
 
 $page = new Page("add", _T('Add a package', 'pkgs'));
 $submod->addPage($page);
@@ -53,11 +72,18 @@ $submod->addPage($page);
 $page = new Page("edit", _T('Edit a package', 'pkgs'));
 $submod->addPage($page);
 
-$page = new Page("addBundle", _T('Add a bundle', 'pkgs'));
+$page = new Page("detail", _T('Package detail', 'pkgs'));
 $submod->addPage($page);
 
-$page = new Page("editBundle", _T('Edit a bundle', 'pkgs'));
+$page = new Page("preview", _T('Package File Preview', 'pkgs'));
+$page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>False));
 $submod->addPage($page);
+
+// $page = new Page("addBundle", _T('Add a bundle', 'pkgs'));
+// $submod->addPage($page);
+//
+// $page = new Page("editBundle", _T('Edit a bundle', 'pkgs'));
+// $submod->addPage($page);
 
 $page = new Page("addXMPP", 'Add XMPP package');
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>False));
@@ -78,7 +104,11 @@ $page = new Page("ajaxRefreshPackageTempDir", 'Display Package API Temporary Dir
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxGetSuggestedCommand", 'Get suggested command');
+// $page = new Page("ajaxGetSuggestedCommand", 'Get suggested command');
+// $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
+// $submod->addPage($page);
+
+$page = new Page("ajaxGetSuggestedCommand1", 'Get suggested command');
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
 
@@ -88,6 +118,10 @@ $submod->addPage($page);
 
 $page = new Page("rsync",_T("Show mirror status", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/rsync.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("desynchronization",_T("Pending Package synchronization", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/desynchronization.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
 $page = new Page("delete",_T("Delete a package", 'pkgs'));

@@ -1,4 +1,5 @@
 <?php
+require_once("../../../../includes/i18n.inc.php");
 extract($_POST);
 //$lab = "PACKAGE_CLEAR";
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
@@ -8,7 +9,7 @@ $toggleable =  "toggleable".uniqid();
 $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
-    <h1>Remove uploaded files</h1>
+    <h1><?php echo _T('Remove uploaded files', 'pkgs'); ?></h1>
 </div>
 
 <div class="content">
@@ -19,7 +20,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
           <tr class="toggleable">
         <?php
         echo'
-                    <th width="16%">Step label : </th>
+                    <th width="16%">'._T("Step label :","pkgs").'</th>
                     <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>';
                     echo'
@@ -33,8 +34,8 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         ?>
         <!-- All extra options are added here-->
     </div>
- <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
+ <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 
 <script type="text/javascript">

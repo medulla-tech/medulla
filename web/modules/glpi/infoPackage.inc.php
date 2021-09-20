@@ -44,6 +44,21 @@ $page = new Page('glpi_dashboard', _T('Glpi Dashboard', 'glpi'));
 $submod->addPage($page);
 $mod->addSubmod($submod);
 
+// Set the rights for glpi/includes/panels/antivirus.inc.php
+$page = new Page('antivirus_dashboard', _T('Antivirus Panel', 'glpi'));
+$submod->addPage($page);
+$mod->addSubmod($submod);
+
+// Set the rights for glpi/includes/panels/inventory.inc.php
+$page = new Page('inventory_dashboard', _T('Inventory Panel', 'glpi'));
+$submod->addPage($page);
+$mod->addSubmod($submod);
+
+// Set the rights for glpi/includes/panels/os_repartition.inc.php
+$page = new Page('os_repartition_dashboard', _T('Os Repartition Panel', 'glpi'));
+$submod->addPage($page);
+$mod->addSubmod($submod);
+
 $MMCApp->addModule($mod);
 
 /* Get the base module instance */
@@ -51,6 +66,33 @@ $base = &$MMCApp->getModule('base');
 
 /* Get the computers sub-module instance */
 $submod = & $base->getSubmod('computers');
+
+$page = new Page("machinesList", _T("Get the whole machines list", "glpi"));
+$page->setFile("modules/glpi/glpi/machinesList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxMachinesList", _T("Machines List", "glpi"));
+$page->setFile("modules/glpi/glpi/ajaxMachinesList.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("machinesListglpi", _T("Get the whole machines list", "glpi"));
+$page->setFile("modules/glpi/glpi/machinesListglpi.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxMachinesListglpi", _T("Machines List", "glpi"));
+$page->setFile("modules/glpi/glpi/ajaxMachinesListglpi.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("xmppMachinesList", _T("Get the xmpp machines list", "glpi"));
+$page->setFile("modules/xmppmaster/xmppmaster/machinesList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxXmppMachinesList", _T("Xmpp Machines List", "glpi"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
 
 $page = new Page("createStaticGroup", _T("Create static group from dashboard widgets (GLPI)", "glpi"));
 $page->setFile("modules/glpi/glpi/createStaticGroup.php");
@@ -153,43 +195,10 @@ $page->setFile("modules/glpi/glpi/ajaxSetGlpiEditableValue.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
-$page = new Page("groupglpitabs", _T("Inventory (GLPI) on a group of machines", "glpi"));
-$page->setFile("modules/glpi/glpi/tabs.php");
-$page->setOptions(array("visible"=>False));
-
-$tab = new Tab("tab0", _T("Summary tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab1", _T("Hardware tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab2", _T("Storage tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab3", _T("Network tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab4", _T("Softwares tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab5", _T("Administrative tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab6", _T("History tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab7", _T("Antivirus tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$tab = new Tab("tab8", _T("Registry tab (GLPI)", 'glpi'));
-$page->addTab($tab);
-
-$submod->addPage($page);
 
 $page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
 $page->setFile("modules/glpi/glpi/tabs.php");
 $page->setOptions(array("visible"=>False));
-
 $tab = new Tab("tab0", _T("Summary tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
@@ -215,6 +224,9 @@ $tab = new Tab("tab7", _T("Antivirus tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
 $tab = new Tab("tab8", _T("Registry tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab9", _T("Connections tab (GLPI)", "glpi"));
 $page->addTab($tab);
 
 $submod->addPage($page);

@@ -16,7 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-for name in `find ${1} -type f -name *.po`
+for name in `find "${1}" -type f -name "*.po"`
   do
     newname=`echo ${name} | sed 's!^\(.*\)/\(.*\).po$!\1/\2.mo!'`
     echo -n "Building ${name} as ${newname}..."

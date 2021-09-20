@@ -50,6 +50,43 @@ class PkgsConfig(PluginConfig):
         Read the module configuration
         """
         PluginConfig.readConf(self)
+        self.dbdriver = self.get("database", "dbdriver")
+        self.dbhost = self.get("database", "dbhost")
+        self.dbname = self.get("database", "dbname")
+        self.dbuser = self.get("database", "dbuser")
+        if self.has_option("database", "dbport"):
+            self.dbport = self.getint("database", "dbport")
+        else:
+            self.dbport = 3306
+
+        self.max_size_stanza_xmpp = 1048576
+        if self.has_option("quick_deploy", "max_size_stanza_xmpp"):
+            self.max_size_stanza_xmpp = self.getint("quick_deploy",
+                                                    "max_size_stanza_xmpp")
+
+        self.dbsslenable = False
+        if self.has_option("database", "dbsslenable"):
+            self.dbsslenable = self.getboolean("database", "dbsslenable")
+            if self.dbsslenable:
+                self.dbsslca = self.get("database", "dbsslca")
+                self.dbsslcert = self.get("database", "dbsslcert")
+                self.dbsslkey = self.get("database", "dbsslkey")
+
+        if self.has_option("database",  "dbpooltimeout"):
+            self.dbpooltimeout = self.getint("database", "dbpooltimeout")
+        else:
+            self.dbpooltimeout = 30
+
+        if self.has_option("database", "dbpoolrecycle"):
+            self.dbpoolrecycle = self.get("database", "dbpoolrecycle")
+        else:
+            self.dbpoolrecycle = 60
+        if self.has_option("database", "dbpoolsize"):
+            self.dbpoolsize = self.get("database", "dbpoolsize")
+        else:
+            self.dbpoolsize = 5
+        self.dbpasswd = self.getpassword("database", "dbpasswd")
+
 
         # API Package
         if self.has_option("user_package_api", "server"):
@@ -95,3 +132,12 @@ class PkgsConfig(PluginConfig):
         # Appstream settings
         if self.has_option("appstream", "url"):
             self.appstream_url = self.get("appstream", "url")
+
+        # PKGS PARAMETERS
+        self.centralizedmultiplesharing = False
+        if self.has_option("pkgs", "centralizedmultiplesharing"):
+            self.centralizedmultiplesharing = self.getboolean("pkgs",
+                                                              "centralizedmultiplesharing")
+        self.movepackage = False
+        if self.has_option("pkgs", "movepackage"):
+            self.movepackage = self.getboolean("pkgs", "movepackage")

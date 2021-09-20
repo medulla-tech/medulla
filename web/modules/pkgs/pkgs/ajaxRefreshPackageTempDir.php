@@ -33,7 +33,7 @@ else {
 }
 
 $_SESSION['p_api_id'] = $_GET['papi'];
-$files = getTemporaryFiles($_GET['papi']);
+$files = getTemporaryFiles();//$_GET['papi']
 
 if(count($files)) {
     $r = new SelectItem("rdo_files");
@@ -59,7 +59,7 @@ if(count($files)) {
      */
     // FIXME: duplicated fillForm function
     function fillForm(selectedPapi, tempdir) {
-        url = '<?php echo urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand")?>&papiid=' + selectedPapi;
+        url = '<?php echo urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand1")?>&papiid=' + selectedPapi;
         if (tempdir != undefined) {
             url += '&tempdir=' + tempdir;
         }

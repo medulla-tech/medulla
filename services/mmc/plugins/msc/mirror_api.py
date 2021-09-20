@@ -34,36 +34,36 @@ from mmc.support.mmctools import Singleton
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
-class MirrorApi(Singleton):
-    initialized = False
-    def __init__(self):
-        if self.initialized: return
-        self.logger = logging.getLogger()
-        self.logger.debug("Going to initialize MirrorApi")
-        self.config = mmc.plugins.msc.MscConfig()
-        credentials = ''
+#class MirrorApi(Singleton):
+    #initialized = False
+    #def __init__(self):
+        #if self.initialized: return
+        #self.logger = logging.getLogger()
+        #self.logger.debug("Going to initialize MirrorApi")
+        #self.config = mmc.plugins.msc.MscConfig()
+        #credentials = ''
 
-        if self.config.ma_enablessl:
-            self.server_addr = 'https://'
-        else:
-            self.server_addr = 'http://'
+        #if self.config.ma_enablessl:
+            #self.server_addr = 'https://'
+        #else:
+            #self.server_addr = 'http://'
 
-        if self.config.ma_username != '':
-            self.server_addr += self.config.ma_username
-            credentials = self.config.ma_username
-            if self.config.ma_password != '':
-                self.server_addr += ":"+self.config.ma_password
-                credentials += ":"+self.config.ma_password
-            self.server_addr += "@"
+        #if self.config.ma_username != '':
+            #self.server_addr += self.config.ma_username
+            #credentials = self.config.ma_username
+            #if self.config.ma_password != '':
+                #self.server_addr += ":"+self.config.ma_password
+                #credentials += ":"+self.config.ma_password
+            #self.server_addr += "@"
 
-        self.server_addr += self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
+        #self.server_addr += self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
 
-        if self.config.ma_verifypeer:
-            self.internal = pulse2.apis.clients.mirror_api.MirrorApi(credentials, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
-        else:
-            self.internal = pulse2.apis.clients.mirror_api.MirrorApi(credentials, self.server_addr)
+        #if self.config.ma_verifypeer:
+            #self.internal = pulse2.apis.clients.mirror_api.MirrorApi(credentials, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
+        #else:
+            #self.internal = pulse2.apis.clients.mirror_api.MirrorApi(credentials, self.server_addr)
 
-        for method in ('getMirror', 'getMirrors', 'getFallbackMirror', 'getFallbackMirrors', 'getApiPackage', 'getApiPackages', ):
-            setattr(self, method, getattr(self.internal, method))
+        #for method in ('getMirror', 'getMirrors', 'getFallbackMirror', 'getFallbackMirrors', 'getApiPackage', 'getApiPackages', ):
+            #setattr(self, method, getattr(self.internal, method))
 
-        self.initialized = True
+        #self.initialized = True

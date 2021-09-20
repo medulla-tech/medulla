@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2018
+# Yuri Chornoivan <yurchor@ukr.net>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 14:20+0100\n"
+"POT-Creation-Date: 2021-09-01 13:52+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,73 +21,229 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
+#: modules/pkgs/infoPackage.inc.php:35 modules/pkgs/infoPackage.inc.php:41
 msgid "Packages"
 msgstr "Пакунки"
 
-#: modules/pkgs/infoPackage.inc.php:44
+#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/rulesList.php:29
+#: modules/pkgs/pkgs/localSidebar.php:48
+msgid "Rules list"
+msgstr "Список правил"
+
+#: modules/pkgs/infoPackage.inc.php:50 modules/pkgs/pkgs/localSidebar.php:49
+msgid "Add a rule"
+msgstr "Додати правило"
+
+#: modules/pkgs/infoPackage.inc.php:54
+msgid "Edit a rule"
+msgstr "Редагувати правило"
+
+#: modules/pkgs/infoPackage.inc.php:58
+msgid "Delete a rule"
+msgstr "Вилучити правило"
+
+#: modules/pkgs/infoPackage.inc.php:63
 msgid "Show all packages"
 msgstr "Показати усі пакунки"
 
-#: modules/pkgs/infoPackage.inc.php:47
-msgid "Show all bundles"
-msgstr "Показати усі в'язки"
-
-#: modules/pkgs/infoPackage.inc.php:50 modules/pkgs/pkgs/localSidebar.php:28
+#: modules/pkgs/infoPackage.inc.php:69 modules/pkgs/pkgs/localSidebar.php:41
+#: modules/pkgs/pkgs/localSidebar.php:45
 msgid "Add a package"
 msgstr "Додати пакунок"
 
-#: modules/pkgs/infoPackage.inc.php:53
-#: modules/pkgs/pkgs/ajaxPackageList.php:94 modules/pkgs/pkgs/edit.php:291
+#: modules/pkgs/infoPackage.inc.php:72
+#: modules/pkgs/pkgs/ajaxPackageList.php:73 modules/pkgs/pkgs/edit.php:193
 msgid "Edit a package"
 msgstr "Редагувати пакунок"
 
-#: modules/pkgs/infoPackage.inc.php:56
-msgid "Add a bundle"
-msgstr "Додати в'язку"
+#: modules/pkgs/infoPackage.inc.php:75
+msgid "Package detail"
+msgstr "Подробиці щодо пакунка"
 
-#: modules/pkgs/infoPackage.inc.php:59
-msgid "Edit a bundle"
-msgstr "Редагувати в'язку"
+#: modules/pkgs/infoPackage.inc.php:78
+msgid "Package File Preview"
+msgstr "Перегляд файлів пакунка"
 
-#: modules/pkgs/infoPackage.inc.php:66
+#: modules/pkgs/infoPackage.inc.php:92
 msgid "Create licence static group"
 msgstr "Створити статичну ліцензійну групу"
 
-#: modules/pkgs/infoPackage.inc.php:72
+#: modules/pkgs/infoPackage.inc.php:98
 msgid "See pending packages"
 msgstr "Переглянути пакунки з черги"
 
-#: modules/pkgs/infoPackage.inc.php:74
+#: modules/pkgs/infoPackage.inc.php:100
 #: modules/pkgs/pkgs/appstreamSettings.php:34
 msgid "Appstream settings"
 msgstr "Параметри Appstream"
 
-#: modules/pkgs/infoPackage.inc.php:89
+#: modules/pkgs/infoPackage.inc.php:119
 msgid "Show mirror status"
 msgstr "Показати стан дзеркала"
 
-#: modules/pkgs/infoPackage.inc.php:93
-#: modules/pkgs/pkgs/ajaxPackageList.php:98
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: modules/pkgs/infoPackage.inc.php:123
+msgid "Pending Package synchronization"
+msgstr "Черга синхронізації пакунків"
+
+#: modules/pkgs/infoPackage.inc.php:127
+#: modules/pkgs/pkgs/ajaxPackageList.php:77
 msgid "Delete a package"
 msgstr "Вилучити пакунок"
 
-#: modules/pkgs/infoPackage.inc.php:97
+#: modules/pkgs/infoPackage.inc.php:131
 msgid "Delete a bundle"
 msgstr "Вилучити в'язку"
 
-#: modules/pkgs/infoPackage.inc.php:101
+#: modules/pkgs/infoPackage.inc.php:135
 msgid "Activate Appstream Stream"
 msgstr "Активувати потік Appstream"
 
-#: modules/pkgs/infoPackage.inc.php:140
+#: modules/pkgs/infoPackage.inc.php:174
 msgid "Appstream Updates list"
 msgstr "Список оновлень Appstream"
 
-#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
+#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:47
 msgid "Pending packages list"
 msgstr "Список пакунків у черзі"
+
+#: modules/pkgs/pkgs/pending.php:41
+msgid "All the pendings have been deleted"
+msgstr "Усі заплановані завдання було вилучено"
+
+#: modules/pkgs/pkgs/pending.php:44
+msgid "The package "
+msgstr "Пакунок"
+
+#: modules/pkgs/pkgs/pending.php:47
+msgid "The relays <b>"
+msgstr "Зміни <b>"
+
+#: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
+msgid "Appstream updates"
+msgstr "Оновлення Appstream"
+
+#: modules/pkgs/pkgs/viewAppstreamUpdates.php:38
+msgid "Appstream update"
+msgstr "Оновлення Appstream"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:72 modules/pkgs/pkgs/detail.php:268
+msgid "Package Detail"
+msgstr "Подробиці щодо пакунка"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:74
+msgid "Please switch to Expert mode to edit this package"
+msgstr ""
+"Будь ласка, перемкніться на режим досвідченого користувача, щоб редагувати "
+"цей пакунок"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:75
+msgid "You must have write rights to edit this package"
+msgstr "Для редагування цього пакунка вам потрібні права доступу до запису"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:78
+msgid "You must have write rights to delete this package"
+msgstr "Для вилучення цього пакунка вам потрібні права доступу до запису"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:142
+#: modules/pkgs/pkgs/ajaxPackageList.php:146
+msgid "Sharing disk usage"
+msgstr "Спільне використання диска"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:142
+msgid "Package occupation"
+msgstr "Місце пакунка"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:145
+msgid "Not limited"
+msgstr "Не обмежено"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:146
+#: modules/pkgs/pkgs/ajaxPackageList.php:162
+msgid "not limited"
+msgstr "не обмежено"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:176
+msgid "Non precised"
+msgstr "Не вказано"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:291
+#: modules/pkgs/pkgs/ajaxPackageList.php:435
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
+msgid "Package name"
+msgstr "Назва пакунка"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:293 modules/pkgs/pkgs/edit.php:306
+#: modules/pkgs/pkgs/add.php:224
+msgid "Share"
+msgstr "Спільний"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:294
+msgid "Permissions"
+msgstr "Права доступу"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:296
+#: modules/pkgs/pkgs/ajaxPackageList.php:437 modules/pkgs/pkgs/addRule.php:60
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/detail.php:204 modules/pkgs/pkgs/edit.php:244
+#: modules/pkgs/pkgs/editRule.php:65 modules/pkgs/pkgs/add.php:232
+msgid "Description"
+msgstr "Опис"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:297
+#: modules/pkgs/pkgs/ajaxPackageList.php:438
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: modules/pkgs/pkgs/detail.php:205 modules/pkgs/pkgs/add.php:231
+#: modules/pkgs/includes/query.php:88
+msgid "Version"
+msgstr "Версія"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:298
+#: modules/pkgs/pkgs/ajaxPackageList.php:439 modules/pkgs/pkgs/detail.php:208
+msgid "Licenses"
+msgstr "Ліцензії"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:299
+#: modules/pkgs/pkgs/ajaxPackageList.php:440
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:71
+msgid "Os"
+msgstr "ОС"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:300
+#: modules/pkgs/pkgs/ajaxPackageList.php:441
+msgid "Package size"
+msgstr "Розмір пакунка"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:301
+msgid "Share usage"
+msgstr "Спільне використання"
+
+#: modules/pkgs/pkgs/addXMPP.php:40
+msgid "Available Actions"
+msgstr "Доступні дії"
+
+#: modules/pkgs/pkgs/addXMPP.php:43
+msgid "Deployment Workflow"
+msgstr "Процедура розгортання"
+
+#: modules/pkgs/pkgs/deletePackage.php:38
+msgid "Delete this rule"
+msgstr "Вилучити це правило"
+
+#: modules/pkgs/pkgs/desynchronization.php:54
+msgid "Delete Pending"
+msgstr "Вилучити заплановане"
+
+#: modules/pkgs/pkgs/desynchronization.php:57
+#: modules/pkgs/pkgs/desynchronization.php:74
+msgid "Remove package "
+msgstr "Вилучити пакунок"
+
+#: modules/pkgs/pkgs/desynchronization.php:57
+#: modules/pkgs/pkgs/desynchronization.php:81
+msgid "Remove specific jids from "
+msgstr "Вилучити вказані jid з"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:39
 #, php-format
@@ -129,224 +285,13 @@ msgstr "Користувач"
 msgid "Password"
 msgstr "Пароль"
 
-#: modules/pkgs/pkgs/add.php:33
-msgid "Add package"
-msgstr "Додати пакунок"
+#: modules/pkgs/pkgs/rsync.php:74
+msgid "Relay servers not yet synchronized : "
+msgstr "Проміжні сервери, які ще не синхронізовано:"
 
-#: modules/pkgs/pkgs/add.php:106 modules/pkgs/pkgs/associate_files.php:65
-#, php-format
-msgid "Files successfully associated with package <b>%s (%s)</b>%s"
-msgstr "Файли успішно пов'язано із пакунком <b>%s (%s)</b>%s"
-
-#: modules/pkgs/pkgs/add.php:126 modules/pkgs/pkgs/associate_files.php:85
-#: modules/pkgs/pkgs/edit.php:167
-#, php-format
-msgid "Failed to associate files%s"
-msgstr "Не вдалося пов'язати файли%s"
-
-#: modules/pkgs/pkgs/add.php:143 modules/pkgs/pkgs/associate_files.php:88
-#: modules/pkgs/pkgs/edit.php:182
-msgid "Failed to associate files"
-msgstr "Не вдалося пов'язати файли"
-
-#: modules/pkgs/pkgs/add.php:163
-msgid "Choose package source"
-msgstr "Виберіть джерело пакунка"
-
-#: modules/pkgs/pkgs/add.php:178
-msgid "Already uploaded on the server"
-msgstr "Вже вивантажено на сервер"
-
-#: modules/pkgs/pkgs/add.php:178
-msgid "Upload from this web page"
-msgstr "Вивантажити з цієї сторінки"
-
-#: modules/pkgs/pkgs/add.php:178
-msgid "Make an empty package"
-msgstr "Створити порожній пакунок"
-
-#: modules/pkgs/pkgs/add.php:184 modules/pkgs/pkgs/edit.php:322
-msgid "Package API"
-msgstr "API пакунка"
-
-#: modules/pkgs/pkgs/add.php:187
-msgid "Package source"
-msgstr "Джерело пакунка"
-
-#: modules/pkgs/pkgs/add.php:188 modules/pkgs/pkgs/add.php:434
-msgid "Files directory"
-msgstr "Каталог файлів"
-
-#: modules/pkgs/pkgs/add.php:191
-msgid "Package Creation"
-msgstr "Створення пакунка"
-
-#: modules/pkgs/pkgs/add.php:197
-msgid "Name"
-msgstr "Назва"
-
-#: modules/pkgs/pkgs/add.php:197
-msgid "<fill_package_name>"
-msgstr "<вкажіть_назву_пакунка>"
-
-#: modules/pkgs/pkgs/add.php:198 modules/pkgs/pkgs/ajaxPackageList.php:188
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-#: modules/pkgs/includes/query.php:88
-msgid "Version"
-msgstr "Версія"
-
-#: modules/pkgs/pkgs/add.php:199 modules/pkgs/pkgs/ajaxPackageList.php:187
-#: modules/pkgs/pkgs/edit.php:342
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-msgid "Description"
-msgstr "Опис"
-
-#: modules/pkgs/pkgs/add.php:205
-msgid "Command:"
-msgstr "Команда:"
-
-#: modules/pkgs/pkgs/add.php:206
-msgid ""
-"Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
-"        If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
-"        Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\\n\n"
-"        You may also ask Google for the silent installation switches. If you're feeling lucky, here is a Google search that may help:\\n\\n\n"
-"        <a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
-msgstr ""
-"Pulse спробує визначити спосіб встановлення вивантажених файлів.\\n\\n\n"
-"        Якщо визначити спосіб не вдасться, це не означатиме, що програму не можна встановити за допомогою Pulse, а означатиме лише те, що вам доведеться самостійно визначити відповідну команду.\\n\\n\n"
-"        Багато постачальників програмного забезпечення (Acrobat, Flash, Skype) надають версію MSI власних пакунків, яку може бути оброблено Pulse у автоматичному режимі.\\n\n"
-"        Крім того, ви можете пошукати у Google параметри команди для автоматичного встановлення. Якщо вам скрізь таланить, можете спробувати ось таку адресу для пошуку у Google:\\n\\n\n"
-"        <a href=\"@@GOOGLE_SEARCH_URL@@\">Пошук у Google</a>"
-
-#: modules/pkgs/pkgs/add.php:213 modules/pkgs/pkgs/edit.php:348
-msgid "Command's name : "
-msgstr "Назва програми: "
-
-#: modules/pkgs/pkgs/add.php:217 modules/pkgs/pkgs/edit.php:356
-msgid "Need a reboot ?"
-msgstr "Потребує перезавантаження?"
-
-#: modules/pkgs/pkgs/add.php:222 modules/pkgs/pkgs/edit.php:362
-msgid "Windows"
-msgstr "Windows"
-
-#: modules/pkgs/pkgs/add.php:222 modules/pkgs/pkgs/edit.php:362
-msgid "Linux"
-msgstr "Linux"
-
-#: modules/pkgs/pkgs/add.php:222 modules/pkgs/pkgs/edit.php:362
-msgid "Mac OS"
-msgstr "Mac OS"
-
-#: modules/pkgs/pkgs/add.php:241 modules/pkgs/pkgs/edit.php:382
-msgid "Operating System"
-msgstr "Операційна система"
-
-#: modules/pkgs/pkgs/add.php:260 modules/pkgs/pkgs/edit.php:411
-msgid "Transfer method"
-msgstr "Спосіб передавання"
-
-#: modules/pkgs/pkgs/add.php:266 modules/pkgs/pkgs/edit.php:424
-msgid "bandwidth throttling (ko)"
-msgstr "звуження каналу (кілооктети)"
-
-#: modules/pkgs/pkgs/add.php:266 modules/pkgs/pkgs/edit.php:424
-msgid "<in ko>"
-msgstr "<у ko>"
-
-#: modules/pkgs/pkgs/add.php:270 modules/pkgs/pkgs/edit.php:436
-msgid "high priority"
-msgstr "висока пріоритетність"
-
-#: modules/pkgs/pkgs/add.php:270 modules/pkgs/pkgs/edit.php:436
-msgid "ordinary priority"
-msgstr "звичайна пріоритетність"
-
-#: modules/pkgs/pkgs/add.php:273 modules/pkgs/pkgs/edit.php:439
-msgid "Spooling"
-msgstr "Буферизація"
-
-#: modules/pkgs/pkgs/add.php:341
-msgid "Add"
-msgstr "Додати"
-
-#: modules/pkgs/pkgs/add.php:456
-#, php-format
-msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
-msgstr "Вивантаження файлів (<b><u title='%s'>макс. %s МБ</u></b>)"
-
-#: modules/pkgs/pkgs/add.php:456
-msgid ""
-"Change post_max_size and upload_max_filesize directives in php.ini file to "
-"increase upload size."
-msgstr ""
-"Щоб збільшити розмір вивантажуваних даних, змініть значення у командах "
-"post_max_size і upload_max_filesize у файлі php.ini."
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:95
-msgid "Please switch to Expert mode to edit this package"
-msgstr ""
-"Будь ласка, перемкніться на режим досвідченого користувача, щоб редагувати "
-"цей пакунок"
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:110 modules/pkgs/pkgs/index.php:45
-#, php-format
-msgid "MMC failed to contact package server %s."
-msgstr "MMC не вдалося зв'язатися із сервером пакунків %s."
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:181 modules/pkgs/pkgs/index.php:53
-msgid "Please contact your administrator."
-msgstr "Будь ласка, зверніться до адміністратора."
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:185
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
-#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
-msgid "Package name"
-msgstr "Назва пакунка"
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:189
-msgid "Licenses"
-msgstr "Ліцензії"
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:190
-msgid "Package size"
-msgstr "Розмір пакунка"
-
-#: modules/pkgs/pkgs/remove.php:43 modules/pkgs/pkgs/removeBundle.php:36
-msgid "The package has been deleted."
-msgstr "Пакунок вилучено."
-
-#: modules/pkgs/pkgs/remove.php:57 modules/pkgs/pkgs/removeBundle.php:52
-msgid "The package failed to delete"
-msgstr "Не вдалося вилучити пакунок"
-
-#: modules/pkgs/pkgs/remove.php:69 modules/pkgs/pkgs/removeBundle.php:74
-msgid "Delete this package"
-msgstr "Вилучити цей пакунок"
-
-#: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
-msgid "Appstream updates"
-msgstr "Оновлення Appstream"
-
-#: modules/pkgs/pkgs/viewAppstreamUpdates.php:38
-msgid "Appstream update"
-msgstr "Оновлення Appstream"
-
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
-#: modules/pkgs/pkgs/edit.php:579 modules/pkgs/includes/html.inc.php:59
-msgid "Click here to select files"
-msgstr "Натисніть, щоб вибрати файли"
-
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
-#: modules/pkgs/pkgs/edit.php:580 modules/pkgs/includes/html.inc.php:42
-msgid "Upload Queued Files"
-msgstr "Вивантажити файли з черги"
-
-#: modules/pkgs/pkgs/localSidebar.php:27 modules/pkgs/pkgs/index.php:29
-msgid "Packages list"
-msgstr "Список пакунків"
+#: modules/pkgs/pkgs/rsync.php:93
+msgid "Relay servers already synchronized : "
+msgstr "Проміжні сервери, які вже синхронізовано:"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
 msgid "Waiting..."
@@ -364,77 +309,112 @@ msgstr "Готовий до використання"
 msgid "Expiration date"
 msgstr "Дата завершення строку дії"
 
-#: modules/pkgs/pkgs/createGroupLicence.php:64
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:38
+msgid "Packages list"
+msgstr "Список пакунків"
+
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:101
+msgid "Package API temporary directory is empty"
+msgstr "Тимчасовий каталог програмного інтерфейсу пакунка є порожнім"
+
+#: modules/pkgs/pkgs/addRule.php:29
+msgid "Add a Rule"
+msgstr "Додати правило"
+
+#: modules/pkgs/pkgs/addRule.php:41
 #, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "Список комп'ютерів обрізано до %d записів"
+msgid "The rule %s has been created"
+msgstr "Створено правило %s"
 
-#: modules/pkgs/pkgs/edit.php:39
-msgid "Edit package"
-msgstr "Редагувати пакунок"
+#: modules/pkgs/pkgs/addRule.php:59 modules/pkgs/pkgs/rulesList.php:69
+#: modules/pkgs/pkgs/editRule.php:64
+msgid "Rule Name"
+msgstr "Назва правила"
 
-#: modules/pkgs/pkgs/edit.php:98
-#, php-format
-msgid "Package successfully added in %s"
-msgstr "Пакунок успішно додано до %s"
+#: modules/pkgs/pkgs/addRule.php:61 modules/pkgs/pkgs/editRule.php:66
+msgid "Search in Name"
+msgstr "Шукати у назві"
 
-#: modules/pkgs/pkgs/edit.php:116
-msgid "Package successfully edited"
-msgstr "Пакунок успішно змінено"
+#: modules/pkgs/pkgs/addRule.php:61 modules/pkgs/pkgs/editRule.php:66
+msgid "File Name"
+msgstr "Назва файла"
 
-#: modules/pkgs/pkgs/edit.php:145
-#, php-format
-msgid "Files successfully added to the package <b>%s (%s)</b>"
-msgstr "Файли успішно додано до пакунка <b>%s (%s)</b>"
+#: modules/pkgs/pkgs/addRule.php:62 modules/pkgs/pkgs/editRule.php:67
+msgid "Search in Extension"
+msgstr "Шукати у суфіксі"
 
-#: modules/pkgs/pkgs/edit.php:213
-msgid "Package failed to save"
-msgstr "Не вдалося зберегти пакунок"
+#: modules/pkgs/pkgs/addRule.php:62 modules/pkgs/pkgs/editRule.php:67
+msgid "File Extension"
+msgstr "Суфікс файла"
 
-#: modules/pkgs/pkgs/edit.php:241
-msgid "File successfully deleted."
-msgstr "Файл успішно вилучено."
+#: modules/pkgs/pkgs/addRule.php:63 modules/pkgs/pkgs/editRule.php:68
+msgid "Search in Bang"
+msgstr "Шукати у Bang"
 
-#: modules/pkgs/pkgs/edit.php:259
-#, php-format
-msgid "Failed to delete files%s"
-msgstr "Не вдалося вилучити файли%s"
+#: modules/pkgs/pkgs/addRule.php:63 modules/pkgs/pkgs/editRule.php:68
+msgid "Element in Bang"
+msgstr "Елемент у Bang"
 
-#: modules/pkgs/pkgs/edit.php:274
-msgid "Failed to delete files"
-msgstr "Не вдалося вилучити файли"
+#: modules/pkgs/pkgs/addRule.php:64 modules/pkgs/pkgs/editRule.php:69
+msgid "Search into File command"
+msgstr "Шукати у команді File"
 
-#: modules/pkgs/pkgs/edit.php:340
-msgid "Package label"
-msgstr "Мітка пакунка"
+#: modules/pkgs/pkgs/addRule.php:64 modules/pkgs/pkgs/editRule.php:69
+msgid "Element in File Result"
+msgstr "Елемент у результаті File"
 
-#: modules/pkgs/pkgs/edit.php:341
-msgid "Package version"
-msgstr "Версія пакунка"
+#: modules/pkgs/pkgs/addRule.php:65 modules/pkgs/pkgs/editRule.php:70
+msgid "Search into Strings command"
+msgstr "Шукати у команді Strings"
 
-#: modules/pkgs/pkgs/edit.php:348
-msgid "Command : "
-msgstr "Команда:"
+#: modules/pkgs/pkgs/addRule.php:65 modules/pkgs/pkgs/editRule.php:70
+msgid "Element in Strings Result"
+msgstr "Елемент у результаті Strings"
 
-#: modules/pkgs/pkgs/edit.php:554
-msgid "File"
-msgstr "Файл"
-
-#: modules/pkgs/pkgs/edit.php:563
-msgid "Delete file"
-msgstr "Вилучити файл"
-
-#: modules/pkgs/pkgs/edit.php:563
-msgid "Are you sure you want to delete this file?"
-msgstr "Ви справді хочете вилучити цей файл?"
+#: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
+#: modules/pkgs/pkgs/add.php:382
+msgid "Add"
+msgstr "Додати"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
 msgid "Associate package"
 msgstr "Пов'язати пакунок"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+msgid "Remove all packages from pending"
+msgstr "Вилучити усі пакунки зі списку запланованого"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:80
 msgid "Show mirrors"
 msgstr "Показати дзеркала"
+
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:81
+msgid "Remove packages from pending"
+msgstr "Вилучити пакунки зі списку запланованого"
+
+#: modules/pkgs/pkgs/preview.php:5
+msgid "Content for file "
+msgstr "Вміст файла"
+
+#: modules/pkgs/pkgs/preview.php:16
+msgid "NL mode (unix)"
+msgstr "NL-режим (unix)"
+
+#: modules/pkgs/pkgs/preview.php:17
+msgid "CRLF mode (win)"
+msgstr "CRLF-режим (win)"
+
+#: modules/pkgs/pkgs/remove.php:39
+msgid "The package has been deleted."
+msgstr "Пакунок вилучено."
+
+#: modules/pkgs/pkgs/remove.php:53
+msgid "The package failed to delete"
+msgstr "Не вдалося вилучити пакунок"
+
+#: modules/pkgs/pkgs/remove.php:66
+msgid "Delete this package"
+msgstr "Вилучити цей пакунок"
 
 #: modules/pkgs/pkgs/activateAppstreamFlow.php:37
 msgid ""
@@ -452,14 +432,386 @@ msgstr "Не вдалося додати потік."
 msgid "Activate this Appstream stream?"
 msgstr "Активувати цей потік Appstream?"
 
-#: modules/pkgs/pkgs/rsync.php:32
-#, php-format
-msgid "The package %s (%s) is not associated"
-msgstr "Пакунок %s (%s) не пов'язано"
+#: modules/pkgs/pkgs/detail.php:35
+msgid "Executed Command"
+msgstr "Виконана команда"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:101
-msgid "Package API temporary directory is empty"
-msgstr "Тимчасовий каталог програмного інтерфейсу пакунка є порожнім"
+#: modules/pkgs/pkgs/detail.php:40
+msgid "Type Script"
+msgstr "Ввести скрипт"
+
+#: modules/pkgs/pkgs/detail.php:45
+msgid "Shebang"
+msgstr "Шебанг"
+
+#: modules/pkgs/pkgs/detail.php:51
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
+msgid "Script"
+msgstr "Скрипт"
+
+#: modules/pkgs/pkgs/detail.php:56
+msgid "Timeout"
+msgstr "Час очікування"
+
+#: modules/pkgs/pkgs/detail.php:61
+msgid "Code Return"
+msgstr "Повернення коду"
+
+#: modules/pkgs/pkgs/detail.php:66
+msgid "Alternate Package"
+msgstr "Альтернативний пакунок"
+
+#: modules/pkgs/pkgs/detail.php:71
+msgid "Set Environ Variable"
+msgstr "Встановити змінну середовища"
+
+#: modules/pkgs/pkgs/detail.php:81 modules/pkgs/pkgs/detail.php:240
+#: modules/pkgs/pkgs/edit.php:505
+msgid "File"
+msgstr "Файл"
+
+#: modules/pkgs/pkgs/detail.php:87
+msgid "Set"
+msgstr "Встановити"
+
+#: modules/pkgs/pkgs/detail.php:92
+#: modules/pkgs/includes/actions/action_download.php:73
+msgid "Download File"
+msgstr "Отримати файл"
+
+#: modules/pkgs/pkgs/detail.php:97 modules/pkgs/pkgs/detail.php:102
+#: modules/pkgs/pkgs/detail.php:107 modules/pkgs/pkgs/detail.php:112
+#: modules/pkgs/pkgs/detail.php:117 modules/pkgs/pkgs/detail.php:123
+#: modules/pkgs/pkgs/detail.php:128 modules/pkgs/pkgs/detail.php:133
+#: modules/pkgs/pkgs/detail.php:138
+msgid "Result Command"
+msgstr "Команда-результат"
+
+#: modules/pkgs/pkgs/detail.php:144 modules/pkgs/pkgs/detail.php:225
+#: modules/pkgs/includes/actions/actionrestart.php:36
+msgid "Restart"
+msgstr "Перезапустити"
+
+#: modules/pkgs/pkgs/detail.php:144
+msgid "Agent Machine"
+msgstr "Машина агента"
+
+#: modules/pkgs/pkgs/detail.php:144
+msgid "Machine"
+msgstr "Комп’ютер"
+
+#: modules/pkgs/pkgs/detail.php:149
+msgid "Waiting"
+msgstr "Очікування"
+
+#: modules/pkgs/pkgs/detail.php:149
+msgid "secs."
+msgstr "сек."
+
+#: modules/pkgs/pkgs/detail.php:150
+msgid "Go to"
+msgstr "Перейти"
+
+#: modules/pkgs/pkgs/detail.php:156
+msgid "Comment"
+msgstr "Коментар"
+
+#: modules/pkgs/pkgs/detail.php:161
+msgid "Inventory Activated"
+msgstr "Облік активовано"
+
+#: modules/pkgs/pkgs/detail.php:166
+msgid "Clear package after install"
+msgstr "Вилучити пакунок після встановлення"
+
+#: modules/pkgs/pkgs/detail.php:171
+msgid "If error go to"
+msgstr "Якщо помилка, перейти до"
+
+#: modules/pkgs/pkgs/detail.php:174
+msgid "If success go to"
+msgstr "Якщо успіх, перейти до"
+
+#: modules/pkgs/pkgs/detail.php:187
+msgid "Detail of Package "
+msgstr "Подробиці щодо пакунка"
+
+#: modules/pkgs/pkgs/detail.php:192
+msgid "Context"
+msgstr "Контекст"
+
+#: modules/pkgs/pkgs/detail.php:194
+msgid "Package Name"
+msgstr "Назва пакунка"
+
+#: modules/pkgs/pkgs/detail.php:195
+msgid "Creator"
+msgstr "Творець"
+
+#: modules/pkgs/pkgs/detail.php:197
+msgid "Edited By"
+msgstr "Автор редагування"
+
+#: modules/pkgs/pkgs/detail.php:198
+msgid "Creation Date"
+msgstr "Дата створення"
+
+#: modules/pkgs/pkgs/detail.php:200
+msgid "Last Modification Date"
+msgstr "Дата останньої зміни"
+
+#: modules/pkgs/pkgs/detail.php:202
+msgid "Sharing Location"
+msgstr "Адреса спільного ресурсу"
+
+#: modules/pkgs/pkgs/detail.php:203
+msgid "Package Uuid"
+msgstr "UUID пакунка"
+
+#: modules/pkgs/pkgs/detail.php:206
+msgid "Type"
+msgstr "Тип"
+
+#: modules/pkgs/pkgs/detail.php:216
+msgid "Transfer Method"
+msgstr "Спосіб передавання"
+
+#: modules/pkgs/pkgs/detail.php:218 modules/pkgs/pkgs/edit.php:365
+#: modules/pkgs/pkgs/add.php:295
+msgid "Transfer method"
+msgstr "Спосіб передавання"
+
+#: modules/pkgs/pkgs/detail.php:219 modules/pkgs/pkgs/detail.php:241
+msgid "Size"
+msgstr "Розмір"
+
+#: modules/pkgs/pkgs/detail.php:220
+msgid "Transferfile"
+msgstr "Передавання файла"
+
+#: modules/pkgs/pkgs/detail.php:222 modules/pkgs/pkgs/edit.php:378
+#: modules/pkgs/pkgs/add.php:301
+msgid "bandwidth throttling (ko)"
+msgstr "звуження каналу (кілооктети)"
+
+#: modules/pkgs/pkgs/detail.php:223 modules/pkgs/pkgs/edit.php:393
+#: modules/pkgs/pkgs/add.php:309
+msgid "Spooling"
+msgstr "Буферизація"
+
+#: modules/pkgs/pkgs/detail.php:223
+msgid "Priority"
+msgstr "Пріоритетність"
+
+#: modules/pkgs/pkgs/detail.php:224
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
+msgid "Inventory"
+msgstr "Облік"
+
+#: modules/pkgs/pkgs/detail.php:232
+msgid "View File Content"
+msgstr "Переглянути вміст файла"
+
+#: modules/pkgs/pkgs/detail.php:235
+msgid "Files"
+msgstr "Файли"
+
+#: modules/pkgs/pkgs/detail.php:235
+msgid "Total"
+msgstr "Загалом"
+
+#: modules/pkgs/pkgs/detail.php:242
+msgid "Ratio Size/Total"
+msgstr "Відношення розмір/загалом"
+
+#: modules/pkgs/pkgs/detail.php:243
+msgid "Mime"
+msgstr "MIME"
+
+#: modules/pkgs/pkgs/detail.php:244
+msgid "Mime Type"
+msgstr "Тип MIME"
+
+#: modules/pkgs/pkgs/detail.php:245 modules/pkgs/pkgs/detail.php:293
+msgid "Action"
+msgstr "Дія"
+
+#: modules/pkgs/pkgs/detail.php:284 modules/pkgs/pkgs/edit.php:428
+#: modules/pkgs/pkgs/add.php:317
+msgid "Dependencies"
+msgstr "Залежності"
+
+#: modules/pkgs/pkgs/detail.php:291
+msgid "Package"
+msgstr "Пакунок"
+
+#: modules/pkgs/pkgs/detail.php:292
+msgid "Uuid"
+msgstr "UUID"
+
+#: modules/pkgs/pkgs/detail.php:321
+msgid "Sequences"
+msgstr "Послідовності"
+
+#: modules/pkgs/pkgs/edit.php:38
+msgid "Edit package"
+msgstr "Редагувати пакунок"
+
+#: modules/pkgs/pkgs/edit.php:99
+#, php-format
+msgid "Package successfully added in %s"
+msgstr "Пакунок успішно додано до %s"
+
+#: modules/pkgs/pkgs/edit.php:106
+msgid "Package successfully edited"
+msgstr "Пакунок успішно змінено"
+
+#: modules/pkgs/pkgs/edit.php:120
+#, php-format
+msgid "Files successfully added to the package <b>%s (%s)</b>"
+msgstr "Файли успішно додано до пакунка <b>%s (%s)</b>"
+
+#: modules/pkgs/pkgs/edit.php:129 modules/pkgs/pkgs/add.php:136
+#: modules/pkgs/pkgs/associate_files.php:85
+#, php-format
+msgid "Failed to associate files%s"
+msgstr "Не вдалося пов'язати файли%s"
+
+#: modules/pkgs/pkgs/edit.php:133 modules/pkgs/pkgs/add.php:142
+#: modules/pkgs/pkgs/associate_files.php:88
+msgid "Failed to associate files"
+msgstr "Не вдалося пов'язати файли"
+
+#: modules/pkgs/pkgs/edit.php:142
+msgid "Package failed to save"
+msgstr "Не вдалося зберегти пакунок"
+
+#: modules/pkgs/pkgs/edit.php:171
+#, php-format
+msgid "Failed to delete files%s"
+msgstr "Не вдалося вилучити файли%s"
+
+#: modules/pkgs/pkgs/edit.php:173 modules/pkgs/pkgs/edit.php:178
+#, php-format
+msgid "<br/>File successfully deleted. %s"
+msgstr "<br/>Файл успішно вилучено. %s"
+
+#: modules/pkgs/pkgs/edit.php:183
+msgid "Failed to delete files"
+msgstr "Не вдалося вилучити файли"
+
+#: modules/pkgs/pkgs/edit.php:242
+msgid "Package label"
+msgstr "Мітка пакунка"
+
+#: modules/pkgs/pkgs/edit.php:243
+msgid "Package version"
+msgstr "Версія пакунка"
+
+#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:247
+msgid "Command's name : "
+msgstr "Назва програми: "
+
+#: modules/pkgs/pkgs/edit.php:252
+msgid "Command : "
+msgstr "Команда:"
+
+#: modules/pkgs/pkgs/edit.php:256 modules/pkgs/pkgs/add.php:251
+msgid "Need a reboot ?"
+msgstr "Потребує перезавантаження?"
+
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+msgid "Windows"
+msgstr "Windows"
+
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+msgid "Linux"
+msgstr "Linux"
+
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+msgid "Mac OS"
+msgstr "Mac OS"
+
+#: modules/pkgs/pkgs/edit.php:335 modules/pkgs/pkgs/add.php:275
+msgid "Operating System"
+msgstr "Операційна система"
+
+#: modules/pkgs/pkgs/edit.php:378 modules/pkgs/pkgs/add.php:302
+msgid "<in ko>"
+msgstr "<у ko>"
+
+#: modules/pkgs/pkgs/edit.php:390 modules/pkgs/pkgs/add.php:306
+msgid "high priority"
+msgstr "висока пріоритетність"
+
+#: modules/pkgs/pkgs/edit.php:390 modules/pkgs/pkgs/add.php:306
+msgid "ordinary priority"
+msgstr "звичайна пріоритетність"
+
+#: modules/pkgs/pkgs/edit.php:438 modules/pkgs/pkgs/add.php:327
+msgid "Added dependencies"
+msgstr "Додані залежності"
+
+#: modules/pkgs/pkgs/edit.php:454 modules/pkgs/pkgs/add.php:343
+msgid "Available dependencies"
+msgstr "Доступні залежності"
+
+#: modules/pkgs/pkgs/edit.php:455 modules/pkgs/pkgs/add.php:344
+msgid "search by name ..."
+msgstr "шукати за назвою…"
+
+#: modules/pkgs/pkgs/edit.php:514
+msgid "Delete file"
+msgstr "Вилучити файл"
+
+#: modules/pkgs/pkgs/edit.php:514
+msgid "Are you sure you want to delete this file?"
+msgstr "Ви справді хочете вилучити цей файл?"
+
+#: modules/pkgs/pkgs/edit.php:530
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
+#: modules/pkgs/includes/html.inc.php:59
+msgid "Click here to select files"
+msgstr "Натисніть, щоб вибрати файли"
+
+#: modules/pkgs/pkgs/edit.php:531
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
+#: modules/pkgs/includes/html.inc.php:42
+msgid "Upload Queued Files"
+msgstr "Вивантажити файли з черги"
+
+#: modules/pkgs/pkgs/edit.php:607 modules/pkgs/pkgs/add.php:444
+msgid "Accentuated and special chars are not allowed"
+msgstr "Не можна використовувати символи з акцентами або спеціальні символи"
+
+#: modules/pkgs/pkgs/rulesList.php:35
+#, php-format
+msgid "The rule %s has been removed"
+msgstr "Вилучено правило %s"
+
+#: modules/pkgs/pkgs/rulesList.php:71
+msgid "Rules Order"
+msgstr "Порядок правил"
+
+#: modules/pkgs/pkgs/rulesList.php:72
+msgid "Rule Description"
+msgstr "Опис правила"
+
+#: modules/pkgs/pkgs/rulesList.php:74
+msgid "Raise order priority"
+msgstr "Підняти пріоритетність"
+
+#: modules/pkgs/pkgs/rulesList.php:75
+msgid "Lower order priority"
+msgstr "Знизити пріоритетність"
+
+#: modules/pkgs/pkgs/rulesList.php:76
+msgid "Edit rule"
+msgstr "Редагувати правило"
+
+#: modules/pkgs/pkgs/rulesList.php:77
+msgid "Delete rule"
+msgstr "Вилучити правило"
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:55
 msgid "Validity (months)"
@@ -468,6 +820,494 @@ msgstr "Чинність (у місяцях)"
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:62
 msgid "Activate this Appstream stream"
 msgstr "Активувати цей потік Appstream"
+
+#: modules/pkgs/pkgs/editRule.php:29
+msgid "Edit a Rule"
+msgstr "Редагувати правило"
+
+#: modules/pkgs/pkgs/editRule.php:41
+#, php-format
+msgid "The rule %s has been modified"
+msgstr "Змінено правило %s"
+
+#: modules/pkgs/pkgs/add.php:35
+msgid "Add package"
+msgstr "Додати пакунок"
+
+#: modules/pkgs/pkgs/add.php:124 modules/pkgs/pkgs/associate_files.php:65
+#, php-format
+msgid "Files successfully associated with package <b>%s (%s)</b>%s"
+msgstr "Файли успішно пов'язано із пакунком <b>%s (%s)</b>%s"
+
+#: modules/pkgs/pkgs/add.php:162
+msgid "Choose package source"
+msgstr "Виберіть джерело пакунка"
+
+#: modules/pkgs/pkgs/add.php:177
+msgid "Already uploaded on the server"
+msgstr "Вже вивантажено на сервер"
+
+#: modules/pkgs/pkgs/add.php:177
+msgid "Upload from this web page"
+msgstr "Вивантажити з цієї сторінки"
+
+#: modules/pkgs/pkgs/add.php:177
+msgid "Make an empty package"
+msgstr "Створити порожній пакунок"
+
+#: modules/pkgs/pkgs/add.php:186
+msgid "Package source"
+msgstr "Джерело пакунка"
+
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:523
+msgid "Files directory"
+msgstr "Каталог файлів"
+
+#: modules/pkgs/pkgs/add.php:190
+msgid "Package Creation"
+msgstr "Створення пакунка"
+
+#: modules/pkgs/pkgs/add.php:230
+msgid "Name"
+msgstr "Назва"
+
+#: modules/pkgs/pkgs/add.php:230
+msgid "<fill_package_name>"
+msgstr "<вкажіть_назву_пакунка>"
+
+#: modules/pkgs/pkgs/add.php:239
+msgid "Command:"
+msgstr "Команда:"
+
+#: modules/pkgs/pkgs/add.php:240
+msgid ""
+"Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
+"        If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
+"        Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\\n\n"
+"        You may also ask Google for the silent installation switches. If you're feeling lucky, here is a Google search that may help:\\n\\n\n"
+"        <a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
+msgstr ""
+"Pulse спробує визначити спосіб встановлення вивантажених файлів.\\n\\n\n"
+"        Якщо визначити спосіб не вдасться, це не означатиме, що програму не можна встановити за допомогою Pulse, а означатиме лише те, що вам доведеться самостійно визначити відповідну команду.\\n\\n\n"
+"        Багато постачальників програмного забезпечення (Acrobat, Flash, Skype) надають версію MSI власних пакунків, яку може бути оброблено Pulse у автоматичному режимі.\\n\n"
+"        Крім того, ви можете пошукати у Google параметри команди для автоматичного встановлення. Якщо вам скрізь таланить, можете спробувати ось таку адресу для пошуку у Google:\\n\\n\n"
+"        <a href=\"@@GOOGLE_SEARCH_URL@@\">Пошук у Google</a>"
+
+#: modules/pkgs/pkgs/add.php:545
+#, php-format
+msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
+msgstr "Вивантаження файлів (<b><u title='%s'>макс. %s МБ</u></b>)"
+
+#: modules/pkgs/pkgs/add.php:545
+msgid ""
+"Change post_max_size and upload_max_filesize directives in php.ini file to "
+"increase upload size."
+msgstr ""
+"Щоб збільшити розмір вивантажуваних даних, змініть значення у командах "
+"post_max_size і upload_max_filesize у файлі php.ini."
+
+#: modules/pkgs/pkgs/createGroupLicence.php:64
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "Список комп'ютерів обрізано до %d записів"
+
+#: modules/pkgs/includes/actions/action_section_update.php:17
+msgid "Update Section"
+msgstr "Оновити розділ"
+
+#: modules/pkgs/includes/actions/action_section_update.php:25
+#: modules/pkgs/includes/actions/action_pwd_package.php:84
+#: modules/pkgs/includes/actions/action_comment.php:73
+#: modules/pkgs/includes/actions/action_unzip_file.php:370
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:220
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:436
+#: modules/pkgs/includes/actions/actionrestart.php:72
+#: modules/pkgs/includes/actions/actioncleaning.php:37
+#: modules/pkgs/includes/actions/action_section_uninstall.php:26
+#: modules/pkgs/includes/actions/action_section_install.php:26
+#: modules/pkgs/includes/actions/action_set_environ.php:56
+#: modules/pkgs/includes/actions/actionprocessscript.php:273
+#: modules/pkgs/includes/actions/action_set_config_file.php:60
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:87
+#: modules/pkgs/includes/actions/action_download.php:135
+msgid "Delete"
+msgstr "Вилучити"
+
+#: modules/pkgs/includes/actions/action_pwd_package.php:12
+msgid "Go to package folder"
+msgstr "Перейти до теки пакунків"
+
+#: modules/pkgs/includes/actions/action_pwd_package.php:39
+#: modules/pkgs/includes/actions/action_comment.php:27
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:21
+#: modules/pkgs/includes/actions/actionrestart.php:48
+#: modules/pkgs/includes/actions/actioncleaning.php:23
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:22
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:22
+#: modules/pkgs/includes/actions/action_set_config_file.php:29
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:30
+#: modules/pkgs/includes/actions/action_download.php:85
+msgid "Step label :"
+msgstr "Мітка кроку:"
+
+#: modules/pkgs/includes/actions/action_pwd_package.php:56
+#: modules/pkgs/includes/actions/action_pwd_package.php:70
+#: modules/pkgs/includes/actions/action_unzip_file.php:114
+#: modules/pkgs/includes/actions/action_unzip_file.php:128
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:134
+#: modules/pkgs/includes/actions/actionprocessscript.php:57
+#: modules/pkgs/includes/actions/actionprocessscript.php:71
+#: modules/pkgs/includes/actions/action_download.php:103
+#: modules/pkgs/includes/actions/action_download.php:117
+msgid "Alternate package"
+msgstr "Альтернативний пакунок"
+
+#: modules/pkgs/includes/actions/action_pwd_package.php:85
+#: modules/pkgs/includes/actions/action_comment.php:74
+#: modules/pkgs/includes/actions/action_unzip_file.php:371
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:437
+#: modules/pkgs/includes/actions/actionrestart.php:73
+#: modules/pkgs/includes/actions/actioncleaning.php:38
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:34
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:116
+#: modules/pkgs/includes/actions/action_set_environ.php:57
+#: modules/pkgs/includes/actions/actionprocessscript.php:274
+#: modules/pkgs/includes/actions/action_set_config_file.php:65
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:88
+#: modules/pkgs/includes/actions/action_download.php:136
+msgid "Options"
+msgstr "Параметри"
+
+#: modules/pkgs/includes/actions/action_comment.php:12
+msgid "Add info in deployment log"
+msgstr "Додати дані до журналу розгортання"
+
+#: modules/pkgs/includes/actions/action_comment.php:36
+msgid "Information"
+msgstr "Інформація"
+
+#: modules/pkgs/includes/actions/action_comment.php:41
+msgid "Your log comments !"
+msgstr "Ваші коментарі до журналу!"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:77
+msgid "Unzip File"
+msgstr "Розпакувати файл"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:86
+msgid "Step label:"
+msgstr "Мітка кроку:"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:95
+msgid "Zip file:"
+msgstr "Файл архіву:"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:143
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:68
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:283
+#: modules/pkgs/includes/actions/actionprocessscript.php:121
+msgid "10 first lines of result"
+msgstr "10 перших рядків результату"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:144
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:69
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:284
+#: modules/pkgs/includes/actions/actionprocessscript.php:122
+msgid "20 first lines of result"
+msgstr "20 перших рядків результату"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:145
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:70
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:285
+#: modules/pkgs/includes/actions/actionprocessscript.php:123
+msgid "30 first lines of result"
+msgstr "30 перших рядків результату"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:146
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:71
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:286
+#: modules/pkgs/includes/actions/actionprocessscript.php:124
+msgid "Complete results"
+msgstr "Результати повністю"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:147
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:72
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:287
+#: modules/pkgs/includes/actions/actionprocessscript.php:125
+msgid "10 last lines of result"
+msgstr "10 останніх рядків результату"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:148
+#: modules/pkgs/includes/actions/action_unzip_file.php:150
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:73
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:75
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:288
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:290
+#: modules/pkgs/includes/actions/actionprocessscript.php:126
+#: modules/pkgs/includes/actions/actionprocessscript.php:128
+msgid "20 last lines of result"
+msgstr "20 останніх рядків результату"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:149
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:74
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:289
+#: modules/pkgs/includes/actions/actionprocessscript.php:127
+msgid "30 last lines of result"
+msgstr "30 останніх рядків результату"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:151
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:76
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:291
+#: modules/pkgs/includes/actions/actionprocessscript.php:129
+msgid "The last line of result"
+msgstr "Останній рядок результату"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:197
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:122
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:137
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:337
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:352
+#: modules/pkgs/includes/actions/actionprocessscript.php:175
+#: modules/pkgs/includes/actions/actionprocessscript.php:190
+msgid "Return result"
+msgstr "Повернути результат"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:238
+#: modules/pkgs/includes/actions/action_unzip_file.php:253
+msgid "Unzip to specified folder"
+msgstr "Розпакувати до вказаної теки"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:272
+#: modules/pkgs/includes/actions/action_unzip_file.php:286
+msgid "Go to step"
+msgstr "Перейти до кроку"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:309
+#: modules/pkgs/includes/actions/action_unzip_file.php:324
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:158
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:173
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:374
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:389
+#: modules/pkgs/includes/actions/actionprocessscript.php:211
+#: modules/pkgs/includes/actions/actionprocessscript.php:226
+msgid "On success go to step"
+msgstr "Якщо успішно, перейти до кроку"
+
+#: modules/pkgs/includes/actions/action_unzip_file.php:344
+#: modules/pkgs/includes/actions/action_unzip_file.php:359
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:193
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:208
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:409
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:424
+#: modules/pkgs/includes/actions/actionprocessscript.php:246
+#: modules/pkgs/includes/actions/actionprocessscript.php:261
+msgid "On error go to step"
+msgstr "Якщо помилка, перейти до кроку"
+
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:11
+msgid "Run Command in shell"
+msgstr "Виконати команду у оболонці"
+
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:25
+#: modules/pkgs/includes/actions/actionprocessscript.php:40
+msgid "Command"
+msgstr "Команда"
+
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:42
+#: modules/pkgs/includes/actions/action_command_natif_shell.php:57
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:271
+#: modules/pkgs/includes/actions/actionprocessscript.php:95
+#: modules/pkgs/includes/actions/actionprocessscript.php:110
+msgid "Set timeout"
+msgstr "Встановити часовий пояс"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
+msgid "Execute script"
+msgstr "Виконати скрипт"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:54
+msgid "Native (Windows batch, Linux bash and macOS bash)"
+msgstr "Вбудований (пакетний файл Windows, скрипт bash у Linux та macOS)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:57
+msgid "Python (Windows, Linux and macOS)"
+msgstr "Python (Windows, Linux та macOS)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:60
+msgid "Visual Basic Script (Windows)"
+msgstr "Скрипт Visual Basic (Windows)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:63
+msgid "Power Shell (Windows)"
+msgstr "Power Shell (Windows)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:66
+msgid "Korn Shell (Linux & macOS)"
+msgstr "Оболонка Korn (Linux і macOS)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:69
+msgid "C Shell (Linux & macOS)"
+msgstr "C Shell (Linux і macOS)"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:84
+msgid "Script language"
+msgstr "Скриптова мова"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:158
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:177
+msgid "Force suffix"
+msgstr "Примусовий суфікс"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:162
+msgid ""
+"The \"Script language\" property above applies a suffix to the script by default.\n"
+"However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
+msgstr ""
+"Типово, використання властивості «Скриптова мова» призводить до встановлення суфікса назви скрипту.\n"
+"Втім, якщо встановлено властивість «Примусовий суфікс», завжди використовуватиметься суфікс'"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:181
+msgid ""
+"The \"Script language\" property above applies a suffix to the script by default.\n"
+" However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
+msgstr ""
+"Типово, використання властивості «Скриптова мова» призводить до встановлення суфікса назви скрипту.\n"
+"Втім, якщо встановлено властивість «Примусовий суфікс», завжди використовуватиметься суфікс'"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:211
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:230
+msgid ""
+"The \"Script language\" property above applies a hash-bang to the script by default.\n"
+" However, if the \"Force hash-bang\" property is set, the imposed hash-bang will be this one'"
+msgstr ""
+"Типово, використання властивості «Скриптова мова» призводить до встановлення шебанґа у скрипті.\n"
+"Втім, якщо встановлено властивість «Примусовий шебанґ», завжди використовуватиметься шебанґ'"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:226
+msgid "Force hash-bang"
+msgstr "Примусовий шебанґ"
+
+#: modules/pkgs/includes/actions/actionrestart.php:17
+msgid "Restart Machine"
+msgstr "Перезапустити комп'ютер"
+
+#: modules/pkgs/includes/actions/actionrestart.php:19
+msgid "Restart Agent Machine"
+msgstr "Перезапустити комп'ютер агента"
+
+#: modules/pkgs/includes/actions/actionrestart.php:59
+msgid "Target Restart"
+msgstr "Перезапуск призначення"
+
+#: modules/pkgs/includes/actions/actioncleaning.php:12
+msgid "Remove uploaded files"
+msgstr "Вилучити вивантажені файли"
+
+#: modules/pkgs/includes/actions/action_section_uninstall.php:18
+msgid "Uninstall Section"
+msgstr "Вилучити розділ"
+
+#: modules/pkgs/includes/actions/actionerrorcompletedend.php:7
+msgid "End Error"
+msgstr "Кінцева помилка"
+
+#: modules/pkgs/includes/actions/action_section_install.php:18
+msgid "Install Section"
+msgstr "Встановити розділ"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:8
+msgid "End Success"
+msgstr "Кінцевий успіх"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:42
+msgid "Delete package"
+msgstr "Вилучити пакунок"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:92
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:97
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:102
+msgid "Forced inventory"
+msgstr "Примусовий облік"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:93
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:98
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:103
+msgid "No inventory"
+msgstr "Без обліку"
+
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:94
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:99
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:104
+msgid "Inventory on change"
+msgstr "Облік при зміні"
+
+#: modules/pkgs/includes/actions/action_set_environ.php:28
+msgid "Set Environment variables"
+msgstr "Встановити змінні середовища"
+
+#: modules/pkgs/includes/actions/action_set_environ.php:36
+msgid "Step label : "
+msgstr "Мітка кроку:"
+
+#: modules/pkgs/includes/actions/action_set_environ.php:44
+msgid "Environment variable"
+msgstr "Змінна середовища"
+
+#: modules/pkgs/includes/actions/actionprocessscript.php:26
+msgid "Run command"
+msgstr "Виконати команду"
+
+#: modules/pkgs/includes/actions/actionprocessscript.php:36
+msgid "Step label: "
+msgstr "Мітка кроку:"
+
+#: modules/pkgs/includes/actions/action_set_config_file.php:12
+msgid "Set config file parameter"
+msgstr "Встановити параметр файла налаштувань"
+
+#: modules/pkgs/includes/actions/action_set_config_file.php:38
+msgid "Config action description"
+msgstr "Опис дії із налаштовування"
+
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:21
+msgid "Wait and go to step"
+msgstr "Зачекати і перейти до кроку"
+
+#: modules/pkgs/includes/actions/actionwaitandgoto.php:41
+msgid "Wait for (seconds)"
+msgstr "Очікування (у секундах)"
+
+#: modules/pkgs/includes/actions/action_download.php:127
+msgid "Download File:"
+msgstr "Отримання файла:"
+
+#: modules/pkgs/includes/html.inc.php:60
+#: modules/pkgs/includes/html.inc.php:151
+#: modules/pkgs/includes/html.inc.php:242
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: modules/pkgs/includes/html.inc.php:150
+#: modules/pkgs/includes/html.inc.php:241
+msgid "Add files"
+msgstr "Додати файли"
+
+#: modules/pkgs/includes/html.inc.php:188
+#: modules/pkgs/includes/html.inc.php:282
+msgid "Upload selected files"
+msgstr "Вивантажити позначені файли"
+
+#: modules/pkgs/includes/panels/appstream.inc.php:30
+msgid "Appstream"
+msgstr "Appstream"
+
+#: modules/pkgs/includes/panels/appstream.inc.php:38
+msgid "_X_ AppStream(s) available for subscription"
+msgstr "_X_ AppStream доступні для передплати"
+
+#: modules/pkgs/includes/panels/appstream.inc.php:39
+msgid "No featured appstream found."
+msgstr "Не знайдено рекомендованого appstream."
 
 #: modules/pkgs/includes/query.php:38
 msgid ""
@@ -499,31 +1339,6 @@ msgstr "Програмне забезпечення"
 msgid "Bool"
 msgstr "Булеве"
 
-#: modules/pkgs/includes/query.php:97
+#: modules/pkgs/includes/query.php:99
 msgid "Number of licenses"
 msgstr "Кількість ліцензій"
-
-#: modules/pkgs/includes/html.inc.php:60
-#: modules/pkgs/includes/html.inc.php:151
-msgid "Cancel"
-msgstr "Скасувати"
-
-#: modules/pkgs/includes/html.inc.php:150
-msgid "Add files"
-msgstr "Додати файли"
-
-#: modules/pkgs/includes/html.inc.php:188
-msgid "Upload selected files"
-msgstr "Вивантажити позначені файли"
-
-#: modules/pkgs/includes/panels/appstream.inc.php:30
-msgid "Appstream"
-msgstr "Appstream"
-
-#: modules/pkgs/includes/panels/appstream.inc.php:38
-msgid "_X_ AppStream(s) available for subscription"
-msgstr "_X_ AppStream доступні для передплати"
-
-#: modules/pkgs/includes/panels/appstream.inc.php:39
-msgid "No featured appstream found."
-msgstr "Не знайдено рекомендованого appstream."

@@ -84,6 +84,11 @@ function isAvailable($p_api, $pid, $mirror) {
 }
 
 class ServerAPI {
+  protected $server;
+  protected $port;
+  protected $mountpoint;
+  protected $protocol;
+
     function ServerAPI($h = null) {
         if ($h) {
             $this->server = $h['server'];
@@ -116,6 +121,7 @@ class Package {
         $this->Qversion = $h_pkg['Qversion'];
         $this->Qvendor = $h_pkg['Qvendor'];
         $this->associateinventory = $h_pkg['associateinventory'];
+        $this->targetos = $h_pkg['targetos'];
     }
 }
 

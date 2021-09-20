@@ -620,9 +620,12 @@ def get_host_rsync_path(uuid):
     machine_info = Glpi().getLastMachineInventoryFull(uuid)
     machine = dict((key, value) for (key, value) in machine_info)
     if 'Windows'.lower() in machine['os'].lower():
-        if '64' in machine['os_arch']:
-            return 'C:\\Windows\\SysWOW64\\rsync.exe'
-        else:
+        try:
+            if '64' in machine['os_arch']:
+                return 'C:\\Windows\\SysWOW64\\rsync.exe'
+            else:
+                return 'C:\\Windows\\System32\\rsync.exe'
+        except KeyError:
             return 'C:\\Windows\\System32\\rsync.exe'
     elif 'macOS'.lower() in machine['os'].lower():
         return 'rsync'

@@ -29,7 +29,7 @@ import logging
 from twisted.internet import defer
 from sets import Set as set
 import time, ipaddr
-
+import traceback
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
 from mmc.core.tasks import TaskManager
@@ -696,7 +696,7 @@ class ImagingRpcProxy(RpcProxyI):
                     self.synchroProfile(objmenu['group'])
                     return
             except KeyError:
-                logger.error("Multicast error monitorsUDPSender\n%s"%(traceback.format_exc()))
+                logging.getLogger().error("Multicast error monitorsUDPSender\n%s"%(traceback.format_exc()))
                 ImagingRpcProxy.checkThreadData[objmenu['location']]={}
                 ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
         else:
@@ -704,7 +704,7 @@ class ImagingRpcProxy(RpcProxyI):
             self.synchroProfile(objmenu['group'])
 
 
-    def checkDeploymentUDPSender(self,process):
+    def checkDeploymentUDPSender(self, process):
         """
         check whether multicast transfer is in progress
         """
@@ -715,8 +715,8 @@ class ImagingRpcProxy(RpcProxyI):
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
         if i == None:
-            logger.error("couldn't initialize the ImagingApi to %s"%( my_is.url))
-            return [False, "couldn't initialize the ImagingApi to %s"%( my_is.url)]
+            logger.error("couldn't initialize the ImagingApi to %s"%(location))
+            return [False, "couldn't initialize the ImagingApi to %s"%( location)]
 
         def treatResult(results):
             if results:
@@ -920,7 +920,6 @@ class ImagingRpcProxy(RpcProxyI):
         ret = db.getEntityMastersByUUID(loc_id, uuids)
         return xmlrpcCleanup(ret)
 
-    #jfk
     def getComputersWithImageInEntity(self, uuidimagingServer):
         db = ImagingDatabase()
         ret = db.getComputerWithImageInEntity(uuidimagingServer)
@@ -3675,14 +3674,10 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
 
     # initialize stuff
     logger = logging.getLogger()
-    ListImagingServerAssociated=[]
     db = ImagingDatabase()
 
     # store the fact that we are attempting a sync
     db.changeTargetsSynchroState(uuids, target_type, P2ISS.RUNNING)
-    dfdf = db.getListImagingServerAssociated()
-    for t in dfdf:
-        ListImagingServerAssociated.append(t.url)
     # Load up l_uuids with the required info (computer within profile OR given computers)
     if target_type == P2IT.PROFILE:
         pid = uuids[0]
@@ -3792,10 +3787,6 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
     if len(defer_list) == 0:
         distinct_locs = distinct_loc
         keyvaleur = distinct_loc.keys()
-        for tt in ListImagingServerAssociated:
-            for z in keyvaleur:
-                distinct_loc[z][0]=tt
-                synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
         return synchroTargetsSecondPart(ctx, distinct_locs, target_type, pid, macs = macs)
     else:
         def sendResult(results, distinct_loc = distinct_loc, target_type = target_type, pid = pid, db = db):
@@ -3803,10 +3794,6 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
                 db.delProfileMenuTarget(uuids)
             distinct_locs = distinct_loc
             keyvaleur = distinct_loc.keys()
-            for tt in ListImagingServerAssociated:
-                for z in keyvaleur:
-                    distinct_loc[z][0]=tt
-                    synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
             return synchroTargetsSecondPart(ctx, distinct_locs, target_type, pid, macs = macs)
         defer_list = defer.DeferredList(defer_list)
         defer_list.addCallback(sendResult)

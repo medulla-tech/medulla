@@ -26,7 +26,7 @@ It provide methods to tell which package_api a user can use to modify packages.
 """
 
 from pulse2.apis.clients import Pulse2Api
-        
+
 class UserPackageApiApi(Pulse2Api):
     def __init__(self, *attr):
         self.name = "UserPackageApiApi"

@@ -26,7 +26,7 @@ class MultiFileTpl extends AbstractTpl {
         $this->name = $name;
     }
 
-    function display() {
+    function display($arrParam = array()) {
         // FIXME use session or not ?
         $random_dir = "pulse_rdir_" . uniqid();
         $_SESSION['random_dir'] = $random_dir;
@@ -65,7 +65,7 @@ class MultiFileTpl extends AbstractTpl {
                     }
                     // DEBUG: write action to do when upload complete
 
-                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand") . '&papiid=\' + selectedPapi;
+                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand1") . '&papiid=\' + selectedPapi;
                     url += \'&tempdir=' . $random_dir . '\';
 
                     jQuery.ajax({
@@ -119,7 +119,7 @@ class MultiFileTpl2 extends AbstractTpl {
         $this->name = $name;
     }
 
-    function display() {
+    function display($arrParam = array()) {
 
         $random_dir = "pulse_rdir_" . uniqid();
         print '<div id="file-uploader">
@@ -159,7 +159,7 @@ class MultiFileTpl2 extends AbstractTpl {
                     // Set files_uploaded to 1
                     jQuery(\'[name=files_uploaded]\').val(1);
 
-                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand") . '&papiid=\' + selectedPapi;
+                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand1") . '&papiid=\' + selectedPapi;
                     url += \'&tempdir=' . $random_dir . '\';
 
                     jQuery.ajax({
@@ -203,6 +203,95 @@ class MultiFileTpl2 extends AbstractTpl {
 
 }
 
+
+class MultiFileTpl3 extends AbstractTpl {
+
+    function MultiFileTpl2($name) {
+        $this->name = $name;
+    }
+
+    function display($arrParam = array()) {
+
+        $random_dir = "pulse_rdir_" . uniqid();
+        print '<div id="file-uploader">
+                <noscript>
+                        <p>Please enable JavaScript to use file uploader.</p>
+                        <!-- or put a simple form for upload here -->
+                </noscript>
+
+        </div>
+        <input id="random_dir" name="random_dir" type="hidden" value="' . $random_dir . '">
+        <input id="packageUuid" name="packageUuid" type="hidden" value="' . $_GET['packageUuid'] . '">
+
+        <script src="modules/pkgs/lib/fileuploader/fileuploader.js" type="text/javascript"></script>
+        <link href="modules/pkgs/lib/fileuploader/fileuploader2.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript">
+        var selectedPapi = jQuery("[name=p_api]").val();
+        var packageUuid = jQuery("[name=packageUuid]").val();
+        function createUploader(){
+            var uploader = new qq.FileUploader({
+                element: document.getElementById(\'file-uploader\'),
+                action: \'modules/pkgs/lib/fileuploader/fileuploader.php\',
+                debug: true,
+                multiple: true,
+                demoMode: false,
+                random_dir: \'' . $random_dir . '\',
+                selectedPapi: selectedPapi,
+                autoUpload: false,
+                uploadButtonText: "' . _T('Add files', "pkgs") . '",
+                cancelButtonText: "' . _T('Cancel', "pkgs") . '",
+                onComplete: function(id, file, responseJson){
+                    // queue
+                    if(uploader.getInProgress() > 0){
+                        return;
+                    }
+                    // DEBUG: write action to do when upload complete
+
+                    // Set files_uploaded to 1
+                    jQuery(\'[name=files_uploaded]\').val(1);
+
+                    url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand1") . '&papiid=\' + selectedPapi;
+                    url += \'&tempdir=' . $random_dir . '\';
+                    url += \'&packageUuid=\' ;
+                    url += packageUuid;
+                    console.log(url);
+                    //console.log(packageUuid);
+                    jQuery.ajax({
+                        \'url\': url,
+                        type: \'get\',
+                        success: function(data){
+                            var googleFileName = \'\';
+                            jQuery(\'#commandcmd\').val(jQuery(\'#commandcmd\').val()+\'\\n\'+data.commandcmd);
+                            jQuery(\'.qq-upload-file\').each(function() {
+                                googleFileName = jQuery(this).text();
+                                return false;
+                            });
+
+                            jQuery(\'.label span a\').each(function() {
+                                url = \'http://www.google.com/#q=\' + googleFileName + \'+silent+install\';
+                                jQuery(this).attr(\'href\', url);
+                                jQuery(this).attr(\'target\', \'_blank\');
+                                return false;
+                            });
+                        }
+                    });
+
+                }
+            });
+
+            jQuery("<div class=\"uploadFiles btnPrimary\">' . _T('Upload selected files', 'pkgs') . '</div>").css("margin","0 0 0 10px").insertAfter(jQuery(".qq-upload-button"));
+            jQuery(".qq-upload-button").addClass("btnPrimary").removeClass("qq-upload-button").css("margin","0 0 0 0");
+
+            jQuery(\'.uploadFiles\').click(function() {
+                uploader.uploadStoredFiles();
+            });
+        }
+        createUploader();
+    </script>';
+    }
+}
+
+
 class buttonTpl extends AbstractTpl {
     var $class = '';
     var $cssClass = 'btn btn-small';
@@ -218,7 +307,7 @@ class buttonTpl extends AbstractTpl {
         $this->cssClass = $class;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
         if (isset($this->id,$this->text))
             printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
     }

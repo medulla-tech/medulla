@@ -2,11 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
- * (c) 2018 Siveo, http://www.siveo.net/
+ * (c) 2018-2021 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * file: pkgs/pkgs/add.php
  */
 require("localSidebar.php");
 require("graph/navbar.inc.php");
@@ -30,6 +31,7 @@ require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/query.php");
 require_once("modules/pkgs/includes/class.php");
 
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 $p = new PageGenerator(_T("Add package", "pkgs"));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -37,12 +39,10 @@ $p->display();
 // This session variable is used for auto-check upload button
 // @see ajaxrefreshPackageTempdir.php
 $_SESSION['pkgs-add-reloaded'] = array();
-
-
-if (isset($_POST['bconfirm'])) {
-
-    $p_api_id = $_POST['p_api'];
-    $random_dir = $_SESSION['random_dir'];
+function isExpertMode1(){return 1;}
+if (isset($_POST['bconfirm'])){
+    //$p_api_id = $_POST['p_api'];
+    $random_dir = isset($_SESSION['random_dir'])?$_SESSION['random_dir'] : "";
     $need_assign = True;
     $mode = $_POST['mode'];
     $level = 0;
@@ -51,24 +51,39 @@ if (isset($_POST['bconfirm'])) {
     }
 
     foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware',
-            'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
+            'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator',
+            'creator', 'creation_date', 'localisation_server') as $post) {
         //$package[$post] = iconv("utf-8","ascii//TRANSLIT",$_POST[$post]);
-        $package[$post] = $_POST[$post];
+        if(isset($_POST[$post])) {
+            $package[$post] = $_POST[$post];
+        }
+        else{
+            $package[$post] = "";
+        }
     }
     foreach (array('reboot', 'associateinventory') as $post) {
-        $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
+        if(isset($_POST[$post] )){
+            $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
+        }
+        else{
+            $package[$post] = 0;
+        }
     }
     // Package command
+    $_POST['commandname'] = isset($_POST['commandname'])?$_POST['commandname']:"";
+    $_POST['commandcmd'] = isset($_POST['commandcmd'])?$_POST['commandcmd']:"";
     $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
 
     // Simple package: not a bundle
     $package['sub_packages'] = array();
 
     // Send Package Infos via XMLRPC
-    $ret = putPackageDetail($p_api_id, $package, $need_assign);
+    $ret = putPackageDetail($package, $need_assign);
     $pid = $ret[3]['id'];
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
+
+
 
     $package_uuid = "";
     if(isset($_POST['saveList']))
@@ -80,6 +95,7 @@ if (isset($_POST['bconfirm'])) {
         $package_uuid = $ret[2];
         $result = save_xmpp_json($package_uuid,$saveList1);
     }
+    $cbx = array();
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($_POST['package-method'] == "upload") {
             $cbx = array($random_dir);
@@ -95,7 +111,9 @@ if (isset($_POST['bconfirm'])) {
                 $cbx[] = $_POST['rdo_files'];
             }
         }
-        $ret = associatePackages($p_api_id, $pid, $cbx, $level);
+
+        $ret = associatePackages($pid, $cbx, $level);
+        xmlrpc_update_package_size($pid);
         if (!isXMLRPCError() and is_array($ret)) {
             if ($ret[0]) {
                 $explain = '';
@@ -105,18 +123,10 @@ if (isset($_POST['bconfirm'])) {
                 //ICI
                 $str = sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain);
                 new NotifyWidgetSuccess($str);
-                xmlrpc_setfrompkgslogxmpp(  $str,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $explain ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Packaging | List | Manual');
-                header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
+                if($package_uuid != "")
+                  xmlrpc_chown($package_uuid);
+                header("Location: " . urlStrRedirect("pkgs/pkgs/index", array()));
+                //'location' => base64_encode($p_api_id)
                 exit;
             } else {
                 $reason = '';
@@ -125,17 +135,6 @@ if (isset($_POST['bconfirm'])) {
                 }
                 $str = sprintf(_T("Failed to associate files%s", "pkgs"), $reason);
                 new NotifyWidgetFailure($str);
-                xmlrpc_setfrompkgslogxmpp(  $str,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $reason ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Packaging | List | Manual');
                 if($package_uuid != '')
                     remove_xmpp_package($package_uuid);
             }
@@ -145,27 +144,27 @@ if (isset($_POST['bconfirm'])) {
     }
 } else {
     // Get number of PackageApi
-    $res = getUserPackageApi();
-
-    // set first Package Api found as default Package API
-    $p_api_id = $res[0]['uuid'];
-
-    $list_val = $list = array();
-    if (!isset($_SESSION['PACKAGEAPI'])) {
-        $_SESSION['PACKAGEAPI'] = array();
-    }
-    foreach ($res as $mirror) {
-        $list_val[$mirror['uuid']] = $mirror['uuid'];
-        $list[$mirror['uuid']] = $mirror['mountpoint'];
-        $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
-    }
+//     $res = getUserPackageApi();
+//
+//     // set first Package Api found as default Package API
+//     $p_api_id = $res[0]['uuid'];
+//
+//     $list_val = $list = array();
+//     if (!isset($_SESSION['PACKAGEAPI'])) {
+//         $_SESSION['PACKAGEAPI'] = array();
+//     }
+//     foreach ($res as $mirror) {
+//         $list_val[$mirror['uuid']] = $mirror['uuid'];
+//         $list[$mirror['uuid']] = $mirror['mountpoint'];
+//         $_SESSION['PACKAGEAPI'][$mirror['uuid']] = $mirror;
+//     }
 
     $span = new SpanElement(_T("Choose package source", "pkgs"), "pkgs-title");
-
+/*
     $selectpapi = new SelectItem('p_api');
     $selectpapi->setElements($list);
     $selectpapi->setElementsVal($list_val);
-    $_SESSION['pkgs_selected'] = array_values($list_val)[0];
+    $_SESSION['pkgs_selected'] = array_values($list_val)[0];*/
 
     $f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
     $f->push(new Table());
@@ -179,28 +178,63 @@ if (isset($_POST['bconfirm'])) {
     $r->setValues($vals);
     $r->setChoices($keys);
 
-    // Package API
-    $f->add(
-            new TrFormElement("<div id=\"p_api_label\">" . _T("Package API", "pkgs") . "</div>", $selectpapi), array("value" => $p_api_id, "required" => True)
-    );
+//     // Package API
+//     $f->add(
+//             new TrFormElement("<div id=\"p_api_label\">" . _T("Package API", "pkgs") . "</div>", $selectpapi), array("value" => $p_api_id, "required" => True)
+//     );
 
     $f->add(new TrFormElement(_T("Package source", "pkgs"), $r), array());
-    $f->add(new TrFormElement("<div id='directory-label'>" . _T("Files directory", "pkgs") . "</div>", new Div(array("id" => "package-temp-directory"))), array());
+    $f->add(new TrFormElement("<div id='directory-label'>" . _T("Files directory", "pkgs") . "</div>",
+                new Div(array("id" => "package-temp-directory"))), array());
     $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
-
     $span = new SpanElement(_T("Package Creation", "pkgs"), "pkgs-title");
     $f->add(new TrFormElement("", $span), array());
+    $f->add(new HiddenTpl("creator"), array("value" => $_SESSION['login'], "hide" => True));
+    $f->add(new HiddenTpl("creation_date"), array("value" => date("Y-m-d H:i:s"), "hide" => True));
 
+
+    if(isset($_SESSION['sharings'])){
+      $getShares = $_SESSION['sharings'];
+    }
+    else{
+      $getShares = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
+    }
+    $shares =[];
+    foreach($getShares['datas'] as $share){
+      $diskUsage = ($share['quotas'] > 0) ? ($share['usedquotas']/(1073741824*$share['quotas']))*100 : 0;
+      if(preg_match("#w#", $share['permission']) && $diskUsage < 100 ){
+        $shares[] = $share;
+      }
+    }
+    if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true ){
+      if(count($shares) == 1){
+        $f->add(new HiddenTpl("localisation_server"), array("value" => $shares[0]["name"], "hide" => True));
+      }
+      else{
+        $sharesNames = [];
+        $sharesPaths = [];
+        foreach($shares as $key=>$share){
+          $sharesNames[] = (isset($share['comments']) && $share['comments'] != "") ? $share['comments'] : $share['name'];
+          $sharesPaths[] = $share['name'];
+        }
+        $location_servers = new SelectItem('localisation_server');
+        $location_servers->setElements($sharesNames);
+        $location_servers->setElementsVal($sharesPaths);
+        $f->add(
+                new TrFormElement(_T('Share', 'pkgs'), $location_servers), array("value" => '')
+        );
+      }
+    }
     // fields
-
     $fields = array(
         array("label", _T("Name", "pkgs"), array("required" => True, 'placeholder' => _T('<fill_package_name>', 'pkgs'))),
         array("version", _T("Version", "pkgs"), array("required" => True)),
         array('description', _T("Description", "pkgs"), array()),
     );
 
-
-    if(!isExpertMode())
+    $options = array();
+    $cmds = array();
+    if(!isExpertMode1())
     {
         $command = _T('Command:', 'pkgs') . '<br /><br />';
         $commandHelper = '<span>' . _T('Pulse will try to figure out how to install the uploaded files.\n\n
@@ -241,7 +275,7 @@ if (isset($_POST['bconfirm'])) {
             new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => '')
     );
 
-    if(isExpertMode())
+    if(isExpertMode1())
     {
       $f->add(new HiddenTpl("metagenerator"), array("value" => "expert", "hide" => True));
     }
@@ -249,21 +283,23 @@ if (isset($_POST['bconfirm'])) {
       $f->add(new HiddenTpl("metagenerator"), array("value" => "standard", "hide" => True));
     }
 
-    if(isExpertMode())
+    if(isExpertMode1())
     {
 
         $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
 
         $methodtransfer = new SelectItem('methodetransfert');
-        $methodtransfer->setElements(['pullcurl','pushrsync']);
-        $methodtransfer->setElementsVal(['pullcurl','pushrsync']);
+        // Allowed methods are pullcurl, pushrsync, pullrsync, pullscp
+        $methodtransfer->setElements(['pushrsync', 'pullrsync', 'pulldirect']);
+        $methodtransfer->setElementsVal(['pushrsync', 'pullrsync', 'pulldirect']);
         $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer,['trid'=>'trTransfermethod']),['value'=>'']);
 
 
         $bpuploaddownload = new IntegerTpl("limit_rate_ko");
         $bpuploaddownload->setAttributCustom('min = 0');
         $f->add(
-                new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
+                new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''),
+                array('placeholder' => _T('<in ko>', 'pkgs')))
         );
         //spooling priority
         $rb = new RadioTpl("spooling");
@@ -273,11 +309,12 @@ if (isset($_POST['bconfirm'])) {
         $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
         $packagesInOption = '';
-        foreach(xmpp_packages_list() as $package)
+        $dependencies = get_dependencies_list_from_permissions($_SESSION["login"]);
+        foreach($dependencies as $package)
         {
-            $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
+            $packagesInOption .= '<option title="'.$package['name'].' v.'.$package['version'].'" value="'.$package['uuid'].'">'.$package['name'].' V.'.$package['version'].'</option>';
         }
-        $f->add(new TrFormElement("Dependencies",new SpanElement('<div id="grouplist">
+        $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">
     <table style="border: none;" cellspacing="0">
         <tr>
             <td style="border: none;">
@@ -287,11 +324,12 @@ if (isset($_POST['bconfirm'])) {
                 </div>
             </td>
             <td style="border: none;">
-                <h3>Added dependencies</h3>
+                <h3>'._T('Added dependencies', 'pkgs').'</h3>
                 <div class="list">
                     <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
 
                     </select>
+                    <div class="opt_name" style="position:absolute;background-color:yellow"></div>
                 </div>
             </td>
             <td style="border: none;">
@@ -302,10 +340,12 @@ if (isset($_POST['bconfirm'])) {
             </td>
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
-                    <h3>Available dependencies</h3>
+                    <h3>'._T('Available dependencies', 'pkgs').'</h3>
+                    <input type="text" id="dependenciesFilter" value="" placeholder="'._T("search by name ...", "pkgs").'"><br/>
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOption.'
                     </select>
+                    <div class="opt_name" style="position:absolute;background-color:yellow;"></div>
                 </div>
                 <div class="clearer"></div>
             </td>
@@ -319,7 +359,8 @@ if (isset($_POST['bconfirm'])) {
                 new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)
         );
         $f->add(
-                new TrFormElement($p[2], new TextareaTplArray(["name"=>$p[0] . 'cmd',"required"=>"required"])), array("value" => '')
+                new TrFormElement($p[2], new TextareaTplArray(["name"=>$p[0] . 'cmd',"required"=>"required"])),
+                array("value" => '')
         );
     }
 
@@ -332,7 +373,7 @@ if (isset($_POST['bconfirm'])) {
     addQuerySection($f, $package);
 
     $f->pop();
-    if(isExpertMode())
+    if(isExpertMode1())
     {
         $f->add(new HiddenTpl('saveList'), array('id'=>'saveList','name'=>'saveList',"value" => '', "hide" => True));
         include('addXMPP.php');
@@ -353,6 +394,54 @@ if (isset($_POST['bconfirm'])) {
 
 <script type="text/javascript">
     jQuery(function() { // load this piece of code when page is loaded
+
+      jQuery(".opt_bubble").on("mouseover", function(e){
+        let bubble = jQuery(this).parent().next(".opt_name");
+        let element = this;
+        let bodyRect = document.body.getBoundingClientRect();
+        let elementRect = element.getBoundingClientRect();
+        let offsetY = elementRect.top - bodyRect.top - 15;
+
+        let pkgsName = jQuery(element).text();
+        jQuery(bubble).text(pkgsName);
+        jQuery(bubble).css("left", elementRect.x+"px");
+        jQuery(bubble).css("top", offsetY+"px");
+        jQuery(bubble).show();
+      })
+
+      jQuery(".opt_bubble").on("mouseleave", function(){
+        let bubble = jQuery(this).parent().next(".opt_name");
+        jQuery(bubble).text("");
+
+      });
+
+      dependenciesFilter = jQuery("#dependenciesFilter");
+      pooldependencies = jQuery("#pooldependencies option");
+
+      dependenciesFilter.on("change click hover keypress keydown", function(event){
+        if(dependenciesFilter.val() != ""){
+          regex = new RegExp(dependenciesFilter.val(), "gi");
+          jQuery.each(pooldependencies, function(id, dependency){
+            optionSelector = jQuery(dependency)
+            if(regex.test(optionSelector.val()) === false){
+              optionSelector.hide();
+            }
+            else{
+              optionSelector.show();
+            }
+          })
+        }
+        else{
+          jQuery.each(pooldependencies, function(id, dependency){
+            optionSelector = jQuery(dependency)
+            optionSelector.show();
+          })
+        }
+      })
+
+        // Limit the text length for label
+        jQuery("input[name='label']").attr("maxlength", 60);
+        jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
         jQuery('.label span a').each(function() {
             jQuery(this).attr('href', 'http://www.google.com/#q=file.exe+silent+install');
             jQuery(this).attr('target', '_blank');
@@ -374,7 +463,7 @@ if (isset($_POST['bconfirm'])) {
                 'url': url,
                 type: 'get',
                 success: function(data) {
-                    jQuery('#version').val(data.version);
+                    //jQuery('#version').val(data.version);
                     jQuery('#commandcmd').val(data.commandcmd);
 
                 }
@@ -409,7 +498,7 @@ if (isset($_POST['bconfirm'])) {
                 jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
 
                 // reset form fields
-                jQuery('#version').val("");
+                //jQuery('#version').val("");
                 jQuery('#commandcmd').val("");
             }
 
@@ -451,7 +540,7 @@ if (isset($_POST['bconfirm'])) {
             else if (selectedValue == "upload") {
                 jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
                 // reset form fields
-                jQuery('#version').val("");
+                //jQuery('#version').val("");
                 jQuery('#commandcmd').val("");
                 jQuery('#directory-label').html("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
                 jQuery('#directory-label').parent().parent().fadeIn();
@@ -460,12 +549,12 @@ if (isset($_POST['bconfirm'])) {
     });
 <?php
 // if one package API, hide field
-if (count($list) < 2) {
-    echo <<< EOT
-            // Hide package api field
-            jQuery('#p_api').parents('tr:first').hide();
-
-EOT;
-}
+// if (count($list) < 2) {
+//     echo <<< EOT
+//             // Hide package api field
+//             jQuery('#p_api').parents('tr:first').hide();
+//
+// EOT;
+// }
 ?>
 </script>

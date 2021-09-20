@@ -1,5 +1,5 @@
 /**
- * (c) 2016 Siveo, http://www.siveo.net/
+ * (c) 2016-2021 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -71,6 +71,7 @@ var actionsList = [
     'action_comment', //Add info in deployment log
     'action_set_config_file', //initialise config file
     'action_unzip_file', //Unzip file
+    'action_download', // Download remote file
     //'actionconfirm',
     //'action_pwd_package', //Go to package folder
     'actioncleaning', //Remove uploaded files

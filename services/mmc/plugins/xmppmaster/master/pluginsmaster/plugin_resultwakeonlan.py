@@ -22,9 +22,7 @@
 #
 # file pluginsmaster/plugin_resultwakeonlan.py
 
-import base64
 import json
-import os
 
 import logging
 

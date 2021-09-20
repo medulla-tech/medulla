@@ -1,0 +1,3 @@
+etc/mmc/plugins/admin.ini
+usr/lib/python2.?/*-packages/mmc/plugins/admin
+usr/share/doc/mmc/contrib/admin/sql

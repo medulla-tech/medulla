@@ -1,4 +1,5 @@
 <?php
+require_once("../../../../includes/i18n.inc.php");
 extract($_POST);
 /*
 descriptor type
@@ -17,7 +18,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
 
 ?>
 <div class="header">
-    <h1>Wait and go to step</h1>
+    <h1><?php echo _T('Wait and go to step', 'pkgs'); ?></h1>
 </div>
 <div class="content">
     <div>
@@ -26,7 +27,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
         <input type="hidden" name="codereturn" value=""/>
     <table id="tableToggle">
        <tr class="toggleable">
-            <th width="16%">Step label:</th>
+            <th width="16%"><?php echo _T('Step label :', 'pkgs'); ?></th>
             <th width="25%">
                 <input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/>
             </th>
@@ -36,9 +37,9 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
         <tr>
             <?php
                 echo '
-                <td>
-                    Wait for (seconds)
-                </td>
+                <td>'
+                    ._T("Wait for (seconds)","pkgs").
+                '</td>
                 <td>
                     <input " type="number" min="1" value="'.$waiting.'" name="waiting"  />
                 </td>';
@@ -83,8 +84,8 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
     </table>
         <!-- Option timeout -->
     </div>
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-   <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
+   <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 
 <script type="text/javascript">

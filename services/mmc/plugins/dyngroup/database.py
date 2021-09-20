@@ -36,6 +36,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from mmc.plugins.base import getUserGroups
 import mmc.plugins.dyngroup
 from mmc.database.database_helper import DatabaseHelper
+from mmc.support.mmctools import SecurityContext
 # PULSE2 modules
 import pulse2.database.dyngroup
 from pulse2.database.dyngroup import Groups, Machines, Results, Users, Convergence, ProfilesData, ProfilesResults, ShareGroup
@@ -455,7 +456,14 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         the owner will be the ctx
         a share will be created for the owner (needed to set the visibility)
         """
+        if parent_id is not None and parent_id == '':
+            parent_id = 0
+        root_context = SecurityContext()
+        root_context.userid = 'root'
+
         user_id = self.__getOrCreateUser(ctx)
+        root_id = self.__getOrCreateUser(root_context)
+
         session = create_session()
         group = Groups()
         group.name = name.encode('utf-8')
@@ -468,6 +476,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
         # we now need to add an entry in ShareGroup for the creator
         self.__createShare(group.id, user_id, visibility, 1)
+
+        # Add also an entry in ShareGroup for the root account
+        self.__createShare(group.id, root_id, visibility, 1)
         return group.id
 
     def setname_group(self, ctx, id, name):
@@ -875,10 +886,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return True
 
     @DatabaseHelper._session
-    def get_deploy_group_id(self, session, gid, papi, package_id):
+    def get_deploy_group_id(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:
@@ -916,11 +926,10 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return True
 
     @DatabaseHelper._session
-    def edit_convergence_datas(self, session, gid, papi, package_id, datas):
+    def edit_convergence_datas(self, session, gid, package_id, datas):
         datas['cmdPhases'] = cPickle.dumps(datas['cmdPhases'])
         return session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         ).update(datas)
 
@@ -932,8 +941,12 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 commandId = cmd_id,
                 deployGroupId = deploy_group_id
             ).one()
-        except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.warn('Error while fetching convergence phases for command %s: %s' % (cmd_id, e))
+        except MultipleResultsFound as multiple_convergences:
+            self.logger.error('We found several convergences with the same command id: %s' % cmd_id)
+            self.logger.error('We encountered the error: %s' % multiple_convergences)
+        except  NoResultFound as no_convergence:
+            self.logger.warn("We did not find any convergence for the command_id %s" % cmd_id)
+            self.logger.warn('We encountered the error: %s' % no_convergence)
         if ret:
             try:
                 return cPickle.loads(ret.cmdPhases)
@@ -954,26 +967,22 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             }
         }
         """
-        query = session.query(Convergence).filter_by(parentGroupId = gid)
+        query = session.query(Convergence).filter_by(parentGroupId = gid).all()
         ret = {}
         for line in query:
             papi = cPickle.loads(line.papi)
+            if 'mountpoint' not in papi:
+                papi['mountpoint'] =  '/package_api_get1'
             if not papi['mountpoint'] in ret:
                 ret[papi['mountpoint']] = {}
             ret[papi['mountpoint']][line.packageUUID] = line.active
         return ret
 
     @DatabaseHelper._session
-    def get_active_convergence_commands(self, session, mountpoint, package_id):
-        if mountpoint.startswith('UUID/'):
-            # mountpoint param is normally package API UUID
-            # package API UUID = UUID/mountpoint
-            # So remove this silly UUID/
-            mountpoint = mountpoint[5:]
+    def get_active_convergence_commands(self, session, package_id):
         ret = []
         query = session.query(Convergence)
         query = query.filter(and_(
-                    Convergence.papi.like('%' + mountpoint + '%'),
                     Convergence.packageUUID == package_id,
                     Convergence.active == 1,
                 ))
@@ -995,16 +1004,15 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             'pid': x[2]} for x in query]
 
     @DatabaseHelper._session
-    def get_convergence_groups_to_update(self, session, mountpoint, package_id):
-        if mountpoint.startswith('UUID/'):
-            # mountpoint param is normally package API UUID
-            # package API UUID = UUID/mountpoint
-            # So remove this silly UUID/
-            mountpoint = mountpoint[5:]
+    def get_convergence_groups_to_update(self, session, package_id):
+        #if mountpoint.startswith('UUID/'):
+            ## mountpoint param is normally package API UUID
+            ## package API UUID = UUID/mountpoint
+            ## So remove this silly UUID/
+            #mountpoint = mountpoint[5:]
         ret = []
         query = session.query(Convergence)
-        query = query.filter(and_(
-                    Convergence.papi.like('%' + mountpoint + '%'),
+        query = query.filter(and_(#Convergence.papi.like('%' + mountpoint + '%'),
                     Convergence.packageUUID == package_id,
                 ))
         for line in query:
@@ -1012,10 +1020,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return ret
 
     @DatabaseHelper._session
-    def get_convergence_command_id(self, session, gid, papi, package_id):
+    def get_convergence_command_id(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:
@@ -1026,10 +1033,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return None
 
     @DatabaseHelper._session
-    def get_convergence_phases(self, session, gid, papi, package_id):
+    def get_convergence_phases(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:
@@ -1043,16 +1049,16 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return False
 
     @DatabaseHelper._session
-    def is_convergence_active(self, session, gid, papi, package_id):
+    def is_convergence_active(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId = gid,
-            papi = cPickle.dumps(papi),
             packageUUID = package_id
         )
         try:
             ret = query.one()
             return ret.active
         except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.error("is_convergence_active")
             self.logger.warn("Error while fetching convergence command id for group %s (package UUID %s): %s" % (gid, package_id, e))
             return None
 

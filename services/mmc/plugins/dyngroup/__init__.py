@@ -521,8 +521,8 @@ class RpcProxy(RpcProxyI):
         ret = DyngroupDatabase().add_convergence_datas(parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active, params)
         return xmlrpcCleanup(ret)
 
-    def edit_convergence_datas(self, gid, papi, package_id, datas):
-        ret = DyngroupDatabase().edit_convergence_datas(gid, papi, package_id, datas)
+    def edit_convergence_datas(self, gid, package_id, datas):
+        ret = DyngroupDatabase().edit_convergence_datas(gid, package_id, datas)
         return xmlrpcCleanup(ret)
 
     def getConvergenceStatus(self, gid):
@@ -539,28 +539,28 @@ class RpcProxy(RpcProxyI):
                 host_convergences.append(cv)
         return host_convergences
 
-    def get_active_convergence_commands(self, papi_id, package_id):
-        ret = DyngroupDatabase().get_active_convergence_commands(papi_id, package_id)
+    def get_active_convergence_commands(self,package_id):
+        ret = DyngroupDatabase().get_active_convergence_commands(package_id)
         return xmlrpcCleanup(ret)
 
-    def get_convergence_groups_to_update(self, papi_id, package_id):
-        ret = DyngroupDatabase().get_convergence_groups_to_update(papi_id, package_id)
+    def get_convergence_groups_to_update(self, package_id):
+        ret = DyngroupDatabase().get_convergence_groups_to_update(package_id)
         return xmlrpcCleanup(ret)
 
-    def get_convergence_command_id(self, gid, papi, package_id):
-        ret = DyngroupDatabase().get_convergence_command_id(gid, papi, package_id)
+    def get_convergence_command_id(self, gid, package_id):
+        ret = DyngroupDatabase().get_convergence_command_id(gid, package_id)
         return xmlrpcCleanup(ret)
 
-    def get_convergence_phases(self, gid, papi, package_id):
-        ret = DyngroupDatabase().get_convergence_phases(gid, papi, package_id)
+    def get_convergence_phases(self, gid, package_id):
+        ret = DyngroupDatabase().get_convergence_phases(gid, package_id)
         return xmlrpcCleanup(ret)
 
-    def is_convergence_active(self, gid, papi, package_id):
-        ret = DyngroupDatabase().is_convergence_active(gid, papi, package_id)
+    def is_convergence_active(self, gid, package_id):
+        ret = DyngroupDatabase().is_convergence_active(gid, package_id)
         return xmlrpcCleanup(ret)
 
-    def get_deploy_group_id(self, gid, papi, package_id):
-        ret = DyngroupDatabase().get_deploy_group_id(gid, papi, package_id)
+    def get_deploy_group_id(self, gid, package_id):
+        ret = DyngroupDatabase().get_deploy_group_id(gid, package_id)
         return xmlrpcCleanup(ret)
 
     def get_convergence_group_parent_id(self, gid):

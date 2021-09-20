@@ -63,8 +63,13 @@ class ComputerImagingManager(Singleton):
         return ret
 
     def getAllImagingServers(self, user_id, associated):
-        klass = self.components[self.main]
-        return klass().getAllImagingServers(user_id, associated)
+
+        if self.main in self.components:
+            klass = self.components[self.main]
+            ret = klass().getAllImagingServers(user_id, associated)
+        else:
+            ret = False
+        return ret
 
     def getImagingServerEntityUUID(self, imaging_uuid):
         klass = self.components[self.main]

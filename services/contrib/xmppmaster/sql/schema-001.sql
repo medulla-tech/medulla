@@ -257,6 +257,3 @@ UNLOCK TABLES;
 LOCK TABLES `version` WRITE;
 INSERT INTO `version` VALUES (1);
 UNLOCK TABLES;
-
-
-GRANT ALL PRIVILEGES ON `xmppmaster`.*  TO 'mmc'@'localhost' ;

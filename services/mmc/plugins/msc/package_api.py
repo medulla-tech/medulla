@@ -35,8 +35,8 @@ from sqlalchemy.orm import create_session
 
 from mmc.plugins.msc import MscConfig
 from mmc.plugins.msc.database import MscDatabase
-from mmc.plugins.msc.mirror_api import MirrorApi
-from mmc.plugins.msc.qaction import qa_list_files
+#from mmc.plugins.msc.mirror_api import MirrorApi
+#from mmc.plugins.msc.qaction import qa_list_files
 
 from pulse2.managers.group import ComputerGroupManager
 import pulse2.apis.clients.package_get_api
@@ -63,146 +63,146 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
         else:
             pulse2.apis.clients.package_get_api.PackageGetA.__init__(self, credentials, self.server_addr)
 
-def get_default_bundle_name(bundle_elem_nb = 0):
-    localtime = time.localtime()
-    title = "Bundle (%d) - %04d/%02d/%02d %02d:%02d:%02d" % (
-        bundle_elem_nb,
-        localtime[0],
-        localtime[1],
-        localtime[2],
-        localtime[3],
-        localtime[4],
-        localtime[5]
-    )
-    return title
+#def get_default_bundle_name(bundle_elem_nb = 0):
+    #localtime = time.localtime()
+    #title = "Bundle (%d) - %04d/%02d/%02d %02d:%02d:%02d" % (
+        #bundle_elem_nb,
+        #localtime[0],
+        #localtime[1],
+        #localtime[2],
+        #localtime[3],
+        #localtime[4],
+        #localtime[5]
+    #)
+    #return title
 
-class SendBundleCommand:
-    def __init__(self, ctx, porders, targets, params, mode, gid = None, proxies = []):
-        self.ctx = ctx
-        self.porders = porders
-        self.targets = targets
-        self.params = params
-        self.mode = mode
-        self.gid = gid
-        self.bundle_id = None
-        self.proxies = proxies
-        self.pids = []
-        self.session = None
+#class SendBundleCommand:
+    #def __init__(self, ctx, porders, targets, params, mode, gid = None, proxies = []):
+        #self.ctx = ctx
+        #self.porders = porders
+        #self.targets = targets
+        #self.params = params
+        #self.mode = mode
+        #self.gid = gid
+        #self.bundle_id = None
+        #self.proxies = proxies
+        #self.pids = []
+        #self.session = None
 
-    def onError(self, error):
-        logging.getLogger().error("SendBundleCommand: %s", str(error))
-        if self.session:
-            # Rollback the transaction
-            self.session.rollback()
-            self.session.close()
-        return self.deferred.callback([])
+    #def onError(self, error):
+        #logging.getLogger().error("SendBundleCommand: %s", str(error))
+        #if self.session:
+            ## Rollback the transaction
+            #self.session.rollback()
+            #self.session.close()
+        #return self.deferred.callback([])
 
-    def sendResult(self, result):
-        return self.deferred.callback([self.bundle_id, result])
+    #def sendResult(self, result):
+        #return self.deferred.callback([self.bundle_id, result])
 
-    def send(self):
-        self.last_order = 0
-        self.first_order = len(self.porders)
-        for id in self.porders:
-            p_api, pid, order = self.porders[id]
-            self.pids.append(pid)
-            if int(order) > int(self.last_order):
-                self.last_order = order
-            if int(order) < int(self.first_order):
-                self.first_order = order
+    #def send(self):
+        #self.last_order = 0
+        #self.first_order = len(self.porders)
+        #for id in self.porders:
+            #p_api, pid, order = self.porders[id]
+            #self.pids.append(pid)
+            #if int(order) > int(self.last_order):
+                #self.last_order = order
+            #if int(order) < int(self.first_order):
+                #self.first_order = order
 
-        # treat bundle inventory and halt (put on the last command)
-        self.do_wol = self.params['do_wol']
-        self.do_imaging_menu = 'disable'
-        self.do_inventory = self.params['do_inventory']
-        self.issue_halt_to = self.params["issue_halt_to"]
+        ## treat bundle inventory and halt (put on the last command)
+        #self.do_wol = self.params['do_wol']
+        #self.do_imaging_menu = 'disable'
+        #self.do_inventory = self.params['do_inventory']
+        #self.issue_halt_to = self.params["issue_halt_to"]
 
-        # Build the list of all the different package APIs to connect to
-        self.p_apis = []
-        for p in self.porders:
-            p_api, _, _ = self.porders[p]
-            if p_api not in self.p_apis:
-                self.p_apis.append(p_api)
+        ## Build the list of all the different package APIs to connect to
+        #self.p_apis = []
+        #for p in self.porders:
+            #p_api, _, _ = self.porders[p]
+            #if p_api not in self.p_apis:
+                #self.p_apis.append(p_api)
 
-        self.packages = {}
-        self.ppaths = {}
-        self.packageApiLoop()
+        #self.packages = {}
+        #self.ppaths = {}
+        #self.packageApiLoop()
 
-    def packageApiLoop(self):
-        """
-        Loop over all packages package API to get package informations
-        """
-        if self.p_apis:
-            self.p_api = self.p_apis.pop()
-            # Get package ID linked to the selected package API
-            self.p_api_pids = []
-            for p in self.porders:
-                p_api, pid, _ = self.porders[p]
-                if p_api == self.p_api:
-                    self.p_api_pids.append(pid)
+    #def packageApiLoop(self):
+        #"""
+        #Loop over all packages package API to get package informations
+        #"""
+        #if self.p_apis:
+            #self.p_api = self.p_apis.pop()
+            ## Get package ID linked to the selected package API
+            #self.p_api_pids = []
+            #for p in self.porders:
+                #p_api, pid, _ = self.porders[p]
+                #if p_api == self.p_api:
+                    #self.p_api_pids.append(pid)
 
-            d = PackageGetA(self.p_api).getPackagesDetail(self.p_api_pids)
-            d.addCallbacks(self.setPackagesDetail, self.onError)
-        else:
-            self.createBundle()
+            #d = PackageGetA(self.p_api).getPackagesDetail(self.p_api_pids)
+            #d.addCallbacks(self.setPackagesDetail, self.onError)
+        #else:
+            #self.createBundle()
 
-    def setPackagesDetail(self, packages):
-        for i in range(len(self.p_api_pids)):
-            self.packages[self.p_api_pids[i]] = packages[i]
-        d = PackageGetA(self.p_api).getLocalPackagesPath(self.p_api_pids)
-        d.addCallbacks(self.setLocalPackagesPath, self.onError)
+    #def setPackagesDetail(self, packages):
+        #for i in range(len(self.p_api_pids)):
+            #self.packages[self.p_api_pids[i]] = packages[i]
+        #d = PackageGetA(self.p_api).getLocalPackagesPath(self.p_api_pids)
+        #d.addCallbacks(self.setLocalPackagesPath, self.onError)
 
-    def setLocalPackagesPath(self, ppaths):
-        for i in range(len(self.p_api_pids)):
-            self.ppaths[self.p_api_pids[i]] = ppaths[i]
-        self.packageApiLoop()
+    #def setLocalPackagesPath(self, ppaths):
+        #for i in range(len(self.p_api_pids)):
+            #self.ppaths[self.p_api_pids[i]] = ppaths[i]
+        #self.packageApiLoop()
 
-    def createBundle(self):
-        # treat bundle title
-        try:
-            title = self.params['bundle_title']
-        except:
-            title = '' # ie. "no title"
-        self.params['bundle_title'] = None
+    #def createBundle(self):
+        ## treat bundle title
+        #try:
+            #title = self.params['bundle_title']
+        #except:
+            #title = '' # ie. "no title"
+        #self.params['bundle_title'] = None
 
-        if title == None or title == '':
-            title = get_default_bundle_name(len(self.porders))
-        # Insert bundle object
-        self.session = create_session()
-        bundle = MscDatabase().createBundle(title, self.session)
+        #if title == None or title == '':
+            #title = get_default_bundle_name(len(self.porders))
+        ## Insert bundle object
+        #self.session = create_session()
+        #bundle = MscDatabase().createBundle(title, self.session)
 
-        commands = []
-        for p in self.porders:
-            p_api, pid, order = self.porders[p]
-            pinfos = self.packages[pid]
-            ppath = self.ppaths[pid]
-            params = self.params.copy()
+        #commands = []
+        #for p in self.porders:
+            #p_api, pid, order = self.porders[p]
+            #pinfos = self.packages[pid]
+            #ppath = self.ppaths[pid]
+            #params = self.params.copy()
 
-            if int(order) == int(self.first_order):
-                params['do_wol'] = self.do_wol
-            else:
-                params['do_wol'] = 'off'
+            #if int(order) == int(self.first_order):
+                #params['do_wol'] = self.do_wol
+            #else:
+                #params['do_wol'] = 'off'
 
 
-            # override possible choice of do_reboot from the gui by the one declared in the package
-            # (in bundle mode, the gui does not offer enough choice to say when to reboot)
-            params['do_reboot'] = pinfos['do_reboot']
-            cmd = prepareCommand(pinfos, params)
-            command = cmd.copy()
-            command['package_id'] = pid
-            command['connect_as'] = 'root'
-            command['mode'] = self.mode
-            command['root'] = ppath
-            command['order_in_bundle'] = order
-            command['proxies'] = self.proxies
-            command['fk_bundle'] = bundle.id
-            command['do_windows_update'] = "disable"
-            commands.append(command)
-        add = MscDatabase().addCommands(self.ctx, self.session, self.targets, commands, self.gid)
-        if type(add) != int:
-            add.addCallbacks(self.sendResult, self.onError)
-        else:
-            self.onError("Error while creating the bundle")
+            ## override possible choice of do_reboot from the gui by the one declared in the package
+            ## (in bundle mode, the gui does not offer enough choice to say when to reboot)
+            #params['do_reboot'] = pinfos['do_reboot']
+            #cmd = prepareCommand(pinfos, params)
+            #command = cmd.copy()
+            #command['package_id'] = pid
+            #command['connect_as'] = 'root'
+            #command['mode'] = self.mode
+            #command['root'] = ppath
+            #command['order_in_bundle'] = order
+            #command['proxies'] = self.proxies
+            #command['fk_bundle'] = bundle.id
+            #command['do_windows_update'] = "disable"
+            #commands.append(command)
+        #add = MscDatabase().addCommands(self.ctx, self.session, self.targets, commands, self.gid)
+        #if type(add) != int:
+            #add.addCallbacks(self.sendResult, self.onError)
+        #else:
+            #self.onError("Error while creating the bundle")
 
 def prepareCommand(pinfos, params):
     """
@@ -282,11 +282,9 @@ def prepareCommand(pinfos, params):
         ret['files'] = ''
     return ret
 
-
 class SendPackageCommand:
-    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = [], cmd_type = 0):
+    def __init__(self, ctx, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = [], cmd_type = 0):
         self.ctx = ctx
-        self.p_api = p_api.copy()
         self.pid = pid
         self.targets = targets
         self.params = params.copy()
@@ -297,56 +295,22 @@ class SendPackageCommand:
         self.proxies = proxies
         self.cmd_type = cmd_type
 
-    def onError(self, error):
-        logging.getLogger().error("SendPackageCommand: %s", str(error))
-        return self.deferred.errback(error)
-
-    def sendResult(self, id_command = -1):
-        return self.deferred.callback(id_command)
-
     def send(self):
-        #if (self.pid == None or self.pid == '') and 'launchAction' in self.params:
-        if (self.pid == None or self.pid == '') and self.params.has_key('launchAction'):
-            # this is a QA passing by the advanced page
-            idcmd = self.params['launchAction']
-            result, qas = qa_list_files()
-            if result and idcmd in qas:
-                self.params['command'] = qas[idcmd]['command']
-            else:
-                logging.getLogger().warn("Failed to get the QA %s"%(idcmd))
-
-            self.pinfos = {
-                    "files":None,
-                    "command":{"command":self.params['command']}
-            }
-            self.pid = None
-            self.setRoot('')
-        else:
-            d = PackageGetA(self.p_api).getPackageDetail(self.pid)
-            d.addCallbacks(self.setPackage, self.onError)
-
-    def setPackage(self, package):
-        if not package:
-            self.onError("Can't get informations on package %s" % self.pid)
-        else:
-            self.pinfos = package
-            d = PackageGetA(self.p_api).getLocalPackagePath(self.pid)
-            d.addCallbacks(self.setRoot, self.onError)
+        from mmc.plugins.xmppmaster.master.lib.managepackage import apimanagepackagemsc
+        self.pinfos =  apimanagepackagemsc.getPackageDetail(self.pid)
+        return self.setRoot("/var/lib/pulse2/packages")
 
     def setRoot(self, root):
         logging.getLogger().debug(root)
         if self.pid != None and self.pid != '' and not root:
             return self.onError("Can't get path for package %s" % self.pid)
         self.root = root
-
         # If is an empty Package, avoid file uploading
         if 'size' in self.pinfos:
             if self.pinfos['size'] == 0 :
                 self.pinfos['files'] = None
-
         # Prepare command parameters for database insertion
         cmd = prepareCommand(self.pinfos, self.params)
-
         # cmd['maxbw'] is in kbits, set in bits
         cmd['maxbw'] = int(cmd['maxbw']) * 1024
         cmd['do_wol_with_imaging'] = 'disable'
@@ -358,9 +322,7 @@ class SendPackageCommand:
                      'do_windows_update': cmd['do_windows_update'],
                      'do_inventory': cmd['do_inventory'],
                      }
-        cmd['start_file'], patternActions = MscDatabase().applyCmdPatterns(cmd['start_file'],
-                                                                          _patterns)
-
+        cmd['start_file'], patternActions = MscDatabase().applyCmdPatterns(cmd['start_file'], _patterns)
         addCmd = MscDatabase().addCommand(  # TODO: refactor to get less args
             self.ctx,
             self.pid,
@@ -394,11 +356,7 @@ class SendPackageCommand:
             cmd['state'],
             cmd_type = self.cmd_type
         )
-
-        if type(addCmd) != int:
-            addCmd.addCallbacks(self.sendResult, self.onError)
-        else:
-            self.onError('Error while creating the command')
+        return addCmd
 
 def convert_date(date = '0000-00-00 00:00:00'):
     try:
@@ -411,237 +369,237 @@ def convert_date(date = '0000-00-00 00:00:00'):
     return timestamp
 
 
-def _p_apiuniq(list, x):
-  try:
-    list.index(x)
-  except:
-    list.append(x)
+#def _p_apiuniq(list, x):
+  #try:
+    #list.index(x)
+  #except:
+    #list.append(x)
 
-def _merge_list(list, x):
-    for i in x:
-      try:
-        list.index(i)
-      except:
-        pass
-    rem = []
-    for i in list:
-      try:
-        x.index(i)
-      except:
-        rem.append(i)
-    for i in rem:
-      list.remove(i)
+#def _merge_list(list, x):
+    #for i in x:
+      #try:
+        #list.index(i)
+      #except:
+        #pass
+    #rem = []
+    #for i in list:
+      #try:
+        #x.index(i)
+      #except:
+        #rem.append(i)
+    #for i in rem:
+      #list.remove(i)
 
-class GetPackagesFiltered:
+#class GetPackagesFiltered:
 
-    def __init__(self, ctx, filt):
-        self.ctx = ctx
-        self.filt = filt
-        self.packages = []
+    #def __init__(self, ctx, filt):
+        #self.ctx = ctx
+        #self.filt = filt
+        #self.packages = []
 
-    def get(self):
-        if "packageapi" in self.filt:
-            if 'pending' in self.filt:
-                ret = defer.maybeDeferred(PackageGetA(self.filt["packageapi"]).getAllPendingPackages, False)
-            else:
-                ret = defer.maybeDeferred(PackageGetA(self.filt["packageapi"]).getAllPackages, False)
-            ret.addCallbacks(self.sendResult, self.onError)
-            ret.addErrback(lambda err: self.onError(err))
-        else:
-            ret = self.sendResult()
+    #def get(self):
+        #if "packageapi" in self.filt:
+            #if 'pending' in self.filt:
+                #ret = defer.maybeDeferred(PackageGetA(self.filt["packageapi"]).getAllPendingPackages, False)
+            #else:
+                #ret = defer.maybeDeferred(PackageGetA(self.filt["packageapi"]).getAllPackages, False)
+            #ret.addCallbacks(self.sendResult, self.onError)
+            #ret.addErrback(lambda err: self.onError(err))
+        #else:
+            #ret = self.sendResult()
 
-    def sendResult(self, packages = []):
-        ret = map(lambda m: [m, 0, self.filt['packageapi']], packages)
-        self.deferred.callback(ret)
+    #def sendResult(self, packages = []):
+        #ret = map(lambda m: [m, 0, self.filt['packageapi']], packages)
+        #self.deferred.callback(ret)
 
-    def onError(self, error):
-        logging.getLogger().error("GetPackagesFiltered: %s", str(error))
-        self.deferred.callback([])
+    #def onError(self, error):
+        #logging.getLogger().error("GetPackagesFiltered: %s", str(error))
+        #self.deferred.callback([])
 
-class GetPackagesUuidFiltered:
+#class GetPackagesUuidFiltered:
 
-    def __init__(self, ctx, filt):
-        self.ctx = ctx
-        self.filt = filt
+    #def __init__(self, ctx, filt):
+        #self.ctx = ctx
+        #self.filt = filt
 
-    def onError(self, error):
-        logging.getLogger().error("GetPackagesUuidFiltered: %s", str(error))
-        return self.deferred.callback([])
+    #def onError(self, error):
+        #logging.getLogger().error("GetPackagesUuidFiltered: %s", str(error))
+        #return self.deferred.callback([])
 
-    def sendResult(self, packages = []):
-        self.deferred.callback(packages)
+    #def sendResult(self, packages = []):
+        #self.deferred.callback(packages)
 
-    def get(self):
-        try:
-            self.machine = self.filt["uuid"]
-            d = MirrorApi().getApiPackage(self.machine)
-            d.addCallbacks(self.uuidFilter2, self.onError)
-            d.addErrback(lambda err: self.onError(err))
-        except KeyError:
-            self.sendResult()
+    #def get(self):
+        #try:
+            #self.machine = self.filt["uuid"]
+            #d = MirrorApi().getApiPackage(self.machine)
+            #d.addCallbacks(self.uuidFilter2, self.onError)
+            #d.addErrback(lambda err: self.onError(err))
+        #except KeyError:
+            #self.sendResult()
 
-    def uuidFilter2(self, package_apis):
-        self.package_apis = package_apis
-        # warn as we do pop in package retrival but we want to keep the packages
-        # in the good order, we need to reverse the package api list order
-        self.package_apis.reverse()
-        d = MirrorApi().getMirror(self.machine)
-        d.addCallbacks(self.uuidFilter3, self.onError)
-        d.addErrback(lambda err: self.onError(err))
+    #def uuidFilter2(self, package_apis):
+        #self.package_apis = package_apis
+        ## warn as we do pop in package retrival but we want to keep the packages
+        ## in the good order, we need to reverse the package api list order
+        #self.package_apis.reverse()
+        #d = MirrorApi().getMirror(self.machine)
+        #d.addCallbacks(self.uuidFilter3, self.onError)
+        #d.addErrback(lambda err: self.onError(err))
 
-    def uuidFilter3(self, mirror):
-        self.mirror = mirror
-        self.index = -1
-        self.packages = []
-        self.getPackagesLoop()
+    #def uuidFilter3(self, mirror):
+        #self.mirror = mirror
+        #self.index = -1
+        #self.packages = []
+        #self.getPackagesLoop()
 
-    def getPackagesLoop(self, result = None):
-        if result and not isinstance(result, failure.Failure):
-            self.index = self.index + 1
-            self.packages.extend(map(lambda m: [m, self.index, self.p_api], result))
-        if self.package_apis:
-            if type(self.package_apis) == list:
-                self.p_api = self.package_apis.pop()
-            else:
-                self.p_api = self.package_apis
-            if 'pending' in self.filt:
-                d = defer.maybeDeferred(PackageGetA(self.p_api).getAllPendingPackages, self.mirror)
-            else:
-                d = defer.maybeDeferred(PackageGetA(self.p_api).getAllPackages, self.mirror)
-            d.addCallbacks(self.getPackagesLoop)
-        else:
-            self.sendResult(self.packages)
+    #def getPackagesLoop(self, result = None):
+        #if result and not isinstance(result, failure.Failure):
+            #self.index = self.index + 1
+            #self.packages.extend(map(lambda m: [m, self.index, self.p_api], result))
+        #if self.package_apis:
+            #if type(self.package_apis) == list:
+                #self.p_api = self.package_apis.pop()
+            #else:
+                #self.p_api = self.package_apis
+            #if 'pending' in self.filt:
+                #d = defer.maybeDeferred(PackageGetA(self.p_api).getAllPendingPackages, self.mirror)
+            #else:
+                #d = defer.maybeDeferred(PackageGetA(self.p_api).getAllPackages, self.mirror)
+            #d.addCallbacks(self.getPackagesLoop)
+        #else:
+            #self.sendResult(self.packages)
 
-class GetPackagesGroupFiltered:
+#class GetPackagesGroupFiltered:
 
-    def __init__(self, ctx, filt):
-        self.ctx = ctx
-        self.filt = filt
-        self.gid = None
+    #def __init__(self, ctx, filt):
+        #self.ctx = ctx
+        #self.filt = filt
+        #self.gid = None
 
-    def onError(self, error):
-        logging.getLogger().error("GetPackagesGroupFiltered: %s", str(error))
-        return self.deferred.callback([])
+    #def onError(self, error):
+        #logging.getLogger().error("GetPackagesGroupFiltered: %s", str(error))
+        #return self.deferred.callback([])
 
-    def sendResult(self, packages = []):
-        self.deferred.callback(packages)
+    #def sendResult(self, packages = []):
+        #self.deferred.callback(packages)
 
-    def get(self):
-        try:
-            self.gid = self.filt["group"]
-        except KeyError:
-            self.sendResult()
-        if self.gid:
-            self.machines = []
-            if ComputerGroupManager().isdyn_group(self.ctx, self.gid):
-                if ComputerGroupManager().isrequest_group(self.ctx, self.gid):
-                    self.machines = ComputerGroupManager().requestresult_group(self.ctx, self.gid, 0, -1, '')
-                else:
-                    self.machines = ComputerGroupManager().result_group(self.ctx, self.gid, 0, -1, '')
-            else:
-                self.machines = ComputerGroupManager().result_group(self.ctx, self.gid, 0, -1, '')
-            d = MirrorApi().getApiPackages(self.machines)
-            d.addCallbacks(self.getMirrors, self.onError)
-            d.addErrback(lambda err: self.onError(err))
+    #def get(self):
+        #try:
+            #self.gid = self.filt["group"]
+        #except KeyError:
+            #self.sendResult()
+        #if self.gid:
+            #self.machines = []
+            #if ComputerGroupManager().isdyn_group(self.ctx, self.gid):
+                #if ComputerGroupManager().isrequest_group(self.ctx, self.gid):
+                    #self.machines = ComputerGroupManager().requestresult_group(self.ctx, self.gid, 0, -1, '')
+                #else:
+                    #self.machines = ComputerGroupManager().result_group(self.ctx, self.gid, 0, -1, '')
+            #else:
+                #self.machines = ComputerGroupManager().result_group(self.ctx, self.gid, 0, -1, '')
+            #d = MirrorApi().getApiPackages(self.machines)
+            #d.addCallbacks(self.getMirrors, self.onError)
+            #d.addErrback(lambda err: self.onError(err))
 
-    def getMirrors(self, package_apis):
-        self.package_apis = package_apis
-        d = MirrorApi().getMirrors(self.machines)
-        d.addCallbacks(self.getMirrorsResult, self.onError)
-        d.addErrback(lambda err: self.onError(err))
+    #def getMirrors(self, package_apis):
+        #self.package_apis = package_apis
+        #d = MirrorApi().getMirrors(self.machines)
+        #d.addCallbacks(self.getMirrorsResult, self.onError)
+        #d.addErrback(lambda err: self.onError(err))
 
-    def getMirrorsResult(self, mirrors):
-        self.mirrors = mirrors
-        mergedlist = []
-        for i in range(len(self.package_apis)):
-            tmpmerged = []
-            for papi in self.package_apis[i]:
-                tmpmerged.append((papi, self.mirrors[i]))
-            mergedlist.insert(i, tmpmerged)
+    #def getMirrorsResult(self, mirrors):
+        #self.mirrors = mirrors
+        #mergedlist = []
+        #for i in range(len(self.package_apis)):
+            #tmpmerged = []
+            #for papi in self.package_apis[i]:
+                #tmpmerged.append((papi, self.mirrors[i]))
+            #mergedlist.insert(i, tmpmerged)
 
-        #if mergedlist:
-        if not len(mergedlist):
-            self.sendResult()
-        else:
-            plists = []
-            i = 0
-            for i in range(len(mergedlist[0])): # all line must have the same size!
-                plists.insert(i, [])
-                try:
-                    map(lambda x: _p_apiuniq(plists[i], x[i]), mergedlist)
-                except IndexError:
-                    logging.getLogger().error("Error with i=%d" %i)
-            self.plists = plists
-            self.index = -1
-            self.p_apis = None
-            self.packages = []
-            self.tmppackages = []
-            self.getPackagesLoop()
+        ##if mergedlist:
+        #if not len(mergedlist):
+            #self.sendResult()
+        #else:
+            #plists = []
+            #i = 0
+            #for i in range(len(mergedlist[0])): # all line must have the same size!
+                #plists.insert(i, [])
+                #try:
+                    #map(lambda x: _p_apiuniq(plists[i], x[i]), mergedlist)
+                #except IndexError:
+                    #logging.getLogger().error("Error with i=%d" %i)
+            #self.plists = plists
+            #self.index = -1
+            #self.p_apis = None
+            #self.packages = []
+            #self.tmppackages = []
+            #self.getPackagesLoop()
 
-    def getPackagesLoop(self, result = None):
-        if result:
-            if not isinstance(result, failure.Failure):
-                self.tmppackages.append(result)
-            else:
-                logging.getLogger().error("%s", str(result))
-        if not self.p_apis and self.tmppackages:
-            # Merge temporary results
-            lp = self.tmppackages[0]
-            map(lambda p: _merge_list(lp, p), self.tmppackages)
-            self.packages.extend(map(lambda m: [m, self.index, self.p_api_first], lp))
-            self.tmppackages = []
-        if self.plists and not self.p_apis:
-            # Fill self.p_apis if empty
-            self.p_apis = self.plists.pop()
-            self.p_api_first = self.p_apis[0][0]
-            self.index = self.index + 1
-        if self.p_apis:
-            p_api = self.p_apis.pop()
-            if 'pending' in self.filt:
-                d = defer.maybeDeferred(PackageGetA(p_api[0]).getAllPendingPackages, p_api[1])
-            else:
-                d = defer.maybeDeferred(PackageGetA(p_api[0]).getAllPackages, p_api[1])
-            d.addCallbacks(self.getPackagesLoop)
-        else:
-            # No more remote call to do, we are done
-            self.sendResult(self.packages)
+    #def getPackagesLoop(self, result = None):
+        #if result:
+            #if not isinstance(result, failure.Failure):
+                #self.tmppackages.append(result)
+            #else:
+                #logging.getLogger().error("%s", str(result))
+        #if not self.p_apis and self.tmppackages:
+            ## Merge temporary results
+            #lp = self.tmppackages[0]
+            #map(lambda p: _merge_list(lp, p), self.tmppackages)
+            #self.packages.extend(map(lambda m: [m, self.index, self.p_api_first], lp))
+            #self.tmppackages = []
+        #if self.plists and not self.p_apis:
+            ## Fill self.p_apis if empty
+            #self.p_apis = self.plists.pop()
+            #self.p_api_first = self.p_apis[0][0]
+            #self.index = self.index + 1
+        #if self.p_apis:
+            #p_api = self.p_apis.pop()
+            #if 'pending' in self.filt:
+                #d = defer.maybeDeferred(PackageGetA(p_api[0]).getAllPendingPackages, p_api[1])
+            #else:
+                #d = defer.maybeDeferred(PackageGetA(p_api[0]).getAllPackages, p_api[1])
+            #d.addCallbacks(self.getPackagesLoop)
+        #else:
+            ## No more remote call to do, we are done
+            #self.sendResult(self.packages)
 
-class GetPackagesAdvanced:
+#class GetPackagesAdvanced:
 
-    def __init__(self, ctx, filt):
-        self.ctx = ctx
-        self.filt = filt
-        self.packages = []
+    #def __init__(self, ctx, filt):
+        #self.ctx = ctx
+        #self.filt = filt
+        #self.packages = []
 
-    def get(self):
-        g1 = GetPackagesFiltered(self.ctx, self.filt)
-        g1.deferred = defer.Deferred()
-        g2 = GetPackagesUuidFiltered(self.ctx, self.filt)
-        g2.deferred = defer.Deferred()
-        g3 = GetPackagesGroupFiltered(self.ctx, self.filt)
-        g3.deferred = defer.Deferred()
-        dl = defer.DeferredList([g1.deferred, g2.deferred, g3.deferred])
-        dl.addCallback(self.sendResult)
-        g1.get()
-        g2.get()
-        g3.get()
+    #def get(self):
+        #g1 = GetPackagesFiltered(self.ctx, self.filt)
+        #g1.deferred = defer.Deferred()
+        #g2 = GetPackagesUuidFiltered(self.ctx, self.filt)
+        #g2.deferred = defer.Deferred()
+        #g3 = GetPackagesGroupFiltered(self.ctx, self.filt)
+        #g3.deferred = defer.Deferred()
+        #dl = defer.DeferredList([g1.deferred, g2.deferred, g3.deferred])
+        #dl.addCallback(self.sendResult)
+        #g1.get()
+        #g2.get()
+        #g3.get()
 
-    def sendResult(self, results):
-        # Aggregate all results
-        for result in results:
-            status, packages = result
-            if status == defer.SUCCESS:
-                self.packages.extend(packages)
-        # Apply filter if wanted
-        try:
-            if 'bundle' in self.filt:
-                if self.filt['bundle'] == 1:
-                    self.packages = [p for p in self.packages if p[0]['sub_packages']]
-                else:
-                    self.packages = [p for p in self.packages if not p[0]['sub_packages']]
+    #def sendResult(self, results):
+        ## Aggregate all results
+        #for result in results:
+            #status, packages = result
+            #if status == defer.SUCCESS:
+                #self.packages.extend(packages)
+        ## Apply filter if wanted
+        #try:
+            #if 'bundle' in self.filt:
+                #if self.filt['bundle'] == 1:
+                    #self.packages = [p for p in self.packages if p[0]['sub_packages']]
+                #else:
+                    #self.packages = [p for p in self.packages if not p[0]['sub_packages']]
 
-        except KeyError:
-            pass
-        # Sort on the mirror order then on the label, and finally on the version number
-        self.packages.sort(lambda x, y: 10*cmp(x[1], y[1]) + 5*cmp(x[0]['label'], y[0]['label']) + cmp(x[0]['version'], y[0]['version']))
-        self.deferred.callback(self.packages)
+        #except KeyError:
+            #pass
+        ## Sort on the mirror order then on the label, and finally on the version number
+        #self.packages.sort(lambda x, y: 10*cmp(x[1], y[1]) + 5*cmp(x[0]['label'], y[0]['label']) + cmp(x[0]['version'], y[0]['version']))
+        #self.deferred.callback(self.packages)

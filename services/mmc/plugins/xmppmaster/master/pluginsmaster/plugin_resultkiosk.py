@@ -34,14 +34,16 @@ from utils import name_random, file_put_contents, file_get_contents
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
 
+logger = logging.getLogger()
+
 plugin = {"VERSION": "1.3", "NAME": "resultkiosk", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug("#################################################")
-    logging.getLogger().debug(plugin)
-    logging.getLogger().debug(json.dumps(data, indent=4))
-    logging.getLogger().debug("#################################################")
+    logger.debug("#################################################")
+    logger.debug(plugin)
+    logger.debug(json.dumps(data, indent=4))
+    logger.debug("#################################################")
     if 'subaction' in data:
         if data['subaction'] == 'initialization':
             initialisekiosk(data, message, xmppobject)
@@ -164,7 +166,9 @@ def deploypackage(data, message, xmppobject):
                      (data['uuid'], machine['hostname']))
         return None
     objdeployadvanced = XmppMasterDatabase().datacmddeploy(commandid)
-
+    if not objdeployadvanced:
+        logger.error("The line has_login_command for the idcommand %s is missing" % commandid)
+        logger.error("To solve this, please remove the group, and recreate it")
     datasend = {"name": name,
                 "login": nameuser,
                 "idcmd": commandid,
@@ -214,7 +218,7 @@ def deploypackage(data, message, xmppobject):
                        type='deploy',
                        sessionname=sessionid,
                        priority=-1,
-                       action="",
+                       action="xmpplog",
                        who=nameuser,
                        how="",
                        why=xmppobject.boundjid.bare,

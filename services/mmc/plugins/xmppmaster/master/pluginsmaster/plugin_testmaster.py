@@ -22,7 +22,7 @@
 #
 # file pluginsmaster/plugin_testmaster.py
 
-from utils import pluginmaster, pluginmastersessionaction
+from utils import pluginmastersessionaction
 import logging
 
 plugin = {"VERSION": "1.0", "NAME": "testmaster", "TYPE": "master"}

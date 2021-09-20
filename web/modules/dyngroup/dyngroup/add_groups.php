@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://siveo.net
  *
  * $Id$
  *
@@ -26,7 +27,8 @@ require("modules/dyngroup/includes/groups.inc.php");
 if (in_array("imaging", $_SESSION["modulesList"])) {
                     require_once('modules/imaging/includes/xmlrpc.inc.php');
                     }
-$name = quickGet('name', $p_first = True, $urldecode = False);
+$name = clean_xss(quickGet('name', $p_first = True, $urldecode = False));
+
 $id = quickGet('id');
 $visibility = quickGet('visible');
 $already_exists = false;
@@ -293,10 +295,15 @@ if (isset($_POST["bdelmachine_x"])) {
             }
         }
     }
-
+    /*
+    //Historical machine list, do not remove
     $listOfMachines = getMachineforentityList(0, $truncate_limit, array('get'=>array('cn', 'objectUUID'),
                                                     'imaging_server'=>$imaging_server,
                                                     'fk_entity' => $entitieval));
+*/
+
+    $listOfMachines = getRestrictedComputersList(0, -1, array('get'=>array('cn', 'objectUUID'), 'imaging_server'=>$imaging_server), False);
+
     $count = getRestrictedComputersListLen(array('imaging_server'=>$imaging_server));
     if ($truncate_limit < $count) {
         new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers. Use the filter to find specific machines.", "dyngroup"), $truncate_limit));

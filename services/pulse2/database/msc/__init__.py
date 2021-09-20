@@ -47,7 +47,6 @@ from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.pull_targets import PullTargets
 from pulse2.database.msc.orm.bundle import Bundle
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.xmppmaster import XmppMasterDatabase
 # Pulse 2 stuff
 from pulse2.managers.location import ComputerLocationManager
 # Imported last
@@ -185,7 +184,7 @@ class MscDatabase(DatabaseHelper):
         if type(query) != list:
             ret = query.id
             #elif query:
-        elif len(query) > 0:
+        elif query:
             ret = []
             for q in query:
                 ret.append(q.id)
@@ -273,6 +272,9 @@ class MscDatabase(DatabaseHelper):
         #cmd.do_reboot = do_reboot
         #cmd.do_wol = do_wol
         #cmd.do_imaging_menu = do_wol_with_imaging
+        if next_connection_delay is not None and next_connection_delay == '':
+            next_connection_delay = 0
+
         cmd.next_connection_delay = next_connection_delay
         cmd.max_connection_attempt = max_connection_attempt
         #cmd.do_inventory = do_inventory
@@ -461,19 +463,19 @@ class MscDatabase(DatabaseHelper):
 
     def get_count_timeout_wol_deploy( self, id_command, start_date):
         """
-            this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals
+            This function is scheduled by xmpp.
+            It counts the number of machines out of the deployment intervals
         """
-        #datenow = datetime.datetime.now()
         session = create_session()
-        q = session.query(func.count(CommandsOnHost)).\
+        numberTimedout = session.query(func.count(CommandsOnHost)).\
             filter(and_(CommandsOnHost.fk_commands == id_command,
                         CommandsOnHost.stage == 'ended',
                         CommandsOnHost.current_state == 'over_timed',
                         CommandsOnHost.start_date == start_date)).\
                             scalar()
-        return q
+        return numberTimedout
 
-    def deployxmpponmachine(self, command_id):
+    def deployxmpponmachine(self, command_id, uuid):
         result = {}
         sqlselect="""
             SELECT
@@ -491,7 +493,8 @@ class MscDatabase(DatabaseHelper):
                 target_network,
                 package_id,
                 creator,
-                connect_as
+                connect_as,
+                commands.creation_date
             FROM
                 commands_on_host
                     INNER JOIN
@@ -503,9 +506,9 @@ class MscDatabase(DatabaseHelper):
             WHERE
                 commands.id = %s
                 and commands_on_host.id_group IS NULL
-                ORDER BY commands_on_host.id DESC
-                limit 1
-                ;"""%command_id
+                and target_uuid = "%s"
+            GROUP BY commands_on_host.id
+                ;"""%(command_id, uuid)
         resultsql = self.db.execute(sqlselect)
         for x in resultsql:
             result['host'] = x.host
@@ -523,61 +526,164 @@ class MscDatabase(DatabaseHelper):
             result['package_id'] = x.package_id
             result['creator'] = x.creator
             result['connect_as'] = x.connect_as
+            result['creation_date'] = x.creation_date
         return result
 
-    def deployxmpponmachine(self, command_id):
-        result = {}
+    @DatabaseHelper._sessionm
+    def get_msc_listuuid_commandid(self, session, command_id, filter, start, limit):
+        start = int(start)
         sqlselect="""
             SELECT
-                host,
-                target_name,
-                title,
-                commands.start_date AS startdatec,
-                commands_on_host.start_date AS startdateh,
-                commands.end_date AS enddatec,
-                commands_on_host.end_date AS enddateh,
-                target_ipaddr,
-                target_uuid,
-                target_macaddr,
-                target_bcast,
-                target_network,
-                package_id,
-                creator,
-                connect_as
+                DISTINCT commands_on_host.start_date as dated,
+                commands_on_host.end_date as datef
             FROM
-                commands_on_host
-                    INNER JOIN
-                commands ON commands.id = commands_on_host.fk_commands
-                    INNER JOIN
-                target ON target.id = commands_on_host.fk_target
-                    INNER JOIN
-                phase ON commands_on_host.id = phase.fk_commands_on_host
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
             WHERE
-                commands.id = %s
-                and commands_on_host.id_group IS NULL
-                ORDER BY commands_on_host.id DESC
-                limit 1
-                ;"""%command_id
+                    commands_on_host.fk_commands = %s
+            ORDER BY dated DESC
+            LIMIT 1;"""% (command_id)
         resultsql = self.db.execute(sqlselect)
-        for x in resultsql:
-            result['host'] = x.host
-            result['target_name'] = x.target_name
-            result['title'] = x.title
-            result['startdatec'] = x.startdatec
-            result['startdateh'] = x.startdateh
-            result['enddatec'] = x.enddatec
-            result['enddateh'] = x.enddateh
-            result['target_ipaddr'] = x.target_ipaddr
-            result['target_uuid'] = x.target_uuid
-            result['target_macaddr'] = x.target_macaddr
-            result['target_bcast'] = x.target_bcast
-            result['target_network'] = x.target_network
-            result['package_id'] = x.package_id
-            result['creator'] = x.creator
-            result['connect_as'] = x.connect_as
-        return result
+        if resultsql is not None:
+            dateintervale = [x for x in resultsql]
+            if dateintervale:
+                datestartstr  = dateintervale[0].dated
+                dateendstr    = dateintervale[0].datef
+            else:
+                self.logger.warning("command [%s] deploy missing msc"%command_id)
+                return ""
+        else:
+            return ""
 
-    def deployxmppscheduler(self, login, min , max, filt):
+        query = session.query(Target.target_uuid).distinct()\
+        .filter(CommandsOnHost.fk_commands == command_id)\
+        .filter(CommandsOnHost.start_date <= datestartstr)\
+        .filter(CommandsOnHost.end_date >= dateendstr)\
+        .join(CommandsOnHost, Target.id == CommandsOnHost.fk_target)
+
+        if start != -1:
+            query = query.offset(int(start)).limit(int(limit))
+        query=query.count()
+
+        query1 = session.query(Target.target_uuid).distinct()\
+        .filter(CommandsOnHost.fk_commands == command_id)\
+        .filter(CommandsOnHost.start_date <= datestartstr)\
+        .filter(CommandsOnHost.end_date >= dateendstr)\
+        .join(CommandsOnHost, Target.id == CommandsOnHost.fk_target)
+        if start != -1:
+            query1 = query1.offset(int(start)).limit(int(limit))
+
+        query1 = query1.all()
+        commands = ''
+        if query1 is not None:
+            commands = [element[0].split('UUID')[1] for element in query1]
+            commands = ','.join(commands)
+            return {'total': query, 'list': commands}
+        else:
+            return {'total': 0, 'list': commands}
+
+        sqlselect="""
+            SELECT
+                GROUP_CONCAT(DISTINCT SUBSTR(target_uuid, 5) SEPARATOR ',') as listuuid
+            FROM
+                (SELECT
+                    commands_on_host.fk_commands,
+                    target.target_name as dname,
+                    target.target_uuid
+                FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+                WHERE
+                    commands_on_host.fk_commands = %s  and
+                    commands_on_host.start_date <= '%s' and
+                    commands_on_host.end_date >= '%s'
+                    %s
+                    ) as listhost;
+                        """% (command_id, datestartstr, dateendstr, limit)
+
+        resultsql = self.db.execute(sqlselect)
+
+        if resultsql is not None:
+            z= [x for x in resultsql][0].listuuid
+            if z is not None:
+                return z
+        self.logger.warning("command [%s] deploy missing for slot [%s,%s]"%(command_id, datestartstr, dateendstr))
+        return ""
+
+    def get_msc_listhost_commandid(self, command_id):
+        sqlselect="""
+            SELECT
+                DISTINCT commands_on_host.start_date as dated,
+                commands_on_host.end_date as datef
+            FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+            WHERE
+                    commands_on_host.fk_commands = %s
+            ORDER BY dated DESC
+            LIMIT 1;"""% (command_id)
+        resultsql = self.db.execute(sqlselect)
+        if resultsql is not None:
+            dateintervale = [x for x in resultsql]
+            if dateintervale:
+                datestartstr  = dateintervale[0].dated
+                dateendstr    = dateintervale[0].datef
+            else:
+                self.logger.warning("command [%s] deploy missing msc"%command_id)
+                return ""
+        else:
+            return ""
+        sqlselect="""
+            SELECT
+                GROUP_CONCAT(DISTINCT CONCAT('"',
+                            SUBSTR(dname,
+                                1,
+                                CHAR_LENGTH(dname) - 1),
+                            '"')
+                    SEPARATOR ',') as listhostname
+            FROM
+                (SELECT
+                    commands_on_host.fk_commands,
+                    target.target_name as dname,
+                    target.target_uuid
+                FROM
+                    commands_on_host
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+                WHERE
+                    commands_on_host.fk_commands = %s  and
+                    commands_on_host.start_date <= '%s' and
+                    commands_on_host.end_date >= '%s'
+                    ) as listhost;
+                        """ % (command_id, datestartstr, dateendstr)
+
+        resultsql = self.db.execute(sqlselect)
+
+        if resultsql is not None:
+            z= [x for x in resultsql][0].listhostname
+            if z is not None:
+                return z
+        self.logger.warning("command [%s] deploy missing for slot [%s,%s]"%(command_id, datestartstr, dateendstr))
+        return ""
+
+    def deployxmppscheduler(self, login, minimum , maximum, filt):
+        """
+        This function isued to retrieve all the scheduled deployments on msc
+
+        Args:
+            login: The login of the user
+            minimum: Minimum value ( for pagination )
+            maximum: Maximum value ( for pagination )
+            filt: Filter of the search
+        Returns:
+            It returns the list of all the scheduled deployments on msc
+        """
+        listuser = []
+        if isinstance(login, list):
+            listuser = [ '"%s"'%x.strip() for x in login if x.strip() != ""]
         datenow = datetime.datetime.now()
         sqlselect="""
             SELECT
@@ -618,9 +724,14 @@ class MscDatabase(DatabaseHelper):
                     phase.state = 'ready'"""
 
         if login:
-            sqlfilter = sqlfilter + """
-            AND
-                commands.creator = '%s'"""%login
+            if listuser:
+                sqlfilter = sqlfilter + """
+                AND
+                    commands.creator in (%s)""" % ",".join(listuser)
+            else:
+                sqlfilter = sqlfilter + """
+                AND
+                    commands.creator = '%s'""" % login
 
         if filt:
             sqlfilter = sqlfilter + """
@@ -634,18 +745,16 @@ class MscDatabase(DatabaseHelper):
         reqsql = sqlselect + sqlfilter
 
         sqllimit=""
-        if min and max:
+        if minimum and maximum:
             sqllimit = """
                 LIMIT %d
-                OFFSET %d"""%(int(max)-int(min), int(min))
+                OFFSET %d"""%(int(maximum)-int(minimum), int(minimum))
             reqsql = reqsql + sqllimit
 
         sqlgroupby = """
             GROUP BY titledeploy"""
 
         reqsql = reqsql + sqlgroupby+";"
-
-        ###### print reqsql
 
         sqlselect="""
             Select COUNT(nb) AS TotalRecords from(
@@ -669,13 +778,14 @@ class MscDatabase(DatabaseHelper):
             AND
             """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;";
+
         result={}
         resulta = self.db.execute(reqsql)
         resultb = self.db.execute(reqsql1)
         sizereq = [x for x in resultb][0][0]
         result['lentotal'] = sizereq
-        result['min'] = int(min)
-        result['nb']  = (int(max)-int(min))
+        result['min'] = int(minimum)
+        result['nb']  = (int(maximum)-int(minimum))
         result['tabdeploy'] = {}
         inventoryuuid = []
         host = []
@@ -717,6 +827,7 @@ class MscDatabase(DatabaseHelper):
         result['tabdeploy']['titledeploy'] = titledeploy
         return result
 
+
     def updategroup(self, group):
         session = create_session()
         join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
@@ -732,7 +843,7 @@ class MscDatabase(DatabaseHelper):
             resultat = {}
             resultat['gid']         = group
             resultat['pathpackage'] = objdeploy.Commands.package_id
-            resultat['state']       = 'DEPLOYMENT ABORT'
+            resultat['state']       = 'ABORT DEPLOYMENT CANCELLED BY USER'
             resultat['start']       = objdeploy.CommandsOnHost.start_date
             resultat['end']         = objdeploy.CommandsOnHost.end_date
             resultat['inventoryuuid'] = objdeploy.Target.target_uuid
@@ -762,7 +873,6 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return result
 
-    #jfkjfk
     def xmppstage_statecurrent_xmpp(self):
         """
             this function scheduled by xmpp, change current_state et stage if command is out of deployment_intervals
@@ -779,19 +889,13 @@ class MscDatabase(DatabaseHelper):
         session.close()
 
 
-    def deployxmpp(self, intervalsearch=800):
-        """
-            select deploy machine
-        """
-        q = self.__search_command_deploy(intervalsearch)
-        return self.__dispach_deploy(q)
-
     @DatabaseHelper._sessionm
-    def __search_command_deploy(self, session, intervalsearch):
+    def deployxmpp(self, session, limitnbr=100):
         """
             select deploy machine
         """
         datenow = datetime.datetime.now()
+        datestr = datenow.strftime('%Y-%m-%d %H:%M:%S')
         sqlselect="""
         SELECT
                 `commands`.`id` AS commands_id,
@@ -818,25 +922,104 @@ class MscDatabase(DatabaseHelper):
                     AND
                 `phase`.`state` = 'ready'
                     AND
-                commands.start_date <= '%s'
-                    AND
-                commands.end_date > DATE_SUB("%s",
-                                             INTERVAL %s SECOND);"""%(datenow,
-                                                                      datenow,
-                                                                      intervalsearch)
-        resultsql = self.db.execute(sqlselect)
-        return resultsql
+                    '%s' BETWEEN commands.start_date AND commands.end_date limit %s;"""%(datenow,
+                                                                                         limitnbr);
+        #self.logger.debug("sqlselect %s"%sqlselect)
+        selectedMachines = session.execute(sqlselect)
+        nb_machine_select_for_deploy_cycle=selectedMachines.rowcount
+        if nb_machine_select_for_deploy_cycle == 0:
+            self.logger.debug("Aucun deployement for process")
+            return nb_machine_select_for_deploy_cycle, []
+        else:
+            self.logger.debug("%s mach for deploy"%nb_machine_select_for_deploy_cycle)
+
+        machine_status_update=[]
+        unique_deploy_on_machine = []
+        updatemachine = []
+
+        self.logger.debug("launch new select deploy machine")
+
+        for msc_machine_to_deploy in selectedMachines:
+            machine_status_update.append(str(msc_machine_to_deploy.commands_on_host_id))
+            # on prepare les machines a mettre a jour.
+            self.logger.debug("machine %s [%s] presente for deploy package %s" % (msc_machine_to_deploy.target_target_name,
+                                                                                  msc_machine_to_deploy.target_target_uuid,
+                                                                                  msc_machine_to_deploy.commands_package_id))
+            title = str(msc_machine_to_deploy.commands_title)
+            self.logger.info("title '%s'" % title)
+            if title.startswith("Convergence on"):
+                title ="%s %s"%( title, datestr)
+
+            if not msc_machine_to_deploy.target_target_uuid in unique_deploy_on_machine:
+                unique_deploy_on_machine.append(msc_machine_to_deploy.target_target_uuid)
+                updatemachine.append( { 'name': str(msc_machine_to_deploy.target_target_name)[:-1],
+                                        'pakkageid': str(msc_machine_to_deploy.commands_package_id),
+                                        'commandid':  msc_machine_to_deploy.commands_id,
+                                        'mac': str(msc_machine_to_deploy.target_target_macaddr),
+                                        'count': 0,
+                                        'cycle': 0,
+                                        'login': str(msc_machine_to_deploy.commands_creator),
+                                        'start_date': msc_machine_to_deploy.commands_start_date,
+                                        'end_date': msc_machine_to_deploy.commands_end_date,
+                                        'title': title,
+                                        'UUID': str(msc_machine_to_deploy.target_target_uuid),
+                                        'GUID': msc_machine_to_deploy.target_id_group})
+                #recherche machine existe pour xmpp
+                self.logger.info("deploy on machine %s [%s] -> %s" % (msc_machine_to_deploy.target_target_name,
+                                                                      msc_machine_to_deploy.target_target_uuid,
+                                                                      msc_machine_to_deploy.commands_package_id))
+            else:
+                self.logger.warn("Cancel deploy in process\n"\
+                                 "Deploy on machine %s [%s] -> %s" % (msc_machine_to_deploy.target_target_name,
+                                                                      msc_machine_to_deploy.target_target_uuid,
+                                                                      msc_machine_to_deploy.commands_package_id))
+        # deploiement status dans msc imédiatement mis a jour pour libere imediatement le verrou sur la table msc.
+        if machine_status_update:
+            list_uuid_machine = ",".join(machine_status_update)
+            sql ="""UPDATE `msc`.`commands_on_host`
+                        SET
+                           `current_state`='done',
+                            `stage`='ended'
+                        WHERE `commands_on_host`.`id` in(%s);
+                    UPDATE `msc`.`phase`
+                        SET
+                           `phase`.`state`='done'
+                        WHERE `phase`.`fk_commands_on_host` in(%s);
+            """%(list_uuid_machine,
+                 list_uuid_machine);
+            #self.logger.debug("sql %s"%sql)
+            ret=session.execute(sql)
+            self.logger.debug("update deployement %s"%ret.rowcount)
+        session.commit()
+        session.flush()
+        return nb_machine_select_for_deploy_cycle, updatemachine
 
     @DatabaseHelper._sessionm
-    def getnotdeploybyuserrecent(self, session, login, intervalsearch, min, max, filt):
+    def get_deploy_inprogress_by_team_member(self, session, login, intervalsearch, minimum, maximum, filt):
         """
-            select deploys not deployed
-        """
+        This function is used to retrieve not yet done deployements of a team.
+        This team is found based on the login of a member.
 
+        Args:
+            session: The SQL Alchemy session
+            login: The login of the user
+            intervalsearch: The interval on which we search the deploys.
+            minimum: Minimum value ( for pagination )
+            maximum: Maximum value ( for pagination )
+            filt: Filter of the search
+            Returns:
+                It returns all the deployement not yet started of a specific team.
+                It can be done by time search too.
+        """
+        list_login=[]
+        if login:
+            if isinstance(login, (tuple, list)):
+                list_login=[x.strip() for x in login if x.strip() != ""]
+            else :
+                list_login.append(login)
         datenow = datetime.datetime.now()
         delta = datetime.timedelta(seconds=intervalsearch)
         datereduced = datenow - delta
-
         query = session.query(Commands.id,
                               func.count(Commands.id).label('nb_machine'),
                               Commands.title,
@@ -854,23 +1037,36 @@ class MscDatabase(DatabaseHelper):
         .join(CommandsOnHostPhase, CommandsOnHostPhase.fk_commands_on_host == CommandsOnHost.id)\
         .filter(CommandsOnHostPhase.name == 'upload')\
         .filter(CommandsOnHostPhase.state == 'ready')\
-        .filter(Commands.end_date > datereduced)
+        .filter(Commands.end_date > datereduced)\
+        .filter(Commands.type != 2)
 
-        if filt:
-            query = query.filter(or_(Commands.title.like("%%%s%%"%filt), \
-                                     Commands.creator.like("%%%s%%"%filt),\
-                                     Commands.package_id.like("%%%s%%"%filt),\
-                                     Commands.start_date.like("%%%s%%"%filt),\
-                                     Commands.end_date.like("%%%s%%"%filt),\
-                                     CommandsOnHost.id.like("%%%s%%"%filt),\
-                                     Target.target_name.like("%%%s%%"%filt),\
-                                     Target.target_uuid.like("%%%s%%"%filt),\
-                                     Target.id_group.like("%%%s%%"%filt),\
-                                     Target.target_macaddr.like("%%%s%%"%filt)))
-
+        if list_login:
+            query = query.filter(Commands.creator.in_(list_login))
+            if filt:
+                query = query.filter(or_(Commands.title.like("%%%s%%"%filt),
+                                        Commands.package_id.like("%%%s%%"%filt),
+                                        Commands.start_date.like("%%%s%%"%filt),
+                                        Commands.end_date.like("%%%s%%"%filt),
+                                        CommandsOnHost.id.like("%%%s%%"%filt),
+                                        Target.target_name.like("%%%s%%"%filt),
+                                        Target.target_uuid.like("%%%s%%"%filt),
+                                        Target.id_group.like("%%%s%%"%filt),
+                                        Target.target_macaddr.like("%%%s%%"%filt)))
+        else:
+            if filt:
+                query = query.filter(or_(Commands.title.like("%%%s%%"%filt),
+                                        Commands.creator.like("%%%s%%"%filt),
+                                        Commands.package_id.like("%%%s%%"%filt),
+                                        Commands.start_date.like("%%%s%%"%filt),
+                                        Commands.end_date.like("%%%s%%"%filt),
+                                        CommandsOnHost.id.like("%%%s%%"%filt),
+                                        Target.target_name.like("%%%s%%"%filt),
+                                        Target.target_uuid.like("%%%s%%"%filt),
+                                        Target.id_group.like("%%%s%%"%filt),
+                                        Target.target_macaddr.like("%%%s%%"%filt)))
         query = query.group_by(Commands.id, CommandsOnHostPhase.state)
         nb = query.count()
-        query = query.offset(int(min)).limit(int(max)-int(min))
+        query = query.offset(int(minimum)).limit(int(maximum)-int(minimum))
         res = query.all()
 
         result = {'total': nb, 'elements':[]}
@@ -888,66 +1084,6 @@ class MscDatabase(DatabaseHelper):
                            'gid': element[10],
                            'mac_address': element[11]})
         return result
-
-    @DatabaseHelper._sessionm
-    def __dispach_deploy(self, session, q):
-        tabmachine = []
-        updatemachine = []
-        listemachine = []
-        machine_do_deploy = {}
-        wolupdatemachine = []
-        self.logger.debug("select deploy machine")
-        for x in q:
-            presence = XmppMasterDatabase().getPresenceuuid(x.target_target_uuid)
-            if presence:
-                self.logger.debug("machine %s [%s] presente for deploy package %s"%(x.target_target_name,
-                                                                                    x.target_target_uuid,
-                                                                                    x.commands_package_id))
-            else:
-                self.logger.debug("machine %s [%s] missing for deploy package %s"%(x.target_target_name,
-                                                                                    x.target_target_uuid,
-                                                                                    x.commands_package_id))
-            deployobject = {'pakkageid': str(x.commands_package_id),
-                            'commandid':  x.commands_id,
-                            'mac': str(x.target_target_macaddr),
-                            'count': 0,
-                            'cycle': 0,
-                            'login': str(x.commands_creator),
-                            'start_date': x.commands_start_date,
-                            'end_date': x.commands_end_date,
-                            'title': str(x.commands_title),
-                            'UUID': str(x.target_target_uuid),
-                            'GUID': x.target_id_group}
-            if presence:
-                if not x.target_target_uuid in tabmachine:
-                    tabmachine.append(x.target_target_uuid)
-                    #recherche machine existe pour xmpp
-                    self.logger.info("deploy on machine %s [%s] -> %s"%(x.target_target_name,
-                                                                        x.target_target_uuid,
-                                                                        x.commands_package_id))
-                    machine_do_deploy[x.target_target_uuid] = x.commands_package_id
-                    updatemachine.append(deployobject)
-
-                    session.query(CommandsOnHost).filter(CommandsOnHost.id == x.commands_on_host_id ).\
-                        update({CommandsOnHost.current_state: "done",
-                                CommandsOnHost.stage : "ended"
-                                })
-                    session.flush()
-                    session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.commands_on_host_id).\
-                        update({ CommandsOnHostPhase.state : "done" })
-                    session.flush()
-
-                else:
-                    self.logger.warn("Cancel deploy in process\n"\
-                        "Deploy on machine %s [%s] -> %s"%(x.target_target_name,
-                                                           x.target_target_uuid,
-                                                           x.commands_package_id))
-                    listemachine.append(deployobject)
-            else:
-                wolupdatemachine.append(deployobject)
-        # return updatemachine, machine_do_deploy, wolupdatemachine, listemachine #complete infos
-        return updatemachine, wolupdatemachine
-
 
     def deleteCommand(self, cmd_id):
         """
@@ -1179,7 +1315,7 @@ class MscDatabase(DatabaseHelper):
                     continue
                 if name == "wol" and do_wol == "disable" :
                     continue
-                if name == "upload" and len(files) == 0:
+                if name == "upload" and not files:
                     continue
                 if name == "execute" and (start_script == "disable" \
                         or is_quick_action) and do_windows_update == "disable":
@@ -1978,24 +2114,24 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return map(lambda x: x.toH(), ret)
 
-    def getBundle(self, ctx, fk_bundle):
-        session = create_session()
-        try:
-            ret = session.query(Bundle).filter(self.bundle.c.id == fk_bundle).first().toH()
-        except:
-            self.logger.info("Bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
-            return [None, []]
-        try:
-            cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands.c.order_in_bundle).all())
-        except:
-            self.logger.info("Commands for bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
-            return [ret, []]
-        session.close()
-        try:
-            ret['creation_date'] = cmds[0]['creation_date']
-        except:
-            ret['creation_date'] = ''
-        return [ret, cmds]
+    #def getBundle(self, ctx, fk_bundle):
+        #session = create_session()
+        #try:
+            #ret = session.query(Bundle).filter(self.bundle.c.id == fk_bundle).first().toH()
+        #except:
+            #self.logger.info("Bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
+            #return [None, []]
+        #try:
+            #cmds = map(lambda a:a.toH(), session.query(Commands).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands.c.order_in_bundle).all())
+        #except:
+            #self.logger.info("Commands for bundle '%s' cant be retrieved by '%s'"%(fk_bundle, ctx.userid))
+            #return [ret, []]
+        #session.close()
+        #try:
+            #ret['creation_date'] = cmds[0]['creation_date']
+        #except:
+            #ret['creation_date'] = ''
+        #return [ret, cmds]
 
     @DatabaseHelper._session
     def isCommandsCconvergenceType(self, session, ctx, cmd_id):
@@ -2019,7 +2155,7 @@ class MscDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def getCommands(self, session, ctx, cmd_id):
-        if cmd_id == None or cmd_id == '':
+        if cmd_id == "0" or cmd_id == None or cmd_id == '':
             return False
         a_targets = map(lambda target:target[0], self.getTargets(cmd_id, True))
         if ComputerLocationManager().doesUserHaveAccessToMachines(ctx, a_targets):
@@ -2186,10 +2322,17 @@ class MscDatabase(DatabaseHelper):
         start_dateunixtime = time.mktime(CommandsOnHostdata.start_date.timetuple())
         end_dateunixtime   = time.mktime(CommandsOnHostdata.end_date.timetuple())
         next_launch_dateunixtime = time.mktime(CommandsOnHostdata.next_launch_date.timetuple())
-        return {"start_dateunixtime" : start_dateunixtime,
-                "end_dateunixtime" : end_dateunixtime,
-                "next_launch_dateunixtime" : next_launch_dateunixtime
-            }
+        if hasattr(CommandsOnHostdata, "package_id"):
+            return {"start_dateunixtime" : start_dateunixtime,
+                    "end_dateunixtime" : end_dateunixtime,
+                    "next_launch_dateunixtime" : next_launch_dateunixtime,
+                    "package_id" : CommandsOnHostdata.package_id
+                }
+        else:
+            return {"start_dateunixtime" : start_dateunixtime,
+                    "end_dateunixtime" : end_dateunixtime,
+                    "next_launch_dateunixtime" : next_launch_dateunixtime
+                }
 
     def _getcommanddata(self, CommandsOnHostdata):
         ret =  {"uploaded" : CommandsOnHostdata.uploaded,
@@ -2232,8 +2375,10 @@ class MscDatabase(DatabaseHelper):
         session = create_session()
         ret = session.query(CommandsOnHost.start_date,
                             CommandsOnHost.end_date,
-                            CommandsOnHost.next_launch_date).\
-            filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
+                            CommandsOnHost.next_launch_date,
+                            Commands.package_id)\
+            .join(Commands)\
+            .filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
         session.close()
         return self._getcommanddatadate(ret)
 
@@ -2248,16 +2393,16 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return self._getarraycommanddatadate(ret)
 
-
-    def getCommandOnGroupByState(self, ctx, cmd_id, state, min = 0, max = -1):
+    def getCommandOnGroupByState(self, ctx, cmd_id, state, min=0, max=-1):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id).order_by(self.commands_on_host.c.host)
         ret = self.__filterOnStatus(ctx, query, state)
         session.close()
-        if max != -1: ret = ret[min:max]
+        if max != -1:
+            ret = ret[min:max]
         return map(lambda coh: {'coh_id':coh.id, 'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
 
-    def getCommandOnGroupStatus(self, ctx, cmd_id):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
+    def getCommandOnGroupStatus(self, ctx, cmd_id):  # TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
         query = session.query(func.count(self.commands_on_host.c.id), CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.id == cmd_id)
         ret = self.__getStatus(ctx, query)
@@ -2267,7 +2412,7 @@ class MscDatabase(DatabaseHelper):
     def getMachineNamesOnGroupStatus(self, ctx, cmd_id, state, limit):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id)
-        if state in ['success', 'paused', 'stopped', 'running', 'failure']: # Global statues
+        if state in ['success', 'paused', 'stopped', 'running', 'failure']:  # Global statues
             query = query.filter(self.commands_on_host.c.current_state.in_(self.__getAllStatus()[state]))
         # Treat failed statues
         elif state == "fail_up":
@@ -2328,7 +2473,8 @@ class MscDatabase(DatabaseHelper):
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.fk_bundle == fk_bundle).order_by(self.commands_on_host.c.host)
         ret = self.__filterOnStatus(ctx, query, state)
         session.close()
-        if max != -1: ret = ret[min:max]
+        if max != -1:
+            ret = ret[min:max]
         return map(lambda coh: {'coh_id': coh.id, 'uuid':coh.target_uuid, 'host':coh.host, 'start_date':coh.start_date, 'end_date':coh.end_date, 'current_state':coh.current_state}, ret)
 
     def getCommandOnBundleStatus(self, ctx, fk_bundle):
@@ -2568,61 +2714,86 @@ class MscDatabase(DatabaseHelper):
             }
         }
 
-        if verbose: # used for CSV generation
+        if verbose:  # used for CSV generation
             for coh in query:
-                if coh.current_state == 'done': # success
-                    if verbose: ret['success']['total'][1].append(coh)
-                elif coh.current_state == 'stop' or coh.current_state == 'stopped': # stopped coh
-                    if verbose: ret['stopped']['total'][1].append(coh)
+                if coh.current_state == 'done':  # success
+                    if verbose:
+                        ret['success']['total'][1].append(coh)
+                elif coh.current_state == 'stop' or coh.current_state == 'stopped':  # stopped coh
+                    if verbose:
+                        ret['stopped']['total'][1].append(coh)
                 elif coh.current_state == 'pause':
-                    if verbose: ret['paused']['total'][1].append(coh)
-                elif coh.current_state == 'over_timed': # out of the valid period of execution (= failed)
-                    if verbose: ret['failure']['total'][1].append(coh)
-                    if verbose: ret['failure']['over_timed'][1].append(coh)
-                elif coh.attempts_left == 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # failure
-                    if verbose: ret['failure']['total'][1].append(coh)
+                    if verbose:
+                        ret['paused']['total'][1].append(coh)
+                elif coh.current_state == 'over_timed':  # out of the valid period of execution (= failed)
+                    if verbose:
+                        ret['failure']['total'][1].append(coh)
+                    if verbose:
+                        ret['failure']['over_timed'][1].append(coh)
+                elif coh.attempts_left == 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'):  # failure
+                    if verbose:
+                        ret['failure']['total'][1].append(coh)
                     if coh.uploaded == 'FAILED':
-                        if verbose: ret['failure']['fail_up'][1].append(coh)
+                        if verbose:
+                            ret['failure']['fail_up'][1].append(coh)
                         if coh.current_state == 'not_reachable':
-                            if verbose: ret['failure']['conn_up'][1].append(coh)
+                            if verbose:
+                                ret['failure']['conn_up'][1].append(coh)
                     elif coh.executed == 'FAILED':
-                        if verbose: ret['failure']['fail_ex'][1].append(coh)
+                        if verbose:
+                            ret['failure']['fail_ex'][1].append(coh)
                         if coh.current_state == 'not_reachable':
-                            if verbose: ret['failure']['conn_ex'][1].append(coh)
+                            if verbose:
+                                ret['failure']['conn_ex'][1].append(coh)
                     elif coh.deleted == 'FAILED':
-                        if verbose: ret['failure']['fail_rm'][1].append(coh)
+                        if verbose:
+                            ret['failure']['fail_rm'][1].append(coh)
                         if coh.current_state == 'not_reachable':
-                            if verbose: ret['failure']['conn_rm'][1].append(coh)
-                elif coh.attempts_left != 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'): # fail but can still try again
-                    if verbose: ret['running']['total'][1].append(coh)
+                            if verbose:
+                                ret['failure']['conn_rm'][1].append(coh)
+                elif coh.attempts_left != 0 and (coh.uploaded == 'FAILED' or coh.executed == 'FAILED' or coh.deleted == 'FAILED'):  # fail but can still try again
+                    if verbose:
+                        ret['running']['total'][1].append(coh)
                     if coh.uploaded == 'FAILED':
-                        if verbose: ret['running']['wait_up'][1].append(coh)
-                        if verbose: ret['running']['sec_up'][1].append(coh)
+                        if verbose:
+                            ret['running']['wait_up'][1].append(coh)
+                        if verbose:
+                            ret['running']['sec_up'][1].append(coh)
                     elif coh.executed == 'FAILED':
-                        if verbose: ret['running']['wait_ex'][1].append(coh)
-                        if verbose: ret['running']['sec_ex'][1].append(coh)
+                        if verbose:
+                            ret['running']['wait_ex'][1].append(coh)
+                        if verbose:
+                            ret['running']['sec_ex'][1].append(coh)
                     elif coh.deleted == 'FAILED':
                         ret['running']['wait_rm'][0] += 1
                         ret['running']['sec_rm'][0] += 1
                 else: # running
-                    if verbose and coh.deleted != 'DONE' and coh.deleted != 'IGNORED': ret['running']['total'][1].append(coh)
-                    if coh.deleted == 'DONE' or coh.deleted == 'IGNORED': # done
-                        if verbose: ret['success']['total'][1].append(coh)
-                    elif coh.executed == 'DONE' or coh.executed == 'IGNORED': # delete running
+                    if verbose and coh.deleted != 'DONE' and coh.deleted != 'IGNORED':
+                        ret['running']['total'][1].append(coh)
+                    if coh.deleted == 'DONE' or coh.deleted == 'IGNORED':  # done
+                        if verbose:
+                            ret['success']['total'][1].append(coh)
+                    elif coh.executed == 'DONE' or coh.executed == 'IGNORED':  # delete running
                         if coh.deleted == 'WORK_IN_PROGRESS':
-                            if verbose: ret['running']['run_rm'][1].append(coh)
+                            if verbose:
+                                ret['running']['run_rm'][1].append(coh)
                         else:
-                            if verbose: ret['running']['wait_rm'][1].append(coh)
-                    elif coh.uploaded == 'DONE' or coh.uploaded == 'IGNORED': # exec running
+                            if verbose:
+                                ret['running']['wait_rm'][1].append(coh)
+                    elif coh.uploaded == 'DONE' or coh.uploaded == 'IGNORED':  # exec running
                         if coh.executed == 'WORK_IN_PROGRESS':
-                            if verbose: ret['running']['run_ex'][1].append(coh)
+                            if verbose:
+                                ret['running']['run_ex'][1].append(coh)
                         else:
-                            if verbose: ret['running']['wait_ex'][1].append(coh)
-                    else: # upload running
+                            if verbose:
+                                ret['running']['wait_ex'][1].append(coh)
+                    else:  # upload running
                         if coh.uploaded == 'WORK_IN_PROGRESS':
-                            if verbose: ret['running']['run_up'][1].append(coh)
+                            if verbose:
+                                ret['running']['run_up'][1].append(coh)
                         else:
-                            if verbose: ret['running']['wait_up'][1].append(coh)
+                            if verbose:
+                                ret['running']['wait_up'][1].append(coh)
 
         return ret
 

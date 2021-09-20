@@ -28,12 +28,14 @@ import traceback
 from utils import name_random
 import logging
 
+logger = logging.getLogger()
+
 plugin = {"VERSION": "1.0", "NAME": "plugin_guacamole", "TYPE": "master"}
 # plugin run guacamole
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug(plugin)
+    logger.debug(plugin)
     try:
         relayserver = XmppMasterDatabase().getRelayServerForMachineUuid(data['uuid'])
         jidmachine = XmppMasterDatabase().getjidMachinefromuuid(data['uuid'])
@@ -45,6 +47,6 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                 mtype='chat')
 
     except:
-        logging.getLogger().error("error plugin plugin_guacamole %s" % data)
-        traceback.print_exc(file=sys.stdout)
+        logger.error("error plugin plugin_guacamole %s" % data)
+        logger.error("\n%s"%(traceback.format_exc()))
         pass

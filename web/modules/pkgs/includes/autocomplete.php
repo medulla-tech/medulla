@@ -34,7 +34,7 @@ class Autocomplete extends InputTpl {
     }
 
     function display($arrParam = array()) {
-        if (in_array($_GET ['add_param'], array(
+        if (isset($_GET ['add_param']) && in_array($_GET ['add_param'], array(
                     "Entity"
                 ))) {
             $frequency = 1.0;

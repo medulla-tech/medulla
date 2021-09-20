@@ -28,6 +28,7 @@ from mmc.plugins.xmppmaster.master.lib.utils import ipfromdns
 import os
 import ConfigParser
 
+logger = logging.getLogger()
 
 class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
@@ -39,6 +40,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
     def loadparametersplugins(self, namefile):
         Config = ConfigParser.ConfigParser()
+        Config.optionxform = str
         Config.read(namefile)
         return Config.items("parameters")
 
@@ -85,6 +87,44 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         if self.has_option("bowserfile", "rootfilesystem"):
             self.rootfilesystem = self.get('browserfile', 'rootfilesystem')
 
+        # This will be used to configure the machine table from GLPI
+        # the reg_key_ to show are defined  reg_key_1 reg_key_2
+        # regarding the reg_key_1 et reg_key_2 defined in the inventory section
+        self.summary = ['cn', 'description', 'os', 'type', 'user', 'entity']
+        if self.has_option("computer_list", "summary"):
+            self.summary = self.get("computer_list", "summary").split(' ')
+
+        ## Registry keys that need to be pushed in an inventory
+        ## Format: reg_key_x = path_to_key|key_label_shown_in_mmc
+        ## eg.:
+        ## reg_key_1 = HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA|LUAEnabled
+        ## reg_key_2 = HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\ProductName|WindowsVersion
+        ## max_key_index = 2
+
+        ##reg_key_1 = HKEY_CURRENT_USER\Software\test\dede|dede
+        #reg_key_1 = HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA|LUAEnabled
+        #reg_key_2 = HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\ProductName|ProductName
+        #max_key_index=2
+
+        self.max_key_index = 50
+        if self.has_option("inventory", "max_key_index"):
+            self.max_key_index = self.getint("inventory", "max_key_index")
+        # create mutex
+        self.arraykeys=[]
+        for index_key in range(1, self.max_key_index+1):
+            if self.has_option("inventory", "reg_key_%s" % index_key):
+                self.arraykeys.append( self.get("inventory", "reg_key_%s" % index_key))
+
+        self.max_key_index = len(self.arraykeys)
+
+        self.centralizedmultiplesharing = True
+        if self.has_option("pkgs", "centralizedmultiplesharing"):
+            self.centralizedmultiplesharing = self.getboolean("pkgs", "centralizedmultiplesharing")
+
+        self.movepackage = False
+        if self.has_option("pkgs", "movepackage"):
+            self.movepackage = self.getboolean("pkgs", "movepackage")
+
         ###################Chatroom for dynamic configuration of agents#######################
         # Dynamic configuration information
         self.confjidchatroom = "%s@%s" % (
@@ -95,6 +135,54 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.chatserver = self.get('chat', 'domain')
         # plus petite mac adress
         self.jidagent = "%s@%s/%s" % (utils.name_jid(), self.get('chat', 'domain'), platform.node())
+
+        try:
+            # Interval for installing new plugins on clients (in seconds)
+            self.remote_update_plugin_interval = self.getint('global', 'remote_update_plugin_interval')
+        except Exception:
+            self.remote_update_plugin_interval = 60
+        # deployment support for master
+        try:
+            self.Booltaskdeploy = self.getboolean('global', 'taskdeploy')
+        except Exception:
+            self.Booltaskdeploy = True
+        # manage session
+        try:
+            self.Boolsessionwork = self.getboolean('global', 'sessionwork')
+        except Exception:
+            self.Boolsessionwork = True
+        # Enable memory leaks checks and define interval (in seconds)
+        try:
+            self.memory_leak_check = self.getboolean('global', 'memory_leak_check')
+        except Exception:
+            self.memory_leak_check = False
+        try:
+            self.memory_leak_interval = self.getint('global', 'memory_leak_interval')
+        except Exception:
+            self.memory_leak_interval = 15
+
+        try:
+            self.reload_plugins_base_interval = self.getint('global', 'reload_plugins_base_interval')
+        except Exception:
+            self.reload_plugins_base_interval = 900
+        try:
+            # Interval between two scans for checking for new deployments (in seconds)
+            self.deployment_scan_interval = self.getint('global', 'deployment_scan_interval')
+        except Exception:
+            self.deployment_scan_interval = 30
+        try:
+            self.deployment_end_timeout = self.getint('global', 'deployment_end_timeout')
+        except Exception:
+            self.deployment_end_timeout = 300
+        try:
+            self.session_check_interval = self.getint('global', 'session_check_interval')
+        except Exception:
+            self.session_check_interval = 15
+
+        try:
+            self.wol_interval = self.getint('global', 'wol_interval')
+        except Exception:
+            self.wol_interval = 60
         try:
             self.jidagentsiveo = "%s@%s" % (
                 self.get('global', 'allow_order'), self.get('chat', 'domain'))
@@ -103,6 +191,22 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.ordreallagent = self.getboolean('global', 'inter_agent')
         self.showinfomaster = self.getboolean('master', 'showinfo')
         self.showplugins = self.getboolean('master', 'showplugins')
+        self.blacklisted_mac_addresses= []
+        if self.has_option("master", "blacklisted_mac_addresses"):
+            blacklisted_mac_addresses = self.get('master', 'blacklisted_mac_addresses')
+        else:
+            blacklisted_mac_addresses = "00:00:00:00:00:00"
+        blacklisted_mac_addresses = blacklisted_mac_addresses.lower().replace(":","").replace(" ","")
+        blacklisted_mac_addresses_list = [x.strip() for x in blacklisted_mac_addresses.split(',')]
+        for t in blacklisted_mac_addresses_list:
+            if len(t) == 12:
+                macadrs = t[0:2]+":"+t[2:4]+":"+t[4:6]+":"+t[6:8]+":"+t[8:10]+":"+t[10:12]
+                self.blacklisted_mac_addresses.append(macadrs)
+            else:
+                logger.warning("the mac address in blacklisted_mac_addresses parameter is bad format for value %s"%t )
+        if "00:00:00:00:00:00" not in self.blacklisted_mac_addresses:
+            self.blacklisted_mac_addresses.insert(0,"00:00:00:00:00:00")
+        self.blacklisted_mac_addresses=list(set(self.blacklisted_mac_addresses))
         ###################time execcution plugin ####################
         # write execution time in fichier /tmp/Execution_time_plugin.txt
         #
@@ -133,7 +237,11 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         if self.has_option("global", "autoupdatebyrelay"):
             self.autoupdatebyrelay = self.getboolean('global', 'autoupdatebyrelay')
         else:
-            self.autoupdatebyrelay = False
+            self.autoupdatebyrelay = True
+        self.pluginliststart = ""
+        if self.has_option("plugins", "pluginliststart"):
+            self.pluginliststart = self.get('plugins', 'pluginliststart')
+        self.pluginliststart = [x.strip() for x in self.pluginliststart.split(",") if x.strip() != ""]
         self.dirplugins = self.get('plugins', 'dirplugins')
         self.dirschedulerplugins = self.get('plugins', 'dirschedulerplugins')
         self.information = {}
@@ -169,6 +277,10 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
                         setattr(self, keyparameter, valueparameter)
                 else:
                     logging.getLogger().error("Parameter File Plugin %s : missing" % namefile)
+        if self.has_option("syncthing", "announce_server"):
+            self.announce_server = self.get('syncthing', 'announce_server')
+        else:
+            self.announce_server = "default"
 
     def check(self):
         """

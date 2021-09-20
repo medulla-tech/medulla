@@ -1,0 +1,199 @@
+[ldap]
+# LDAP we are connected to
+# If ldapurl starts with "ldaps://", use LDAP over SSL on the LDAPS port.
+# LDAPS is deprecated, and you should use StartTLS.
+# If ldapverifypeer = demand, always use the server hostname instead of its IP
+# address in the LDAP URL. This hostname must match the CN field of the server
+# certificate.
+ldapurl = ldap://127.0.0.1:389
+# Network timeout in seconds for LDAP operations. No default timeout set.
+#network_timeout =
+# TLS connection parameters when LDAPS is not used:
+#  off - never use TLS (default value)
+#  start_tls - Use the LDAPv3 StartTLS extended operation (better)
+#start_tls = off
+# If start_tls != off or LDAPS, specify check to perform on server certificate:
+#  never - don't ask certificate
+#  demand - request certificate. If none or bad certificate provided, stop the
+#           connection (recommended)
+#ldapverifypeer = demand
+# Client certicates to use (default are empty) for LDAPS or TLS connections:
+# For example: @sysconfdir@/ssl/certs
+#cacertdir =
+# For example: @sysconfdir@/mmc/certs/demoCA/cacert.pem
+#cacert =
+# For example: @sysconfdir@/mmc/certs/client.cert
+#localcert =
+# For example: @sysconfdir@/mmc/certs/client.key
+#localkey =
+# Accepted ciphers
+# Use this for more security: TLSv1+SHA1+AES+DH:CAMELLIA:!NULL:!ADH
+#ciphersuites = TLSv1:!NULL
+# LDAP debug level - set this to 255 to debug LDAP connection problems
+#ldapdebuglevel = 0
+# LDAP base DN
+baseDN = dc=mandriva, dc=com
+# Users location in the LDAP
+baseUsersDN = ou=Users, %(baseDN)s
+# Groups location in the LDAP
+baseGroupsDN = ou=Groups, %(baseDN)s
+# LDAP manager
+rootName = cn=admin, %(baseDN)s
+password = secret
+# If enabled, the MMC will create/move/delete the home of the users
+# Else will do nothing, but only write user informations into LDAP
+userHomeAction = 1
+# Skeleton directory to populate a new home directory
+skelDir = /etc/skel
+# If set, all new users will belong to this group when created
+defaultUserGroup = Domain Users
+# Default home directory for users
+defaultHomeDir = /home
+# Default shell for enabled users
+defaultShellEnable = /bin/bash
+# Default shell for disabled users
+defaultShellDisable = /bin/false
+# user uid number start
+uidStart = 10000
+# group gid number start
+gidStart = 10000
+# LDAP log file path
+logfile = /var/log/ldap.log
+# FDS log file path
+# logfile = /opt/fedora-ds/slapd-hostname/logs/access
+
+# you can specify here where you can authorized creation of your homedir
+# default is your defaultHomeDir
+# example:
+# authorizedHomeDir = /home, /home2, /mnt/depot/newhome
+
+# LDAP user password scheme to use
+# Possible values are "ssha", "crypt" and "passmod"
+# "passmod" uses the LDAP Password Modify Extended Operations to change
+# password. The password encryption is done by the LDAP server.
+passwordscheme = passmod
+
+[backup-tools]
+# Path of the backup tools
+path = @libdir@/mmc/backup-tools
+# Where are put the archives
+destpath = /home/archives
+
+# Computer inventory plugin to use (Pulse 2 related option)
+# [computers]
+# method = glpi
+# method = inventory
+
+# Audit system configuration
+# If commented, the audit module will be disabled
+# [audit]
+# method = database
+# dbhost = localhost
+# MySQL and PostgreSQL backends are available
+# dbdriver = postgres
+# dbport = 5432
+# dbdriver = mysql
+# dbport = 3306
+# dbuser = audit
+# dbpassword = audit
+# dbname = audit
+
+# User authentication configuration
+#[authentication]
+# Authenticators chain
+#method = baseldap externalldap
+
+# baseldap authenticator configuration
+#[authentication_baseldap]
+# Set a list of login that will only be authentified using this authenticator
+#authonly = root
+
+# Externalldap authenticator configuration
+#[authentication_externalldap]
+# Login list that won't be authenticated with this authenticator.
+#exclude =
+# If set, only the speficied logins will be authenticated with this
+# authenticator.
+#authonly =
+# Set whether this authenticator is mandatory. If it is mandatory and can't be
+# validated during the mmc-agent activation phase, the mmc-agent exits with an
+# error.
+#mandatory = True
+# LDAP server URLs. The LDAP server are selected in the given order when
+# authenticating a user.
+#ldapurl = ldap://192.168.0.1:389 ldap://192.168.0.2:389
+# LDAP connection timeout in seconds. If the LDAP connection failed after this
+# timeout, we try the next LDAP server in the list or give up if it the last.
+#network_timeout =
+# LDAP suffix where to search for user
+#suffix = cn=Users,dc=mandriva,dc=com
+# How to bind to the LDAP. Empty if anonymous
+#bindname = cn=account, cn=Users, dc=linboxad, dc=com
+#bindpasswd = s3cr3t
+#bindname =
+#bindpasswd =
+# User filter
+#filter = objectClass=*
+# User attribute containing her/his login
+#attr = cn
+
+# User provisioning configuration
+#[provisioning]
+#method = externalldap
+
+# externalldap provisioner configuration
+#[provisioning_externalldap]
+# Login list that won't be provisioned with this provisioner
+#exclude = root
+# These attributes are mandatory to create a user
+#ldap_uid = cn
+#ldap_givenName = sn
+#ldap_sn = sn
+# Other attributes to fill in
+#ldap_mail = mail
+#...
+# We are able to fill the ACL fields the user logs in according to the value of
+# an attribute from the external LDAP.
+# What is the field name ?
+#profile_attr =
+# Here we define two profiles: profile1 and profile2
+# profile1 allows the user to log in and change her/his password in the web
+# interface
+#profile_acl_profile1= :base#users#passwd/
+# profile2 disallows the user to do anything (no ACL defined)
+#profile_acl_profile2 =
+# ... You can define as much profile_acl_* options as you need
+# For each profile, we can create a group of user, and put users with a given
+# profile in the corresponding group automatically when they log in.
+# Set the next line to True to activate profile to group mapping
+#profile_group_mapping = False
+# A prefix for the created group can be set
+#profile_group_prefix =
+
+# Example userdefault settings to support Kerberos
+# [userdefault]
+# objectClass = +krb5KDCEntry,krb5Principal
+# krb5KeyVersionNumber = 1
+# krb5KDCFlags = 126
+# krb5PrincipalName = %uid%@DOMAIN
+
+# Subscription informations
+# [subscription]
+# product_name = MDS
+# vendor_name = Mandriva
+# vendor_mail = sales@mandriva.com
+# customer_name =
+# customer_mail =
+# comment =
+# users = 0
+# computers = 0
+# upgrade_url =
+# # Support informations
+# support_mail =
+# support_phone =
+# support_comment =
+
+[memoryinfo]
+time = 15
+outfile = /tmp/leakmemory.data
+leak_memory_disable = True

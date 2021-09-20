@@ -1,0 +1,105 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; -*-
+#
+# (c) 2010 Mandriva, http://www.mandriva.com
+#
+# $Id$
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+Displays stats from a mmc-agent.log file running in DEBUG mode
+"""
+
+import sys
+
+def usage():
+    """
+    Print command usage
+    """
+    print 'usage: mmc-stats file'
+    print
+    print 'This tool analyses a mmc-agent log file in DEBUG mode and displays some stats.'
+
+if __name__ == '__main__':
+    # FIXME: code need to be reworked
+    if len(sys.argv) != 2:
+        usage()
+        sys.exit(1)
+
+    callcount = {}
+    timecount = {}
+    avg = {}
+    thread = {}
+    users = {}
+
+    lasttime = None
+    for line in file(sys.argv[1]):
+        if "Execution time:" in line:
+            try:
+                _, _, _, _, _, lasttime = line.split()
+                lasttime = float(lasttime)
+            except ValueError:
+                print line
+                print line.split()
+                sys.exit(0)
+        elif "Result for " in line:
+            _, _, tmp, _ = line.split(":", 3)
+            func = tmp.split(',')[2].strip()
+            user = tmp.split(',')[1].split()[-1]
+            if not func in callcount:
+                callcount[func] = 0
+            callcount[func] = callcount[func] + 1
+            if not user in users:
+                users[user] = 0
+            users[user] = users[user] + 1
+            if lasttime:
+                if not func in timecount:
+                    timecount[func] = 0
+                timecount[func] = timecount[func] + lasttime
+        elif "Using thread #" in line:
+            num = line.split('#')[1].split()[0]
+            if not num in thread:
+                thread[num] = 0
+            thread[num] = thread[num] + 1
+
+    def callcounts():
+        print "Call counts:"
+        for func in callcount:
+            print callcount[func], func, "%02f" % timecount[func]
+        print
+
+    def timecounts():
+        print "Time counts:"
+        for func in callcount:
+            print "%02f" % timecount[func], func, callcount[func]
+        print
+
+    def avgcounts():
+        print "Average call time:"
+        for func in callcount:
+            print "%02f" % (timecount[func] / callcount[func]), func
+        print
+
+    def other():
+        print "Number of threads:", len(thread)
+        print "Number of users:", len(users)
+        print
+
+    callcounts()
+    timecounts()
+    avgcounts()
+    other()

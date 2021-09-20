@@ -527,7 +527,7 @@ class UploadPhase(RemoteControlPhase):
 
         proxyCoH = CoHQuery(self.coh.getUsedProxy())
         # get informations about our proxy
-        if proxyCoH == None:
+        if proxyCoH is None:
             return defer.fail(Exception("Cant access to CoH")).addErrback(self.parsePushError).addErrback(self.got_error_in_error)
 
         #proxy = self.get_client("transfert")
@@ -685,7 +685,7 @@ class UploadPhase(RemoteControlPhase):
                 pass
 
         # from here, either file_uris is a dict with a bunch of uris, or it is void in which case we give up
-        if (not file_uris) or (len(file_uris['files']) == 0):
+        if (not file_uris) or not file_uris['files']:
             if useFallback:
                 self.logger.warn("Circuit #%s: can't get files URI from fallback mirror, skipping command" % (self.coh.getId()))
                 #self.updateHistory('upload_failed',
@@ -805,7 +805,7 @@ class UploadPhase(RemoteControlPhase):
         error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
         """
         self.logger.warn("Circuit #%s: push failed, unattented reason: %s" % (self.coh.id, reason.getErrorMessage()))
-        if self.coh == None:
+        if self.coh is None:
             return self.give_up()
         self.update_history_failed(error_code, '', reason.getErrorMessage())
         return self.switch_phase_failed()
@@ -1003,7 +1003,7 @@ class WUParsePhase(Phase):
             if match :
                 output += line[match.end():]
 
-        if len(output) > 0:
+        if output:
             re_slice = re.findall(self.json_pattern, output, re.DOTALL|re.MULTILINE)
             output = "".join(re_slice)
             self.logger.debug("WU output: %s" % output)
@@ -1088,7 +1088,7 @@ class DonePhase(Phase):
     def run(self): return self.perform()
 
     def perform(self):
-       self.phase.set_done()
-       self.coh.setStateDone()
-       self.dispatcher.bundles.finish(self.coh.id)
-       return self.next()
+        self.phase.set_done()
+        self.coh.setStateDone()
+        self.dispatcher.bundles.finish(self.coh.id)
+        return self.next()
