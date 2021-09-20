@@ -164,7 +164,19 @@ function chart(selector, datas)
     .append("span")
     .append('a')
     .style("color","black")
-    .attr("href", function(d){return d.data.href})
+    .style("font-weight","normal")
+    .attr("href", function(d){
+      if(typeof(d.data.onclick) == "undefined")
+      {
+        return d.data.href
+      }
+    })
+    .attr("onclick", function(d){
+      if(typeof(d.data.onclick) !== "undefined")
+      {
+        return d.data.onclick+"('"+d.data.label+"')";
+      }
+    })
     .text(function(d,i){
         return d.data.label+" : "+d.data.value+ " ("+((d.data.value/total)*100).toFixed(0) + "%)"
       });

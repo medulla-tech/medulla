@@ -1,7 +1,7 @@
 <?php
 
 /*
- * (c) 2015-2017 Siveo, http://www.siveo.net
+ * (c) 2015-2020 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -30,6 +30,10 @@
 function xmlrpc_topology_pulse() {
     return xmlCall("xmppmaster.topologypulse", array());
 }
+
+ function xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx){
+     return xmlCall("xmppmaster.get_machines_list", [$start, $end, $ctx]);
+ }
 
 function xmlrpc_getPresenceuuid($uuid) {
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
@@ -67,8 +71,8 @@ function xmlrpc_remotecommandshell($command, $jidmachine, $timeout){
     return xmlCall("xmppmaster.remotecommandshell", array($command, $jidmachine, $timeout));
 }
 
-function xmlrpc_remoteXmppMonitoring($sujectinfo, $jidmachine, $timeout){
-    return xmlCall("xmppmaster.remoteXmppMonitoring", array($sujectinfo, $jidmachine, $timeout));
+function xmlrpc_remoteXmppMonitoring($subjectinfo, $jidmachine, $timeout){
+    return xmlCall("xmppmaster.remoteXmppMonitoring", array($subjectinfo, $jidmachine, $timeout));
 }
 
 function xmlrpc_listremotefileedit($jidmachine){
@@ -214,6 +218,19 @@ function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE") {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
 }
 
+function xmlrpc_getdeployment_cmd_and_title($command_id, $title, $filter = "", $start, $limit) {
+    return xmlCall("xmppmaster.getdeployment_cmd_and_title", array( $command_id,
+                                                                    $title,
+                                                                    $filter,
+                                                                    $start,
+                                                                    $limit));
+}
+
+function xmlrpc_getstatdeploy_from_command_id_and_title($command_id, $title) {
+    return xmlCall("xmppmaster.getstatdeploy_from_command_id_and_title", array($command_id,
+                                                                        $title));
+}
+
 function xmlrpc_getdeployment($command_id, $filter = "", $start, $limit) {
     return xmlCall("xmppmaster.getdeployment", array($command_id, $filter, $start, $limit));
 }
@@ -259,25 +276,74 @@ function xmlrpc_runXmppReverseSSHforGuacamole($uuid, $cux_id, $cux_type){
     return xmlCall("xmppmaster.CallXmppPlugin", array("guacamole", array("uuid"=>$uuid, "cux_id"=>$cux_id, "cux_type"=>$cux_type)));
 }
 
-function xmlrpc_getdeploybymachinerecent($uuidinventory, $state, $duree, $min, $max, $filt) {
-    return xmlCall("xmppmaster.getdeploybymachinerecent", array($uuidinventory, $state, $duree, $min , $max, $filt));
+function xmlrpc_get_deploy_for_machine($uuidinventory, $state, $duree, $min, $max, $filt) {
+    return xmlCall("xmppmaster.get_deploy_for_machine", array($uuidinventory, $state, $duree, $min , $max, $filt));
 }
 
-function xmlrpc_getdeploybymachinegrprecent($gid, $state, $duree, $min, $max, $filt) {
-    return xmlCall("xmppmaster.getdeploybymachinegrprecent", array($gid, $state, $duree, $min , $max, $filt));
+function xmlrpc_get_deploy_from_group($gid, $state, $duree, $min, $max, $filt) {
+    return xmlCall("xmppmaster.get_deploy_from_group", array($gid, $state, $duree, $min , $max, $filt));
 }
 
 function xmlrpc_delDeploybygroup( $numgrp) {
     return xmlCall("xmppmaster.delDeploybygroup", array($numgrp));
 }
 
-function xmlrpc_getdeploybyuserrecent( $login , $state, $duree, $min=null, $max=null, $filt=null) {
-    return xmlCall("xmppmaster.getdeploybyuserrecent", array($login , $state, $duree, $min , $max, $filt));
+function xmlrpc_getdeploybyteamuserrecent($login,
+                                          $state,
+                                          $duree,
+                                          $min=null,
+                                          $max=null,
+                                          $filt=null) {
+    return xmlCall("xmppmaster.get_deploy_by_team_member", array($login,
+                                                                $state,
+                                                                $duree,
+                                                                $min,
+                                                                $max,
+                                                                $filt));
+}
+function xmlrpc_getnotdeploybyteamuserrecent($login,
+                                             $duree,
+                                             $min=null,
+                                             $max=null,
+                                             $filt=null) {
+    return xmlCall("xmppmaster.get_deploy_inprogress_by_team_member", array($login,
+                                                                            $duree,
+                                                                            $min,
+                                                                            $max,
+                                                                            $filt));
 }
 
-function xmlrpc_getdeploybyuserpast( $login, $duree, $min=null, $max=null, $filt=null) {
-    return xmlCall("xmppmaster.getdeploybyuserpast", array($login, $duree, $min , $max, $filt));
+
+function xmlrpc_get_deploy_xmpp_teamscheduler($login,
+                                            $start,
+                                            $end,
+                                            $filter){
+    return xmlCall("xmppmaster.get_deploy_xmpp_teamscheduler", array($login,
+                                                                     $start,
+                                                                     $end,
+                                                                     $filter));
 }
+
+function xmlrpc_get_deploy_by_team_finished($login,
+                                        $duree,
+                                        $min=null,
+                                        $max=null,
+                                        $filt=null) {
+    return xmlCall("xmppmaster.get_deploy_by_team_finished", array($login,
+                                                                   $duree,
+                                                                   $min,
+                                                                   $max,
+                                                                   $filt));
+}
+
+function xmlrpc_get_deploy_by_user_with_interval($login , $state, $duree, $min=null, $max=null, $filt=null) {
+    return xmlCall("xmppmaster.get_deploy_by_user_with_interval", array($login, $state, $duree, $min, $max, $filt));
+}
+
+function xmlrpc_get_deploy_by_user_finished( $login, $duree, $min=null, $max=null, $filt=null) {
+    return xmlCall("xmppmaster.get_deploy_by_user_finished", array($login, $duree, $min , $max, $filt));
+}
+
 
 function xmlrpc_getdeploybyuserlen($login) {
     return xmlCall("xmppmaster.getdeploybyuserlen", array($login));
@@ -472,7 +538,7 @@ function xmlrpc_xmpp_get_info_synchro_packageid($pid_ppackage){
 //######################################
 
 function xmlrpc_xmppGetAllPackages($filter, $start, $end) {
-    return xmlCall("xmppmaster.xmppGetAllPackages", array($filter, $start, $end));
+    return xmlCall("xmppmaster.xmppGetAllPackages", array($_SESSION['login'], $filter, $start, $end));
 }
 
 function xmpp_getPackageDetail($pid){
@@ -497,6 +563,15 @@ function xmlrpc_get_xmppmachines_list($start=-1, $limit=-1, $filter="", $presenc
 
 function xmlrpc_get_xmpprelays_list($start=-1, $limit=-1, $filter="", $presence='all'){
   return xmlCall("xmppmaster.get_xmpprelays_list", [$start, $limit, $filter, $presence]);
+}
+
+function get_list_ars_from_sharing($sharings,
+                                   $start=-1,
+                                   $limit=-1,
+                                   $objectlogin="",
+                                   $filter=""){
+  return xmlCall("xmppmaster.get_list_ars_from_sharing",
+                    [$sharings, $start, $limit, $objectlogin, $filter]);
 }
 
 function xmlrpc_get_clusters_list($start=-1, $limit=-1, $filter=""){
@@ -537,5 +612,138 @@ function xmlrpc_get_relay_qa_launched($jid, $login, $start=-1, $maxperpage=-1){
 
 function xmlrpc_get_packages_list($jid, $filter=""){
   return xmlCall("xmppmaster.get_packages_list", [$jid, $filter]);
+}
+
+function xmlrpc_getPanelsForMachine($hostname){
+  return xmlCall("xmppmaster.getPanelsForMachine", [$hostname]);
+}
+
+function xmlrpc_getPanelImage($hostname, $panel_title, $from, $to){
+  return xmlCall("xmppmaster.getPanelImage", [$hostname, $panel_title, $from, $to]);
+}
+
+function xmlrpc_getPanelGraph($hostname, $panel_title, $from, $to){
+  return xmlCall("xmppmaster.getPanelGraph", [$hostname, $panel_title, $from, $to]);
+}
+
+function xmlrpc_getLastOnlineStatus($jid){
+  return xmlCall("xmppmaster.getLastOnlineStatus", [$jid]);
+}
+
+function xmlrpc_create_reverse_ssh_from_am_to_ars($jidmachine, $remoteport,  $proxyport=null){
+  return xmlCall("xmppmaster.create_reverse_ssh_from_am_to_ars", [$jidmachine, $remoteport, $proxyport]);
+}
+
+function xmlrpc_get_mon_events($start=-1, $maxperpage=-1, $filter=""){
+  return xmlCall("xmppmaster.get_mon_events", [$start, $maxperpage, $filter]);
+}
+
+function xmlrpc_acquit_mon_event($id, $user){
+  return xmlCall("xmppmaster.acquit_mon_event", [$id, $user]);
+}
+
+function xmlrpc_create_dir($path){
+  return xmlCall("xmppmaster.create_dir", [$path]);
+}
+
+function xmlrpc_dir_exists($path){
+  return xmlCall("xmppmaster.dir_exists", [$path]);
+}
+
+function xmlrpc_create_file($path){
+  return xmlCall("xmppmaster.create_file", [$path]);
+}
+
+function xmlrpc_file_exists($path){
+  return xmlCall("xmppmaster.file_exists", [$path]);
+}
+
+function xmlrpc_get_content($path){
+  return xmlCall("xmppmaster.get_content", [$path]);
+}
+
+function xmlrpc_write_content($path, $datas){
+  return xmlCall("xmppmaster.write_content", [$path, $datas, "w"]);
+}
+
+function xmlprc_get_ars_from_cluster($id, $filter=""){
+  return xmlCall("xmppmaster.get_ars_from_cluster", [$id, $filter]);
+}
+
+function xmlrpc_update_cluster($id, $name, $description, $relay_ids){
+  return xmlCall("xmppmaster.update_cluster", [$id, $name, $description, $relay_ids]);
+}
+
+function xmlrpc_create_cluster($name, $description, $relay_ids){
+  return xmlCall("xmppmaster.create_cluster", [$name, $description, $relay_ids]);
+}
+
+function xmlrpc_get_rules_list($start, $end, $filter){
+  return xmlCall("xmppmaster.get_rules_list", [$start, $end, $filter]);
+}
+
+function xmlrpc_order_relay_rule($action, $id){
+  return xmlCall("xmppmaster.order_relay_rule", [$action, $id]);
+}
+
+function xmlrpc_get_relay_rules($id, $start, $end, $filter){
+  return xmlCall("xmppmaster.get_relay_rules", [$id, $start, $end, $filter]);
+}
+
+function xmlrpc_new_rule_order_relay($id){
+  return xmlCall("xmppmaster.new_rule_order_relay", [$id]);
+}
+
+function xmlrpc_add_rule_to_relay($relay_id, $rule_id, $order, $subject){
+  return xmlCall("xmppmaster.add_rule_to_relay", [$relay_id, $rule_id, $order, $subject]);
+}
+
+
+function xmlrpc_delete_rule_relay($rule_id){
+  return xmlCall("xmppmaster.delete_rule_relay", [$rule_id]);
+}
+
+function xmlrpc_move_relay_rule($relayid, $rule, $action){
+  return xmlCall("xmppmaster.move_relay_rule", [$relayid, $rule, $action]);
+}
+
+function xmlrpc_get_relay_rule($ruleid){
+  return xmlCall("xmppmaster.get_relay_rule", [$ruleid]);
+}
+
+function xmlrpc_get_relays_for_rule($ruleid, $start, $end, $filter){
+  return xmlCall("xmppmaster.get_relays_for_rule", [$ruleid, $start, $end, $filter]);
+}
+
+function xmlrpc_edit_rule_to_relay($selected_rule, $relay_id, $rule_id, $subject){
+  return xmlCall("xmppmaster.edit_rule_to_relay", [$selected_rule, $relay_id, $rule_id, $subject]);
+}
+
+function xmlrpc_get_minimal_relays_list($mode="static"){
+  return xmlCall("xmppmaster.get_minimal_relays_list", [$mode]);
+}
+
+function xmlrpc_get_count_success_rate_for_dashboard(){
+  return xmlCall("xmppmaster.get_count_success_rate_for_dashboard", []);
+}
+
+function xmlrpc_get_count_total_deploy_for_dashboard(){
+  return xmlCall("xmppmaster.get_count_total_deploy_for_dashboard", []);
+}
+
+function xmlrpc_get_count_agent_for_dashboard(){
+  return xmlCall("xmppmaster.get_count_agent_for_dashboard", []);
+}
+
+function xmlrpc_get_machines_for_ban($jid_ars, $start=0, $end=-1, $filter=""){
+  return xmlCall("xmppmaster.get_machines_for_ban", [$jid_ars, $start, $end, $filter]);
+}
+
+function xmlrpc_get_machines_to_unban($jid_ars, $start=0, $end=-1, $filter=""){
+  return xmlCall("xmppmaster.get_machines_to_unban", [$jid_ars, $start, $end, $filter]);
+}
+
+function xmlrpc_ban_machines($subaction, $jid_ars, $machines){
+  return xmlCall("xmppmaster.ban_machines", [$subaction, $jid_ars, $machines]);
 }
 ?>

@@ -24,8 +24,8 @@ START TRANSACTION;
 
 LOCK TABLES `qa_custom_command` WRITE;
 INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Restart Pulse Agent service','powershell -command "Restart-Service pulseagent -Force"','Restart Pulse Agent windows service');
-INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Restart Pulse Agent service','systemctl restart pulse-xmpp-agent-machine.service','Restart pulse-xmpp-agent-machine systemctl service');
-INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Restart Pulse Agent service','launchctl kickstart -k system/net.siveo.pulse_xmpp_agent','Restart net.siveo.pulse_xmpp_agent launchctl service');
+INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Restart Pulse Agent service','systemctl restart pulse-xmpp-agent-machine.service','Restart Pulse Agent linux service');
+INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Restart Pulse Agent service','launchctl kickstart -k system/net.siveo.pulse_xmpp_agent','Restart Pulse Agent macos service');
 UNLOCK TABLES;
 
 

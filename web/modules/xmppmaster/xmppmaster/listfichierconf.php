@@ -136,7 +136,8 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
 echo "<br><br><br>";
 
     $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-    $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
+    $jid  = isset($_GET['jid']) ? $_GET['jid'] : ( isset($_POST['jid']) ? $_POST['jid'] : "");
+    $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ?  xmlrpc_getjidMachinefromuuid( $uuid ) : $jid);
     $ma = xmlrpc_getMachinefromjid($machine);
 
     if (isset($_POST["bcreate"])){

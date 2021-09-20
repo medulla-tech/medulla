@@ -180,6 +180,29 @@ class Packages(object):
         else:
             return ""
 
+    def getpkgs_share_id(self):
+        if self.pkgs_share_id is not None:
+            return self.pkgs_share_id
+        else:
+            return None
+
+    def getedition_status(self):
+        if self.edition_status is not None:
+            return self.edition_status
+        else:
+            return ""
+
+    def getconf_json(self):
+        if self.conf_json is not None:
+            return self.conf_json
+        else:
+            return ""
+
+    def getsize(self):
+        if self.size is not None:
+            return self.size
+        else:
+            return "0"
 
     def to_array(self):
         """
@@ -230,5 +253,9 @@ class Packages(object):
                     "Qsoftware": self.getQsoftware()
                 },
                 "metagenerator": self.getMetaGenerator()
-            }
+            },
+            "pkgs_share_id": self.getpkgs_share_id(),
+            "edition_status": self.getedition_status(),
+            "conf_json": self.getconf_json(),
+            "size": self.getsize()
         }

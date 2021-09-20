@@ -26,6 +26,10 @@
      return xmlCall("glpi.get_machines_list", [$start, $end, $ctx]);
  }
 
+ function xmlrpc_get_machines_list1($start, $end, $ctx){
+     return xmlCall("glpi.get_machines_list1", [$start, $end, $ctx]);
+ }
+ 
 function glpiExists($uuid) {
     return xmlCall("glpi.inventoryExists", array($uuid));
 }

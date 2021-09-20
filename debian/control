@@ -26,6 +26,7 @@ Depends: ${misc:Depends},
          mmc-web-support, python-mmc-support,
          mmc-web-xmppmaster, python-mmc-xmppmaster,
          pulse2-uuid-resolver,
+         mmc-web-admin, python-mmc-admin,
          pulse-xmppmaster-agentplugins, pulse-xmpp-agent-relay,
          pulse-agent-installers, pulse2-common,
          pulse2-imaging-client | pulse2-davos-client,
@@ -40,7 +41,7 @@ Description: Pulse 2 metapackage
 Package: pulse2-common
 Architecture: all
 Section: python
-Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python-configobj, curl, nsis, dnsutils, python-psutil (>= 0.6.1), rpm (>= 4.8)
+Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python-configobj, curl, nsis, dnsutils, python-psutil (>= 0.6.1), rpm (>= 4.8), python-netifaces, python-netaddr
 Description: Pulse 2 common files (doc)
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -76,6 +77,16 @@ Description: Pulse 2 common inventory database files
  organizations.
  .
  This package contains Pulse 2 common inventory database files.
+
+Package: python-pulse2-common-database-admin
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Description: Pulse 2 common admin database files
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common admin database files.
 
 Package: python-pulse2-common-database-msc
 Architecture: all
@@ -212,7 +223,7 @@ Description: Pulse 2 dyngroup plugin for MMC agent
 Package: python-mmc-pkgs
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-msc (= ${binary:Version}), python-requests (>= 0.12.1), python-unidecode
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-msc (= ${binary:Version}), python-requests (>= 0.12.1), python-unidecode, python-magic
 Description: Pulse 2 pkgs plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -249,6 +260,17 @@ Description: Pulse 2 support plugin (provide remote access)
  organizations.
  .
  This package contains the support plugin to provide remote access
+ to the Pulse server for support purpose.
+
+Package: python-mmc-admin
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-admin (= ${binary:Version})
+Description: Pulse 2 support plugin (admin access)
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the support plugin to provide admin access
  to the Pulse server for support purpose.
 
 Package: pulse2-package-server
@@ -345,7 +367,7 @@ Description: Pulse 2 base plugin for MMC web interface
 
 Package: mmc-web-imaging
 Architecture: all
-Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1), php7.0-xml
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1), php-xml
 Description: Pulse 2 imaging plugin for MMC web interface
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -517,7 +539,7 @@ Description: Management Console Agent
 
 Package: mmc-web-base
 Architecture: all
-Depends: ${misc:Depends}, libapache2-mod-php7.0, php7.0-xmlrpc, php7.0-gd, apache2 | apache2-mpm-prefork, wwwconfig-common, node-d3
+Depends: ${misc:Depends}, php-fpm | libapache2-mod-php, php-xmlrpc, php-gd, apache2 | apache2-mpm-prefork, wwwconfig-common, node-d3
 Description: MMC web interface to interact with a MMC agent
  Management Console web interface designed by Siveo.
 
@@ -532,6 +554,12 @@ Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
 Description: Dashboard module for MMC
  Dashboard module in MMC.
+
+Package: mmc-web-admin
+Architecture: all
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
+Description: Admin module for MMC
+ Admin module in MMC.
 
 Package: mmc-web-services
 Architecture: all

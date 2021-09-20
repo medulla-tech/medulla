@@ -2,11 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
- * (c) 2015-2018 Siveo, http://http://www.siveo.net
+ * (c) 2015-2021 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
+require_once("modules/pulse2/includes/utilities.php");
 
 
 $computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence'] : (isset($_SESSION['computerpresence']) ? $_SESSION['computerpresence'] : "all_computer");
@@ -64,7 +65,8 @@ if (!$gid) { // TODO !!
         $item = null;
     }
     if ($group->type == 0) {
-        __my_header(sprintf(_T("Group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
+        $name = clean_xss($group->getName());
+        __my_header(sprintf(_T("Group '%s' content", "dyngroup"), $name), $sidemenu, $item, $group);
         if (in_array("pulse2", $_SESSION["modulesList"])) {
           //Radiobox Mode
           echo '<input type="radio" ';

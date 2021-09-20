@@ -1,5 +1,5 @@
 /**
- * (c) 2016 Siveo, http://www.siveo.net/
+ * (c) 2016-2021 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -147,7 +147,7 @@ function moveToLeft()
     selectedDependencies = jQuery("#pooldependencies").val();
 
     jQuery.each(selectedDependencies, function(id,dependency){
-        jQuery("#addeddependencies").append(jQuery("#pooldependencies").find("[value="+dependency+"]")[0]);
+        jQuery("#addeddependencies").append(jQuery("#pooldependencies").find("[value=\""+dependency+"\"]")[0]);
     });
 
 }
@@ -289,7 +289,8 @@ function createInfo()
                 else if(jQuery.inArray(param['name'],['Dependency',"members[]",'environ','action','actionlabel','boolcnd','script','comment',
                     'codereturn','command','filename','goto','old_Qsoftware','old_Qvendor','old_Qversion','old_associateinventory',
                     'old_boolcnd','old_label', 'old_description','old_licenses','old_methodetransfert','old_p_api','old_package-method',
-                    'old_pkgs','old_pkgs-title','old_targetos','old_version','p_api','random_dir','step','mode','waiting', 'set']) >= 0)
+                    'old_pkgs','old_pkgs-title','old_targetos','old_version','p_api','random_dir','step','mode','waiting', 'set',
+                    'old_limit_rate_ko', 'old_spooling', 'old_Elements', 'pathdirectorytounzip', 'package-method', 'error']) >= 0)
                 {
                     // All the element from the array are not added into the info section.
                     // Dependency is also ignored because it is managed outside this loop

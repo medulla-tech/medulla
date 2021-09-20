@@ -1,7 +1,7 @@
 <?php
 /*
  * (c) 2012 Mandriva, http://www.mandriva.com
- * (c) 2019 siveo, http://www.siveo.net/
+ * (c) 2019-2021 siveo, http://www.siveo.net/
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -54,7 +54,7 @@ class GeneralPanel extends Panel {
   var datas = [];
   for(i =0; i < n; i++)
   {
-    datas.push({"x": i, "y":load[i]})
+    datas.push({"x": i, "y":parseFloat(load[i])})
   }
   lineChart("load-graph",datas)
 

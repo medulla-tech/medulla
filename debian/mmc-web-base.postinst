@@ -36,7 +36,7 @@ case "$1" in
 
         # We create the d3 folder for the dashboard
         if [ ! -d "/usr/share/mmc/jsframework/d3" ]; then
-            ln -s ln -s /usr/lib/nodejs/d3/ /usr/share/mmc/jsframework/
+            ln -s /usr/lib/nodejs/d3/ /usr/share/mmc/jsframework/
         fi
 
     ;;

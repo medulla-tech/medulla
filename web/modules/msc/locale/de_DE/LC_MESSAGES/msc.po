@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 18:22+0200\n"
+"POT-Creation-Date: 2021-09-01 13:52+0200\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: German (Germany) (https://www.transifex.com/siveo/teams/72118/de_DE/)\n"
@@ -69,7 +69,7 @@ msgstr "Status"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:136
 #: modules/msc/logs/ajaxConsultLogsFilter.php:142
-#: modules/msc/msc/ajaxPackageFilter.php:206 modules/msc/msc/packages.php:40
+#: modules/msc/msc/ajaxPackageFilter.php:205 modules/msc/msc/packages.php:40
 msgid "Package"
 msgstr "Paket"
 
@@ -859,11 +859,11 @@ msgstr "Angehalten"
 msgid "Create a group"
 msgstr "Eine Gruppe erstellen"
 
-#: modules/msc/includes/utilities.php:32
+#: modules/msc/includes/utilities.php:33
 msgid "Bytes"
 msgstr "Bytes"
 
-#: modules/msc/includes/utilities.php:35
+#: modules/msc/includes/utilities.php:36
 #, php-format
 msgid "%3.1f %s%s"
 msgstr "%3.1f %s%s"
@@ -873,7 +873,7 @@ msgid "Set order"
 msgstr "Reihenfolge festlegen"
 
 #: modules/msc/includes/bundle_widgets.php:150
-#: modules/msc/msc/ajaxPackageFilter.php:203
+#: modules/msc/msc/ajaxPackageFilter.php:202
 msgid "Please contact your administrator."
 msgstr "Bitte kontaktieren Sie Ihren Administrator."
 
@@ -889,7 +889,7 @@ msgstr "Mgliche Aktionen"
 
 #: modules/msc/includes/bundle_widgets.php:170
 #: modules/msc/includes/bundle_widgets.php:199
-#: modules/msc/msc/ajaxPackageFilter.php:148
+#: modules/msc/msc/ajaxPackageFilter.php:147
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "MMC konnte den Paketserver %s nicht kontaktieren."
@@ -1280,58 +1280,58 @@ msgstr "Sichere Kontrolle von %s Gruppe"
 msgid "Not enough information"
 msgstr "Nicht genug Informationen"
 
-#: modules/msc/msc/ajaxPackageFilter.php:46
+#: modules/msc/msc/ajaxPackageFilter.php:47
 #, php-format
 msgid "These packages can be installed on computer \"%s\""
 msgstr "Diese Pakete knnen auf dem Computer \"%s\" installiert werden"
 
-#: modules/msc/msc/ajaxPackageFilter.php:48
+#: modules/msc/msc/ajaxPackageFilter.php:49
 #, php-format
 msgid "These packages can be installed on group \"%s\""
 msgstr "Diese Pakete knnen in Gruppe \"%s\" installiert werden"
 
-#: modules/msc/msc/ajaxPackageFilter.php:77
+#: modules/msc/msc/ajaxPackageFilter.php:73
 msgid "Available"
 msgstr "Verfgbar"
 
-#: modules/msc/msc/ajaxPackageFilter.php:79
+#: modules/msc/msc/ajaxPackageFilter.php:75
 msgid "Active"
 msgstr "Aktiv"
 
-#: modules/msc/msc/ajaxPackageFilter.php:81
+#: modules/msc/msc/ajaxPackageFilter.php:77
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: modules/msc/msc/ajaxPackageFilter.php:84
+#: modules/msc/msc/ajaxPackageFilter.php:80
 msgid "Not available"
 msgstr "Nicht verfgbar"
 
-#: modules/msc/msc/ajaxPackageFilter.php:92
-#: modules/msc/msc/ajaxPackageFilter.php:211 modules/msc/msc/launch.php:651
+#: modules/msc/msc/ajaxPackageFilter.php:89
+#: modules/msc/msc/ajaxPackageFilter.php:210 modules/msc/msc/launch.php:651
 #: modules/msc/msc/launch.php:658
 msgid "Convergence"
 msgstr "Konvergenz"
 
-#: modules/msc/msc/ajaxPackageFilter.php:207
+#: modules/msc/msc/ajaxPackageFilter.php:206
 msgid "Description"
 msgstr "Beschreibung"
 
-#: modules/msc/msc/ajaxPackageFilter.php:208 modules/msc/msc/packages.php:41
+#: modules/msc/msc/ajaxPackageFilter.php:207 modules/msc/msc/packages.php:41
 #: modules/msc/msc/package_detail.php:37
 msgid "Version"
 msgstr "Version"
 
-#: modules/msc/msc/ajaxPackageFilter.php:209
+#: modules/msc/msc/ajaxPackageFilter.php:208
 msgid "Package size"
 msgstr "Paketgre"
 
-#: modules/msc/msc/ajaxPackageFilter.php:225
-#: modules/msc/msc/ajaxPackageFilter.php:229
+#: modules/msc/msc/ajaxPackageFilter.php:224
+#: modules/msc/msc/ajaxPackageFilter.php:228
 msgid "Advanced launch"
 msgstr "Fortgeschrittener Start"
 
-#: modules/msc/msc/ajaxPackageFilter.php:226
-#: modules/msc/msc/ajaxPackageFilter.php:231
+#: modules/msc/msc/ajaxPackageFilter.php:225
+#: modules/msc/msc/ajaxPackageFilter.php:230
 msgid "Direct launch"
 msgstr "Direkter Start"
 

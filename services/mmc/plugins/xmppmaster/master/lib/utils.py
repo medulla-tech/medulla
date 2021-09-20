@@ -444,7 +444,6 @@ def shorten_mac(mac):
 
 # 3 functions used for subnet network
 
-
 def ipV4toDecimal(ipv4):
     d = ipv4.split('.')
     return (int(d[0])*256*256*256) + (int(d[1])*256*256) + (int(d[2])*256) + int(d[3])
@@ -457,12 +456,17 @@ def decimaltoIpV4(ipdecimal):
     d = (c - int(c))*256
     return "%s.%s.%s.%s" % (int(a), int(b), int(c), int(d))
 
-
 def subnetnetwork(adressmachine, mask):
     adressmachine = adressmachine.split(":")[0]
     reseaumachine = ipV4toDecimal(adressmachine) & ipV4toDecimal(mask)
     return decimaltoIpV4(reseaumachine)
 
+def subnet_address(address, maskvalue ):
+    addr = [int(x) for x in adress.split(".")]
+    mask = [int(x) for x in maskvalue.split(".")]
+    subnet = [addr[i] & mask[i] for i in range(4)]
+    broadcast =  [(addr[i] & mask[i]) | (255^mask[i]) for i in range(4)]
+    return ".".join([str(x) for x in subnet]), '.'.join([str(x) for x in broadcast])
 
 def is_valid_ipv4(ip):
     """Validates IPv4 addresses.
@@ -937,7 +941,7 @@ def make_tarfile(output_file_gz_bz2, source_dir, compresstype="gz"):
         with tarfile.open(output_file_gz_bz2, "w:%s"%compresstype) as tar:
             tar.add(source_dir, arcname=os.path.basename(source_dir))
         return True
-    except Exception:
+    except Exception as e:
         logger.error("Error creating tar.%s archive : %s"%(compresstype, str(e)))
         return False
 

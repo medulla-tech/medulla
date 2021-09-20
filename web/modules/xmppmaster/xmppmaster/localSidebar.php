@@ -1,6 +1,6 @@
-<?
+<?php
 /*
- *  (c) 2016 - 1017 siveo, http://www.siveo.net
+ *  (c) 2016 - 2020 siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -25,16 +25,20 @@ if (isExpertMode()){
     $sidemenu->addSideMenuItem(
         new SideMenuItem(_T("Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
     );
-
-    $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("List of Relays","xmppmaster"), "xmppmaster", "xmppmaster", "xmppRelaysList")
-    );
 }
 
 
 
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("List of Uninventoried Machines","xmppmaster"), "base", "computers", "xmppMachinesList")
+);
+
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Monitoring Alerts","xmppmaster"), "xmppmaster", "xmppmaster", "alerts")
+);
+
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Monitoring Configuration","xmppmaster"), "xmppmaster", "xmppmaster", "monconfig")
 );
 
 $sidemenu->addSideMenuItem(

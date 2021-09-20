@@ -34,6 +34,11 @@ function putPackageDetail($package, $need_assign = True) {
     return xmlCall("pkgs.putPackageDetail", array($package, $need_assign));
 }
 
+
+function xmlrpc_pkgs_search_share($objectsearch){
+    return xmlCall("pkgs.pkgs_search_share", array($objectsearch));
+}
+
 // function pushPackage($papi, $random_dir, $files, $local_mmc) {
 //     return xmlCall("pkgs.ppa_pushPackage", array($papi, $random_dir, $files, $local_mmc));
 // }
@@ -72,8 +77,8 @@ function getTemporaryFiles() {
     return xmlCall("pkgs.pkgs_getTemporaryFiles", array());
 }
 
-function getTemporaryFileSuggestedCommand1($tempdir) {
-    return xmlcall("pkgs.getTemporaryFileSuggestedCommand1", array( $tempdir));
+function getTemporaryFileSuggestedCommand1($tempdir, $sizeBytes=524288000) {
+    return xmlcall("pkgs.getTemporaryFileSuggestedCommand1", array( $tempdir, $sizeBytes));
 }
 
 function associatePackages($pid, $files, $level = 0) {
@@ -235,5 +240,41 @@ function xmlrpc_pkgs_get_info_synchro_packageid($pid_ppackage){
 
 function xmlrpc_delete_from_pending($pid = "", $jidrelay = []){
     return xmlCall("pkgs.delete_from_pending", array($pid, $jidrelay));
+}
+
+function xmlrpc_get_all_packages($login, $sharing_activated = false, $start=-1, $end=-1, $filter=""){
+  return xmlCall("pkgs.get_all_packages", [$login, $sharing_activated, $start, $end, $filter]);
+}
+
+function xmlrpc_update_package_size($uuid){
+  return xmlCall("pkgs.update_package_size", [$uuid]);
+}
+
+function get_all_packages_deploy($login, $start=-1, $end=-1, $filter=""){
+  return xmlCall("pkgs.get_all_packages_deploy", [$login, $start, $end, $filter]);
+}
+
+function get_dependencies_list_from_permissions($login){
+  return xmlCall("pkgs.get_dependencies_list_from_permissions", [$login]);
+}
+
+function get_pkg_name_from_uuid($uuids){
+  return xmlCall("pkgs.get_pkg_name_from_uuid", [$uuids]);
+}
+
+function xmlrpc_get_files_infos($uuid, $filename=""){
+  return xmlCall("pkgs.get_files_infos", [$uuid, $filename]);
+}
+
+function get_pkg_creator_from_uuid($uuids){
+  return xmlCall("pkgs.get_pkg_creator_from_uuid", [$uuids]);
+}
+
+function pkgs_search_ars_list_from_cluster_rules($login){
+  return xmlCall("pkgs.pkgs_search_ars_list_from_cluster_rules", [$login]);
+}
+
+function get_Cluster_list_rule($login){
+  return xmlCall("pkgs.get_Cluster_list_rule", [$login]);
 }
 ?>

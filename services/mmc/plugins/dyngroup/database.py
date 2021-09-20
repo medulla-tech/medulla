@@ -456,6 +456,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         the owner will be the ctx
         a share will be created for the owner (needed to set the visibility)
         """
+        if parent_id is not None and parent_id == '':
+            parent_id = 0
         root_context = SecurityContext()
         root_context.userid = 'root'
 
@@ -939,8 +941,12 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 commandId = cmd_id,
                 deployGroupId = deploy_group_id
             ).one()
-        except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.warn('Error while fetching convergence phases for command %s: %s' % (cmd_id, e))
+        except MultipleResultsFound as multiple_convergences:
+            self.logger.error('We found several convergences with the same command id: %s' % cmd_id)
+            self.logger.error('We encountered the error: %s' % multiple_convergences)
+        except  NoResultFound as no_convergence:
+            self.logger.warn("We did not find any convergence for the command_id %s" % cmd_id)
+            self.logger.warn('We encountered the error: %s' % no_convergence)
         if ret:
             try:
                 return cPickle.loads(ret.cmdPhases)
@@ -961,10 +967,12 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             }
         }
         """
-        query = session.query(Convergence).filter_by(parentGroupId = gid)
+        query = session.query(Convergence).filter_by(parentGroupId = gid).all()
         ret = {}
         for line in query:
             papi = cPickle.loads(line.papi)
+            if 'mountpoint' not in papi:
+                papi['mountpoint'] =  '/package_api_get1'
             if not papi['mountpoint'] in ret:
                 ret[papi['mountpoint']] = {}
             ret[papi['mountpoint']][line.packageUUID] = line.active

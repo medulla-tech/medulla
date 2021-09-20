@@ -25,8 +25,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           4.6.4
-%define mmc_version            4.6.4
+%define real_version           4.6.9
+%define mmc_version            4.6.9
 
 Summary:	Management Console
 Name:		pulse2
@@ -51,7 +51,11 @@ Source6:        get_file.php
 BuildRequires:	python-devel
 BuildRequires:	gettext
 BuildRequires:	gettext-devel
+%if %_vendor == "Mageia"
+BuildRequires:  xsltproc
+%else
 BuildRequires:  libxslt
+%endif
 BuildRequires:  wget
 BuildRequires:  docbook-style-xsl
 
@@ -70,6 +74,8 @@ Requires:       mmc-web-pulse2
 Requires:       python-mmc-pulse2
 Requires:       mmc-web-kiosk
 Requires:       python-mmc-kiosk
+Requires:       mmc-web-admin
+Requires:       python-mmc-admin
 Requires:       pulse2-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
@@ -246,7 +252,9 @@ allows one to query a GLPI database to display computer inventory.
 %package -n python-mmc-msc
 Summary:    Pulse 2 MSC plugin for MMC agent
 Group:      System/Servers
+%if %_vendor == "redhat"
 Requires:   python-libs
+%endif
 Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-base >= %mmc_version
 Requires:   python-pulse2-common-database-msc = %version-%release
@@ -413,6 +421,7 @@ Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 Requires:   python2-requests
 Requires:   python2-unidecode
+Requires:   python-magic
 
 %description -n python-mmc-pkgs
 This package contains the pkgs plugin for the MMC agent.
@@ -436,6 +445,23 @@ This package contains the pkgs plugin for the MMC agent.
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/kiosk.ini
 %python2_sitelib/mmc/plugins/kiosk
 %python2_sitelib/pulse2/database/kiosk
+
+
+#--------------------------------------------------------------------
+
+%package -n python-mmc-admin
+Summary:    Kiosk plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+Requires:   python-pulse2-common-database-admin = %version-%release
+
+%description -n python-mmc-admin
+This package contains the admin plugin for the MMC agent.
+
+%files -n python-mmc-admin
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/admin.ini
+%python2_sitelib/mmc/plugins/admin
+%{_docdir}/mmc/contrib/admin
 
 #--------------------------------------------------------------------
 
@@ -462,17 +488,19 @@ if ! getent passwd | grep -q "^pulsetransfert:"; then
 fi
 
 %files -n python-mmc-xmppmaster
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/xmppmaster.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/inventoryconf.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/resultinventory.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/assessor_agent.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadautoupdate.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadlogsrotation.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadpluginlistversion.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadpluginschedulerlistversion.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadshowregistration.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/registeryagent.ini
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/loadreconf.ini
+%{_sysconfdir}/mmc/plugins/xmppmaster.ini
+%{_sysconfdir}/mmc/plugins/inventoryconf.ini
+%{_sysconfdir}/mmc/plugins/resultinventory.ini
+%{_sysconfdir}/mmc/plugins/assessor_agent.ini
+%{_sysconfdir}/mmc/plugins/loadautoupdate.ini
+%{_sysconfdir}/mmc/plugins/loadlogsrotation.ini
+%{_sysconfdir}/mmc/plugins/loadpluginlistversion.ini
+%{_sysconfdir}/mmc/plugins/loadpluginschedulerlistversion.ini
+%{_sysconfdir}/mmc/plugins/loadshowregistration.ini
+%{_sysconfdir}/mmc/plugins/registeryagent.ini
+%{_sysconfdir}/mmc/plugins/loadreconf.ini
+%{_sysconfdir}/mmc/plugins/wakeonlangroup.ini
+%{_sysconfdir}/mmc/plugins/wakeonlan.ini
 %python2_sitelib/mmc/plugins/xmppmaster
 %python2_sitelib/pulse2/database/xmppmaster
 
@@ -590,6 +618,9 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-collect-info
 %{_sbindir}/restart-pulse-services
 %{_sbindir}/pulse2-packageparser.py
+%{_sbindir}/pulse2-inscription_packages_in_base.py
+%{_sbindir}/pulse2-generation_package.py
+%{_sbindir}/pulse2-migration_old_package.py
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
@@ -696,7 +727,7 @@ service pulse2-scheduler stop >/dev/null 2>&1 || :
 %dir %_var/lib/pulse2/imaging/computers
 %dir %_var/lib/pulse2/imaging/inventories
 %dir %_var/lib/pulse2/imaging/masters
-#%dir %_var/lib/pulse2/imaging/custom
+#dir _var/lib/pulse2/imaging/custom
 %dir %_var/lib/pulse2/imaging/archives
 %config(noreplace) %_sysconfdir/mmc/pulse2/scheduler/scheduler.ini
 %{_sysconfdir}/mmc/pulse2/scheduler/keys
@@ -761,6 +792,20 @@ This package contains Pulse 2 common MSC database files
 
 %files -n python-pulse2-common-database-msc
 %python2_sitelib/pulse2/database/msc
+
+#--------------------------------------------------------------------
+
+%package -n     python-pulse2-common-database-admin
+Summary:        Pulse 2 common admin database files
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       python-pulse2-common-database = %version-%release
+
+%description -n python-pulse2-common-database-admin
+This package contains Pulse 2 common admin database files
+
+%files -n python-pulse2-common-database-admin
+%python2_sitelib/pulse2/database/admin
 
 #--------------------------------------------------------------------
 
@@ -1126,6 +1171,7 @@ fi
 %exclude %{_datadir}/mmc/modules/ppolicy
 %exclude %{_datadir}/mmc/modules/services
 %exclude %{_datadir}/mmc/modules/dashboard
+%exclude %{_datadir}/mmc/modules/admin
 
 #--------------------------------------------------------------------
 
@@ -1187,6 +1233,19 @@ Report module for the MMC web interface
 
 #--------------------------------------------------------------------
 
+%package -n     mmc-web-admin
+Summary:        Admin module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-admin
+Admin module for the MMC web interface
+
+%files -n mmc-web-admin
+%{_datadir}/mmc/modules/admin
+
+#--------------------------------------------------------------------
+
 %package -n     python-mmc-database
 Summary:        Console database common files
 Group:          System/Servers
@@ -1215,7 +1274,7 @@ cp %{SOURCE6}   web/modules/base/computers
 
 %build
 
-%configure --disable-python-check --disable-wol
+%configure2_5x --disable-python-check
 
 %make_build
 
@@ -1242,6 +1301,7 @@ cp -fv %buildroot%_datadir/mmc/conf/apache/pulse.conf %buildroot%_sysconfdir/htt
 mkdir -p %buildroot%_var/lib/pulse2/file-transfer
 
 cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/mmc/contrib/
+cp services/contrib/glpi-94.sql %buildroot%_datadir/doc/mmc/contrib/
 
 rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
 mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
