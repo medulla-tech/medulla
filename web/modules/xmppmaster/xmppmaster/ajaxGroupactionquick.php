@@ -1,6 +1,6 @@
 <?php
 /**
- *  (c) 2015-2017 Siveo, http://www.siveo.net
+ *  (c) 2015-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -48,7 +48,7 @@ foreach ($dd[7] as $val ){
     $machine = $target[$val][1];
     $namemachine = $machine['cn'][0];
     $usermachine = $machine['user'][0];
-    $machinetarget[] = $namemachine;
+    $machinetarget[]= '<a href="'.urlStrRedirect("base/computers/glpitabs", ["cn"=>$namemachine, "objectUUID"=>$val]).'">'.$namemachine.'</a>';
 }
 $log = array();
 $resultmachine = new ActionItem(_T("Os", "xmppmaster"),"QAcustommachgrp","logfile","computer", "xmppmaster", "xmppmaster");
@@ -82,7 +82,6 @@ for ($i=0;$i< count( $dd[0] );$i++){
     $logs[] = $resultmachine;
     $params[] = $param;
 }
-
 $n = new OptimizedListInfos( $dd[1], _T("Custom Command", "xmppmaster"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();

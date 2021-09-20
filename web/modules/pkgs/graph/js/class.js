@@ -1,5 +1,5 @@
 /**
- * (c) 2016 Siveo, http://www.siveo.net/
+ * (c) 2016-2021 Siveo, http://www.siveo.net/
  *
  * $Id$
  *

@@ -200,7 +200,8 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
                                            who,
                                            why,
                                            headercolumn)
-
+def get_machines_list(start, end, ctx):
+    return XmppMasterDatabase().get_machines_list(start, end, ctx)
 
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
@@ -338,6 +339,48 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid):
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+
+def getdeployment_cmd_and_title(command_id,
+                                title,
+                                search_filter="",
+                                start=0,
+                                limit=-1):
+    """
+    Get the list of deploys based on the command_id and title of the packages.
+
+    Arg:
+        sesion: The SQL Alchemy session
+        command_id: The id the package
+        title: Name of the package
+        search_filter: Used filters in the web page
+        start: Number of the first package to show.
+        limit: Maximum number of deploys sent at once.
+
+    Return:
+        It returns the list of the deploys
+
+    """
+    return XmppMasterDatabase().getdeployment_cmd_and_title(command_id,
+                                                            title,
+                                                            search_filter,
+                                                            start,
+                                                            limit)
+
+def getstatdeploy_from_command_id_and_title(command_id,
+                                            title):
+
+    """
+    Retrieve the deploy statistics based on the command_id and name
+    Args:
+        session: The SQL Alchemy session
+        command_id: id of the deploy
+        title: The name of deploy
+    Return:
+        It returns the number of machines per status.
+    """
+    return XmppMasterDatabase().getstatdeploy_from_command_id_and_title(command_id,
+                                                                        title)
+
 def getdeployment(command_id, filter="", start=0, limit=-1):
     return XmppMasterDatabase().getdeployment(command_id, filter, start, limit)
 
@@ -394,34 +437,193 @@ def getdeploybyuserlen(login):
     return XmppMasterDatabase().getdeploybyuserlen(login)
 
 
-def getdeploybymachinerecent(uuidinventory, state, duree, min, max, filt):
-    return XmppMasterDatabase().getdeploybymachinerecent(uuidinventory, state, duree, min, max, filt)
+def get_deploy_for_machine(uuidinventory, state, intervalsearch, minimum, maximum, filt):
+    """
+    This function is used to retrieve the deploy of a user.
+    Args:
+        uuidinventory: The login of the user
+        state: The state of the deploy. (Started, Error, etc. ).
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+    Returns:
+        It returns all the deployement for a machine.
+    """
+    return XmppMasterDatabase().get_deploy_for_machine(uuidinventory, state, intervalsearch, minimum, maximum, filt)
 
 
-def getdeploybymachinegrprecent(gid, state, duree, min, max, filt):
-    return XmppMasterDatabase().getdeploybymachinegrprecent(gid, state, duree, min, max, filt)
+def get_deploy_from_group(gid, state, intervalsearch, minimum, maximum, filt):
+    """
+    This function is used to retrieve the deploy of a machine's group.
+    Args:
+        session: The SQL Alchemy session
+        group_uuid: The login of the user
+        state: The state of the deploy. (Started, Error, etc. ).
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+    Returns:
+        It returns all the deployement of a group.
+    """
+    return XmppMasterDatabase().get_deploy_from_group(gid, state, intervalsearch, minimum, maximum, filt)
 
 
 def delDeploybygroup(numgrp):
     return XmppMasterDatabase().delDeploybygroup(numgrp)
 
 
-def getdeploybyuserrecent(login, state, duree, min=None, max=None, filt=None):
-    if min == "":
-        min = None
-    if max == "":
-        max = None
+def get_deploy_by_team_member(login, state, intervalsearch, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrieve the deployements of a team.
+    This team is found based on the login of a member.
+
+    Args:
+        session: The SQL Alchemy session
+        login: The login of the user
+        state: State of the deployment (Started, Error, etc.)
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+        Returns:
+            It returns all the deployement done by a specific team.
+            It can be done by time search too.
+    """
+
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
     if filt == "":
         filt = None
-    return XmppMasterDatabase().getdeploybyuserrecent(login, state, duree, min, max, filt)
+    return XmppMasterDatabase().get_deploy_by_team_member(login, state, intervalsearch, minimum, maximum, filt)
 
 
-def getdeploybyuserpast(login, duree, min=None, max=None, filt=None):
-    if min == "":
-        min = None
-    if max == "":
-        max = None
-    return XmppMasterDatabase().getdeploybyuserpast(login, duree, min, max, filt)
+def get_deploy_inprogress_by_team_member(login, intervalsearch, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrieve not yet done deployements of a team.
+    This team is found based on the login of a member.
+
+    Args:
+        login: The login of the user
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+        Returns:
+            It returns all the deployement not yet started of a specific team.
+            It can be done by time search too.
+    """
+
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    if filt == "":
+        filt = None
+    # call xmppmaster search users list of team
+    pulse_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
+    # call msc search no deploy
+    return MscDatabase().get_deploy_inprogress_by_team_member(pulse_usersidlist,
+                                                              intervalsearch,
+                                                               minimum,
+                                                               maximum,
+                                                               filt)
+
+def get_deploy_xmpp_teamscheduler(login, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrieve the depoyement from a team.
+    Args:
+        login: The login of the user
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+    Returns:
+        It returns the deploys of a team. Defined by the login of one user of this team.
+    """
+
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    if filt == "":
+        filt = None
+
+    pulse_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
+    result = MscDatabase().deployxmppscheduler(pulse_usersidlist, minimum, maximum, filt)
+    return result
+
+def get_deploy_by_team_finished(login, intervalsearch, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrieve all the deployments done by a team.
+    Args:
+        login: The login of the user
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+    Returns:
+        It returns all the deployment done by a team
+    """
+
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    pulse_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
+    return XmppMasterDatabase().get_deploy_by_user_finished(pulse_usersidlist,
+                                                    intervalsearch,
+                                                    minimum,
+                                                    maximum,
+                                                    filt)
+
+def get_deploy_by_user_with_interval(login, state, intervalsearch, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrive the recent deployment done by a user.
+
+    Args:
+        login: The login of the user
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+
+    Returns:
+        It returns all the deployment done by a user.
+        If intervalsearch is not used it is by default in the last 24 hours.
+"""
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    if filt == "":
+        filt = None
+    return XmppMasterDatabase().get_deploy_by_user_with_interval(login, state, intervalsearch, minimum, maximum, filt)
+
+def get_deploy_by_user_finished(login, intervalsearch, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrieve all the deployments done by a user (or a team).
+
+    Args:
+        login: The login of the user
+        state: State of the deployment (Started, Error, etc.)
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+    Returns:
+        There is 3 scenario.
+            If login is empty, this returns all the past deploys for everyone
+            If login is a string, this returns all the past deploys for this user
+            If login is a list, this returns all the past deploys for the group this user belong to.
+    """
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    return XmppMasterDatabase().get_deploy_by_user_finished(login, intervalsearch, minimum, maximum, filt)
 
 
 def getdeploybyuser(login, numrow, offset):
@@ -455,8 +657,8 @@ def setCommand_qa(command_name, command_action, command_login, command_grp="", c
     return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os)
 
 
-def getCommand_action_time(during_the_last_seconds, start, stop, filter):
-    return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds, start, stop, filter)
+def getCommand_action_time(during_the_last_seconds, start, stop, filt):
+    return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds, start, stop, filt)
 
 
 def setCommand_action(target, command_id, sessionid, command_result, typemessage):
@@ -592,8 +794,8 @@ def remotecommandshell(command, jidmachine, timeout):
     return callremotecommandshell(jidmachine, command, timeout=timeout)
 
 
-def remoteXmppMonitoring(suject, jidmachine, timeout):
-    data = callremoteXmppMonitoring(jidmachine,  suject, timeout=timeout)
+def remoteXmppMonitoring(subject, jidmachine, timeout):
+    data = callremoteXmppMonitoring(jidmachine,  subject, timeout=timeout)
     result = json.loads(data)
     resultdata = zlib.decompress(base64.b64decode(result['result']))
     dataresult = [x for x in resultdata.split('\n')]
@@ -683,16 +885,13 @@ def getCountOnlineMachine():
 
 
 ############### package #####################
-def xmppGetAllPackages(filter,  start, end):
-    return apimanagepackagemsc.loadpackagelistmsc(filter, start, end)
+def xmppGetAllPackages(login, filter,  start, end):
+    return apimanagepackagemsc.loadpackagelistmsc(login, filter, start, end)
 
 def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)
 
 ############### synchro syncthing package #####################
-
-def pkgs_regiter_synchro_package(uuidpackage, typesynchro):
-    return PkgsDatabase().pkgs_regiter_synchro_package(uuidpackage, typesynchro)
 
 def pkgs_delete_synchro_package(uuidpackage):
     return PkgsDatabase().pkgs_delete_synchro_package(uuidpackage)
@@ -746,6 +945,103 @@ def get_xmppmachines_list(start, limit, filter, presence):
 
 def get_xmpprelays_list(start, limit, filter, presence):
     return XmppMasterDatabase().get_xmpprelays_list(start, limit, filter, presence)
+
+def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
+    listidars = []
+    arslistextend = []
+    objsearch = {}
+    if userlogin != "":
+        objsearch['login'] = userlogin
+        arslistextend = PkgsDatabase().pkgs_search_ars_list_from_cluster_rules(objsearch)
+        # on utilise la table rules global pour etendre ou diminuer les droits d'admins sur les ars.
+
+    for share in sharings:
+        if "r" in share['permission'] :
+            listidars.append(share['ars_id'])
+    if arslistextend:
+        listidars.extend([x[0] for x in arslistextend])
+    ars_list = {}
+    ars_list = XmppMasterDatabase().get_ars_list_belongs_cluster(listidars, start, limit, filter)
+    if not ars_list or ars_list['count']== 0:
+        res =  { "total" : 0,
+            "datas": {},
+            "partielcount" : 0
+            }
+        return res
+
+    stat_ars_machine = XmppMasterDatabase().get_stat_ars_machine(ars_list['jid'])
+    ars_list['total_machines'] = []
+    ars_list['uninventoried'] = []
+    ars_list['publicclass'] = []
+    ars_list['nblinuxmachine'] = []
+    ars_list['inventoried_online'] = []
+    ars_list['mach_on'] = []
+    ars_list['uninventoried_online'] = []
+    ars_list['nbmachinereconf'] = []
+    ars_list['kioskon'] = []
+    ars_list['inventoried'] = []
+    ars_list['nbdarwin'] = []
+    ars_list['kioskoff'] = []
+    ars_list['bothclass'] = []
+    ars_list['privateclass'] = []
+    ars_list['mach_off'] = []
+    ars_list['inventoried_offline'] = []
+    ars_list['with_uuid_serial'] = []
+    ars_list['nb_OU_mach'] = []
+    ars_list['uninventoried_offline'] = []
+    ars_list['nbwindows'] = []
+    ars_list['nb_ou_user'] = []
+    for jid in ars_list['jid']:
+        if jid in stat_ars_machine:
+            ars_list['total_machines'].append(stat_ars_machine[jid]['nbmachine'])
+            ars_list['uninventoried'].append(stat_ars_machine[jid]['uninventoried'])
+            ars_list['publicclass'].append(stat_ars_machine[jid]['publicclass'])
+            ars_list['nblinuxmachine'].append(stat_ars_machine[jid]['nblinuxmachine'])
+            ars_list['inventoried_online'].append(stat_ars_machine[jid]['inventoried_online'])
+            ars_list['mach_on'].append(stat_ars_machine[jid]['mach_on'])
+            ars_list['uninventoried_online'].append(stat_ars_machine[jid]['uninventoried_online'])
+            ars_list['nbmachinereconf'].append(stat_ars_machine[jid]['nbmachinereconf'])
+            ars_list['kioskon'].append(stat_ars_machine[jid]['kioskon'])
+            ars_list['inventoried'].append(stat_ars_machine[jid]['inventoried'])
+            ars_list['nbdarwin'].append(stat_ars_machine[jid]['nbdarwin'])
+            ars_list['kioskoff'].append(stat_ars_machine[jid]['kioskoff'])
+            ars_list['bothclass'].append(stat_ars_machine[jid]['bothclass'])
+            ars_list['privateclass'].append(stat_ars_machine[jid]['privateclass'])
+            ars_list['mach_off'].append(stat_ars_machine[jid]['mach_off'])
+            ars_list['inventoried_offline'].append(stat_ars_machine[jid]['inventoried_offline'])
+            ars_list['with_uuid_serial'].append(stat_ars_machine[jid]['with_uuid_serial'])
+            ars_list['nb_OU_mach'].append(stat_ars_machine[jid]['nb_OU_mach'])
+            ars_list['uninventoried_offline'].append(stat_ars_machine[jid]['uninventoried_offline'])
+            ars_list['nbwindows'].append(stat_ars_machine[jid]['nbwindows'])
+            ars_list['nb_ou_user'].append(stat_ars_machine[jid]['nb_ou_user'])
+        else:
+            ars_list['total_machines'].append(0)
+            ars_list['uninventoried'].append(0)
+            ars_list['publicclass'].append(0)
+            ars_list['nblinuxmachine'].append(0)
+            ars_list['inventoried_online'].append(0)
+            ars_list['mach_on'].append(0)
+            ars_list['uninventoried_online'].append(0)
+            ars_list['nbmachinereconf'].append(0)
+            ars_list['kioskon'].append(0)
+            ars_list['inventoried'].append(0)
+            ars_list['nbdarwin'].append(0)
+            ars_list['kioskoff'].append(0)
+            ars_list['bothclass'].append(0)
+            ars_list['privateclass'].append(0)
+            ars_list['mach_off'].append(0)
+            ars_list['inventoried_offline'].append(0)
+            ars_list['with_uuid_serial'].append(0)
+            ars_list['nb_OU_mach'].append(0)
+            ars_list['uninventoried_offline'].append(0)
+            ars_list['nbwindows'].append(0)
+            ars_list['nb_ou_user'].append(0)
+
+    res = {"total": ars_list['count'],
+           "datas": ars_list,
+           "partielcount" : len(ars_list['jid'])
+           }
+    return res
 
 def get_clusters_list(start, limit, filter):
     return XmppMasterDatabase().get_clusters_list(start, limit, filter)
@@ -802,7 +1098,7 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
         The function returns the proxy port
     """
     timeout = 15
-    ssh_port_machine = 22
+    #ssh_port_machine = 22
     machine = XmppMasterDatabase().getMachinefromjid(jidmachine)
     if machine:
         ipARS = XmppMasterDatabase().ippackageserver(machine['groupdeploy'])[0]
@@ -814,35 +1110,46 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
     #logging.getLogger().error("jidARS %s " % machine['groupdeploy'])
     #logging.getLogger().error("jidAM %s " %jidmachine)
     type_reverse = "R"
-    logging.getLogger().error("proxyport %s " % proxyport)
-
+    logging.getLogger().debug("proxyport %s " % proxyport)
+    iqcomand = {"action": "information",
+                "data": {"listinformation": ["get_ars_key_id_rsa_pub",
+                                            "get_ars_key_id_rsa",
+                                            "get_free_tcp_port",
+                                            "clean_reverse_ssh"],
+                        "param": {}
+                        }
+                }
+    logging.getLogger().debug("iq to %s iqcommand is : %s " % (jidARS, iqcomand))
     result = ObjectXmpp().iqsendpulse(jidARS,
-                                      {"action": "information",
-                                       "data": {"listinformation": ["get_ars_key_id_rsa_pub",
-                                                                    "get_ars_key_id_rsa",
-                                                                    "get_free_tcp_port",
-                                                                    "clean_reverse_ssh"],
-                                                "param": {}
-                                                }
-                                       },
+                                      iqcomand,
                                       timeout)
+
     res = json.loads(result)
+
+    logging.getLogger().debug("result iqcommand : %s" % json.dumps(res, indent = 4))
     if res['numerror'] != 0:
         logger.error("iq information error to %s on get_ars_key_id_rsa_pub, get_ars_key_id_rsa ,get_free_tcp_port" % jidARS)
+        logger.error("abandon reverse ssh")
         return
+
     resultatinformation = res['result']['informationresult']
     if proxyport is None or proxyport == 0 or proxyport == "":
         proxyportars = resultatinformation['get_free_tcp_port']
     else:
         proxyportars = proxyport
     if not uninterrupted:
+        uninterruptedstruct= { "action": "information",
+                               "data": {"listinformation": ["add_proxy_port_reverse"],
+                                           "param": {"proxyport": proxyportars}
+                                           }
+                             }
+        logging.getLogger().debug("send iqcommand to %s : %s" % (jidARS,
+                                                                 uninterruptedstruct))
         result = ObjectXmpp().iqsendpulse(jidARS,
-                                        {"action": "information",
-                                        "data": {"listinformation": ["add_proxy_port_reverse"],
-                                                    "param": {"proxyport": proxyportars}
-                                                    }
-                                        },
+                                        uninterruptedstruct,
                                         timeout)
+
+        logging.getLogger().debug("result iqcommand : %s" % result)
     structreverse = {"action": "reversesshqa",
                      "sessionid": name_random(8, "reversshiq"),
                      "from": ObjectXmpp().boundjid.bare,
@@ -857,15 +1164,28 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
                               "public_key_ars": resultatinformation['get_ars_key_id_rsa_pub']
                               }
                      }
-
-    logging.getLogger().error("structreverse %s" % structreverse)
+    logging.getLogger().debug("send iqcommand to %s : %s" % (jidAM,
+                                                             structreverse))
     result = ObjectXmpp().iqsendpulse(jidAM, structreverse, timeout)
+    logging.getLogger().debug("result iqcommand : %s" % result)
     del structreverse['data']['private_key_ars']
     del structreverse['data']['public_key_ars']
     structreverse['data']['uninterrupted'] = uninterrupted
     return structreverse['data']
 
-def get_packages_list(jid, filter=""):
+def get_packages_list(jid, CGIGET=""):
+    filter = ""
+    maxperpage = 10
+    start = 0
+    nb_dataset = 0
+    if "filter" in CGIGET:
+        filter = CGIGET["filter"]
+    if "maxperpage" in CGIGET:
+        maxperpage = int(CGIGET["maxperpage"])
+    if "start" in  CGIGET:
+        start = int(CGIGET["start"])
+    end = start + maxperpage
+
     timeout = 15
     result = ObjectXmpp().iqsendpulse(jid, {"action": "packageslist", "data": "/var/lib/pulse2/packages"}, timeout)
 
@@ -883,50 +1203,42 @@ def get_packages_list(jid, filter=""):
             'metagenerator': [],
             'count_files': [],
         },
-        'total': 0
+        'total': 0,
+        'nb_dataset' : 0
     }
 
     try:
         packages = json.loads(result)
         count = 0
-        for package in packages['datas']:
-            if filter != "":
-                if re.search(filter, package['description']) or\
-                    re.search(filter, package['name']) or\
-                    re.search(filter, package['version']) or\
-                    re.search(filter, package['targetos']) or\
-                    re.search(filter, package['methodtransfer']) or\
-                    re.search(filter, package['metagenerator']):
-
-                    _result['datas']['files'].append(package['files'])
-                    _result['datas']['description'].append(package['description'])
-                    _result['datas']['licenses'].append(package['licenses'])
-                    _result['datas']['name'].append(package['name'])
-                    _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
-                    _result['datas']['os'].append(package['targetos'])
-                    _result['datas']['size'].append(package['size'])
-                    _result['datas']['version'].append(package['version'])
-                    _result['datas']['methodtransfer'].append(package['methodtransfer'])
-                    _result['datas']['metagenerator'].append(package['metagenerator'])
-                    _result['datas']['count_files'].append(package['count_files'])
-                    count += 1
-            else:
-                _result['datas']['files'].append(package['files'])
-                _result['datas']['description'].append(package['description'])
-                _result['datas']['licenses'].append(package['licenses'])
-                _result['datas']['name'].append(package['name'])
-                _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
-                _result['datas']['os'].append(package['targetos'])
-                _result['datas']['size'].append(package['size'])
-                _result['datas']['version'].append(package['version'])
-                _result['datas']['methodtransfer'].append(package['methodtransfer'])
-                _result['datas']['metagenerator'].append(package['metagenerator'])
-                _result['datas']['count_files'].append(package['count_files'])
-
+        _result['datas']['total'] = len(packages['datas']);
+        pp=[]
         if filter != "":
-            _result['total'] = count
+            for package in packages['datas']:
+                if re.search(filter, package['description'], re.IGNORECASE) or\
+                    re.search(filter, package['name'], re.IGNORECASE) or\
+                    re.search(filter, package['version'], re.IGNORECASE) or\
+                    re.search(filter, package['targetos'], re.IGNORECASE) or\
+                    re.search(filter, package['methodtransfer'], re.IGNORECASE) or\
+                    re.search(filter, package['metagenerator'], re.IGNORECASE):
+                    pp.append(package)
         else:
-            _result['total'] = packages['total']
+            pp= packages['datas']
+        for package in pp[start:end]:
+            nb_dataset+=1
+            package['files'] = [[str(elem) for elem in _file] for _file in package['files']]
+            _result['datas']['files'].append(package['files'])
+            _result['datas']['description'].append(package['description'])
+            _result['datas']['licenses'].append(package['licenses'])
+            _result['datas']['name'].append(package['name'])
+            _result['datas']['uuid'].append(package['uuid'].split('/')[-1])
+            _result['datas']['os'].append(package['targetos'])
+            _result['datas']['size'].append(str(package['size']))
+            _result['datas']['version'].append(package['version'])
+            _result['datas']['methodtransfer'].append(package['methodtransfer'])
+            _result['datas']['metagenerator'].append(package['metagenerator'])
+            _result['datas']['count_files'].append(package['count_files'])
+        _result['total'] = len(pp);
+        _result['nb_dataset'] = nb_dataset
     except Exception as e:
         logging.error(e)
         pass
@@ -1009,3 +1321,82 @@ def write_content(path, datas, mode="w"):
                 return True
         except:
             return False
+
+def get_count_success_rate_for_dashboard():
+    result = XmppMasterDatabase().get_count_success_rate_for_dashboard()
+    return result
+
+def get_count_total_deploy_for_dashboard():
+    result = XmppMasterDatabase().get_count_total_deploy_for_dashboard()
+    return result
+
+def get_ars_from_cluster(id, filter=""):
+    result = XmppMasterDatabase().get_ars_from_cluster(id, filter)
+    return result
+
+def update_cluster(id, name, description, relay_ids):
+    result = XmppMasterDatabase().update_cluster(id, name, description, relay_ids)
+    return result
+
+def create_cluster(name, description, relay_ids):
+    result = XmppMasterDatabase().create_cluster(name, description, relay_ids)
+    return result
+
+def get_rules_list(start, end, filter):
+    return XmppMasterDatabase().get_rules_list(start, end, filter)
+
+def order_relay_rule(action, id):
+    result = XmppMasterDatabase().order_relay_rule(action, id)
+    return result
+
+def get_relay_rules(id, start, end, filter):
+    return XmppMasterDatabase().get_relay_rules(id, start, end, filter)
+
+def new_rule_order_relay(id):
+    return XmppMasterDatabase().new_rule_order_relay(id)
+
+def add_rule_to_relay(relay_id, rule_id, order, subject):
+    return XmppMasterDatabase().add_rule_to_relay(relay_id, rule_id, order, subject)
+
+def delete_rule_relay(rule_id):
+    return XmppMasterDatabase().delete_rule_relay(rule_id)
+
+def move_relay_rule(relay_id, rule_id, action):
+    return XmppMasterDatabase().move_relay_rule(relay_id, rule_id, action)
+
+def get_relay_rule(rule_id):
+    return XmppMasterDatabase().get_relay_rule(rule_id)
+
+def get_relays_for_rule(rule_id, start, end, filter):
+    return XmppMasterDatabase().get_relays_for_rule(rule_id, start, end, filter)
+
+def edit_rule_to_relay(id, relay_id, rule_id, subject):
+    return XmppMasterDatabase().edit_rule_to_relay(id, relay_id, rule_id, subject)
+
+def get_minimal_relays_list(mode):
+    return XmppMasterDatabase().get_minimal_relays_list(mode)
+
+def get_count_agent_for_dashboard():
+    result = XmppMasterDatabase().get_count_agent_for_dashboard()
+    return result
+
+def get_machines_for_ban(jid_ars, start=0, end=-1, filter=""):
+    result = XmppMasterDatabase().get_machines_for_ban(jid_ars, start, end, filter)
+    return result
+
+def get_machines_to_unban(jid_ars, start=0, end=-1, filter=""):
+    result = XmppMasterDatabase().get_machines_to_unban(jid_ars, start, end, filter)
+    return result
+
+def ban_machines(subaction, jid_ars, machines):
+    sessionid = name_random(8, "banmachines")
+    datasend = {
+        "action": "banmachines",
+        "from": ObjectXmpp().boundjid.bare,
+        "sessionid": sessionid,
+        "data": {'subaction': subaction, 'jid_ars': jid_ars, 'jid_machines':machines},
+        "base64": False
+    }
+    callXmppPlugin("banmachines", datasend)
+
+    return True

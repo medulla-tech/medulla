@@ -170,6 +170,50 @@ class Syncthing_machine(Base, XmppMasterDBObj):
     syncthing_ars_cluster = relationship(Syncthing_ars_cluster)
 
 
+
+class Glpi_entity(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'glpi_entity'
+    # ====== Fields =============================
+    # Here we define columns for the table machines.
+    # Notice that each column is also a normal Python instance attribute.
+    # id = Column(Integer, primary_key=True)
+    complete_name = Column(String(512), nullable=False)
+    name = Column(String(45), nullable=False)
+    glpi_id = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return "<entity('%s','%s', '%s')>" % (self.name, self.complete_name, self.glpi_id)
+    
+    def get_data(self):
+        return{ 'id' : self.id,
+                'complete_name' : self.complete_name,
+                'name' : self.name,
+                'glpi_id' : self.glpi_id
+               }
+
+class Glpi_location(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'glpi_location'
+    # ====== Fields =============================
+    # Here we define columns for the table machines.
+    # Notice that each column is also a normal Python instance attribute.
+    # id = Column(Integer, primary_key=True)
+    complete_name = Column(String(512), nullable=False)
+    name = Column(String(45), nullable=False)
+    glpi_id = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return "<location('%s','%s', '%s')>" % (self.name, self.complete_name, self.glpi_id)
+    
+    def get_data(self):
+        return{ 'id' : self.id,
+                'complete_name' : self.complete_name,
+                'name' : self.name,
+                'glpi_id' : self.glpi_id
+               }
+
+
 class Machines(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'machines'
@@ -183,7 +227,7 @@ class Machines(Base, XmppMasterDBObj):
     enabled = Column(Boolean, unique=False)
     platform = Column(String(60))
     hostname = Column(String(45), nullable=False)
-    archi = Column(String(45), nullable=False)
+    archi= Column(String(45), nullable=False)
     uuid_inventorymachine = Column(String(45), nullable=False)
     ippublic = Column(String(20))
     ip_xmpp = Column(String(45))
@@ -199,7 +243,44 @@ class Machines(Base, XmppMasterDBObj):
     kiosk_presence = Column(Enum('False', 'True'))
     lastuser = Column(String(45))
     keysyncthing = Column(String(70), default="")
+    glpi_description = Column(String(90), default="")
+    glpi_owner_firstname = Column(String(45), default="")
+    glpi_owner_realname = Column(String(45), default="")
+    glpi_owner = Column(String(45), default="")
+    model = Column(String(45), default="")
+    manufacturer = Column(String(45), default="")
+    # ====== ForeignKey =============================
+    # machines_id = Column(Integer, nullable=False)
+    glpi_entity_id = Column(Integer, ForeignKey('glpi_entity.id'))
+    glpi_entity = relationship(Glpi_entity)
+    glpi_location_id = Column(Integer, ForeignKey('glpi_location.id'))
+    glpi_location = relationship(Glpi_location)
 
+
+class Glpi_Register_Keys(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'glpi_register_keys'
+    # ====== Fields =============================
+    # Here we define columns for the table machines.
+    # Notice that each column is also a normal Python instance attribute.
+    # id = Column(Integer, primary_key=True)
+    name = Column(String(90), nullable=False)
+    value = Column(String(90), nullable=False)
+    comment =  Column(String(90))
+    # ====== ForeignKey =============================
+    machines_id = Column(Integer, ForeignKey('machines.id'))
+    machines = relationship(Machines)
+
+    def __repr__(self):
+        return "<register_keys('%s','%s', '%s', '%s')>" % (self.name, self.value, self.comment, self.machines_id)
+    
+    def get_data(self):
+        return{ 'id' : self.id,
+                'name' : self.name,
+                'value' : self.value,
+                'comment' : self.comment,
+                'machines_id' : self.machines_id
+               }
 
 class Network(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -295,7 +376,7 @@ class Has_relayserverrules(Base, XmppMasterDBObj):
     rules_id = Column(Integer, ForeignKey('rules.id'))
     relayserver_id = Column(Integer)
     subject = Column(String(45))
-    order = Column(String(45))
+    order = Column(Integer)
     rules = relationship(Regles)
 
 
@@ -369,7 +450,7 @@ class Cluster_resources(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'cluster_resources'
     # ====== Fields =============================
-    hostname = Column(String(45))
+    hostname = Column(String(255))
     jidmachine = Column(String(255), nullable=False)
     jidrelay = Column(String(255), nullable=False)
     startcmd = Column(DateTime, default=None)
@@ -699,3 +780,32 @@ class Mon_panels_template(Base, XmppMasterDBObj):
     parameters = Column(String(1024), default="{}")
     status = Column(Boolean, default=True)
     comment = Column(String(1024), default="")
+
+"""
+This code is kept here as a comment, "if" we need to use it
+and not use the automatic table anymore.
+DO NOT REMOVE.
+class Update_machine(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'update_machine'
+    # ====== Fields =============================
+    # Here we define columns for the table update_machine.
+    # Notice that each column is also a normal Python instance attribute.
+    hostname = Column(String(120), nullable=False)
+    jid = Column(String(255), nullable=False)
+    status  = Column(String(255), nullable=False, default="ready")
+    descriptor = Column(Text, nullable=False)
+    md5 = Column(String(255), nullable=False)
+    date_creation  =  Column(DateTime, default=datetime.datetime.now)
+    ars = Column(String(255), nullable=False,default="")
+
+class Ban_machines(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'ban_machines'
+    # ====== Fields =============================
+    # Here we define columns for the table ban_machines.
+    # Notice that each column is also a normal Python instance attribute.
+    jid = Column(String(255), nullable=False)
+    date  =  Column(DateTime, default=datetime.datetime.now)
+    ars_server     = Column(String(255), nullable=False,default="")
+"""

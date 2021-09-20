@@ -2,10 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +25,7 @@
 
 /* Get GLPI xmlrpc includes */
 require_once("modules/glpi/includes/xmlrpc.php");
+require_once("modules/pulse2/includes/utilities.php");
 
 /*
  * Display Glpi Inventory part infos (Summary, Hardware, Network, etc..)
@@ -83,10 +85,10 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
             $vals[1] = str_replace('@@FALSE_POSITIVE@@', _T(' (Not an antivirus)', 'glpi'), $vals[1]);
             $all[$vals[0]][$i] = '';
             if (!is_array($vals[1]) && $vals[1] != '') { // translatable fields
-                $all[$vals[0]][$i] = _T($vals[1]);
+                $all[$vals[0]][$i] = _T(clean_xss($vals[1]));
             }
             elseif (is_array($vals[1])) { // editable fields
-                $all[$vals[0]][$i] = $vals[1];
+                $all[$vals[0]][$i] = clean_xss($vals[1]);
             }
         }
         $i++;
@@ -270,7 +272,7 @@ _T('Up-to-date', 'glpi');
 ?>
 
 </table>
-<script src="modules/glpi/graph/js/autoresize.js"></script>
+<!--<script src="modules/glpi/graph/js/autoresize.js"></script>-->
 <script type="text/javascript">
 //demo: http://so.devilmaycode.it/jquery-convert-line-breaks-to-br-nl2br-equivalent
 function nl2br (str) {
@@ -288,7 +290,7 @@ jQuery('label.editableField').on('click',function(){
     jQuery(this).hide();
     input.val(value).show().focus();
     input.css('width', '100%');
-    input.autoResize()
+    //input.autoResize()
 });
 
 jQuery('textarea.editableField').bind('keyup focusout',function(e){
@@ -307,10 +309,10 @@ jQuery('textarea.editableField').bind('keyup focusout',function(e){
     }
 
     // Posting ajax request
-    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php echo quickGet('uuid'); ?>&name='+name+'&value='+value).success(function(){
-        var label = jQuery('label.editableField[name="'+name+'"]').first();
-        label.html(value).show();
-        input.hide();
+    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php echo quickGet('uuid'); ?>&name='+name+'&value='+value, function(datas){
+      var label = jQuery('label.editableField[name="'+name+'"]').first();
+      label.html(value).show();
+      input.hide();
     });
 });
 

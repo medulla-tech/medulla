@@ -2,11 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
- * (c) 2018 Siveo, http://www.siveo.net
+ * (c) 2018-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ $result = xmlrpc_get_machines_with_os_and_version($requestedOS, $requestedVersio
 foreach($result as $entry){
   $uuid = 'UUID'.$entry['id'];
   $cn = $entry['hostname'];
-  $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
+  $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid, 'groupname'=>$groupname);
 }
 
 $group = new Group();

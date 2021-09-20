@@ -28,6 +28,7 @@ dist_qactions_DATA = msc/qactions/001reboot.msc \
 	msc/qactions/011windows_update.msc
 
 nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
+	admin/sql/schema-001.sql \
 	dyngroup/sql/schema-001.sql \
 	dyngroup/sql/schema-002.sql \
 	dyngroup/sql/schema-003.sql \
@@ -242,11 +243,23 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	xmppmaster/sql/schema-052.sql \
 	xmppmaster/sql/schema-053.sql \
 	xmppmaster/sql/schema-054.sql \
+	xmppmaster/sql/schema-055.sql \
+	xmppmaster/sql/schema-056.sql \
+	xmppmaster/sql/schema-057.sql \
+	xmppmaster/sql/schema-058.sql \
+	xmppmaster/sql/schema-059.sql \
+	xmppmaster/sql/schema-061.sql \
+	xmppmaster/sql/schema-062.sql \
+	xmppmaster/sql/schema-063.sql \
+	xmppmaster/sql/schema-064.sql \
 	kiosk/sql/schema-001.sql \
 	kiosk/sql/schema-002.sql \
 	kiosk/sql/schema-003.sql \
 	pkgs/sql/schema-001.sql \
 	pkgs/sql/schema-002.sql \
+	pkgs/sql/schema-003.sql \
+	pkgs/sql/schema-004.sql \
+	pkgs/sql/schema-005.sql \
 	monit/pulse2 \
 	samba/smb.conf \
 	test-xmlrpc.php \

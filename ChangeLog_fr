@@ -1,0 +1,117 @@
+Pulse 2 4.6.9
+=============
+* [FONCTIONNALITE]    Ajout du support des Equipe dans la page Audit
+* [FONCTIONNALITE]    Ajout de nouvelles options de configuration dans le
+fileviewer ( Serveur, port, taille de la popup, etc.)
+* [FONCTIONNALITE]    Ajout du lien vers les machines dans la page de sommaire
+des Actions rapides
+* [FONCTIONNALITE]    Suppression de l'action rapdie "Restart machine agent"
+* [FONCTIONNALITE]    Ajout d'un bouton de validation des recherches
+* [FONCTIONNALITE]    Optimisation de l'affichage de la vue ordinateur
+* [FONCTIONNALITE]    Optimisation de l'affichage de la vue admin
+* [FONCTIONNALITE]    Ajout d'un selecteur en ligne/hors ligne pour la vue des
+machines non inventoriées
+* [FONCTIONNALITE]    Ajout de l'option @@@DEBUG@@@ lors des recherches afin
+de montrer les Requetes SQL jouées
+* [CORRECTION DE BUG] Correction de la suppression de packages. Bug#1323
+* [CORRECTION DE BUG] Correction de la suppression d'anciens compte
+utilisateurs dans ejabberd
+* [CORRECTION DE BUG] Suppression des cdn pour l'utilisation des fichiers js.
+Utilisation de fichiers locaux à la place
+* [CORRECTION DE BUG] De nombreuses optimisations dans les requetes SQL jouées
+* [CORRECTION DE BUG] Correction de l'état de déployement affiché en début de
+déployement.
+* [CORRECTION DE BUG]  Correction de la gestion de la creation de certains
+utilisateurs ( subsitutes )
+* [CORRECTION DE BUG]  Correction de l'affichage des informations dans la page
+audit ( nom de la machine par exemple).
+* [CORRECTION DE BUG]  Correction de la creation de groupes, basés sur OU de
+l'AD Bug#1238
+* [CORRECTION DE BUG]  Correction de la détection des machines en ligne avec
+Glpi 0.84
+
+
+Pulse 2 4.6.8
+=============
+* [FONCTIONNALITE]     Suppresion de la liste des relays dans la page Ordinateurs.
+* [FONCTIONNALITE]     Ajout d'un utilitaire afin de migrer vers le nouveau systeme de
+packages.
+* [FONCTIONNALITE]     Désactivation du nouveau partage par defaut.
+* [FONCTIONNALITE]     Mise à jour de traductions.
+* [FONCTIONNALITE]     Renommage de "Serveur de Localisation" en "Partage" et suppresion
+du champs de recherche
+* [FONCTIONNALITE]     Suppression de "Ajouter un package" du menu pour les utilisateurs
+n'ayant pas les droits
+* [FONCTIONNALITE]     Amélioration du "package parser" afin d'attraper plus d'erreurs.
+* [FONCTIONNALITE]     Amélioration de messages d'erreur.
+* [FONCTIONNALITE]     Corrections de bugs XSS
+* [FONCTIONNALITE]     Récupération de l'UUID Glpi si manquant
+* [FONCTIONNALITE]     Les convergences sont maintenant identifiées par leur nom + date.
+* [FONCTIONNALITE]     Suppression de l'ancienne vue de création de packages
+* [FONCTIONNALITE]     Ajout de la recherche de machines basé sur le JID du relay
+* [CORRECTION DE BUG]  Correction d'un backtrace pendant le déploiement
+* [CORRECTION DE BUG]  Correction de l'affichage des packages pendant le déploiement
+* [CORRECTION DE BUG]  Ajout d'ACL pour les actions des relays
+* [CORRECTION DE BUG]  Correction de l'utlisation de caractères accentués dans les
+descriptions Glpi
+* [CORRECTION DE BUG]  Correction de la détection des machines en ligne/Hors ligne dans
+la vue Glpi
+* [CORRECTION DE BUG]  Add back addMachinesToCommand function ( fixing restarting
+convergences)
+* [CORRECTION DE BUG]  Interdiction des caractères ; dans la description des ordinateurs
+* [CORRECTION DE BUG]  Support pour les anciennes versions de SQLAlchemy
+* [CORRECTION DE BUG]  Correction de l'enregistrement lorsque le uuidsetup n'est pas
+défini
+* [CORRECTION DE BUG]  Changement de la colonne glpi_description vers "text"
+* [CORRECTION DE BUG]  Correction de l'affichage des convergences actives/disponibles
+* [CORRECTION DE BUG]  Correction de la gestion des droits pour les clusters d'ARS dans
+la vue admin
+* [CORRECTION DE BUG]  Correction de l'utilisation de <br> dans les descriptions glpi
+* [CORRECTION DE BUG]  Correction de l'utilisation de ' dans les descriptions ( glpi )
+* [CORRECTION DE BUG]  Correction du listage des plugins actifs
+* [CORRECTION DE BUG]  Correction d'un backtrace lorsqu'un metagenerateur est manquant
+* [CORRECTION DE BUG]  Modification de la clef du  metagenerateur en expert si manquant
+* [CORRECTION DE BUG]  Correction d'un backtrace lors de l'edition d'un package
+* [CORRECTION DE BUG]  Utilisation des dates d'inventaire OCS si elles existent
+* [CORRECTION DE BUG]  Correction de la recherche des entités
+* [CORRECTION DE BUG]  Ajout des entités aux recherches
+* [CORRECTION DE BUG]  Correction d'un bug lors du changement de nom d'hote de la machine
+* [CORRECTION DE BUG]  Ne pas chercher la commande d'installation si le package fait plus
+de 500 Mo.
+* [CORRECTION DE BUG]  Correction d'un backtrace lorsqu'aucune machine n'est associée a
+un relay
+* [CORRECTION DE BUG]  Correction de la pagination dans la fenetre package de la vue admin
+* [CORRECTION DE BUG]  Amélioration du support de Glpi 0.84
+* [CORRECTION DE BUG]  Correction de la pagination dans la vue ordinateur
+* [CORRECTION DE BUG]  Correction de la pagination de la page Admin
+* [CORRECTION DE BUG]  Correction d'un backtrace lorsqu'un utilisateur n'a aucun droit
+sur les partages des relays.
+* [CORRECTION DE BUG]  Correction d'un tableau manquant dans Glpi 0.84
+* [CORRECTION DE BUG]  Suppression des anciens parametres dans les filtres.
+* [CORRECTION DE BUG]  Correction d'un backtrace lors de l'affichage de tout les
+ordinateurs sous glpi 0.84
+* [CORRECTION DE BUG]  Correction des actions de déploiement lorsqu'une machine est hors
+ligne.
+* [CORRECTION DE BUG]  Les utilisateurs ne peuvent voir que les relays utilisés dans pkgs_rules_local
+* [CORRECTION DE BUG]  Correction du WOL en corrigeant le nom d'une variable.
+* [CORRECTION DE BUG]  Correction de l'affichage de la taille des packages pour être
+compréhensible.
+* [CORRECTION DE BUG]  Correction de la page package lorsqu'il n'y a pas de packages à
+afficher.
+* [CORRECTION DE BUG]  Verification du mode de partage utilisé. Utilisation de l'ancien
+par defaut.
+* [CORRECTION DE BUG]  Ajout du nom du fichier csv lorsqu'un groupe est créé
+* [CORRECTION DE BUG]  Ajout d'un parametre manquant dans pkgs.ini et initialisation de
+la table pkgs_rules_algo
+* [CORRECTION DE BUG]  Correction de la pagination dans la vue GLPI
+* [CORRECTION DE BUG]  Correction de l'enregistrement d'ARs
+* [CORRECTION DE BUG]  Correction de l'affichage de la page des relays
+* [CORRECTION DE BUG]  Ajout et Corrections d'ACLs
+* [CORRECTION DE BUG]  Correction de la migration vers le nouveau style de package
+* [CORRECTION DE BUG]  Modification du champs hostname dans cluster_resources à une
+taille de 255
+* [CORRECTION DE BUG]  Suppresion du champs des description des CSV
+* [CORRECTION DE BUG]  Modification du symbole de concaténation ( " ) lors de la
+génération des CSV
+* [CORRECTION DE BUG]  Correction de l'affichage des dates dans la page Audit
+

@@ -89,10 +89,10 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
         for file_name in file_names:
             if file_name.startswith(prefix) and not file_name.endswith('.zip'):
                 f=os.path.join(dir_name, file_name )
-                result.append((os.stat(f)[ST_CTIME], f)  )
+                result.append((os.stat(f).st_ctime, f)  )
             if file_name.startswith(prefix) and  file_name.endswith('.zip'):
                 f=os.path.join(dir_name, file_name )
-                result1.append((os.stat(f)[ST_CTIME], f))
+                result1.append((os.stat(f).st_ctime, f))
         result1.sort()
         result.sort()
         while result1 and len(result1) >= self.backupCountlocal:
@@ -120,7 +120,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpclib.Fault
 ctx = None
-VERSION = "4.6.5"
+VERSION = "4.6.9"
 
 
 class IncludeStartsWithFilter(logging.Filter):

@@ -608,9 +608,8 @@ class DateTimeTpl extends AbstractTpl {
         if (!isset($GLOBALS["__JSDATETIME_SOURCED__"])) { // to avoid double-sourcing
             $GLOBALS["__JSDATETIME_SOURCED__"] = 1;
             print '
-            <script type="text/javascript" src="jsframework/lib/jquery-ui-timepicker-addon.min.js"></script>
+            <script type="text/javascript" src="jsframework/lib/plugin.jquery-ui/jquery-ui-timepicker-addon.min.js"></script>
             ';
-
             /*if (isset($_REQUEST["lang"])) { // EN calendar always read, as the next one may not exists
                 $extention = substr($_REQUEST["lang"], 0, 2); // transpose LANG, f.ex. fr_FR => fr
                 print '

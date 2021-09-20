@@ -1,4 +1,26 @@
 <?php
+/*
+ *  (c) 2021 siveo, http://www.siveo.net
+ *
+ * $Id$
+ *
+ * This file is part of MMC, http://www.siveo.net
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = $_GET["filter"];
@@ -7,7 +29,7 @@ $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
-$machines = xmlrpc_get_xmppmachines_list($start, $maxperpage, $filter, 'all');
+$machines = xmlrpc_get_xmppmachines_list($start, $maxperpage, $filter, $_SESSION['computerpresence']);
 
 $raw = 0;
 $params = [];
@@ -87,7 +109,7 @@ $n->addExtraInfo( $machines['datas']['macaddress'], _T("Mac Address", "xmppmaste
 $n->addExtraInfo( $machines['datas']['ip_xmpp'], _T("Xmpp IP", "xmppmaster"));
 $n->setTableHeaderPadding(0);
 $n->setItemCount($machines['total']);
-$n->setNavBar(new AjaxNavBar($machines['total'], $filter, "updateSearchParamformRunning1"));
+$n->setNavBar(new AjaxNavBar($machines['total'], $filter, "updateSearchParamformRunning"));
 $n->addActionItemArray($vncActions);
 $n->addActionItemArray($consoleActions);
 $n->addActionItemArray($configActions);

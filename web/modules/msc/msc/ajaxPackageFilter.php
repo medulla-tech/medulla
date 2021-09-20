@@ -29,6 +29,7 @@ require_once('modules/msc/includes/widgets.inc.php');
 require_once('modules/msc/includes/utilities.php');
 require_once("includes/xmlrpc.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/pkgs/includes/xmlrpc.php");
 
 $group = null;
 if (!empty($_GET['gid'])) {
@@ -51,25 +52,20 @@ if (! in_array("xmppmaster", $_SESSION["supportModList"])) {
 }
 
 function getConvergenceStatus($mountpoint, $pid, $group_convergence_status, $associateinventory) {
-    $return = 0;
+    $ret = 0;
     if ($associateinventory) {
-        if (array_key_exists($mountpoint, $group_convergence_status)) {
-            if (array_key_exists($pid, $group_convergence_status[$mountpoint])) {
-                if ($group_convergence_status[$mountpoint][$pid]) {
-                    $return = 1;
-                }
-                else {
-                    $return = 2;
-                }
-            }
+        if (array_key_exists($pid, $group_convergence_status)) {
+            if ($group_convergence_status[$pid] == 0)
+                $ret = 2;
+            else
+                $ret = 1;
         }
     }
     else {
-        $return = 3;
+        $ret = 3;
     }
-    return $return;
+    return $ret;
 }
-
 
 function prettyConvergenceStatusDisplay($status) {
     switch ($status) {
@@ -84,9 +80,10 @@ function prettyConvergenceStatusDisplay($status) {
             return _T('Not available', 'msc');
     }
 }
+$a_convergence_status = array();
 if ($group != null) {
     $group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
-    $a_convergence_status = array();
+    $group_convergence_status1 = $group_convergence_status['/package_api_get1'];
 }
 $emptyAction = new EmptyActionItem();
 $convergenceAction = new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers");
@@ -127,7 +124,9 @@ if (isset($_GET['uuid'])){
         $filter['filter1'] = "darwin";
     }
 };
-list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
+list($count, $packages) =  get_all_packages_deploy($_SESSION['login'], $start,  $start + $maxperpage, $filter);
+
+// list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
 $packages[0][1] = 0;
 $packages[0][2] = array();
 $packages[0][2]["mountpoint"] = "/package_api_get1";
@@ -158,13 +157,13 @@ foreach ($packages as $c_package) {
         if ($group != null) {
             $current_convergence_status = ($package != null) ? getConvergenceStatus(0,
                                                                $package->id,
-                                                               $group_convergence_status,
+                                                               $group_convergence_status1,
                                                                $package->associateinventory) : null;
             // set param_convergence_edit to True if convergence status is active or inactive
             $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
             $elt_convergence_status = prettyConvergenceStatusDisplay($current_convergence_status);
             $a_convergence_status[] = $elt_convergence_status;
-            $a_convergence_action[] = isset($package->associateinventory) ? $convergenceAction : $emptyAction;
+            $a_convergence_action[] = (isset($package->associateinventory) && $package->associateinventory == 1) ? $convergenceAction : $emptyAction;
         }
       }
 

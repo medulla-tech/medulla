@@ -76,6 +76,15 @@ $page->setFile("modules/glpi/glpi/ajaxMachinesList.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("machinesListglpi", _T("Get the whole machines list", "glpi"));
+$page->setFile("modules/glpi/glpi/machinesListglpi.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxMachinesListglpi", _T("Machines List", "glpi"));
+$page->setFile("modules/glpi/glpi/ajaxMachinesListglpi.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("xmppMachinesList", _T("Get the xmpp machines list", "glpi"));
 $page->setFile("modules/xmppmaster/xmppmaster/machinesList.php");
 $submod->addPage($page);

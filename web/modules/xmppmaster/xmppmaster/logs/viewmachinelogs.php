@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2017 siveo, http://www.siveo.net/
+ * (c) 2017-2021 siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -22,14 +22,6 @@
  *
  *  file : logs/viewmachinelogs.php
  */
-
-$p = new PageGenerator(_T("Deployment [machine ", 'xmppmaster')." ".$hostname."]");
-$p->setSideMenu($sidemenu);
-$p->display();
-
-$hideText = _T("Hide", "xmppmaster");
-$showText = _T("Show", "xmppmaster");
-
 ?>
 <style>
 
@@ -152,6 +144,31 @@ li.quickg a {
         -moz-filter: grayscale(50%);
         opacity:0.5;
 }
+
+.actions:target {
+   background-color: #ffa;
+}
+.actions{
+  margin-bottom:5px;
+  padding:3px;
+  border: dashed 1px rgb(100,100,100);
+  display:flex;
+}
+
+.actions a:hover{
+  background-color: #007fff;
+  color:rgb(255, 255, 255);
+  border: 1px solid #003eff
+}
+
+.actions a{
+  padding:1px;
+}
+
+.action_datas, .action_result{
+  width:50%;
+  padding:10px;
+}
 </style>
 
 <?
@@ -160,10 +177,22 @@ require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/pulse2/includes/menu_actionaudit.php');
 include_once('modules/glpi/includes/xmlrpc.php');
+include_once('modules/pkgs/includes/xmlrpc.php');
+
     // Retrieve information deploy. For cmn_id
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
-$deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
+$deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id, $uuid);
+
+$pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
+$pkgcreator = get_pkg_creator_from_uuid($deploymachine['package_id']);
+
+$p = new PageGenerator(_T("Deployment [machine ", 'xmppmaster')." ".$deploymachine['target_name']."]");
+$p->setSideMenu($sidemenu);
+$p->display();
+
+$hideText = _T("Hide", "xmppmaster");
+$showText = _T("Show", "xmppmaster");
 
     if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT ABORT"){
         echo "<H1>DEPLOYMENT ABORT</H1>";
@@ -299,6 +328,14 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         }
     }
     if (count($deploymachine != 0)){
+        $creation_date = mktime( $deploymachine['creation_date'][3],
+                                 $deploymachine['creation_date'][4],
+                                 $deploymachine['creation_date'][5],
+                                 $deploymachine['creation_date'][1],
+                                 $deploymachine['creation_date'][2],
+                                 $deploymachine['creation_date'][0]);
+        $creation_date = date("Y-m-d H:i:s", $creation_date);
+
         $start_datemsc = mktime( $deploymachine['startdatec'][3],
                                  $deploymachine['startdatec'][4],
                                  $deploymachine['startdatec'][5],
@@ -350,7 +387,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                     echo "<tbody>";
                         echo "<tr>";
                             echo "<td>";
-                                echo $hostname;
+                                echo $deploymachine['target_name'];
                             echo "</td>";
 
                             echo "<td>";
@@ -392,16 +429,16 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                     echo "<tbody>";
                         echo "<tr>";
                             echo "<td>";
-                                echo $deploymachine['creator'];
+                                echo $pkgcreator[$deploymachine['package_id']];
                             echo "</td>";
                             echo "<td>";
-                            echo $info['objectdeploy'][0]['pathpackage'];
+                            echo $pkgname[$deploymachine['package_id']];
                             echo "</td>";
                             echo "<td>";
                                 echo $deploymachine['package_id'];
                             echo "</td>";
                             echo "<td>";
-                                echo $start_datemsc;
+                                echo $creation_date;
                             echo "</td>";
                         echo "</tr>";
                     echo "</tbody>";
@@ -433,7 +470,7 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
                     echo "<tbody>";
                         echo "<tr>";
                             echo "<td>";
-                                echo $deploymachine['connect_as'];
+                                echo $deploymachine['creator'];
                             echo "</td>";
                             echo "<td>";
                             echo $deploymachine['title'];
@@ -638,83 +675,260 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
         );
     if (isset($descriptorslist)){
         echo "<br>";
-        echo '<h2 class="replytab" id="result">'.$hideText." "._T("Deployment result", "xmppmaster").'</h2>
-        <div id="titleresult">';
-        echo "<pre style='  box-shadow: 6px 6px 0px black;
-                            border-radius: 20px / 10px;
-                            border-left: 2px solid black;
-                            border-right: 2px solid black;
-                            border-top: 2px solid black;
-                            padding: 10px 10px 5px 10px;'>";
-        foreach (range( 0, count($descriptorslist)-1) as $index1){
-            $arraylist= $descriptorslist[$index1];
-            echo "<div>";
-            echo "<span class='replytab' style='color : blue; font: italic bold 12px/30px Georgia, serif;'>" . _T('Hide Result', 'xmppmaster') . $infoslist[$index1]->name."</span>";
-            echo "<div>";
-            foreach (range( 0, count($arraylist)-1) as $index){
-                $step=$arraylist[$index];
-                if (array_key_exists($step->action, $actionsname)) {
-                    $actions = $actionsname[$step->action];
-                }
-                else{
-                    $actions = ltrim(str_replace("_"," ",substr($step->action,6)));
-                    echo $step->action;
-                }
-                $color="red";
-                echo "<br>";
-                if (isset($step->completed) && $actions != "ERROR"){
-                    echo '<h3 style="color:green;">STEP'." <strong>".$step->step. " [". $actions. "]</strong>" ."". "  </h3>";
-                    $color="green";
-                }
 
-                if (isset($step->completed)){
-                    echo '<div class="shadow"
-                                style="  color:'.$color.';
-                                        display: none;
-                                            padding:0 10px;">';
-                    foreach($step as $keystep => $infostep){
-                        if ($keystep != "step" and $keystep != "action" and  $keystep != "completed"){
-                            if( strstr($keystep, "resultcommand")) {
-                            echo "<pre>";
-                                //echo nl2br($infostep);
-                                echo $keystep." :".$infostep."<br>";
-                            echo "</pre>";
-                            }
-                            else{
-                                if (is_object ($infostep)) {
+        $header = "";
+        $values = "";
+        $content = "";
 
-                                    echo $keystep;
-                                    echo "<br>";
-                                    echo "<ul>";
-                                    foreach(get_object_vars ($infostep) as $key0 => $valu0){
-                                        if ($key0 =='') break;
-                                        echo'<li>'.$key0.'=>'.$valu0 .'</li>';
-                                    }
-                                    echo "</ul>";
-                                }
-                                else{
-                                    echo $keystep." :".$infostep."<br>";
-                                }
-                            }
-                        }
-                    }
-                }
-                else{
-                    echo '<div class="shadow" style="  color:blue; display: none;
-                                        font-size:10px;
-                                        font-style: italic;
-                                        padding:0 10px;">';
-                    foreach($step as $keystep => $infostep){
-                        if ($keystep != "step" and $keystep != "action" and  $keystep != "completed")
-                            echo $keystep." :".$infostep."<br>";
-                        }
-                }
-                    echo "</div>";
+        $deploymentCompleted = $boolterminate ? true : false;
+        $deploymentSuccessed = false;
+
+        // Do some modifications on actions result
+        $resultcommand = '@resultcommand';
+        $_1lastlines = '1@lastlines';
+        $_10lastlines = '10@lastlines';
+        $_20lastlines = '20@lastlines';
+        $_30lastlines = '30@lastlines';
+
+        $_1firstlines = '1@firstlines';
+        $_10firstlines = '10@firstlines';
+        $_20firstlines = '20@firstlines';
+        $_30firstlines = '30@firstlines';
+        $associations = [];
+        foreach($descriptorslist[0] as $keyId => $_action){
+            $associations[$_action->actionlabel] = $_action;
+            // Digest name for action step names
+            $_action->action = ltrim(ltrim($_action->action, 'action'), '_');
+
+            // Explicit if the step is in success state
+            if($_action->completed && $_action->completed == 1 && isset($_action->codereturn)){
+                $_action->successed = ($_action->codereturn == 0) ? true : false;
             }
-            echo"</div>";
+            else{
+                $_action->successed = false;
+            }
+            // Explicit if the step has been completed
+            if(!isset($_action->completed)){
+                $_action->completed = false;
+            }
+
+            // Determine if the deployment is finished and if it is in success or error
+            if($_action->actionlabel == "END_ERROR" && isset($_action->completed) && $_action->completed == 1){
+                $deploymentCompleted = true;
+                $_action->successed = true;
+                //$deploymentSuccessed is already set to false
+            }
+            if($_action->actionlabel == "END_SUCCESS" && isset($_action->completed) && $_action->completed == 1){
+                $deploymentCompleted = true;
+                $deploymentSuccessed = true;
+                $_action->successed = true;
+            }
         }
-            echo "</pre>";
-            echo"</div>";
+
+        echo '<h2 class="replytab2">'._T("Deployment Status", "xmppmaster").'</h2>';
+        if($deploymentCompleted){
+            if($deploymentSuccessed){
+                echo '<p style="font-weight:bold; color:green;">'._T("Complete", 'xmppmaster')." : "._T("yes", "xmppmaster").'</p>';
+                echo '<p style="font-weight:bold; color:green;">'._T("Successed", "xmppmaster").' : '._T("yes", "xmppmaster").'</p>';
+            }
+            else{
+                echo '<p style="font-weight:bold; color:green;">'._T("Complete", 'xmppmaster')." : "._T("yes", "xmppmaster").'</p>';
+                echo '<p style="font-weight:bold; color:red;">'._T("Success","xmppmaster").' : '._T("no", "xmppmaster").'</p>';
+            }
+        }
+        else{
+            echo '<p style="font-weight:bold; color:blue;">'._T("Complete","xmppmaster").' : '._T("processing", "xmppmaster").'</p>';
+        }
+
+        // Now we know all the steps status
+
+        // step processing : !deploymentCompleted && !completed
+        // step completed but error : completed && !successed
+        // step completed and success : completed && successed == 0
+        // step ignored : deploymentCompleted && !completed
+        foreach($descriptorslist[0] as $_action){
+
+            $content .= "<div class='actions' id='".$cmd_id."-".$_action->step."'>";
+            $content .= "<div class='action_datas'>";
+
+            if($deploymentCompleted && !$_action->completed){
+                $content .= '<h3>['._T("Not completed", "xmppmaster").'] Action '.$_action->action.' '._T("labelled", "xmppmaster").' '.$_action->actionlabel.'</h3>';
+            }
+            // step processing
+            if(!$deploymentCompleted && !$_action->completed){
+
+                $content .= '<h3>['._T("Processing", "xmppmaster").'] Action '.$_action->action.' '._T("labelled", "xmppmaster").' '.$_action->actionlabel.'</h3>';
+            }
+            // step failed
+            else if($_action->completed && !$_action->successed){
+                $content .= '<h3>['._T("Failure", "xmppmaster").'] Action '.$_action->action.' '._T("labelled", "xmppmaster").' '.$_action->actionlabel.'</h3>';
+            }
+            // step successed
+            else if($_action->completed && $_action->successed){
+                $content .= '<h3>['._T("Success", "xmppmaster").'] Action '.$_action->action.' '._T("labelled", "xmppmaster").' '.$_action->actionlabel.'</h3>';
+            }
+
+
+            $content.= '<ul>';
+            if(isset($_action->command)){
+                $command = base64_decode($_action->command, true) == false ? $_action->command : base64_decode($_action->command);
+                $content.= '<li>';
+                $content .= _T("Executed Command", "pkgs").' : '.htmlentities($command);
+                $content .= '</li>';
+            }
+            if(isset($_action->typescript) && $_action->typescript != ""){
+                $content.= '<li>';
+                $content .= _T("Type Script", "pkgs").' : '.htmlentities($_action->typescript);
+                $content .= '</li>';
+            }
+            if(isset($_action->bang) && $_action->bang != ""){
+                $content.= '<li>';
+                $content .= _T("Shebang", "pkgs").' : '.htmlentities($_action->bang);
+                $content .= '</li>';
+            }
+            if(isset($_action->script)){
+                $content.= '<li>';
+                $script = (base64_decode($_action->script, true) == false) ? $_action->script : base64_decode($_action->script);
+                $content .= _T("Script", "pkgs").' : '.nl2br(htmlentities($script));
+                $content .= '</li>';
+            }
+            if(isset($_action->timeout) && $_action->timeout != ""){
+                $content.= '<li>';
+                $content .= _T("Timeout", "pkgs").' : '.htmlentities($_action->timeout);
+                $content .= '</li>';
+            }
+            if(isset($_action->codereturn) && $_action->codereturn != ""){
+                $content.= '<li>';
+                $content .= _T("Code Return", "pkgs").' : '.htmlentities($_action->codereturn);
+                $content .= '</li>';
+            }
+            if(isset($_action->packageuuid)  && $_action->packageuuid != ""){
+                $content.= '<li>';
+                $content .= _T("Alternate Package", "pkgs").' : '.htmlentities($_action->packageuuid);
+                $content .= '</li>';
+            }
+            if(isset($_action->environ)  && $_action->environ != []){
+                $content .= '<li>';
+                $content .= _T("Set Environ Variable", "pkgs").' : ';
+                $content .= '<ul>';
+                foreach($_action->environ as $opt=>$optval){
+                    $content  .= '<li>'.htmlentities($opt).': '.htmlentities($optval).'</li>';
+                }
+                $content .= '</ul>';
+                $content .= '</li>';
+            }
+            if(isset($_action->filename)  && $_action->filename != ""){
+                $content.= '<li>';
+                $content .= _T("File", "pkgs").' : '.htmlentities($_action->filename);
+                $content .= '</li>';
+            }
+            if(isset($_action->set)  && $_action->set != ""){
+                $content.= '<li>';
+                $set = (base64_decode($_action->set, true) == false) ? $_action->set : base64_decode($_action->set);
+                $content .= _T("Set", "pkgs").' : '.htmlentities($set);
+                $content .= '</li>';
+            }
+            if(isset($_action->url)  && $_action->url != ""){
+                $content.= '<li>';
+                $content .= _T("Download File", "pkgs").' : <a href="'.htmlentities($_action->url).'">'.htmlentities($_action->url).'</a>';
+                $content .= '</li>';
+            }
+            if(isset($_action->targetrestart)  && $_action->targetrestart != ""){
+                $content.= '<li>';
+                $content .= ($_action->targetrestart == "AM") ? _T("Restart", "pkgs").' : '._T("Agent Machine", "pkgs"): _T("Restart", "pkgs").' : '._T("Machine", "pkgs");
+                $content .= '</li>';
+            }
+            if(isset($_action->waiting)  && $_action->waiting != ""){
+                $content.= '<li>';
+                $content .= _T("Waiting", "pkgs").' : '.$_action->waiting.' '._T('secs.', "pkgs").'<br>';
+                $content .= _T("Go to", "pkgs").' : <a href="#'.$cmd_id.'-'.htmlentities($associations[$_action->goto]->step).'">'.htmlentities($associations[$_action->goto]->action).' at '.htmlentities($associations[$_action->goto]->actionlabel).'</a>';
+                $content .= '</li>';
+            }
+            if(isset($_action->comment)  && $_action->comment != ""){
+                $content.= '<li>';
+                $_comment = (base64_decode($_action->comment, true) == false) ? $_action->comment : base64_decode($_action->comment);
+                $content .= _T("Comment", "pkgs").' : '.nl2br(htmlentities($_comment));
+                $content .= '</li>';
+            }
+            if(isset($_action->inventory)){
+                $content.= '<li>';
+                $content .= _T("Inventory", "pkgs").' : '.htmlentities($_action->inventory);
+                if(isset($_action->actioninventory)){
+                    $content .= ', '.htmlentities($_action->actioninventory);
+                }
+                $content .= '</li>';
+            }
+            if(isset($_action->clear)){
+                $content.= '<li>';
+                $content .= _T("Clear package after install", "pkgs").' : '.htmlentities($_action->clear);
+                $content .= '</li>';
+            }
+
+
+            $content .= '</ul>';
+
+            // Choose the next step. If failed && error defined : goto error
+            if((isset($_action->error) && !$_action->successed && $_action->completed)){
+                $content .= '<a href="#'.$cmd_id.'-'.$descriptorslist[0][$_action->error]->step.'">'._T("Next Step", 'xmppmaster').' : '.$descriptorslist[0][$_action->error]->action.' '._T("at", "xmppmaster").' '.$descriptorslist[0][$_action->error]->actionlabel.'</a>';
+            }
+            // If success && success defined : goto success
+            else if(isset($_action->success) && $_action->successed){
+                $content .= '<a href="#'.$cmd_id.'-'.$descriptorslist[0][$_action->success]->step.'">'._T("Next Step", 'xmppmaster').' : '.$descriptorslist[0][$_action->success]->action.' '._T("at", "xmppmaster").' '.$descriptorslist[0][$_action->success]->actionlabel.'</a>';
+            }
+            // If closure action (end or success action) : end point
+            else if($_action->actionlabel == "END_ERROR" || $_action->actionlabel == "END_SUCCESS"){
+                $content .= 'End of deployment';
+            }
+            else{
+                $content .= '<a href="#'.$cmd_id.'-'.($_action->step+1).'">'._T("Next Step", 'xmppmaster').' : '.$descriptorslist[0][$_action->step+1]->action.' '._T("at", "xmppmaster").' '.$descriptorslist[0][$_action->step+1]->actionlabel.'</a>';
+            }
+            $content .= '</div>'; // .action_datas
+            $content .= '<div class="action_result">';
+
+            if(isset($_action->$resultcommand) && $_action->$resultcommand != ""){
+                $content .= '<h3>'._T("Result Command", "pkgs").'</h3>';
+                $content .= nl2br(htmlentities($_action->$resultcommand));
+            }
+            if(isset($_action->$_1lastlines) && $_action->$_1lastlines != ""){
+                $content .= '<h3>'._T("Result Command", "pkgs").'</h3>';
+                $content .= nl2br(htmlentities($_action->$_1lastlines));
+            }
+            if(isset($_action->$_1firstlines) && $_action->$_1firstlines != ""){
+                $content .= '<h3>'._T("Result Command", "pkgs").'</h3>';
+                $content .= nl2br(htmlentities($_action->$_1firstlines));
+            }
+
+            if(isset($_action->$_10lastlines) && $_action->$_10lastlines != ""){
+                $content .= '<h3>'._T("Result Command", "pkgs").'</h3>';
+                $content .= nl2br(htmlentities($_action->$_10lastlines));
+            }
+            if(isset($_action->$_20lastlines) && $_action->$_20lastlines != ""){
+                $content .= '<h3>'._T("Result Command", "pkgs").'</h3>';
+                $content .= nl2br(htmlentities($_action->$_20lastlines));
+            }
+            if(isset($_action->$_30lastlines) && $_action->$_30lastlines != ""){
+                $content .= '<h3>'._T("Result Command", "pkgs").'</h3>';
+                $content .= nl2br(htmlentities($_action->$_30lastlines));
+            }
+
+            if(isset($_action->$_10firstlines) && $_action->$_10firstlines != ""){
+                $content .= '<h3>'._T("Result Command", "pkgs").'</h3>';
+                $content .= nl2br(htmlentities($_action->$_10firstlines));
+            }
+
+            if(isset($_action->$_20firstlines) && $_action->$_20firstlines != ""){
+                $content .= '<h3>'._T("Result Command", "pkgs").'</h3>';
+                $content .= nl2br(htmlentities($_action->$_20firstlines));
+            }
+
+            if(isset($_action->$_30firstlines) && $_action->$_30firstlines != ""){
+                $content .= '<h3>'._T("Result Command", "pkgs").'</h3>';
+                $content .= nl2br(htmlentities($_action->$_30firstlines));
+            }
+            $content .= '</div>';// .action_result
+            $content .= '</div>'; // .actions
+        }
+        echo $content;
     }
     if (isset($otherinfos[0]->environ) && count((array)$otherinfos[0]->environ) == 1){
         if ( $info['len'] != 0){
@@ -794,18 +1008,6 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
     }
     //hidden table by default.decommente pour hide by default
     hideid("env");
-    // hideid("wol");
-    // hideid("result");
-    // hideid("detailmach");
-    // hideid("detailpack");
-    // hideid("deployplan");
-    // hideid("xmppinfo");
-    // hideid("dependency");
-    // hideid("phase");
-      jQuery( "h3" ).click(function() {
-        jQuery(this).css('background-color','white')
-        jQuery(this).next('div').toggle();
-        });
         jQuery( ".replytab" ).click(function() {
             a = jQuery(this).text();
             if (a.search( "<?php echo $showText;?>" ) != -1){
@@ -816,6 +1018,17 @@ $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id);
             }
             jQuery(this).text(a);
             jQuery(this).next('div').toggle();
+        });
+
+        jQuery( ".replytab2" ).click(function() {
+            a = jQuery(this).text();
+            jQuery(this).text(a);
+            completed = jQuery(this).next('p');
+            successed = completed.next('p');
+            action = jQuery(".actions");
+            completed.toggle();
+            successed.toggle();
+            action.toggle();
         });
 </script>
 <?
