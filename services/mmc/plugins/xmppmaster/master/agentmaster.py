@@ -291,22 +291,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.file_deploy_plugin = []
         self.wolglobal_set = set() #use group wol
         self.confaccount=[] #list des account for clear
-        #clear conf compte.
-        logger.debug('Delete old ejabberd accounts')
-        cmd = "ejabberdctl --no-timeout delete_old_users 1"
-        try:
-            a = simplecommandstr(cmd)
-            logger.debug(a['result'])
-        except Exception as e:
-            pass
-        #del old message offline
-        logger.debug('Delete old offline ejabberd messages')
-        cmd = "ejabberdctl --no-timeout delete_old_messages 1"
-        try:
-            a = simplecommandstr(cmd)
-            logger.debug(a['result'])
-        except Exception as e:
-            pass
+
         # The queues. These objects are like shared lists
         # The command processes use this queue to notify an event to the event manager
         # self.queue_read_event_from_command = Queue()
@@ -323,6 +308,24 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.manage_scheduler = manage_scheduler(self)
         self.xmppbrowsingpath = xmppbrowsing(defaultdir=self.config.defaultdir,
                                              rootfilesystem=self.config.rootfilesystem)
+        
+        # Clear configuration accounts
+        logger.debug('Delete old ejabberd accounts')
+        cmd = "ejabberdctl --no-timeout delete_old_users 1"
+        try:
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+        except Exception as e:
+            pass
+        # Delete old messages
+        logger.debug('Delete old offline ejabberd messages')
+        cmd = "ejabberdctl --no-timeout delete_old_messages 1"
+        try:
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+        except Exception as e:
+            pass
+
         # dictionary used for deploy
         self.machineWakeOnLan = {}
         self.machineDeploy = {}
