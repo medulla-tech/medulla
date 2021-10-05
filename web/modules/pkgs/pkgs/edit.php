@@ -38,7 +38,7 @@ if (in_array('dyngroup', $_SESSION['modulesList'])) {
 $p = new PageGenerator(_T("Edit package", "pkgs"));
 $p->setSideMenu($sidemenu);
 $p->display();
-
+function isExpertMode1(){return 1;}
 // var formating
 $_GET['p_api'] = isset($_GET['p_api']) ? $_GET['p_api'] : "";
 $_GET['p_api'] = "UUID/package_api_get1";
@@ -245,7 +245,7 @@ $fields = array(
 );
 $cmds = array();
 $options = array();
-if(!isExpertMode())
+if(!isExpertMode1())
 {
 
     $cmds = array(
@@ -282,13 +282,13 @@ foreach($getShares['datas'] as $share){
 }
 
 if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true){
-  $previous_localisation = (isset($json['info']['previous_localisation_server']) && $json['info']['previous_localisation_server'] != "") ? $json['info']['previous_localisation_server'] : $json['info']['localisation_server'];
+  $previous_localisation = (isset($package['previous_localisation_server']) && $package['previous_localisation_server'] != "") ? $package['previous_localisation_server'] : $json['info']['localisation_server'];
 
   $f->add(new HiddenTpl("previous_localisation_server"), array("value" => $previous_localisation, "hide" => True));
   if(isset($getShares["config"]["movepackage"]) && $getShares["config"]["movepackage"] == True){
     if(isset($json["info"]["Dependency"]) && count($json["info"]["Dependency"]) == 0){
       if(count($shares) == 1){ // Just 1 sharing (no choice)
-        $f->add(new HiddenTpl("localisation_server"), array("value" => $json["info"]['localisation_server'], "hide" => True));
+        $f->add(new HiddenTpl("localisation_server"), array("value" => $package['localisation_server'], "hide" => True));
       }
       else{ // sharing server > 1
         $sharesNames = [];
@@ -308,7 +308,7 @@ if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["conf
       }
     }
     else{ // Dependencies > 0
-      $f->add(new HiddenTpl("localisation_server"), array("value" => $json['info']["localisation_server"], "hide" => True));
+      $f->add(new HiddenTpl("localisation_server"), array("value" => $package["localisation_server"], "hide" => True));
     }
   }
   else{ // movepackage == false
@@ -335,7 +335,7 @@ $f->add(
         new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => $package['targetos'])
 );
 
-if(isExpertMode())
+if(isExpertMode1())
 {
   $f->add(new HiddenTpl("metagenerator"), array("value" => "expert", "hide" => True));
 }
@@ -343,7 +343,7 @@ else {
   $f->add(new HiddenTpl("metagenerator"), array("value" => "standard", "hide" => True));
 }
 
-if(isExpertMode())
+if(isExpertMode1())
 {
     //$f->add(new HiddenTpl("last_editor"), array("value" => $_SESSION['login'], "hide" => True));
     $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
@@ -414,11 +414,11 @@ if(isExpertMode())
 
           if(in_array($uuid, $dependencies))
           {
-            $packagesInOptionAdded .= '<option value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+            $packagesInOptionAdded .= '<option title="'.$name.' v.'.$version.'" value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
 
           }
           else{
-            $packagesInOptionNotAdded .= '<option value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+            $packagesInOptionNotAdded .= '<option title="'.$name.' v.'.$version.'" value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
             $allDependenciesList[] = $xmpp_package;
           }
         }
@@ -440,6 +440,7 @@ if(isExpertMode())
                     <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
                     '.$packagesInOptionAdded.'
                     </select>
+                    <div class="opt_name" style="position:absolute;"></div>
                 </div>
             </td>
             <td style="border: none;">
@@ -452,9 +453,11 @@ if(isExpertMode())
                 <div class="list" style="padding-left: 10px;">
                     <h3>'._T('Available dependencies', 'pkgs').'</h3>
                     <input type="text" id="dependenciesFilter" value="" placeholder="'._T("search by name ...", "pkgs").'"><br/>
+
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOptionNotAdded.'
                     </select>
+                    <div class="opt_name" style="position:absolute;"></div>
                 </div>
                 <div class="clearer"></div>
             </td>
@@ -540,7 +543,7 @@ $f->add(
 // =========================================================================
 
 $f->pop();
-if(isExpertMode())
+if(isExpertMode1())
 {
     $f->add(new HiddenTpl('saveList'), array('id'=>'saveList','name'=>'saveList',"value" => '', "hide" => True));
     include('addXMPP.php');
@@ -554,6 +557,27 @@ $f->display();
 
 <script>
 jQuery(function(){
+  jQuery(".opt_bubble").on("mouseover", function(e){
+    let bubble = jQuery(this).parent().next(".opt_name");
+    let element = this;
+    let bodyRect = document.body.getBoundingClientRect();
+    let elementRect = element.getBoundingClientRect();
+    let offsetY = elementRect.top - bodyRect.top - 15;
+
+    let pkgsName = jQuery(element).text();
+    jQuery(bubble).text(pkgsName);
+    jQuery(bubble).css("background-color", "yellow");
+    jQuery(bubble).css("left", elementRect.x+"px");
+    jQuery(bubble).css("top", offsetY+"px");
+    jQuery(bubble).show();
+  })
+
+  jQuery(".opt_bubble").on("mouseleave", function(){
+    let bubble = jQuery(this).parent().next(".opt_name");
+    jQuery(bubble).text("");
+
+  })
+
   dependenciesFilter = jQuery("#dependenciesFilter");
   pooldependencies = jQuery("#pooldependencies option");
 

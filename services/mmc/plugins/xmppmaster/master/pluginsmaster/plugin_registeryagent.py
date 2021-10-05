@@ -131,7 +131,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                 '',
                                                 'Registration',
                                                 '',
-                                                '',
+                                                xmppobject.boundjid.bare,
                                                 xmppobject.boundjid.bare)
             if 'oldjid' in data:
                 logger.debug("The hostname changed from %s to %s" % (data['oldjid'], data['from']))
@@ -151,20 +151,21 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                 else:
                     logger.info("Machine %s does not exist in base" % msg['from'])
             if machine:
-                # on regarde si coherence avec table network.
+                # We look if there is coherency with the network table
                 try:
                     result = XmppMasterDatabase().listMacAdressforMachine(machine['id'],
                                                                           infomac=showinfobool)
-                    macadresssort=sorted([ x['macnotshortened'] for x in  \
+                    macadresssort = sorted([x['macnotshortened'] for x in  \
                                             data['information']['listipinfo']])
-                    macadressstr=",".join(macadresssort)
-                    logger.info("macadressstr %s " %macadressstr)
+                    macadressstr = "," . join(macadresssort)
+                    logger.debug("The mac address is: %s" % macadressstr)
                     if result[0] is None or result[0] != macadressstr:
                         if result[0] is not None:
-                            logger.warning("mac adress diff :\n\t %s : %s\n\t "\
-                                           "network table : %s" %(data['agenttype'],
-                                                                  macadressstr,
-                                                                  result[0]))
+                            logger.warning("The is a difference in the database between \n"\
+                                           "the %s 's table: %s" \
+                                           "and the network's table %s" %(data['agenttype'],
+                                                                          macadressstr,
+                                                                          result[0]))
                         raise
                     machine['enabled'] = 1
                 except Exception:
@@ -188,7 +189,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                     '',
                                                     'Registration | Notify',
                                                     '',
-                                                    '',
+                                                    xmppobject.boundjid.bare,
                                                     xmppobject.boundjid.bare)
                 if machine['enabled'] == 1:
                     logger.info("Machine %s registered with %s" %
@@ -202,7 +203,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                     '',
                                                     'Registration | Notify',
                                                     '',
-                                                    '',
+                                                    xmppobject.boundjid.bare,
                                                     xmppobject.boundjid.bare)
 
                     if showinfobool:
@@ -234,6 +235,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     if data['agenttype'] == "relayserver":
                         # on notify to ars pour sa registration
                         notify_ars_to_recording("recording_case1", str(msg['from']), xmppobject)
+                        XmppMasterDatabase().update_Presence_Relay(str(msg['from']), presence=1)
                     if data['from'] != machine['jid'] or\
                         data['baseurlguacamole'] != machine['urlguacamole'] or\
                         data['deployment'] != machine['groupdeploy']:
@@ -533,7 +535,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                 '',
                                                 'Registration | Notify',
                                                 '',
-                                                '',
+                                                xmppobject.boundjid.bare,
                                                 xmppobject.boundjid.bare)
             if idmachine != -1:
                 if showinfobool:
@@ -563,7 +565,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                     '',
                                                     'Registration | Notify',
                                                     '',
-                                                    '',
+                                                    xmppobject.boundjid.bare,
                                                     xmppobject.boundjid.bare)
                 if showinfobool:
                     logger.info("Machine %s added to machines table"%idmachine)
@@ -581,7 +583,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                     '',
                                                     'Registration | Notify | Error | Alert',
                                                     '',
-                                                    '',
+                                                    xmppobject.boundjid.bare,
                                                     xmppobject.boundjid.bare)
                 XmppMasterDatabase().delNetwork_for_machines_id(idmachine)
                 for i in data['information']["listipinfo"]:
@@ -659,7 +661,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                         '',
                                                         'Remote_desktop | Guacamole | Service | Auto',
                                                         '',
-                                                        '',
+                                                        xmppobject.boundjid.bare,
                                                         "Master")
                     else:
                         if showinfobool:
@@ -673,7 +675,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                         '',
                                                         'QuickAction | Inventory | Inventory requested',
                                                         '',
-                                                        '',
+                                                        xmppobject.boundjid.bare,
                                                         "Master")
                         callinventory(xmppobject, data['from'])
                         if showinfobool:
@@ -704,7 +706,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                             '',
                                             'Registration | Notify',
                                             '',
-                                            '',
+                                            xmppobject.boundjid.bare,
                                             xmppobject.boundjid.bare)
             pluginfunction=[str("plugin_%s"%x) for x in xmppobject.pluginlistunregistered]
             if showinfobool:
@@ -732,7 +734,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                     '',
                                                     'Registration | Notify | Error | Alert',
                                                     '',
-                                                    '',
+                                                    xmppobject.boundjid.bare,
                                                     xmppobject.boundjid.bare)
 
     except Exception as e:
@@ -746,7 +748,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                         '',
                                         'Registration | Notify | Error | Alert',
                                         '',
-                                        '',
+                                        xmppobject.boundjid.bare,
                                         xmppobject.boundjid.bare)
 
 def test_mac_adress_black_list(macadress, table_reg_for_match, showinfobool=True):
@@ -1013,7 +1015,7 @@ def adduserdatageolocalisation(xmppobject, data, msg, sessionid, showinfobool):
                                             '',
                                             'Registration | Notify | Error | Alert',
                                             '',
-                                            '',
+                                            xmppobject.boundjid.bare,
                                             xmppobject.boundjid.bare)
             return -1, tabinformation
     except Exception:
@@ -1115,11 +1117,11 @@ def read_conf_remote_registeryagent(xmppobject):
 
     for regexpconf in blacklisted_mac_addresseslist:
         try:
-            logger.info("BUILD REGEXP FOR BLACKLIST MAC ADRESS -> %s"%regexpconf)
+            logger.debug("We are backlisting the following mac address: %s" % regexpconf)
             xmppobject.blacklisted_mac_addresses.append(re.compile(regexpconf))
         except Exception:
             logger.error("\n%s" % (traceback.format_exc()))
-            logger.error("COMPIL REGEXP BLACKLIST MAC ADRESS -> %s <- [IGNORE THIS REGEXP]" % regexpconf)
+            logger.error("An error occured while blacklisting this mac address %s. We ignore it." % regexpconf)
     logger.debug("Plugin list registered is %s" % xmppobject.pluginlistregistered)
     logger.debug("Plugin list unregistered is %s" % xmppobject.pluginlistunregistered)
 
@@ -1191,7 +1193,7 @@ def test_consolidation_inventory(xmppobject, sessionid, data, showinfobool, msg,
                                             '',
                                             'Registration | Notify | Error | Alert',
                                             '',
-                                            '',
+                                            xmppobject.boundjid.bare,
                                             xmppobject.boundjid.bare)
             return  False
         # cherche machine in glpi on macadress

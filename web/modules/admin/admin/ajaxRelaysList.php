@@ -36,14 +36,16 @@ if ($_SESSION["login"] == "root"){
 }else{
   $sharings = xmlrpc_pkgs_search_share(["login"=> $_SESSION["login"]]);
   if($sharings['config']['centralizedmultiplesharing'] == 1){
-      $relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage, $filter);
+      $relays = get_list_ars_from_sharing($sharings['datas'],$start, $maxperpage,$_SESSION["login"],  $filter);
   }else{
     $relays = xmlrpc_get_xmpprelays_list($start, $maxperpage, $filter, 'all');
   }
 }
 
-$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
-$editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
+//$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
+$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"conffile", "configg","","admin", "admin");
+//$editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
+$editremoteconfiguration = new ActionItem(_("Edit config files"),"conffile","config","", "admin", "admin");
 
 $detailactionempty = new EmptyActionItem1(_("Relay Detail"),"relaystatusdetail", "logfileg","","admin", "admin");
 $detailaction = new ActionItem(_("Relay Detail"),"relaystatusdetail", "logfile","","admin", "admin");
@@ -69,6 +71,12 @@ $packageaction = new ActionItem(_("Packages List"), "packageslist", 'package', "
 $packageemptyaction = new EmptyActionItem1(_("Packages List"), "packageslist", 'packageg', "", "admin", "admin");
 
 $relayRulesAction = new ActionItem(_("Relay Rules"), "rules_tabs", 'inventory', "", "admin", "admin");
+
+$banAction = new ActionPopupItem(_("Ban"), "ban", 'ban', "", "admin", "admin");
+$banEmptyAction = new EmptyActionItem1(_("Ban"), "ban", 'bang', "", "admin", "admin");
+
+$unbanAction = new ActionPopupItem(_("Unban"), "unban", 'unban', "", "admin", "admin");
+$unbanEmptyAction = new EmptyActionItem1(_("Unban"), "unban", 'unbang', "", "admin", "admin");
 
 $raw = 0;
 $params = [];
@@ -105,6 +113,8 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $quickActions[] = $quickaction;
     $vncActions[] = $vncaction;
     $packagesAction[] = $packageaction;
+    $banActions[] = $banAction;
+    $unbanActions[] = $unbanAction;
   }
   else{
     $configActions[] =$editremoteconfigurationempty;
@@ -113,6 +123,8 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $quickActions[] = $quickactionempty;
     $vncActions[] = $vncemptyaction;
     $packagesAction[] = $packageemptyaction;
+    $banActions[] = $banEmptyAction;
+    $unbanActions[] = $unbanEmptyAction;
   }
   $relayRulesActions[] = $relayRulesAction;
 
@@ -153,6 +165,8 @@ $n->addActionItemArray($switchActions);
 $n->addActionItemArray($configActions);
 $n->addActionItemArray($qalistActions);
 $n->addActionItemArray($quickActions);
+$n->addActionItemArray($banActions);
+$n->addActionItemArray($unbanActions);
 $n->addActionItemArray($vncActions);
 $n->addActionItemArray($relayRulesActions);
 $n->setParamInfo($params);

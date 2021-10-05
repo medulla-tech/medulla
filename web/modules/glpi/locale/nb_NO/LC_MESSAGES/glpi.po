@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-01 11:32+0200\n"
+"POT-Creation-Date: 2021-09-01 13:52+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2021\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -23,8 +23,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: modules/glpi/infoPackage.inc.php:32
-#: modules/glpi/glpi/ajaxMachinesList.php:174
-#: modules/glpi/glpi/ajaxMachinesList.php:178
+#: modules/glpi/glpi/ajaxMachinesList.php:187
+#: modules/glpi/glpi/ajaxMachinesList.php:190
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:86
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:90
 msgid "GLPI Inventory"
@@ -175,25 +175,29 @@ msgstr "Register fane (GLPI)"
 msgid "Connections tab (GLPI)"
 msgstr "Tilkoblingsfanen (GLPI)"
 
-#: modules/glpi/includes/html.php:49 modules/glpi/includes/html.php:419
+#: modules/glpi/includes/html.php:50 modules/glpi/includes/html.php:421
 msgid "Hide Windows Updates"
 msgstr "Skjul Windows-oppdateringer"
 
-#: modules/glpi/includes/html.php:57 modules/glpi/glpi/ajaxViewPart.php:255
+#: modules/glpi/includes/html.php:58 modules/glpi/glpi/ajaxViewPart.php:257
 msgid "Today"
 msgstr "I dag"
 
-#: modules/glpi/includes/html.php:58 modules/glpi/glpi/ajaxViewPart.php:256
+#: modules/glpi/includes/html.php:59 modules/glpi/glpi/ajaxViewPart.php:258
 msgid "Last 7 days"
 msgstr "Siste 7 dager"
 
-#: modules/glpi/includes/html.php:59 modules/glpi/glpi/ajaxViewPart.php:257
+#: modules/glpi/includes/html.php:60 modules/glpi/glpi/ajaxViewPart.php:259
 msgid "Last 30 days"
 msgstr "Siste 30 dager"
 
-#: modules/glpi/includes/html.php:60 modules/glpi/glpi/ajaxViewPart.php:258
+#: modules/glpi/includes/html.php:61 modules/glpi/glpi/ajaxViewPart.php:260
 msgid "All"
 msgstr "Alle"
+
+#: modules/glpi/includes/html.php:268 modules/glpi/includes/html.php:485
+msgid "Search"
+msgstr "Søk"
 
 #: modules/glpi/includes/publicFunc.php:86
 msgid "Entity attributes"
@@ -251,7 +255,7 @@ msgid "Uninventoried Machines"
 msgstr "Maskiner som ikke er i inventaret"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:31
-#: modules/glpi/glpi/tabs.php:88
+#: modules/glpi/glpi/tabs.php:90
 msgid "Antivirus"
 msgstr "Antivirus"
 
@@ -267,88 +271,88 @@ msgstr "Kjører ikke eller er ikke oppdatert: %prosent% (%d)"
 msgid "No antivirus found: %percent% (%d)"
 msgstr "Ingen antivirus funnet: %prosent% (%d)"
 
-#: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
+#: modules/glpi/glpi/tabs.php:62 modules/glpi/glpi/tabs.php:70
 msgid "This client has been registered in pull mode"
 msgstr "Denne klienten er registrert i trekk-modus"
 
-#: modules/glpi/glpi/tabs.php:62
+#: modules/glpi/glpi/tabs.php:64
 msgid "Leave pull mode"
 msgstr "Gå ut av trekkmodus"
 
-#: modules/glpi/glpi/tabs.php:72
+#: modules/glpi/glpi/tabs.php:74
 #, php-format
 msgid "%s's inventory %s"
 msgstr "%ss inventar%s"
 
-#: modules/glpi/glpi/tabs.php:80
+#: modules/glpi/glpi/tabs.php:82
 msgid "Summary"
 msgstr "Sammendrag"
 
-#: modules/glpi/glpi/tabs.php:81
+#: modules/glpi/glpi/tabs.php:83
 msgid "Hardware"
 msgstr "Maskinvare"
 
-#: modules/glpi/glpi/tabs.php:83
+#: modules/glpi/glpi/tabs.php:85
 msgid "Storage"
 msgstr "Lagring"
 
-#: modules/glpi/glpi/tabs.php:84
+#: modules/glpi/glpi/tabs.php:86
 msgid "Network"
 msgstr "Nettverk"
 
-#: modules/glpi/glpi/tabs.php:85
+#: modules/glpi/glpi/tabs.php:87
 msgid "Software"
 msgstr "Programvare"
 
-#: modules/glpi/glpi/tabs.php:86
+#: modules/glpi/glpi/tabs.php:88
 msgid "Administrative"
 msgstr "Administrativ"
 
-#: modules/glpi/glpi/tabs.php:87
+#: modules/glpi/glpi/tabs.php:89
 msgid "History"
 msgstr "Historikk"
 
-#: modules/glpi/glpi/tabs.php:93
+#: modules/glpi/glpi/tabs.php:95
 msgid "Registry"
 msgstr "Register"
 
-#: modules/glpi/glpi/tabs.php:107
+#: modules/glpi/glpi/tabs.php:109
 msgid "Get XLS Report"
 msgstr "Hent XLS Rapport"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:182
+#: modules/glpi/glpi/ajaxMachinesList.php:194
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:95
 msgid "Monitoring"
-msgstr ""
+msgstr "Overvåking"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:183
-#: modules/glpi/glpi/ajaxMachinesList.php:207
+#: modules/glpi/glpi/ajaxMachinesList.php:195
 #: modules/glpi/glpi/ajaxMachinesList.php:219
+#: modules/glpi/glpi/ajaxMachinesList.php:231
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:96
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:111
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:121
 msgid "Remote control"
 msgstr "Fjernkontroll"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:186
-#: modules/glpi/glpi/ajaxMachinesList.php:187
+#: modules/glpi/glpi/ajaxMachinesList.php:198
+#: modules/glpi/glpi/ajaxMachinesList.php:199
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:87
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:92
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:97
 msgid "Software deployment"
 msgstr "Utrulling av Programvare"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:189
-#: modules/glpi/glpi/ajaxMachinesList.php:190
+#: modules/glpi/glpi/ajaxMachinesList.php:201
+#: modules/glpi/glpi/ajaxMachinesList.php:202
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:99
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:100
 msgid "xmppconsole"
 msgstr "xmppkonsoll"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:193
-#: modules/glpi/glpi/ajaxMachinesList.php:194
-#: modules/glpi/glpi/ajaxMachinesList.php:196
-#: modules/glpi/glpi/ajaxMachinesList.php:197
+#: modules/glpi/glpi/ajaxMachinesList.php:205
+#: modules/glpi/glpi/ajaxMachinesList.php:206
+#: modules/glpi/glpi/ajaxMachinesList.php:208
+#: modules/glpi/glpi/ajaxMachinesList.php:209
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:102
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:103
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:104
@@ -356,294 +360,294 @@ msgstr "xmppkonsoll"
 msgid "files browsing"
 msgstr "Bla igjennom filer"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:200
-#: modules/glpi/glpi/ajaxMachinesList.php:201
+#: modules/glpi/glpi/ajaxMachinesList.php:212
+#: modules/glpi/glpi/ajaxMachinesList.php:213
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:105
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:106
 msgid "Edit config files"
 msgstr "Rediger konfigurasjonsfiler"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:203
-#: modules/glpi/glpi/ajaxMachinesList.php:204
+#: modules/glpi/glpi/ajaxMachinesList.php:215
+#: modules/glpi/glpi/ajaxMachinesList.php:216
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:108
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:109
 msgid "files viewer"
-msgstr ""
+msgstr "filviser"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:210
+#: modules/glpi/glpi/ajaxMachinesList.php:222
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:113
 msgid "Imaging management"
 msgstr "Administrering av bildefiler"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:212
+#: modules/glpi/glpi/ajaxMachinesList.php:224
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:114
 msgid "extTicket issue"
 msgstr "extTicket-problem"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:216
+#: modules/glpi/glpi/ajaxMachinesList.php:228
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:118
 msgid "Quick action"
 msgstr "Hurtighandling"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:243
+#: modules/glpi/glpi/ajaxMachinesList.php:255
 #: modules/glpi/glpi/addEntityRule.php:99
 #: modules/glpi/glpi/machinesList.php:62
 msgid "Hostname"
 msgstr "Vertsnavn"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:244
+#: modules/glpi/glpi/ajaxMachinesList.php:256
 #: modules/glpi/glpi/machinesList.php:56
 msgid "Jabber ID"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:245
+#: modules/glpi/glpi/ajaxMachinesList.php:257
 #: modules/glpi/glpi/machinesList.php:60
 msgid "Platform"
 msgstr "Plattform"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:246
-#: modules/glpi/glpi/ajaxViewPart.php:260
+#: modules/glpi/glpi/ajaxMachinesList.php:258
+#: modules/glpi/glpi/ajaxViewPart.php:262
 #: modules/glpi/glpi/machinesList.php:61
 msgid "Architecture"
 msgstr "Arkitektur"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:247
+#: modules/glpi/glpi/ajaxMachinesList.php:259
 #: modules/glpi/glpi/machinesList.php:57
 msgid "Machine UUID"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:248
+#: modules/glpi/glpi/ajaxMachinesList.php:260
 #: modules/glpi/glpi/machinesList.php:58
 msgid "Reconf. requested"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:249
+#: modules/glpi/glpi/ajaxMachinesList.php:261
 #: modules/glpi/glpi/machinesList.php:59
 msgid "Online"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:250
+#: modules/glpi/glpi/ajaxMachinesList.php:262
 #: modules/glpi/glpi/machinesList.php:64
 msgid "IP address"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:251
+#: modules/glpi/glpi/ajaxMachinesList.php:263
 #: modules/glpi/glpi/addEntityRule.php:102
 #: modules/glpi/glpi/machinesList.php:65
 msgid "Subnet"
 msgstr "Subnet"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:252
+#: modules/glpi/glpi/ajaxMachinesList.php:264
 #: modules/glpi/glpi/machinesList.php:67
 msgid "Public IP"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:253
+#: modules/glpi/glpi/ajaxMachinesList.php:265
 #: modules/glpi/glpi/machinesList.php:66
 msgid "Mac address"
 msgstr "Mac adresse"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:254
+#: modules/glpi/glpi/ajaxMachinesList.php:266
 #: modules/glpi/glpi/machinesList.php:68
 msgid "Agent type"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:255
+#: modules/glpi/glpi/ajaxMachinesList.php:267
 #: modules/glpi/glpi/machinesList.php:69
 msgid "Usage class"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:256
+#: modules/glpi/glpi/ajaxMachinesList.php:268
 #: modules/glpi/glpi/machinesList.php:70
 msgid "Relay JID"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:257
+#: modules/glpi/glpi/ajaxMachinesList.php:269
 #: modules/glpi/glpi/machinesList.php:71
 msgid "AD machine OU"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:258
+#: modules/glpi/glpi/ajaxMachinesList.php:270
 #: modules/glpi/glpi/machinesList.php:72
 msgid "AD user OU"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:259
+#: modules/glpi/glpi/ajaxMachinesList.php:271
 #: modules/glpi/glpi/machinesList.php:73
 msgid "Kiosk enabled"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:260
+#: modules/glpi/glpi/ajaxMachinesList.php:272
 #: modules/glpi/glpi/machinesList.php:74
 msgid "Last user connected"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:261
+#: modules/glpi/glpi/ajaxMachinesList.php:273
 #: modules/glpi/glpi/machinesList.php:75
 msgid "Syncthing ID"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:262
+#: modules/glpi/glpi/ajaxMachinesList.php:274
 #: modules/glpi/glpi/machinesList.php:76
 msgid "Registry keys"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:263
+#: modules/glpi/glpi/ajaxMachinesList.php:275
 #: modules/glpi/glpi/machinesList.php:55
 msgid "Machine ID"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:264
+#: modules/glpi/glpi/ajaxMachinesList.php:276
 #: modules/glpi/glpi/machinesList.php:63
 msgid "GLPI ID"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:265
+#: modules/glpi/glpi/ajaxMachinesList.php:277
 #: modules/glpi/glpi/machinesList.php:77
 msgid "GLPI description"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:266
+#: modules/glpi/glpi/ajaxMachinesList.php:278
 #: modules/glpi/glpi/machinesList.php:78
 msgid "Owner firstname"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:267
+#: modules/glpi/glpi/ajaxMachinesList.php:279
 #: modules/glpi/glpi/machinesList.php:79
 msgid "Owner lastname"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:268
-#: modules/glpi/glpi/ajaxMachinesList.php:438
+#: modules/glpi/glpi/ajaxMachinesList.php:280
+#: modules/glpi/glpi/ajaxMachinesList.php:450
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:287
 #: modules/glpi/glpi/machinesList.php:80
 msgid "Owner"
 msgstr "Eier"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:269
+#: modules/glpi/glpi/ajaxMachinesList.php:281
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:297
-#: modules/glpi/glpi/ajaxViewPart.php:241
+#: modules/glpi/glpi/ajaxViewPart.php:243
 #: modules/glpi/glpi/machinesList.php:81
 msgid "Model"
 msgstr "Modell"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:270
-#: modules/glpi/glpi/ajaxMachinesList.php:443
+#: modules/glpi/glpi/ajaxMachinesList.php:282
+#: modules/glpi/glpi/ajaxMachinesList.php:455
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:299
-#: modules/glpi/glpi/ajaxViewPart.php:242
+#: modules/glpi/glpi/ajaxViewPart.php:244
 #: modules/glpi/glpi/machinesList.php:82
 msgid "Manufacturer"
 msgstr "Produsent"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:271
+#: modules/glpi/glpi/ajaxMachinesList.php:283
 #: modules/glpi/glpi/machinesList.php:83
 msgid "Short entity name"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:272
+#: modules/glpi/glpi/ajaxMachinesList.php:284
 #: modules/glpi/glpi/machinesList.php:84
 msgid "Full entity name"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:273
+#: modules/glpi/glpi/ajaxMachinesList.php:285
 #: modules/glpi/glpi/machinesList.php:85
 msgid "Entity ID"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:274
+#: modules/glpi/glpi/ajaxMachinesList.php:286
 #: modules/glpi/glpi/machinesList.php:86
 msgid "Short location name"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:275
+#: modules/glpi/glpi/ajaxMachinesList.php:287
 #: modules/glpi/glpi/machinesList.php:87
 msgid "Full location name"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:276
+#: modules/glpi/glpi/ajaxMachinesList.php:288
 #: modules/glpi/glpi/machinesList.php:88
 msgid "Location ID"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:277
+#: modules/glpi/glpi/ajaxMachinesList.php:289
 #: modules/glpi/glpi/machinesList.php:89
 msgid "IP addresses"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:278
+#: modules/glpi/glpi/ajaxMachinesList.php:290
 #: modules/glpi/glpi/machinesList.php:90
 msgid "Network mask"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:279
+#: modules/glpi/glpi/ajaxMachinesList.php:291
 #: modules/glpi/glpi/machinesList.php:91
 msgid "Broadcast address"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:280
+#: modules/glpi/glpi/ajaxMachinesList.php:292
 #: modules/glpi/glpi/machinesList.php:92
 msgid "Gateway address"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:431
+#: modules/glpi/glpi/ajaxMachinesList.php:443
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:276
-#: modules/glpi/glpi/ajaxViewPart.php:231
+#: modules/glpi/glpi/ajaxViewPart.php:233
 msgid "Computer Name"
 msgstr "Maskinnavn"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:434
+#: modules/glpi/glpi/ajaxMachinesList.php:446
 #: modules/glpi/glpi/addLocation.php:101 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:279
 #: modules/glpi/glpi/addEntityRule.php:77
-#: modules/glpi/glpi/ajaxViewPart.php:232
+#: modules/glpi/glpi/ajaxViewPart.php:234
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:435
+#: modules/glpi/glpi/ajaxMachinesList.php:447
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:281
-#: modules/glpi/glpi/ajaxViewPart.php:238
+#: modules/glpi/glpi/ajaxViewPart.php:240
 msgid "Operating System"
 msgstr "Operativsystem"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:436
+#: modules/glpi/glpi/ajaxMachinesList.php:448
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:283
-#: modules/glpi/glpi/ajaxViewPart.php:239
+#: modules/glpi/glpi/ajaxViewPart.php:241
 msgid "Computer Type"
 msgstr "Datamaskin Type"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:437
+#: modules/glpi/glpi/ajaxMachinesList.php:449
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:285
-#: modules/glpi/glpi/ajaxViewPart.php:236
+#: modules/glpi/glpi/ajaxViewPart.php:238
 msgid "Last Logged User"
 msgstr "Sist logget bruker"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:439
+#: modules/glpi/glpi/ajaxMachinesList.php:451
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:289
-#: modules/glpi/glpi/ajaxViewPart.php:234
+#: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Entity"
 msgstr "Enhet"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:440
+#: modules/glpi/glpi/ajaxMachinesList.php:452
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:291
 msgid "Localization"
 msgstr "Lokalisering"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:441
+#: modules/glpi/glpi/ajaxMachinesList.php:453
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:293
 msgid "Owner Firstname"
 msgstr "Eiers Fornavn"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:442
+#: modules/glpi/glpi/ajaxMachinesList.php:454
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:295
 msgid "Owner Real Name"
 msgstr "Eiers Riktige Navn"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:459
+#: modules/glpi/glpi/ajaxMachinesList.php:471
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:323
 msgid "Backup status"
 msgstr "Backup status"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:493
+#: modules/glpi/glpi/ajaxMachinesList.php:505
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:360
 msgid "Delete computer"
 msgstr "Slett datamaskin"
@@ -683,8 +687,8 @@ msgstr "Rediger plassering"
 
 #: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/addEntity.php:78
 #: modules/glpi/glpi/addEntityRule.php:72
-#: modules/glpi/glpi/ajaxViewPart.php:212
-#: modules/glpi/glpi/ajaxViewPart.php:229
+#: modules/glpi/glpi/ajaxViewPart.php:214
+#: modules/glpi/glpi/ajaxViewPart.php:231
 msgid "Name"
 msgstr "Navn"
 
@@ -785,7 +789,7 @@ msgid "IP Address"
 msgstr "IP Adresse"
 
 #: modules/glpi/glpi/addEntityRule.php:100
-#: modules/glpi/glpi/ajaxViewPart.php:262
+#: modules/glpi/glpi/ajaxViewPart.php:264
 msgid "Domain"
 msgstr "Domene"
 
@@ -859,31 +863,31 @@ msgstr "Målenhet"
 msgid "Target location"
 msgstr "Mållokasjon"
 
-#: modules/glpi/glpi/ajaxViewPart.php:83
+#: modules/glpi/glpi/ajaxViewPart.php:85
 msgid " (Not an antivirus)"
 msgstr " (Ikke et antivirus)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:107
+#: modules/glpi/glpi/ajaxViewPart.php:109
 msgid "Click here to see this computer on manufacturer website"
 msgstr "Klikk her for å se denne datamaskinen på produsentens nettsted"
 
-#: modules/glpi/glpi/ajaxViewPart.php:124
+#: modules/glpi/glpi/ajaxViewPart.php:126
 msgid "Properties"
 msgstr "Egenskaper"
 
-#: modules/glpi/glpi/ajaxViewPart.php:125
+#: modules/glpi/glpi/ajaxViewPart.php:127
 msgid "Value"
 msgstr "Verdi"
 
-#: modules/glpi/glpi/ajaxViewPart.php:143
+#: modules/glpi/glpi/ajaxViewPart.php:145
 msgid "No record found for this period."
 msgstr "Ingen poster ble funnet for denne perioden."
 
-#: modules/glpi/glpi/ajaxViewPart.php:146
+#: modules/glpi/glpi/ajaxViewPart.php:148
 msgid "Unable to detect any Antivirus software on this machine."
 msgstr "Kan ikke oppdage antivirusprogramvare på denne maskinen."
 
-#: modules/glpi/glpi/ajaxViewPart.php:147
+#: modules/glpi/glpi/ajaxViewPart.php:149
 msgid ""
 "Please ensure you are running GLPI with FusionInventory plugin and "
 "FusionInventory Agent on this client."
@@ -891,211 +895,211 @@ msgstr ""
 "Forsikre deg om at du kjører GLPI med FusionInventarplugin og FusionInventar"
 " Agenten på denne klienten."
 
-#: modules/glpi/glpi/ajaxViewPart.php:150
+#: modules/glpi/glpi/ajaxViewPart.php:152
 msgid "No record found."
 msgstr "Ingen poster funnet."
 
-#: modules/glpi/glpi/ajaxViewPart.php:188
+#: modules/glpi/glpi/ajaxViewPart.php:190
 msgid "Processors"
 msgstr "Prosessorer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:189
-#: modules/glpi/glpi/ajaxViewPart.php:249
+#: modules/glpi/glpi/ajaxViewPart.php:191
+#: modules/glpi/glpi/ajaxViewPart.php:251
 msgid "Memory"
 msgstr "Minne"
 
-#: modules/glpi/glpi/ajaxViewPart.php:190
+#: modules/glpi/glpi/ajaxViewPart.php:192
 msgid "Hard Drives"
 msgstr "Disker"
 
-#: modules/glpi/glpi/ajaxViewPart.php:191
+#: modules/glpi/glpi/ajaxViewPart.php:193
 msgid "Controllers"
 msgstr "Kontrollere"
 
-#: modules/glpi/glpi/ajaxViewPart.php:192
+#: modules/glpi/glpi/ajaxViewPart.php:194
 msgid "Network Cards"
 msgstr "Nettverkskort"
 
-#: modules/glpi/glpi/ajaxViewPart.php:193
+#: modules/glpi/glpi/ajaxViewPart.php:195
 msgid "Drives"
 msgstr "Disker"
 
-#: modules/glpi/glpi/ajaxViewPart.php:194
+#: modules/glpi/glpi/ajaxViewPart.php:196
 msgid "Graphic Cards"
 msgstr "Grafikkort"
 
-#: modules/glpi/glpi/ajaxViewPart.php:195
+#: modules/glpi/glpi/ajaxViewPart.php:197
 msgid "Sound Cards"
 msgstr "Lydkort"
 
-#: modules/glpi/glpi/ajaxViewPart.php:196
+#: modules/glpi/glpi/ajaxViewPart.php:198
 msgid "Others"
 msgstr "Øvrige"
 
-#: modules/glpi/glpi/ajaxViewPart.php:210
+#: modules/glpi/glpi/ajaxViewPart.php:212
 msgid "Yes"
 msgstr "Ja"
 
-#: modules/glpi/glpi/ajaxViewPart.php:211
+#: modules/glpi/glpi/ajaxViewPart.php:213
 msgid "No"
 msgstr "Nei"
 
-#: modules/glpi/glpi/ajaxViewPart.php:213
+#: modules/glpi/glpi/ajaxViewPart.php:215
 msgid "Network Type"
 msgstr "Nettverkstype"
 
-#: modules/glpi/glpi/ajaxViewPart.php:214
+#: modules/glpi/glpi/ajaxViewPart.php:216
 msgid "MAC Address"
 msgstr "MAC Adresse"
 
-#: modules/glpi/glpi/ajaxViewPart.php:215
+#: modules/glpi/glpi/ajaxViewPart.php:217
 msgid "IP"
 msgstr "IP"
 
-#: modules/glpi/glpi/ajaxViewPart.php:216
+#: modules/glpi/glpi/ajaxViewPart.php:218
 msgid "Netmask"
 msgstr "Nettmaske"
 
-#: modules/glpi/glpi/ajaxViewPart.php:217
+#: modules/glpi/glpi/ajaxViewPart.php:219
 msgid "Gateway"
 msgstr "Gateway"
 
-#: modules/glpi/glpi/ajaxViewPart.php:218
+#: modules/glpi/glpi/ajaxViewPart.php:220
 msgid "Device"
 msgstr "Enhet"
 
-#: modules/glpi/glpi/ajaxViewPart.php:219
+#: modules/glpi/glpi/ajaxViewPart.php:221
 msgid "Mount Point"
 msgstr "Monteringspunkt"
 
-#: modules/glpi/glpi/ajaxViewPart.php:220
+#: modules/glpi/glpi/ajaxViewPart.php:222
 msgid "Filesystem"
 msgstr "Filsystem"
 
-#: modules/glpi/glpi/ajaxViewPart.php:221
-#: modules/glpi/glpi/ajaxViewPart.php:246
+#: modules/glpi/glpi/ajaxViewPart.php:223
+#: modules/glpi/glpi/ajaxViewPart.php:248
 msgid "Size"
 msgstr "Størrelse"
 
-#: modules/glpi/glpi/ajaxViewPart.php:222
+#: modules/glpi/glpi/ajaxViewPart.php:224
 msgid "Free Size"
 msgstr "Ledig plass"
 
-#: modules/glpi/glpi/ajaxViewPart.php:223
+#: modules/glpi/glpi/ajaxViewPart.php:225
 msgid "Supplier"
 msgstr "Leverandør"
 
-#: modules/glpi/glpi/ajaxViewPart.php:224
+#: modules/glpi/glpi/ajaxViewPart.php:226
 msgid "Invoice Number"
 msgstr "Fakturanummer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:225
+#: modules/glpi/glpi/ajaxViewPart.php:227
 msgid "Date Of Purchase"
 msgstr "Kjøpsdato"
 
-#: modules/glpi/glpi/ajaxViewPart.php:226
+#: modules/glpi/glpi/ajaxViewPart.php:228
 msgid "Warranty End Date"
 msgstr "Sluttdato for garanti"
 
-#: modules/glpi/glpi/ajaxViewPart.php:227
+#: modules/glpi/glpi/ajaxViewPart.php:229
 msgid "Last Inventory Date"
 msgstr "Siste inventeringsdato"
 
-#: modules/glpi/glpi/ajaxViewPart.php:228
+#: modules/glpi/glpi/ajaxViewPart.php:230
 msgid "Vendor"
 msgstr "Leverandør"
 
-#: modules/glpi/glpi/ajaxViewPart.php:230
+#: modules/glpi/glpi/ajaxViewPart.php:232
 msgid "Version"
 msgstr "Versjon"
 
-#: modules/glpi/glpi/ajaxViewPart.php:233
+#: modules/glpi/glpi/ajaxViewPart.php:235
 msgid "Entity (Location)"
 msgstr "Enhet (Lokasjon)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:235
+#: modules/glpi/glpi/ajaxViewPart.php:237
 msgid "Location"
 msgstr "Plassering"
 
-#: modules/glpi/glpi/ajaxViewPart.php:237
+#: modules/glpi/glpi/ajaxViewPart.php:239
 msgid "OS"
 msgstr "OS"
 
-#: modules/glpi/glpi/ajaxViewPart.php:240
+#: modules/glpi/glpi/ajaxViewPart.php:242
 msgid "Model / Type"
 msgstr "Modell / Type"
 
-#: modules/glpi/glpi/ajaxViewPart.php:243
+#: modules/glpi/glpi/ajaxViewPart.php:245
 msgid "Serial Number"
 msgstr "Serienummer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:244
+#: modules/glpi/glpi/ajaxViewPart.php:246
 msgid "Frequency"
 msgstr "Frekvens"
 
-#: modules/glpi/glpi/ajaxViewPart.php:245
+#: modules/glpi/glpi/ajaxViewPart.php:247
 msgid "Type"
 msgstr "Type"
 
-#: modules/glpi/glpi/ajaxViewPart.php:247
+#: modules/glpi/glpi/ajaxViewPart.php:249
 msgid "Bandwidth"
 msgstr "Båndbredde"
 
-#: modules/glpi/glpi/ajaxViewPart.php:248
+#: modules/glpi/glpi/ajaxViewPart.php:250
 msgid "Writer"
 msgstr "Writer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:250
+#: modules/glpi/glpi/ajaxViewPart.php:252
 #: modules/glpi/glpi/ajaxLocationList.php:68
 #: modules/glpi/glpi/ajaxEntityList.php:68
 msgid "Comment"
 msgstr "Kommentar"
 
-#: modules/glpi/glpi/ajaxViewPart.php:251
+#: modules/glpi/glpi/ajaxViewPart.php:253
 msgid "Date"
 msgstr "Dato"
 
-#: modules/glpi/glpi/ajaxViewPart.php:252
+#: modules/glpi/glpi/ajaxViewPart.php:254
 msgid "User"
 msgstr "Bruker"
 
-#: modules/glpi/glpi/ajaxViewPart.php:253
+#: modules/glpi/glpi/ajaxViewPart.php:255
 msgid "Category"
 msgstr "Kategori"
 
-#: modules/glpi/glpi/ajaxViewPart.php:254
+#: modules/glpi/glpi/ajaxViewPart.php:256
 msgid "Action"
 msgstr "Handling"
 
-#: modules/glpi/glpi/ajaxViewPart.php:259
+#: modules/glpi/glpi/ajaxViewPart.php:261
 msgid "Service Pack"
 msgstr "Service Pakke"
 
-#: modules/glpi/glpi/ajaxViewPart.php:261
+#: modules/glpi/glpi/ajaxViewPart.php:263
 msgid "Windows Key"
 msgstr "Windows Nøkkel"
 
-#: modules/glpi/glpi/ajaxViewPart.php:263
+#: modules/glpi/glpi/ajaxViewPart.php:265
 msgid "State"
 msgstr "Tilstand"
 
-#: modules/glpi/glpi/ajaxViewPart.php:264
+#: modules/glpi/glpi/ajaxViewPart.php:266
 msgid "Unknown"
 msgstr "Ukjent"
 
-#: modules/glpi/glpi/ajaxViewPart.php:265
+#: modules/glpi/glpi/ajaxViewPart.php:267
 msgid "Inventory Number"
 msgstr "Inventarnummer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:267
+#: modules/glpi/glpi/ajaxViewPart.php:269
 msgid "Enabled"
 msgstr "Aktivert"
 
-#: modules/glpi/glpi/ajaxViewPart.php:268
+#: modules/glpi/glpi/ajaxViewPart.php:270
 msgid "Up-to-date"
 msgstr "Oppdatert"
 
-#: modules/glpi/glpi/ajaxViewPart.php:305
+#: modules/glpi/glpi/ajaxViewPart.php:307
 msgid "Invalid hostname"
 msgstr "Ugyldig vertsnavn"
 

@@ -37,6 +37,8 @@ from sqlalchemy.orm.exc import NoResultFound
 #from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 ##from sqlalchemy.orm import sessionmaker
 import datetime
+import magic
+import base64
 # ORM mappings
 from pulse2.database.pkgs.orm.version import Version
 from pulse2.database.pkgs.orm.pakages import Packages
@@ -1250,7 +1252,8 @@ class PkgsDatabase(DatabaseHelper):
                     pkgs.pkgs_rules_global
                 WHERE
                     '%s' REGEXP (pkgs.pkgs_rules_global.subject)
-                        AND permission LIKE '%%r%%';"""%objsearch['login']
+                         AND permission LIKE '%%r%%'
+                         AND pkgs.pkgs_rules_global.pkgs_rules_algos_id = 3;""" % objsearch['login']
             result = session.execute(sql)
             session.commit()
             session.flush()
@@ -1481,3 +1484,127 @@ class PkgsDatabase(DatabaseHelper):
                 resuldict['permission']=y[13]
                 ret.append(resuldict)
         return ret
+
+    @DatabaseHelper._sessionm
+    def get_pkg_name_from_uuid(self, session, uuids):
+        """
+            Retrieve the name of the package based on the uuids
+            Args:
+                session: The SQL Alchemy session
+                uuids: uuids of the packages
+            Return:
+                It returns the name of the package
+        """
+        query = session.query(Packages.label, Packages.uuid)
+        if type(uuids) is list:
+            query = query.filter(Packages.uuid.in_(uuids))
+        elif type(uuids) is str:
+            query = query.filter(Packages.uuid == uuids)
+
+        result = query.all()
+        pkg = {}
+        if result is not None:
+            for tmp in result:
+                pkg[tmp.uuid] = tmp.label
+
+        return pkg
+
+    @DatabaseHelper._sessionm
+    def get_pkg_creator_from_uuid(self, session, uuids):
+        """
+            Retrieve the creator of the package based on the uuids
+            Args:
+                session: The SQL Alchemy session
+                uuids: uuids of the packages
+            Return:
+                It returns the name of the creator of the package
+        """
+        query = session.query(Packages.conf_json, Packages.uuid)
+        if type(uuids) is list:
+            query = query.filter(Packages.uuid.in_(uuids))
+        elif type(uuids) is str:
+            query = query.filter(Packages.uuid == uuids)
+        result = query.all()
+
+        pkg = {}
+        if result is not None:
+            for tmp in result:
+                try:
+                    conf_json = json.loads(tmp.conf_json)
+                    if 'creator' in conf_json:
+                        pkg[tmp.uuid] = conf_json['creator']
+                    else:
+                        pkg[tmp.uuid] = ""
+                except:
+                    pkg[tmp.uuid] = ""
+        return pkg
+
+    @DatabaseHelper._sessionm
+    def get_files_infos(self, session, uuid, filename=""):
+        """
+            This is used to retrieve informations about a package.
+            Args:
+                session: The SQLAlchemy session
+                uuid: uuid of the package
+                filename: name of the file to analyze
+            Return:
+                Return informations about the package:
+                    - Name
+                    - Size
+                    - Mime
+                    - Fullpath
+                    - Content
+        """
+        query = session.query(Pkgs_shares.share_path)\
+            .join(Packages, Pkgs_shares.id == Packages.pkgs_share_id)\
+            .filter(Packages.uuid == uuid).first()
+
+        path = query[0] if query is not None else ""
+
+        result = {
+            "path": path,
+            "files": []
+        }
+
+        if path is None:
+            return result
+
+        try:
+            pkg_path = os.readlink(os.path.join(path, uuid))
+        except:
+            pkg_path = os.path.join(path, uuid)
+
+
+        mime_reader = magic.open(magic.MAGIC_MIME)
+        mime_reader.load()
+
+        if(os.path.isdir(pkg_path)):
+            result["valid_path"] = True
+            if filename == "":
+                # Get all files
+                result['files'] = [{
+                    'fullpath': os.path.join(pkg_path, pkg_file),
+                    'name': pkg_file,
+                    'size': str(os.path.getsize(os.path.join(pkg_path, pkg_file))),
+                    'mime': mime_reader.file(os.path.join(pkg_path, pkg_file)).split("; charset="),
+                    } for pkg_file in os.listdir(pkg_path) if os.path.isfile(os.path.join(pkg_path, pkg_file))]
+            else:
+                # Get specific file
+                if os.path.join(pkg_path, filename):
+                    result = {
+                        'name': filename,
+                        'mime': mime_reader.file(os.path.join(pkg_path, filename)).split("; charset="),
+                        'content' : ""
+                        }
+                    if result['mime'][0].startswith("text"):
+                        fp = open(os.path.join(pkg_path, filename), 'rb')
+                        result["content"] = base64.b64encode(fp.read())
+                        fp.close()
+                else:
+                    result = {
+                        'size': 0,
+                        'content' : ""
+                    }
+        else:
+            result["valid_path"] = False
+        return result

@@ -25,6 +25,38 @@ require("modules/admin/admin/localSidebar.php");
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
+
+
+$jid_ars = (isset($_POST['jid_ars'])) ? $_POST['jid_ars'] : "";
+$selected_machine = isset($_POST['selected_machine']) ? $_POST['selected_machine'] : [];
+$start_date = isset($_POST['start_date']) ? $_POST['start_date'] : [];
+$reason = isset($_POST['reason']) ? $_POST['reason'] : [];
+
+$ban_all = isset($_POST['ban_all']) ? true : false;
+
+if(isset($_POST['unban']))
+{
+  if(!$ban_all){
+    $result = xmlrpc_ban_machines('direct_unban', $jid_ars, $selected_machine);
+  }
+  else{
+    $result = xmlrpc_ban_machines('direct_unban', $jid_ars, 'all');
+  }
+  new NotifyWidgetSuccess(_T('The unban command has been sent to '.htmlentities($_POST['jid_ars']), "admin"));
+
+}
+if(isset($_POST['ban']))
+{
+  if(!$ban_all){
+    $result = xmlrpc_ban_machines('direct_ban', $jid_ars, $selected_machine);
+  }
+  else{
+    $result = xmlrpc_ban_machines('direct_ban', $jid_ars, 'all');
+  }
+  new NotifyWidgetSuccess(_T('The ban command has been sent to '.htmlentities($_POST['jid_ars']), "admin"));
+}
+
+
 $p = new PageGenerator(_T("XMPP Relays list", 'glpi'));
 $p->setSideMenu($sidemenu);
 $p->display();

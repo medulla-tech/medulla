@@ -25,8 +25,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           4.6.7
-%define mmc_version            4.6.7
+%define real_version           4.6.9
+%define mmc_version            4.6.9
 
 Summary:	Management Console
 Name:		pulse2
@@ -421,6 +421,7 @@ Requires:   pulse2-common = %version-%release
 Requires:   python-mmc-msc = %version-%release
 Requires:   python2-requests
 Requires:   python2-unidecode
+Requires:   python-magic
 
 %description -n python-mmc-pkgs
 This package contains the pkgs plugin for the MMC agent.
@@ -619,6 +620,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-packageparser.py
 %{_sbindir}/pulse2-inscription_packages_in_base.py
 %{_sbindir}/pulse2-generation_package.py
+%{_sbindir}/pulse2-migration_old_package.py
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
@@ -1150,7 +1152,7 @@ Requires:   	mmc-web-dashboard >= %{version}
 Requires:       node-d3
 
 %description -n mmc-web-base
-Console web interface designed by Linbox.
+Console web interface.
 
 %post -n mmc-web-base
 if [ ! -L "/usr/share/mmc/jsframework/d3" ];
@@ -1165,11 +1167,20 @@ fi
 %attr(0640,root,root) %config(noreplace) %_webappconfdir/mmc.conf
 %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mmc/mmc.ini
 %dir %{_datadir}/mmc
-%{_datadir}/mmc/*
-%exclude %{_datadir}/mmc/modules/ppolicy
-%exclude %{_datadir}/mmc/modules/services
-%exclude %{_datadir}/mmc/modules/dashboard
-%exclude %{_datadir}/mmc/modules/admin
+%{_datadir}/mmc/forgotpassword.php
+%{_datadir}/mmc/license.php
+%{_datadir}/mmc/logout/index.php
+%{_datadir}/mmc/main.php
+%{_datadir}/mmc/site.php
+%{_datadir}/mmc/token.php
+%{_datadir}/mmc/version.php
+%{_datadir}/mmc/graph/
+%{_datadir}/mmc/img/
+%{_datadir}/mmc/includes/
+%{_datadir}/mmc/index.php
+%{_datadir}/mmc/jsframework/
+%{_datadir}/mmc/modules/base/
+%{_datadir}/mmc/modules/xmppmaster/
 
 #--------------------------------------------------------------------
 

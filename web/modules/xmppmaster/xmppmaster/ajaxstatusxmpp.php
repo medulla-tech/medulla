@@ -41,13 +41,13 @@ if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1'){
   $status="";
   $LastdeployINsecond = 3600*24;
   echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
-  $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter) ;
-  $arraynotdeploy = xmlrpc_getnotdeploybyuserrecent($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
+  $arraydeploy = xmlrpc_get_deploy_by_user_with_interval( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter) ;
+  $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
 }
 else {
   $LastdeployINsecond = 3600*2160;
   echo "<h2>" . _T("Past tasks (last 3 months)") ."</h2>";
-  $arraydeploy = xmlrpc_getdeploybyuserpast( $_GET['login'] ,$LastdeployINsecond, $start, $end, $filter) ;
+  $arraydeploy = xmlrpc_get_deploy_by_user_finished( $_GET['login'] ,$LastdeployINsecond, $start, $end, $filter) ;
 }
 
 if (isset($arraydeploy['total_of_rows']))
@@ -64,18 +64,33 @@ $arraystate = array();
 $params = array();
 $logs   = array();
 $startdeploy = array();
+$endcmd = array();
+$startcmd = array();
 $tolmach=array();
 $successmach=array();
 $errormach=array();
 $abortmachuser = array();
 $processmachr = array();
 
-// $dd = xmlrpc_getstatbycmd(3);
 foreach( $arraydeploy['tabdeploy']['start'] as $ss){
     if (gettype($ss) == "string"){
         $startdeploy[]=$ss;
     }
 }
+    $arraydeploy['tabdeploy']['start'] = $startdeploy;
+
+foreach( $arraydeploy['tabdeploy']['endcmd'] as $ss){
+    $ee =  get_object_vars ( $ss);
+    $endcmd[]=gmdate("Y-m-d H:i:s", $ee['timestamp']);
+}
+    $arraydeploy['tabdeploy']['endcmd'] = $endcmd;
+
+    foreach( $arraydeploy['tabdeploy']['startcmd'] as $ss){
+    $ee =  get_object_vars ( $ss);
+    $startcmd[]=gmdate("Y-m-d H:i:s", $ee['timestamp']);
+}
+    $arraydeploy['tabdeploy']['startcmd'] = $startcmd;
+
 
 $logAction = new ActionItem(_("detaildeploy"),
                                 "viewlogs",
@@ -84,7 +99,6 @@ $logAction = new ActionItem(_("detaildeploy"),
                                 "xmppmaster",
                                 "xmppmaster");
 
-$arraydeploy['tabdeploy']['start'] = $startdeploy;
 
 for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
     $param=array();
@@ -93,6 +107,10 @@ for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
     $param['gid']=$arraydeploy['tabdeploy']['group_uuid'][$i];
     $param['cmd_id']=$arraydeploy['tabdeploy']['command'][$i];
     $param['login']=$arraydeploy['tabdeploy']['login'][$i];
+    $param['title']=$arraydeploy['tabdeploy']['title'][$i];
+    $param['start']=$arraydeploy['tabdeploy']['start'][$i];
+    $param['endcmd']=$arraydeploy['tabdeploy']['endcmd'][$i];
+    $param['startcmd']=$arraydeploy['tabdeploy']['startcmd'][$i];
     $logs[] = $logAction;
     $params[] = $param;
 }
@@ -106,14 +124,12 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $error = False;
     if(($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT DIFFERED" ||
         strpos($arraydeploy['tabdeploy']['state'][$index], "DEPLOYMENT START")!==false) &&
-            (get_object_vars($arraydeploy['tabdeploy']['endcmd'][$index])['timestamp']- time()) < 0){
+            (strtotime($arraydeploy['tabdeploy']['endcmd'][$index])- time()) < 0){
         $error = True;
         $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
     }
-        $deploydate = (array)$arraydeploy['tabdeploy']['startcmd'][$index];
-        $deploydate = substr($deploydate['scalar'], 0, 4).'-'.substr($deploydate['scalar'], 4, 2).'-'.substr($deploydate['scalar'], 6, 2).' '.substr($deploydate['scalar'], 9);
-        $result = xmlrpc_getstatdeployfromcommandidstartdate($arraydeploy['tabdeploy']['command'][$index],
-                                                             $deploydate);
+        $result = xmlrpc_getstatdeploy_from_command_id_and_title($arraydeploy['tabdeploy']['command'][$index],
+                                                                 $arraydeploy['tabdeploy']['title'][$index]);
         $done = 0;
         $aborted = 0;
         $inprogress = 0;
@@ -273,7 +289,7 @@ if(isset($arraynotdeploy))
       $arrayname[] = $name;
 
       $date = (array)$deploy['date_start'];
-      $arraydeploy['tabdeploy']['start'][] = date("Y-m-d H:i:s",$date['timestamp']);
+      $arraydeploy['tabdeploy']['start'][] = substr($date['scalar'], 0, 4).'-'.substr($date['scalar'], 4, 2).'-'.substr($date['scalar'], 6, 2).' '.substr($date['scalar'], 9);
       //TODO
       $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline</span>';
       $tolmach[] = $deploy['nb_machines'];

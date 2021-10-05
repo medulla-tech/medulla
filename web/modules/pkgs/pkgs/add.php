@@ -39,7 +39,7 @@ $p->display();
 // This session variable is used for auto-check upload button
 // @see ajaxrefreshPackageTempdir.php
 $_SESSION['pkgs-add-reloaded'] = array();
-
+function isExpertMode1(){return 1;}
 if (isset($_POST['bconfirm'])){
     //$p_api_id = $_POST['p_api'];
     $random_dir = isset($_SESSION['random_dir'])?$_SESSION['random_dir'] : "";
@@ -234,7 +234,7 @@ if (isset($_POST['bconfirm'])){
 
     $options = array();
     $cmds = array();
-    if(!isExpertMode())
+    if(!isExpertMode1())
     {
         $command = _T('Command:', 'pkgs') . '<br /><br />';
         $commandHelper = '<span>' . _T('Pulse will try to figure out how to install the uploaded files.\n\n
@@ -275,7 +275,7 @@ if (isset($_POST['bconfirm'])){
             new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => '')
     );
 
-    if(isExpertMode())
+    if(isExpertMode1())
     {
       $f->add(new HiddenTpl("metagenerator"), array("value" => "expert", "hide" => True));
     }
@@ -283,7 +283,7 @@ if (isset($_POST['bconfirm'])){
       $f->add(new HiddenTpl("metagenerator"), array("value" => "standard", "hide" => True));
     }
 
-    if(isExpertMode())
+    if(isExpertMode1())
     {
 
         $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
@@ -312,7 +312,7 @@ if (isset($_POST['bconfirm'])){
         $dependencies = get_dependencies_list_from_permissions($_SESSION["login"]);
         foreach($dependencies as $package)
         {
-            $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].' V.'.$package['version'].'</option>';
+            $packagesInOption .= '<option title="'.$package['name'].' v.'.$package['version'].'" value="'.$package['uuid'].'">'.$package['name'].' V.'.$package['version'].'</option>';
         }
         $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">
     <table style="border: none;" cellspacing="0">
@@ -329,6 +329,7 @@ if (isset($_POST['bconfirm'])){
                     <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
 
                     </select>
+                    <div class="opt_name" style="position:absolute;background-color:yellow"></div>
                 </div>
             </td>
             <td style="border: none;">
@@ -344,6 +345,7 @@ if (isset($_POST['bconfirm'])){
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOption.'
                     </select>
+                    <div class="opt_name" style="position:absolute;background-color:yellow;"></div>
                 </div>
                 <div class="clearer"></div>
             </td>
@@ -371,7 +373,7 @@ if (isset($_POST['bconfirm'])){
     addQuerySection($f, $package);
 
     $f->pop();
-    if(isExpertMode())
+    if(isExpertMode1())
     {
         $f->add(new HiddenTpl('saveList'), array('id'=>'saveList','name'=>'saveList',"value" => '', "hide" => True));
         include('addXMPP.php');
@@ -392,6 +394,26 @@ if (isset($_POST['bconfirm'])){
 
 <script type="text/javascript">
     jQuery(function() { // load this piece of code when page is loaded
+
+      jQuery(".opt_bubble").on("mouseover", function(e){
+        let bubble = jQuery(this).parent().next(".opt_name");
+        let element = this;
+        let bodyRect = document.body.getBoundingClientRect();
+        let elementRect = element.getBoundingClientRect();
+        let offsetY = elementRect.top - bodyRect.top - 15;
+
+        let pkgsName = jQuery(element).text();
+        jQuery(bubble).text(pkgsName);
+        jQuery(bubble).css("left", elementRect.x+"px");
+        jQuery(bubble).css("top", offsetY+"px");
+        jQuery(bubble).show();
+      })
+
+      jQuery(".opt_bubble").on("mouseleave", function(){
+        let bubble = jQuery(this).parent().next(".opt_name");
+        jQuery(bubble).text("");
+
+      });
 
       dependenciesFilter = jQuery("#dependenciesFilter");
       pooldependencies = jQuery("#pooldependencies option");

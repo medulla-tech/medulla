@@ -339,6 +339,48 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid):
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+
+def getdeployment_cmd_and_title(command_id,
+                                title,
+                                search_filter="",
+                                start=0,
+                                limit=-1):
+    """
+    Get the list of deploys based on the command_id and title of the packages.
+
+    Arg:
+        sesion: The SQL Alchemy session
+        command_id: The id the package
+        title: Name of the package
+        search_filter: Used filters in the web page
+        start: Number of the first package to show.
+        limit: Maximum number of deploys sent at once.
+
+    Return:
+        It returns the list of the deploys
+
+    """
+    return XmppMasterDatabase().getdeployment_cmd_and_title(command_id,
+                                                            title,
+                                                            search_filter,
+                                                            start,
+                                                            limit)
+
+def getstatdeploy_from_command_id_and_title(command_id,
+                                            title):
+
+    """
+    Retrieve the deploy statistics based on the command_id and name
+    Args:
+        session: The SQL Alchemy session
+        command_id: id of the deploy
+        title: The name of deploy
+    Return:
+        It returns the number of machines per status.
+    """
+    return XmppMasterDatabase().getstatdeploy_from_command_id_and_title(command_id,
+                                                                        title)
+
 def getdeployment(command_id, filter="", start=0, limit=-1):
     return XmppMasterDatabase().getdeployment(command_id, filter, start, limit)
 
@@ -395,34 +437,193 @@ def getdeploybyuserlen(login):
     return XmppMasterDatabase().getdeploybyuserlen(login)
 
 
-def getdeploybymachinerecent(uuidinventory, state, duree, min, max, filt):
-    return XmppMasterDatabase().getdeploybymachinerecent(uuidinventory, state, duree, min, max, filt)
+def get_deploy_for_machine(uuidinventory, state, intervalsearch, minimum, maximum, filt):
+    """
+    This function is used to retrieve the deploy of a user.
+    Args:
+        uuidinventory: The login of the user
+        state: The state of the deploy. (Started, Error, etc. ).
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+    Returns:
+        It returns all the deployement for a machine.
+    """
+    return XmppMasterDatabase().get_deploy_for_machine(uuidinventory, state, intervalsearch, minimum, maximum, filt)
 
 
-def getdeploybymachinegrprecent(gid, state, duree, min, max, filt):
-    return XmppMasterDatabase().getdeploybymachinegrprecent(gid, state, duree, min, max, filt)
+def get_deploy_from_group(gid, state, intervalsearch, minimum, maximum, filt):
+    """
+    This function is used to retrieve the deploy of a machine's group.
+    Args:
+        session: The SQL Alchemy session
+        group_uuid: The login of the user
+        state: The state of the deploy. (Started, Error, etc. ).
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+    Returns:
+        It returns all the deployement of a group.
+    """
+    return XmppMasterDatabase().get_deploy_from_group(gid, state, intervalsearch, minimum, maximum, filt)
 
 
 def delDeploybygroup(numgrp):
     return XmppMasterDatabase().delDeploybygroup(numgrp)
 
 
-def getdeploybyuserrecent(login, state, duree, min=None, max=None, filt=None):
-    if min == "":
-        min = None
-    if max == "":
-        max = None
+def get_deploy_by_team_member(login, state, intervalsearch, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrieve the deployements of a team.
+    This team is found based on the login of a member.
+
+    Args:
+        session: The SQL Alchemy session
+        login: The login of the user
+        state: State of the deployment (Started, Error, etc.)
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+        Returns:
+            It returns all the deployement done by a specific team.
+            It can be done by time search too.
+    """
+
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
     if filt == "":
         filt = None
-    return XmppMasterDatabase().getdeploybyuserrecent(login, state, duree, min, max, filt)
+    return XmppMasterDatabase().get_deploy_by_team_member(login, state, intervalsearch, minimum, maximum, filt)
 
 
-def getdeploybyuserpast(login, duree, min=None, max=None, filt=None):
-    if min == "":
-        min = None
-    if max == "":
-        max = None
-    return XmppMasterDatabase().getdeploybyuserpast(login, duree, min, max, filt)
+def get_deploy_inprogress_by_team_member(login, intervalsearch, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrieve not yet done deployements of a team.
+    This team is found based on the login of a member.
+
+    Args:
+        login: The login of the user
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+        Returns:
+            It returns all the deployement not yet started of a specific team.
+            It can be done by time search too.
+    """
+
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    if filt == "":
+        filt = None
+    # call xmppmaster search users list of team
+    pulse_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
+    # call msc search no deploy
+    return MscDatabase().get_deploy_inprogress_by_team_member(pulse_usersidlist,
+                                                              intervalsearch,
+                                                               minimum,
+                                                               maximum,
+                                                               filt)
+
+def get_deploy_xmpp_teamscheduler(login, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrieve the depoyement from a team.
+    Args:
+        login: The login of the user
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+    Returns:
+        It returns the deploys of a team. Defined by the login of one user of this team.
+    """
+
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    if filt == "":
+        filt = None
+
+    pulse_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
+    result = MscDatabase().deployxmppscheduler(pulse_usersidlist, minimum, maximum, filt)
+    return result
+
+def get_deploy_by_team_finished(login, intervalsearch, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrieve all the deployments done by a team.
+    Args:
+        login: The login of the user
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+    Returns:
+        It returns all the deployment done by a team
+    """
+
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    pulse_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
+    return XmppMasterDatabase().get_deploy_by_user_finished(pulse_usersidlist,
+                                                    intervalsearch,
+                                                    minimum,
+                                                    maximum,
+                                                    filt)
+
+def get_deploy_by_user_with_interval(login, state, intervalsearch, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrive the recent deployment done by a user.
+
+    Args:
+        login: The login of the user
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+
+    Returns:
+        It returns all the deployment done by a user.
+        If intervalsearch is not used it is by default in the last 24 hours.
+"""
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    if filt == "":
+        filt = None
+    return XmppMasterDatabase().get_deploy_by_user_with_interval(login, state, intervalsearch, minimum, maximum, filt)
+
+def get_deploy_by_user_finished(login, intervalsearch, minimum=None, maximum=None, filt=None):
+    """
+    This function is used to retrieve all the deployments done by a user (or a team).
+
+    Args:
+        login: The login of the user
+        state: State of the deployment (Started, Error, etc.)
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+    Returns:
+        There is 3 scenario.
+            If login is empty, this returns all the past deploys for everyone
+            If login is a string, this returns all the past deploys for this user
+            If login is a list, this returns all the past deploys for the group this user belong to.
+    """
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    return XmppMasterDatabase().get_deploy_by_user_finished(login, intervalsearch, minimum, maximum, filt)
 
 
 def getdeploybyuser(login, numrow, offset):
@@ -456,8 +657,8 @@ def setCommand_qa(command_name, command_action, command_login, command_grp="", c
     return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os)
 
 
-def getCommand_action_time(during_the_last_seconds, start, stop, filter):
-    return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds, start, stop, filter)
+def getCommand_action_time(during_the_last_seconds, start, stop, filt):
+    return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds, start, stop, filt)
 
 
 def setCommand_action(target, command_id, sessionid, command_result, typemessage):
@@ -791,7 +992,7 @@ def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
     ars_list['nbwindows'] = []
     ars_list['nb_ou_user'] = []
     for jid in ars_list['jid']:
-        if 'jid' in stat_ars_machine:
+        if jid in stat_ars_machine:
             ars_list['total_machines'].append(stat_ars_machine[jid]['nbmachine'])
             ars_list['uninventoried'].append(stat_ars_machine[jid]['uninventoried'])
             ars_list['publicclass'].append(stat_ars_machine[jid]['publicclass'])
@@ -1181,3 +1382,24 @@ def get_minimal_relays_list(mode):
 def get_count_agent_for_dashboard():
     result = XmppMasterDatabase().get_count_agent_for_dashboard()
     return result
+
+def get_machines_for_ban(jid_ars, start=0, end=-1, filter=""):
+    result = XmppMasterDatabase().get_machines_for_ban(jid_ars, start, end, filter)
+    return result
+
+def get_machines_to_unban(jid_ars, start=0, end=-1, filter=""):
+    result = XmppMasterDatabase().get_machines_to_unban(jid_ars, start, end, filter)
+    return result
+
+def ban_machines(subaction, jid_ars, machines):
+    sessionid = name_random(8, "banmachines")
+    datasend = {
+        "action": "banmachines",
+        "from": ObjectXmpp().boundjid.bare,
+        "sessionid": sessionid,
+        "data": {'subaction': subaction, 'jid_ars': jid_ars, 'jid_machines':machines},
+        "base64": False
+    }
+    callXmppPlugin("banmachines", datasend)
+
+    return True

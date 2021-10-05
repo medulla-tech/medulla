@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015 siveo, http://www.siveo.net/
+ * (c) 2015-2021 siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -165,6 +165,7 @@ input[type="text"] {
                     <td>
                         <select id="select">';
                         foreach($qacomand['command'] as $tabblecommand){
+                          if($tabblecommand['namecmd'] != "Restart machine agent"){
                             $tabblecommand['customcmd'] = preg_replace('/\r?\n|\r/',' ', $tabblecommand['customcmd']);
                             $tabblecommand['customcmd'] = trim ( $tabblecommand['customcmd'] , " \t\n\r");
                             echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].' ('.$tabblecommand['os'].')</option>';
@@ -172,7 +173,7 @@ input[type="text"] {
                                         "description" : "'.addslashes( $tabblecommand['description'] ).'",
                                         "customcmd" : "'.addslashes($tabblecommand['customcmd']).'",
                                         "os" : "'.addslashes($tabblecommand['os']).'",
-                                        "user" : "'.addslashes($tabblecommand['user']).'}';
+                                        "user" : "'.addslashes($tabblecommand['user']).'}';}
                                     };
                         echo'</select>
                     </td>

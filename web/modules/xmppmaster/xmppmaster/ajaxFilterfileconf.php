@@ -58,8 +58,8 @@ a.info:hover span{
 <?php
 
         $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-        $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
-        $ma = xmlrpc_getMachinefromjid($machine);
+        $jid  = isset($_GET['jid']) ? $_GET['jid'] : ( isset($_POST['jid']) ? $_POST['jid'] : "");
+        $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ?  xmlrpc_getjidMachinefromuuid( $uuid ) : $jid);
 
         $result = xmlrpc_remotefileeditaction($ma['jid'], array('action' => 'listconfigfile'));
         if (isset($result['err'])){

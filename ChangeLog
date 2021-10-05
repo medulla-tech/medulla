@@ -1,4 +1,31 @@
-Pulse 2 4.6.8 (unreleased)
+Pulse 2 4.6.9
+=============
+* [FEATURE] Add Team support in Audit page
+* [FEATURE] Add new infos in the fileviewer as config ( server, port, size
+popup, etc.)
+* [FEATURE] Add link to machines in the Quick Action summary page
+* [FEATURE] Add a button to run the researches on computers
+* [FEATURE] Remove the "Restart machine agent" Quick action
+* [FEATURE] Optimize Comuter view display
+* [FEATURE] Optimize admin view display
+* [FEATURE] Add online/offline switch to the uninventoried page
+* [FEATURE] Add a @@@DEBUG@@@ option in queries to show played SQL Requests
+* [FEATURE] Add the possibility to add a limit number to the autoupdate feature.
+* [FEATURE] Change the way WOL is handled.
+* [BUGFIX]  Fix removing packages from the database. Bug#1323
+* [BUGFIX]  Fix deleting old users in ejabberd
+* [BUGFIX]  Remove cdn from js files import. Use local files instead
+* [BUGFIX]  Several SQL Optimisations
+* [BUGFIX]  Fix shown state when starting a deployment
+* [BUGFIX]  Fix handling some accounts creation
+* [BUGFIX]  Fix display infos on group deployment audit
+* [BUGFIX]  Fix creating groups based on ADs
+* [BUGFIX]  The abort deployment button was always disabled
+* [BUGFIX]  Fix creation of groups based on OU or AD. Bug#1238
+* [BUGFIX]  Add carriage return on "Executed command" info in detail view
+* [BUGFIX]  Fix detection of online machines with glpi 0.84
+
+Pulse 2 4.6.8
 =============
 * [FEATURE] Disable relay list page from computers menu
 * [FEATURE] Add utilities to migrate to new package server
@@ -10,6 +37,9 @@ Pulse 2 4.6.8 (unreleased)
 * [FEATURE] Enhance error messages.
 * [FEATURE] Fix several XSS issues.
 * [FEATURE] Allow to retrieve the glpi uuid if missing
+* [FEATURE] Convergences are now identified by their name + date
+* [FEATURE] Do not display old view when creating the packages.
+* [FEATURE] Allow to filter searches based on the relay jid
 * [BUGFIX]  Fix backtrace during deployment
 * [BUGFIX]  Fixes listing of packages for deployment
 * [BUGFIX]  Add acl for relays actions
@@ -66,6 +96,15 @@ convergences)
 * [BUGFIX]  Add name to csv when the group is created
 * [BUGFIX]  Add missing parameters in pkgs.ini and initialise pkgs_rules_algo table
 * [BUGFIX]  Fix pagination in GLPI View
+* [BUGFIX]  Fix registering ARS
+* [BUGFIX]  Fix displaying the relay list
+* [BUGFIX]  Fix and add ACLs
+* [BUGFIX]  Fix migration to new packages layout
+* [BUGFIX]  Change hostname in cluster_resources size to 255
+* [BUGFIX]  Remove description from csv generation
+* [BUGFIX]  Modify concatenation of " bracket from csv generation
+* [BUGFIX]  Fix display of dates in the audit page
+
 Pulse 2 4.6.7
 =============
 * [FEATURE] Order relay list
