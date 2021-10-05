@@ -31,7 +31,7 @@ logger = logging.getLogger()
 plugin = {"VERSION": "1.3", "NAME": "vectormonitoringagent", "TYPE": "master"}
 
 
-def process_system(functiionname,
+def process_system(functionname,
                    xmppobject,
                    msg_from,
                    sessionid,
