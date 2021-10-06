@@ -291,22 +291,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.file_deploy_plugin = []
         self.wolglobal_set = set() #use group wol
         self.confaccount=[] #list des account for clear
-        #clear conf compte.
-        logger.debug('Delete old ejabberd accounts')
-        cmd = "ejabberdctl --no-timeout delete_old_users 1"
-        try:
-            a = simplecommandstr(cmd)
-            logger.debug(a['result'])
-        except Exception as e:
-            pass
-        #del old message offline
-        logger.debug('Delete old offline ejabberd messages')
-        cmd = "ejabberdctl --no-timeout delete_old_messages 1"
-        try:
-            a = simplecommandstr(cmd)
-            logger.debug(a['result'])
-        except Exception as e:
-            pass
+
         # The queues. These objects are like shared lists
         # The command processes use this queue to notify an event to the event manager
         # self.queue_read_event_from_command = Queue()
@@ -323,6 +308,24 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.manage_scheduler = manage_scheduler(self)
         self.xmppbrowsingpath = xmppbrowsing(defaultdir=self.config.defaultdir,
                                              rootfilesystem=self.config.rootfilesystem)
+        
+        # Clear configuration accounts
+        logger.debug('Delete old ejabberd accounts')
+        cmd = "ejabberdctl --no-timeout delete_old_users 1"
+        try:
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+        except Exception as e:
+            pass
+        # Delete old messages
+        logger.debug('Delete old offline ejabberd messages')
+        cmd = "ejabberdctl --no-timeout delete_old_messages 1"
+        try:
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+        except Exception as e:
+            pass
+
         # dictionary used for deploy
         self.machineWakeOnLan = {}
         self.machineDeploy = {}
@@ -801,18 +804,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
             UUID = deployobject['UUID']
             UUIDSTR = UUID.replace('UUID', "")
             re_search = []
-            if resultpreseince[UUID][1] == 0:
+            if resultpresence[UUID][1] == 0:
                 # There is no GLPI UUID
-                re_search = XmppMasterDatabase().getMachinedeployexistonHostname(deployobject['name'])
-                if self.Recover_GLPI_Identifier_from_name and len(re_search) == 1:
+                hostname = deployobject['name'].split(".", 1)[0]
+                re_search = XmppMasterDatabase().getMachinedeployexistonHostname(hostname)
+                if self.recover_glpi_identifier_from_name and len(re_search) == 1:
                     update_result = XmppMasterDatabase().update_uuid_inventory(re_search[0]['id'], UUID)
                     if update_result is not None:
                         if update_result.rowcount > 0:
-                            logger.info("update uuid inventory %s for machine %s" % (UUID, deployobject['name']))
+                            logger.info("update uuid inventory %s for machine %s" % (UUID, hostname))
                     resultpresence[UUID][1] = 1
                     reloadresultpresence_uuid = XmppMasterDatabase().getPresenceExistuuids(UUID)
                     resultpresence[UUID]=reloadresultpresence_uuid[UUID]
-                    self.xmpplog("Attaching GLPI identifier [%s] in xmppmaster machine [%s]" % (UUID, deployobject['name']),
+                    self.xmpplog("Attaching GLPI identifier [%s] in xmppmaster machine [%s]" % (UUID, hostname),
                                  type='deploy',
                                  sessionname="no_session",
                                  priority=-1,
@@ -846,9 +850,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                         UUIDSTR))
 
                     logging.warning("No machine found on hostname. You must verify consolidation GLPI with xmpp")
-                    logging.warning("INFO\nGLPI : name %s uuid %s " % (deployobject['name'],
+                    logging.warning("INFO\nGLPI: name %s uuid %s " % (deployobject['name'],
                                                                     deployobject['UUID']))
-                    logging.warning("INFO\nXMPP : No machine found for %s" % (deployobject['name']))
+                    logging.warning("INFO\nXMPP: No machine found for %s" % (deployobject['name']))
 
                 #listobjnoexist.append(deployobject)
                 # incription dans deploiement cette machine sans agent

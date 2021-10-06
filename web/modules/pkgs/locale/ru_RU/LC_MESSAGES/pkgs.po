@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2019
+# Nicolas Lécureuil <neoclust@mageia.org>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-01 11:32+0200\n"
+"POT-Creation-Date: 2021-09-01 13:52+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2021\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,79 +21,88 @@ msgstr ""
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
+#: modules/pkgs/infoPackage.inc.php:35 modules/pkgs/infoPackage.inc.php:41
 msgid "Packages"
 msgstr "Пакеты"
 
-#: modules/pkgs/infoPackage.inc.php:45 modules/pkgs/pkgs/rulesList.php:29
-#: modules/pkgs/pkgs/localSidebar.php:30
+#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/rulesList.php:29
+#: modules/pkgs/pkgs/localSidebar.php:48
 msgid "Rules list"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:49 modules/pkgs/pkgs/localSidebar.php:31
+#: modules/pkgs/infoPackage.inc.php:50 modules/pkgs/pkgs/localSidebar.php:49
 msgid "Add a rule"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:53
+#: modules/pkgs/infoPackage.inc.php:54
 msgid "Edit a rule"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:57
+#: modules/pkgs/infoPackage.inc.php:58
 msgid "Delete a rule"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:62
+#: modules/pkgs/infoPackage.inc.php:63
 msgid "Show all packages"
 msgstr "Показать все пакеты"
 
-#: modules/pkgs/infoPackage.inc.php:68 modules/pkgs/pkgs/localSidebar.php:28
+#: modules/pkgs/infoPackage.inc.php:69 modules/pkgs/pkgs/localSidebar.php:41
+#: modules/pkgs/pkgs/localSidebar.php:45
 msgid "Add a package"
 msgstr "Добавить пакет"
 
-#: modules/pkgs/infoPackage.inc.php:71
-#: modules/pkgs/pkgs/ajaxPackageList.php:71 modules/pkgs/pkgs/edit.php:193
+#: modules/pkgs/infoPackage.inc.php:72
+#: modules/pkgs/pkgs/ajaxPackageList.php:73 modules/pkgs/pkgs/edit.php:193
 msgid "Edit a package"
 msgstr "Редактировать пакет"
 
-#: modules/pkgs/infoPackage.inc.php:84
+#: modules/pkgs/infoPackage.inc.php:75
+msgid "Package detail"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:78
+msgid "Package File Preview"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:92
 msgid "Create licence static group"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:90
+#: modules/pkgs/infoPackage.inc.php:98
 msgid "See pending packages"
 msgstr "Просмотреть ожидающие пакеты"
 
-#: modules/pkgs/infoPackage.inc.php:92
+#: modules/pkgs/infoPackage.inc.php:100
 #: modules/pkgs/pkgs/appstreamSettings.php:34
 msgid "Appstream settings"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:111
+#: modules/pkgs/infoPackage.inc.php:119
 msgid "Show mirror status"
 msgstr "Показать состояние зеркала"
 
-#: modules/pkgs/infoPackage.inc.php:115
+#: modules/pkgs/infoPackage.inc.php:123
 msgid "Pending Package synchronization"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:119
-#: modules/pkgs/pkgs/ajaxPackageList.php:75
+#: modules/pkgs/infoPackage.inc.php:127
+#: modules/pkgs/pkgs/ajaxPackageList.php:77
 msgid "Delete a package"
 msgstr "Удалить пакет"
 
-#: modules/pkgs/infoPackage.inc.php:123
+#: modules/pkgs/infoPackage.inc.php:131
 msgid "Delete a bundle"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:127
+#: modules/pkgs/infoPackage.inc.php:135
 msgid "Activate Appstream Stream"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:166
+#: modules/pkgs/infoPackage.inc.php:174
 msgid "Appstream Updates list"
 msgstr ""
 
-#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
+#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:47
 msgid "Pending packages list"
 msgstr "Список ожидающих пакетов"
 
@@ -117,89 +126,94 @@ msgstr ""
 msgid "Appstream update"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:72
+#: modules/pkgs/pkgs/ajaxPackageList.php:72 modules/pkgs/pkgs/detail.php:268
+msgid "Package Detail"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:74
 msgid "Please switch to Expert mode to edit this package"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:73
+#: modules/pkgs/pkgs/ajaxPackageList.php:75
 msgid "You must have write rights to edit this package"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:76
+#: modules/pkgs/pkgs/ajaxPackageList.php:78
 msgid "You must have write rights to delete this package"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:139
-#: modules/pkgs/pkgs/ajaxPackageList.php:143
+#: modules/pkgs/pkgs/ajaxPackageList.php:142
+#: modules/pkgs/pkgs/ajaxPackageList.php:146
 msgid "Sharing disk usage"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:139
+#: modules/pkgs/pkgs/ajaxPackageList.php:142
 msgid "Package occupation"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:142
+#: modules/pkgs/pkgs/ajaxPackageList.php:145
 msgid "Not limited"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:143
-#: modules/pkgs/pkgs/ajaxPackageList.php:159
+#: modules/pkgs/pkgs/ajaxPackageList.php:146
+#: modules/pkgs/pkgs/ajaxPackageList.php:162
 msgid "not limited"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:173
+#: modules/pkgs/pkgs/ajaxPackageList.php:176
 msgid "Non precised"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:287
-#: modules/pkgs/pkgs/ajaxPackageList.php:429
+#: modules/pkgs/pkgs/ajaxPackageList.php:291
+#: modules/pkgs/pkgs/ajaxPackageList.php:435
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
 msgid "Package name"
 msgstr "Имя пакета"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:289 modules/pkgs/pkgs/edit.php:301
-#: modules/pkgs/pkgs/add.php:219
+#: modules/pkgs/pkgs/ajaxPackageList.php:293 modules/pkgs/pkgs/edit.php:306
+#: modules/pkgs/pkgs/add.php:224
 msgid "Share"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:290
+#: modules/pkgs/pkgs/ajaxPackageList.php:294
 msgid "Permissions"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:292
-#: modules/pkgs/pkgs/ajaxPackageList.php:431 modules/pkgs/pkgs/addRule.php:60
+#: modules/pkgs/pkgs/ajaxPackageList.php:296
+#: modules/pkgs/pkgs/ajaxPackageList.php:437 modules/pkgs/pkgs/addRule.php:60
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:244 modules/pkgs/pkgs/editRule.php:65
-#: modules/pkgs/pkgs/add.php:227
+#: modules/pkgs/pkgs/detail.php:204 modules/pkgs/pkgs/edit.php:244
+#: modules/pkgs/pkgs/editRule.php:65 modules/pkgs/pkgs/add.php:232
 msgid "Description"
 msgstr "Описание"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:293
-#: modules/pkgs/pkgs/ajaxPackageList.php:432
+#: modules/pkgs/pkgs/ajaxPackageList.php:297
+#: modules/pkgs/pkgs/ajaxPackageList.php:438
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-#: modules/pkgs/pkgs/add.php:226 modules/pkgs/includes/query.php:88
+#: modules/pkgs/pkgs/detail.php:205 modules/pkgs/pkgs/add.php:231
+#: modules/pkgs/includes/query.php:88
 msgid "Version"
 msgstr "Версия"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:294
-#: modules/pkgs/pkgs/ajaxPackageList.php:433
+#: modules/pkgs/pkgs/ajaxPackageList.php:298
+#: modules/pkgs/pkgs/ajaxPackageList.php:439 modules/pkgs/pkgs/detail.php:208
 msgid "Licenses"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:295
-#: modules/pkgs/pkgs/ajaxPackageList.php:434
+#: modules/pkgs/pkgs/ajaxPackageList.php:299
+#: modules/pkgs/pkgs/ajaxPackageList.php:440
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:71
 msgid "Os"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:296
-#: modules/pkgs/pkgs/ajaxPackageList.php:435
+#: modules/pkgs/pkgs/ajaxPackageList.php:300
+#: modules/pkgs/pkgs/ajaxPackageList.php:441
 msgid "Package size"
 msgstr "Размер пакета"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:297
+#: modules/pkgs/pkgs/ajaxPackageList.php:301
 msgid "Share usage"
 msgstr ""
 
@@ -290,7 +304,7 @@ msgstr ""
 msgid "Expiration date"
 msgstr ""
 
-#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:38
 msgid "Packages list"
 msgstr "Список пакетов"
 
@@ -353,7 +367,7 @@ msgid "Element in Strings Result"
 msgstr ""
 
 #: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
-#: modules/pkgs/pkgs/add.php:375
+#: modules/pkgs/pkgs/add.php:382
 msgid "Add"
 msgstr "Добавить"
 
@@ -371,6 +385,18 @@ msgstr "Показать зеркала"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:81
 msgid "Remove packages from pending"
+msgstr ""
+
+#: modules/pkgs/pkgs/preview.php:5
+msgid "Content for file "
+msgstr ""
+
+#: modules/pkgs/pkgs/preview.php:16
+msgid "NL mode (unix)"
+msgstr ""
+
+#: modules/pkgs/pkgs/preview.php:17
+msgid "CRLF mode (win)"
 msgstr ""
 
 #: modules/pkgs/pkgs/remove.php:39
@@ -397,6 +423,227 @@ msgstr ""
 
 #: modules/pkgs/pkgs/activateAppstreamFlow.php:61
 msgid "Activate this Appstream stream?"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:35
+msgid "Executed Command"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:40
+msgid "Type Script"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:45
+msgid "Shebang"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:51
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
+msgid "Script"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:56
+msgid "Timeout"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:61
+msgid "Code Return"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:66
+msgid "Alternate Package"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:71
+msgid "Set Environ Variable"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:81 modules/pkgs/pkgs/detail.php:240
+#: modules/pkgs/pkgs/edit.php:505
+msgid "File"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:87
+msgid "Set"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:92
+#: modules/pkgs/includes/actions/action_download.php:73
+msgid "Download File"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:97 modules/pkgs/pkgs/detail.php:102
+#: modules/pkgs/pkgs/detail.php:107 modules/pkgs/pkgs/detail.php:112
+#: modules/pkgs/pkgs/detail.php:117 modules/pkgs/pkgs/detail.php:123
+#: modules/pkgs/pkgs/detail.php:128 modules/pkgs/pkgs/detail.php:133
+#: modules/pkgs/pkgs/detail.php:138
+msgid "Result Command"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:144 modules/pkgs/pkgs/detail.php:225
+#: modules/pkgs/includes/actions/actionrestart.php:36
+msgid "Restart"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:144
+msgid "Agent Machine"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:144
+msgid "Machine"
+msgstr "Машина"
+
+#: modules/pkgs/pkgs/detail.php:149
+msgid "Waiting"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:149
+msgid "secs."
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:150
+msgid "Go to"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:156
+msgid "Comment"
+msgstr "Комментарии"
+
+#: modules/pkgs/pkgs/detail.php:161
+msgid "Inventory Activated"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:166
+msgid "Clear package after install"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:171
+msgid "If error go to"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:174
+msgid "If success go to"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:187
+msgid "Detail of Package "
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:192
+msgid "Context"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:194
+msgid "Package Name"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:195
+msgid "Creator"
+msgstr "Создатель"
+
+#: modules/pkgs/pkgs/detail.php:197
+msgid "Edited By"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:198
+msgid "Creation Date"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:200
+msgid "Last Modification Date"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:202
+msgid "Sharing Location"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:203
+msgid "Package Uuid"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:206
+msgid "Type"
+msgstr "Тип"
+
+#: modules/pkgs/pkgs/detail.php:216
+msgid "Transfer Method"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:218 modules/pkgs/pkgs/edit.php:365
+#: modules/pkgs/pkgs/add.php:295
+msgid "Transfer method"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:219 modules/pkgs/pkgs/detail.php:241
+msgid "Size"
+msgstr "Размер"
+
+#: modules/pkgs/pkgs/detail.php:220
+msgid "Transferfile"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:222 modules/pkgs/pkgs/edit.php:378
+#: modules/pkgs/pkgs/add.php:301
+msgid "bandwidth throttling (ko)"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:223 modules/pkgs/pkgs/edit.php:393
+#: modules/pkgs/pkgs/add.php:309
+msgid "Spooling"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:223
+msgid "Priority"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:224
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
+msgid "Inventory"
+msgstr "Инвентарь"
+
+#: modules/pkgs/pkgs/detail.php:232
+msgid "View File Content"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:235
+msgid "Files"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:235
+msgid "Total"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:242
+msgid "Ratio Size/Total"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:243
+msgid "Mime"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:244
+msgid "Mime Type"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:245 modules/pkgs/pkgs/detail.php:293
+msgid "Action"
+msgstr "Действие"
+
+#: modules/pkgs/pkgs/detail.php:284 modules/pkgs/pkgs/edit.php:428
+#: modules/pkgs/pkgs/add.php:317
+msgid "Dependencies"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:291
+msgid "Package"
+msgstr "Пакет"
+
+#: modules/pkgs/pkgs/detail.php:292
+msgid "Uuid"
+msgstr ""
+
+#: modules/pkgs/pkgs/detail.php:321
+msgid "Sequences"
 msgstr ""
 
 #: modules/pkgs/pkgs/edit.php:38
@@ -454,7 +701,7 @@ msgstr "Ярлык пакета"
 msgid "Package version"
 msgstr "Версия пакета"
 
-#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:242
+#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:247
 msgid "Command's name : "
 msgstr " : "
 
@@ -462,91 +709,71 @@ msgstr " : "
 msgid "Command : "
 msgstr ": "
 
-#: modules/pkgs/pkgs/edit.php:256 modules/pkgs/pkgs/add.php:246
+#: modules/pkgs/pkgs/edit.php:256 modules/pkgs/pkgs/add.php:251
 msgid "Need a reboot ?"
 msgstr " ?"
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:251
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
 msgid "Windows"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:251
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
 msgid "Linux"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:251
+#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
 msgid "Mac OS"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:330 modules/pkgs/pkgs/add.php:270
+#: modules/pkgs/pkgs/edit.php:335 modules/pkgs/pkgs/add.php:275
 msgid "Operating System"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:360 modules/pkgs/pkgs/add.php:290
-msgid "Transfer method"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:373 modules/pkgs/pkgs/add.php:296
-msgid "bandwidth throttling (ko)"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:373 modules/pkgs/pkgs/add.php:297
+#: modules/pkgs/pkgs/edit.php:378 modules/pkgs/pkgs/add.php:302
 msgid "<in ko>"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:385 modules/pkgs/pkgs/add.php:301
+#: modules/pkgs/pkgs/edit.php:390 modules/pkgs/pkgs/add.php:306
 msgid "high priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:385 modules/pkgs/pkgs/add.php:301
+#: modules/pkgs/pkgs/edit.php:390 modules/pkgs/pkgs/add.php:306
 msgid "ordinary priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:388 modules/pkgs/pkgs/add.php:304
-msgid "Spooling"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:421 modules/pkgs/pkgs/add.php:312
-msgid "Dependencies"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:431 modules/pkgs/pkgs/add.php:322
+#: modules/pkgs/pkgs/edit.php:438 modules/pkgs/pkgs/add.php:327
 msgid "Added dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:446 modules/pkgs/pkgs/add.php:337
+#: modules/pkgs/pkgs/edit.php:454 modules/pkgs/pkgs/add.php:343
 msgid "Available dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:447 modules/pkgs/pkgs/add.php:338
+#: modules/pkgs/pkgs/edit.php:455 modules/pkgs/pkgs/add.php:344
 msgid "search by name ..."
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:495
-msgid "File"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:504
+#: modules/pkgs/pkgs/edit.php:514
 msgid "Delete file"
 msgstr "Удалить файл"
 
-#: modules/pkgs/pkgs/edit.php:504
+#: modules/pkgs/pkgs/edit.php:514
 msgid "Are you sure you want to delete this file?"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:520
+#: modules/pkgs/pkgs/edit.php:530
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 #: modules/pkgs/includes/html.inc.php:59
 msgid "Click here to select files"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:521
+#: modules/pkgs/pkgs/edit.php:531
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 #: modules/pkgs/includes/html.inc.php:42
 msgid "Upload Queued Files"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:576 modules/pkgs/pkgs/add.php:417
+#: modules/pkgs/pkgs/edit.php:607 modules/pkgs/pkgs/add.php:444
 msgid "Accentuated and special chars are not allowed"
 msgstr ""
 
@@ -625,7 +852,7 @@ msgstr ""
 msgid "Package source"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:496
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:523
 msgid "Files directory"
 msgstr ""
 
@@ -633,19 +860,19 @@ msgstr ""
 msgid "Package Creation"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:225
+#: modules/pkgs/pkgs/add.php:230
 msgid "Name"
 msgstr "Имя"
 
-#: modules/pkgs/pkgs/add.php:225
+#: modules/pkgs/pkgs/add.php:230
 msgid "<fill_package_name>"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:234
+#: modules/pkgs/pkgs/add.php:239
 msgid "Command:"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:235
+#: modules/pkgs/pkgs/add.php:240
 msgid ""
 "Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
 "        If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
@@ -654,12 +881,12 @@ msgid ""
 "        <a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:518
+#: modules/pkgs/pkgs/add.php:545
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:518
+#: modules/pkgs/pkgs/add.php:545
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -912,10 +1139,6 @@ msgstr ""
 msgid "Script language"
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
-msgid "Script"
-msgstr ""
-
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:158
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:177
 msgid "Force suffix"
@@ -952,10 +1175,6 @@ msgstr ""
 msgid "Restart Agent Machine"
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionrestart.php:36
-msgid "Restart"
-msgstr ""
-
 #: modules/pkgs/includes/actions/actionrestart.php:59
 msgid "Target Restart"
 msgstr ""
@@ -983,10 +1202,6 @@ msgstr ""
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:42
 msgid "Delete package"
 msgstr ""
-
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
-msgid "Inventory"
-msgstr "Инвентарь"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:92
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:97
@@ -1040,10 +1255,6 @@ msgstr ""
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:41
 msgid "Wait for (seconds)"
-msgstr ""
-
-#: modules/pkgs/includes/actions/action_download.php:73
-msgid "Download File"
 msgstr ""
 
 #: modules/pkgs/includes/actions/action_download.php:127

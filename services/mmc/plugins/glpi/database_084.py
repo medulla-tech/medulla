@@ -591,10 +591,10 @@ class Glpi084(DyngroupDatabaseHelper):
                                 else:
                                     strre = getattr(ret, keynameresult)
                                     if isinstance(strre, basestring):
-                                        if encode != "utf8":
-                                            resultrecord[keynameresult] =  "%s"%strre.decode(encode).encode('utf8')
+                                        if encode == "utf8":
+                                            resultrecord[keynameresult] = str(strre)
                                         else:
-                                            resultrecord[keynameresult] =  "%s"%strre.encode('utf8')
+                                            resultrecord[keynameresult] =  strre.decode(encode).encode('utf8')
                                     else:
                                         resultrecord[keynameresult] = strre
                     except AttributeError:
@@ -732,16 +732,13 @@ class Glpi084(DyngroupDatabaseHelper):
         query = query.order_by(Machine.name)
 
         online_machines = []
-        # All computers
+        online_machines = [int(id) for id in XmppMasterDatabase().getidlistPresenceMachine(presence=True) if id != "UUID" and id != ""]
         if "computerpresence" not in ctx:
             # Do nothing more
             pass
         elif ctx["computerpresence"] == "no_presence":
-            online_machines = XmppMasterDatabase().getidlistPresenceMachine(presence=False)
+            query = query.filter(Machine.id.notin_(online_machines))
         else:
-            online_machines = XmppMasterDatabase().getidlistPresenceMachine(presence=True)
-
-        if online_machines:
             query = query.filter(Machine.id.in_(online_machines))
 
         query = self.__filter_on(query)
@@ -1004,7 +1001,7 @@ class Glpi084(DyngroupDatabaseHelper):
                     result['data'][columns_name[indexcolum]].append(machine[indexcolum])
                     #
             else:
-                recordmachinedict = self._machineobjectdymresult(machine)
+                recordmachinedict = self._machineobjectdymresult(machine, encode='utf8')
                 for recordmachine in recordmachinedict:
                     result['data'][recordmachine] = [ recordmachinedict[recordmachine]]
 

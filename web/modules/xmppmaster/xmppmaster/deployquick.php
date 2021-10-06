@@ -180,6 +180,7 @@ $presencemachinexmpp = (isset($_GET['presencemachinexmpp'])) ? $_GET['presencema
 $vnctype = (isset($_GET['vnctype'])) ? $_GET['vnctype'] : '';
 $mod = (isset($_GET['mod'])) ? $_GET['mod'] : '';
 $user = (isset($_GET['user'])) ? $_GET['user'] : '';
+$jid = (isset($_GET['jid'])) ? $_GET['jid'] : '';
 
         echo "<form name='formmonitoring' id ='formmonitoring' action='main.php' method='GET' >";
             echo "<input type= 'hidden' name = 'module' value ='xmppmaster'>";
@@ -197,6 +198,7 @@ $user = (isset($_GET['user'])) ? $_GET['user'] : '';
             echo "<input type= 'hidden' name = 'presencemachinexmpp' value='".$presencemachinexmpp."'>";
             echo "<input type= 'hidden' name = 'vnctype' value='".$vnctype."'>";
             echo "<input type= 'hidden' name = 'mod' value='".$mod."'>";
+            echo "<input type= 'hidden' name = 'jid' value='".$jid."'>";
             echo "<input id='informationmonitor' type= 'hidden' name = 'information' value=''>";
             echo "<input id='args' type= 'hidden' name = 'args' value=''>";
             echo "<input id='kwargs' type= 'hidden' name = 'kwargs' value=''>";

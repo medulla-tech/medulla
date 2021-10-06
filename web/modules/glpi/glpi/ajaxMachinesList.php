@@ -358,7 +358,7 @@ $orderkey = array( "glpi_owner",
 */
 
         foreach($datas as $mach => $value ){
-            if(in_array($mach,$exclud ) ||  $value[$index] ==""){
+            if(in_array($mach,$exclud ) ||  $value[$index] =="" || gettype($value[$index]) == "array"){
                 continue;
             }
             $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$mach] ."</td><td class='ttabletd'>: ".$value[$index]."</td></tr>";
@@ -433,6 +433,7 @@ $orderkey = array( "glpi_owner",
             'presencemachinexmpp'=>$datas['enabled'][$index],
             'entity' => $datas['entityname'][$index],
             'user' => $datas['glpi_owner'][$index],
+						'jid' => $datas['jid'][$index],
         'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
         ];
 

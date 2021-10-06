@@ -2024,37 +2024,52 @@ class XmppMasterDatabase(DatabaseHelper):
                     self.create_Glpi_register_keys( idmachine,
                                                     regwindokey,
                                                     value=glpiinformation['data']['reg'][regwindokey][0])
-        updatedb=-1
+        return self.updateGLPI_information_machine( idmachine,
+                                                    "UUID%s" % glpiinformation['data']['uuidglpicomputer'][0],
+                                                    glpiinformation['data']['description'][0],
+                                                    glpiinformation['data']['owner_firstname'][0],
+                                                    glpiinformation['data']['owner_realname'][0],
+                                                    glpiinformation['data']['owner'][0],
+                                                    glpiinformation['data']['model'][0],
+                                                    glpiinformation['data']['manufacturer'][0],
+                                                    entity_id_xmpp,
+                                                    location_id_xmpp)
+
+    @DatabaseHelper._sessionm
+    def updateGLPI_information_machine(self,
+                                       session,
+                                       id,
+                                       uuid_inventory,
+                                       description_machine,
+                                       owner_firstname,
+                                       owner_realname,
+                                       owner,
+                                       model,
+                                       manufacturer,
+                                       entity_id_xmpp,
+                                       location_id_xmpp):
+        """
+            update Machine table with information retrieved from GLPI
+        """
         try:
-            sql = '''
-                UPDATE `machines`
-                SET
-                    `uuid_inventorymachine` = '%s',
-                    `glpi_description`  = '%s',
-                    `glpi_owner_firstname` = '%s',
-                    `glpi_owner_realname` = '%s',
-                    `glpi_owner` = '%s',
-                    `model` = '%s',
-                    `manufacturer` = '%s',
-                    `glpi_entity_id` = %s,
-                    `glpi_location_id` = %s
-                WHERE
-                    `id` = '%s';''' % ("UUID%s" % glpiinformation['data']['uuidglpicomputer'][0],
-                                    glpiinformation['data']['description'][0].replace('"','\\"').replace("'","\\'"),
-                                    glpiinformation['data']['owner_firstname'][0],
-                                    glpiinformation['data']['owner_realname'][0],
-                                    glpiinformation['data']['owner'][0],
-                                    glpiinformation['data']['model'][0],
-                                    glpiinformation['data']['manufacturer'][0],
-                                    entity_id_xmpp,
-                                    location_id_xmpp,
-                                    idmachine)
-            updatedb = session.execute(sql)
+            entity_id_xmpp = None if entity_id_xmpp in ["NULL", ""] else entity_id_xmpp
+            location_id_xmpp = None if location_id_xmpp in ["NULL",""] else location_id_xmpp
+            obj = { Machines.uuid_inventorymachine : uuid_inventory ,
+                              Machines.glpi_description : description_machine,
+                              Machines.glpi_owner_firstname : owner_firstname,
+                              Machines.glpi_owner_realname : owner_realname,
+                              Machines.glpi_owner : owner,
+                              Machines.model : model,
+                              Machines.manufacturer : manufacturer,
+                              Machines.glpi_entity_id :  entity_id_xmpp,
+                              Machines.glpi_location_id :location_id_xmpp }
+            session.query(Machines).filter( Machines.id == id).update( obj)
             session.commit()
             session.flush()
+            return 1
         except Exception, e:
-            logging.getLogger().error(str(e))
-        return updatedb
+            logging.getLogger().debug("updateMachines error %s->" % str(e))
+            return -1
 
     @DatabaseHelper._sessionm
     def updateName_Qa_custom_command( self,
@@ -4532,12 +4547,24 @@ class XmppMasterDatabase(DatabaseHelper):
                 It can be done by time search too.
         """
         pulse_usersid = self.get_teammembers_from_login(login)
-        llogin=','.join(['"%s"' % x for x in  pulse_usersid])
 
-        if len(pulse_usersid) <= 1:
-            return self.get_deploy_by_user_with_interval(login, state, intervalsearch, minimum=None, maximum=None, filt=None)
+        deploylog = session.query(Deploy)
 
-        deploylog = session.query(Deploy).filter(Deploy.login.in_(pulse_usersid))
+        if not pulse_usersid or len(pulse_usersid) == 1 and pulse_usersid[0] == "root":
+            return self.get_deploy_by_user_with_interval(login,
+                                                         state,
+                                                         intervalsearch,
+                                                         minimum=None,
+                                                         maximum=None,
+                                                         filt=None)
+
+        preposition_comparaisons = [Deploy.login.op('regexp')(field)  for field in pulse_usersid]
+        deploylog= deploylog.filter( or_(*preposition_comparaisons))
+
+        preposition_comparaisons_count = [ "login REGEXP '%s' "% field  for field in pulse_usersid]
+        preposition_sql_string = ""
+        if preposition_comparaisons_count:
+            preposition_sql_string ='and (' + ' or '.join(['%s' % x for x in  preposition_comparaisons_count]) +')'
 
         if state:
             deploylog = deploylog.filter(Deploy.state == state)
@@ -4555,7 +4582,7 @@ class XmppMasterDatabase(DatabaseHelper):
                             select count(id) as nb
                             from deploy
                             where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
-                            AND login in (%s)
+                            %s
                             AND (state LIKE "%%%s%%"
                             or pathpackage LIKE "%%%s%%"
                             or start LIKE "%%%s%%"
@@ -4563,16 +4590,21 @@ class XmppMasterDatabase(DatabaseHelper):
                             or host LIKE "%%%s%%"
                             )
                             group by title
-                            ) as x;""" % (llogin, filt, filt, filt, filt, filt,)
+                            ) as x;""" % (preposition_sql_string,
+                                          filt,
+                                          filt,
+                                          filt,
+                                          filt,
+                                          filt)
         else:
             # nb deploiement different
             count = """select count(*) as nb from (
                             select count(id) as nb
                             from deploy
                             where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
-                            AND login in (%s)
+                            %s
                             group by title
-                            ) as x;""" % llogin
+                            ) as x;""" % preposition_sql_string
 
         len_query = self.get_count(deploylog)
 
@@ -7196,7 +7228,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if enable is None:
                 logging.getLogger().error("We found no machines with the UUID %s" % uuid)
             else:
-                logging.getLogger().error("We found no machines with the UUID %s, and with enabled: %s" % uuid, enable)
+                logging.getLogger().error("We found no machines with the UUID %s, and with enabled: %s" % (uuid, enable))
 
             logging.getLogger().error("We encountered the following error:\n %s" % str(e))
         except MultipleResultsFound as e:
@@ -7914,49 +7946,59 @@ class XmppMasterDatabase(DatabaseHelper):
             'inventoried_online': [],
             'total_machines': [],
         }
+        sql_counts = """SELECT
+            SUM(1) AS total,
+            SUM(CASE
+                WHEN (uuid_inventorymachine IS NULL and enabled = 0) THEN 1
+                ELSE 0
+            END) AS `uninventoried_offline`,
+            SUM(CASE
+                WHEN (uuid_inventorymachine IS NULL and enabled = 1) THEN 1
+                ELSE 0
+            END) AS `uninventoried_online`,
+
+            SUM(CASE
+                WHEN (uuid_inventorymachine IS NOT NULL and enabled = 0) THEN 1
+                ELSE 0
+            END) AS `inventoried_offline`,
+            SUM(CASE
+                WHEN (uuid_inventorymachine IS NOT NULL and enabled = 1) THEN 1
+                ELSE 0
+            END) AS `inventoried_online`,
+            groupdeploy as jid
+        from machines where agenttype="machine" group by groupdeploy;"""
+
+        counts_result = session.execute(sql_counts)
+        #uninventoried_offline = [x for x in count_uninventoried_offline]
+
+        counts = [{
+            "total": int(count_ars[0]),
+            "uninventoried_offline" : int(count_ars[1]),
+            "uninventoried_online" : int(count_ars[2]),
+            "inventoried_offline" : int(count_ars[3]),
+            "inventoried_online" : int(count_ars[4]),
+            "jid" : count_ars[5]
+        } for count_ars in counts_result]
+
         if query is not None:
-            sql1 = """select count(id) as nb
-from machines
-where uuid_inventorymachine IS NULL and enabled = 0 and agenttype="machine" """
-            sql2 = """select count(id) as nb
-from machines
-where uuid_inventorymachine IS NULL and enabled = 1 and agenttype="machine"
-"""
-
-            sql3 = """select count(id) as nb
-from machines
-where uuid_inventorymachine IS NOT NULL and enabled = 0 and agenttype="machine"
-"""
-            sql4 = """select count(id) as nb
-from machines
-where uuid_inventorymachine IS NOT NULL and enabled = 1 and agenttype="machine"
-"""
             for machine in query:
-                _sql1 = sql1 + """and groupdeploy = "%s";""" % machine.jid
-                count_uninventoried_offline = session.execute(_sql1)
-                uninventoried_offline = [x for x in count_uninventoried_offline]
-
-                _sql2 = sql2 + """and groupdeploy = "%s";""" % machine.jid
-                count_uninventoried_offline = session.execute(_sql2)
-                uninventoried_online = [x for x in count_uninventoried_offline]
-
-                _sql3 = sql3 + """and groupdeploy = "%s";""" % machine.jid
-                count_uninventoried_offline = session.execute(_sql3)
-                inventoried_offline = [x for x in count_uninventoried_offline]
-
-                _sql4 = sql4 + """and groupdeploy = "%s";""" % machine.jid
-                count_uninventoried_offline = session.execute(_sql4)
-                inventoried_online = [x for x in count_uninventoried_offline]
-
-                total_machines = uninventoried_offline[0][0] + \
-                    uninventoried_online[0][0] + \
-                    inventoried_offline[0][0] + \
-                    inventoried_online[0][0]
-                result['uninventoried_offline'].append(uninventoried_offline[0][0])
-                result['uninventoried_online'].append(uninventoried_online[0][0])
-                result['inventoried_offline'].append(inventoried_offline[0][0])
-                result['inventoried_online'].append(inventoried_online[0][0])
-                result['total_machines'].append(total_machines)
+                flag = False
+                for count_ars in counts:
+                    if machine.jid == count_ars["jid"]:
+                        flag = True
+                        break
+                if flag == True:
+                    result['uninventoried_offline'].append(count_ars["uninventoried_offline"])
+                    result['uninventoried_online'].append(count_ars["uninventoried_online"])
+                    result['inventoried_offline'].append(count_ars["inventoried_offline"])
+                    result['inventoried_online'].append(count_ars["inventoried_online"])
+                    result['total_machines'].append(count_ars["total"])
+                else:
+                    result['uninventoried_offline'].append(0)
+                    result['uninventoried_online'].append(0)
+                    result['inventoried_offline'].append(0)
+                    result['inventoried_online'].append(0)
+                    result['total_machines'].append(0)
 
                 result['id'].append(machine.id)
                 result['jid'].append(machine.jid)
