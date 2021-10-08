@@ -10,6 +10,7 @@ Pulse 2 4.6.10
 * [BUGFIX]  Fix counting machines connected on ARS.
 * [BUGFIX]  Fix WOL on single machines and QA
 * [BUGFIX]  Fix restart of deployment if transfer has already started
+* [BUGFIX]  Fix deleting machines not available in glpi
 
 Pulse 2 4.6.9
 =============

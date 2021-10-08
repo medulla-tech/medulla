@@ -1637,6 +1637,8 @@ class Glpi94(DyngroupDatabaseHelper):
         if type(uuid) == list:
             return query.filter(self.machine.c.id.in_([int(str(a).replace("UUID", "")) for a in uuid]))
         else:
+            if uuid is None:
+                uuid = ""
             return query.filter(self.machine.c.id == int(str(uuid).replace("UUID", "")))
 
     ##################### Machine output format (for ldap compatibility)
