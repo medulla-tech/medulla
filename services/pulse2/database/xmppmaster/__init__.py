@@ -6514,24 +6514,108 @@ class XmppMasterDatabase(DatabaseHelper):
         return resulttypemachine
 
     @DatabaseHelper._sessionm
+    def delMachineXmppPresenceHostname(self, session, hostname):
+        """
+            Remove the `hostname` machine from the xmppmaster database.
+
+            Args:
+                session: The SQL Alchemy session.
+                hostname: The hostname of the machine we want to remove.
+        """
+        result = ['-1']
+        typemachine = "machine"
+
+        try:
+            list_hostname = """SELECT
+                        id, hostname, agenttype
+                    FROM
+                        xmppmaster.machines
+                    WHERE
+                        xmppmaster.machines.hostname  like '%s';""" % hostname
+
+            machines_id = session.execute(list_hostname)
+
+            session.commit()
+            session.flush()
+
+            result = [x for x in machines_id][0]
+
+            delete_machine = """DELETE FROM `xmppmaster`.`machines`
+                                WHERE
+                                    `xmppmaster`.`machines`.`id` = '%s';""" % result[0]
+
+            if result[2] == "relayserver":
+                typemachine = "relayserver"
+                update_status = """UPDATE `xmppmaster`.`relayserver`
+                            SET
+                                `enabled` = '0'
+                            WHERE
+                                `xmppmaster`.`relayserver`.`nameserver` = '%s';""" % result[1]
+                session.execute(update_status)
+
+            session.execute(delete_machine)
+            session.commit()
+            session.flush()
+        except IndexError as index_error:
+            logging.getLogger().warning("The machine %s has not been found in the database. We cannot delete it." % hostname)
+            logging.getLogger().warning("We obtained the error: %s" % index_error)
+            return {}
+        except Exception as e:
+            logging.getLogger().error(str(e))
+            return {}
+
+        resulttypemachine = {"type": typemachine }
+        return resulttypemachine
+
+    @DatabaseHelper._sessionm
+    def get_machine_from_hostname(self, session, hostname):
+        """
+            Retrieve the machine based on `hostname`
+            Args:
+                session: The SQL Alchemy session
+                hostname: The hostname of the machines we are searching
+            Returns:
+                List of dict. The dict contains all the machines found.
+        """
+        sql = """
+                    SELECT
+                        *
+                    FROM
+                        machines
+                    WHERE
+                        hostname like "%s%%";""" % hostname
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [{column: value for column, value in rowproxy.items()} for rowproxy in result]
+
+    @DatabaseHelper._sessionm
     def SetPresenceMachine(self, session, jid, presence=0):
         """
-            chang presence in table machines
+            Change the presence in the machine table.
+            Args:
+                session: The SQL Alchemy session
+                jid: The jid of the machine where we want to change the presence
+                presence: The new presence state/
+                          0: The machine is offline
+                          1: The machine is online
+
         """
-        user = str(jid).split("@")[0]
+        hostname = str(jid).split("@")[0]
         try:
             sql = """UPDATE
                         `xmppmaster`.`machines`
                     SET
                         `xmppmaster`.`machines`.`enabled` = '%s'
                     WHERE
-                        `xmppmaster`.`machines`.jid like('%s@%%');""" % (presence, user)
+                        `xmppmaster`.`machines`.jid like('%s@%%');""" % (presence, hostname)
             session.execute(sql)
             session.commit()
             session.flush()
             return True
-        except Exception, e:
-            logging.getLogger().error("SetPresenceMachine : %s" % str(e))
+        except Exception as error_presence:
+            logging.getLogger().error("An error occured while setting the new presence.")
+            logging.getLogger().error("We got the error:\n %s" % str(error_presence))
             return False
 
     @DatabaseHelper._sessionm
