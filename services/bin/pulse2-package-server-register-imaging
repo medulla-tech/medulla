@@ -32,7 +32,7 @@ import logging
 from twisted.internet import reactor
 
 from mmc.site import mmcconfdir
-from mmc.client import async
+from mmc.client import async_
 from pulse2.package_server.config import P2PServerCP
 
 # Return codes
@@ -84,7 +84,7 @@ class BaseAction(object):
 
         log.debug("Connecting from: %s" % self.client_url)
         log.debug("Connecting to: %s" % options.mmc_url)
-        self.proxy = async.Proxy(options.mmc_url)
+        self.proxy = async_.Proxy(options.mmc_url)
 
     def _check_options(self, options):
         ret = True

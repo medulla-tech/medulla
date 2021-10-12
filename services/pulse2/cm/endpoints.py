@@ -35,7 +35,7 @@ from twisted.web.client import getPage
 from twisted.internet.protocol import ProcessProtocol
 from twisted.internet.error import ProcessDone
 
-from mmc.client.async import Proxy
+from mmc.client.async_ import Proxy
 from pulse2.network import NetUtils
 
 class MethodNotFound(Exception):

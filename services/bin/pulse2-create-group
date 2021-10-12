@@ -27,7 +27,7 @@ import logging
 from twisted.internet import reactor
 
 from mmc.site import sysconfdir
-from mmc.client.async import Proxy
+from mmc.client.async_ import Proxy
 from mmc.support.config import PluginConfigFactory
 from mmc.support.config import MMCConfigParser
 from mmc.plugins.base.config import BasePluginConfig

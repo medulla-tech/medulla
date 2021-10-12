@@ -26,7 +26,7 @@ import logging
 
 from mmc.site import mmcconfdir
 from configparser import ConfigParser
-from mmc.client.async import Proxy
+from mmc.client.async_ import Proxy
 
 log = logging.getLogger()
 
