@@ -778,9 +778,9 @@ class Glpi95(DyngroupDatabaseHelper):
 
         if debugfunction:
             try:
-                logger.info("@@@DEBUG@@@ %s"%literalquery(query))
+                self.logger.info("@@@DEBUG@@@ %s"%literalquery(query))
             except Exception as e:
-                logger.error("display @@@DEBUG@@@ sql literal from alchemy error : %s" % e)
+                self.logger.error("display @@@DEBUG@@@ sql literal from alchemy error : %s" % e)
 
         machines = query.all()
 
