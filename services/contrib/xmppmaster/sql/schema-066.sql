@@ -35,55 +35,68 @@ begin
 
   -- week - 1
   set @total = 0;
-  set @partial = 0;
+  set @notstarted = 0;
+  set @success = 0;
 
   select @total:=count(id) from deploy where startcmd >= (NOW()-INTERVAL 1 WEEK);
-  select @partial:=count(id) from deploy where state not in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd >= (NOW()-INTERVAL 1 WEEK);
-  select if(@total >0, (@partial/@total)*100, 0) into week1;
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd >= (NOW()-INTERVAL 1 WEEK);
+  select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd >= (NOW()-INTERVAL 1 WEEK);
+  select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week1;
 
   -- week - 2
   set @total = 0;
-  set @partial = 0;
+  set @notstarted = 0;
+  set @success = 0;
 
   select @total:=count(id) from deploy where startcmd < (NOW()-INTERVAL 1 WEEK) and startcmd >= (NOW()-INTERVAL 2 WEEK);
-  select @partial:=count(id) from deploy where state not in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd < (NOW()-INTERVAL 1 WEEK) and startcmd >= (NOW()-INTERVAL 2 WEEK);
-  select if(@total >0, (@partial/@total)*100, 0) into week2;
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd < (NOW()-INTERVAL 1 WEEK) and startcmd >= (NOW()-INTERVAL 2 WEEK);
+  select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd < (NOW()-INTERVAL 1 WEEK) and startcmd >= (NOW()-INTERVAL 2 WEEK);
+  select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week2;
 
   -- week - 3
   set @total = 0;
-  set @partial = 0;
+  set @notstarted = 0;
+  set @success = 0;
 
   select @total:=count(id) from deploy where startcmd < (NOW()-INTERVAL 2 WEEK) and startcmd >= (NOW()-INTERVAL 3 WEEK);
-  select @partial:=count(id) from deploy where state not in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd < (NOW()-INTERVAL 2 WEEK) and startcmd >= (NOW()-INTERVAL 3 WEEK);
-  select if(@total >0, (@partial/@total)*100, 0) into week3;
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd < (NOW()-INTERVAL 2 WEEK) and startcmd >= (NOW()-INTERVAL 3 WEEK);
+  select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd < (NOW()-INTERVAL 2 WEEK) and startcmd >= (NOW()-INTERVAL 3 WEEK);
+  select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week3;
 
   -- week - 4
   set @total = 0;
-  set @partial = 0;
+  set @notstarted = 0;
+  set @success = 0;
 
   select @total:=count(id) from deploy where startcmd < (NOW()-INTERVAL 3 WEEK) and startcmd >= (NOW()-INTERVAL 4 WEEK);
-  select @partial:=count(id) from deploy where state not in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd < (NOW()-INTERVAL 3 WEEK) and startcmd >= (NOW()-INTERVAL 4 WEEK);
-  select if(@total >0, (@partial/@total)*100, 0) into week4;
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd < (NOW()-INTERVAL 3 WEEK) and startcmd >= (NOW()-INTERVAL 4 WEEK);
+  select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd < (NOW()-INTERVAL 3 WEEK) and startcmd >= (NOW()-INTERVAL 4 WEEK);
+  select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week4;
 
   -- week - 5
   set @total = 0;
-  set @partial = 0;
+  set @notstarted = 0;
+  set @success = 0;
 
   select @total:=count(id) from deploy where startcmd < (NOW()-INTERVAL 4 WEEK) and startcmd >= (NOW()-INTERVAL 5 WEEK);
-  select @partial:=count(id) from deploy where state not in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd < (NOW()-INTERVAL 4 WEEK) and startcmd >= (NOW()-INTERVAL 5 WEEK);
-  select if(@total >0, (@partial/@total)*100, 0) into week5;
+  select @notstarted:=count(id) from deploy where state not in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd < (NOW()-INTERVAL 4 WEEK) and startcmd >= (NOW()-INTERVAL 5 WEEK);
+  select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd < (NOW()-INTERVAL 4 WEEK) and startcmd >= (NOW()-INTERVAL 5 WEEK);
+  select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week5;
 
   -- week - 6
   set @total = 0;
-  set @partial = 0;
+  set @notstarted = 0;
+  set @success = 0;
 
   select @total:=count(id) from deploy where startcmd < (NOW()-INTERVAL 5 WEEK) and startcmd >= (NOW()-INTERVAL 6 WEEK);
-  select @partial:=count(id) from deploy where state not in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd < (NOW()-INTERVAL 5 WEEK) and startcmd >= (NOW()-INTERVAL 6 WEEK);
-  select if(@total >0, (@partial/@total)*100, 0) into week6;
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT") and startcmd < (NOW()-INTERVAL 5 WEEK) and startcmd >= (NOW()-INTERVAL 6 WEEK);
+  select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd < (NOW()-INTERVAL 5 WEEK) and startcmd >= (NOW()-INTERVAL 6 WEEK);
+  select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week6;
 
 end;
 //
 DELIMITER ;
+
 
 UPDATE version SET Number = 66;
 
