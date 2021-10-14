@@ -1514,13 +1514,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             fromuser=login)
             return False
 
-    def parsexmppjsonfile(self, path):
-        # puts the words False in lowercase.
-        datastr = file_get_contents(path)
-        datastr = re.sub(r"(?i) *: *false", " : false", datastr)
-        datastr = re.sub(r"(?i) *: *true", " : true", datastr)
-        file_put_contents(path, datastr)
-
     def totimestamp(self, dt, epoch=datetime(1970,1,1)):
         td = dt - epoch
         # return td.total_seconds()
@@ -1615,7 +1608,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
         descript = managepackage.loadjsonfile(os.path.join(path, 'xmppdeploy.json'))
 
-        self.parsexmppjsonfile(os.path.join(path, 'xmppdeploy.json'))
         if descript is None:
             XmppMasterDatabase().adddeploy(idcommand,
                                             jidmachine,
