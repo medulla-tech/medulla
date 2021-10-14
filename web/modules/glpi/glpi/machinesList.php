@@ -97,7 +97,21 @@ $ajax->setfieldsearch(array_flip ($chaine ));
 list($list, $values) = getEntitiesSelectableElements();
 
 $listWithAll = array_merge([_T("All my entities", "glpi")], $list);
-$valuesWithAll = array_merge([implode(',',$values)], $values);
+
+# FIXME: This variable should be added as a parameter.
+$root_sees_all_machines = 0;//  1 The root user sees all the machines, even those with neither entity nor uuid_inventory.
+
+if ($root_sees_all_machines == 1)
+{
+    if($_SESSION['login'] == "root")
+        $valuesWithAll = array_merge([-1], $values);
+    else
+        $valuesWithAll = array_merge([implode(',',$values)], $values);
+}
+else{
+    $valuesWithAll = array_merge([implode(',',$values)], $values);
+}
+
 
 $ajax->setElements($listWithAll);
 $ajax->setElementsVal($valuesWithAll);

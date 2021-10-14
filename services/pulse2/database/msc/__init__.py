@@ -475,7 +475,7 @@ class MscDatabase(DatabaseHelper):
                             scalar()
         return numberTimedout
 
-    def deployxmpponmachine(self, command_id):
+    def deployxmpponmachine(self, command_id, uuid):
         result = {}
         sqlselect="""
             SELECT
@@ -506,9 +506,9 @@ class MscDatabase(DatabaseHelper):
             WHERE
                 commands.id = %s
                 and commands_on_host.id_group IS NULL
-                ORDER BY commands_on_host.id DESC
-                limit 1
-                ;"""%command_id
+                and target_uuid = "%s"
+            GROUP BY commands_on_host.id
+                ;"""%(command_id, uuid)
         resultsql = self.db.execute(sqlselect)
         for x in resultsql:
             result['host'] = x.host
@@ -669,7 +669,21 @@ class MscDatabase(DatabaseHelper):
         self.logger.warning("command [%s] deploy missing for slot [%s,%s]"%(command_id, datestartstr, dateendstr))
         return ""
 
-    def deployxmppscheduler(self, login, min , max, filt):
+    def deployxmppscheduler(self, login, minimum , maximum, filt):
+        """
+        This function isued to retrieve all the scheduled deployments on msc
+
+        Args:
+            login: The login of the user
+            minimum: Minimum value ( for pagination )
+            maximum: Maximum value ( for pagination )
+            filt: Filter of the search
+        Returns:
+            It returns the list of all the scheduled deployments on msc
+        """
+        listuser = []
+        if isinstance(login, list):
+            listuser = [ '"%s"'%x.strip() for x in login if x.strip() != ""]
         datenow = datetime.datetime.now()
         sqlselect="""
             SELECT
@@ -710,9 +724,14 @@ class MscDatabase(DatabaseHelper):
                     phase.state = 'ready'"""
 
         if login:
-            sqlfilter = sqlfilter + """
-            AND
-                commands.creator = '%s'"""%login
+            if listuser:
+                sqlfilter = sqlfilter + """
+                AND
+                    commands.creator in (%s)""" % ",".join(listuser)
+            else:
+                sqlfilter = sqlfilter + """
+                AND
+                    commands.creator = '%s'""" % login
 
         if filt:
             sqlfilter = sqlfilter + """
@@ -726,18 +745,16 @@ class MscDatabase(DatabaseHelper):
         reqsql = sqlselect + sqlfilter
 
         sqllimit=""
-        if min and max:
+        if minimum and maximum:
             sqllimit = """
                 LIMIT %d
-                OFFSET %d"""%(int(max)-int(min), int(min))
+                OFFSET %d"""%(int(maximum)-int(minimum), int(minimum))
             reqsql = reqsql + sqllimit
 
         sqlgroupby = """
             GROUP BY titledeploy"""
 
         reqsql = reqsql + sqlgroupby+";"
-
-        ###### print reqsql
 
         sqlselect="""
             Select COUNT(nb) AS TotalRecords from(
@@ -761,13 +778,14 @@ class MscDatabase(DatabaseHelper):
             AND
             """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;";
+
         result={}
         resulta = self.db.execute(reqsql)
         resultb = self.db.execute(reqsql1)
         sizereq = [x for x in resultb][0][0]
         result['lentotal'] = sizereq
-        result['min'] = int(min)
-        result['nb']  = (int(max)-int(min))
+        result['min'] = int(minimum)
+        result['nb']  = (int(maximum)-int(minimum))
         result['tabdeploy'] = {}
         inventoryuuid = []
         host = []
@@ -808,6 +826,7 @@ class MscDatabase(DatabaseHelper):
         result['tabdeploy']['groupid'] = groupid
         result['tabdeploy']['titledeploy'] = titledeploy
         return result
+
 
     def updategroup(self, group):
         session = create_session()
@@ -870,19 +889,13 @@ class MscDatabase(DatabaseHelper):
         session.close()
 
 
-    def deployxmpp(self):
-        """
-            select deploy machine
-        """
-        q = self.__search_command_deploy()
-        return self.__dispach_deploy(q)
-
     @DatabaseHelper._sessionm
-    def __search_command_deploy(self, session):
+    def deployxmpp(self, session, limitnbr=100):
         """
             select deploy machine
         """
         datenow = datetime.datetime.now()
+        datestr = datenow.strftime('%Y-%m-%d %H:%M:%S')
         sqlselect="""
         SELECT
                 `commands`.`id` AS commands_id,
@@ -909,22 +922,104 @@ class MscDatabase(DatabaseHelper):
                     AND
                 `phase`.`state` = 'ready'
                     AND
-                    '%s' BETWEEN commands.start_date AND commands.end_date;"""%(datenow);
-        resultsql = session.execute(sqlselect)
+                    '%s' BETWEEN commands.start_date AND commands.end_date limit %s;"""%(datenow,
+                                                                                         limitnbr);
+        #self.logger.debug("sqlselect %s"%sqlselect)
+        selectedMachines = session.execute(sqlselect)
+        nb_machine_select_for_deploy_cycle=selectedMachines.rowcount
+        if nb_machine_select_for_deploy_cycle == 0:
+            self.logger.debug("Aucun deployement for process")
+            return nb_machine_select_for_deploy_cycle, []
+        else:
+            self.logger.debug("%s mach for deploy"%nb_machine_select_for_deploy_cycle)
+
+        machine_status_update=[]
+        unique_deploy_on_machine = []
+        updatemachine = []
+
+        self.logger.debug("launch new select deploy machine")
+
+        for msc_machine_to_deploy in selectedMachines:
+            machine_status_update.append(str(msc_machine_to_deploy.commands_on_host_id))
+            # on prepare les machines a mettre a jour.
+            self.logger.debug("machine %s [%s] presente for deploy package %s" % (msc_machine_to_deploy.target_target_name,
+                                                                                  msc_machine_to_deploy.target_target_uuid,
+                                                                                  msc_machine_to_deploy.commands_package_id))
+            title = str(msc_machine_to_deploy.commands_title)
+            self.logger.info("title '%s'" % title)
+            if title.startswith("Convergence on"):
+                title ="%s %s"%( title, datestr)
+
+            if not msc_machine_to_deploy.target_target_uuid in unique_deploy_on_machine:
+                unique_deploy_on_machine.append(msc_machine_to_deploy.target_target_uuid)
+                updatemachine.append( { 'name': str(msc_machine_to_deploy.target_target_name)[:-1],
+                                        'pakkageid': str(msc_machine_to_deploy.commands_package_id),
+                                        'commandid':  msc_machine_to_deploy.commands_id,
+                                        'mac': str(msc_machine_to_deploy.target_target_macaddr),
+                                        'count': 0,
+                                        'cycle': 0,
+                                        'login': str(msc_machine_to_deploy.commands_creator),
+                                        'start_date': msc_machine_to_deploy.commands_start_date,
+                                        'end_date': msc_machine_to_deploy.commands_end_date,
+                                        'title': title,
+                                        'UUID': str(msc_machine_to_deploy.target_target_uuid),
+                                        'GUID': msc_machine_to_deploy.target_id_group})
+                #recherche machine existe pour xmpp
+                self.logger.info("deploy on machine %s [%s] -> %s" % (msc_machine_to_deploy.target_target_name,
+                                                                      msc_machine_to_deploy.target_target_uuid,
+                                                                      msc_machine_to_deploy.commands_package_id))
+            else:
+                self.logger.warn("Cancel deploy in process\n"\
+                                 "Deploy on machine %s [%s] -> %s" % (msc_machine_to_deploy.target_target_name,
+                                                                      msc_machine_to_deploy.target_target_uuid,
+                                                                      msc_machine_to_deploy.commands_package_id))
+        # deploiement status dans msc imédiatement mis a jour pour libere imediatement le verrou sur la table msc.
+        if machine_status_update:
+            list_uuid_machine = ",".join(machine_status_update)
+            sql ="""UPDATE `msc`.`commands_on_host`
+                        SET
+                           `current_state`='done',
+                            `stage`='ended'
+                        WHERE `commands_on_host`.`id` in(%s);
+                    UPDATE `msc`.`phase`
+                        SET
+                           `phase`.`state`='done'
+                        WHERE `phase`.`fk_commands_on_host` in(%s);
+            """%(list_uuid_machine,
+                 list_uuid_machine);
+            #self.logger.debug("sql %s"%sql)
+            ret=session.execute(sql)
+            self.logger.debug("update deployement %s"%ret.rowcount)
         session.commit()
         session.flush()
-        return resultsql
+        return nb_machine_select_for_deploy_cycle, updatemachine
 
     @DatabaseHelper._sessionm
-    def getnotdeploybyuserrecent(self, session, login, intervalsearch, min, max, filt):
+    def get_deploy_inprogress_by_team_member(self, session, login, intervalsearch, minimum, maximum, filt):
         """
-            select deploys not deployed
-        """
+        This function is used to retrieve not yet done deployements of a team.
+        This team is found based on the login of a member.
 
+        Args:
+            session: The SQL Alchemy session
+            login: The login of the user
+            intervalsearch: The interval on which we search the deploys.
+            minimum: Minimum value ( for pagination )
+            maximum: Maximum value ( for pagination )
+            filt: Filter of the search
+            Returns:
+                It returns all the deployement not yet started of a specific team.
+                It can be done by time search too.
+        """
+        list_login=[]
+        if login:
+            if isinstance(login, (tuple, list)):
+                list_login=[x.strip() for x in login if x.strip() != ""]
+            else :
+                list_login.append(login)
         datenow = datetime.datetime.now()
         delta = datetime.timedelta(seconds=intervalsearch)
         datereduced = datenow - delta
-
         query = session.query(Commands.id,
                               func.count(Commands.id).label('nb_machine'),
                               Commands.title,
@@ -945,21 +1040,33 @@ class MscDatabase(DatabaseHelper):
         .filter(Commands.end_date > datereduced)\
         .filter(Commands.type != 2)
 
-        if filt:
-            query = query.filter(or_(Commands.title.like("%%%s%%"%filt), \
-                                     Commands.creator.like("%%%s%%"%filt),\
-                                     Commands.package_id.like("%%%s%%"%filt),\
-                                     Commands.start_date.like("%%%s%%"%filt),\
-                                     Commands.end_date.like("%%%s%%"%filt),\
-                                     CommandsOnHost.id.like("%%%s%%"%filt),\
-                                     Target.target_name.like("%%%s%%"%filt),\
-                                     Target.target_uuid.like("%%%s%%"%filt),\
-                                     Target.id_group.like("%%%s%%"%filt),\
-                                     Target.target_macaddr.like("%%%s%%"%filt)))
-
+        if list_login:
+            query = query.filter(Commands.creator.in_(list_login))
+            if filt:
+                query = query.filter(or_(Commands.title.like("%%%s%%"%filt),
+                                        Commands.package_id.like("%%%s%%"%filt),
+                                        Commands.start_date.like("%%%s%%"%filt),
+                                        Commands.end_date.like("%%%s%%"%filt),
+                                        CommandsOnHost.id.like("%%%s%%"%filt),
+                                        Target.target_name.like("%%%s%%"%filt),
+                                        Target.target_uuid.like("%%%s%%"%filt),
+                                        Target.id_group.like("%%%s%%"%filt),
+                                        Target.target_macaddr.like("%%%s%%"%filt)))
+        else:
+            if filt:
+                query = query.filter(or_(Commands.title.like("%%%s%%"%filt),
+                                        Commands.creator.like("%%%s%%"%filt),
+                                        Commands.package_id.like("%%%s%%"%filt),
+                                        Commands.start_date.like("%%%s%%"%filt),
+                                        Commands.end_date.like("%%%s%%"%filt),
+                                        CommandsOnHost.id.like("%%%s%%"%filt),
+                                        Target.target_name.like("%%%s%%"%filt),
+                                        Target.target_uuid.like("%%%s%%"%filt),
+                                        Target.id_group.like("%%%s%%"%filt),
+                                        Target.target_macaddr.like("%%%s%%"%filt)))
         query = query.group_by(Commands.id, CommandsOnHostPhase.state)
         nb = query.count()
-        query = query.offset(int(min)).limit(int(max)-int(min))
+        query = query.offset(int(minimum)).limit(int(maximum)-int(minimum))
         res = query.all()
 
         result = {'total': nb, 'elements':[]}
@@ -977,72 +1084,6 @@ class MscDatabase(DatabaseHelper):
                            'gid': element[10],
                            'mac_address': element[11]})
         return result
-
-    @DatabaseHelper._sessionm
-    def __dispach_deploy(self, session, selectedMachines):
-        """
-        Prepare the xmpp deploy
-        Args:
-            session: The SQL Alchemy session
-            selectedMachines: The selected machines from msc for the deploy
-        Return:
-            The modified states in the msc table. This way xmpp knows the machines it needs to deploy in.
-        """
-        tabmachine = []
-        updatemachine = []
-        machine_list = []
-        machine_do_deploy = {}
-        self.logger.debug("Looking to new machines to deploy")
-        datenow = datetime.datetime.now()
-        datestr = datenow.strftime('%Y-%m-%d %H:%M:%S')
-        for msc_machine_to_deploy in selectedMachines:
-            self.logger.debug("The machine %s [%s] is available to deploy the package %s" % (msc_machine_to_deploy.target_target_name,
-                                                                                             msc_machine_to_deploy.target_target_uuid,
-                                                                                             msc_machine_to_deploy.commands_package_id))
-            title = str(msc_machine_to_deploy.commands_title)
-            if title.startswith("Convergence on"):
-                title ="%s %s" % (title, datestr)
-            deployobject = {'name': str(msc_machine_to_deploy.target_target_name)[:-1],
-                            'pakkageid': str(msc_machine_to_deploy.commands_package_id),
-                            'commandid':  msc_machine_to_deploy.commands_id,
-                            'mac': str(msc_machine_to_deploy.target_target_macaddr),
-                            'count': 0,
-                            'cycle': 0,
-                            'login': str(msc_machine_to_deploy.commands_creator),
-                            'start_date': msc_machine_to_deploy.commands_start_date,
-                            'end_date': msc_machine_to_deploy.commands_end_date,
-                            'title': title,
-                            'UUID': str(msc_machine_to_deploy.target_target_uuid),
-                            'GUID': msc_machine_to_deploy.target_id_group}
-
-            if not msc_machine_to_deploy.target_target_uuid in tabmachine:
-                tabmachine.append(msc_machine_to_deploy.target_target_uuid)
-                #recherche machine existe pour xmpp
-                self.logger.info("deploy on machine %s [%s] -> %s" % (msc_machine_to_deploy.target_target_name,
-                                                                      msc_machine_to_deploy.target_target_uuid,
-                                                                      msc_machine_to_deploy.commands_package_id))
-                machine_do_deploy[msc_machine_to_deploy.target_target_uuid] = msc_machine_to_deploy.commands_package_id
-                updatemachine.append(deployobject)
-
-                sql ="""UPDATE `msc`.`commands_on_host` SET `current_state`='done', `stage`='ended' WHERE `commands_on_host`.`id` = %s;""" % msc_machine_to_deploy.commands_on_host_id
-                session.execute(sql)
-                session.commit()
-
-                session.flush()
-                sql="""UPDATE `msc`.`phase` SET `phase`.`state`='done' WHERE `phase`.`fk_commands_on_host` =%s;""" % msc_machine_to_deploy.commands_on_host_id;
-                session.execute(sql)
-                session.commit()
-                session.flush()
-
-            else:
-                self.logger.warn("We cannot start the deploy on the machine %s [%s] for the package with the uuid %s" % (msc_machine_to_deploy.target_target_name,
-                                                                                                                         msc_machine_to_deploy.target_target_uuid,
-                                                                                                                         msc_machine_to_deploy.commands_package_id))
-
-
-                machine_list.append(deployobject)
-
-        return updatemachine
 
     def deleteCommand(self, cmd_id):
         """

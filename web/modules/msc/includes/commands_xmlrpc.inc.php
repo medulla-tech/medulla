@@ -113,8 +113,8 @@ function xmlrpc_get_msc_listuuid_commandid($command_id, $filter="", $start=0, $e
 function xmlrpc_get_deployxmppscheduler($login, $min, $max, $flit){
     return xmlCall('msc.get_deployxmppscheduler', array($login, $min, $max, $flit));
 }
-function xmlrpc_get_deployxmpponmachine($command_id){
-    return xmlCall('msc.get_deployxmpponmachine', array($command_id));
+function xmlrpc_get_deployxmpponmachine($command_id, $uuid){
+    return xmlCall('msc.get_deployxmpponmachine', array($command_id, $uuid));
 }
 
 function xmlrpc_get_count_timeout_wol_deploy($command_id, $datestart){
@@ -324,7 +324,7 @@ function delete_command_on_host($id) {
     return xmlCall('msc.delete_command_on_host', array($id));
 }
 
-function xmlrpc_getnotdeploybyuserrecent( $login, $time, $min=null, $max=null, $filt=null) {
-    return xmlCall("msc.getnotdeploybyuserrecent", array($login, $time, $min , $max, $filt));
+function xmlrpc_get_deploy_inprogress_by_team_member( $login, $time, $min=null, $max=null, $filt=null) {
+    return xmlCall("msc.get_deploy_inprogress_by_team_member", array($login, $time, $min , $max, $filt));
 }
 ?>

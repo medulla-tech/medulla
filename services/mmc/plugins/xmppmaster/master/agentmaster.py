@@ -292,16 +292,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.wolglobal_set = set() #use group wol
         self.confaccount=[] #list des account for clear
         #clear conf compte.
-        logger.debug('Clear MUC conf account')
-        cmd = "for i in  $(ejabberdctl registered_users pulse | grep '^conf' ); do echo $i; ejabberdctl unregister $i pulse; done"
+        logger.debug('Delete old ejabberd accounts')
+        cmd = "ejabberdctl --no-timeout delete_old_users 1"
         try:
             a = simplecommandstr(cmd)
             logger.debug(a['result'])
         except Exception as e:
             pass
         #del old message offline
-        logger.debug('del old message offline')
-        cmd = "ejabberdctl delete_old_messages 1"
+        logger.debug('Delete old offline ejabberd messages')
+        cmd = "ejabberdctl --no-timeout delete_old_messages 1"
         try:
             a = simplecommandstr(cmd)
             logger.debug(a['result'])
@@ -782,17 +782,48 @@ class MUCBot(sleekxmpp.ClientXMPP):
             pass
         #listobjnoexist = []
         listobjsupp = []
-        #search deploy to rumming
-        resultdeploymachine = MscDatabase().deployxmpp()
+        #search deploy to running
+        try:
+            # Search deploy to running
+            nb_machine_select_for_deploy_cycle, resultdeploymachine = MscDatabase().deployxmpp(limitnbr=100)
+        except Exception:
+            logger.error("%s" % (traceback.format_exc()))
+        if nb_machine_select_for_deploy_cycle == 0:
+            return
+
+        uuidlist = []
+        for deployobject in resultdeploymachine:
+            uuidlist.append(deployobject['UUID'])
+        resultpresence = XmppMasterDatabase().getPresenceExistuuids(uuidlist)
 
         for deployobject in resultdeploymachine:
-            msg = []
             # creation deployment
             UUID = deployobject['UUID']
             UUIDSTR = UUID.replace('UUID', "")
-            resultpresence = XmppMasterDatabase().getPresenceExistuuids(UUID)
+            re_search = []
             if resultpresence[UUID][1] == 0:
-                re_search = XmppMasterDatabase().getMachinedeployexistonHostname(deployobject['name'])
+                # There is no GLPI UUID
+                hostname = deployobject['name'].split(".", 1)[0]
+                re_search = XmppMasterDatabase().getMachinedeployexistonHostname(hostname)
+                if self.recover_glpi_identifier_from_name and len(re_search) == 1:
+                    update_result = XmppMasterDatabase().update_uuid_inventory(re_search[0]['id'], UUID)
+                    if update_result is not None:
+                        if update_result.rowcount > 0:
+                            logger.info("update uuid inventory %s for machine %s" % (UUID, hostname))
+                    resultpresence[UUID][1] = 1
+                    reloadresultpresence_uuid = XmppMasterDatabase().getPresenceExistuuids(UUID)
+                    resultpresence[UUID]=reloadresultpresence_uuid[UUID]
+                    self.xmpplog("Attaching GLPI identifier [%s] in xmppmaster machine [%s]" % (UUID, hostname),
+                                 type='deploy',
+                                 sessionname="no_session",
+                                 priority=-1,
+                                 action="xmpplog",
+                                 why=self.boundjid.bare,
+                                 module="Deployment | Start | Creation| Notify",
+                                 date=None,
+                                 fromuser=deployobject['login'])
+
+            if resultpresence[UUID][1] == 0:
                 if re_search:
                     msg.append( "<span class='log_err'>Consolidation GLPI XMPP ERROR for machine %s. " \
                                 "Deployment impossible : GLPI ID is %s</span>" % (deployobject['name'],
@@ -816,51 +847,46 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                         UUIDSTR))
 
                     logging.warning("No machine found on hostname. You must verify consolidation GLPI with xmpp")
-                    logging.warning("INFO\nGLPI : name %s uuid %s " % (deployobject['name'],
+                    logging.warning("INFO\nGLPI: name %s uuid %s " % (deployobject['name'],
                                                                     deployobject['UUID']))
-                    logging.warning("INFO\nXMPP : No machine found for %s" % (deployobject['name']))
+                    logging.warning("INFO\nXMPP: No machine found for %s" % (deployobject['name']))
 
-
-                #incrition dans deploiement cette machine sans agent
+                #listobjnoexist.append(deployobject)
+                # incription dans deploiement cette machine sans agent
                 XmppMasterDatabase().adddeploy(deployobject['commandid'],
-                                                deployobject['name'],
-                                                deployobject['name'],
-                                                deployobject['name'],
-                                                UUID,
-                                                deployobject['login'],
-                                                "ABORT MISSING AGENT",
-                                                sessiondeployementless,
-                                                user=deployobject['login'],
-                                                login=deployobject['login'],
-                                                title=deployobject['title'],
-                                                group_uuid=deployobject['GUID'],
-                                                startcmd=deployobject['start_date'],
-                                                endcmd=deployobject['end_date'],
-                                                macadress=deployobject['mac'],
-                                                result = "",
-                                                syncthing = 0)
+                                            deployobject['name'],
+                                            deployobject['name'],
+                                            deployobject['name'],
+                                            UUID,
+                                            deployobject['login'],
+                                            MSG_ERROR,
+                                            sessiondeployementless,
+                                            user=deployobject['login'],
+                                            login=deployobject['login'],
+                                            title=deployobject['title'],
+                                            group_uuid=deployobject['GUID'],
+                                            startcmd=deployobject['start_date'],
+                                            endcmd=deployobject['end_date'],
+                                            macadress=deployobject['mac'],
+                                            result="",
+                                            syncthing=0)
 
-                msg.append("<span class='log_err'>Agent missing on machine %s. " \
-                            "Deployment impossible : GLPI ID is %s</span>"%(deployobject['name'],
-                                                                             UUID))
-                msg.append("Action : Check that the machine "\
-                    "agent is working, or install the agent on the"\
-                        " machine %s (%s) if it is missing."%(deployobject['name'],
-                                                                       UUID))
+
                 for logmsg in msg:
                     self.xmpplog(logmsg,
-                             type='deploy',
-                             sessionname=sessiondeployementless,
-                             priority=-1,
-                             action="xmpplog",
-                             why=self.boundjid.bare,
-                             module="Deployment | Start | Creation",
-                             date=None,
-                             fromuser=deployobject['login'])
+                                type='deploy',
+                                sessionname=sessiondeployementless,
+                                priority=-1,
+                                action="xmpplog",
+                                why=self.boundjid.bare,
+                                module="Deployment | Start | Creation",
+                                date=None,
+                                fromuser=deployobject['login'])
                 continue
 
-            if datetime.now() < deployobject['start_date']:
-                deployobject['wol'] = 2 #
+
+            if datetimenow < deployobject['start_date']:
+                deployobject['wol'] = 2
             else:
                 if resultpresence[UUID][0] == 1:
                     # If a machine is present, add deployment in deploy list to manage.
@@ -870,7 +896,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             try:
                 self.machineDeploy[UUID].append(deployobject)
             except:
-                #creation list deployement
+                # creation list deployement
                 self.machineDeploy[UUID] = []
                 self.machineDeploy[UUID].append(deployobject)
 
@@ -880,8 +906,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
             try:
                 deployobject = self.machineDeploy[deployuuid].pop(0)
                 listobjsupp.append(deployuuid)
-                logging.debug("send deploy on machine %s package %s" %
-                              (deployuuid, deployobject['pakkageid']))
+                logging.debug("send deploy on machine %s package %s" % (deployuuid,
+                                                                        deployobject['pakkageid']))
+
                 self.applicationdeployjsonUuidMachineAndUuidPackage(deployuuid,
                                                                     deployobject['pakkageid'],
                                                                     deployobject['commandid'],
@@ -896,7 +923,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     nbdeploy=nbdeploy,
                                                                     wol=deployobject['wol'])
             except Exception:
+                logger.error("%s" % (traceback.format_exc()))
                 listobjsupp.append(deployuuid)
+            if deployobject['wol'] == 1:
+                listmacadress = [x.strip() for x in deployobject['mac'].split("||")]
+                for macadressdata in listmacadress:
+                    self._addsetwol(self.wolglobal_set, macadressdata)
             if deployobject['wol'] == 1:
                 listmacadress = [x.strip() for x in deployobject['mac'].split("||")]
                 for macadressdata in listmacadress:
@@ -1008,6 +1040,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 touser = ""):
         if who == "":
             who = self.boundjid.bare
+        if touser == "":
+            touser = self.boundjid.bare
         XmppMasterDatabase().setlogxmpp(text,
                                         type=type,
                                         sessionname=sessionname,
@@ -1262,46 +1296,68 @@ class MUCBot(sleekxmpp.ClientXMPP):
             msg=[]
             # search group deploy and jid machine
             objmachine = XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuidmachine, None)
+            if 'error' in objmachine and objmachine['error'] == "MultipleResultsFound" :
+                # FIXME: Check if the debug message is really useful
+                logger.warn('getGuacamoleRelayServerMachineUuid %s' % objmachine['error'])
+                possibly_dupplicate = XmppMasterDatabase().get_machine_with_dupplicate_uuidinventory(uuidmachine, None)
+                logger.warn("The following machines have the same uuid %s" % possibly_dupplicate)
+                grparray = []
+                jidarray = []
+                keysyncthingarray = []
+
+                for machine in possibly_dupplicate:
+                    grparray.append(machine['groupdeploy'])
+                    jidarray.append(machine['jid'])
+                    keysyncthingarray.append(machine['keysyncthing'])
+
+                grparray = list(set(grparray))
+                jidarray = list(set(jidarray))
+                keysyncthingarray = list(set(keysyncthingarray))
+                jidrelay = ",".join(grparray)
+                jidmachine = ",".join(jidarray)
+                keysyncthing = ",".join(keysyncthingarray)
+                raise Exception("MultipleResultsFound")
+
             jidrelay = objmachine['groupdeploy']
             jidmachine = objmachine['jid']
             keysyncthing = objmachine['keysyncthing']
-            if jidmachine != None and jidmachine != "" and jidrelay != None and jidrelay != "":
+            if jidmachine is not None and jidmachine != "" and jidrelay is not None and jidrelay != "":
                 # il y a 1 ARS pour le deploiement
                 # on regarde si celui-ci est up dans la table machine
                 ARSsearch = XmppMasterDatabase().getMachinefromjid(jidrelay)
                 if ARSsearch['enabled'] == 0:
-                    msg.append("<span class='log_err'>ARS %s for deployment is down.</span>"%jidrelay)
+                    msg.append("<span class='log_err'>ARS %s for deployment is down.</span>" % jidrelay)
                     msg.append("Action : Either restart it or rerun the configurator "\
-                                "on the machine %s to use another ARS"%(name))
+                                "on the machine %s to use another ARS" % (name))
                     msg.append("Searching alternative ARS for deployment")
-                    # il faut recherche si on trouve 1 alternative. dans le cluster
-                    # on cherche 1 ars disponible et up dans son cluster.
+                    # We look if we find an alternative in the cluster.
+                    # We search for an available and up ars in the culster
                     cluster = XmppMasterDatabase().clusterlistars(enabled=None)
-                    trouver = False
+                    found = False
                     for  i in range(1, len(cluster)+1):
                         nbars = len(cluster[i]['listarscluster'])
                         if jidrelay in cluster[i]['listarscluster']:
                             if nbars < 2:
                                 msg.append("<span class='log_err'>No alternative ARS found</span>")
                                 msg.append("Action : Either restart it or rerun the configurator "\
-                                            "on the machine %s to use another ARS"%(name))
+                                        "on the machine %s to use another ARS" % (name))
                                 XmppMasterDatabase().adddeploy(idcommand,
-                                                                jidmachine,
-                                                                jidrelay,
-                                                                name,
-                                                                uuidmachine,
-                                                                title,
-                                                                "ABORT RELAY DOWN",
-                                                                sessiondeployementless,
-                                                                user=login,
-                                                                login=login,
-                                                                title=title,
-                                                                group_uuid=GUID,
-                                                                startcmd=start_date,
-                                                                endcmd=end_date,
-                                                                macadress=macadress,
-                                                                result = "",
-                                                                syncthing = 0)
+                                                               jidmachine,
+                                                               jidrelay,
+                                                               name,
+                                                               uuidmachine,
+                                                               title,
+                                                               "ABORT RELAY DOWN",
+                                                               sessiondeployementless,
+                                                               user=login,
+                                                               login=login,
+                                                               title=title,
+                                                               group_uuid=GUID,
+                                                               startcmd=start_date,
+                                                               endcmd=end_date,
+                                                               macadress=macadress,
+                                                               result="",
+                                                               syncthing=0)
                                 for logmsg in msg:
                                     self.xmpplog(logmsg,
                                                 type='deploy',
@@ -1319,34 +1375,34 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 nbint = random.randint(0, nbars-1)
                                 arsalternative = cluster[i]['listarscluster'][nbint]
 
-                                msg.append("<span class='log_err'>ARS %s for deployment is "\
-                                            "down. Use alternative ARS for deployment %s. ARS "\
-                                                " %s must be restarted</span>"%(jidrelay,arsalternative,jidrelay) )
+                                msg.append("<span class='log_err'>ARS %s for deployment is "
+                                        "down. Use alternative ARS for deployment %s. ARS "
+                                        " %s must be restarted</span>" % (jidrelay, arsalternative, jidrelay))
                                 jidrelay = arsalternative
                                 ARSsearch = XmppMasterDatabase().getMachinefromjid(jidrelay)
                                 if ARSsearch['enabled'] == 1:
-                                    trouver = True
+                                    found = True
                                     break
 
-                    if not trouver:
+                    if not found:
                         sessiondeployementless = name_random(5, "missinggroupdeploy")
                         XmppMasterDatabase().adddeploy(idcommand,
-                                                        jidmachine,
-                                                        jidrelay,
-                                                        name,
-                                                        uuidmachine,
-                                                        title,
-                                                        "ABORT ALTERNATIVE RELAYS DOWN",
-                                                        sessiondeployementless,
-                                                        user=login,
-                                                        login=login,
-                                                        title=title,
-                                                        group_uuid=GUID,
-                                                        startcmd=start_date,
-                                                        endcmd=end_date,
-                                                        macadress=macadress,
-                                                        result = "",
-                                                        syncthing = 0)
+                                                    jidmachine,
+                                                    jidrelay,
+                                                    name,
+                                                    uuidmachine,
+                                                    title,
+                                                    "ABORT ALTERNATIVE RELAYS DOWN",
+                                                    sessiondeployementless,
+                                                    user=login,
+                                                    login=login,
+                                                    title=title,
+                                                    group_uuid=GUID,
+                                                    startcmd=start_date,
+                                                    endcmd=end_date,
+                                                    macadress=macadress,
+                                                    result="",
+                                                    syncthing=0)
                         msg.append("<span class='log_err'>Alternative ARS Down</span>")
                         msg.append("Action : check ARS cluster.")
                         for logmsg in msg:
@@ -1361,79 +1417,92 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         logger.error("deploy error cluster ARS")
                         return False
                 else:
-                    trouver = True
+                    found = True
                 #run deploiement
                 return self.applicationdeploymentjson(jidrelay,
-                                                        jidmachine,
-                                                        idcommand,
-                                                        login,
-                                                        name,
-                                                        time,
-                                                        encodebase64=False,
-                                                        uuidmachine=uuidmachine,
-                                                        start_date=start_date,
-                                                        end_date=end_date,
-                                                        title=title,
-                                                        macadress=macadress,
-                                                        GUID=GUID,
-                                                        keysyncthing = keysyncthing,
-                                                        nbdeploy=nbdeploy,
-                                                        wol=wol,
-                                                        msg=msg)
+                                                      jidmachine,
+                                                      idcommand,
+                                                      login,
+                                                      name,
+                                                      time,
+                                                      encodebase64=False,
+                                                      uuidmachine=uuidmachine,
+                                                      start_date=start_date,
+                                                      end_date=end_date,
+                                                      title=title,
+                                                      macadress=macadress,
+                                                      GUID=GUID,
+                                                      keysyncthing=keysyncthing,
+                                                      nbdeploy=nbdeploy,
+                                                      wol=wol,
+                                                      msg=msg)
             else:
                 sessiondeployementless = name_random(5, "missinggroupdeploy")
                 XmppMasterDatabase().adddeploy(idcommand,
-                                                jidmachine,
-                                                jidrelay,
-                                                name,
-                                                uuidmachine,
-                                                title,
-                                                "ABORT INFO RELAY MISSING",
-                                                sessiondeployementless,
-                                                user=login,
-                                                login=login,
-                                                title=title,
-                                                group_uuid=GUID,
-                                                startcmd=start_date,
-                                                endcmd=end_date,
-                                                macadress=macadress,
-                                                result = "",
-                                                syncthing = 0)
-                msg.append("<span class='log_err'>ARS for deployment is missing for machine %s </span>"%uuidmachine)
+                                               jidmachine,
+                                               jidrelay,
+                                               name,
+                                               uuidmachine,
+                                               title,
+                                               "ABORT INFO RELAY MISSING",
+                                               sessiondeployementless,
+                                               user=login,
+                                               login=login,
+                                               title=title,
+                                               group_uuid=GUID,
+                                               startcmd=start_date,
+                                               endcmd=end_date,
+                                               macadress=macadress,
+                                               result="",
+                                               syncthing=0)
+                msg.append("<span class='log_err'>ARS for deployment is missing for machine %s </span>" % uuidmachine)
                 msg.append("Action : The configurator must be restarted on the machine.")
                 for logmsg in msg:
                     self.xmpplog(logmsg,
-                                type='deploy',
-                                sessionname=sessiondeployementless,
-                                priority=-1,
-                                action="xmpplog",
-                                why=self.boundjid.bare,
-                                module="Deployment | Start | Creation",
-                                fromuser=login)
+                                 type='deploy',
+                                 sessionname=sessiondeployementless,
+                                 priority=-1,
+                                 action="xmpplog",
+                                 why=self.boundjid.bare,
+                                 module="Deployment | Start | Creation",
+                                 fromuser=login)
                 logger.error("deploy %s error on machine %s" % (name, uuidmachine))
                 return False
-        except:
+        except Exception as e:
+            logger.error("%s" % (str(e)))
             logger.error("%s" % (traceback.format_exc()))
             logger.error("deploy %s error on machine %s" % (name, uuidmachine))
-            XmppMasterDatabase().adddeploy( idcommand,
-                                            jidmachine,
-                                            jidrelay,
-                                            name,
-                                            uuidmachine,
-                                            title,
-                                            "ERROR UNKNOWN ERROR",
-                                            sessiondeployementless,
-                                            user=login,
-                                            login=login,
-                                            title=title,
-                                            group_uuid=GUID,
-                                            startcmd=start_date,
-                                            endcmd=end_date,
-                                            macadress=macadress,
-                                            result = "",
-                                            syncthing = 0)
-            msg.append("<span class='log_err'>Error creating deployment on machine %s "\
-                    "[%s]</span>"%(name, uuidmachine))
+
+            if str(e) == "MultipleResultsFound":
+                statusmsg = "ABORT DUPLICATE MACHINES"
+            else:
+                statusmsg = "ERROR UNKNOWN ERROR"
+
+
+            XmppMasterDatabase().adddeploy(idcommand,
+                                           jidmachine,
+                                           jidrelay,
+                                           name,
+                                           uuidmachine,
+                                           title,
+                                           statusmsg,
+                                           sessiondeployementless,
+                                           user=login,
+                                           login=login,
+                                           title=title,
+                                           group_uuid=GUID,
+                                           startcmd=start_date,
+                                           endcmd=end_date,
+                                           macadress=macadress,
+                                           result="",
+                                           syncthing=0)
+            msg.append("<span class='log_err'>Error creating deployment on machine[ %s ] "\
+                    "[%s] package[%s]</span>" % (jidmachine, uuidmachine,name))
+
+            if str(e) == "MultipleResultsFound":
+                msg.append("<span class='log_err'>The following machines " \
+                    "(%s) have the same GLPI ID: %s</span>" % (jidmachine,
+                                                               uuidmachine))
             for logmsg in msg:
                 self.xmpplog(logmsg,
                             type='deploy',
@@ -1446,7 +1515,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
 
     def parsexmppjsonfile(self, path):
-        ### puts the words False in lowercase.
+        # puts the words False in lowercase.
         datastr = file_get_contents(path)
         datastr = re.sub(r"(?i) *: *false", " : false", datastr)
         datastr = re.sub(r"(?i) *: *true", " : true", datastr)
@@ -1924,8 +1993,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
             resp.send(now=True)
             logger.info("Account created for %s!" % self.boundjid)
         except IqError as e:
-            logger.error("Could not register account: %s" %
-                         e.iq['error']['text'])
+            if e.iq['error']['code'] == "409":
+                logger.warning("Could not register account: User already exists")
+            else:
+                logger.error("Could not register account: %s" %\
+                        e.iq['error']['text'])
         except IqTimeout:
             logger.error("No response from server.")
             self.disconnect()

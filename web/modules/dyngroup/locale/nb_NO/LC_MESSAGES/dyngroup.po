@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-01 11:32+0200\n"
+"POT-Creation-Date: 2021-09-01 13:52+0200\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -198,8 +198,8 @@ msgstr "Avbryt"
 #: modules/dyngroup/includes/groups.inc.php:118
 #: modules/dyngroup/includes/groups.inc.php:122
 #: modules/dyngroup/dyngroup/import_from_file.php:51
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:101
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:103
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:104
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:106
 msgid "Group name"
 msgstr "Gruppenavn"
 
@@ -219,7 +219,7 @@ msgstr "Gruppemedlemmer"
 #: modules/dyngroup/dyngroup/creator.php:280
 #: modules/dyngroup/dyngroup/creator.php:286
 #: modules/dyngroup/dyngroup/save.php:84
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:89
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:92
 msgid "Yes"
 msgstr "Ja"
 
@@ -227,7 +227,7 @@ msgstr "Ja"
 #: modules/dyngroup/dyngroup/import_from_file.php:54
 #: modules/dyngroup/dyngroup/creator.php:281
 #: modules/dyngroup/dyngroup/save.php:84
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:89
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:92
 msgid "No"
 msgstr "Nei"
 
@@ -292,8 +292,8 @@ msgstr "Midlertidig resultatvisning for '%s'"
 msgid "back"
 msgstr "forrige"
 
-#: modules/dyngroup/dyngroup/add_groups.php:82
-#: modules/dyngroup/dyngroup/add_groups.php:307
+#: modules/dyngroup/dyngroup/add_groups.php:84
+#: modules/dyngroup/dyngroup/add_groups.php:309
 #, php-format
 msgid ""
 "Computers list has been truncated at %d computers. Use the filter to find "
@@ -302,11 +302,11 @@ msgstr ""
 "Datamaskinlisten er avkortet ved %ddatamaskiner. Bruk filteret til å finne "
 "spesifikke maskiner."
 
-#: modules/dyngroup/dyngroup/add_groups.php:162
+#: modules/dyngroup/dyngroup/add_groups.php:164
 msgid "Group successfully modified"
 msgstr "Gruppen ble endret"
 
-#: modules/dyngroup/dyngroup/add_groups.php:176
+#: modules/dyngroup/dyngroup/add_groups.php:178
 msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
 "running."
@@ -314,7 +314,7 @@ msgstr ""
 "Oppstartsmenyene kan ikke genereres ettersom det en multicast-distribusjon "
 "rulles ut for øyeblikket."
 
-#: modules/dyngroup/dyngroup/add_groups.php:190
+#: modules/dyngroup/dyngroup/add_groups.php:192
 msgid ""
 "Imaging group modified, but some machines were not added to existing imaging"
 " group, because they have more than one ethernet card:"
@@ -322,46 +322,46 @@ msgstr ""
 "Speilbildegruppen er endret, men noen maskiner ble ikke lagt til "
 "eksisterende speilbildegruppe, fordi de har mer enn ett Ethernet-kort:"
 
-#: modules/dyngroup/dyngroup/add_groups.php:206
+#: modules/dyngroup/dyngroup/add_groups.php:208
 msgid "Imaging group successfully modified"
 msgstr "Speilbildegruppen ble endret"
 
-#: modules/dyngroup/dyngroup/add_groups.php:211
+#: modules/dyngroup/dyngroup/add_groups.php:213
 #: modules/dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully created"
 msgstr "Gruppen ble opprettet"
 
-#: modules/dyngroup/dyngroup/add_groups.php:247
+#: modules/dyngroup/dyngroup/add_groups.php:249
 msgid "Group failed to modify"
 msgstr "Gruppen ble ikke endret"
 
-#: modules/dyngroup/dyngroup/add_groups.php:250
+#: modules/dyngroup/dyngroup/add_groups.php:252
 #, php-format
 msgid "Imaging group failed to modify.<br/>Can't add %s"
 msgstr "Speilbildegruppen kunne ikke endres. <br/> Kan ikke legge til%s"
 
-#: modules/dyngroup/dyngroup/add_groups.php:252
+#: modules/dyngroup/dyngroup/add_groups.php:254
 msgid "Imaging group failed to modify"
 msgstr "Speilbildegruppen kunne ikke endres."
 
-#: modules/dyngroup/dyngroup/add_groups.php:258
+#: modules/dyngroup/dyngroup/add_groups.php:260
 #: modules/dyngroup/dyngroup/save.php:100
 #: modules/dyngroup/dyngroup/save.php:102
 msgid "You must specify a group name"
 msgstr "Du må angi et gruppenavn"
 
-#: modules/dyngroup/dyngroup/add_groups.php:260
+#: modules/dyngroup/dyngroup/add_groups.php:262
 msgid "You must specify an imaging group name"
 msgstr "Du må angi en speilbildegruppenavn"
 
-#: modules/dyngroup/dyngroup/add_groups.php:263
+#: modules/dyngroup/dyngroup/add_groups.php:265
 #: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:98
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Det eksisterer en gruppe allerede med navnet '%s'"
 
-#: modules/dyngroup/dyngroup/add_groups.php:265
+#: modules/dyngroup/dyngroup/add_groups.php:267
 #, php-format
 msgid "An imaging group already exists with name '%s'"
 msgstr "En speilbildegruppe eksisterer allerede med navnet '%s'"
@@ -572,24 +572,24 @@ msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
 msgstr ""
 "To-trinns spørring: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
 
-#: modules/dyngroup/dyngroup/display.php:67
+#: modules/dyngroup/dyngroup/display.php:69
 #, php-format
 msgid "Group '%s' content"
 msgstr "Gruppe '%s' innhold"
 
-#: modules/dyngroup/dyngroup/display.php:73
+#: modules/dyngroup/dyngroup/display.php:75
 msgid "All computers"
 msgstr "Alle datamaskiner"
 
-#: modules/dyngroup/dyngroup/display.php:77
+#: modules/dyngroup/dyngroup/display.php:79
 msgid "Online computers"
 msgstr "Online datamaskiner"
 
-#: modules/dyngroup/dyngroup/display.php:81
+#: modules/dyngroup/dyngroup/display.php:83
 msgid "Offline computers"
 msgstr "Frakoblede datamaskiner"
 
-#: modules/dyngroup/dyngroup/display.php:84
+#: modules/dyngroup/dyngroup/display.php:86
 #, php-format
 msgid "Imaging group '%s' content"
 msgstr "Innehold i Speilbildebruppe '%s'"
@@ -616,7 +616,7 @@ msgid "save as"
 msgstr "Lagre som"
 
 #: modules/dyngroup/dyngroup/save.php:80
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:88
 msgid "query"
 msgstr "spørring"
 
@@ -746,89 +746,89 @@ msgstr "Velg Avbildningsserver"
 msgid "Select an imaging server for this group"
 msgstr "Velg en Avbildningsserver for denne gruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:63
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:65
 msgid "Delete this group"
 msgstr "Slett denne gruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:65
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:67
 msgid "Delete this imaging group"
 msgstr "Slett denne Avbildningsgruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:69
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:71
 msgid "Quick action"
 msgstr "Hurtighandling"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:88
 #, php-format
 msgid "result (%s)"
 msgstr "resultat (%s)"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:87
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:90
 msgid "static group"
 msgstr "statisk gruppe"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:113
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:116
 msgid "Type"
 msgstr "Type"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:115
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:118
 msgid "Favourite"
 msgstr "Favoritt"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:119
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:122
 msgid "Display this group's content"
 msgstr "Vis denne gruppens innhold"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:121
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:124
 msgid "Inventory on this group"
 msgstr "Denne gruppens inventar"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:126
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:129
 msgid "Edit this group"
 msgstr "Rediger denne gruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:127
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:130
 msgid "Share this group"
 msgstr "Del denne gruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:131
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:150
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:134
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:153
 msgid "Read log"
 msgstr "Les logg"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:133
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:136
 msgid "Software deployment on this group"
 msgstr "Distribusjon av programvare i denne gruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:136
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:139
 msgid "Update on this group"
 msgstr "Oppdater i denne gruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:139
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:142
 msgid "Display this imaging group's content"
 msgstr "Vis innholdet til denne bildebehandlingsgruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:141
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:144
 msgid "Inventory on this imaging group"
 msgstr "Denne gruppens inventar"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:146
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:149
 msgid "Edit this imaging group"
 msgstr "Rediger denne bildebehandlingsgruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:147
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:150
 msgid "Share this imaging group"
 msgstr "Del denne bildebehandlingsgruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:152
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:155
 msgid "Software deployment on this imaging group"
 msgstr "Utrulling av Programvarei denne bildebehandlingsgruppen"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:156
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:159
 msgid "Imaging management"
 msgstr "Administrering av bildefiler"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:167
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:170
 msgid "Csv export"
 msgstr "Csv eksport"
 

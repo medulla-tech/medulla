@@ -27,7 +27,9 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
     $uuid         = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-    $machine      = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
+    //$machine      = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
+    $jid  = isset($_GET['jid']) ? $_GET['jid'] : ( isset($_POST['jid']) ? $_POST['jid'] : "");
+    $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ?  xmlrpc_getjidMachinefromuuid( $uuid ) : $jid);
     $cmdsend      = isset($_GET['customcmd']) ? $_GET['customcmd'] : $_POST['customcmd'];
     $namecmd      = isset($_GET['namecmd']) ? $_GET['namecmd'] : $_POST['namecmd'];
     $os           = isset($_GET['os']) ? $_GET['os'] : $_POST['os'];
