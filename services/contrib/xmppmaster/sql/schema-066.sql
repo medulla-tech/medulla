@@ -39,7 +39,7 @@ begin
   set @success = 0;
 
   select @total:=count(id) from deploy where startcmd >= (NOW()-INTERVAL 1 WEEK);
-  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION") and startcmd >= (NOW()-INTERVAL 1 WEEK);
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION","ABORT DUPLICATE MACHINES") and startcmd >= (NOW()-INTERVAL 1 WEEK);
   select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd >= (NOW()-INTERVAL 1 WEEK);
   select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week1;
 
@@ -49,7 +49,7 @@ begin
   set @success = 0;
 
   select @total:=count(id) from deploy where startcmd < (NOW()-INTERVAL 1 WEEK) and startcmd >= (NOW()-INTERVAL 2 WEEK);
-  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION") and startcmd < (NOW()-INTERVAL 1 WEEK) and startcmd >= (NOW()-INTERVAL 2 WEEK);
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION","ABORT DUPLICATE MACHINES") and startcmd < (NOW()-INTERVAL 1 WEEK) and startcmd >= (NOW()-INTERVAL 2 WEEK);
   select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd < (NOW()-INTERVAL 1 WEEK) and startcmd >= (NOW()-INTERVAL 2 WEEK);
   select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week2;
 
@@ -59,7 +59,7 @@ begin
   set @success = 0;
 
   select @total:=count(id) from deploy where startcmd < (NOW()-INTERVAL 2 WEEK) and startcmd >= (NOW()-INTERVAL 3 WEEK);
-  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION") and startcmd < (NOW()-INTERVAL 2 WEEK) and startcmd >= (NOW()-INTERVAL 3 WEEK);
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION","ABORT DUPLICATE MACHINES") and startcmd < (NOW()-INTERVAL 2 WEEK) and startcmd >= (NOW()-INTERVAL 3 WEEK);
   select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd < (NOW()-INTERVAL 2 WEEK) and startcmd >= (NOW()-INTERVAL 3 WEEK);
   select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week3;
 
@@ -69,7 +69,7 @@ begin
   set @success = 0;
 
   select @total:=count(id) from deploy where startcmd < (NOW()-INTERVAL 3 WEEK) and startcmd >= (NOW()-INTERVAL 4 WEEK);
-  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION") and startcmd < (NOW()-INTERVAL 3 WEEK) and startcmd >= (NOW()-INTERVAL 4 WEEK);
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION","ABORT DUPLICATE MACHINES") and startcmd < (NOW()-INTERVAL 3 WEEK) and startcmd >= (NOW()-INTERVAL 4 WEEK);
   select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd < (NOW()-INTERVAL 3 WEEK) and startcmd >= (NOW()-INTERVAL 4 WEEK);
   select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week4;
 
@@ -79,7 +79,7 @@ begin
   set @success = 0;
 
   select @total:=count(id) from deploy where startcmd < (NOW()-INTERVAL 4 WEEK) and startcmd >= (NOW()-INTERVAL 5 WEEK);
-  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION") and startcmd < (NOW()-INTERVAL 4 WEEK) and startcmd >= (NOW()-INTERVAL 5 WEEK);
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION","ABORT DUPLICATE MACHINES") and startcmd < (NOW()-INTERVAL 4 WEEK) and startcmd >= (NOW()-INTERVAL 5 WEEK);
   select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd < (NOW()-INTERVAL 4 WEEK) and startcmd >= (NOW()-INTERVAL 5 WEEK);
   select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week5;
 
@@ -89,7 +89,7 @@ begin
   set @success = 0;
 
   select @total:=count(id) from deploy where startcmd < (NOW()-INTERVAL 5 WEEK) and startcmd >= (NOW()-INTERVAL 6 WEEK);
-  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION") and startcmd < (NOW()-INTERVAL 5 WEEK) and startcmd >= (NOW()-INTERVAL 6 WEEK);
+  select @notstarted:=count(id) from deploy where state in ("WAITING MACHINE ONLINE","WOL1","WOL2","WOL3","DEPLOYMENT DELAYED","DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...","ABORT MISSING AGENT","ABORT ON TIMEOUT","ABORT DEPLOYMENT CANCELLED BY USER","ABORT INCONSISTENT GLPI INFORMATION","ABORT DUPLICATE MACHINES") and startcmd < (NOW()-INTERVAL 5 WEEK) and startcmd >= (NOW()-INTERVAL 6 WEEK);
   select @success:=count(id) from deploy where state="DEPLOYMENT SUCCESS" and startcmd < (NOW()-INTERVAL 5 WEEK) and startcmd >= (NOW()-INTERVAL 6 WEEK);
   select if((@total-@notstarted) >0, (@success/(@total-@notstarted))*100, 0) into week6;
 
