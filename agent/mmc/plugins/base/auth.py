@@ -125,7 +125,7 @@ class AuthenticatorConfig(MMCConfigParser):
         self.conffile = conffile
         self.section = section
         self.setDefault()
-        fp = file(self.conffile, "r")
+        fp = open(self.conffile, "r")
         self.readfp(fp, self.conffile)
         if os.path.isfile(self.conffile + '.local'):
             self.readfp(open(self.conffile + '.local','r'))

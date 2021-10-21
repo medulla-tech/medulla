@@ -2,7 +2,7 @@
 
 log=`mktemp`
 error=0
-pyflakes . >"${log}" 2>&1
+python -m pyflakes . >"${log}" 2>&1
 
 # Print log without manual ignores
 while read line; do

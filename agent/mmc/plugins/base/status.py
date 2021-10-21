@@ -53,7 +53,7 @@ def getUptime():
     """
     Returns the machine uptime
     """
-    f = file('/proc/uptime')
+    f = open('/proc/uptime')
     data = f.read()
     f.close()
     return data
