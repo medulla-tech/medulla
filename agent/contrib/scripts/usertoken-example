@@ -79,5 +79,5 @@ Example support
         s.quit()
 
 
-parser = SendUserToken(file(sys.argv[1]))
+parser = SendUserToken(open(sys.argv[1]))
 parser.parse()

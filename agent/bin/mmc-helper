@@ -33,10 +33,9 @@ from mmc.core.audit import AuditFactory
 logging.basicConfig(level = logging.INFO)
 
 def usage():
-    print 'usage: mmc-helper command [subcommand]'
-    print
-    print \
-'''This tool is a basic helper for administrator to manage the internals of the
+    print('usage: mmc-helper command [subcommand]')
+    print()
+    print('''This tool is a basic helper for administrator to manage the internals of the
 MMC.
 For now, it only allows to create and initialize the audit database.
 
@@ -53,7 +52,7 @@ audit subcommands:
  list : print all audit records on command line
 
 example: mmc-helper audit initdb
-'''
+''')
 
 ret = 0
 printusage = False

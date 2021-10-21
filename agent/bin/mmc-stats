@@ -30,9 +30,9 @@ def usage():
     """
     Print command usage
     """
-    print 'usage: mmc-stats file'
-    print
-    print 'This tool analyses a mmc-agent log file in DEBUG mode and displays some stats.'
+    print('usage: mmc-stats file')
+    print()
+    print('This tool analyses a mmc-agent log file in DEBUG mode and displays some stats.')
 
 if __name__ == '__main__':
     # FIXME: code need to be reworked
@@ -47,14 +47,14 @@ if __name__ == '__main__':
     users = {}
 
     lasttime = None
-    for line in file(sys.argv[1]):
+    for line in open(sys.argv[1]):
         if "Execution time:" in line:
             try:
                 _, _, _, _, _, lasttime = line.split()
                 lasttime = float(lasttime)
             except ValueError:
-                print line
-                print line.split()
+                print(line)
+                print(line.split())
                 sys.exit(0)
         elif "Result for " in line:
             _, _, tmp, _ = line.split(":", 3)
@@ -77,27 +77,27 @@ if __name__ == '__main__':
             thread[num] = thread[num] + 1
 
     def callcounts():
-        print "Call counts:"
+        print("Call counts:")
         for func in callcount:
-            print callcount[func], func, "%02f" % timecount[func]
+            print(callcount[func], func, "%02f" % timecount[func])
         print
 
     def timecounts():
-        print "Time counts:"
+        print("Time counts:")
         for func in callcount:
-            print "%02f" % timecount[func], func, callcount[func]
-        print
+            print("%02f" % timecount[func], func, callcount[func])
+        print()
 
     def avgcounts():
-        print "Average call time:"
+        print("Average call time:")
         for func in callcount:
-            print "%02f" % (timecount[func] / callcount[func]), func
-        print
+            print("%02f" % (timecount[func] / callcount[func]), func)
+        print()
 
     def other():
-        print "Number of threads:", len(thread)
-        print "Number of users:", len(users)
-        print
+        print("Number of threads:", len(thread))
+        print("Number of users:", len(users))
+        print()
 
     callcounts()
     timecounts()
