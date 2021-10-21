@@ -31,6 +31,7 @@ from inspect import getargspec
 import twisted.internet.error
 import twisted.copyright
 from twisted.web import xmlrpc, server
+from twisted.web.xmlrpc import XMLRPC
 from twisted.internet import reactor, defer
 from twisted.python import failure
 try:
@@ -49,6 +50,7 @@ import imp
 import logging
 import logging.config
 import xmlrpc.client
+import xmlrpc.server
 from logging.handlers import TimedRotatingFileHandler
 import os
 import sys
@@ -265,7 +267,7 @@ class ExcludeEndsWithFilter(logging.Filter):
         return not record.getMessage().endswith(self.criterion)
 
 
-class MmcServer(xmlrpc.XMLRPC, object):
+class MmcServer(XMLRPC, object):
     """
     MMC Server implemented as a XML-RPC server.
 
@@ -1002,7 +1004,7 @@ def readConfig(config):
     if config.has_section("daemon"):
         config.euid = pwd.getpwnam(config.get("daemon", "user"))[2]
         config.egid = grp.getgrnam(config.get("daemon", "group"))[2]
-        config.umask = string.atoi(config.get("daemon", "umask"), 8)
+        config.umask = int(config.get("daemon", "umask"), 8)
     else:
         config.euid = 0
         config.egid = 0

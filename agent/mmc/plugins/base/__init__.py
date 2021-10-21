@@ -58,7 +58,6 @@ import os
 import time
 import copy
 import tempfile
-from sets import Set
 import logging
 import shutil
 import xmlrpc.client
@@ -1989,7 +1988,7 @@ class LdapUserGroupControl:
 
         attrList = self.getSchema(className)
 
-        badList = Set()
+        badList = set()
         for schemaName in arrObjectList:
             badList = badList | self.getSchema(schemaName)
 
@@ -2012,9 +2011,9 @@ class LdapUserGroupControl:
         subschemasubentry_dn, schema = ldap.schema.urlfetch(self.config.ldapurl)
         schemaAttrObj = schema.get_obj(ldap.schema.ObjectClass,schemaName)
         if not schemaAttrObj is None:
-            return ( Set(schemaAttrObj.must) | Set(schemaAttrObj.may) )
+            return (set(schemaAttrObj.must) | set(schemaAttrObj.may))
         else:
-            return Set()
+            return set()
 
     def posixGroupIsRFC2307bis(self):
         """

@@ -34,7 +34,7 @@ import shutil
 import logging
 import configparser
 import re
-from new import instancemethod
+from types import MethodType
 from time import time, struct_time
 import datetime
 from twisted.internet import protocol
@@ -440,10 +440,11 @@ def shlaunchBackground(cmd, desc = None, progressFunc = None, endFunc = None):
     ProcessScheduler().addProcess(shProcess.desc, shProcess)
 
     if progressFunc:
-        shProcess.progressCalc = instancemethod(progressFunc, shProcess, shSharedProcessProtocol)
+        shProcess.progressCalc = MethodType(progressFunc, shProcess, shSharedProcessProtocol)
 
     if endFunc:
-        shProcess.processEnded = instancemethod(endFunc, shProcess, shSharedProcessProtocol)
+        shProcess.processEnded = MethodType(endFunc, shProcess, shSharedProcessProtocol)
+
     reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
 
 
