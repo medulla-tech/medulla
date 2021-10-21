@@ -2,7 +2,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2008 Mandriva, http://www.mandriva.com
-#
+# (c) 2021 Siveo, http://www.siveo.net/
 # $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
@@ -25,13 +25,13 @@
 Set of classes to connect to a MMC server, and do XML-RPC requests.
 
 Example:
-import mmc.client.async
+import mmc.client.async_
 
 def cb(result):
     print result
     reactor.stop()
 
-proxy = async.Proxy("https://127.0.0.1:7080/XMLRPC", "mmc", "s3cr3t")
+proxy = async_.Proxy("https://127.0.0.1:7080/XMLRPC", "mmc", "s3cr3t")
 proxy.callRemote("base.ldapAuth", "root", "passpass").addCallbacks(cb)
 reactor.run()
 """

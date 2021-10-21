@@ -38,10 +38,11 @@ logging.basicConfig(level=logging.DEBUG)
 proxy = sync.Proxy('https://mmc:s3cr3t@127.0.0.1:7080')
 
 proxy.base.ldapAuth('root', 'secret')
-print 'Version:', proxy.base.getVersion()
-print 'APIVersion:', proxy.base.getApiVersion()
-print 'Revision:', proxy.base.getRevision()
+print('Version:', proxy.base.getVersion())
+print('APIVersion:', proxy.base.getApiVersion())
+print('Revision:', proxy.base.getRevision())
 """
+
 import os
 import stat
 import logging

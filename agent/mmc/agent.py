@@ -63,10 +63,6 @@ import re
 import zipfile
 from stat import ST_CTIME
 
-
-
-
-
 class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
     """
     Extended version of TimedRotatingFileHandler that compress logs on rollover.
@@ -560,10 +556,10 @@ class MmcServer(xmlrpc.XMLRPC, object):
             if isinstance(obj, PluginConfig):
                 try:
                     # Reloading configuration file
-                    fid = file(obj.conffile, "r")
+                    fid = open(obj.conffile, "r")
                     obj.readfp(fid, obj.conffile)
                     if os.path.isfile(obj.conffile + '.local'):
-                        fid = file(obj.conffile + '.local', "r")
+                        fid = open(obj.conffile + '.local', "r")
                         obj.readfp(fid, obj.conffile + '.local')
                     # Refresh config attributes
                     obj.readConf()

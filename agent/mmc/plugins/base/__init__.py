@@ -98,6 +98,8 @@ REVISION = scmRevision("$Rev$")
 NOAUTHNEEDED = ['authenticate', 'ldapAuth', 'isCommunityVersion',
                 'createAuthToken', 'tokenAuthenticate']
 
+def cmp(a, b):
+    return (a > b) - (a < b)
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
