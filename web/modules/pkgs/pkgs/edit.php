@@ -405,6 +405,14 @@ if(isExpertMode1())
     $allDependenciesList = [];
     $packagesInOptionAdded = '';
     $packagesInOptionNotAdded = '';
+    $dependenciesArray = [];
+    foreach($dependencies as $dependency){
+      $dependenciesArray[] = [
+        "uuid"=>$dependency,
+        "version"=>"",
+        "name"=>""
+      ];
+    }
     foreach($allPackagesList as $xmpp_package) {
       if(is_array($xmpp_package)){
         if($_GET['packageUuid'] != $xmpp_package['uuid']){
@@ -414,8 +422,9 @@ if(isExpertMode1())
 
           if(in_array($uuid, $dependencies))
           {
-            $packagesInOptionAdded .= '<option title="'.$name.' v.'.$version.'" value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
-
+            $id = array_search($uuid, $dependencies);
+            $dependenciesArray[$id]["name"] = $name;
+            $dependenciesArray[$id]["version"] = $version;
           }
           else{
             $packagesInOptionNotAdded .= '<option title="'.$name.' v.'.$version.'" value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
@@ -425,6 +434,9 @@ if(isExpertMode1())
       }
     }
 
+    foreach($dependenciesArray as $dep){
+      $packagesInOptionAdded .= '<option title="'.$dep["name"].' v.'.$dep["version"].'" value="'.$dep["uuid"].'">'.$dep["name"].' v.'.$dep["version"].'</option>';
+    }
     $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">
     <table style="border: none;" cellspacing="0">
         <tr>
