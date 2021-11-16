@@ -25,7 +25,7 @@
 # import time
 from manageRSAsigned import MsgsignedRSA
 from sleekxmpp import jid
-from utils import getRandomName
+from mmc.plugins.xmppmaster.master.lib.utils import getRandomName
 import re
 from distutils.version import LooseVersion
 import ConfigParser

@@ -28,7 +28,7 @@ import os
 import logging
 import zlib
 from time import sleep
-from utils import name_random, file_put_contents, file_get_contents
+from mmc.plugins.xmppmaster.master.lib.utils import name_random, file_put_contents, file_get_contents
 import traceback
 
 logger = logging.getLogger()
