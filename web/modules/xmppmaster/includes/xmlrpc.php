@@ -419,6 +419,10 @@ function xmlrpc_runXmppWolforuuid($uuid){
     return xmlCall("xmppmaster.CallXmppPlugin", array("wakeonlan", array("UUID"=>$uuid)));
 }
 
+function xmlrpc_runXmppWolforuuidsarray($uuids){
+    return xmlCall("xmppmaster.runXmppWolforuuidsarray",array($uuids));
+}
+
 function xmlrpc_callInventoryinterface($uuid){
     return xmlCall("xmppmaster.callInventoryinterface", array($uuid));
 }

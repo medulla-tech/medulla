@@ -891,6 +891,15 @@ def xmppGetAllPackages(login, filter,  start, end):
 def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)
 
+def runXmppWolforuuidsarray(uuids):
+    mach_infos = XmppMasterDatabase().getmachinesbyuuids(uuids)
+    macaddresslist=[]
+    # creation list mac address
+    for i in mach_infos:
+        macaddresslist.append(mach_infos[i]['macaddress'])
+    callXmppPlugin('wakeonlangroup', {'macadress': macaddresslist})
+    return True
+
 ############### synchro syncthing package #####################
 
 def pkgs_delete_synchro_package(uuidpackage):
