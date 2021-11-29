@@ -10866,6 +10866,74 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
+    def reload_deploy(self,
+                      session,
+                      uuid,
+                      cmd_id,
+                      gid,
+                      sessionid,
+                      hostname,
+                      login,
+                      title,
+                      start,
+                      endcmd,
+                      startcmd,
+                      force_redeploy,
+                      rechedule):
+        connection = self.db.raw_connection()
+
+
+        if cmd_id and  gid and sessionid:
+            logger.info("user %s reload deployement %s cmd id "\
+                    "%s on group (%s[%s]) sessionid  %s" % (login,
+                                                            title,
+                                                            cmd_id,
+                                                            hostname,
+                                                            gid,
+                                                            sessionid))
+            try:
+                logger.info("call procedure stockee mmc_restart_deploy_sessionid( %s,%s,%s) "%(sessionid,
+                                                                             force_redeploy,
+                                                                             rechedule))
+                cursor = connection.cursor()
+                cursor.callproc("mmc_restart_deploy_sessionid", [sessionid,
+                                                                force_redeploy,
+                                                                rechedule])
+                results = list(cursor.fetchall())
+                cursor.close()
+                connection.commit()
+            finally:
+                connection.close()
+            return
+        try:
+            if not gid:
+                logger.info("user %s reload deployement %s cmd id %s on mach (%s[%s])" % (login,
+                                                                                        title,
+                                                                                        cmd_id,
+                                                                                        hostname,
+                                                                                        uuid))
+            else:
+                # groupe complet a traite
+                logger.info("user %s reload deployement %s cmd id %s on complet group (%s[%s])" % (login,
+                                                                                            title,
+                                                                                            cmd_id,
+                                                                                            hostname,
+                                                                                            gid))
+
+            logger.info("callprocedure stockee  mmc_restart_deploy_cmdid( %s,%s,%s) "%( cmd_id,
+                                                                                        force_redeploy,
+                                                                                        rechedule))
+            cursor = connection.cursor()
+            cursor.callproc("mmc_restart_deploy_cmdid", [ cmd_id,
+                                                        force_redeploy,
+                                                        rechedule])
+            results = list(cursor.fetchall())
+            cursor.close()
+            connection.commit()
+        finally:
+            connection.close()
+
+    @DatabaseHelper._sessionm
     def get_machines_to_unban(self, session, jid_ars, start=0, end=-1, filter=""):
 
         try:

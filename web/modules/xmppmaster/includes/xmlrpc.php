@@ -763,6 +763,32 @@ function xmlrpc_ban_machines($subaction, $jid_ars, $machines){
   return xmlCall("xmppmaster.ban_machines", [$subaction, $jid_ars, $machines]);
 }
 
+function xmlrpc_reload_deploy( $uuid,
+                               $cmd_id,
+                               $gid,
+                               $sessionid,
+                               $hostname,
+                               $login,
+                               $title,
+                               $start,
+                               $endcmd,
+                               $startcmd,
+                               $force_redeploy,
+                               $rechedule){
+    return xmlCall("xmppmaster.reload_deploy",  array($uuid,
+                                                      $cmd_id,
+                                                      $gid,
+                                                      $sessionid,
+                                                      $hostname,
+                                                      $login,
+                                                      $title,
+                                                      $start,
+                                                      $endcmd,
+                                                      $startcmd,
+                                                      $force_redeploy,
+                                                      $rechedule));
+}
+
 function xmlrpc_get_conformity_update_by_entity(){
   return xmlCall("xmppmaster.get_conformity_update_by_entity");
 }
@@ -778,5 +804,4 @@ function xmlrpc_get_conformity_update_for_group($uuidArray){
 function xmlrpc_get_count_grey_list_enable(){
   return xmlCall("xmppmaster.get_count_grey_list_enable");
 }
-
 ?>

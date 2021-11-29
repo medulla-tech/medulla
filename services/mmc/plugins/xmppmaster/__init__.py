@@ -1479,3 +1479,30 @@ def ban_machines(subaction, jid_ars, machines):
     callXmppPlugin("banmachines", datasend)
 
     return True
+
+
+def reload_deploy(uuid,
+                  cmd_id,
+                  gid,
+                  sessionid,
+                  hostname,
+                  login,
+                  title,
+                  start,
+                  endcmd,
+                  startcmd,
+                  force_redeploy,
+                  rechedule):
+
+    result = XmppMasterDatabase().reload_deploy(uuid,
+                                                        cmd_id,
+                                                        gid,
+                                                        sessionid,
+                                                        hostname,
+                                                        login,
+                                                        title,
+                                                        start,
+                                                        endcmd,
+                                                        startcmd,
+                                                        force_redeploy,
+                                                        rechedule)
