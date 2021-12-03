@@ -277,4 +277,8 @@ function pkgs_search_ars_list_from_cluster_rules($login){
 function get_Cluster_list_rule($login){
   return xmlCall("pkgs.get_Cluster_list_rule", [$login]);
 }
+
+function xmlrpc_create_plan_deploiement($uuid){
+  return xmlCall("pkgs.create_plan_deploiement", [$uuid]);
+}
 ?>

@@ -1980,3 +1980,7 @@ def get_Cluster_list_rule(login):
     objsearch = {'login': login}
     re = PkgsDatabase().get_Cluster_list_rule(objsearch)
     return [x[0] for x in re]
+
+
+def create_plan_deploiement(packageuuid):
+    return apimanagepackagemsc.create_plan_deploiement(packageuuid)

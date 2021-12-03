@@ -13,6 +13,7 @@ thead{
 </style>
 
 <?php
+
 function renderAction($sequence, $os){
   $header = "";
   $values = "";
@@ -309,6 +310,44 @@ foreach($json['info']['Dependency'] as $dep){
 }
 echo '</table>';
 echo '</div>';
+
+
+
+
+$deployment_plan = xmlrpc_create_plan_deploiement($_GET['packageUuid']);
+echo '<h2 onclick="_toggle(\'#ordered-dependencies\')">'._T("Dependencies Workflow", "pkgs").'</h2>';
+
+echo '<div id="ordered-dependencies">';
+// Using manual table because we don't want pagination
+echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
+echo '<thead>';
+echo '<tr>';
+  echo '<th>'._T("Package", "pkgs").'</th>';
+  echo '<th>'._T("Uuid", "pkgs").'</th>';
+  echo '<th>'._T("Action", "pkgs").'</th>';
+echo '</tr>';
+echo '</thead>';
+foreach($deployment_plan as $dep){
+  echo '<tr class="alternate">';
+    // To ensure we have the name we use the global list
+    echo '<td>'.$allDependencies[$dep].'</td>';
+    echo '<td>'.$dep.'</td>';
+
+    echo '<td class="action">';
+      echo '<ul class="action">';
+      if(isset($allDependencies[$dep]))
+      echo $detailAction->display("", ["packageUuid"=>$dep]);
+      echo '</ul>';
+    echo '</td>';
+  echo '</tr>';
+}
+echo '</table>';
+echo '</div>';
+
+
+
+
+
 $tabsnames = "";
 $tabscontents= "";
 
