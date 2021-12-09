@@ -3925,22 +3925,40 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updatedeploystate1(self, session, sessionid, state):
         try:
-            sql="""UPDATE `xmppmaster`.`deploy`
-                SET
-                    `state` = '%s'
-                WHERE
-                    (deploy.sessionid = '%s'
-                        AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
-                                              'ABORT DEPLOYMENT CANCELLED BY USER')
-                                OR
-                              `state` REGEXP '^(\?!ERROR)^(\?!SUCCESS)^(\?!ABORT)'));
-                """ % (state, sessionid)
+            if "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)":
+                sql="""UPDATE `xmppmaster`.`deploy`
+                            SET
+                                `state` = '%s'
+                            WHERE
+                                (deploy.sessionid = '%s'
+                                    AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
+                                                        'ABORT DEPLOYMENT CANCELLED BY USER',
+                                                        "WOL 1",
+                                                        "WOL 2",
+                                                        "WOL 3",
+                                                        "WAITING MACHINE ONLINE"
+                                                        )
+                                            OR
+                                        `state` REGEXP '^(?!ERROR)^(?!SUCCESS)^(?!ABORT)'));
+                        """ % (state, sessionid)
+            else:
+                sql="""UPDATE `xmppmaster`.`deploy`
+                        SET
+                            `state` = '%s'
+                        WHERE
+                            (deploy.sessionid = '%s'
+                                AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
+                                                    'ABORT DEPLOYMENT CANCELLED BY USER')
+                                        OR
+                                    `state` REGEXP '^(?!ERROR)^(?!SUCCESS)^(?!ABORT)'));
+                        """ % (state, sessionid)
             result = session.execute(sql)
             session.commit()
             session.flush()
         except Exception, e:
             logging.getLogger().error(str(e))
             return -1
+
 
     @DatabaseHelper._sessionm
     def updatemachineAD(self, session, idmachine, lastuser, ou_machine, ou_user):
