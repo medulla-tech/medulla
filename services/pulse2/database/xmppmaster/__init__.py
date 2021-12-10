@@ -6870,7 +6870,64 @@ class XmppMasterDatabase(DatabaseHelper):
         return resulttypemachine
 
     @DatabaseHelper._sessionm
-    def search_machines_from_state(self, session, state):
+    def update_status_waiting_for_machine_off_in_state_deploy_start(self, session):
+        try:
+            sql = """UPDATE `xmppmaster`.`deploy`
+                        SET
+                            `state` = 'WAITING MACHINE ONLINE'
+                        WHERE
+                            deploy.sessionid IN (SELECT
+                                    sessionid
+                                FROM
+                                    xmppmaster.deploy
+                                        JOIN
+                                    xmppmaster.machines ON machines.jid = deploy.jidmachine
+                                WHERE
+                                    deploy.state = 'DEPLOYMENT START'
+                                        AND (NOW() BETWEEN deploy.startcmd AND deploy.endcmd)
+                                        AND machines.enabled = 0);"""
+            session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception:
+            logger.error("%s" % (traceback.format_exc()))
+
+    @DatabaseHelper._sessionm
+    def update_status_waiting_for_deploy_on_mochine_restart_or_stop(self, session):
+        """ selectionne machine data et session  deployement rester bloque sur starting plus de " seconde"""
+        try:
+            sql = """UPDATE `xmppmaster`.`deploy`
+                        SET
+                            `state` = 'WAITING MACHINE ONLINE'
+                        WHERE
+                            `deploy`.sessionid IN (SELECT DISTINCT
+                                    `xmppmaster`.`deploy`.sessionid
+                                FROM
+                                    xmppmaster.deploy
+                                        JOIN
+                                    logs ON logs.sessionname = deploy.sessionid
+                                WHERE
+                                    deploy.state = 'DEPLOYMENT START'
+                                        AND (NOW() BETWEEN deploy.startcmd AND deploy.endcmd)
+                                        AND logs.text LIKE '%online. Starting deployment%'
+                                        AND logs.date < DATE_ADD(NOW(), INTERVAL - 60 SECOND)
+                                        AND NOT EXISTS( SELECT
+                                            *
+                                        FROM
+                                            logs
+                                        WHERE
+                                            logs.text LIKE 'File transfer is enabled'
+                                                AND sessionname = deploy.sessionid)
+                                GROUP BY deploy.sessionid);"""
+            session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception:
+            logger.error("%s" % (traceback.format_exc()))
+
+
+    @DatabaseHelper._sessionm
+    def search_machines_from_state(self, session, state,subdep_user=None):
         dateend = datetime.now()
         sql= """SELECT
                     *
