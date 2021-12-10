@@ -66,7 +66,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback,sys
-
+from collections import OrderedDict
 import decimal
 
 logger = logging.getLogger()
@@ -5748,6 +5748,33 @@ ORDER BY
             return {"registered" : len(inventory_filtered_machines), "online": len(registered_online_machine), 'offline': len(registered_offline_machine), 'unregistered': len(unregistred_online_machine)}
         else:
             return {"registered" : inventory_filtered_machines, "online": registered_online_machine, 'offline': registered_offline_machine,'unregistered': unregistred_online_machine}
+
+
+    @DatabaseHelper._sessionm
+    def get_ancestors(self, session, uuid):
+        id = uuid.split("UUID")[1]
+        # Get the entity ancestors
+        query = session.query(Entities.ancestors_cache).filter(Entities.id == id).first()
+        # query can have 3 kind of datas:
+        # (None) None value (this is the case for the root entity )
+        # ('[0, 1]') list serialized, if the entity has less than 3 ancestors
+        # ('{"0":"0", "1": "1", "2":"2"}') dict serialized, if the entity has more than 2 ancestors
+
+        if query[0] is not None:
+            # Parse the elements in the initial order
+            decoder = json.JSONDecoder(object_pairs_hook=OrderedDict)
+            query = decoder.decode(query[0])
+        else:
+            query = []
+
+        result = []
+        if type(query) is dict:
+            for key in query:
+                # get the key, tke key = the value
+                result.append(int(key))
+        else:
+            result = [int(id) for id in query]
+        return result
 
 
 # Class for SQLalchemy mapping
