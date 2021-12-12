@@ -2,6 +2,7 @@ Pulse 2 4.6.10
 =============
 * [BUGFIX]  Fix displaying machines in the GLPI view
 * [BUGFIX]  Fix displaying of teams in Audit
+* [BUGFIX]  Fix displaying package order when editing a package
 
 Pulse 2 4.6.9
 =============
