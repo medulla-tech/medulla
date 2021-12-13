@@ -6881,7 +6881,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 FROM
                                     xmppmaster.deploy
                                         JOIN
-                                    xmppmaster.machines ON machines.jid = deploy.jidmachine
+                                    xmppmaster.machines ON FS_JIDUSERTRUE(machines.jid) = FS_JIDUSERTRUE(deploy.jidmachine)
                                 WHERE
                                     deploy.state = 'DEPLOYMENT START'
                                         AND (NOW() BETWEEN deploy.startcmd AND deploy.endcmd)
