@@ -29,7 +29,7 @@ import base64
 import json
 import os
 import sys
-from mmc.plugins.xmppmaster.master.lib.utils
+import mmc.plugins.xmppmaster.master.lib.utils
 import pprint
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
