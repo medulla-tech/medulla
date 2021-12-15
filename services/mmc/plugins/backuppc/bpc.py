@@ -1028,7 +1028,14 @@ def get_host_status(host):
 
 def get_global_status(entity_uuid):
     params = {'action':'summary'}
+    entities_parent = Glpi().get_ancestors(entity_uuid)
     url = BackuppcDatabase().get_backupserver_by_entity(entity_uuid)
+    if url == "":
+        for id in entities_parent:
+            url = BackuppcDatabase().get_backupserver_by_entity("UUID%s"%id)
+            if url != "":
+                break;
+
     if not url: return {'err':0,'data':{}}
     html = send_request(params,url)
     if not html:

@@ -638,6 +638,10 @@ function xmlrpc_get_mon_events($start=-1, $maxperpage=-1, $filter=""){
   return xmlCall("xmppmaster.get_mon_events", [$start, $maxperpage, $filter]);
 }
 
+function xmlrpc_get_mon_events_history($start=-1, $maxperpage=-1, $filter=""){
+  return xmlCall("xmppmaster.get_mon_events_history", [$start, $maxperpage, $filter]);
+}
+
 function xmlrpc_acquit_mon_event($id, $user){
   return xmlCall("xmppmaster.acquit_mon_event", [$id, $user]);
 }

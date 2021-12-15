@@ -399,6 +399,14 @@ def test_ln(pathdirpackage):
         os.remove(pathdirpackage)
     return { "result" : False }
 
+
+def parsexmppjsonfile(path):
+    # puts the words False in lowercase.
+    datastr = file_get_contents(path)
+    datastr = re.sub(r"(?i) *: *false", " : false", datastr)
+    datastr = re.sub(r"(?i) *: *true", " : true", datastr)
+    file_put_contents(path, datastr)
+
 def putPackageDetail(package, need_assign=True):
     """
         This function is used to create or edite a package
@@ -533,12 +541,13 @@ def putPackageDetail(package, need_assign=True):
     if 'mode' in package and   package['mode'] !=  'creation':
         typesynchro = 'chang'
 
-
     # writte file to xmpp deploy
     xmppdeployfile = to_json_xmppdeploy(package)
     fichier = open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" )
     fichier.write(xmppdeployfile)
     fichier.close()
+
+    parsexmppjsonfile(os.path.join(packages_id_input_dir,"xmppdeploy.json"))
 
     if centralizedmultiplesharing:
         localisation_server = package['localisation_server'] if 'localisation_server' in package else None

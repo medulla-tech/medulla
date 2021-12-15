@@ -22,12 +22,12 @@
 #
 # file pluginsmaster/plugin_resultdownloadfile.py
 
-from utils import pluginmaster, pluginmastersessionaction
+from mmc.plugins.xmppmaster.master.lib.utils import pluginmaster, pluginmastersessionaction
 import base64
 import json
 import os
 import zlib
-from utils import md5
+from mmc.plugins.xmppmaster.master.lib.utils import md5
 import hashlib
 import logging
 

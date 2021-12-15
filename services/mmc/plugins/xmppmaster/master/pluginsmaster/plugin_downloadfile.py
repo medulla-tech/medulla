@@ -27,7 +27,7 @@ import base64
 import json
 import os
 import sys
-from utils import simplecommand, file_get_content, file_put_content
+from mmc.plugins.xmppmaster.master.lib.utils import simplecommand, file_get_content, file_put_content
 import pprint
 import logging
 

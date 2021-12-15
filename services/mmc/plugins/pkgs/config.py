@@ -78,11 +78,11 @@ class PkgsConfig(PluginConfig):
             self.dbpooltimeout = 30
 
         if self.has_option("database", "dbpoolrecycle"):
-            self.dbpoolrecycle = self.get("database", "dbpoolrecycle")
+            self.dbpoolrecycle = self.getint("database", "dbpoolrecycle")
         else:
             self.dbpoolrecycle = 60
         if self.has_option("database", "dbpoolsize"):
-            self.dbpoolsize = self.get("database", "dbpoolsize")
+            self.dbpoolsize = self.getint("database", "dbpoolsize")
         else:
             self.dbpoolsize = 5
         self.dbpasswd = self.getpassword("database", "dbpasswd")

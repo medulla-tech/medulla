@@ -25,7 +25,7 @@
 import base64
 import json
 import os
-import utils
+from mmc.plugins.xmppmaster.master.lib.utils
 import pprint
 from pulse2.database.xmppmaster import XmppMasterDatabase
 

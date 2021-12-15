@@ -295,14 +295,6 @@ $showText = _T("Show", "xmppmaster");
         echo "</div>";
     }
     if ( $info['len'] == 0 || $boolterminate == false){
-        echo'
-            <script type="text/javascript">
-            setTimeout(refresh, 120000);
-            function  refresh(){
-                jQuery( "#formpage" ).submit();
-            }
-        </script>
-        ';
         $result = command_detail($cmd_id);
         $start_date = mktime($result['start_date'][3],
                             $result['start_date'][4],

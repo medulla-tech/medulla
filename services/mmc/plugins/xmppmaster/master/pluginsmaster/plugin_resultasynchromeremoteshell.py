@@ -28,7 +28,7 @@ import traceback
 import sys
 import os
 import json
-from utils import file_put_content
+from mmc.plugins.xmppmaster.master.lib.utils import file_put_content
 
 
 plugin = {"VERSION": "1.0", "NAME": "resultasynchromeremoteshell", "TYPE": "master"}

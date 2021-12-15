@@ -28,7 +28,7 @@ import traceback
 import types
 import ConfigParser
 import hashlib
-from utils import file_get_contents, name_random
+from mmc.plugins.xmppmaster.master.lib.utils import file_get_contents, name_random
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from manage_grafana import manage_grafana
 

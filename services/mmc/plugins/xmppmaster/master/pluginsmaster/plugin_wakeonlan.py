@@ -27,7 +27,7 @@ import json
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
 import traceback
-from utils import name_random
+from mmc.plugins.xmppmaster.master.lib.utils import name_random
 import logging
 import os
 import ConfigParser

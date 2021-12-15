@@ -25,7 +25,7 @@
 import json
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
-from utils import name_random
+from mmc.plugins.xmppmaster.master.lib.utils import name_random
 import logging
 
 logger = logging.getLogger()

@@ -90,6 +90,9 @@ class PkgsDatabase(DatabaseHelper):
         self.config = config
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, \
                 pool_size = self.config.dbpoolsize, pool_timeout = self.config.dbpooltimeout, convert_unicode = True)
+        self.logger.info("parameters connection pkgs from mmc :  pool_recycle  %s"\
+                            " pool_size %s pool_timeout %s"%( self.config.dbpoolrecycle ,
+                                                              self.config.dbpoolsize ,                                                                                     self.config.dbpooltimeout))
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)

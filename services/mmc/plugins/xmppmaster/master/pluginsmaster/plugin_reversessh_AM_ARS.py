@@ -24,7 +24,7 @@
 # this plugin can be called from quick action
 # eg : plugin_reversessh_AM_ARS@_@{ "proxyport" : 5225", "remoteport" : 9091 }
 import json
-from utils import name_random
+from mmc.plugins.xmppmaster.master.lib.utils import name_random
 import logging
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -99,7 +99,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 proxyportars = resultatinformation['get_free_tcp_port']
             else:
                 proxyportars = proxyport
-            
+
             result = xmppobject.iqsendpulse(jidARS,
                                             {"action": "information",
                                              "data": {"listinformation": ["add_proxy_port_reverse"],
@@ -122,7 +122,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                       }
                              }
             result = xmppobject.iqsendpulse(jidAM, structreverse, timeout)
-            
+
             del structreverse['data']['private_key_ars']
             del structreverse['data']['public_key_ars']
             structreverse['data']['uninterrupted'] = uninterrupted

@@ -3,6 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2016-2021 Siveo, http://siveo.net
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -70,6 +71,12 @@ $page = new Page("backup_dashboard", _T("Backup Panel", "dashboard"));
 $submod->addPage($page);
 
 $page = new Page("product_updates_dashboard", _T("Update Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("alerts", _T("Alerts Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("alertsentity", _T("Alerts by Entity Panel", "dashboard"));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
