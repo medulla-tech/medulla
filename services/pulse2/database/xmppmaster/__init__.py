@@ -3925,22 +3925,40 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updatedeploystate1(self, session, sessionid, state):
         try:
-            sql="""UPDATE `xmppmaster`.`deploy`
-                SET
-                    `state` = '%s'
-                WHERE
-                    (deploy.sessionid = '%s'
-                        AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
-                                              'ABORT DEPLOYMENT CANCELLED BY USER')
-                                OR
-                              `state` REGEXP '^(\?!ERROR)^(\?!SUCCESS)^(\?!ABORT)'));
-                """ % (state, sessionid)
+            if "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)":
+                sql="""UPDATE `xmppmaster`.`deploy`
+                            SET
+                                `state` = '%s'
+                            WHERE
+                                (deploy.sessionid = '%s'
+                                    AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
+                                                        'ABORT DEPLOYMENT CANCELLED BY USER',
+                                                        "WOL 1",
+                                                        "WOL 2",
+                                                        "WOL 3",
+                                                        "WAITING MACHINE ONLINE"
+                                                        )
+                                            OR
+                                        `state` REGEXP '^(?!ERROR)^(?!SUCCESS)^(?!ABORT)'));
+                        """ % (state, sessionid)
+            else:
+                sql="""UPDATE `xmppmaster`.`deploy`
+                        SET
+                            `state` = '%s'
+                        WHERE
+                            (deploy.sessionid = '%s'
+                                AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
+                                                    'ABORT DEPLOYMENT CANCELLED BY USER')
+                                        OR
+                                    `state` REGEXP '^(?!ERROR)^(?!SUCCESS)^(?!ABORT)'));
+                        """ % (state, sessionid)
             result = session.execute(sql)
             session.commit()
             session.flush()
         except Exception, e:
             logging.getLogger().error(str(e))
             return -1
+
 
     @DatabaseHelper._sessionm
     def updatemachineAD(self, session, idmachine, lastuser, ou_machine, ou_user):
@@ -6936,7 +6954,73 @@ class XmppMasterDatabase(DatabaseHelper):
         return resulttypemachine
 
     @DatabaseHelper._sessionm
-    def search_machines_from_state(self, session, state):
+    def update_status_waiting_for_machine_off_in_state_deploy_start(self, session):
+        """
+            Change the status of deploiements where the computer is offline.
+            It change de status from DEPLOYMENT START to WAITING MACHINE ONLINE
+        """
+        try:
+            sql = """UPDATE `xmppmaster`.`deploy`
+                        SET
+                            `state` = 'WAITING MACHINE ONLINE'
+                        WHERE
+                            deploy.sessionid IN (SELECT
+                                    sessionid
+                                FROM
+                                    xmppmaster.deploy
+                                        JOIN
+                                    xmppmaster.machines ON FS_JIDUSERTRUE(machines.jid) = FS_JIDUSERTRUE(deploy.jidmachine)
+                                WHERE
+                                    deploy.state = 'DEPLOYMENT START'
+                                        AND (NOW() BETWEEN deploy.startcmd AND deploy.endcmd)
+                                        AND machines.enabled = 0);"""
+            session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception:
+            logger.error("%s" % (traceback.format_exc()))
+
+    @DatabaseHelper._sessionm
+    def update_status_waiting_for_deploy_on_machine_restart_or_stop(self, session):
+        """
+            We select the machines in a stalled deploiement for more than 60 seconds in the 
+            WAITING MACHINE ONLINE state.
+        """
+        try:
+            sql = """UPDATE `xmppmaster`.`deploy`
+                        SET
+                            `state` = 'WAITING MACHINE ONLINE'
+                        WHERE
+                            `deploy`.sessionid IN (SELECT DISTINCT
+                                    `xmppmaster`.`deploy`.sessionid
+                                FROM
+                                    xmppmaster.deploy
+                                        JOIN
+                                    logs ON logs.sessionname = deploy.sessionid
+                                WHERE
+                                    deploy.state = 'DEPLOYMENT START'
+                                        AND (NOW() BETWEEN deploy.startcmd AND deploy.endcmd)
+                                        AND logs.text LIKE '%online. Starting deployment%'
+                                        AND logs.date < DATE_ADD(NOW(), INTERVAL - 60 SECOND)
+                                        AND NOT EXISTS( SELECT
+                                            *
+                                        FROM
+                                            logs
+                                        WHERE
+                                            logs.text LIKE 'File transfer is enabled'
+                                                AND sessionname = deploy.sessionid)
+                                GROUP BY deploy.sessionid);"""
+            session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception as stalled_error:
+            logger.error("We failed to find/select machines on a stalled deploiement for more than 60 seconds")
+            logger.error("We got the error %s" % stalled_error)
+            logger.error("We hit the backtrace: \n %s" % (traceback.format_exc()))
+
+
+    @DatabaseHelper._sessionm
+    def search_machines_from_state(self, session, state,subdep_user=None):
         dateend = datetime.now()
         sql= """SELECT
                     *
@@ -7042,6 +7126,25 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
         except Exception, e:
             logging.getLogger().error(str(e))
+
+    def restart_blocked_deployments(self, nb_reload=50):
+        """
+        Plan with blocked deployments again
+        call procedure mmc_restart_blocked_deployments
+        """
+        connection = self.db.raw_connection()
+        results = None
+        try:
+                self.logger.info("call procedure stockee mmc_restart_blocked_deployments(%s)" % nb_reload)
+                cursor = connection.cursor()
+                cursor.callproc("mmc_restart_blocked_deployments", [nb_reload])
+                results = list(cursor.fetchall())
+                cursor.close()
+                connection.commit()
+        finally:
+            connection.close()
+        self.logger.info("results (%s)" % results)
+        return results
 
     @DatabaseHelper._sessionm
     def updatedeploytosessionid(self, session, status, sessionid):
