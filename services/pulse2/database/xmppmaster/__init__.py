@@ -6959,6 +6959,25 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
 
+    def restart_blocked_deployments(self, nb_reload=50):
+        """
+        Plan with blocked deployments again
+        call procedure mmc_restart_blocked_deployments
+        """
+        connection = self.db.raw_connection()
+        results = None
+        try:
+                self.logger.info("call procedure stockee mmc_restart_blocked_deployments(%s)" % nb_reload)
+                cursor = connection.cursor()
+                cursor.callproc("mmc_restart_blocked_deployments", [nb_reload])
+                results = list(cursor.fetchall())
+                cursor.close()
+                connection.commit()
+        finally:
+            connection.close()
+        self.logger.info("results (%s)" % results)
+        return results
+
     @DatabaseHelper._sessionm
     def updatedeploytosessionid(self, session, status, sessionid):
         try:
