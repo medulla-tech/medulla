@@ -583,10 +583,10 @@ jQuery(function(){
 
   dependenciesFilter.on("change click hover keypress keydown", function(event){
     if(dependenciesFilter.val() != ""){
-      regex = new RegExp(dependenciesFilter.val(), "gi");
+      regex = new RegExp(dependenciesFilter.val(), "i");
       jQuery.each(pooldependencies, function(id, dependency){
         optionSelector = jQuery(dependency)
-        if(regex.test(optionSelector.val()) === false){
+        if(regex.test(dependency.title) === false){
           optionSelector.hide();
         }
         else{
