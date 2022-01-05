@@ -6010,6 +6010,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 if entitylist:
                     entitystrlist=",".join(entitylist)
                     entity = " AND ent.glpi_id in (%s) "% entitystrlist
+
+        ordered = ""
+        if (self.config.ordered == 1):
+            ordered = " order by mach.hostname "
+
         computerpresence = ""
         if 'computerpresence' in ctx:
             if ctx['computerpresence'] == 'presence':
@@ -6070,9 +6075,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     agenttype = 'machine'%s%s%s
                 GROUP BY mach.id
+                %s
                 limit %s, %s;""" % (computerpresence,
                                     entity,
                                     recherchefild,
+                                    ordered,
                                     start,
                                     end)
 
