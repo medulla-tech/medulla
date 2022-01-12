@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 13:52+0200\n"
+"POT-Creation-Date: 2022-01-09 15:47+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -459,7 +459,7 @@ msgid "Set Environ Variable"
 msgstr ""
 
 #: modules/pkgs/pkgs/detail.php:81 modules/pkgs/pkgs/detail.php:240
-#: modules/pkgs/pkgs/edit.php:505
+#: modules/pkgs/pkgs/edit.php:517
 msgid "File"
 msgstr "档案"
 
@@ -629,7 +629,7 @@ msgstr ""
 msgid "Action"
 msgstr "动作"
 
-#: modules/pkgs/pkgs/detail.php:284 modules/pkgs/pkgs/edit.php:428
+#: modules/pkgs/pkgs/detail.php:284 modules/pkgs/pkgs/edit.php:440
 #: modules/pkgs/pkgs/add.php:317
 msgid "Dependencies"
 msgstr ""
@@ -741,39 +741,39 @@ msgstr ""
 msgid "ordinary priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:438 modules/pkgs/pkgs/add.php:327
+#: modules/pkgs/pkgs/edit.php:450 modules/pkgs/pkgs/add.php:327
 msgid "Added dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:454 modules/pkgs/pkgs/add.php:343
+#: modules/pkgs/pkgs/edit.php:466 modules/pkgs/pkgs/add.php:343
 msgid "Available dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:455 modules/pkgs/pkgs/add.php:344
+#: modules/pkgs/pkgs/edit.php:467 modules/pkgs/pkgs/add.php:344
 msgid "search by name ..."
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:514
+#: modules/pkgs/pkgs/edit.php:526
 msgid "Delete file"
 msgstr "删除档案"
 
-#: modules/pkgs/pkgs/edit.php:514
+#: modules/pkgs/pkgs/edit.php:526
 msgid "Are you sure you want to delete this file?"
 msgstr "是否确定要删除此档案？"
 
-#: modules/pkgs/pkgs/edit.php:530
+#: modules/pkgs/pkgs/edit.php:542
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 #: modules/pkgs/includes/html.inc.php:59
 msgid "Click here to select files"
 msgstr "按一下此处选择档案"
 
-#: modules/pkgs/pkgs/edit.php:531
+#: modules/pkgs/pkgs/edit.php:543
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 #: modules/pkgs/includes/html.inc.php:42
 msgid "Upload Queued Files"
 msgstr "上传已伫列的档案"
 
-#: modules/pkgs/pkgs/edit.php:607 modules/pkgs/pkgs/add.php:444
+#: modules/pkgs/pkgs/edit.php:619 modules/pkgs/pkgs/add.php:444
 msgid "Accentuated and special chars are not allowed"
 msgstr ""
 

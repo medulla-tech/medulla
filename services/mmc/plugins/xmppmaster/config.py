@@ -94,6 +94,11 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         if self.has_option("computer_list", "summary"):
             self.summary = self.get("computer_list", "summary").split(' ')
 
+        # This is used to order by name asc the xmpp machines list
+        self.ordered = 0
+        if self.has_option("computer_list", "ordered"):
+            self.ordered = self.getint("computer_list", "ordered")
+
         ## Registry keys that need to be pushed in an inventory
         ## Format: reg_key_x = path_to_key|key_label_shown_in_mmc
         ## eg.:

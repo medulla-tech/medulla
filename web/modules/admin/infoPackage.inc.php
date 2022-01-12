@@ -164,7 +164,7 @@ $submod->addPage($page);
 
 $page = new Page("ban", _T("Ban Machines", "admin"));
 $page->setFile("modules/admin/admin/ban.php");
-$page->setOptions(array("AJAX" => true));
+$page->setOptions(array("AJAX" => false, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("ajaxban", _T("Ban Machines", "admin"));
@@ -174,7 +174,7 @@ $submod->addPage($page);
 
 $page = new Page("unban", _T("Unban Machines", "admin"));
 $page->setFile("modules/admin/admin/unban.php");
-$page->setOptions(array("AJAX" => true, "visible" => false));
+$page->setOptions(array("AJAX" => false, "noHeader" => True));
 $submod->addPage($page);
 
 $page = new Page("ajaxunban", _T("Unban Machines", "admin"));

@@ -25,7 +25,7 @@
 import base64
 import json
 import os
-from mmc.plugins.xmppmaster.master.lib.utils
+import mmc.plugins.xmppmaster.master.lib.utils
 import pprint
 import logging
 from pulse2.database.pkgs import PkgsDatabase

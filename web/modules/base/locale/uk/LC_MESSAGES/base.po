@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
-# Yuri Chornoivan <yurchor@ukr.net>, 2021
+# Yuri Chornoivan <yurchor@ukr.net>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 13:52+0200\n"
+"POT-Creation-Date: 2022-01-09 15:47+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1079,14 +1079,14 @@ msgid "Computers list"
 msgstr "Список комп'ютерів"
 
 #: modules/base/includes/computers_list.inc.php:368
-#: modules/glpi/glpi/ajaxMachinesList.php:471
+#: modules/glpi/glpi/ajaxMachinesList.php:472
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:323
 #: modules/pulse2/includes/menu_actionaudit.php:66
 msgid "Backup status"
 msgstr "Стан резервного копіювання"
 
 #: modules/base/includes/computers_list.inc.php:408
-#: modules/glpi/glpi/ajaxMachinesList.php:505
+#: modules/glpi/glpi/ajaxMachinesList.php:506
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:360
 msgid "Delete computer"
 msgstr "Вилучити комп'ютер"
@@ -1914,8 +1914,17 @@ msgstr ""
 "/>Позначте цей пункт, якщо хочете."
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
+#: modules/dashboard/includes/panels/alertsentity.inc.php:50
+#: modules/dashboard/includes/panels/alerts.inc.php:50
 msgid "Acknowledge"
 msgstr "Оповіщення"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:38
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:28
+#: modules/dashboard/includes/panels/alertsentity.inc.php:49
+#: modules/dashboard/includes/panels/alerts.inc.php:49
+msgid "Detail"
+msgstr "Подробиці"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:67
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
