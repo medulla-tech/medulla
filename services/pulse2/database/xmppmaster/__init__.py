@@ -6596,9 +6596,21 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [{column: value for column, value in rowproxy.items()} for rowproxy in result]
 
+    def jid_to_hostname(self, jid):
+        try:
+            user = jid.split('@')[0].split('.')
+            if len(user) > 1:
+                user = user[:-1]
+        except Exception :
+            return None
+        user=".".join(user)
+        if not user:
+            return None
+        return user
+
     @DatabaseHelper._sessionm
     def SetPresenceMachine(self, session, jid, presence=0):
-        """
+         """
             Change the presence in the machine table.
             Args:
                 session: The SQL Alchemy session
@@ -6606,16 +6618,18 @@ class XmppMasterDatabase(DatabaseHelper):
                 presence: The new presence state/
                           0: The machine is offline
                           1: The machine is online
-
         """
-        hostname = str(jid).split("@")[0]
+        user = self.jid_to_hostname(jid)
+        if not user:
+            logging.getLogger().error("SetPresenceMachine jid error : %s" % jid)
+            return False
         try:
             sql = """UPDATE
                         `xmppmaster`.`machines`
                     SET
                         `xmppmaster`.`machines`.`enabled` = '%s'
                     WHERE
-                        `xmppmaster`.`machines`.jid like('%s@%%');""" % (presence, hostname)
+                        `xmppmaster`.`machines`.hostname like '%s' limit 1;""" % (presence, user)
             session.execute(sql)
             session.commit()
             session.flush()
@@ -6624,6 +6638,7 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error("An error occured while setting the new presence.")
             logging.getLogger().error("We got the error:\n %s" % str(error_presence))
             return False
+
 
     @DatabaseHelper._sessionm
     def updatedeployresultandstate(self, session, sessionid, state, result ):
@@ -6745,13 +6760,16 @@ class XmppMasterDatabase(DatabaseHelper):
         """
             update boolean need_reconf in table machines
         """
-        user = str(jid).split("@")[0]
+        user = self.jid_to_hostname(jid)
+        if not user:
+            logging.getLogger().error("SetPresenceMachine jid error : %s" % jid)
+            return False
         try:
             sql = """UPDATE `xmppmaster`.`machines`
                          SET `need_reconf` = '%s'
                      WHERE
-                         `xmppmaster`.`machines`.jid like('%s@%%')""" % (status,
-                                                                       user)
+                         `xmppmaster`.`machines`.hostname like '%s' limit 1;""" % (status, 
+                                                                                   user)
             result = session.execute(sql)
             session.commit()
             session.flush()
@@ -6788,6 +6806,7 @@ class XmppMasterDatabase(DatabaseHelper):
         else:
             return {}
 
+
     @DatabaseHelper._sessionm
     def update_Presence_Relay(self, session, jid, presence=0):
         """
@@ -6806,22 +6825,23 @@ class XmppMasterDatabase(DatabaseHelper):
                     SET
                         `enabled` = '%s'
                     WHERE
-                        `xmppmaster`.`machines`.`jid` like('%s@%%');""" % (presence,
-                                                                           user)
+                        `xmppmaster`.`machines`.`jid` like('%s@%%') limit 1;""" % ( presence,
+                                                                                    user)
             session.execute(sql)
             sql = """UPDATE
                         `xmppmaster`.`relayserver`
                     SET
                         `enabled` = '%s'
                     WHERE
-                        `xmppmaster`.`relayserver`.`jid` like('%s@%%');""" % (presence,
-                                                                              user)
+                        `xmppmaster`.`relayserver`.`jid` like('%s@%%') limit 1;""" % (presence,
+                                                                                      user)
             session.execute(sql)
             session.commit()
             session.flush()
-        except Exception, e:
-            logging.getLogger().error(str(e))
-            logging.getLogger().error("\n%s" % (traceback.format_exc()))
+        except Exception as e:
+            logging.getLogger().error("Function : update_Presence_Relay, we got the error: " % str(e))
+            logging.getLogger().error("We encountered the backtrace: \n%s" % traceback.format_exc())
+
 
     @DatabaseHelper._sessionm
     def update_reconf_mach_of_Relay_down(self, session, jid, reconf=1):
