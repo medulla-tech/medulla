@@ -28,8 +28,21 @@ START TRANSACTION;
 USE `xmppmaster`;
 SET FOREIGN_KEY_CHECKS=0;
 
-  ALTER TABLE `xmppmaster`.`machines` 
+ALTER TABLE `xmppmaster`.`machines`
 ADD INDEX `ind_hostname` (`hostname` ASC) ;
+
+ALTER TABLE `xmppmaster`.`cluster_resources`
+ADD INDEX `ind_jid_search` (`jidmachine` ASC);
+;
+
+DROP EVENT IF EXISTS purgecluster_resource;
+CREATE EVENT IF NOT EXISTS purgecluster_resource
+    ON SCHEDULE
+        EVERY 1 DAY
+        STARTS CURRENT_DATE + INTERVAL 1 DAY + INTERVAL 5 HOUR
+        COMMENT 'Clean each day at 5 hours olds records of 30 days on table cluster ressource'
+    DO
+          DELETE FROM xmppmaster.cluster_resources WHERE endcmd < DATE_SUB(NOW(), INTERVAL 30 DAY);
 
 SET FOREIGN_KEY_CHECKS=1;
 -- ----------------------------------------------------------------------
