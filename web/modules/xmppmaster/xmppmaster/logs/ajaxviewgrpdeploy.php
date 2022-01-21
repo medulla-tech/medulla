@@ -174,6 +174,8 @@ $getdeployment = xmlrpc_getdeployment_cmd_and_title($cmd_id,
                                                     $filter,
                                                     $start,
                                                     $maxperpage);
+$status = array_combine($getdeployment["datas"]["uuid"], $getdeployment["datas"]["status"]);
+
 // Get the same machines from glpi
 $re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'],
                                 $filter,
@@ -192,7 +194,7 @@ $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 
 if ($count == 0){
-    // Refresh if no deployment is started. 
+    // Refresh if no deployment is started.
     installrefresh();
 }
 $timestampnow = time();
@@ -451,8 +453,8 @@ echo "<div>";
         echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
-            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($status,"xmppmaster")))."</td>" : "";
+        foreach($dynamicstatus as $label=>$_status){
+            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($_status,"xmppmaster")))."</td>" : "";
         }
         echo "</tr></thead>";
 
@@ -481,7 +483,7 @@ echo "<div>";
         echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
+        foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
         }
         echo "</tr>";
@@ -527,8 +529,8 @@ echo "<div>";
         echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
-            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($status,"xmppmaster")))."</td>" : "";
+        foreach($dynamicstatus as $label=>$_status){
+            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($_status,"xmppmaster")))."</td>" : "";
         }
         echo "</tr></thead>";
 
@@ -557,7 +559,7 @@ echo "<div>";
         echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
+        foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
         }
         echo "</tr></thead></table>";
@@ -668,11 +670,7 @@ if ($count != 0){
   $uuidprocess = array();
   $uuiddefault = array();
 
-  $status = [];
   foreach ($info['objectdeploy'] as  $val){
-      $status[$val['inventoryuuid']] = "";
-      $status[$val['inventoryuuid']] = $val['state'];
-
       switch($val['state']){
           case "DEPLOYMENT SUCCESS":
               $uuidsuccess[] = $val['inventoryuuid'];
@@ -690,6 +688,11 @@ if ($count != 0){
       }
   }
   $params = [];
+
+  $info_from_machines[] = []; // Add 7th index
+  $info_from_machines[] = []; // Add 8th index
+  $info_from_machines[] = []; // Add 9th index
+
   foreach($info_from_machines[0] as $key => $value)
   {
       if(isset($status['UUID'.$value]))
