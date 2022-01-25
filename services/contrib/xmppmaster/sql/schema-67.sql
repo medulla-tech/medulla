@@ -62,8 +62,11 @@ autre
 ALTER TABLE `xmppmaster`.`relayserver`
 ADD INDEX `ind_mode_ars` (`moderelayserver` ASC)
 
-
-
+-- ----------------------------------------------------------------------
+-- Database add index
+-- ------------------ ----------------------------------------------------
+ALTER TABLE `xmppmaster`.`agent_subscription`
+ADD INDEX `ind_name` (`name` ASC) ;
 -- ----------------------------------------------------------------------
 -- Database supprime index en doublon dans deploy table
 -- ------------------ ----------------------------------------------------
