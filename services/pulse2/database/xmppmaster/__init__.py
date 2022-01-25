@@ -1250,7 +1250,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         LEFT OUTER JOIN
                     cluster_ars ON cluster_ars.id = has_cluster_ars.id_cluster
                         LEFT OUTER JOIN
-                    machines ON SUBSTRING_INDEX(machines.jid, '@', 1) = SUBSTRING_INDEX(relayserver.jid, '@', 1)
+                    machines ON machines.hostname = relayserver.nameserver 
                 WHERE
                     relayserver.moderelayserver = 'static' %s
                     AND relayserver.id in(	 SELECT

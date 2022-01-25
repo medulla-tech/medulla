@@ -44,6 +44,26 @@ CREATE EVENT IF NOT EXISTS purgecluster_resource
     DO
           DELETE FROM xmppmaster.cluster_resources WHERE endcmd < DATE_SUB(NOW(), INTERVAL 30 DAY);
 
+
+          ALTER TABLE `xmppmaster`.`has_cluster_ars`
+
+
+-- ----------------------------------------------------------------------
+-- Database add index
+-- ------------------ ----------------------------------------------------
+ALTER TABLE `xmppmaster`.`has_cluster_ars`
+ADD INDEX `ind_id_ars` (`id_ars` ASC) ;
+ALTER TABLE `xmppmaster`.`has_cluster_ars`
+ADD INDEX `ind_id_cluster` (`id_cluster` ASC) ;
+
+ALTER TABLE `xmppmaster`.`relayserver`
+ADD INDEX `ind_server_name` (`nameserver` ASC);
+autre
+ALTER TABLE `xmppmaster`.`relayserver`
+ADD INDEX `ind_mode_ars` (`moderelayserver` ASC)
+
+
+
 -- ----------------------------------------------------------------------
 -- Database supprime index en doublon dans deploy table
 -- ------------------ ----------------------------------------------------
