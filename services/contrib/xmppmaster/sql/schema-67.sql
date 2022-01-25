@@ -44,6 +44,16 @@ CREATE EVENT IF NOT EXISTS purgecluster_resource
     DO
           DELETE FROM xmppmaster.cluster_resources WHERE endcmd < DATE_SUB(NOW(), INTERVAL 30 DAY);
 
+-- ----------------------------------------------------------------------
+-- Database supprime index en doublon dans deploy table
+-- ------------------ ----------------------------------------------------
+ ALTER TABLE `xmppmaster`.`deploy`
+DROP INDEX `ind_end_cmd` ;
+
+ALTER TABLE `xmppmaster`.`deploy`
+DROP INDEX `ind_start_cmd` ;
+;
+
 SET FOREIGN_KEY_CHECKS=1;
 -- ----------------------------------------------------------------------
 -- Database version
