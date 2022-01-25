@@ -58,6 +58,8 @@ DROP INDEX `ind_start_cmd` ;
 -- ------------------ ----------------------------------------------------
 ALTER TABLE `xmppmaster`.`machines`
 ADD INDEX `ind_groupedeploy` (`groupdeploy` ASC)
+ALTER TABLE `xmppmaster`.`machines`
+ADD INDEX `ind_macadress` (`macaddress` ASC) ;
 -- ----------------------------------------------------------------------
 -- Database controle insertion dans table machine
 -- ------------------ ----------------------------------------------------
