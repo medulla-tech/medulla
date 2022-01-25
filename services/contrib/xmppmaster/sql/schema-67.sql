@@ -54,6 +54,49 @@ ALTER TABLE `xmppmaster`.`deploy`
 DROP INDEX `ind_start_cmd` ;
 ;
 
+
+-- ----------------------------------------------------------------------
+-- Database controle insertion dans table machine
+-- ------------------ ----------------------------------------------------
+USE `xmppmaster`;
+DROP procedure IF EXISTS `afterinsertmachine`;
+
+USE `xmppmaster`;
+DROP procedure IF EXISTS `xmppmaster`.`afterinsertmachine`;
+;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE PROCEDURE `afterinsertmachine`(IN newjid VARCHAR(255))
+BEGIN
+-- efface si il existe 1 ancien jid pour la meme machine.
+-- si on trouve 1 machine avec le meme hostname,
+-- mais avec 1 sufixe d user different
+-- ou 1 domaine different
+-- ou encore 1 ressource differente.
+-- on supprime cette machine de la table machine.
+
+set @userjid =  SUBSTRING_INDEX(SUBSTRING_INDEX(newjid, '@', 1),'.',1);
+set @pattern = CONCAT("^" ,@userjid);-- le patern est user du newjid precede de ^
+
+DELETE FROM `xmppmaster`.`machines`
+WHERE
+    `id` IN (SELECT
+        id
+    FROM
+        `xmppmaster`.`machines`
+    WHERE
+        `jid` REGEXP @pattern
+        AND `enabled` = 0
+        AND `uuid_inventorymachine` IS NOT NULL)
+    AND `jid` != newjid;
+END$$
+
+DELIMITER ;
+;
+
+
+
 SET FOREIGN_KEY_CHECKS=1;
 -- ----------------------------------------------------------------------
 -- Database version
