@@ -392,19 +392,21 @@ def getstatdeployfromcommandidstartdate(command_id, datestart):
 
 def get_machine_stop_deploy(cmdid, uuid):
     result = XmppMasterDatabase().get_machine_stop_deploy(cmdid, uuid)
-    msg_stop_deploy = {
-        "action": "enddeploy",
-        "sessionid": result['sessionid'],
-        'data': {"typerequest": "bansessionid"},
-        "ret": 0,
-        'base64': False
-    }
-    updatedeploystate(result['sessionid'], 'ABORT DEPLOYMENT CANCELLED BY USER')
-    if 'jid_relay' in result and result['jid_relay'] != "fake_jidrelay":
-        send_message_json(result['jid_relay'], msg_stop_deploy)
-    if 'jidmachine' in result and result['jidmachine'] != "fake_jidmachine":
-        send_message_json(result['jidmachine'], msg_stop_deploy)
-    return True
+    if machine:
+        msg_stop_deploy = {
+            "action": "enddeploy",
+            "sessionid": result['sessionid'],
+            'data': {"typerequest": "bansessionid"},
+            "ret": 0,
+            'base64': False
+        }
+        updatedeploystate(result['sessionid'], 'ABORT DEPLOYMENT CANCELLED BY USER')
+        if 'jid_relay' in result and result['jid_relay'] != "fake_jidrelay":
+            send_message_json(result['jid_relay'], msg_stop_deploy)
+        if 'jidmachine' in result and result['jidmachine'] != "fake_jidmachine":
+            send_message_json(result['jidmachine'], msg_stop_deploy)
+        return True
+    return False
 
 
 def get_group_stop_deploy(grpid, cmdid):
