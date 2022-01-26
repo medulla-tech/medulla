@@ -73,6 +73,12 @@ DROP INDEX `ind_end_cmd` ;
 ALTER TABLE `xmppmaster`.`deploy`
 DROP INDEX `ind_start_cmd` ;
 ;
+
+-- ----------------------------------------------------------------------
+-- Database add index
+-- ------------------ ----------------------------------------------------
+ALTER TABLE `xmppmaster`.`deploy`
+ADD INDEX `ind_syncthing` (`syncthing` ASC) ;
 -- ----------------------------------------------------------------------
 -- Database add index  dans machines table
 -- ------------------ ----------------------------------------------------
