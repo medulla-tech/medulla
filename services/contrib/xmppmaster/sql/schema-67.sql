@@ -45,9 +45,6 @@ CREATE EVENT IF NOT EXISTS purgecluster_resource
           DELETE FROM xmppmaster.cluster_resources WHERE endcmd < DATE_SUB(NOW(), INTERVAL 30 DAY);
 
 
-          ALTER TABLE `xmppmaster`.`has_cluster_ars`
-
-
 -- ----------------------------------------------------------------------
 -- Database add index
 -- ------------------ ----------------------------------------------------
@@ -123,7 +120,110 @@ END$$
 DELIMITER ;
 ;
 
+-- ----------------------------------------------------------------------
+-- Database history for deploy table
+-- ----------------------------------------------------------------------
+-- Database creation historydeploy table
+CREATE TABLE `historydeploy` (
+  `id` int(11) NOT NULL DEFAULT 0,
+  `title` varchar(255) DEFAULT NULL,
+  `jidmachine` varchar(255) NOT NULL,
+  `jid_relay` varchar(255) NOT NULL,
+  `pathpackage` varchar(100) NOT NULL,
+  `state` varchar(45) NOT NULL,
+  `sessionid` varchar(45) NOT NULL,
+  `start` timestamp NOT NULL DEFAULT current_timestamp(),
+  `startcmd` timestamp NULL DEFAULT NULL,
+  `endcmd` timestamp NULL DEFAULT NULL,
+  `inventoryuuid` varchar(11) NOT NULL,
+  `host` varchar(255) DEFAULT NULL,
+  `user` varchar(45) DEFAULT NULL,
+  `command` int(11) DEFAULT NULL,
+  `group_uuid` varchar(11) DEFAULT NULL,
+  `login` varchar(45) DEFAULT NULL,
+  `macadress` varchar(255) DEFAULT NULL,
+  `syncthing` int(11) DEFAULT 0,
+  `result` mediumtext DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- add index deploy table on status
+ALTER TABLE `xmppmaster`.`deploy`
+ADD INDEX `ind_state` (`state` ASC) ;
+
+-- delete old historydeploy
+
+DROP EVENT IF EXISTS purge_historydeploy;
+CREATE EVENT IF NOT EXISTS purge_historydeploy
+    ON SCHEDULE
+        EVERY 1 DAY
+        STARTS CURRENT_DATE + INTERVAL 1 DAY + INTERVAL 6 HOUR
+        COMMENT 'Clean each day at 6 hours olds records of 60 days on table historydeploy'
+    DO
+          DELETE FROM xmppmaster.historydeploy
+WHERE
+    endcmd < DATE_SUB(NOW(), INTERVAL 60 DAY);
+
+-- add trigger suppression deploy
+
+DROP TRIGGER IF EXISTS `xmppmaster`.`deploy_AFTER_DELETE`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `xmppmaster`.`deploy_AFTER_DELETE` AFTER DELETE ON `deploy` FOR EACH ROW
+BEGIN
+INSERT INTO historydeploy
+      (id,
+      title,
+      jidmachine,
+      jid_relay,
+      pathpackage,state,sessionid,
+      start,
+      startcmd,
+      endcmd,
+      inventoryuuid,
+      host,
+      user,
+      command,
+      group_uuid,
+      login,
+      macadress,
+      syncthing,
+      result)
+    VALUES
+      (OLD.id,
+      OLD.title,
+      OLD.jidmachine,
+      OLD.jid_relay,
+      OLD.pathpackage,
+      OLD.state,
+      OLD.sessionid,
+      OLD.start,
+      OLD.startcmd,
+      OLD.endcmd,
+      OLD.inventoryuuid,
+      OLD.host,
+      OLD.user,
+      OLD.command,
+      OLD.group_uuid,
+      OLD.login,
+      OLD.macadress,
+      OLD.syncthing,
+      OLD.result);
+END$$
+DELIMITER ;
+
+-- delete old deploy
+
+DROP EVENT IF EXISTS purge_deploy;
+CREATE EVENT IF NOT EXISTS purge_deploy
+    ON SCHEDULE
+        EVERY 1 DAY
+        STARTS CURRENT_DATE + INTERVAL 1 DAY + INTERVAL 4 HOUR
+        COMMENT 'Clean each day at 4 hours olds records of 30 days on table deploy. the deployment deleted are copy to table historydeploy'
+    DO
+          DELETE FROM xmppmaster.deploy
+WHERE
+    endcmd < DATE_SUB(NOW(), INTERVAL 30 DAY);
 
 SET FOREIGN_KEY_CHECKS=1;
 -- ----------------------------------------------------------------------
