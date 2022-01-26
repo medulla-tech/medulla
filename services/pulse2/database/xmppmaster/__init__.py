@@ -4572,7 +4572,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if intervalsearch:
             deploylog = deploylog.filter(Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
 
-        if filt is not None:
+        if filt:
             deploylog = deploylog.filter(or_(Deploy.state.like('%%%s%%' % filt),
                                              Deploy.pathpackage.like('%%%s%%' % filt),
                                              Deploy.start.like('%%%s%%' % filt),
@@ -4698,7 +4698,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if intervalsearch:
             deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
 
-        if filt is not None:
+        if filt:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
                                                 Deploy.pathpackage.like('%%%s%%'%(filt)),
                                                 Deploy.start.like('%%%s%%'%(filt)),
@@ -4761,7 +4761,7 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = deploylog.order_by(desc(Deploy.id))
 
         ##deploylog = deploylog.add_column(func.count(Deploy.title))
-        if minimum is not None and maximum is not None:
+        if minimum  and maximum:
             deploylog = deploylog.offset(int(minimum)).limit(int(maximum)-int(minimum))
         result = deploylog.all()
         session.commit()
@@ -4844,13 +4844,20 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if intervalsearch:
             deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
-
-        if filt is not None:
+        filter_filt=""
+        if filt:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
                                                 Deploy.pathpackage.like('%%%s%%' % (filt)),
                                                 Deploy.start.like('%%%s%%' % (filt)),
                                                 Deploy.login.like('%%%s%%' % (filt)),
                                                 Deploy.host.like('%%%s%%' % (filt))))
+            filter_filt=""" AND (state LIKE "%%%s%%"
+                or pathpackage LIKE "%%%s%%"
+                or start LIKE "%%%s%%"
+                or login LIKE "%%%s%%"
+                or host LIKE "%%%s%%"
+                ) """( filt,filt,filt,filt,filt)
+
 
         deploylog = deploylog.filter( or_(  Deploy.state == 'DEPLOYMENT SUCCESS',
                                             Deploy.state.startswith('ERROR'),
@@ -4866,42 +4873,24 @@ class XmppMasterDatabase(DatabaseHelper):
                 select count(id) as nb
                 from deploy
                 where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
-                AND login REGEXP "%s"
-                AND (state LIKE "%%%s%%"
-                or pathpackage LIKE "%%%s%%"
-                or start LIKE "%%%s%%"
-                or login LIKE "%%%s%%"
-                or host LIKE "%%%s%%"
-                )
+                AND login REGEXP "%s" %s
                 group by title
-                ) as x;"""%(llogin, filt,filt,filt,filt,filt,)
+                ) as x;"""%(llogin, filter_filt)
             else:
                 count = """select count(*) as nb from (
                 select count(id) as nb
                 from deploy
                 where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
-                AND login LIKE "%s"
-                AND (state LIKE "%%%s%%"
-                or pathpackage LIKE "%%%s%%"
-                or start LIKE "%%%s%%"
-                or login LIKE "%%%s%%"
-                or host LIKE "%%%s%%"
-                )
+                AND login LIKE "%s" %s
                 group by title
-                ) as x;"""%(login, filt,filt,filt,filt,filt,)
+                ) as x;"""%(login,filter_filt)
         else:
             count = """select count(*) as nb from (
             select count(id) as nb
             from deploy
-            where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
-            AND (state LIKE "%%%s%%"
-            or pathpackage LIKE "%%%s%%"
-            or start LIKE "%%%s%%"
-            or login LIKE "%%%s%%"
-            or host LIKE "%%%s%%"
-            )
+            where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH) %s
             group by title
-            ) as x;"""%(filt,filt,filt,filt,filt,)
+            ) as x;"""%(filter_filt)
 
         count = session.execute(count)
         count = [nbcount for nbcount in count]
@@ -4914,7 +4903,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         nbfilter =  self.get_count(deploylog)
 
-        if minimum is not None and maximum is not None:
+        if minimum and maximum:
             deploylog = deploylog.offset(int(minimum)).limit(int(maximum)-int(minimum))
         result = deploylog.all()
         session.commit()
@@ -4966,8 +4955,6 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['jid_relay'].append(linedeploy.jid_relay)
             ret['tabdeploy']['title'].append(linedeploy.title)
         return ret
-
-
 
     @DatabaseHelper._sessionm
     def getdeploybyuser(self, session, login = None, numrow = None, offset=None):
