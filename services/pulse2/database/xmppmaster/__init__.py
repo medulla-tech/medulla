@@ -7998,7 +7998,7 @@ class XmppMasterDatabase(DatabaseHelper):
             .add_column(Machines.macaddress.label('macaddress'))\
             .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)\
             .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
-            .outerjoin(Machines, func.substring_index(Machines.jid, '/', 1) == func.substring_index(RelayServer.jid, '/', 1))\
+            .outerjoin(Machines, Machines.hostname == RelayServer.nameserver)\
             .filter(RelayServer.moderelayserver == 'static')
 
         if presence == 'nopresence':
@@ -8127,13 +8127,13 @@ class XmppMasterDatabase(DatabaseHelper):
     def change_relay_switch(self, session, jid, switch, propagate):
         id_cluster = None
         if propagate is True:
-            session.query(RelayServer).filter(func.substring_index(RelayServer.jid, '/', 1) == jid.split('/')[0],\
-                RelayServer.mandatory == 0).update(\
+            session.query(RelayServer).filter(and_(RelayServer.nameserver == jid.split('/')[0],\
+                RelayServer.mandatory == 0)).update(\
                 {RelayServer.switchonoff: switch})
             try:
                 cluster = session.query(Has_cluster_ars.id_cluster)\
                     .join(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
-                    .join(Machines, func.substring_index(Machines.jid, '/', 1) == func.substring_index(RelayServer.jid, '/', 1))\
+                    .join(Machines, Machines.hostname == RelayServer.nameserver)\
                     .filter(Machines.jid == jid).one()
                 id_cluster = cluster.id_cluster
             except:
@@ -8229,14 +8229,14 @@ where agenttype="machine" and groupdeploy in (
         @returns: boolean"""
         try:
             query = session.query(RelayServer.enabled)\
-            .filter(func.substring_index(RelayServer.jid, '/', 1)==jid.split('/')[0]).one()
-
+            .filter(RelayServer.nameserver==jid.split('/')[0]).one()
             if query is not None:
                 return query.enabled
             else:
                 return False
         except:
             return False
+
     @DatabaseHelper._sessionm
     def get_qa_for_relays(self, session, login=""):
         """ Get the list of qa for relays
