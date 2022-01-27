@@ -20,6 +20,7 @@ Depends: ${misc:Depends},
          mmc-web-pulse2, python-mmc-pulse2,
          mmc-web-kiosk, python-mmc-kiosk,
          mmc-web-backuppc, python-mmc-backuppc,
+         mmc-web-urbackup, python-mmc-urbackup,
          mmc-web-dashboard, python-mmc-dashboard,
          mmc-web-ppolicy, python-mmc-ppolicy,
          mmc-web-services, python-mmc-services,
@@ -117,6 +118,16 @@ Description: Pulse 2 common backuppc database files.
  organizations.
  .
  This package contains Pulse 2 common BackupPC database files.
+
+Package: python-pulse2-common-database-urbackup
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database (= ${binary:Version})
+Description: Pulse 2 common urbackup database files.
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common Urbackup database files.
 
 Package: python-pulse2-common-database
 Architecture: all
@@ -251,6 +262,17 @@ Description: Pulse 2 BackupPC plugin for MMC agent
  .
  This package contains the BackupPC plugin for MMC agent.
 
+Package: python-mmc-urbackup
+Architecture: all
+Section: python
+Pre-Depends: urbackup-server
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-urbackup (= ${binary:Version}), python-pyquery
+Description: Pulse 2 Urbackup plugin for MMC agent
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the Urbackup plugin for MMC agent.
+
 Package: python-mmc-support
 Architecture: all
 Section: python
@@ -382,6 +404,15 @@ Description: Pulse 2 BackupPC plugin for MMC web interface
  organizations.
  .
  This package contains the BackupPC plugin for the MMC web interface.
+
+Package: mmc-web-urbackup
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 Urbackup plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the Urbackup plugin for the MMC web interface.
 
 Package: mmc-web-monitoring
 Architecture: all
@@ -577,4 +608,3 @@ Package: mmc-web-xmppmaster
 Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version}), ajax-php-file-manager
 Description: Xmpp mmc module
-
