@@ -8127,7 +8127,7 @@ class XmppMasterDatabase(DatabaseHelper):
     def change_relay_switch(self, session, jid, switch, propagate):
         id_cluster = None
         if propagate is True:
-            session.query(RelayServer).filter(and_(RelayServer.nameserver == jid.split('/')[0],\
+            session.query(RelayServer).filter(and_(func.substring_index(RelayServer.jid, '/', 1) == jid.split('/')[0],\
                 RelayServer.mandatory == 0)).update(\
                 {RelayServer.switchonoff: switch})
             try:
@@ -8229,7 +8229,7 @@ where agenttype="machine" and groupdeploy in (
         @returns: boolean"""
         try:
             query = session.query(RelayServer.enabled)\
-            .filter(RelayServer.nameserver==jid.split('/')[0]).one()
+                .filter(func.substring_index(RelayServer.jid, '/', 1)==jid.split('/')[0]).one()
             if query is not None:
                 return query.enabled
             else:
