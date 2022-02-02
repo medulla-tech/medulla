@@ -3387,16 +3387,44 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_machine_stop_deploy(self, session, cmdid , inventoryuuid):
         """
-            this function return the machines list for  1 command_id and 1 uuid
+            It is used  to get a list of machines with deploiements to stop.
+
+            Args:
+                session: The SQL Alchemy session
+                cmdid: The id of the command ( = the deploiement )
+                inventoryuuid: The id of the machine on which we are trying to deploy.
+
+            Returns:
+                For the machine with `cmdid` and `inventoryuuid`, it returns a dict with
+                informations about this deploy for the machine ( title, pathpackage,pathpackage, jidmachine, etc.)
+
+                There is two possible errors:
+                    1- If no machine is found ( the `cmdid` or `inventoryuuid` does not exist.
+                    2- If there is more than one machine answering the request.
+
+                For this two specific cases, it returns an empty dict.
         """
-        query = session.query(Deploy).filter(and_( Deploy.inventoryuuid == inventoryuuid,
-                                                   Deploy.command == cmdid))
-        query = query.one()
-        session.commit()
-        session.flush()
-        machine={}
+        machine = {}
+        try:
+            query = session.query(Deploy).filter(and_(Deploy.inventoryuuid == inventoryuuid,
+                                                    Deploy.command == cmdid))
+            query = query.one()
+            session.commit()
+            session.flush()
+
+        except NoResultFound as e:
+            logging.getLogger().error(str(e))
+            logging.getLogger().error("We tried to stop the deploiement for the cmd %s. We did not find the uuid %s" % (cmdid , inventoryuuid))
+            return machine
+
+        except MultipleResultsFound as e:
+            logging.getLogger().error(str(e))
+            logging.getLogger().error("When stopping the deploiement we detected several machines for the cmd %s and uuid %s " % (cmdid , inventoryuuid))
+            return machine
+
         machine['len'] = 0
-        try :
+
+        try:
             machine['len'] = 1
             machine['title'] = query.title
             machine['pathpackage'] = query.pathpackage
@@ -3417,6 +3445,7 @@ class XmppMasterDatabase(DatabaseHelper):
             machine['syncthing'] = query.syncthing
         except Exception as e:
             logging.getLogger().error(str(e))
+
         return machine
 
     @DatabaseHelper._sessionm
