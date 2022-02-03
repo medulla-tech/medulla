@@ -1188,7 +1188,7 @@ class ImagingRpcProxy(RpcProxyI):
             d = i.imagingServerImageDelete(im.uuid)
             d.addCallback(treatDel, image_uuid, db, logger)
             return d
-        #except Exception, e:
+        #except Exception as e:
         #    return xmlrpcCleanup([False, e])
 
     def addImageToLocation(self, item_uuid, loc_id, params):
@@ -2660,7 +2660,7 @@ class ImagingRpcProxy(RpcProxyI):
             try:
                 f = open(filexml, 'w')
                 f.write(xmlWAFG)
-            except  Exception as e:
+            except Exception as e:
                 logging.getLogger().exception(e)
                 return False
             else:

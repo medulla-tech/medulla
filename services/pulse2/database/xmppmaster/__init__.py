@@ -939,7 +939,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     }
                 relayserver_list.append(res)
             return relayserver_list
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             traceback.print_exc(file=sys.stdout)
             return relayserver_list
@@ -1573,7 +1573,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
             return True
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             return False
 
@@ -1629,7 +1629,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     session.flush()
                     idorganization = result_organization.id
 
-                except Exception, e:
+                except Exception as e:
                     logging.getLogger().debug("organization id : %s does not exists" % organization_id)
                     return -1
             elif organization_name != None:
@@ -1825,7 +1825,7 @@ class XmppMasterDatabase(DatabaseHelper):
                return result_entity.get_data()
             else:
                 logging.getLogger().debug("Glpi_entity id : %s does not exists" % glpi_id)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("Glpi_entity id : %s does not exists" % glpi_id)
         return None
 
@@ -1846,7 +1846,7 @@ class XmppMasterDatabase(DatabaseHelper):
                return result_location.get_data()
             else:
                 logging.getLogger().debug("Glpi_location id : %s des not exists" % glpi_id)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("Glpi_location id : %s does not exists" % glpi_id)
         return None
 
@@ -1872,7 +1872,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 logging.getLogger().debug("Glpi_Register_Keys  : %s"\
                     " for machine %s does not exists" % (name,
                                                       machines_id))
-        except Exception, e:
+        except Exception as e:
                 logging.getLogger().error("Glpi_Register_Keys  : %s "\
                     "for machine %s does not exists" % (name,
                                                      machines_id))
@@ -1903,7 +1903,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 session.commit()
                 session.flush()
                 return new_glpi_entity.get_data()
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().error(str(e))
                 logging.getLogger().error("glpi_entity error")
         else:
@@ -1940,7 +1940,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 session.commit()
                 session.flush()
                 return new_glpi_location.get_data()
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().error(str(e))
                 logging.getLogger().error("create_Glpi_location error")
         else:
@@ -1983,7 +1983,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 session.commit()
                 session.flush()
                 return new_glpi_register_keys.get_data()
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().error(str(e))
                 logging.getLogger().error("Glpi_register_keys error")
         else:
@@ -2067,7 +2067,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
             return 1
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().debug("updateMachines error %s->" % str(e))
             return -1
 
@@ -5720,7 +5720,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
             return [x[0] for x in result]
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             logging.getLogger().error("\n%s" % (traceback.format_exc()))
 
@@ -6819,7 +6819,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.execute(sql)
             session.commit()
             session.flush()
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             logging.getLogger().error("\n%s" % (traceback.format_exc()))
 
@@ -6842,7 +6842,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.execute(sql)
             session.commit()
             session.flush()
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             logging.getLogger().error("\n%s" % (traceback.format_exc()))
 
@@ -8536,7 +8536,7 @@ where agenttype="machine" and groupdeploy in (
             session.commit()
             session.flush()
             return new_Uptime_machine.id
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             return -1
 
@@ -8586,7 +8586,7 @@ where agenttype="machine" and groupdeploy in (
                      "updowntime": element[4],
                      "date": element[5].strftime("%Y/%m/%d/ %H:%M:%S"),
                      "time": element[6]} for element in result]
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             return []
 
@@ -8650,7 +8650,7 @@ where agenttype="machine" and groupdeploy in (
                         else:
                             nb = True
             return statdict
-        except Exception, e:
+        except Exception as e:
             self.logger.error("\n%s" % (traceback.format_exc()))
             logging.getLogger().error(str(e))
             return statdict
@@ -9541,7 +9541,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.commit()
             session.flush()
             return new_Monitoring_panels_template.id
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             return -1
 
@@ -9582,7 +9582,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                        'status': graphe_template.status,
                        'comment': graphe_template.comment}
                 list_panels_template.append(res)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
         return list_panels_template
 

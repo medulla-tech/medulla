@@ -983,7 +983,7 @@ def adduserdatageolocalisation(xmppobject, data, msg, sessionid, showinfobool):
             for geovariable in tabinformation:
                 try:
                     tabinformation[geovariable]=str(data['geolocalisation'][geovariable])
-                except  Exception:
+                except Exception:
                     pass
             if showinfobool:
                 logger.info("parameter geolocalisation : %s"%tabinformation)
