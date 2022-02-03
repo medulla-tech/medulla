@@ -264,8 +264,13 @@ END$$
 DELIMITER ;
 ;
 
+-- ----------------------------------------------------------------------
+-- Database index on date on table uptime_machine
+-- ----------------------------------------------------------------------
 
-
+ALTER TABLE `xmppmaster`.`uptime_machine`
+ADD INDEX `ind_date` (`date` ASC) ;
+;
 
 
 SET FOREIGN_KEY_CHECKS=1;
