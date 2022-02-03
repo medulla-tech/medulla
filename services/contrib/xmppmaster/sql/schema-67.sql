@@ -80,7 +80,7 @@ DROP INDEX `ind_start_cmd` ;
 ALTER TABLE `xmppmaster`.`deploy`
 ADD INDEX `ind_syncthing` (`syncthing` ASC) ;
 
-ALTER TABLE `xmppmaster`.`deploy` 
+ALTER TABLE `xmppmaster`.`deploy`
 ADD INDEX `ind_session` (`sessionid` ASC) ;
 
 -- ----------------------------------------------------------------------
@@ -234,6 +234,39 @@ CREATE EVENT IF NOT EXISTS purge_deploy
           DELETE FROM xmppmaster.deploy
 WHERE
     endcmd < DATE_SUB(NOW(), INTERVAL 30 DAY);
+
+
+
+-- ----------------------------------------------------------------------
+-- Database replace mon-onlineoffline
+-- ----------------------------------------------------------------------
+USE `xmppmaster`;
+DROP procedure IF EXISTS `mon-onlineoffline`;
+
+USE `xmppmaster`;
+DROP procedure IF EXISTS `xmppmaster`.`mon-onlineoffline`;
+;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mon-onlineoffline`(IN param_hostname VARCHAR(45))
+BEGIN
+  SELECT
+    date AS 'time',
+    status
+FROM
+    uptime_machine
+WHERE
+	hostname = param_hostname;
+
+END$$
+
+DELIMITER ;
+;
+
+
+
+
 
 SET FOREIGN_KEY_CHECKS=1;
 -- ----------------------------------------------------------------------
