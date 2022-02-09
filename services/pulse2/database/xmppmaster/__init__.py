@@ -6683,7 +6683,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
         except Exception as e:
             self.logger.error("An error occured while fetching the ordered list of subsitutes.")
-            logging.getLogger().error("parameter in : %s" % (listconfsubstitute, arsname))
+            logging.getLogger().error("parameter in : %s %s" % (listconfsubstitute, arsname))
             logging.getLogger().error("sql information in : %s\n%s" % (sql, sql1))
         logging.getLogger().debug("substitute list : %s"  % listconfsubstitute)
         return listconfsubstitute
