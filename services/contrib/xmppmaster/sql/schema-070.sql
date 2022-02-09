@@ -102,14 +102,14 @@ SELECT DISTINCT
 	`xmppmaster`.`logs`.text
 FROM
     xmppmaster.deploy
-        JOIN
+JOIN
     logs ON logs.sessionname = deploy.sessionid
 WHERE
     deploy.title  like "Convergence%"
     AND deploy.state = 'DEPLOYMENT START'
 	AND (NOW() BETWEEN deploy.startcmd AND deploy.endcmd)
 	AND sessionname = deploy.sessionid
-	AND ((logs.text REGEXP '^First WOL|^Second WOL|^Third WOL|.*Trying to continue deployment|Starting deployment$|^Key successfully present'
+	AND ((logs.text REGEXP '^First WOL|^Second WOL|^Third WOL|.*Trying to continue deployment|Starting deployment|^Key successfully present'
 	AND logs.date < DATE_ADD(NOW(), INTERVAL - 600 SECOND))
 	OR (logs.text REGEXP '^Client generated transfer command is'
 	AND logs.date < DATE_ADD(NOW(), INTERVAL - 1 DAY)))
@@ -275,14 +275,14 @@ SELECT DISTINCT
     `xmppmaster`.`logs`.text
 FROM
     xmppmaster.deploy
-        JOIN
+JOIN
     logs ON logs.sessionname = deploy.sessionid
 WHERE
     deploy.title  NOT like "Convergence%"
 	AND deploy.state = 'DEPLOYMENT START'
 	AND (NOW() BETWEEN deploy.startcmd AND deploy.endcmd)
 	AND sessionname = deploy.sessionid
-	AND ((logs.text REGEXP '^First WOL|^Second WOL|^Third WOL|.*Trying to continue deployment|Starting deployment$|^Key successfully present'
+	AND ((logs.text REGEXP '^First WOL|^Second WOL|^Third WOL|.*Trying to continue deployment|Starting deployment|^Key successfully present'
 	AND logs.date < DATE_ADD(NOW(), INTERVAL - 600 SECOND))
 	OR (logs.text REGEXP '^Client generated transfer command is'
 	AND logs.date < DATE_ADD(NOW(), INTERVAL - 1 DAY)))
@@ -298,7 +298,7 @@ OPEN cursor_session_reload;
 nextsessionid: LOOP
 	FETCH cursor_session_reload INTO session_string,title_deploy,machine_name,ars_name,history_log_msg;
 	IF finished = 1 THEN
-		LEAVE nextsessionid;
+	LEAVE nextsessionid;
 	END IF;
 	-- count
 	set nombreselect = nombreselect + 1;
