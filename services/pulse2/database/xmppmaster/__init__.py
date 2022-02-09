@@ -6670,8 +6670,6 @@ class XmppMasterDatabase(DatabaseHelper):
                 listconfsubstitute[t].append(excluded_account)
             idt=[idx[x].pop(0) for x in idx]
             idt.sort()
-            logging.getLogger().debug("substitute list result : %s"  % listconfsubstitute)
-            logging.getLogger().debug("substitute list idt : %s"  % idt)
             xstr=",".join(str(x) for x in idt)
             sql1=""" UPDATE `xmppmaster`.`substituteconf`
                     SET
@@ -6685,7 +6683,6 @@ class XmppMasterDatabase(DatabaseHelper):
             self.logger.error("An error occured while fetching the ordered list of subsitutes.")
             logging.getLogger().error("parameter in : %s %s" % (listconfsubstitute, arsname))
             logging.getLogger().error("sql information in : %s\n%s" % (sql, sql1))
-        logging.getLogger().debug("substitute list : %s"  % listconfsubstitute)
         return listconfsubstitute
 
     @DatabaseHelper._sessionm
