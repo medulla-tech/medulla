@@ -272,6 +272,15 @@ ALTER TABLE `xmppmaster`.`uptime_machine`
 ADD INDEX `ind_date` (`date` ASC) ;
 ;
 
+-- ----------------------------------------------------------------------
+-- Database index on date on table substituteconf
+-- ----------------------------------------------------------------------
+ALTER TABLE `xmppmaster`.`substituteconf`
+ADD INDEX `ind_type` (`type` ASC) ,
+ADD INDEX `ind_count` (`countsub` ASC) ,
+ADD INDEX `ind_sidsubstitute` (`jidsubtitute` ASC) ;
+;
+
 
 SET FOREIGN_KEY_CHECKS=1;
 -- ----------------------------------------------------------------------
